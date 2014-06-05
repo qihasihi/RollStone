@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="aggregator-web:war exploded">
+    <output-path>$PROJECT_DIR$/aggregator-web/target/aggregator-web</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="aggregator-web/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="aggregator-web" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
+        </element>
+      </element>
+      <element id="artifact" artifact-name="web-chanpin:war exploded" />
+    </root>
+  </artifact>
+</component>

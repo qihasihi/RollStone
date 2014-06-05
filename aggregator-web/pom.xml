@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <artifactId>sz_school</artifactId>
+        <groupId>sz_school</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>aggregator-web</artifactId>
+    <packaging>war</packaging>
+    <name>aggregator-web</name>
+
+
+    <build>
+        <finalName>aggregator-web</finalName>
+        <plugins>
+
+            <!-- 合并web项目。聚合项目需配置依赖。 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
+                    <overlays>
+                        <overlay>
+                            <groupId>sz_school</groupId>
+                            <artifactId>web-chanpin</artifactId>
+                        </overlay>
+
+                    </overlays>
+                </configuration>
+            </plugin>
+
+
+
+        </plugins>
+
+
+
+    </build>
+
+
+
+    <dependencies>
+        <dependency>
+            <groupId>sz_school</groupId>
+            <artifactId>web-chanpin</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+
+</project>

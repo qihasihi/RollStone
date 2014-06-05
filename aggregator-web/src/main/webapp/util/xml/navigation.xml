@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<navigation>
+	<navs>
+	<!-- 1平台管理,2教学系统,3资源系统,4评教系统，5通知公告，6校园活动，7校园活动管理，8资源审核权限，9四中网校 -->
+		<nav displayName="平台管理" fnid="1" url="term?m=list" class="lm11">
+				<role roleid="4" rolename="管理员"></role>
+		</nav>
+		<!--学生教学系统-->
+		<nav displayName="教学系统" fnid="2" url="teachercourse?m=toStudentCourseList" class="lm07">
+				<role roleid="1" rolename="学生"></role>				
+    	</nav> 
+		<!--教师教学系统-->
+		<nav displayName="教学系统" fnid="2" url="teachercourse?m=toTeacherCourseList" class="lm07">
+				<role roleid="2" rolename="老师"></role>				
+		</nav>
+		
+		<nav displayName="资源系统" fnid="3" url="resource?m=toindex" class="lm06">			
+				<role roleid="2" rolename="老师"></role>
+				<role roleid="4" rolename="管理员"></role>  
+		</nav>
+        <!--<nav displayName="资源审核权限" fnid="3" url="check?m=tocheckPage" class="lm06">
+                <role roleid="4" rolename="管理员"></role>
+        </nav>
+            <nav displayName="评教管理" fnid="4" url="timestep?m=list" class="lm03">
+                    <role roleid="4" rolename="管理员"></role>
+            </nav>
+            <nav displayName="评教系统" fnid="4" url="teacherappraise?m=self_watch_ban" class="lm03">
+                    <role roleid="2" rolename="老师"></role>
+            </nav>
+            <nav displayName="评教系统" fnid="4" url="teacherappraise?m=list_stu" class="lm03">
+                    <role roleid="1" rolename="学生"></role>
+            </nav>-->
+		<nav displayName="通知公告" fnid="5" url="notice?m=list" class="lm16">			
+				<role roleid="4" rolename="管理员"></role>
+				<role roleid="14" rolename="公告管理员"></role>
+		</nav>	 
+	<!--	<nav displayName="校园活动" fnid="8" url="activity?m=list" class="lm02">
+				<role roleid="2" rolename="老师"></role>
+				<role roleid="4" rolename="管理员"></role>
+		</nav>	
+		<nav displayName="校园活动管理" fnid="8" url="activity?m=adminlist" class="lm02">			
+				<role roleid="4" rolename="管理员"></role>
+		</nav> -->
+		  
+		<nav displayName="四中网校" fnid="9" url="user?m=toEttUrl" class="lm19">	
+				<role roleid="1" rolename="学生"></role>
+				<role roleid="2" rolename="老师"></role>
+		</nav>
+        <!-- 	<nav displayName="直播课堂" fnid="10" url="zbkt-lineSelect.jsp" class="lm07">
+                <role roleid="2" rolename="老师"></role>
+            </nav>
+            <nav displayName="网络备课" fnid="11" url="http://conference.etiantian.com" class="lm07">
+                <role roleid="2" rolename="老师"></role>
+            </nav>
+            <nav displayName="视频转换设置" fnid="12" url="videotime?m=toList" class="lm02">
+                    <role roleid="4" rolename="管理员"></role>
+            </nav> -->
+	</navs>  
+</navigation>

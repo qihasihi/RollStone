@@ -1,0 +1,338 @@
+package  com.school.entity.teachpaltform;
+
+import com.school.entity.UserInfo;
+import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
+import com.school.util.PageUtil.PageUtilTool;
+import com.school.util.UtilTool;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class TpTaskInfo implements Serializable {
+
+	public void TpTaskInfo (){}
+   
+    private java.lang.String taskname;
+    private Long taskvalueid;
+    private Date ctime;
+    private Date mtime;
+    private java.lang.String taskremark;
+    private Long taskid;
+    private java.lang.Integer cloudstatus;
+    private java.lang.Integer tasktype;
+    private UserInfo userinfo;
+    private Integer criteria;
+    private Long courseid;
+    private Long quoteid;
+
+
+    private Object totalcount;  //任务总人数
+    private Object stucount;    //已做人数
+
+
+    private Object taskobjname; //关联名称
+    private Object flag;    //1：已发布
+    private Object questiontype; //任务类型
+    private Integer cloudtype;  //查询使用
+    private Integer selecttype; //查询使用
+    private Object iscomplete;
+    private Integer loginuserid;
+    private Integer status;
+    private Integer userid;
+    public Object getIscomplete() {
+        return iscomplete;
+    }
+
+    public void setIscomplete(Object iscomplete) {
+        this.iscomplete = iscomplete;
+    }
+    public Object getStucount() {
+        return stucount;
+    }
+
+    public void setStucount(Object stucount) {
+        this.stucount = stucount;
+    }
+
+    public Integer getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Integer userid) {
+        this.userid = userid;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getLoginuserid() {
+        return loginuserid;
+    }
+
+    public void setLoginuserid(Integer loginuserid) {
+        this.loginuserid = loginuserid;
+    }
+
+    public Integer getSelecttype() {
+        return selecttype;
+    }
+
+    public void setSelecttype(Integer selecttype) {
+        this.selecttype = selecttype;
+    }
+
+    public Integer getCloudtype() {
+        return cloudtype;
+    }
+
+    public void setCloudtype(Integer cloudtype) {
+        this.cloudtype = cloudtype;
+    }
+
+    public Object getQuestiontype() {
+        return questiontype;
+    }
+    public void setQuestiontype(Object questiontype) {
+        this.questiontype = questiontype;
+    }
+    public Object getFlag() {
+        return flag;
+    }
+    public void setFlag(Object flag) {
+        this.flag = flag;
+    }
+    public Integer getCriteria() {
+        return criteria;
+    }
+    public void setCriteria(Integer criteria) {
+        this.criteria = criteria;
+    }
+    public Object getTaskobjname() {
+        return taskobjname;
+    }
+    public void setTaskobjname(Object taskobjname) {
+        this.taskobjname = taskobjname;
+    }
+    public Object getTotalcount() {
+        return totalcount;
+    }
+    public void setTotalcount(Object totalcount) {
+        this.totalcount = totalcount;
+    }
+
+    public UserInfo getUserinfo() {
+        if(userinfo==null)
+            userinfo=new UserInfo();
+        return userinfo;
+    }
+    public void setUserinfo(UserInfo userinfo) {
+        this.userinfo = userinfo;
+    }
+
+
+    public java.lang.String getTaskname(){
+      return taskname;
+    }
+    public void setTaskname(java.lang.String taskname){
+      this.taskname = taskname;
+    }
+    public java.lang.Long getTaskvalueid(){
+      return taskvalueid;
+    }
+    public void setTaskvalueid(java.lang.Long taskvalueid){
+      this.taskvalueid = taskvalueid;
+    }
+    public Date getCtime(){
+      return ctime;
+    }
+    public void setCtime(Date ctime){
+      this.ctime = ctime;
+    }
+    public Date getMtime(){
+      return mtime;
+    }
+    public void setMtime(java.sql.Timestamp mtime){
+      this.mtime = mtime;
+    }
+    public java.lang.String getTaskremark(){
+      return taskremark;
+    }
+    public void setTaskremark(java.lang.String taskremark){
+      this.taskremark = taskremark;
+    }
+    public java.lang.String getCuserid(){
+        return this.getUserinfo().getRef();
+    }
+    public void setCuserid(java.lang.String cuserid){
+        this.getUserinfo().setRef(cuserid);
+    }
+
+    public Long getCourseid() {
+        return courseid;
+    }
+
+    public void setCourseid(Long courseid) {
+        this.courseid = courseid;
+    }
+
+    public Long getQuoteid() {
+        return quoteid;
+    }
+
+    public void setQuoteid(Long quoteid) {
+        this.quoteid = quoteid;
+    }
+
+    public java.lang.Long getTaskid(){
+      return taskid;
+    }
+    public void setTaskid(java.lang.Long taskid){
+      this.taskid = taskid;
+    }
+    public java.lang.Integer getCloudstatus(){
+      return cloudstatus;
+    }
+    public void setCloudstatus(java.lang.Integer cloudstatus){
+      this.cloudstatus = cloudstatus;
+    }
+    public java.lang.Integer getTasktype(){
+      return tasktype;
+    }
+    public void setTasktype(java.lang.Integer tasktype){
+      this.tasktype = tasktype;
+    }
+
+
+
+    private Object btime;
+    private Object etime;
+
+    public Object getBtime() {
+        return btime;
+    }
+
+    public void setBtime(Object btime) {
+        this.btime = btime;
+    }
+
+
+    public Object getEtime() {
+        return etime;
+    }
+
+    public void setEtime(Object etime) {
+        this.etime = etime;
+    }
+
+    public String getCtimeString(){
+        if(ctime==null)
+            return null;
+        return UtilTool.DateConvertToString(ctime, UtilTool.DateType.type1);
+    }
+
+    public String getMtimeString(){
+        if(mtime==null)
+            return null;
+        return UtilTool.DateConvertToString(mtime, UtilTool.DateType.type1);
+    }
+
+    public String getBtimeString(){
+        if(btime==null)
+            return null;
+        return UtilTool.DateConvertToString(UtilTool.StringConvertToDate(btime.toString()), UtilTool.DateType.type1);
+    }
+
+    public String getEtimeString(){
+        if(etime==null)
+            return null;
+        return UtilTool.DateConvertToString(UtilTool.StringConvertToDate(etime.toString()), UtilTool.DateType.type1);
+    }
+
+
+    public String getTaskstatus(){
+        if(this.getBtimeString()==null||this.getEtimeString()==null)
+            return "";
+        try {
+            return PageUtilTool.DateDiffNumber(this.getBtimeString(), this.getEtimeString());
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private List<QuestionOption>questionOptionList=new ArrayList<QuestionOption>();
+    private List<QuestionInfo>questionList=new ArrayList<QuestionInfo>();
+    private List<QuestionAnswer>questionAnswerList=new ArrayList<QuestionAnswer>();
+    private List<TaskPerformanceInfo>taskPerformanceList=new ArrayList<TaskPerformanceInfo>();
+    private List<TpTopicThemeInfo>tpTopicThemeInfoList=new ArrayList<TpTopicThemeInfo>();
+
+    //问题
+    private List rightAnswerList=new ArrayList();
+    //问题选项
+    private List rightOptionAnswerList=new ArrayList();
+
+    public List getRightOptionAnswerList() {
+        return rightOptionAnswerList;
+    }
+
+    public void setRightOptionAnswerList(List rightOptionAnswerList) {
+        this.rightOptionAnswerList = rightOptionAnswerList;
+    }
+    public List getRightAnswerList() {
+        return rightAnswerList;
+    }
+
+    public void setRightAnswerList(List rightAnswerList) {
+        this.rightAnswerList = rightAnswerList;
+    }
+
+    public List<QuestionAnswer> getQuestionAnswerList() {
+        return questionAnswerList;
+    }
+
+    public void setQuestionAnswerList(List<QuestionAnswer> questionAnswerList) {
+        this.questionAnswerList = questionAnswerList;
+    }
+
+    public List<QuestionInfo> getQuestionList() {
+        return questionList;
+    }
+
+    public void setQuestionList(List<QuestionInfo> questionList) {
+        this.questionList = questionList;
+    }
+
+    public List<QuestionOption> getQuestionOptionList() {
+        return questionOptionList;
+    }
+
+    public void setQuestionOptionList(List<QuestionOption> questionOptionList) {
+        this.questionOptionList = questionOptionList;
+    }
+
+
+    public List<TaskPerformanceInfo> getTaskPerformanceList() {
+        return taskPerformanceList;
+    }
+
+    public void setTaskPerformanceList(List<TaskPerformanceInfo> taskPerformanceList) {
+        this.taskPerformanceList = taskPerformanceList;
+    }
+
+
+    public List<TpTopicThemeInfo> getTpTopicThemeInfoList() {
+        return tpTopicThemeInfoList;
+    }
+
+    public void setTpTopicThemeInfoList(List<TpTopicThemeInfo> tpTopicThemeInfoList) {
+        this.tpTopicThemeInfoList = tpTopicThemeInfoList;
+    }
+
+
+}
