@@ -8,7 +8,7 @@ import java.util.List;
 
 public class TpCourseQuestion implements Serializable{
 
-	public void TpCourseQuestion (){}
+    public void TpCourseQuestion (){}
     private java.lang.Long ref;
     private java.util.Date ctime;
     public Object flag;
@@ -89,22 +89,22 @@ public class TpCourseQuestion implements Serializable{
         this.questioninfo = questioninfo;
     }
     public Long getQuestionid(){
-      return this.getQuestioninfo().getQuestionid();
+        return this.getQuestioninfo().getQuestionid();
     }
     public void setQuestionid(Long questionid){
-      this.getQuestioninfo().setQuestionid(questionid);
+        this.getQuestioninfo().setQuestionid(questionid);
     }
     public java.lang.Long getRef(){
-      return ref;
+        return ref;
     }
     public void setRef(java.lang.Long ref){
-      this.ref = ref;
+        this.ref = ref;
     }
     public java.util.Date getCtime(){
-      return ctime;
+        return ctime;
     }
     public void setCtime(java.util.Date ctime){
-      this.ctime = ctime;
+        this.ctime = ctime;
     }
 
     /**
@@ -119,7 +119,20 @@ public class TpCourseQuestion implements Serializable{
         this.getQuestioninfo().setQuestiontype(questiontype);
     }
     public java.lang.String getContent(){
-        return  this.getQuestioninfo().getContent();
+        String content=this.getQuestioninfo().getContent();
+        if(content!=null&&content.trim().length()>0){
+            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+            while(content.indexOf("_QUESTIONPIC+")!=-1)
+                content=content.replace("_QUESTIONPIC+",t);
+            while (content.indexOf("\n")!=-1||content.indexOf("\n\r")!=-1||content.indexOf("\t")!=-1){
+                content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
+                content=content.replace("\n", "<br>");
+                content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                //content=content.replace(" ", "&nbsp;");
+                //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
+            }
+        }
+        return content;
     }
     public void setContent(java.lang.String content){
         this.getQuestioninfo().setContent(content);

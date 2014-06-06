@@ -17,6 +17,15 @@ public class PsUserFriend implements  Serializable {
     private Date ctime;
     private Date mtime;
 
+    private Object friendname;
+
+    public Object getFriendname() {
+        return friendname;
+    }
+
+    public void setFriendname(Object friendname) {
+        this.friendname = friendname;
+    }
 
     public PsFriendGroupInfo getFriendgroup() {
         if(friendgroup==null)

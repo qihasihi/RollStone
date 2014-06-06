@@ -12,8 +12,8 @@ import java.util.List;
 
 public class TpTaskInfo implements Serializable {
 
-	public void TpTaskInfo (){}
-   
+    public void TpTaskInfo (){}
+
     private java.lang.String taskname;
     private Long taskvalueid;
     private Date ctime;
@@ -114,8 +114,22 @@ public class TpTaskInfo implements Serializable {
     public void setCriteria(Integer criteria) {
         this.criteria = criteria;
     }
+
     public Object getTaskobjname() {
-        return taskobjname;
+        String content=taskobjname.toString();
+        if(content!=null&&content.trim().length()>0){
+            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getTaskvalueid()+"/";
+            while(content.indexOf("_QUESTIONPIC+")!=-1)
+                content=content.replace("_QUESTIONPIC+",t);
+            while (content.indexOf("\n")!=-1||content.indexOf("\n\r")!=-1||content.indexOf("\t")!=-1){
+                content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
+                content=content.replace("\n", "<br>");
+                content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                //content=content.replace(" ", "&nbsp;");
+                //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
+            }
+        }
+        return content;
     }
     public void setTaskobjname(Object taskobjname) {
         this.taskobjname = taskobjname;
@@ -138,34 +152,34 @@ public class TpTaskInfo implements Serializable {
 
 
     public java.lang.String getTaskname(){
-      return taskname;
+        return taskname;
     }
     public void setTaskname(java.lang.String taskname){
-      this.taskname = taskname;
+        this.taskname = taskname;
     }
     public java.lang.Long getTaskvalueid(){
-      return taskvalueid;
+        return taskvalueid;
     }
     public void setTaskvalueid(java.lang.Long taskvalueid){
-      this.taskvalueid = taskvalueid;
+        this.taskvalueid = taskvalueid;
     }
     public Date getCtime(){
-      return ctime;
+        return ctime;
     }
     public void setCtime(Date ctime){
-      this.ctime = ctime;
+        this.ctime = ctime;
     }
     public Date getMtime(){
-      return mtime;
+        return mtime;
     }
     public void setMtime(java.sql.Timestamp mtime){
-      this.mtime = mtime;
+        this.mtime = mtime;
     }
     public java.lang.String getTaskremark(){
-      return taskremark;
+        return taskremark;
     }
     public void setTaskremark(java.lang.String taskremark){
-      this.taskremark = taskremark;
+        this.taskremark = taskremark;
     }
     public java.lang.String getCuserid(){
         return this.getUserinfo().getRef();
@@ -191,22 +205,22 @@ public class TpTaskInfo implements Serializable {
     }
 
     public java.lang.Long getTaskid(){
-      return taskid;
+        return taskid;
     }
     public void setTaskid(java.lang.Long taskid){
-      this.taskid = taskid;
+        this.taskid = taskid;
     }
     public java.lang.Integer getCloudstatus(){
-      return cloudstatus;
+        return cloudstatus;
     }
     public void setCloudstatus(java.lang.Integer cloudstatus){
-      this.cloudstatus = cloudstatus;
+        this.cloudstatus = cloudstatus;
     }
     public java.lang.Integer getTasktype(){
-      return tasktype;
+        return tasktype;
     }
     public void setTasktype(java.lang.Integer tasktype){
-      this.tasktype = tasktype;
+        this.tasktype = tasktype;
     }
 
 

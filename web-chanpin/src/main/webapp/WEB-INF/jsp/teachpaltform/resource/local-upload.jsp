@@ -1,9 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page import="com.school.util.UtilTool" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%
+    String proc_name= UtilTool.utilproperty.getProperty("PROC_NAME");
     String basePath = request.getScheme() + "://"
-            + request.getServerName() + ":" + request.getServerPort()
-            + request.getContextPath() + "/";
+            + UtilTool.utilproperty.getProperty("IP_ADDRESS")
+            +"/"+proc_name + "/";
 %>
 <!-- 上传控件 -->
 <script type="text/javascript" src="<%=basePath %>js/common/uploadControl.js"></script>
@@ -102,67 +104,67 @@
 
 
 <div id="dv_upload"  >
-                <div class="subpage_lm">
-                    <ul>
-                        <li id="li_dv_upload_local" class="crumb"><a onclick="changeTab('dv_upload_local')">本地上传</a></li>
-                        <c:if test="${param.usertype eq 2}">
-                            <li id="li_dv_upload_course"><a onclick="changeTab('dv_upload_course')">通过专题查找</a></li>
-                            <li id="li_dv_upload_resource"><a onclick="changeTab('dv_upload_resource')">通过资源库查找</a></li>
-                        </c:if>
+<div class="subpage_lm">
+    <ul>
+        <li id="li_dv_upload_local" class="crumb"><a onclick="changeTab('dv_upload_local')">本地上传</a></li>
+        <c:if test="${param.usertype eq 2}">
+            <li id="li_dv_upload_course"><a onclick="changeTab('dv_upload_course')">通过专题查找</a></li>
+            <li id="li_dv_upload_resource"><a onclick="changeTab('dv_upload_resource')">通过资源库查找</a></li>
+        </c:if>
 
-                    </ul>
+    </ul>
+</div>
+<div id="dv_upload_local">
+    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
+        <col class="w100"/>
+        <col class="w600"/>
+
+        <tr id="tr_res_type">
+            <th><span class="ico06"></span>资源类别：</th>
+            <td class="font-black">
+                <input  name="tp_res_type" checked="checked" type="radio" value="1"  />
+                学习资源&nbsp;&nbsp;&nbsp;&nbsp;
+                <input  name="tp_res_type" type="radio" value="2"  />
+                教学参考
+            </td>
+        </tr>
+
+        <tr>
+            <th><span class="ico06"></span>资源名称：</th>
+            <td><input name="res_name" id="res_name" class="w430" /></td>
+        </tr>
+        <tr>
+            <th><span class="ico06"></span>资源类型：</th>
+            <td class="font-black">
+                <c:if test="${!empty resType}">
+                <c:forEach items="${resType}" var="d">
+                <input type="radio" name="res_type"  value="${d.dictionaryvalue}" />${d.dictionaryname}&nbsp;&nbsp;&nbsp;&nbsp;
+                </c:forEach>
+                </c:if>
+        </tr>
+        <tr>
+            <th>&nbsp;&nbsp;资源简介：</th>
+            <td><textarea id="res_remark" class="h90 w600"></textarea></td>
+        </tr>
+        <tr>
+            <th>&nbsp;&nbsp;附件上传：</th>
+            <td><p class="font-black">
+                <input name="rdo_uplaod" type="radio" value="1" checked  onclick="p_res_file.style.display='block';dv_super_file.style.display='NONE';" />
+                普通附件&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="rdo_uplaod"  value="2"  onclick="p_res_file.style.display='NONE';dv_super_file.style.display='block';UploadInit_CourseResource(url,false);" />
+                超大附件&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;"
+                                               onmousemove="var dvstyle=dv_allow_filetype.style;dvstyle.left=(mousePostion.x+5)+'px';dvstyle.top=(mousePostion.y+5)+'px';dvstyle.display='block'"
+                                               onmouseout="dv_allow_filetype.style.display='none';" class="font-darkblue">支持的文件类型</a>
+                <!-- <a class="font-darkblue" href="http://202.99.47.77/fileoperate/uploadfile/tmp/upload-chajian2013-07-29.exe">下载插件</a>
+                 <a class="font-darkblue" href="template/IEUpload Solution.docx">使用说明</a>-->
+            </p>
+                <div class="jxxt_zhuanti_zy_add" id="p_res_file">
+                    <input type="file" name="uploadfile" id="uploadfile" class="w410" /><!--<a href="1" class="an_public3">上&nbsp;传</a>-->
+                    <p class="font-gray">提示：附件仅限一个，100M以内。视频资源<20M可实时转换播放，>20M需等待，第二天可播放。</p>
                 </div>
-    <div id="dv_upload_local">
-                <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
-                    <col class="w100"/>
-                    <col class="w600"/>
-
-                        <tr id="tr_res_type">
-                            <th><span class="ico06"></span>资源类别：</th>
-                                <td class="font-black">
-                             <input  name="tp_res_type" checked="checked" type="radio" value="1"  />
-                                    学习资源&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input  name="tp_res_type" type="radio" value="2"  />
-                                    教学参考
-                                </td>
-                        </tr>
-
-                    <tr>
-                        <th><span class="ico06"></span>资源名称：</th>
-                        <td><input name="res_name" id="res_name" class="w430" /></td>
-                    </tr>
-                    <tr>
-                        <th><span class="ico06"></span>资源类型：</th>
-                        <td class="font-black">
-                            <c:if test="${!empty resType}">
-                                <c:forEach items="${resType}" var="d">
-                                    <input type="radio" name="res_type"  value="${d.dictionaryvalue}" />${d.dictionaryname}&nbsp;&nbsp;&nbsp;&nbsp;
-                                </c:forEach>
-                            </c:if>
-                    </tr>
-                    <tr>
-                        <th>&nbsp;&nbsp;资源简介：</th>
-                        <td><textarea id="res_remark" class="h90 w600"></textarea></td>
-                    </tr>
-                    <tr>
-                        <th>&nbsp;&nbsp;附件上传：</th>
-                        <td><p class="font-black">
-                            <input name="rdo_uplaod" type="radio" value="1" checked  onclick="p_res_file.style.display='block';dv_super_file.style.display='NONE';" />
-                            普通附件&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="radio" name="rdo_uplaod"  value="2"  onclick="p_res_file.style.display='NONE';dv_super_file.style.display='block';UploadInit_CourseResource(url,false);" />
-                            超大附件&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;"
-                                                           onmousemove="var dvstyle=dv_allow_filetype.style;dvstyle.left=(mousePostion.x+5)+'px';dvstyle.top=(mousePostion.y+5)+'px';dvstyle.display='block'"
-                                                           onmouseout="dv_allow_filetype.style.display='none';" class="font-darkblue">支持的文件类型</a>
-                                                           <!-- <a class="font-darkblue" href="http://202.99.47.77/fileoperate/uploadfile/tmp/upload-chajian2013-07-29.exe">下载插件</a>
-                                                            <a class="font-darkblue" href="template/IEUpload Solution.docx">使用说明</a>-->
-                        </p>
-                            <div class="jxxt_zhuanti_zy_add" id="p_res_file">
-                                <input type="file" name="uploadfile" id="uploadfile" class="w410" /><!--<a href="1" class="an_public3">上&nbsp;传</a>-->
-                                <p class="font-gray">提示：附件仅限一个，100M以内。视频资源<20M可实时转换播放，>20M需等待，第二天可播放。</p>
-                            </div>
-                            <div class="jxxt_zhuanti_zy_add" id="dv_super_file" style="display: none">
-                                    <div id="uploadcontrol_div" >
-                                        <!-- 加载控件 <span id="span_obj_add"></span>
+                <div class="jxxt_zhuanti_zy_add" id="dv_super_file" style="display: none">
+                    <div id="uploadcontrol_div" >
+                        <!-- 加载控件 <span id="span_obj_add"></span>
 
                                         <script type="text/javascript">
                                             var url="${fileSystemIpPort}upload1.jsp?jsessionid=aaatCu3yQxMmN-Rru135t&res_id="+nextid;
@@ -198,21 +200,21 @@
                                                 <button data-bind="attr: { id: 'upload_cancel_' + index }" class="info-button">取消</button>
                                             </div>
                                         </div> -->
-                                    </div>
-                                <p><span class="font-gray">提示： 附件仅限一个，>100M  <3G。</span>&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue" href="http://202.99.47.77/fileoperate/uploadfile/tmp/upload-chajian2013-07-29.exe">下载插件</a>
-                                    <a class="font-darkblue" href="template/IEUpload Solution.docx">使用说明</a></p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>&nbsp;</th>
-                        <td><a id="a_submit" onclick="doUploadResource(${param.usertype})"   class="an_small">提&nbsp;交</a><a href="javascript:void(0);" onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a></td>
-                    </tr>
-                </table>
-    </div>
+                    </div>
+                    <p><span class="font-gray">提示： 附件仅限一个，>100M  <3G。</span>&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue" href="http://202.99.47.77/fileoperate/uploadfile/tmp/upload-chajian2013-07-29.exe">下载插件</a>
+                        <a class="font-darkblue" href="template/IEUpload Solution.docx">使用说明</a></p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>&nbsp;</th>
+            <td><a id="a_submit" onclick="doUploadResource(${param.usertype})"   class="an_small">提&nbsp;交</a><a href="javascript:void(0);" onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a></td>
+        </tr>
+    </table>
+</div>
 
-    <div id="dv_upload_course" style="display: none">
-       <div id="p_upload_course2" style="display: none;">
+<div id="dv_upload_course" style="display: none">
+    <div id="p_upload_course2" style="display: none;">
         <div class="jxxt_zhuanti_zy_add_info">
             <p class="font-black" id="p_coursename">
 
@@ -220,67 +222,67 @@
             <p>类型：<span id="sp_type"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作者：<span id="sp_author"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年级：<span id="sp_grade"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="sp_star"></span></p>
             <!--<p class="font-darkblue">搜到的资源&nbsp;<span class="font-red">40</span></p>-->
         </div>
-         <input id="hd_courseid" type="hidden">
+        <input id="hd_courseid" type="hidden">
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
             <col class="w50"/>
             <col class="w700"/>
             <tbody id="courseResData">
 
             </tbody>
-           <!-- <tr>
-                <td><input type="checkbox" name="checkbox2" id="checkbox2"><span class="ico_doc1"></span></td>
-                <td>
-                    <p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-                    <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                    <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p>
-                </td>
-            </tr>
+            <!-- <tr>
+                 <td><input type="checkbox" name="checkbox2" id="checkbox2"><span class="ico_doc1"></span></td>
+                 <td>
+                     <p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
+                     <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                     <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p>
+                 </td>
+             </tr>
 
-            <tr>
-                <td><input type="checkbox" name="checkbox2" id="checkbox2"><span class="ico_xls1"></span></td>
-                <td>
-                    <p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-                    <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                    <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" name="checkbox" id="checkbox"><span class="ico_tex1"></span></td>
-                <td><span class="ico_txt1"></span><span class="ico_ppt1"></span><span class="ico_rtf1"></span><span class="ico_vsd1"></span><span class="ico_mp31"></span><span class="ico_swf1"></span><span class="ico_mp41"></span><span class="ico_jpg1"></span><span class="ico_wps1"></span></td>
-            </tr> -->
+             <tr>
+                 <td><input type="checkbox" name="checkbox2" id="checkbox2"><span class="ico_xls1"></span></td>
+                 <td>
+                     <p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
+                     <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                     <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
+             </tr>
+             <tr>
+                 <td><input type="checkbox" name="checkbox" id="checkbox"><span class="ico_tex1"></span></td>
+                 <td><span class="ico_txt1"></span><span class="ico_ppt1"></span><span class="ico_rtf1"></span><span class="ico_vsd1"></span><span class="ico_mp31"></span><span class="ico_swf1"></span><span class="ico_mp41"></span><span class="ico_jpg1"></span><span class="ico_wps1"></span></td>
+             </tr> -->
         </table>
 
         <form action="/role/ajaxlist" id="page2form" name="page2form" method="post" >
             <p align="center" id="page2address"></p>
         </form>
         <p class="t_c"><a href="javascript:void(0);" onclick="sub_res('dv_upload_course',1)" class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="sub_res('dv_upload_course',2)" class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="p_upload_course2.style.display='NONE';p_upload_course1.style.display='block';dv_detail_course.style.display='block';" class="an_small">取&nbsp;消</a></p><!--hideUploadDiv()-->
-        </div>
+    </div>
 
-        <p class="public_input t_l" id="p_upload_course1">
-            <select id="sel_grade" onchange="load_material()">
-                <c:if test="${!empty gradeList}">
-                    <c:forEach items="${gradeList}" var="g">
-                        <option value="${g.gradeid}">${g.gradevalue}</option>
-                    </c:forEach>
-                </c:if>
-            </select>
+    <p class="public_input t_l" id="p_upload_course1">
+        <select id="sel_grade" onchange="load_material()">
+            <c:if test="${!empty gradeList}">
+                <c:forEach items="${gradeList}" var="g">
+                    <option value="${g.gradeid}">${g.gradevalue}</option>
+                </c:forEach>
+            </c:if>
+        </select>
 
-            <select id="sel_material">
+        <select id="sel_material">
 
-            </select>
+        </select>
 
-            <select id="sel_courselevel">
-                <c:if test="${!empty courseLevel}">
-                    <c:forEach items="${courseLevel}" var="g">
-                        <option value="${g.dictionaryvalue}">${g.dictionaryname}</option>
-                    </c:forEach>
-                </c:if>
-            </select>
+        <select id="sel_courselevel">
+            <c:if test="${!empty courseLevel}">
+                <c:forEach items="${courseLevel}" var="g">
+                    <option value="${g.dictionaryvalue}">${g.dictionaryname}</option>
+                </c:forEach>
+            </c:if>
+        </select>
 
-            <input id="txt_course" name="txt_course" type="text" class="w240" />
-            <a onclick="pageGo('pCourseRes')" class="an_search" title="查询"></a>
-        </p>
+        <input id="txt_course" name="txt_course" type="text" class="w240" />
+        <a onclick="pageGo('pCourseRes')" class="an_search" title="查询"></a>
+    </p>
 
-        <div id="dv_detail_course">
+    <div id="dv_detail_course">
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
             <col class="w350"/>
             <col class="w80"/>
@@ -295,79 +297,79 @@
                 <th>评价</th>
             </tr>
             <tbody id="tbl_course">
-               <!-- <tr>
-                    <td><p><a href="1" target="_blank">是否可以提供更多的视频资源？是否可以提供更多的视频资源？是否可以提供更多的</a></p></td>
-                    <td><span class="font-red">300</span></td>
-                    <td>王美联</td>
-                    <td>高一</td>
-                    <td><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star2"></span><span class="ico_star3"></span>&nbsp;3.5</td>
-                </tr> -->
+            <!-- <tr>
+                 <td><p><a href="1" target="_blank">是否可以提供更多的视频资源？是否可以提供更多的视频资源？是否可以提供更多的</a></p></td>
+                 <td><span class="font-red">300</span></td>
+                 <td>王美联</td>
+                 <td>高一</td>
+                 <td><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star2"></span><span class="ico_star3"></span>&nbsp;3.5</td>
+             </tr> -->
             </tbody>
         </table>
 
         <form action="/role/ajaxlist" id="pageCourseResform" name="pageCourseResform" method="post">
             <p align="center" id="pageCourseResaddress"></p>
         </form>
-        </div>
-
     </div>
 
-    <div id="dv_upload_resource" style="display: none;">
-        <div class="jxxt_zhuanti_zy_add_info">
-            <p class="public_input t_l">
-                <input id="searchValue" name="searchValue" type="text" class="w350" />
-                <a href="javascript:void(0);"
-                   onclick="var resname=$('#searchValue').val(); if(resname.Trim().length<1){alert('请输入关键字后点击搜索按钮!');return;}else{pageGo('p1')}" class="an_search" title="查询"></a></p>
-                <div id="PropertyArea" >
+</div>
 
-                    <div class="jxpt_ziyuan_zrss">
-                        <p><strong>已选择：</strong></p>
-                    </div>
+<div id="dv_upload_resource" style="display: none;">
+    <div class="jxxt_zhuanti_zy_add_info">
+        <p class="public_input t_l">
+            <input id="searchValue" name="searchValue" type="text" class="w350" />
+            <a href="javascript:void(0);"
+               onclick="var resname=$('#searchValue').val(); if(resname.Trim().length<1){alert('请输入关键字后点击搜索按钮!');return;}else{pageGo('p1')}" class="an_search" title="查询"></a></p>
+        <div id="PropertyArea" >
 
-                    <div class="jxpt_ziyuan_zrss_option" >
-                    </div>
-                </div>
+            <div class="jxpt_ziyuan_zrss">
+                <p><strong>已选择：</strong></p>
+            </div>
+
+            <div class="jxpt_ziyuan_zrss_option" >
+            </div>
         </div>
-
-        <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black" style="float: left">
-            <col class="w50"/>
-            <col class="w700"/>
-            <tbody id="resData" >
-               <!-- <tr>
-                    <td><input type="checkbox" name="checkbox2" id="checkbox2">
-                        <span class="ico_doc1"></span></td>
-                    <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-                        <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                        <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" name="checkbox2" id="checkbox2">
-                        <span class="ico_pdf1"></span></td>
-                    <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-                        <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                        <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" name="checkbox2" id="checkbox2">
-                        <span class="ico_xls1"></span></td>
-                    <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-                        <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                        <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" name="checkbox" id="checkbox">
-                        <span class="ico_tex1"></span></td>
-                    <td><span class="ico_txt1"></span><span class="ico_ppt1"></span><span class="ico_rtf1"></span><span class="ico_vsd1"></span><span class="ico_mp31"></span><span class="ico_swf1"></span><span class="ico_mp41"></span><span class="ico_jpg1"></span><span class="ico_wps1"></span></td>
-                </tr>-->
-            </tbody>
-        </table>
-
-        <form action="/role/ajaxlist" id="page1form" name="page1form" method="post">
-            <p align="center" id="page1address"></p>
-        </form>
-        <p class="t_c p_tb_10"><a onclick="sub_res('dv_upload_resource',1)"  class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="sub_res('dv_upload_resource',2)"  class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a></p>
-
     </div>
+
+    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black" style="float: left">
+        <col class="w50"/>
+        <col class="w700"/>
+        <tbody id="resData" >
+        <!-- <tr>
+             <td><input type="checkbox" name="checkbox2" id="checkbox2">
+                 <span class="ico_doc1"></span></td>
+             <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
+                 <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                 <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
+         </tr>
+         <tr>
+             <td><input type="checkbox" name="checkbox2" id="checkbox2">
+                 <span class="ico_pdf1"></span></td>
+             <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
+                 <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                 <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
+         </tr>
+         <tr>
+             <td><input type="checkbox" name="checkbox2" id="checkbox2">
+                 <span class="ico_xls1"></span></td>
+             <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
+                 <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                 <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
+         </tr>
+         <tr>
+             <td><input type="checkbox" name="checkbox" id="checkbox">
+                 <span class="ico_tex1"></span></td>
+             <td><span class="ico_txt1"></span><span class="ico_ppt1"></span><span class="ico_rtf1"></span><span class="ico_vsd1"></span><span class="ico_mp31"></span><span class="ico_swf1"></span><span class="ico_mp41"></span><span class="ico_jpg1"></span><span class="ico_wps1"></span></td>
+         </tr>-->
+        </tbody>
+    </table>
+
+    <form action="/role/ajaxlist" id="page1form" name="page1form" method="post">
+        <p align="center" id="page1address"></p>
+    </form>
+    <p class="t_c p_tb_10"><a onclick="sub_res('dv_upload_resource',1)"  class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="sub_res('dv_upload_resource',2)"  class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a></p>
+
+</div>
 </div>
 
 
@@ -385,8 +387,8 @@
 
 <script type="text/javascript">
     <c:if test="${!empty materialInfo}">
-        $("#sel_grade").val("${materialInfo.gradeid}");
-        load_material();
-        $("#sel_material").val("${materialInfo.teachingmaterialid}");
+    $("#sel_grade").val("${materialInfo.gradeid}");
+    load_material();
+    $("#sel_material").val("${materialInfo.teachingmaterialid}");
     </c:if>
 </script>

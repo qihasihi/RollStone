@@ -709,7 +709,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         List<TpCourseResource>countList=this.tpCourseResourceManager.getList(tcheck, null);*/
 
         //SESSION添加专题状态
-        request.getSession().setAttribute("coursestate", teacherCourseList.get(0).getLocalstatus());
+        //request.getSession().setAttribute("coursestate", teacherCourseList.get(0).getLocalstatus());
         //专题教材查询条件
         GradeInfo grade=new GradeInfo();
         //grade.setGradename("高");
@@ -730,9 +730,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             pageResult.setOrderBy(" aa.c_time,aa.operate_time desc");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
-                for(int i=1;i<=resourceList.size();i++){
+                for(int i=0;i<resourceList.size();i++){
                     if(tpresdetailid.equals(resourceList.get(i).getResid().toString())){
-                        pageno=i<10?1:i/10<1?1:i/10+1;
+                        pageno=i<10?1:(i+1)/10<1?1:i/10+1;
                         break;
                     }
                 }
@@ -747,7 +747,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         mp.put("courseList", courseList);
         mp.put("nextid",this.tpCourseResourceManager.getNextId(true));
         mp.put("gradeList",gradeList);
-       // mp.put("materialList",materialList);
+        // mp.put("materialList",materialList);
         mp.put("courseLevel",courseLevelList);
         mp.put("resType",resourceTypeList);
         return new ModelAndView("/teachpaltform/resource/teacher-index",mp);
@@ -1176,9 +1176,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             pageResult.setOrderBy(" aa.c_time,aa.operate_time desc");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
-                for(int i=1;i<=resourceList.size();i++){
+                for(int i=0;i<resourceList.size();i++){
                     if(tpresdetailid.equals(resourceList.get(i).getResid().toString())){
-                        pageno=i<10?1:i/10<1?1:i/10+1;
+                        pageno=i<10?1:(i+1)/10<1?1:i/10+1;
                         break;
                     }
                 }
@@ -1689,7 +1689,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String resourceid=request.getParameter("resourceid");
         String courseid=request.getParameter("courseid");
         if(resourceid==null||resourceid.trim().length()<1
-                //||courseid==null||courseid.trim().length()<1
+            //||courseid==null||courseid.trim().length()<1
                 ){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
@@ -2230,7 +2230,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             if(filetype!=null&&filetype.equals("doc")){
                 //String destPath=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
                 String destPath=UtilTool.getResourceLocation(r.getResid(),2)+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
-               System.out.println("checkConvertStatus destpath:"+destPath);
+                System.out.println("checkConvertStatus destpath:"+destPath);
                 if(!new File(destPath).exists()){
                     je.setMsg("当前资源不可预览，请等待转换完成后预览!");
                     je.setObjList(resourceInfoList);

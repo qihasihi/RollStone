@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 <%
@@ -44,49 +43,49 @@
         <div class="jxxt_zhuanti_zy_layoutR">
             <div id="dv_obj"></div>
             <div id="dv_init">
-            <h1 id="h1_resname"></h1><h1 style="color: #0000ff" id="h1_promt"></h1>
-            <div class="right">
-                <div id="dv_res_detail">
-                    <p><span class="font-black">发 布 者：</span></p>
-                    <p><span class="font-black">发布时间：</span></p>
-                    <p><span class="font-black">资源简介：</span></p>
-                    <p></p>
+                <h1 id="h1_resname"></h1><h1 style="color: #0000ff" id="h1_promt"></h1>
+                <div class="right">
+                    <div id="dv_res_detail">
+                        <p><span class="font-black">发 布 者：</span></p>
+                        <p><span class="font-black">发布时间：</span></p>
+                        <p><span class="font-black">资源简介：</span></p>
+                        <p></p>
+                    </div>
+                    <!--p class="number">
+                        <span id="sp_collect"></span><span style="color:#34a4c6 " id="sp_collect_count"></span>
+                        <span id="sp_download"></span><span style="color:#34a4c6 " id="sp_download_count"></span><span ><a style="color:#34a4c6 ">浏览量:</a></span><span style="color:#34a4c6 " id="sp_viewcount"></span>
+                    </p-->
+                    <ul class="font-blue">
+                        <li><strong id="sp_collect"><a>收藏</a></strong><br/><font id="sp_collect_count"></font></li>
+                        <li><strong id="sp_download"><a href="#">下载</a></strong><br/><font id="sp_download_count"></font></li>
+                        <li><strong>浏览量</strong><br/>
+                            <font id="sp_viewcount"></font></li>
+                    </ul>
                 </div>
-                <!--p class="number">
-                    <span id="sp_collect"></span><span style="color:#34a4c6 " id="sp_collect_count"></span>
-                    <span id="sp_download"></span><span style="color:#34a4c6 " id="sp_download_count"></span><span ><a style="color:#34a4c6 ">浏览量:</a></span><span style="color:#34a4c6 " id="sp_viewcount"></span>
-                </p-->
-                <ul class="font-blue">
-                    <li><strong id="sp_collect"><a>收藏</a></strong><br/><font id="sp_collect_count"></font></li>
-                    <li><strong id="sp_download"><a href="#">下载</a></strong><br/><font id="sp_download_count"></font></li>
-                    <li><strong>浏览量</strong><br/>
-                        <font id="sp_viewcount"></font></li>
-                </ul>
+                <div class="left" id="div_show"></div>
+                <div class="jxxt_zhuanti_zy_pl public_input">
+                    <ul id="ul_comment">
+                        <li id="li_studynote"><a href="javascript:loadStudyNotes(1);">学习心得</a></li>
+                        <li  class="crumb"><a href="javascript:loadAllComment()">所有评论</a></li>
+                    </ul>
+                    <div class="fabiao" id="div_xheditor">
+
+                    </div>
+                    <div   id="dv_study_note">
+                        <!--  <p class="font-black"><span class="font-blue">张明：</span>这本书太好看了太好看太好看了，大家一起来看吧。喜欢难能可贵。这本书太好看了太好看太好看了，大家一起来看吧喜欢难能可贵。这本书太好看了太好看太好看了，大家一起来看吧。</p>
+                          <p>2013-12-04&nbsp;&nbsp;<a href="1" class="ico45" title="回复"></a></p>
+                          <p class="pic"><img src="../images/pic02_140226.jpg" width="38" height="38" /></p> -->
+                    </div>
+
+                    <div id="div_comment_htm">
+
+                    </div>
+
+                    <form id="pListForm" name="pListForm">
+                        <p class="Mt20" name="pListaddress" id="pListaddress" align="center"></p>
+                    </form>
+                </div>
             </div>
-            <div class="left" id="div_show"></div>
-            <div class="jxxt_zhuanti_zy_pl public_input">
-                <ul id="ul_comment">
-                    <li id="li_studynote"><a href="javascript:loadStudyNotes(1);">学习心得</a></li>
-                    <li  class="crumb"><a href="javascript:loadAllComment()">所有评论</a></li>
-                </ul>
-                <div class="fabiao" id="div_xheditor">
-
-                </div>
-                <div   id="dv_study_note">
-                  <!--  <p class="font-black"><span class="font-blue">张明：</span>这本书太好看了太好看太好看了，大家一起来看吧。喜欢难能可贵。这本书太好看了太好看太好看了，大家一起来看吧喜欢难能可贵。这本书太好看了太好看太好看了，大家一起来看吧。</p>
-                    <p>2013-12-04&nbsp;&nbsp;<a href="1" class="ico45" title="回复"></a></p>
-                    <p class="pic"><img src="../images/pic02_140226.jpg" width="38" height="38" /></p> -->
-                </div>
-
-                <div id="div_comment_htm">
-
-                </div>
-
-                <form id="pListForm" name="pListForm">
-                    <p class="Mt20" name="pListaddress" id="pListaddress" align="center"></p>
-                </form>
-            </div>
-           </div>
         </div>
 
         <div class="jxxt_zhuanti_zy_layoutL">

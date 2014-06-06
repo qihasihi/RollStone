@@ -42,7 +42,7 @@ public class PsUserFriendController extends BaseController<PsUserFriend> {
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=manageFriend",method= RequestMethod.POST)
+    @RequestMapping(params="m=manageFriend",method= RequestMethod.GET)
     public ModelAndView toManageFriend(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         PsFriendGroupInfo groupInfo=new PsFriendGroupInfo();
         groupInfo.setCuserid(this.logined(request).getUserid());
@@ -51,6 +51,8 @@ public class PsUserFriendController extends BaseController<PsUserFriend> {
         mp.put("groupList",groupList);
         return new ModelAndView("/personalspace/friend/manage",mp);
     }
+
+
 
     /**
      * 根据分组查找好友
@@ -68,6 +70,7 @@ public class PsUserFriendController extends BaseController<PsUserFriend> {
             response.getWriter().print(jeEntity.toJSON());
             return;
         }
+        userFriend.setUserid(this.logined(request).getUserid());
         List<PsUserFriend>friendList=this.psUserFriendManager.getMyFriendList(userFriend,null);
         jeEntity.setObjList(friendList);
         jeEntity.setType("success");
@@ -101,7 +104,7 @@ public class PsUserFriendController extends BaseController<PsUserFriend> {
             for(PsUserFriend ufriend:friendList){
                 PsUserFriend upd=new PsUserFriend();
                 upd.setRef(ufriend.getRef());
-                upd.setGroupid(new Long(1));
+                upd.setGroupid(new Long(0));
                 sql=new StringBuilder();
                 objList=this.psUserFriendManager.getUpdateSql(upd,sql);
                 if(objList!=null&&sql!=null){

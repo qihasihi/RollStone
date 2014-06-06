@@ -143,11 +143,11 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height){
         jwplayerSetup.image=imagepath;
     jwplayer(playeraddressid).setup(jwplayerSetup);
     if(typeof(resid)!="undefined"){
-         var suffixName=filepath;
-         if(filepath.lastIndexOf(".mp4")!=-1){
+        var suffixName=filepath;
+        if(filepath.lastIndexOf(".mp4")!=-1){
             suffixName=filepath.substring(filepath.lastIndexOf(".mp4",filepath.lastIndexOf("/")),filepath.lastIndexOf(".mp4"));
         }else
-         suffixName=filepath.substring(filepath.lastIndexOf("."));
+            suffixName=filepath.substring(filepath.lastIndexOf("."));
         if(suffixName.indexOf(".")>-1){
             jwplayer().addButton(
                 "images/down.png",
@@ -237,7 +237,7 @@ function loadSwfReview(swfpath,showdiv,width,height){
     attributes.id = "FlexPaperViewer";
     attributes.name = "FlexPaperViewer";
     swfobject.embedSWF(
-        "/sz_school/flexpaper/swf/FlexPaperViewer.swf", showdiv,
+        "flexpaper/swf/FlexPaperViewer.swf", showdiv,
         width, height,
         swfVersionStr, xiSwfUrlStr,
         flashvars, params, attributes);
@@ -381,7 +381,7 @@ function loadSwfReview(swfpath,showdiv,width,height){
     attributes.id = "FlexPaperViewer";
     attributes.name = "FlexPaperViewer";
     swfobject.embedSWF(
-        "/sz_school/flexpaper/swf/FlexPaperViewer.swf", showdiv,
+        "flexpaper/swf/FlexPaperViewer.swf", showdiv,
         width, height,
         swfVersionStr, xiSwfUrlStr,
         flashvars, params, attributes);
@@ -415,7 +415,7 @@ function resourceDownLoadFile(resid,fname,isval){
             }else{
                 var pathurl=rmsg.objList[0];
 
-               // window.open(pathurl);
+                // window.open(pathurl);
                 location.href=pathurl;
             }
         }
