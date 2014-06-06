@@ -17,8 +17,19 @@ public class MyInfoCloudInfo implements  Serializable{
     private String data;
     private Long userid;
     private Date ctime;
+    private String realName;
+
+
     //查询字段
     private String targetName;
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
 
     public String getTargetName() {
         return targetName;
@@ -95,6 +106,19 @@ public class MyInfoCloudInfo implements  Serializable{
                 returnVal=this.data.replace("#ETIANTIAN_SPLIT#",targetName+"");
             }
         }
+        return returnVal;
+    }
+
+    public String getOtherDataMsg(){
+        String returnVal=this.getDataMsg();
+        if(realName!=null&&realName.trim().length()>0){
+//           String typeStr="专题";
+//            if(this.type==1)
+//                typeStr="资源";
+//            returnVal=realName+" 分享了"+typeStr+" "+returnVal;
+            returnVal=realName+" 分享了 "+returnVal;
+        }
+
         return returnVal;
     }
 }

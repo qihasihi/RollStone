@@ -22,49 +22,49 @@ import com.school.manager.inter.resource.IResourceManager;
 import com.school.util.PageResult;
 
 @Service
-public class  ResourceManager extends BaseManager<ResourceInfo> implements IResourceManager  { 
-	
-	private IResourceDAO resourcedao;
-	
-	@Autowired
-	@Qualifier("resourceDAO")
-	public void setResourcedao(IResourceDAO resourcedao) {
-		this.resourcedao = resourcedao;
-	}
-	
-	public Boolean doSave(ResourceInfo resourceinfo) {
-		return resourcedao.doSave(resourceinfo);
-	}
-	
-	public Boolean doDelete(ResourceInfo resourceinfo) {
-		return resourcedao.doDelete(resourceinfo);
-	}
+public class  ResourceManager extends BaseManager<ResourceInfo> implements IResourceManager  {
 
-	public Boolean doUpdate(ResourceInfo resourceinfo) {
-		return resourcedao.doUpdate(resourceinfo);
-	}
-	
-	public List<ResourceInfo> getList(ResourceInfo resourceinfo, PageResult presult) {
-		return resourcedao.getList(resourceinfo,presult);	
-	}
+    private IResourceDAO resourcedao;
 
-	public List<Object> getSaveSql(ResourceInfo resourceinfo, StringBuilder sqlbuilder) {
-		return resourcedao.getSaveSql(resourceinfo,sqlbuilder);
-	}
+    @Autowired
+    @Qualifier("resourceDAO")
+    public void setResourcedao(IResourceDAO resourcedao) {
+        this.resourcedao = resourcedao;
+    }
 
-	public List<Object> getDeleteSql(ResourceInfo resourceinfo, StringBuilder sqlbuilder) {
+    public Boolean doSave(ResourceInfo resourceinfo) {
+        return resourcedao.doSave(resourceinfo);
+    }
 
-		return resourcedao.getDeleteSql(resourceinfo,sqlbuilder);
-	}
+    public Boolean doDelete(ResourceInfo resourceinfo) {
+        return resourcedao.doDelete(resourceinfo);
+    }
 
-	public List<Object> getUpdateSql(ResourceInfo resourceinfo, StringBuilder sqlbuilder) {
-		return resourcedao.getUpdateSql(resourceinfo,sqlbuilder);
-	}
+    public Boolean doUpdate(ResourceInfo resourceinfo) {
+        return resourcedao.doUpdate(resourceinfo);
+    }
 
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
-			List<List<Object>> objArrayList) {
-		return resourcedao.doExcetueArrayProc(sqlArrayList,objArrayList);
-	}
+    public List<ResourceInfo> getList(ResourceInfo resourceinfo, PageResult presult) {
+        return resourcedao.getList(resourceinfo,presult);
+    }
+
+    public List<Object> getSaveSql(ResourceInfo resourceinfo, StringBuilder sqlbuilder) {
+        return resourcedao.getSaveSql(resourceinfo,sqlbuilder);
+    }
+
+    public List<Object> getDeleteSql(ResourceInfo resourceinfo, StringBuilder sqlbuilder) {
+
+        return resourcedao.getDeleteSql(resourceinfo,sqlbuilder);
+    }
+
+    public List<Object> getUpdateSql(ResourceInfo resourceinfo, StringBuilder sqlbuilder) {
+        return resourcedao.getUpdateSql(resourceinfo,sqlbuilder);
+    }
+
+    public Boolean doExcetueArrayProc(List<String> sqlArrayList,
+                                      List<List<Object>> objArrayList) {
+        return resourcedao.doExcetueArrayProc(sqlArrayList,objArrayList);
+    }
     /**
      * 得到同步的SQL
      * @param entity  对象实体
@@ -74,51 +74,51 @@ public class  ResourceManager extends BaseManager<ResourceInfo> implements IReso
     public List<Object> getSynchroSql(ResourceInfo entity,StringBuilder sqlbuilder){
         return this.resourcedao.getSynchroSql(entity,sqlbuilder);
     }
-	
-	public ResourceInfo getOfExcel(Sheet rs, int cols, int d, String type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	protected ICommonDAO<ResourceInfo> getBaseDAO() {
-		// TODO Auto-generated method stub
-		return resourcedao;
-	}
+    public ResourceInfo getOfExcel(Sheet rs, int cols, int d, String type) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String getNextId() {
-		// TODO Auto-generated method stub
-		return UUID.randomUUID().toString();
-	}
-	
-	public Boolean addClicks(String resId) {
-		return resourcedao.addClicks(resId);
-	}
-	public Boolean addDowns(String resId) {
-		return resourcedao.addDowns(resId);
-	}
+    @Override
+    protected ICommonDAO<ResourceInfo> getBaseDAO() {
+        // TODO Auto-generated method stub
+        return resourcedao;
+    }
+
+    @Override
+    public String getNextId() {
+        // TODO Auto-generated method stub
+        return UUID.randomUUID().toString();
+    }
+
+    public Boolean addClicks(String resId) {
+        return resourcedao.addClicks(resId);
+    }
+    public Boolean addDowns(String resId) {
+        return resourcedao.addDowns(resId);
+    }
 
     public List<ResourceInfo> getListOfExcellentResource(ResourceInfo resourceinfo, PageResult presult) {
-		// TODO Auto-generated method stub
-		return resourcedao.getListOfExcellentResource(resourceinfo, presult);
-	}
+        // TODO Auto-generated method stub
+        return resourcedao.getListOfExcellentResource(resourceinfo, presult);
+    }
 
-	public List<UserInfo> getListByUserSort(
-			ResourceInfo resourceinfo, PageResult presult) {
-		// TODO Auto-generated method stub
-		return resourcedao.getListByUserSort(resourceinfo, presult);
-	}
+    public List<UserInfo> getListByUserSort(
+            ResourceInfo resourceinfo, PageResult presult) {
+        // TODO Auto-generated method stub
+        return resourcedao.getListByUserSort(resourceinfo, presult);
+    }
 
-	public List<ResourceInfo> getListByExtendValue(ResourceInfo resourceinfo,PageResult presult) {
-		// TODO Auto-generated method stub
-		return resourcedao.getListByExtendValue(resourceinfo, presult);
-	}
+    public List<ResourceInfo> getListByExtendValue(ResourceInfo resourceinfo,PageResult presult) {
+        // TODO Auto-generated method stub
+        return resourcedao.getListByExtendValue(resourceinfo, presult);
+    }
 
-	public boolean updateResScore(String resid) {
-		// TODO Auto-generated method stub
-		return resourcedao.updateResScore(resid);
-	}
+    public boolean updateResScore(String resid) {
+        // TODO Auto-generated method stub
+        return resourcedao.updateResScore(resid);
+    }
 
     public boolean doUpdateShareNetShareStatus(int up_netsharestatus, int sharestatus, int resdegree, int netsharestatus) {
         return resourcedao.doUpdateShareNetShareStatus(up_netsharestatus,sharestatus,resdegree,netsharestatus);
@@ -132,7 +132,7 @@ public class  ResourceManager extends BaseManager<ResourceInfo> implements IReso
      * @return
      */
     public List<ResourceInfo> getListByUser(String usernamelike,Integer userid,
-                                        PageResult presult){
+                                            PageResult presult){
         return resourcedao.getListByUser(usernamelike,userid,presult);
     }
     public List<ResourceInfo> getListBySchoolName(String schoolnameLike,Integer iseq,PageResult presult){
@@ -243,6 +243,16 @@ public class  ResourceManager extends BaseManager<ResourceInfo> implements IReso
      */
     public List<MyInfoCloudInfo> getMyInfoCloudList(MyInfoCloudInfo rs, PageResult presult){
         return this.resourcedao.getMyInfoCloudList(rs,presult);
+    }
+
+    /**
+     * 查询他人云态云端相关动态
+     * @param rs
+     * @param presult
+     * @return
+     */
+    public List<MyInfoCloudInfo> getMyInfoCloudOtherList(MyInfoCloudInfo rs, PageResult presult){
+        return this.resourcedao.getMyInfoCloudOtherList(rs,presult);
     }
 }
 

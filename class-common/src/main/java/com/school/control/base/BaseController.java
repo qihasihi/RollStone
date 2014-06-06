@@ -32,11 +32,11 @@ import java.util.List;
 
 /**
  * 控制器基类
- * 
+ *
  * @author zhengzhou
  */
 @Controller
-@Scope("prototype") 
+@Scope("prototype")
 public class BaseController<T extends java.io.Serializable> {
 
 
@@ -52,7 +52,7 @@ public class BaseController<T extends java.io.Serializable> {
     public <T> T getManager(Class<T> cls){
         return  SpringBeanUtil.getBean(cls.getSimpleName(), cls);
     }
-	public BaseController(){};
+    public BaseController(){};
 //    /**初始化向导*/
 //    @Autowired
 //    @Qualifier("initWizardManager")
@@ -741,358 +741,358 @@ public class BaseController<T extends java.io.Serializable> {
 //    @Qualifier("userModelScoreLogsManager")
 //    public IUserModelScoreLogsManager userModelScoreLogsManager;
 //
-	
-	/******************************** 公共方法区域 ***********************************/
 
-	 
-	/** 
-	 * 将参数转换成实体成型 
-	 * @param request
-	 * @param clazz
-	 */
-	public T getParameter(HttpServletRequest request,
-			Class<? extends Object> clazz) throws Exception {
-		Object obj = null;
+    /******************************** 公共方法区域 ***********************************/
 
-		if (request == null || clazz == null)
-			return null;
-		Enumeration<String> paraNameStrArr = request.getParameterNames();
-		if (paraNameStrArr != null) {
-			obj = clazz.newInstance();
-			while (paraNameStrArr.hasMoreElements()) {
-				
-				String paraNameStr = paraNameStrArr.nextElement();
-			
-				Object paraVal = request.getParameter(paraNameStr);
-				// 进行封装成Entity
-				if (clazz != null && obj != null&&paraVal!=null) {
-					Method[] methods = clazz.getMethods(); // 获取
-					// 该类的所有方法
-					// 查找所有方法中的set方法 利用反射把取出的字段通过set方法对对象中的字段赋值
-					String colName = paraNameStr;
-					// 获取Set方法名字
-					String methodName = "set"
-							+ colName.substring(0, 1).toUpperCase() // 第1个大写
-							+ colName.substring(1).replace("_", "");
 
-					// _empty适用于jgrid的添加
-					if (paraVal != null && !paraVal.equals("_empty"))
-						for (Method m : methods)
-							if (methodName.equals(m.getName())) {
+    /**
+     * 将参数转换成实体成型
+     * @param request
+     * @param clazz
+     */
+    public T getParameter(HttpServletRequest request,
+                          Class<? extends Object> clazz) throws Exception {
+        Object obj = null;
+
+        if (request == null || clazz == null)
+            return null;
+        Enumeration<String> paraNameStrArr = request.getParameterNames();
+        if (paraNameStrArr != null) {
+            obj = clazz.newInstance();
+            while (paraNameStrArr.hasMoreElements()) {
+
+                String paraNameStr = paraNameStrArr.nextElement();
+
+                Object paraVal = request.getParameter(paraNameStr);
+                // 进行封装成Entity
+                if (clazz != null && obj != null&&paraVal!=null) {
+                    Method[] methods = clazz.getMethods(); // 获取
+                    // 该类的所有方法
+                    // 查找所有方法中的set方法 利用反射把取出的字段通过set方法对对象中的字段赋值
+                    String colName = paraNameStr;
+                    // 获取Set方法名字
+                    String methodName = "set"
+                            + colName.substring(0, 1).toUpperCase() // 第1个大写
+                            + colName.substring(1).replace("_", "");
+
+                    // _empty适用于jgrid的添加
+                    if (paraVal != null && !paraVal.equals("_empty"))
+                        for (Method m : methods)
+                            if (methodName.equals(m.getName())) {
                                 Object val=paraVal;
-                              //  System.out.println(m.getName()+"  "+val);
+                                //  System.out.println(m.getName()+"  "+val);
                                 if(m.getParameterTypes()!=null&&m.getParameterTypes().length>0&&val!=null&&
                                         !m.getParameterTypes()[0].getSimpleName().toLowerCase().equals("string"))
                                     val= ConvertUtils.convert(val.toString(), m.getParameterTypes()[0]);
 
                                 m.invoke(obj, val); // obj:被实例化的类
-								break;
-							}
-				}
-			}
-		}
-		return (T) obj;
-	}
-	
-	/**
-	 * 验证当前用户的角色
-	 * 
-	 * @param rid
-	 */
-	public boolean validateRole(HttpServletRequest request,Integer rid) {
-		boolean returnVal = false;
-		UserInfo cuuser = this.logined(request);
-		if (cuuser != null && cuuser.getCjJRoleUsers().size() > 0) {
-			for (Object ruObj : cuuser.getCjJRoleUsers()) {
-				RoleUser ru = (RoleUser) ruObj;
-				if (ru.getRoleinfo().getRoleid()!= null
-						&& ru.getRoleinfo().getRoleid().intValue() == rid.intValue()) {
-					returnVal = true;
-					break;
-				}
-			}
-		}
-		return returnVal;
-	}
+                                break;
+                            }
+                }
+            }
+        }
+        return (T) obj;
+    }
 
-
-
-	/**
-	 * 获取分页参数的所有信息
-	 */
-	public PageResult getPageResultParameter(HttpServletRequest request) {
-		// 获取排序组件信息
-		PageResult pageresult = new PageResult();
-		String pageNo = request.getParameter("pageResult.pageNo");
-		String pageSize = request.getParameter("pageResult.pageSize");
-		String orderBy = request.getParameter("pageResult.orderBy");
-		String sort = request.getParameter("pageResult.sort");
-		String objList=request.getParameter("pageResult.objList");
-		if (pageNo != null && pageNo.trim().length() > 0) {
-			pageresult.setPageNo(Integer.parseInt(pageNo.trim()));
-		}
-		if (pageSize != null && pageSize.trim().length() > 0) {
-			pageresult.setPageSize(Integer.parseInt(pageSize.trim()));
-		}
-		if (orderBy != null && orderBy.trim().length() > 0) {
-			pageresult.setOrderBy(orderBy.trim());
-		}
-		if (sort != null && sort.trim().length() > 0) {
-			pageresult.setSort(sort);
-		}
-		//将objList转化成List<object>
-		if(objList!=null&&objList.length()>0){
-			Map<String, Class> m=new HashMap<String, Class>();
-			 m.put("rules", JQGridDetial.class);
-			JSONObject filt=JSONObject.fromObject(objList);
-			JQGridConditionEntity pg=(JQGridConditionEntity)JSONObject.toBean(filt, JQGridConditionEntity.class,m);	
-			pageresult.setJqgridcondition(pg);
-		}		
-		return pageresult;
-	}
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		System.out.println(UtilTool.gender_MD5("1123一五六数学课堂（王秋嬛）.mp4"));
-	} 
-	/**
-	 * 文件上传用
-	 */
-	private static final long serialVersionUID = 572146812454l;
-	private static final int BUFFER_SIZE = 16 * 1024;
-	
-	/**
-	 * 用String数组封装多个文件名称 
-	 */
-	private String[]uploadFileName;
-	public MultipartFile myFile;
-	private String fname;
-	private List<String>fileNameList=new ArrayList<String>();
-	
-	public MultipartFile[] getUpload(HttpServletRequest request){
-			MultipartFile[]fileArray=null;
-			MultipartHttpServletRequest multipartrequest = (MultipartHttpServletRequest)request;
-			Map<String,MultipartFile>fileMaps =multipartrequest.getFileMap();
-			if(fileMaps!=null&&fileMaps.size()>0){
-				fileArray=new MultipartFile[fileMaps.size()];
-				uploadFileName=new String[fileMaps.size()];
-				int idx=0;
-				for(Map.Entry<String, MultipartFile>entity:fileMaps.entrySet()){
-					fileArray[idx]=entity.getValue();
-					MultipartFile file = entity.getValue();
-					uploadFileName[idx]=file.getOriginalFilename();
-					idx+=1;
-				}
-			}
-		return fileArray;  
-	}
-	 
-	/**
-	 * 根据上传文件名  组成生成文件名
-	 * @param fnameSize
-	 * @return
-	 */
-	public List<String>getFileArrayName(int fnameSize){
-		fileNameList.clear();
-		for(int i=0;i<fnameSize;i++){
-			fileNameList.add(new Date().getTime()
-					+ ""
-					+ i
-					+ "."
-					+ this.getUploadFileName()[i].substring(this
-							.getUploadFileName()[i].lastIndexOf(".")+1));
-		}
-		return fileNameList;
-	}
-	
-	/**
-	 * 文件上传
-	 * @return
-	 */
-	public boolean fileupLoad(HttpServletRequest request)throws Exception{
-		try {
-			if(this.getFname()==null){
-				this.setFname(this.getFileNameList().get(0));
-			}
-			String filename = this.getFname();
-			File imageFile = new File(request.getRealPath("/")
-					+ "uploadfile/"+ filename);
-			if(myFile==null)
-				myFile=this.getUpload(request)[0];
-			copy(myFile.getInputStream(),imageFile);
-			myFile=null;
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * 多文件上传
-	 */
-	public boolean fileupLoad(HttpServletRequest request,boolean ismulti){
-		boolean flag = true;
-		int i=0;
-		if(this.getUpload(request)!=null&&this.getUpload(request).length>0){
-			try {
-				for(;i<this.getUpload(request).length;i++){
-					File f=new File(request.getRealPath("/")+"uploadfile/"+this.getFileNameList().get(i));
-					copy(this.getUpload(request)[i].getInputStream(),f);
-				}
-			}catch (Exception e) {
-				System.out.println(e.getMessage());
-				flag=false;
-			}
-			if(!flag){
-				for(int j=0;j<i;j++){
-					File f=new File(request.getRealPath("/")+"uploadfile/"+this.getFileNameList().get(i));
-					if(f.exists())
-						f.delete();
-				}
-			}
-		}
-		return flag; 
-	}
-	
-	public List<String> getFileNameList() {
-		return fileNameList;
-	}
-	public void setFileNameList(List<String> fileNameList) {
-		this.fileNameList = fileNameList;
-	}
-
-	public String[] getUploadFileName() {
-		return uploadFileName;
-	}
-	public void setUploadFileName(String[] uploadFileName) {
-		this.uploadFileName = uploadFileName;
-	}
-	public MultipartFile getMyFile() {
-		return myFile;
-	}
-	public void setMyFile(MultipartFile myFile) {
-		this.myFile = myFile;
-	}
-	public String getFname() {
-		return fname;
-	}
-	public void setFname(String fname) {
-		this.fname = fname;
-	}
-	
-	/**
-	 * 文件复制 以文件流的形式
-	 * 
-	 * @param src
-	 * @param dst
-	 * @throws Exception
-	 */
-	public static void copy(InputStream src, File dst) throws Exception {
-
-		InputStream in = null;
-		OutputStream out = null;
-		try {
-			in = new BufferedInputStream(src, BUFFER_SIZE);
-			out = new BufferedOutputStream(new FileOutputStream(dst),
-					BUFFER_SIZE);
-			byte[] buffer = new byte[BUFFER_SIZE];
-			while (in.read(buffer) > 0) {
-				out.write(buffer);
-			}
-		} finally {
-			if (null != in) {
-				in.close();
-			}
-			if (null != out) {
-				out.close();
-			}
-		}
-
-	}
-	
-	/**
-	 * java 文件下载
-	 */
-	public void doloadLocalFile(HttpServletRequest request,HttpServletResponse response,String fname)
-		throws Exception{
-		JsonEntity je = new JsonEntity();
-		String filename=request.getRealPath("/")+"uploadfile/"+fname;
-		File f=new File(filename);
-		if(!f.exists()){
-			je.setMsg("系统中未发现该文件!请联系管理员审查!");
-			je.getAlertMsgAndBack();
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		//读到流中
-		InputStream in = new BufferedInputStream(new FileInputStream(f));
-		
-		//清除头部空白行
-		response.reset();
-		//设置输出格式
-		response.setContentType("bin");
-		response.addHeader("Content-Disposition", "attchment; filename=\"" + filename + "\"");
-		//取出流中数据
-		byte[] b = new byte[100];
-		int len;
-		try {
-			while( (len=in.read(b)) >0){
-				response.getOutputStream().write(b, 0, len);
-			}
-			in.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	
-	
-	/**
-	 * 存入Session 中。
-	 * 
-	 * @param request
-	 *            HttpServletRequest对象
-	 * @param key
-	 *            存入Session的key
-	 * @param val
-	 *            存入Session的value（值）
-	 */
-	protected void setAttributeSession(HttpServletRequest request, String key,
-			Object val) {
-		if (key == null)
-			return;
-		request.getSession().setAttribute(key, val);
-	}
-
-	
-	/**
-	 * 是否登录 操作
-	 * 
-	 * @return
-	 */
-	protected UserInfo logined(HttpServletRequest request) {
-		UserInfo usr = (UserInfo) request.getSession().getAttribute("CURRENT_USER");
-		return usr; 
-	}
-	
-	public static boolean isNum(String str){
-		if(str==null||str.trim().length()==0)
-			return false;
-		return str.matches("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
-	}
+    /**
+     * 验证当前用户的角色
+     *
+     * @param rid
+     */
+    public boolean validateRole(HttpServletRequest request,Integer rid) {
+        boolean returnVal = false;
+        UserInfo cuuser = this.logined(request);
+        if (cuuser != null && cuuser.getCjJRoleUsers().size() > 0) {
+            for (Object ruObj : cuuser.getCjJRoleUsers()) {
+                RoleUser ru = (RoleUser) ruObj;
+                if (ru.getRoleinfo().getRoleid()!= null
+                        && ru.getRoleinfo().getRoleid().intValue() == rid.intValue()) {
+                    returnVal = true;
+                    break;
+                }
+            }
+        }
+        return returnVal;
+    }
 
 
 
     /**
-	 * 验证客户端功能权限
-	 * @param fnid
-	 * @return
-	 * @throws Exception 
-	 */
-	public Boolean validateFn(HttpServletRequest request,Integer fnid) throws Exception{
-		if (request == null)
-			return null;
+     * 获取分页参数的所有信息
+     */
+    public PageResult getPageResultParameter(HttpServletRequest request) {
+        // 获取排序组件信息
+        PageResult pageresult = new PageResult();
+        String pageNo = request.getParameter("pageResult.pageNo");
+        String pageSize = request.getParameter("pageResult.pageSize");
+        String orderBy = request.getParameter("pageResult.orderBy");
+        String sort = request.getParameter("pageResult.sort");
+        String objList=request.getParameter("pageResult.objList");
+        if (pageNo != null && pageNo.trim().length() > 0) {
+            pageresult.setPageNo(Integer.parseInt(pageNo.trim()));
+        }
+        if (pageSize != null && pageSize.trim().length() > 0) {
+            pageresult.setPageSize(Integer.parseInt(pageSize.trim()));
+        }
+        if (orderBy != null && orderBy.trim().length() > 0) {
+            pageresult.setOrderBy(orderBy.trim());
+        }
+        if (sort != null && sort.trim().length() > 0) {
+            pageresult.setSort(sort);
+        }
+        //将objList转化成List<object>
+        if(objList!=null&&objList.length()>0){
+            Map<String, Class> m=new HashMap<String, Class>();
+            m.put("rules", JQGridDetial.class);
+            JSONObject filt=JSONObject.fromObject(objList);
+            JQGridConditionEntity pg=(JQGridConditionEntity)JSONObject.toBean(filt, JQGridConditionEntity.class,m);
+            pageresult.setJqgridcondition(pg);
+        }
+        return pageresult;
+    }
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        System.out.println(UtilTool.gender_MD5("1123一五六数学课堂（王秋嬛）.mp4"));
+    }
+    /**
+     * 文件上传用
+     */
+    private static final long serialVersionUID = 572146812454l;
+    private static final int BUFFER_SIZE = 16 * 1024;
+
+    /**
+     * 用String数组封装多个文件名称
+     */
+    private String[]uploadFileName;
+    public MultipartFile myFile;
+    private String fname;
+    private List<String>fileNameList=new ArrayList<String>();
+
+    public MultipartFile[] getUpload(HttpServletRequest request){
+        MultipartFile[]fileArray=null;
+        MultipartHttpServletRequest multipartrequest = (MultipartHttpServletRequest)request;
+        Map<String,MultipartFile>fileMaps =multipartrequest.getFileMap();
+        if(fileMaps!=null&&fileMaps.size()>0){
+            fileArray=new MultipartFile[fileMaps.size()];
+            uploadFileName=new String[fileMaps.size()];
+            int idx=0;
+            for(Map.Entry<String, MultipartFile>entity:fileMaps.entrySet()){
+                fileArray[idx]=entity.getValue();
+                MultipartFile file = entity.getValue();
+                uploadFileName[idx]=file.getOriginalFilename();
+                idx+=1;
+            }
+        }
+        return fileArray;
+    }
+
+    /**
+     * 根据上传文件名  组成生成文件名
+     * @param fnameSize
+     * @return
+     */
+    public List<String>getFileArrayName(int fnameSize){
+        fileNameList.clear();
+        for(int i=0;i<fnameSize;i++){
+            fileNameList.add(new Date().getTime()
+                    + ""
+                    + i
+                    + "."
+                    + this.getUploadFileName()[i].substring(this
+                    .getUploadFileName()[i].lastIndexOf(".")+1));
+        }
+        return fileNameList;
+    }
+
+    /**
+     * 文件上传
+     * @return
+     */
+    public boolean fileupLoad(HttpServletRequest request)throws Exception{
+        try {
+            if(this.getFname()==null){
+                this.setFname(this.getFileNameList().get(0));
+            }
+            String filename = this.getFname();
+            File imageFile = new File(request.getRealPath("/")
+                    + "uploadfile/"+ filename);
+            if(myFile==null)
+                myFile=this.getUpload(request)[0];
+            copy(myFile.getInputStream(),imageFile);
+            myFile=null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 多文件上传
+     */
+    public boolean fileupLoad(HttpServletRequest request,boolean ismulti){
+        boolean flag = true;
+        int i=0;
+        if(this.getUpload(request)!=null&&this.getUpload(request).length>0){
+            try {
+                for(;i<this.getUpload(request).length;i++){
+                    File f=new File(request.getRealPath("/")+"uploadfile/"+this.getFileNameList().get(i));
+                    copy(this.getUpload(request)[i].getInputStream(),f);
+                }
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
+                flag=false;
+            }
+            if(!flag){
+                for(int j=0;j<i;j++){
+                    File f=new File(request.getRealPath("/")+"uploadfile/"+this.getFileNameList().get(i));
+                    if(f.exists())
+                        f.delete();
+                }
+            }
+        }
+        return flag;
+    }
+
+    public List<String> getFileNameList() {
+        return fileNameList;
+    }
+    public void setFileNameList(List<String> fileNameList) {
+        this.fileNameList = fileNameList;
+    }
+
+    public String[] getUploadFileName() {
+        return uploadFileName;
+    }
+    public void setUploadFileName(String[] uploadFileName) {
+        this.uploadFileName = uploadFileName;
+    }
+    public MultipartFile getMyFile() {
+        return myFile;
+    }
+    public void setMyFile(MultipartFile myFile) {
+        this.myFile = myFile;
+    }
+    public String getFname() {
+        return fname;
+    }
+    public void setFname(String fname) {
+        this.fname = fname;
+    }
+
+    /**
+     * 文件复制 以文件流的形式
+     *
+     * @param src
+     * @param dst
+     * @throws Exception
+     */
+    public static void copy(InputStream src, File dst) throws Exception {
+
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = new BufferedInputStream(src, BUFFER_SIZE);
+            out = new BufferedOutputStream(new FileOutputStream(dst),
+                    BUFFER_SIZE);
+            byte[] buffer = new byte[BUFFER_SIZE];
+            while (in.read(buffer) > 0) {
+                out.write(buffer);
+            }
+        } finally {
+            if (null != in) {
+                in.close();
+            }
+            if (null != out) {
+                out.close();
+            }
+        }
+
+    }
+
+    /**
+     * java 文件下载
+     */
+    public void doloadLocalFile(HttpServletRequest request,HttpServletResponse response,String fname)
+            throws Exception{
+        JsonEntity je = new JsonEntity();
+        String filename=request.getRealPath("/")+"uploadfile/"+fname;
+        File f=new File(filename);
+        if(!f.exists()){
+            je.setMsg("系统中未发现该文件!请联系管理员审查!");
+            je.getAlertMsgAndBack();
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        //读到流中
+        InputStream in = new BufferedInputStream(new FileInputStream(f));
+
+        //清除头部空白行
+        response.reset();
+        //设置输出格式
+        response.setContentType("bin");
+        response.addHeader("Content-Disposition", "attchment; filename=\"" + filename + "\"");
+        //取出流中数据
+        byte[] b = new byte[100];
+        int len;
+        try {
+            while( (len=in.read(b)) >0){
+                response.getOutputStream().write(b, 0, len);
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /**
+     * 存入Session 中。
+     *
+     * @param request
+     *            HttpServletRequest对象
+     * @param key
+     *            存入Session的key
+     * @param val
+     *            存入Session的value（值）
+     */
+    protected void setAttributeSession(HttpServletRequest request, String key,
+                                       Object val) {
+        if (key == null)
+            return;
+        request.getSession().setAttribute(key, val);
+    }
+
+
+    /**
+     * 是否登录 操作
+     *
+     * @return
+     */
+    protected UserInfo logined(HttpServletRequest request) {
+        UserInfo usr = (UserInfo) request.getSession().getAttribute("CURRENT_USER");
+        return usr;
+    }
+
+    public static boolean isNum(String str){
+        if(str==null||str.trim().length()==0)
+            return false;
+        return str.matches("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
+    }
+
+
+
+    /**
+     * 验证客户端功能权限
+     * @param fnid
+     * @return
+     * @throws Exception
+     */
+    public Boolean validateFn(HttpServletRequest request,Integer fnid) throws Exception{
+        if (request == null)
+            return null;
 	/*	String fpath = request.getRealPath("/")+"school.txt";
 		BufferedReader br = null;
 		StringBuilder content = null;
@@ -1156,63 +1156,63 @@ public class BaseController<T extends java.io.Serializable> {
 				}
 			}
 		}*/
-		return true;
-	}
-	
-	/**
-	 * 验证加密狗，功能权限
-	 * @param ：schoolid*fnid，fnid，fnid。。。。。。
-	 * @return boolean true or false
-	 * @author 岳春阳
-	 * @throws Exception 
-	 * @date  2013-06-18 14:02
-	 */
-	public String validateRy4S() throws Exception{
-		
-		//验证有没有权限
-		short[] handle=new short[1];
-		short[] handleAll=new short[1024];
-		int[] lp1=new int[1];
-		int[] lp2=new int[2];
-		short[] p1=new short[1];
-		short[] p2=new short[1];
-		short[] p3=new short[1];
-		short[] p4=new short[1];
-		byte[]  buffer=new byte[1024];
-		short	retval;
-	
-		Ry4S rockey=new Ry4S();
+        return true;
+    }
 
-		p1[0] = -(0xffff-0xc44c)-1;
-		p2[0] = -(0xffff-0xc8f8)-1;
-		p3[0] = 	0x0799;
-		p4[0] = -(0xffff-0xc43b)-1;
+    /**
+     * 验证加密狗，功能权限
+     * @param ：schoolid*fnid，fnid，fnid。。。。。。
+     * @return boolean true or false
+     * @author 岳春阳
+     * @throws Exception
+     * @date  2013-06-18 14:02
+     */
+    public String validateRy4S() throws Exception{
 
-		retval=rockey.Rockey(rockey.RY_FIND,handle,lp1,lp2,p1,p2,p3,p4,buffer);//查询狗
-		if(retval!=rockey.ERR_SUCCESS)
-		{
-			return "1";
-		}
-		System.out.println("Find Rockey4Smart:"+lp1[0]);
-		retval=rockey.Rockey(rockey.RY_OPEN,handle,lp1,lp2,p1,p2,p3,p4,buffer);//打开狗
-		if(retval!=rockey.ERR_SUCCESS)
-		{
-			return "2";
-		}
-		int i=1;
-		
+        //验证有没有权限
+        short[] handle=new short[1];
+        short[] handleAll=new short[1024];
+        int[] lp1=new int[1];
+        int[] lp2=new int[2];
+        short[] p1=new short[1];
+        short[] p2=new short[1];
+        short[] p3=new short[1];
+        short[] p4=new short[1];
+        byte[]  buffer=new byte[1024];
+        short	retval;
 
-		
-		p1[0]=3;
-		p2[0]=499;
-		for(int m=0;m<1024;m++)buffer[m]=0;
-		retval = rockey.Rockey(rockey.RY_READ,handle,lp1,lp2,p1,p2,p3,p4,buffer);//读锁
-		if(retval!=rockey.ERR_SUCCESS)
-		{
-			return "3";
-		}
-		return new String(buffer);
-	}
+        Ry4S rockey=new Ry4S();
+
+        p1[0] = -(0xffff-0xc44c)-1;
+        p2[0] = -(0xffff-0xc8f8)-1;
+        p3[0] = 	0x0799;
+        p4[0] = -(0xffff-0xc43b)-1;
+
+        retval=rockey.Rockey(rockey.RY_FIND,handle,lp1,lp2,p1,p2,p3,p4,buffer);//查询狗
+        if(retval!=rockey.ERR_SUCCESS)
+        {
+            return "1";
+        }
+        System.out.println("Find Rockey4Smart:"+lp1[0]);
+        retval=rockey.Rockey(rockey.RY_OPEN,handle,lp1,lp2,p1,p2,p3,p4,buffer);//打开狗
+        if(retval!=rockey.ERR_SUCCESS)
+        {
+            return "2";
+        }
+        int i=1;
+
+
+
+        p1[0]=3;
+        p2[0]=499;
+        for(int m=0;m<1024;m++)buffer[m]=0;
+        retval = rockey.Rockey(rockey.RY_READ,handle,lp1,lp2,p1,p2,p3,p4,buffer);//读锁
+        if(retval!=rockey.ERR_SUCCESS)
+        {
+            return "3";
+        }
+        return new String(buffer);
+    }
 
 
     /*****************************资源工具**********************************/

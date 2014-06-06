@@ -18,95 +18,95 @@ import java.util.Map;
 @Component
 public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO {
 
-	public Boolean doSave(ResourceInfo resourceinfo) {
-		if (resourceinfo == null)
-			return false;
-		StringBuilder sqlbuilder = new StringBuilder();
-		List<Object> objList = this.getSaveSql(resourceinfo, sqlbuilder);
-		Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
-				objList.toArray());
-		if (afficeObj != null && afficeObj.toString().trim().length() > 0
-				&& Integer.parseInt(afficeObj.toString()) > 0) {
-			return true;
-		}
-		return false;
-	}
+    public Boolean doSave(ResourceInfo resourceinfo) {
+        if (resourceinfo == null)
+            return false;
+        StringBuilder sqlbuilder = new StringBuilder();
+        List<Object> objList = this.getSaveSql(resourceinfo, sqlbuilder);
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0
+                && Integer.parseInt(afficeObj.toString()) > 0) {
+            return true;
+        }
+        return false;
+    }
 
-	public Boolean doDelete(ResourceInfo resourceinfo) {
-		if (resourceinfo == null)
-			return false;
-		StringBuilder sqlbuilder = new StringBuilder();
-		List<Object> objList = getDeleteSql(resourceinfo, sqlbuilder);
-		Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
-				objList.toArray());
-		if (afficeObj != null && afficeObj.toString().trim().length() > 0
-				&& Integer.parseInt(afficeObj.toString()) > 0) {
-			return true;
-		}
-		return false;
-	}
+    public Boolean doDelete(ResourceInfo resourceinfo) {
+        if (resourceinfo == null)
+            return false;
+        StringBuilder sqlbuilder = new StringBuilder();
+        List<Object> objList = getDeleteSql(resourceinfo, sqlbuilder);
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0
+                && Integer.parseInt(afficeObj.toString()) > 0) {
+            return true;
+        }
+        return false;
+    }
 
-	public Boolean doUpdate(ResourceInfo resourceinfo) {
-		if (resourceinfo == null)
-			return false;
-		StringBuilder sqlbuilder = new StringBuilder();
-		List<Object> objList = this.getUpdateSql(resourceinfo, sqlbuilder);
-		Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
-				objList.toArray());
-		if (afficeObj != null && afficeObj.toString().trim().length() > 0
-				&& Integer.parseInt(afficeObj.toString()) > 0) {
-			return true;
-		}
-		return false;
-	}
+    public Boolean doUpdate(ResourceInfo resourceinfo) {
+        if (resourceinfo == null)
+            return false;
+        StringBuilder sqlbuilder = new StringBuilder();
+        List<Object> objList = this.getUpdateSql(resourceinfo, sqlbuilder);
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0
+                && Integer.parseInt(afficeObj.toString()) > 0) {
+            return true;
+        }
+        return false;
+    }
 
-	public Boolean addClicks(String resId) {
-		if (resId == null || resId.length() == 0)
-			return false;
-		StringBuilder sqlbuilder = new StringBuilder();
-		sqlbuilder.append("{CALL rs_resource_info_proc_addclicks(?,?)}");
-		List<Object> objList = new ArrayList<Object>();
-		objList.add(resId);
-		Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
-				objList.toArray());
-		if (afficeObj != null && afficeObj.toString().trim().length() > 0
-				&& Integer.parseInt(afficeObj.toString()) > 0) {
-			return true;
-		}
-		return false;
-	}
+    public Boolean addClicks(String resId) {
+        if (resId == null || resId.length() == 0)
+            return false;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL rs_resource_info_proc_addclicks(?,?)}");
+        List<Object> objList = new ArrayList<Object>();
+        objList.add(resId);
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0
+                && Integer.parseInt(afficeObj.toString()) > 0) {
+            return true;
+        }
+        return false;
+    }
 
-	public Boolean addDowns(String resId) {
-		if (resId == null || resId.length() == 0)
-			return false;
-		StringBuilder sqlbuilder = new StringBuilder();
-		sqlbuilder.append("{CALL rs_resource_info_proc_adddowns(?,?)}");
-		List<Object> objList = new ArrayList<Object>();
-		objList.add(resId);
-		Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
-				objList.toArray());
-		if (afficeObj != null && afficeObj.toString().trim().length() > 0
-				&& Integer.parseInt(afficeObj.toString()) > 0) {
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean updateResScore(String resid) {
-		if(resid==null)
-			return false;
-		StringBuilder sqlbuilder = new StringBuilder();
-		sqlbuilder.append("{CALL rs_resource_update_score_proc(?,?)}");
-		List<Object> objList = new ArrayList<Object>();
-		objList.add(resid);
-		Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
-				objList.toArray());
-		if (afficeObj != null && afficeObj.toString().trim().length() > 0
-				&& Integer.parseInt(afficeObj.toString()) > 0) {
-			return true;
-		}
-		return false;
-	}
+    public Boolean addDowns(String resId) {
+        if (resId == null || resId.length() == 0)
+            return false;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL rs_resource_info_proc_adddowns(?,?)}");
+        List<Object> objList = new ArrayList<Object>();
+        objList.add(resId);
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0
+                && Integer.parseInt(afficeObj.toString()) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateResScore(String resid) {
+        if(resid==null)
+            return false;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL rs_resource_update_score_proc(?,?)}");
+        List<Object> objList = new ArrayList<Object>();
+        objList.add(resid);
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0
+                && Integer.parseInt(afficeObj.toString()) > 0) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * 同步数据修改netsharestatus 云端状态
@@ -172,13 +172,13 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
      * @param presult
      * @return
      */
-	public List<ResourceInfo> getList(ResourceInfo resourceinfo,
-			PageResult presult) {
-		StringBuilder sqlbuilder = new StringBuilder();
-		sqlbuilder.append("{CALL rs_resource_info_proc_split(");
-		if (resourceinfo == null)
-			resourceinfo = new ResourceInfo();
-		List<Object> objList = new ArrayList<Object>();
+    public List<ResourceInfo> getList(ResourceInfo resourceinfo,
+                                      PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL rs_resource_info_proc_split(");
+        if (resourceinfo == null)
+            resourceinfo = new ResourceInfo();
+        List<Object> objList = new ArrayList<Object>();
 
         if (resourceinfo.getResid() != null) {
             sqlbuilder.append("?,");
@@ -363,32 +363,32 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
             sqlbuilder.append("null,");
 
         if (presult != null && presult.getPageNo() > 0
-				&& presult.getPageSize() > 0) {
-			sqlbuilder.append("?,?,");
-			objList.add(presult.getPageNo());
-			objList.add(presult.getPageSize());
-		} else {
-			sqlbuilder.append("NULL,NULL,");
-		}
-		if (presult != null && presult.getOrderBy() != null
-				&& presult.getOrderBy().trim().length() > 0) {
-			sqlbuilder.append("?,");
-			objList.add(presult.getOrderBy());
-		} else {
-			sqlbuilder.append("NULL,");
-		}
-		sqlbuilder.append("?)}");
-		List<Integer> types = new ArrayList<Integer>();
-		types.add(Types.INTEGER);
-		Object[] objArray = new Object[1];
-		List<ResourceInfo> resourceinfoList = this.executeResult_PROC(
-				sqlbuilder.toString(), objList, types, ResourceInfo.class,
-				objArray);
-		if (presult != null && objArray[0] != null
-				&& objArray[0].toString().trim().length() > 0)
-			presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
-		return resourceinfoList;
-	}
+                && presult.getPageSize() > 0) {
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        } else {
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if (presult != null && presult.getOrderBy() != null
+                && presult.getOrderBy().trim().length() > 0) {
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        } else {
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types = new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray = new Object[1];
+        List<ResourceInfo> resourceinfoList = this.executeResult_PROC(
+                sqlbuilder.toString(), objList, types, ResourceInfo.class,
+                objArray);
+        if (presult != null && objArray[0] != null
+                && objArray[0].toString().trim().length() > 0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return resourceinfoList;
+    }
 
     public List<Object> getSaveSql(ResourceInfo resourceinfo, StringBuilder sqlbuilder) {
         if(resourceinfo==null || sqlbuilder==null)
@@ -494,91 +494,91 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
         return objList;
     }
 
-	public List<Object> getDeleteSql(ResourceInfo resourceinfo,
-			StringBuilder sqlbuilder) {
-		if (resourceinfo == null || sqlbuilder == null)
-			return null;
-		sqlbuilder.append("{CALL rs_resource_info_proc_delete(");
-		List<Object> objList = new ArrayList<Object>();
-		if (resourceinfo.getReskeyword() != null) {
-			sqlbuilder.append("?,");
-			objList.add(resourceinfo.getReskeyword());
-		} else
-			sqlbuilder.append("null,");
+    public List<Object> getDeleteSql(ResourceInfo resourceinfo,
+                                     StringBuilder sqlbuilder) {
+        if (resourceinfo == null || sqlbuilder == null)
+            return null;
+        sqlbuilder.append("{CALL rs_resource_info_proc_delete(");
+        List<Object> objList = new ArrayList<Object>();
+        if (resourceinfo.getReskeyword() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getReskeyword());
+        } else
+            sqlbuilder.append("null,");
 
-		if (resourceinfo.getUserid() != null) {
-			sqlbuilder.append("?,");
-			objList.add(resourceinfo.getUserid());
-		} else
-			sqlbuilder.append("null,");
-		if (resourceinfo.getResname() != null) {
-			sqlbuilder.append("?,");
-			objList.add(resourceinfo.getResname());
-		} else
-			sqlbuilder.append("null,");
-		if (resourceinfo.getResintroduce() != null) {
-			sqlbuilder.append("?,");
-			objList.add(resourceinfo.getResintroduce());
-		} else
-			sqlbuilder.append("null,");
-		if (resourceinfo.getResstatus() != null) {
-			sqlbuilder.append("?,");
-
-
-			objList.add(resourceinfo.getResstatus());
-		} else
-			sqlbuilder.append("null,");
-		if (resourceinfo.getResid() != null) {
-			sqlbuilder.append("?,");
-			objList.add(resourceinfo.getResid());
-		} else
-			sqlbuilder.append("null,");
-		sqlbuilder.append("?)}");
-		return objList;
-	}
-
-	public List<Object> getUpdateSql(ResourceInfo resourceinfo,
-			StringBuilder sqlbuilder) {
-		if (resourceinfo == null || sqlbuilder == null)
-			return null;
-		sqlbuilder.append("{CALL rs_resource_info_proc_update(");
-		List<Object> objList = new ArrayList<Object>();
-		if (resourceinfo.getResid() != null) {
-			sqlbuilder.append("?,");
-			objList.add(resourceinfo.getResid());
-		} else
-			sqlbuilder.append("null,");
-
-		if (resourceinfo.getResname() != null) {
-			sqlbuilder.append("?,");
-			objList.add(resourceinfo.getResname());
-		} else
-			sqlbuilder.append("null,");
+        if (resourceinfo.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getUserid());
+        } else
+            sqlbuilder.append("null,");
+        if (resourceinfo.getResname() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getResname());
+        } else
+            sqlbuilder.append("null,");
+        if (resourceinfo.getResintroduce() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getResintroduce());
+        } else
+            sqlbuilder.append("null,");
+        if (resourceinfo.getResstatus() != null) {
+            sqlbuilder.append("?,");
 
 
-		if (resourceinfo.getReskeyword() != null) {
-			sqlbuilder.append("?,");
-			objList.add(resourceinfo.getReskeyword());
-		} else
-			sqlbuilder.append("null,");
+            objList.add(resourceinfo.getResstatus());
+        } else
+            sqlbuilder.append("null,");
+        if (resourceinfo.getResid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getResid());
+        } else
+            sqlbuilder.append("null,");
+        sqlbuilder.append("?)}");
+        return objList;
+    }
 
-		if (resourceinfo.getResintroduce() != null) {
+    public List<Object> getUpdateSql(ResourceInfo resourceinfo,
+                                     StringBuilder sqlbuilder) {
+        if (resourceinfo == null || sqlbuilder == null)
+            return null;
+        sqlbuilder.append("{CALL rs_resource_info_proc_update(");
+        List<Object> objList = new ArrayList<Object>();
+        if (resourceinfo.getResid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getResid());
+        } else
+            sqlbuilder.append("null,");
+
+        if (resourceinfo.getResname() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getResname());
+        } else
+            sqlbuilder.append("null,");
+
+
+        if (resourceinfo.getReskeyword() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getReskeyword());
+        } else
+            sqlbuilder.append("null,");
+
+        if (resourceinfo.getResintroduce() != null) {
             sqlbuilder.append("?,");
             objList.add(resourceinfo.getResintroduce());
         }else
             sqlbuilder.append("null,");
 
-		if (resourceinfo.getUserid() != null) {
+        if (resourceinfo.getUserid() != null) {
             sqlbuilder.append("?,");
             objList.add(resourceinfo.getUserid());
         }else
-        sqlbuilder.append("NULL,");
+            sqlbuilder.append("NULL,");
 
-		if (resourceinfo.getUsertype() != null) {
-			sqlbuilder.append("?,");
-			objList.add(resourceinfo.getUsertype());
-		} else
-			sqlbuilder.append("null,");
+        if (resourceinfo.getUsertype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getUsertype());
+        } else
+            sqlbuilder.append("null,");
 
         if (resourceinfo.getUsername() != null) {
             sqlbuilder.append("?,");
@@ -693,9 +693,9 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
         } else
             sqlbuilder.append("null,");
 
-		sqlbuilder.append("?)}");
-		return objList;
-	}
+        sqlbuilder.append("?)}");
+        return objList;
+    }
 
     public List<ResourceInfo> getListByExtendValue(ResourceInfo resourceinfo, PageResult presult) {
 
@@ -1112,10 +1112,10 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
         return resourceinfoList;
     }
 
-	public List<ResourceInfo> getListOfExcellentResource(ResourceInfo resourceinfo,
-			PageResult presult) {
-		StringBuilder sqlbuilder = new StringBuilder();
-		sqlbuilder.append("{CALL rs_resource_proc_excellent_resource(");
+    public List<ResourceInfo> getListOfExcellentResource(ResourceInfo resourceinfo,
+                                                         PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL rs_resource_proc_excellent_resource(");
         if (resourceinfo == null)
             resourceinfo = new ResourceInfo();
         List<Object> objList = new ArrayList<Object>();
@@ -1305,38 +1305,38 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
             objList.add(resourceinfo.getCtimeString());
         } else
             sqlbuilder.append("null,");
-		if (presult != null && presult.getPageNo() > 0
-				&& presult.getPageSize() > 0) {
-			sqlbuilder.append("?,?,");
-			objList.add(presult.getPageNo());
-			objList.add(presult.getPageSize());
-		} else {
-			sqlbuilder.append("NULL,NULL,");
-		}
-		if (presult != null && presult.getOrderBy() != null
-				&& presult.getOrderBy().trim().length() > 0) {
-			sqlbuilder.append("?,");
-			objList.add(presult.getOrderBy());
-		} else {
-			sqlbuilder.append("NULL,");
-		}
-		sqlbuilder.append("?)}");
-		List<Integer> types = new ArrayList<Integer>();
-		types.add(Types.INTEGER);
-		Object[] objArray = new Object[1];
-		List<ResourceInfo> resourceinfoList = this.executeResult_PROC(
-				sqlbuilder.toString(), objList, types, ResourceInfo.class,objArray);
-		if (presult != null && objArray[0] != null
-				&& objArray[0].toString().trim().length() > 0)
-			presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
-		return resourceinfoList;
-	}
-	
-	public List<UserInfo> getListByUserSort(ResourceInfo resourceinfo,
-			PageResult presult) {
-		StringBuilder sqlbuilder = new StringBuilder();
-		sqlbuilder.append("{CALL rs_resource_info_proc_by_user_sort(");
-		List<Object> objList = new ArrayList<Object>();
+        if (presult != null && presult.getPageNo() > 0
+                && presult.getPageSize() > 0) {
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        } else {
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if (presult != null && presult.getOrderBy() != null
+                && presult.getOrderBy().trim().length() > 0) {
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        } else {
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types = new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray = new Object[1];
+        List<ResourceInfo> resourceinfoList = this.executeResult_PROC(
+                sqlbuilder.toString(), objList, types, ResourceInfo.class,objArray);
+        if (presult != null && objArray[0] != null
+                && objArray[0].toString().trim().length() > 0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return resourceinfoList;
+    }
+
+    public List<UserInfo> getListByUserSort(ResourceInfo resourceinfo,
+                                            PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL rs_resource_info_proc_by_user_sort(");
+        List<Object> objList = new ArrayList<Object>();
         if (resourceinfo!=null && resourceinfo.getUsername()!=null) {
             sqlbuilder.append("?,");
             objList.add(resourceinfo.getUsername());
@@ -1349,32 +1349,32 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
         } else {
             sqlbuilder.append("NULL,");
         }
-		if (presult != null && presult.getPageNo() > 0
-				&& presult.getPageSize() > 0) {
-			sqlbuilder.append("?,?,");
-			objList.add(presult.getPageNo());
-			objList.add(presult.getPageSize());
-		} else {
-			sqlbuilder.append("NULL,NULL,");
-		}
-		if (presult != null && presult.getOrderBy() != null
-				&& presult.getOrderBy().trim().length() > 0) {
-			sqlbuilder.append("?,");
-			objList.add(presult.getOrderBy());
-		} else {
-			sqlbuilder.append("NULL,");
-		}
-		sqlbuilder.append("?)}");
-		List<Integer> types = new ArrayList<Integer>();
-		types.add(Types.INTEGER);
-		Object[] objArray = new Object[1];
-		List<UserInfo> userList = this.executeResult_PROC(sqlbuilder.toString(), objList, types, UserInfo.class,
-				objArray);
-		if (presult != null && objArray[0] != null
-				&& objArray[0].toString().trim().length() > 0)
-			presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
-		return userList;
-	}
+        if (presult != null && presult.getPageNo() > 0
+                && presult.getPageSize() > 0) {
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        } else {
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if (presult != null && presult.getOrderBy() != null
+                && presult.getOrderBy().trim().length() > 0) {
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        } else {
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types = new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray = new Object[1];
+        List<UserInfo> userList = this.executeResult_PROC(sqlbuilder.toString(), objList, types, UserInfo.class,
+                objArray);
+        if (presult != null && objArray[0] != null
+                && objArray[0].toString().trim().length() > 0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return userList;
+    }
 
     /**
      * 查询用户
@@ -2049,6 +2049,57 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
             objList.add(rs.getUserid());
         }else
             sqlbuilder.append("NULL,");
+        if(presult==null){
+            sqlbuilder.append("NULL,NULL,NULL,");
+        }else{
+            if(presult.getPageNo()>0&&presult.getPageSize()>0){
+                sqlbuilder.append("?,?,");
+                objList.add(presult.getPageNo());
+                objList.add(presult.getPageSize());
+            }else
+                sqlbuilder.append("NULL,NULL,");
+            if(presult.getOrderBy()!=null){
+                sqlbuilder.append("?,");
+                objList.add(presult.getOrderBy());
+            }else
+                sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types = new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray = new Object[1];
+        List<MyInfoCloudInfo> userList = this.executeResult_PROC(sqlbuilder.toString(), objList, types, MyInfoCloudInfo.class,
+                objArray);
+        if (presult != null && objArray[0] != null
+                && objArray[0].toString().trim().length() > 0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return userList;
+    }
+    /**
+     * 查询他人云态云端相关动态
+     * @param rs
+     * @param presult
+     * @return
+     */
+    public List<MyInfoCloudInfo> getMyInfoCloudOtherList(MyInfoCloudInfo rs, PageResult presult){
+        List<Object> objList=new ArrayList<Object>();
+        StringBuilder sqlbuilder=new StringBuilder("{CALL myinfo_cloud_info_proc_othermsg_split(");
+        if(rs.getUserid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(rs.getUserid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(rs.getTargetid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(rs.getTargetid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(rs.getType()!=null){
+            sqlbuilder.append("?,");
+            objList.add(rs.getType());
+        }else
+            sqlbuilder.append("NULL,");
+
         if(presult==null){
             sqlbuilder.append("NULL,NULL,NULL,");
         }else{

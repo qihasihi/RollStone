@@ -30,18 +30,18 @@ import org.w3c.dom.NodeList;
  */
 public class BaseInterceptor implements HandlerInterceptor {
     private static boolean iswrite=false;
-	public void afterCompletion(HttpServletRequest arg0,
-			HttpServletResponse arg1, Object arg2, Exception arg3)
-			throws Exception {
-		// TODO Auto-generated method stub
+    public void afterCompletion(HttpServletRequest arg0,
+                                HttpServletResponse arg1, Object arg2, Exception arg3)
+            throws Exception {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1,
-			Object arg2, ModelAndView arg3) throws Exception {
-		// TODO Auto-generated method stub
+    public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1,
+                           Object arg2, ModelAndView arg3) throws Exception {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
     /**
      * 加载资源文件的各种类型
@@ -67,16 +67,16 @@ public class BaseInterceptor implements HandlerInterceptor {
         UtilTool.isSynchroFileType=true;
     }
 
-	/**
-	 * 访问时拦截
-	 */
-	public boolean preHandle(HttpServletRequest request,
-			HttpServletResponse response, Object arg2) throws Exception {
+    /**
+     * 访问时拦截
+     */
+    public boolean preHandle(HttpServletRequest request,
+                             HttpServletResponse response, Object arg2) throws Exception {
 
-		// 字符设定
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;charset=UTF-8");
+        // 字符设定
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         // 设置TITLE
         if (request.getSession().getAttribute("_TITLE") == null)
             request.getSession().setAttribute("_TITLE",UtilTool.utilproperty.getProperty("CURRENT_PAGE_TITLE"));
@@ -86,7 +86,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 //			String dbTitle = UtilTool._PAGE_TITLE;
 //			request.getSession().setAttribute("CURRENT_TITLE", dbTitle);
 //		}
-		writeUtilProperties(request);	//写配置文件
+        writeUtilProperties(request);	//写配置文件
         //加载资源文件的各种配置
         if(!UtilTool.isSynchroFileType)
             writeUtilToolDocType();
@@ -98,45 +98,45 @@ public class BaseInterceptor implements HandlerInterceptor {
             request.getSession().setAttribute("CURRENT_SCHOOL_NAME", currentSchool);
         }
 
-		//将分校名称写入Session中
+        //将分校名称写入Session中
         String currentpath = request.getRequestURL().toString();
-		if (request.getQueryString() != null
-				&& request.getQueryString().trim().length() > 0)
-			currentpath += "?" + request.getQueryString().split("&")[0];
-		//System.out.println(currentpath);
+        if (request.getQueryString() != null
+                && request.getQueryString().trim().length() > 0)
+            currentpath += "?" + request.getQueryString().split("&")[0];
+        //System.out.println(currentpath);
 
-		boolean returnType = false;
-		String realpath = this.getLocationUrlMethod(request);
-		// 未登录时用户访问以下链接不需要拦截
-		//System.out.println(realpath);
-		// 不需要拦截的链接
-		String passpath = UtilTool.utilproperty.getProperty("INTERCEPTOR_PASS_PATH");	
-		boolean isfilterPath = false;
-		if (passpath != null) {
-			Object[] passPathArray = passpath.trim().split(",");
-			if (passPathArray != null && passPathArray.length > 0) {
-				for (Object pathObj : passPathArray) {
-					if (pathObj != null
-							&& pathObj.toString().trim().length() > 0) {
-						String pathObjStr = pathObj.toString().toLowerCase();
-						// System.out.println(pathObjStr + "     " + passpath);
-						// String
-						// suffix=pathObjStr.indexOf(".")!=-1?pathObjStr.substring(pathObjStr.indexOf(".")+1):pathObjStr;
-						if (realpath.toLowerCase().indexOf(pathObjStr) != -1) {
-							isfilterPath = true;
-							break;
-						}
-					}
-				}
-			}
-		}
-		if (isfilterPath)
-			return true;
+        boolean returnType = false;
+        String realpath = this.getLocationUrlMethod(request);
+        // 未登录时用户访问以下链接不需要拦截
+        //System.out.println(realpath);
+        // 不需要拦截的链接
+        String passpath = UtilTool.utilproperty.getProperty("INTERCEPTOR_PASS_PATH");
+        boolean isfilterPath = false;
+        if (passpath != null) {
+            Object[] passPathArray = passpath.trim().split(",");
+            if (passPathArray != null && passPathArray.length > 0) {
+                for (Object pathObj : passPathArray) {
+                    if (pathObj != null
+                            && pathObj.toString().trim().length() > 0) {
+                        String pathObjStr = pathObj.toString().toLowerCase();
+                        // System.out.println(pathObjStr + "     " + passpath);
+                        // String
+                        // suffix=pathObjStr.indexOf(".")!=-1?pathObjStr.substring(pathObjStr.indexOf(".")+1):pathObjStr;
+                        if (realpath.toLowerCase().indexOf(pathObjStr) != -1) {
+                            isfilterPath = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (isfilterPath)
+            return true;
 
-		// 当用户访问内部资源时检查是否登陆，否则跳至登陆页面 开发时如果不想要可以把下面的全部注掉
-		UserInfo user = (UserInfo)request.getSession().getAttribute("CURRENT_USER");
-		if (user == null) {
-			// 当拦截到未登录用户时，查询cookie是否保存用户信息如果保存将自动登录
+        // 当用户访问内部资源时检查是否登陆，否则跳至登陆页面 开发时如果不想要可以把下面的全部注掉
+        UserInfo user = (UserInfo)request.getSession().getAttribute("CURRENT_USER");
+        if (user == null) {
+            // 当拦截到未登录用户时，查询cookie是否保存用户信息如果保存将自动登录
 			/*
 			 * String username = ""; int i = 0; Cookie[] cookie =
 			 * request.getCookies(); if (cookie != null) { for (; i <
@@ -159,144 +159,144 @@ public class BaseInterceptor implements HandlerInterceptor {
             }else{
                 response.sendRedirect("user?m=simpleResLogin");
             }
-			return false;
+            return false;
 			/*
 			 * } return true;
 			 */
-		} else {
-			//System.out.println(6);
-			UserInfo u = (UserInfo) request.getSession().getAttribute(
-					"CURRENT_USER");
-			JsonEntity je = new JsonEntity();
-			if (request.getSession().getAttribute("currentUserRoleList") == null)
-				request.getSession().setAttribute("currentUserRoleList",
-						u.getCjJRoleUsers());
-			// 得到当前链接下的column_id
-			//ApplicationContext context=WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
-			
-		
-			String data = getCurrentLocationColumnId(realpath);
-			// 如果没有查到，则说明没有限制。
-			if (data == null || data.trim().length() < 1
-					|| data.trim().equals("ERROR"))
-				returnType = true;
-			else
-				// 权限验证判断.
-				//returnType =  validatePageRight(data.trim(), user.getRef(),realpath);
+        } else {
+            //System.out.println(6);
+            UserInfo u = (UserInfo) request.getSession().getAttribute(
+                    "CURRENT_USER");
+            JsonEntity je = new JsonEntity();
+            if (request.getSession().getAttribute("currentUserRoleList") == null)
+                request.getSession().setAttribute("currentUserRoleList",
+                        u.getCjJRoleUsers());
+            // 得到当前链接下的column_id
+            //ApplicationContext context=WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
+
+
+            String data = getCurrentLocationColumnId(realpath);
+            // 如果没有查到，则说明没有限制。
+            if (data == null || data.trim().length() < 1
+                    || data.trim().equals("ERROR"))
+                returnType = true;
+            else
+                // 权限验证判断.
+                //returnType =  validatePageRight(data.trim(), user.getRef(),realpath);
                 returnType=true;
 
-			if (!returnType) {
-				je.setMsg(UtilTool.msgproperty.getProperty("NO_PAGE_RIGHT"));
-				response.getWriter().println(je.getAlertMsg());
-				response
-						.getWriter()
-					 	.print(
-								"<script type='text/javascript'>history.go(-1);</script>");
-			}
+            if (!returnType) {
+                je.setMsg(UtilTool.msgproperty.getProperty("NO_PAGE_RIGHT"));
+                response.getWriter().println(je.getAlertMsg());
+                response
+                        .getWriter()
+                        .print(
+                                "<script type='text/javascript'>history.go(-1);</script>");
+            }
 
-			return returnType;
-			//return true;
+            return returnType;
+            //return true;
 
-			// 加载导航文件，得到导航
-		}
-	}
+            // 加载导航文件，得到导航
+        }
+    }
 
-	/**
-	 * 得到当前的链接方法指向
-	 * 
-	 * @param request
-	 * @return
-	 */
-	private String getLocationUrlMethod(HttpServletRequest request) {
-		String queryPath = request.getQueryString();
+    /**
+     * 得到当前的链接方法指向
+     *
+     * @param request
+     * @return
+     */
+    private String getLocationUrlMethod(HttpServletRequest request) {
+        String queryPath = request.getQueryString();
 //		String realpath = request.getRequestURI().substring(
 //				request.getRequestURI().lastIndexOf("/") + 1);
-		String realpath=request.getRequestURI().substring(
-				request.getRequestURI().indexOf(request.getContextPath())+request.getContextPath().length()
-				);
-		if(realpath.substring(0,1).equals("/"))
-			realpath=realpath.substring(1);
-		if(realpath.lastIndexOf("/")!=-1&&realpath.substring(realpath.lastIndexOf("/")).equals("/"))
-			realpath=realpath.substring(0,realpath.lastIndexOf("/"));
-		if (queryPath != null) {
-			boolean isflag = false;
-			String queryParamMethod = UtilTool.utilproperty
-					.getProperty("QUERY_PARAM_METHOD");
-			Object[] queryParamMethodArray = queryParamMethod.trim().split(",");
-			if (queryParamMethod != null
-					&& queryParamMethod.trim().length() > 0) {
-				for (Object tmp : queryParamMethodArray) {
-					if (tmp != null && tmp.toString().trim().length() > 0) {
-						String obj = request.getParameter(tmp.toString());
-						if (obj != null && obj.trim().length() > 0) {
-							realpath = realpath + "?" + tmp + "=" + obj;
-							isflag = true;
-							break;
-						}
-					}
-				}
-			}
-			if (isflag == false && queryPath != null && queryPath.length() > 0) {
-				if (queryPath.indexOf("&") != -1) {
-					queryPath = queryPath.substring(0, queryPath.indexOf("&"));
-					realpath += "?" + queryPath;
-				}
-			}
-		}
-		return realpath;
-	}
+        String realpath=request.getRequestURI().substring(
+                request.getRequestURI().indexOf(request.getContextPath())+request.getContextPath().length()
+        );
+        if(realpath.substring(0,1).equals("/"))
+            realpath=realpath.substring(1);
+        if(realpath.lastIndexOf("/")!=-1&&realpath.substring(realpath.lastIndexOf("/")).equals("/"))
+            realpath=realpath.substring(0,realpath.lastIndexOf("/"));
+        if (queryPath != null) {
+            boolean isflag = false;
+            String queryParamMethod = UtilTool.utilproperty
+                    .getProperty("QUERY_PARAM_METHOD");
+            Object[] queryParamMethodArray = queryParamMethod.trim().split(",");
+            if (queryParamMethod != null
+                    && queryParamMethod.trim().length() > 0) {
+                for (Object tmp : queryParamMethodArray) {
+                    if (tmp != null && tmp.toString().trim().length() > 0) {
+                        String obj = request.getParameter(tmp.toString());
+                        if (obj != null && obj.trim().length() > 0) {
+                            realpath = realpath + "?" + tmp + "=" + obj;
+                            isflag = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (isflag == false && queryPath != null && queryPath.length() > 0) {
+                if (queryPath.indexOf("&") != -1) {
+                    queryPath = queryPath.substring(0, queryPath.indexOf("&"));
+                    realpath += "?" + queryPath;
+                }
+            }
+        }
+        return realpath;
+    }
 
-	/**
-	 * 验证权限
-	 * 
-	 * @param columnid
-	 * @param userref
-	 * @return
-	 */
-	private boolean validatePageRight(String columnid, String userref,
-			String realpath) {
-		IPageRightManager pageRightManager = (PageRightManager) SpringBeanUtil
-				.getBean("pageRightManager");
-		List<PageRightInfo> prList = pageRightManager.getUserColumnList(
-				columnid, userref);	
-		boolean returnType = true;
-		if (prList != null && prList.size() > 0) {
-			for (PageRightInfo prtmp : prList) {
-				if (prtmp != null) {
-					if (realpath.indexOf(prtmp.getPagevalue().trim()) != -1) {
-						returnType = false;
-						break;
-					}
-				}
-			}
-		}
-		return returnType;
-	}
+    /**
+     * 验证权限
+     *
+     * @param columnid
+     * @param userref
+     * @return
+     */
+    private boolean validatePageRight(String columnid, String userref,
+                                      String realpath) {
+        IPageRightManager pageRightManager = (PageRightManager) SpringBeanUtil
+                .getBean("pageRightManager");
+        List<PageRightInfo> prList = pageRightManager.getUserColumnList(
+                columnid, userref);
+        boolean returnType = true;
+        if (prList != null && prList.size() > 0) {
+            for (PageRightInfo prtmp : prList) {
+                if (prtmp != null) {
+                    if (realpath.indexOf(prtmp.getPagevalue().trim()) != -1) {
+                        returnType = false;
+                        break;
+                    }
+                }
+            }
+        }
+        return returnType;
+    }
 
-	/**
-	 * 得到当前链接下所属的栏目
-	 * 
-	 * @param path
-	 * @return
-	 */
-	private String getCurrentLocationColumnId(String path) {
-		IPageRightManager crprManager = (PageRightManager) SpringBeanUtil.getBean("pageRightManager");
-		PageRightInfo crprEntity = new PageRightInfo();
-		crprEntity.setPagevalue(path);
-		List<PageRightInfo> crprList = crprManager.getList(
-				crprEntity, null);
-		if (crprList != null && crprList.size() > 0)
-			return crprList.get(0).getColumnid();
-		return null;
-	}
+    /**
+     * 得到当前链接下所属的栏目
+     *
+     * @param path
+     * @return
+     */
+    private String getCurrentLocationColumnId(String path) {
+        IPageRightManager crprManager = (PageRightManager) SpringBeanUtil.getBean("pageRightManager");
+        PageRightInfo crprEntity = new PageRightInfo();
+        crprEntity.setPagevalue(path);
+        List<PageRightInfo> crprList = crprManager.getList(
+                crprEntity, null);
+        if (crprList != null && crprList.size() > 0)
+            return crprList.get(0).getColumnid();
+        return null;
+    }
 
-	/**
-	 * 写配置文件Util
-	 * 
-	 * @param request
-	 */
-	public static void writeUtilProperties(HttpServletRequest request) {
-		//检测CURRENT_SCHOOL_ID
+    /**
+     * 写配置文件Util
+     *
+     * @param request
+     */
+    public static void writeUtilProperties(HttpServletRequest request) {
+        //检测CURRENT_SCHOOL_ID
         String tmp="";
         //单例写
         if(iswrite)return;
@@ -305,61 +305,61 @@ public class BaseInterceptor implements HandlerInterceptor {
             iswrite=true;
             String schoolId = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
             String schoolname=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME");
-         //   if(schoolId==null||schoolId.trim().length()<1||schoolname==null||schoolname.trim().length()<1){
-                //得到文件中的KEY
-                String fpath = request.getRealPath("/") + "school.txt";
-                BufferedReader br = null;
-                StringBuilder content = null;
-                try {
-                    br = new BufferedReader(new FileReader(fpath.trim()));
-                    String lineContent = null;
-                    while ((lineContent = br.readLine()) != null) {
-                        if (content == null)
-                            content = new StringBuilder(lineContent);
-                        else
-                            content.append("\n" + lineContent);
-                    }
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    return;
-                } finally {
-                    if (br != null)
-                        try{
-                        br.close();
-                        }catch(Exception e){e.printStackTrace();}
+            //   if(schoolId==null||schoolId.trim().length()<1||schoolname==null||schoolname.trim().length()<1){
+            //得到文件中的KEY
+            String fpath = request.getRealPath("/") + "school.txt";
+            BufferedReader br = null;
+            StringBuilder content = null;
+            try {
+                br = new BufferedReader(new FileReader(fpath.trim()));
+                String lineContent = null;
+                while ((lineContent = br.readLine()) != null) {
+                    if (content == null)
+                        content = new StringBuilder(lineContent);
+                    else
+                        content.append("\n" + lineContent);
                 }
-                //解析key  并写入schoolid,schoolname
-                try {
-                    DESPlus des = new DESPlus();
-                    String schoolkeyfn = des.decrypt(content.toString());
-                    //得到分校已经买的栏目
-                    String[] schoolArray = schoolkeyfn.split("\\*");
-                    if(schoolId==null||schoolId.length()<1){
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return;
+            } finally {
+                if (br != null)
+                    try{
+                        br.close();
+                    }catch(Exception e){e.printStackTrace();}
+            }
+            //解析key  并写入schoolid,schoolname
+            try {
+                DESPlus des = new DESPlus();
+                String schoolkeyfn = des.decrypt(content.toString());
+                //得到分校已经买的栏目
+                String[] schoolArray = schoolkeyfn.split("\\*");
+                if(schoolId==null||schoolId.length()<1){
                     String schoolid=schoolArray[0];
 
 //                        WriteProperties.writeProperties(request.getRealPath("/")
 //                                + "/WEB-INF/classes/properties/util.properties",
 //                                "CURRENT_SCHOOL_ID", schoolid);
-                        writeMap.put("CURRENT_SCHOOL_ID",schoolid);
-                        UtilTool.utilproperty.setProperty("CURRENT_SCHOOL_ID",
-                                schoolid);
-                    }
-                    //得到Schoolid后，得到名称,并赋值
-                    if(schoolArray.length>3){
-                        //对中文进行解码
-                        String schoolnameChina=java.net.URLDecoder.decode(schoolArray[3],"UTF-8");
-                        if(schoolname==null|| schoolname.trim().length()<1||!schoolnameChina.equals(schoolname)){
-//                            WriteProperties.writeProperties(request.getRealPath("/")+ "/WEB-INF/classes/properties/util.properties","CURRENT_SCHOOL_NAME",schoolnameChina);
-                            UtilTool.utilproperty.setProperty("CURRENT_SCHOOL_NAME",
-                                    schoolnameChina);
-                            writeMap.put("CURRENT_SCHOOL_NAME",schoolnameChina);
-                        }
-                    }
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    writeMap.put("CURRENT_SCHOOL_ID",schoolid);
+                    UtilTool.utilproperty.setProperty("CURRENT_SCHOOL_ID",
+                            schoolid);
                 }
+                //得到Schoolid后，得到名称,并赋值
+                if(schoolArray.length>3){
+                    //对中文进行解码
+                    String schoolnameChina=java.net.URLDecoder.decode(schoolArray[3],"UTF-8");
+                    if(schoolname==null|| schoolname.trim().length()<1||!schoolnameChina.equals(schoolname)){
+//                            WriteProperties.writeProperties(request.getRealPath("/")+ "/WEB-INF/classes/properties/util.properties","CURRENT_SCHOOL_NAME",schoolnameChina);
+                        UtilTool.utilproperty.setProperty("CURRENT_SCHOOL_NAME",
+                                schoolnameChina);
+                        writeMap.put("CURRENT_SCHOOL_NAME",schoolnameChina);
+                    }
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
             String ipAddress=UtilTool.utilproperty.getProperty("IP_ADDRESS");
             String localpath="http://"+ request.getServerName() + ":"+request.getServerPort();
@@ -373,17 +373,16 @@ public class BaseInterceptor implements HandlerInterceptor {
 //                                + request.getServerName() + ":"
 //                                + request.getServerPort() + "/fileoperate/");
 
-                writeMap.put("RESOURCE_FILE_UPLOAD_HEAD", localpath+ "/fileoperate/");
+            writeMap.put("RESOURCE_FILE_UPLOAD_HEAD", localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/");
 
 
-                UtilTool.utilproperty.setProperty("RESOURCE_FILE_UPLOAD_HEAD",
-                       localpath + "/fileoperate/");
+            UtilTool.utilproperty.setProperty("RESOURCE_FILE_UPLOAD_HEAD",
+                    localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/");
 
 
-            String pt="http://" + request.getServerName() + ":"
-                        + request.getServerPort() + "/fileoperate/questionimg/package/";
-                writeMap.put("RESOURCE_QUESTION_IMG_PARENT_PATH",pt);
-                UtilTool.utilproperty.setProperty("RESOURCE_QUESTION_IMG_PARENT_PATH",pt);
+            String pt=localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/"+"/questionimg/package/";
+            writeMap.put("RESOURCE_QUESTION_IMG_PARENT_PATH",pt);
+            UtilTool.utilproperty.setProperty("RESOURCE_QUESTION_IMG_PARENT_PATH",pt);
 
 
 //                WriteProperties.writeProperties(request.getRealPath("/")
@@ -393,21 +392,22 @@ public class BaseInterceptor implements HandlerInterceptor {
 //                                + request.getServerPort()
 //                                + "/fileoperate/uploadfile/");
 
-                writeMap.put("RESOURCE_FILE_PATH_HEAD", localpath+ "/fileoperate/uploadfile/");
+            writeMap.put("RESOURCE_FILE_PATH_HEAD", localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/uploadfile/");
 
-                UtilTool.utilproperty.setProperty("RESOURCE_FILE_PATH_HEAD",
-                        localpath + "/fileoperate/uploadfile/");
+            UtilTool.utilproperty.setProperty("RESOURCE_FILE_PATH_HEAD",
+                    localpath + "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/uploadfile/");
 
 
 
             UtilTool.utilproperty.setProperty("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD",
-                    localpath+ "/fileoperate/clouduploadfile/");
+                    localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/clouduploadfile/");
 
-            writeMap.put("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD",localpath +"/fileoperate/clouduploadfile/");
+            writeMap.put("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD",localpath +"/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/clouduploadfile/");
 
 
 
             String bijiaoServerPath=loadServerUploadFile(request,"/fileoperate/uploadfile");
+            //  System.out.println("localrealpath:"+bijiaoServerPath);
             if(bijiaoServerPath==null||bijiaoServerPath.toString().trim().length()<1||!new File(bijiaoServerPath).exists()){
                 bijiaoServerPath = request.getRealPath("/").replaceAll("\\\\",
                         "/").substring(
@@ -427,6 +427,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 
 
             bijiaoServerPath=loadServerUploadFile(request,"/fileoperate/clouduploadfile");
+            // System.out.println("cloudrealpath:"+bijiaoServerPath);
             if(bijiaoServerPath==null||bijiaoServerPath.toString().trim().length()<1||!new File(bijiaoServerPath).exists()){
                 bijiaoServerPath = request.getRealPath("/").replaceAll("\\\\",
                         "/").substring(
@@ -445,9 +446,9 @@ public class BaseInterceptor implements HandlerInterceptor {
                     bijiaoServerPath);
             //写入XML中
             WriteProperties.writeProperties(request.getRealPath("/") + "/WEB-INF/classes/properties/util.properties",writeMap);
-         // System.out.println(UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH").toString()+"           "+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD").toString());
+            // System.out.println(UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH").toString()+"           "+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD").toString());
         }
-	}
+    }
 
     /**
      * 得到Context中的docBase值

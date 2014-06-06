@@ -30,13 +30,15 @@
             changeTab("back");
             changeTab("front");
             var objLi=$("li[id='li_sub_${!empty subjectid?subjectid:subjectEVList[0].subjectid}']");
-            eval($("li[id='li_sub_${!empty subjectid?subjectid:subjectEVList[0].subjectid}']").children("a").attr("href").replace("javascript:",""));
             while(true){
                 if(objLi.css("display")=='none')
                     changeTab("back");
                 else
                     break;
             }
+        //   eval($("li[id='li_sub_${!empty subjectid?subjectid:subjectEVList[0].subjectid}']").children("a").attr("onclick").replace("javascript:",""));
+            getResourceListBySub('${!empty subjectid?subjectid:subjectEVList[0].subjectid}');
+
             //开始防ajax刷新
             allowRefresh();
         });

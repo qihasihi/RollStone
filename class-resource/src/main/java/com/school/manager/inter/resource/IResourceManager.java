@@ -12,17 +12,17 @@ import com.school.util.PageResult;
 
 public interface IResourceManager extends IBaseManager<ResourceInfo> {
 
-	public List<ResourceInfo> getListByExtendValue(ResourceInfo resourceinfo, PageResult presult);
+    public List<ResourceInfo> getListByExtendValue(ResourceInfo resourceinfo, PageResult presult);
 
     public List<ResourceInfo> getListOfExcellentResource(ResourceInfo resourceinfo, PageResult presult);
 
-	public Boolean addClicks(String resId);
-	
-	public Boolean addDowns(String resId);
+    public Boolean addClicks(String resId);
 
-	public List<UserInfo> getListByUserSort(ResourceInfo resourceinfo,PageResult presult);
-	
-	public boolean updateResScore(String resid);
+    public Boolean addDowns(String resId);
+
+    public List<UserInfo> getListByUserSort(ResourceInfo resourceinfo,PageResult presult);
+
+    public boolean updateResScore(String resid);
 
     /**
      * 同步数据修改netsharestatus 云端状态
@@ -32,7 +32,7 @@ public interface IResourceManager extends IBaseManager<ResourceInfo> {
      * @param netsharestatus 条件：网校分享类型(-1：未同步  0:待审核 1:未通过 2:已删除 3:共享 4:标准)
      * @return
      */
-   public boolean doUpdateShareNetShareStatus(int up_netsharestatus, int sharestatus, int resdegree, int netsharestatus);
+    public boolean doUpdateShareNetShareStatus(int up_netsharestatus, int sharestatus, int resdegree, int netsharestatus);
 
     /**
      * 得到同步的SQL
@@ -49,7 +49,7 @@ public interface IResourceManager extends IBaseManager<ResourceInfo> {
      * @return
      */
     public List<ResourceInfo> getListByUser(String usernamelike,Integer userid,
-                                        PageResult presult);
+                                            PageResult presult);
     public List<ResourceInfo> getListBySchoolName(String schoolnameLike,Integer iseq,PageResult presult);
 
     /**
@@ -104,7 +104,7 @@ public interface IResourceManager extends IBaseManager<ResourceInfo> {
      * @param presult
      * @return
      */
-   public List<ResourceInfo> getResourceIdxViewRankPage(ResourceInfo rs, PageResult presult);
+    public List<ResourceInfo> getResourceIdxViewRankPage(ResourceInfo rs, PageResult presult);
 
     /**
      * 得到排行榜的添加SQL语句
@@ -143,4 +143,12 @@ public interface IResourceManager extends IBaseManager<ResourceInfo> {
      * @return
      */
     public List<MyInfoCloudInfo> getMyInfoCloudList(MyInfoCloudInfo rs, PageResult presult);
+
+    /**
+     * 查询他人云态云端相关动态
+     * @param rs
+     * @param presult
+     * @return
+     */
+    public List<MyInfoCloudInfo> getMyInfoCloudOtherList(MyInfoCloudInfo rs, PageResult presult);
 }

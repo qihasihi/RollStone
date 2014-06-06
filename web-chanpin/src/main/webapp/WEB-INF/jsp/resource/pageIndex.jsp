@@ -63,6 +63,22 @@ $(function(){
         operate_id:"ul_dt_data"
     });
 
+    p_omyinfo=new PageControl({
+        post_url:'resource?m=ajx_RsMyInfoCloudOther',
+        page_id:'p_myinfo',
+        page_control_name:"p_myinfo",		//分页变量空间的对象名称
+        post_form:document.fm_dt_form,		//form
+        gender_address_id:'dv_dt_pageress',		//显示的区域
+        //  http_free_operate_handler:beforDtMethod,		//执行查询前操作的内容
+        http_operate_handler:myInfoAjaxList,	//执行成功后返回方法
+        return_type:'json',								//放回的值类型
+        page_no:1,					//当前的页数
+        page_size:8,				//当前页面显示的数量
+        rectotal:0,				//一共多少
+        pagetotal:1,
+        operate_id:"ul_dt_data"
+    });
+
 
     // getViewClickTop('week');
 	//getSubjectResource(subject);
@@ -96,11 +112,15 @@ $(function(){
 
 function myInfoAjaxList(rps){
     var h='';
-    if(rps.type=="success"&&rps.objList.length>0){
-        $.each(rps.objList,function(idx,itm){
-           h+='<li><b>'+itm.ctimeString+'</b><span class="ico63"></span>'+itm.dataMsg+'</li>';
-        });
-
+    if(rps.type=="success"){
+        if(rps.objList.length>0){
+            $.each(rps.objList,function(idx,itm){
+                var sMsg=itm.dataMsg;
+                if(typeof(itm.realName)!="undefined"&&itm.realName.Trim().length>0)
+                    sMsg=itm.otherDataMsg;
+               h+='<li><b>'+itm.ctimeString+'</b><span class="ico63"></span>&nbsp;'+sMsg+'</li>';
+            });
+        }
         p_myinfo.setPageSize(rps.presult.pageSize);
         p_myinfo.setPageNo(rps.presult.pageNo);
         p_myinfo.setRectotal(rps.presult.recTotal);
@@ -280,8 +300,8 @@ function myInfoAjaxList(rps){
     <div class="zyxt_homeL">
           <div class="zyxt_home_dongtaiT">
             <ul id="ul_dt">
-                <li class="crumb" id="li_my"><a href="javascript:;" onclick="$('#ul_dt li').removeClass('crumb');$('#li_my').addClass('crumb');">我的动态</a></li>
-                <li id="li_other"><a href="javascript:;" onclick="$('#ul_dt li').removeClass('crumb');$('#li_other').addClass('crumb');" >他人动态</a></li>
+                <li class="crumb" id="li_my"><a href="javascript:;" onclick="$('#ul_dt li').removeClass('crumb');$('#li_my').addClass('crumb');pageGo('p_myinfo')">我的动态</a></li>
+                <li id="li_other"><a href="javascript:;" onclick="$('#ul_dt li').removeClass('crumb');$('#li_other').addClass('crumb');pageGo('p_omyinfo')" >他人动态</a></li>
             </ul>
         </div>
      <div class="zyxt_home_dongtaiB">

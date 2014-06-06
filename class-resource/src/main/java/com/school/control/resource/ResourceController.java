@@ -54,7 +54,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/resource")
 public class ResourceController extends BaseController<ResourceInfo> {
-    public ResourceController(){/////
+    public ResourceController(){
         this.resourceFileManager=this.getManager(ResourceFileManager.class);
         this.extendManager=this.getManager(ExtendManager.class);
         this.extendResourceManager=this.getManager(ExtendResourceManager.class);
@@ -113,22 +113,22 @@ public class ResourceController extends BaseController<ResourceInfo> {
     private ISchoolScoreRankManager schoolScoreRankManager;
 
 
-	@RequestMapping(params = "m=list", method = RequestMethod.GET)
-	public ModelAndView toList(HttpServletRequest request, ModelMap mp)
-			throws Exception {
-		boolean adminFlag = false;
-		if(this.logined(request)!=null && this.logined(request).getCjJRoleUsers()!=null)
-			for(RoleUser ru : (List<RoleUser>)this.logined(request).getCjJRoleUsers()){
-				if(ru.getRoleid()==4)
-					adminFlag=true;
-			}
-		mp.put("adminFlag", adminFlag);
-		String resname = request.getParameter("srhValue");
-		if (resname != null) {
-			resname = URLDecoder.decode(request.getParameter("srhValue"),
-					"utf-8");
+    @RequestMapping(params = "m=list", method = RequestMethod.GET)
+    public ModelAndView toList(HttpServletRequest request, ModelMap mp)
+            throws Exception {
+        boolean adminFlag = false;
+        if(this.logined(request)!=null && this.logined(request).getCjJRoleUsers()!=null)
+            for(RoleUser ru : (List<RoleUser>)this.logined(request).getCjJRoleUsers()){
+                if(ru.getRoleid()==4)
+                    adminFlag=true;
+            }
+        mp.put("adminFlag", adminFlag);
+        String resname = request.getParameter("srhValue");
+        if (resname != null) {
+            resname = URLDecoder.decode(request.getParameter("srhValue"),
+                    "utf-8");
             mp.put("srhValue", resname);
-		} else
+        } else
             mp.put("srhValue", "");
 
         mp.put("audiosuffix",UtilTool._MP3_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
@@ -156,8 +156,8 @@ public class ResourceController extends BaseController<ResourceInfo> {
             mp.put("subjectid",(sb1List==null||sb1List.size()<1)?0:sb1List.get(0).getSubjectid());
         }
 
-		return new ModelAndView("/resource/base/list",mp);
-	}
+        return new ModelAndView("/resource/base/list",mp);
+    }
 
     @RequestMapping(params = "m=resList", method = RequestMethod.GET)
     public ModelAndView toResourseList(HttpServletRequest request, ModelMap mp)
@@ -184,7 +184,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         //得到当前老师的所有学科，如果没有则得到当前一个
         //得到该教师的主授学科
         SubjectUser sbu=new SubjectUser();
-       // sbu.setIsmajor(1);
+        // sbu.setIsmajor(1);
         sbu.setUserid(this.logined(request).getRef());
         List<SubjectUser> sbList=this.subjectUserManager.getList(sbu,null);
         if(sbList!=null&&sbList.size()>0){
@@ -235,7 +235,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
             List<SubjectInfo> sbList=this.subjectManager.getList(null,null);
             mp.put("subList",sbList);
         }else
-              mp.put("subList",sbuList);
+            mp.put("subList",sbuList);
         return new ModelAndView("/resource/base/courseList");
     }
 
@@ -279,15 +279,15 @@ public class ResourceController extends BaseController<ResourceInfo> {
         return new ModelAndView("/resource/base/courseResList",mp);
     }
 
-	@RequestMapping(params = "m=toindex", method = RequestMethod.GET)
-	public ModelAndView toPageIndex(HttpServletRequest request,HttpServletResponse response, ModelMap mp)
-			throws Exception {
-		List<SubjectInfo> subjectEVList = this.subjectManager.getList(new SubjectInfo(), null);
-		List<GradeInfo> gradeEVList = this.gradeManager.getList(new GradeInfo(), null);
+    @RequestMapping(params = "m=toindex", method = RequestMethod.GET)
+    public ModelAndView toPageIndex(HttpServletRequest request,HttpServletResponse response, ModelMap mp)
+            throws Exception {
+        List<SubjectInfo> subjectEVList = this.subjectManager.getList(new SubjectInfo(), null);
+        List<GradeInfo> gradeEVList = this.gradeManager.getList(new GradeInfo(), null);
         List<DictionaryInfo> resTypeEVList=this.dictionaryManager.getDictionaryByType("RES_TYPE");
         List<DictionaryInfo> resFileTypeEVList=this.dictionaryManager.getDictionaryByType("RES_FILE_TYPE");
 
-		JsonEntity jeEntity = new JsonEntity();
+        JsonEntity jeEntity = new JsonEntity();
 
         if(subjectEVList==null || subjectEVList.size()==0
                 || gradeEVList==null || gradeEVList.size()==0
@@ -299,68 +299,68 @@ public class ResourceController extends BaseController<ResourceInfo> {
             return null;
         }
 
-		mp.put("subjectEVList", subjectEVList);
-		mp.put("gradeEVList", gradeEVList);
+        mp.put("subjectEVList", subjectEVList);
+        mp.put("gradeEVList", gradeEVList);
         mp.put("resTypeEVList", resTypeEVList);
         mp.put("resFileTypeEVList", resFileTypeEVList);
 
-		// 获取资源总条数
-		PageResult pr = new PageResult();
-		ResourceInfo ri = new ResourceInfo();
+        // 获取资源总条数
+        PageResult pr = new PageResult();
+        ResourceInfo ri = new ResourceInfo();
         ri.setResstatus(1);
-		this.resourceManager.getList(ri,pr);
-		mp.put("resTotalNum", pr.getRecTotal());
+        this.resourceManager.getList(ri,pr);
+        mp.put("resTotalNum", pr.getRecTotal());
 
-		// 获取本日资源更新条数
-		Calendar currentDate = new GregorianCalendar();
-		currentDate.set(Calendar.HOUR_OF_DAY, 0);
-		currentDate.set(Calendar.MINUTE, 0);
-		currentDate.set(Calendar.SECOND, 0);
-		ri.setCtime((Date) currentDate.getTime().clone());
-		pr = new PageResult();
-		this.resourceManager.getList(ri, pr);
-		mp.put("dayResNum", pr.getRecTotal());
+        // 获取本日资源更新条数
+        Calendar currentDate = new GregorianCalendar();
+        currentDate.set(Calendar.HOUR_OF_DAY, 0);
+        currentDate.set(Calendar.MINUTE, 0);
+        currentDate.set(Calendar.SECOND, 0);
+        ri.setCtime((Date) currentDate.getTime().clone());
+        pr = new PageResult();
+        this.resourceManager.getList(ri, pr);
+        mp.put("dayResNum", pr.getRecTotal());
 
-		// 获取本周资源更新条数
-		currentDate = new GregorianCalendar();
-		currentDate.setFirstDayOfWeek(Calendar.MONDAY);
-		currentDate.set(Calendar.HOUR_OF_DAY, 0);
-		currentDate.set(Calendar.MINUTE, 0);
-		currentDate.set(Calendar.SECOND, 0);
-		currentDate.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		ri.setCtime((Date) currentDate.getTime().clone());
-		pr = new PageResult();
-		this.resourceManager.getList(ri, pr);
-		mp.put("weekResNum", pr.getRecTotal());
+        // 获取本周资源更新条数
+        currentDate = new GregorianCalendar();
+        currentDate.setFirstDayOfWeek(Calendar.MONDAY);
+        currentDate.set(Calendar.HOUR_OF_DAY, 0);
+        currentDate.set(Calendar.MINUTE, 0);
+        currentDate.set(Calendar.SECOND, 0);
+        currentDate.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        ri.setCtime((Date) currentDate.getTime().clone());
+        pr = new PageResult();
+        this.resourceManager.getList(ri, pr);
+        mp.put("weekResNum", pr.getRecTotal());
 
-		// 获取本月资源更新条数
-		currentDate = new GregorianCalendar();
-		currentDate.add(Calendar.DATE, -15);
-		currentDate.set(Calendar.HOUR_OF_DAY, 0);
-		currentDate.set(Calendar.MINUTE, 0);
-		currentDate.set(Calendar.SECOND, 0);
-		ri.setCtime((Date) currentDate.getTime().clone());
-		pr = new PageResult();
-		this.resourceManager.getList(ri, pr);
-		mp.put("monthResNum", pr.getRecTotal());
-		//得到资源公告
-		NoticeInfo notic=new NoticeInfo();
-		notic.setCuserid(this.logined(request).getRef());
-		notic.setNoticetype("3");  //通知公告
-		PageResult presult=new PageResult();
-		presult.setPageNo(1);
-		presult.setPageSize(5);
-		presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
-		List<NoticeInfo> noticeList=this.noticeManager.getUserList(notic, presult);
-		mp.put("resourceNotice", noticeList);
-		//角色
-		List<RoleInfo> roleList = this.roleManager.getList(null, null);
+        // 获取本月资源更新条数
+        currentDate = new GregorianCalendar();
+        currentDate.add(Calendar.DATE, -15);
+        currentDate.set(Calendar.HOUR_OF_DAY, 0);
+        currentDate.set(Calendar.MINUTE, 0);
+        currentDate.set(Calendar.SECOND, 0);
+        ri.setCtime((Date) currentDate.getTime().clone());
+        pr = new PageResult();
+        this.resourceManager.getList(ri, pr);
+        mp.put("monthResNum", pr.getRecTotal());
+        //得到资源公告
+        NoticeInfo notic=new NoticeInfo();
+        notic.setCuserid(this.logined(request).getRef());
+        notic.setNoticetype("3");  //通知公告
+        PageResult presult=new PageResult();
+        presult.setPageNo(1);
+        presult.setPageSize(5);
+        presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
+        List<NoticeInfo> noticeList=this.noticeManager.getUserList(notic, presult);
+        mp.put("resourceNotice", noticeList);
+        //角色
+        List<RoleInfo> roleList = this.roleManager.getList(null, null);
         mp.put("role", roleList);
-		//年级
-		List gradeList = this.gradeManager.getList(null, null);
-		mp.put("gradeList", gradeList);
+        //年级
+        List gradeList = this.gradeManager.getList(null, null);
+        mp.put("gradeList", gradeList);
 
-	        //教师学科
+        //教师学科
         int def_sub=subjectEVList.get(0).getSubjectid();
         int subvalue=0;
         SubjectUser su = new SubjectUser();
@@ -462,12 +462,12 @@ public class ResourceController extends BaseController<ResourceInfo> {
             }
         }else
             mp.put("isFirstInto",2);//不是这第一次进入
-		return new ModelAndView("/resource/pageIndex", mp);
-	}
+        return new ModelAndView("/resource/pageIndex", mp);
+    }
 
-	@RequestMapping(params = "m=toAllResPage", method = RequestMethod.GET)
-	public ModelAndView toSubjectPage(HttpServletRequest request,HttpServletResponse response, ModelMap mp)
-			throws Exception {
+    @RequestMapping(params = "m=toAllResPage", method = RequestMethod.GET)
+    public ModelAndView toSubjectPage(HttpServletRequest request,HttpServletResponse response, ModelMap mp)
+            throws Exception {
         JsonEntity jeEntity = new JsonEntity();
         String type = request.getParameter("type");
 
@@ -491,7 +491,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         mp.put("subjectEVList", subjectEVList);
         mp.put("resTypeEVList", resTypeEVList);
 
-		mp.put("type", type);
+        mp.put("type", type);
         mp.put("audiosuffix",UtilTool._MP3_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
         mp.put("videosuffix",UtilTool._VIEW_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
         mp.put("imagesuffix",UtilTool._IMG_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
@@ -546,13 +546,13 @@ public class ResourceController extends BaseController<ResourceInfo> {
             loginGrdid=Integer.parseInt(mapList.get(0).get("GRADE_ID").toString());
         mp.put("currentloginSub",(loginSuid==null?0:loginSuid));
         mp.put("currentloginGrd",(loginGrdid==null?0:loginGrdid));
-		return new ModelAndView("/resource/allResPage", mp);
-	}
+        return new ModelAndView("/resource/allResPage", mp);
+    }
 
-	@RequestMapping(params = "m=toMyResList", method = RequestMethod.GET)
-	public ModelAndView toMyResourseList(HttpServletRequest request,HttpServletResponse response, ModelMap mp)
-			throws Exception {
-		Integer userid = this.logined(request).getUserid();
+    @RequestMapping(params = "m=toMyResList", method = RequestMethod.GET)
+    public ModelAndView toMyResourseList(HttpServletRequest request,HttpServletResponse response, ModelMap mp)
+            throws Exception {
+        Integer userid = this.logined(request).getUserid();
         List<SubjectInfo> subjectEVList = this.subjectManager.getList(new SubjectInfo(), null);
         List<GradeInfo> gradeEVList = this.gradeManager.getList(new GradeInfo(), null);
         List<DictionaryInfo> resTypeEVList=this.dictionaryManager.getDictionaryByType("RES_TYPE");
@@ -577,10 +577,10 @@ public class ResourceController extends BaseController<ResourceInfo> {
         mp.put("gradeEVList", gradeEVList);
         mp.put("resTypeEVList", resTypeEVList);
         mp.put("resFileTypeEVList", resFileTypeEVList);
-		mp.put("userid", userid);
+        mp.put("userid", userid);
         mp.put("isadmin", this.validateRole(request, UtilTool._ROLE_ADMIN_ID)?1:2);
         return new ModelAndView("/resource/base/myResList", mp);
-	}
+    }
 
     @RequestMapping(params = "m=toStoreList", method = RequestMethod.GET)
     public ModelAndView toStoreList(HttpServletRequest request,HttpServletResponse response, ModelMap mp)
@@ -670,7 +670,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
             if(mapList==null||mapList.size()<1){
                 List<SubjectInfo> subList=this.subjectManager.getList(null,null);
                 if(subList!=null&&subList.size()>0)
-                 mp.put("subjectid", subList.get(0).getSubjectid());
+                    mp.put("subjectid", subList.get(0).getSubjectid());
             }else  //如果没有主授，辅授学科，则按照班级出发
                 mp.put("subjectid", Integer.parseInt(mapList.get(0).get("SUBJECT_ID").toString()));
         }else{
@@ -692,35 +692,35 @@ public class ResourceController extends BaseController<ResourceInfo> {
             mp.put("grdeid", this.gradeManager.getList(null, null).get(0).getGradeid());
         }else
             mp.put("gradeid", mapList.get(0).get("GRADE_ID").toString());
-        
+
 
 
         return new ModelAndView("/resource/base/checkList", mp);
     }
 
-	/**
-	 * 进入教师搜索的页面。
-	 * 
-	 * @param request
-	 * @param mp
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=toteacherreslist", method = RequestMethod.GET)
-	public ModelAndView toTeacherResourseList(HttpServletRequest request,
-			ModelMap mp) throws Exception {
-		
-		boolean adminFlag = false;
-		if(this.logined(request)!=null && this.logined(request).getCjJRoleUsers()!=null)
-			for(RoleUser ru : (List<RoleUser>)this.logined(request).getCjJRoleUsers()){
-				if(ru.getRoleid()==4){
-					adminFlag=true;
+    /**
+     * 进入教师搜索的页面。
+     *
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toteacherreslist", method = RequestMethod.GET)
+    public ModelAndView toTeacherResourseList(HttpServletRequest request,
+                                              ModelMap mp) throws Exception {
+
+        boolean adminFlag = false;
+        if(this.logined(request)!=null && this.logined(request).getCjJRoleUsers()!=null)
+            for(RoleUser ru : (List<RoleUser>)this.logined(request).getCjJRoleUsers()){
+                if(ru.getRoleid()==4){
+                    adminFlag=true;
                     break;
                 }
-			}
+            }
         mp.put("adminFlag", adminFlag);
-		String tchname = request.getParameter("srhValue");
-		String userid = request.getParameter("userid");
+        String tchname = request.getParameter("srhValue");
+        String userid = request.getParameter("userid");
         if(userid != null){
             if(!userid.trim().equals("0")){
 //            UserInfo user = new UserInfo();
@@ -739,191 +739,191 @@ public class ResourceController extends BaseController<ResourceInfo> {
                         "utf-8");
             }
             mp.put("srhValue", tchname);
-		} else
+        } else
             mp.put("srhValue", "");
         mp.put("audiosuffix",UtilTool._MP3_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
         mp.put("videosuffix",UtilTool._VIEW_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
         mp.put("imagesuffix",UtilTool._IMG_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
-		return new ModelAndView("/resource/base/teacherResList", mp);
-	}
+        return new ModelAndView("/resource/base/teacherResList", mp);
+    }
 
-	/**
-	 * 进入上传用户排行榜。
-	 * 
-	 * @param request
-	 * @param mp
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=topublicusertop", method = RequestMethod.GET)
-	public ModelAndView toPublicUserTopPage(HttpServletRequest request,
-			ModelMap mp) throws Exception {
-		boolean adminFlag = false;
-		if(this.logined(request)!=null && this.logined(request).getCjJRoleUsers()!=null)
-			for(RoleUser ru : (List<RoleUser>)this.logined(request).getCjJRoleUsers()){
-				if(ru.getRoleid()==4)
-					adminFlag=true;
-			}
-		request.setAttribute("adminFlag", adminFlag);
-		return new ModelAndView("/resource/base/publicUserTop", mp);
-	}
+    /**
+     * 进入上传用户排行榜。
+     *
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=topublicusertop", method = RequestMethod.GET)
+    public ModelAndView toPublicUserTopPage(HttpServletRequest request,
+                                            ModelMap mp) throws Exception {
+        boolean adminFlag = false;
+        if(this.logined(request)!=null && this.logined(request).getCjJRoleUsers()!=null)
+            for(RoleUser ru : (List<RoleUser>)this.logined(request).getCjJRoleUsers()){
+                if(ru.getRoleid()==4)
+                    adminFlag=true;
+            }
+        request.setAttribute("adminFlag", adminFlag);
+        return new ModelAndView("/resource/base/publicUserTop", mp);
+    }
 
-	/**
-	 * 进入资源排行榜。
-	 * 
-	 * @param request
-	 * @param mp
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=toresourcetop", method = RequestMethod.GET)
-	public ModelAndView toResourceTopPage(HttpServletRequest request,
-			ModelMap mp) throws Exception {
-		boolean adminFlag = false;
-		if(this.logined(request)!=null && this.logined(request).getCjJRoleUsers()!=null)
-			for(RoleUser ru : (List<RoleUser>)this.logined(request).getCjJRoleUsers()){
-				if(ru.getRoleid()==4)
-					adminFlag=true;
-			}
-		request.setAttribute("adminFlag", adminFlag);
-		String topType = request.getParameter("topType");
+    /**
+     * 进入资源排行榜。
+     *
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toresourcetop", method = RequestMethod.GET)
+    public ModelAndView toResourceTopPage(HttpServletRequest request,
+                                          ModelMap mp) throws Exception {
+        boolean adminFlag = false;
+        if(this.logined(request)!=null && this.logined(request).getCjJRoleUsers()!=null)
+            for(RoleUser ru : (List<RoleUser>)this.logined(request).getCjJRoleUsers()){
+                if(ru.getRoleid()==4)
+                    adminFlag=true;
+            }
+        request.setAttribute("adminFlag", adminFlag);
+        String topType = request.getParameter("topType");
         String timeType = request.getParameter("timeType");
-		mp.put("topType", topType);
+        mp.put("topType", topType);
         mp.put("timeType", timeType);
 
         mp.put("audiosuffix",UtilTool._MP3_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
         mp.put("videosuffix",UtilTool._VIEW_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
         mp.put("imagesuffix",UtilTool._IMG_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
-		return new ModelAndView("/resource/base/resourceTop", mp);
-	}
+        return new ModelAndView("/resource/base/resourceTop", mp);
+    }
 
-	/**
-	 * 进入修改资源的页面。
-	 * 
-	 * @param request
-	 * @param mp
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=toupdate", method = RequestMethod.GET)
-	public ModelAndView toUpdateResourse(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		// 得到RES_ID
-		JsonEntity jeEntity = new JsonEntity();
-		String resid = request.getParameter("resid");
-		if (resid == null||resid.trim().length()<1) {
-			jeEntity.setMsg(UtilTool.msgproperty
-					.getProperty("RESOURCE_NO_RESID"));// 异常错误，参数不齐，无法正常访问!
-			response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
-			return null;
-		}
-		ResourceInfo restmp = new ResourceInfo();
-		restmp.setResid(Long.parseLong(resid));
-		List<ResourceInfo> resList = this.resourceManager.getList(restmp, null);
-		if (resList == null || resList.size() < 1) {
-			jeEntity.setMsg(UtilTool.msgproperty
-					.getProperty("RESOURCE_NO_DATE"));// 异常错误，系统未发现您要查询的信息，可能已不存在!
-			response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
-			return null;
-		}
-		mp.put("resinfo", resList.get(0));
-		// 得到对应的扩展树名
-		restmp = resList.get(0);
-		if (restmp == null) {
-			jeEntity.setMsg(UtilTool.msgproperty
-					.getProperty("RESOURCE_NO_DATE"));// 异常错误，系统未发现您要查询的信息，可能已不存在!
-			response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
-			return null;
-		}
-		// 得到文件
-		ResourceFileInfo resourceFileInfo = new ResourceFileInfo();
-		resourceFileInfo.setResid(Long.parseLong(resid));
-		List<ResourceFileInfo> reFileInfoList = this.resourceFileManager
-				.getList(resourceFileInfo, null);
-		if (reFileInfoList != null && reFileInfoList.size() > 0) {
-			request.setAttribute("reFileInfoList", reFileInfoList);
-		}
-		ExtendResource eResource = new ExtendResource();
-		eResource.setResid(restmp.getResid());
-		List<ExtendResource> eResourceList = extendResourceManager.getList(
-				eResource, null);
-		mp.put("erList", eResourceList);
-		// 得到基本的属性
-		ExtendInfo extendInfo = new ExtendInfo();
-		extendInfo.setIsquery(1);
-		extendInfo.setDependextendid("0");
-		PageResult presult = new PageResult();
-		presult.setPageSize(300);
-		List<ExtendInfo> extendList = this.extendManager.getList(extendInfo,
-				presult);
-		if (extendList != null && extendList.size() > 0) {
-			mp.put("extendcount", extendList.size());
-		}
-		// 得到浏览权限设置
-		DictionaryInfo dicInfo = new DictionaryInfo();
-		dicInfo.setDictionarytype("RS_RESOURCE_VIEW_RIGHT_TYPE");
-		List<DictionaryInfo> dicList = this.dictionaryManager.getList(dicInfo,
-				null);
-		if (dicList != null && dicList.size() > 0)
-			mp.put("resourceViewRightType", dicList);
-		// 得到下载权限设置
-		dicInfo = new DictionaryInfo();
-		dicInfo.setDictionarytype("RS_RESOURCE_DOWN_RIGHT_TYPE");
-		dicList = this.dictionaryManager.getList(dicInfo, null);
-		if (dicList != null && dicList.size() > 0)
-			mp.put("resourceDownRightType", dicList);
-		// 得到学科
-		SubjectUser sbu = new SubjectUser();
-		sbu.getUserinfo().setRef(this.logined(request).getRef());
-		List<SubjectUser> sbUserList = this.subjectUserManager.getList(sbu,
-				null);
-		if (sbUserList != null && sbUserList.size() > 0)
-			mp.put("sublist", sbUserList);
-		// 得到部门
-		PageResult p = new PageResult();
-		p.setOrderBy("d.dept_id");
-		p.setPageNo(0);
-		p.setPageSize(0);
-		List<DeptInfo> deptList = this.deptManager.getList(null, p);
-		if (deptList != null && deptList.size() > 0)
-			mp.put("deptList", deptList);
-		// 得到浏览权限
-		ResourceRightInfo viewRightInfo = new ResourceRightInfo();
-		viewRightInfo.setResid(Long.parseLong(resid));
-		viewRightInfo.setRighttype(1);
-		List<ResourceRightInfo> rrList = this.resourceRightManager.getList(
-				viewRightInfo, null);
-		if (rrList != null && rrList.size() > 0)
-			mp.put("reviewright", rrList);
+    /**
+     * 进入修改资源的页面。
+     *
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toupdate", method = RequestMethod.GET)
+    public ModelAndView toUpdateResourse(HttpServletRequest request,
+                                         HttpServletResponse response, ModelMap mp) throws Exception {
+        // 得到RES_ID
+        JsonEntity jeEntity = new JsonEntity();
+        String resid = request.getParameter("resid");
+        if (resid == null||resid.trim().length()<1) {
+            jeEntity.setMsg(UtilTool.msgproperty
+                    .getProperty("RESOURCE_NO_RESID"));// 异常错误，参数不齐，无法正常访问!
+            response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
+            return null;
+        }
+        ResourceInfo restmp = new ResourceInfo();
+        restmp.setResid(Long.parseLong(resid));
+        List<ResourceInfo> resList = this.resourceManager.getList(restmp, null);
+        if (resList == null || resList.size() < 1) {
+            jeEntity.setMsg(UtilTool.msgproperty
+                    .getProperty("RESOURCE_NO_DATE"));// 异常错误，系统未发现您要查询的信息，可能已不存在!
+            response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
+            return null;
+        }
+        mp.put("resinfo", resList.get(0));
+        // 得到对应的扩展树名
+        restmp = resList.get(0);
+        if (restmp == null) {
+            jeEntity.setMsg(UtilTool.msgproperty
+                    .getProperty("RESOURCE_NO_DATE"));// 异常错误，系统未发现您要查询的信息，可能已不存在!
+            response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
+            return null;
+        }
+        // 得到文件
+        ResourceFileInfo resourceFileInfo = new ResourceFileInfo();
+        resourceFileInfo.setResid(Long.parseLong(resid));
+        List<ResourceFileInfo> reFileInfoList = this.resourceFileManager
+                .getList(resourceFileInfo, null);
+        if (reFileInfoList != null && reFileInfoList.size() > 0) {
+            request.setAttribute("reFileInfoList", reFileInfoList);
+        }
+        ExtendResource eResource = new ExtendResource();
+        eResource.setResid(restmp.getResid());
+        List<ExtendResource> eResourceList = extendResourceManager.getList(
+                eResource, null);
+        mp.put("erList", eResourceList);
+        // 得到基本的属性
+        ExtendInfo extendInfo = new ExtendInfo();
+        extendInfo.setIsquery(1);
+        extendInfo.setDependextendid("0");
+        PageResult presult = new PageResult();
+        presult.setPageSize(300);
+        List<ExtendInfo> extendList = this.extendManager.getList(extendInfo,
+                presult);
+        if (extendList != null && extendList.size() > 0) {
+            mp.put("extendcount", extendList.size());
+        }
+        // 得到浏览权限设置
+        DictionaryInfo dicInfo = new DictionaryInfo();
+        dicInfo.setDictionarytype("RS_RESOURCE_VIEW_RIGHT_TYPE");
+        List<DictionaryInfo> dicList = this.dictionaryManager.getList(dicInfo,
+                null);
+        if (dicList != null && dicList.size() > 0)
+            mp.put("resourceViewRightType", dicList);
+        // 得到下载权限设置
+        dicInfo = new DictionaryInfo();
+        dicInfo.setDictionarytype("RS_RESOURCE_DOWN_RIGHT_TYPE");
+        dicList = this.dictionaryManager.getList(dicInfo, null);
+        if (dicList != null && dicList.size() > 0)
+            mp.put("resourceDownRightType", dicList);
+        // 得到学科
+        SubjectUser sbu = new SubjectUser();
+        sbu.getUserinfo().setRef(this.logined(request).getRef());
+        List<SubjectUser> sbUserList = this.subjectUserManager.getList(sbu,
+                null);
+        if (sbUserList != null && sbUserList.size() > 0)
+            mp.put("sublist", sbUserList);
+        // 得到部门
+        PageResult p = new PageResult();
+        p.setOrderBy("d.dept_id");
+        p.setPageNo(0);
+        p.setPageSize(0);
+        List<DeptInfo> deptList = this.deptManager.getList(null, p);
+        if (deptList != null && deptList.size() > 0)
+            mp.put("deptList", deptList);
+        // 得到浏览权限
+        ResourceRightInfo viewRightInfo = new ResourceRightInfo();
+        viewRightInfo.setResid(Long.parseLong(resid));
+        viewRightInfo.setRighttype(1);
+        List<ResourceRightInfo> rrList = this.resourceRightManager.getList(
+                viewRightInfo, null);
+        if (rrList != null && rrList.size() > 0)
+            mp.put("reviewright", rrList);
 
-		// 得到下载权限
-		ResourceRightInfo downRightInfo = new ResourceRightInfo();
-		downRightInfo.setResid(Long.parseLong(resid));
-		downRightInfo.setRighttype(2);
-		List<ResourceRightInfo> rdList = this.resourceRightManager.getList(downRightInfo, null);
-		if (rdList != null && rdList.size() > 0)
-			mp.put("redownright", rdList);
-		//得到推荐关键字
+        // 得到下载权限
+        ResourceRightInfo downRightInfo = new ResourceRightInfo();
+        downRightInfo.setResid(Long.parseLong(resid));
+        downRightInfo.setRighttype(2);
+        List<ResourceRightInfo> rdList = this.resourceRightManager.getList(downRightInfo, null);
+        if (rdList != null && rdList.size() > 0)
+            mp.put("redownright", rdList);
+        //得到推荐关键字
 		/*DictionaryInfo dicTmp=new DictionaryInfo();
 		dicTmp.setDictionarytype("RESOURCE_STORE_RECOMMEND");
 		List<DictionaryInfo> recommendStoreDic=this.dictionaryManager.getList(dicTmp,null);
 		mp.put("keyWordRecommend", recommendStoreDic);*/
-		
-		
-		return new ModelAndView("/resource/base/update", mp);
-	}
 
-	/**
-	 * 进入添加资源的页面。
-	 * 
-	 * @param request
-	 * @param mp
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=toadd", method = RequestMethod.GET)
-	public ModelAndView toAddResourse(HttpServletRequest request, ModelMap mp)
-			throws Exception {
+
+        return new ModelAndView("/resource/base/update", mp);
+    }
+
+    /**
+     * 进入添加资源的页面。
+     *
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toadd", method = RequestMethod.GET)
+    public ModelAndView toAddResourse(HttpServletRequest request, ModelMap mp)
+            throws Exception {
 
         //生成新的ID
         mp.put("nextId", this.resourceManager.getNextId(true));
@@ -932,109 +932,109 @@ public class ResourceController extends BaseController<ResourceInfo> {
         mp.put("resTypeDicList",resTypeDicList);
 
 
-       // 得到分享类型  RES_LEVEL
+        // 得到分享类型  RES_LEVEL
         resTypeDicList=this.dictionaryManager.getDictionaryByType("RES_LEVEL");
         mp.put("resLevelDicList",resTypeDicList);
 
-		return new ModelAndView("/resource/base/add", mp);
-	}
+        return new ModelAndView("/resource/base/add", mp);
+    }
 
-	/**
-	 * 更改資源狀態
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=changeresstate", method = RequestMethod.POST)
-	public void changeResourceState(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		// 得到参数
-		ResourceInfo resInfo = this.getParameter(request, ResourceInfo.class);
-		JsonEntity jeEntity = new JsonEntity();
-		if (resInfo == null || resInfo.getResid() == null
-				|| resInfo.getResstatus() == null) {
-			jeEntity.setMsg("参数错误！！");
-			response.getWriter().print(jeEntity.toJSON());
-			return;
-		}
+    /**
+     * 更改資源狀態
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=changeresstate", method = RequestMethod.POST)
+    public void changeResourceState(HttpServletRequest request,
+                                    HttpServletResponse response) throws Exception {
+        // 得到参数
+        ResourceInfo resInfo = this.getParameter(request, ResourceInfo.class);
+        JsonEntity jeEntity = new JsonEntity();
+        if (resInfo == null || resInfo.getResid() == null
+                || resInfo.getResstatus() == null) {
+            jeEntity.setMsg("参数错误！！");
+            response.getWriter().print(jeEntity.toJSON());
+            return;
+        }
 
-		// 执行
-		if (this.resourceManager.doUpdate(resInfo))
-			jeEntity.setType("success");
-		else
-			jeEntity.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
-		response.getWriter().print(jeEntity.toJSON());
-	}
-
-	/**
-	 * 执行添加
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=doupdate", method = RequestMethod.POST)
-	public void doUpdateResource(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		// 得到参数
-		ResourceInfo resInfo = this.getParameter(request, ResourceInfo.class);
-		JsonEntity jeEntity = new JsonEntity();
-		if (resInfo.getResid() == null) {
-			jeEntity.setMsg(UtilTool.msgproperty
-					.getProperty("RESOURCE_NO_RESID"));
-			response.getWriter().print(jeEntity.toJSON());
-			return;
-		}
-		if (resInfo.getResname() == null
-				|| resInfo.getResname().trim().length() < 1) {
-			// jeEntity.setMsg("异常错误，资源名称不能为空，请刷重试!");
-			jeEntity.setMsg(UtilTool.msgproperty
-					.getProperty("RESOURCE_NO_RESNAME"));
-			response.getWriter().print(jeEntity.toJSON());
-			return;
-		}
-		if (resInfo.getReskeyword() == null
-				|| resInfo.getReskeyword().trim().length() < 1) {
-			// 异常错误，关键字不能为空，请重试!
-			jeEntity.setMsg(UtilTool.msgproperty
-					.getProperty("RESOURCE_NO_KEYWORD"));
-			response.getWriter().print(jeEntity.toJSON());
-			return;
-		}
-		if(this.resourceManager.doUpdate(resInfo))
+        // 执行
+        if (this.resourceManager.doUpdate(resInfo))
             jeEntity.setType("success");
-		response.getWriter().print(jeEntity.toJSON());
-	}
+        else
+            jeEntity.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
+        response.getWriter().print(jeEntity.toJSON());
+    }
 
-	/**
-	 * 执行添加
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=doadd", method = RequestMethod.POST)
-	public void doAddResource(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		// 得到参数
-		ResourceInfo resInfo = this.getParameter(request, ResourceInfo.class);
-		JsonEntity jeEntity = new JsonEntity();
-		if (resInfo.getResid() == null) {
-			jeEntity.setMsg(UtilTool.msgproperty
-					.getProperty("RESOURCE_NO_RESID"));
-			response.getWriter().print(jeEntity.toJSON());
-			return;
-		}
+    /**
+     * 执行添加
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=doupdate", method = RequestMethod.POST)
+    public void doUpdateResource(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+        // 得到参数
+        ResourceInfo resInfo = this.getParameter(request, ResourceInfo.class);
+        JsonEntity jeEntity = new JsonEntity();
+        if (resInfo.getResid() == null) {
+            jeEntity.setMsg(UtilTool.msgproperty
+                    .getProperty("RESOURCE_NO_RESID"));
+            response.getWriter().print(jeEntity.toJSON());
+            return;
+        }
+        if (resInfo.getResname() == null
+                || resInfo.getResname().trim().length() < 1) {
+            // jeEntity.setMsg("异常错误，资源名称不能为空，请刷重试!");
+            jeEntity.setMsg(UtilTool.msgproperty
+                    .getProperty("RESOURCE_NO_RESNAME"));
+            response.getWriter().print(jeEntity.toJSON());
+            return;
+        }
+        if (resInfo.getReskeyword() == null
+                || resInfo.getReskeyword().trim().length() < 1) {
+            // 异常错误，关键字不能为空，请重试!
+            jeEntity.setMsg(UtilTool.msgproperty
+                    .getProperty("RESOURCE_NO_KEYWORD"));
+            response.getWriter().print(jeEntity.toJSON());
+            return;
+        }
+        if(this.resourceManager.doUpdate(resInfo))
+            jeEntity.setType("success");
+        response.getWriter().print(jeEntity.toJSON());
+    }
 
-		if (resInfo.getResname() == null
-				|| resInfo.getResname().trim().length() < 1) {
-			// jeEntity.setMsg("异常错误，资源名称不能为空，请刷重试!");
-			jeEntity.setMsg(UtilTool.msgproperty
-					.getProperty("RESOURCE_NO_RESNAME"));
-			response.getWriter().print(jeEntity.toJSON());
-			return;
-		}
+    /**
+     * 执行添加
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=doadd", method = RequestMethod.POST)
+    public void doAddResource(HttpServletRequest request,
+                              HttpServletResponse response) throws Exception {
+        // 得到参数
+        ResourceInfo resInfo = this.getParameter(request, ResourceInfo.class);
+        JsonEntity jeEntity = new JsonEntity();
+        if (resInfo.getResid() == null) {
+            jeEntity.setMsg(UtilTool.msgproperty
+                    .getProperty("RESOURCE_NO_RESID"));
+            response.getWriter().print(jeEntity.toJSON());
+            return;
+        }
+
+        if (resInfo.getResname() == null
+                || resInfo.getResname().trim().length() < 1) {
+            // jeEntity.setMsg("异常错误，资源名称不能为空，请刷重试!");
+            jeEntity.setMsg(UtilTool.msgproperty
+                    .getProperty("RESOURCE_NO_RESNAME"));
+            response.getWriter().print(jeEntity.toJSON());
+            return;
+        }
         if(resInfo.getRestype()==null){
             jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jeEntity.toJSON());
@@ -1055,15 +1055,15 @@ public class ResourceController extends BaseController<ResourceInfo> {
 //		}
 
 
-		// 得到资源文件
-		// ----------------------------------------------------------
-		String filename = request.getParameter("filename");
-		if (filename == null || filename.trim().length() < 1) {
-			jeEntity.setMsg(UtilTool.msgproperty
-					.getProperty("RESOURCE_NO_FILE"));// 异常错误，没有发现文件!请刷新页面后重试!
-			response.getWriter().print(jeEntity.toJSON());
-			return;
-		}
+        // 得到资源文件
+        // ----------------------------------------------------------
+        String filename = request.getParameter("filename");
+        if (filename == null || filename.trim().length() < 1) {
+            jeEntity.setMsg(UtilTool.msgproperty
+                    .getProperty("RESOURCE_NO_FILE"));// 异常错误，没有发现文件!请刷新页面后重试!
+            response.getWriter().print(jeEntity.toJSON());
+            return;
+        }
         resInfo.setFilename(null);
 
         String suffix=filename.substring(filename.lastIndexOf("."));
@@ -1082,12 +1082,12 @@ public class ResourceController extends BaseController<ResourceInfo> {
 
         resInfo.setUsername(this.logined(request).getRealname());
         resInfo.setSchoolname(UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME"));
-		// ----------------------------------------------------------
-		// 默认值
-		resInfo.setUserid(this.logined(request).getUserid());
-		resInfo.setResstatus(1);//上传成功的
+        // ----------------------------------------------------------
+        // 默认值
+        resInfo.setUserid(this.logined(request).getUserid());
+        resInfo.setResstatus(1);//上传成功的
 
-       //文件类型处理
+        //文件类型处理
         List<DictionaryInfo> dicList=this.dictionaryManager.getDictionaryByType("FILE_SUFFIX_TYPE");
 
         if(dicList!=null&&dicList.size()>0){
@@ -1129,30 +1129,30 @@ public class ResourceController extends BaseController<ResourceInfo> {
          * 学科
          * 判断该老师教授的学科，如果没有设置，则提取该学校的某个学科
          */
-         SubjectUser sbu=new SubjectUser();
-         sbu.setUserid(this.logined(request).getRef());
-         List<SubjectUser> sbuList=this.subjectUserManager.getList(sbu,null);
-         if(sbuList==null||sbuList.size()<1){
-             if(mapList==null||mapList.size()<1){
-                 List<SubjectInfo> subList=this.subjectManager.getList(null,null);
-                 if(subList==null||subList.size()<1){
-                     jeEntity.setMsg("异常错误，没有发现学校的学科数据，请联系相关人员进行配置填加!");
-                     response.getWriter().print(jeEntity.toJSON());return;
-                 }
-                 resInfo.setSubject(subList.get(0).getSubjectid());
-             }else  //如果没有主授，辅授学科，则按照班级出发
-                 resInfo.setSubject(Integer.parseInt(mapList.get(0).get("SUBJECT_ID").toString()));
-         }else{
-             for(SubjectUser sb:sbuList){
-                 if(sb!=null){
-                     if(sb.getIsmajor()==1){
+        SubjectUser sbu=new SubjectUser();
+        sbu.setUserid(this.logined(request).getRef());
+        List<SubjectUser> sbuList=this.subjectUserManager.getList(sbu,null);
+        if(sbuList==null||sbuList.size()<1){
+            if(mapList==null||mapList.size()<1){
+                List<SubjectInfo> subList=this.subjectManager.getList(null,null);
+                if(subList==null||subList.size()<1){
+                    jeEntity.setMsg("异常错误，没有发现学校的学科数据，请联系相关人员进行配置填加!");
+                    response.getWriter().print(jeEntity.toJSON());return;
+                }
+                resInfo.setSubject(subList.get(0).getSubjectid());
+            }else  //如果没有主授，辅授学科，则按照班级出发
+                resInfo.setSubject(Integer.parseInt(mapList.get(0).get("SUBJECT_ID").toString()));
+        }else{
+            for(SubjectUser sb:sbuList){
+                if(sb!=null){
+                    if(sb.getIsmajor()==1){
                         resInfo.setSubject(sb.getSubjectid());break;
-                     }
-                 }
-             }
-             if(resInfo.getSubject()==null)
+                    }
+                }
+            }
+            if(resInfo.getSubject()==null)
                 resInfo.setSubject(sbuList.get(0).getSubjectid());
-         }
+        }
         /**
          * 年级
          */
@@ -1214,40 +1214,40 @@ public class ResourceController extends BaseController<ResourceInfo> {
 //            resInfo.setFiletype(1);
 //        else
 //            resInfo.setFiletype(0);
-		// 执行
-		if (this.resourceManager.doSave(resInfo)) {
-			jeEntity.setType("success");
-			// 返回nextid
-			jeEntity.getObjList().add(this.resourceManager.getNextId());
-			// 文件转换
-			if (resInfo.getFilesuffixname() != null && resInfo.getFilesuffixname().trim().length() > 0) {
-				if (filetype != null && filetype.equals("doc")) {
-					UtilTool.Office2Swf(request, resInfo.getResid().toString(),resInfo.getFilesuffixname());
-				}
-			}
+        // 执行
+        if (this.resourceManager.doSave(resInfo)) {
+            jeEntity.setType("success");
+            // 返回nextid
+            jeEntity.getObjList().add(this.resourceManager.getNextId());
+            // 文件转换
+            if (resInfo.getFilesuffixname() != null && resInfo.getFilesuffixname().trim().length() > 0) {
+                if (filetype != null && filetype.equals("doc")) {
+                    UtilTool.Office2Swf(request, resInfo.getResid().toString(),resInfo.getFilesuffixname());
+                }
+            }
             jeEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-	    } else
-			jeEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-		response.getWriter().print(jeEntity.toJSON());
-	}
+        } else
+            jeEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().print(jeEntity.toJSON());
+    }
 
-	@RequestMapping(params = "m=ajaxMyResourceList", method = RequestMethod.POST)
-	public void getMyResourceList(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		ResourceInfo resourceinfo = this.getParameter(request,
-				ResourceInfo.class);
-		JsonEntity je = new JsonEntity();
-		PageResult presult = this.getPageResultParameter(request);
-		if(resourceinfo==null)
-			resourceinfo = new ResourceInfo();
-		resourceinfo.setUserid(this.logined(request).getUserid());
-		resourceinfo.setResstatus(-3);
+    @RequestMapping(params = "m=ajaxMyResourceList", method = RequestMethod.POST)
+    public void getMyResourceList(HttpServletRequest request,
+                                  HttpServletResponse response) throws Exception {
+        ResourceInfo resourceinfo = this.getParameter(request,
+                ResourceInfo.class);
+        JsonEntity je = new JsonEntity();
+        PageResult presult = this.getPageResultParameter(request);
+        if(resourceinfo==null)
+            resourceinfo = new ResourceInfo();
+        resourceinfo.setUserid(this.logined(request).getUserid());
+        resourceinfo.setResstatus(-3);
         presult.setOrderBy(" C_TIME DESC");
-		List<ResourceInfo> extList = this.resourceManager.getMyResList(resourceinfo, presult);
-		presult.setList(extList);
-		je.setPresult(presult);
-		response.getWriter().print(je.toJSON());
-	}
+        List<ResourceInfo> extList = this.resourceManager.getMyResList(resourceinfo, presult);
+        presult.setList(extList);
+        je.setPresult(presult);
+        response.getWriter().print(je.toJSON());
+    }
     @RequestMapping(params = "m=ajaxUser", method = RequestMethod.POST)
     public void getResUserName(HttpServletRequest request,
                                HttpServletResponse response) throws Exception{
@@ -1284,54 +1284,54 @@ public class ResourceController extends BaseController<ResourceInfo> {
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }
-	
-	@RequestMapping(params = "m=ajaxList", method = RequestMethod.POST)
-	public void getResList(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		ResourceInfo resourceinfo = this.getParameter(request,
-				ResourceInfo.class);
-        resourceinfo.setResstatus(-3);
-		String timeRange = request.getParameter("timerange");
-		if (timeRange != null && timeRange.trim().length() > 0) {
-			if (resourceinfo == null)
-				resourceinfo = new ResourceInfo();
-			Calendar currentDate = new GregorianCalendar();
-			if (timeRange.trim().equals("day")) {
-				// 获取本日资源更新条数
-				currentDate.set(Calendar.HOUR_OF_DAY, 0);
-				currentDate.set(Calendar.MINUTE, 0);
-				currentDate.set(Calendar.SECOND, 0);
-				resourceinfo.setCtime((Date) currentDate.getTime().clone());
-			} else if (timeRange.trim().equals("week")) {
-				// 获取本周资源更新条数
-				currentDate.setFirstDayOfWeek(Calendar.MONDAY);
-				currentDate.set(Calendar.HOUR_OF_DAY, 0);
-				currentDate.set(Calendar.MINUTE, 0);
-				currentDate.set(Calendar.SECOND, 0);
-				currentDate.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-				resourceinfo.setCtime((Date) currentDate.getTime().clone());
-			} else if (timeRange.trim().equals("halfMonth")) {
-				// 获取半月资源更新条数
-				currentDate.add(Calendar.DATE, -15);
-				currentDate.set(Calendar.HOUR_OF_DAY, 0);
-				currentDate.set(Calendar.MINUTE, 0);
-				currentDate.set(Calendar.SECOND, 0);
 
-				resourceinfo.setCtime((Date) currentDate.getTime().clone());
-			} else if (timeRange.trim().equals("month")) {
-				// 获取本月资源更新条数
-				currentDate = new GregorianCalendar();
-				currentDate.set(Calendar.DATE, 1);
-				currentDate.set(Calendar.HOUR_OF_DAY, 0);
-				currentDate.set(Calendar.MINUTE, 0);
+    @RequestMapping(params = "m=ajaxList", method = RequestMethod.POST)
+    public void getResList(HttpServletRequest request,
+                           HttpServletResponse response) throws Exception {
+        ResourceInfo resourceinfo = this.getParameter(request,
+                ResourceInfo.class);
+        resourceinfo.setResstatus(-3);
+        String timeRange = request.getParameter("timerange");
+        if (timeRange != null && timeRange.trim().length() > 0) {
+            if (resourceinfo == null)
+                resourceinfo = new ResourceInfo();
+            Calendar currentDate = new GregorianCalendar();
+            if (timeRange.trim().equals("day")) {
+                // 获取本日资源更新条数
+                currentDate.set(Calendar.HOUR_OF_DAY, 0);
+                currentDate.set(Calendar.MINUTE, 0);
                 currentDate.set(Calendar.SECOND, 0);
-				resourceinfo.setCtime((Date) currentDate.getTime().clone());
-			}
-		}
-		JsonEntity je = new JsonEntity();
-		PageResult presult = this.getPageResultParameter(request);
-		List<ResourceInfo> extList = this.resourceManager.getList(
-				resourceinfo, presult);
+                resourceinfo.setCtime((Date) currentDate.getTime().clone());
+            } else if (timeRange.trim().equals("week")) {
+                // 获取本周资源更新条数
+                currentDate.setFirstDayOfWeek(Calendar.MONDAY);
+                currentDate.set(Calendar.HOUR_OF_DAY, 0);
+                currentDate.set(Calendar.MINUTE, 0);
+                currentDate.set(Calendar.SECOND, 0);
+                currentDate.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                resourceinfo.setCtime((Date) currentDate.getTime().clone());
+            } else if (timeRange.trim().equals("halfMonth")) {
+                // 获取半月资源更新条数
+                currentDate.add(Calendar.DATE, -15);
+                currentDate.set(Calendar.HOUR_OF_DAY, 0);
+                currentDate.set(Calendar.MINUTE, 0);
+                currentDate.set(Calendar.SECOND, 0);
+
+                resourceinfo.setCtime((Date) currentDate.getTime().clone());
+            } else if (timeRange.trim().equals("month")) {
+                // 获取本月资源更新条数
+                currentDate = new GregorianCalendar();
+                currentDate.set(Calendar.DATE, 1);
+                currentDate.set(Calendar.HOUR_OF_DAY, 0);
+                currentDate.set(Calendar.MINUTE, 0);
+                currentDate.set(Calendar.SECOND, 0);
+                resourceinfo.setCtime((Date) currentDate.getTime().clone());
+            }
+        }
+        JsonEntity je = new JsonEntity();
+        PageResult presult = this.getPageResultParameter(request);
+        List<ResourceInfo> extList = this.resourceManager.getList(
+                resourceinfo, presult);
         StringBuilder resStrBuilder=new StringBuilder();
         if(extList!=null&&extList.size()>0){
             for(ResourceInfo entity:extList){
@@ -1364,15 +1364,15 @@ public class ResourceController extends BaseController<ResourceInfo> {
                 }
             }
         }
-		presult.setList(extList);
-		je.setPresult(presult);
+        presult.setList(extList);
+        je.setPresult(presult);
         je.setType("success");
-		response.getWriter().print(je.toJSON());
-	}
+        response.getWriter().print(je.toJSON());
+    }
 
     @RequestMapping(params = "m=ajaxListByValues", method = RequestMethod.POST)
     public void getResListByValues(HttpServletRequest request,
-                           HttpServletResponse response) throws Exception {
+                                   HttpServletResponse response) throws Exception {
         ResourceInfo resourceinfo = this.getParameter(request,
                 ResourceInfo.class);
         resourceinfo.setResstatus(1);
@@ -1421,14 +1421,14 @@ public class ResourceController extends BaseController<ResourceInfo> {
             resourceinfo.setIsunion(1);
         else if(resourceinfo.getIsunion()==0)
             resourceinfo.setIsunion(null);
-    StringBuilder resStrBuilder=new StringBuilder();
+        StringBuilder resStrBuilder=new StringBuilder();
         List<ResourceInfo> extList = this.resourceManager.getListByExtendValue(resourceinfo , presult);
         if(extList!=null&&extList.size()>0){
             for(ResourceInfo entity:extList){
                 if(entity!=null){
                     if(resStrBuilder.toString().trim().length()>0)
                         resStrBuilder.append(",");
-                     resStrBuilder.append(entity.getResid());
+                    resStrBuilder.append(entity.getResid());
                 }
             }
             if(resStrBuilder.toString().trim().length()>0){
@@ -1438,14 +1438,14 @@ public class ResourceController extends BaseController<ResourceInfo> {
                         for(ResourceInfo entity:extList){
                             if(entity!=null&&mp.get("RES_ID")!=null&&entity.getGrade()==null&&entity.getSubject()==null){
                                 if(entity.getResid().toString().equals(mp.get("RES_ID").toString().trim())){
-                                        if(mp.get("GRADE_ID")!=null)
-                                            entity.setGrade(Integer.parseInt(mp.get("GRADE_ID").toString()));
-                                        if(mp.get("GRADE_NAME")!=null)
-                                            entity.setGradename(mp.get("GRADE_NAME").toString());
-                                        if(mp.get("SUBJECT_ID")!=null)
-                                            entity.setSubject(Integer.parseInt(mp.get("SUBJECT_ID").toString()));
-                                        if(mp.get("SUBJECT_NAME")!=null)
-                                            entity.setSubjectname(mp.get("SUBJECT_NAME").toString());
+                                    if(mp.get("GRADE_ID")!=null)
+                                        entity.setGrade(Integer.parseInt(mp.get("GRADE_ID").toString()));
+                                    if(mp.get("GRADE_NAME")!=null)
+                                        entity.setGradename(mp.get("GRADE_NAME").toString());
+                                    if(mp.get("SUBJECT_ID")!=null)
+                                        entity.setSubject(Integer.parseInt(mp.get("SUBJECT_ID").toString()));
+                                    if(mp.get("SUBJECT_NAME")!=null)
+                                        entity.setSubjectname(mp.get("SUBJECT_NAME").toString());
                                     break;
                                 }
                             }
@@ -1460,81 +1460,81 @@ public class ResourceController extends BaseController<ResourceInfo> {
         response.getWriter().print(je.toJSON());
     }
 
-	@RequestMapping(params = "m=ajaxUserList", method = RequestMethod.POST)
-	public void getUserSortResultList(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		ResourceInfo resourceinfo = this.getParameter(request,
-				ResourceInfo.class);
+    @RequestMapping(params = "m=ajaxUserList", method = RequestMethod.POST)
+    public void getUserSortResultList(HttpServletRequest request,
+                                      HttpServletResponse response) throws Exception {
+        ResourceInfo resourceinfo = this.getParameter(request,
+                ResourceInfo.class);
         //专题资源调用增加的参数
         String courseid = request.getParameter("courseid");
-		String timeRange = request.getParameter("timerange");
-		if (timeRange != null && timeRange.trim().length() > 0) {
-			if (resourceinfo == null)
-				resourceinfo = new ResourceInfo();
-			Calendar currentDate = new GregorianCalendar();
-			if (timeRange.trim().equals("day")) {
-				// 获取本日资源更新条数
-				currentDate.set(Calendar.HOUR_OF_DAY, 0);
-				currentDate.set(Calendar.MINUTE, 0);
-				currentDate.set(Calendar.SECOND, 0);
-				resourceinfo.setCtime((Date) currentDate.getTime().clone());
-			} else if (timeRange.trim().equals("week")) {
-				// 获取本周资源更新条数
-				currentDate.setFirstDayOfWeek(Calendar.MONDAY);
-				currentDate.set(Calendar.HOUR_OF_DAY, 0);
-				currentDate.set(Calendar.MINUTE, 0);
-				currentDate.set(Calendar.SECOND, 0);
-				currentDate.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-				resourceinfo.setCtime((Date) currentDate.getTime().clone());
-			} else if (timeRange.trim().equals("month")) {
-				// 获取本月资源更新条数
-				currentDate = new GregorianCalendar();
-				currentDate.set(Calendar.DATE, 1);
-				currentDate.set(Calendar.HOUR_OF_DAY, 0);
-				currentDate.set(Calendar.MINUTE, 0);
-				currentDate.set(Calendar.SECOND, 0);
-				resourceinfo.setCtime((Date) currentDate.getTime().clone());
-			}
-		}
+        String timeRange = request.getParameter("timerange");
+        if (timeRange != null && timeRange.trim().length() > 0) {
+            if (resourceinfo == null)
+                resourceinfo = new ResourceInfo();
+            Calendar currentDate = new GregorianCalendar();
+            if (timeRange.trim().equals("day")) {
+                // 获取本日资源更新条数
+                currentDate.set(Calendar.HOUR_OF_DAY, 0);
+                currentDate.set(Calendar.MINUTE, 0);
+                currentDate.set(Calendar.SECOND, 0);
+                resourceinfo.setCtime((Date) currentDate.getTime().clone());
+            } else if (timeRange.trim().equals("week")) {
+                // 获取本周资源更新条数
+                currentDate.setFirstDayOfWeek(Calendar.MONDAY);
+                currentDate.set(Calendar.HOUR_OF_DAY, 0);
+                currentDate.set(Calendar.MINUTE, 0);
+                currentDate.set(Calendar.SECOND, 0);
+                currentDate.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                resourceinfo.setCtime((Date) currentDate.getTime().clone());
+            } else if (timeRange.trim().equals("month")) {
+                // 获取本月资源更新条数
+                currentDate = new GregorianCalendar();
+                currentDate.set(Calendar.DATE, 1);
+                currentDate.set(Calendar.HOUR_OF_DAY, 0);
+                currentDate.set(Calendar.MINUTE, 0);
+                currentDate.set(Calendar.SECOND, 0);
+                resourceinfo.setCtime((Date) currentDate.getTime().clone());
+            }
+        }
 
         if(courseid!=null&&courseid.length()>0)
             resourceinfo.setCourseid(Long.parseLong(courseid));
 
-		JsonEntity je = new JsonEntity();
-		PageResult presult = this.getPageResultParameter(request);
-		resourceinfo.setResstatus(1);
-		List<UserInfo> extList = this.resourceManager.getListByUserSort(resourceinfo, presult);
-		
-		presult.setList(extList);
-		je.setPresult(presult);
-		response.getWriter().print(je.toJSON());
-	}
+        JsonEntity je = new JsonEntity();
+        PageResult presult = this.getPageResultParameter(request);
+        resourceinfo.setResstatus(1);
+        List<UserInfo> extList = this.resourceManager.getListByUserSort(resourceinfo, presult);
 
-	@RequestMapping(params = "m=ajaxExcellentList", method = RequestMethod.POST)
-	public void getExcellentResource(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		boolean reverse=false;
-		JsonEntity je = new JsonEntity();
+        presult.setList(extList);
+        je.setPresult(presult);
+        response.getWriter().print(je.toJSON());
+    }
+
+    @RequestMapping(params = "m=ajaxExcellentList", method = RequestMethod.POST)
+    public void getExcellentResource(HttpServletRequest request,
+                                     HttpServletResponse response) throws Exception {
+        boolean reverse=false;
+        JsonEntity je = new JsonEntity();
         ResourceInfo resourceinfo = this.getParameter(request,
                 ResourceInfo.class);
         resourceinfo.setResstatus(1);
-		PageResult presult = this.getPageResultParameter(request);
-		String type = request.getParameter("type");
-		if(type!=null&&type.equals("video")){           //视频包括视频与动画
-			type=UtilTool._VIEW_SUFFIX_TYPE_REGULAR;
+        PageResult presult = this.getPageResultParameter(request);
+        String type = request.getParameter("type");
+        if(type!=null&&type.equals("video")){           //视频包括视频与动画
+            type=UtilTool._VIEW_SUFFIX_TYPE_REGULAR;
             type+="|"+UtilTool._SWF_SUFFIX_TYPE_REGULAR;
             type=type.replaceAll("\\(|\\)|\\$","");
         }else if(type!=null&&type.equals("doc")){       //文档包含除视频与动画以外的文件
-			type=UtilTool._DOC_SUFFIX_TYPE_REGULAR;
+            type=UtilTool._DOC_SUFFIX_TYPE_REGULAR;
             type+="|"+UtilTool._IMG_SUFFIX_TYPE_REGULAR;
             type+="|"+UtilTool._MP3_SUFFIX_TYPE_REGULAR;
             type+="|"+UtilTool._PDF_SUFFIX_TYPE_REGULAR;
             type=type.replaceAll("\\(|\\)|\\$","");
         }else{
-			type=UtilTool._VIEW_SUFFIX_TYPE_REGULAR+"|"+UtilTool._DOC_SUFFIX_TYPE_REGULAR;
+            type=UtilTool._VIEW_SUFFIX_TYPE_REGULAR+"|"+UtilTool._DOC_SUFFIX_TYPE_REGULAR;
             type=type.replaceAll("\\(|\\)|\\$","");
-			reverse=true;
-		}
+            reverse=true;
+        }
         resourceinfo.setType(type);
         resourceinfo.setReverse(reverse);
         presult.setOrderBy(" r.RECOMENDNUM desc,r.praisenum desc ");
@@ -1576,11 +1576,11 @@ public class ResourceController extends BaseController<ResourceInfo> {
         }else{
             for(SubjectUser sb:sbuList){
                 if(sb!=null){
-                        if(resourceinfo.getSubjectvalues()!=null&&resourceinfo.getSubjectvalues().trim().length()>0
-                                &&resourceinfo.getSubjectvalues().indexOf(sb.getSubjectid().toString())<0){
-                            resourceinfo.setSubjectvalues(resourceinfo.getSubjectvalues()+","+sb.getSubjectid());
-                        }else
-                            resourceinfo.setSubjectvalues(sb.getSubjectid().toString());
+                    if(resourceinfo.getSubjectvalues()!=null&&resourceinfo.getSubjectvalues().trim().length()>0
+                            &&resourceinfo.getSubjectvalues().indexOf(sb.getSubjectid().toString())<0){
+                        resourceinfo.setSubjectvalues(resourceinfo.getSubjectvalues()+","+sb.getSubjectid());
+                    }else
+                        resourceinfo.setSubjectvalues(sb.getSubjectid().toString());
                 }
             }
         }
@@ -1589,7 +1589,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
          */
         if(mapList!=null&&mapList.size()>0){
             //得到这个学校的最高年级
-          //  resourceinfo.setGrade(this.gradeManager.getList(null, null).get(0).getGradeid());
+            //  resourceinfo.setGrade(this.gradeManager.getList(null, null).get(0).getGradeid());
             for (Map<String,Object> mp:mapList){
                 if(mp!=null&&mp.containsKey("GRADE_ID")&&mp.get("GRADE_ID")!=null){
                     if( resourceinfo.getGradevalues()==null||resourceinfo.getGradevalues().indexOf(mp.get("GRADE_ID").toString())<0)
@@ -1601,27 +1601,27 @@ public class ResourceController extends BaseController<ResourceInfo> {
             }
         }
         resourceinfo.setSharestatusvalues("1,2");
-		List<ResourceInfo> rsList = this.resourceManager.getListByExtendValue(resourceinfo, presult);
-		presult.setList(rsList);
+        List<ResourceInfo> rsList = this.resourceManager.getListByExtendValue(resourceinfo, presult);
+        presult.setList(rsList);
         if(presult.getPageTotal()>3){   //只显示三页
             presult.setRecTotal(presult.getPageSize()*3);
         }
-		je.setPresult(presult);
-		je.setType("success");
-		response.getWriter().print(je.toJSON());
-	}
+        je.setPresult(presult);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
 
-	@RequestMapping(params = "m=ajaxCheckList", method = RequestMethod.POST)
-	public void getCheckResultList(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		ResourceInfo resourceinfo = this.getParameter(request,ResourceInfo.class);
-		JsonEntity je = new JsonEntity();
-		PageResult presult = this.getPageResultParameter(request);
+    @RequestMapping(params = "m=ajaxCheckList", method = RequestMethod.POST)
+    public void getCheckResultList(HttpServletRequest request,
+                                   HttpServletResponse response) throws Exception {
+        ResourceInfo resourceinfo = this.getParameter(request,ResourceInfo.class);
+        JsonEntity je = new JsonEntity();
+        PageResult presult = this.getPageResultParameter(request);
         presult.setOrderBy(" r.RES_STATUS ASC,r.REPORTNUM DESC,r.C_time DESC ");
         resourceinfo.setResstatus(-100);//(r.RES_STATUS=1 OR r.res_status=3)   只查询已经通过的 或者删除的
         resourceinfo.setSharestatusvalues("1,2");//校内，云端都查
-       // resourceinfo.setIsunion(1);
-		List<ResourceInfo> extList = this.resourceManager.getCheckListByExtendValue(resourceinfo, presult);
+        // resourceinfo.setIsunion(1);
+        List<ResourceInfo> extList = this.resourceManager.getCheckListByExtendValue(resourceinfo, presult);
         if(extList!=null&&extList.size()>0){
             StringBuilder resStrBuilder=new StringBuilder();
             for(ResourceInfo entity:extList){
@@ -1655,24 +1655,24 @@ public class ResourceController extends BaseController<ResourceInfo> {
             }
         }
 
-		presult.setList(extList);
-		je.setPresult(presult);
+        presult.setList(extList);
+        je.setPresult(presult);
         je.setType("success");
-		response.getWriter().print(je.toJSON());
-	}
+        response.getWriter().print(je.toJSON());
+    }
 
-	/**
-	 * 进入修改资源的页面。
-	 * 
-	 * @param request
-	 * @param mp
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=todetail", method = RequestMethod.GET)
-	public ModelAndView toResourseDetail(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		JsonEntity jeEntity = new JsonEntity();
+    /**
+     * 进入修改资源的页面。
+     *
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=todetail", method = RequestMethod.GET)
+    public ModelAndView toResourseDetail(HttpServletRequest request,
+                                         HttpServletResponse response, ModelMap mp) throws Exception {
+        JsonEntity jeEntity = new JsonEntity();
         // 得到相关参数
         ResourceInfo entity=this.getParameter(request,ResourceInfo.class);
         //验证参数
@@ -1829,7 +1829,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
             TpCourseResource cr=new TpCourseResource();
             cr.setResid(entity.getResid());
             PageResult npresult=new PageResult();
-           npresult.setPageNo(1);
+            npresult.setPageNo(1);
             npresult.setPageSize(1);
             List<TpCourseResource> tpCr=this.tpCourseResourceManager.getList(cr,npresult);
             if(tpCr!=null&&tpCr.size()>0){
@@ -1873,8 +1873,8 @@ public class ResourceController extends BaseController<ResourceInfo> {
         mp.put("imagesuffix",UtilTool._IMG_SUFFIX_TYPE_REGULAR.replaceAll("\\(|\\$|\\||\\)",""));
 
 
-		return new ModelAndView("/resource/base/detail", mp);
-	}
+        return new ModelAndView("/resource/base/detail", mp);
+    }
 
     /**
      * 更新某个字段
@@ -2008,13 +2008,13 @@ public class ResourceController extends BaseController<ResourceInfo> {
         entity.setResstatus(3);//已删除
         List<Object> objList=this.resourceManager.getUpdateSql(entity,sqlbuilder);
         if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
-           sqlArrayList.add(sqlbuilder.toString());
+            sqlArrayList.add(sqlbuilder.toString());
             objArrayList.add(objList);
         }
         //操作记录
         sqlbuilder=new StringBuilder();
         objList=this.resourceManager.getAddOperateLog(this.logined(request).getRef(),"rs_resource_info"
-                    ,entity.getResid().toString(),"","","UPDATE",this.logined(request).getRealname()+"(逻辑)删除了资源"+entity.getResid(),sqlbuilder);
+                ,entity.getResid().toString(),"","","UPDATE",this.logined(request).getRealname()+"(逻辑)删除了资源"+entity.getResid(),sqlbuilder);
         if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
             sqlArrayList.add(sqlbuilder.toString());
             objArrayList.add(objList);
@@ -2022,7 +2022,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
 
         if(sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
             if(this.resourceManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
-               jsonEntity.setType("success");
+                jsonEntity.setType("success");
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             }else
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
@@ -2199,9 +2199,9 @@ public class ResourceController extends BaseController<ResourceInfo> {
         // 获取本日资源更新条数
         Calendar currentDate = new GregorianCalendar();
         if(type.trim().toLowerCase().equals("week")){
-          rs.setType("1");
+            rs.setType("1");
         }else if(type.trim().toLowerCase().equals("month")){
-        // 获取本周资源更新条数
+            // 获取本周资源更新条数
             rs.setType("2");
         }else{
             jsonEntity.setMsg(UtilTool.utilproperty.getProperty("PARAM_ERROR"));
@@ -2268,7 +2268,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
     @RequestMapping(params="m=ajx_hotDownRes",method=RequestMethod.POST)
     public void getHotDownResByType(HttpServletRequest request,HttpServletResponse response) throws Exception{
         PageResult presult=this.getPageResultParameter(request);
-       // String type=request.getParameter("type");
+        // String type=request.getParameter("type");
         JsonEntity jsonEntity=new JsonEntity()  ;
         //得到当前登陆用户的主授学科,如果没有则得到辅授学科，如果没有学科信息，则得到该学校的第一个学科
         Integer subvalue=null;
@@ -2346,18 +2346,38 @@ public class ResourceController extends BaseController<ResourceInfo> {
     }
 
     /**
-     *
+     *得到关于我的当前动态
      * @param request
      * @param response
      * @throws Exception
      */
     @RequestMapping(params="m=ajx_RsMyInfoCloud",method = RequestMethod.POST)
     public void ajx_RsMyInfoCloud(HttpServletRequest request,HttpServletResponse response) throws Exception{
-       PageResult presult=this.getPageResultParameter(request);
-       MyInfoCloudInfo myInfoCloudInfo=new MyInfoCloudInfo();
+        PageResult presult=this.getPageResultParameter(request);
+        MyInfoCloudInfo myInfoCloudInfo=new MyInfoCloudInfo();
         myInfoCloudInfo.setUserid(Long.parseLong(this.logined(request).getUserid()+""));
         myInfoCloudInfo.setType(1);
         List<MyInfoCloudInfo> myList=this.resourceManager.getMyInfoCloudList(myInfoCloudInfo,presult);
+        presult.setList(myList);
+        JsonEntity jsonEntity=new JsonEntity();
+        jsonEntity.setType("success");
+        jsonEntity.setPresult(presult);
+        response.getWriter().print(jsonEntity.toJSON());
+    }
+
+    /**
+     *得到他人动态AJAX
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=ajx_RsMyInfoCloudOther",method = RequestMethod.POST)
+    public void ajx_RsMyInfoCloudOther(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        PageResult presult=this.getPageResultParameter(request);
+        MyInfoCloudInfo myInfoCloudInfo=new MyInfoCloudInfo();
+        myInfoCloudInfo.setUserid(Long.parseLong(this.logined(request).getUserid()+""));
+        myInfoCloudInfo.setType(1);
+        List<MyInfoCloudInfo> myList=this.resourceManager.getMyInfoCloudOtherList(myInfoCloudInfo,presult);
         presult.setList(myList);
         JsonEntity jsonEntity=new JsonEntity();
         jsonEntity.setType("success");
