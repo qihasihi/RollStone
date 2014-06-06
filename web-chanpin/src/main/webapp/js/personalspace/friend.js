@@ -3,12 +3,12 @@
  */
 
 /**
- * Ìí¼ÓºÃÓÑ·Ö×é
+ * æ·»åŠ å¥½å‹åˆ†ç»„
  */
 function doAddGroup(){
     var groupname=$("#groupname");
     if(groupname.val().Trim().length<1){
-        alert('ÇëÊäÈë·Ö×éÃû³Æ!');
+        alert('è¯·è¾“å…¥åˆ†ç»„åç§°!');
         return;
     }
     $.ajax({
@@ -18,7 +18,7 @@ function doAddGroup(){
         dataType: 'json',
         cache: false,
         error: function () {
-            alert('ÍøÂçÒì³£!')
+            alert('ç½‘ç»œå¼‚å¸¸!')
         },
         success: function (rps) {
             if (rps.type == 'error') {
@@ -36,11 +36,11 @@ function doUpdGroup(){
     var groupname=$("#dv_upd input[id='groupname']");
     var groupid=$("#hd_groupid").val();
     if(groupid.length<1){
-        alert('Î´»ñÈ¡·Ö×é±êÊ¶!');
+        alert('æœªè·å–åˆ†ç»„æ ‡è¯†!');
         return;
     }
     if(groupname.val().Trim().length<1){
-        alert('ÇëÊäÈë·Ö×éÃû³Æ!');
+        alert('è¯·è¾“å…¥åˆ†ç»„åç§°!');
         return;
     }
     $.ajax({
@@ -53,7 +53,7 @@ function doUpdGroup(){
         dataType: 'json',
         cache: false,
         error: function () {
-            alert('ÍøÂçÒì³£!')
+            alert('ç½‘ç»œå¼‚å¸¸!')
         },
         success: function (rps) {
             if (rps.type == 'error') {
@@ -70,11 +70,11 @@ function doUpdGroup(){
 
 function doDelGroup(groupid){
     if(typeof  groupid=='undefined'||groupid.length<1){
-        alert('Î´»ñÈ¡·Ö×é±êÊ¶!');
+        alert('æœªè·å–åˆ†ç»„æ ‡è¯†!');
         return;
     }
 
-    if(!confirm('É¾³ı·Ö×é£¬²»»áÉ¾³ıºÃÓÑ£¬¸Ã×éÏÂµÄºÃÓÑ×Ô¶¯×ªµ½¡¾ÎÒµÄºÃÓÑ¡¿ÖĞ!\n\nÈ·¶¨É¾³ı¸Ã×éÂğ?'))return;
+    if(!confirm('åˆ é™¤åˆ†ç»„ï¼Œä¸ä¼šåˆ é™¤å¥½å‹ï¼Œè¯¥ç»„ä¸‹çš„å¥½å‹è‡ªåŠ¨è½¬åˆ°ã€æˆ‘çš„å¥½å‹ã€‘ä¸­!\n\nç¡®å®šåˆ é™¤è¯¥ç»„å—?'))return;
     $.ajax({
         url: 'userfriend?m=delGroup',
         type: 'post',
@@ -84,7 +84,7 @@ function doDelGroup(groupid){
         dataType: 'json',
         cache: false,
         error: function () {
-            alert('ÍøÂçÒì³£!')
+            alert('ç½‘ç»œå¼‚å¸¸!')
         },
         success: function (rps) {
             if (rps.type == 'error') {
@@ -105,7 +105,7 @@ function loadGroup(){
         dataType: 'json',
         cache: false,
         error: function () {
-            alert('ÍøÂçÒì³£!')
+            alert('ç½‘ç»œå¼‚å¸¸!')
         },
         success: function (rps) {
             var h='';
@@ -114,7 +114,7 @@ function loadGroup(){
                     h+='<input type="hidden" value="'+itm.groupid+'"/><li><a href="javascript:void(0);"  onclick="loadFriendById(\''+itm.groupid+'\')">'+itm.groupname+'</a></li>';
                 });
             }
-            h+='<input type="hidden" value="0"/><li><a href="javascript:void(0);"  onclick="loadFriendById(\'0\')">ÎÒµÄºÃÓÑ</a></li>';
+            h+='<input type="hidden" value="0"/><li><a href="javascript:void(0);"  onclick="loadFriendById(\'0\')">æˆ‘çš„å¥½å‹</a></li>';
             $("#ul_group").html(h);
 
             var liObj=$("#ul_group li").eq(0);
@@ -128,11 +128,11 @@ function loadGroup(){
 }
 
 /**
- * ·Ö×éÏêÇé
+ * åˆ†ç»„è¯¦æƒ…
  */
 function load_group_detail(groupid){
     if(groupid=='0'){
-        $("#p_operate").html('ÎÒµÄºÃÓÑ');
+        $("#p_operate").html('æˆ‘çš„å¥½å‹');
         return;
     }
 
@@ -143,7 +143,7 @@ function load_group_detail(groupid){
         dataType: 'json',
         cache: false,
         error: function () {
-            alert('ÍøÂçÒì³£!')
+            alert('ç½‘ç»œå¼‚å¸¸!')
         },
         success: function (rps) {
             var h='';
@@ -151,8 +151,8 @@ function load_group_detail(groupid){
                 $.each(rps.objList,function(idx,itm){
                     h=itm.groupname+"&nbsp;";
                     if(itm.groupid!=0){
-                        h+='<a href="javascript:void(0);" onclick="showModel(\'dv_upd\');toUpdGroup(\''+itm.groupid+'\')">ĞŞ¸Ä</a>&nbsp;';
-                        h+='<a href="javascript:doDelGroup(\''+itm.groupid+'\')">É¾³ı</a>';
+                        h+='<a href="javascript:void(0);" onclick="showModel(\'dv_upd\');toUpdGroup(\''+itm.groupid+'\')">ä¿®æ”¹</a>&nbsp;';
+                        h+='<a href="javascript:doDelGroup(\''+itm.groupid+'\')">åˆ é™¤</a>';
                     }
                 });
             }
@@ -163,7 +163,7 @@ function load_group_detail(groupid){
 
 
 /**
- * »ñÈ¡ºÃÓÑ
+ * è·å–å¥½å‹
  */
 function loadFriendById(groupid){
     if(typeof groupid=='undefined')
@@ -178,7 +178,7 @@ function loadFriendById(groupid){
         dataType: 'json',
         cache: false,
         error: function () {
-            alert('ÍøÂçÒì³£!')
+            alert('ç½‘ç»œå¼‚å¸¸!')
         },
         success: function (rps) {
             var h='';
@@ -207,7 +207,7 @@ function toUpdGroup(groupid){
         dataType: 'json',
         cache: false,
         error: function () {
-            alert('ÍøÂçÒì³£!')
+            alert('ç½‘ç»œå¼‚å¸¸!')
         },
         success: function (rps) {
             var h='';
