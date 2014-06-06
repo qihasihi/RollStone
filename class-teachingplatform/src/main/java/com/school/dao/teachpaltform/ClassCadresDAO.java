@@ -14,7 +14,7 @@ import com.school.util.PageResult;
 @Component  
 public class ClassCadresDAO extends CommonDAO<ClassCadresInfo> implements IClassCadresDAO {
 
-	public Boolean doSave(ClassCadresInfo classcadresinfo) {
+	public Boolean doSave(ClassCadresInfo classcadresinfo) {//
 		if (classcadresinfo == null)
 			return false;
 		StringBuilder sqlbuilder = new StringBuilder();
