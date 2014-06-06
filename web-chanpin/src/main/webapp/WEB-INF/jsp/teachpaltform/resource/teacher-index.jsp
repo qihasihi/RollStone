@@ -51,7 +51,7 @@
                         <span ><a style="color:#34a4c6 ">浏览量:</a></span><span style="color:#34a4c6 " id="sp_viewcount"></span>
                     </p-->
                     <ul class="font-blue">
-                        <li><strong><a>收藏</a></strong><br/><font id="sp_collect_count"></font></li>
+                        <!--<li><strong><a>收藏</a></strong><br/><font id="sp_collect_count"></font></li>-->
                         <li><strong id="sp_download"><a href="#">下载</a></strong><br/><font id="sp_download_count"></font></li>
                         <li><strong>浏览量</strong><br/>
                             <font id="sp_viewcount"></font></li>
