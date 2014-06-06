@@ -7,7 +7,7 @@
 		<meta http-equiv="pragma" content="no-cache">
 		<meta http-equiv="cache-control" content="no-cache">
 		<meta http-equiv="expires" content="0">
-	<script type="text/javascript" src="js/teachpaltform/group.js"></script>  
+	<script type="text/javascript" src="js/teachpaltform/group.js"></script>
 <script type="text/javascript">
     var currtenTab=1; //当前学科导航栏页数
     var tabSize=6; //学科导航栏每页显示数量
@@ -88,7 +88,7 @@
             <input type="hidden" id="classType" value="${classtype}"/>
             <div class="jxxt_banji_xzgl">
                 <p class="font-darkblue"><a name="a_hide" href="javascript:showModel('addGroupDiv',false);"><span class="ico26"></span>新建小组</a></p>
-                <div class="jxxt_banji_xzgl_text">
+                <div class="jxxt_banji_xzgl_text" id="nogroup">
                     <p class="font-black">未分配成员：</p>
                     <ul id="noGroupStudents">
                     </ul>

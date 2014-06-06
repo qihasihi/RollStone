@@ -255,6 +255,10 @@ function moveAllStudent(type){
 function submitCheckedStu(){
     var students = new Array();
     $("input[name='checkedStu']").each(function() {students.push($(this).val());});
+    if(students.length<1){
+        alert("还没选择学生");
+        return;
+    }
     $.ajax({
         url:'virtualclassstudent?m=addVirtualClassStudents',
         data:{

@@ -65,6 +65,9 @@
                         var typename="";
                         var details="";
                         var timestring = im.C_TIME;
+                        var now="";
+                        var myDate = new Date();
+                        now=myDate.toLocaleTimeString();
                         timestring = timestring.substring(0,timestring.lastIndexOf("."));
                         if(im.TASK_TYPE==1){
                             typename="资源学习";
@@ -80,7 +83,11 @@
                         if(im.STATUS>0){
                             status='<span class="ico12" title="完成"></span>';
                         }else{
-                            status='<span class="ico24" title="未完成"></span>';
+                            if(validateTwoDate(now,im.E_TIME)){
+                                status='<span class="ico24a" title="进行中"></span>';
+                            }else{
+                                status='<span class="ico24b" title="已结束"></span>';
+                            }
                         }
                         var content="";
                         content=im.ANSWERCONTENT;

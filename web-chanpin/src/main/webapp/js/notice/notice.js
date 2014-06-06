@@ -81,13 +81,13 @@ function noticeUserListReturn(rps){
 			p1.setRectotal(0);
 			p1.Refresh();
 			// 设置显示值
-			var shtml = '<li>暂时没有校园活动信息!</li>';
+			var shtml = '<li>暂时没有通知公告信息!</li>';
 			$("#mainList").html(shtml);
 		}		
 	}else{
 		var shtml = '';
 		if(rps.objList.length<1){
-			shtml+='<li>暂时没有校园活动信息!</li>';
+			shtml+='<li>暂时没有通知公告信息!</li>';
 		}else{
 			$.each(rps.objList,function(idx,itm){
 				shtml+='<li>';

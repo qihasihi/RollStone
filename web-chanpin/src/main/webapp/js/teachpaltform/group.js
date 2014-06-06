@@ -103,7 +103,8 @@ function getNoGroupStudentsByClassId(){
             $("#no_gs").append("<option id='special_option' value='0' ></option>");
         }
 		if(responseText.objList.length==0){
-			$("#noGroupStudents").html("<li>全部添加到小组！</li>");
+			//$("#noGroupStudents").html("<li>全部添加到小组！</li>");
+            $("#nogroup").hide();
 		}
 
         $("#no_gs_bk").html($("#no_gs").html())

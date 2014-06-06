@@ -386,7 +386,7 @@
 	.ico10{background-position:-116px -34px;}
 	.ico11{background-position:0 -272px;}
 
-	.ico02,.ico13,.ico14,.ico15,.ico16,.ico17,.ico18,.ico19,.ico20,.ico21,.ico22,.ico23,.ico24,.ico25,.ico_star1,.ico_star2,.ico_star3{
+	.ico02,.ico13,.ico14,.ico15,.ico16,.ico17,.ico18,.ico19,.ico20,.ico21,.ico22,.ico23,.ico24a,.ico24b,.ico25,.ico_star1,.ico_star2,.ico_star3{
 	width:17px;
 	height:17px;
 	background: url(images/ico03_131230.png) no-repeat;
@@ -406,7 +406,8 @@
 	.ico21{background-position:-89px -18px;}
 	.ico22{background-position:-107px -18px;}
 	.ico23{background-position:-118px 0;}
-	.ico24{background-position:-125px -18px;}
+	.ico24a{background-position:-125px -18px;}
+	.ico24b{background-position:-23px -24px;}
 	.ico25{background-position:-136px 0;}
 	.ico_star1{background-position:-143px -18px;margin:0 1px;}
 	.ico_star2{background-position:-154px 0;margin:0 1px;}
