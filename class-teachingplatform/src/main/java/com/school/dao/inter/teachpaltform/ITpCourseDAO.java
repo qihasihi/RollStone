@@ -6,6 +6,7 @@ import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.util.PageResult;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ITpCourseDAO extends ICommonDAO<TpCourseInfo>{
     public List<TpCourseInfo> getTchCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
@@ -22,6 +23,12 @@ public interface ITpCourseDAO extends ICommonDAO<TpCourseInfo>{
      * @return
      */
     public List<TpCourseInfo> getCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
+
+    /**
+     * 查询关联专题
+     * @return
+     */
+    public List<Map<String,Object>> getRelatedCourseList(Integer materialid,Integer userid,String coursename);
 
     /**
      * 得到同步的SQL

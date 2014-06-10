@@ -14,6 +14,7 @@
     <script type="text/javascript">
         var materialid="${materialid}";
         $(function(){
+            inputThinking();
             $("#material_id").val(materialid);
 
             /**
@@ -150,6 +151,12 @@
                     云端教师&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="radio" name="sharetype" id="sharetype" value="3" checked="true"/>
                     不分享</td>
+            </tr>
+            <tr>
+                <th><span class="ico06"></span>关联专题：</th>
+                <td id="related_p">
+                    <input type="text" id="related" />
+                </td>
             </tr>
             <tr>
                 <th>&nbsp;</th>

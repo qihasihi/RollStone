@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO {
@@ -118,6 +119,33 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
         if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
             presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
         return tpcourseinfoList;
+    }
+
+    public List<Map<String,Object>> getRelatedCourseList(Integer materialid, Integer userid,String coursename) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_course_related_proc_list(");
+        List<Object> objList=new ArrayList<Object>();
+        if(materialid!=null){
+            sqlbuilder.append("?,");
+            objList.add(materialid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(materialid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(coursename!=null){
+            sqlbuilder.append("?");
+            objList.add(coursename);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> courselist=this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        return courselist;
     }
 
     /**

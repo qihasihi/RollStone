@@ -1848,6 +1848,28 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     }
 
     /**
+     * 获取关联专题
+     */
+    @RequestMapping(params = "m=getRelatedCourse", method = RequestMethod.POST)
+    public void getRelatedCourse(HttpServletRequest request,
+                                         HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String materialid=request.getParameter("materialid");
+        String coursename=request.getParameter("course_name");
+        if (materialid == null || coursename == null) {
+            je.setType("error");
+            je.setMsg("参数错误，无法请求数据！");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        UserInfo user = this.logined(request);
+        List<Map<String,Object>> relatedCourseList=this.tpCourseManager.getRelatedCourseList(Integer.parseInt(materialid),user.getUserid(),coursename);
+        je.setObjList(relatedCourseList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
      * 获取教师课题ajax列表
      */
     @RequestMapping(params = "m=getTchCourListAjax", method = RequestMethod.POST)

@@ -6,6 +6,7 @@ import com.school.manager.base.IBaseManager;
 import com.school.util.PageResult;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ITpCourseManager  extends IBaseManager<TpCourseInfo> {
     public List<TpCourseInfo> getTchCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
@@ -22,6 +23,12 @@ public interface ITpCourseManager  extends IBaseManager<TpCourseInfo> {
      * @return
      */
     public List<TpCourseInfo> getCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
+
+    /**
+     * 查询关联专题
+     * @return
+     */
+    public List<Map<String,Object>> getRelatedCourseList(Integer materialid,Integer userid,String coursename);
 
     /**
      * 得到同步的SQL

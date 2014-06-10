@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCourseManager  {
@@ -113,6 +114,12 @@ public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCo
     public List<TpCourseInfo> getCourseList(TpCourseInfo tpcourseinfo, PageResult presult) {
         return tpcoursedao.getCourseList(tpcourseinfo,presult);
     }
+
+    @Override
+    public List<Map<String,Object>> getRelatedCourseList(Integer materialid, Integer userid,String coursename) {
+        return tpcoursedao.getRelatedCourseList(materialid,userid,coursename);
+    }
+
     /**
      * 得到云端共享的集合
      * @param tpcourseinfo
