@@ -23,10 +23,10 @@
         changeTab('back');
         changeTab('front');
 
-        //已托管
-        <c:if test="${!empty isTrust}">
-             $("a[name='a_hide']").remove();
-        </c:if>
+        <%--//已托管--%>
+        <%--<c:if test="${!empty isTrust}">--%>
+             <%--$("a[name='a_hide']").remove();--%>
+        <%--</c:if>--%>
     });
 
     function changeTab(direct){

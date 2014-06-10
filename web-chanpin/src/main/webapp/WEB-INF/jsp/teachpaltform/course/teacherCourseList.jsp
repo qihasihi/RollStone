@@ -41,21 +41,21 @@
             });
 
             <c:if test="${isTrust==1}">
-            pTsList = new PageControl( {
-                post_url : 'teachercourse?m=getTrusteeshipCourListAjax',
-                page_id : 'pageTs',
-                page_control_name : "pTsList",
-                post_form : document.pListForm,
-                gender_address_id : 'pTsListaddress',
-                http_free_operate_handler : preeDoPageSub, //执行查询前操作的内容
-                http_operate_handler : getTsInvestReturnMethod, //执行成功后返回方法
-                return_type : 'json', //放回的值类型
-                page_no : 1, //当前的页数
-                page_size : 20, //当前页面显示的数量
-                rectotal : 0, //一共多少
-                pagetotal : 1,
-                operate_id : "initItemList"
-            });
+//            pTsList = new PageControl( {
+//                post_url : 'teachercourse?m=getTrusteeshipCourListAjax',
+//                page_id : 'pageTs',
+//                page_control_name : "pTsList",
+//                post_form : document.pListForm,
+//                gender_address_id : 'pTsListaddress',
+//                http_free_operate_handler : preeDoPageSub, //执行查询前操作的内容
+//                http_operate_handler : getTsInvestReturnMethod, //执行成功后返回方法
+//                return_type : 'json', //放回的值类型
+//                page_no : 1, //当前的页数
+//                page_size : 20, //当前页面显示的数量
+//                rectotal : 0, //一共多少
+//                pagetotal : 1,
+//                operate_id : "initItemList"
+//            });
             </c:if>
             getTermCondition('${currtTerm.ref}','${currtTerm.year } ${currtTerm.termname}');
 
@@ -179,31 +179,31 @@
         <form id="pListForm" name="pListForm"><p class="nextpage" id="pListaddress" align="center"></p></form>
     </div>
 
-    <h6></h6>
+    <%--<h6></h6>--%>
 
     <c:if test="${isTrust==1}">
-    <div class="jxxt_title">
-        <!-- <p class="f_right">已托管班级：高一1班&nbsp;&nbsp;高一2班&nbsp;&nbsp;高一3班</p> -->
-        <p><span class="ico14"></span><strong>托管班级课表</strong></p>
-    </div>
+    <%--<div class="jxxt_title">--%>
+        <%--<!-- <p class="f_right">已托管班级：高一1班&nbsp;&nbsp;高一2班&nbsp;&nbsp;高一3班</p> -->--%>
+        <%--<p><span class="ico14"></span><strong>托管班级课表</strong></p>--%>
+    <%--</div>--%>
 
-    <div id="ts_course" class="jxxt_tab_layout">
-        <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
-            <col class="w120"/>
-            <col class="w350"/>
-            <col class="w350"/>
-            <col class="w120"/>
-            <tr>
-                <th>受托老师</th>
-                <th>专题名称</th>
-                <th>班级&mdash;开始时间</th>
-                <th>专题评价</th>
-            </tr>
-            <tbody id="tsCourseTable">
-            </tbody>
-        </table>
-        <form id="pTsListForm" name="pTsListForm"><p class="nextpage" id="pTsListaddress" align="center"></p></form>
-    </div>
+    <%--<div id="ts_course" class="jxxt_tab_layout">--%>
+        <%--<table border="0" cellpadding="0" cellspacing="0" class="public_tab2">--%>
+            <%--<col class="w120"/>--%>
+            <%--<col class="w350"/>--%>
+            <%--<col class="w350"/>--%>
+            <%--<col class="w120"/>--%>
+            <%--<tr>--%>
+                <%--<th>受托老师</th>--%>
+                <%--<th>专题名称</th>--%>
+                <%--<th>班级&mdash;开始时间</th>--%>
+                <%--<th>专题评价</th>--%>
+            <%--</tr>--%>
+            <%--<tbody id="tsCourseTable">--%>
+            <%--</tbody>--%>
+        <%--</table>--%>
+        <%--<form id="pTsListForm" name="pTsListForm"><p class="nextpage" id="pTsListaddress" align="center"></p></form>--%>
+    <%--</div>--%>
     </c:if>
 
 </div>
