@@ -28,7 +28,7 @@ public class CheckDAO extends CommonDAO<CheckInfo> implements ICheckDAO {
 		return false;
 	}
 	
-	public Boolean doDelete(CheckInfo checkinfo) {
+	public Boolean doDelete(CheckInfo checkinfo) {//
 		if(checkinfo==null)		
 			return false;
 		StringBuilder sqlbuilder=new StringBuilder();
