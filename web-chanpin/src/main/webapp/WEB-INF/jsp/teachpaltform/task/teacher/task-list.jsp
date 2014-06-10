@@ -131,7 +131,7 @@
                     }else if(itm.taskstatus=="1"){
                         html+='<p class="blue"><span class="ico_time"></span>任务未开始</p>';
                     }else{
-                        html+='<p class="green"><span class="ico_time"></span>'+itm.taskstatus+'</p>';
+                        html+='<p class="green"><span class="ico_time"></span>任务进行中</p>';
                         html+='<input type="hidden" name="hd_task_status" value="'+itm.taskid+'"/>';
                     }
 

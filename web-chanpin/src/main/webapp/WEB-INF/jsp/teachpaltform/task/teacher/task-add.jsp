@@ -18,6 +18,52 @@
                 questype=3
             //任务类型
             changeTaskType("${param.tasktype}","${param.taskvalueid}");
+            $("#time_rdo").attr("checked",true);
+
+
+            $("input[name='time_rdo']").bind("click",function(){
+                if($(this).val()==1){
+                    $("#list_ct p").hide();
+
+                    $("input[name='ck_cls']:checked").each(function(idx,itm) {
+                        $("#p_"+$(this).val()).show();
+                    });
+                    $("input[name='ck_group']:checked").each(function(idx,itm) {
+                        var p=$(itm).parent().parent("ul");
+                        var tmpId=p.attr("id").substring(p.attr("id").lastIndexOf('_')+1);
+                        $("#p_"+tmpId).show();
+                    });
+
+                    $("#all_ct").hide();
+                    $("#list_ct").show('fast');
+                }else{
+                    $("#list_ct").hide();
+                    $("#all_ct").show('fast');
+                }
+            });
+
+            $("input[name='ck_cls']").bind("click",function(){
+                if($(this).attr("checked")){
+                    $("#p_"+$(this).val()).show();
+                }else{
+                    $("#p_"+$(this).val()).hide();
+                    $("#b_time_"+$(this).val()+"").val("");
+                    $("#e_time_"+$(this).val()+"").val("");
+                }
+            });
+
+            $("input[name='ck_group']").bind("click",function(){
+                var p=$(this).parent().parent("ul");
+                var tmpId=p.attr("id").substring(p.attr("id").lastIndexOf('_')+1);
+                var len=$('#p_group_'+tmpId+' input:checked').length;
+                if(len>0)
+                    $("#p_"+tmpId).show();
+                else{
+                    $("#p_"+tmpId).hide();
+                    $("#b_time_"+tmpId+"").val("");
+                    $("#e_time_"+tmpId+"").val("");
+                }
+            });
 
         });
         function changeTaskType(type,taskvalueid){
@@ -96,15 +142,15 @@
         </tr>
 
         <tr>
-            <th><span class="ico06"></span>选对象-时间:</th>
+            <th><span class="ico06"></span>任务对象：</th>
             <td>
                 <c:if test="${!empty courseclassList}">
                     <c:forEach var="cc" items="${courseclassList}" varStatus="idx">
 
-                                <p class="f_right w410">
+                               <!-- <p class="f_right w410">
                                     <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" class="public_input w140" />~
                                     <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly" id="e_time_${cc.classid}" type="text"class="public_input w140" />
-                                </p>
+                                </p> -->
                                 <p class="font-black"><input name="ck_cls" type="checkbox"  onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
 
 
@@ -122,6 +168,30 @@
                     <p class="font-darkblue"><a href="group?m=toGroupManager&classid=${courseclassList[0].classid}&classtype=${courseclassList[0].classtype}"  target="_blank">&gt;&gt;&nbsp;小组管理</a></p></td>
                 </c:if>
         </tr>
+
+        <tr>
+            <th><span class="ico06"></span>任务时间：</th>
+            <td>
+                <p><input id="time_rdo" name="time_rdo" type="radio" value="0"/>一致&nbsp;<input id="time_rdo"  name="time_rdo" value="1" type="radio"/>不一致</p>
+                <div id="all_ct">
+                    <p><span>全部班级:</span>
+                        <input class="public_input w140"  onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'all_class_etime\',{H:-1})}',startDate:'${courseclassList[0].begintimeString}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="all_class_btime"  name="all_classtime" type="text" />~
+                        <input class="public_input w140" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'all_class_btime\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${courseclassList[0].begintimeString}'})" readonly="readonly" id="all_class_etime"  name="all_classtime" type="text" />
+                    </p>
+                </div>
+                <div id="list_ct" style="display:none">
+                    <c:forEach var="cc" items="${ courseclassList}">
+                        <p id="p_${cc.classid}"  style="display:none"><span>${cc.classgrade}${cc.classname}:</span>&nbsp;
+                            <input class="public_input w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" />~
+                            <input onfocus="WdatePicker({minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="public_input w140" />
+                        </p>
+                    </c:forEach>
+
+                </div>
+            </td>
+        </tr>
+
+
         <tr>
             <th><span class="ico06"></span>完成标准：</th>
             <td class="font-black" id="td_criteria">
@@ -151,7 +221,7 @@
     if(trobj.length>0){
         var flag=$("#ckb_${c.classid}").attr("checked");
         var html='<li><input id="ck_group_${c.groupid}"  type="checkbox" name="ck_group" value="${c.groupid}" />'
-                +'<label for="ck_group_${c.groupid}"> ${c.groupname}</label></li>';
+                +'<label for="ck_group_${c.groupid}"> ${c.groupname}&nbsp;(${c.groupnum})</label></li>';
         if(flag){
             html='<li><input id="ck_group_${c.groupid}"  type="checkbox" name="ck_group" value="${c.groupid}" />'
                     +'<label for="ck_group_${c.groupid}"> ${c.groupname}</label></li>';

@@ -302,8 +302,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         t.setTaskid(Long.parseLong(taskid));
         t.setUserid(this.logined(request).getUserid());
         List<UserInfo>stuList=this.userManager.getUserNotCompleteTask(t,"1");
-        je.setType("success");
-        je.setObjList(stuList);
+        je.setType("success");//
+        je.setObjList(stuList);//
         response.getWriter().print(je.toJSON());
     }
 
@@ -915,7 +915,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
      */
 	@RequestMapping(params="doUpdTask",method=RequestMethod.GET)
 	public ModelAndView doUpdTask(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je =new JsonEntity();
+		JsonEntity je =new JsonEntity();//
 		String courseid=request.getParameter("courseid");
 		String taskid=request.getParameter("taskid");
 		

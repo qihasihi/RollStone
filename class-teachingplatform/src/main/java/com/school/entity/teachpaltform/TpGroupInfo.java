@@ -19,6 +19,15 @@ public class TpGroupInfo  implements java.io.Serializable{
     private Object teachername;
     private Integer userid;
     private Integer subjectid;
+    private Object groupnum;
+
+    public Object getGroupnum() {
+        return groupnum;
+    }
+
+    public void setGroupnum(Object groupnum) {
+        this.groupnum = groupnum;
+    }
 
     public Integer getSubjectid() {
         return subjectid;

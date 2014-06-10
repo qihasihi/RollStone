@@ -194,7 +194,8 @@ function beforeQryCourseList(p) {
         gradeid: sel_grade,
         materialid: sel_material,
         courselevel: sel_courselevel,
-        coursename: txt_course
+        coursename: txt_course,
+        subjectid: courseSubject
     };
     p.setPostParams(param);
 }
@@ -396,7 +397,7 @@ function load_material() {
             if (rps.type == "error") {
                 alert(rps.msg);
             } else {
-                var htm = '';
+                var htm = '<option value="">==请选择教材版本==</option>';
                 if (rps.objList.length) {
                     //htm+='<option value="">全部</option>';
                     $.each(rps.objList, function (idx, itm) {

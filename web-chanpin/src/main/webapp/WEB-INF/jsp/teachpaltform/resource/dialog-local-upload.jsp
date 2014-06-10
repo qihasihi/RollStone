@@ -263,6 +263,7 @@
 
         <select id="sel_courselevel">
             <c:if test="${!empty courseLevel}">
+                <option value="">==请选择专题类型==</option>
                 <c:forEach items="${courseLevel}" var="g">
                     <option value="${g.dictionaryvalue}">${g.dictionaryname}</option>
                 </c:forEach>

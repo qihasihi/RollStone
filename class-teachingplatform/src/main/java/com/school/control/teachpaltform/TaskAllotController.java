@@ -1,7 +1,6 @@
 package com.school.control.teachpaltform;
 
 import com.school.control.base.BaseController;
-import com.school.entity.ClassInfo;
 import com.school.entity.DictionaryInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
@@ -73,7 +72,7 @@ public class TaskAllotController extends BaseController<TpTaskAllotInfo>{
             QuestionInfo q=new QuestionInfo();
             q.setQuestionid(task.getTaskvalueid());
             List<QuestionInfo>questionInfoList=this.questionManager.getList(q,null);
-            je.getObjList().add(questionInfoList);
+            je.getObjList().add(questionInfoList);//
 
             QuestionOption questionOption=new QuestionOption();
             questionOption.setQuestionid(task.getTaskvalueid());

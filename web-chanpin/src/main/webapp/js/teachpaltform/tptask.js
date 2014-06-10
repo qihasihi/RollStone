@@ -474,6 +474,8 @@ function initTaskCriteria(tasktype){
 function doSubManageTask(taskid){ 
 	//任务相关
 	var tasktype=$("#task_type");
+    var timeType=$("input[name='time_rdo']:checked").val();
+    var all_btime=$("#all_class_btime"),all_etime=$("#all_class_etime");
 	//var taskname=$("#task_name");
 	var taskremark=CKEDITOR.instances["task_remark"].getData();
 	var criteriatype=$("input[name='ck_criteria']:checked");
@@ -502,54 +504,88 @@ function doSubManageTask(taskid){
 		return;  
 	}
 
+    if(timeType==0){
+        if(all_btime.val().length<1){
+            alert('请设置任务开始时间!');
+            return;
+        }else if(all_etime.val().length<1){
+            alert('请设置任务结束时间!');
+            return;
+        }
+    }
+
+
 
 	$.each(grouparr,function(idx,itm){
         var p=$(itm).parent().parent("ul");
         var tmpId=p.attr("id").substring(p.attr("id").lastIndexOf('_')+1);
         var btimeObj=$('#b_time_'+tmpId+'');
-        if(btimeObj.val().length<1){
-            iserror='请设置任务开始时间!';
-        }
-        var etimeObj=$('#e_time_'+tmpId+'');
-        if(etimeObj.val().length<1){
-            iserror='请设置任务结束时间!';
+        if(timeType==1){
+            if(btimeObj.val().length<1){
+                iserror='请设置任务开始时间!';
+            }
+            var etimeObj=$('#e_time_'+tmpId+'');
+            if(etimeObj.val().length<1){
+                iserror='请设置任务结束时间!';
+            }
+            if(paramStr.Trim().length>0)
+                paramStr+='&';
+            paramStr+='btimeArray='+btimeObj.val();
+
+            if(paramStr.Trim().length>0)
+                paramStr+='&';
+            paramStr+='etimeArray='+etimeObj.val();
+        }else{
+            if(paramStr.Trim().length>0)
+                paramStr+='&';
+            paramStr+='btimeClsArray='+all_btime.val();
+
+            if(paramStr.Trim().length>0)
+                paramStr+='&';
+            paramStr+='etimeClsArray='+all_etime.val();
         }
 
 		if(paramStr.Trim().length>0)        
 	 		paramStr+='&';   
 		paramStr+='groupArray='+$(itm).val();
 
-        if(paramStr.Trim().length>0)
-            paramStr+='&';
-        paramStr+='btimeArray='+btimeObj.val();
 
-        if(paramStr.Trim().length>0)
-            paramStr+='&';
-        paramStr+='etimeArray='+etimeObj.val();
 	});
 
     /*班级*/
     $.each(clsarr,function(idx,itm){
         var tmpId=itm.id.substring(itm.id.lastIndexOf('_')+1);
         var btimeObj=$('#b_time_'+tmpId+'');
-        if(btimeObj.val().length<1){
-            iserror='请设置任务开始时间!';
+        if(timeType==1){
+            if(btimeObj.val().length<1){
+                iserror='请设置任务开始时间!';
+            }
+            var etimeObj=$('#e_time_'+tmpId+'');
+            if(etimeObj.val().length<1){
+                iserror='请设置任务结束时间!';
+            }
+            if(paramStr.Trim().length>0)
+                paramStr+='&';
+            paramStr+='btimeClsArray='+btimeObj.val();
+
+            if(paramStr.Trim().length>0)
+                paramStr+='&';
+            paramStr+='etimeClsArray='+etimeObj.val();
+        }else{
+            if(paramStr.Trim().length>0)
+                paramStr+='&';
+            paramStr+='btimeClsArray='+all_btime.val();
+
+            if(paramStr.Trim().length>0)
+                paramStr+='&';
+            paramStr+='etimeClsArray='+all_etime.val();
         }
-        var etimeObj=$('#e_time_'+tmpId+'');
-        if(etimeObj.val().length<1){
-            iserror='请设置任务结束时间!';
-        }
+
         if(paramStr.Trim().length>0)
             paramStr+='&';
         paramStr+='clsArray='+$(itm).val();
 
-        if(paramStr.Trim().length>0)
-            paramStr+='&';
-        paramStr+='btimeClsArray='+btimeObj.val();
 
-        if(paramStr.Trim().length>0)
-            paramStr+='&';
-        paramStr+='etimeClsArray='+etimeObj.val();
     });
 
     if(iserror.length){

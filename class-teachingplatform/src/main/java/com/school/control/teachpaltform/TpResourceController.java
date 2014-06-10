@@ -87,6 +87,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String materialid=request.getParameter("materialid");
         String gradeid=request.getParameter("gradeid");
         String coursename=request.getParameter("coursename");
+        String subjectid=request.getParameter("subjectid");
 
         PageResult pageResult=this.getPageResultParameter(request);
         TpCourseInfo tpCourseInfo=new TpCourseInfo();
@@ -100,6 +101,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         }
         if(gradeid!=null&&gradeid.trim().length()>0){
             tpCourseInfo.setGradeid(Integer.parseInt(gradeid));
+        }
+        if(subjectid!=null&&subjectid.trim().length()>0){
+            tpCourseInfo.setSubjectid(Integer.parseInt(subjectid));
         }
         if(coursename!=null&&coursename.trim().length()>0){
             tpCourseInfo.setCoursename(coursename);
@@ -938,8 +942,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             String suffix=filename.substring(filename.lastIndexOf("."));
             String fileurl=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/"+UtilTool.getResourceUrl(resid,suffix);
             File tmp=new File(fileurl);
-            System.out.println("fileurl:"+fileurl+"   "+tmp.exists()+" "+request.getRealPath("/"));
-            if(!tmp.exists()){
+            System.out.println("fileurl:" + fileurl + "   " + tmp.exists() + " " + request.getSession().getServletContext().getRealPath("/"));
+            if(!tmp.exists()){  //
                 je.setMsg("文件不存在!");
                 response.getWriter().print(je.toJSON());
                 return;

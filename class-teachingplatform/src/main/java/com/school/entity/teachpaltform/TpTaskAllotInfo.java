@@ -1,6 +1,7 @@
 package  com.school.entity.teachpaltform;
 
 import com.school.entity.UserInfo;
+import com.school.util.PageUtil.PageUtilTool;
 import com.school.util.UtilTool;
 
 import java.io.Serializable;
@@ -108,6 +109,16 @@ public class TpTaskAllotInfo implements Serializable {
     }
     public void setCuserid(java.lang.String cuserid){
       this.getUserinfo().setRef(cuserid);
+    }
+
+    public String getTaskstatus(){//
+        if(this.getBtimeString()==null||this.getEtimeString()==null)
+            return "";
+        try {
+            return PageUtilTool.DateDiffNumber(this.getBtimeString(), this.getEtimeString());
+        } catch (Exception e) {
+            return "";
+        }
     }
 
 
