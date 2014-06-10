@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.school.dao.inter.resource.IAccessDAO;
 import com.school.entity.*;
 import com.school.entity.resource.AccessInfo;
+import com.school.entity.resource.StoreInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.manager.DictionaryManager;
 import com.school.manager.GradeManager;
@@ -22,9 +23,11 @@ import com.school.manager.inter.IStudentManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IAccessManager;
 import com.school.manager.inter.resource.IResourceManager;
+import com.school.manager.inter.resource.IStoreManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.resource.AccessManager;
 import com.school.manager.resource.ResourceManager;
+import com.school.manager.resource.StoreManager;
 import com.school.manager.teachpaltform.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -58,6 +61,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     private IUserManager userManager;
     private ITpCourseQuestionManager tpCourseQuestionManager;
     private IAccessManager accessManager;
+    private IStoreManager storeManager;
     public TpResourceController(){
         this.tpCourseManager=this.getManager(TpCourseManager.class);
         this.tpOperateManager=this.getManager(TpOperateManager.class);
@@ -75,6 +79,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         this.userManager=this.getManager(UserManager.class);
         this.tpCourseQuestionManager=this.getManager(TpCourseQuestionManager.class);
         this.accessManager=this.getManager(AccessManager.class);
+        this.storeManager=this.getManager(StoreManager.class);
     }
 
     /**
@@ -1338,20 +1343,61 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     public void doCancelCollectResource(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();
         String ref=request.getParameter("ref");
-        if(ref==null||ref.trim().length()<1){
+        String resid=request.getParameter("resid");
+        if(ref==null||ref.trim().length()<1
+                ||resid==null||resid.trim().length()<1){
             je.setMsg("异常错误!系统未获取到资源收藏标识!");
             response.getWriter().print(je.toJSON());
             return;
         }
+        //验证是否已经存在
+        StoreInfo storetmp=new StoreInfo();
+        storetmp.setResid(Long.parseLong(resid));
+        storetmp.setUserid(this.logined(request).getUserid());
+        List<StoreInfo> storeList=storeManager.getList(storetmp, null);
+        if(storeList==null||storeList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("STORE_IS_NULL"));
+            response.getWriter().print(je.toJSON());return;
+        }
+
+        //修改状态,同时写入操作记录
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+
+        StringBuilder sqlbuilder=new StringBuilder();
+        List<Object> objList=this.storeManager.getDeleteSql(storetmp,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+        //修改数量
+        sqlbuilder=new StringBuilder();
+        objList=this.storeManager.getUpdateNumAdd("rs_resource_info","res_id","STORENUM",storetmp.getResid().toString(),2,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+
+
+
         TpResourceCollect c=new TpResourceCollect();
-        c.setCollectid(Integer.parseInt(ref));
+        //c.setCollectid(Integer.parseInt(ref));
         c.setUserid(this.logined(request).getRef());
-        boolean flag=this.tpResourceCollectManager.doDelete(c);
-        if(flag){
-            je.setMsg("操作成功!");
-            je.setType("success");
+        c.setResid(Long.parseLong(resid));
+        sqlbuilder=new StringBuilder();
+        objList=this.tpResourceCollectManager.getDeleteSql(c,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+        if(sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
+            if(this.resourceManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+                je.setType("success");
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            }else
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
         }else{
-            je.setMsg("操作失败!");
+            je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         }
         response.getWriter().print(je.toJSON());
     }
@@ -1723,16 +1769,56 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             response.getWriter().print(je.toJSON());
             return;
         }
+        //验证是否已经存在
+        StoreInfo storetmp=new StoreInfo();
+        storetmp.setResid(Long.parseLong(resourceid));
+        storetmp.setUserid(this.logined(request).getUserid());
+        List<StoreInfo> storeList=storeManager.getList(storetmp, null);
+        if(storeList!=null&&storeList.size()>0){
+            je.setMsg(UtilTool.msgproperty.getProperty("STORE_HAS_MORE"));
+            response.getWriter().print(je.toJSON());return;
+        }
+
+        //开始添加
+        storetmp.setRef(this.storeManager.getNextId());
+        //修改状态,同时写入操作记录
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+
+        StringBuilder sqlbuilder=new StringBuilder();
+        List<Object> objList=this.storeManager.getSaveSql(storetmp, sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+        //修改数量
+        sqlbuilder=new StringBuilder();
+        objList=this.storeManager.getUpdateNumAdd("rs_resource_info","res_id","STORENUM",storetmp.getResid().toString(),1,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+
+
         TpResourceCollect c=new TpResourceCollect();
         c.setUserid(this.logined(request).getRef());
         c.setResid(Long.parseLong(resourceid));
         c.setCourseid(Long.parseLong(courseid));
-        boolean flag=this.tpResourceCollectManager.doSave(c);
-        if(flag){
-            je.setMsg("操作成功!");
-            je.setType("success");
+        sqlbuilder=new StringBuilder();
+        objList=this.tpResourceCollectManager.getSaveSql(c,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+
+        if(sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
+            if(this.resourceManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+                je.setType("success");
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            }else
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
         }else{
-            je.setMsg("操作失败!");
+            je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         }
         response.getWriter().print(je.toJSON());
     }

@@ -596,7 +596,7 @@
 													&nbsp;&nbsp;辅授学科：
 												</th>
 												<td id="edit_subject">
-                                                    <p class="font-darkblue"><a id="a_for_show" href="javascript:void (0);" onclick="ul_subject.style.display='block';a_for_hide.style.display='block';this.style.display='none'">展开选择<span class="ico49a"></span></a><a href="javascript:void (0);" onclick="ul_subject.style.display='none';a_for_show.style.display='block';this.style.display='none'" id="a_for_hide" style="display: none;">收起<span class="ico49c"></span></a></p>
+                                                    <p class="font-darkblue"><a id="a_for_show" href="javascript:void (0);" onclick="var ul_subject=document.getElementById('ul_subject'),a_for_hide=document.getElementById('a_for_hide'); ul_subject.style.display='block';a_for_hide.style.display='block';this.style.display='none'">展开选择<span class="ico49a"></span></a><a href="javascript:void (0);" onclick="var ul_subject=document.getElementById('ul_subject'),a_for_show=document.getElementById('a_for_show'); ul_subject.style.display='none';a_for_show.style.display='block';this.style.display='none'" id="a_for_hide" style="display: none;">收起<span class="ico49c"></span></a></p>
 													<ul class="public_list1" id="ul_subject" style="display: none;">
 														<c:if test="${!empty subjectlist}">
 															<c:forEach items="${subjectlist}" var="sj">

@@ -435,7 +435,7 @@ function loadStuResourcePage(courseid) {
  * 取消收藏资源
  * @param ref
  */
-function doDelOneResource(ref) {
+function doDelOneResource(ref,resid) {
     if (typeof(ref) == "undefined" || isNaN(ref)) {
         alert('异常错误!未获取到资源收藏标识!');
         return;
@@ -448,7 +448,8 @@ function doDelOneResource(ref) {
         url: 'tpres?doCancelCollect',
         type: 'post',
         data: {
-            ref: ref
+            ref: ref,
+            resid:resid
         },
         dataType: 'json',
         cache: false,
@@ -1705,12 +1706,11 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     $("#sp_download").html('<a  style="color:#34a4c6"  title="下载" href="javascript:resourceDownLoadFile(\'' + resid + '\',\'' + fname + '\',1)">下载</a>');
     // 收藏
     // 好评  
-    if (isStudent) {
-        //	qryCommentScore(resid);
-        // 已收藏
+    if (isStudent)
         $("#sp_collect").html('<a  style="color:#34a4c6"  title="收藏" href="javascript:doCollectResource(\'' + resid + '\');">收藏</a>');
-        isCollected(resid);
-    }
+    else
+        $("#sp_collect").html('<a  style="color:#34a4c6"  title="收藏" href="javascript:doCollectResource(\'' + resid + '\');">收藏</a>');
+    isCollected(resid);
 
     // 点击量
     doAddResourceView(resid);
@@ -1731,6 +1731,51 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     //学习心得
     if(typeof tpresdetailid!='undeinfed'&& tpresdetailid.toString().length>0)
         loadStudyNotes(1);
+}
+
+
+/**
+ *添加收藏
+ *@params type: 类型  1:添加收藏  2:取消收藏
+ *@params resid: 资源ID
+ *@params dvid:显示的地址ID
+ */
+function operateStore(type,resid,dvid){
+    if(typeof(type)=="undefined"||type==null){
+        alert('异常错误，请刷新页面后重试!原因：type is empty!');return;
+    }
+    if(typeof(resid)=="undefined"||resid==null||resid.Trim().length<1){
+        alert("异常错误，请刷新页面后重试! 原因：resid is empty!");return;
+    }
+    var u='store?m=';
+    if(type==1)
+        u+='doadd';
+    else
+        u+='dodelete';
+    $.ajax({
+        url:u,
+        type:'POST',
+        data:{resid:resid},
+        dataType:'json',
+        error:function(){alert("网络异常")},
+        success:function(rps){
+            if(rps.type=="error"){
+                alert(rps.msg);
+            }else{
+                var htm='';
+                if(type==1){
+                    htm+='<a href="javascript:;" onclick="operateStore(2,\''+resid+'\',\'dv_store\')">';
+                    htm+='取消收藏';
+                    htm+='</a>';
+                }else{
+                    htm+='<a href="javascript:;" onclick="operateStore(1,\''+resid+'\',\'dv_store\')">';
+                    htm+='收藏';
+                    htm+='</a>';
+                }
+                $("#"+dvid).html(htm);
+            }
+        }
+    });
 }
 
 /**

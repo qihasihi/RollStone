@@ -95,7 +95,7 @@
                     html+='<td>'+itm.userinfo.realname+'</td>';
                     html+='<td>'+itm.ctimeString+'</td>';
                     html+='<td>';
-                    html+='<a href="javascript:void(0)" class="ico58b" title="取消收藏" onclick="doDelOneResource('+itm.collectid+')"></a>';
+                    html+='<a href="javascript:void(0)" class="ico58b" title="取消收藏" onclick="doDelOneResource('+itm.collectid+','+itm.resid+')"></a>';
                     html+='</td>';
                     html+='</tr>';
                 });

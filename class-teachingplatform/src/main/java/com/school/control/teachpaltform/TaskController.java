@@ -15,9 +15,11 @@ import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.manager.ClassManager;
 import com.school.manager.DictionaryManager;
+import com.school.manager.SmsManager;
 import com.school.manager.UserManager;
 import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.IDictionaryManager;
+import com.school.manager.inter.ISmsManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
@@ -66,6 +68,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private ITpVirtualClassManager tpVirtualClassManager;
     private ITaskSuggestManager taskSuggestManager;
     private ITpCourseTeachingMaterialManager tpCourseTeachingMaterialManager;
+    private ISmsManager smsManager;
     public TaskController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -88,6 +91,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         this.classManager=this.getManager(ClassManager.class);
         this.tpVirtualClassManager=this.getManager(TpVirtualClassManager.class);
         this.taskSuggestManager=this.getManager(TaskSuggestManager.class);
+        this.smsManager=this.getManager(SmsManager.class);
     }
     /**
 	 * 根据课题ID，加载任务列表
@@ -2703,6 +2707,71 @@ public class TaskController extends BaseController<TpTaskInfo>{
             je.setType("success");
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 给未完成任务的学生发提醒
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=doSendTaskMsg",method=RequestMethod.POST)
+    public void doSendTaskMsg(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String uidArray=request.getParameter("uidArray");
+        if(uidArray==null||uidArray.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String[] useridArray=uidArray.split(",");
+        String userName="";
+        for(String uid:useridArray){
+            UserInfo u=new UserInfo();
+            u.setUserid(Integer.parseInt(uid));
+            List<UserInfo>userInfoList=this.userManager.getList(u,null);
+            if(userInfoList!=null&&userInfoList.size()>0){
+                if(userName.length()>0)
+                    userName+=";";
+                userName+=userInfoList.get(0).getUsername();
+            }
+        }
+        SmsInfo smsInfo=new SmsInfo();
+        smsInfo.setReceiverlist(userName);
+        smsInfo.setSmstitle("");
+        smsInfo.setSenderid(this.logined(request).getUserid());
+        smsInfo.setSmscontent("");
+        smsInfo.setSmsstatus(1);
+        if(this.smsManager.doSave(smsInfo)){
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            je.setType("success");
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 获取小组名单
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=loadGroupStudent",method=RequestMethod.POST)
+    public void loadGroupStudent(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String groupid=request.getParameter("groupid");
+        if(groupid==null||groupid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpGroupStudent gs=new TpGroupStudent();
+        gs.setGroupid(Long.parseLong(groupid));
+        List<TpGroupStudent>groupStudentList=this.tpGroupStudentManager.getList(gs,null);
+        je.setObjList(groupStudentList);
+        je.setType("success");
         response.getWriter().print(je.toJSON());
     }
 }

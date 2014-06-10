@@ -6,10 +6,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.school.entity.teachpaltform.TpResourceCollect;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.resource.IStoreManager;
+import com.school.manager.inter.teachpaltform.ITpResourceCollectManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.resource.StoreManager;
+import com.school.manager.teachpaltform.TpResourceCollectManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,10 +30,11 @@ import com.school.util.UtilTool;
 public class StoreController extends BaseController<StoreInfo>{
     private IStoreManager storeManager;
     private IResourceManager resourceManager;
-
+    private ITpResourceCollectManager tpResourceCollectManager;
     public StoreController(){
         this.storeManager=this.getManager(StoreManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
+        this.tpResourceCollectManager=this.getManager(TpResourceCollectManager.class);
     }
 
 	/**
@@ -141,6 +145,17 @@ public class StoreController extends BaseController<StoreInfo>{
         //ÐÞ¸ÄÊýÁ¿
         sqlbuilder=new StringBuilder();
         objList=this.storeManager.getUpdateNumAdd("rs_resource_info","res_id","STORENUM",storetmp.getResid().toString(),2,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+
+        TpResourceCollect c=new TpResourceCollect();
+        //c.setCollectid(Integer.parseInt(ref));
+        c.setUserid(this.logined(request).getRef());
+        c.setResid(storeinfo.getResid());
+        sqlbuilder=new StringBuilder();
+        objList=this.tpResourceCollectManager.getDeleteSql(c,sqlbuilder);
         if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
             sqlArrayList.add(sqlbuilder.toString());
             objArrayList.add(objList);

@@ -26,7 +26,15 @@ public class TpTaskInfo implements Serializable {
     private Integer criteria;
     private Long courseid;
     private Long quoteid;
+    private Integer orderidx;
 
+    public Integer getOrderidx() {
+        return orderidx;
+    }
+
+    public void setOrderidx(Integer orderidx) {
+        this.orderidx = orderidx;
+    }
 
     private Object totalcount;  //任务总人数
     private Object stucount;    //已做人数

@@ -1,3 +1,12 @@
+$(function(){
+    $("label").filter(function(){return $(this).attr('for').indexOf('ck_group_')!=-1}).hover(function(){
+        var groupid=$(this).prev('input').val();
+        genderShowdiv(groupid);
+    },function(){
+        $("#div_tmp_show01").remove();
+    });
+})
+
 /**
  * 任务--选择元素
  * @param type
@@ -161,7 +170,7 @@ function queryQuestionType(trobj,questype,boo,questionid){
  * @param trobj
  * @return
  */
-function queryResource(courseid,trobj,taskvalueid){
+function queryResource(courseid,trobj,taskvalueid,taskstatus){
 	if(typeof(courseid)=='undefined'||courseid.length<1){
 		alert('异常错误，系统未获取到课题标识!');
 		return;
@@ -179,8 +188,8 @@ function queryResource(courseid,trobj,taskvalueid){
 		 		var htm='';
                 htm+='<th><span class="ico06"></span>选择资源：</th>';
                 htm+='<td class="font-black">';
-                htm+='<p><a class="font-darkblue"  href="javascript:showTaskElement(1)">>> 选择已有资源</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-                htm+='<a class="font-darkblue"  href="javascript:showDialogPage(1)">>> 添加资源</a></p>';
+                if(typeof taskstatus=='undefined')
+                    htm+='<p><a class="font-darkblue"  href="javascript:showTaskElement(1)">>> 选择已有资源</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue"  href="javascript:showDialogPage(1)">>> 添加资源</a></p>';
                 htm+='<div class="jxxt_zhuanti_add_ziyuan" id="dv_res_name"></div>';
                 htm+='<input type="hidden" id="hd_elementid"/>';
                 htm+='</td>';
@@ -223,7 +232,7 @@ function selectClassObj(obj,classid){
  * @param trobj
  * @return  
  */  
-function queryInteraction(courseid,trobj,taskvalueid,seltype){
+function queryInteraction(courseid,trobj,taskvalueid,seltype,taskstatus){
 	if(typeof(courseid)=='undefined'||courseid.length<1){
 		alert('异常错误，系统未获取到课题标识!');
 		return;
@@ -258,7 +267,8 @@ function queryInteraction(courseid,trobj,taskvalueid,seltype){
 		 		var htm='';
                 htm+='<th><span class="ico06"></span>选择论题：</th>';
                 htm+='<td class="font-black">';
-                htm+='<a class="font-darkblue"  href="javascript:showTaskElement(2)">>> 选择已有论题</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue"  href="javascript:showDialogPage(2)">>> 添加论题</a>';
+                if(typeof taskstatus=='undefined')
+                    htm+='<p><a class="font-darkblue"  href="javascript:showTaskElement(2)">>> 选择已有论题</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue"  href="javascript:showDialogPage(2)">>> 添加论题</a></p>';
                 htm+='<div class="jxxt_zhuanti_add_ziyuan" id="dv_topictitle"></div>';
                 htm+='<input type="hidden" id="hd_elementid"/>';
                 htm+='</td>';
@@ -397,8 +407,13 @@ function load_task_detial(taskid){
                 if(rmsg.objList.length){
                     if(rmsg.objList[0]!=null){
                         $.each(rmsg.objList[0],function(idx,itm){
+                            var timeObj=itm.taskstatus==1?"任务未开始":itm.taskstatus==3?"任务已结束":itm.taskstatus;
+                            if(idx!=0)
+                                timeObj='<br>'+timeObj;
                             if(typeof itm.allotname!='undefined'&&!$('span[id="sp_'+itm.taskid+itm.allotid+'"]').length)
-                                $('#p_obj_'+taskid+'').append('<span id="sp_'+itm.taskid+itm.allotid+'">'+itm.allotname+itm.allotobj+'&nbsp;</span>');
+                                $('#p_obj_'+taskid+'').append('<span id="sp_'+itm.taskid+itm.allotid+'">'+timeObj+'&nbsp;&nbsp;'+itm.allotname+itm.allotobj+'&nbsp;</span>');
+                            else if(!$('span[id="sp_'+itm.taskid+itm.allotid+'"]').length)
+                                $('#p_obj_'+taskid+'').append('<span id="sp_'+itm.taskid+itm.allotid+'">'+timeObj+'&nbsp;&nbsp;'+itm.allotobj+'&nbsp;</span>');
                             else
                                 $('#p_obj_'+taskid+'').append(itm.allotobj+"&nbsp;");
                         });
@@ -834,6 +849,33 @@ function loadNoCompleteStu(taskid){
 }
 
 
+function doSendTaskMsg(){
+    var uidArray=$("input[name='hd_uid']");
+    if(uidArray.length<1){
+        alert('没有发现未完成任务人员!');
+        return;
+    }
+    $.ajax({
+        url:'task?doSendTaskMsg',
+        type:"post",
+        data:{uidArray:uidArray.val().join(",")},
+        dataType:'json',
+        cache: false,
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+        },success:function(rmsg){
+            if(rmsg.type=="error"){
+                alert(rmsg.msg);
+            }else{
+                alert(rmsg.msg);
+                closeModel('dv_nocomplete');
+            }
+        }
+    });
+
+}
+
+
 
 /**
  *  提交学生建议
@@ -887,21 +929,46 @@ function doSubSuggest(taskid){
 	
 }
 
-function genderShowdiv(name,time){
+function genderShowdiv(groupid){
 	$("#div_tmp_show01").remove();
-	//得到准确的 鼠标位置
-	var y=mousePostion.y;
-	var x=mousePostion.x;
-	//判断是不是IE8以下的浏览器浏览
-	if ($.browser.msie && (parseInt($.browser.version) <= 7)){
-		y+=parseFloat(document.documentElement.scrollTop);
-		x+=parseFloat(document.documentElement.scrollLeft); 
-	}		
-	y+=5;
-	var h='<div id="div_tmp_show01" '
-			+'style="position:absolute;padding:5px;border:1px solid green;left:'
-			+x+'px;top:'+y+'px;background-color:white">'+name+'&nbsp;'+time+'</div>';
-	$("body").append(h);
+
+    $.ajax({
+        url:'task?m=loadGroupStudent',
+        type:"post",
+        data:{
+            groupid:groupid
+        },
+        dataType:'json',
+        cache: false,
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+        },success:function(rmsg){
+            if(rmsg.type=="error"){
+                alert(rmsg.msg);
+            }else{
+                //得到准确的 鼠标位置
+                var y=mousePostion.y;
+                var x=mousePostion.x;
+                //判断是不是IE8以下的浏览器浏览
+                if ($.browser.msie && (parseInt($.browser.version) <= 7)){
+                    y+=parseFloat(document.documentElement.scrollTop);
+                    x+=parseFloat(document.documentElement.scrollLeft);
+                }
+                y+=5;
+                var username='';
+                if(rmsg.objList.length>0){
+                    $.each(rmsg.objList,function(idx,itm){
+                        username+=itm.stuname+"&nbsp;";
+                    });
+                }
+                var h='<div id="div_tmp_show01" '
+                    +'style="position:absolute;padding:5px;border:1px solid green;left:'
+                    +x+'px;top:'+y+'px;background-color:white">'+username+'</div>';
+                $("body").append(h);
+            }
+        }
+    });
+
 }
 
 /**
