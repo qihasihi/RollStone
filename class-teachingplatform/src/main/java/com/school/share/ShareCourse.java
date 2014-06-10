@@ -301,11 +301,6 @@ public class ShareCourse extends TimerTask {
                         if(ques==null)ques=getQuestionInfo(courseQues.getQuestionid());
                         if(ques==null)continue;
 
-                        if(ques.getContent()!=null)
-                            ques.setContent(ques.getContent().replaceAll("ueditor/jsp/../../","_SZ_SCHOOL_IMG_PLACEHOLDER_"));
-                        if(ques.getAnalysis()!=null)
-                            ques.setAnalysis(ques.getAnalysis().replaceAll("ueditor/jsp/../../", "_SZ_SCHOOL_IMG_PLACEHOLDER_"));
-                        System.out.println(ques.getContent()+"  "+ques.getAnalysis());
 
                         //记录XML中,并得到相关图片进行压综
                         path=MD5_NEW.getMD5Result(courseQues.getQuestionid().toString());

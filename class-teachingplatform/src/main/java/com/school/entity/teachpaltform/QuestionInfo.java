@@ -80,6 +80,20 @@ public class QuestionInfo implements java.io.Serializable {
         return content;
     }
 
+    public String getUpContent(){
+        String returnVal=this.content;
+        if(returnVal!=null)
+            returnVal=returnVal.replaceAll("ueditor/jsp/../../","_SZ_SCHOOL_IMG_PLACEHOLDER_");
+        return returnVal;
+
+    }
+    public String getUpAnalysis(){
+        String returnVal=this.analysis;
+        if(returnVal!=null)
+            returnVal=returnVal.replaceAll("ueditor/jsp/../../","_SZ_SCHOOL_IMG_PLACEHOLDER_");
+        return returnVal;
+    }
+
     public java.lang.String getSaveContent(){
         if(this.content!=null){
             this.setContent(this.content.replaceAll("_SZ_SCHOOL_IMG_PLACEHOLDER_","ueditor/jsp/../../"));

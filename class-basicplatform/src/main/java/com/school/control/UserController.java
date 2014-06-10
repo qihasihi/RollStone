@@ -4634,9 +4634,9 @@ public class UserController extends BaseController<UserInfo> {
     @RequestMapping(params="m=toEttUrl", method = RequestMethod.GET)
     public void getEttUrl(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception {
 
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
+//        response.setCharacterEncoding("UTF-8");
+//        response.setContentType("text/html;charset=UTF-8");
+//        request.setCharacterEncoding("UTF-8");
 
         // 获得用户信息
         UserInfo u = this.logined(request);
@@ -4688,6 +4688,7 @@ public class UserController extends BaseController<UserInfo> {
             }
         }
 
+
         // 判断是否为教师
         // usertype
         //boolean isteacher = this.getRolemanager().isTeacher(u.getUserId());
@@ -4716,12 +4717,14 @@ public class UserController extends BaseController<UserInfo> {
                 else
                     sex = 1;
             } else {
-                String msg = "异常错误!您的信息不全，请先完善!";
+                String msg = "Missing information!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
-                                + "');history.go(-1);</script>");
+                                + "');this.close();</script>");
                 return;
             }
+
+
 
             // 如果不存在教务，班主任角色 则按课程显示
             if (!isflag) {
@@ -4800,10 +4803,11 @@ public class UserController extends BaseController<UserInfo> {
             stu.setUserref(uidRef);
             List<StudentInfo> stuList = this.studentManager.getList(stu,null);
             if(stuList==null||stuList.size()<1){
-                String msg = "异常错误!您的信息中详细信息，请联系管理人员!!";
+                String msg = "Missing information!";
+
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
-                                + "');history.go(-1);</script>");
+                                + "');this.close();</script>");
                 return;
             }
             stu=stuList.get(0);
@@ -4822,10 +4826,10 @@ public class UserController extends BaseController<UserInfo> {
                 }
 
             } else if (!isflag) {
-                String msg = "异常错误!您的信息中存在异常，请联系管理人员!!";
+                String msg = "Missing information!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
-                                + "');history.go(-1);</script>");
+                                + "');this.close();</script>");
                 return;
             }
         }
