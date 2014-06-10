@@ -2,21 +2,292 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="18acd0f4-a376-4b78-afa2-6fd0cdc84b8e" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/1.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/10.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/100.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/101.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/102.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/103.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/104.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/105.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/106.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/107.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/108.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/109.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/11.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/110.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/111.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/112.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/113.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/114.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/115.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/116.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/117.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/118.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/12.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/13.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/14.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/15.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/16.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/17.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/18.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/19.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/2.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/20.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/21.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/22.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/23.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/24.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/25.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/26.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/27.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/28.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/29.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/3.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/30.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/31.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/32.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/33.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/34.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/35.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/36.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/37.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/38.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/39.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/4.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/40.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/41.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/42.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/43.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/44.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/45.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/46.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/47.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/48.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/49.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/5.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/50.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/51.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/52.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/53.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/54.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/55.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/56.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/57.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/58.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/59.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/6.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/60.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/61.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/62.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/63.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/64.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/65.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/66.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/67.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/68.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/69.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/7.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/70.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/71.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/72.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/73.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/74.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/75.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/76.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/77.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/78.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/79.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/8.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/80.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/81.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/82.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/83.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/84.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/85.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/86.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/87.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/88.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/89.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/9.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/90.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/91.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/92.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/93.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/94.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/95.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/96.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/97.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/98.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/99.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/Thumbs.db" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/about" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link/images/anchor.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/images/arrow.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/clipboard" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/images/close.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/dialog" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/about/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/clipboard/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/image/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/table/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/tabletools/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/fakeobjects" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/pastefromword/filter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/magicline/images/icon.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/icons.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/icons.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/image" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/fakeobjects/images" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/image/images" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link/images" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/magicline/images" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/images" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/lang" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/about/dialogs/logo_ckeditor.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/magicline" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/images/mini.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/image/images/noimage.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/pastefromword" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/fakeobjects/images/spacer.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/table" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/tabletools" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/CHANGES.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/_translationstatus.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/_translationstatus.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/a11yhelp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/about/dialogs/about.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link/dialogs/anchor.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/bg.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/build-config.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ca.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/ca.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/dialogs/ciframe.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/ckeditor.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/config.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/contents.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/cs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/cs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/cy.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/cy.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/da.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/de.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/de.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/pastefromword/filter/default.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/dialog/dialogDefinition.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog_ie.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog_ie7.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog_ie8.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog_iequirks.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog_opera.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor_gecko.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor_ie.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor_ie7.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor_ie8.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor_iequirks.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/el.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/el.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/lang/en.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/en.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/en.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/eo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/eo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/es.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/et.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/et.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/fa.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/fa.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/fi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/fi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/fr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/fr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/gu.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/he.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/he.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/hi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/hr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/hr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/hu.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/image/dialogs/image.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/it.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/it.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ja.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ku.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/ku.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link/dialogs/link.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/lt.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/lv.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/lv.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/mk.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/mn.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/nb.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/nb.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/nl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/nl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/no.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/no.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt/dialogs/options.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/clipboard/dialogs/paste.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/pl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/pt-br.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/pt-br.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/pt.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ro.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ru.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/sk.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/sk.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/sl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/specialchar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/styles.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/sv.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/sv.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/table/dialogs/table.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/tabletools/dialogs/tableCell.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/dialogs/tmpFrameset.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt/dialogs/toolbar.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/tr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/tr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ug.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/ug.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/uk.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/vi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/dialogs/wsc.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/dialogs/wsc.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/lang/zh-cn.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/zh-cn.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/zh-cn.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-resource/src/main/java/com/school/dao/resource/CheckDAO.java" afterPath="$PROJECT_DIR$/class-resource/src/main/java/com/school/dao/resource/CheckDAO.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/ClassCadresDAO.java" afterPath="$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/ClassCadresDAO.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-common/src/main/java/com/school/util/PageUtil/PageUtilTool.java" afterPath="$PROJECT_DIR$/class-common/src/main/java/com/school/util/PageUtil/PageUtilTool.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/TpResourceCollectDAO.java" afterPath="$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/TpResourceCollectDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aggregator-web/aggregator-web.iml" afterPath="$PROJECT_DIR$/aggregator-web/aggregator-web.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/aggregator_web_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/aggregator_web_war_exploded.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-basicplatform/class-basicplatform.iml" afterPath="$PROJECT_DIR$/class-basicplatform/class-basicplatform.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-common/class-common.iml" afterPath="$PROJECT_DIR$/class-common/class-common.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-personalspace/class-personalspace.iml" afterPath="$PROJECT_DIR$/class-personalspace/class-personalspace.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-resource/class-resource.iml" afterPath="$PROJECT_DIR$/class-resource/class-resource.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-teachingplatform/class-teachingplatform.iml" afterPath="$PROJECT_DIR$/class-teachingplatform/class-teachingplatform.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aggregator-web/pom.xml" afterPath="$PROJECT_DIR$/aggregator-web/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-chanpin/pom.xml" afterPath="$PROJECT_DIR$/web-chanpin/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aggregator-web/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/aggregator-web/src/main/resources/rebel.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-basicplatform/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/class-basicplatform/src/main/resources/rebel.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-common/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/class-common/src/main/resources/rebel.xml" />
@@ -25,10 +296,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-teachingplatform/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/class-teachingplatform/src/main/resources/rebel.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/src/main/resources/rebel.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-chanpin/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/web-chanpin/src/main/resources/rebel.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sz_school.iml" afterPath="$PROJECT_DIR$/sz_school.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-chanpin/web-chanpin.iml" afterPath="$PROJECT_DIR$/web-chanpin/web-chanpin.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/web_chanpin_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/web_chanpin_war_exploded.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="sz_school_m_chanpin_0605.iws" />
@@ -377,7 +644,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="class-resource" />
+              <option name="myItemId" value="web-chanpin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -391,7 +658,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="class-resource" />
+              <option name="myItemId" value="web-chanpin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -409,29 +676,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="class-resource" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sz_school" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sz_school_chanpin_m_pan" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="class-resource" />
+              <option name="myItemId" value="web-chanpin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -442,12 +687,18 @@
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="school" />
+              <option name="myItemId" value="aggregator-web" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -461,33 +712,13 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="class-resource" />
+              <option name="myItemId" value="aggregator-web" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="school" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dao" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resource" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -499,7 +730,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="class-resource" />
+              <option name="myItemId" value="aggregator-web" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -511,15 +742,55 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
+              <option name="myItemId" value="webapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="school" />
+              <option name="myItemId" value="aggregator-web" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="dao" />
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aggregator-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1151,17 +1422,21 @@
       <workItem from="1401946244012" duration="425000" />
       <workItem from="1401947311476" duration="6269000" />
       <workItem from="1402279050725" duration="700000" />
-      <workItem from="1402283730066" duration="13447000" />
+      <workItem from="1402283730066" duration="13638000" />
     </task>
     <task id="LOCAL-00001" summary="for test">
       <created>1402042143131</created>
       <updated>1402042143131</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="for test">
+      <created>1402366147129</created>
+      <updated>1402366147129</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30722000" />
+    <option name="totallyTimeSpent" value="30913000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -1213,7 +1488,7 @@
       <window_info id="JRebel" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36208734" sideWeight="0.26373628" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27982163" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36900958" sideWeight="0.54229933" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973376" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30404687" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />

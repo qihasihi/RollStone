@@ -13,7 +13,7 @@ public class PageUtilTool implements java.io.Serializable{
 	 * @param sdate
 	 * @return
 	 */
-	public String DateDiffNow(String sdate){
+	public String DateDiffNow(String sdate){////
 		if(sdate==null||sdate.length()<1)
 			return null;
 		String returnVal=null;

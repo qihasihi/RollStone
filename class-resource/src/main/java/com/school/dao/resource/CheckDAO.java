@@ -14,7 +14,7 @@ import com.school.util.PageResult;
 @Component  
 public class CheckDAO extends CommonDAO<CheckInfo> implements ICheckDAO {
 
-	public Boolean doSave(CheckInfo checkinfo) {
+	public Boolean doSave(CheckInfo checkinfo) {//
 		if (checkinfo == null)
 			return false;
 		StringBuilder sqlbuilder = new StringBuilder();

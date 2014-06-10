@@ -14,7 +14,7 @@ import com.school.util.PageResult;
 @Component  
 public class ClassCadresDAO extends CommonDAO<ClassCadresInfo> implements IClassCadresDAO {
 
-	public Boolean doSave(ClassCadresInfo classcadresinfo) {//
+	public Boolean doSave(ClassCadresInfo classcadresinfo) {////
 		if (classcadresinfo == null)
 			return false;
 		StringBuilder sqlbuilder = new StringBuilder();
@@ -54,7 +54,7 @@ public class ClassCadresDAO extends CommonDAO<ClassCadresInfo> implements IClass
 	}
 	
 	public List<ClassCadresInfo> getList(ClassCadresInfo classcadresinfo, PageResult presult) {
-		StringBuilder sqlbuilder = new StringBuilder();
+		StringBuilder sqlbuilder = new StringBuilder();//
 		sqlbuilder.append("{CALL class_cadres_info_proc_split(");
 		List<Object> objList=new ArrayList<Object>();
 		if (classcadresinfo.getSubjectid() != null) {

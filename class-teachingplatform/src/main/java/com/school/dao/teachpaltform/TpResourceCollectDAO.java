@@ -14,7 +14,7 @@ import com.school.util.PageResult;
 @Component  
 public class TpResourceCollectDAO extends CommonDAO<TpResourceCollect> implements ITpResourceCollectDAO {
 
-	public Boolean doSave(TpResourceCollect tpresourcecollect) {
+	public Boolean doSave(TpResourceCollect tpresourcecollect) {//
 		if (tpresourcecollect == null)
 			return false;
 		StringBuilder sqlbuilder = new StringBuilder();
