@@ -72,59 +72,11 @@ public class ShareCourse extends TimerTask {
 
 
     public static void main(String[] args){
-        String templatepath="F:/javaworkspance/sz_school/WebRoot/uploadfile/tmp/"+_Template_name;
-        File fromF=new File(templatepath);
-        if(!fromF.exists()){
-            //记录错误信息
-            System.out.println("分校异常!没有发现资源上传模版!");
-            return;
-        }
+        String ques="<img src='ueditor/jsp/../../asdfasfasdfasdfasdfa/001.jpg'><img src='ueditor/jsp/../../asdfasfasdfasdfasdfa/001.jpg'><img src='ueditor/jsp/../../asdfasfasdfasdfasdfa/001.jpg'>";
+        ques=ques.replaceAll("ueditor/jsp/../../","_SZ_SCHOOL_IMG_PLACEHOLDER_");
+        System.out.println(ques);
 
-        String writeUrl="F:/javaworkspance/sz_school/WebRoot/uploadfile/tmp/1393223762485.xml";
-        //创建文件夹，并复制模板，进行操作
-        File tmpF1=new File(writeUrl);
-        try{
-            if(!tmpF1.getParentFile().exists())
-                tmpF1.getParentFile().mkdirs();
-            if(tmpF1.exists()&&tmpF1.isFile())
-                tmpF1.delete();
-            //复制模板
-            FileUtils.copyFile(fromF, tmpF1);
-        }catch(Exception e){
-            //记录日志
-            System.out.println("分校异常!创建空文件失败，原因：未知");
-            e.printStackTrace();
-        }
-        UserInfo us=new UserInfo();
-        us.setUserid(2);
-        us.setUsername("asdf");
-        List<Object> col=new ArrayList<Object>();
-        col.add("resid");
-        OperateXMLUtil.addXml(writeUrl,col,new Object[]{"3"});
-        OperateXMLUtil.addXml(writeUrl,col,new Object[]{"4"});
-        List<UserInfo> usList=new ArrayList<UserInfo>();
-        usList.add(us);
-        us=new UserInfo();
-        us.setUserid(4);
-        us.setUsername("asdfaaaaaaaaaaaaaaaaa");
-        usList.add(us);
-        OperateXMLUtil.updateEntityToXml(writeUrl, "resid", "3", usList);
-        List<DeptUser> dpList=new ArrayList<DeptUser>();
-        DeptUser du=new DeptUser();
-        du.setUserid(333333);
-        du.setDeptid(3333);
-        dpList.add(du);
-        du=new DeptUser();
-        du.setUserid(22222);
-        du.setDeptid(22222);
-        dpList.add(du);
-        du=new DeptUser();
-        du.setUserid(22222111);
-        du.setDeptid(22222111);
-        dpList.add(du);
-        OperateXMLUtil.updateEntityToXml(writeUrl, "resid", "3", dpList);
-        List list=OperateXMLUtil.findXml(writeUrl,"//table //row",false);
-        System.out.println(list);
+                ;
     }
 
     @Override
@@ -239,6 +191,7 @@ public class ShareCourse extends TimerTask {
 //                  }
                 }
                 //循环得到专题资源
+                System.out.println("开始组织资源数据!");
                 presource.setPageNo(0);
                 while(true){
                     presource.setPageNo(presource.getPageNo()+1);
@@ -264,6 +217,8 @@ public class ShareCourse extends TimerTask {
                                 File tmpF=new File(filepath);
                                 if(tmpF.exists()&&tmpF.isDirectory()){
                                     ZipUtil.genZip(filepath,directionPath,directoryName);//将资源文件生成ZIP文件至项目目录下
+                                    UtilTool.writeFile(request,directionPath,_UploadFileName,directionPath+directoryName+".zip\r\n");  //将生成的ZIP文件，记录到上传文件列表中。
+                                    //资源文件压缩
                                 }
                             }
                         }
@@ -274,6 +229,7 @@ public class ShareCourse extends TimerTask {
                         return;
                     }
                 }
+                System.out.println("结束组织资源数据!");
                 //循环得到专题论题及专题主题
                 presource.setPageNo(0);
                 while(true){
@@ -309,6 +265,8 @@ public class ShareCourse extends TimerTask {
                                 folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
                                 f=new File(folderpath);
                                 System.out.println(folderpath);
+
+
                                 if(f.exists()&&f.isDirectory()){
                                     ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
                                     UtilTool.writeFile(request,directionPath,_UploadFileName,directionPath+path+".zip\r\n");  //将生成的ZIP文件，记录到上传文件列表中。
@@ -329,6 +287,8 @@ public class ShareCourse extends TimerTask {
 //                    presource.setPageNo(presource.getPageNo()+1);
 //
 //                }
+
+                System.out.println("开始组织试题问题数据");
                 //循环得到专题试题记录
                 presource.setPageNo(0);
                 while(true){
@@ -340,6 +300,13 @@ public class ShareCourse extends TimerTask {
                         QuestionInfo ques=courseQues.getQuestioninfo();
                         if(ques==null)ques=getQuestionInfo(courseQues.getQuestionid());
                         if(ques==null)continue;
+
+                        if(ques.getContent()!=null)
+                            ques.setContent(ques.getContent().replaceAll("ueditor/jsp/../../","_SZ_SCHOOL_IMG_PLACEHOLDER_"));
+                        if(ques.getAnalysis()!=null)
+                            ques.setAnalysis(ques.getAnalysis().replaceAll("ueditor/jsp/../../", "_SZ_SCHOOL_IMG_PLACEHOLDER_"));
+                        System.out.println(ques.getContent()+"  "+ques.getAnalysis());
+
                         //记录XML中,并得到相关图片进行压综
                         path=MD5_NEW.getMD5Result(courseQues.getQuestionid().toString());
                         folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
@@ -359,14 +326,12 @@ public class ShareCourse extends TimerTask {
                         List<QuestionOption> quesOptsList=getQuestionOption(courseQues.getQuestionid());
                         if(quesOptsList==null||quesOptsList.size()<1)
                             continue;
-                        //保存答案信息到数据库
-                        if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",quesOptsList)){
-                            System.out.println("异常错误，写入专题教材记录至XML文件失败，原因：未知!");
-                            return;
-                        }
                         //得到答案信息中的附件
                         for(QuestionOption qoption:quesOptsList){
                             if(qoption!=null&&qoption.getRef()!=null){
+                                if(qoption.getContent()!=null)
+                                    qoption.setContent(qoption.getContent().replaceAll("ueditor/jsp/../../","_SZ_SCHOOL_IMG_PLACEHOLDER_"));
+
                                 //写入XML文件,并得到备注里的 附件 进行压综
                                 path=MD5_NEW.getMD5Result(qoption.getQuestionid().toString());
                                 folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
@@ -377,6 +342,11 @@ public class ShareCourse extends TimerTask {
                                 }
                             }
                         }
+                        //保存答案信息到数据库
+                        if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",quesOptsList)){
+                            System.out.println("异常错误，写入专题教材记录至XML文件失败，原因：未知!");
+                            return;
+                        }
 
                     }
                     if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",courseQuestionList)){
@@ -384,6 +354,7 @@ public class ShareCourse extends TimerTask {
                         return;
                     }
                 }
+                System.out.println("完成组织试题问题数据");
                 //循环得到专题任务
                     presource.setPageNo(0);
                 while(true){

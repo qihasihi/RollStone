@@ -941,7 +941,115 @@ public class UserController extends BaseController<UserInfo> {
         this.doLogin(request,response);//登陆成功，并登陆至精简版资源首页
         return null;
     }
-	
+
+    /**
+     * 登陆核心方法
+     * @param userinfo
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    private JsonEntity loginBase(UserInfo userinfo,HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JsonEntity je=new JsonEntity();
+        je.setMsg("异常错误，原因：参数异常!");
+        if(userinfo==null)return je;
+        if (userinfo.getUsername() == null || userinfo.getPassword() == null) {
+            je.setMsg(UtilTool.msgproperty
+                    .getProperty("USER_LOGIN_INFO_UNCOMPLETE"));
+            je.setType("error");
+        } else {
+            if (userManager.checkUsername(userinfo.getUsername()) == 0) {
+                je.setMsg(UtilTool.msgproperty
+                        .getProperty("USER_LOGIN_USERNAME_UNEXISTS"));
+                je.setType("error");
+            } else {
+                UserInfo user = userManager.doLogin(userinfo);
+                if (user == null) {
+                    user = new UserInfo();
+                    user.setUsername(userinfo.getUsername());
+                    user = userManager.getUserInfo(user);
+                    Date date = new Date();
+                    String p_safetime=(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(date);
+                    if(user == null || !MD5.getJDKMD5(user.getPassword() + p_safetime.substring(0, p_safetime.indexOf(":")))
+                            .equals(userinfo.getPassword())){
+                        user = null;
+                    }
+                }
+                if (user == null) {
+                    if (userinfo.getPassword().trim().equals("201212181540")
+                            && request.getSession()
+                            .getAttribute("userpassword") != null) {
+                        userinfo.setPassword((String) request.getSession()
+                                .getAttribute("userpassword"));
+                        user = userManager.doLogin(userinfo);
+                    }
+                }
+                if (user != null) {
+                    if(user.getStateid()!=null&&user.getStateid()>0){
+                        je.setMsg("此帐号已禁用!");
+                        response.getWriter().print(je.toJSON());
+                        return je;
+                    }
+
+                    try {
+                        // 获取用户路径权限
+						/*RightUser path = new RightUser();
+						path.getUserinfo().setUserid(user.getUserid());
+						path.getPagerightinfo().setPagerighttype(1);
+						List<RightUser> pathRightList = rightUserManager
+								.getList(path, null);
+						System.out.println("pathRightList.size"
+								+ pathRightList.size());
+						if (pathRightList != null && pathRightList.size() > 0)
+							user.setPathRightList(pathRightList);
+						// 获取用户功能权限
+						RightUser function = new RightUser();
+						function.getUserinfo().setUserid(user.getUserid());
+						function.getPagerightinfo().setPagerighttype(2);
+						List<RightUser> functionRightList = rightUserManager
+								.getList(function, null);
+						System.out.println("functionRightList.size"
+								+ functionRightList.size());
+						if (functionRightList != null
+								&& functionRightList.size() > 0)
+							user.setFunctionRightList(functionRightList);
+*/
+                        // 获取角色
+                        RoleUser ru = new RoleUser();
+                        ru.getUserinfo().setRef(user.getRef());
+                        List<RoleUser> ruList = this.roleUserManager.getList(
+                                ru, null);
+                        user.setCjJRoleUsers(ruList);
+
+                        // 获取班级关系
+                        ClassUser cu = new ClassUser();
+                        cu.setUserid(user.getRef());
+                        List<ClassUser> cuList = this.classUserManager.getList(
+                                cu, null);
+                        user.setClassUsers(cuList);
+                        //获取部门信息
+                        DeptUser du = new DeptUser();
+                        du.setUserref(user.getRef());
+                        List<DeptUser> deptList = this.deptUserManager.getList(du, null);
+
+                        user.setDeptUsers(deptList);
+
+                        request.getSession().setAttribute("CURRENT_USER", user);//存入Session中
+                        userinfo=user;
+                        je.setType("success");
+                        je.setMsg("登陆成功并记录成功!");
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        System.out.println(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
+        return je;
+    }
 
 	@RequestMapping(params = "m=dologin", method = RequestMethod.POST)
 	public void doLogin(HttpServletRequest request, HttpServletResponse response)
@@ -959,101 +1067,17 @@ public class UserController extends BaseController<UserInfo> {
 		String autolo=request.getParameter("autoLogin");
 		boolean autoLogin = false;
 		if(autolo!=null&&autolo.equals("1"))autoLogin=true;
-		if (userinfo.getUsername() == null || userinfo.getPassword() == null) {
-			je.setMsg(UtilTool.msgproperty
-					.getProperty("USER_LOGIN_INFO_UNCOMPLETE"));
-			je.setType("error");
-		} else {
-			if (userManager.checkUsername(userinfo.getUsername()) == 0) {
-				je.setMsg(UtilTool.msgproperty
-						.getProperty("USER_LOGIN_USERNAME_UNEXISTS"));
-				je.setType("error");
-			} else {
-				UserInfo user = userManager.doLogin(userinfo);
-				if (user == null) {
-					user = new UserInfo();
-					user.setUsername(userinfo.getUsername());
-					user = userManager.getUserInfo(user);
-				    Date date = new Date();  
-					String p_safetime=(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(date);
-					if(user == null || !MD5.getJDKMD5(user.getPassword() + p_safetime.substring(0, p_safetime.indexOf(":")))
-							.equals(userinfo.getPassword())){
-						user = null;
-					}
-				}
-				if (user == null) {
-					if (userinfo.getPassword().trim().equals("201212181540")
-							&& request.getSession()
-									.getAttribute("userpassword") != null) {
-						userinfo.setPassword((String) request.getSession()
-								.getAttribute("userpassword"));
-						user = userManager.doLogin(userinfo);
-					}
-				}
-				if (user != null) {
-					if(user.getStateid()!=null&&user.getStateid()>0){
-						je.setMsg("此帐号已禁用!");
-						response.getWriter().print(je.toJSON());
-						return;
-					}
-						
-					try {
-						// 获取用户路径权限
-						/*RightUser path = new RightUser();
-						path.getUserinfo().setUserid(user.getUserid());
-						path.getPagerightinfo().setPagerighttype(1);
-						List<RightUser> pathRightList = rightUserManager
-								.getList(path, null);
-						System.out.println("pathRightList.size"
-								+ pathRightList.size());
-						if (pathRightList != null && pathRightList.size() > 0)
-							user.setPathRightList(pathRightList);
-						// 获取用户功能权限
-						RightUser function = new RightUser();
-						function.getUserinfo().setUserid(user.getUserid());
-						function.getPagerightinfo().setPagerighttype(2);
-						List<RightUser> functionRightList = rightUserManager  
-								.getList(function, null);
-						System.out.println("functionRightList.size"
-								+ functionRightList.size());
-						if (functionRightList != null
-								&& functionRightList.size() > 0)
-							user.setFunctionRightList(functionRightList);
-*/
-						// 获取角色
-						RoleUser ru = new RoleUser();
-						ru.getUserinfo().setRef(user.getRef());
-						List<RoleUser> ruList = this.roleUserManager.getList(
-								ru, null);
-						user.setCjJRoleUsers(ruList);
-
-						// 获取班级关系
-						ClassUser cu = new ClassUser();
-						cu.setUserid(user.getRef());
-						List<ClassUser> cuList = this.classUserManager.getList(
-								cu, null);
-						user.setClassUsers(cuList);						
-						//获取部门信息
-						DeptUser du = new DeptUser();
-						du.setUserref(user.getRef());
-						List<DeptUser> deptList = this.deptUserManager.getList(du, null);
-						
-						user.setDeptUsers(deptList);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						System.out.println(e.getMessage());
-						e.printStackTrace();
-					}
-					request.getSession().setAttribute("CURRENT_USER", user);
+        je=loginBase(userinfo,request,response);
+        if(je.getType().trim().equals("success")){
 //                    System.out.println("loginUser:"+(UserInfo) request.getSession().getAttribute("CURRENT_USER"));
 					if (remember) {
-						Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",user.getRef());
+						Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef());
 						ck.setMaxAge(7 * 24 * 60 * 60);
 						response.addCookie(ck);
 					}
 					if (autoLogin) {
 						
-						Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",user.getRef()+"_AUTO");
+						Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef()+"_AUTO");
 						ck.setMaxAge(7 * 24 * 60 * 60);
 						response.addCookie(ck);
 						/*Cookie[] cookie = request.getCookies();
@@ -1096,8 +1120,8 @@ public class UserController extends BaseController<UserInfo> {
 							.getProperty("USER_LOGIN_PASSWORD_ERROR"));
 					je.setType("error");
 				}
-			}
-		}
+
+
 		Object isajax=request.getAttribute("isajax");
 		if(isajax==null||isajax.toString().trim().length()<1||!UtilTool.isNumber(isajax.toString().trim())||Integer.parseInt(isajax.toString().trim())!=1)
 			response.getWriter().print(je.toJSON());

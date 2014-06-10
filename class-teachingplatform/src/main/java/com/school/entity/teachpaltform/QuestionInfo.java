@@ -76,6 +76,7 @@ public class QuestionInfo implements java.io.Serializable {
             }
 
         }
+        System.out.println(content);
         return content;
     }
 
