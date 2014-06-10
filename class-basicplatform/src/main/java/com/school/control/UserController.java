@@ -2380,7 +2380,7 @@ public class UserController extends BaseController<UserInfo> {
 			return;
 		}
 		List<String> filenameString = getFileArrayName(1);
-
+        this.setFname(null);
 		if (!this.fileupLoad(request)) {
 			msg = "…œ¥´ ß∞‹£¨«Î÷ÿ ‘!";
 			returnVal = "{error:'" + msg + "'}";
