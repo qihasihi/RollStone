@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IE 上传组件测试</title>
+    <link href="css/smoothness/jquery-ui-1.10.2.custom.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="js/jquery-migrate-1.1.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.json-2.4.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.10.2.custom.js"></script>
+    <script type="text/javascript" src="js/knockout-2.2.1.js"></script>
+    <style>
+        body
+        {
+            font: 75% "新宋体", sans-serif;
+        }
+
+        .info-pb-container
+        {
+            height: 24px;
+            padding: 2px 10px;
+        }
+
+        .info-pb-label
+        {
+            float: left;
+            margin-left: 50%;
+            margin-top: 2px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #fff;
+        }
+
+        .info-pb
+        {
+            height: 20px;
+        }
+
+        .info-button
+        {
+            display: block;
+            float: left;
+            margin-left: 10px;
+            /*height: 1.2em;
+            width: 1.2em;*/
+        }
+
+        .info-filename
+        {
+            display: block;
+            float: left;
+            margin-left: 15px;
+        }
+
+        .info-text-right
+        {
+            display: block;
+            float: right;
+            margin-right: 15px;
+        }
+    </style>
+    <script type="text/javascript">
+        var infosVM = {};
+				var UploadInfoStatus = {usWaiting: 0, usPaused: 1, usUploading: 2, usCompleted: 3, usAborted: 4, usCanceling: 5, usCanceled: 6};
+
+        function formatFileSize(fileSize) {
+            var unit = ' B';
+
+            if (fileSize > 1024) {
+                unit = " KB";
+                fileSize = fileSize / 1024
+                if (fileSize > 1024) {
+                    unit = " MB";
+                    fileSize = fileSize / 1024
+
+                    if (fileSize > 1024) {
+                        unit = " G";
+                        fileSize = fileSize / 1024
+                    }
+                }
+            }
+
+            return Math.round(fileSize * 100) / 100 + unit;
+        }
+
+        function reconvert(str) {
+            str = str.replace(/(\\u)(\w{4})/g, function ($0) {
+                return (String.fromCharCode(parseInt((escape($0).replace(/(%5Cu)(\w{4})/g, "$2")), 16)));
+            });
+            str = str.replace(/(&#x)(\w{4});/g, function ($0) {
+                return String.fromCharCode(parseInt(escape($0).replace(/(%26%23x)(\w{4})(%3B)/g, "$2"), 16));
+            });
+            return str;
+        }
+
+        function uploadInfoVM(item, index) {
+            var self = this;
+            self.filePath = item.FileName;
+            self.filename = self.filePath.substr(self.filePath.lastIndexOf('\\') + 1);
+            self.fileSize = ko.observable(formatFileSize(item.FileSize));
+            self.rate = ko.observable(formatFileSize(item.TransferRate));
+            self.pos = ko.observable(item.UploadRate);
+            self.index = index;
+
+            self.update = function (item) {
+                self.fileSize(formatFileSize(item.FileSize));
+                self.rate(formatFileSize(item.TransferRate));
+                self.pos(item.UploadRate);
+            }
+        }
+
+        function uploadListVM() {
+            var self = this;
+            self.infos = ko.observableArray([]);
+
+            self.addInfo = function (item) {
+                var list = self.infos();
+                var exists = null;
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].filePath == item.FileName) {
+                        exists = list[i];
+                        if (item.Status == UploadInfoStatus.usCanceled) {
+                            self.infos.remove(list[i]);
+                            return null;
+                        }
+                        break;
+                    }
+                }
+
+                if (exists == null) {
+                		if (item.Status != UploadInfoStatus.usCanceled) {
+                    		var index = self.infos().length;
+                    		self.infos.push(new uploadInfoVM(item, index));
+                  			return { index: index, isNew: true };
+                  	}
+                  	else
+                  			return null;
+                }
+                else {
+                    exists.update(item);
+                    return { index: exists.index, isNew: false };
+                }
+            }
+        }
+
+        function upadteUploadControl(item, control) {
+            if (control != null) {
+                var play = jQuery("#upload_play_" + control.index);
+                var pause = jQuery("#upload_pause_" + control.index);
+                var cancel = jQuery("#upload_cancel_" + control.index);
+                var pb = jQuery("#upload_pb_" + control.index);
+                var pbtext = pb.children(".info-pb-label");
+
+                if (control.isNew) {
+                    play
+                        .button({ icons: { primary: "ui-icon-play" }, text: false })
+                        .click(function(){
+								            var data = { cmd: "start", filename: item.FileName };
+								            uploader.ExecuteCmd($.toJSON(data));
+                        });
+                    pause
+                    		.button({ icons: { primary: "ui-icon-pause" }, text: false })
+                    		.click(function(){
+								            var data = { cmd: "pause", filename: item.FileName };
+								            uploader.ExecuteCmd($.toJSON(data));
+                    		});
+                    cancel
+                    		.button({ icons: { primary: "ui-icon-close" }, text: false })
+                    		.click(function(){
+								            var data = { cmd: "cancel", filename: item.FileName };
+								            uploader.ExecuteCmd($.toJSON(data));
+                    		});                    		;
+                    pb.progressbar({
+                        value: false,
+                        change: function () {
+                            pbtext.text(pb.progressbar("value") + "%");
+                        },
+                        complete: function () {
+                            pbtext.text(item.FileName+"完成!"); 
+                        }
+                    });
+                }
+
+                pb.progressbar("value", parseFloat(item.UploadRate));
+
+								switch(item.Status){
+									case UploadInfoStatus.usWaiting:
+									case UploadInfoStatus.usPaused:
+										play.button("enable");
+                    pause.button("disable");
+										break;
+									case UploadInfoStatus.usUploading:
+									  play.button("disable");
+                    pause.button("enable");
+                    break;
+                  case UploadInfoStatus.usCompleted:
+                  case UploadInfoStatus.usCanceling:
+                  case UploadInfoStatus.usCanceled:
+                    play.hide();
+                    pause.hide();
+                    cancel.hide();
+                    break;
+                  case UploadInfoStatus.usAborted:
+                    play.hide();
+                    pause.hide();
+                    break;
+								}
+            }
+        }
+
+        function showUploadInfo() {
+            try {
+                var data = {};
+                data.cmd = "getinfo";
+                var info = reconvert(uploader.ExecuteCmd($.toJSON(data)));
+                jQuery.each(jQuery.evalJSON(info), function (i, v) {
+                    var retval = infosVM.addInfo(v);
+                    upadteUploadControl(v, retval);
+                });
+            } catch (e) {
+
+            }
+            window.setTimeout("showUploadInfo()", 1000);
+        }
+
+        function uploadFile(filename) {
+            var data = {};
+            data.cmd = "upload";
+            if (filename) {
+                data.filename = filename;
+            }
+            uploader.ExecuteCmd($.toJSON(data));
+        }
+
+        jQuery(function ($) {
+            $("#fileUploader").change(function () {
+                alert(getFullPath(this));
+            });
+
+            var init = {};
+            init.url = 'http://localhost:8080/fileoperate/upload1.jsp?jsessionid=aaatCu3yQxMmN-Rru135t&res_id=10000';//'http://202.99.47.94:8080/ffmpeg/upload1.jsp?jsessionid=aaatCu3yQxMmN-Rru135t&res_id=10000';
+            init.chunksize = 1024 * 256;
+            uploader.Init($.toJSON(init));
+
+            $("#btnUpload")
+              .button({ icons: { primary: "ui-icon-circle-plus" } })
+              .click(function () { uploadFile(); });
+
+            infosVM = new uploadListVM();
+            ko.applyBindings(infosVM, $("#divUploadInfo")[0]);
+            showUploadInfo();
+        });
+    </script>
+</head>
+<body>
+    <object classid="clsid:787D6738-39C4-458C-BE8B-0084503FC021" id="uploader"></object>
+    <button id="btnUpload">上传文件</button>
+    <br />
+    <div id="divUploadInfo" class="info-container" data-bind="foreach: infos">
+        <div style="height: 15px">
+            <span class="info-filename" data-bind="text: filename"></span>
+            <div class="info-text-right">
+                上传速度: <span data-bind="text: rate"></span>/s &nbsp;&nbsp;&nbsp; 文件大小：<span data-bind="text: fileSize"></span>
+            </div>
+        </div>
+        <div class="info-pb-container">
+            <div data-bind="attr: { id: 'upload_pb_' + index }" class="info-pb">
+                <div class="info-pb-label">等待上传...</div>
+            </div>
+        </div>
+        <div style="height: 24px">
+            <button data-bind="attr: { id: 'upload_play_' + index }" class="info-button">开始</button>
+            <button data-bind="attr: { id: 'upload_pause_' + index }" class="info-button">暂停</button>
+            <button data-bind="attr: { id: 'upload_cancel_' + index }" class="info-button">取消</button>
+        </div>
+    </div>
+</body>
+</html>
