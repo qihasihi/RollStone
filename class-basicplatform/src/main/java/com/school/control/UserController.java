@@ -5079,6 +5079,95 @@ public class UserController extends BaseController<UserInfo> {
         // response.getWriter().
         // print("{\"type\":\"success\",\"msg\":\""+http_1.toString()+"\"}");
     }
+
+    /**
+     * 外部接口登陆(必要参数 user_name,password)
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=foreighLogin",method={RequestMethod.GET,RequestMethod.POST})
+    public void foreighLogin(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String logintime=request.getParameter("login_time");
+       JsonEntity jsonEntity=new JsonEntity();
+        if(logintime==null||logintime.trim().length()<1||!UtilTool.isNumber(logintime)){
+            jsonEntity.setMsg("异常错误，登陆时间戳参数缺少!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+        UserInfo loginUsr=new UserInfo();
+        String schoolid=request.getParameter("lzx_school_id");
+        if(schoolid==null||schoolid.trim().length()<1||!UtilTool.isNumber(schoolid)){
+            jsonEntity.setMsg("异常错误，分校ID为空!!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+        String lzx_userid=request.getParameter("lzx_userid");
+        String username=request.getParameter("username");
+        String pass=request.getParameter("password");
+        String loginCode=request.getParameter("login_code");
+        if(loginCode==null||loginCode.trim().length()<1){
+            jsonEntity.setMsg("异常错误，登陆码参数缺少!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+        if(username==null||username.trim().length()<1){
+            if(lzx_userid==null||lzx_userid.trim().length()<1){
+                jsonEntity.setMsg("异常错误，登陆用户ID戳参数缺少!");
+                response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+            }
+            loginUsr.setLzxuserid(lzx_userid);
+        }else{
+            if(pass==null||pass.trim().length()<1){
+                jsonEntity.setMsg("异常错误，登陆密码为空!");
+                response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+            }
+            loginUsr.setUsername(username);
+            loginUsr.setPassword(pass);
+        }
+        String flag_id=request.getParameter("flag_id");
+        if(flag_id==null||flag_id.trim().length()<1||!UtilTool.isNumber(flag_id.trim())){
+            jsonEntity.setMsg("异常错误，功能ID为空，无法进行跳转!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+        //验证是否在三分钟内
+        Long logint=Long.parseLong(logintime);
+        Long nt=new Date().getTime();
+        double d=(nt-logint)/(1000*60);
+        if(d>3){//大于三分钟
+            jsonEntity.setMsg("异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+        String loginKey=request.getParameter("login_key");
+        //验证key
+        String md5key=logintime+schoolid;
+        if(loginUsr.getLzxuserid()!=null&&loginUsr.getLzxuserid().trim().length()>0){
+            md5key+=loginUsr.getLzxuserid();
+        }else{
+            md5key+=loginUsr.getUsername()+loginUsr.getPassword();
+        }
+        md5key+=flag_id+loginCode+logintime;
+        md5key=MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
+        if(!md5key.trim().equals(loginKey.trim())){//如果不一致，则说明非法登陆
+            jsonEntity.setMsg("异常错误，非法登陆!!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+        String targetUrl=null;
+        String foreignFlagStr=UtilTool.utilproperty.getProperty("FOREIGN_FLAG_ID");//flag_id|url,flag_id|url
+        String[] foreighFlagArray=foreignFlagStr.split(",");
+        if(foreighFlagArray.length>0){
+            for (String ft:foreighFlagArray){
+                String[] fttmp=ft.split("\\|");
+                if(fttmp!=null&&fttmp.length>1){
+                    if(fttmp[0].trim().equals(flag_id.trim())){
+                        targetUrl=fttmp[1];break;
+                    }
+                }
+            }
+        }
+        if(targetUrl==null){
+            jsonEntity.setMsg("异常错误，网校端配置错误!请联系管理人员");
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+        response.sendRedirect(targetUrl);
+    }
 }
 
 /**

@@ -2312,4 +2312,17 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("courseid", courseList.get(0).getCourseid());
         return new ModelAndView("/teachpaltform/preview/course-ques-list",mp);
     }
+
+    /**
+     * 根据角色进入教学平台
+     * @param request
+     * @param response
+     */
+    @RequestMapping(params="m=toCourseByRole",method=RequestMethod.GET)
+    public void toCourseByRole(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID)){ //进入学生首页
+            response.sendRedirect("teachercourse?m=toStudentCourseList");
+        }else
+            response.sendRedirect("teachercourse?m=toTeacherCourseList"); //进入教师首页
+    }
 }

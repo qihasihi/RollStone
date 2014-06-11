@@ -702,8 +702,8 @@ public class ClassController extends BaseController<ClassInfo>{
 		}else
 			jeEntity.setMsg("升级失败!原因：未知!");
 		response.getWriter().print(jeEntity.toJSON());
-		
 	}
+
 }
 
 
