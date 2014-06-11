@@ -20,13 +20,14 @@ public class SubjectInfo implements java.io.Serializable{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public SubjectInfo(Integer subjectid, String subjectname, Date ctime, Date mtime,Integer subjecttype) {
+	public SubjectInfo(Integer subjectid, String subjectname, Date ctime, Date mtime,Integer subjecttype,Integer lzxsubjectid) {
 		super();
 		this.subjectid = subjectid;
 		this.subjectname = subjectname;
 		this.ctime = ctime;
 		this.mtime = mtime;
 		this.subjecttype=subjecttype;
+        this.lzxsubjectid=lzxsubjectid;
 	}
 	
 	private Integer subjectid;
@@ -34,8 +35,17 @@ public class SubjectInfo implements java.io.Serializable{
 	private Integer subjecttype;
 	private Date ctime;
 	private Date mtime;
-	
-	public Integer getSubjecttype() {
+    private Integer lzxsubjectid;
+
+    public Integer getLzxsubjectid() {
+        return lzxsubjectid;
+    }
+
+    public void setLzxsubjectid(Integer lzxsubjectid) {
+        this.lzxsubjectid = lzxsubjectid;
+    }
+
+    public Integer getSubjecttype() {
 		return subjecttype;
 	}
 

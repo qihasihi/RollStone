@@ -150,4 +150,83 @@ public class SubjectController extends BaseController<SubjectInfo>{
         je.setObjList(subList);
         response.getWriter().print(je.toJSON());
     }
+
+    @RequestMapping(params="m=addLzxSubject",method=RequestMethod.POST)
+    protected void addLzxSubject(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        String lzxsubjectid=request.getParameter("subject_id");
+        String lzxsubjectname=request.getParameter("subject_name");
+        SubjectInfo si = new SubjectInfo();
+        si.setSubjectname(lzxsubjectname);
+        List<SubjectInfo> subList = this.subjectManager.getList(si,null);
+        StringBuilder sb=new StringBuilder();
+        if(subList!=null&&subList.size()>0){
+            si=new SubjectInfo();
+            si.setLzxsubjectid(Integer.parseInt(lzxsubjectid));
+            si.setSubjectid(subList.get(0).getSubjectid());
+            Boolean b = this.subjectManager.doUpdate(si);
+            if(b){
+               sb.append("[{\"status\":\"success\"}]");
+            }else{
+               sb.append("[{\"status\":\"error\",\"message\":\"添加失败，请稍后重试\"}]");
+            }
+        }else{
+            si.setLzxsubjectid(Integer.parseInt(lzxsubjectid));
+            si.setSubjectname(lzxsubjectname);
+            Boolean b = this.subjectManager.doSave(si);
+            if(b){
+                sb.append("[{\"status\":\"success\"}]");
+            }else{
+                sb.append("[{\"status\":\"error\",\"message\":\"添加失败，请稍后重试\"}]");
+            }
+        }
+        response.getWriter().print(sb.toString());
+    }
+
+    @RequestMapping(params="m=updLzxSubject",method=RequestMethod.POST)
+    protected void updLzxSubject(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        JsonEntity je = new JsonEntity();
+        String lzxsubjectid=request.getParameter("subject_id");
+        String lzxsubjectname=request.getParameter("subject_name");
+        SubjectInfo si = new SubjectInfo();
+        si.setLzxsubjectid(Integer.parseInt(lzxsubjectid));
+        List<SubjectInfo> subList = this.subjectManager.getList(si,null);
+        StringBuilder sb=new StringBuilder();
+        if(subList!=null&&subList.size()>0){
+            si=new SubjectInfo();
+            si.setSubjectname(lzxsubjectname);
+            si.setSubjectid(subList.get(0).getSubjectid());
+            Boolean b = this.subjectManager.doUpdate(si);
+            if(b){
+                sb.append("[{\"status\":\"success\"}]");
+            }else{
+                sb.append("[{\"status\":\"error\",\"message\":\"修改失败，请稍后重试\"}]");
+            }
+        }else{
+            sb.append("[{\"status\":\"error\",\"message\":\"无此学科信息，请确认已添加后重试\"}]");
+        }
+        response.getWriter().print(sb.toString());
+    }
+
+    @RequestMapping(params="m=delLzxSubject",method=RequestMethod.POST)
+    protected void delLzxSubject(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        JsonEntity je = new JsonEntity();
+        String lzxsubjectid=request.getParameter("subject_id");
+        SubjectInfo si = new SubjectInfo();
+        si.setLzxsubjectid(Integer.parseInt(lzxsubjectid));
+        List<SubjectInfo> subList = this.subjectManager.getList(si,null);
+        StringBuilder sb = new StringBuilder();
+        if(subList!=null&&subList.size()>0){
+            si=new SubjectInfo();
+            si.setSubjectid(subList.get(0).getSubjectid());
+            Boolean b = this.subjectManager.doDelete(si);
+            if(b){
+                sb.append("[{\"status\":\"success\"}]");
+            }else{
+                sb.append("[{\"status\":\"error\",\"message\":\"删除失败，请稍后重试\"}]");
+            }
+        }else{
+            sb.append("[{\"status\":\"error\",\"message\":\"无此学科信息，已删除或者未添加成功\"}]");
+        }
+        response.getWriter().print(sb.toString());
+    }
 }
