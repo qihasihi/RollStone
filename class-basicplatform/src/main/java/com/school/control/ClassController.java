@@ -1,14 +1,16 @@
 package com.school.control;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.school.manager.*;
 import com.school.manager.inter.*;
+import com.school.util.MD5_NEW;
+import jcore.jsonrpc.common.JSONArray;
+import jcore.jsonrpc.common.JSONObject;
+import net.sf.json.JSON;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -704,6 +706,114 @@ public class ClassController extends BaseController<ClassInfo>{
 		response.getWriter().print(jeEntity.toJSON());
 	}
 
+    @RequestMapping(params ="m=lzxUpdate")
+    public void lzxUpdate(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String clsArrayjson=request.getParameter("clsarrayjson");
+        if(clsArrayjson==null||clsArrayjson.toString().trim().length()<1){
+            response.getWriter().print("异常错误，没有发现您要添加或修改的班级数据JSOn!");return;
+        }
+        net.sf.json.JSONArray clsJr=net.sf.json.JSONArray.fromObject(clsArrayjson);
+        if(clsJr==null||clsJr.isEmpty()){
+            response.getWriter().print("异常错误，没有发现您要添加或修改的班级数据Json!");return;
+        }
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+        Iterator jrIte=clsJr.iterator();
+        while(jrIte.hasNext()){
+            net.sf.json.JSONObject clsJo=(net.sf.json.JSONObject)jrIte.next();
+            Object timeStr=clsJo.get("timestamp");
+            Object schoolid=clsJo.get("lzx_school_id");
+            Object classid=clsJo.get("classid");
+            Object className=clsJo.get("class_name");
+            Object pattern=clsJo.get("pattern");
+            Object classGrade=clsJo.get("class_grade");
+            Object year=clsJo.get("year");
+            Object type= clsJo.get("type");
+            Object subjectid=clsJo.get("subject_id");
+            Object isflag=clsJo.get("isflag");
+            Object key=clsJo.get("key");
+            //验证相关参数
+            if(timeStr==null||timeStr.toString().trim().length()<1||!UtilTool.isNumber(timeStr.toString())){
+                response.getWriter().print("异常错误，登陆时间戳参数缺少!");return;
+            }
+            if(schoolid==null||schoolid.toString().trim().length()<1||!UtilTool.isNumber(schoolid.toString())){
+                response.getWriter().print("异常错误，分校ID为空!!");return;
+            }
+            if(classid==null||classid.toString().trim().length()<1||!UtilTool.isNumber(classid.toString())){
+                response.getWriter().print("异常错误，班级ID为空!!");return;
+            }
+            if(className==null||className.toString().trim().length()<1){
+                response.getWriter().print("异常错误，班级名称为空!!");return;
+            }
+            if(pattern==null||pattern.toString().trim().length()<1){
+                response.getWriter().print("异常错误，班级类型为空!!");return;
+            }
+            if(classGrade==null||classGrade.toString().trim().length()<1){
+                response.getWriter().print("异常错误，年级为空!!");return;
+            }
+            if(year==null||year.toString().trim().length()<1){
+                response.getWriter().print("异常错误，学年为空!!");return;
+            }
+            if(type==null||type.toString().trim().length()<1){
+                response.getWriter().print("异常错误，班级类型为空!!");return;
+            }
+            if(pattern!=null&&pattern.toString().trim().equals("分层班")){
+                if(subjectid==null||subjectid.toString().trim().length()<1||!UtilTool.isNumber(subjectid.toString())){
+                    response.getWriter().print("异常错误，分层班的班级要添加学科ID,学科ID为空!!");return;
+                }
+            }
+            if(isflag==null||isflag.toString().trim().length()<1||!UtilTool.isNumber(isflag.toString())){
+                response.getWriter().print("异常错误，班级是否启用为空!!");return;
+            }
+            if(key==null||key.toString().trim().length()<1){
+                response.getWriter().print("异常错误，key为空!!");return;
+            }
+
+            //验证是否在三分钟内
+            Long ct=Long.parseLong(timeStr.toString());
+            Long nt=new Date().getTime();
+            double d=(nt-ct)/(1000*60);
+            if(d>3){//大于三分钟
+                response.getWriter().print("异常错误，响应超时!接口三分钟内有效!");return;
+            }
+            //验证key
+            String md5key=timeStr.toString()+schoolid;
+
+            md5key+=classid.toString()+className.toString()+classGrade.toString()+type.toString()+timeStr.toString();
+            md5key= MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
+            if(!md5key.trim().equals(key.toString().trim())){//如果不一致，则说明非法登陆
+                response.getWriter().print("异常错误，非法登陆!!");return;
+            }
+            //验证通过
+            ClassInfo cls=new ClassInfo();
+            cls.setClassid(Integer.parseInt(classid.toString()));
+            cls.setClassname(className.toString());
+            cls.setClassgrade(classGrade.toString());
+            cls.setPattern(pattern.toString());
+            cls.setYear(year.toString());
+            cls.setType(type.toString());
+            cls.setIsflag(Integer.parseInt(isflag.toString()));
+            if(pattern.toString().trim().equals("分层班")){
+                cls.setSubjectid(Integer.parseInt(subjectid.toString()));
+            }
+            StringBuilder sqlbuilder=new StringBuilder();
+            List<Object> objList=this.classManager.getSaveOrUpdateSql(cls,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+        }
+
+        if(sqlArrayList!=null&&sqlArrayList.size()>0&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
+            if(this.classManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+                response.getWriter().println("success");
+            }else{
+                response.getWriter().println("异常错误，原因：未知!");
+            }
+        }else{
+            response.getWriter().println("没有可添加或修改的班级记录可以操作!");
+        }
+    }
 }
 
 

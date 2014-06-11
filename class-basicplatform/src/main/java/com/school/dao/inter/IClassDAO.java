@@ -22,4 +22,12 @@ public interface  IClassDAO extends ICommonDAO<ClassInfo>{
 	 * @return
 	 */
 	public Boolean doClassLevelUp(String year);
+
+    /**
+     * 得到更新或添加的SQL
+     * @param obj;
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getSaveOrUpdateSql(ClassInfo obj, StringBuilder sqlbuilder);
 }

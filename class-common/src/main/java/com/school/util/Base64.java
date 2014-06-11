@@ -1,5 +1,6 @@
 package com.school.util;
 
+import net.sf.json.JSONArray;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -31,14 +32,7 @@ public class Base64 {
     }
     public  static  void  main(String args[])
     {
-        String s="test";
-        System.out.println(s);
-        //±àÂë
-        s=Base64.EncodeBase64(s);
-        System.out.println("±àÂë=="+s);
-        //½âÂë
-        s=Base64.DecodeBase64(s);
-        System.out.println("½âÂë=="+s);
+
 
     }
 }

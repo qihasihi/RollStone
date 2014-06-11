@@ -33,6 +33,7 @@ package com.school.util;
         import com.sun.image.codec.jpeg.JPEGCodec;
         import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
+        import net.sf.json.JSONArray;
         import org.apache.commons.lang.math.RandomUtils;
         import org.w3c.dom.Element;
         import org.w3c.dom.NodeList;
@@ -1321,18 +1322,7 @@ public class UtilTool implements java.io.Serializable {
     }
 
     public static void main(String[] args){
-        String content="f1b4178743b3e412199a4b4c8b98ac15e7a36be038a002bf9bef77a46ae53175bffc3ec0e077982a553e1cc0473c64ad229ea04ba803ff38e23ea032b7e4c720e45bc1788576dc4a5d55835e5c069364b2c1df69b797a027de0681dc89d20fb8";
-        try{
-        DESPlus des = new DESPlus();
-        String schoolkeyfn = des.decrypt(content.toString());
-        //得到分校已经买的栏目
-        String[] schoolArray = schoolkeyfn.split("\\*");
-         for (String s:schoolArray){
-             System.out.println(s);
-         }
-        }catch(Exception e){
 
-        }
     }
 
 

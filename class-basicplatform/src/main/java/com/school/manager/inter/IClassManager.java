@@ -21,4 +21,12 @@ public interface IClassManager  extends IBaseManager<ClassInfo> {
 	 * @return
 	 */
 	public Boolean doClassLevelUp(String year);
+
+    /**
+     * 得到更新或添加的SQL
+     * @param obj;
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getSaveOrUpdateSql(ClassInfo obj, StringBuilder sqlbuilder);
 } 

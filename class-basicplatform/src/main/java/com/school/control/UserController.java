@@ -5149,6 +5149,18 @@ public class UserController extends BaseController<UserInfo> {
             jsonEntity.setMsg("异常错误，非法登陆!!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
+        List<UserInfo> usrList=this.userManager.getList(loginUsr,null);
+        if(usrList==null||usrList.size()<1){
+            jsonEntity.setMsg("没有发现该用户!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+        loginUsr.setUsername(usrList.get(0).getUsername());
+        loginUsr.setPassword(usrList.get(0).getPassword());
+        jsonEntity=this.loginBase(loginUsr,request,response);
+        if(!jsonEntity.getType().trim().equals("success")){
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+
         String targetUrl=null;
         String foreignFlagStr=UtilTool.utilproperty.getProperty("FOREIGN_FLAG_ID");//flag_id|url,flag_id|url
         String[] foreighFlagArray=foreignFlagStr.split(",");

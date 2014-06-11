@@ -91,7 +91,15 @@ public class  ClassManager extends BaseManager<ClassInfo> implements IClassManag
 	public Boolean doClassLevelUp(String year){
 		return this.classdao.doClassLevelUp(year);
 	}
-
+    /**
+     * 得到更新或添加的SQL
+     * @param obj;
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getSaveOrUpdateSql(ClassInfo obj, StringBuilder sqlbuilder){
+        return this.classdao.getSaveOrUpdateSql(obj,sqlbuilder);
+    }
 	
 	
 	

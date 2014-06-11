@@ -201,11 +201,17 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 			return null;
 		sqlbuilder.append("{call class_proc_add(");
 		List<Object>objList = new ArrayList<Object>();
-		if(obj.getClassgrade()!=null){
-			sqlbuilder.append("?,");
-			objList.add(obj.getClassgrade());
-		}else
-			sqlbuilder.append("NULL,");
+
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClassid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClassgrade()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClassgrade());
+        }else
+            sqlbuilder.append("NULL,");
 		if(obj.getClassname()!=null){
 			sqlbuilder.append("?,");
 			objList.add(obj.getClassname());
@@ -311,4 +317,61 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 		}
 		return false;
 	}
+
+    /**
+     * 得到更新或添加的SQL
+     * @param obj
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getSaveOrUpdateSql(ClassInfo obj, StringBuilder sqlbuilder) {
+        if(obj==null||sqlbuilder==null)
+            return null;
+        sqlbuilder.append("{call class_proc_addOrUpdate(");
+        List<Object>objList = new ArrayList<Object>();
+
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClassid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClassgrade()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClassgrade());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClassname()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClassname());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getYear()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getYear());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getType()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getType());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getPattern()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getPattern());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getIsflag()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getIsflag());
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
+        return objList;
+    }
+
 }
