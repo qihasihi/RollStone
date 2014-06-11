@@ -19,6 +19,7 @@ import com.school.manager.inter.notice.INoticeManager;
 import com.school.manager.notice.NoticeManager;
 import com.school.share.*;
 import com.school.util.*;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -5080,6 +5081,553 @@ public class UserController extends BaseController<UserInfo> {
         // print("{\"type\":\"success\",\"msg\":\""+http_1.toString()+"\"}");
     }
 
+
+
+
+    /**
+     * 乐知行用户添加接口
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+
+    @RequestMapping(params = "m=receiveLZXUser", method = RequestMethod.POST)
+    public void receiveLZXUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String schoolid=request.getParameter("schoolid");
+        String timestamp=request.getParameter("timestamp");
+        String signature=request.getParameter("signature");
+        if(schoolid==null||schoolid.trim().length()<1){
+            je.setMsg("Schoolid is empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(timestamp==null||timestamp.trim().length()<1){
+            je.setMsg("Timestamp is empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(signature==null||signature.trim().length()<1){
+            je.setMsg("Signature is empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        String validateStr=MD5_NEW.getMD5ResultCode(timestamp+schoolid);
+        if(!signature.equals(validateStr)){
+            je.setMsg("Signature invalid!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        StringBuilder stringBuilder=new StringBuilder();
+        try {
+            String strCurrentLine;
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(request.getInputStream()));
+            while ((strCurrentLine = reader.readLine()) != null) {
+                stringBuilder.append(strCurrentLine).append("\n");
+            }
+            reader.close();
+        } catch (IOException e) {
+            je.setMsg(e.getMessage());
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        String returnContent=null;
+        try {
+            returnContent=new String(stringBuilder.toString());//.getBytes("gbk"),"UTF-8"
+        } catch (Exception e) {
+            je.setMsg(e.getMessage());
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        //转换成JSON
+        System.out.println(returnContent);
+        JSONArray jsonArray;
+        try{
+            jsonArray= JSONArray.fromObject(returnContent);
+        }catch (Exception e){
+            je.setMsg(e.getMessage());
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+
+        if(jsonArray!=null&&jsonArray.size()>0){
+            while(jsonArray.iterator().hasNext()){
+                JSONObject obj=(JSONObject)jsonArray.iterator().next();
+                boolean isTea=false,isStu=false;
+                String lzxuserid=obj.containsKey("lzx_user_id")?obj.getString("lzx_user_id"):"";
+                String username=obj.containsKey("user_name")?obj.getString("user_name"):"";
+                String identityname=obj.containsKey("identity_name")?obj.getString("identity_name"):"";
+                String stuname="",stusex="",stuno="";
+                String teachername="",teachersex="";
+
+                if(lzxuserid.length()<1){
+                    je.setMsg("lzxuserid is empty!");
+                    response.getWriter().print(je.toJSON());return;
+                }
+                if(username.length()<1){
+                    je.setMsg("username is empty!");
+                    response.getWriter().print(je.toJSON());return;
+                }
+                if(identityname.length()<1){
+                    je.setMsg("identityname is empty!");
+                    response.getWriter().print(je.toJSON());return;
+                }
+                if(identityname.length()>0&&identityname.equals("教师")){
+                    isTea=true;
+                    teachername=obj.containsKey("teacher_name")?obj.getString("teacher_name"):"";
+                    teachersex=obj.containsKey("teacher_sex")?obj.getString("teacher_sex"):"";
+                    if(teachername.length()<1){
+                        je.setMsg("teachername is empty!");
+                        response.getWriter().print(je.toJSON());return;
+                    }
+                    if(teachersex.length()<1){
+                        je.setMsg("teachersex is empty!");
+                        response.getWriter().print(je.toJSON());return;
+                    }
+                }else if(identityname.length()>0&&identityname.equals("学生")){
+                    isStu=true;
+                    stuname=obj.containsKey("stu_name")?obj.getString("stu_name"):"";
+                    stusex=obj.containsKey("stu_sex")?obj.getString("stu_sex"):"";
+                    stuno=obj.containsKey("stu_no")?obj.getString("stu_no"):"";
+                    if(stuname.length()<1){
+                        je.setMsg("stuname is empty!");
+                        response.getWriter().print(je.toJSON());return;
+                    }
+                    if(stusex.length()<1){
+                        je.setMsg("stusex is empty!");
+                        response.getWriter().print(je.toJSON());return;
+                    }
+                }
+
+
+
+                UserInfo userInfo=new UserInfo();
+                userInfo.setUsername(username);
+                userInfo.setLzxuserid(lzxuserid);
+                List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
+                //已存在
+                if(userInfoList!=null&&userInfoList.size()>0){
+                    je.setMsg("username:"+username+" lzxuserid:"+lzxuserid+" already exists!");
+                    response.getWriter().print(je.toJSON());return;
+                }else{
+                    //添加用户
+                    String userNextRef = UUID.randomUUID().toString();
+                    userInfo.setRef(userNextRef);
+                    userInfo.setPassword("111111");
+                    userInfo.setStateid(0);
+                    sql = new StringBuilder();
+                    objList = this.userManager.getSaveSql(userInfo, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+
+                    //添加用户与身份关联信息
+                    String identityNextRef = UUID.randomUUID().toString();
+                    UserIdentityInfo ui = new UserIdentityInfo();
+                    ui.setRef(identityNextRef);
+                    ui.getUserinfo().setRef(userNextRef);
+                    ui.setIdentityname(identityname);
+                    sql = new StringBuilder();
+                    objList = this.userIdentityManager.getSaveSql(ui, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+
+                    if(isStu){
+                        // 添加学生
+                        StudentInfo s = new StudentInfo();
+                        s.getUserinfo().setRef(userNextRef);
+                        s.setStuname(stuname);
+                        s.setStusex(stusex);
+                        s.setStuno(stuno);
+                        sql = new StringBuilder();
+                        objList = this.studentManager.getSaveSql(s, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+
+                        //添加默认学生角色
+                        String ruNextRef = UUID.randomUUID().toString();
+                        RoleUser ru = new RoleUser();
+                        ru.setRef(ruNextRef);
+                        ru.getUserinfo().setRef(userNextRef);
+                        ru.getRoleinfo().setRoleid(UtilTool._ROLE_STU_ID);
+
+                        sql = new StringBuilder();
+                        objList = this.roleUserManager.getSaveSql(ru, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+
+                        //添加学生角色默认权限
+                        RoleColumnRightInfo rc=new RoleColumnRightInfo();
+                        rc.setRoleid(UtilTool._ROLE_STU_ID);
+                        List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
+                        if(rcList!=null&&rcList.size()>0){
+                            for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
+                                UserColumnRightInfo ucr=new UserColumnRightInfo();
+                                ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                                ucr.setUserid(userNextRef);
+                                ucr.setRef(this.userColumnRightManager.getNextId());
+                                ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                                sql=new StringBuilder();
+                                objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                                if(objList!=null&&sql!=null){
+                                    sqlListArray.add(sql.toString());
+                                    objListArray.add(objList);
+                                }
+                            }
+                        }
+                    }else if(isTea){
+                        TeacherInfo t = new TeacherInfo();
+                        t.setUserid(userNextRef);
+                        t.setTeachername(teachername);
+                        t.setTeachersex(teachersex);
+
+                        sql = new StringBuilder();
+                        objList = this.teacherManager.getSaveSql(t, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+
+                        //添加默认教师角色
+                        String ruNextRef = UUID.randomUUID().toString();
+                        RoleUser ru = new RoleUser();
+                        ru.setRef(ruNextRef);
+                        ru.getUserinfo().setRef(userNextRef);
+                        ru.getRoleinfo().setRoleid(UtilTool._ROLE_TEACHER_ID);
+
+                        sql = new StringBuilder();
+                        objList = this.roleUserManager.getSaveSql(ru, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+
+                        //添加教师角色默认权限
+                        RoleColumnRightInfo rc=new RoleColumnRightInfo();
+                        rc.setRoleid(UtilTool._ROLE_TEACHER_ID);
+                        List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
+
+                        if(rcList!=null&&rcList.size()>0){
+                            for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
+                                UserColumnRightInfo ucr=new UserColumnRightInfo();
+                                ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                                ucr.setUserid(userNextRef);
+                                ucr.setRef(this.userColumnRightManager.getNextId());
+                                ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                                sql=new StringBuilder();
+                                objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                                if(objList!=null&&sql!=null){
+                                    sqlListArray.add(sql.toString());
+                                    objListArray.add(objList);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }else {
+            je.setMsg("Jsondata empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
+            boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
+            if(flag)
+                je.setType("success");
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+
+
+    /**
+     * 乐知行用户修改接口
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+
+    @RequestMapping(params = "m=modifyLZXUser", method = RequestMethod.POST)
+    public void modifyLZXUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String schoolid=request.getParameter("schoolid");
+        String timestamp=request.getParameter("timestamp");
+        String signature=request.getParameter("signature");
+        if(schoolid==null||schoolid.trim().length()<1){
+            je.setMsg("Schoolid is empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(timestamp==null||timestamp.trim().length()<1){
+            je.setMsg("Timestamp is empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(signature==null||signature.trim().length()<1){
+            je.setMsg("Signature is empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        String validateStr=MD5_NEW.getMD5ResultCode(timestamp+schoolid);
+        if(!signature.equals(validateStr)){
+            je.setMsg("Signature invalid!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        StringBuilder stringBuilder=new StringBuilder();
+        try {
+            String strCurrentLine;
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(request.getInputStream()));
+            while ((strCurrentLine = reader.readLine()) != null) {
+                stringBuilder.append(strCurrentLine).append("\n");
+            }
+            reader.close();
+        } catch (IOException e) {
+            je.setMsg(e.getMessage());
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        String returnContent=null;
+        try {
+            returnContent=new String(stringBuilder.toString());//.getBytes("gbk"),"UTF-8"
+        } catch (Exception e) {
+            je.setMsg(e.getMessage());
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        //转换成JSON
+        System.out.println(returnContent);
+        JSONArray jsonArray;
+        try{
+            jsonArray= JSONArray.fromObject(returnContent);
+        }catch (Exception e){
+            je.setMsg(e.getMessage());
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+
+        if(jsonArray!=null&&jsonArray.size()>0){
+            while(jsonArray.iterator().hasNext()){
+                JSONObject obj=(JSONObject)jsonArray.iterator().next();
+                boolean isTea=false,isStu=false;
+                String lzxuserid=obj.containsKey("lzx_user_id")?obj.getString("lzx_user_id"):"";
+                String stuname="",stusex="",stuno="";
+                String teachername="",teachersex="";
+                stuname=obj.containsKey("stu_name")?obj.getString("stu_name"):"";
+                stusex=obj.containsKey("stu_sex")?obj.getString("stu_sex"):"";
+                stuno=obj.containsKey("stu_no")?obj.getString("stu_no"):"";
+                teachername=obj.containsKey("teacher_name")?obj.getString("teacher_name"):"";
+                teachersex=obj.containsKey("teacher_sex")?obj.getString("teacher_sex"):"";
+
+                if(stuname.length()>0||stusex.length()>0){
+                    isStu=true;
+                }else if(teachername.length()>0||teachersex.length()>0){
+                    isTea=true;
+                }
+
+
+                UserInfo userInfo=new UserInfo();
+                userInfo.setLzxuserid(lzxuserid);
+                List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
+                //用户不存在
+                if(userInfoList!=null&&userInfoList.size()>0){
+                    je.setMsg("lzxuserid:"+lzxuserid+" not exists!");
+                    response.getWriter().print(je.toJSON());return;
+                }else{
+                    if(isTea){
+                        TeacherInfo t=new TeacherInfo();
+                        t.setUserid(userInfoList.get(0).getRef());
+                        if(teachername.length()>0)
+                            t.setTeachername(teachername);
+                        if(teachersex.length()>0)
+                            t.setTeachersex(teachersex);
+                        sql=new StringBuilder();
+                        objList=this.teacherManager.getUpdateSql(t,sql);
+                        if(objList!=null&&sql!=null){
+                            objListArray.add(objList);
+                            sqlListArray.add(sql.toString());
+                        }
+
+                    }else if(isStu){
+                        StudentInfo s=new StudentInfo();
+                        s.setUserref(userInfoList.get(0).getRef());
+                        if(stuname.length()>0)
+                            s.setStuname(stuname);
+                        if(stusex.length()>0)
+                            s.setStusex(stusex);
+                        if(stuno.length()>0)
+                            s.setStuno(stuno);
+                        sql=new StringBuilder();
+                        objList=this.studentManager.getUpdateSql(s,sql);
+                        if(objList!=null&&sql!=null){
+                            objListArray.add(objList);
+                            sqlListArray.add(sql.toString());
+                        }
+                    }
+                }
+            }
+        }else {
+            je.setMsg("Jsondata empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
+            boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
+            if(flag)
+                je.setType("success");
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 乐知行用户添加接口
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+
+    @RequestMapping(params = "m=deleteLZXUser", method = RequestMethod.POST)
+    public void deleteLZXUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String schoolid=request.getParameter("schoolid");
+        String timestamp=request.getParameter("timestamp");
+        String signature=request.getParameter("signature");
+        if(schoolid==null||schoolid.trim().length()<1){
+            je.setMsg("Schoolid is empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(timestamp==null||timestamp.trim().length()<1){
+            je.setMsg("Timestamp is empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(signature==null||signature.trim().length()<1){
+            je.setMsg("Signature is empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        String validateStr=MD5_NEW.getMD5ResultCode(timestamp+schoolid);
+        if(!signature.equals(validateStr)){
+            je.setMsg("Signature invalid!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        StringBuilder stringBuilder=new StringBuilder();
+        try {
+            String strCurrentLine;
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(request.getInputStream()));
+            while ((strCurrentLine = reader.readLine()) != null) {
+                stringBuilder.append(strCurrentLine).append("\n");
+            }
+            reader.close();
+        } catch (IOException e) {
+            je.setMsg(e.getMessage());
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        String returnContent=null;
+        try {
+            returnContent=new String(stringBuilder.toString());//.getBytes("gbk"),"UTF-8"
+        } catch (Exception e) {
+            je.setMsg(e.getMessage());
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        //转换成JSON
+        System.out.println(returnContent);
+        JSONArray jsonArray;
+        try{
+            jsonArray= JSONArray.fromObject(returnContent);
+        }catch (Exception e){
+            je.setMsg(e.getMessage());
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+
+        if(jsonArray!=null&&jsonArray.size()>0){
+            while(jsonArray.iterator().hasNext()){
+                JSONObject obj=(JSONObject)jsonArray.iterator().next();
+                String lzxuserid=obj.containsKey("lzx_user_id")?obj.getString("lzx_user_id"):"";
+
+
+                UserInfo userInfo=new UserInfo();
+                userInfo.setLzxuserid(lzxuserid);
+                List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
+                //用户不存在
+                if(userInfoList!=null&&userInfoList.size()>0){
+                    je.setMsg("lzxuserid:"+lzxuserid+" not exists!");
+                    response.getWriter().print(je.toJSON());return;
+                }else{
+                    userInfo.setStateid(1);
+                    sql=new StringBuilder();
+                    objList=this.userManager.getUpdateSql(userInfo,sql);
+                    if(sql!=null&&objList!=null){
+                        objListArray.add(objList);
+                        sqlListArray.add(sql.toString());
+                    }
+                }
+            }
+        }else {
+            je.setMsg("Jsondata empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
+            boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
+            if(flag)
+                je.setType("success");
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+
+
     /**
      * 外部接口登陆(必要参数 user_name,password)
      * @param request
@@ -5089,7 +5637,7 @@ public class UserController extends BaseController<UserInfo> {
     @RequestMapping(params="m=foreighLogin",method={RequestMethod.GET,RequestMethod.POST})
     public void foreighLogin(HttpServletRequest request,HttpServletResponse response) throws Exception{
         String logintime=request.getParameter("login_time");
-       JsonEntity jsonEntity=new JsonEntity();
+        JsonEntity jsonEntity=new JsonEntity();
         if(logintime==null||logintime.trim().length()<1||!UtilTool.isNumber(logintime)){
             jsonEntity.setMsg("异常错误，登陆时间戳参数缺少!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
