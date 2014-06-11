@@ -195,7 +195,8 @@ function beforeQryCourseList(p) {
         materialid: sel_material,
         courselevel: sel_courselevel,
         coursename: txt_course,
-        subjectid: courseSubject
+        subjectid: courseSubject,
+        currentcourseid:courseid
     };
     p.setPostParams(param);
 }
@@ -1379,7 +1380,7 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
         fileSystemIpPort+="/uploadfile/";
 
     var filepath = fileSystemIpPort  + resmd5id + "/" + filemd5name + lastnameobj;
-    if (typeof(filetype) != "undefined")
+    if (typeof(filetype) != "undefined"&&filetype.length>0)
         filepath = fileSystemIpPort   + resmd5id + "/" + filemd5name+lastname;
     // 配置参数
 
@@ -1828,8 +1829,8 @@ function videoConvertProgress(resid, fname, md5fname, idxstate, path, baseIpPort
         typeof(fname) != "undefined" && fname != null) {
         var urlpath = "http://202.99.47.104/resource/get_video_state.jsp?jsoncallback=?";
         if (typeof(baseIpPort) != "undefined" && baseIpPort.Trim().length > 0) {
-            baseIpPort=baseIpPort.substring(0,baseIpPort.indexOf("fileoperate"))+"fileoperate/";
-            urlpath = baseIpPort + "get_video_state.jsp?jsoncallback=?";
+            var tmppath=baseIpPort.substring(0,baseIpPort.indexOf("fileoperate"))+"fileoperate/";
+            urlpath = tmppath + "get_video_state.jsp?jsoncallback=?";
         }
         var lastname = "";
         if (typeof(fname) != 'undefined' && fname.Trim().length > 0 && fname.indexOf(".") != -1)
@@ -1927,7 +1928,7 @@ function isCollected(resdetailid) {
                 alert(rps.msg);
             } else {
                 if (rps.objList.length > 0)
-                    $("#sp_collect").html('<a href="javascript:void(0);">收藏</a>');
+                    $("#sp_collect").html('<a href="javascript:void(0);">已收藏</a>');
             }
         }
     });
@@ -1969,7 +1970,7 @@ function doCollectResource(resdetailid) {
                 alert(rps.msg);
             } else {
                 alert(rps.msg);
-                $("#sp_collect").html('<a href="javascript:void(0);">收藏</a>');
+                $("#sp_collect").html('<a href="javascript:void(0);">已收藏</a>');
             }
         }
     });

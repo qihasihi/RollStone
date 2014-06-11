@@ -93,6 +93,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String gradeid=request.getParameter("gradeid");
         String coursename=request.getParameter("coursename");
         String subjectid=request.getParameter("subjectid");
+        String currentcourseid=request.getParameter("currentcourseid");
 
         PageResult pageResult=this.getPageResultParameter(request);
         TpCourseInfo tpCourseInfo=new TpCourseInfo();
@@ -113,6 +114,11 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         if(coursename!=null&&coursename.trim().length()>0){
             tpCourseInfo.setCoursename(coursename);
         }
+        if(currentcourseid!=null&&currentcourseid.trim().length()>0){
+            tpCourseInfo.setCourseid(Long.parseLong(currentcourseid));
+        }
+
+
 
         List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getCouresResourceList(tpCourseInfo, pageResult);
         pageResult.setList(teacherCourseList);
@@ -138,7 +144,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         if(currentcourseid!=null&&currentcourseid.trim().length()>0)
             tr.setCurrentcourseid(Long.parseLong(currentcourseid));
 
-        pageResult.setOrderBy(" aa.c_time,aa.operate_time desc");
+        pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc");
         List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
         pageResult.setList(resourceList);
         je.setPresult(pageResult);
@@ -736,7 +742,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tr.setResstatus(1);
             tr.setResourcetype(1);
             PageResult pageResult=new PageResult();
-            pageResult.setOrderBy(" aa.c_time,aa.operate_time desc");
+            pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
                 for(int i=0;i<resourceList.size();i++){
@@ -1182,7 +1188,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tr.setResstatus(1);
             tr.setResourcetype(1);
             PageResult pageResult=new PageResult();
-            pageResult.setOrderBy(" aa.c_time,aa.operate_time desc");
+            pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
                 for(int i=0;i<resourceList.size();i++){

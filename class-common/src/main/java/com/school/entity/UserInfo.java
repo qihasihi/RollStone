@@ -35,6 +35,15 @@ public class UserInfo implements java.io.Serializable {
     private String hobbies;
     private String country;
     private String nation;
+    private String lzxuserid;   //乐知行用户ID
+
+    public String getLzxuserid() {
+        return lzxuserid;
+    }
+
+    public void setLzxuserid(String lzxuserid) {
+        this.lzxuserid = lzxuserid;
+    }
 
     public String getCountry() {
         return country;

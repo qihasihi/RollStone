@@ -136,6 +136,11 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
                 objList.add(obj.getMailaddress());
             } else
                 sqlbuilder.append("NULL,");
+            if(obj.getLzxuserid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getLzxuserid());
+            }else
+                sqlbuilder.append("NULL,");
 		}
 		if (presult != null && presult.getPageNo() > 0
 				&& presult.getPageSize() > 0) {
@@ -220,6 +225,11 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
 			objList.add(obj.getBirthdate());
 		}else 
 			sqlbuilder.append("NULL,");
+        if(obj.getLzxuserid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getLzxuserid());
+        }else
+            sqlbuilder.append("NULL,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -304,7 +314,11 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
             objList.add(obj.getIsmodify());
         } else
             sqlbuilder.append("NULL,");
-
+        if(obj.getLzxuserid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getLzxuserid());
+        }else
+            sqlbuilder.append("NULL,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
