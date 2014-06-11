@@ -157,9 +157,6 @@
         writeHtml.append("<li>&nbsp;</li>");
     }
     writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl'><span class='lm_ico07'></span>四中网校</a></li>");
-    if(writeHtml.indexOf("<li")==-1){
-        writeHtml.append("<li>&nbsp;</li>");
-    }
     writeHtml.append("</ul></div>");
 
 %>

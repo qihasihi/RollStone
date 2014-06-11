@@ -28,7 +28,10 @@
     Uploader up = new Uploader(request);
     up.setDataid(dataid);
    // up.setSavePath("upload"); //保存路径
-    String[] fileType = {".rar" , ".doc" , ".docx" , ".zip" , ".pdf" , ".txt" , ".swf", ".wmv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg", ".ogg", ".mov", ".wmv", ".mp4"};  //允许的文件类型
+    String[] fileType = {".rar" , ".doc" , ".docx" , ".zip" , ".pdf" , ".txt"
+                , ".swf", ".wmv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg", ".ogg"
+                , ".mov", ".wmv", ".mp4"
+                ,".gif" , ".png" , ".jpg" , ".jpeg" , ".bmp"};  //允许的文件类型
     up.setAllowFiles(fileType);
     up.setMaxSize(500 * 1024);        //允许的文件最大尺寸，单位KB
     up.upload();
