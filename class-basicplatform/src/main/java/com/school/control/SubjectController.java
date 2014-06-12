@@ -10,6 +10,7 @@ import com.school.manager.DictionaryManager;
 import com.school.manager.SubjectManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.ISubjectManager;
+import com.school.util.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +21,6 @@ import com.school.control.base.BaseController;
 import com.school.entity.DictionaryInfo;
 import com.school.entity.JobInfo;
 import com.school.entity.SubjectInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
-import com.school.util.WriteProperties;
 
 @Controller
 @RequestMapping(value="/subject")
@@ -153,8 +150,17 @@ public class SubjectController extends BaseController<SubjectInfo>{
 
     @RequestMapping(params="m=addLzxSubject",method=RequestMethod.POST)
     protected void addLzxSubject(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        String lzxschoolid=request.getParameter("lzx_school_id");
         String lzxsubjectid=request.getParameter("subject_id");
         String lzxsubjectname=request.getParameter("subject_name");
+        String timestamp=request.getParameter("timestamp");
+        String checkcode=request.getParameter("checkcode");
+        String md5key = lzxschoolid+lzxsubjectid+lzxsubjectname+timestamp;
+        String key = MD5_NEW.getMD5ResultCode(md5key);
+        if(!checkcode.trim().equals(key)){
+            response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
+            return;
+        }
         SubjectInfo si = new SubjectInfo();
         si.setSubjectname(lzxsubjectname);
         List<SubjectInfo> subList = this.subjectManager.getList(si,null);
@@ -185,8 +191,17 @@ public class SubjectController extends BaseController<SubjectInfo>{
     @RequestMapping(params="m=updLzxSubject",method=RequestMethod.POST)
     protected void updLzxSubject(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
         JsonEntity je = new JsonEntity();
+        String lzxschoolid=request.getParameter("lzx_school_id");
         String lzxsubjectid=request.getParameter("subject_id");
         String lzxsubjectname=request.getParameter("subject_name");
+        String timestamp=request.getParameter("timestamp");
+        String checkcode=request.getParameter("checkcode");
+        String md5key = lzxschoolid+lzxsubjectid+lzxsubjectname+timestamp;
+        String key = MD5_NEW.getMD5ResultCode(md5key);
+        if(!checkcode.trim().equals(key)){
+            response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
+            return;
+        }
         SubjectInfo si = new SubjectInfo();
         si.setLzxsubjectid(Integer.parseInt(lzxsubjectid));
         List<SubjectInfo> subList = this.subjectManager.getList(si,null);
@@ -210,7 +225,16 @@ public class SubjectController extends BaseController<SubjectInfo>{
     @RequestMapping(params="m=delLzxSubject",method=RequestMethod.POST)
     protected void delLzxSubject(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
         JsonEntity je = new JsonEntity();
+        String lzxschoolid=request.getParameter("lzx_school_id");
         String lzxsubjectid=request.getParameter("subject_id");
+        String timestamp=request.getParameter("timestamp");
+        String checkcode=request.getParameter("checkcode");
+        String md5key = lzxschoolid+lzxsubjectid+timestamp;
+        String key = MD5_NEW.getMD5ResultCode(md5key);
+        if(!checkcode.trim().equals(key)){
+            response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
+            return;
+        }
         SubjectInfo si = new SubjectInfo();
         si.setLzxsubjectid(Integer.parseInt(lzxsubjectid));
         List<SubjectInfo> subList = this.subjectManager.getList(si,null);

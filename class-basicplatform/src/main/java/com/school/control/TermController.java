@@ -12,6 +12,7 @@ import com.school.manager.ClassYearManager;
 import com.school.manager.TermManager;
 import com.school.manager.inter.IClassYearManager;
 import com.school.manager.inter.ITermManager;
+import com.school.util.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.school.control.base.BaseController;
 import com.school.entity.ClassYearInfo;
 import com.school.entity.TermInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
 
 @Controller
 @RequestMapping(value="/term")
@@ -235,4 +233,90 @@ public class TermController extends BaseController<TermInfo> {
 		}
 		response.getWriter().print(je.toJSON());	
 	}
+
+    /**
+     * 初始化向导修改学期
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=addLzxTerm",method=RequestMethod.POST)
+    public void lzxAddTerm(HttpServletRequest request,HttpServletResponse response)throws Exception{
+//        lzx_school_id ：乐之行分校id
+//        class_year_name :学年名称  varchar(100) 格式：2012~2013学年
+//        class_year_value :学年值 varchar(100) 格式：2012~2013
+//        year_begin_time :学年开始时间 datetime 格式：2014-03-03
+//        year_end_time :学年结束时间 datetime  格式为：2014-03-03
+//        one_term_name :第一学期名称 varchar(200)
+//        two_term_name：第二学期名称 varchar(200)
+//        one_term_begin_time：第一学期开始时间 datetime 格式：2014-03-03
+//        one_term_end_time：第一学期结束时间 datetime 格式：2014-03-03
+//        two_term_begin_time：第二学期开始时间 datetime 格式：2014-03-03
+//        two_term_end_time：第二学期结束时间 datetime 格式：2014-03-03
+        String lzxschoolid=request.getParameter("lzx_school_id");
+        String classyearname=request.getParameter("class_year_name");
+        String classyearvalue=request.getParameter("class_year_value");
+        String yearbegintime=request.getParameter("year_begin_time");
+        String yearendtime=request.getParameter("year_end_time");
+        String onetermname=request.getParameter("one_term_name");
+        String twotermname=request.getParameter("two_term_name");
+        String onetermbegintime=request.getParameter("one_term_begin_time");
+        String onetermendtime=request.getParameter("one_term_end_time");
+        String twotermbegintime=request.getParameter("two_term_begin_time");
+        String twotermendtime=request.getParameter("two_term_end_time");
+        String timestamp=request.getParameter("timestamp");
+        String checkcode=request.getParameter("checkcode");
+        String md5key = lzxschoolid+classyearname+classyearvalue+yearbegintime+yearendtime+onetermname+twotermname+onetermbegintime+onetermendtime+twotermbegintime+twotermendtime+timestamp;
+        String key = MD5_NEW.getMD5ResultCode(md5key);
+        if(!checkcode.trim().equals(key)){
+            response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
+            return;
+        }
+        //存放值得数据集集合
+        List<String> sqlArrayList = new ArrayList<String>();
+        //存放sql的集合
+        List<List<Object>> objArrayList = new ArrayList<List<Object>>();
+        TermInfo ti = new TermInfo();
+        ClassYearInfo ci = new ClassYearInfo();
+        //添加学年信息
+        ci.setClassyearname(classyearname);
+        ci.setClassyearvalue(classyearvalue);
+        ci.setBtime(UtilTool.StringConvertToDate(yearbegintime));
+        ci.setEtime(UtilTool.StringConvertToDate(yearendtime));
+        StringBuilder cisql =new StringBuilder();
+        List<Object> ciObj =  this.classYearManager.getSaveSql(ci,cisql);
+        sqlArrayList.add(cisql.toString());
+        objArrayList.add(ciObj);
+        //添加学期信息
+        StringBuilder tisql;
+        List<Object> tiObj=new ArrayList<Object>();
+        //第一学期
+        ti.setTermname(onetermname);
+        ti.setSemesterbegindatestring(onetermbegintime);
+        ti.setSemesterenddatestring(onetermendtime);
+        ti.setYear(classyearvalue);
+        tisql = new StringBuilder();
+        tiObj = this.termManager.getSaveSql(ti,tisql);
+        sqlArrayList.add(tisql.toString());
+        objArrayList.add(tiObj);
+        //第二学期
+        ti.setTermname(twotermname);
+        ti.setSemesterbegindatestring(twotermbegintime);
+        ti.setSemesterenddatestring(twotermendtime);
+        ti.setYear(classyearvalue);
+        tisql = new StringBuilder();
+        tiObj = this.termManager.getSaveSql(ti,tisql);
+        sqlArrayList.add(tisql.toString());
+        objArrayList.add(tiObj);
+
+        Boolean b = this.termManager.doExcetueArrayProc(sqlArrayList, objArrayList);
+        StringBuilder sb = new StringBuilder();
+        if(b){
+            sb.append("[{\"status\":\"success\"}]");
+        }else{
+            sb.append("[{\"status\":\"error\",\"message\":\"删除失败，请稍后重试\"}]");
+        }
+        response.getWriter().print(sb.toString());
+    }
+
 }
