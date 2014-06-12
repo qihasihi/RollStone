@@ -33,9 +33,9 @@
     			password:$("#password").val().Trim(),
     			autoLogin:autoLogin,
     			remember:remember},
-    		error:function(){alert('网络异常!');
+    		/*error:function(){alert('网络异常!');
     		$("#lg").show();
-		   		$("#lging").hide();},
+		   		$("#lging").hide();},*/
     		success: function(rps){     //根据后台返回的result判断是否成功!  
    				if(rps.type=="success"){
    					var href=location.href;

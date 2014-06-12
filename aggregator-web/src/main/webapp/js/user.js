@@ -5,7 +5,7 @@ function closeModel(showId){
 	if(yearSelect!=undefined&&yearSelect!="undefined"&&yearSelect==null){
 	yearSelect=false;
 	}
-	}catch(e){}  
+	}catch(e){}
 	//$("body").css("overflow","auto");
 }  
 
