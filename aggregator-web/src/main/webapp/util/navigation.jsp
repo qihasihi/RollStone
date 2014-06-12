@@ -150,12 +150,15 @@
                     }
                 }
             }
-        }else{
-            writeHtml.append("<li>&nbsp;</li>");
         }
-    }else{
-        writeHtml.append("<li>&nbsp;</li>");
     }
+
+if(isStudent){
+    writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=11'><span class='lm_ico07'></span>天天单词</a></li>");
+    writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=9'><span class='lm_ico07'></span>互帮互学</a></li>");
+    writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=220'><span class='lm_ico07'></span>作文大赛</a></li>");
+}
+
     writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl'><span class='lm_ico07'></span>四中网校</a></li>");
     writeHtml.append("</ul></div>");
 
@@ -165,6 +168,6 @@
     $(function(){
         var ettCon=$(".home_layoutL li a[href='user?m=toEttUrl']");
         if(ettCon.length>1)
-            ettCon.first().remove();
+            ettCon.first().parent().remove();
     })
 </script>

@@ -81,9 +81,6 @@
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
 			 boolean isTeacher=false,isStudent=false;
  List<RoleUser> cruList=null;
- System.out.println(request.getRequestURI().trim().replaceAll("/",""));
- System.out.println(request.getServletPath().replaceAll("/",""));
-
 if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 		||!request.getServletPath().replaceAll("/","").equals(proc_name+"login.jsp")
 		||!request.getServletPath().replaceAll("/","").equals(proc_name+"userRegister.jsp")

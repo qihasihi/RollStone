@@ -20,11 +20,19 @@ public class ClassInfo implements java.io.Serializable {
     private Integer islike; //是否模糊查询
     private SubjectInfo subjectinfo;    
     private Integer isflag; //是否启用：  1：启用   2：禁用
+    private Integer lzxclassid;
         
     private String classyearname;
-    
-    
-	public Integer getIsflag() {
+
+    public Integer getLzxclassid() {
+        return lzxclassid;
+    }
+
+    public void setLzxclassid(Integer lzxclassid) {
+        this.lzxclassid = lzxclassid;
+    }
+
+    public Integer getIsflag() {
 		return isflag;
 	}
 	public void setIsflag(Integer isflag) {

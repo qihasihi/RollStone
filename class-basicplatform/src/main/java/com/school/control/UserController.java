@@ -4638,7 +4638,8 @@ public class UserController extends BaseController<UserInfo> {
 //        response.setCharacterEncoding("UTF-8");
 //        response.setContentType("text/html;charset=UTF-8");
 //        request.setCharacterEncoding("UTF-8");
-
+        //功能ID
+        String mid=request.getParameter("mid");
         // 获得用户信息
         UserInfo u = this.logined(request);
         // ////////////////////////////变量存储
@@ -5037,6 +5038,8 @@ public class UserController extends BaseController<UserInfo> {
             //组织学生参数
 
             paramMap.put("uid",uid);
+            if(mid!=null)
+                paramMap.put("mid",mid);
             paramMap.put("realname",  java.net.URLEncoder.encode(realname,"UTF-8"));
             paramMap.put("usertype", usertype);
             paramMap.put("sex",sex);

@@ -62,12 +62,17 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 			return null;
 		sqlbuilder.append("{call class_proc_delete(");
 		List<Object>objList = new ArrayList<Object>();
-		if(obj.getClassid()!=null){
-			sqlbuilder.append("?,");
-			objList.add(obj.getClassid());
-		}else
-			sqlbuilder.append("NULL,"); 
-		if(obj.getSubjectid()!=null){
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClassid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getLzxclassid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getLzxclassid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSubjectid()!=null){
 			sqlbuilder.append("?,");
 			objList.add(obj.getSubjectid());
 		}else
@@ -85,13 +90,18 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 		StringBuilder sqlbuilder=new StringBuilder("{CALL class_info_proc_split(");
 		List<Object> objList=new ArrayList<Object>(); 
 		if(obj==null)  
-			sqlbuilder.append("null,null,null,null,null,null,null,0,null,null,");
-		else{   
-			if(obj.getClassid()!=null){   
-				sqlbuilder.append("?,");  
-				objList.add(obj.getClassid()); 
-			}else  
-				sqlbuilder.append("NULL,");
+			sqlbuilder.append("null,null,null,null,null,null,null,null,0,null,null,");
+		else{
+            if(obj.getClassid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getClassid());
+            }else
+                sqlbuilder.append("NULL,");
+            if(obj.getLzxclassid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getLzxclassid());
+            }else
+                sqlbuilder.append("NULL,");
 			if(obj.getClassname()!=null){ 
 				sqlbuilder.append("?,");
 				objList.add(obj.getClassname());
@@ -202,9 +212,9 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 		sqlbuilder.append("{call class_proc_add(");
 		List<Object>objList = new ArrayList<Object>();
 
-        if(obj.getClassid()!=null){
+        if(obj.getLzxclassid()!=null){
             sqlbuilder.append("?,");
-            objList.add(obj.getClassid());
+            objList.add(obj.getLzxclassid());
         }else
             sqlbuilder.append("NULL,");
         if(obj.getClassgrade()!=null){
@@ -319,7 +329,7 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 	}
 
     /**
-     * 得到更新或添加的SQL
+     * 得到更新或添加的SQL(乐知行)
      * @param obj
      * @param sqlbuilder
      * @return
@@ -330,9 +340,9 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         sqlbuilder.append("{call class_proc_addOrUpdate(");
         List<Object>objList = new ArrayList<Object>();
 
-        if(obj.getClassid()!=null){
+        if(obj.getLzxclassid()!=null){
             sqlbuilder.append("?,");
-            objList.add(obj.getClassid());
+            objList.add(obj.getLzxclassid());
         }else
             sqlbuilder.append("NULL,");
         if(obj.getClassgrade()!=null){
