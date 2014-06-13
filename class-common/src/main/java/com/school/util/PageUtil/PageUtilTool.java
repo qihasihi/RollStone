@@ -97,4 +97,44 @@ public class PageUtilTool implements java.io.Serializable{
 		//System.out.println(returnStr);
 		return returnStr;  
 	}
+
+
+    /**
+     *
+     * @param倒计时
+     * @return
+     * @throws Exception
+     */
+    public static String  DateTimer(String bdate) throws Exception{
+        if(bdate==null||bdate.trim().length()<1)
+            return null;
+
+        long nd = 1000*24*60*60;//一天的毫秒数
+        long nh = 1000*60*60;//一小时的毫秒数
+        long nm = 1000*60;//一分钟的毫秒数
+        long ns = 1000;//一秒钟的毫秒数
+        String returnStr=null;
+
+        if(bdate.split(" ").length<2)
+            bdate+=" 00:00:00";
+
+        //开始时间
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date bb=sd.parse(bdate);
+//		Calendar c = Calendar.getInstance();
+//		c.setTime(db);
+//		c.add(Calendar.DAY_OF_MONTH, edate);
+//		Date e=c.getTime();
+        //当前时间
+        Long curobj=new Date().getTime();
+        if(bb.getTime()>curobj){
+            Long diff=bb.getTime()-curobj;
+            long day = diff/nd;//计算差多少天
+            long hour = diff%nd/nh;//计算差多少小时
+            long min = diff%nd%nh/nm;//计算差多少分钟
+            //long sec = diff%nd%nh%nm/ns;//计算差多少秒
+            returnStr=day+"天"+hour+"时"+min+"分";
+        }
+        return returnStr;
+    }
 }

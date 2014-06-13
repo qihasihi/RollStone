@@ -286,7 +286,7 @@
                 <th>数量</th>
                 <th>作者</th>
                 <th>年级</th>
-                <th>评价</th>
+                <th>总评分</th>
             </tr>
             <tbody id="tbl_course">
             <!-- <tr>

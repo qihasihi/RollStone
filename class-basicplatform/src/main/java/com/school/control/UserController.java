@@ -989,7 +989,7 @@ public class UserController extends BaseController<UserInfo> {
                 }
                 if (user != null) {
                     if(user.getStateid()!=null&&user.getStateid()>0){
-                        je.setMsg("此帐号已禁用!");
+                        je.setMsg("该账号已被禁用，有问题请联系本校的系统管理员!");
                         return je;
                     }
 

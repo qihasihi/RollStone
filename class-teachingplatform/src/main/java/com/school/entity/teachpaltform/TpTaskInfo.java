@@ -49,6 +49,16 @@ public class TpTaskInfo implements Serializable {
     private Integer loginuserid;
     private Integer status;
     private Integer userid;
+    private Object usertypeid;
+
+    public Object getUsertypeid() {
+        return usertypeid;
+    }
+
+    public void setUsertypeid(Object usertypeid) {
+        this.usertypeid = usertypeid;
+    }
+
     public Object getIscomplete() {
         return iscomplete;
     }

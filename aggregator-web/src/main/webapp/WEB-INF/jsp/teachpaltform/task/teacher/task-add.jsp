@@ -171,19 +171,22 @@
 
         <tr>
             <th><span class="ico06"></span>任务时间：</th>
-            <td>
-                <p><input id="time_rdo" name="time_rdo" type="radio" value="0"/>一致&nbsp;<input id="time_rdo"  name="time_rdo" value="1" type="radio"/>不一致</p>
-                <div id="all_ct">
-                    <p><span>全部班级:</span>
-                        <input class="public_input w140"  onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'all_class_etime\',{H:-1})}',startDate:'${courseclassList[0].begintimeString}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="all_class_btime"  name="all_classtime" type="text" />~
-                        <input class="public_input w140" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'all_class_btime\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${courseclassList[0].begintimeString}'})" readonly="readonly" id="all_class_etime"  name="all_classtime" type="text" />
+            <td class="font-black">
+                <p><input id="time_rdo0" name="time_rdo" type="radio" value="0"/>
+                    所有班级一致&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input id="time_rdo1"  name="time_rdo" value="1" type="radio"/>不一致</p>
+                <div id="all_ct" class="jxxt_zhuanti_add_time">
+                    <p>
+                        <span class="f_right">
+                            <input placeholder="设置开始时间" class="w140"  onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'all_class_etime\',{H:-1})}',startDate:'${courseclassList[0].begintimeString}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="all_class_btime"  name="all_classtime" type="text" /> - <input placeholder="设置开始时间" class="w140" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'all_class_btime\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${courseclassList[0].begintimeString}'})" readonly="readonly" id="all_class_etime"  name="all_classtime" type="text" />
+                        </span>&nbsp;&nbsp;&nbsp;所有班级：
                     </p>
                 </div>
-                <div id="list_ct" style="display:none">
+                <div id="list_ct" style="display:none" class="jxxt_zhuanti_add_time">
                     <c:forEach var="cc" items="${ courseclassList}">
-                        <p id="p_${cc.classid}"  style="display:none"><span>${cc.classgrade}${cc.classname}:</span>&nbsp;
-                            <input class="public_input w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" />~
-                            <input onfocus="WdatePicker({minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="public_input w140" />
+                        <p id="p_${cc.classid}"  style="display:none">
+                            <span class="f_right"><input placeholder="设置开始时间" class="w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" /> - <input placeholder="设置开始时间" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="w140" />
+                            </span>&nbsp;&nbsp;&nbsp;${cc.classgrade}${cc.classname}：
                         </p>
                     </c:forEach>
 

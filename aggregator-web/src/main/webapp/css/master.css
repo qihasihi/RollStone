@@ -55,6 +55,7 @@
 	.m_t_5 {margin-top: 5px;}
 	.m_t_15 {margin-top: 15px;}
 	.m_r_15 {margin-right: 15px;}
+	.m_lr_10 {margin: 0 10px;}
 
 	.w30{width:30px;}
 	.w40{width:40px;}
@@ -66,6 +67,7 @@
 	.w100{width:100px;}
 	.w110{width:110px;}
 	.w120{width:120px;}
+	.w130{width:130px;}
 	.w140{width:140px;}
 	.w150{width:150px;}
 	.w160{width:160px;}

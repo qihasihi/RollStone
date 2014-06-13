@@ -3,7 +3,9 @@ $(function(){
         var groupid=$(this).prev('input').val();
         genderShowdiv(groupid);
     },function(){
-        $("#div_tmp_show01").remove();
+        var divObj=$("div").filter(function(){return this.id.indexOf('div_tmp_show')!=-1});
+        if(divObj.length>0)
+            $(divObj).remove();
     });
 })
 
@@ -232,7 +234,7 @@ function selectClassObj(obj,classid){
  * @param trobj
  * @return  
  */  
-function queryInteraction(courseid,trobj,taskvalueid,seltype,taskstatus){
+function queryInteraction(courseid,trobj,taskvalueid,taskstatus){
 	if(typeof(courseid)=='undefined'||courseid.length<1){
 		alert('异常错误，系统未获取到课题标识!');
 		return;
@@ -258,7 +260,7 @@ function queryInteraction(courseid,trobj,taskvalueid,seltype,taskstatus){
 	 $.ajax({
 			url:'task?toQryTopicList',
 			type:'post',
-			data:{courseid:courseid,clsid:clsid,seltype:seltype,topicid:taskvalueid},
+			data:{courseid:courseid,clsid:clsid,topicid:taskvalueid},
 			dataType:'json',
 			error:function(){
 			 	alert('网络异常!');
@@ -406,16 +408,53 @@ function load_task_detial(taskid){
                 $('#p_obj_'+taskid+'').html('');
                 if(rmsg.objList.length){
                     if(rmsg.objList[0]!=null){
+
                         $.each(rmsg.objList[0],function(idx,itm){
-                            var timeObj=itm.taskstatus==1?"任务未开始":itm.taskstatus==3?"任务已结束":itm.taskstatus;
+                            var timeObj=itm.taskstatus==1?itm.tasktime:itm.taskstatus==3?"0天00时00分":itm.taskstatus;
+                            var tmpTime='<strong><span class="ico_time"></span>'+timeObj+'</strong>';
                             if(idx!=0)
-                                timeObj='<br>'+timeObj;
-                            if(typeof itm.allotname!='undefined'&&!$('span[id="sp_'+itm.taskid+itm.allotid+'"]').length)
-                                $('#p_obj_'+taskid+'').append('<span id="sp_'+itm.taskid+itm.allotid+'">'+timeObj+'&nbsp;&nbsp;'+itm.allotname+itm.allotobj+'&nbsp;</span>');
-                            else if(!$('span[id="sp_'+itm.taskid+itm.allotid+'"]').length)
-                                $('#p_obj_'+taskid+'').append('<span id="sp_'+itm.taskid+itm.allotid+'">'+timeObj+'&nbsp;&nbsp;'+itm.allotobj+'&nbsp;</span>');
-                            else
-                                $('#p_obj_'+taskid+'').append(itm.allotobj+"&nbsp;");
+                                tmpTime='<br>'+tmpTime;
+
+                            if(typeof itm.allotname!='undefined'&&!$('span[id="sp_'+itm.taskid+itm.allotid+'"]').length){
+
+                                $('#p_obj_'+taskid+'').append('<span id="sp_'+itm.taskid+itm.allotid+'">'+tmpTime+itm.allotname+itm.allotobj+'&nbsp;</span>');
+                                var dvObj=$('#dv_group_'+taskid+'');
+                                if(dvObj.length<1){
+                                    var h='<div style="display: none;float:right;z-index: 9999" class="float" id="dv_group_'+taskid+'">';
+                                    var str=itm.allotname.length>12?itm.allotname.substring(0,12)+'...':itm.allotname;
+                                    var str1=itm.allotobj.length>12?itm.allotobj.substring(0,12)+'...':itm.allotobj;
+                                    h+='<p><strong>'+str+'</strong></p>';
+                                    h+='<ul id="ul_group_'+taskid+'">';
+                                    h+='<li>'+str1+'</li>'
+                                    h+='</ul>';
+                                    h+='</div>';
+                                    $('#p_obj_'+taskid+'').append(h);
+                                }
+                            }else if(!$('span[id="sp_'+itm.taskid+itm.allotid+'"]').length){
+                                $('#p_obj_'+taskid+'').append('<span id="sp_'+itm.taskid+itm.allotid+'">'+tmpTime+itm.allotobj+'&nbsp;</span>');
+
+                            }else{
+                                //$('#p_obj_'+taskid+'').append(itm.allotobj+"&nbsp;");
+                                var groupname=itm.allotobj.length>12?itm.allotobj.substring(0,12)+'...':itm.allotobj;
+                                $('#ul_group_'+taskid+'').append('<li>'+groupname+'</li>');
+                                var obj=$('#sp_'+itm.taskid+itm.allotid+"");
+                                var str=isIE?obj.get(0).innerText:obj.get(0).textContent;
+                                var tmpStr=itm.allotobj;
+                                //123+123>5  5-3
+                                if(str.length+itm.allotobj.length>58){
+                                    tmpStr=itm.allotobj.substring(0,58-str.length)+'...';
+                                    if(str.lastIndexOf('...')==-1){
+                                        $(obj).append(tmpStr+"&nbsp;");
+                                        $(obj).hover(
+                                            function(){
+                                                $('#dv_group_'+taskid+'').show();
+                                            },function(){
+                                                $('#dv_group_'+taskid+'').hide();
+                                            });
+                                    }
+                                }else
+                                    $(obj).append(tmpStr+"&nbsp;");
+                            }
                         });
                     }
 
@@ -545,11 +584,11 @@ function doSubManageTask(taskid){
             }
             if(paramStr.Trim().length>0)
                 paramStr+='&';
-            paramStr+='btimeArray='+btimeObj.val();
+            paramStr+='btimeClsArray='+btimeObj.val();
 
             if(paramStr.Trim().length>0)
                 paramStr+='&';
-            paramStr+='etimeArray='+etimeObj.val();
+            paramStr+='etimeClsArray='+etimeObj.val();
         }else{
             if(paramStr.Trim().length>0)
                 paramStr+='&';
@@ -710,6 +749,40 @@ function doDelTask(taskid,doFlag){
 
 }
 
+/**
+ * 修改任务排序
+ * @param taskid
+ * @param orderidx
+ */
+function doUpdOrderIdx(taskid,orderidx){
+    if(typeof taskid=='undefined'||orderidx=='undefined')
+        return;
+
+    $.ajax({
+        url:"task?m=doUpdOrderIdx",
+        type:"post",
+        data:{
+            taskid:taskid,
+            orderidx:orderidx,
+            courseid:courseid
+        },
+        dataType:'json',
+        cache: false,
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+        },success:function(rmsg){
+            if(rmsg.type=="error"){
+                alert(rmsg.msg);
+            }else{
+                alert(rmsg.msg);
+                pageGo('pList');
+            }
+        }
+    });
+
+}
+
+
 
 
 
@@ -806,7 +879,7 @@ function doStuSubmitQues(tasktype,taskid,quesid,groupid,questype){
  * 获取未完成任务人员
  * @param taskid
  */
-function loadNoCompleteStu(taskid){
+function loadNoCompleteStu(taskid,usertypeid,taskstatus){
     if(typeof taskid=='undefined')
         return;
 
@@ -840,7 +913,8 @@ function loadNoCompleteStu(taskid){
                         }
 
                     });
-                    $("#dv_nocomplete_data").append('<p class="t_c"><a href="#"  class="an_public1">发提醒</a></p>');
+                    if(taskstatus!='3')
+                        $("#dv_nocomplete_data").append('<p class="t_c"><a href="javascript:doSendTaskMsg('+taskid+','+usertypeid+')"  class="an_public1">发提醒</a></p>');
                 }
                 showModel("dv_nocomplete");
             }
@@ -849,16 +923,29 @@ function loadNoCompleteStu(taskid){
 }
 
 
-function doSendTaskMsg(){
+function doSendTaskMsg(taskid,usertypeid){
+    if(typeof taskid=='undefined'||typeof usertypeid=='undefined'){
+        alert('参数异常!请刷新页面重试!');
+        return;
+    }
+
     var uidArray=$("input[name='hd_uid']");
     if(uidArray.length<1){
         alert('没有发现未完成任务人员!');
         return;
     }
+    var dataArray=new Array();
+    uidArray.each(function(){
+        dataArray.push($(this).val());
+    })
     $.ajax({
-        url:'task?doSendTaskMsg',
+        url:'task?m=doSendTaskMsg',
         type:"post",
-        data:{uidArray:uidArray.val().join(",")},
+        data:{
+            uidArray:dataArray.join(','),
+            taskid:taskid,
+            usertypeid:usertypeid
+        },
         dataType:'json',
         cache: false,
         error:function(){
@@ -930,7 +1017,9 @@ function doSubSuggest(taskid){
 }
 
 function genderShowdiv(groupid){
-	$("#div_tmp_show01").remove();
+    var divObj=$("div").filter(function(){return this.id.indexOf('div_tmp_show')!=-1});
+    if(divObj.length>0)
+        $(divObj).remove();
 
     $.ajax({
         url:'task?m=loadGroupStudent',
@@ -955,14 +1044,18 @@ function genderShowdiv(groupid){
                     x+=parseFloat(document.documentElement.scrollLeft);
                 }
                 y+=5;
-                var username='';
+                var username='',groupname='';
                 if(rmsg.objList.length>0){
+                    username+='<ul>';
                     $.each(rmsg.objList,function(idx,itm){
-                        username+=itm.stuname+"&nbsp;";
+                        username+='<li>'+itm.stuname+'</li>';
+                        groupname=itm.groupname;
                     });
+                    username+='</ul>';
                 }
-                var h='<div id="div_tmp_show01" '
-                    +'style="position:absolute;padding:5px;border:1px solid green;left:'
+                username='<p><strong>'+groupname+'成员</strong></p>'+username;
+                var h='<div id="div_tmp_show01" class="jxxt_zhuanti_add_float" '
+                    +'style="position:absolute;left:'
                     +x+'px;top:'+y+'px;background-color:white">'+username+'</div>';
                 $("body").append(h);
             }
@@ -1290,3 +1383,5 @@ function zgloadStuPerformance(classid,tasktype,questionid,classtype){
         }
     });
 }
+
+

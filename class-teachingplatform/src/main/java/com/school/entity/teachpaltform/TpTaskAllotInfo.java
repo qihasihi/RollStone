@@ -121,6 +121,16 @@ public class TpTaskAllotInfo implements Serializable {
         }
     }
 
+    public String getTasktime(){
+        if(this.getBtimeString()==null)
+            return "";
+        try {
+            return PageUtilTool.DateTimer(this.getBtimeString());
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
 
 
     public java.lang.String getCriteria(){

@@ -17,7 +17,12 @@ public class TpGroupStudent {
     private Object completenum;
     private Integer stateid;
 
-
+    public String getGroupname(){
+        return this.getGroupinfo().getGroupname();
+    }
+    public void setGroupname(String groupname){
+        this.getGroupinfo().setGroupname(groupname);
+    }
 
     public Integer getStateid() {
         return stateid;

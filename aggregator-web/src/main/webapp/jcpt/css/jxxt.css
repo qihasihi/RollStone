@@ -174,11 +174,25 @@
 	.jxxt_zhuanti_rwR div.title {width:830px; padding:10px 5px 6px; border-bottom:1px solid #cfcfcf; color:#000;}
 	.jxxt_zhuanti_rwR div.title b{width:40px; display:inline-block;color:red; font-weight:normal;}
 	.jxxt_zhuanti_rwR div.text {width:800px; padding:10px 15px 6px 25px; background-color:#f8f8f8;}
+	.jxxt_zhuanti_rwR div.text p.time {width:730px;}
+	.jxxt_zhuanti_rwR div.text p.time strong{width:120px; display: inline-block;}
+	.jxxt_zhuanti_rwR div.text p.time span.ico_time{margin:0 5px 0 0;}
 	.jxxt_zhuanti_rwR div.text p { padding-bottom:5px;}
 	.jxxt_zhuanti_rwR div.text span.width { width:730px;display:inline-block; vertical-align:top; color:#000;}
 	.jxxt_zhuanti_rwR table { text-align:left; color:#000;}
 	.jxxt_zhuanti_rwR table th {text-align:left;vertical-align:top; }
 	.jxxt_zhuanti_rwR table td {padding-bottom:10px;vertical-align:top;}
+	.jxxt_zhuanti_rwR div.text div.float{
+	width:360px;
+	border:1px solid #0d799b;
+	background-color:#edfaff;
+	padding:6px 8px 5px 12px;
+}
+	.jxxt_zhuanti_rwR div.text div.float ul li{
+	width:175px;
+	display:inline-block;
+	color:#000;
+}
 
 	.jxxt_zhuanti_rwR textarea{
 	width:600px;
@@ -211,6 +225,28 @@
 	margin-top:10px;
 	background-color:#fff;
 	padding:0 10px 10px;
+}
+	.jxxt_zhuanti_add_ziyuan{
+	width:586px;
+	border:1px solid #9c9c9c;
+	margin-top:10px;
+	background-color:#fff;
+	padding:10px;
+	color:#000;
+}
+	.jxxt_zhuanti_add_time{width:610px; }
+	.jxxt_zhuanti_add_time p{padding-top:10px; }
+
+	.jxxt_zhuanti_add_float{
+	width:300px;
+	border:1px solid #0d799b;
+	background-color:#edfaff;
+	padding:6px 8px 5px 12px ;
+}
+	.jxxt_zhuanti_add_float ul li{
+	width:55px;
+	display:inline-block;
+	color:#000;
 }
 	.jxxt_zhuanti_rw_tongji{
 	width:608px;
@@ -264,8 +300,12 @@
 	.jxxt_zhuanti_zy_layoutR{width:775px; padding:0 10px 0 15px; float:right;}
 	.jxxt_zhuanti_zy_layoutR h1{ font-size:14px; font-weight:normal;color:#000;padding-bottom:5px;}
 	.jxxt_zhuanti_zy_layoutR div.left{ width:578px; height:480px;}
-	.jxxt_zhuanti_zy_layoutR div.right{ width:183px; height:445px; float:right; position:relative;padding-bottom:35px;}
-	.jxxt_zhuanti_zy_layoutR div.right p.number{position: absolute;bottom:1px; left:0;}
+	.jxxt_zhuanti_zy_layoutR div.right{ width:183px; height:440px; float:right; position:relative;padding-bottom:40px;}
+	.jxxt_zhuanti_zy_layoutR div.right p.number{position: absolute;bottom:-3px; left:0;}
+	.jxxt_zhuanti_zy_layoutR div.right p.number a,.jxxt_zhuanti_zy_layoutR div.right p.number span{margin:0 5px 5px;}
+	.jxxt_zhuanti_zy_layoutR div.right ul{ width:180px;position: absolute;bottom:-3px; left:0;}
+	.jxxt_zhuanti_zy_layoutR div.right ul li{ width:60px; float:left; line-height:18px; text-align:center;}
+	.jxxt_zhuanti_zy_layoutR div.right ul li strong{ color:#3297A3;}
 	.jxxt_zhuanti_zy_layoutR .subpage_lm{padding:0;}
 	.jxxt_zhuanti_zy_layoutR .t_l{padding:0 0 10px 13px;}
 	
@@ -347,6 +387,7 @@
 	.jxxt_zhuanti_zy_add_info table td ul li a.font-blue {color:#3297a3;}
 	
 	.jxxt_zhuanti_zy_add_text { text-align:right;color:#8d8c8c; }
+	.jxxt_zhuanti_zy_add_text span{ margin:0 5px 5px; }
 	.jxxt_zhuanti_zy_add_text b {width:40px; display:inline-block; font-weight:normal; vertical-align:middle; text-align:left;}
 	.jxxt_zhuanti_zy_add_text p {padding-bottom:5px;}
 
@@ -562,4 +603,4 @@
 	.jxxt_student_pingjia strong{ font-size:14px;}
 	.jxxt_student_rw_float {width:430px; margin:5px auto 0;color:#000;}
 	.jxxt_student_rw_float ul{ margin:5px 0 10px;}
-	.jxxt_student_rw_float ul li{ display:inline-block; width:85px;}
+	.jxxt_student_rw_float ul li{ display:inline-block; width:65px;}

@@ -1726,8 +1726,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         c.setResid(Long.parseLong(resourceid));
         c.setCourseid(Long.parseLong(courseid));
         List<TpResourceCollect>collectList=this.tpResourceCollectManager.getList(c,null);
-        if(collectList!=null&&collectList.size()>0)
-            je.getObjList().add(collectList.size());
+        je.getObjList().add(collectList==null||collectList.size()<1?0:collectList.size());
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }

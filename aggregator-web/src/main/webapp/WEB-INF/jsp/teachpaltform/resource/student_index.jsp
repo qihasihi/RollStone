@@ -89,7 +89,7 @@
         </div>
 
         <div class="jxxt_zhuanti_zy_layoutL">
-            <p class="t_c p_b_10"><a  href="javascript:showUploadDiv(1)" class="an_big">添加资源</a><a href="javascript:loadStuResourcePage(${param.courseid})" class="an_big">管&nbsp;&nbsp;&nbsp;&nbsp;理</a></p>
+            <p class="t_c p_b_10"><a  href="javascript:showUploadDiv(1)" class="an_big">分享资源</a><a href="javascript:loadStuResourcePage(${param.courseid})" class="an_big">管&nbsp;&nbsp;&nbsp;&nbsp;理</a></p>
             <!--<p class="f_right"><a href="1" target="_blank" class="ico15" title="回收站"></a></p>-->
             <ul class="one">
                 <li class="crumb" id="li_nav_1"><a  onclick="load_stu_resource(1,1)">学习资源</a></li>

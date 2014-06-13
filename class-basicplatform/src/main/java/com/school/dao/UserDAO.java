@@ -104,7 +104,7 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
 				"{CALL user_info_proc_split(");
 		List<Object> objList = new ArrayList<Object>();
 		if (obj == null)
-			sqlbuilder.append("NULL,NULL,NULL,NULL,NULL,NULL,");
+			sqlbuilder.append("NULL,NULL,NULL,NULL,NULL,NULL,NULL,");
 		else {
 			if (obj.getRef() != null) {
 				sqlbuilder.append("?,");

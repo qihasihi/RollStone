@@ -10,6 +10,7 @@
 <script type="text/javascript">
 var courseid="${courseid}";
 var pList,pBankList;
+var total;
 $(function(){
     pList = new PageControl( {
         post_url : 'task?m=ajaxTaskList',
@@ -27,6 +28,25 @@ $(function(){
         operate_id : "initItemList"
     });
     pageGo('pList');
+
+    $('body').bind('click',function(){
+        var obj=$("#sel_order_idx");
+        if(obj.length>0){
+            var width=parseFloat(obj.css("width").replace("px",""));
+            var height=parseFloat(obj.css("height").replace("px",""));
+            var top=parseFloat(obj.css("top").replace("px",""));
+            var left=parseFloat(obj.css("left").replace("px",""));
+            if(mousePostion.x>(left+width)||mousePostion.x<left
+                    ||mousePostion.y<top||mousePostion.y>(top+height)){
+                //恢复事件
+                $(obj).parent().bind("click",function(){
+                    spanClick(this,total);
+                });
+                var h=$(obj).find('option:selected').val();
+                $(obj).parent().html(h);
+            }
+        }
+    });
 
 
 
@@ -92,6 +112,7 @@ function getInvestReturnMethod(rps){
             if(typeof itm.taskobjname!='undefined')
                 taskObj=itm.taskobjname;//taskObj=replaceAll(replaceAll(itm.taskobjname.toLowerCase(),"<p>",""),"</p>","");
 
+
             html+='<div class="jxxt_zhuanti_rw">';
             html+='<div class="jxxt_zhuanti_rwR">';
             html+='<div class="title">';
@@ -103,7 +124,7 @@ function getInvestReturnMethod(rps){
             }
             html+='<a title="删除" class="ico04" href="javascript:doDelTask('+itm.taskid+','+itm.stucount+')"></a>';
             html+='</p>';
-            html+='<p><a class="ico49b"  id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务'+(rps.presult.pageSize*(rps.presult.pageNo-1)+(idx+1))+'：'+type+'</a>';
+            html+='<p><a class="ico49b"  id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务</a><span data-bind="'+itm.taskid+'" id="order_'+itm.taskid+'" class="m_lr_10">'+itm.orderidx+'</span>：'+type+'';
             if(itm.tasktype==1){
                 html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==2){
@@ -113,9 +134,9 @@ function getInvestReturnMethod(rps){
             html+='</div>';
             html+='<div id="div_task_'+itm.taskid+'" style="display:none;"  class="text">';
             html+='<p class="f_right"><a href="task?m=toTaskSuggestList&courseid='+courseid+'&taskid='+itm.taskid+'" target="_blank" class="font-darkblue">学生建议</a></p>';
-            html+='<p id="p_obj_'+itm.taskid+'"></p>';//<strong>任务对象：</strong>
+            html+='<p class="time" id="p_obj_'+itm.taskid+'"></p>';//<strong>任务对象：</strong>
             html+='<p><strong>完成标准：</strong> '+criteria+'</p>';
-            html+='<p><strong>任务描述：</strong><span class="width">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
+            html+='<p><strong>任务描述：</strong><span  style="color:#000000;">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';//class="width"
             html+='<table border="0" cellspacing="0" cellpadding="0" class="black">';
             html+='<col class="w50"/>'
             html+='<col class="w750"/>';
@@ -152,6 +173,19 @@ function getInvestReturnMethod(rps){
         $('a[id="a_show_'+taskid+'"]').click();
     }
 
+    var h='';
+    if(typeof rps.presult.recTotal!='undeinfed'&&rps.presult.recTotal>1){
+        total=rps.presult.recTotal;
+        $("span").filter(function(){return this.id.indexOf('order_')!=-1}).each(function(idx,itm){
+            $(itm).bind("click",function(){
+                spanClick(itm,total);
+            })
+        })
+    }
+
+
+
+
     if(rps.objList.length>0){
         pList.setPagetotal(rps.presult.pageTotal);
         pList.setRectotal(rps.presult.recTotal);
@@ -164,6 +198,40 @@ function getInvestReturnMethod(rps){
         pList.setPageNo(1);
     }
     pList.Refresh();
+}
+
+
+function spanClick(obj,total){
+    var idxObj=$("select[id='sel_order_idx']");
+    if(idxObj.length>0)
+        idxChange(idxObj,total);
+
+    var idxVal=$(obj).html();
+    var h='<select id="sel_order_idx" style="position: absolute;left:mousePostion.x;top: mousePostion.y ">';
+    for(var i=1;i<=total;i++){
+        h+='<option value="'+i+'">'+i+'</option>';
+    }
+    h+='</select>';
+    $(obj).html(h);
+    if(idxVal!=null&&idxVal>0)
+        $("select[id='sel_order_idx']").val(idxVal);
+    $(obj).unbind('click');
+
+    $("select[id='sel_order_idx']").bind("change",function(){
+        idxChange(this,total);
+    });
+
+}
+
+function idxChange(obj,total){
+    //恢复事件
+    $(obj).parent().bind("click",function(){
+        spanClick(this,total);
+    });
+    var h=$(obj).find('option:selected').val();
+    var taskid=$(obj).parent().data().bind;
+    doUpdOrderIdx(taskid,h);
+    $(obj).parent().html(h);
 }
 
 function preeDoPageSub(pObj){

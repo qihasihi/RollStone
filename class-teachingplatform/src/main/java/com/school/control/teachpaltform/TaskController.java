@@ -190,7 +190,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
              return;
          }
          PageResult p=this.getPageResultParameter(request);
-         p.setOrderBy("u.c_time desc");
+         p.setOrderBy("u.order_idx desc,u.c_time desc");
          TpTaskInfo t=new TpTaskInfo();
          t.setCourseid(Long.parseLong(courseid));
          //查询没被我删除的任务
@@ -205,6 +205,118 @@ public class TaskController extends BaseController<TpTaskInfo>{
          je.setType("success");
          response.getWriter().print(je.toJSON());
      }
+
+
+    /**
+     * 修改任务排序
+     * @throws Exception
+     */
+    @RequestMapping(params="m=doUpdOrderIdx",method=RequestMethod.POST)
+    public void doUpdOrderIdx(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String taskid=request.getParameter("taskid");
+        String courseid=request.getParameter("courseid");
+        String orderix=request.getParameter("orderidx");
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(orderix==null||orderix.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpTaskInfo tmpTask=new TpTaskInfo();
+        tmpTask.setCourseid(Long.parseLong(courseid));
+        //查询没被我删除的任务
+        tmpTask.setSelecttype(1);
+        tmpTask.setLoginuserid(this.logined(request).getUserid());
+        tmpTask.setStatus(1);
+        tmpTask.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo>tmpTaskList=this.tpTaskManager.getTaskReleaseList(tmpTask,null);
+        if(tmpTaskList==null||tmpTaskList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        tmpTask=tmpTaskList.get(0);
+
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+
+        TpTaskInfo t=new TpTaskInfo();
+        t.setCourseid(Long.parseLong(courseid));
+        //查询没被我删除的任务
+        t.setSelecttype(1);
+        t.setLoginuserid(this.logined(request).getUserid());
+        t.setStatus(1);
+        //1 2 3 4 5 6 7 8 9 10
+        //已发布的任务
+        Integer descIdx=Integer.parseInt(orderix);
+        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t,null);
+
+        if(taskList!=null&&taskList.size()>0){
+            if(tmpTask.getOrderidx()>descIdx){  //从7往3调
+                for(TpTaskInfo task:taskList){
+                    if(task.getOrderidx()>=descIdx&&task.getOrderidx()<tmpTask.getOrderidx()){
+                        System.out.println("orderidx:" + task.getOrderidx());
+                        TpTaskInfo upd=new TpTaskInfo();
+                        upd.setTaskid(task.getTaskid());
+                        upd.setOrderidx(task.getOrderidx()+1);
+                        sql=new StringBuilder();
+                        objList=this.tpTaskManager.getUpdateSql(upd,sql);
+                        if(sql!=null&&objList!=null){
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+
+                    }
+                }
+            }else if(tmpTask.getOrderidx()<descIdx){ //从1往9调
+                for(TpTaskInfo task:taskList){
+                    if(task.getOrderidx()>tmpTask.getOrderidx()&&task.getOrderidx()<=descIdx){
+                        TpTaskInfo upd=new TpTaskInfo();
+                        upd.setTaskid(task.getTaskid());
+                        upd.setOrderidx(task.getOrderidx()-1);
+                        sql=new StringBuilder();
+                        objList=this.tpTaskManager.getUpdateSql(upd,sql);
+                        if(sql!=null&&objList!=null){
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                }
+            }
+        }
+
+        TpTaskInfo upd=new TpTaskInfo();
+        upd.setTaskid(tmpTask.getTaskid());
+        upd.setOrderidx(Integer.parseInt(orderix));
+        sql=new StringBuilder();
+        objList=this.tpTaskManager.getUpdateSql(upd,sql);
+        if(sql!=null&&objList!=null){
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+        if(sqlListArray.size()>0&&objListArray.size()>0){
+            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray,objListArray);
+            if(flag){
+                je.setType("success");
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            }else{
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        }
+        response.getWriter().print(je.toJSON());
+    }
 
     /**
      * 获取学生任务列表
@@ -400,7 +512,39 @@ public class TaskController extends BaseController<TpTaskInfo>{
         List<Object>objList=null;
 
 
+
+
         TpTaskInfo tmpTask=taskList.get(0);
+
+        TpTaskInfo sel=new TpTaskInfo();
+        sel.setCourseid(tmpTask.getCourseid());
+        //查询没被我删除的任务
+        sel.setSelecttype(1);
+        sel.setLoginuserid(this.logined(request).getUserid());
+        sel.setStatus(1);
+
+        //1 2 3 4 5
+        //已发布的任务
+        List<TpTaskInfo>taskReleaseList=this.tpTaskManager.getTaskReleaseList(sel, null);
+        Integer orderIdx=tmpTask.getOrderidx();
+        if(taskReleaseList!=null&&taskReleaseList.size()>0){
+            for(TpTaskInfo task:taskReleaseList){
+                if(task.getOrderidx()!=null){
+                    if(task.getOrderidx()>orderIdx){
+                        TpTaskInfo upd=new TpTaskInfo();
+                        upd.setTaskid(task.getTaskid());
+                        upd.setOrderidx(task.getOrderidx()-1);
+                        sql=new StringBuilder();
+                        objList=this.tpTaskManager.getUpdateSql(upd,sql);
+                        if(sql!=null&&sql.toString().trim().length()>0){
+                            objListArray.add(objList);
+                            sqlStrList.add(sql.toString());
+                        }
+                    }
+                }
+            }
+        }
+
        /* if(tmpTask.getCloudstatus()!=null&&(tmpTask.getCloudstatus().intValue()==3||tmpTask.getCloudstatus().intValue()==4)){
             TpOperateInfo to=new TpOperateInfo();
             to.setRef(this.tpOperateManager.getNextId(true));
@@ -426,6 +570,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
         }else{*/
             t.setStatus(2); //修改本地状态为已删除
+            t.setOrderidx(-1);
             sql=new StringBuilder();
             objList=this.tpTaskManager.getUpdateSql(t,sql);
             if(sql!=null&&sql.toString().trim().length()>0){
@@ -434,13 +579,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
 
         //操作日志
-        sql=new StringBuilder();
+       /* sql=new StringBuilder();
         objList=this.tpOperateManager.getAddOperateLog(this.logined(request).getRef(),"TP_TASK_INFO", t.getTaskid().toString(),null,null,"UPDATE"
                 ,"修改本地状态",sql);
         if(sql!=null&&sql.toString().trim().length()>0){
             objListArray.add(objList);
             sqlStrList.add(sql.toString());
-        }
+        })*/
 
         if(sqlStrList.size()>0&&objListArray.size()>0){
             boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlStrList,objListArray);
@@ -692,8 +837,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		String[]criteriaArray=request.getParameterValues("taskcri");
         //小组
 		String[]groupArray=request.getParameterValues("groupArray");
-        String[]btimeArray=request.getParameterValues("btimeArray");
-        String[]etimeArray=request.getParameterValues("etimeArray");
         //班级
         String[]clsArray=request.getParameterValues("clsArray");
         String[]bClsArray=request.getParameterValues("btimeClsArray");
@@ -781,6 +924,22 @@ public class TaskController extends BaseController<TpTaskInfo>{
 			}
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
 		}
+        /**
+         *查询出当前专题有效的任务个数，排序用
+         */
+
+        TpTaskInfo t=new TpTaskInfo();
+        t.setCourseid(Long.parseLong(courseid));
+        //查询没被我删除的任务
+        t.setSelecttype(1);
+        t.setLoginuserid(this.logined(request).getUserid());
+        t.setStatus(1);
+
+        //已发布的任务
+        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t, null);
+        Integer orderIdx=1;
+        if(taskList!=null&&taskList.size()>0)
+            orderIdx+=taskList.size();
 		
 		//添加任务
 		Long tasknextid=this.tpTaskManager.getNextId(true);
@@ -790,6 +949,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		ta.setCourseid(Long.parseLong(courseid));
 		ta.setCuserid(this.logined(request).getRef());
         ta.setCriteria(Integer.parseInt(criteriaArray[0]));
+        ta.setOrderidx(orderIdx);
 		if(taskremark!=null)
 			ta.setTaskremark(taskremark);
 		sql=new StringBuilder();
@@ -806,8 +966,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 tal.setTaskid(tasknextid);
                 tal.setUsertype(2);
                 tal.setUsertypeid(Long.parseLong(groupArray[i]));
-                tal.setBtime(UtilTool.StringConvertToDate(btimeArray[i]));
-                tal.setEtime(UtilTool.StringConvertToDate(etimeArray[i]));
+                tal.setBtime(UtilTool.StringConvertToDate(bClsArray[i]));
+                tal.setEtime(UtilTool.StringConvertToDate(eClsArray[i]));
                 tal.setCuserid(this.logined(request).getRef());
                 //tal.setCriteria(criteriaArray[0]);
                 tal.setCourseid(Long.parseLong(courseid));
@@ -1004,8 +1164,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String[]criteriaArray=request.getParameterValues("taskcri");
         //小组
         String[]groupArray=request.getParameterValues("groupArray");
-        String[]btimeArray=request.getParameterValues("btimeArray");
-        String[]etimeArray=request.getParameterValues("etimeArray");
         //班级
         String[]clsArray=request.getParameterValues("clsArray");
         String[]bClsArray=request.getParameterValues("btimeClsArray");
@@ -1171,8 +1329,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 tal.setTaskid(tasknextid);
                 tal.setUsertype(2);
                 tal.setUsertypeid(Long.parseLong(groupArray[i]));
-                tal.setBtime(UtilTool.StringConvertToDate(btimeArray[i]));
-                tal.setEtime(UtilTool.StringConvertToDate(etimeArray[i]));
+                tal.setBtime(UtilTool.StringConvertToDate(bClsArray[i]));
+                tal.setEtime(UtilTool.StringConvertToDate(eClsArray[i]));
                 tal.setCuserid(this.logined(request).getRef());
                 //tal.setCriteria(criteriaArray[0]);
                 tal.setCourseid(Long.parseLong(courseid));
@@ -2699,10 +2857,52 @@ public class TaskController extends BaseController<TpTaskInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
+
+        TpTaskInfo t=new TpTaskInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo>taskList=this.tpTaskManager.getList(t, null);
+        if(taskList==null||taskList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        //批量操作记录
+        List<List<Object>> objListArray=new ArrayList<List<Object>>();
+        List<String> sqlStrList=new ArrayList<String>();
+        StringBuilder sql=null;
+        List<Object>objList=null;
+
+
+
+
+        TpTaskInfo tmpTask=taskList.get(0);
+
+        TpTaskInfo sel=new TpTaskInfo();
+        sel.setCourseid(tmpTask.getCourseid());
+        //查询没被我删除的任务
+        sel.setSelecttype(1);
+        sel.setLoginuserid(this.logined(request).getUserid());
+        sel.setStatus(1);
+
+        //已发布的任务
+        List<TpTaskInfo>taskReleaseList=this.tpTaskManager.getTaskReleaseList(sel, null);
+        Integer orderIdx=1;
+        if(taskReleaseList!=null&&taskReleaseList.size()>0)
+            orderIdx+=taskReleaseList.size();
+
+
         TpTaskInfo taskInfo=new TpTaskInfo();
         taskInfo.setStatus(1);
         taskInfo.setTaskid(Long.parseLong(taskid));
-        if(this.tpTaskManager.doUpdate(taskInfo)){
+        taskInfo.setOrderidx(orderIdx);
+        sql=new StringBuilder();
+        objList=this.tpTaskManager.getUpdateSql(taskInfo,sql);
+        if(sql!=null&&sql.toString().trim().length()>0){
+            objListArray.add(objList);
+            sqlStrList.add(sql.toString());
+        }
+        if(this.tpTaskManager.doExcetueArrayProc(sqlStrList,objListArray)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");
         }else
@@ -2721,7 +2921,11 @@ public class TaskController extends BaseController<TpTaskInfo>{
     public void doSendTaskMsg(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();
         String uidArray=request.getParameter("uidArray");
-        if(uidArray==null||uidArray.trim().length()<1){
+        String taskid=request.getParameter("taskid");
+        String usertypeid=request.getParameter("usertypeid");
+        if(uidArray==null||uidArray.trim().length()<1
+                ||taskid==null||taskid.trim().length()<1
+                ||usertypeid==null||usertypeid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
@@ -2738,11 +2942,40 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 userName+=userInfoList.get(0).getUsername();
             }
         }
+
+        TpTaskInfo taskInfo=new TpTaskInfo();
+        taskInfo.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo>tpTaskInfoList=this.tpTaskManager.getList(taskInfo,null);
+        if(tpTaskInfoList==null||tpTaskInfoList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpTaskInfo tmpTask=tpTaskInfoList.get(0);
+
+        TpTaskAllotInfo ta=new TpTaskAllotInfo();
+        ta.setTaskid(tmpTask.getTaskid());
+        ta.setUsertypeid(Long.parseLong(usertypeid));
+        List<TpTaskAllotInfo>taskAllotInfoList=this.tpTaskAllotManager.getList(ta,null);
+        if(tpTaskInfoList==null||tpTaskInfoList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpTaskAllotInfo tmpTaskAllot=taskAllotInfoList.get(0);
+        //任务1：资源学习 野生动物.wmv 截止时间是XXX（此处具体到分钟即可），特提醒你尽快完成任务。
+        String tasktype=tmpTask.getTasktype()==1?"资源学习":tmpTask.getTasktype()==2?"互动交流":tmpTask.getTasktype()==3?"试题":"";
+        String content="";
+        try {
+            content="任务："+tasktype+" "+tmpTask.getTaskobjname()+" 截止时间是"+tmpTaskAllot.getEtimeString()+"，请尽快完成任务!";
+        }catch (Exception e){
+            content="";
+        }
         SmsInfo smsInfo=new SmsInfo();
         smsInfo.setReceiverlist(userName);
-        smsInfo.setSmstitle("");
+        smsInfo.setSmstitle("任务未完成提醒");
         smsInfo.setSenderid(this.logined(request).getUserid());
-        smsInfo.setSmscontent("");
+        smsInfo.setSmscontent(content);
         smsInfo.setSmsstatus(1);
         if(this.smsManager.doSave(smsInfo)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));

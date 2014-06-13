@@ -174,11 +174,25 @@
 	.jxxt_zhuanti_rwR div.title {width:830px; padding:10px 5px 6px; border-bottom:1px solid #cfcfcf; color:#000;}
 	.jxxt_zhuanti_rwR div.title b{width:40px; display:inline-block;color:red; font-weight:normal;}
 	.jxxt_zhuanti_rwR div.text {width:800px; padding:10px 15px 6px 25px; background-color:#f8f8f8;}
+	.jxxt_zhuanti_rwR div.text p.time {width:730px;}
+	.jxxt_zhuanti_rwR div.text p.time strong{width:120px; display: inline-block;}
+	.jxxt_zhuanti_rwR div.text p.time span.ico_time{margin:0 5px 0 0;}
 	.jxxt_zhuanti_rwR div.text p { padding-bottom:5px;}
 	.jxxt_zhuanti_rwR div.text span.width { width:730px;display:inline-block; vertical-align:top; color:#000;}
 	.jxxt_zhuanti_rwR table { text-align:left; color:#000;}
 	.jxxt_zhuanti_rwR table th {text-align:left;vertical-align:top; }
 	.jxxt_zhuanti_rwR table td {padding-bottom:10px;vertical-align:top;}
+	.jxxt_zhuanti_rwR div.text div.float{
+	width:360px;
+	border:1px solid #0d799b;
+	background-color:#edfaff;
+	padding:6px 8px 5px 12px;
+}
+	.jxxt_zhuanti_rwR div.text div.float ul li{
+	width:175px;
+	display:inline-block;
+	color:#000;
+}
 
 	.jxxt_zhuanti_rwR textarea{
 	width:600px;
@@ -218,6 +232,20 @@
 	margin-top:10px;
 	background-color:#fff;
 	padding:10px;
+	color:#000;
+}
+	.jxxt_zhuanti_add_time{width:610px; }
+	.jxxt_zhuanti_add_time p{padding-top:10px; }
+
+	.jxxt_zhuanti_add_float{
+	width:300px;
+	border:1px solid #0d799b;
+	background-color:#edfaff;
+	padding:6px 8px 5px 12px ;
+}
+	.jxxt_zhuanti_add_float ul li{
+	width:55px;
+	display:inline-block;
 	color:#000;
 }
 	.jxxt_zhuanti_rw_tongji{

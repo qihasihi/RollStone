@@ -139,7 +139,7 @@
                 html+='<div class="jxxt_zhuanti_rw">';
                 html+='        <div class="jxxt_zhuanti_rwR">';
                 html+='        <div class="title">';
-                html+='        <p class="f_right"><span class="ico35" style="cursor:pointer" onclick="loadNoCompleteStu('+itm.taskid+')"></span><b><a   class="font-red">'+itm.stucount+'/'+itm.totalcount+'</a></b></p>';
+                html+='        <p class="f_right"><span class="ico35" style="cursor:pointer" onclick="loadNoCompleteStu(\''+itm.taskid+'\',\''+itm.usertypeid+'\',\''+itm.taskstatus+'\')"></span><b><a   class="font-red">'+itm.stucount+'/'+itm.totalcount+'</a></b></p>';
                 html+='        <p><a class="ico49b" id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务'+(rps.presult.pageSize*(rps.presult.pageNo-1)+(idx+1))+'：'+type+'</a>';
                 if(itm.tasktype==1){
                     html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
