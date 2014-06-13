@@ -708,24 +708,56 @@ public class ClassController extends BaseController<ClassInfo>{
 
     @RequestMapping(params ="m=lzxUpdate")
     public void lzxUpdate(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        Object timeStr=request.getParameter("timestamp");
+        Object schoolid=request.getParameter("lzx_school_id");
+        Object key=request.getParameter("key");
+        //验证相关参数
+        if(timeStr==null||timeStr.toString().trim().length()<1||!UtilTool.isNumber(timeStr.toString())){
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，登陆时间戳参数缺少!\"}");return;
+        }
+        if(schoolid==null||schoolid.toString().trim().length()<1||!UtilTool.isNumber(schoolid.toString())){
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，分校ID为空!!\"}");return;
+        }
+
+
         String clsArrayjson=request.getParameter("clsarrayjson");
         if(clsArrayjson==null||clsArrayjson.toString().trim().length()<1){
-            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，没有发现您要添加或修改的班级数据Json!\"}");
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，没有发现您要添加或修改的班级数据Json!\"}");
             return;
         }
         net.sf.json.JSONArray clsJr=net.sf.json.JSONArray.fromObject(clsArrayjson);
         if(clsJr==null||clsJr.isEmpty()){
-            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，没有发现您要添加或修改的班级数据Json!\"}");return;
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，没有发现您要添加或修改的班级数据Json!\"}");return;
         }
+        if(key==null||key.toString().trim().length()<1){
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，key为空!!\"}");
+            return;
+        }
+
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(timeStr.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，响应超时!接口三分钟内有效!\"}");
+            return;
+        }
+        //验证key
+        String md5key=timeStr.toString()+schoolid;
+        md5key+=timeStr.toString();
+        md5key= MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
+        if(!md5key.trim().equals(key.toString().trim())){//如果不一致，则说明非法登陆
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，非法登陆!!\"}");return;
+        }
+
+
         String hasClsid=null;
         List<String> sqlArrayList=new ArrayList<String>();
         List<List<Object>> objArrayList=new ArrayList<List<Object>>();
         Iterator jrIte=clsJr.iterator();
         while(jrIte.hasNext()){
             net.sf.json.JSONObject clsJo=(net.sf.json.JSONObject)jrIte.next();
-            Object timeStr=clsJo.get("timestamp");
-            Object schoolid=clsJo.get("lzx_school_id");
-            Object classid=clsJo.get("classid");
+            Object classid=clsJo.get("lzx_classid");
             Object className=clsJo.get("class_name");
             Object pattern=clsJo.get("pattern");
             Object classGrade=clsJo.get("class_grade");
@@ -733,19 +765,12 @@ public class ClassController extends BaseController<ClassInfo>{
             Object type= clsJo.get("type");
             Object subjectid=clsJo.get("subject_id");
             Object isflag=clsJo.get("isflag");
-            Object key=clsJo.get("key");
-            //验证相关参数
-            if(timeStr==null||timeStr.toString().trim().length()<1||!UtilTool.isNumber(timeStr.toString())){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，登陆时间戳参数缺少!\"}");return;
-            }
-            if(schoolid==null||schoolid.toString().trim().length()<1||!UtilTool.isNumber(schoolid.toString())){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，分校ID为空!!\"}");return;
-            }
+
             if(classid==null||classid.toString().trim().length()<1||!UtilTool.isNumber(classid.toString())){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，班级ID为空!!\"}");return;
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，班级ID为空!!\"}");return;
             }
             if(className==null||className.toString().trim().length()<1){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，班级名称为空!!\"}");
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，班级名称为空!!\"}");
                 return;
             }
             if(pattern==null||pattern.toString().trim().length()<1){
@@ -753,11 +778,11 @@ public class ClassController extends BaseController<ClassInfo>{
                 pattern="行政班";
             }
             if(classGrade==null||classGrade.toString().trim().length()<1){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，年级为空!!\"}");
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，年级为空!!\"}");
                 return;
             }
             if(year==null||year.toString().trim().length()<1){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，学年为空!!\"}");
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，学年为空!!\"}");
                return;
             }
             if(type==null||type.toString().trim().length()<1){
@@ -766,34 +791,14 @@ public class ClassController extends BaseController<ClassInfo>{
             }
             if(pattern!=null&&pattern.toString().trim().equals("分层班")){
                 if(subjectid==null||subjectid.toString().trim().length()<1||!UtilTool.isNumber(subjectid.toString())){
-                    response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，分层班的班级要添加学科ID,学科ID为空!!\"}");
+                    response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，分层班的班级要添加学科ID,学科ID为空!!\"}");
                     return;
                 }
             }
             if(isflag==null||isflag.toString().trim().length()<1||!UtilTool.isNumber(isflag.toString())){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，班级是否启用为空!!\"}");return;
-            }
-            if(key==null||key.toString().trim().length()<1){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，key为空!!\"}");
-                return;
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，班级是否启用为空!!\"}");return;
             }
 
-            //验证是否在三分钟内
-            Long ct=Long.parseLong(timeStr.toString());
-            Long nt=new Date().getTime();
-            double d=(nt-ct)/(1000*60);
-            if(d>3){//大于三分钟
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，响应超时!接口三分钟内有效!\"}");
-               return;
-            }
-            //验证key
-            String md5key=timeStr.toString()+schoolid;
-
-            md5key+=classid.toString()+className.toString()+classGrade.toString()+type.toString()+timeStr.toString();
-            md5key= MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
-            if(!md5key.trim().equals(key.toString().trim())){//如果不一致，则说明非法登陆
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，非法登陆!!\"}");return;
-            }
             //验证通过
             ClassInfo cls=new ClassInfo();
             cls.setClassname(className.toString());
@@ -824,14 +829,14 @@ public class ClassController extends BaseController<ClassInfo>{
         if(sqlArrayList!=null&&sqlArrayList.size()>0&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
             if(this.classManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
                  if(hasClsid!=null){
-                     response.getWriter().println("{\"type\":\"success\",\"msg\":\""+hasClsid+"\"}");
+                     response.getWriter().println("{\"type\":\"error\",\"msg\":\""+hasClsid+"\"}");
                  }else
                       response.getWriter().println("{\"type\":\"success\"}");
              }else{
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，原因：未知!\"}");return;
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，原因：未知!\"}");return;
             }
         }else{
-            response.getWriter().println("{\"type\":\"success\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");return;
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");return;
         }
     }
 
@@ -842,6 +847,21 @@ public class ClassController extends BaseController<ClassInfo>{
      */
     @RequestMapping(params="m=lzxDel",method=RequestMethod.POST)
     public void lzxDel(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        Object timeStr=request.getParameter("timestamp");
+        Object schoolid=request.getParameter("lzx_school_id");
+        Object key=request.getParameter("key");
+        //验证相关参数
+        if(timeStr==null||timeStr.toString().trim().length()<1||!UtilTool.isNumber(timeStr.toString())){
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，登陆时间戳参数缺少!\"}");return;
+        }
+        if(schoolid==null||schoolid.toString().trim().length()<1||!UtilTool.isNumber(schoolid.toString())){
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，分校ID为空!!\"}");return;
+        }
+        if(key==null||key.toString().trim().length()<1){
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，key为空!!\"}");
+            return;
+        }
+
         String clsArrayjson=request.getParameter("clsarrayjson");
         if(clsArrayjson==null||clsArrayjson.toString().trim().length()<1){
             response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，没有发现您要添加或修改的班级数据Json!\"}");return;
@@ -850,46 +870,33 @@ public class ClassController extends BaseController<ClassInfo>{
         if(clsJr==null||clsJr.isEmpty()){
             response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，没有发现您要添加或修改的班级数据Json!\"}");return;
         }
+
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(timeStr.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，响应超时!接口三分钟内有效!\"}");return;
+        }
+        //验证key
+        String md5key=timeStr.toString()+schoolid;
+        md5key+=timeStr.toString();
+        md5key= MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
+        if(!md5key.trim().equals(key.toString().trim())){//如果不一致，则说明非法登陆
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，非法登陆!!\"}");
+            return;
+        }
+
         String noDelClsId=null;
         List<String> sqlArrayList=new ArrayList<String>();
         List<List<Object>> objArrayList=new ArrayList<List<Object>>();
         Iterator jrIte=clsJr.iterator();
         while(jrIte.hasNext()){
             net.sf.json.JSONObject clsJo=(net.sf.json.JSONObject)jrIte.next();
-            Object timeStr=clsJo.get("timestamp");
-            Object schoolid=clsJo.get("lzx_school_id");
-            Object classid=clsJo.get("classid");
-            Object key=clsJo.get("key");
-            //验证相关参数
-            if(timeStr==null||timeStr.toString().trim().length()<1||!UtilTool.isNumber(timeStr.toString())){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，登陆时间戳参数缺少!\"}");return;
-            }
-            if(schoolid==null||schoolid.toString().trim().length()<1||!UtilTool.isNumber(schoolid.toString())){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，分校ID为空!!\"}");return;
-            }
+            Object classid=clsJo.get("lzx_classid");
+
             if(classid==null||classid.toString().trim().length()<1||!UtilTool.isNumber(classid.toString())){
                 response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，班级ID为空!!\"}");return;
-            }
-            if(key==null||key.toString().trim().length()<1){
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，key为空!!\"}");
-                return;
-            }
-
-            //验证是否在三分钟内
-            Long ct=Long.parseLong(timeStr.toString());
-            Long nt=new Date().getTime();
-            double d=(nt-ct)/(1000*60);
-            if(d>3){//大于三分钟
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，响应超时!接口三分钟内有效!\"}");return;
-            }
-            //验证key
-            String md5key=timeStr.toString()+schoolid;
-
-            md5key+=classid.toString()+timeStr.toString();
-            md5key= MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
-            if(!md5key.trim().equals(key.toString().trim())){//如果不一致，则说明非法登陆
-                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，非法登陆!!\"}");
-                return;
             }
             //查看是否存在学生记录
             ClassUser cutmp=new ClassUser();
