@@ -219,6 +219,16 @@
 	.back a:link,.back a:visited{color:#19a0ca;}
 	.back a:hover,.back a:active{color:#22aed9;}
 
+	.tishi{
+	width:400px;
+	height:48px;
+	background:url(images/bg28_131230.png) no-repeat; 
+	padding:25px 0 0 100px;
+	font:bold 16px/28px Microsoft YaHei;
+	margin:70px auto 0;
+}
+
+
 	.home_layout{
 	width:1000px;
 	background:url(images/bg14_131230.png) repeat-y;
@@ -239,7 +249,7 @@
 	.home_layoutL ul li.crumb{ background-position: 0 -130px;}
 	.home_layoutL ul li.crumb a{color:#fff100;}
 
-	.lm_ico01,.lm_ico02,.lm_ico03,.lm_ico04,.lm_ico05,.lm_ico06,.lm_ico07,.lm_ico08{
+	.lm_ico01,.lm_ico02,.lm_ico03,.lm_ico04,.lm_ico05,.lm_ico06,.lm_ico07,.lm_ico08,.lm_ico09,.lm_ico10,.lm_ico11,.lm_ico12,.lm_ico13,.lm_ico14{
 	width:19px;
 	height:19px;
 	background: url(images/ico02_131230.png) no-repeat -36px 0;
@@ -254,6 +264,12 @@
 	.lm_ico06{ background-position:-76px -40px;}
 	.lm_ico07{ background-position:-96px 0;}
 	.lm_ico08{ background-position:-96px -40px;}
+	.lm_ico09{ background-position:-133px 0;}
+	.lm_ico10{ background-position:-133px -40px;}
+	.lm_ico11{ background-position:-153px 0;}
+	.lm_ico12{ background-position:-153px -40px;}
+	.lm_ico13{ background-position:-173px 0;}
+	.lm_ico14{ background-position:-173px -40px;}
 
     .home_layoutL ul li.crumb .lm_ico01{ background-position:-36px -20px;}
 	.home_layoutL ul li.crumb .lm_ico02{ background-position:-36px -60px;}
@@ -263,6 +279,12 @@
 	.home_layoutL ul li.crumb .lm_ico06{ background-position:-76px -60px;}
 	.home_layoutL ul li.crumb .lm_ico07{ background-position:-96px -20px;}
 	.home_layoutL ul li.crumb .lm_ico08{ background-position:-96px -60px;}
+	.home_layoutL ul li.crumb .lm_ico09{ background-position:-133px -20px;}
+	.home_layoutL ul li.crumb .lm_ico10{ background-position:-133px -60px;}
+	.home_layoutL ul li.crumb .lm_ico11{ background-position:-153px -20px;}
+	.home_layoutL ul li.crumb .lm_ico12{ background-position:-153px -60px;}
+	.home_layoutL ul li.crumb .lm_ico13{ background-position:-173px -20px;}
+	.home_layoutL ul li.crumb .lm_ico14{ background-position:-173px -60px;}
 
 	.home_layoutR{
 	width:224px;

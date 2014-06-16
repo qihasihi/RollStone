@@ -154,14 +154,14 @@
     }
 
     if(isStudent){
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=11'><span class='lm_ico07'></span>天天单词</a></li>");
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=9'><span class='lm_ico07'></span>互帮互学</a></li>");
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=220'><span class='lm_ico07'></span>作文大赛</a></li>");
+        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=11'><span class='lm_ico12'></span>天天单词</a></li>");
+        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=9'><span class='lm_ico13'></span>互帮互学</a></li>");
+        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=220'><span class='lm_ico14'></span>作文大赛</a></li>");
     }
     if(isTeacher){
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=ycjy'><span class='lm_ico07'></span>远程教研</a></li>");
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=mxst'><span class='lm_ico07'></span>名校试题</a></li>");
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=gkk'><span class='lm_ico07'></span>四中公开课</a></li>");
+        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=ycjy'><span class='lm_ico09'></span>远程教研</a></li>");
+        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=mxst'><span class='lm_ico10'></span>名校试题</a></li>");
+        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=gkk'><span class='lm_ico11'></span>四中公开课</a></li>");
     }
 
     writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl'><span class='lm_ico07'></span>四中网校</a></li>");
