@@ -148,7 +148,7 @@
                             var imgpath=resourcepathHead+itm.path+'/001'+itm.filesuffixname+'.pre.jpg';
                             h+='<li><a href="resource?m=todetail&resid='+itm.resid+'"><img src="'+imgpath+'" width="160" height="90" />'+itm.resname25word+'</a></li>'; //alt="'+itm.resname25word+'" title="'+itm.resname25word+'"
                         }else if(cufiletype==4){    //图片
-                            var imgpath=resourcepathHead+itm.path+'/001_smail.jpg';//+itm.filesuffixname;
+                            var imgpath='resource?m=getResourceImage&resid='+itm.resid+'&w=135&h=135';//+itm.filesuffixname;
                             h+='<li><a href="resource?m=todetail&resid='+itm.resid+'"  title="'+itm.resname25word+'"><img src="'+imgpath+'" width="135" height="135" /></a></li>';
                         }else{   //动画
                             h+='<li><a href="resource?m=todetail&resid='+itm.resid+'"  title="'+itm.resname25word+'">';

@@ -9,11 +9,11 @@
 <%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.BufferedOutputStream"%>
 <%@page import="org.apache.commons.fileupload.DiskFileUpload"%>
+<%@ page import="com.school.util.UtilTool" %>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+	String basePath = "http://"+UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"
+            + UtilTool.utilproperty.getProperty("PROC_NAME") + "/";
 	response.setContentType("text/html;charset=utf-8");
 	response.setCharacterEncoding("UTF-8");
 	request.setCharacterEncoding("UTF-8");
