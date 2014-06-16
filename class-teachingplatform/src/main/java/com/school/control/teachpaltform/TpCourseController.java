@@ -418,6 +418,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
         TpVirtualClassInfo tvc= new TpVirtualClassInfo();
         tvc.setCuserid(u.getUserid());
+        tvc.setStatus(1);
         List<TpVirtualClassInfo> tvcList=this.tpVirtualClassManager.getList(tvc, null);
 
         TpCourseClass tcc = new TpCourseClass();
@@ -479,6 +480,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
         TpVirtualClassInfo tvc= new TpVirtualClassInfo();
         tvc.setCuserid(u.getUserid());
+        tvc.setStatus(1);
         List<TpVirtualClassInfo> tvcList=this.tpVirtualClassManager.getList(tvc, null);
 
         List<ClassUser> cuList = null;
@@ -2073,6 +2075,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         //ªÒ»°–Èƒ‚∞‡º∂
         TpVirtualClassInfo tvc = new TpVirtualClassInfo();
         tvc.setCuserid(this.logined(request).getUserid());
+        tvc.setStatus(1);
         List<TpVirtualClassInfo> tvcList = this.tpVirtualClassManager.getList(tvc, null);
 
         TrusteeShipClass tsc = new TrusteeShipClass();

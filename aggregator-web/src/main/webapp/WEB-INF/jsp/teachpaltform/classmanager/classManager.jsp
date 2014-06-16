@@ -60,7 +60,7 @@
                             <a href="javascript:void(0)" class="ico36" title="添加学生"
                                onclick="getVirClassStudents(${cla.CLASS_ID });
                                        showModel('class_student_manager');"></a>&nbsp;
-                            <a href="javascript:void(0)" class="ico01" title="删除"
+                            <a href="javascript:void(0)" class="ico04" title="删除"
                                onclick="changeVirClassStatus(${cla.CLASS_ID },false);"></a>
                             <%--
                               <c:if test="${cla.STATUS==1}">

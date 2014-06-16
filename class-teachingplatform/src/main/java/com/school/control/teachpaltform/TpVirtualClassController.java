@@ -95,7 +95,7 @@ public class TpVirtualClassController extends BaseController<TpVirtualClassInfo>
                 || tvc.getVirtualclassname()==null
                 || tvc.getVirtualclassname().trim().length()==0) {
             je.setType("error");
-            je.setMsg("小组名称参数错误！！");
+            je.setMsg("班级名称参数错误！！");
             response.getWriter().print(je.toJSON());
             return ;
         }
@@ -105,7 +105,7 @@ public class TpVirtualClassController extends BaseController<TpVirtualClassInfo>
         if(tvcList != null
                 && tvcList.size()>0) {
             je.setType("error");
-            je.setMsg("该小组名已存在！");
+            je.setMsg("该班级名已存在！");
             response.getWriter().print(je.toJSON());
             return ;
         }

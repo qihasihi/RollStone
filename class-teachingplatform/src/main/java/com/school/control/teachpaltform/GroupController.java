@@ -76,6 +76,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
         List<ClassUser> clsList = this.classUserManager.getListByTchYear(u.getRef(), ti.getYear());
         TpVirtualClassInfo tvc= new TpVirtualClassInfo();
         tvc.setCuserid(u.getUserid());
+        tvc.setStatus(1);
         List<TpVirtualClassInfo> tvcList=this.tpVirtualClassManager.getList(tvc, null);
 
         TrusteeShipClass trusteeShipClass=new TrusteeShipClass();
