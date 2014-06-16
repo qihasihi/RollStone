@@ -118,7 +118,12 @@ function myInfoAjaxList(rps){
                 var sMsg=itm.dataMsg;
                 if(typeof(itm.realName)!="undefined"&&itm.realName.Trim().length>0)
                     sMsg=itm.otherDataMsg;
-               h+='<li><b>'+itm.ctimeString+'</b><span class="ico63"></span>&nbsp;'+sMsg+'</li>';
+               h+='<li><b>'+itm.ctimeString+'</b>';
+                if(itm.targetid>0)
+                h+='<span class="ico64">';
+                else
+                    h+='<span class="ico63">';
+               h+='</span>&nbsp;'+sMsg+'</li>';
             });
         }
         p_myinfo.setPageSize(rps.presult.pageSize);

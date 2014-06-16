@@ -4640,6 +4640,7 @@ public class UserController extends BaseController<UserInfo> {
 //        request.setCharacterEncoding("UTF-8");
         //功能ID
         String mid=request.getParameter("mid");
+        String modelName=request.getParameter("modelName");
         // 获得用户信息
         UserInfo u = this.logined(request);
         // ////////////////////////////变量存储
@@ -5033,6 +5034,9 @@ public class UserController extends BaseController<UserInfo> {
             }
             paramMap.put("serverendtime",servertime);
             paramMap.put("s",UserTool.zuzhiTeacherSParameter(uid.toString(),gradeidList,realname,usertype.toString(),sex+"",email,schoolid,servertime,time.toString(),key));
+            if(modelName==null)
+                modelName="";
+            paramMap.put("modelName",modelName);
             requestUrl=UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_URL").toString(); //教师进入ett入口
         }else if(isstuflag){
             //组织学生参数

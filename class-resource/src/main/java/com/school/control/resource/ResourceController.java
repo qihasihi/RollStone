@@ -1214,8 +1214,34 @@ public class ResourceController extends BaseController<ResourceInfo> {
 //            resInfo.setFiletype(1);
 //        else
 //            resInfo.setFiletype(0);
+
+        List<String>sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArraylist=new ArrayList<List<Object>>();
+        StringBuilder sqlbuilder=new StringBuilder();
+        List<Object> objList=this.resourceManager.getSaveSql(resInfo,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArraylist.add(objList);
+        }
+        if(resInfo.getSharestatus()!=null&&resInfo.getSharestatus()==1){//校内共享
+            sqlbuilder=new StringBuilder();
+            MyInfoCloudInfo mc=new MyInfoCloudInfo();
+            mc.setTargetid(Long.parseLong(resInfo.getResid().toString()));
+            mc.setUserid(Long.parseLong(this.logined(request).getUserid().toString()));
+            mc.setData("分享了资源\"<a href=\"resource?m=todetail&resid="+resInfo.getResid()+"\">#ETIANTIAN_SPLIT#</a>\"!");
+            mc.setType(1);
+            objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArraylist.add(objList);
+            }
+
+        }
+
         // 执行
-        if (this.resourceManager.doSave(resInfo)) {
+        if(this.resourceManager.doExcetueArrayProc(sqlArrayList,objArraylist)){
+            System.out.println("上传资源，添加消息成功!");
+
             jeEntity.setType("success");
             // 返回nextid
             jeEntity.getObjList().add(this.resourceManager.getNextId());
@@ -1911,8 +1937,30 @@ public class ResourceController extends BaseController<ResourceInfo> {
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NO_SERVICE_RIGHT"));    //没有操作权限
             response.getWriter().print(jsonEntity.toJSON());return;
         }
+        List<String>sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+        StringBuilder sqlbuilder=new StringBuilder();
+
+        List<Object> objList=this.resourceManager.getUpdateSql(resEntity,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+        if(resEntity.getSharestatus()!=null&&resEntity.getSharestatus()==1){
+            sqlbuilder=new StringBuilder();
+            MyInfoCloudInfo mc=new MyInfoCloudInfo();
+            mc.setTargetid(Long.parseLong(resEntity.getResid().toString()));
+            mc.setUserid(Long.parseLong(this.logined(request).getUserid().toString()));
+            mc.setData("\""+this.logined(request).getRealname()+"\"分享了资源\"<a href=\"resource?m=todetail&resid="+resEntity.getResid()+"\">#ETIANTIAN_SPLIT#</a>\"!");
+            mc.setType(1);
+            objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+        }
         //执行修改
-        if(this.resourceManager.doUpdate(resEntity)){
+        if(this.resourceManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
             jsonEntity.setType("success");
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
         }else{

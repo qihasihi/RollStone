@@ -5,6 +5,8 @@ import com.school.entity.CommentInfo;
 import com.school.entity.DictionaryInfo;
 import com.school.entity.ScoreInfo;
 import com.school.entity.UserInfo;
+import com.school.entity.resource.MyInfoCloudInfo;
+import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.TpCourseClass;
 import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.manager.CommentManager;
@@ -116,6 +118,25 @@ public class CommentController extends BaseController<CommentInfo> {
             if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){
                 sqlArrayList.add(sqlbuilder.toString());
                 objArraylist.add(objList);
+            }
+            ResourceInfo rs=new ResourceInfo();
+            rs.setResid(Long.parseLong(commentinfo.getCommentobjectid()));
+            List<ResourceInfo> rsList=this.resourceManager.getList(rs,null);
+            if(rsList!=null&&rsList.size()>0){
+                sqlbuilder=new StringBuilder();
+                MyInfoCloudInfo mc=new MyInfoCloudInfo();
+                mc.setTargetid(Long.parseLong(commentinfo.getCommentobjectid().toString()));
+                mc.setUserid(Long.parseLong(rsList.get(0).getUserid().toString()));
+                if(commentinfo.getAnonymous()==null&&commentinfo.getAnonymous()!=1)
+                    mc.setData("\"" + this.logined(request).getRealname() + "\"评论了你的资源\"<a href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a>\"");
+                else
+                    mc.setData("您的资源\"<a href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a>\" 被匿名评论了!");
+                mc.setType(1);
+                objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
+                if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){
+                    sqlArrayList.add(sqlbuilder.toString());
+                    objArraylist.add(objList);
+                }
             }
         }
         if (sqlArrayList.size()>0&&sqlArrayList.size()==objArraylist.size()
