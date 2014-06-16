@@ -4640,9 +4640,9 @@ public class UserController extends BaseController<UserInfo> {
     @RequestMapping(params="m=toEttUrl", method = RequestMethod.GET)
     public void getEttUrl(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception {
 
-//        response.setCharacterEncoding("UTF-8");
-//        response.setContentType("text/html;charset=UTF-8");
-//        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         //功能ID
         String mid=request.getParameter("mid");
         String modelName=request.getParameter("modelName");
@@ -4701,7 +4701,7 @@ public class UserController extends BaseController<UserInfo> {
         // usertype
         //boolean isteacher = this.getRolemanager().isTeacher(u.getUserId());
         boolean  isteacher=this.validateRole(request, UtilTool._ROLE_TEACHER_ID);
-        if (isteacher) {
+        if (isteacher||!isstuflag) {
 
             // 教师显示全部年纪 2012-02-03 11:06
             gradeidList.clear();
@@ -4859,7 +4859,7 @@ public class UserController extends BaseController<UserInfo> {
                         .getList(cu,null);
                 // 现在的
                 Date nowd = new Date();
-                Date d = UtilTool.StringConvertToDate(nowd.getYear() + "-07-15");
+                Date d = UtilTool.StringConvertToDate(UtilTool.DateConvertToString(nowd,DateType.year) + "-07-15 00:00:00");
 
                 if (nowd.getTime() >= d.getTime() && usertype == 3)
                     isshengji = true;
@@ -4981,21 +4981,27 @@ public class UserController extends BaseController<UserInfo> {
                     }
                 }
                 if (isbiye && !isteacher && !isflag) {
-                    String msg = "抱歉!您已经毕业，将无法使用网校平台!";
+                    String msg = "Sorry!You have graduated!";
                     response.getWriter().print(
                             "<script type='text/javascript'>alert('" + msg
-                                    + "');history.go(-1);</script>");
+                                    + "');this.close();</script>");
                     return;
                 }
             } else {
-                String msg = "抱歉!您在本学期中没有新的班级信息!无法进入!详情请联系管理人员!";
+                String msg = "Sorry,This semester has not class information!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
-                                + "');history.go(-1);</script>");
+                                + "');this.close();</script>");
                 return;
             }
         }
-
+        if(gradeidList == null ||gradeidList.size() <1){
+            String msg = "Sorry,This semester has not grade information!";
+            response.getWriter().print(
+                    "<script type='text/javascript'>alert('" + msg
+                            + "');this.close();</script>");
+            return;
+        }
 
         String requestUrl=null;
         Map<String,Object> paramMap=new HashMap<String, Object>();
