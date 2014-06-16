@@ -149,23 +149,23 @@ public class StudentController extends BaseController<StudentInfo> {
 					}
 					
 					//删除该班级下的所有学生
-					if(freeClsid==null||freeClsid!=null&&clsList.get(0).getClassid()!=freeClsid){						
+					if(freeClsid==null||(freeClsid!=null&&clsList.get(0).getClassid().intValue()!=freeClsid.intValue())){
 						ClassUser cutmp=new ClassUser();
 						cutmp.setClassid(clsList.get(0).getClassid());
 						cutmp.setRelationtype("学生");
-						
-						objparaList=this.classUserManager.getDeleteSql(cutmp, sqlbuilder);						
+
+						objparaList=this.classUserManager.getDeleteSql(cutmp, sqlbuilder);
 						objListArray.add(objparaList);
 						sqlListArray.add(sqlbuilder.toString());
 						freeClsid=clsList.get(0).getClassid();
 						sqlbuilder=new StringBuilder();
 						objparaList=this.classUserManager.getAddOperateLog(this.logined(request).getRef()
 								,"class_user_info",null,null,null,"DELETE","导入学生名册，根据班级ID批量删除数据!", sqlbuilder);
-						
+
 						objListArray.add(objparaList);
 						sqlListArray.add(sqlbuilder.toString());
-					}	
-					
+					}
+
 					StudentInfo selstu=new StudentInfo();
 					selstu.setStuno(stu.getStuno());
 					//验证学生存在

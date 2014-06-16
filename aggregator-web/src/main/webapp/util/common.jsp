@@ -4,8 +4,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@page import="com.school.entity.RoleUser"%>
 <%@page import="com.school.util.UtilTool"%>
-<%@page import="com.school.util.JsonEntity"%> 
+<%@page import="com.school.util.JsonEntity"%>
 <%@page import="com.school.entity.UserInfo"%>
+<%@page import="com.school.entity.UserIdentityInfo"%>
 <%@page import="java.math.BigDecimal"%>
 <%
     /**
@@ -79,7 +80,7 @@
 			
 	String fileSystemIpPort=UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD");//"http://202.99.47.77:80/";//request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort()+"/";;
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
-			 boolean isTeacher=false,isStudent=false;
+			 boolean isTeacher=false,isStudent=false,isteaidentity=false,isstuidentity=false;
  List<RoleUser> cruList=null;
 if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 		||!request.getServletPath().replaceAll("/","").equals(proc_name+"login.jsp")
@@ -105,16 +106,31 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 }else{
 	if(u!=null){		
 		cruList=u.getCjJRoleUsers();
-	
 		for(RoleUser ru : cruList){
 			if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID)){
 				isTeacher=true;
 			}else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_STU_ID)){
 				isStudent=true;
 			}
-		} 
+		}
+
+
 	}
-	session.setAttribute("currentUserRoleList",cruList);	
+    Object cutUidentity=request.getSession().getAttribute("cut_uidentity");
+    if(cutUidentity!=null){
+        List<UserIdentityInfo> uittList=(List<UserIdentityInfo>)cutUidentity;
+        if(uittList!=null&&uittList.size()>0){
+            for (UserIdentityInfo uita:uittList){
+                if(uita!=null&&uita.getIdentityname()!=null&&uita.getIdentityname().trim().equals("教职工")){
+                    isteaidentity=true;
+                }
+                if(uita!=null&&uita.getIdentityname()!=null&&uita.getIdentityname().trim().equals("学生")){
+                    isstuidentity=true;
+                }
+            }
+        }
+        session.setAttribute("currentUserRoleList",cruList);
+    }
 }
 
 %> 

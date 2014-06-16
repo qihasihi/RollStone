@@ -1,9 +1,7 @@
 package com.school.manager;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.awt.*;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,15 +9,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.school.util.UtilTool;
 import jxl.Sheet;
 import jxl.Workbook;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.hssf.util.Region;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -90,11 +86,8 @@ public class OperateExcelManager implements IOperateExcelManager {
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 设置居中
 		style.setLocked(islock);
 		style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-		cell.setCellStyle(style);
-
-		// cell.setEncoding(HSSFCell.ENCODING_UTF_16);
-		cell.setCellValue(cellValue);
-
+		//cell.setCellStyle(style);
+        cell.setCellValue(cellValue);
 	}
 
 	/**
@@ -205,14 +198,13 @@ public class OperateExcelManager implements IOperateExcelManager {
 	private void saveExcelByPOI(HttpServletResponse response, String filename,
 			List<String> sheetNames, List<List<String>> columns, List list,
 			List<String> title, List<Class<? extends Object>> clz,
-			List<String> explortObject) throws IOException {
+			List<String> explortObject,boolean ispizhu) throws IOException {
 		// filename = "explortfile";
 
 		response.addHeader("Content-Disposition", "attachment;filename="
-				+ new String((filename + ".xls").getBytes("GBK"), "ISO8859-1"));
+                + toUtf8String(filename + ".xls"));
 		OutputStream out = response.getOutputStream();
 		HSSFWorkbook wb = new HSSFWorkbook(); // 创建工作簿
-
 		// 循环。
 		for (int i = 0; i < sheetNames.size(); i++) {
 			// HSSFSheet sheet = wb.createSheet();
@@ -263,17 +255,87 @@ public class OperateExcelManager implements IOperateExcelManager {
 			//sheet.protectSheet("http://www.etiantian.com");
 			abstractEntityFactory(list.get(i), sheet, wb, columns.get(i), clz
 					.get(i), rowBegin);
+
+            //固定的几个位置
+            if(ispizhu){
+                HSSFCell cell=sheet.getRow(0).getCell(0);
+                //插入单元格内容
+                //创建绘图对象
+                HSSFPatriarch p=sheet.createDrawingPatriarch();
+                //获取批注对象
+                //(int dx1, int dy1, int dx2, int dy2, short col1, int row1, short col2, int row2)
+                //前四个参数是坐标点,后四个参数是编辑和显示批注时的大小.
+                HSSFComment comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)3,3,(short)5,6));
+                //输入批注信息
+                comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI1").toString() ));
+                cell.setCellComment(comment);
+                /******第二个批注*********/
+                cell=sheet.getRow(0).createCell(3);
+                HSSFFont f = wb.createFont();
+                f.setColor(HSSFColor.GREEN.index);
+                f.setFontName("黑体");
+                HSSFCellStyle cellStyle=wb.createCellStyle();
+                cellStyle.setFont(f);
+                cell.setCellStyle(cellStyle);
+                //输入批注信息
+                cell.setCellValue(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI2").toString());
+                        //new String(("——请先在系统中建好班级，再导入学生。\n——导入时会自动清空该班级原有的学生，再导入表格里的学生。").getBytes("ISO8859-1"),"GBK"));
+
+                /*************第三个批注***************/
+                comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)3,3,(short)5,6));
+                cell=sheet.getRow(1).getCell(0);
+                //输入批注信息
+                comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI3").toString()));
+                /*("①必填\n" +
+                        "②不能重复。可以是数字或字符\n" +
+                        "③如果是新学生，导入后同时给学生创建账户，用户名为学号，密码默认为111111。"
+                )*/
+                cell.setCellComment(comment);
+                /*************第四个批注***************/
+                comment=p.createComment(new HSSFClientAnchor(0, 0, 0, 0, (short) 3, 3, (short) 5, 6));
+                cell=sheet.getRow(1).getCell(1);
+                //输入批注信息
+                comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI4").toString()));
+                cell.setCellComment(comment);
+                /*************第五个批注***************/
+                comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)3,3,(short)5,6));
+                cell=sheet.getRow(1).getCell(2);
+                //输入批注信息
+                comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI5").toString()));
+                cell.setCellComment(comment);
+            }
+
 		}
 
 		try {
-			wb.write(out);
-		} catch (Exception e) {
+			wb.write(out);		} catch (Exception e) {
 			// e.printStackTrace();
 		} finally {
 			out.close();
 			out.flush();
 		}
 	}
+    public static String toUtf8String(String s){
+        StringBuffer sb = new StringBuffer();
+        for (int i=0;i<s.length();i++){
+            char c = s.charAt(i);
+            if (c >= 0 && c <= 255){sb.append(c);}
+            else{
+                byte[] b;
+                try { b = Character.toString(c).getBytes("utf-8");}
+                catch (Exception ex) {
+                    System.out.println(ex);
+                    b = new byte[0];
+                }
+                for (int j = 0; j < b.length; j++) {
+                    int k = b[j];
+                    if (k < 0) k += 256;
+                    sb.append("%" + Integer.toHexString(k).toUpperCase());
+                }
+            }
+        }
+        return sb.toString();
+    }
 
 	/**
 	 * 创建正文 *
@@ -285,7 +347,7 @@ public class OperateExcelManager implements IOperateExcelManager {
 
 	private void saveExcelByPOI(HttpServletResponse response, String filename,
 			List<String> columns, List list, String title, Class clz,
-			String explortObject) throws IOException {
+			String explortObject,boolean ispizhu) throws IOException {
 		// filename = "explortfile";
 
 		response.addHeader("Content-Disposition", "attachment;filename="
@@ -351,6 +413,52 @@ public class OperateExcelManager implements IOperateExcelManager {
 		}
 		abstractEntityFactory(list, sheet, wb, columns, clz, rowBegin);
 
+        //固定的几个位置
+        if(ispizhu){
+            HSSFCell cell=sheet.getRow(0).getCell(0);
+            //插入单元格内容
+            //创建绘图对象
+            HSSFPatriarch p=sheet.createDrawingPatriarch();
+            //获取批注对象
+            //(int dx1, int dy1, int dx2, int dy2, short col1, int row1, short col2, int row2)
+            //前四个参数是坐标点,后四个参数是编辑和显示批注时的大小.
+            HSSFComment comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)3,3,(short)5,6));
+            //输入批注信息
+            comment.setString(new HSSFRichTextString(
+                    new String(("将学年、年级、班级名称修改为导入班级的信息即可，~和()这些符号不能变。 ").getBytes("GBK"), "ISO8859-1")
+            ));
+            cell.setCellComment(comment);
+            /******第二个批注*********/
+            cell=sheet.getRow(0).createCell(3);
+            //输入批注信息
+            cell.setCellValue("——请先在系统中建好班级，再导入学生。\n——导入时会自动清空该班级原有的学生，再导入表格里的学生。");
+            HSSFFont f = wb.createFont();
+            f.setColor(HSSFColor.GREEN.index);
+            HSSFCellStyle cellStyle=wb.createCellStyle();
+            cellStyle.setFont(f);
+            cell.setCellStyle(cellStyle);
+            /*************第三个批注***************/
+            comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)3,3,(short)5,6));
+            cell=sheet.getRow(1).getCell(0);
+            //输入批注信息
+            comment.setString(new HSSFRichTextString("①必填\n" +
+                    "②不能重复。可以是数字或字符\n" +
+                    "③如果是新学生，导入后同时给学生创建账户，用户名为学号，密码默认为111111。"
+            ));
+            cell.setCellComment(comment);
+            /*************第四个批注***************/
+            comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)3,3,(short)5,6));
+            cell=sheet.getRow(1).getCell(1);
+            //输入批注信息
+            comment.setString(new HSSFRichTextString("必填项"));
+            cell.setCellComment(comment);
+            /*************第五个批注***************/
+            comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)3,3,(short)5,6));
+            cell=sheet.getRow(1).getCell(2);
+            //输入批注信息
+            comment.setString(new HSSFRichTextString("必填项"));
+            cell.setCellComment(comment);
+        }
 		try {
 			wb.write(out);
 		} catch (Exception e) {
@@ -697,14 +805,28 @@ public class OperateExcelManager implements IOperateExcelManager {
 		}
 		try {
 			this.saveExcelByPOI(response, filename, columns, list, title, clz,
-					explortObject);
+					explortObject,true);
 		} catch (IOException e) {
 			return "导出失败!";
 		}
 		// ServletActionContext.getResponse().sendRedirect("user!select.action");
 		return null;
 	}
-
+    public String ExplortExcel(HttpServletResponse response, String filename,
+                              List<String> columns, List list, String title, Class clz,
+                              String explortObject,boolean ispizhu) throws Exception {
+        if (filename == null || filename == "") {
+            filename = "explortFile";
+        }
+        try {
+            this.saveExcelByPOI(response, filename, columns, list, title, clz,
+                    explortObject,ispizhu);
+        } catch (IOException e) {
+            return "导出失败!";
+        }
+        // ServletActionContext.getResponse().sendRedirect("user!select.action");
+        return null;
+    }
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -716,19 +838,25 @@ public class OperateExcelManager implements IOperateExcelManager {
 	public String ExplortExcel(HttpServletResponse response, String filename,
 			List<String> sheetNames, List<List<String>> columns, List list,
 			List<String> title, List<Class<? extends Object>> clz,
-			List<String> explortObject) throws Exception {
+			List<String> explortObject,Boolean ispizhu) throws Exception {
 		if (filename == null || filename == "") {
 			filename = "explortFile";
 		}
 		try {
 			this.saveExcelByPOI(response, filename, sheetNames, columns, list,
-					title, clz, explortObject);
+					title, clz, explortObject,ispizhu);
 		} catch (IOException e) {
 			return "导出失败!";
 		}
 		// ServletActionContext.getResponse().sendRedirect("user!select.action");
 		return null;
 	}
+    public String ExplortExcel(HttpServletResponse response, String filename,
+                               List<String> sheetNames, List<List<String>> columns, List list,
+                               List<String> title, List<Class<? extends Object>> clz,
+                               List<String> explortObject) throws Exception {
+       return  ExplortExcel(response,filename,sheetNames,columns,list,title,clz,explortObject,true);
+    }
 
 	/******************************** 导入Excel 涉及方法 ************************************/
 	/**
@@ -799,5 +927,33 @@ public class OperateExcelManager implements IOperateExcelManager {
 	}
 
 	/******************************************************************************************/
-	
+
+    public static void main(String[] args) throws Exception{
+        //创建工作簿对象
+        HSSFWorkbook wb=new HSSFWorkbook();
+        //创建工作表对象
+        HSSFSheet sheet=wb.createSheet("我的工作表");
+        //创建绘图对象
+        HSSFPatriarch p=sheet.createDrawingPatriarch();
+        //创建单元格对象,批注插入到4行,1列,B5单元格
+        HSSFCell cell=sheet.getRow(4).getCell(1);
+        //插入单元格内容
+        cell.setCellValue(new HSSFRichTextString("批注"));
+        //获取批注对象
+        //(int dx1, int dy1, int dx2, int dy2, short col1, int row1, short col2, int row2)
+        //前四个参数是坐标点,后四个参数是编辑和显示批注时的大小.
+        HSSFComment comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)3,3,(short)5,6));
+        //输入批注信息
+        comment.setString(new HSSFRichTextString("插件批注成功!插件批注成功!"));
+        //添加作者,选中B5单元格,看状态栏
+        comment.setAuthor("toad");
+        //将批注添加到单元格对象中
+        cell.setCellComment(comment);
+        //创建输出流
+        FileOutputStream out=new FileOutputStream("E:/writerPostil.xls");
+
+        wb.write(out);
+        //关闭流对象
+        out.close();
+    }
 }

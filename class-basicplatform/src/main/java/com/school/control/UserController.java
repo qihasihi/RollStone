@@ -1036,6 +1036,11 @@ public class UserController extends BaseController<UserInfo> {
 
                         user.setDeptUsers(deptList);
 
+                        UserIdentityInfo uitmp=new UserIdentityInfo();
+                        uitmp.setUserid(user.getRef());
+                        List<UserIdentityInfo> uidtttList=this.userIdentityManager.getList(uitmp,null);
+
+                        request.getSession().setAttribute("cut_uidentity", uidtttList);//存入Session中
                         request.getSession().setAttribute("CURRENT_USER", user);//存入Session中
                         userinfo=user;
                         je.setType("success");
