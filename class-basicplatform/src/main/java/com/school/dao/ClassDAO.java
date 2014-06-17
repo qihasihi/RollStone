@@ -24,10 +24,10 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 		}return false;
 	}
  
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList, 
-			List<List<Object>> objArrayList) {
-		return this.executeArray_SQL(sqlArrayList, objArrayList); 
-	}
+//	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
+//			List<List<Object>> objArrayList) {
+//		return this.executeArray_SQL(sqlArrayList, objArrayList);
+//	}
 
 	public Boolean doSave(ClassInfo obj) {
 		if (obj == null)

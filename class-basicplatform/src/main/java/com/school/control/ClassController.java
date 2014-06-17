@@ -805,11 +805,12 @@ public class ClassController extends BaseController<ClassInfo>{
             cls.setClassgrade(classGrade.toString());
             cls.setYear(year.toString());
             cls.setPattern(pattern.toString());
-            List<ClassInfo> clsList=this.classManager.getList(cls,null);
-            if(clsList!=null&&clsList.size()>0){
-                hasClsid=(hasClsid==null?classid.toString():hasClsid+","+classid.toString());
-                continue;
-            }
+            cls.setLzxclassid(Integer.parseInt(classid.toString()));
+//            List<ClassInfo> clsList=this.classManager.getList(cls,null);
+//            if(clsList!=null&&clsList.size()>0){
+//                hasClsid=(hasClsid==null?classid.toString():hasClsid+","+classid.toString());
+//                continue;
+//            }
 
             cls.setType(type.toString());
 
@@ -836,7 +837,10 @@ public class ClassController extends BaseController<ClassInfo>{
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，原因：未知!\"}");return;
             }
         }else{
-            response.getWriter().println("{\"type\":\"error\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");return;
+            if(hasClsid!=null)
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\""+hasClsid+"\"}");
+            else
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");return;
         }
     }
 
@@ -911,7 +915,7 @@ public class ClassController extends BaseController<ClassInfo>{
             }
             //验证通过
             ClassInfo cls=new ClassInfo();
-            cls.setClassid(Integer.parseInt(classid.toString()));
+            cls.setLzxclassid(Integer.parseInt(classid.toString()));
             StringBuilder sqlbuilder=new StringBuilder();
             List<Object> objList=this.classManager.getDeleteSql(cls, sqlbuilder);
             if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){

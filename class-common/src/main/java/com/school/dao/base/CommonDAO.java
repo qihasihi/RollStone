@@ -433,8 +433,7 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
 					cs.execute() ;
 					Object returnObj = cs
 							.getObject((p == null ? 0 : p.size()) + 1);
-                   System.out.print(returnObj);
-                    System.out.println();
+                   System.out.println(returnObj);
 
 					cs.close();
 					if (returnObj == null||Integer.parseInt(returnObj.toString().trim()) < 1) {

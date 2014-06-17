@@ -4725,7 +4725,7 @@ public class UserController extends BaseController<UserInfo> {
                 else
                     sex = 1;
             } else {
-                String msg = "Missing information!";
+                String msg = "异常错误，没有找到您的教师信息数据，请联系管理人员!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
                                 + "');this.close();</script>");
@@ -4736,6 +4736,10 @@ public class UserController extends BaseController<UserInfo> {
 
             // 如果不存在教务，班主任角色 则按课程显示
             if (!isflag) {
+                if(teaList.size()<1||teaList.get(0)==null||teaList.get(0).getSubjects()==null){
+                    gradeidList.add(0);
+                    subjectid.add(Long.valueOf(0));
+                }else{
                 Object[] courseArray = teaList.get(0).getSubjects().split(
                         ",");
                 if (courseArray != null && courseArray.length > 0 && !ishasflag) {
@@ -4805,13 +4809,14 @@ public class UserController extends BaseController<UserInfo> {
                         subjectid.add(Long.valueOf(-1));
                     }
                 }
+                }
             }
         } else {
             StudentInfo stu=new StudentInfo();
             stu.setUserref(uidRef);
             List<StudentInfo> stuList = this.studentManager.getList(stu,null);
             if(stuList==null||stuList.size()<1){
-                String msg = "Missing information!";
+                String msg = "异常错误，没有找到您的学生信息数据，请联系管理人员!";
 
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
@@ -4834,7 +4839,7 @@ public class UserController extends BaseController<UserInfo> {
                 }
 
             } else if (!isflag) {
-                String msg = "Missing information!";
+                String msg = "异常错误，没有找到您的学生信息数据，请联系管理人员!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
                                 + "');this.close();</script>");
@@ -4981,14 +4986,14 @@ public class UserController extends BaseController<UserInfo> {
                     }
                 }
                 if (isbiye && !isteacher && !isflag) {
-                    String msg = "Sorry!You have graduated!";
+                    String msg = "抱歉，您已经毕业！已无法使用该功能!";
                     response.getWriter().print(
                             "<script type='text/javascript'>alert('" + msg
                                     + "');this.close();</script>");
                     return;
                 }
             } else {
-                String msg = "Sorry,This semester has not class information!";
+                String msg = "您当前学期中没有班级信息，请联系相关老师进行修改!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
                                 + "');this.close();</script>");
@@ -4996,7 +5001,7 @@ public class UserController extends BaseController<UserInfo> {
             }
         }
         if(gradeidList == null ||gradeidList.size() <1){
-            String msg = "Sorry,This semester has not grade information!";
+            String msg = "您当前学期中没有班级信息，请联系相关老师进行修改!";
             response.getWriter().print(
                     "<script type='text/javascript'>alert('" + msg
                             + "');this.close();</script>");
