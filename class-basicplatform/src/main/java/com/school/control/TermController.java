@@ -1,9 +1,6 @@
 package com.school.control;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -264,14 +261,14 @@ public class TermController extends BaseController<TermInfo> {
         String onetermendtime=request.getParameter("one_term_end_time");
         String twotermbegintime=request.getParameter("two_term_begin_time");
         String twotermendtime=request.getParameter("two_term_end_time");
-        String timestamp=request.getParameter("timestamp");
-        String checkcode=request.getParameter("checkcode");
-        String md5key = lzxschoolid+classyearname+classyearvalue+yearbegintime+yearendtime+onetermname+twotermname+onetermbegintime+onetermendtime+twotermbegintime+twotermendtime+timestamp;
-        String key = MD5_NEW.getMD5ResultCode(md5key);
-        if(!checkcode.trim().equals(key)){
-            response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
-            return;
-        }
+//        String timestamp=request.getParameter("timestamp");
+//        String checkcode=request.getParameter("checkcode");
+//        String md5key = lzxschoolid+classyearname+classyearvalue+yearbegintime+yearendtime+onetermname+twotermname+onetermbegintime+onetermendtime+twotermbegintime+twotermendtime+timestamp;
+//        String key = MD5_NEW.getMD5ResultCode(md5key);
+//        if(!checkcode.trim().equals(key)){
+//            response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
+//            return;
+//        }
         //存放值得数据集集合
         List<String> sqlArrayList = new ArrayList<String>();
         //存放sql的集合
@@ -290,7 +287,10 @@ public class TermController extends BaseController<TermInfo> {
         //添加学期信息
         StringBuilder tisql;
         List<Object> tiObj=new ArrayList<Object>();
+        String ref;
         //第一学期
+        ref= UUID.randomUUID().toString();
+        ti.setRef(ref);
         ti.setTermname(onetermname);
         ti.setSemesterbegindatestring(onetermbegintime);
         ti.setSemesterenddatestring(onetermendtime);
@@ -300,6 +300,8 @@ public class TermController extends BaseController<TermInfo> {
         sqlArrayList.add(tisql.toString());
         objArrayList.add(tiObj);
         //第二学期
+        ref=UUID.randomUUID().toString();
+        ti.setRef(ref);
         ti.setTermname(twotermname);
         ti.setSemesterbegindatestring(twotermbegintime);
         ti.setSemesterenddatestring(twotermendtime);
@@ -314,7 +316,7 @@ public class TermController extends BaseController<TermInfo> {
         if(b){
             sb.append("[{\"status\":\"success\"}]");
         }else{
-            sb.append("[{\"status\":\"error\",\"message\":\"删除失败，请稍后重试\"}]");
+            sb.append("[{\"status\":\"error\",\"message\":\"添加失败，请稍后重试\"}]");
         }
         response.getWriter().print(sb.toString());
     }

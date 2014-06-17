@@ -115,6 +115,12 @@ public class SubjectDAO extends CommonDAO<SubjectInfo> implements ISubjectDAO{
 			}else{
 				sqlbuilder.append("NULL,");
 			}
+            if(obj.getLzxsubjectid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getLzxsubjectid());
+            }else{
+                sqlbuilder.append("NULL,");
+            }
 		}
 		sqlbuilder.append("?)}");
 		return objList;
