@@ -153,9 +153,16 @@
                     不分享</td>
             </tr>
             <tr>
-                <th><span class="ico06"></span>关联专题：</th>
+                <th>关联专题：</th>
                 <td id="related_p">
-                    <input type="text" id="related" />
+                    <input type="text" id="related" />  &nbsp;&nbsp;&nbsp;<input type="button" value="添加" onclick="addRelatedItem()"/>
+                    <input type="hidden" id="hcourse_id"/>
+                </td>
+            </tr>
+            <tr>
+                <th>已选关联专题：</th>
+                <td id="">
+                    <ul id="selectedCourse"></ul>
                 </td>
             </tr>
             <tr>

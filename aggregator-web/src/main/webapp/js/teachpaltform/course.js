@@ -412,6 +412,20 @@ function toCourseLibrary(){
 
 /************************************************************************************************************************/
 
+function delLi(id){
+    $("#"+id).remove();
+}
+
+function addRelatedItem(){
+    var coursename=$("#related").val();
+    var courseid=$("#hcourse_id").val();
+    var htm='';
+    htm+='<li id="'+courseid+'">'+coursename+'&nbsp;<a href="javascript:delLi('+courseid+')">[X]</a></li>';
+    $("#selectedCourse").after(htm);
+    $("#related").val('');
+    $("#hcourse_id").val('');
+}
+
 /**
  * 联想输入框的实现
  *
@@ -526,7 +540,7 @@ function showThinking(inputId) {
                     var htm='';
                     if(rps.objList!=null&&rps.objList.length>0){
                         $.each(rps.objList,function(idx,itm){
-                            htm+='<a href="javascript:selectCourseName(\''+itm.COURSE_NAME+'\')" >'+itm.COURSE_NAME+'</a><br>';
+                            htm+='<a href="javascript:selectCourseName(\''+itm.COURSE_NAME+'\','+itm.COURSE_ID+')" >'+itm.COURSE_NAME+'</a><br>';
                         });
                      }
                     $("#thinking").html(htm);
@@ -573,7 +587,8 @@ function get(array, index) {
  *
  * @param name 显示的数据内容
  */
-function selectCourseName(name) {
+function selectCourseName(name,id) {
+    $("#hcourse_id").val(id);
     $("#" + $("#inputId").val()).val(name);
     $("#" + $("#inputId").val()).change(); // 触发change事件，更新输入联想提示内容
     $("#thinking").css('display', 'none');
