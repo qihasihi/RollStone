@@ -5115,6 +5115,7 @@ public class UserController extends BaseController<UserInfo> {
         String schoolid=request.getParameter("schoolid");
         String timestamp=request.getParameter("timestamp");
         String signature=request.getParameter("signature");
+
         if(schoolid==null||schoolid.trim().length()<1){
             je.setMsg("Schoolid is empty!");
             response.getWriter().print(je.toJSON());
@@ -5130,56 +5131,40 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
-
         String validateStr=MD5_NEW.getMD5ResultCode(timestamp+schoolid);
         if(!signature.equals(validateStr)){
             je.setMsg("Signature invalid!");
             response.getWriter().print(je.toJSON());
             return;
         }
-        StringBuilder stringBuilder=new StringBuilder();
-        try {
-            String strCurrentLine;
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(request.getInputStream()));
-            while ((strCurrentLine = reader.readLine()) != null) {
-                stringBuilder.append(strCurrentLine).append("\n");
-            }
-            reader.close();
-        } catch (IOException e) {
-            je.setMsg(e.getMessage());
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-
-        String returnContent=null;
-        try {
-            returnContent=new String(stringBuilder.toString());//.getBytes("gbk"),"UTF-8"
-        } catch (Exception e) {
-            je.setMsg(e.getMessage());
+        String message=request.getParameter("message");
+        if(message==null||message.trim().length()<1){
+            je.setMsg("message is empty!");
             response.getWriter().print(je.toJSON());
             return;
         }
 
         //转换成JSON
-        System.out.println(returnContent);
+
+        System.out.println(message);
         JSONArray jsonArray;
         try{
-            jsonArray= JSONArray.fromObject(returnContent);
+            jsonArray= JSONArray.fromObject(java.net.URLDecoder.decode(message,"UTF-8"));
         }catch (Exception e){
             je.setMsg(e.getMessage());
             response.getWriter().print(je.toJSON());
             return;
         }
 
+
         List<Object>objList=null;
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
-
         if(jsonArray!=null&&jsonArray.size()>0){
-            while(jsonArray.iterator().hasNext()){
-                JSONObject obj=(JSONObject)jsonArray.iterator().next();
+            Iterator iterator=jsonArray.iterator();
+            while(iterator.hasNext()){
+                JSONObject obj=(JSONObject)iterator.next();
                 boolean isTea=false,isStu=false;
                 String lzxuserid=obj.containsKey("lzx_user_id")?obj.getString("lzx_user_id"):"";
                 String username=obj.containsKey("user_name")?obj.getString("user_name"):"";
@@ -5242,6 +5227,7 @@ public class UserController extends BaseController<UserInfo> {
                     userInfo.setRef(userNextRef);
                     userInfo.setPassword("111111");
                     userInfo.setStateid(0);
+                    userInfo.setSchoolid(schoolid);
                     sql = new StringBuilder();
                     objList = this.userManager.getSaveSql(userInfo, sql);
                     if (objList != null && sql != null) {
@@ -5414,35 +5400,18 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
-        StringBuilder stringBuilder=new StringBuilder();
-        try {
-            String strCurrentLine;
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(request.getInputStream()));
-            while ((strCurrentLine = reader.readLine()) != null) {
-                stringBuilder.append(strCurrentLine).append("\n");
-            }
-            reader.close();
-        } catch (IOException e) {
-            je.setMsg(e.getMessage());
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-
-        String returnContent=null;
-        try {
-            returnContent=new String(stringBuilder.toString());//.getBytes("gbk"),"UTF-8"
-        } catch (Exception e) {
-            je.setMsg(e.getMessage());
+        String message=request.getParameter("message");
+        if(message==null||message.trim().length()<1){
+            je.setMsg("message is empty!");
             response.getWriter().print(je.toJSON());
             return;
         }
 
         //转换成JSON
-        System.out.println(returnContent);
+        System.out.println(message);
         JSONArray jsonArray;
         try{
-            jsonArray= JSONArray.fromObject(returnContent);
+            jsonArray= JSONArray.fromObject(message);
         }catch (Exception e){
             je.setMsg(e.getMessage());
             response.getWriter().print(je.toJSON());
@@ -5455,8 +5424,9 @@ public class UserController extends BaseController<UserInfo> {
         List<String>sqlListArray=new ArrayList<String>();
 
         if(jsonArray!=null&&jsonArray.size()>0){
-            while(jsonArray.iterator().hasNext()){
-                JSONObject obj=(JSONObject)jsonArray.iterator().next();
+            Iterator iterator=jsonArray.iterator();
+            while(iterator.hasNext()){
+                JSONObject obj=(JSONObject)iterator.next();
                 boolean isTea=false,isStu=false;
                 String lzxuserid=obj.containsKey("lzx_user_id")?obj.getString("lzx_user_id"):"";
                 String stuname="",stusex="",stuno="";
@@ -5476,6 +5446,7 @@ public class UserController extends BaseController<UserInfo> {
 
                 UserInfo userInfo=new UserInfo();
                 userInfo.setLzxuserid(lzxuserid);
+                userInfo.setSchoolid(schoolid);
                 List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
                 //用户不存在
                 if(userInfoList!=null&&userInfoList.size()>0){
@@ -5565,53 +5536,39 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
-        StringBuilder stringBuilder=new StringBuilder();
-        try {
-            String strCurrentLine;
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(request.getInputStream()));
-            while ((strCurrentLine = reader.readLine()) != null) {
-                stringBuilder.append(strCurrentLine).append("\n");
-            }
-            reader.close();
-        } catch (IOException e) {
-            je.setMsg(e.getMessage());
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-
-        String returnContent=null;
-        try {
-            returnContent=new String(stringBuilder.toString());//.getBytes("gbk"),"UTF-8"
-        } catch (Exception e) {
-            je.setMsg(e.getMessage());
+        String message=request.getParameter("message");
+        if(message==null||message.trim().length()<1){
+            je.setMsg("message is empty!");
             response.getWriter().print(je.toJSON());
             return;
         }
 
         //转换成JSON
-        System.out.println(returnContent);
+        System.out.println(message);
         JSONArray jsonArray;
         try{
-            jsonArray= JSONArray.fromObject(returnContent);
+            jsonArray= JSONArray.fromObject(message);
         }catch (Exception e){
             je.setMsg(e.getMessage());
             response.getWriter().print(je.toJSON());
             return;
         }
+
         List<Object>objList=null;
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
 
         if(jsonArray!=null&&jsonArray.size()>0){
-            while(jsonArray.iterator().hasNext()){
-                JSONObject obj=(JSONObject)jsonArray.iterator().next();
+            Iterator iterator=jsonArray.iterator();
+            while(iterator.hasNext()){
+                JSONObject obj=(JSONObject)iterator.next();
                 String lzxuserid=obj.containsKey("lzx_user_id")?obj.getString("lzx_user_id"):"";
 
 
                 UserInfo userInfo=new UserInfo();
                 userInfo.setLzxuserid(lzxuserid);
+                userInfo.setSchoolid(schoolid);
                 List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
                 //用户不存在
                 if(userInfoList!=null&&userInfoList.size()>0){
@@ -5619,6 +5576,7 @@ public class UserController extends BaseController<UserInfo> {
                     response.getWriter().print(je.toJSON());return;
                 }else{
                     userInfo.setStateid(1);
+                    userInfo.setSchoolid(schoolid);
                     sql=new StringBuilder();
                     objList=this.userManager.getUpdateSql(userInfo,sql);
                     if(sql!=null&&objList!=null){
@@ -5678,54 +5636,37 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
-        StringBuilder stringBuilder=new StringBuilder();
-        try {
-            String strCurrentLine;
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(request.getInputStream()));
-            while ((strCurrentLine = reader.readLine()) != null) {
-                stringBuilder.append(strCurrentLine).append("\n");
-            }
-            reader.close();
-        } catch (IOException e) {
-            je.setMsg(e.getMessage());
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-
-        String returnContent=null;
-        try {
-            returnContent=new String(stringBuilder.toString());//.getBytes("gbk"),"UTF-8"
-        } catch (Exception e) {
-            je.setMsg(e.getMessage());
+        String message=request.getParameter("message");
+        if(message==null||message.trim().length()<1){
+            je.setMsg("message is empty!");
             response.getWriter().print(je.toJSON());
             return;
         }
 
         //转换成JSON
-        System.out.println(returnContent);
+        System.out.println(message);
         JSONArray jsonArray;
         try{
-            jsonArray= JSONArray.fromObject(returnContent);
+            jsonArray= JSONArray.fromObject(message);
         }catch (Exception e){
             je.setMsg(e.getMessage());
             response.getWriter().print(je.toJSON());
             return;
         }
-
         List<Object>objList=null;
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
 
         if(jsonArray!=null&&jsonArray.size()>0){
-            while(jsonArray.iterator().hasNext()){
-                JSONObject obj=(JSONObject)jsonArray.iterator().next();
+            Iterator iterator=jsonArray.iterator();
+            while(iterator.hasNext()){
+                JSONObject obj=(JSONObject)iterator.next();
                 String lzxuserid=obj.containsKey("lzx_user_id")?obj.getString("lzx_user_id"):"";
                 String classid=obj.containsKey("class_id")?obj.getString("class_id"):"";
                 String relationtype=obj.containsKey("relation_type")?obj.getString("relation_type"):"";
                 String subjectid=obj.containsKey("subject_id")?obj.getString("subject_id"):"";
-
+                List<SubjectInfo>subjectList=null;
 
                 if(lzxuserid.length()<1){
                     je.setMsg("lzxuserid is empty!");
@@ -5746,7 +5687,7 @@ public class UserController extends BaseController<UserInfo> {
                     }
                     SubjectInfo subjectInfo=new SubjectInfo();
                     subjectInfo.setLzxsubjectid(Integer.parseInt(subjectid));
-                    List<SubjectInfo>subjectList=this.subjectManager.getList(subjectInfo,null);
+                    subjectList=this.subjectManager.getList(subjectInfo,null);
                     if(subjectList==null&&subjectList.size()<1){
                         je.setMsg("lzxsubject:"+subjectid+" subject not exists!");
                         response.getWriter().print(je.toJSON());return;
@@ -5756,13 +5697,14 @@ public class UserController extends BaseController<UserInfo> {
 
                 UserInfo userInfo=new UserInfo();
                 userInfo.setLzxuserid(lzxuserid);
+                userInfo.setSchoolid(schoolid);
                 List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
                 if(userInfoList==null&&userInfoList.size()<1){
                     je.setMsg("lzxuserid:"+lzxuserid+" user not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }
                 ClassInfo c=new ClassInfo();
-                c.setClassid(Integer.parseInt(classid));
+                c.setLzxclassid(Integer.parseInt(classid));
                 List<ClassInfo>clsList=this.classManager.getList(c,null);
                 if(clsList==null&&clsList.size()<1){
                     je.setMsg("classid:"+classid+" class not exists!");
@@ -5774,8 +5716,8 @@ public class UserController extends BaseController<UserInfo> {
                 cu.setUserid(userInfoList.get(0).getRef());
                 cu.setClassid(clsList.get(0).getClassid());
                 cu.setRelationtype(relationtype);
-                if(subjectid.length()>0)
-                    cu.setSubjectid(Integer.parseInt(subjectid));
+                if(subjectid.length()>0&&subjectList!=null&&subjectList.size()>0)
+                    cu.setSubjectid(subjectList.get(0).getSubjectid());
                 sql=new StringBuilder();
                 objList=this.classUserManager.getSaveSql(cu,sql);
                 if(objList!=null&&sql!=null){
@@ -5832,35 +5774,18 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
-        StringBuilder stringBuilder=new StringBuilder();
-        try {
-            String strCurrentLine;
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(request.getInputStream()));
-            while ((strCurrentLine = reader.readLine()) != null) {
-                stringBuilder.append(strCurrentLine).append("\n");
-            }
-            reader.close();
-        } catch (IOException e) {
-            je.setMsg(e.getMessage());
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-
-        String returnContent=null;
-        try {
-            returnContent=new String(stringBuilder.toString());//.getBytes("gbk"),"UTF-8"
-        } catch (Exception e) {
-            je.setMsg(e.getMessage());
+        String message=request.getParameter("message");
+        if(message==null||message.trim().length()<1){
+            je.setMsg("message is empty!");
             response.getWriter().print(je.toJSON());
             return;
         }
 
         //转换成JSON
-        System.out.println(returnContent);
+        System.out.println(message);
         JSONArray jsonArray;
         try{
-            jsonArray= JSONArray.fromObject(returnContent);
+            jsonArray= JSONArray.fromObject(message);
         }catch (Exception e){
             je.setMsg(e.getMessage());
             response.getWriter().print(je.toJSON());
@@ -5873,8 +5798,9 @@ public class UserController extends BaseController<UserInfo> {
         List<String>sqlListArray=new ArrayList<String>();
 
         if(jsonArray!=null&&jsonArray.size()>0){
-            while(jsonArray.iterator().hasNext()){
-                JSONObject obj=(JSONObject)jsonArray.iterator().next();
+            Iterator iterator=jsonArray.iterator();
+            while(iterator.hasNext()){
+                JSONObject obj=(JSONObject)iterator.next();
                 String lzxuserid=obj.containsKey("lzx_user_id")?obj.getString("lzx_user_id"):"";
                 String classid=obj.containsKey("class_id")?obj.getString("class_id"):"";
 
@@ -5890,13 +5816,14 @@ public class UserController extends BaseController<UserInfo> {
 
                 UserInfo userInfo=new UserInfo();
                 userInfo.setLzxuserid(lzxuserid);
+                userInfo.setSchoolid(schoolid);
                 List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
                 if(userInfoList==null&&userInfoList.size()<1){
                     je.setMsg("lzxuserid:"+lzxuserid+" user not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }
                 ClassInfo c=new ClassInfo();
-                c.setClassid(Integer.parseInt(classid));
+                c.setLzxclassid(Integer.parseInt(classid));
                 List<ClassInfo>clsList=this.classManager.getList(c,null);
                 if(clsList==null&&clsList.size()<1){
                     je.setMsg("classid:"+classid+" class not exists!");
