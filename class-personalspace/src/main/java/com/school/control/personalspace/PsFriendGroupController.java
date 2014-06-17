@@ -48,6 +48,7 @@ public class PsFriendGroupController extends BaseController<PsFriendGroupInfo> {
     @RequestMapping(params="m=addGroup",method= RequestMethod.POST)
     public void addGroup(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();
+
         PsFriendGroupInfo groupInfo=this.getParameter(request,PsFriendGroupInfo.class);
         if(groupInfo==null||groupInfo.getGroupname()==null||groupInfo.getGroupname().trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));

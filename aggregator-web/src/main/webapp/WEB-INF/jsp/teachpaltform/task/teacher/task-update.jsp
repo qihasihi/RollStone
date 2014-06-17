@@ -264,8 +264,8 @@
                         <c:if test="${tg.usertype eq 2}">
                             var p=$("#ck_group_${tg.usertypeid}").parent().parent("ul").attr("id");
                             p= p.substring(p.lastIndexOf("_")+1);
-                            $('#b_time_'+p+'').val("${tg.btimeString}").parent().show();
-                            $('#e_time_'+p+'').val("${tg.etimeString}").parent().show();
+                            $('#b_time_'+p+'').val("${tg.btimeString}").parent().parent('p').show();
+                            $('#e_time_'+p+'').val("${tg.etimeString}").parent().parent('p').show();
 
                             <c:if test="${tg.taskstatus ne '1'}">
                                  $('#b_time_'+p+'').attr("disabled",true);
