@@ -87,6 +87,7 @@ public class OperateExcelManager implements IOperateExcelManager {
 		style.setLocked(islock);
 		style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
 		//cell.setCellStyle(style);
+        cell.setCellType(HSSFCell.ENCODING_UTF_16);
         cell.setCellValue(cellValue);
 	}
 
@@ -200,9 +201,9 @@ public class OperateExcelManager implements IOperateExcelManager {
 			List<String> title, List<Class<? extends Object>> clz,
 			List<String> explortObject,boolean ispizhu) throws IOException {
 		// filename = "explortfile";
-
+       filename= new String(filename.getBytes("gbk"), "ISO8859-1");
 		response.addHeader("Content-Disposition", "attachment;filename="
-                + toUtf8String(filename + ".xls"));
+                 + filename+".xls");
 		OutputStream out = response.getOutputStream();
 		HSSFWorkbook wb = new HSSFWorkbook(); // 创建工作簿
 		// 循环。
@@ -265,15 +266,15 @@ public class OperateExcelManager implements IOperateExcelManager {
                 //获取批注对象
                 //(int dx1, int dy1, int dx2, int dy2, short col1, int row1, short col2, int row2)
                 //前四个参数是坐标点,后四个参数是编辑和显示批注时的大小.
-                HSSFComment comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,5,(short)6,7));
+                HSSFComment comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,6,(short)8,12));
                 //输入批注信息
                 comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI1").toString() ));
                 cell.setCellComment(comment);
                 /******第二个批注*********/
                 cell=sheet.getRow(0).createCell(3);
                 HSSFFont f = wb.createFont();
-                f.setColor(HSSFColor.GREEN.index);
-                f.setFontName("黑体");
+                f.setColor(HSSFColor.BLUE.index);
+              //  f.setFontName("黑体");
                 HSSFCellStyle cellStyle=wb.createCellStyle();
                 cellStyle.setFont(f);
                 cell.setCellStyle(cellStyle);
@@ -282,7 +283,7 @@ public class OperateExcelManager implements IOperateExcelManager {
                         //new String(("——请先在系统中建好班级，再导入学生。\n——导入时会自动清空该班级原有的学生，再导入表格里的学生。").getBytes("ISO8859-1"),"GBK"));
 
                 /*************第三个批注***************/
-                comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,5,(short)6,7));
+                comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,6,(short)8,12));
                 cell=sheet.getRow(1).getCell(0);
                 //输入批注信息
                 comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI3").toString()));
@@ -292,13 +293,13 @@ public class OperateExcelManager implements IOperateExcelManager {
                 )*/
                 cell.setCellComment(comment);
                 /*************第四个批注***************/
-                comment=p.createComment(new HSSFClientAnchor(0, 0, 0, 0,(short)5,5,(short)6,7));
+                comment=p.createComment(new HSSFClientAnchor(0, 0, 0, 0,(short)5,6,(short)8,12));
                 cell=sheet.getRow(1).getCell(1);
                 //输入批注信息
                 comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI4").toString()));
                 cell.setCellComment(comment);
                 /*************第五个批注***************/
-                comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,5,(short)6,7));
+                comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,6,(short)8,12));
                 cell=sheet.getRow(1).getCell(2);
                 //输入批注信息
                 comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI5").toString()));
@@ -422,7 +423,7 @@ public class OperateExcelManager implements IOperateExcelManager {
             //获取批注对象
             //(int dx1, int dy1, int dx2, int dy2, short col1, int row1, short col2, int row2)
             //前四个参数是坐标点,后四个参数是编辑和显示批注时的大小.
-            HSSFComment comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,5,(short)6,7));
+            HSSFComment comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,6,(short)8,12));
             //输入批注信息
             comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI1").toString() ));
             cell.setCellComment(comment);
@@ -439,7 +440,7 @@ public class OperateExcelManager implements IOperateExcelManager {
             //new String(("——请先在系统中建好班级，再导入学生。\n——导入时会自动清空该班级原有的学生，再导入表格里的学生。").getBytes("ISO8859-1"),"GBK"));
 
             /*************第三个批注***************/
-            comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,5,(short)6,7));
+            comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,6,(short)8,12));
             cell=sheet.getRow(1).getCell(0);
             //输入批注信息
             comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI3").toString()));
@@ -449,13 +450,13 @@ public class OperateExcelManager implements IOperateExcelManager {
                 )*/
             cell.setCellComment(comment);
             /*************第四个批注***************/
-            comment=p.createComment(new HSSFClientAnchor(0, 0, 0, 0,(short)5,5,(short)6,7));
+            comment=p.createComment(new HSSFClientAnchor(0, 0, 0, 0,(short)5,6,(short)8,12));
             cell=sheet.getRow(1).getCell(1);
             //输入批注信息
             comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI4").toString()));
             cell.setCellComment(comment);
             /*************第五个批注***************/
-            comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,5,(short)6,7));
+            comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)5,6,(short)8,12));
             cell=sheet.getRow(1).getCell(2);
             //输入批注信息
             comment.setString(new HSSFRichTextString(UtilTool.utilproperty.getProperty("EXCEL_WRITE_TISHI5").toString()));
