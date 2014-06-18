@@ -1,28 +1,30 @@
-<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@ page language="java" import="java.util.*" pageEncoding="GBK"%>
 <%@include file="/util/common-jsp/common-zrxt.jsp" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript" src="js/resource/res_index.js"></script>
 	<script type="text/javascript">
-        var currtenTab=1; //å½“å‰å­¦ç§‘å¯¼èˆªæ é¡µæ•°
-        var tabSize=14; //å­¦ç§‘å¯¼èˆªæ æ¯é¡µæ˜¾ç¤ºæ•°é‡
+        var currtenTab=1; //µ±Ç°Ñ§¿Æµ¼º½À¸Ò³Êı
+        var tabSize=14; //Ñ§¿Æµ¼º½À¸Ã¿Ò³ÏÔÊ¾ÊıÁ¿
         var audiosuffix="${audiosuffix}";
         var videosuffix="${videosuffix}";
         var imagesuffix="${imagesuffix}";
         var selVersionId="${selVersionId}";
+
+        var subjectid="${param.subjectid}";
         $(function(){
             p1=new PageControl({
                 post_url:'resource?m=ajaxListByValues',
                 page_id:'page1',
-                page_control_name:"p1",		//åˆ†é¡µå˜é‡ç©ºé—´çš„å¯¹è±¡åç§°
+                page_control_name:"p1",		//·ÖÒ³±äÁ¿¿Õ¼äµÄ¶ÔÏóÃû³Æ
                 post_form:document.page1form,		//form
                 http_free_operate_handler:beforeAjaxList,
-                gender_address_id:'page1address',		//æ˜¾ç¤ºçš„åŒºåŸŸ
-                http_operate_handler:afterAjaxList,	//æ‰§è¡ŒæˆåŠŸåè¿”å›æ–¹æ³•
-                return_type:'json',								//æ”¾å›çš„å€¼ç±»å‹
-                page_no:1,					//å½“å‰çš„é¡µæ•°
-                page_size:20,				//å½“å‰é¡µé¢æ˜¾ç¤ºçš„æ•°é‡
-                rectotal:0,				//ä¸€å…±å¤šå°‘
+                gender_address_id:'page1address',		//ÏÔÊ¾µÄÇøÓò
+                http_operate_handler:afterAjaxList,	//Ö´ĞĞ³É¹¦ºó·µ»Ø·½·¨
+                return_type:'json',								//·Å»ØµÄÖµÀàĞÍ
+                page_no:1,					//µ±Ç°µÄÒ³Êı
+                page_size:20,				//µ±Ç°Ò³ÃæÏÔÊ¾µÄÊıÁ¿
+                rectotal:0,				//Ò»¹²¶àÉÙ
                 pagetotal:1,
                 operate_id:"resData"
             });
@@ -30,9 +32,9 @@
 
             changeTab("back");
             changeTab("front");
-            <%--var objLi=$("li[id='li_sub_${!empty subjectid?subjectid:subjectEVList[0].subjectid}']");--%>
-            <%--eval($("li[id='li_sub_${!empty subjectid?subjectid:subjectEVList[0].subjectid}']").children("a").attr("href").replace("javascript:",""));--%>
-            //å¼€å§‹é˜²ajaxåˆ·æ–°
+            <%--eval($("li[id='li_sub_${!empty param.subjectid?param.subjectid:subjectEVList[0].subjectid}']").children("a").attr("onclick"));--%>
+            getResourceListBySub('${!empty param.subjectid?param.subjectid:subjectEVList[0].subjectid}');
+            //¿ªÊ¼·ÀajaxË¢ĞÂ
             allowRefresh();
         });
 
@@ -49,7 +51,7 @@
                 param.resname =$("#searchValue").val().Trim();
             }
             if(selVersionId.Trim().length>0)
-                param.versionvalues=selVersionId;<%//ç²¾ç®€ç‰ˆåªå…è®¸æŸ¥çš„æ•™æä¿¡æ¯%>
+                param.versionvalues=selVersionId;<%//¾«¼ò°æÖ»ÔÊĞí²éµÄ½Ì²ÄĞÅÏ¢%>
             p.setPostParams(param);
         }
 
@@ -60,7 +62,7 @@
             dvstyle.display='block';
             // dv_res_course.style.display='none';
             if(typeof(resid)=="undefined"||resid==null||(resid+"").length<1){
-                alert("å¼‚å¸¸é”™è¯¯ï¼ŒåŸå› ï¼šå‚æ•°å¼‚å¸¸!");return;
+                alert("Òì³£´íÎó£¬Ô­Òò£º²ÎÊıÒì³£!");return;
             }
             if($("#ul_course li").length<1)
                 $.ajax({
@@ -68,13 +70,13 @@
                     type:'post',
                     data:{resid:resid },
                     dataType:'json',
-                    error:function(){alert("ç½‘ç»œå¼‚å¸¸")},
+                    error:function(){alert("ÍøÂçÒì³£")},
                     success:function(rps){
                         var h='';
                         $("#ul_course").html('');
                         if(rps.type=="success"){
                             if(rps.objList.length<1){
-                                h+="<li>æš‚æ— çŸ¥è¯†ç‚¹!</li>";
+                                h+="<li>ÔİÎŞÖªÊ¶µã!</li>";
                                 $("#ul_course").append(h);
                             }else{
                                 $.each(rps.objList,function(idx,itm){
@@ -88,7 +90,7 @@
                                     $("#ul_course").append(h);
                             }
                         }else{
-                            h+="<li>å¼‚å¸¸é”™è¯¯!åŸå› ï¼šæœªçŸ¥!</li>";
+                            h+="<li>Òì³£´íÎó!Ô­Òò£ºÎ´Öª!</li>";
                         }
                     }
                 });
@@ -124,7 +126,7 @@
                     else
                         html+="<b class='ico_other1'></b>";
                     html+="<a target='_blank' href='simpleRes?m=todetail&resid="+itm.resid+"'>"+ itm.resname +"</a></p></td>";
-                    html+="<td  onmouseover=\"getResCourse('"+itm.resid+"')\" onmouseout=\"dv_res_course.style.display='none';ul_course.innerHTML='';\"><p>æŸ¥çœ‹</p></td>";
+                    html+="<td  onmouseover=\"getResCourse('"+itm.resid+"')\" onmouseout=\"dv_res_course.style.display='none';ul_course.innerHTML='';\"><p>²é¿´</p></td>";
                     html+="<td>"+itm.username+"</td>";
                     html+="<td>"+itm.clicks+"</td>";
                     html+="<td>"+itm.recomendnum+"</td>";
@@ -132,7 +134,7 @@
                     html+="</tr>";
                 });
             }else{
-                html+="<tr><td colspan='6'>æš‚æ— æ•°æ®ï¼</tr></td>";
+                html+="<tr><td colspan='6'>ÔİÎŞÊı¾İ£¡</tr></td>";
             }
             p1.setPageSize(rps.presult.pageSize);
             p1.setPageNo(rps.presult.pageNo);
@@ -190,7 +192,7 @@
 
 
         function changeTab(direct){
-            tabTotal=$("#ul_sub").children().length; //æ ‡ç­¾æ€»æ•°
+            tabTotal=$("#ul_sub").children().length; //±êÇ©×ÜÊı
             var i=0,j=0;
             if(direct=="front"){
                 if(currtenTab==1){
@@ -231,9 +233,9 @@
     </script>
 </head>
 <body>
-<div class="subpage_head"><span class="lm_ico03"></span><strong>å…¨éƒ¨èµ„æº</strong>
-<span style="float:right"><a href="simpleRes?m=resList" target="_blank"><strong>è¿›å…¥æœç´¢é¡µé¢</strong></a></span></div>
-<input type="hidden" id="subject" value="${subjectEVList[0].subjectid}"/>
+<div class="subpage_head"><span class="lm_ico03"></span><strong>È«²¿×ÊÔ´</strong>
+<span style="float:right"><a href="simpleRes?m=resList" target="_blank"><strong>½øÈëËÑË÷Ò³Ãæ</strong></a></span></div>
+<input type="hidden" id="subject" value="${empty param.subjectid?subjectEVList[0].subjectid:param.subjectid}"/>
 <input type="hidden" id="restype" value="${resTypeEVList[0].dictionaryvalue}"/>
 <input type="hidden" id="orderby" value=" r.CLICKS DESC "/>
 <div class="subpage_nav">
@@ -245,22 +247,22 @@
     </ul></div>
 </div>
 
-<div class="content">asdasdas11111111111111111231231111
+<div class="content">
     <div class="contentR zyxt_qbzy">
         <div class="subpage_lm">
             <ul>
-                <li id="order_1" class="crumb"><a href="javascript:changeOrderBy('r.CLICKS DESC',1);">æŒ‰æµè§ˆé‡</a></li>
-                <li id="order_2"><a href="javascript:changeOrderBy('r.C_TIME DESC',2);">æŒ‰å‘å¸ƒæ—¶é—´</a></li>
-                <li id="order_3"><a href="javascript:changeOrderBy('r.RECOMENDNUM DESC',3);">æŒ‰æ¨èæ¬¡æ•°</a></li>
+                <li id="order_1" class="crumb"><a href="javascript:changeOrderBy('r.CLICKS DESC',1);">°´ä¯ÀÀÁ¿</a></li>
+                <li id="order_2"><a href="javascript:changeOrderBy('r.C_TIME DESC',2);">°´·¢²¼Ê±¼ä</a></li>
+                <li id="order_3"><a href="javascript:changeOrderBy('r.RECOMENDNUM DESC',3);">°´ÍÆ¼ö´ÎÊı</a></li>
             </ul>
             <span style="float:right">
                 <select id="sharestatusvalue" onchange="pageGo('p1',1);" style="display:none">
-                    <option value="1,2">å…¨éƒ¨</option>
-                    <option value="2" selected>äº‘ç«¯</option>
-                    <option value="1">æ ¡å†…</option>
+                    <option value="1,2">È«²¿</option>
+                    <option value="2" selected>ÔÆ¶Ë</option>
+                    <option value="1">Ğ£ÄÚ</option>
                 </select>
-                <input id="searchValue" placeholder="è¾“å…¥ä¿¡æ¯æŒ‰èµ„æºåç§°æœç´¢!" name="searchValue" type="text" class="w320"/>&nbsp;
-            <a class="an_search" href="javascript:pageGo('p1',1);" title="æœç´¢"></a></span>
+                <input id="searchValue" placeholder="ÊäÈëĞÅÏ¢°´×ÊÔ´Ãû³ÆËÑË÷!" name="searchValue" type="text" class="w320"/>&nbsp;
+            <a class="an_search" href="javascript:pageGo('p1',1);" title="ËÑË÷"></a></span>
         </div>
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
             <col class="w300" />
@@ -270,12 +272,12 @@
             <col class="w60" />
             <col class="w80" />
             <tr>
-                <th>èµ„æºåç§°</th>
-                <th>çŸ¥è¯†ç‚¹</th>
-                <th>ä½œè€…</th>
-                <th>æµè§ˆ</th>
-                <th>æ¨è</th>
-                <th>å‘å¸ƒæ—¶é—´</th>
+                <th>×ÊÔ´Ãû³Æ</th>
+                <th>ÖªÊ¶µã</th>
+                <th>×÷Õß</th>
+                <th>ä¯ÀÀ</th>
+                <th>ÍÆ¼ö</th>
+                <th>·¢²¼Ê±¼ä</th>
             </tr>
             <tbody id="resData"></tbody>
         </table>
@@ -291,12 +293,12 @@
         </ul>
     </div>
     <div class="clear"></div>
-</div>ddddddddddddddd
+</div>
 <%@include file="/util/foot.jsp" %>
 
-<!--ä¸Šä¼ æ–‡ä»¶ç±»å‹-->
+<!--ÉÏ´«ÎÄ¼şÀàĞÍ-->
 <div class="public_windows font-black"  id="dv_res_course" name="dv_res_course" style="display:none;position: absolute">
-    <h3>çŸ¥è¯†ç‚¹</h3>
+    <h3>ÖªÊ¶µã</h3>
     <ul id="ul_course">
 
     </ul>

@@ -117,6 +117,19 @@ public class SimpleResController extends BaseController<ResourceInfo> {
 
         return new ModelAndView("/resource/simple/allResPage", mp);
     }
+
+    /**
+     * 进入精简版首页
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=toindex",method=RequestMethod.GET)
+    public ModelAndView toIndex(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+            return new ModelAndView("/resource/simple/index",mp);
+    }
     /**
      * 进入修改资源的页面。
      *

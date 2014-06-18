@@ -118,6 +118,53 @@
 	color:#8d8c8c;
 	font-weight:normal;
 }
+    .zyxt_jb_home_pic li{float:left;padding-left:1px; margin-top:-4px;}
+	.zyxt_jb_home_pic li:first-child{padding-left:0;}
+
+    .zyxt_jb_homeL{
+	width:207px;
+	min-height:300px;
+	border-right:1px solid #cfcfcf;
+	padding:30px 22px 0;
+	margin-top:2px;
+	clear:left;
+}
+    .zyxt_jb_homeL p{ padding-bottom:25px;}
+
+    .zyxt_jb_homeR{
+	width:680px;
+	min-height:300px;
+	padding-top:28px ;
+	margin-top:2px;
+	float:right;
+}
+    .zyxt_jb_homeR ul li{
+	width:60px;
+	min-height:80px;
+	padding:25px 10px 0 45px;
+	float:left;
+}
+    .zyxt_jb_homeR ul li a{
+	width:60px;
+	height:15px;
+	display:inline-block;
+	background:url(images/ico07_131230.png) no-repeat;
+	padding-top:65px;
+	line-height:14px;
+	font-weight:bold;
+	text-align:center;	
+}
+    .zyxt_jb_homeR ul li a.yy{ background-position:0 0;}
+	.zyxt_jb_homeR ul li a.sx{ background-position:-61px 0;}
+	.zyxt_jb_homeR ul li a.yy{ background-position:-122px 0;}
+	.zyxt_jb_homeR ul li a.wl{ background-position:-183px 0;}
+	.zyxt_jb_homeR ul li a.hx{ background-position:-244px 0;}
+	.zyxt_jb_homeR ul li a.ls{ background-position:-305px 0;}
+	.zyxt_jb_homeR ul li a.sw{ background-position:-366px 0;}
+	.zyxt_jb_homeR ul li a.dl{ background-position:-427px 0;}
+	.zyxt_jb_homeR ul li a.zz{ background-position:-488px 0;}
+
+
     .zyxt_sczy { padding-bottom:10px;}
 	.zyxt_sczy select { width:100px; margin-right:5px;}
 	.zyxt_sczy p {padding-bottom:15px;}
@@ -348,3 +395,35 @@
 	.zyxt_zyxq_pl div.fabiao .t_r{padding-top:10px;}
 	.zyxt_zyxq_pl div.fabiao .an_small{ margin-right:-4px;}
 	.zyxt_zyxq_pl .nextpage{margin:10px 0 15px;}
+
+    .zyxt_paihang_gr,.zyxt_paihang_xx {	width:465px;display: inline-block; vertical-align: top;}
+    .zyxt_paihang_gr li,.zyxt_paihang_xx li {
+	width:345px;
+	height:45px;
+	padding:4px 9px;
+	position:relative;
+	color:#000;
+	background-color:#fff;
+	margin:6px 30px 20px 70px;
+	border:1px solid #fff;
+}
+    .zyxt_paihang_gr li strong,.zyxt_paihang_xx li strong {
+	width:26px;
+	height:26px;
+	display: inline-block;
+	background:url(images/ico05_131230.png) no-repeat -302px 0;
+	font-family:Arial;
+	font-size:14px;
+	text-align:center;
+	line-height:26px;
+	top:15px;
+	left:-40px;
+	position:absolute;
+}
+    .zyxt_paihang_gr li.crumb,.zyxt_paihang_xx li.crumb { border:1px solid #4fb1d1; background-color:#ebf9fb;}
+	.zyxt_paihang_gr li strong.hot,.zyxt_paihang_xx li strong.hot { background-position:-329px 0; color:#fff;}
+    .zyxt_paihang_gr li em {width:120px;display:inline-block;font-style:normal;}
+
+    .zyxt_paihang_xx li {height:20px;}
+    .zyxt_paihang_xx li strong {top:2px;}
+    .zyxt_paihang_xx li em { float:right;font-style:normal;}

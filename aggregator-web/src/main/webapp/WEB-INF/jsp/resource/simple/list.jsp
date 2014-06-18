@@ -1,6 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@include file="/util/common-jsp/common-zrxt.jsp" %>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
 <script type="text/javascript" src="js/resource/new_resbase.js"></script>
 	<script type="text/javascript">

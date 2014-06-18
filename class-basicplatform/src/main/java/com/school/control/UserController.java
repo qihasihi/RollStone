@@ -1136,7 +1136,7 @@ public class UserController extends BaseController<UserInfo> {
                 if(UtilTool._IS_SIMPLE_RESOURCE!=2)
 				    response.sendRedirect("user?m=toIndex");
                 else
-                    response.sendRedirect("simpleRes?m=toAllResPage");
+                    response.sendRedirect("simpleRes?m=toindex");
             }else
 				response.getWriter().print(je.getAlertMsgAndCloseWin());
 		}
