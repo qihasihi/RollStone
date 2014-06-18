@@ -60,7 +60,7 @@ public class SubjectDAO extends CommonDAO<SubjectInfo> implements ISubjectDAO{
 		StringBuilder sqlbuilder=new StringBuilder("{CALL subject_info_proc_split(");
 		List<Object> objList=new ArrayList<Object>();
 		if(obj==null)
-			sqlbuilder.append("NULL,NULL,");
+			sqlbuilder.append("NULL,NULL,NULL,");
 		else{
             if (obj.getSubjectid() != null) {
                 sqlbuilder.append("?,");
@@ -73,6 +73,12 @@ public class SubjectDAO extends CommonDAO<SubjectInfo> implements ISubjectDAO{
 				objList.add(obj.getSubjectname());
 			}else
 				sqlbuilder.append("NULL,");
+            if(obj.getLzxsubjectid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getLzxsubjectid());
+            }else{
+                sqlbuilder.append("NULL,");
+            }
 		}
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
