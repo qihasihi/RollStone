@@ -154,7 +154,7 @@ public class SubjectController extends BaseController<SubjectInfo>{
         String lzxsubjectid=request.getParameter("subject_id");
         String lzxsubjectname=request.getParameter("subject_name");
         String timestamp=request.getParameter("timestamp");
-        String checkcode=request.getParameter("checkcode");
+        String checkcode=java.net.URLDecoder.decode(request.getParameter("checkcode"),"UTF-8");
         String md5key = lzxschoolid+lzxsubjectid+lzxsubjectname+timestamp;
         String key = MD5_NEW.getMD5ResultCode(md5key);
         if(!checkcode.trim().equals(key)){
