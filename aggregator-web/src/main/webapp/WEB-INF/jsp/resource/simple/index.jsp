@@ -9,12 +9,11 @@
     <div class="title">合作学校资源系统<a href="1" class="help" title="帮助"></a></div>
     <p><span></span><img src="images/logo_140616.png" width="253" height="64" /></p>
 </div>
-<div class="ej_nav"></div>
 <div class="content2">
     <ul class="zyxt_jb_home_pic">
         <li><a href="<%=UtilTool.utilproperty.getProperty("SIMPLE_INTO_ETT_TEA_URL")%>" target="_blank"><img src="images/pic10_140616.jpg" width="125" height="74" title="点击进入教师版"></a></li>
-        <li><a href="<%=UtilTool.utilproperty.getProperty("SIMPLE_INTO_ETT_TEA_URL")%>?modelName=mfycjy" target="_blank"><img src="images/pic11_140616.jpg" width="125" height="74" title="远程教研入口"></a></li>
-        <li><a href="<%=UtilTool.utilproperty.getProperty("SIMPLE_INTO_ETT_TEA_URL")%>?modelName=mfszxy" target="_blank"><img src="images/pic12_140616.jpg" width="748" height="74" title="北京四中网校数字校园"></a></li>
+        <li><a href="<%=UtilTool.utilproperty.getProperty("SIMPLE_INTO_ETT_TEA_URL")%>?freeModelName=tutor" target="_blank"><img src="images/pic11_140616.jpg" width="125" height="74" title="远程教研入口"></a></li>
+        <li><a href="<%=UtilTool.utilproperty.getProperty("SIMPLE_INTO_ETT_TEA_URL")%>?freeModelName=digitalCampus" target="_blank"><img src="images/pic12_140616.jpg" width="748" height="74" title="北京四中网校数字校园"></a></li>
     </ul>
     <div class="zyxt_jb_homeR">
         <p><strong class="font-darkblue">资源中心</strong></p>
