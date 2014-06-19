@@ -144,7 +144,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         if(currentcourseid!=null&&currentcourseid.trim().length()>0)
             tr.setCurrentcourseid(Long.parseLong(currentcourseid));
 
-        pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc");
+        pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc,aa.res_flag ");
         List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
         pageResult.setList(resourceList);
         je.setPresult(pageResult);
@@ -742,7 +742,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tr.setResstatus(1);
             tr.setResourcetype(1);
             PageResult pageResult=new PageResult();
-            pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc");
+            pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc,aa.res_flag ");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
                 for(int i=0;i<resourceList.size();i++){
@@ -1188,7 +1188,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tr.setResstatus(1);
             tr.setResourcetype(1);
             PageResult pageResult=new PageResult();
-            pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc");
+            pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc,aa.res_flag ");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
                 for(int i=0;i<resourceList.size();i++){

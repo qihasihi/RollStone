@@ -5454,7 +5454,7 @@ public class UserController extends BaseController<UserInfo> {
                 userInfo.setSchoolid(schoolid);
                 List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
                 //用户不存在
-                if(userInfoList!=null&&userInfoList.size()>0){
+                if(userInfoList==null||userInfoList.size()<1){
                     je.setMsg("lzxuserid:"+lzxuserid+" not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }else{
@@ -5576,7 +5576,7 @@ public class UserController extends BaseController<UserInfo> {
                 userInfo.setSchoolid(schoolid);
                 List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
                 //用户不存在
-                if(userInfoList!=null&&userInfoList.size()>0){
+                if(userInfoList==null||userInfoList.size()<1){
                     je.setMsg("lzxuserid:"+lzxuserid+" not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }else{
@@ -5693,7 +5693,7 @@ public class UserController extends BaseController<UserInfo> {
                     SubjectInfo subjectInfo=new SubjectInfo();
                     subjectInfo.setLzxsubjectid(Integer.parseInt(subjectid));
                     subjectList=this.subjectManager.getList(subjectInfo,null);
-                    if(subjectList==null&&subjectList.size()<1){
+                    if(subjectList==null||subjectList.size()<1){
                         je.setMsg("lzxsubject:"+subjectid+" subject not exists!");
                         response.getWriter().print(je.toJSON());return;
                     }
@@ -5704,14 +5704,14 @@ public class UserController extends BaseController<UserInfo> {
                 userInfo.setLzxuserid(lzxuserid);
                 userInfo.setSchoolid(schoolid);
                 List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
-                if(userInfoList==null&&userInfoList.size()<1){
+                if(userInfoList==null||userInfoList.size()<1){
                     je.setMsg("lzxuserid:"+lzxuserid+" user not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }
                 ClassInfo c=new ClassInfo();
                 c.setLzxclassid(Integer.parseInt(classid));
                 List<ClassInfo>clsList=this.classManager.getList(c,null);
-                if(clsList==null&&clsList.size()<1){
+                if(clsList==null||clsList.size()<1){
                     je.setMsg("classid:"+classid+" class not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }
@@ -5823,14 +5823,14 @@ public class UserController extends BaseController<UserInfo> {
                 userInfo.setLzxuserid(lzxuserid);
                 userInfo.setSchoolid(schoolid);
                 List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
-                if(userInfoList==null&&userInfoList.size()<1){
+                if(userInfoList==null||userInfoList.size()<1){
                     je.setMsg("lzxuserid:"+lzxuserid+" user not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }
                 ClassInfo c=new ClassInfo();
                 c.setLzxclassid(Integer.parseInt(classid));
                 List<ClassInfo>clsList=this.classManager.getList(c,null);
-                if(clsList==null&&clsList.size()<1){
+                if(clsList==null||clsList.size()<1){
                     je.setMsg("classid:"+classid+" class not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }

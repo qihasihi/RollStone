@@ -7,6 +7,11 @@ $(function(){
         if(divObj.length>0)
             $(divObj).remove();
     });
+    $("body").bind("click",function(){
+        var divObj=$("div").filter(function(){return this.id.indexOf('div_tmp_show')!=-1});
+        if(divObj.length>0)
+            $(divObj).remove();
+    })
 })
 
 /**
