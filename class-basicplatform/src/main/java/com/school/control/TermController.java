@@ -261,14 +261,14 @@ public class TermController extends BaseController<TermInfo> {
         String onetermendtime=request.getParameter("one_term_end_time");
         String twotermbegintime=request.getParameter("two_term_begin_time");
         String twotermendtime=request.getParameter("two_term_end_time");
-//        String timestamp=request.getParameter("timestamp");
-//        String checkcode=request.getParameter("checkcode");
-//        String md5key = lzxschoolid+classyearname+classyearvalue+yearbegintime+yearendtime+onetermname+twotermname+onetermbegintime+onetermendtime+twotermbegintime+twotermendtime+timestamp;
-//        String key = MD5_NEW.getMD5ResultCode(md5key);
-//        if(!checkcode.trim().equals(key)){
-//            response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
-//            return;
-//        }
+        String timestamp=request.getParameter("timestamp");
+        String checkcode=request.getParameter("checkcode");
+        String md5key = lzxschoolid+classyearname+classyearvalue+yearbegintime+yearendtime+onetermname+twotermname+onetermbegintime+onetermendtime+twotermbegintime+twotermendtime+timestamp;
+        String key = MD5_NEW.getMD5ResultCode(md5key);
+        if(!checkcode.trim().equals(key)){
+            response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
+            return;
+        }
         //存放值得数据集集合
         List<String> sqlArrayList = new ArrayList<String>();
         //存放sql的集合
