@@ -251,12 +251,12 @@ public class TermController extends BaseController<TermInfo> {
 //        two_term_begin_time：第二学期开始时间 datetime 格式：2014-03-03
 //        two_term_end_time：第二学期结束时间 datetime 格式：2014-03-03
         String lzxschoolid=request.getParameter("lzx_school_id");
-        String classyearname=request.getParameter("class_year_name");
-        String classyearvalue=request.getParameter("class_year_value");
+        String classyearname=java.net.URLDecoder.decode(request.getParameter("class_year_name"),"UTF-8");
+        String classyearvalue=java.net.URLDecoder.decode(request.getParameter("class_year_value"),"UTF-8");
         String yearbegintime=request.getParameter("year_begin_time");
         String yearendtime=request.getParameter("year_end_time");
-        String onetermname=request.getParameter("one_term_name");
-        String twotermname=request.getParameter("two_term_name");
+        String onetermname=java.net.URLDecoder.decode(request.getParameter("one_term_name"),"UTF-8");
+        String twotermname=java.net.URLDecoder.decode(request.getParameter("two_term_name"),"UTF-8");
         String onetermbegintime=request.getParameter("one_term_begin_time");
         String onetermendtime=request.getParameter("one_term_end_time");
         String twotermbegintime=request.getParameter("two_term_begin_time");
@@ -269,6 +269,7 @@ public class TermController extends BaseController<TermInfo> {
             response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
             return;
         }
+        System.out.println("学年开始时间"+yearbegintime);
         //存放值得数据集集合
         List<String> sqlArrayList = new ArrayList<String>();
         //存放sql的集合
