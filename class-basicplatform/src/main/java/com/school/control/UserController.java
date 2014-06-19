@@ -5252,6 +5252,12 @@ public class UserController extends BaseController<UserInfo> {
                         sqlListArray.add(sql.toString());
                         objListArray.add(objList);
                     }
+                    if(!isStu&&!isTea){
+                        je.setMsg("Invalid identity!");
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }
+
 
                     if(isStu){
                         // Ìí¼ÓÑ§Éú
@@ -5416,7 +5422,7 @@ public class UserController extends BaseController<UserInfo> {
         System.out.println(message);
         JSONArray jsonArray;
         try{
-            jsonArray= JSONArray.fromObject(message);
+            jsonArray= JSONArray.fromObject(java.net.URLDecoder.decode(message,"UTF-8"));
         }catch (Exception e){
             je.setMsg(e.getMessage());
             response.getWriter().print(je.toJSON());
@@ -5552,7 +5558,7 @@ public class UserController extends BaseController<UserInfo> {
         System.out.println(message);
         JSONArray jsonArray;
         try{
-            jsonArray= JSONArray.fromObject(message);
+            jsonArray= JSONArray.fromObject(java.net.URLDecoder.decode(message,"UTF-8"));
         }catch (Exception e){
             je.setMsg(e.getMessage());
             response.getWriter().print(je.toJSON());
@@ -5652,7 +5658,7 @@ public class UserController extends BaseController<UserInfo> {
         System.out.println(message);
         JSONArray jsonArray;
         try{
-            jsonArray= JSONArray.fromObject(message);
+            jsonArray= JSONArray.fromObject(java.net.URLDecoder.decode(message,"UTF-8"));
         }catch (Exception e){
             je.setMsg(e.getMessage());
             response.getWriter().print(je.toJSON());
@@ -5790,7 +5796,7 @@ public class UserController extends BaseController<UserInfo> {
         System.out.println(message);
         JSONArray jsonArray;
         try{
-            jsonArray= JSONArray.fromObject(message);
+            jsonArray= JSONArray.fromObject(java.net.URLDecoder.decode(message,"UTF-8"));
         }catch (Exception e){
             je.setMsg(e.getMessage());
             response.getWriter().print(je.toJSON());

@@ -77,6 +77,15 @@ public class TpCourseInfo  implements java.io.Serializable{
     private String subjectvalues;
 
     private String versionvalues;
+    private Long currentcourseid;
+
+    public Long getCurrentcourseid() {
+        return currentcourseid;
+    }
+
+    public void setCurrentcourseid(Long currentcourseid) {
+        this.currentcourseid = currentcourseid;
+    }
 
     public String getSubjectvalues() {
         return subjectvalues;

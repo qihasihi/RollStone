@@ -6,7 +6,7 @@
 	<folder name='class' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 班级管理"></folder>
 	<folder name='class/detail' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='cls?m=list'&gt;班级管理&lt;/a&gt; &gt; 班级学生"></folder>
 	<folder name='classyear' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 学年管理"></folder>
-	<folder name='comment' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3Fm=toTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 专题评价"></folder>
+	<folder name='comment' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3FtoTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 专题评价"></folder>
 	<folder name='dept' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 部门管理"></folder>
 	<folder name='dept/deptuser' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='dept?m=list'&gt;部门管理&lt;/a&gt; &gt; 指定人员"></folder>
 	<folder name='dept/leader' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='dept?m=list'&gt;部门管理&lt;/a&gt; &gt; 指定干部"></folder>
@@ -19,9 +19,9 @@
 	<folder name='evalteacher/teacherappraise/teacheritem' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='teacherappraise?m=admin_watch_ban'&gt;评教结果&lt;/a&gt; &gt; 各项得分"></folder>
 	<folder name='evalteacher/timesetup' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 评教时间"></folder>
 	<folder name='grade' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 年级管理"></folder>
-	<folder name='interactive/columns' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3Fm=toTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 互动空间"></folder>
-	<folder name='interactive/theme' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3Fm=toTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 互动空间"></folder>
-	<folder name='interactive/topic' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3Fm=toTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 互动空间"></folder>
+	<folder name='interactive/columns' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3FtoTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 互动空间"></folder>
+	<folder name='interactive/theme' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3FtoTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 互动空间"></folder>
+	<folder name='interactive/topic' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3FtoTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 互动空间"></folder>
 	<folder name='job' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 职务管理"></folder>
 	<folder name='login' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 登陆跳转"></folder>
 	<folder name='notice' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 通知公告"></folder>
@@ -39,12 +39,12 @@
 	<folder name='student' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 学生管理"></folder>
 	<folder name='subject' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 学科管理"></folder>
 	<folder name='teacher' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 教师管理"></folder>
-	<folder name='teachpaltform/course' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3Fm=toTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 专题"></folder>
-    <folder name='teachpaltform/classmanager' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3Fm=toTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 班级管理"></folder>
-	<folder name='teachpaltform/resource' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3Fm=toTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 资源"></folder>
-	<folder name='teachpaltform/task/student' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3Fm=toTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 学生任务"></folder>
-	<folder name='teachpaltform/task/teacher' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3Fm=toTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt;  &gt; 任务管理"></folder>
-    <folder name='teachpaltform/question' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3Fm=toTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 试题"></folder>
+	<folder name='teachpaltform/course' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3FtoTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 专题"></folder>
+    <folder name='teachpaltform/classmanager' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3FtoTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 班级管理"></folder>
+	<folder name='teachpaltform/resource' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3FtoTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 资源"></folder>
+	<folder name='teachpaltform/task/student' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3FtoTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 学生任务"></folder>
+	<folder name='teachpaltform/task/teacher' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3FtoTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt;  &gt; 任务管理"></folder>
+    <folder name='teachpaltform/question' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='page-nav-jump.jsp?url=teachercourse%3FtoTeacherCourseList%7Cteachercourse%3Fm=toStudentCourseList&amp;roleid=2%7C1'&gt;教学系统&lt;/a&gt; &gt; 试题"></folder>
 	<folder name='term' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 学年管理"></folder>
 	<folder name='user' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 用户管理"></folder>
 	<folder name='user/add' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='user?m=list'&gt;用户管理&lt;/a&gt; &gt; 添加"></folder>

@@ -205,18 +205,27 @@ function spanClick(obj,total){
     var idxObj=$("select[id='sel_order_idx']");
     if(idxObj.length>0)
         idxChange(idxObj,total);
-
+    mousePostion
     var idxVal=$(obj).html();
-    var h='<select id="sel_order_idx" style="position: absolute;left:mousePostion.x;top: mousePostion.y ">';
+// style="position: absolute;left: '+mousePostion.x+'px;top:'+mousePostion.y+'px"
+    var h='<select id="sel_order_idx">';
     for(var i=1;i<=total;i++){
         h+='<option value="'+i+'">'+i+'</option>';
     }
     h+='</select>';
     $(obj).html(h);
+    $("select[id='sel_order_idx']").focus();
     if(idxVal!=null&&idxVal>0)
         $("select[id='sel_order_idx']").val(idxVal);
     $(obj).unbind('click');
 
+    $("select[id='sel_order_idx']").bind("blur",function(){
+        var spanObj=$(this).parent();
+        spanObj.html(this.value);
+        $(spanObj).bind("click",function(){
+            spanClick(spanObj,total);
+        });
+    });
     $("select[id='sel_order_idx']").bind("change",function(){
         idxChange(this,total);
     });

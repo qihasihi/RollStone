@@ -10,7 +10,7 @@
 				<role roleid="1" rolename="学生"></role>				
     	</nav> 
 		<!--教师教学系统-->
-		<nav displayName="教学系统" fnid="2" url="teachercourse?m=toTeacherCourseList" class="lm07">
+		<nav displayName="教学系统" fnid="2" url="teachercourse?toTeacherCourseList" class="lm07">
 				<role roleid="2" rolename="老师"></role>				
 		</nav>
 		

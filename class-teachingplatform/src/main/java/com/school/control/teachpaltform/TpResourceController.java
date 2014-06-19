@@ -115,7 +115,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tpCourseInfo.setCoursename(coursename);
         }
         if(currentcourseid!=null&&currentcourseid.trim().length()>0){
-            tpCourseInfo.setCourseid(Long.parseLong(currentcourseid));
+            tpCourseInfo.setCurrentcourseid(Long.parseLong(currentcourseid));
         }
 
 

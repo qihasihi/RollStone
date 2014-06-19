@@ -95,10 +95,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
      * @throws Exception
      */
 
-    @RequestMapping(params = "m=toTeacherCourseList", method = RequestMethod.GET)
-    public ModelAndView toTeacherCourseList(HttpServletRequest request, HttpServletResponse response,
-                                            ModelMap mp) throws Exception {
-        JsonEntity jeEntity = new JsonEntity();
+    @RequestMapping(params="toTeacherCourseList",method={RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView toTeacherCourseList(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
         String materialid=request.getParameter("materialid");
         if(materialid!=null&&materialid.length()>0){
             TeachingMaterialInfo tm = new TeachingMaterialInfo();
