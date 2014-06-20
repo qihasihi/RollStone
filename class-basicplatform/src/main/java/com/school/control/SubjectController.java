@@ -152,11 +152,12 @@ public class SubjectController extends BaseController<SubjectInfo>{
     protected void addLzxSubject(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
         String lzxschoolid=request.getParameter("lzx_school_id");
         String lzxsubjectid=request.getParameter("subject_id");
-        String lzxsubjectname=request.getParameter("subject_name");
+        String lzxsubjectname=java.net.URLDecoder.decode(request.getParameter("subject_name"),"UTF-8");
         String timestamp=request.getParameter("timestamp");
-        String checkcode=java.net.URLDecoder.decode(request.getParameter("checkcode"),"UTF-8");
+        String checkcode=request.getParameter("checkcode");
         String md5key = lzxschoolid+lzxsubjectid+lzxsubjectname+timestamp;
         String key = MD5_NEW.getMD5ResultCode(md5key);
+        System.out.println("lzxsubjectname:"+lzxsubjectname+" checkcode:"+checkcode+"md5:"+key);
         if(!checkcode.trim().equals(key)){
             response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
             return;
@@ -193,7 +194,7 @@ public class SubjectController extends BaseController<SubjectInfo>{
         JsonEntity je = new JsonEntity();
         String lzxschoolid=request.getParameter("lzx_school_id");
         String lzxsubjectid=request.getParameter("subject_id");
-        String lzxsubjectname=request.getParameter("subject_name");
+        String lzxsubjectname=java.net.URLDecoder.decode(request.getParameter("subject_name"),"UTF-8");
         String timestamp=request.getParameter("timestamp");
         String checkcode=request.getParameter("checkcode");
         String md5key = lzxschoolid+lzxsubjectid+lzxsubjectname+timestamp;

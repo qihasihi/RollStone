@@ -134,6 +134,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     public void ajaxCourseResList(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je =new JsonEntity();
         PageResult pageResult=this.getPageResultParameter(request);
+        pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc ");
         TpCourseResource tr=this.getParameter(request,TpCourseResource.class);
         String courseid=request.getParameter("courseid");
         String currentcourseid=request.getParameter("currentcourseid");
@@ -141,10 +142,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tr.setCourseid(Long.parseLong(courseid));
         else
             tr.setCourseid(null);
-        if(currentcourseid!=null&&currentcourseid.trim().length()>0)
+        if(currentcourseid!=null&&currentcourseid.trim().length()>0){
             tr.setCurrentcourseid(Long.parseLong(currentcourseid));
+            pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc,aa.res_flag ");
+        }
 
-        pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc,aa.res_flag ");
+
         List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
         pageResult.setList(resourceList);
         je.setPresult(pageResult);

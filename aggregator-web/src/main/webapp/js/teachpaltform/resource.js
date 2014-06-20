@@ -2281,6 +2281,20 @@ function generXheditor(resdetailid, isstuipt) {
     else
         htm += '<p class="t_r"><a href="javascript:void(0);" onclick="doSubResourceComment(\'' + resdetailid + '\')"  class="an_small">发&nbsp;表</a></p>';
     $("#div_xheditor").html(htm);
+    if(isstuipt){
+       /* editor = new UE.ui.Editor({
+            //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+            toolbars: [
+                [ 'Undo', 'Redo', 'Bold',, 'fullscreen', 'removeformat','insertimage']
+            ],
+            // initialFrameWidth: "580px",
+            // initialFrameHeight: "500px",
+            autoHeightEnabled: false
+        });
+        textarea:'xheditor'; //与textarea的name值保持一致
+        //editor.render('editor');
+        editor.render('xheditor'); */
+    }
     /*  editor = new UE.ui.Editor({
      //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
      toolbars: [
