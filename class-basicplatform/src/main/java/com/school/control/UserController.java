@@ -1165,6 +1165,8 @@ public class UserController extends BaseController<UserInfo> {
 		request.getSession().removeAttribute("CURRENT_USER");		
 		request.getSession().setMaxInactiveInterval(0);
 		request.setAttribute("state","user_quit");
+        if(request.getSession().getAttribute("fromType")!=null)
+            request.getSession().removeAttribute("fromType");
 		request.getRequestDispatcher("/login.jsp").forward(request, response);
 	}
 
@@ -5969,6 +5971,7 @@ public class UserController extends BaseController<UserInfo> {
             jsonEntity.setMsg("异常错误，网校端配置错误!请联系管理人员");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
+        request.getSession().setAttribute("fromType","lzx");
         response.sendRedirect(targetUrl);
     }
 }

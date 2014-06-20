@@ -25,7 +25,9 @@
   %>
 <div id="header">
   <ul>
-    <li <%= (pageType!=null&&pageType=="index"?"class='one crumb'":"")%>><a href="<%=basePath %>user?m=toIndex">首&nbsp;页</a></li>
+    <c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
+         <li <%= (pageType!=null&&pageType=="index"?"class='one crumb'":"")%>><a href="<%=basePath %>user?m=toIndex">首&nbsp;页</a></li>
+    </ul>
    <!-- <li <%= (pageType!=null&&pageType=="userview"?"class='two crumb'":"")%>><a href="user?m=userview">个人主页</a></li>
     <li><a href="sms?m=inbox" target="_blank">
   	消息中心<%=receiveSMSList!=null&&receiveSMSList.size()>0?"(<font color='red'>"+receiveSMSList.size()+"</font>)":"" %>

@@ -772,15 +772,18 @@ public class ClassController extends BaseController<ClassInfo>{
             if(className==null||className.toString().trim().length()<1){
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，班级名称为空!!\"}");
                 return;
-            }
+            }else
+                  className=java.net.URLDecoder.decode(className.toString(),"GBK");
             if(pattern==null||pattern.toString().trim().length()<1){
                 //response.getWriter().print("异常错误，班级类型为空!!");return;
                 pattern="行政班";
-            }
+            }else
+                pattern=java.net.URLDecoder.decode(pattern.toString(),"GBK");
             if(classGrade==null||classGrade.toString().trim().length()<1){
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，年级为空!!\"}");
                 return;
-            }
+            }else
+                classGrade=java.net.URLDecoder.decode(classGrade.toString(),"GBK");
             if(year==null||year.toString().trim().length()<1){
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，学年为空!!\"}");
                 return;

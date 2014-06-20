@@ -36,6 +36,7 @@ String url=parenturl.substring(0,parenturl.lastIndexOf("/"));
 		}	  
 	}
 %>
+<c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
 <script type="text/javascript">var current_parent_path="<%=url%>";</script>
 <div class="head_crumb">
  <p><strong>
@@ -43,4 +44,5 @@ String url=parenturl.substring(0,parenturl.lastIndexOf("/"));
     	&&current_user.getRealname().trim().length()>0?
     			current_user.getRealname():current_user.getUsername()%></strong>&nbsp;您好！&nbsp;&nbsp;当前位置：<%=pageName %></p>
 </div>
+</c:if>
 	
