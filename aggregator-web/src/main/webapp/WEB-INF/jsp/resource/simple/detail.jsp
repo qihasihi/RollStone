@@ -493,7 +493,7 @@
           </div>
       </div>
       <div class="zyxt_zyxqL">
-          <img src="resource?m=getResourceImage&resid=${resObj.resid}&w=578&h=480"  width="578px" height="480px" alt="${resObj.resname}" id="img_show"/>
+          <img src="resource?m=getResourceImage&resid=${resObj.resid}&w=578&h=480"  alt="${resObj.resname}" id="img_show"/>
       </div>
 
   </c:if>

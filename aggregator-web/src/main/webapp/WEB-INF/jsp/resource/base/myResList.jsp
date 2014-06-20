@@ -126,7 +126,6 @@
                         nstus=itm.netsharestatus;
                         switch(nstus){
                             case -1:
-                                html+="未分享";break;
                             case 0:
                                 html+="待审核";break;
                             case 1:

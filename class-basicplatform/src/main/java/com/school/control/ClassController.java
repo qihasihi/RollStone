@@ -706,7 +706,7 @@ public class ClassController extends BaseController<ClassInfo>{
         response.getWriter().print(jeEntity.toJSON());
     }
 
-    @RequestMapping(params ="m=lzxUpdate")
+    @RequestMapping(params ="m=lzxUpdate",method=RequestMethod.POST)
     public void lzxUpdate(HttpServletRequest request,HttpServletResponse response) throws Exception{
         Object timeStr=request.getParameter("timestamp");
         Object schoolid=request.getParameter("lzx_school_id");
