@@ -152,7 +152,7 @@
     var usertype=1;
     var clickcount=0;
     var tpresdetailid="${param.tpresdetailid}";
-    var pList,p2,editor,child_editor;
+    var pList,p2,editor,child_editor,note_editor;
     $("#hd_resdetailid").val('');
 
     $(function(){

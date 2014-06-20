@@ -823,27 +823,27 @@ function load_resource(type, pageno, isinit) {
                             htm += '</p>';
 
                             if (itm.resourseType == "other") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '"  href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '"  href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)">' +  itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "doc") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "jpeg") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "video") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "swf") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "mp3") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             htm += '</li>';
@@ -874,27 +874,27 @@ function load_resource(type, pageno, isinit) {
                             htm += '<li id="li_' + itm.resid + '" >';
                             htm += '<p class="a"><span class="' + itm.suffixtype + '"></span></p>';
                             if (itm.resourseType == "other") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "doc") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "jpeg") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "video") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "swf") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "mp3") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             htm += '</li>';
@@ -991,27 +991,27 @@ function load_stu_resource(type, pageno, isinit) {
                             htm += '</p>';
 
                             if (itm.resourseType == "other") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "doc") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "jpeg") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "video") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "swf") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             if (itm.resourseType == "mp3") {
-                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                 htm += dvhtm;
                             }
                             htm += '</li>';
@@ -2282,10 +2282,10 @@ function generXheditor(resdetailid, isstuipt) {
         htm += '<p class="t_r"><a href="javascript:void(0);" onclick="doSubResourceComment(\'' + resdetailid + '\')"  class="an_small">发&nbsp;表</a></p>';
     $("#div_xheditor").html(htm);
     if(isstuipt){
-       /* editor = new UE.ui.Editor({
+        editor = new UE.ui.Editor({
             //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
             toolbars: [
-                [ 'Undo', 'Redo', 'Bold',, 'fullscreen', 'removeformat','insertimage']
+                ['emotion','attachment','superscript','subscript','fullscreen','insertimage']
             ],
             // initialFrameWidth: "580px",
             // initialFrameHeight: "500px",
@@ -2293,7 +2293,8 @@ function generXheditor(resdetailid, isstuipt) {
         });
         textarea:'xheditor'; //与textarea的name值保持一致
         //editor.render('editor');
-        editor.render('xheditor'); */
+        editor.setDataId(new Date().getTime());
+        editor.render('xheditor');
     }
     /*  editor = new UE.ui.Editor({
      //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
@@ -2316,15 +2317,15 @@ function generXheditor(resdetailid, isstuipt) {
 function doSubStudyNote(resid) {
     if (typeof resid == 'undefined')
         return;
-    var commentobj = $("#xheditor");
-    if (commentobj.val().Trim().length < 1) {
+    //var commentobj = $("#xheditor");
+
+    if (editor.getContent().Trim().length < 1) {
         alert('请输入学习心得后提交!');
-        commentobj.focus();
         return;
     }
     var param = {
         courseid: courseid,
-        answercontent: commentobj.val().Trim(),
+        answercontent: editor.getContent(),
         resid: resid
     };
     if (typeof (taskid) != 'undefined' && taskid.length > 0)
@@ -2346,7 +2347,7 @@ function doSubStudyNote(resid) {
                 $("#div_xheditor").hide();
                 loadStudyNotes(2);
                 try {
-                    $("#xheditor").val("");
+                    $("#xheditor").setContent("");
                 } catch (e) {
                 }
 
@@ -2868,32 +2869,33 @@ function genderStuNoteTextArea(ref) {
 
     var divObj = $("#dv_updnote");
     var htm = divObj.html();
-    divObj.html('<textarea id="txt_updnote">' + htm + '</textarea><p class="t_r"><a href="javascript:doUpdStuNote(' + ref + ')" class="an_small">确定</a><a  class="an_small" href="javascript:cancelUpdStuNote()">取消</a></p>');
-
-    /* note_editor = new UE.ui.Editor({
-     //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
-     toolbars: [
-     ['Undo', 'Redo', 'Bold', 'fullscreen', 'removeformat','insertimage']
-     ],
-     //        initialFrameWidth: "450px",
-     //        initialFrameHeight: "80px",
-     autoHeightEnabled: false
-     });
-     textarea:'txt_updnote'; //与textarea的name值保持一致
-     note_editor.render('txt_updnote'); */
+    divObj.html('<textarea id="txt_updnote">'+htm+'</textarea><p class="t_r"><a href="javascript:doUpdStuNote(' + ref + ')" class="an_small">确定</a><a  class="an_small" href="javascript:cancelUpdStuNote()">取消</a></p>');
+    note_editor = new UE.ui.Editor({
+        //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+        toolbars: [
+            ['emotion','attachment','superscript','subscript','fullscreen','insertimage']
+        ],
+        // initialFrameWidth: "580px",
+        // initialFrameHeight: "500px",
+        autoHeightEnabled: false
+    });
+    textarea:'txt_updnote'; //与textarea的name值保持一致
+    note_editor.setDataId(new Date().getTime());
+    note_editor.render('txt_updnote');
+    //note_editor.setContent();
 }
 
 function cancelUpdStuNote() {
-    $("#dv_updnote").html($("#txt_updnote").html())
+    $("#dv_updnote").html(note_editor.getContent());
 }
 
 function doUpdStuNote(ref) {
     if (typeof  ref == 'undefined')
         return;
-    var valObj = $("#txt_updnote");
-    if (valObj.val().Trim().length < 1) {
+    //var valObj = $("#txt_updnote");
+
+    if (note_editor.getContent().Trim().length < 1) {
         alert("请输入学习心得!");
-        valObj.focus();
         return;
     }
 
@@ -2905,7 +2907,7 @@ function doUpdStuNote(ref) {
             cache: false,
             data: {
                 ref: ref,
-                content: valObj.val().Trim()
+                content: note_editor.getContent()
             },
             error: function () {
                 alert('系统未响应!');

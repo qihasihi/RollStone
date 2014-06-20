@@ -3,17 +3,19 @@
 <%@page import="java.io.DataInputStream"%>
 <%@page import="java.io.FileOutputStream"%>
 <%@page import="org.apache.commons.fileupload.FileItem"%>
+<%@page import="org.apache.commons.fileupload.DiskFileUpload"%>
 <%@page import="java.io.InputStream"%>
 <%@page import="java.io.OutputStream"%>
 <%@page import="java.io.BufferedInputStream"%>
 <%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.BufferedOutputStream"%>
-<%@page import="org.apache.commons.fileupload.DiskFileUpload"%>
+
 <%@ page import="com.school.util.UtilTool" %>
 <%
 	String path = request.getContextPath();
 	String basePath = "http://"+UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"
             + UtilTool.utilproperty.getProperty("PROC_NAME") + "/";
+    //String basePath="http://"+request.getServerName()+":"+request.getLocalPort()+request.getContextPath();
 	response.setContentType("text/html;charset=utf-8");
 	response.setCharacterEncoding("UTF-8");
 	request.setCharacterEncoding("UTF-8");
