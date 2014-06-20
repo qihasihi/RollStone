@@ -858,7 +858,7 @@ public class ClassController extends BaseController<ClassInfo>{
         Object schoolid=request.getParameter("lzx_school_id");
         Object key=request.getParameter("key");
         //验证相关参数
-        if(timeStr==null||timeStr.toString().trim().length()<1||!UtilTool.isNumber(timeStr.toString())){
+        if(timeStr==null||timeStr.toString().trim().length()<1){
             response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，登陆时间戳参数缺少!\"}");return;
         }
         if(schoolid==null||schoolid.toString().trim().length()<1||!UtilTool.isNumber(schoolid.toString())){
