@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <%@include file="/util/common-jsp/common-jxpt.jsp" %>
 <html>
@@ -129,7 +128,7 @@
                 alert('请选择'+type+'!');
                 return;
             }
-            if(tasktype=='1'){
+            /*if(tasktype=='1'){
                 $.ajax({
                     url: 'tpres?m=doUpdResTypeById',
                     type: 'post',
@@ -146,7 +145,7 @@
                         }
                     }
                 });
-            }
+            }*/
 
             window.returnValue=dataObj.val();
             window.close();

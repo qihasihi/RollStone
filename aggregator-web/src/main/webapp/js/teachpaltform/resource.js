@@ -2519,7 +2519,7 @@ function loadStuNoteReplyTextArea(id, touserid, resdetailid) {
     htm += '</div>';
     $("div[id='p_rframe_" + id + "']").html(htm);
     $("div[id='p_rframe_" + id + "']").show('fast');
-//	$("div[id='p_rframe_" + id + "'] textarea").xheditor( {
+	//$("div[id='p_rframe_" + id + "'] textarea").xheditor( {
 //		tools : 'Removeformat,|,Link,Unlink,|,Emot'
 //	});
     /*  child_editor = new UE.ui.Editor({

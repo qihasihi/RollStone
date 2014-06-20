@@ -1997,7 +1997,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("aa.resource_type");
+        p.setOrderBy("aa.resource_type,aa.c_time desc,aa.operate_time desc ");
         TpCourseResource t= new TpCourseResource();
         t.setCourseid(Long.parseLong(courseid));
         t.setResstatus(1);

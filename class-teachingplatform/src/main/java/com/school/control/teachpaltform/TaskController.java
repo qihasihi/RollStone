@@ -923,6 +923,28 @@ public class TaskController extends BaseController<TpTaskInfo>{
 				return;
 			}
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
+
+
+
+            TpCourseResource tt=new TpCourseResource();
+            tt.setCourseid(Long.parseLong(courseid));
+            tt.setResid(Long.parseLong(taskvalueid));
+            List<TpCourseResource>tpCourseResourceList=this.tpCourseResourceManager.getList(tt,null);
+            if(tpCourseResourceList==null||tpCourseResourceList.size()<1){
+                je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            if(tpCourseResourceList.get(0).getResourcetype().equals(2)){
+                tt.setRef(tpCourseResourceList.get(0).getRef());
+                tt.setResourcetype(1);
+                sql=new StringBuilder();
+                objList=this.tpCourseResourceManager.getUpdateSql(tt,sql);
+                if(objList!=null&&sql!=null&&sql.length()>0){
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+            }
 		}
         /**
          *查询出当前专题有效的任务个数，排序用
@@ -1037,6 +1059,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 }
             }
         }
+
+
 
 		
 		 
@@ -1239,6 +1263,26 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 return;
             }
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
+
+            TpCourseResource tt=new TpCourseResource();
+            tt.setCourseid(Long.parseLong(courseid));
+            tt.setResid(Long.parseLong(taskvalueid));
+            List<TpCourseResource>tpCourseResourceList=this.tpCourseResourceManager.getList(tt,null);
+            if(tpCourseResourceList==null||tpCourseResourceList.size()<1){
+                je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            if(tpCourseResourceList.get(0).getResourcetype().equals(2)){
+                tt.setRef(tpCourseResourceList.get(0).getRef());
+                tt.setResourcetype(1);
+                sql=new StringBuilder();
+                objList=this.tpCourseResourceManager.getUpdateSql(tt,sql);
+                if(objList!=null&&sql!=null&&sql.length()>0){
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+            }
         }
         //获取任务
         TpTaskInfo sel=new TpTaskInfo();
