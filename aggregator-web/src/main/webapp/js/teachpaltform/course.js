@@ -167,7 +167,7 @@ function addTeacherCourse(){
         },success:function(rps){
             if(rps.type=="success"){
                 if(maid!=null&&maid>0){
-                            window.location.href="teachercourse?m=toTeacherCourseList&gradeid="+$("#gradeid").val()+"&materialid="+maid+"&currentSubjectid="+$("#subjectid").val();
+                            window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&materialid="+maid+"&currentSubjectid="+$("#subjectid").val();
                         }else{
                             var param={gradeid:$("#gradeid").val(),subjectid:$("#subjectid").val(),termid:term.val(),materialid:material_id};
                             $.ajax({
@@ -181,7 +181,7 @@ function addTeacherCourse(){
                             if(rps.type=="success"){
                                 alert(rps.msg);
                                 closeModel("teaching_materia_div");
-                                window.location.href="teachercourse?m=toTeacherCourseList&gradeid="+$("#gradeid").val()+"&materialid="+material_id+"&currentSubjectid="+$("#subjectid").val();
+                                window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&materialid="+material_id+"&currentSubjectid="+$("#subjectid").val();
                             }else{
                                 alert(rps.msg);
                             }
@@ -198,9 +198,9 @@ function addTeacherCourse(){
 
 function closeAddorUpdateWindow(){
     if(typeof(materialid)!='undefined'&&materialid!=null&&parseInt(materialid)>0){
-        window.location.href="teachercourse?m=toTeacherCourseList&materialid="+materialid;
+        window.location.href="teachercourse?toTeacherCourseList&materialid="+materialid;
     }else{
-        window.location.href="teachercourse?m=toTeacherCourseList";
+        window.location.href="teachercourse?toTeacherCourseList";
     }
 }
 
@@ -313,7 +313,7 @@ function updateTeacherCourse(){
         },success:function(rps){
             if(rps.type=="success"){
                 alert("修改成功!");
-                window.location.href="teachercourse?m=toTeacherCourseList&gradeid="+$("#gradeid").val()+"&currentSubjectid="+$("#subjectid").val();
+                window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&currentSubjectid="+$("#subjectid").val();
             }else{
                 $("#updateButton").attr("href","javascript:updateTeacherCourse();");
                 alert("无法修改!"+rps.msg);

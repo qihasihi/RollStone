@@ -5723,6 +5723,17 @@ public class UserController extends BaseController<UserInfo> {
                     je.setMsg("classid:"+classid+" class not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }
+                ClassUser sel=new ClassUser();
+                sel.setUserid(userInfoList.get(0).getRef());
+                sel.setClassid(clsList.get(0).getClassid());
+                sel.setRelationtype(relationtype);
+                if(subjectid.length()>0&&subjectList!=null&&subjectList.size()>0)
+                    sel.setSubjectid(subjectList.get(0).getSubjectid());
+                List<ClassUser>clsUserList=this.classUserManager.getList(sel,null);
+                if(clsUserList!=null&&clsUserList.size()>0){
+                    je.setMsg("clsid:"+classid+",lzxuserid:"+lzxuserid+" already exist!");
+                    response.getWriter().print(je.toJSON());return;
+                }
 
                 ClassUser cu=new ClassUser();
                 cu.setRef(this.classUserManager.getNextId());

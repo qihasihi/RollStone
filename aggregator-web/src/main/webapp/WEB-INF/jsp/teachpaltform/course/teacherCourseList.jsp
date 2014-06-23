@@ -16,6 +16,10 @@
         var currentSubjectid = "${param.currentSubjectid}";
         var currentGradeid="${param.gradeid}";
         $(function(){
+            if(materialid.length>0){
+                initMaterial();
+            }
+
             $("#fTermid").change(function(){
                 getFTermCondition();
             });
@@ -62,9 +66,7 @@
 
             // 导航栏调整为正确显示
 
-            if(materialid.length>0){
-                initMaterial();
-            }
+
         });
         function initMaterial(){
 //            $.ajax({

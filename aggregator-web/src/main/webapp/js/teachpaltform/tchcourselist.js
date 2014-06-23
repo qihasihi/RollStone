@@ -142,7 +142,8 @@ function getInvestReturnMethod(rps){
             html+="<td><a href='teachercourse?m=toClassCommentList&courseid="+itm.courseid+"&type=1' target='_blank'>"+itm.avgscore+"（"+itm.commentnum+"人）</a></td>";
             html+="<td>";
             if(termid==currtterm){
-                html+="<a href='teachercourse?m=toSaveOrUpdate&courseid="+itm.courseid+"' class='ico11' title='编辑'></a>";
+                var materialid=$("#material_id").val();
+                html+="<a href='javascript:toUpdCoursePage("+itm.courseid+")' class='ico11' title='编辑'></a>";
                 html+="<a href='javascript:deleteCourse("+itm.courseid+");' class='ico04' title='删除'></a>";
                 $("a[name='a_hide']").show();
             }else
@@ -196,6 +197,17 @@ function getInvestReturnMethod(rps){
     $("#courseTable").html(html);
     $("#claList").html(classhtml);
 }
+
+
+function toUpdCoursePage(courseid){
+    var url= "teachercourse?m=toSaveOrUpdate&courseid="+courseid;
+    if($("#material_id").val()!=0){
+        url+="&materialid="+$("#material_id").val();
+    }
+    window.location.href=url;
+}
+
+
 
 //分享专题
 function shareCourse(courseid,sharetype){
