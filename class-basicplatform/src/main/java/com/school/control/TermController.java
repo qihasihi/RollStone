@@ -269,7 +269,14 @@ public class TermController extends BaseController<TermInfo> {
             response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
             return;
         }
-        System.out.println("学年开始时间"+yearbegintime);
+        //验证是否已经添加
+        ClassYearInfo obj = new ClassYearInfo();
+        obj.setClassyearvalue(classyearvalue);
+        List<ClassYearInfo> ciList = this.classYearManager.getList(obj,null);
+        if(ciList!=null&&ciList.size()>0){
+            response.getWriter().print("[{\"status\":\"error\",\"message\":\"当前学年已添加，请勿重复添加\"}]");
+            return;
+        }
         //存放值得数据集集合
         List<String> sqlArrayList = new ArrayList<String>();
         //存放sql的集合
