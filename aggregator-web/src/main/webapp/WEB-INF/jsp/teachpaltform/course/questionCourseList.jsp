@@ -10,6 +10,7 @@
 <script type="text/javascript" src="<%=basePath %>js/notice/notice.js"></script>
 <script type="text/javascript">
     var subjectid="${subjectid}";
+    var courseid="${addCourseId}";
     var p1;
     $(function(){
 
@@ -54,6 +55,8 @@
         if(name.length>0){
             param.coursename = name;
         }
+        param.currentcourseid=courseid;
+        param.subjectid=subjectid;
         tObj.setPostParams(param);
     }
 
@@ -145,6 +148,7 @@
                 } else {
                     var htm = '';
                     if (rps.objList.length) {
+                        htm='<option value="">==请选择教材版本==</option>'
                         $.each(rps.objList, function (idx, itm) {
                             var versionname=typeof itm.versionname !='undefined'&&itm.versionname.length>0?'('+itm.versionname+')':'';
                             htm += '<option value="' + itm.materialid + '">' + itm.subjectname + itm.materialname +versionname+ '</option>';
@@ -196,9 +200,10 @@
                 <option>北师大版</option> -->
             </select>
             <select id="level" name="level">
-                <option value="0">全部</option>
+                <option value="0">==请选择专题类型==</option>
                 <option value="1">自建专题</option>
                 <option value="2">标准/共享专题</option>
+                <option value="3">关联专题</option>
             </select>
             <input  id="coursename" name="coursename" placeholder="输入专题名     匹配" type="text" class="w240" />
             <a href="javascript:pageGo('p1');" class="an_search" title="查询"></a></p>

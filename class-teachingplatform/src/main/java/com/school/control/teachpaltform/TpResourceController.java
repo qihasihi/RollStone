@@ -134,7 +134,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     public void ajaxCourseResList(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je =new JsonEntity();
         PageResult pageResult=this.getPageResultParameter(request);
-        pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc ");
+        pageResult.setOrderBy(" aa.ctime desc,aa.operate_time desc ");
         TpCourseResource tr=this.getParameter(request,TpCourseResource.class);
         String courseid=request.getParameter("courseid");
         String currentcourseid=request.getParameter("currentcourseid");
@@ -144,7 +144,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tr.setCourseid(null);
         if(currentcourseid!=null&&currentcourseid.trim().length()>0){
             tr.setCurrentcourseid(Long.parseLong(currentcourseid));
-            pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc,aa.res_flag ");
+            pageResult.setOrderBy(" aa.ctime desc,aa.operate_time desc,aa.res_flag ");
         }
 
 
@@ -745,7 +745,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tr.setResstatus(1);
             tr.setResourcetype(1);
             PageResult pageResult=new PageResult();
-            pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc ");
+            pageResult.setOrderBy(" aa.ctime desc,aa.operate_time desc ");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
                 for(int i=0;i<resourceList.size();i++){
@@ -1191,7 +1191,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tr.setResstatus(1);
             tr.setResourcetype(1);
             PageResult pageResult=new PageResult();
-            pageResult.setOrderBy(" aa.c_time desc,aa.operate_time desc ");
+            pageResult.setOrderBy(" aa.ctime desc,aa.operate_time desc ");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
                 for(int i=0;i<resourceList.size();i++){
@@ -1997,7 +1997,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("aa.resource_type,aa.c_time desc,aa.operate_time desc ");
+        p.setOrderBy("aa.resource_type,aa.ctime desc,aa.operate_time desc ");
         TpCourseResource t= new TpCourseResource();
         t.setCourseid(Long.parseLong(courseid));
         t.setResstatus(1);

@@ -227,7 +227,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
             tpCourseQuestion.setFlag(1);//去除已发布并且结束了的任务试题
         tpCourseQuestion.setQuestiontype(questype.equals("0")?null:Integer.parseInt(questype));
         tpCourseQuestion.setUserid(this.logined(request).getUserid());
-        presult.setOrderBy("q.c_time DESC");
+        presult.setOrderBy("q.c_time DESC,u.c_time DESC ");
         List<TpCourseQuestion> tpCourseQuestionList=this.tpCourseQuestionManager.getList(tpCourseQuestion,presult);
         if(tpCourseQuestionList!=null&&tpCourseQuestionList.size()>0){
             for(TpCourseQuestion tq :tpCourseQuestionList){
