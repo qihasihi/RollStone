@@ -138,6 +138,10 @@ function addTeacherCourse(){
         materialidvalues=$("#materialid").val();
     }
     var material_id=$("input[name='materialid']:checked").val();
+//    var selectCourseid='';
+//    $("#selectedCourse li").each(function(){
+//        selectCourseid+=$(this).attr("id")+'|';
+//    });
     $.ajax({
         url:'teachercourse?m=addCourse',
         data:{
@@ -152,7 +156,8 @@ function addTeacherCourse(){
             vclassidstr:vclasses.join(','),
             materialidvalues:materialidvalues,
             classTimeArray:classTimeArray.join(','),
-            vclassTimeArray:vclassTimeArray.join(',')
+            vclassTimeArray:vclassTimeArray.join(','),
+            selectcourseid:selectedCourseids
         },
         type:'POST',
         dataType:'json',
@@ -422,6 +427,7 @@ function addRelatedItem(){
     var htm='';
     htm+='<li id="'+courseid+'">'+coursename+'&nbsp;<a href="javascript:delLi('+courseid+')">[X]</a></li>';
     $("#selectedCourse").after(htm);
+    selectedCourseids+=courseid+'|';
     $("#related").val('');
     $("#hcourse_id").val('');
 }

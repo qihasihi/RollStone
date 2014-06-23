@@ -10,7 +10,6 @@
     var teacherid="${teacherid}";
     var termid="${param.termid}";
     var subjectid="${param.subjectid}";
-
     $(function(){
         <c:if test="${currtTerm!=null}">
         $("#termid").val("${currtTerm}");

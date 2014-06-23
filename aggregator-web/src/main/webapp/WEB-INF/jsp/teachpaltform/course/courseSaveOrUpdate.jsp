@@ -13,6 +13,7 @@
     </head>
     <script type="text/javascript">
         var materialid="${materialid}";
+        var selectedCourseids='';
         $(function(){
             inputThinking();
             $("#material_id").val(materialid);

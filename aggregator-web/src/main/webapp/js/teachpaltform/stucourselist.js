@@ -27,16 +27,16 @@ function getInvestReturnMethod(rps){
         }else{
             html+="<tr><td colspan='5'>暂无数据</td></tr>";
         }
-
+        var subjectid=$("#subjectid").val();
         if(rps.presult.list[1]!=null&&rps.presult.list[1].length>0){
             $.each(rps.presult.list[1],function(idx,itm){
-                chtml+="<li><a target='_blank' href='teachercourse?m=toStudeClassList&classid="+itm.classid+"&classtype=1'>"+itm.classgrade+itm.classname+"</a></li>";
+                chtml+="<li><a target='_blank' href='teachercourse?m=toStudeClassList&classid="+itm.classid+"&classtype=1&subjectid="+subjectid+"'>"+itm.classgrade+itm.classname+"</a></li>";
             });
         }
 
         if(rps.presult.list[2]!=null&&rps.presult.list[2].length>0){
             $.each(rps.presult.list[2],function(idx,itm){
-                chtml+="<li><a target='_blank' href='teachercourse?m=toStudeClassList&classid="+itm.virtualclassid+"&classtype=2'>"+itm.virtualclassname+"</a></li>";
+                chtml+="<li><a target='_blank' href='teachercourse?m=toStudeClassList&classid="+itm.virtualclassid+"&classtype=2&subjectid="+subjectid+"'>"+itm.virtualclassname+"</a></li>";
             });
         }
         $("#p_stuClasses").html('');

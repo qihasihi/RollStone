@@ -10,10 +10,42 @@
         <script type="text/javascript" src="js/teachpaltform/stucourselist.js"></script>
 <script type="text/javascript">
 $(function(){
+    var subjectid= parseInt("${param.subjectid}");
+    var subjectname='';
+    switch(subjectid){
+        case 1:
+            subjectname='语文';
+            break;
+        case 2:
+            subjectname='数学';
+            break;
+        case 3:
+            subjectname='英语';
+            break;
+        case 4:
+            subjectname='物理';
+            break;
+        case 5:
+            subjectname='化学';
+            break;
+        case 6:
+            subjectname='历史';
+            break;
+        case 7:
+            subjectname='生物';
+            break;
+        case 8:
+            subjectname='地理';
+            break;
+        case 9:
+            subjectname='政治';
+            break;
+    }
 	$("#classes").change(function(){
         window.location.href="teachercourse?m=toStudeClassList&classid="+$("#classes").val()
                 +"&classtype="+$("#classes").find("option:selected").attr("classtype");
 	});
+    $("#subjectname").html(subjectname);
 });
 
 function tabCutover(n){
@@ -30,7 +62,7 @@ function tabCutover(n){
 </script>
 </head>
     <body>
-    <div class="subpage_head"><span class="ico19"></span><strong>我的班级</strong>&nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="subpage_head"><span class="ico19"></span><strong>我的班级--<span id="subjectname"></span></strong>&nbsp;&nbsp;&nbsp;&nbsp;
         <select name="classes" id="classes">
             <c:forEach var="cu" items="${cuList }">
                 <option value="${cu.classinfo.classid }" classtype="1" ${classtype==1&&cu.classinfo.classid==classid?"selected":"" }>${cu.classinfo.classname }</option>

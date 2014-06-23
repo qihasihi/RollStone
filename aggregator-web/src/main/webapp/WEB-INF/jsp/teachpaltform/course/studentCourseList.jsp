@@ -10,7 +10,6 @@
 <script type="text/javascript">
     var currtenTab=1; //当前学科导航栏页数
     var tabSize=10; //学科导航栏每页显示数量
-
     $(function(){
 
         $("#p_stuClasses").change(function(){

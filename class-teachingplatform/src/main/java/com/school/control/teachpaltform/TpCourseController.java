@@ -60,6 +60,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         this.tpTeacherTeachMaterialManager=this.getManager(TpTeacherTeachMaterialManager.class);
         this.schoolManager=this.getManager(SchoolManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
+        this.tpCourseRelatedManager=this.getManager(TpCourseRelatedManager.class);
     }
     private ITpTaskManager tpTaskManager;
     private ITpCourseManager tpCourseManager;
@@ -87,6 +88,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     private ITpTeacherTeachMaterialManager tpTeacherTeachMaterialManager;
     private ISchoolManager schoolManager;
     private IResourceManager resourceManager;
+    private ITpCourseRelatedManager tpCourseRelatedManager;
     /**
      * 进入教师课题页
      * @param request
@@ -340,6 +342,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity jeEntity = new JsonEntity();
         String classid = request.getParameter("classid");
         String classtype = request.getParameter("classtype");
+        String subjectid=request.getParameter("subjectid");
 
         if (classid == null || classtype == null) {
             jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));// 异常错误，参数不齐，无法正常访问!
@@ -353,6 +356,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             ClassUser cu = new ClassUser();
             cu.setClassid(Integer.parseInt(classid));
             cu.setRelationtype("学生");
+            cu.setSubjectid(Integer.parseInt(subjectid));
             cu.setCompletenum(1);//查询任务完成率
             List<ClassUser> stuList = this.classUserManager.getList(cu, null);
             mp.put("students", stuList);
@@ -865,6 +869,22 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                     response.getWriter().print(je.toJSON());
                     return;
                 }
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+
+        //关联专题
+        String selectedCourseid=request.getParameter("selectcourseid");
+        if(selectedCourseid.length()>0){
+            String[] courseids = selectedCourseid.split("\\|");
+            int length = courseids.length;
+            for(int i = 0;i<length;i++){
+                TpCourseRelatedInfo obj = new TpCourseRelatedInfo();
+                obj.setCourseid(courseid);
+                obj.setRelatedcourseid(Long.parseLong(courseids[i]));
+                sql = new StringBuilder();
+                objList = this.tpCourseRelatedManager.getSaveSql(obj, sql);
                 sqlListArray.add(sql.toString());
                 objListArray.add(objList);
             }

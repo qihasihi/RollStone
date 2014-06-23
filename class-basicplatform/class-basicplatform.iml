@@ -46,7 +46,6 @@
     <orderEntry type="library" name="Maven: commons-net:commons-net:3.3" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.18" level="project" />
     <orderEntry type="module" module-name="aggregator-class" />
-    <orderEntry type="module" module-name="class-teachingplatform" />
   </component>
 </module>
 
