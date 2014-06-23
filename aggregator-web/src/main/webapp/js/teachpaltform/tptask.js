@@ -1314,30 +1314,33 @@ function zgloadStuPerformance(classid,tasktype,questionid,classtype){
                         htm+='<th>是否完成</th>';
                         htm+='</tr>';
                         $.each(rmsg.objList[1],function(idx,itm){
-                            if(im.tpgroupstudent.stuno==itm.userinfo.stuNo){
-                                htm+='<tr>';
-                                htm+='<td>'+itm.userinfo.stuNo+'</td>';
-                                htm+='<td>'+itm.userinfo.stuname+'</td>';
-                                if(typeof(itm.ctimeString)!='undefined')
-                                    htm+='<td>'+itm.ctimeString+'</td>';
-                                else
-                                    htm+='<td></td>';
-                                if(typeof(itm.answercontent)!='undefined'){
-                                    htm+='<td>'+itm.answercontent+'</td>';
-                                }
-                                else{
-                                    if(itm.status>0&&(tasktype==1 || tasktype==2)){
-                                        htm+='<td>已查看</td>';
-                                    }else{
+                            $.each(im.tpgroupstudent2,function(i,m){
+                                if(m.stuno==itm.userinfo.stuNo){
+                                    htm+='<tr>';
+                                    htm+='<td>'+itm.userinfo.stuNo+'</td>';
+                                    htm+='<td>'+itm.userinfo.stuname+'</td>';
+                                    if(typeof(itm.ctimeString)!='undefined')
+                                        htm+='<td>'+itm.ctimeString+'</td>';
+                                    else
                                         htm+='<td></td>';
+                                    if(typeof(itm.answercontent)!='undefined'){
+                                        htm+='<td>'+itm.answercontent+'</td>';
                                     }
+                                    else{
+                                        if(itm.status>0&&(tasktype==1 || tasktype==2)){
+                                            htm+='<td>已查看</td>';
+                                        }else{
+                                            htm+='<td></td>';
+                                        }
+                                    }
+                                    if(itm.status>0)
+                                        htm+='<td><span class="ico12" title="完成"></span></td>';
+                                    else
+                                        htm+='<td><span class="ico24" title="进行中"></span></td>';
+                                    htm+='</tr>';
                                 }
-                                if(itm.status>0)
-                                    htm+='<td><span class="ico12" title="完成"></span></td>';
-                                else
-                                    htm+='<td><span class="ico24" title="进行中"></span></td>';
-                                htm+='</tr>';
-                            }
+                            });
+
                         });
                         htm+='</table>';
                     });

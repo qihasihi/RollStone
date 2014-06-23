@@ -2783,8 +2783,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             for(int i = 0;i<tiList.size();i++){
                 TpGroupStudent ts = new TpGroupStudent();
                 for(int j = 0;j<tgsList.size();j++){
-                    if(tiList.get(i).getGroupid()==tgsList.get(j).getGroupid()){
-                        tiList.get(i).setTpgroupstudent(tgsList);
+                    if(tiList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
+                        tiList.get(i).setTpgroupstudent2(tgsList.get(j));
                     }
                 }
             }

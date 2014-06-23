@@ -244,7 +244,7 @@
     <div class="subpage_nav">
         <ul>
             <li><a href="teachercourse?m=toSaveOrUpdate&subjectid=${subject.subjectid}&gradeid=${grade.gradeid}">新建专题</a></li>
-            <li class="crumb"><a href="javascript:void(0);">通过专题库查找</a></li>
+            <li class="crumb"><a href="javascript:void(0);">引用专题</a></li>
         </ul>
     </div>
     <div class="content2">

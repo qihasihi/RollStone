@@ -62,10 +62,20 @@ public class TpGroupInfo  implements java.io.Serializable{
             tpgroupstudent = new ArrayList<TpGroupStudent>();
         return tpgroupstudent;
     }
-
     public void setTpgroupstudent(List<TpGroupStudent> tpgroupstudent) {
         this.getTpgroupstudent().addAll(tpgroupstudent);
     }
+    private List<TpGroupStudent> tpgroupstudent2;
+    public List<TpGroupStudent> getTpgroupstudent2(){
+        if(tpgroupstudent2==null)
+            tpgroupstudent2 = new ArrayList<TpGroupStudent>();
+        return tpgroupstudent2;
+    }
+    public void setTpgroupstudent2(TpGroupStudent tpgroustudent2){
+        this.getTpgroupstudent2().add(tpgroustudent2);
+    }
+
+
 
     public String getClassname() {
         return classname;
