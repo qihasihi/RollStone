@@ -471,6 +471,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity jeEntity = new JsonEntity();
         String classid = request.getParameter("classid");
         String classtype = request.getParameter("classtype");
+        String subjectid=request.getParameter("subjectid");
         UserInfo u=this.logined(request);
         TermInfo ti = this.termManager.getMaxIdTerm(false);
         if (ti == null || classid==null || classtype==null) {
@@ -491,6 +492,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             ClassUser cu = new ClassUser();
             cu.setClassid(Integer.parseInt(classid));
             cu.setRelationtype("学生");
+            cu.setSubjectid(Integer.parseInt(subjectid));
             cu.setCompletenum(1);//查询任务完成比率
             cu.getUserinfo().setStateid(0);
 

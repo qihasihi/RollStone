@@ -16,10 +16,44 @@
         var userid="<%=userid%>";
         var subjectid="${subjectid}";
         var gradeid="${param.gradeid}";
+        var subjectname='';
+        switch(parseInt(subjectid)){
+            case 1:
+                subjectname='语文';
+                break;
+            case 2:
+                subjectname='数学';
+                break;
+            case 3:
+                subjectname='英语';
+                break;
+            case 4:
+                subjectname='物理';
+                break;
+            case 5:
+                subjectname='化学';
+                break;
+            case 6:
+                subjectname='历史';
+                break;
+            case 7:
+                subjectname='生物';
+                break;
+            case 8:
+                subjectname='地理';
+                break;
+            case 9:
+                subjectname='政治';
+                break;
+        }
+        $(function(){
+            $("#subjectname").html(subjectname);
+
+        });
     </script>
     </head>
     <body>
-    <div class="subpage_head"><span class="ico28"></span><strong>班级管理</strong></div>
+    <div class="subpage_head"><span class="ico28"></span><strong>班级管理--<span id="subjectname"></span></strong></div>
     <div class="content1">
         <p class="font-darkblue"><a href="javascript:void(0)" onclick="showModel('add_virtual_class_Div');"><span class="ico26"></span>新建虚拟班级</a></p>
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">

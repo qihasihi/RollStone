@@ -10,6 +10,60 @@
     var teacherid="${teacherid}";
     var termid="${param.termid}";
     var subjectid="${param.subjectid}";
+    var gradeid="${param.gradeid}";
+    var subjectname='';
+    var gradename='';
+    switch(parseInt(subjectid)){
+        case 1:
+            subjectname='语文';
+            break;
+        case 2:
+            subjectname='数学';
+            break;
+        case 3:
+            subjectname='英语';
+            break;
+        case 4:
+            subjectname='物理';
+            break;
+        case 5:
+            subjectname='化学';
+            break;
+        case 6:
+            subjectname='历史';
+            break;
+        case 7:
+            subjectname='生物';
+            break;
+        case 8:
+            subjectname='地理';
+            break;
+        case 9:
+            subjectname='政治';
+            break;
+    }
+
+    switch(parseInt(gradeid)){
+        case 1:
+            gradename='高三';
+            break;
+        case 2:
+            gradename='高二';
+            break;
+        case 3:
+            gradename='高一';
+            break;
+        case 41:
+            gradename='初三';
+            break;
+        case 5:
+            gradename='初二';
+            break;
+        case 6:
+            gradename='初一';
+            break;
+    }
+    var grade_name=gradename+subjectname;
     $(function(){
         <c:if test="${currtTerm!=null}">
         $("#termid").val("${currtTerm}");
@@ -28,6 +82,7 @@
             changeTab('front');
             changeTab('back');
         }
+        $("#grade_subject").html(grade_name);
     });
 
     function changeAvailable(courseid,available){
@@ -88,14 +143,14 @@
     }
 
     function abc(clsid,clstype){
-        location.href="teachercourse?m=toClassStudentList&classid="+clsid+"&classtype="+clstype+"&pageidx="+currtenTab;
+        location.href="teachercourse?m=toClassStudentList&classid="+clsid+"&classtype="+clstype+"&pageidx="+currtenTab+"&subjectid="+subjectid+"&gradeid="+gradeid;
     }
 
 
 </script>
 </head>
     <body>
-    <div class="subpage_head"><span class="ico19"></span><strong>班级主页</strong></div>
+    <div class="subpage_head"><span class="ico19"></span><strong>班级主页--<span id="grade_subject"></span></strong></div>
     <div class="subpage_nav">
         <div class="arr"><a href="javascript:changeTab('front');"><span class="up"></span></a><a href="javascript:changeTab('back');"><span class="next"></span></a></div>
         <ul id="ul_class">
@@ -148,9 +203,9 @@
 
         <div class="subpage_contentL">
             <ul>
-                <li class="crumb"><a href="teachercourse?m=toClassStudentList&classid=${classid}&classtype=${classtype}">学生名单</a></li>
-                <li><a href="group?m=toGroupManager&classid=${classid}&classtype=${classtype}">小组管理</a></li>
-                <li><a href="teachercourse?m=toClassCourseList&classid=${classid}&classtype=${classtype}">专题列表</a></li>
+                <li class="crumb"><a href="teachercourse?m=toClassStudentList&classid=${classid}&classtype=${classtype}&subjectid=${param.subjectid}&gradeid=${param.gradeid}">班级成员</a></li>
+                <li><a href="group?m=toGroupManager&classid=${classid}&classtype=${classtype}&subjectid=${param.subjectid}&gradeid=${param.gradeid}">小组管理</a></li>
+                <li><a href="teachercourse?m=toClassCourseList&classid=${classid}&classtype=${classtype}&subjectid=${param.subjectid}&gradeid=${param.gradeid}">专题列表</a></li>
             </ul>
         </div>
         <div class="clear"></div>

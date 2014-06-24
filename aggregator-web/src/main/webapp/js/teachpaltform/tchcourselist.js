@@ -178,12 +178,12 @@ function getInvestReturnMethod(rps){
     }
     if(rps.presult.list[1]!=null&&rps.presult.list[1].length>0){
         $.each(rps.presult.list[1],function(idx,itm){
-            classhtml+="<li><a target='_blank' href='teachercourse?m=toClassStudentList&classid="+itm.classid+"&classtype=1' >"+itm.classgrade+itm.classname+"</a></li>";
+            classhtml+="<li><a target='_blank' href='teachercourse?m=toClassStudentList&classid="+itm.classid+"&classtype=1&subjectid="+global_subjectid+"&gradeid="+global_gradeid+"' >"+itm.classgrade+itm.classname+"</a></li>";
         });
     }
     if(rps.presult.list[2]!=null&&rps.presult.list[2].length>0){
         $.each(rps.presult.list[2],function(idx,itm){
-            classhtml+="<li><a target='_blank' href='teachercourse?m=toClassStudentList&classid="+itm.virtualclassid+"&classtype=2' >"+itm.virtualclassname+"</a></li>";
+            classhtml+="<li><a target='_blank' href='teachercourse?m=toClassStudentList&classid="+itm.virtualclassid+"&classtype=2&subjectid="+global_subjectid+"&gradeid="+global_gradeid+"' >"+itm.virtualclassname+"</a></li>";
         });
     }
     if(typeof(rps.objList[3])!="undefined"&&rps.objList[3]!=null){
