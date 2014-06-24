@@ -1,4 +1,4 @@
-package com.school.dao.teachpaltform;
+package com.school.dao.teachpaltform.paper;
 
 import java.sql.Types;
 import java.util.ArrayList;
@@ -7,7 +7,8 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.school.dao.base.CommonDAO;
-import com.school.dao.inter.teachpaltform.IPaperQuestionDAO;
+import com.school.entity.teachpaltform.paper.PaperQuestion;
+import com.school.dao.inter.teachpaltform.paper.IPaperQuestionDAO;
 import com.school.util.PageResult;
 
 @Component  
@@ -56,34 +57,19 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
 		StringBuilder sqlbuilder = new StringBuilder();
 		sqlbuilder.append("{CALL j_paper_question_proc_split(");
 		List<Object> objList=new ArrayList<Object>();
-		if (paperquestion.getQuestionid() != null) {
-			sqlbuilder.append("?,");
-			objList.add(paperquestion.getQuestionid());
-		} else
-			sqlbuilder.append("null,");
-		if (paperquestion.getOrderidx() != null) {
-			sqlbuilder.append("?,");
-			objList.add(paperquestion.getOrderidx());
-		} else
-			sqlbuilder.append("null,");
-		if (paperquestion.getRef() != null) {
-			sqlbuilder.append("?,");
-			objList.add(paperquestion.getRef());
-		} else
-			sqlbuilder.append("null,");
-		if (paperquestion.getCtime() != null) {
-			sqlbuilder.append("?,");
-			objList.add(paperquestion.getCtime());
-		} else
-			sqlbuilder.append("null,");
+        if (paperquestion.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(paperquestion.getRef());
+        } else
+            sqlbuilder.append("null,");
 		if (paperquestion.getPaperid() != null) {
 			sqlbuilder.append("?,");
 			objList.add(paperquestion.getPaperid());
 		} else
 			sqlbuilder.append("null,");
-		if (paperquestion.getScore() != null) {
+		if (paperquestion.getQuestionid() != null) {
 			sqlbuilder.append("?,");
-			objList.add(paperquestion.getScore());
+			objList.add(paperquestion.getQuestionid());
 		} else
 			sqlbuilder.append("null,");
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
@@ -114,29 +100,19 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
 			return null;
 		sqlbuilder.append("{CALL j_paper_question_proc_add(");
 		List<Object>objList = new ArrayList<Object>();
-			if (paperquestion.getQuestionid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getQuestionid());
-			} else
-				sqlbuilder.append("null,");
-			if (paperquestion.getOrderidx() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getOrderidx());
-			} else
-				sqlbuilder.append("null,");
-			if (paperquestion.getRef() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getRef());
-			} else
-				sqlbuilder.append("null,");
-			if (paperquestion.getCtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getCtime());
-			} else
-				sqlbuilder.append("null,");
 			if (paperquestion.getPaperid() != null) {
 				sqlbuilder.append("?,");
 				objList.add(paperquestion.getPaperid());
+			} else
+				sqlbuilder.append("null,");
+            if (paperquestion.getQuestionid() != null) {
+                sqlbuilder.append("?,");
+                objList.add(paperquestion.getQuestionid());
+            } else
+                sqlbuilder.append("null,");
+			if (paperquestion.getOrderidx() != null) {
+				sqlbuilder.append("?,");
+				objList.add(paperquestion.getOrderidx());
 			} else
 				sqlbuilder.append("null,");
 			if (paperquestion.getScore() != null) {
@@ -153,34 +129,19 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
 			return null;
 		sqlbuilder.append("{CALL j_paper_question_proc_delete(");
 		List<Object>objList = new ArrayList<Object>();
-			if (paperquestion.getQuestionid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getQuestionid());
-			} else
-				sqlbuilder.append("null,");
-			if (paperquestion.getOrderidx() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getOrderidx());
-			} else
-				sqlbuilder.append("null,");
-			if (paperquestion.getRef() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getRef());
-			} else
-				sqlbuilder.append("null,");
-			if (paperquestion.getCtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getCtime());
-			} else
-				sqlbuilder.append("null,");
+            if (paperquestion.getRef() != null) {
+                sqlbuilder.append("?,");
+                objList.add(paperquestion.getRef());
+            } else
+                sqlbuilder.append("null,");
 			if (paperquestion.getPaperid() != null) {
 				sqlbuilder.append("?,");
 				objList.add(paperquestion.getPaperid());
 			} else
 				sqlbuilder.append("null,");
-			if (paperquestion.getScore() != null) {
+			if (paperquestion.getQuestionid() != null) {
 				sqlbuilder.append("?,");
-				objList.add(paperquestion.getScore());
+				objList.add(paperquestion.getQuestionid());
 			} else
 				sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
@@ -192,31 +153,27 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
 			return null;
 		sqlbuilder.append("{CALL j_paper_question_proc_update(");
 		List<Object>objList = new ArrayList<Object>();
-			if (paperquestion.getQuestionid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getQuestionid());
-			} else
-				sqlbuilder.append("null,");
-			if (paperquestion.getOrderidx() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getOrderidx());
-			} else
-				sqlbuilder.append("null,");
-			if (paperquestion.getRef() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getRef());
-			} else
-				sqlbuilder.append("null,");
-			if (paperquestion.getCtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(paperquestion.getCtime());
-			} else
-				sqlbuilder.append("null,");
+            if (paperquestion.getRef() != null) {
+                sqlbuilder.append("?,");
+                objList.add(paperquestion.getRef());
+            } else
+                sqlbuilder.append("null,");
 			if (paperquestion.getPaperid() != null) {
 				sqlbuilder.append("?,");
 				objList.add(paperquestion.getPaperid());
 			} else
 				sqlbuilder.append("null,");
+
+			if (paperquestion.getQuestionid() != null) {
+				sqlbuilder.append("?,");
+				objList.add(paperquestion.getQuestionid());
+			} else
+				sqlbuilder.append("null,");
+            if (paperquestion.getOrderidx() != null) {
+                sqlbuilder.append("?,");
+                objList.add(paperquestion.getOrderidx());
+            } else
+                sqlbuilder.append("null,");
 			if (paperquestion.getScore() != null) {
 				sqlbuilder.append("?,");
 				objList.add(paperquestion.getScore());

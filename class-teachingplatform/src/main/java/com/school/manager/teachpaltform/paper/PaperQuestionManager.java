@@ -1,5 +1,5 @@
 
-package  com.school.manager.teachpaltform;
+package  com.school.manager.teachpaltform.paper;
 
 import java.util.List;
 import jxl.Sheet;
@@ -7,11 +7,12 @@ import jxl.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import com.school.dao.inter.teachpaltform.IPaperQuestionDAO;
+import com.school.dao.inter.teachpaltform.paper.IPaperQuestionDAO;
 
+import com.school.entity.teachpaltform.paper.PaperQuestion;
 import com.school.dao.base.ICommonDAO;
 import com.school.manager.base.BaseManager;
-import com.school.manager.inter.teachpaltform.IPaperQuestionManager;
+import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
 import com.school.util.PageResult;
 
 @Service
