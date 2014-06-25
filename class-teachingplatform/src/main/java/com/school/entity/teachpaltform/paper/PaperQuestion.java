@@ -1,6 +1,10 @@
 package  com.school.entity.teachpaltform.paper;
 
-public class PaperQuestion {
+import javax.persistence.Entity;
+import java.io.Serializable;
+
+@Entity
+public class PaperQuestion implements Serializable{
 
 	public void PaperQuestion (){}
    

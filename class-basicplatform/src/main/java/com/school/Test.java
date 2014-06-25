@@ -14,12 +14,40 @@ import java.util.Map;
  * Created by zhengzhou on 14-6-17.
  */
 public class Test {
-    public static void main(String[] args){
-        String url="http://localhost:8080/sz_school/user?m=foreighLogin";
+    public static void main(String[] args)throws Exception{
+//        String url="http://school.etiantian.com/lezhixingt1/user?m=foreighLogin";
+//        Long t=new Date().getTime();
+//        String lzxschoolid="001",login_code="lzx_loginToEtt201406",lzx_userid="0122f4c5f18341838478575be29aff24",flag_id="1";
+//        String key=MD5_NEW.getMD5ResultCode(t.toString()+lzxschoolid+lzx_userid+flag_id+login_code+t);
+//        String param="login_time="+t+"&lzx_school_id="+lzxschoolid+"&login_key="+key+"&lzx_userid="+lzx_userid+"&flag_id="+flag_id+"&login_code="+login_code;
+//        System.out.println(url+"&"+param);
+//        System.out.println(sendPostURL(url,param));
+
+
+        String url="http://school.etiantian.com/lezhixingt1/cls?m=lzxUpdate";
         Long t=new Date().getTime();
-        String lzxschoolid="001",login_code="lzx_loginToEtt201406",lzx_userid="001",flag_id="1";
-        String key=MD5_NEW.getMD5ResultCode(t.toString()+lzxschoolid+lzx_userid+flag_id+login_code+t);
-        String param="lzx_userid="+lzx_userid+"&login_time="+t+"&lzx_school_id="+lzxschoolid+"&flag_id="+flag_id+"&login_code="+login_code+"&&login_key="+key;
+        String lzxschoolid="001",lzx_userid="002",flag_id="1";
+        String key=MD5_NEW.getMD5ResultCode(t.toString()+lzxschoolid+t);
+
+        JSONArray ja=new JSONArray();
+        JSONObject jo=new JSONObject();
+        jo.put("lzx_classid","211222");
+        jo.put("class_name",java.net.URLEncoder.encode("4班","UTF-8"));
+        jo.put("class_grade",java.net.URLEncoder.encode("高一","UTF-8"));
+        jo.put("year","2013~2014");
+        jo.put("type","NORMAL");
+        jo.put("isflag","1");
+        ja.add(jo);
+        jo=new JSONObject();
+        jo.put("lzx_classid","2112");
+        jo.put("class_name",java.net.URLEncoder.encode("44班","UTF-8"));
+        jo.put("class_grade",java.net.URLEncoder.encode("高二","UTF-8"));
+        jo.put("year", "2013~2014");
+        jo.put("type","NORMAL");
+        jo.put("isflag","1");
+        ja.add(jo); 
+        String param="timestamp="+t+"&lzx_school_id="+lzxschoolid+"&key="+key+"&clsarrayjson="+ja.toString();
+        System.out.println(url+"&"+param);
         System.out.println(sendPostURL(url,param));
     }
 
