@@ -3573,6 +3573,7 @@ public class UserController extends BaseController<UserInfo> {
                 jeEntity.setMsg("异常错误，网站设置错误，请联系管理人员设置学期!");
                 response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return null;
             }
+            term=this.termManager.getAutoTerm();
 		}
 		//得到教授班级
 		String year=term.getYear();
