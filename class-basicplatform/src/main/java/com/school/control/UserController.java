@@ -5901,7 +5901,7 @@ public class UserController extends BaseController<UserInfo> {
         }
         UserInfo loginUsr=new UserInfo();
         String schoolid=request.getParameter("lzx_school_id");
-        if(schoolid==null||schoolid.trim().length()<1||!UtilTool.isNumber(schoolid)){
+        if(schoolid==null||schoolid.trim().length()<1){//||!UtilTool.isNumber(schoolid)
             jsonEntity.setMsg("异常错误，分校ID为空!!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
@@ -5936,9 +5936,9 @@ public class UserController extends BaseController<UserInfo> {
         Long logint=Long.parseLong(logintime);
         Long nt=new Date().getTime();
         double d=(nt-logint)/(1000*60);
-        if(d>3){//大于三分钟
-            jsonEntity.setMsg("异常错误，响应超时!接口三分钟内有效!");
-            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        if(d>30){//大于三分钟
+            //jsonEntity.setMsg("异常错误，响应超时!接口三分钟内有效!");
+            //response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         String loginKey=request.getParameter("login_key");
         //验证key

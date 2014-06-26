@@ -4,6 +4,7 @@ import com.school.dao.base.ICommonDAO;
 import com.school.dao.inter.teachpaltform.award.ITpClassPerformanceAwardDAO;
 import com.school.entity.teachpaltform.award.TpClassPerformanceAwardInfo;
 import com.school.manager.base.BaseManager;
+import com.school.manager.inter.teachpaltform.award.ITpClassPerformanceAwardManager;
 import com.school.util.PageResult;
 import jxl.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.util.List;
  * Created by zhengzhou on 14-6-24.
  */
 @Service
-public class TpClassPerformanceAwardManager extends BaseManager<TpClassPerformanceAwardInfo> {
+public class TpClassPerformanceAwardManager extends BaseManager<TpClassPerformanceAwardInfo> implements ITpClassPerformanceAwardManager{
     private ITpClassPerformanceAwardDAO tpClassPerformanceAwardDAO;
     @Autowired
     @Qualifier("tpClassPerformanceAwardDAO")

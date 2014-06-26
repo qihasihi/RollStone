@@ -4,6 +4,7 @@ import com.school.dao.base.CommonDAO;
 import com.school.dao.inter.teachpaltform.award.ITpClassPerformanceAwardDAO;
 import com.school.entity.teachpaltform.award.TpClassPerformanceAwardInfo;
 import com.school.util.PageResult;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Created by zhengzhou on 14-6-24.
  */
+@Component
 public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwardInfo> implements ITpClassPerformanceAwardDAO {
     @Override
     public Boolean doSave(TpClassPerformanceAwardInfo obj) {
