@@ -426,11 +426,17 @@ public class QuestionController extends BaseController<QuestionInfo> {
     public void getQuestionListByCourse(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         PageResult presult = this.getPageResultParameter(request);
+        String addCourseId = request.getParameter("addCourseid");
         String selectCourseid = request.getParameter("selectCourseid");
         TpCourseQuestion tpCourseQuestion = new TpCourseQuestion();
         tpCourseQuestion.setCourseid(Long.parseLong(selectCourseid));
         tpCourseQuestion.setStatus(1);
         List<TpCourseQuestion> questionList = this.tpCourseQuestionManager.getList(tpCourseQuestion,presult);
+        //已选择试题
+        tpCourseQuestion = new TpCourseQuestion();
+        tpCourseQuestion.setCourseid(Long.parseLong(addCourseId));
+        tpCourseQuestion.setStatus(1);
+        List<TpCourseQuestion> selectedQuestionList = this.tpCourseQuestionManager.getList(tpCourseQuestion,null);
         for(TpCourseQuestion tcq:questionList){
             QuestionOption obj = new QuestionOption();
             obj.setQuestionid(tcq.getQuestionid());
@@ -439,6 +445,13 @@ public class QuestionController extends BaseController<QuestionInfo> {
             List<QuestionOption> optionList = this.questionOptionManager.getList(obj,p);
             if(optionList!=null){
                 tcq.setQuestionOptionList(optionList);
+            }
+            //标记已选过的
+            for(TpCourseQuestion o:selectedQuestionList){
+                if(tcq.getQuestionid()==o.getQuestionid()){
+                    tcq.setState(1);
+                    break;
+                }
             }
         }
         presult.setList(questionList);

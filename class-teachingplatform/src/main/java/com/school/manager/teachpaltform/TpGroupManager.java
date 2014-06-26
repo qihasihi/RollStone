@@ -84,5 +84,9 @@ public class  TpGroupManager extends BaseManager<TpGroupInfo> implements ITpGrou
         return this.tpgroupdao.getMyGroupList(classid, classtype, termid, tchid, stuid,subjectid);
     }
 
+    public List<TpGroupInfo> getGroupBySubject(TpGroupInfo obj) {
+        return this.tpgroupdao.getGroupBySubject(obj);
+    }
+
 }
 

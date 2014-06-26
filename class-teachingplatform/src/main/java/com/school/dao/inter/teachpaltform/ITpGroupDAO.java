@@ -12,4 +12,6 @@ public interface ITpGroupDAO extends ICommonDAO<TpGroupInfo>{
 
     public List<TpGroupInfo> getMyGroupList(Integer classid,Integer classtype, String termid, Integer tchid, Integer stuid,Integer subjectid);
 
+    public List<TpGroupInfo> getGroupBySubject(TpGroupInfo obj);
+
 }

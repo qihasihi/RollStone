@@ -15,6 +15,16 @@ public class TpCourseQuestion implements Serializable{
     private Object Isreference;
     private Long courseid;
 
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    private int state;//区分是否选过，引用试题用的
+
 
     public Integer getLocalstatus() {
         return localstatus;

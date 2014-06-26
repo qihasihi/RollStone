@@ -16,7 +16,7 @@ function questionListReturn(rps){
         if(rps.objList.length<1){
             shtml+="<tr><th colspan='8' style='height:65px' align='center'>暂无信息!</th></tr>";
         }else{
-            $.each(rps.objList,function(idx,itm){
+            $.each(rps.objList[0],function(idx,itm){
                 shtml+='<tr><td>';
                 shtml+='<input type="checkbox" onclick="getQuestionIds(this,'+itm.questionid+')" value="'+itm.questionid+'" name="question"';
                 if(questionids.length>0){
@@ -25,6 +25,9 @@ function questionListReturn(rps){
                             shtml+='checked="checked"';
                         }
                     });
+                }
+                if(itm.state!=null&&itm.state>0){
+                    shtml+='checked="checked" disabled="disabled"';
                 }
                 var content=replaceAll(itm.content.toLowerCase(),'<span name="fillbank"></span>','______');
                 shtml+='/>';

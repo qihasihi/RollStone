@@ -138,6 +138,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
 		if(term==null)
 			term = this.termManager.getMaxIdTerm(true);
 		if(tg==null
+                ||tg.getSubjectid()==null
                 ||tg.getClassid()==null
                 ||tg.getClasstype()==null
 			    ||term.getRef()==null
@@ -148,8 +149,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
 			return;
 		}
 		tg.setTermid(term.getRef());
-		tg.setCuserid(this.logined(request).getUserid());
-		List<TpGroupInfo>groupList=this.tpGroupManager.getList(tg,null);
+		List<TpGroupInfo>groupList=this.tpGroupManager.getGroupBySubject(tg);
 		je.setObjList(groupList);
 		je.setType("success"); 
 		response.getWriter().append(je.toJSON());

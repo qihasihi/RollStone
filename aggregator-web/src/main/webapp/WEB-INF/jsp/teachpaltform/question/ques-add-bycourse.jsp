@@ -29,6 +29,7 @@
                 http_free_operate_handler:function(p){
                     var param={};
                     param.selectCourseid = "${param.selectCourseid}";
+                    param.addCourseid=addCourseId;
                     p.setPostParams(param);
 
                 },
@@ -41,6 +42,10 @@
                 operate_id:"mainTbl"
             });
             pageGo("p1");
+
+            $("$hideDiv").children.each(function(idx,itm){
+                alert(1);
+            });
         });
 
 
@@ -86,7 +91,13 @@
     <form id="page1form" name="page1form"  method="post" >
         <p class="nextpage" align="center" id="page1address"></p>
     </form>
-
+    <%--<div id="hideDiv" style="display: none">--%>
+        <%--<c:if test="${!empty selectedQuestion}">--%>
+            <%--<c:forEach items="${selectedQuestion}" var="itm">--%>
+                <%--<input type="text" id="${itm.questionid}" value="${itm.questionid}"/>--%>
+            <%--</c:forEach>--%>
+        <%--</c:if>--%>
+    <%--</div>--%>
     <p class="t_c p_tb_10"><a href="javascript:questionSubmit();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:window.close()" class="an_small">取&nbsp;消</a></p>
 </div>
 <%@include file="/util/foot.jsp" %>

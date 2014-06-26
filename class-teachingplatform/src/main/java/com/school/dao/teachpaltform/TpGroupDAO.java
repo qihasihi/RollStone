@@ -314,4 +314,39 @@ public class TpGroupDAO extends CommonDAO<TpGroupInfo> implements ITpGroupDAO {
         List<TpGroupInfo> tpgroupinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpGroupInfo.class, objArray);
         return tpgroupinfoList;
     }
+
+    public List<TpGroupInfo> getGroupBySubject(TpGroupInfo obj) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_group_info_proc_split_bysubject(");
+        List<Object> objList=new ArrayList<Object>();
+        if(obj==null)
+            return null;
+        if(obj.getTermid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getTermid());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClassid());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getSubjectid());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(obj.getClasstype()!=null){
+            sqlbuilder.append("?");
+            objList.add(obj.getClasstype());
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<TpGroupInfo> groupList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,TpGroupInfo.class,null);
+        return groupList;
+    }
 }

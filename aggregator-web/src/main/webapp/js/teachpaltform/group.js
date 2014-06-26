@@ -118,39 +118,43 @@ function getClassGroups(){
 	var url="group?m=getClassGroups";
 	$.ajax({
 			url:url,
-			data:{classid:classId,classtype:classType},
+			data:{classid:classId,classtype:classType,subjectid:subjectid},
 			type:'post',
 			dataType:'json',
 			error:function(){
 				alert('异常错误,系统未响应！');
 			},
 			success:function(responseText){
-                var forGroupHtml="";
-                var changeGroupHtml="";
-                var groupHtml="<colgroup><col class='w350'/><col class='w190'/><col class='w200'/></colgroup><tr><th>组名</th><th>学号</th><th>组员姓名</th></tr>";
-                if(responseText!=null&&responseText.objList!=null&&responseText.objList.length>0){
-                    $.each(responseText.objList,function(idx,itm){
-                        groupHtml+="<tbody id='group_"+itm.groupid+"'>";
-                        groupHtml+="<tr>";
-                        groupHtml+="<td class='v_c'>"+itm.groupname;
-                        if(isTrust.toString().length<1)
-                            groupHtml+="<a href='javascript:delGroup("+itm.groupid+");' class='ico04' title='删除'>";
-                        groupHtml+="</td>";
-                        groupHtml+="<td>&nbsp;</td>";
-                        groupHtml+="<td>&nbsp;</td>";
-                        groupHtml+="</tr>";
-                        groupHtml+="</tbody>";
-                        forGroupHtml+="<li><input type='radio' name='forGroupId' value='"+itm.groupid+"'/>"+itm.groupname+"</li>";
-                        changeGroupHtml+="<option value='"+itm.groupid+"' >"+itm.groupname+"</option>";
-                    });
-                    $("#group_list").html(groupHtml);
-                    $("#forGroupList").html(forGroupHtml);
-                    $("#changeGroups").html(changeGroupHtml);
-                    $.each(responseText.objList,function(idx,itm){
-                        getGroupStudents(itm.groupid,itm.groupname);
-                    });
+                if(responseText.type=="success"){
+                    var forGroupHtml="";
+                    var changeGroupHtml="";
+                    var groupHtml="<colgroup><col class='w350'/><col class='w190'/><col class='w200'/></colgroup><tr><th>组名</th><th>学号</th><th>组员姓名</th></tr>";
+                    if(responseText!=null&&responseText.objList!=null&&responseText.objList.length>0){
+                        $.each(responseText.objList,function(idx,itm){
+                            groupHtml+="<tbody id='group_"+itm.groupid+"'>";
+                            groupHtml+="<tr>";
+                            groupHtml+="<td class='v_c'>"+itm.groupname;
+                            if(isTrust.toString().length<1)
+                                groupHtml+="<a href='javascript:delGroup("+itm.groupid+");' class='ico04' title='删除'>";
+                            groupHtml+="</td>";
+                            groupHtml+="<td>&nbsp;</td>";
+                            groupHtml+="<td>&nbsp;</td>";
+                            groupHtml+="</tr>";
+                            groupHtml+="</tbody>";
+                            forGroupHtml+="<li><input type='radio' name='forGroupId' value='"+itm.groupid+"'/>"+itm.groupname+"</li>";
+                            changeGroupHtml+="<option value='"+itm.groupid+"' >"+itm.groupname+"</option>";
+                        });
+                        $("#group_list").html(groupHtml);
+                        $("#forGroupList").html(forGroupHtml);
+                        $("#changeGroups").html(changeGroupHtml);
+                        $.each(responseText.objList,function(idx,itm){
+                            getGroupStudents(itm.groupid,itm.groupname);
+                        });
+                    }else{
+                        $("#group_list").html(groupHtml+"<tr><td colspan='3'>您还没有创建小组！</td></tr>");
+                    }
                 }else{
-                    $("#group_list").html(groupHtml+"<tr><td colspan='3'>您还没有创建小组！</td></tr>");
+                    alert(responseText.msg);
                 }
 
 	}}); 
