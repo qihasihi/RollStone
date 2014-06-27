@@ -217,6 +217,11 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
                 objList.add(tptaskinfo.getOrderidx());
             } else
                 sqlbuilder.append("null,");
+            if (tptaskinfo.getQuesnum() != null) {
+                sqlbuilder.append("?,");
+                objList.add(tptaskinfo.getQuesnum());
+            } else
+                sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -333,6 +338,11 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
         if (tptaskinfo.getOrderidx() != null) {
             sqlbuilder.append("?,");
             objList.add(tptaskinfo.getOrderidx());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskinfo.getQuesnum() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getQuesnum());
         } else
             sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
