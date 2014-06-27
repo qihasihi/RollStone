@@ -107,6 +107,36 @@ public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwar
         return returnVal;
     }
 
+    /**
+     * Ìí¼Ó»òÐÞ¸Ä
+     * @param obj
+     * @return
+     */
+    public boolean AddOrUpdate(final TpClassPerformanceAwardInfo obj){
+
+        List<Object> returnVal=new ArrayList<Object>();
+        StringBuilder sqlbuilder=new StringBuilder();
+        sqlbuilder.append("{CALL tp_cls_performance_award_info_addOrUpdate(");
+
+        if(obj.getCourseid()!=null){
+            sqlbuilder.append("?,");
+            returnVal.add(obj.getCourseid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getGroupid()!=null){
+            sqlbuilder.append("?,");
+            returnVal.add(obj.getGroupid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getAwardnumber()!=null){
+            sqlbuilder.append("?,");
+            returnVal.add(obj.getAwardnumber());
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
+        return this.executeQuery_PROC(sqlbuilder.toString(),returnVal.toArray());
+    }
+
     @Override
     public List<Object> getDeleteSql(TpClassPerformanceAwardInfo obj, StringBuilder sqlbuilder) {
         return null;

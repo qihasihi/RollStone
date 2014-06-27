@@ -10,9 +10,9 @@ import java.util.Date;
 @Entity
 public class TpClassPerformanceAwardInfo implements Serializable {
     private Integer ref;
-    private Integer groupid;
+    private Long groupid;
     private Integer awardnumber;
-    private Integer courseid;
+    private Long courseid;
     private Date ctime;
     private Date mtime;
 
@@ -24,11 +24,11 @@ public class TpClassPerformanceAwardInfo implements Serializable {
         this.ref = ref;
     }
 
-    public Integer getGroupid() {
+    public Long getGroupid() {
         return groupid;
     }
 
-    public void setGroupid(Integer groupid) {
+    public void setGroupid(Long groupid) {
         this.groupid = groupid;
     }
 
@@ -40,11 +40,11 @@ public class TpClassPerformanceAwardInfo implements Serializable {
         this.awardnumber = awardnumber;
     }
 
-    public Integer getCourseid() {
+    public Long getCourseid() {
         return courseid;
     }
 
-    public void setCourseid(Integer courseid) {
+    public void setCourseid(Long courseid) {
         this.courseid = courseid;
     }
 

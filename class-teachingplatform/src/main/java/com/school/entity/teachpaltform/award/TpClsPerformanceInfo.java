@@ -9,12 +9,12 @@ import java.io.Serializable;
 @Entity
 public class TpClsPerformanceInfo implements  Serializable{
     private Integer ref;
-    private Integer userid;
+    private Long userid;
     private  Integer attendanceNum;
     private Integer similingNum;
     private Integer violationDisNum;
-    private Integer groupid;
-    private Integer courseid;
+    private Long groupid;
+    private Long courseid;
 
     private String realName;
     private String groupName;
@@ -43,11 +43,11 @@ public class TpClsPerformanceInfo implements  Serializable{
         this.ref = ref;
     }
 
-    public Integer getUserid() {
+    public Long getUserid() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
+    public void setUserid(Long userid) {
         this.userid = userid;
     }
 
@@ -75,19 +75,19 @@ public class TpClsPerformanceInfo implements  Serializable{
         this.violationDisNum = violationDisNum;
     }
 
-    public Integer getGroupid() {
+    public Long getGroupid() {
         return groupid;
     }
 
-    public void setGroupid(Integer groupid) {
+    public void setGroupid(Long groupid) {
         this.groupid = groupid;
     }
 
-    public Integer getCourseid() {
+    public Long getCourseid() {
         return courseid;
     }
 
-    public void setCourseid(Integer courseid) {
+    public void setCourseid(Long courseid) {
         this.courseid = courseid;
     }
 }

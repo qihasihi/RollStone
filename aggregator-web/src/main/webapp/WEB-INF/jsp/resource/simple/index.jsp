@@ -18,7 +18,7 @@
     <div class="zyxt_jb_homeR">
         <p><strong class="font-darkblue">资源中心</strong></p>
         <ul class="font-darkblue">
-            <li><a href="simpleRes?m=toAllResPage&subjectid=4" target="_blank" class="yl">物理</a></li>
+            <li><a href="simpleRes?m=toAllResPage&subjectid=4" target="_blank" class="wl">物理</a></li>
             <li><a href="simpleRes?m=toAllResPage&subjectid=6" target="_blank" class="ls">历史</a></li>
             <li><a href="simpleRes?m=toAllResPage&subjectid=7" target="_blank" class="sw">生物</a></li>
             <li><a href="simpleRes?m=toAllResPage&subjectid=5" target="_blank" class="hx">化学</a></li>

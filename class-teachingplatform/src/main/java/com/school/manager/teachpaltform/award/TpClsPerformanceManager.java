@@ -72,12 +72,20 @@ public class TpClsPerformanceManager extends BaseManager<TpClsPerformanceInfo> i
      * @param classtype
      * @return
      */
-    public List<Map<String,Object>> getPageDataList(final Integer courseid,final Integer classid,final Integer classtype){
+    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype){
         return tpClsPerformanceDAO.getPageDataList(courseid,classid,classtype);
     }
 
     @Override
     public TpClsPerformanceInfo getOfExcel(Sheet rs, int cols, int d, String type) {
         return null;
+    }
+    /**
+     * 添加或更新
+     * @param entity
+     * @return
+     */
+    public boolean AddOrUpdate(final TpClsPerformanceInfo entity){
+        return tpClsPerformanceDAO.AddOrUpdate(entity);
     }
 }

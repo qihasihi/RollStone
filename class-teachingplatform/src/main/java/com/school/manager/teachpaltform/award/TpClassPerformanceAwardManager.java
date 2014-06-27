@@ -64,7 +64,9 @@ public class TpClassPerformanceAwardManager extends BaseManager<TpClassPerforman
     public List<Object> getDeleteSql(final TpClassPerformanceAwardInfo obj, StringBuilder sqlbuilder) {
         return tpClassPerformanceAwardDAO.getDeleteSql(obj,sqlbuilder);
     }
-
+    public boolean AddOrUpdate(final TpClassPerformanceAwardInfo entity){
+        return tpClassPerformanceAwardDAO.AddOrUpdate(entity);
+    }
     @Override
     public TpClassPerformanceAwardInfo getOfExcel(Sheet rs, int cols, int d, String type) {
         return null;

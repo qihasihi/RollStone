@@ -134,7 +134,7 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
      * @param classtype
      * @return
      */
-    public List<Map<String,Object>> getPageDataList(final Integer courseid,final Integer classid,final Integer classtype){
+    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype){
         List<Object> objList=new ArrayList<Object>();
         StringBuilder sqlbuilder=new StringBuilder("{CALL tp_cls_performance_info_list(");
         if(courseid!=null){
@@ -148,13 +148,57 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
         }else
             sqlbuilder.append("NULL,");
         if(classtype!=null){
-            sqlbuilder.append("?,");
+            sqlbuilder.append("?");
             objList.add(classtype);
         }else
-            sqlbuilder.append("NULL,");
+            sqlbuilder.append("NULL");
         sqlbuilder.append(")}");
 
         return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
+
+    /**
+     * Ìí¼Ó»òÐÞ¸Ä
+     * @param obj
+     * @return
+     */
+    public boolean AddOrUpdate(final TpClsPerformanceInfo obj){
+        StringBuilder sqlbuilder=new StringBuilder();
+        List<Object> objlist=new ArrayList<Object>();
+        sqlbuilder.append("{CALL tp_class_performance_info_addOrupdate(");
+
+        if(obj.getUserid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getUserid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getGroupid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getGroupid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getCourseid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getCourseid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getAttendanceNum()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getAttendanceNum());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSimilingNum()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getSimilingNum());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getViolationDisNum()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getViolationDisNum());
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
+        return this.executeQuery_PROC(sqlbuilder.toString(),objlist.toArray());
     }
 
     @Override
