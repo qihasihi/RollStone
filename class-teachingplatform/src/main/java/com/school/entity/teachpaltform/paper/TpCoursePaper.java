@@ -7,6 +7,15 @@ public class TpCoursePaper {
     private java.lang.Long paperid;
     private java.lang.Integer ref;
     private java.lang.Long courseid;
+    private String papername;
+
+    public String getPapername() {
+        return papername;
+    }
+
+    public void setPapername(String papername) {
+        this.papername = papername;
+    }
 
     public java.lang.Long getPaperid(){
       return paperid;

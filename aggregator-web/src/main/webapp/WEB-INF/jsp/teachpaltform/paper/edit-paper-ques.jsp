@@ -368,18 +368,8 @@ function showCourseList(){
 <%@include file="/util/head.jsp" %>
 <%@include file="/util/nav-base.jsp" %>
 <div class="zhuanti">
-    <p>${coursename }<a class="ico13" href="javascript:showCourseList();"></a></p>
-    <ul  style="display:none;" id="ul_courselist">
-        <c:if test="${!empty courseList}">
-            <c:forEach items="${courseList}" var="c">
-                <c:if test="${c.courseid!=courseid}">
-                    <li>
-                        <a href="task?toTaskList&courseid=${c.courseid }">${c.coursename }</a>
-                    </li>
-                </c:if>
-            </c:forEach>
-        </c:if>
-    </ul>
+    <p>${paper.papername }</p>
+
 </div>
 
 <div class="subpage_nav">

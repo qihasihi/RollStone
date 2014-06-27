@@ -62,6 +62,30 @@ public class PaperInfo {
     public void setScore(java.lang.Float score){
       this.score = score;
     }
+
+    public static enum PAPER_TYPE{
+        /**
+         * 标准A
+         */
+        STANDARD_A{public Integer getValue(){return 1;}},
+        /**
+         * 标准B
+         */
+        STANDARD_B{public Integer getValue(){return 2;}},
+        /**
+         * 教师组卷
+         */
+        ORGANIZE{public Integer getValue(){return 3;}},
+        /**
+         * 自主测试
+         */
+        FREE{public Integer getValue(){return 4;}},
+        /**
+         * 微课程
+         */
+        VIEW_COURSE{public Integer getValue(){return 5;}};
+        public abstract Integer getValue();
+    }
   
 
 }
