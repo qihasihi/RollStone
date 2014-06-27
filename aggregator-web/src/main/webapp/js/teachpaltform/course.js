@@ -145,8 +145,6 @@ function addTeacherCourse(){
     var selectedcourseids='';
     $("#selectedCourse li").each(function(ix,im){
         selectedcourseids+=$(this).attr("id")+"|";
-
-        alert($(this).attr("id"));
     });
     $.ajax({
         url:'teachercourse?m=addCourse',
