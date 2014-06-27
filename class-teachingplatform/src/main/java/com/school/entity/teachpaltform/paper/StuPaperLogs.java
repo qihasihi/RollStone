@@ -8,7 +8,7 @@ public class StuPaperLogs {
     private java.sql.Timestamp ctime;
     private java.lang.Integer userid;
     private java.lang.Long ref;
-    private java.lang.Integer score;
+    private Float score;
 
     public java.lang.Long getPaperid(){
       return paperid;
@@ -34,10 +34,10 @@ public class StuPaperLogs {
     public void setRef(java.lang.Long ref){
       this.ref = ref;
     }
-    public java.lang.Integer getScore(){
+    public java.lang.Float getScore(){
       return score;
     }
-    public void setScore(java.lang.Integer score){
+    public void setScore(java.lang.Float score){
       this.score = score;
     }
   

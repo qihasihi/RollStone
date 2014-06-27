@@ -29,6 +29,7 @@
                 <a href="commoncomment?m=toCourseCommentList&objectid=${courseid }">专题评价</a>
             </li>-->
         <li><a href="question?m=toQuestionList&courseid=${courseid}">试&nbsp;&nbsp;题</a></li>
+        <li><a href="paper?toPaperList&courseid=${courseid}">试&nbsp;&nbsp;卷</a></li>
     </ul>
 </div>
 

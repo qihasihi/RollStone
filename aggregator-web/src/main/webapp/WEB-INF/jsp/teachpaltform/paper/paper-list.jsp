@@ -6,7 +6,7 @@
 <html>
 <head>
 <title>${sessionScope.CURRENT_TITLE}</title>
-<script type="text/javascript" src="<%=basePath %>js/teachpaltform/tptask.js"></script>
+<script type="text/javascript" src="<%=basePath %>js/teachpaltform/paper.js"></script>
 <script type="text/javascript">
 var courseid="${courseid}";
 var pList,pBankList;
@@ -27,26 +27,7 @@ $(function(){
         pagetotal : 1,
         operate_id : "initItemList"
     });
-    pageGo('pList');
-
-    $('body').bind('click',function(){
-        var obj=$("#sel_order_idx");
-        if(obj.length>0){
-            var width=parseFloat(obj.css("width").replace("px",""));
-            var height=parseFloat(obj.css("height").replace("px",""));
-            var top=parseFloat(obj.css("top").replace("px",""));
-            var left=parseFloat(obj.css("left").replace("px",""));
-            if(mousePostion.x>(left+width)||mousePostion.x<left
-                    ||mousePostion.y<top||mousePostion.y>(top+height)){
-                //恢复事件
-                $(obj).parent().bind("click",function(){
-                    spanClick(this,total);
-                });
-                var h=$(obj).find('option:selected').val();
-                $(obj).parent().html(h);
-            }
-        }
-    });
+  //  pageGo('pList');
 
 
 
@@ -403,27 +384,24 @@ function showCourseList(){
 
 <div class="subpage_nav">
     <ul>
-        <li class="crumb"><a>学习任务</a></li>
+        <li><a>学习任务</a></li>
         <li><a  href="tpres?toTeacherIdx&courseid=${courseid }&termid=${termid}">专题资源</a></li>
         <li><a href="tptopic?m=index&courseid=${courseid }">互动空间</a></li>
         <!--<li>
                 <a href="commoncomment?m=toCourseCommentList&objectid=${courseid }">专题评价</a>
             </li> -->
         <li><a href="question?m=toQuestionList&courseid=${courseid}">试&nbsp;&nbsp;题</a></li>
-        <li><a href="paper?toPaperList&courseid=${courseid}">试&nbsp;&nbsp;卷</a></li>
+        <li class="crumb"><a href="javascript:void (0);">试&nbsp;&nbsp;卷</a></li>
     </ul>
 </div>
 <div class="content2">
     <div class="subpage_lm">
         <p class="f_right"><a class="ico15" target="_blank" href="tpres?m=toRecycleIdx&type=1&courseid=${courseid}" title="回收站"></a></p>
-        <ul>
-            <li name="li_nav" id="li_" class="crumb"><a href='javascript:pageGo("pList")'>已发任务</a></li>
-            <li name="li_nav"><a href='javascript:pageGo("pBankList")'>任务库</a></li>
-        </ul>
+
     </div>
 
     <div id="dv_task">
-        <p class="jxxt_zhuanti_add font-darkblue"><a href="task?toAddTask&courseid=${param.courseid }&termid=${param.termid}" ><span class="ico26"></span>添加任务</a></p>
+        <p class="jxxt_zhuanti_add font-darkblue"><a href="task?toAddTask&courseid=${param.courseid }&termid=${param.termid}" ><span class="ico26"></span>添加试卷</a></p>
         <div class="jxxt_zhuanti" id="initItemList">
 
         </div>
@@ -487,21 +465,6 @@ function showCourseList(){
 
 
 <%@include file="/util/foot.jsp" %>
-<script type="text/javascript">
-    <c:if test="${!empty suggestList}">
-    <c:forEach items="${suggestList}" var="s">
-    var isanonymous="${s.isanonymous}";
-    var htm='<li ';
-    if(typeof(isanonymous)!='undefined'&&isanonymous<1)
-        htm+=' onmouseover="genderShowdiv(\'${s.userinfo.realname}\',\'${s.ctimeString}\')" onmouseout="$(\'#div_tmp_show01\').remove();" ';
-    htm+='>${s.suggestcontent}</li>';
-    var divobj=$("#div_suggest_${s.taskid}");
-    if(divobj.length>0){
-        $("#p_suggest_${s.taskid}").show();
-        divobj.append(htm);
-    }
-    </c:forEach>
-    </c:if>
-</script>
+
 </body>
 </html>

@@ -71,7 +71,8 @@
           <li><a href="task?toTaskList&courseid=${courseid}">学习任务</a></li>
           <li><a href="tpres?toTeacherIdx&courseid=${courseid}">专题资源</a></li>
           <li class="crumb"><a>互动空间</a></li>
-          <li><a  href="question?m=toQuestionList&courseid=${courseid}">试题</a></li>
+          <li><a  href="question?m=toQuestionList&courseid=${courseid}">试&nbsp;&nbsp;题</a></li>
+          <li><a href="paper?toPaperList&courseid=${courseid}">试&nbsp;&nbsp;卷</a></li>
       </c:if>
       <c:if test="${!empty roleStr&&roleStr eq 'STUDENT'}">
           <li><a href="task?toStuTaskIndex&courseid=${courseid }">学习任务</a></li>

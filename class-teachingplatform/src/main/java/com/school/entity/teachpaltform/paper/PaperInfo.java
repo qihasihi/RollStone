@@ -11,7 +11,8 @@ public class PaperInfo {
     private java.sql.Timestamp mtime;
     private java.lang.Long ref;
     private java.lang.String papername;
-    private java.lang.Integer score;
+    private Float score;
+
 
     public java.lang.Integer getCuserid(){
       return cuserid;
@@ -55,10 +56,10 @@ public class PaperInfo {
     public void setPapername(java.lang.String papername){
       this.papername = papername;
     }
-    public java.lang.Integer getScore(){
+    public Float getScore(){
       return score;
     }
-    public void setScore(java.lang.Integer score){
+    public void setScore(java.lang.Float score){
       this.score = score;
     }
   

@@ -27,6 +27,15 @@ public class TpTaskInfo implements Serializable {
     private Long courseid;
     private Long quoteid;
     private Integer orderidx;
+    private Integer quesnum;
+
+    public Integer getQuesnum() {
+        return quesnum;
+    }
+
+    public void setQuesnum(Integer quesnum) {
+        this.quesnum = quesnum;
+    }
 
     public Integer getOrderidx() {
         return orderidx;

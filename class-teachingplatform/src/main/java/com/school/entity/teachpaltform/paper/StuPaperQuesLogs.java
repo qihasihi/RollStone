@@ -11,7 +11,7 @@ public class StuPaperQuesLogs {
     private java.sql.Timestamp ctime;
     private java.lang.Long quesid;
     private java.lang.Integer userid;
-    private java.lang.Integer score;
+    private Float score;
 
     public java.lang.Integer getIsright(){
       return isright;
@@ -55,10 +55,10 @@ public class StuPaperQuesLogs {
     public void setUserid(java.lang.Integer userid){
       this.userid = userid;
     }
-    public java.lang.Integer getScore(){
+    public java.lang.Float getScore(){
       return score;
     }
-    public void setScore(java.lang.Integer score){
+    public void setScore(java.lang.Float score){
       this.score = score;
     }
   

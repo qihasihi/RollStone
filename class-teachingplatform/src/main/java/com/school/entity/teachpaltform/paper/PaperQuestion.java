@@ -13,7 +13,7 @@ public class PaperQuestion implements Serializable{
     private java.lang.Long questionid;
     private java.lang.Integer ref;
     private java.sql.Timestamp ctime;
-    private java.lang.Integer score;
+    private Float score;
 
     public java.lang.Long getPaperid(){
       return paperid;
@@ -45,10 +45,10 @@ public class PaperQuestion implements Serializable{
     public void setCtime(java.sql.Timestamp ctime){
       this.ctime = ctime;
     }
-    public java.lang.Integer getScore(){
+    public java.lang.Float getScore(){
       return score;
     }
-    public void setScore(java.lang.Integer score){
+    public void setScore(java.lang.Float score){
       this.score = score;
     }
   

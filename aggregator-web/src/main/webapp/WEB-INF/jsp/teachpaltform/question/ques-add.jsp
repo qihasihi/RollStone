@@ -138,7 +138,7 @@
         </tr>
         <tr>
             <th>&nbsp;</th>
-            <td><a href="javascript:void(0);" onclick="doAddQuestion();" class="an_small">提&nbsp;交</a><a href="javascript:history.go(-1);" class="an_small">取&nbsp;消</a></td>
+            <td><a href="javascript:void(0);" onclick="doAddQuestion();" class="an_small">提&nbsp;交</a><a  href="javascript:window.close()" class="an_small">取&nbsp;消</a></td>
         </tr>
     </table>
 </div>

@@ -126,7 +126,7 @@ function getInvestReturnMethod(rps){
 
             html+="<a target='_blank' href='task?toTaskList&courseid="+itm.courseid+"&subjectid="+global_subjectid+"'>"+itm.coursename+"</p></td>";
             html+="<td>";
-            if(itm.classEntity.length>0){
+            if(typeof(itm.classEntity)!='undefined'&&itm.classEntity.length>0){
                 if(itm.classEntity[0].CLASS_NAME!="0"){
                     $.each(itm.classEntity,function(n,classTemp){
                         html+="<p><span class='f_right'>"+classTemp.CLASS_TIME.substring(0,16)+"</span>"+classTemp.CLASS_NAME+"</p>";
