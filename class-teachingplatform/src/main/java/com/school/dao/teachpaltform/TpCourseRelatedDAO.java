@@ -26,12 +26,32 @@ public class TpCourseRelatedDAO extends CommonDAO<TpCourseRelatedInfo> implement
 
     @Override
     public Boolean doDelete(TpCourseRelatedInfo obj) {
-        return null;
+        if(obj==null)
+            return false;
+        StringBuilder sqlbuilder=new StringBuilder();
+        List<Object> objList=getDeleteSql(obj, sqlbuilder);
+        Object afficeObj=this.executeSacle_PROC(sqlbuilder.toString(), objList.toArray());
+        if(afficeObj!=null&&afficeObj.toString().trim().length()>0&&Integer.parseInt(afficeObj.toString())>0){
+            return true;
+        }return false;
     }
 
     @Override
     public List<TpCourseRelatedInfo> getList(TpCourseRelatedInfo obj, PageResult presult) {
-        return null;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_j_course_related_proc_list(");
+        List<Object> objList=new ArrayList<Object>();
+        if(obj.getCourseid()==null)
+            return null;
+        if(obj.getCourseid()!=null){
+            sqlbuilder.append("?");
+            objList.add(obj.getCourseid());
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<TpCourseRelatedInfo> tpCourseRelatedInfoList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,TpCourseRelatedInfo.class,null);
+        return tpCourseRelatedInfoList;
     }
 
     @Override
@@ -63,6 +83,17 @@ public class TpCourseRelatedDAO extends CommonDAO<TpCourseRelatedInfo> implement
 
     @Override
     public List<Object> getDeleteSql(TpCourseRelatedInfo obj, StringBuilder sqlbuilder) {
-        return null;
+        if(obj==null || sqlbuilder==null)
+            return null;
+        sqlbuilder.append("{CALL tp_j_course_related_proc_del(");
+        List<Object>objList = new ArrayList<Object>();
+        if (obj.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(obj.getCourseid());
+        } else
+            sqlbuilder.append("NULL,");
+
+        sqlbuilder.append("?)}");
+        return objList;
     }
 }

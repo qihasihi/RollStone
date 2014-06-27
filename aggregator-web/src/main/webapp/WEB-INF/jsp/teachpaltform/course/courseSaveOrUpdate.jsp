@@ -17,7 +17,6 @@
         $(function(){
             inputThinking();
             $("#material_id").val(materialid);
-
             /**
             *开始时间后，班级、开始时间都不能再修改
              */
@@ -154,16 +153,22 @@
                     不分享</td>
             </tr>
             <tr>
-                <th>关联专题：</th>
+                <th>&nbsp;&nbsp;关联专题：</th>
                 <td id="related_p">
-                    <input type="text" id="related" />  &nbsp;&nbsp;&nbsp;<input type="button" value="添加" onclick="addRelatedItem()"/>
+                    <input type="text" id="related" class="w430"/>  &nbsp;&nbsp;&nbsp;<input type="button" value="添加" onclick="addRelatedItem()"/>
                     <input type="hidden" id="hcourse_id"/>
                 </td>
             </tr>
             <tr>
-                <th>已选关联专题：</th>
+                <th></th>
                 <td id="">
-                    <ul id="selectedCourse"></ul>
+                    <ul  class="p_t_10" id="selectedCourse">
+                        <c:if test="${!empty trList}">
+                            <c:forEach items="${trList}" var="itm">
+                                <li id="${itm.relatedcourseid}">${itm.coursename}<a class="ico_delete" title="删除" href="javascript:delLi(${itm.relatedcourseid})"></a></li>
+                            </c:forEach>
+                        </c:if>
+                    </ul>
                 </td>
             </tr>
             <tr>

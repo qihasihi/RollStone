@@ -1775,6 +1775,29 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             }
         }
 
+        //关联专题
+        String selectedCourseid=request.getParameter("selectcourseid");
+        if(selectedCourseid.length()>0){
+            //  首先删除旧的关系
+            TpCourseRelatedInfo o = new TpCourseRelatedInfo();
+            o.setCourseid(tc.getCourseid());
+            sql = new StringBuilder();
+            objList = this.tpCourseRelatedManager.getDeleteSql(o,sql);
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+            //添加新的关系
+            String[] courseids = selectedCourseid.split("\\|");
+            int length = courseids.length;
+            for(int i = 0;i<length;i++){
+                TpCourseRelatedInfo obj = new TpCourseRelatedInfo();
+                obj.setCourseid(tc.getCourseid());
+                obj.setRelatedcourseid(Long.parseLong(courseids[i]));
+                sql = new StringBuilder();
+                objList = this.tpCourseRelatedManager.getSaveSql(obj, sql);
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
 
         if (sqlListArray.size() > 0 && objListArray.size() > 0) {
             boolean bo = this.tpCourseManager.doExcetueArrayProc(
@@ -2047,6 +2070,12 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         SubjectInfo sub = new SubjectInfo();
         if (tc != null && tc.getCourseid() != null) {
             List<TpCourseInfo> tcList = this.tpCourseManager.getTchCourseList(tc, null);
+            TpCourseRelatedInfo tr = new TpCourseRelatedInfo();
+            tr.setCourseid(tc.getCourseid());
+            List<TpCourseRelatedInfo> trList = this.tpCourseRelatedManager.getList(tr,null);
+            if(trList!=null&&trList.size()>0){
+                mp.put("trList",trList);
+            }
             if (tcList == null || tcList.size() == 0) {
                 jeEntity.setMsg(UtilTool.msgproperty.getProperty("专题不存在！"));// 异常错误，参数不齐，无法正常访问!
                 response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());

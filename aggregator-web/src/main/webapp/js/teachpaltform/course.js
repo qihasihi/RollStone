@@ -142,6 +142,12 @@ function addTeacherCourse(){
 //    $("#selectedCourse li").each(function(){
 //        selectCourseid+=$(this).attr("id")+'|';
 //    });
+    var selectedcourseids='';
+    $("#selectedCourse li").each(function(ix,im){
+        selectedcourseids+=$(this).attr("id")+"|";
+
+        alert($(this).attr("id"));
+    });
     $.ajax({
         url:'teachercourse?m=addCourse',
         data:{
@@ -157,7 +163,7 @@ function addTeacherCourse(){
             materialidvalues:materialidvalues,
             classTimeArray:classTimeArray.join(','),
             vclassTimeArray:vclassTimeArray.join(','),
-            selectcourseid:selectedCourseids
+            selectcourseid:selectedcourseids
         },
         type:'POST',
         dataType:'json',
@@ -288,7 +294,10 @@ function updateTeacherCourse(){
         $("input[type='checkbox'][name='tsclasses']:checked").each(function() {classTimeArray.push(classtime)});
         $("input[type='checkbox'][name='vclasses']:checked").each(function() {vclassTimeArray.push(classtime)});
     }
-
+    var selectedcourseids='';
+    $("#selectedCourse li").each(function(ix,im){
+        selectedcourseids+=$(this).attr("id")+"|";
+    });
     $.ajax({
         url:'teachercourse?m=updateCourse',
         data:{
@@ -304,7 +313,8 @@ function updateTeacherCourse(){
             vclassidstr:vclasses.join(','),
            // materialidvalues:materiaids.join(','),
             classTimeArray:classTimeArray.join(','),
-            vclassTimeArray:vclassTimeArray.join(',')
+            vclassTimeArray:vclassTimeArray.join(','),
+            selectcourseid:selectedcourseids
         },
         type:'POST',
         dataType:'json',
@@ -420,14 +430,17 @@ function toCourseLibrary(){
 function delLi(id){
     $("#"+id).remove();
 }
-
+var n = 0;
 function addRelatedItem(){
     var coursename=$("#related").val();
     var courseid=$("#hcourse_id").val();
+    if(courseid.length<1){
+        courseid="course"+n;
+        n++;
+    }
     var htm='';
-    htm+='<li id="'+courseid+'">'+coursename+'&nbsp;<a href="javascript:delLi('+courseid+')">[X]</a></li>';
-    $("#selectedCourse").after(htm);
-    selectedCourseids+=courseid+'|';
+    htm+='<li id="'+courseid+'">'+coursename+'<a class="ico_delete" title="删除" href="javascript:delLi(\''+courseid+'\')"></a></li>';
+    $("#selectedCourse").append(htm);
     $("#related").val('');
     $("#hcourse_id").val('');
 }
@@ -598,6 +611,8 @@ function selectCourseName(name,id) {
     $("#" + $("#inputId").val()).val(name);
     $("#" + $("#inputId").val()).change(); // 触发change事件，更新输入联想提示内容
     $("#thinking").css('display', 'none');
+
+    addRelatedItem();
 }
 
 /**

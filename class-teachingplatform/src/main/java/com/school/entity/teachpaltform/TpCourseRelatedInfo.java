@@ -9,6 +9,15 @@ public class TpCourseRelatedInfo implements Serializable {
     private Integer ref;
     private Long courseid;
     private Long relatedcourseid;
+    private String coursename;
+
+    public String getCoursename() {
+        return coursename;
+    }
+
+    public void setCoursename(String coursename) {
+        this.coursename = coursename;
+    }
 
     public Integer getRef() {
         return ref;

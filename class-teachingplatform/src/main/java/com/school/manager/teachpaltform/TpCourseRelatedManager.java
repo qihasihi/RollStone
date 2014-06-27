@@ -45,12 +45,12 @@ public class TpCourseRelatedManager extends BaseManager<TpCourseRelatedInfo> imp
 
     @Override
     public Boolean doDelete(TpCourseRelatedInfo obj) {
-        return null;
+        return this.tpCourseRelatedDAO.doDelete(obj);
     }
 
     @Override
     public List<TpCourseRelatedInfo> getList(TpCourseRelatedInfo obj, PageResult presult) {
-        return null;
+        return this.tpCourseRelatedDAO.getList(obj,presult);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class TpCourseRelatedManager extends BaseManager<TpCourseRelatedInfo> imp
 
     @Override
     public List<Object> getDeleteSql(TpCourseRelatedInfo obj, StringBuilder sqlbuilder) {
-        return null;
+        return this.tpCourseRelatedDAO.getDeleteSql(obj,sqlbuilder);
     }
 
     @Override
