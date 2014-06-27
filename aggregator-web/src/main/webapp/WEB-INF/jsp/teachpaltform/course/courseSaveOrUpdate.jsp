@@ -155,7 +155,7 @@
             <tr>
                 <th>&nbsp;&nbsp;关联专题：</th>
                 <td id="related_p">
-                    <input type="text" id="related" class="w430"/>  &nbsp;&nbsp;&nbsp;<input type="button" value="添加" onclick="addRelatedItem()"/>
+                    <input type="text" id="related" class="w430"/>
                     <input type="hidden" id="hcourse_id"/>
                 </td>
             </tr>
