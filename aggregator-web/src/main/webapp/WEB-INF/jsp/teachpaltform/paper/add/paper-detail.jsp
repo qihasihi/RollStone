@@ -367,7 +367,7 @@ function showCourseList(){
 <body>
 <div>
     <a href="">导入试卷</a>
-    <a href="javascript:importQuesList()">导入试题</a>
+    <a href="">导入试题</a>
     <a href="">新建试题</a>
 </div>
 <div class="zhuanti">

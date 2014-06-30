@@ -874,7 +874,7 @@ public class PaperController extends BaseController<TpTaskInfo>{
 
 
     /**
-     * 进入任务修改页
+     * 进入试卷选题页面
      * @return
      * @throws Exception
      */
@@ -906,6 +906,8 @@ public class PaperController extends BaseController<TpTaskInfo>{
         request.setAttribute("paper", tpCoursePaperList.get(0));
         return new ModelAndView("/teachpaltform/paper/edit-paper-ques");
     }
+
+
 
 
     /**

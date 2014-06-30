@@ -378,7 +378,7 @@ function genderHtml() {
 /**
  * 资源上传---查询教材
  */
-function load_material() {
+function load_material(materialid) {
     var gradeid = $("#sel_grade").val();
     if (gradeid.length < 1)
         return;
@@ -407,6 +407,8 @@ function load_material() {
                     })
                 }
                 $("#sel_material").html(htm);
+                if(typeof(materialid)!='undefined'&&materialid.length>0)
+                    $("#sel_material").val(materialid);
             }
         }
     });

@@ -265,7 +265,12 @@
             <c:if test="${!empty courseLevel}">
                 <option value="">==请选择专题类型==</option>
                 <c:forEach items="${courseLevel}" var="g">
-                    <option value="${g.dictionaryvalue}">${g.dictionaryname}</option>
+                    <c:if test="${g.dictionaryvalue eq 2}">
+                        <option selected value="${g.dictionaryvalue}">${g.dictionaryname}</option>
+                    </c:if>
+                    <c:if test="${g.dictionaryvalue ne 2}">
+                        <option  value="${g.dictionaryvalue}">${g.dictionaryname}</option>
+                    </c:if>
                 </c:forEach>
             </c:if>
         </select>
@@ -380,8 +385,7 @@
 <script type="text/javascript">
     <c:if test="${!empty materialInfo}">
         $("#sel_grade").val("${materialInfo.gradeid}");
-        load_material();
-        $("#sel_material").val("${materialInfo.teachingmaterialid}");
+        load_material("${materialInfo.teachingmaterialid}");
     </c:if>
 </script>
 

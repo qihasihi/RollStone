@@ -125,7 +125,7 @@
     /**
      * 资源上传---查询教材
      */
-    function load_material() {
+    function load_material(materialid) {
         var gradeid = $("#grade").val();
         if (gradeid.length < 1)
             return;
@@ -155,6 +155,8 @@
                         })
                     }
                     $("#material").html(htm);
+                    if(typeof(materialid)!='undefined'&&materialid.length>0)
+                        $("#material").val(materialid);
                 }
             }
         });
@@ -202,8 +204,8 @@
             <select id="level" name="level">
                 <option value="0">==请选择专题类型==</option>
                 <option value="1">自建专题</option>
-                <option value="2">标准/共享专题</option>
-                <option value="3">关联专题</option>
+                <option  value="2">标准/共享专题</option>
+                <option selected="selected" value="3">关联专题</option>
             </select>
             <input  id="coursename" name="coursename" placeholder="输入专题名     匹配" type="text" class="w240" />
             <a href="javascript:pageGo('p1');" class="an_search" title="查询"></a></p>
@@ -227,8 +229,7 @@
 <script type="text/javascript">
     <c:if test="${!empty materialInfo}">
          $("#grade").val("${materialInfo.gradeid}");
-         load_material();
-         $("#material").val("${materialInfo.teachingmaterialid}");
+         load_material("${materialInfo.teachingmaterialid}");
     </c:if>
 </script>
 </html>

@@ -14,6 +14,15 @@ public class TpCourseQuestion implements Serializable{
     public Object flag;
     private Object Isreference;
     private Long courseid;
+    private String coursename;
+
+    public String getCoursename() {
+        return coursename;
+    }
+
+    public void setCoursename(String coursename) {
+        this.coursename = coursename;
+    }
 
     public int getState() {
         return state;
@@ -95,6 +104,8 @@ public class TpCourseQuestion implements Serializable{
             questioninfo=new QuestionInfo();
         return questioninfo;
     }
+
+
     public void setQuestioninfo(QuestionInfo questioninfo) {
         this.questioninfo = questioninfo;
     }

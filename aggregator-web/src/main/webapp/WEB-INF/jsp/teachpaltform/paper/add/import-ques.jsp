@@ -13,7 +13,7 @@ var pList,pBankList;
 var total;
 $(function(){
     pList = new PageControl( {
-        post_url : 'task?m=ajaxTaskList',
+        post_url : 'question?m=importPaperQuesList',
         page_id : 'page1',
         page_control_name : "pList",
         post_form : document.pListForm,
@@ -367,7 +367,7 @@ function showCourseList(){
 <body>
 <div>
     <a href="">导入试卷</a>
-    <a href="javascript:importQuesList()">导入试题</a>
+    <a href="">导入试题</a>
     <a href="">新建试题</a>
 </div>
 <div class="zhuanti">

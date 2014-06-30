@@ -972,6 +972,86 @@ public class QuestionController extends BaseController<QuestionInfo> {
         response.getWriter().print(je.toJSON());
     }
 
+
+    /**
+     * 试卷相关功能
+     * */
+
+
+    /**
+     * 试题导入页面
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toImportPaperQuesPage", method = RequestMethod.POST)
+    public ModelAndView toImportQuesPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String courseid=request.getParameter("corseid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return null;
+        }
+        request.setAttribute("corseid",courseid);
+        return new ModelAndView("/teachpaltform/paper/add/import-ques");
+    }
+
+    /**
+     * 获取要导入试卷的试题列表
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=importPaperQuesList", method = RequestMethod.POST)
+    public void importQuestionList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JsonEntity jsonEntity=new JsonEntity();
+        PageResult presult=this.getPageResultParameter(request);
+        String courseid=request.getParameter("courseid");
+        String coursename=request.getParameter("coursename");
+
+
+        //得到列表
+        List<TpCourseQuestion> tmpList=new ArrayList<TpCourseQuestion>();
+        TpCourseQuestion tpCourseQuestion=new TpCourseQuestion();
+        tpCourseQuestion.setCourseid(Long.parseLong(courseid));
+        //1：有效 2：已删除
+        tpCourseQuestion.setStatus(1);
+        if(courseid!=null&&courseid.trim().length()>0)
+            tpCourseQuestion.setCourseid(Long.parseLong(courseid));
+        if(coursename!=null&&coursename.trim().length()>0)
+            tpCourseQuestion.setCoursename(coursename);
+
+
+        /*if(questionid!=null&&questionid.trim().length()>0)
+            tpCourseQuestion.setQuestionid(Long.parseLong(questionid));
+        if(flag!=null&&flag.trim().length()>0)
+            tpCourseQuestion.setFlag(1);//去除已发布并且结束了的任务试题
+        tpCourseQuestion.setQuestiontype(questype.equals("0")?null:Integer.parseInt(questype));*/
+        tpCourseQuestion.setUserid(this.logined(request).getUserid());
+        presult.setOrderBy(" u.c_time DESC,q.c_time DESC ");
+        List<TpCourseQuestion> tpCourseQuestionList=this.tpCourseQuestionManager.getList(tpCourseQuestion,presult);
+        if(tpCourseQuestionList!=null&&tpCourseQuestionList.size()>0){
+            for(TpCourseQuestion tq :tpCourseQuestionList){
+                if(tq.getQuestiontype()==3||tq.getQuestiontype()==4){
+                    QuestionOption questionOption=new QuestionOption();
+                    questionOption.setQuestionid(tq.getQuestionid());
+                    PageResult p = new PageResult();
+                    p.setPageNo(0);
+                    p.setPageSize(0);
+                    p.setOrderBy("u.option_type");
+                    List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,p);
+                    tq.setQuestionOptionList(questionOptionList);
+                }
+                tmpList.add(tq);
+            }
+        }
+        presult.setList(tmpList);
+        jsonEntity.setPresult(presult);
+        jsonEntity.setType("success");
+        response.getWriter().print(jsonEntity.toJSON());
+    }
+
 }
 
 
