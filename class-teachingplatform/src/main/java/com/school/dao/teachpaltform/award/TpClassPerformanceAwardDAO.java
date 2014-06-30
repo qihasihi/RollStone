@@ -68,6 +68,11 @@ public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwar
             rturnVal.add(obj.getGroupid());
         }else
             sqlbuilder.append("null,");
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            rturnVal.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
         if(obj.getAwardnumber()!=null){
             sqlbuilder.append("?,");
             rturnVal.add(obj.getAwardnumber());
@@ -98,6 +103,11 @@ public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwar
             returnVal.add(obj.getGroupid());
         }else
             sqlbuilder.append("NULL,");
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            returnVal.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
         if(obj.getAwardnumber()!=null){
             sqlbuilder.append("?,");
             returnVal.add(obj.getAwardnumber());
@@ -126,6 +136,11 @@ public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwar
         if(obj.getGroupid()!=null){
             sqlbuilder.append("?,");
             returnVal.add(obj.getGroupid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            returnVal.add(obj.getSubjectid());
         }else
             sqlbuilder.append("NULL,");
         if(obj.getAwardnumber()!=null){

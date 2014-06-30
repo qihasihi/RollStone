@@ -18,7 +18,14 @@ public class TpClsPerformanceInfo implements  Serializable{
 
     private String realName;
     private String groupName;
+    private Integer subjectid;
+    public Integer getSubjectid() {
+        return subjectid;
+    }
 
+    public void setSubjectid(Integer subjectid) {
+        this.subjectid = subjectid;
+    }
     public String getRealName() {
         return realName;
     }

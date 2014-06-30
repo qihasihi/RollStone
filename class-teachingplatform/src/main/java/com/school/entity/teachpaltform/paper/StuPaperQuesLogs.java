@@ -1,6 +1,9 @@
 package  com.school.entity.teachpaltform.paper;
 
-public class StuPaperQuesLogs {
+import java.io.Serializable;
+import java.util.Date;
+
+public class StuPaperQuesLogs implements  Serializable {
 
 	public void StuPaperQuesLogs (){}
    
@@ -8,7 +11,7 @@ public class StuPaperQuesLogs {
     private java.lang.Long paperid;
     private java.lang.String answer;
     private java.lang.Integer ref;
-    private java.sql.Timestamp ctime;
+    private Date ctime;
     private java.lang.Long quesid;
     private java.lang.Integer userid;
     private Float score;
@@ -37,10 +40,10 @@ public class StuPaperQuesLogs {
     public void setRef(java.lang.Integer ref){
       this.ref = ref;
     }
-    public java.sql.Timestamp getCtime(){
+    public Date getCtime(){
       return ctime;
     }
-    public void setCtime(java.sql.Timestamp ctime){
+    public void setCtime(Date ctime){
       this.ctime = ctime;
     }
     public java.lang.Long getQuesid(){

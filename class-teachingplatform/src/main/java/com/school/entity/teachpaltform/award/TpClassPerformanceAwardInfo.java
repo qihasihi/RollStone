@@ -15,6 +15,14 @@ public class TpClassPerformanceAwardInfo implements Serializable {
     private Long courseid;
     private Date ctime;
     private Date mtime;
+    private Integer subjectid;
+    public Integer getSubjectid() {
+        return subjectid;
+    }
+
+    public void setSubjectid(Integer subjectid) {
+        this.subjectid = subjectid;
+    }
 
     public Integer getRef() {
         return ref;

@@ -7,6 +7,7 @@ import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.entity.teachpaltform.paper.PaperInfo;
+import com.school.entity.teachpaltform.paper.PaperQuestion;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
 import com.school.manager.ClassManager;
 import com.school.manager.DictionaryManager;
@@ -2706,6 +2707,7 @@ public class PaperController extends BaseController<TpTaskInfo>{
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }
+
 
 
 }

@@ -77,7 +77,12 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
             sqlbuilder.append("?,");
             objlist.add(obj.getCourseid());
         }else
-             sqlbuilder.append("NULL,");
+            sqlbuilder.append("NULL,");
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
         return objlist;
     }
@@ -123,6 +128,11 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
             objlist.add(obj.getCourseid());
         }else
             sqlbuilder.append("NULL,");
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
         return objlist;
     }
@@ -134,7 +144,7 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
      * @param classtype
      * @return
      */
-    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype){
+    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid){
         List<Object> objList=new ArrayList<Object>();
         StringBuilder sqlbuilder=new StringBuilder("{CALL tp_cls_performance_info_list(");
         if(courseid!=null){
@@ -148,8 +158,13 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
         }else
             sqlbuilder.append("NULL,");
         if(classtype!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(classtype);
+        }else
+            sqlbuilder.append("NULL,");
+        if(subjectid!=null){
+            sqlbuilder.append("?");
+            objList.add(subjectid);
         }else
             sqlbuilder.append("NULL");
         sqlbuilder.append(")}");
@@ -180,6 +195,11 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
         if(obj.getCourseid()!=null){
             sqlbuilder.append("?,");
             objlist.add(obj.getCourseid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getSubjectid());
         }else
             sqlbuilder.append("NULL,");
         if(obj.getAttendanceNum()!=null){

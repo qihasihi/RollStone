@@ -17,7 +17,7 @@ public interface ITpClsPerformanceDAO extends ICommonDAO<TpClsPerformanceInfo> {
      * @param classtype
      * @return
      */
-    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype);
+    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid);
 
     /**
      * 添加或更新

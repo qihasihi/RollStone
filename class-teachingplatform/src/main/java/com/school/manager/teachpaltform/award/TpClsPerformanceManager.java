@@ -72,8 +72,8 @@ public class TpClsPerformanceManager extends BaseManager<TpClsPerformanceInfo> i
      * @param classtype
      * @return
      */
-    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype){
-        return tpClsPerformanceDAO.getPageDataList(courseid,classid,classtype);
+    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid){
+        return tpClsPerformanceDAO.getPageDataList(courseid,classid,classtype,subjectid);
     }
 
     @Override

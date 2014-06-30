@@ -50,11 +50,14 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
         String courseid=request.getParameter("courseid"); //专题ID
         String clsid=request.getParameter("classid");     //班级ID
         String typeid=request.getParameter("classtype");  //班级类型
+        String subjectid=request.getParameter("subjectid");
         JsonEntity jsonEntity=new JsonEntity();
         //参数验证。
         if(courseid==null||courseid.trim().length()<1
                 ||clsid==null||clsid.trim().length()<1
-                ||typeid==null||typeid.trim().length()<1){
+                ||typeid==null||typeid.trim().length()<1
+                ||subjectid==null||subjectid.trim().length()<1
+                ){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
@@ -66,8 +69,9 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
             mp.put("coursename",courseList.get(0).getCoursename());
         }
         mp.put("courseid",courseid);
+        mp.put("subjectid",subjectid);
         //根据参数得到值 。
-        List<Map<String,Object>> dataListMap=tpClsPerformanceManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim()),Integer.parseInt(typeid.trim()));
+        List<Map<String,Object>> dataListMap=tpClsPerformanceManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim()),Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid));
         mp.put("dataListMap",dataListMap);
         return new ModelAndView("/teachpaltform/classPerformanceAward/clsPerformanceAwardIndex",mp);
     }
@@ -83,11 +87,10 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
     public void doAddOrUpdate(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity jsonEntity=new JsonEntity();
         TpClsPerformanceInfo entity=this.getParameter(request,TpClsPerformanceInfo.class);
-        if(entity.getUserid()==null||entity.getCourseid()==null||entity.getGroupid()==null){
+        if(entity.getUserid()==null||entity.getCourseid()==null||entity.getGroupid()==null||entity.getSubjectid()==null){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return;
         }
-
         if(this.tpClsPerformanceManager.AddOrUpdate(entity)){
             jsonEntity.setType("success");
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
@@ -107,8 +110,9 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
         JsonEntity jsonEntity=new JsonEntity();
         String courseid=request.getParameter("courseid");
         String groupid=request.getParameter("groupid");
+        String subjectid=request.getParameter("subjectid");
         String awardnumber=request.getParameter("awardNumber");
-        if(courseid==null||groupid==null||awardnumber==null||!UtilTool.isNumber(awardnumber.trim())){
+        if(courseid==null||groupid==null||awardnumber==null||!UtilTool.isNumber(awardnumber.trim())||subjectid==null){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return;
         }
@@ -116,6 +120,7 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
         entity.setAwardnumber(Integer.parseInt(awardnumber.trim()));
         entity.setCourseid(Long.parseLong(courseid.trim()));
         entity.setGroupid(Long.parseLong(groupid.trim()));
+        entity.setSubjectid(Integer.parseInt(subjectid.trim()));
         if(this.tpClsPerformanceAwardManager.AddOrUpdate(entity)){
             jsonEntity.setType("success");
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));

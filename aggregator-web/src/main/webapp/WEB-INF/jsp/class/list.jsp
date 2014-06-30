@@ -181,10 +181,10 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
      &nbsp;&nbsp;&nbsp;&nbsp;3．只自动升级行政班，分层班不升级。<br>
      &nbsp;&nbsp;&nbsp;&nbsp;4．毕业班级不会升级：例如高三的班级、初三的班级。    </p>
      <c:if test="${allowAutoLevel==1}">
-   	 <p class="p_t_10 t_c" id="p_auto_uplevel"><a href="javascript:;" onclick="autoLeaveUp('${currentYear}')" class="an_public1">确定</a></p>
+   	 <p class="p_t_10 t_c" id="p_auto_uplevel"><a href="javascript:;" onclick="autoLeaveUp(sel_year.value)" class="an_public1">确定</a></p>
     </c:if>
     <c:if test="${allowAutoLevel!=1}">
-    	 <p class="p_t_10 t_c" style="color: red">检测到${currentYear}已有班级，可手动删除这些班级再自动升级!</p>
+    	 <p class="p_t_10 t_c" style="color: red">检测到当前选择的学年已有班级，可手动删除这些班级再自动升级!</p>
     </c:if>
   </div>
 </div>

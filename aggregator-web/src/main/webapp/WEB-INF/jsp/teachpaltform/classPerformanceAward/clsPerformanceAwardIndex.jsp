@@ -14,7 +14,7 @@
 <body>
 <div class="subpage_head"><span class="ico19"></span><strong>课堂表现</strong></div>
 <div class="content1">
-    <p class="t_c font-black"><strong>专题名称：${coursename}</strong></p>
+    <p class="t_c font-black"><strong>专题名称：${coursename}</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2 public_input">
         <colgroup class="w400"></colgroup>
         <colgroup span="5" class="w110"></colgroup>
@@ -35,6 +35,10 @@
     <script type="text/javascript">
         var courseid=${courseid};
         $(function(){
+            <c:if test="${empty subjectid}">
+              alert('参数异常，请重试!');
+                this.close();
+            </c:if>
             <c:if test="${!empty dataListMap}">
             var h='';
                     <c:forEach items="${dataListMap}" var="dlm" varStatus="dlmidx">
@@ -94,7 +98,8 @@
                 if(this.value.Trim().length<1||isNaN(this.value.Trim())){
                     $("#txt_update_num").focus();return;
                 }
-                var p={courseid:cid,groupid:groupid,awardNumber:this.value.Trim()};
+                var subid=$("#subjectid").val().Trim();
+                var p={courseid:cid,groupid:groupid,awardNumber:this.value.Trim(),subjectid:subid};
                 $.ajax({
                     url:'clsperformance?m=doAddOrUpdateGroup',
                     data:p,
@@ -132,8 +137,9 @@
                 if(this.value.Trim().length<1||isNaN(this.value.Trim())){
                     $("#txt_update_num").focus();return;
                 }
+                var subid=$("#subjectid").val().Trim();
                 //更新数据库
-                var p={userid:uid,groupid:groupid,courseid:cid};
+                var p={userid:uid,groupid:groupid,courseid:cid,subjectid:subid};
                 eval("(p."+type+"="+this.value.Trim()+")");
                 $.ajax({
                     url:'clsperformance?m=doAddOrUpdate',

@@ -505,7 +505,7 @@
 	.ico_other1{background-position:-873px 0;}
 	.ico_other2{background-position:-890px 0;}
 
-	.ico61,.ico62,.ico63,.ico64,.ico65,.ico66,.ico67,.ico68,.ico69,.ico70,.ico71,.ico72,.ico73,.ico74,.ico75,.ico76,.ico77{
+	.ico61,.ico62,.ico63,.ico64,.ico65,.ico66,.ico67,.ico68,.ico69,.ico70,.ico71,.ico72,.ico73,.ico74,.ico75,.ico76,.ico77,.ico78{
 	width:17px;
 	height:17px;
 	background: url(images/ico05_131230.png) no-repeat 0 0;
@@ -530,3 +530,4 @@
 	.ico75{background-position:-265px 0;}
 	.ico76{background-position:-282px 0;}
 	.ico77{width:18px;background: url(images/ico07_131230.png) no-repeat -549px -32px;}
+	.ico78{background-position:-356px 0;}
