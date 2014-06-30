@@ -15,6 +15,15 @@ public class TpCourseQuestion implements Serializable{
     private Object Isreference;
     private Long courseid;
     private String coursename;
+    private Long paperid;
+
+    public Long getPaperid() {
+        return paperid;
+    }
+
+    public void setPaperid(Long paperid) {
+        this.paperid = paperid;
+    }
 
     public String getCoursename() {
         return coursename;

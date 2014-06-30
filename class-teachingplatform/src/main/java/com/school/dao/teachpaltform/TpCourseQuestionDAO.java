@@ -103,6 +103,11 @@ public class TpCourseQuestionDAO extends CommonDAO<TpCourseQuestion> implements 
             objList.add(tpcoursequestion.getCoursename());
         } else
             sqlbuilder.append("null,");
+        if (tpcoursequestion.getPaperid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getPaperid());
+        } else
+            sqlbuilder.append("null,");
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objList.add(presult.getPageNo());

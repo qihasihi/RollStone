@@ -8,6 +8,15 @@ public class TpCoursePaper {
     private java.lang.Integer ref;
     private java.lang.Long courseid;
     private String papername;
+    private Integer localstatus;
+
+    public Integer getLocalstatus() {
+        return localstatus;
+    }
+
+    public void setLocalstatus(Integer localstatus) {
+        this.localstatus = localstatus;
+    }
 
     public String getPapername() {
         return papername;

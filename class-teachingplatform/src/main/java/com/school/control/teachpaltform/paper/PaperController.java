@@ -361,40 +361,22 @@ public class PaperController extends BaseController<TpTaskInfo>{
      * 获取任务列表
      * @throws Exception
      */
-    @RequestMapping(params="m=ajaxTaskBankList",method=RequestMethod.POST)
+    @RequestMapping(params="m=ajaxPaperList",method=RequestMethod.POST)
     public void ajaxTaskBankList(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
         String courseid=request.getParameter("courseid");
-        String tasktype=request.getParameter("tasktype");
-        String cloudtype=request.getParameter("cloudtype");
-
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("u.cloud_status desc,u.c_time desc");
-        TpTaskInfo t=new TpTaskInfo();
+        //p.setOrderBy("u.cloud_status desc,u.c_time desc");
+        TpCoursePaper t=new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
-        //查询没被我删除的任务
-        t.setSelecttype(1);
-        t.setLoginuserid(this.logined(request).getUserid());
-        t.setStatus(1);
+        t.setLocalstatus(1);
+        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t,p);
 
-        if(tasktype!=null&&tasktype.length()>0){
-            if(tasktype.indexOf("ques_")!=-1)
-                t.setQuestiontype(tasktype.substring(tasktype.lastIndexOf("_") + 1));
-            else{
-                t.setTasktype(Integer.parseInt(tasktype));
-            }
-        }
-        if(cloudtype!=null&&cloudtype.length()>0)
-            t.setCloudtype(Integer.parseInt(cloudtype));
-
-
-        //已发布的任务
-        List<TpTaskInfo>taskList=this.tpTaskManager.getList(t, p);
         //任务下的试题
         if(taskList!=null&&taskList.size()>0){
             for(TpTaskInfo task :taskList){
