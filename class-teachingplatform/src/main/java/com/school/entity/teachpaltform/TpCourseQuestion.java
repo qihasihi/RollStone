@@ -192,7 +192,7 @@ public class TpCourseQuestion implements Serializable{
         this.getQuestioninfo().setQuestionlevel(questionlevel);
     }
 
-    public List<QuestionOption>questionOptionList;
+
 
     public Date getOperatetime() {
         return operatetime;
@@ -201,6 +201,8 @@ public class TpCourseQuestion implements Serializable{
     public void setOperatetime(Date operatetime) {
         this.operatetime = operatetime;
     }
+
+    public List<QuestionOption>questionOptionList;
 
     public List<QuestionOption> getQuestionOptionList() {
         return questionOptionList;
