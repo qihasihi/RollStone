@@ -448,7 +448,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
             }
             //标记已选过的
             for(TpCourseQuestion o:selectedQuestionList){
-                if(tcq.getQuestionid()==o.getQuestionid()){
+                if(tcq.getQuestionid().toString().equals(o.getQuestionid().toString())){
                     tcq.setState(1);
                     break;
                 }

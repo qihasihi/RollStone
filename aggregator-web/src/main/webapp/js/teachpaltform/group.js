@@ -128,14 +128,13 @@ function getClassGroups(){
                 if(responseText.type=="success"){
                     var forGroupHtml="";
                     var changeGroupHtml="";
-                    var groupHtml="<colgroup><col class='w350'/><col class='w190'/><col class='w200'/></colgroup><tr><th>组名</th><th>学号</th><th>组员姓名</th></tr>";
+                    var groupHtml='<colgroup><col class="w300"/><col class="w90"/><col class="w130"/><col class="w90"/><col class="w120"/></colgroup><tr><th>组名</th><th>学号</th><th>组员姓名</th><th>任务完成率</th><th>加入小组时间</th></tr>';
                     if(responseText!=null&&responseText.objList!=null&&responseText.objList.length>0){
                         $.each(responseText.objList,function(idx,itm){
                             groupHtml+="<tbody id='group_"+itm.groupid+"'>";
                             groupHtml+="<tr>";
                             groupHtml+="<td class='v_c'>"+itm.groupname;
-                            if(isTrust.toString().length<1)
-                                groupHtml+="<a href='javascript:delGroup("+itm.groupid+");' class='ico04' title='删除'>";
+                            groupHtml+="<a href='javascript:delGroup("+itm.groupid+");' class='ico04' title='删除'>";
                             groupHtml+="</td>";
                             groupHtml+="<td>&nbsp;</td>";
                             groupHtml+="<td>&nbsp;</td>";
@@ -233,23 +232,20 @@ function getGroupStudents(groupId,groupName){
 			gtHtml+="<td colspan='2'>没有小组成员！</td></tr>";
 			$("#group_"+groupId).html(gtHtml);
 			return;
-		}                 ;
+		}
 		$.each(responseText.objList,function(idx,itm){
 			gtHtml+="<tr>";
             if(idx==0){
                 gtHtml+="<td rowspan="+responseText.objList.length+" class='v_c'>"+groupName;
-                if(isTrust.toString().length<1)
-                    gtHtml+="<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'>";
+                gtHtml+="<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'>";
                 gtHtml+="</td>";
             }
 			gtHtml+="<td>"+itm.stuno+"</td>";
 			gtHtml+="<td><span class='w60'>"+itm.stuname+"</span>";
-            if(isTrust.toString().length<1)
-                gtHtml+="<a href='javascript:delGroupStudent("+itm.ref+");' class='ico34' title='移出小组'></a>";
-            if(itm.isleader==1&&isTrust.toString().length<1)
-                gtHtml+="<a href='javascript:showGroupsPanel("+itm.ref+");' class='ico23' title='调组'></a></td>";
-            if(itm.isleader==2&&isTrust.toString().length<1)
-                gtHtml+="<a href='javascript:showGroupsPanel("+itm.ref+");' class='ico22' title='调组'></a></td>";
+            gtHtml+="<a href='javascript:delGroupStudent("+itm.ref+");' class='ico34' title='移出小组'></a>";
+            gtHtml+="<a href='javascript:showGroupsPanel("+itm.ref+");' class='ico22' title='调组'></a></td>";
+            gtHtml+='<td>'+itm.completenum+'%</td>';
+            gtHtml+='<td>'+itm.ctimestring+'</td>';
 			gtHtml+="</tr>";
 		});
 		$("#group_"+groupId).html(gtHtml);

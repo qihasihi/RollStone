@@ -1,5 +1,7 @@
 package  com.school.entity.teachpaltform;
 
+import com.school.util.UtilTool;
+
 import java.util.Date;
 
 public class TpGroupStudent {
@@ -96,6 +98,11 @@ public class TpGroupStudent {
 
     public Date getCtime() {
         return ctime;
+    }
+    public String getCtimestring(){
+        if(this.ctime==null)
+            return null;
+        return UtilTool.DateConvertToString(this.ctime, UtilTool.DateType.type1);
     }
 
     public void setCtime(Date ctime) {
