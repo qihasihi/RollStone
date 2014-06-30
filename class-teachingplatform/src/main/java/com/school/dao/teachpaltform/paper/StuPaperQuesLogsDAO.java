@@ -225,10 +225,7 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
 		return objList; 
 	}
 
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
-			List<List<Object>> objArrayList) {
-		return this.executeArray_SQL(sqlArrayList, objArrayList);
-	}
+
 	
 	public String getNextId() {
 		// TODO Auto-generated method stub

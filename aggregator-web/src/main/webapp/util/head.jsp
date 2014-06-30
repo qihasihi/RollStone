@@ -7,6 +7,9 @@
 <%@page import="com.school.entity.SmsReceiver"%>
 <%@page import="com.school.dao.SmsReceiverDAO"%>
  <%
+     //如果是乐知行过来，则不显示头尾
+ Object fromType=session.getAttribute("fromType");
+ if(fromType==null||!fromType.toString().trim().equals("lzx")){
     String pageType=null;
   	if(request.getAttribute("pageType")!=null)
   		pageType=(String)request.getAttribute("pageType");
@@ -22,6 +25,7 @@
 	SmsReceiverManager  smsReceiverManagerac=(SmsReceiverManager) acc.getBean("smsReceiverManager");
 	List receiveSMSList = smsReceiverManagerac.getList(smsreceiver, null);
      String logoSrc=UtilTool.utilproperty.getProperty("LOGO_SRC");
+
   %>
 <div id="header">
   <ul>
@@ -36,3 +40,4 @@
   </ul>     
  <p><span></span><img src="<%=basePath %>images/<%=logoSrc %>" width="253" height="64"/></p>
 </div>
+<%}%>

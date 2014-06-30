@@ -8,6 +8,7 @@ import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.entity.teachpaltform.paper.PaperInfo;
 import com.school.entity.teachpaltform.paper.PaperQuestion;
+import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
 import com.school.manager.ClassManager;
 import com.school.manager.DictionaryManager;
@@ -22,16 +23,19 @@ import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
+import com.school.manager.inter.teachpaltform.paper.IStuPaperQuesLogsManager;
 import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.PaperManager;
 import com.school.manager.teachpaltform.paper.PaperQuestionManager;
+import com.school.manager.teachpaltform.paper.StuPaperQuesLogsManager;
 import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import net.sf.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -78,6 +82,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     private IPaperQuestionManager paperQuestionManager;
     private IPaperManager paperManager;
     private ITpCoursePaperManager tpCoursePaperManager;
+    private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
     public PaperQuestionController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -104,6 +109,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
         this.paperManager=this.getManager(PaperManager.class);
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
+        this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
     }
     /**
      * 根据课题ID，加载试卷列表
@@ -2754,7 +2760,49 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
      */
     @RequestMapping(params="m=doSaveTestPaper",method=RequestMethod.POST)
     public void doSaveTestPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
-
+        String testQuesData=request.getParameter("testQuesData");
+        String paperid=request.getParameter("paperid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(testQuesData==null||testQuesData.length()<1||paperid==null||paperid.length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+        Integer userid=this.logined(request).getUserid();
+        JSONArray jsonArray=JSONArray.fromObject(testQuesData);
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+        Iterator jrIte=jsonArray.iterator();
+        while(jrIte.hasNext()){
+            net.sf.json.JSONObject clsJo=(net.sf.json.JSONObject)jrIte.next();
+            Object questionidObj=clsJo.get("questionid");
+            Object answerObj=clsJo.get("answer");
+            Object scoreObj=clsJo.get("score");
+            //验证这个是否正确
+            Float score=Float.parseFloat(scoreObj.toString());
+            String answer=answerObj.toString();
+            Long questionid=Long.parseLong(questionidObj.toString());
+            StuPaperQuesLogs stpq=new StuPaperQuesLogs();
+            stpq.setPaperid(Long.parseLong(paperid));
+            stpq.setAnswer(answer);
+            stpq.setQuesid(questionid);
+            stpq.setScore(score);
+            stpq.setUserid(userid);
+            stpq.setIsright(score>0?1:2);
+            StringBuilder sqlbuilder=new StringBuilder();
+            List<Object> objList=stuPaperQuesLogsManager.getSaveSql(stpq,sqlbuilder);
+            if(sqlbuilder.toString().length()>0){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+        }
+        if(sqlArrayList!=null&&sqlArrayList.size()>0&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
+            if(this.stuPaperQuesLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+                jsonEntity.setMsg("交卷成功!");
+                jsonEntity.setType("success");
+            }else
+                jsonEntity.setMsg("交卷失败!原因：未知!");
+        }else{
+            jsonEntity.setMsg("交卷失败!原因：暂未发现您要提交的数据!");
+        }
     }
-
 }
