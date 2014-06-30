@@ -33,6 +33,7 @@
         });
 
        // pageGo('p1');
+
     });
 
 
@@ -205,7 +206,7 @@
                 <option value="0">==请选择专题类型==</option>
                 <option value="1">自建专题</option>
                 <option  value="2">标准/共享专题</option>
-                <option selected="selected" value="3">关联专题</option>
+                <option  value="3">关联专题</option>
             </select>
             <input  id="coursename" name="coursename" placeholder="输入专题名     匹配" type="text" class="w240" />
             <a href="javascript:pageGo('p1');" class="an_search" title="查询"></a></p>
@@ -230,6 +231,11 @@
     <c:if test="${!empty materialInfo}">
          $("#grade").val("${materialInfo.gradeid}");
          load_material("${materialInfo.teachingmaterialid}");
+
+    </c:if>
+
+    <c:if test="${!empty relateCourse}">
+        $("#level").val(3);
     </c:if>
 </script>
 </html>

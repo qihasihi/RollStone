@@ -1,6 +1,8 @@
 package  com.school.entity.teachpaltform.paper;
 
-public class PaperInfo {
+import java.io.Serializable;
+
+public class PaperInfo implements Serializable {
 
 	public void PaperInfo (){}
    

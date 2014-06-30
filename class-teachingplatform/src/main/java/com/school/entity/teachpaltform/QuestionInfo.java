@@ -74,9 +74,7 @@ public class QuestionInfo implements java.io.Serializable {
                 //content=content.replace(" ", "&nbsp;");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
-
         }
-        System.out.println(content);
         return content;
     }
 

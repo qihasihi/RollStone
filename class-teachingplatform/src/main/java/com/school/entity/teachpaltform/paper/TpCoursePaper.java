@@ -9,6 +9,35 @@ public class TpCoursePaper {
     private java.lang.Long courseid;
     private String papername;
     private Integer localstatus;
+    private Object subjectivenum; //主观题数量
+    private Object objectivenum; //客观题数量
+    private Object taskflag;    //任务状态
+
+    public Object getTaskflag() {
+        return taskflag;
+    }
+
+    public void setTaskflag(Object taskflag) {
+        this.taskflag = taskflag;
+    }
+
+    public Object getObjectivenum() {
+        return objectivenum;
+    }
+
+    public void setObjectivenum(Object objectivenum) {
+        this.objectivenum = objectivenum;
+    }
+
+    public Object getSubjectivenum() {
+        return subjectivenum;
+    }
+
+    public void setSubjectivenum(Object subjectivenum) {
+        this.subjectivenum = subjectivenum;
+    }
+
+
 
     public Integer getLocalstatus() {
         return localstatus;

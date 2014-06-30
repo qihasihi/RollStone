@@ -62,6 +62,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     private ITpCourseQuestionManager tpCourseQuestionManager;
     private IAccessManager accessManager;
     private IStoreManager storeManager;
+    private ITpCourseRelatedManager tpCourseRelatedManager;
     public TpResourceController(){
         this.tpCourseManager=this.getManager(TpCourseManager.class);
         this.tpOperateManager=this.getManager(TpOperateManager.class);
@@ -80,6 +81,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         this.tpCourseQuestionManager=this.getManager(TpCourseQuestionManager.class);
         this.accessManager=this.getManager(AccessManager.class);
         this.storeManager=this.getManager(StoreManager.class);
+        this.tpCourseRelatedManager=this.getManager(TpCourseRelatedManager.class);
     }
 
     /**
@@ -810,7 +812,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         //资源类型
         List<DictionaryInfo>resourceTypeList=this.dictionaryManager.getDictionaryByType("RES_TYPE");
         List<DictionaryInfo>courseLevelList=this.dictionaryManager.getDictionaryByType("COURSE_LEVEL");
-        //  mp.put("courseAllList",courseAllList);
+        //关联专题
+        TpCourseRelatedInfo r=new TpCourseRelatedInfo();
+        r.setCourseid(Long.parseLong(courseid));
+        List<TpCourseRelatedInfo>courseRelatedList=this.tpCourseRelatedManager.getList(r,null);
+        if(courseRelatedList!=null&&courseRelatedList.size()>0)
+            mp.put("relateCourse","1");
         mp.put("resType",resourceTypeList);
         mp.put("gradeList",gradeList);
         mp.put("courseLevel",courseLevelList);
@@ -863,6 +870,13 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                 request.setAttribute("materialInfo",tctList.get(0));
             }
         }
+
+        //关联专题
+        TpCourseRelatedInfo r=new TpCourseRelatedInfo();
+        r.setCourseid(Long.parseLong(courseid));
+        List<TpCourseRelatedInfo>courseRelatedList=this.tpCourseRelatedManager.getList(r,null);
+        if(courseRelatedList!=null&&courseRelatedList.size()>0)
+            mp.put("relateCourse","1");
 
         mp.put("courseAllList",courseAllList);
         mp.put("resType",resourceTypeList);

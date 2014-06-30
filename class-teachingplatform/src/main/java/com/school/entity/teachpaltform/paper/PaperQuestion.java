@@ -122,6 +122,9 @@ public class PaperQuestion implements Serializable{
     public void setPaperid(Long paperid){
         this.getPaperInfo().setPaperid(paperid);
     }
+    public Long getPaperid(){
+        return this.getPaperInfo().getPaperid();
+    }
     public String getPapername(){
         return this.getPaperInfo().getPapername();
     }
@@ -175,7 +178,6 @@ public class PaperQuestion implements Serializable{
     public void setScore(java.lang.Float score){
       this.score = score;
     }
-
 
   
 

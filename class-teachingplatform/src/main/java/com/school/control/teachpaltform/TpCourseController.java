@@ -261,7 +261,12 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             }
         }
 
-
+        //关联专题
+        TpCourseRelatedInfo r=new TpCourseRelatedInfo();
+        r.setCourseid(Long.parseLong(addCourseId));
+        List<TpCourseRelatedInfo>courseRelatedList=this.tpCourseRelatedManager.getList(r,null);
+        if(courseRelatedList!=null&&courseRelatedList.size()>0)
+            mp.put("relateCourse","1");
 
         return new ModelAndView("/teachpaltform/course/questionCourseList", mp);
     }

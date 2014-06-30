@@ -52,7 +52,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping(value="/paper")
-public class PaperController extends BaseController<TpTaskInfo>{
+public class PaperController extends BaseController<PaperInfo>{
     private ITpTaskManager tpTaskManager;
    private ITpTaskAllotManager tpTaskAllotManager;
     private IQuestionOptionManager questionOptionManager;
@@ -359,7 +359,7 @@ public class PaperController extends BaseController<TpTaskInfo>{
 
 
     /**
-     * 获取任务列表
+     * 获取试卷列表
      * @throws Exception
      */
     @RequestMapping(params="m=ajaxPaperList",method=RequestMethod.POST)
@@ -372,28 +372,12 @@ public class PaperController extends BaseController<TpTaskInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        //p.setOrderBy("u.cloud_status desc,u.c_time desc");
+        p.setOrderBy("u.paper_id,u.c_time desc");
         TpCoursePaper t=new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
         t.setLocalstatus(1);
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t,p);
-
-        //任务下的试题
-        if(taskList!=null&&taskList.size()>0){
-            for(TpTaskInfo task :taskList){
-                if(task.getTasktype()==3){
-                    QuestionOption questionOptions=new QuestionOption();
-                    questionOptions.setQuestionid(task.getTaskvalueid());
-                    PageResult pp = new PageResult();
-                    pp.setOrderBy("u.option_type");
-                    pp.setPageNo(0);
-                    pp.setPageSize(0);
-                    List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOptions,pp);
-                    task.setQuestionOptionList(questionOptionList);
-                }
-            }
-        }
-        p.setList(taskList);
+        p.setList(coursePaperList);
         je.setPresult(p);
         je.setType("success");
         response.getWriter().print(je.toJSON());
@@ -857,12 +841,12 @@ public class PaperController extends BaseController<TpTaskInfo>{
 
 
     /**
-     * 进入试卷选题页面
+     * 进入试卷选题、编辑页面
      * @return
      * @throws Exception
      */
     @RequestMapping(params="m=editPaperQuestion",method=RequestMethod.GET)
-    public ModelAndView toEditPaperQuestion(HttpServletRequest request,HttpServletResponse response)throws Exception{
+    public ModelAndView toEditPaperQuestion(HttpServletRequest request)throws Exception{
         JsonEntity je =new JsonEntity();//
         String courseid=request.getParameter("courseid");
         String paperid=request.getParameter("paperid");
@@ -874,7 +858,7 @@ public class PaperController extends BaseController<TpTaskInfo>{
             return null;
         }
 
-        //该任务已设置的相关信息
+
         TpCoursePaper t=new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
         t.setPaperid(Long.parseLong(paperid));
