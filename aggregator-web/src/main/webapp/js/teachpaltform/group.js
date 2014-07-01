@@ -147,7 +147,7 @@ function getClassGroups(){
                         $("#forGroupList").html(forGroupHtml);
                         $("#changeGroups").html(changeGroupHtml);
                         $.each(responseText.objList,function(idx,itm){
-                            getGroupStudents(itm.groupid,itm.groupname);
+                            getGroupStudents(itm.groupid,itm.groupname,itm.completenum,itm.totalnum);
                         });
                     }else{
                         $("#group_list").html(groupHtml+"<tr><td colspan='3'>您还没有创建小组！</td></tr>");
@@ -222,9 +222,18 @@ function delGroupStudent(ref){
 	},"json");
 }
 
-function getGroupStudents(groupId,groupName){
+function getGroupStudents(groupId,groupName,completenum,totalnum){
 	var url="group?m=getGroupStudents";
 	var gtHtml="";
+    var percentHtml="";
+    if(completenum>0){
+        var cnum=parseInt(completenum);
+        var tnum=parseInt(totalnum);
+        var percent=parseFloat(cnum)/tnum*100;
+        percentHtml="<br>" +percent.toFixed(2)+"%";
+    }else{
+        var percentHtml="<br>0%";
+    }
 	$.post(url,{groupid:groupId},
 			function(responseText){
 		if(responseText==null||responseText.objList==null||responseText.objList.length==0){
@@ -238,6 +247,7 @@ function getGroupStudents(groupId,groupName){
             if(idx==0){
                 gtHtml+="<td rowspan="+responseText.objList.length+" class='v_c'>"+groupName;
                 gtHtml+="<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'>";
+                gtHtml+=percentHtml;
                 gtHtml+="</td>";
             }
 			gtHtml+="<td>"+itm.stuno+"</td>";

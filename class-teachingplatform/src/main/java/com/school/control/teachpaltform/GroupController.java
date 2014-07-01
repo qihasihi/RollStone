@@ -5,22 +5,13 @@ import com.school.entity.ClassUser;
 import com.school.entity.GradeInfo;
 import com.school.entity.TermInfo;
 import com.school.entity.UserInfo;
-import com.school.entity.teachpaltform.TpGroupInfo;
-import com.school.entity.teachpaltform.TpGroupStudent;
-import com.school.entity.teachpaltform.TpVirtualClassInfo;
-import com.school.entity.teachpaltform.TrusteeShipClass;
+import com.school.entity.teachpaltform.*;
 import com.school.manager.ClassUserManager;
 import com.school.manager.TermManager;
 import com.school.manager.inter.IClassUserManager;
 import com.school.manager.inter.ITermManager;
-import com.school.manager.inter.teachpaltform.ITpGroupManager;
-import com.school.manager.inter.teachpaltform.ITpGroupStudentManager;
-import com.school.manager.inter.teachpaltform.ITpVirtualClassManager;
-import com.school.manager.inter.teachpaltform.ITrusteeShipClassManager;
-import com.school.manager.teachpaltform.TpGroupManager;
-import com.school.manager.teachpaltform.TpGroupStudentManager;
-import com.school.manager.teachpaltform.TpVirtualClassManager;
-import com.school.manager.teachpaltform.TrusteeShipClassManager;
+import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.teachpaltform.*;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
 import org.springframework.stereotype.Controller;
@@ -44,6 +35,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
     private ITpVirtualClassManager tpVirtualClassManager;
     private ITrusteeShipClassManager trusteeShipClassManager;
     private ITpGroupStudentManager tpGroupStudentManager;
+    private ITpTaskAllotManager tpTaskAllotManager;
     public GroupController(){
         this.termManager=this.getManager(TermManager.class);
         this.tpGroupManager=this.getManager(TpGroupManager.class);
@@ -51,6 +43,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
         this.tpVirtualClassManager=this.getManager(TpVirtualClassManager.class);
         this.trusteeShipClassManager=this.getManager(TrusteeShipClassManager.class);
         this.tpGroupStudentManager=this.getManager(TpGroupStudentManager.class);
+        this.tpTaskAllotManager=this.getManager(TpTaskAllotManager.class);
     }
 
 	/**
@@ -150,6 +143,28 @@ public class GroupController extends BaseController<TpGroupInfo>{
 		}
 		tg.setTermid(term.getRef());
 		List<TpGroupInfo>groupList=this.tpGroupManager.getGroupBySubject(tg);
+        //查询小组任务完成率
+        int completenum=0;
+        int totalnum=0;
+        if(groupList!=null&&groupList.size()>0){
+            for(int i = 0;i<groupList.size();i++){
+                //首先查询没个小组的所有任务
+                List<TpTaskAllotInfo> taskList=this.tpTaskAllotManager.getTaskByGroup(groupList.get(i).getGroupid());
+                //然后根据任务查询每个任务的完成数和接收任务数
+                if(taskList!=null&&taskList.size()>0){
+                    for(int j = 0;j<taskList.size();j++){
+                        //完成数
+                        List<Map<String,Object>>  cnum=this.tpTaskAllotManager.getCompleteNum(groupList.get(i).getGroupid(),taskList.get(j).getTaskid());
+                        completenum+=Integer.parseInt(cnum.get(0).get("NUM").toString());
+                        //总数
+                        List<Map<String,Object>>  tnum=this.tpTaskAllotManager.getNum(groupList.get(i).getGroupid(),taskList.get(j).getTaskid());
+                        totalnum+=Integer.parseInt(tnum.get(0).get("NUM").toString());
+                    }
+                }
+                groupList.get(i).setCompletenum(completenum);
+                groupList.get(i).setTotalnum(totalnum);
+            }
+        }
 		je.setObjList(groupList);
 		je.setType("success"); 
 		response.getWriter().append(je.toJSON());

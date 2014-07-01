@@ -20,6 +20,24 @@ public class TpGroupInfo  implements java.io.Serializable{
     private Integer userid;
     private Integer subjectid;
     private Object groupnum;
+    private int completenum;
+    private int totalnum;
+
+    public int getCompletenum() {
+        return completenum;
+    }
+
+    public void setCompletenum(int completenum) {
+        this.completenum = completenum;
+    }
+
+    public int getTotalnum() {
+        return totalnum;
+    }
+
+    public void setTotalnum(int totalnum) {
+        this.totalnum = totalnum;
+    }
 
     public Object getGroupnum() {
         return groupnum;

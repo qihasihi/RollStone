@@ -2,6 +2,8 @@
 package  com.school.manager.teachpaltform;
 
 import java.util.List;
+import java.util.Map;
+
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +77,20 @@ public class  TpTaskAllotManager extends BaseManager<TpTaskAllotInfo> implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    @Override
+    public List<TpTaskAllotInfo> getTaskByGroup(Long groupid) {
+        return this.tptaskallotdao.getTaskByGroup(groupid);
+    }
+
+    @Override
+    public List<Map<String,Object>> getCompleteNum(Long groupid, Long taskid) {
+        return this.tptaskallotdao.getCompleteNum(groupid,taskid);
+    }
+
+    @Override
+    public List<Map<String,Object>> getNum(Long groupid, Long taskid) {
+        return this.tptaskallotdao.getNum(groupid,taskid);
+    }
 }
 

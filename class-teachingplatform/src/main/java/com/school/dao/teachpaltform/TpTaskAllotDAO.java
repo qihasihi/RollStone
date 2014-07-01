@@ -3,6 +3,7 @@ package com.school.dao.teachpaltform;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.school.util.UtilTool;
 import org.springframework.stereotype.Component;
@@ -243,4 +244,68 @@ public class TpTaskAllotDAO extends CommonDAO<TpTaskAllotInfo> implements ITpTas
 		return null;
 	}
 
+    public List<TpTaskAllotInfo> getTaskByGroup(Long groupid) {
+        if(groupid==null)
+            return null;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_qry_group_for_performance(");
+        List<Object>objList = new ArrayList<Object>();
+        if(groupid!=null){
+            sqlbuilder.append("?");
+            objList.add(groupid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<TpTaskAllotInfo> taskList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,TpTaskAllotInfo.class,null);
+        return taskList;
+    }
+
+    public List<Map<String,Object>> getCompleteNum(Long groupid, Long taskid) {
+        if(groupid==null||taskid==null){
+            return null;
+        }
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_qry_completenum_for_taskpeople(");
+        List<Object>objList = new ArrayList<Object>();
+        if(groupid!=null){
+            sqlbuilder.append("?,");
+            objList.add(groupid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(taskid!=null){
+            sqlbuilder.append("?");
+            objList.add(taskid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        return list;
+    }
+
+    public List<Map<String,Object>> getNum(Long groupid, Long taskid) {
+        if(groupid==null||taskid==null){
+            return null;
+        }
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_qry_num_for_taskpeople(");
+        List<Object>objList = new ArrayList<Object>();
+        if(groupid!=null){
+            sqlbuilder.append("?,");
+            objList.add(groupid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(taskid!=null){
+            sqlbuilder.append("?");
+            objList.add(taskid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        return list;
+    }
 }
