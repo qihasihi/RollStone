@@ -1075,6 +1075,7 @@ public class UserController extends BaseController<UserInfo> {
 		if(autolo!=null&&autolo.equals("1"))autoLogin=true;
         je=loginBase(userinfo,request,response);
         if(je.getType().trim().equals("success")){
+            request.getSession().setAttribute("fromType","szchool");
 //                    System.out.println("loginUser:"+(UserInfo) request.getSession().getAttribute("CURRENT_USER"));
 					if (remember) {
 						Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef());
@@ -1132,6 +1133,7 @@ public class UserController extends BaseController<UserInfo> {
 		if(isajax==null||isajax.toString().trim().length()<1||!UtilTool.isNumber(isajax.toString().trim())||Integer.parseInt(isajax.toString().trim())!=1)
 			response.getWriter().write(je.toJSON());
 		else{
+
 			if(je.getType().equals("success")){
                 if(UtilTool._IS_SIMPLE_RESOURCE!=2)
 				    response.sendRedirect("user?m=toIndex");
