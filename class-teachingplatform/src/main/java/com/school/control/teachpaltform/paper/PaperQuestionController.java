@@ -2732,6 +2732,17 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+        //验证是否已经答题
+        StuPaperQuesLogs stuPaperQuesLogs=new StuPaperQuesLogs();
+        stuPaperQuesLogs.setUserid(this.logined(request).getUserid());
+        stuPaperQuesLogs.setPaperid(Long.parseLong(paperid.trim()));
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<StuPaperQuesLogs> stuPageQuesList=this.stuPaperQuesLogsManager.getList(stuPaperQuesLogs,presult);
+        if(stuPageQuesList!=null&&stuPageQuesList.size()>0){//已经做过，则跳入显示页面
+
+        }
+
         //得到当前的所有问题
         PaperQuestion pq=new PaperQuestion();
         pq.setPaperid(Long.parseLong(paperid));
@@ -2751,6 +2762,55 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         mp.put("paperid",paperid);
         return new ModelAndView("/teachpaltform/paper/stuTest",mp);
     }
+
+    /**
+     * 进入详情页面
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toTestDetail",method=RequestMethod.GET)
+    public ModelAndView toStuTestDetail(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        String paperid=request.getParameter("paperid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(paperid==null||paperid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        //验证是否已经答题
+        StuPaperQuesLogs stuPaperQuesLogs=new StuPaperQuesLogs();
+        stuPaperQuesLogs.setUserid(this.logined(request).getUserid());
+        stuPaperQuesLogs.setPaperid(Long.parseLong(paperid.trim()));
+//        PageResult presult=new PageResult();
+//        presult.setPageSize(1);
+        List<StuPaperQuesLogs> stuPageQuesList=this.stuPaperQuesLogsManager.getList(stuPaperQuesLogs,null);
+        if(stuPageQuesList==null||stuPageQuesList.size()<1){//已经做过，则跳入显示页面
+            return testPaper(request,response,mp);
+        }
+
+        //得到当前的所有问题
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(Long.parseLong(paperid));
+        List<PaperQuestion> pqList=this.paperQuestionManager.getList(pq,null);
+        //保存入ModelMap中
+        if(pqList!=null&&pqList.size()>0){
+            for (PaperQuestion pqentity:pqList){
+                if(pqentity!=null&&pqentity.getQuestionid()!=null){
+                    QuestionOption qo=new QuestionOption();
+                    qo.setQuestionid(pqentity.getQuestionid());
+                    pqentity.getQuestioninfo().setQuestionOption(this.questionOptionManager.getList(qo,null));
+                }
+            }
+        }
+        mp.put("quesList",pqList);
+        //得到当前学生答案
+        mp.put("stuAnswer",stuPageQuesList);
+
+       return new ModelAndView("/teachpaltform/paper/stuTestDetail",mp);
+    }
+
 
     /**
      *
@@ -2777,6 +2837,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             Object questionidObj=clsJo.get("questionid");
             Object answerObj=clsJo.get("answer");
             Object scoreObj=clsJo.get("score");
+            Object questypeObj=clsJo.get("questype");
             //验证这个是否正确
             Float score=Float.parseFloat(scoreObj.toString());
             String answer=answerObj.toString();
@@ -2787,7 +2848,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             stpq.setQuesid(questionid);
             stpq.setScore(score);
             stpq.setUserid(userid);
-            stpq.setIsright(score>0?1:2);
+            Integer questype=Integer.parseInt(questypeObj.toString());
+            if(questype==4||questype==3)
+                stpq.setIsright(score>0?1:2);
             StringBuilder sqlbuilder=new StringBuilder();
             List<Object> objList=stuPaperQuesLogsManager.getSaveSql(stpq,sqlbuilder);
             if(sqlbuilder.toString().length()>0){
