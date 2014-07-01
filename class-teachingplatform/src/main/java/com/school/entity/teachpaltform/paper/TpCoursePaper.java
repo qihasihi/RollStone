@@ -1,12 +1,34 @@
 package  com.school.entity.teachpaltform.paper;
 
+import com.school.entity.teachpaltform.TpCourseInfo;
+
 public class TpCoursePaper {
 
 	public void TpCoursePaper (){}
    
     private java.lang.Long paperid;
     private java.lang.Integer ref;
-    private java.lang.Long courseid;
+    private TpCourseInfo courseinfo;
+    private Long filtercourseid;    //过滤掉的专题ID
+
+    public Long getFiltercourseid() {
+        return filtercourseid;
+    }
+
+    public void setFiltercourseid(Long filtercourseid) {
+        this.filtercourseid = filtercourseid;
+    }
+
+    public TpCourseInfo getCourseinfo() {
+        if(courseinfo==null)
+            courseinfo=new TpCourseInfo();
+        return courseinfo;
+    }
+
+    public void setCourseinfo(TpCourseInfo courseinfo) {
+        this.courseinfo = courseinfo;
+    }
+
     private String papername;
     private Integer localstatus;
     private Object subjectivenum; //主观题数量
@@ -68,11 +90,36 @@ public class TpCoursePaper {
       this.ref = ref;
     }
     public java.lang.Long getCourseid(){
-      return courseid;
+      return this.getCourseinfo().getCourseid();
     }
     public void setCourseid(java.lang.Long courseid){
-      this.courseid = courseid;
+      this.getCourseinfo().setCourseid(courseid);
     }
-  
+    public Integer getMaterialid(){
+        return this.getCourseinfo().getMaterialid();
+    }
+    public void setMaterialid(Integer materialid){
+        this.getCourseinfo().setMaterialid(materialid);
+    }
+    public Integer getGradeid(){
+        return this.getCourseinfo().getGradeid();
+    }
+    public void setGradeid(Integer gradeid){
+        this.getCourseinfo().setGradeid(gradeid);
+    }
+    public Integer getSubjectid(){
+        return this.getCourseinfo().getSubjectid();
+    }
+    public void setSubjectid(Integer subjectid){
+        this.getCourseinfo().setSubjectid(subjectid);
+    }
+    public String getCoursename(){
+        return this.getCourseinfo().getCoursename();
+    }
+    public void setCoursename(String coursename){
+        this.getCourseinfo().setCoursename(coursename);
+    }
+
+
 
 }

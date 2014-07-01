@@ -28,7 +28,7 @@ $(function(){
         pagetotal : 1,
         operate_id : "initItemList"
     });
-    pageGo('pList');
+   // pageGo('pList');
 
 
     $("li[name='li_nav']").each(function(idx,itm){
@@ -93,24 +93,58 @@ function preeDoPageSub(pObj){
 </script>
 </head>
 <body>
-<div>
-    <a href="">导入试卷</a>
-    <a href="javascript:importQuesList()">导入试题</a>
-    <a href="">新建试题</a>
-</div>
 <div class="zhuanti">
     <p>${paper.papername }</p>
-
+    <p style="float: right">主观题：${paper.subjectivenum}&nbsp;客观题：${paper.objectivenum}</p>
+    <p style="float: right"><a href="javascript:history.go(-1);">返回</a></p>
 </div>
 <div class="content2">
     <div class="subpage_lm">
-
+          <c:if test="${!empty pqList}">
+              <c:forEach items="${pqList}" var="pq">
+                    <p>${pq.orderidx}/${fn:length(pqList)}</p>
+                    <p>
+                        <c:if test="${pq.paperid>0}">
+                            参
+                        </c:if>
+                        ${pq.questiontype==1?"其他":pq.questiontype==2?"填空题":pq.questiontype==3?"单选题":pq.questiontype==4?"多选题":""}&nbsp;
+                        ${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+                        <c:forEach items="${pq.questioninfo.questionOption}" var="option">
+                            <c:if test="${pq.questiontype eq 3 }">
+                                <br><input disabled type="radio">
+                            </c:if>
+                            <c:if test="${pq.questiontype eq 4 }">
+                                <br><input disabled type="checkbox">
+                            </c:if>
+                            ${option.optiontype}&nbsp;${option.content};
+                            <c:if test="${option.isright eq 1}">
+                                <span class="ico12"></span>
+                            </c:if>
+                        </c:forEach>
+                    </p>
+                    <p style="float: right">
+                        ${pq.score}
+                    </p>
+                  <p>
+                      正确答案：
+                      <c:if test="${pq.questiontype eq 1 or  pq.questiontype eq 2 }">
+                          ${pq.correctanswer}
+                      </c:if>
+                      <c:if test="${pq.questiontype eq 3 or  pq.questiontype eq 4 }">
+                          <c:forEach items="${pq.questioninfo.questionOption}" var="option">
+                              <c:if test="${option.isright eq 1}">
+                                    ${option.optiontype}&nbsp;
+                              </c:if>
+                          </c:forEach>
+                      </c:if>
+                  </p>
+                    <p>
+                        答案解析：${pq.analysis}
+                    </p>
+                    <br><br>
+              </c:forEach>
+          </c:if>
     </div>
-
-
-    <form id="pListForm" name="pListForm" style="display: none;">
-        <p class="Mt20" id="pListaddress" align="center"></p>
-    </form>
 </div>
 
 

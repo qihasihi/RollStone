@@ -75,5 +75,10 @@ public class  TpCoursePaperManager extends BaseManager<TpCoursePaper> implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    @Override
+    public List<TpCoursePaper> getRelateCoursePaPerList(TpCoursePaper tpcoursepaper, PageResult presult) {
+        return this.tpcoursepaperdao.getRelateCoursePaPerList(tpcoursepaper,presult);
+    }
 }
 

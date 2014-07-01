@@ -83,6 +83,31 @@ public class TpCoursePaperDAO extends CommonDAO<TpCoursePaper> implements ITpCou
             objList.add(tpcoursepaper.getLocalstatus());
         } else
             sqlbuilder.append("null,");
+        if (tpcoursepaper.getCoursename() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursepaper.getCoursename());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursepaper.getMaterialid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursepaper.getMaterialid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursepaper.getGradeid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursepaper.getGradeid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursepaper.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursepaper.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursepaper.getFiltercourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursepaper.getFiltercourseid());
+        } else
+            sqlbuilder.append("null,");
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
@@ -192,4 +217,37 @@ public class TpCoursePaperDAO extends CommonDAO<TpCoursePaper> implements ITpCou
 		return null;
 	}
 
+    @Override
+    public List<TpCoursePaper> getRelateCoursePaPerList(TpCoursePaper tpcoursepaper, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_j_relate_course_paper_proc_split(");
+        List<Object> objList=new ArrayList<Object>();
+        if (tpcoursepaper.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursepaper.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<TpCoursePaper> tpcoursepaperList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpCoursePaper.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return tpcoursepaperList;
+    }
 }

@@ -110,18 +110,18 @@ public class PaperController extends BaseController<PaperInfo>{
 	 * @return
      */
 	@RequestMapping(params="toPaperList",method=RequestMethod.GET)
-	public ModelAndView toPaperList(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		//得到该课题的所有任务，任务完成情况。
-		JsonEntity je= new JsonEntity();
-		String courseid=request.getParameter("courseid");
+         public ModelAndView toPaperList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        //得到该课题的所有任务，任务完成情况。
+        JsonEntity je= new JsonEntity();
+        String courseid=request.getParameter("courseid");
         String subjectid=request.getParameter("subjectid");
         String addresstype = request.getParameter("addresstype");
-		if(courseid==null||courseid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}
-		TpCourseInfo tc=new TpCourseInfo();
+            return null;
+        }
+        TpCourseInfo tc=new TpCourseInfo();
         if(addresstype!=null&&addresstype!=""){
             tc.setUserid(null);
             tc.setCourseid(null);
@@ -131,39 +131,106 @@ public class PaperController extends BaseController<PaperInfo>{
             tc.setCourseid(Long.parseLong(courseid));
             tc.setLocalstatus(1);//正常
         }
-		List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
-		if(teacherCourseList==null||teacherCourseList.size()<1){
-			je.setMsg("找不到指定课题!");
-			response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
         //获取当前专题教材
         TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
         ttm.setCourseid(Long.parseLong(courseid));
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0)
             subjectid=materialList.get(0).getSubjectid().toString();
-		//课题样式
-		request.setAttribute("coursename", teacherCourseList.get(0).getCoursename());
+        //课题样式
+        request.setAttribute("coursename", teacherCourseList.get(0).getCoursename());
         TpCourseInfo tcs= new TpCourseInfo();
-		tcs.setUserid(this.logined(request).getUserid());
-		tcs.setTermid(teacherCourseList.get(0).getTermid());
+        tcs.setUserid(this.logined(request).getUserid());
+        tcs.setTermid(teacherCourseList.get(0).getTermid());
         tcs.setLocalstatus(1);
         if(subjectid!=null)
             tcs.setSubjectid(Integer.parseInt(subjectid));
-		List<TpCourseInfo>courseList=this.tpCourseManager.getCourseList(tcs, null);
-		request.setAttribute("courseList", courseList);
+        List<TpCourseInfo>courseList=this.tpCourseManager.getCourseList(tcs, null);
+        request.setAttribute("courseList", courseList);
 
 
-		String termid=teacherCourseList.get(0).getTermid();
-		request.setAttribute("courseid", courseid);
-		request.setAttribute("termid", termid);
+        String termid=teacherCourseList.get(0).getTermid();
+        request.setAttribute("courseid", courseid);
+        request.setAttribute("termid", termid);
         request.setAttribute("subjectid", subjectid);
         //任务库
         List<DictionaryInfo>courselevel=this.dictionaryManager.getDictionaryByType("COURSE_LEVEL");
         request.setAttribute("courselevel",courselevel);
-		return new ModelAndView("/teachpaltform/paper/paper-list");
-	}
+        return new ModelAndView("/teachpaltform/paper/paper-list");
+    }
+
+
+    /**
+     * 标准、关联试卷预览
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="toPreviewPaper",method=RequestMethod.GET)
+    public ModelAndView toPreviewPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        //得到该课题的所有任务，任务完成情况。
+        JsonEntity je= new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String paperid=request.getParameter("paperid");
+        if(courseid==null||courseid.trim().length()<1||paperid==null||paperid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setCourseid(Long.parseLong(courseid));
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+
+        TpCoursePaper t=new TpCoursePaper();
+        t.setCourseid(Long.parseLong(courseid));
+        t.setPaperid(Long.parseLong(paperid));
+        List<TpCoursePaper>tpCoursePaperList=this.tpCoursePaperManager.getList(t, null);
+        if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
+            je.setMsg("抱歉该试卷已不存在!");
+            je.getAlertMsgAndBack();
+            return null;
+        }
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(Long.parseLong(paperid));
+        PageResult p=new PageResult();
+        p.setOrderBy("u.order_idx");
+        p.setPageNo(0);
+        p.setPageSize(0);
+        List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+        List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+        if(pqList!=null&&pqList.size()>0){
+            for (PaperQuestion ques:pqList){
+                if(ques.getQuestiontype()==3||ques.getQuestiontype()==4){
+                    QuestionOption questionOption=new QuestionOption();
+                    questionOption.setQuestionid(ques.getQuestionid());
+                    PageResult pchild = new PageResult();
+                    pchild.setPageNo(0);
+                    pchild.setPageSize(0);
+                    pchild.setOrderBy("u.option_type");
+                    List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,pchild);
+                    ques.getQuestioninfo().setQuestionOption(questionOptionList);
+                }
+                tmpList.add(ques);
+            }
+        }
+
+        request.setAttribute("pqList", tmpList);
+        request.setAttribute("paper", tpCoursePaperList.get(0));
+        request.setAttribute("courseid", courseid);
+        return new ModelAndView("/teachpaltform/paper/preview-paper");
+    }
 
 
     /**
@@ -372,10 +439,45 @@ public class PaperController extends BaseController<PaperInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("u.paper_id,u.c_time desc");
+        p.setOrderBy("u.paper_id desc,u.c_time desc");
         TpCoursePaper t=new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
         t.setLocalstatus(1);
+        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t,p);
+        p.setList(coursePaperList);
+        je.setPresult(p);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 查询导入试卷列表
+     * @throws Exception
+     */
+    @RequestMapping(params="m=getImportPaperList",method=RequestMethod.POST)
+    public void getImportPaperList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String materialid=request.getParameter("materialid");
+        String gradeid=request.getParameter("gradeid");
+        String subjectid=request.getParameter("subjectid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        PageResult p=this.getPageResultParameter(request);
+        p.setOrderBy("u.paper_id desc,u.c_time desc");
+        TpCoursePaper t=new TpCoursePaper();
+        t.setFiltercourseid(Long.parseLong(courseid));//排除当前专题
+        t.setLocalstatus(1);
+        if(materialid!=null&&materialid.length()>0)
+            t.setMaterialid(Integer.parseInt(materialid));
+        if(gradeid!=null&&gradeid.length()>0)
+            t.setGradeid(Integer.parseInt(gradeid));
+        if(subjectid!=null&&subjectid.length()>0)
+            t.setSubjectid(Integer.parseInt(subjectid));
+
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t,p);
         p.setList(coursePaperList);
         je.setPresult(p);
@@ -869,11 +971,87 @@ public class PaperController extends BaseController<PaperInfo>{
             return null;
         }
 
+
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(Long.parseLong(paperid));
+        PageResult p=new PageResult();
+        p.setOrderBy("u.order_idx");
+        p.setPageNo(0);
+        p.setPageSize(0);
+        List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+        List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+        if(pqList!=null&&pqList.size()>0){
+            for (PaperQuestion ques:pqList){
+                if(ques.getQuestiontype()==3||ques.getQuestiontype()==4){
+                    QuestionOption questionOption=new QuestionOption();
+                    questionOption.setQuestionid(ques.getQuestionid());
+                    PageResult pchild = new PageResult();
+                    pchild.setPageNo(0);
+                    pchild.setPageSize(0);
+                    pchild.setOrderBy("u.option_type");
+                    List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,pchild);
+                    ques.getQuestioninfo().setQuestionOption(questionOptionList);
+                }
+                tmpList.add(ques);
+            }
+        }
+
+        request.setAttribute("pqList", tmpList);
         request.setAttribute("courseid", courseid);
         request.setAttribute("paper", tpCoursePaperList.get(0));
-        return new ModelAndView("/teachpaltform/paper/edit-paper-ques");
+        return new ModelAndView("/teachpaltform/paper/edit-paper");
     }
 
+
+    /**
+     * 模式窗体查询导入试卷
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=dialogPaper",method=RequestMethod.GET)
+    public ModelAndView dialogPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je =new JsonEntity();//
+        String courseid=request.getParameter("courseid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            je.getAlertMsgAndBack();
+            return null;
+        }
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setUserid(this.logined(request).getUserid());
+        tc.setCourseid(Long.parseLong(courseid));
+        tc.setLocalstatus(1);//正常
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        String subjectid=null,materialid=null,gradeid=null;
+        //获取当前专题教材
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(Long.parseLong(courseid));
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0){
+            subjectid=materialList.get(0).getSubjectid().toString();
+            materialid=materialList.get(0).getTeachingmaterialid().toString();
+            gradeid=materialList.get(0).getGradeid().toString();
+        }
+
+        //查询关联专题的试卷
+        TpCoursePaper sel=new TpCoursePaper();
+        sel.setCourseid(Long.parseLong(courseid));
+        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,null);
+
+
+        request.setAttribute("coursePaperList", coursePaperList);
+        request.setAttribute("courseid", courseid);
+        request.setAttribute("subjectid", subjectid);
+        request.setAttribute("materialid", materialid);
+        request.setAttribute("gradeid", gradeid);
+        return new ModelAndView("/teachpaltform/paper/add/import-paper");
+    }
 
 
 

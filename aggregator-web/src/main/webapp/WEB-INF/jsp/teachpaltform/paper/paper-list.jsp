@@ -56,10 +56,18 @@ function getInvestReturnMethod(rps){
     var html='';
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
-            if(itm.paperid>0)
-                html+='<p><a href="paper?m=previewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a></p>';
-            else
-                html+='<p><a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a></p>';
+            if(itm.paperid>0){
+                html+='<p><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a>';
+                html+='&nbsp;客观题：'+itm.objectivenum+'&nbsp;主观题：'+itm.subjectivenum;
+                html+='</p>';
+
+            }else{
+                html+='<p>';
+                html+='<a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a>';
+                html+='&nbsp;客观题：'+itm.objectivenum+'&nbsp;主观题：'+itm.subjectivenum;
+                html+='</p>';
+            }
+
         });
     }
     $("#initItemList").html(html);
