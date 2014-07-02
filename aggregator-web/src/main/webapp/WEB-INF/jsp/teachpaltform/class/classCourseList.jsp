@@ -164,15 +164,17 @@
         <div class="contentR">
             <div class="jxxt_tab_layout">
                 <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
-                    <col class="w500"/>
-                    <col class="w240"/>
+                    <col class="w450"/>
+                    <col class="w130"/>
+                    <col class="w160"/>
                     <tr>
                         <th>专题名称</th>
+                        <th>课堂表现</th>
                         <th>开始时间</th>
                     </tr>
                     <c:if test="${empty courseList}">
                         <tr>
-                            <td colspan="2">没有专题数据！</td>
+                            <td colspan="3">没有专题数据！</td>
                         </tr>
                     </c:if>
                     <c:if test="${!empty courseList}">
@@ -195,6 +197,7 @@
                                         <span class='ico17' title='共享'></span>
                                     </c:if>
                                     <a href="task?toTaskList&courseid=${tc.courseid}">${tc.coursename}</a></p></td>
+                                <td><a target="_blank" href="clsperformance?m=toIndex&courseid=${tc.courseid}&subjectid=${param.subjectid}&classid=${param.classid}&classtype=${param.classtype}">课堂表现</a></td>
                                 <td>${tc.ctimeString}</td>
                             </tr>
                         </c:forEach>

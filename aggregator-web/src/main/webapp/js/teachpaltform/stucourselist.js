@@ -18,6 +18,7 @@ function getInvestReturnMethod(rps){
                 html+="<td><p><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"'>"+itm.coursename+"</a></p></td>";
                 html+="<td>"+itm.teachername+"</td>";
                 html+="<td><p><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"'>"+itm.uncompletenum+"</a></p></td>";
+                html+='<td><a target="_blank" href="clsperformance?m=toIndex&courseid='+itm.courseid+'&subjectid='+$("#subjectid").val()+'&termid='+$("#termid").val()+'">课堂表现</a></td>';
                 if(itm.iscomment>0)
                     html+="<td><span class='font-darkgray'>已评价</span></td>";
                 else
@@ -25,7 +26,7 @@ function getInvestReturnMethod(rps){
                 html+="</tr>";
             });
         }else{
-            html+="<tr><td colspan='5'>暂无数据</td></tr>";
+            html+="<tr><td colspan='6'>暂无数据</td></tr>";
         }
         var subjectid=$("#subjectid").val();
         if(rps.presult.list[1]!=null&&rps.presult.list[1].length>0){

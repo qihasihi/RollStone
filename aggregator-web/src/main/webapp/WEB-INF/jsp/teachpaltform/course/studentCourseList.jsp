@@ -122,7 +122,8 @@
         <p class="font-darkblue font_strong"><a href="tpres?toStuCollectList" target="_blank" ><span class="ico60"></span>我的资源管理</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="" id="task_performance" target="_blank"><span class="ico37"></span>任务完成统计</a></p>
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
             <col class="w150"/>
-            <col class="w350"/>
+            <col class="w270"/>
+            <col class="w80"/>
             <col class="w80"/>
             <col class="w80"/>
             <col class="w80"/>
@@ -131,6 +132,7 @@
                 <th>专题名称</th>
                 <th>授课教师</th>
                 <th>未完成任务</th>
+                <th>课堂表现</th>
                 <th>专题评价</th>
             </tr>
             <tbody id="courseTable">
