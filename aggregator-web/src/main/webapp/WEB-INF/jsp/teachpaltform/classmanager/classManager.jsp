@@ -70,7 +70,7 @@
             <c:forEach var="cla" items="${classes }">
                 <tr>
                     <td>
-                        <a href="teachercourse?m=toClassStudentList&classid=${cla.CLASS_ID }&classtype=${cla.CLASS_TYPE}" target="_blank">${cla.CLASS_NAME }</a>
+                        <a href="teachercourse?m=toClassStudentList&classid=${cla.CLASS_ID }&classtype=${cla.CLASS_TYPE}&subjectid=${param.subjectid}" target="_blank">${cla.CLASS_NAME }</a>
                     </td>
                     <td>
                         <c:if test="${cla.CLASS_TYPE==1}">
