@@ -184,4 +184,31 @@ public class SubjectDAO extends CommonDAO<SubjectInfo> implements ISubjectDAO{
 	}
 
 
+    public List<SubjectInfo> getHavaCourseSubject(String termid, String userref, int userid) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL subject_info_proc_havacourse(");
+        List<Object> objList=new ArrayList<Object>();
+        if(termid==null)
+            return null;
+        if(termid!=null){
+            sqlbuilder.append("?,");
+            objList.add(termid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(userref!=null){
+            sqlbuilder.append("?,");
+            objList.add(userref);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(userid>0){
+            sqlbuilder.append("?");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<SubjectInfo> subjectList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,SubjectInfo.class,null);
+        return subjectList;
+    }
 }

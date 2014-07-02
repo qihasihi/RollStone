@@ -59,7 +59,17 @@ function getInvestReturnMethod(rps){
     }
     $("#courseTable").html(html);
     $("#stuClasses").html(chtml);
-
+    if(rps.presult.list[4]!=null&&rps.presult.list[4].length>0){
+        var shtml='';
+        $.each(rps.presult.list[4],function(idx,itm){
+            shtml+='<li id="sub_'+itm.subjectid+'"><a href="javascript:searchBySubject('+itm.subjectid+')"><span id="sub_'+idx+'">'+itm.subjectname+'</span></a></li>';
+        });
+        $("#ul_grade").html(shtml);
+        $("#sub_"+subjectid).siblings().attr("class","");
+        $("#sub_"+subjectid).attr("class","crumb");
+    }else{
+        $("#ul_grade").html('');
+    }
     $("#my_group").html("");
     if(rps.presult.list.length>2&&rps.presult.list[3]!=null&&rps.presult.list[3].length>0)
         getMyGroup();

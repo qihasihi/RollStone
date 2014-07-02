@@ -328,12 +328,13 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     @RequestMapping(params = "m=toStudentCourseList", method = RequestMethod.GET)
     public ModelAndView toStudentCourseList(HttpServletRequest request, ModelMap mp) throws Exception {
         PageResult pr = new PageResult();
+        UserInfo u = this.logined(request);
         pr.setOrderBy("SEMESTER_BEGIN_DATE");
         List<TermInfo> termList = this.termManager.getList(null, pr);
         mp.put("termList", termList);
         TermInfo currtTerm = this.termManager.getMaxIdTerm(false);
         mp.put("currtTerm", currtTerm);
-        List<SubjectInfo> subjectList = this.subjectManager.getList(null, null);
+        List<SubjectInfo> subjectList = this.subjectManager.getHavaCourseSubject(currtTerm.getRef(),u.getRef(),u.getUserid());
         mp.put("subjectList", subjectList);
         return new ModelAndView("/teachpaltform/course/studentCourseList");
     }
@@ -479,7 +480,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String subjectid=request.getParameter("subjectid");
         UserInfo u=this.logined(request);
         TermInfo ti = this.termManager.getMaxIdTerm(false);
-        if (ti == null || classid==null || classtype==null) {
+        if (ti == null || classid==null || classtype==null||subjectid==null) {
             jeEntity.setMsg(UtilTool.msgproperty.getProperty("学期参数错误,请联系教务。"));// 异常错误，参数不齐，无法正常访问!
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
             return null;
@@ -660,6 +661,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         l.add(tmpClassUser);
         l.add(tpVirtualClassStudentList);
         l.add(groupList);
+        UserInfo u = this.logined(request);
+        List<SubjectInfo> subjectList = this.subjectManager.getHavaCourseSubject(termid,u.getRef(),u.getUserid());
+        l.add(subjectList);
         je.setObjList(l);
         response.getWriter().print(je.toJSON());
     }

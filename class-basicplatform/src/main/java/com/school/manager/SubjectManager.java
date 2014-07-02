@@ -91,4 +91,8 @@ public class SubjectManager extends CommonDAO<SubjectInfo> implements ISubjectMa
 	}
 
 
+    @Override
+    public List<SubjectInfo> getHavaCourseSubject(String termid, String userref, int userid) {
+        return this.subjectDAO.getHavaCourseSubject(termid,userref,userid);
+    }
 }
