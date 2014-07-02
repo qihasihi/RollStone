@@ -75,5 +75,10 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    @Override
+    public Float getSumScore(PaperQuestion paperQuestion) {
+        return this.paperquestiondao.getSumScore(paperQuestion);
+    }
 }
 

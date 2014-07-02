@@ -16,6 +16,51 @@ public class TpCourseQuestion implements Serializable{
     private Long courseid;
     private String coursename;
     private Long paperid;
+    private Object paperquesflag;
+    private Long currentCourseid;   //当前专题ID
+    private Integer gradeid;
+    private Integer subjectid;
+    private Integer materialid;
+
+    public Integer getGradeid() {
+        return gradeid;
+    }
+
+    public void setGradeid(Integer gradeid) {
+        this.gradeid = gradeid;
+    }
+
+    public Integer getMaterialid() {
+        return materialid;
+    }
+
+    public void setMaterialid(Integer materialid) {
+        this.materialid = materialid;
+    }
+
+    public Integer getSubjectid() {
+        return subjectid;
+    }
+
+    public void setSubjectid(Integer subjectid) {
+        this.subjectid = subjectid;
+    }
+
+    public Long getCurrentCourseid() {
+        return currentCourseid;
+    }
+
+    public void setCurrentCourseid(Long currentCourseid) {
+        this.currentCourseid = currentCourseid;
+    }
+
+    public Object getPaperquesflag() {
+        return paperquesflag;
+    }
+
+    public void setPaperquesflag(Object paperquesflag) {
+        this.paperquesflag = paperquesflag;
+    }
 
     public Long getPaperid() {
         return paperid;

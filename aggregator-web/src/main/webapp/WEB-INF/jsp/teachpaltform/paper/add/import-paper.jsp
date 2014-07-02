@@ -9,6 +9,7 @@
 <script type="text/javascript" src="<%=basePath %>js/teachpaltform/paper.js"></script>
 <script type="text/javascript">
 var courseid="${courseid}";
+var paperid="${paperid}";
 var subjectid="${subjectid}";
 var materialid="${materialid}";
 var gradeid="${gradeid}";
@@ -30,7 +31,9 @@ $(function(){
         pagetotal : 1,
         operate_id : "initItemList"
     });
-  //  pageGo('pList');
+    var coursename=$("#txt_search");
+    if(coursename.val().Trim().length>0&&coursename.val()!='输入专题名称')
+        pageGo('pList');
 });
 
 
@@ -39,10 +42,11 @@ function getInvestReturnMethod(rps){
     var html='';
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
-            html+='<p>'+itm.papername+'</p>';
+            html+='<p><a  href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a>&nbsp;<a href="javascript:importPaperQues('+itm.courseid+','+itm.paperid+')">添加</a></p>';
         });
     }
-    $("#initItemList").html(html);
+    $("#dv_data").html(html);
+
 
 
     if(rps.objList.length>0){
@@ -68,21 +72,50 @@ function preeDoPageSub(pObj){
         alert('异常错误，系统未获取到专题标识!');
         return;
     }
+    var param={courseid:courseid,materialid:materialid,gradeid:gradeid,subjectid:subjectid};
     var coursename=$("#txt_search");
     if(coursename.val().Trim().length<1||coursename.val()=='输入专题名称'){
-        alert('请输入专题名称!');
-        coursename.focus();
         return;
     }
-    var param={courseid:courseid,materialid:materialid,gradeid:gradeid,subjectid:subjectid};
+    param.coursename=coursename.val();
     pObj.setPostParams(param);
 }
+
+    function importPaperQues(currentcourseid,currentpaperid){
+        if(typeof paperid=='undefined'){
+            alert('未获取到试卷标识!');
+            return;
+        }
+        $.ajax({
+            url:"paperques?m=doImportPaperQues",
+            type:"post",
+            data:{
+                courseid:courseid,
+                paperid:paperid,
+                currentcourseid:currentcourseid,
+                currentpaperid:currentpaperid
+            },
+            dataType:'json',
+            cache: false,
+            error:function(){
+                alert('系统未响应，请稍候重试!');
+            },success:function(rmsg){
+                if(rmsg.type=="error"){
+                    alert(rmsg.msg);
+                }else{
+                    alert(rmsg.msg)
+                    window.returnValue='ok';
+                    window.close();
+                }
+            }
+        });
+    }
 
 </script>
 </head>
 <body>
 <div>
-    <a href="">添加试题----导入试卷</a>
+    <a href="#">添加试题----导入试卷</a>
 </div>
 <div class="zhuanti">
     <input type="text" id="txt_search" onfocus="if(this.value=='输入专题名称'){this.value=''}" onblur="if(this.value==''){this.value='输入专题名称'}"/><a href="javascript:pageGo('pList');">搜索</a>
@@ -93,7 +126,7 @@ function preeDoPageSub(pObj){
              <c:forEach items="${coursePaperList}" var="c">
                  <p>
                      <a target="_top" href="paper?toPreviewPaper&courseid=${c.courseid}&paperid=${c.paperid}">${c.papername}</a>
-                     <a>添加</a>
+                     <a href="javascript:importPaperQues('${c.courseid}','${c.paperid}')">添加</a>
                      主观题：${c.objectivenum}&nbsp;客观题：${c.subjectivenum}
                  </p>
              </c:forEach>

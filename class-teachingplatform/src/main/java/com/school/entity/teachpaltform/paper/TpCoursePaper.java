@@ -8,7 +8,7 @@ public class TpCoursePaper {
    
     private java.lang.Long paperid;
     private java.lang.Integer ref;
-    private TpCourseInfo courseinfo;
+
     private Long filtercourseid;    //过滤掉的专题ID
 
     public Long getFiltercourseid() {
@@ -19,15 +19,6 @@ public class TpCoursePaper {
         this.filtercourseid = filtercourseid;
     }
 
-    public TpCourseInfo getCourseinfo() {
-        if(courseinfo==null)
-            courseinfo=new TpCourseInfo();
-        return courseinfo;
-    }
-
-    public void setCourseinfo(TpCourseInfo courseinfo) {
-        this.courseinfo = courseinfo;
-    }
 
     private String papername;
     private Integer localstatus;
@@ -89,37 +80,49 @@ public class TpCoursePaper {
     public void setRef(java.lang.Integer ref){
       this.ref = ref;
     }
-    public java.lang.Long getCourseid(){
-      return this.getCourseinfo().getCourseid();
-    }
-    public void setCourseid(java.lang.Long courseid){
-      this.getCourseinfo().setCourseid(courseid);
-    }
-    public Integer getMaterialid(){
-        return this.getCourseinfo().getMaterialid();
-    }
-    public void setMaterialid(Integer materialid){
-        this.getCourseinfo().setMaterialid(materialid);
-    }
-    public Integer getGradeid(){
-        return this.getCourseinfo().getGradeid();
-    }
-    public void setGradeid(Integer gradeid){
-        this.getCourseinfo().setGradeid(gradeid);
-    }
-    public Integer getSubjectid(){
-        return this.getCourseinfo().getSubjectid();
-    }
-    public void setSubjectid(Integer subjectid){
-        this.getCourseinfo().setSubjectid(subjectid);
-    }
-    public String getCoursename(){
-        return this.getCourseinfo().getCoursename();
-    }
-    public void setCoursename(String coursename){
-        this.getCourseinfo().setCoursename(coursename);
+    private Long courseid;
+    private Integer gradeid;
+    private Integer materialid;
+    private Integer subjectid;
+    private String  coursename;
+
+    public Long getCourseid() {
+        return courseid;
     }
 
+    public void setCourseid(Long courseid) {
+        this.courseid = courseid;
+    }
 
+    public Integer getGradeid() {
+        return gradeid;
+    }
 
+    public void setGradeid(Integer gradeid) {
+        this.gradeid = gradeid;
+    }
+
+    public Integer getMaterialid() {
+        return materialid;
+    }
+
+    public void setMaterialid(Integer materialid) {
+        this.materialid = materialid;
+    }
+
+    public Integer getSubjectid() {
+        return subjectid;
+    }
+
+    public void setSubjectid(Integer subjectid) {
+        this.subjectid = subjectid;
+    }
+
+    public String getCoursename() {
+        return coursename;
+    }
+
+    public void setCoursename(String coursename) {
+        this.coursename = coursename;
+    }
 }

@@ -898,6 +898,399 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     }
 
 
+    /**
+     * 导入试卷的试题
+     * @throws Exception
+     */
+    @RequestMapping(params="m=doImportPaperQues",method=RequestMethod.POST)
+    public void doImportPaperQues(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String paperid=request.getParameter("paperid");
+        String courseid=request.getParameter("courseid");
+        String currentcourseid=request.getParameter("currentcourseid");
+        String currentpaperid=request.getParameter("currentpaperid");
+        if(paperid==null||paperid.trim().length()<1||
+                courseid==null||courseid.trim().length()<1||
+                currentcourseid==null||currentcourseid.trim().length()<1||
+                currentpaperid==null||currentpaperid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        TpCourseInfo courseInfo=new TpCourseInfo();
+        courseInfo.setCourseid(Long.parseLong(currentcourseid));
+        List<TpCourseInfo>courseList=this.tpCourseManager.getList(courseInfo,null);
+        if(courseList==null||courseList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(Long.parseLong(currentpaperid));
+        PageResult p=new PageResult();
+        p.setOrderBy("u.order_idx");
+        p.setPageNo(0);
+        p.setPageSize(0);
+        List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+        if(pqList==null||pqList.size()<1){
+            je.setMsg("当前试卷暂无试题!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        StringBuilder sql=null;
+        List<Object>objList=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+
+        //添加试题至试卷中
+        PaperQuestion maxidx=new PaperQuestion();
+        maxidx.setPaperid(Long.parseLong(paperid));
+        PageResult maxp=new PageResult();
+        maxp.setOrderBy("u.order_idx desc");
+        maxp.setPageSize(1);
+        maxp.setPageNo(1);
+        List<PaperQuestion>maxList=this.paperQuestionManager.getList(maxidx,maxp);
+        Integer maxIdx=1;
+        if(maxList!=null&&maxList.size()>0)
+            maxIdx=maxList.get(0).getOrderidx();
+
+        for(PaperQuestion question:pqList){
+            //操作试卷中的试题,添加至专题试题库
+            TpCourseQuestion courseQuestion=new TpCourseQuestion();
+            courseQuestion.setCourseid(Long.parseLong(courseid));
+            courseQuestion.setQuestionid(question.getQuestionid());
+            List<TpCourseQuestion>tpCourseQuestionList=this.tpCourseQuestionManager.getList(courseQuestion,null);
+            if(tpCourseQuestionList==null||tpCourseQuestionList.size()<1){
+                courseQuestion.setRef(this.tpCourseQuestionManager.getNextId(true));
+                sql=new StringBuilder();
+                objList=this.tpCourseQuestionManager.getSaveSql(courseQuestion,sql);
+                if(objList!=null&&sql!=null){
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+            }
+
+
+            PaperQuestion paperQuestion=new PaperQuestion();
+            paperQuestion.setPaperid(Long.parseLong(paperid));
+            paperQuestion.setQuestionid(question.getQuestionid());
+            List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(paperQuestion,null);
+            if(paperQuestionList==null||paperQuestionList.size()<1){
+                maxIdx+=1;
+                PaperQuestion addPaper=new PaperQuestion();
+                addPaper.setPaperid(Long.parseLong(paperid));
+                addPaper.setQuestionid(question.getQuestionid());
+                addPaper.setOrderidx(maxIdx);
+                if(question.getScore()!=null)
+                    addPaper.setScore(question.getScore());
+                sql=new StringBuilder();
+                objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
+                if(objList!=null&&sql!=null){
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+            }
+        }
+
+        if(objListArray.size()>0&&sqlListArray.size()>0){
+            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
+            if(flag){
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+                Float SumScore=this.paperQuestionManager.getSumScore(maxidx);
+                if(SumScore!=null&&SumScore>0){
+                    PaperInfo paper=new PaperInfo();
+                    paper.setPaperid(Long.parseLong(paperid));
+                    paper.setScore(SumScore);
+                    this.paperManager.doUpdate(paper);
+                }
+
+            }else{
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        }else{
+            je.setMsg("您的操作没有执行!");
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+    /**
+     * 获取导入试题列表
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=ajaxImportQuesList", method = RequestMethod.POST)
+    public void ajaxQuestionList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JsonEntity jsonEntity=new JsonEntity();
+        PageResult presult=this.getPageResultParameter(request);
+        String courseid=request.getParameter("courseid");
+        String paperid=request.getParameter("paperid");
+        String coursename=request.getParameter("coursename");
+        String materialid=request.getParameter("materialid");
+        String gradeid=request.getParameter("gradeid");
+        String subjectid=request.getParameter("subjectid");
+        if(courseid==null||courseid.trim().length()<1||
+                paperid==null||paperid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(jsonEntity.toJSON());
+            return;
+        }
+        //得到列表
+        List<TpCourseQuestion> tmpList=new ArrayList<TpCourseQuestion>();
+        TpCourseQuestion tpCourseQuestion=new TpCourseQuestion();
+        tpCourseQuestion.setCurrentCourseid(Long.parseLong(courseid));
+        tpCourseQuestion.setPaperid(Long.parseLong(paperid));
+        if(coursename!=null&&coursename.trim().length()>0){
+            tpCourseQuestion.setCoursename(coursename);
+            if(materialid!=null&&materialid.length()>0)
+                tpCourseQuestion.setMaterialid(Integer.parseInt(materialid));
+            if(gradeid!=null&&gradeid.length()>0)
+                tpCourseQuestion.setGradeid(Integer.parseInt(gradeid));
+            if(subjectid!=null&&subjectid.length()>0)
+                tpCourseQuestion.setSubjectid(Integer.parseInt(subjectid));
+        }else
+            tpCourseQuestion.setCourseid(Long.parseLong(courseid));
+
+        //1：有效 2：已删除
+        tpCourseQuestion.setStatus(1);
+       // tpCourseQuestion.setUserid(this.logined(request).getUserid());
+        presult.setOrderBy("paper_ques_flag,u.c_time DESC,q.c_time DESC ");
+        List<TpCourseQuestion> tpCourseQuestionList=this.tpCourseQuestionManager.getList(tpCourseQuestion,presult);
+        if(tpCourseQuestionList!=null&&tpCourseQuestionList.size()>0){
+            for(TpCourseQuestion tq :tpCourseQuestionList){
+                if(tq.getQuestiontype()==3||tq.getQuestiontype()==4){
+                    QuestionOption questionOption=new QuestionOption();
+                    questionOption.setQuestionid(tq.getQuestionid());
+                    PageResult p = new PageResult();
+                    p.setPageNo(0);
+                    p.setPageSize(0);
+                    p.setOrderBy("u.option_type");
+                    List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,p);
+                    tq.setQuestionOptionList(questionOptionList);
+                }
+                tmpList.add(tq);
+            }
+        }
+        presult.setList(tmpList);
+        jsonEntity.setPresult(presult);
+        jsonEntity.setType("success");
+        response.getWriter().print(jsonEntity.toJSON());
+    }
+
+
+    /**
+     * 通过导入试题,添加试卷试题
+     * @throws Exception
+     */
+    @RequestMapping(params="m=doAddImportQues",method=RequestMethod.POST)
+    public void doAddImportQues(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String paperid=request.getParameter("paperid");
+        String courseid=request.getParameter("courseid");
+        String quesid=request.getParameter("quesid");
+        if(paperid==null||paperid.trim().length()<1||
+                courseid==null||courseid.trim().length()<1||
+                quesid==null||quesid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String[]questionidArray=quesid.split(",");
+
+        TpCourseInfo courseInfo=new TpCourseInfo();
+        courseInfo.setCourseid(Long.parseLong(courseid));
+        List<TpCourseInfo>courseList=this.tpCourseManager.getList(courseInfo,null);
+        if(courseList==null||courseList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        StringBuilder sql=null;
+        List<Object>objList=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+
+        //添加试题至试卷中
+        PaperQuestion maxidx=new PaperQuestion();
+        maxidx.setPaperid(Long.parseLong(paperid));
+        PageResult maxp=new PageResult();
+        maxp.setOrderBy("u.order_idx desc");
+        maxp.setPageSize(1);
+        maxp.setPageNo(1);
+        List<PaperQuestion>maxList=this.paperQuestionManager.getList(maxidx,maxp);
+        Integer maxIdx=1;
+        if(maxList!=null&&maxList.size()>0)
+            maxIdx=maxList.get(0).getOrderidx();
+
+        for(String  questionid:questionidArray){
+            //操作试卷中的试题,添加至专题试题库
+            TpCourseQuestion courseQuestion=new TpCourseQuestion();
+            courseQuestion.setCourseid(Long.parseLong(courseid));
+            courseQuestion.setQuestionid(Long.parseLong(questionid));
+            List<TpCourseQuestion>tpCourseQuestionList=this.tpCourseQuestionManager.getList(courseQuestion,null);
+            if(tpCourseQuestionList==null||tpCourseQuestionList.size()<1){
+                courseQuestion.setRef(this.tpCourseQuestionManager.getNextId(true));
+                sql=new StringBuilder();
+                objList=this.tpCourseQuestionManager.getSaveSql(courseQuestion,sql);
+                if(objList!=null&&sql!=null){
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+            }
+
+
+            PaperQuestion paperQuestion=new PaperQuestion();
+            paperQuestion.setPaperid(Long.parseLong(paperid));
+            paperQuestion.setQuestionid(Long.parseLong(questionid));
+            List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(paperQuestion,null);
+            if(paperQuestionList==null||paperQuestionList.size()<1){
+                maxIdx+=1;
+                PaperQuestion addPaper=new PaperQuestion();
+                addPaper.setPaperid(Long.parseLong(paperid));
+                addPaper.setQuestionid(Long.parseLong(questionid));
+                addPaper.setOrderidx(maxIdx);
+                addPaper.setScore(new Float(10));
+                sql=new StringBuilder();
+                objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
+                if(objList!=null&&sql!=null){
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+            }
+        }
+
+        if(objListArray.size()>0&&sqlListArray.size()>0){
+            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
+            if(flag){
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+                Float SumScore=this.paperQuestionManager.getSumScore(maxidx);
+                if(SumScore!=null&&SumScore>0){
+                    PaperInfo paper=new PaperInfo();
+                    paper.setPaperid(Long.parseLong(paperid));
+                    paper.setScore(SumScore);
+                    this.paperManager.doUpdate(paper);
+                }
+
+            }else{
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        }else{
+            je.setMsg("您的操作没有执行!");
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 通过新建试题,添加试卷试题
+     * @throws Exception
+     */
+    @RequestMapping(params="m=doAddQues",method=RequestMethod.POST)
+    public void doAddQues(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String paperid=request.getParameter("paperid");
+        String courseid=request.getParameter("courseid");
+        String questionid=request.getParameter("questionid");
+        if(paperid==null||paperid.trim().length()<1||
+                courseid==null||courseid.trim().length()<1||
+                questionid==null||questionid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        TpCourseInfo courseInfo=new TpCourseInfo();
+        courseInfo.setCourseid(Long.parseLong(courseid));
+        List<TpCourseInfo>courseList=this.tpCourseManager.getList(courseInfo,null);
+        if(courseList==null||courseList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        StringBuilder sql=null;
+        List<Object>objList=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+
+        //添加试题至试卷中
+        PaperQuestion maxidx=new PaperQuestion();
+        maxidx.setPaperid(Long.parseLong(paperid));
+        PageResult maxp=new PageResult();
+        maxp.setOrderBy("u.order_idx desc");
+        maxp.setPageSize(1);
+        maxp.setPageNo(1);
+        List<PaperQuestion>maxList=this.paperQuestionManager.getList(maxidx,maxp);
+        Integer maxIdx=1;
+        if(maxList!=null&&maxList.size()>0)
+            maxIdx=maxList.get(0).getOrderidx();
+
+
+        //操作试卷中的试题,添加至专题试题库
+        TpCourseQuestion courseQuestion=new TpCourseQuestion();
+        courseQuestion.setCourseid(Long.parseLong(courseid));
+        courseQuestion.setQuestionid(Long.parseLong(questionid));
+        List<TpCourseQuestion>tpCourseQuestionList=this.tpCourseQuestionManager.getList(courseQuestion,null);
+        if(tpCourseQuestionList==null||tpCourseQuestionList.size()<1){
+            courseQuestion.setRef(this.tpCourseQuestionManager.getNextId(true));
+            sql=new StringBuilder();
+            objList=this.tpCourseQuestionManager.getSaveSql(courseQuestion,sql);
+            if(objList!=null&&sql!=null){
+                objListArray.add(objList);
+                sqlListArray.add(sql.toString());
+            }
+        }
+
+
+        PaperQuestion paperQuestion=new PaperQuestion();
+        paperQuestion.setPaperid(Long.parseLong(paperid));
+        paperQuestion.setQuestionid(Long.parseLong(questionid));
+        List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(paperQuestion,null);
+        if(paperQuestionList==null||paperQuestionList.size()<1){
+            maxIdx+=1;
+            PaperQuestion addPaper=new PaperQuestion();
+            addPaper.setPaperid(Long.parseLong(paperid));
+            addPaper.setQuestionid(Long.parseLong(questionid));
+            addPaper.setOrderidx(maxIdx);
+            addPaper.setScore(new Float(10));
+            sql=new StringBuilder();
+            objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
+            if(objList!=null&&sql!=null){
+                objListArray.add(objList);
+                sqlListArray.add(sql.toString());
+            }
+        }
+
+        if(objListArray.size()>0&&sqlListArray.size()>0){
+            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
+            if(flag){
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+                Float SumScore=this.paperQuestionManager.getSumScore(maxidx);
+                if(SumScore!=null&&SumScore>0){
+                    PaperInfo paper=new PaperInfo();
+                    paper.setPaperid(Long.parseLong(paperid));
+                    paper.setScore(SumScore);
+                    this.paperManager.doUpdate(paper);
+                }
+
+            }else{
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        }else{
+            je.setMsg("您的操作没有执行!");
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+
 
 
     /**

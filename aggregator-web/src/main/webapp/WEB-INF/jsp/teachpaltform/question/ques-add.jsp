@@ -20,6 +20,8 @@
         $(function () {
             if(addflag.length>0)
                 $("input[name='rdo_ques_type']").attr("disabled",true);
+            if(operate_type=="3")
+                $("#li_quote").remove();
             //试题类型
             var questype =pQuestype.length>0?parseInt(pQuestype):$("input[name='rdo_ques_type']:checked").val();
             changeQuesType(questype);
@@ -48,8 +50,10 @@
 <div class="subpage_head"><span class="ico55"></span><strong>添加试题</strong></div>
 <div class="subpage_nav">
     <ul>
-        <li class="crumb"><a  href="question?m=toAddQuestion&courseid=${param.courseid}">新建试题</a></li>
-        <li><a href="teachercourse?m=toCourseQuestionList&addCourseId=${param.courseid}">引用试题</a></li>
+        <li class="crumb"><a>新建试题</a></li>
+
+        <li id="li_quote"><a href="teachercourse?m=toCourseQuestionList&addCourseId=${param.courseid}">引用试题</a></li>
+
     </ul>
 </div>
 <div class="content1">

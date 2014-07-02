@@ -461,7 +461,9 @@ public class PaperController extends BaseController<PaperInfo>{
         String materialid=request.getParameter("materialid");
         String gradeid=request.getParameter("gradeid");
         String subjectid=request.getParameter("subjectid");
-        if(courseid==null||courseid.trim().length()<1){
+        String coursename=request.getParameter("coursename");
+        if(courseid==null||courseid.trim().length()<1
+                ||coursename==null||coursename.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
@@ -471,6 +473,7 @@ public class PaperController extends BaseController<PaperInfo>{
         TpCoursePaper t=new TpCoursePaper();
         t.setFiltercourseid(Long.parseLong(courseid));//排除当前专题
         t.setLocalstatus(1);
+        t.setCoursename(coursename);
         if(materialid!=null&&materialid.length()>0)
             t.setMaterialid(Integer.parseInt(materialid));
         if(gradeid!=null&&gradeid.length()>0)
@@ -1013,6 +1016,7 @@ public class PaperController extends BaseController<PaperInfo>{
     public ModelAndView dialogPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je =new JsonEntity();//
         String courseid=request.getParameter("courseid");
+        String paperid=request.getParameter("paperid");
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             je.getAlertMsgAndBack();
@@ -1047,10 +1051,65 @@ public class PaperController extends BaseController<PaperInfo>{
 
         request.setAttribute("coursePaperList", coursePaperList);
         request.setAttribute("courseid", courseid);
+        request.setAttribute("paperid", paperid);
         request.setAttribute("subjectid", subjectid);
         request.setAttribute("materialid", materialid);
         request.setAttribute("gradeid", gradeid);
         return new ModelAndView("/teachpaltform/paper/add/import-paper");
+    }
+
+    /**
+     * 模式窗体查询导入试题
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=dialogQuestion",method=RequestMethod.GET)
+    public ModelAndView dialogQuestion(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je =new JsonEntity();//
+        String courseid=request.getParameter("courseid");
+        String paperid=request.getParameter("paperid");
+        if(courseid==null||courseid.trim().length()<1||
+                paperid==null||paperid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            je.getAlertMsgAndBack();
+            return null;
+        }
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setUserid(this.logined(request).getUserid());
+        tc.setCourseid(Long.parseLong(courseid));
+        tc.setLocalstatus(1);//正常
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        String subjectid=null,materialid=null,gradeid=null;
+        //获取当前专题教材
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(Long.parseLong(courseid));
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0){
+            subjectid=materialList.get(0).getSubjectid().toString();
+            materialid=materialList.get(0).getTeachingmaterialid().toString();
+            gradeid=materialList.get(0).getGradeid().toString();
+        }
+
+        //查询关联专题的试卷
+/*        TpCoursePaper sel=new TpCoursePaper();
+        sel.setCourseid(Long.parseLong(courseid));
+        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,null);
+        request.setAttribute("coursePaperList", coursePaperList);*/
+
+
+
+        request.setAttribute("courseid", courseid);
+        request.setAttribute("paperid", paperid);
+        request.setAttribute("subjectid", subjectid);
+        request.setAttribute("materialid", materialid);
+        request.setAttribute("gradeid", gradeid);
+        return new ModelAndView("/teachpaltform/paper/add/import-ques");
     }
 
 

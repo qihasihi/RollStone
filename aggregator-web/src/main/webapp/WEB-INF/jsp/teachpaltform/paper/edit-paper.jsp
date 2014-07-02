@@ -91,14 +91,14 @@ function preeDoPageSub(pObj){
 }
 
 
-function showDialogPage(type){
+function showDialogPage(type,paperid){
     var url;
     if(type==1){
-        url="paper?m=dialogPaper&courseid="+courseid;
+        url="paper?m=dialogPaper&courseid="+courseid+"&paperid="+paperid;
     }else if(type==2){
-        url="paper?m=dialogQuestion&courseid="+courseid;
+        url="paper?m=dialogQuestion&courseid="+courseid+"&paperid="+paperid;
     }else if(type==3){
-        url='question?m=toAddQuestion&operate_type=2&courseid='+courseid+'&flag=1';
+        url='question?m=toAddQuestion&operate_type=3&courseid='+courseid;
     }
     var param = "dialogWidth:500px;dialogHeight:700px;status:no;location:no";
     var returnValue=window.showModalDialog(url,param);
@@ -106,16 +106,15 @@ function showDialogPage(type){
         alert("操作取消!");
         return;
     }
-    if(type==1){//资源
-        queryResource(courseid,'tr_task_obj',returnValue)
-    }else if(type==2){//论题
-        queryInteraction(courseid,'tr_task_obj',returnValue);
-    }else if(type==3){ //问题类型
-        var questype=$("input[name='rdo_ques_type']:checked").val();
+    if(type==1){//导入试卷
+        window.reload();
+    }else if(type==2){//导入试题
+
+    }else if(type==3){ //新建试题
         $.ajax({
-            url:"question?m=questionAjaxList",
+            url:"paperques?m=doAddQues",
             type:"post",
-            data:{questype:questype,courseid:courseid,questionid:returnValue},
+            data:{courseid:courseid,questionid:returnValue,paperid:paperid},
             dataType:'json',
             cache: false,
             error:function(){
@@ -124,29 +123,57 @@ function showDialogPage(type){
                 if(rmsg.type=="error"){
                     alert(rmsg.msg);
                 }else{
-                    var htm='';
-                    $("#ques_name").html('');
-                    $("#ques_answer").html('');
-                    $("#td_option").hide();
-                    $("#td_option").html('');
-                    if(rmsg.objList.length&&typeof returnValue!='undeinfed'){
-                        $("#hd_questionid").val(rmsg.objList[0].questionid);
-                        $("#sp_ques_id").html(rmsg.objList[0].questionid);
-                        load_ques_detial(returnValue,questype);
-                    }
-                    $("#tr_ques_obj").show();
+                   alert(rmsg.msg);
+                   window.reload();
                 }
             }
         });
     }
 }
+
+
+function genderInput(obj,score){
+    var iptObj=$("input[id='score_input']");
+    if(iptObj.length>0)
+        scoreChange(iptObj,score);
+    var h='<input type="text" id="score_input" value="'+score+'" />';
+    $(obj).html(h);
+    $("input[id='score_input']").focus();
+    $(obj).unbind('click');
+    $("input[id='score_input']").bind("blur",function(){
+        var spanObj=$(this).parent();
+        var score=this.value
+        if(score<1)
+            return;
+        spanObj.html(score);
+        $(spanObj).bind("click",function(){
+            genderInput(spanObj,score);
+        });
+    });
+    $("input[id='score_input']").bind("keyup", function() {
+        this.value = this.value.replace(/[^\d\.]/g, '');
+    });
+
+
+}
+
+function scoreChange(obj,score){
+    //恢复事件
+    if(score<1)
+        return;
+    $(obj).parent().bind("click",function(){
+        genderInput(this,score);
+    });
+    $(obj).parent().html(score);
+
+}
 </script>
 </head>
 <body>
 <div>
-    <a href="javascript:showDialogPage(1)">导入试卷</a>
-    <a href="javascript:showDialogPage(2)">导入试题</a>
-    <a href="javascript:showDialogPage(3)">新建试题</a>
+    <a href="javascript:showDialogPage(1,'${paper.paperid}')">导入试卷</a>
+    <a href="javascript:showDialogPage(2,'${paper.paperid}')">导入试题</a>
+    <a href="javascript:showDialogPage(3,'${paper.paperid}')">新建试题</a>
 </div>
 <div class="zhuanti">
     <p>${paper.papername }</p>
@@ -177,7 +204,7 @@ function showDialogPage(type){
                     </c:forEach>
                 </p>
                 <p style="float: right">
-                        ${pq.score}
+                        <span  style="cursor: pointer" id="score_${pq.questionid}">${pq.score}</span>
                 </p>
                 <p>
                     正确答案：
@@ -204,6 +231,12 @@ function showDialogPage(type){
 
 
 <%@include file="/util/foot.jsp" %>
-
+<script type="text/javascript">
+    $("span").filter(function(){return this.id.indexOf('score_')!=-1}).each(function(idx,itm){
+       $(itm).bind("click",function(){
+           genderInput(itm,$(itm).html());
+       });
+    });
+</script>
 </body>
 </html>

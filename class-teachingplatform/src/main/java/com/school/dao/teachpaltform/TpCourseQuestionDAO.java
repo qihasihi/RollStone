@@ -103,9 +103,29 @@ public class TpCourseQuestionDAO extends CommonDAO<TpCourseQuestion> implements 
             objList.add(tpcoursequestion.getCoursename());
         } else
             sqlbuilder.append("null,");
+        if (tpcoursequestion.getMaterialid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getMaterialid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursequestion.getGradeid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getGradeid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursequestion.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
         if (tpcoursequestion.getPaperid() != null) {
             sqlbuilder.append("?,");
             objList.add(tpcoursequestion.getPaperid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursequestion.getCurrentCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getCurrentCourseid());
         } else
             sqlbuilder.append("null,");
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
