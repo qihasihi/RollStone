@@ -1,16 +1,20 @@
 package com.school.control.teachpaltform.award;
 
 import com.school.control.base.BaseController;
+import com.school.entity.teachpaltform.TpCourseClass;
 import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.entity.teachpaltform.award.TpClassPerformanceAwardInfo;
 import com.school.entity.teachpaltform.award.TpClsPerformanceInfo;
+import com.school.manager.inter.teachpaltform.ITpCourseClassManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
 import com.school.manager.inter.teachpaltform.award.ITpClassPerformanceAwardManager;
 import com.school.manager.inter.teachpaltform.award.ITpClsPerformanceManager;
+import com.school.manager.teachpaltform.TpCourseClassManager;
 import com.school.manager.teachpaltform.TpCourseManager;
 import com.school.manager.teachpaltform.award.TpClassPerformanceAwardManager;
 import com.school.manager.teachpaltform.award.TpClsPerformanceManager;
 import com.school.util.JsonEntity;
+import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -34,10 +38,12 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
     private ITpCourseManager courseManager;
     private ITpClsPerformanceManager tpClsPerformanceManager;
     private ITpClassPerformanceAwardManager tpClsPerformanceAwardManager;
+    private ITpCourseClassManager tpCourseClassManager;
     public TpClsPerformanceController(){
         this.tpClsPerformanceManager=this.getManager(TpClsPerformanceManager.class);
         this.courseManager=this.getManager(TpCourseManager.class);
         this.tpClsPerformanceAwardManager=this.getManager(TpClassPerformanceAwardManager.class);
+        this.tpCourseClassManager=this.getManager(TpCourseClassManager.class);
     }
     /**
      * 进入课堂表现页面的首页(分角色)
@@ -51,11 +57,10 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
         String clsid=request.getParameter("classid");     //班级ID
         String typeid=request.getParameter("classtype");  //班级类型
         String subjectid=request.getParameter("subjectid");
+        String termid=request.getParameter("termid");
         JsonEntity jsonEntity=new JsonEntity();
         //参数验证。
         if(courseid==null||courseid.trim().length()<1
-                ||clsid==null||clsid.trim().length()<1
-                ||typeid==null||typeid.trim().length()<1
                 ||subjectid==null||subjectid.trim().length()<1
                 ){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -67,6 +72,26 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
         List<TpCourseInfo> courseList=this.courseManager.getList(courseInfo,null);
         if(courseList!=null&&courseList.size()>0){
             mp.put("coursename",courseList.get(0).getCoursename());
+        }
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+            //参数验证。
+            if(termid==null){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            //得到学生所在的班级及classtype
+            TpCourseClass tpcc=new TpCourseClass();
+            tpcc.setCourseid(Long.parseLong(courseid.trim()));
+            tpcc.setTermid(termid);
+//            PageResult presult=new PageResult();
+//            presult.setPageSize(1);
+            List<TpCourseClass> tpccList=this.tpCourseClassManager.getList(tpcc,null);
+            if(tpccList==null||tpccList.size()<1){
+                jsonEntity.setMsg("异常错误，这当前学期中本专题没有您的班级信息!请重试!");
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+//            clsid=tpccList.get(0).getClassid().toString();
+//            typeid=tpccList.get(0).getClasstype().toString();
         }
         mp.put("courseid",courseid);
         mp.put("subjectid",subjectid);

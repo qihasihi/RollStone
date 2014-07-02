@@ -4,6 +4,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.school.entity.EttColumnInfo;
 import org.springframework.stereotype.Component;
 
 import com.school.dao.base.CommonDAO;
@@ -287,4 +288,38 @@ public class ColumnDAO extends CommonDAO<ColumnInfo> implements IColumnDAO {
 				.toString(), objList, types, ColumnInfo.class, objArray);
 		return columninfoList;
 	}
+
+    /**
+     * 同步ETT栏目信息
+     * @param entity
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getEttColumnSynchro(final EttColumnInfo entity,StringBuilder sqlbuilder){
+        if(entity==null||sqlbuilder==null)return null;
+        sqlbuilder.append("{CALL ett_column_info_proc_synchro(");
+        List<Object> returnObj=new ArrayList<Object>();
+        if(entity.getEttcolumnid()!=null){
+            returnObj.add(entity.getEttcolumnid());
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(entity.getEttcolumnname()!=null){
+            returnObj.add(entity.getEttcolumnname());
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(entity.getEttcolumnurl()!=null){
+            returnObj.add(entity.getEttcolumnurl());
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(entity.getStatus()!=null){
+            returnObj.add(entity.getStatus());
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
+        return returnObj;
+    }
 }

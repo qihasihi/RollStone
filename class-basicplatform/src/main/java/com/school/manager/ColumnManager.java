@@ -2,6 +2,8 @@
 package  com.school.manager;
 
 import java.util.List;
+
+import com.school.entity.EttColumnInfo;
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +79,14 @@ public class  ColumnManager extends BaseManager<ColumnInfo> implements IColumnMa
 	public List<ColumnInfo> getUserColumnList(String userref){
 		return columndao.getUserColumnList(userref);
 	}
+    /**
+     * 同步ETT栏目信息
+     * @param entity
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getEttColumnSynchro(final EttColumnInfo entity,StringBuilder sqlbuilder){
+        return columndao.getEttColumnSynchro(entity,sqlbuilder);
+    }
 }
 
