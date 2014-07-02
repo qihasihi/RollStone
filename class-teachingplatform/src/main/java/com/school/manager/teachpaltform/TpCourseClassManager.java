@@ -2,6 +2,8 @@
 package  com.school.manager.teachpaltform;
 
 import java.util.List;
+import java.util.Map;
+
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +65,9 @@ public class  TpCourseClassManager extends BaseManager<TpCourseClass> implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+    public List<Map<String,Object>> getTpClassCourse(Long courseid,Integer userid,String termid){
+        return this.tpcourseclassdao.getTpClassCourse(courseid,userid,termid);
+    }
 
 	@Override
 	protected ICommonDAO<TpCourseClass> getBaseDAO() {

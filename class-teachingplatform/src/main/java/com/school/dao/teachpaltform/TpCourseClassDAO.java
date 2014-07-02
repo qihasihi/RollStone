@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component  
 public class TpCourseClassDAO extends CommonDAO<TpCourseClass> implements ITpCourseClassDAO {
@@ -318,11 +319,36 @@ public class TpCourseClassDAO extends CommonDAO<TpCourseClass> implements ITpCou
 		return objList; 
 	}
 
+    public List<Map<String,Object>> getTpClassCourse(Long courseid,Integer userid,String termid){
+        if(courseid==null || userid==null)
+            return null;
+        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_j_course_class_getclassByusercourseid(");
+        List<Object>objList = new ArrayList<Object>();
+
+        if (courseid != null) {
+            sqlbuilder.append("?,");
+            objList.add(courseid);
+        } else
+            sqlbuilder.append("null,");
+        if (userid!= null) {
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        } else
+            sqlbuilder.append("null,");
+        if (termid!= null) {
+            sqlbuilder.append("?");
+            objList.add(termid);
+        } else
+            sqlbuilder.append("null");
+
+        sqlbuilder.append(")}");
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
 	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
 			List<List<Object>> objArrayList) {
 		return this.executeArray_SQL(sqlArrayList, objArrayList);
 	}
-	
+
 	public String getNextId() {
 		// TODO Auto-generated method stub
 		return null;

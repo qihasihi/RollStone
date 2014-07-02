@@ -80,18 +80,13 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
                 response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
             }
             //得到学生所在的班级及classtype
-            TpCourseClass tpcc=new TpCourseClass();
-            tpcc.setCourseid(Long.parseLong(courseid.trim()));
-            tpcc.setTermid(termid);
-//            PageResult presult=new PageResult();
-//            presult.setPageSize(1);
-            List<TpCourseClass> tpccList=this.tpCourseClassManager.getList(tpcc,null);
+            List<Map<String,Object>> tpccList=this.tpCourseClassManager.getTpClassCourse(Long.parseLong(courseid.trim()),this.logined(request).getUserid(),termid);
             if(tpccList==null||tpccList.size()<1){
                 jsonEntity.setMsg("异常错误，这当前学期中本专题没有您的班级信息!请重试!");
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
             }
-//            clsid=tpccList.get(0).getClassid().toString();
-//            typeid=tpccList.get(0).getClasstype().toString();
+            clsid=tpccList.get(0).get("CLASS_ID").toString();
+            typeid=tpccList.get(0).get("CLASS_TYPE").toString();
         }
         mp.put("courseid",courseid);
         mp.put("subjectid",subjectid);
