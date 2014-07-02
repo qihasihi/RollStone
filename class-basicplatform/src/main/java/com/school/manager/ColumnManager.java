@@ -88,5 +88,14 @@ public class  ColumnManager extends BaseManager<ColumnInfo> implements IColumnMa
     public List<Object> getEttColumnSynchro(final EttColumnInfo entity,StringBuilder sqlbuilder){
         return columndao.getEttColumnSynchro(entity,sqlbuilder);
     }
+    /**
+     * 查询ETT栏目信息
+     * @param entity
+     * @param presult
+     * @return
+     */
+    public List<EttColumnInfo> getEttColumnSplit(final EttColumnInfo entity,PageResult presult){
+        return columndao.getEttColumnSplit(entity,presult);
+    }
 }
 

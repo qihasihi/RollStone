@@ -71,8 +71,10 @@
     //得到当前用户有权限的栏目
     List<ColumnInfo> columnList=columnManager.getUserColumnList(usr.getRef());
     StringBuilder writeHtml = new StringBuilder("<div class='home_layoutL'><ul>"); //用于输出
-    //读配置文件，查看已经购买的
 
+
+
+    //读配置文件，查看已经购买的
     String fpath = request.getRealPath("/") + "school.txt";
     BufferedReader br = null;
     StringBuilder content = null;
@@ -152,17 +154,24 @@
             }
         }
     }
-
-    if(isstuidentity){
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=11'><span class='lm_ico12'></span>天天单词</a></li>");
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=9'><span class='lm_ico13'></span>互帮互学</a></li>");
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=220'><span class='lm_ico14'></span>作文大赛</a></li>");
+    List<EttColumnInfo> ettColumnInfos =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
+    if(ettColumnInfos!=null&&ettColumnInfos.size()>0){
+        for (EttColumnInfo ectmp:ettColumnInfos){
+            if(ectmp!=null){
+                writeHtml.append("<li><a target='_blank' href='"+ectmp.getEttcolumnurl()+"'><span class='"+ectmp.getStyle()+"'></span>"+ectmp.getEttcolumnname()+"</a></li>");
+            }
+        }
     }
-    if(isteaidentity){
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=ycjy'><span class='lm_ico09'></span>远程教研</a></li>");
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=mxst'><span class='lm_ico10'></span>名校试题</a></li>");
-        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=gkk'><span class='lm_ico11'></span>四中公开课</a></li>");
-    }
+//    if(isstuidentity){
+//
+//        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=9'><span class='lm_ico13'></span>互帮互学</a></li>");
+//        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&mid=220'><span class='lm_ico14'></span>作文大赛</a></li>");
+//    }
+//    if(isteaidentity){
+//        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=ycjy'><span class='lm_ico09'></span>远程教研</a></li>");
+//        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=mxst'><span class='lm_ico10'></span>名校试题</a></li>");
+//        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=gkk'><span class='lm_ico11'></span>四中公开课</a></li>");
+//    }
 
     writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl'><span class='lm_ico07'></span>四中网校</a></li>");
     writeHtml.append("</ul></div>");

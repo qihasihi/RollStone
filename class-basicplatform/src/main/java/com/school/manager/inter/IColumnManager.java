@@ -6,6 +6,7 @@ import java.util.List;
 import com.school.entity.ColumnInfo;
 import com.school.entity.EttColumnInfo;
 import com.school.manager.base.IBaseManager;
+import com.school.util.PageResult;
 
 public interface IColumnManager  extends IBaseManager<ColumnInfo> { 
 	/**
@@ -22,4 +23,12 @@ public interface IColumnManager  extends IBaseManager<ColumnInfo> {
      * @return
      */
     public List<Object> getEttColumnSynchro(final EttColumnInfo entity,StringBuilder sqlbuilder);
+
+    /**
+     * 查询ETT栏目信息
+     * @param entity
+     * @param presult
+     * @return
+     */
+    public List<EttColumnInfo> getEttColumnSplit(final EttColumnInfo entity,PageResult presult);
 } 

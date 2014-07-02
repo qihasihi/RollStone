@@ -319,7 +319,78 @@ public class ColumnDAO extends CommonDAO<ColumnInfo> implements IColumnDAO {
             sqlbuilder.append("?,");
         }else
             sqlbuilder.append("NULL,");
+        if(entity.getStyle()!=null){
+            returnObj.add(entity.getStyle());
+        }else
+            returnObj.add("");
+
+        sqlbuilder.append("?,");
+        if(entity.getRoletype()!=null){
+            returnObj.add(entity.getRoletype());
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
         return returnObj;
+    }
+
+    /**
+     * 查询ETT栏目信息
+     * @param entity
+     * @param presult
+     * @return
+     */
+    public List<EttColumnInfo> getEttColumnSplit(final EttColumnInfo entity,PageResult presult){
+       StringBuilder sqlbuilder=new StringBuilder("{CALL ett_column_info_proc_split(");
+        List<Object> objList=new ArrayList<Object>();
+        if(entity==null){
+            sqlbuilder.append("NULL,NULL,NULL,NULL,");
+        }else{
+            if(entity.getRef()!=null){
+                objList.add(entity.getRef());
+                sqlbuilder.append("?,");
+            }else
+                sqlbuilder.append("NULL,");
+            if(entity.getEttcolumnid()!=null){
+                objList.add(entity.getEttcolumnid());
+                sqlbuilder.append("?,");
+            }else
+                sqlbuilder.append("NULL,");
+            if(entity.getEttcolumnname()!=null){
+                objList.add(entity.getEttcolumnname());
+                sqlbuilder.append("?,");
+            }else
+                sqlbuilder.append("NULL,");
+            if(entity.getStatus()!=null){
+                objList.add(entity.getStatus());
+                sqlbuilder.append("?,");
+            }else
+                sqlbuilder.append("NULL,");
+            if(entity.getRoletype()!=null){
+                objList.add(entity.getRoletype());
+                sqlbuilder.append("?,");
+            }else
+                sqlbuilder.append("NULL,");
+        }
+        if (presult != null && presult.getPageNo() > 0
+                && presult.getPageSize() > 0) {
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        } else {
+            sqlbuilder.append("NULL,NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types = new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray = new Object[1];
+        List<EttColumnInfo> ettColumnList = this.executeResult_PROC(sqlbuilder
+                .toString(), objList, types, EttColumnInfo.class, objArray);
+        if (presult != null && objArray[0] != null
+                && objArray[0].toString().trim().length() > 0)
+            presult
+                    .setRecTotal(Integer
+                            .parseInt(objArray[0].toString().trim()));
+        return ettColumnList;
     }
 }

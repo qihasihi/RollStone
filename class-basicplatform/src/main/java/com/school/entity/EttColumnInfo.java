@@ -13,6 +13,24 @@ public class EttColumnInfo implements  Serializable{
     private String ettcolumnurl;
     private Integer status;
     private Integer ref;
+    private String style;
+    private Integer roletype;
+
+    public Integer getRoletype() {
+        return roletype;
+    }
+
+    public void setRoletype(Integer roletype) {
+        this.roletype = roletype;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
 
     public Integer getEttcolumnid() {
         return ettcolumnid;

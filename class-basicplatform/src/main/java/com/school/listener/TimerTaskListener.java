@@ -9,6 +9,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 //import com.school.share.*;
+import com.school.share.SynchroEttColumns;
 import com.school.util.DESPlus;
 import com.school.util.UtilTool;
 import com.school.util.WriteProperties;
@@ -91,7 +92,7 @@ public class TimerTaskListener implements ServletContextListener {
 
 
 
-	private Timer schoolTimer = null,teachMaterialTimer=null,vsTimer=null,upCourseTimer=null,ucTimer=null,dcTimer=null,rsRankTimer=null;
+	private Timer schoolTimer = null,teachMaterialTimer=null,vsTimer=null,upCourseTimer=null,ucTimer=null,dcTimer=null,rsRankTimer=null,upEttColumn=null;
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub
         if(schoolTimer!=null)
@@ -108,6 +109,8 @@ public class TimerTaskListener implements ServletContextListener {
             dcTimer.cancel();
         if(rsRankTimer!=null)
             rsRankTimer.cancel();
+        if(upEttColumn!=null)
+            upEttColumn.cancel();
 	}
     //时间间隔(一天)
     private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
@@ -174,9 +177,9 @@ public class TimerTaskListener implements ServletContextListener {
         rsRankTimer=new Timer(true);
         Calendar  rkCourseCal = Calendar.getInstance();
         //每天定点执行
-        rkCourseCal.set(Calendar.HOUR_OF_DAY,1);
+        rkCourseCal.set(Calendar.HOUR_OF_DAY,2);
         Random rkdcrd=new Random();
-        rkCourseCal.set(Calendar.MINUTE,(30+rkdcrd.nextInt(10)));
+        rkCourseCal.set(Calendar.MINUTE,(10+rkdcrd.nextInt(10)));
         rkCourseCal.set(Calendar.SECOND,0);
         Date rsRankDate=rkCourseCal.getTime(); //第一次执行定时任务的时间
         if (rsRankDate.before(new Date())) {
@@ -187,15 +190,29 @@ public class TimerTaskListener implements ServletContextListener {
         dcTimer=new Timer(true);
         Calendar  dCourseCal = Calendar.getInstance();
         //每天定点执行
-        dCourseCal.set(Calendar.HOUR_OF_DAY,1);
+        dCourseCal.set(Calendar.HOUR_OF_DAY,3);
         Random dcrd=new Random();
-        dCourseCal.set(Calendar.MINUTE,(30+dcrd.nextInt(29)));
+        dCourseCal.set(Calendar.MINUTE,(dcrd.nextInt(29)));
         dCourseCal.set(Calendar.SECOND,0);
         Date dcdate=dCourseCal.getTime(); //第一次执行定时任务的时间
         if (dcdate.before(new Date())) {
             dcdate = this.addDay(dcdate, 1);
         }
        // dcTimer.schedule(new UpdateCourse(arg0.getServletContext()),dcdate,PERIOD_DAY);
+        /**************************每天凌晨4点00--4.30开始执行专题下行***********************************/
+        upEttColumn=new Timer(true);
+        Calendar  ueCourseCal = Calendar.getInstance();
+        //每天定点执行
+        ueCourseCal.set(Calendar.HOUR_OF_DAY,4);
+        Random uecrd=new Random();
+        ueCourseCal.set(Calendar.MINUTE,(00+uecrd.nextInt(29)));
+        ueCourseCal.set(Calendar.SECOND,0);
+        Date uedate=dCourseCal.getTime(); //第一次执行定时任务的时间
+        if (uedate.before(new Date())) {
+            uedate = this.addDay(uedate, 1);
+        }
+         upEttColumn.schedule(new SynchroEttColumns(),uedate,PERIOD_DAY);
+
 	}
 
     // 增加或减少天数

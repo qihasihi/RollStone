@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="header">
-    <div class="title">合作学校资源系统<a href="1" class="help" title="帮助"></a></div>
+    <div class="title">合作学校资源系统<!--<a href="1" class="help" title="帮助"></a>--></div>
     <p><span></span><img src="images/logo_140616.png" width="253" height="64" /></p>
 </div>
 <div class="content2">
@@ -18,15 +18,15 @@
     <div class="zyxt_jb_homeR">
         <p><strong class="font-darkblue">资源中心</strong></p>
         <ul class="font-darkblue">
-            <li><a href="simpleRes?m=toAllResPage&subjectid=4" target="_blank" class="wl">物理</a></li>
-            <li><a href="simpleRes?m=toAllResPage&subjectid=6" target="_blank" class="ls">历史</a></li>
-            <li><a href="simpleRes?m=toAllResPage&subjectid=7" target="_blank" class="sw">生物</a></li>
-            <li><a href="simpleRes?m=toAllResPage&subjectid=5" target="_blank" class="hx">化学</a></li>
-            <li><a href="simpleRes?m=toAllResPage&subjectid=8" target="_blank" class="dl">地理</a></li>
-            <li><a href="simpleRes?m=toAllResPage&subjectid=3" target="_blank" class="yy">英语</a></li>
-            <li><a href="simpleRes?m=toAllResPage&subjectid=9" target="_blank" class="zz">政治</a></li>
             <li><a href="simpleRes?m=toAllResPage&subjectid=1" target="_blank" class="yw">语文</a></li>
             <li><a href="simpleRes?m=toAllResPage&subjectid=2" target="_blank" class="sx">数学</a></li>
+            <li><a href="simpleRes?m=toAllResPage&subjectid=3" target="_blank" class="yy">英语</a></li>
+            <li><a href="simpleRes?m=toAllResPage&subjectid=4" target="_blank" class="wl">物理</a></li>
+            <li><a href="simpleRes?m=toAllResPage&subjectid=5" target="_blank" class="hx">化学</a></li>
+            <li><a href="simpleRes?m=toAllResPage&subjectid=7" target="_blank" class="sw">生物</a></li>
+            <li><a href="simpleRes?m=toAllResPage&subjectid=6" target="_blank" class="ls">历史</a></li>
+            <li><a href="simpleRes?m=toAllResPage&subjectid=8" target="_blank" class="dl">地理</a></li>
+            <li><a href="simpleRes?m=toAllResPage&subjectid=9" target="_blank" class="zz">政治</a></li>
         </ul>
     </div>
     <div class="zyxt_jb_homeL public_input">

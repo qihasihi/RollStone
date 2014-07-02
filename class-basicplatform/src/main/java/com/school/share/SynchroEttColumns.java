@@ -9,10 +9,7 @@ import com.school.util.UtilTool;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
@@ -23,23 +20,25 @@ import java.util.*;
 public class SynchroEttColumns  extends TimerTask {
   private  static  String ettColumnUrl=null,school_id=null;
     public SynchroEttColumns(){
-        ettColumnUrl= UtilTool.utilproperty.getProperty("ETT_COLUMNS_UPDATE_ADDRESS");
+        ettColumnUrl= UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION")+UtilTool.utilproperty.getProperty("ETT_COLUMNS_UPDATE_ADDRESS");
         school_id=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
     }
-
     public static void main(String[] args){
-        ettColumnUrl="http://yuechunyang.etiantian.com:8080/totalSchool/ettcolumn?m=getEttColumn";
-        school_id="50000";
-        Long dtime=new Date().getTime();
-        String checkcode= MD5_NEW.getMD5ResultCode(dtime+school_id+dtime);
-        String params="school_id="+school_id+"&timestamp="+dtime+"&checkcode="+checkcode;
-        Map<String,Object> mapObj=sendPostURL(ettColumnUrl,params);
-        System.out.println(mapObj.get("type") + "  " + mapObj.get("msg"));
-        JSONArray jsonArray=(JSONArray)mapObj.get("objList");
-        System.out.println(jsonArray.toString());
+        String txt="123 12312312312111 434 123123 4123123 ";
+        System.out.println(txt.substring(txt.indexOf(" ")+1,txt.indexOf(" ",txt.indexOf(" ")+1)));
+//        ettColumnUrl="http://yuechunyang.etiantian.com:8080/totalSchool/ettcolumn?m=getEttColumn";
+//        school_id="50000";
+//        Long dtime=new Date().getTime();
+//        String checkcode= MD5_NEW.getMD5ResultCode(dtime+school_id+dtime);
+//        String params="school_id="+school_id+"&timestamp="+dtime+"&checkcode="+checkcode;
+//        Map<String,Object> mapObj=sendPostURL(ettColumnUrl,params);
+//        System.out.println(mapObj.get("type") + "  " + mapObj.get("msg"));
+//        JSONArray jsonArray=(JSONArray)mapObj.get("objList");
+//        System.out.println(jsonArray.toString());
     }
     @Override
     public void run() {
+        //ettColumnUrl="http://yuechunyang.etiantian.com:8080/totalSchool/ettcolumn?m=getEttColumn";
          IColumnManager columnManager= (ColumnManager)SpringBeanUtil.getBean("columnManager");
         Long dtime=new Date().getTime();
         String checkcode= MD5_NEW.getMD5ResultCode(dtime+school_id+dtime);
@@ -49,7 +48,7 @@ public class SynchroEttColumns  extends TimerTask {
         List<String>sqlArrayList=new ArrayList<String>();
         List<List<Object>> objArrayList=new ArrayList<List<Object>>();
 
-        if(mapObj.get("type").toString()=="success"){
+        if(mapObj.get("type").toString().equals("success")){
             JSONArray jsonArray=(JSONArray)mapObj.get("objList");
             if(jsonArray!=null){
                 Iterator<Object> itea=jsonArray.iterator();
@@ -60,11 +59,16 @@ public class SynchroEttColumns  extends TimerTask {
                         Object ettcolumnname=jsObj.get("ettcolumnname");
                         Object status=jsObj.get("status");
                         Object ettcolumnurl=jsObj.get("ettcolumnurl");
+                        Object ettstyle=jsObj.get("ettcolumnstyle");
+                        Object ettroletype=jsObj.get("ettcolumntype"); //1:教师  2：学生
                         EttColumnInfo ettEntity=new EttColumnInfo();
                         ettEntity.setEttcolumnid(Integer.parseInt(ettcolumnid.toString()));
                         ettEntity.setEttcolumnname(ettcolumnname.toString());
                         ettEntity.setEttcolumnurl(ettcolumnurl.toString());
-                        ettEntity.setStatus(Integer.parseInt(ettcolumnurl.toString()));
+                        ettEntity.setStatus(Integer.parseInt(status.toString()));
+                        if(ettstyle!=null)
+                            ettEntity.setStyle(ettstyle.toString());
+                        ettEntity.setRoletype(Integer.parseInt(ettroletype.toString()));
                         StringBuilder sqlbuilder=new StringBuilder();
                         List<Object> objList=columnManager.getEttColumnSynchro(ettEntity,sqlbuilder);
                         if(sqlbuilder.toString().length()>0){
@@ -150,7 +154,8 @@ public class SynchroEttColumns  extends TimerTask {
             System.out.println("异常错误!500错误，请联系管理人员!");
             return null;
         }
-        String returnContent=stringBuffer.toString();
+        String returnContent=stringBuffer.toString();//new String(stringBuffer.toString().getBytes("GBK"),"UTF-8");
+
         Map<String,Object> returnMap=null;
         //转换成JSON
         System.out.println(returnContent);

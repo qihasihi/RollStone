@@ -209,8 +209,12 @@ public class UserController extends BaseController<UserInfo> {
         new ShareTeachingMaterial(request.getSession().getServletContext()).run();
     }
     @RequestMapping(params="m=SynchroResource",method=RequestMethod.GET)
-        public void synchroResource(HttpServletRequest request,HttpServletResponse response){
+    public void synchroResource(HttpServletRequest request,HttpServletResponse response){
         new ShareResource(request.getSession().getServletContext()).run();
+    }
+    @RequestMapping(params="m=SynchroEttColumn",method=RequestMethod.GET)
+    public void SynchroEttColumn(HttpServletRequest request,HttpServletResponse response){
+        new SynchroEttColumns().run();
     }
 
     /**
@@ -1075,6 +1079,16 @@ public class UserController extends BaseController<UserInfo> {
 		if(autolo!=null&&autolo.equals("1"))autoLogin=true;
         je=loginBase(userinfo,request,response);
         if(je.getType().trim().equals("success")){
+
+            //À¸Ä¿
+            IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
+            EttColumnInfo ec=new EttColumnInfo();
+            if(this.validateRole(request,UtilTool._ROLE_STU_ID))
+                ec.setRoletype(2);//Ñ§Éú
+            else
+                ec.setRoletype(1);
+            request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
+
             request.getSession().setAttribute("fromType","szchool");
 //                    System.out.println("loginUser:"+(UserInfo) request.getSession().getAttribute("CURRENT_USER"));
 					if (remember) {
