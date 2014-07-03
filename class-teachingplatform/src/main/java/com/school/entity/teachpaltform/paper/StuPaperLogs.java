@@ -9,6 +9,24 @@ public class StuPaperLogs {
     private java.lang.Integer userid;
     private java.lang.Long ref;
     private Float score;
+    private Integer ismarking;
+    private String stuname;
+
+    public Integer getIsmarking() {
+        return ismarking;
+    }
+
+    public void setIsmarking(Integer ismarking) {
+        this.ismarking = ismarking;
+    }
+
+    public String getStuname() {
+        return stuname;
+    }
+
+    public void setStuname(String stuname) {
+        this.stuname = stuname;
+    }
 
     public java.lang.Long getPaperid(){
       return paperid;

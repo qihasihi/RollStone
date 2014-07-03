@@ -17,6 +17,24 @@ public class  PaperQuestion implements Serializable{
     private java.lang.Integer ref;
     private Date ctime;
     private Float score;
+    private Object submitnum;//试题提交数量
+    private Object markingnum;//试题批阅数量
+
+    public Object getSubmitnum() {
+        return submitnum;
+    }
+
+    public void setSubmitnum(Object submitnum) {
+        this.submitnum = submitnum;
+    }
+
+    public Object getMarkingnum() {
+        return markingnum;
+    }
+
+    public void setMarkingnum(Object markingnum) {
+        this.markingnum = markingnum;
+    }
 
     /**
      * 获取问题的字段

@@ -181,4 +181,24 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
 		return null;
 	}
 
+    public List<StuPaperLogs> getMarkingLogs(Integer paperid, Integer quesid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_paper_marking_logs_proc_list(");
+        List<Object> objList=new ArrayList<Object>();
+        if(paperid!=null){
+            sqlbuilder.append("?,");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(quesid!=null){
+            sqlbuilder.append("?");
+            objList.add(quesid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<StuPaperLogs> logsList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,StuPaperLogs.class,null);
+        return logsList;
+    }
 }

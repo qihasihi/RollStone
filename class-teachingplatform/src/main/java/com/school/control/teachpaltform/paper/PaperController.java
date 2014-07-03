@@ -8,6 +8,7 @@ import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.entity.teachpaltform.paper.PaperInfo;
 import com.school.entity.teachpaltform.paper.PaperQuestion;
+import com.school.entity.teachpaltform.paper.StuPaperLogs;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
 import com.school.manager.ClassManager;
 import com.school.manager.DictionaryManager;
@@ -22,12 +23,14 @@ import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
+import com.school.manager.inter.teachpaltform.paper.IStuPaperLogsManager;
 import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.PaperManager;
 import com.school.manager.teachpaltform.paper.PaperQuestionManager;
+import com.school.manager.teachpaltform.paper.StuPaperLogsManager;
 import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
@@ -78,6 +81,7 @@ public class PaperController extends BaseController<PaperInfo>{
     private IPaperQuestionManager paperQuestionManager;
     private IPaperManager paperManager;
     private ITpCoursePaperManager tpCoursePaperManager;
+    private IStuPaperLogsManager stuPaperLogsManager;
     public PaperController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -104,6 +108,7 @@ public class PaperController extends BaseController<PaperInfo>{
         this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
         this.paperManager=this.getManager(PaperManager.class);
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
+        this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
     }
     /**
 	 * 根据课题ID，加载试卷列表
@@ -2929,6 +2934,43 @@ public class PaperController extends BaseController<PaperInfo>{
         response.getWriter().print(je.toJSON());
     }
 
+    /**
+     * 进入批阅试卷首页
+     * @return
+     */
+    @RequestMapping(params="m=toMarking",method=RequestMethod.GET)
+    public ModelAndView toMarkingPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        String paperid = request.getParameter("paperid");
+        JsonEntity je = new JsonEntity();
+        if(paperid==null||paperid.length()<1){
+            je.setMsg("异常错误，请刷新页面重试");
+            je.getAlertMsgAndBack();
+        }
+        List<PaperQuestion> objList = this.paperQuestionManager.getQuestionByPaper(Integer.parseInt(paperid));
+        request.setAttribute("questionList",objList);
+        request.setAttribute("papername",objList.get(0).getPapername());
+        return new ModelAndView("teachpaltform/paper/marking/marking-list");
+    }
+
+    /**
+     * 进入批阅试卷统计
+     * @return
+     */
+    @RequestMapping(params="m=toMarkingLogs",method=RequestMethod.GET)
+    public ModelAndView toMarkingLogs(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        String paperid = request.getParameter("paperid");
+        String quesid = request.getParameter("quesid");
+        String idx = request.getParameter("idx");
+        JsonEntity je = new JsonEntity();
+        if(paperid==null||paperid.length()<1||quesid==null||quesid.length()<1){
+            je.setMsg("异常错误，请刷新页面重试");
+            je.getAlertMsgAndBack();
+        }
+        List<StuPaperLogs> logsList = this.stuPaperLogsManager.getMarkingLogs(Integer.parseInt(paperid),Integer.parseInt(quesid));
+        request.setAttribute("logs",logsList);
+        request.setAttribute("idx",idx);
+        return new ModelAndView("teachpaltform/paper/marking/marking-logs");
+    }
 
 
 }

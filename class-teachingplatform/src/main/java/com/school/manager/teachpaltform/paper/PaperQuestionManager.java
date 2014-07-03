@@ -76,5 +76,10 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
     public Float getSumScore(PaperQuestion paperQuestion) {
         return this.paperquestiondao.getSumScore(paperQuestion);
     }
+
+    @Override
+    public List<PaperQuestion> getQuestionByPaper(Integer paperid) {
+        return this.paperquestiondao.getQuestionByPaper(paperid);
+    }
 }
 

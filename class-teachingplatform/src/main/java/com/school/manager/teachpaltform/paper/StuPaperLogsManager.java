@@ -75,5 +75,10 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    @Override
+    public List<StuPaperLogs> getMarkingLogs(Integer paperid, Integer quesid) {
+        return this.stupaperlogsdao.getMarkingLogs(paperid,quesid);
+    }
 }
 
