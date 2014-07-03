@@ -25,6 +25,15 @@ public class TpCoursePaper {
     private Object subjectivenum; //主观题数量
     private Object objectivenum; //客观题数量
     private Object taskflag;    //任务状态
+    private Float score;
+
+    public Float getScore() {
+        return score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
+    }
 
     public Object getTaskflag() {
         return taskflag;

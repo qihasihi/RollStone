@@ -54,10 +54,6 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
 		return this.paperquestiondao.getUpdateSql(paperquestion,sqlbuilder);
 	}
 
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
-			List<List<Object>> objArrayList) {
-		return this.paperquestiondao.doExcetueArrayProc(sqlArrayList,objArrayList);
-	}
 	
 	public PaperQuestion getOfExcel(Sheet rs, int cols, int d, String type) {
 		// TODO Auto-generated method stub

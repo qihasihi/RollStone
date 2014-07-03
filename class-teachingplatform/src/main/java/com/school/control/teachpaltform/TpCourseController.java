@@ -2,14 +2,17 @@ package com.school.control.teachpaltform;
 
 import com.school.control.base.BaseController;
 import com.school.entity.*;
+
 import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.manager.*;
 import com.school.manager.inter.*;
+
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
+
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
@@ -97,7 +100,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
      * @throws Exception
      */
 
-    @RequestMapping(params="toTeacherCourseList",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(params="toTeacherCourseList",method=RequestMethod.GET)
     public ModelAndView toTeacherCourseList(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
         String materialid=request.getParameter("materialid");
         if(materialid!=null&&materialid.length()>0){

@@ -173,16 +173,16 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
 
     /**
-     * 修改任务排序
+     * 修改试卷试题排序
      * @throws Exception
      */
     @RequestMapping(params="m=doUpdOrderIdx",method=RequestMethod.POST)
     public void doUpdOrderIdx(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
-        String taskid=request.getParameter("taskid");
-        String courseid=request.getParameter("courseid");
+        String paperid=request.getParameter("paperid");
+        String  questionid=request.getParameter("questionid");
         String orderix=request.getParameter("orderidx");
-        if(taskid==null||taskid.trim().length()<1){
+        if(paperid==null||paperid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
@@ -192,67 +192,59 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().print(je.toJSON());
             return;
         }
-        if(courseid==null||courseid.trim().length()<1){
+        if(questionid==null||questionid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
         }
-        TpTaskInfo tmpTask=new TpTaskInfo();
-        tmpTask.setCourseid(Long.parseLong(courseid));
-        //查询没被我删除的任务
-        tmpTask.setSelecttype(1);
-        tmpTask.setLoginuserid(this.logined(request).getUserid());
-        tmpTask.setStatus(1);
-        tmpTask.setTaskid(Long.parseLong(taskid));
-        List<TpTaskInfo>tmpTaskList=this.tpTaskManager.getTaskReleaseList(tmpTask,null);
-        if(tmpTaskList==null||tmpTaskList.size()<1){
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(Long.parseLong(paperid));
+        pq.setQuestionid(Long.parseLong(questionid));
+        List<PaperQuestion>tmpList=this.paperQuestionManager.getList(pq,null);
+        if(tmpList==null||tmpList.size()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().print(je.toJSON());
             return;
         }
-        tmpTask=tmpTaskList.get(0);
+        pq=tmpList.get(0);
+
+        PageResult p=new PageResult();
+        p.setOrderBy("u.order_idx");
+        PaperQuestion paperQuestion=new PaperQuestion();
+        paperQuestion.setPaperid(Long.parseLong(paperid));
+        List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(paperQuestion,p);
 
         List<Object>objList=null;
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
 
-        TpTaskInfo t=new TpTaskInfo();
-        t.setCourseid(Long.parseLong(courseid));
-        //查询没被我删除的任务
-        t.setSelecttype(1);
-        t.setLoginuserid(this.logined(request).getUserid());
-        t.setStatus(1);
-        //1 2 3 4 5 6 7 8 9 10
-        //已发布的任务
         Integer descIdx=Integer.parseInt(orderix);
-        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t,null);
-
-        if(taskList!=null&&taskList.size()>0){
-            if(tmpTask.getOrderidx()>descIdx){  //从7往3调
-                for(TpTaskInfo task:taskList){
-                    if(task.getOrderidx()>=descIdx&&task.getOrderidx()<tmpTask.getOrderidx()){
-                        System.out.println("orderidx:" + task.getOrderidx());
-                        TpTaskInfo upd=new TpTaskInfo();
-                        upd.setTaskid(task.getTaskid());
-                        upd.setOrderidx(task.getOrderidx()+1);
+        if(paperQuestionList!=null&&paperQuestionList.size()>0){
+            if(pq.getOrderidx()>descIdx){  //从7往3调
+                for(PaperQuestion paperQues:paperQuestionList){
+                    if(paperQues.getOrderidx()>=descIdx&&paperQues.getOrderidx()<pq.getOrderidx()){
+                        PaperQuestion upd=new PaperQuestion();
+                        upd.setPaperid(Long.parseLong(paperid));
+                        upd.setQuestionid(paperQues.getQuestionid());
+                        upd.setOrderidx(paperQues.getOrderidx()+1);
                         sql=new StringBuilder();
-                        objList=this.tpTaskManager.getUpdateSql(upd,sql);
+                        objList=this.paperQuestionManager.getUpdateSql(upd,sql);
                         if(sql!=null&&objList!=null){
                             sqlListArray.add(sql.toString());
                             objListArray.add(objList);
                         }
-
                     }
                 }
-            }else if(tmpTask.getOrderidx()<descIdx){ //从1往9调
-                for(TpTaskInfo task:taskList){
-                    if(task.getOrderidx()>tmpTask.getOrderidx()&&task.getOrderidx()<=descIdx){
-                        TpTaskInfo upd=new TpTaskInfo();
-                        upd.setTaskid(task.getTaskid());
-                        upd.setOrderidx(task.getOrderidx()-1);
+            }else if(pq.getOrderidx()<descIdx){ //从1往9调
+                for(PaperQuestion paperQues:paperQuestionList){
+                    if(paperQues.getOrderidx()>pq.getOrderidx()&&paperQues.getOrderidx()<=descIdx){
+                        PaperQuestion upd=new PaperQuestion();
+                        upd.setPaperid(Long.parseLong(paperid));
+                        upd.setQuestionid(paperQues.getQuestionid());
+                        upd.setOrderidx(paperQues.getOrderidx()-1);
                         sql=new StringBuilder();
-                        objList=this.tpTaskManager.getUpdateSql(upd,sql);
+                        objList=this.paperQuestionManager.getUpdateSql(upd,sql);
                         if(sql!=null&&objList!=null){
                             sqlListArray.add(sql.toString());
                             objListArray.add(objList);
@@ -262,17 +254,18 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             }
         }
 
-        TpTaskInfo upd=new TpTaskInfo();
-        upd.setTaskid(tmpTask.getTaskid());
+        PaperQuestion upd=new PaperQuestion();
+        upd.setPaperid(pq.getPaperid());
         upd.setOrderidx(Integer.parseInt(orderix));
+        upd.setQuestionid(pq.getQuestionid());
         sql=new StringBuilder();
-        objList=this.tpTaskManager.getUpdateSql(upd,sql);
+        objList=this.paperQuestionManager.getUpdateSql(upd,sql);
         if(sql!=null&&objList!=null){
             sqlListArray.add(sql.toString());
             objListArray.add(objList);
         }
         if(sqlListArray.size()>0&&objListArray.size()>0){
-            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray,objListArray);
+            boolean flag=this.paperQuestionManager.doExcetueArrayProc(sqlListArray,objListArray);
             if(flag){
                 je.setType("success");
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
@@ -1290,7 +1283,41 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         response.getWriter().print(je.toJSON());
     }
 
-
+    /**
+     * 修改试卷试题分数
+     * @throws Exception
+     */
+    @RequestMapping(params="m=doUpdPaperQuesScore",method=RequestMethod.POST)
+    public void doUpdPaperQuesScore(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String paperid=request.getParameter("paperid");
+        String questionid=request.getParameter("questionid");
+        String score=request.getParameter("score");
+        if(paperid==null||paperid.trim().length()<1||
+                questionid==null||questionid.trim().length()<1||
+                score==null||score.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(!UtilTool.isNumber(score)){
+            je.setMsg("分数类型错误!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(Long.parseLong(paperid));
+        pq.setQuestionid(Long.parseLong(questionid));
+        pq.setScore(new Float(score));
+        if(this.paperQuestionManager.doUpdate(pq)){
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            je.setType("success");
+            Float sumScore=this.paperQuestionManager.getSumScore(pq);
+            je.getObjList().add(sumScore);
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().print(je.toJSON());
+    }
 
 
     /**

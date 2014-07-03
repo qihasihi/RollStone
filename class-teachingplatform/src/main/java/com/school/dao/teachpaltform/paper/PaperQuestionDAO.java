@@ -183,10 +183,6 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
 		return objList; 
 	}
 
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
-			List<List<Object>> objArrayList) {
-		return this.executeArray_SQL(sqlArrayList, objArrayList);
-	}
 	
 	public String getNextId() {
 		// TODO Auto-generated method stub
