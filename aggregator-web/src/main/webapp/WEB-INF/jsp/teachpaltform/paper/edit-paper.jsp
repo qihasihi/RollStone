@@ -31,11 +31,7 @@ $(function(){
   //  pageGo('pList');
 
 
-    $("li[name='li_nav']").each(function(idx,itm){
-        $(itm).bind("click",function(){
-            $(itm).siblings().removeClass("crumb").end().addClass("crumb");
-        })
-    })
+
 });
 
 
@@ -91,7 +87,7 @@ function preeDoPageSub(pObj){
 }
 
 
-function showDialogPage(type,paperid){
+function showDialogPage(type,paperid,quesid){
     var url;
     if(type==1){
         url="paper?m=dialogPaper&courseid="+courseid+"&paperid="+paperid;
@@ -99,6 +95,8 @@ function showDialogPage(type,paperid){
         url="paper?m=dialogQuestion&courseid="+courseid+"&paperid="+paperid;
     }else if(type==3){
         url='question?m=toAddQuestion&operate_type=3&courseid='+courseid;
+    }else if(type==4){
+        url='question?m=toUpdQuestion&courseid='+courseid+"&paperid="+paperid+"&questionid="+quesid;
     }
     var param = "dialogWidth:500px;dialogHeight:700px;status:no;location:no";
     var returnValue=window.showModalDialog(url,param);
@@ -109,7 +107,7 @@ function showDialogPage(type,paperid){
     if(type==1){//导入试卷
         window.reload();
     }else if(type==2){//导入试题
-
+        window.reload();
     }else if(type==3){ //新建试题
         $.ajax({
             url:"paperques?m=doAddQues",
@@ -128,8 +126,89 @@ function showDialogPage(type,paperid){
                 }
             }
         });
+    }else if(type==4){
+        window.reload();
     }
 }
+
+
+function spanClick(obj,total){
+    var idxObj=$("select[id='sel_order_idx']");
+    if(idxObj.length>0)
+        idxChange(idxObj,total);
+    mousePostion
+    var idxVal=$(obj).html();
+// style="position: absolute;left: '+mousePostion.x+'px;top:'+mousePostion.y+'px"
+    var h='<select id="sel_order_idx">';
+    for(var i=1;i<=total;i++){
+        h+='<option value="'+i+'">'+i+'</option>';
+    }
+    h+='</select>';
+    $(obj).html(h);
+    $("select[id='sel_order_idx']").focus();
+    if(idxVal!=null&&idxVal>0)
+        $("select[id='sel_order_idx']").val(idxVal);
+    $(obj).unbind('click');
+
+    $("select[id='sel_order_idx']").bind("blur",function(){
+        var spanObj=$(this).parent();
+        spanObj.html(this.value);
+        $(spanObj).bind("click",function(){
+            spanClick(spanObj,total);
+        });
+    });
+    $("select[id='sel_order_idx']").bind("change",function(){
+        idxChange(this,total);
+    });
+
+}
+
+function idxChange(obj,total){
+    //恢复事件
+    $(obj).parent().bind("click",function(){
+        spanClick(this,total);
+    });
+    var h=$(obj).find('option:selected').val();
+    var quesid=$(obj).parent().data().bind;
+    editQuesIdx(quesid,h);
+    $(obj).parent().html(h);
+}
+
+
+/**
+ * 修改试题顺序
+ * @param taskid
+ * @param orderidx
+ */
+function editQuesIdx(quesid,orderidx){
+    if(typeof quesid=='undefined'||orderidx=='undefined')
+        return;
+
+    $.ajax({
+        url:"paperques?m=doUpdOrderIdx",
+        type:"post",
+        data:{
+            paperid:paperid,
+            orderidx:orderidx,
+            questionid:quesid
+        },
+        dataType:'json',
+        cache: false,
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+        },success:function(rmsg){
+            if(rmsg.type=="error"){
+                alert(rmsg.msg);
+            }else{
+                alert(rmsg.msg);
+                window.reload();
+            }
+        }
+    });
+
+}
+
+
 
 
 function genderInput(obj,score){
@@ -146,6 +225,8 @@ function genderInput(obj,score){
         if(score<1)
             return;
         spanObj.html(score);
+        var quesid=$(spanObj).data().bind;
+        updateQuesScore(score,quesid);
         $(spanObj).bind("click",function(){
             genderInput(spanObj,score);
         });
@@ -165,7 +246,65 @@ function scoreChange(obj,score){
         genderInput(this,score);
     });
     $(obj).parent().html(score);
+    var quesid=$(obj).parent().data().bind;
+    updateQuesScore(score,quesid);
+}
 
+
+/**
+ * 修改试题分数
+ * @param score
+ * @param quesid
+ */
+function updateQuesScore(score,quesid){
+    if(typeof score=='undefined'||isNaN(score))
+        return;
+    $.ajax({
+        url:"paperques?m=doUpdPaperQuesScore",
+        type:"post",
+        data:{questionid:quesid,paperid:paperid,score:score},
+        dataType:'json',
+        cache: false,
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+        },success:function(rmsg){
+            if(rmsg.type=="error"){
+                alert(rmsg.msg);
+            }else{
+                alert(rmsg.msg);
+                if(rmsg.objList.length>0){
+                      $("#total_score").html(rmsg.objList[0]);
+                }
+            }
+        }
+    });
+}
+
+/**
+ * 删除试卷试题
+ * @param quesid
+ */
+function doDelPaperQues(quesid){
+    if(typeof quesid=='undefined'||isNaN(quesid))
+        return;
+    if(!confirm("确认删除?"))return;
+    $.ajax({
+        url:"paperques?m=doDelPaperQues",
+        type:"post",
+        data:{questionid:quesid,paperid:paperid},
+        dataType:'json',
+        cache: false,
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+        },success:function(rmsg){
+            if(rmsg.type=="error"){
+                alert(rmsg.msg);
+            }else{
+                alert(rmsg.msg);
+                window.reload();
+            }
+        }
+    });
 }
 </script>
 </head>
@@ -177,13 +316,19 @@ function scoreChange(obj,score){
 </div>
 <div class="zhuanti">
     <p>${paper.papername }</p>
-    <p style="float: right">主观题：${paper.subjectivenum}&nbsp;客观题：${paper.objectivenum}</p>
+    <p style="float: right">主观题：${paper.subjectivenum}&nbsp;客观题：${paper.objectivenum}&nbsp;</p>
+    <p style="float: right"><span id="total_score">${paper.score}</span></p>
 </div>
 <div class="content2">
     <div class="subpage_lm">
         <c:if test="${!empty pqList}">
             <c:forEach items="${pqList}" var="pq">
-                <p>${pq.orderidx}/${fn:length(pqList)}</p>
+                <div id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}">
+                <p id="edit_${pq.questionid}" style="display: none;">
+                   <a href="javascript:showDialogPage(4,'${pq.paperid}','${pq.questionid}')" >编辑</a>&nbsp;<a href="javascript:doDelPaperQues('${pq.questionid}')">删除</a>
+                </p>
+
+                <p><span id="idx_${pq.questionid}" data-bind="${pq.questionid}" style="color: lightseagreen;font-size: 14px;">${pq.orderidx}</span>/${fn:length(pqList)}</p>
                 <p>
                     <c:if test="${pq.paperid>0}">
                         参
@@ -204,7 +349,7 @@ function scoreChange(obj,score){
                     </c:forEach>
                 </p>
                 <p style="float: right">
-                        <span  style="cursor: pointer" id="score_${pq.questionid}">${pq.score}</span>
+                        <span  style="cursor: pointer" data-bind="${pq.questionid}" id="score_${pq.questionid}">${pq.score}</span>
                 </p>
                 <p>
                     正确答案：
@@ -223,6 +368,7 @@ function scoreChange(obj,score){
                     答案解析：${pq.analysis}
                 </p>
                 <br><br><br>
+                </div>
             </c:forEach>
         </c:if>
     </div>
@@ -236,6 +382,25 @@ function scoreChange(obj,score){
        $(itm).bind("click",function(){
            genderInput(itm,$(itm).html());
        });
+    });
+
+    total="${fn:length(pqList)}";
+
+    $("span").filter(function(){return this.id.indexOf('idx_')!=-1}).each(function(idx,itm){
+        $(itm).bind("click",function(){
+            spanClick(itm,total);
+        });
+    });
+
+    $("div").filter(function(){return this.id.indexOf('dv_ques_')!=-1}).each(function(idx,itm){
+        var quesid=$(itm).data().bind;
+        $(itm).hover(
+                function(){
+                    $("#edit_"+quesid+"").show();
+                },
+                function(){
+                    $("#edit_"+quesid+"").hide();
+                });
     });
 </script>
 </body>

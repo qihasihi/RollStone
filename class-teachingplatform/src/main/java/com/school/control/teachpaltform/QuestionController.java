@@ -3,12 +3,15 @@ package com.school.control.teachpaltform;
 import com.school.control.base.BaseController;
 import com.school.entity.DictionaryInfo;
 import com.school.entity.teachpaltform.*;
+import com.school.entity.teachpaltform.paper.PaperQuestion;
 import com.school.manager.DictionaryManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
+import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
+import com.school.manager.teachpaltform.paper.PaperQuestionManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -39,6 +42,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
     private ITpOperateManager tpOperateManager;
     private ITpTopicManager tpTopicManager;
     private ITpCourseTeachingMaterialManager tpCourseTeachingMaterialManager;
+    private IPaperQuestionManager paperQuestionManager;
 
     public QuestionController(){
         this.questionManager=this.getManager(QuestionManager.class);
@@ -49,6 +53,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
         this.tpOperateManager=this.getManager(TpOperateManager.class);
         this.tpTopicManager=this.getManager(TpTopicManager.class);
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
+        this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
     }
     /**
      * 根据课题ID，加载试题列表
@@ -156,7 +161,10 @@ public class QuestionController extends BaseController<QuestionInfo> {
     public ModelAndView toUpdQuestion(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
         JsonEntity je = new JsonEntity();
         String questionid = request.getParameter("questionid");
-        if (questionid == null || questionid.trim().length() < 1) {
+        String paperid=request.getParameter("paperid");
+        String courseid=request.getParameter("courseid");
+        if (questionid == null || questionid.trim().length() < 1
+                ||courseid==null||courseid.trim().length()<1) {
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
@@ -187,6 +195,8 @@ public class QuestionController extends BaseController<QuestionInfo> {
         List<DictionaryInfo> quesTypeList = this.dictionaryManager.getDictionaryByType("TP_QUESTION_TYPE");
         mp.put("quesTypeList",quesTypeList);
         mp.put("question",ques);
+        mp.put("courseid",courseid);
+        mp.put("paperid",paperid);
 
         return new ModelAndView("/teachpaltform/question/ques-update",mp);
     }
@@ -718,6 +728,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
         String questionid = request.getParameter("questionid");
         String courseid=request.getParameter("courseid");
         String correctanswer=request.getParameter("correctanswer");
+        String paperid=request.getParameter("paperid");
         if (StringUtils.isBlank(questionid)||StringUtils.isBlank(courseid)) { //||StringUtils.isBlank(correctanswer)
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
@@ -766,9 +777,10 @@ public class QuestionController extends BaseController<QuestionInfo> {
         List<String> sqlListArray = new ArrayList<String>();
         List<List<Object>> objListArray = new ArrayList<List<Object>>();
         Long nextref = this.questionManager.getNextId(true);
-
-        if(q.getCloudstatus()!=null&&q.getCloudstatus()==3){
+        boolean delOption=true;
+        if(q.getCloudstatus()!=null&&q.getQuestionid()>0){
             //题干
+            delOption=false;
             QuestionInfo qb = new QuestionInfo();
             qb.setQuestionid(nextref);
             qb.setCuserid(this.logined(request).getRef());
@@ -801,6 +813,36 @@ public class QuestionController extends BaseController<QuestionInfo> {
             if (objList != null && sql != null && sql.length() > 0) {
                 objListArray.add(objList);
                 sqlListArray.add(sql.toString());
+            }
+
+            //修改试题与试卷关系
+            if(paperid!=null&&paperid.trim().length()>0){
+                PaperQuestion sel=new PaperQuestion();
+                sel.setQuestionid(q.getQuestionid());
+                sel.setPaperid(Long.parseLong(paperid));
+                List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(sel,null);
+                if(paperQuestionList!=null&&paperQuestionList.size()>0){
+                    PaperQuestion del=new PaperQuestion();
+                    del.setRef(paperQuestionList.get(0).getRef());
+                    sql = new StringBuilder();
+                    objList=this.paperQuestionManager.getDeleteSql(del,sql);
+                    if(sql!=null&&sql.toString().trim().length()>0){
+                        objListArray.add(objList);
+                        sqlListArray.add(sql.toString());
+                    }
+
+                    PaperQuestion add=new PaperQuestion();
+                    add.setQuestionid(nextref);
+                    add.setPaperid(Long.parseLong(paperid));
+                    add.setOrderidx(paperQuestionList.get(0).getOrderidx());
+                    add.setScore(paperQuestionList.get(0).getScore());
+                    sql = new StringBuilder();
+                    objList=this.paperQuestionManager.getSaveSql(add,sql);
+                    if(sql!=null&&sql.toString().trim().length()>0){
+                        objListArray.add(objList);
+                        sqlListArray.add(sql.toString());
+                    }
+                }
             }
 
             //引用专题
@@ -895,19 +937,23 @@ public class QuestionController extends BaseController<QuestionInfo> {
                 response.getWriter().print(je.toJSON());
                 return;
             }
-            QuestionOption delete = new QuestionOption();
-            delete.setQuestionid(question.getQuestionid());
-            sql=new StringBuilder();
-            objList = this.questionOptionManager.getDeleteSql(delete, sql);
-            if (objList != null && sql != null && sql.length() > 0) {
-                objListArray.add(objList);
-                sqlListArray.add(sql.toString());
-            }
 
+            /**
+             * 云端试题选项不删除
+             */
+            if(delOption){
+                QuestionOption delete = new QuestionOption();
+                delete.setQuestionid(question.getQuestionid());
+                sql=new StringBuilder();
+                objList = this.questionOptionManager.getDeleteSql(delete, sql);
+                if (objList != null && sql != null && sql.length() > 0) {
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+            }
             for (int i = 0; i < optionArray.length; i++) {
                 //选择题选项
                 QuestionOption qoption = new QuestionOption();
-                qoption.setQuestionid(this.questionOptionManager.getNextId(true));
                 //题号ABCD
                 qoption.setOptiontype(UtilTool.AZ[i]);
                 qoption.setQuestionid(nextref);

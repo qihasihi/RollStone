@@ -1,6 +1,9 @@
 package  com.school.entity.teachpaltform.paper;
 
 import com.school.entity.teachpaltform.TpCourseInfo;
+import com.school.util.UtilTool;
+
+import java.util.Date;
 
 public class TpCoursePaper {
 
@@ -133,5 +136,29 @@ public class TpCoursePaper {
 
     public void setCoursename(String coursename) {
         this.coursename = coursename;
+    }
+
+    private Date ctime;
+    private Date mtime;
+
+    public Date getCtime() {
+        return ctime;
+    }
+
+    public void setCtime(Date ctime) {
+        this.ctime = ctime;
+    }
+
+    public Date getMtime() {
+        return mtime;
+    }
+
+    public void setMtime(Date mtime) {
+        this.mtime = mtime;
+    }
+    public String getMtimeString(){
+        if(mtime==null)
+            return "";
+        return UtilTool.DateConvertToString(mtime, UtilTool.DateType.type1);
     }
 }

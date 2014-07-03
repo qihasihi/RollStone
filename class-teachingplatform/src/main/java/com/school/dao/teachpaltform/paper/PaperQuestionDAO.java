@@ -199,8 +199,7 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
         objList.add(paperQuestion.getPaperid());
         Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
                 objList.toArray());
-        if (afficeObj != null && afficeObj.toString().trim().length() > 0
-                && Integer.parseInt(afficeObj.toString()) > 0) {
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0) {
             return  Float.parseFloat(afficeObj.toString());
         }
         return null;

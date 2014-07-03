@@ -65,6 +65,7 @@ function getInvestReturnMethod(rps){
                 html+='<p>';
                 html+='<a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a>';
                 html+='&nbsp;客观题：'+itm.objectivenum+'&nbsp;主观题：'+itm.subjectivenum;
+                html+='&nbsp;<a href="javascript:doDelPaper('+itm.ref+')">删除</a>';
                 html+='</p>';
             }
 
@@ -110,6 +111,29 @@ function showCourseList(){
     else
         ulobj.hide();
 }
+
+    function doDelPaper(ref){
+        if(typeof  ref=='undefined')
+            return;
+        if(!confirm("确认删除?"))return;
+        $.ajax({
+            url:"paper?m=doOperatePaper",
+            type:"post",
+            data:{ref:ref,flag:2},
+            dataType:'json',
+            cache: false,
+            error:function(){
+                alert('系统未响应，请稍候重试!');
+            },success:function(rmsg){
+                if(rmsg.type=="error"){
+                    alert(rmsg.msg);
+                }else{
+                    alert(rmsg.msg);
+                    pageGo('pList');
+                }
+            }
+        });
+    }
 </script>
 </head>
 <body>
@@ -144,7 +168,7 @@ function showCourseList(){
 </div>
 <div class="content2">
     <div class="subpage_lm">
-        <p class="f_right"><a class="ico15" target="_blank" href="tpres?m=toRecycleIdx&type=1&courseid=${courseid}" title="回收站"></a></p>
+        <p class="f_right"><a class="ico15" target="_blank" href="tpres?m=toRecycleIdx&type=5&courseid=${courseid}" title="回收站"></a></p>
 
     </div>
 

@@ -239,115 +239,57 @@ public class PaperController extends BaseController<PaperInfo>{
 
 
     /**
-     * 修改任务排序
+     * 删除、恢复试卷
      * @throws Exception
      */
-    @RequestMapping(params="m=doUpdOrderIdx",method=RequestMethod.POST)
-    public void doUpdOrderIdx(HttpServletRequest request,HttpServletResponse response)throws Exception{
+    @RequestMapping(params="m=doOperatePaper",method=RequestMethod.POST)
+    public void doOperatePaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
-        String taskid=request.getParameter("taskid");
-        String courseid=request.getParameter("courseid");
-        String orderix=request.getParameter("orderidx");
-        if(taskid==null||taskid.trim().length()<1){
+        String ref=request.getParameter("ref");
+        String flag=request.getParameter("flag");
+        if(ref==null||ref.trim().length()<1||
+                flag==null||flag.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
         }
-        if(orderix==null||orderix.trim().length()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-        if(courseid==null||courseid.trim().length()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-        TpTaskInfo tmpTask=new TpTaskInfo();
-        tmpTask.setCourseid(Long.parseLong(courseid));
-        //查询没被我删除的任务
-        tmpTask.setSelecttype(1);
-        tmpTask.setLoginuserid(this.logined(request).getUserid());
-        tmpTask.setStatus(1);
-        tmpTask.setTaskid(Long.parseLong(taskid));
-        List<TpTaskInfo>tmpTaskList=this.tpTaskManager.getTaskReleaseList(tmpTask,null);
-        if(tmpTaskList==null||tmpTaskList.size()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-        tmpTask=tmpTaskList.get(0);
-
-        List<Object>objList=null;
-        StringBuilder sql=null;
-        List<List<Object>>objListArray=new ArrayList<List<Object>>();
-        List<String>sqlListArray=new ArrayList<String>();
-
-        TpTaskInfo t=new TpTaskInfo();
-        t.setCourseid(Long.parseLong(courseid));
-        //查询没被我删除的任务
-        t.setSelecttype(1);
-        t.setLoginuserid(this.logined(request).getUserid());
-        t.setStatus(1);
-        //1 2 3 4 5 6 7 8 9 10
-        //已发布的任务
-        Integer descIdx=Integer.parseInt(orderix);
-        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t,null);
-
-        if(taskList!=null&&taskList.size()>0){
-            if(tmpTask.getOrderidx()>descIdx){  //从7往3调
-                for(TpTaskInfo task:taskList){
-                    if(task.getOrderidx()>=descIdx&&task.getOrderidx()<tmpTask.getOrderidx()){
-                        System.out.println("orderidx:" + task.getOrderidx());
-                        TpTaskInfo upd=new TpTaskInfo();
-                        upd.setTaskid(task.getTaskid());
-                        upd.setOrderidx(task.getOrderidx()+1);
-                        sql=new StringBuilder();
-                        objList=this.tpTaskManager.getUpdateSql(upd,sql);
-                        if(sql!=null&&objList!=null){
-                            sqlListArray.add(sql.toString());
-                            objListArray.add(objList);
-                        }
-
-                    }
-                }
-            }else if(tmpTask.getOrderidx()<descIdx){ //从1往9调
-                for(TpTaskInfo task:taskList){
-                    if(task.getOrderidx()>tmpTask.getOrderidx()&&task.getOrderidx()<=descIdx){
-                        TpTaskInfo upd=new TpTaskInfo();
-                        upd.setTaskid(task.getTaskid());
-                        upd.setOrderidx(task.getOrderidx()-1);
-                        sql=new StringBuilder();
-                        objList=this.tpTaskManager.getUpdateSql(upd,sql);
-                        if(sql!=null&&objList!=null){
-                            sqlListArray.add(sql.toString());
-                            objListArray.add(objList);
-                        }
-                    }
-                }
-            }
-        }
-
-        TpTaskInfo upd=new TpTaskInfo();
-        upd.setTaskid(tmpTask.getTaskid());
-        upd.setOrderidx(Integer.parseInt(orderix));
-        sql=new StringBuilder();
-        objList=this.tpTaskManager.getUpdateSql(upd,sql);
-        if(sql!=null&&objList!=null){
-            sqlListArray.add(sql.toString());
-            objListArray.add(objList);
-        }
-        if(sqlListArray.size()>0&&objListArray.size()>0){
-            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray,objListArray);
-            if(flag){
-                je.setType("success");
-                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-            }else{
-                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-            }
-        }
+        TpCoursePaper cp=new TpCoursePaper();
+        cp.setRef(Integer.parseInt(ref));
+        cp.setLocalstatus(Integer.parseInt(flag));
+        if(this.tpCoursePaperManager.doUpdate(cp)){
+            je.setType("success");
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         response.getWriter().print(je.toJSON());
     }
+
+    /**
+     * 获取已删除试卷
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=loadRecyclePaper",method=RequestMethod.POST)
+    public void loadRecycleQuestion(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        if(courseid==null||courseid.length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return;
+        }
+        TpCoursePaper coursePaper=new TpCoursePaper();
+        coursePaper.setCourseid(Long.parseLong(courseid));
+        coursePaper.setLocalstatus(2); //已删除
+        PageResult pageResult=this.getPageResultParameter(request);
+        pageResult.setOrderBy(" u.m_time desc");
+        List<TpCoursePaper>tpCoursePaperList=this.tpCoursePaperManager.getList(coursePaper,pageResult);
+        pageResult.setList(tpCoursePaperList);
+        je.setPresult(pageResult);
+        response.getWriter().print(je.toJSON());
+    }
+
 
     /**
      * 获取学生任务列表

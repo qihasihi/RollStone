@@ -1,6 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
-<%@ page import="com.school.entity.teachpaltform.QuestionOption" %>
 <%@include file="/util/common-jsp/common-jxpt.jsp" %>
 
 
@@ -12,7 +11,8 @@
     <script type="text/javascript"
             src="<%=basePath %>js/teachpaltform/ques.js"></script>
     <script type="text/javascript">
-        var courseid = "${param.courseid}";
+        var courseid = "${courseid}";
+        var paperid="${paperid}";
         var editor;
         $(function () {
             //试题类型
@@ -21,6 +21,7 @@
                 ${question.questiontype}
             }).attr({checked:true}).andSelf().attr("disabled",true);
             $("#ques_name").html('${question.content}');
+
             $("#ques_answer").html('${question.analysis}');
             $("#correct_answer").html('${question.correctanswer}');
             var correctanswer="";

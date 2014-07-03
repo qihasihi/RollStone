@@ -70,6 +70,8 @@
                     url="tpres?m=loadRecycleQuestion";
                 }else if(type=="4"){
                     url="tptopic?m=ajaxtopiclist&status=3&selectType=1";
+                }else if(type=="5"){
+                    url="paper?m=loadRecyclePaper";
                 }
             }
 
@@ -118,6 +120,11 @@
                         html+='</p></td>';
                         html+='<td>'+itm.mtimeString+'</td>';
                         html+='<td><a href="javascript:;" onclick="doRestoreTopic('+itm.topicid+')" class="ico25" title="恢复"></a></td>';
+                    }else if(type=="5"){
+                        status=itm.paperid>0?'<span class="ico18" title="标准" ></span>':'<span class="ico16" title="自建"></span>';
+                        html+='<td><p class="one">'+status+itm.papername+'</p></td>';
+                        html+='<td>'+itm.mtimeString+'</td>';
+                        html+='<td><a href="javascript:doRestorePaper('+itm.ref+')" class="ico25" title="恢复"></a></td>';
                     }
                     html+='</tr>';
                 });
@@ -265,6 +272,35 @@
             });
         }
 
+
+
+        /**
+         * 恢复试卷
+         * @param ref
+         */
+        function doRestorePaper(ref){
+            if(typeof ref=='undefined')
+                return;
+            if(!confirm("确认恢复?"))return;
+            $.ajax({
+                url:"paper?m=doOperatePaper",
+                type:"post",
+                data:{ref:ref,flag:1},
+                dataType:'json',
+                cache: false,
+                error:function(){
+                    alert('系统未响应，请稍候重试!');
+                },success:function(rmsg){
+                    if(rmsg.type=="error"){
+                        alert(rmsg.msg);
+                    }else{
+                        alert(rmsg.msg);
+                        pageGo('pRecycle');
+                    }
+                }
+            });
+        }
+
     function changePannel(t){
         type=t;
         getUrlByType();
@@ -285,6 +321,7 @@
         <li id="li_2"><a href="javascript:;" onclick="changePannel(2)">资源</a></li>
         <li id="li_4"><a href="javascript:;" onclick="changePannel(4)">论题</a></li>
         <li id="li_3"><a  href="javascript:;" onclick="changePannel(3)">试题</a></li>
+        <li id="li_5"><a  href="javascript:;" onclick="changePannel(5)">试卷</a></li>
     </ul>
 </div>
 <div class="content2">

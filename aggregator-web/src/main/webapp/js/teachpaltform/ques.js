@@ -557,6 +557,8 @@ function doUpdQuestion(questionid){
     param.questionid=questionid;
     param.optionArray=optionArry.join("#sz#");
     param.rightArray=isrightArray.join(",");
+    if(paperid.length>0)
+        param.paperid=paperid;
 
     if(!confirm('数据验证完毕!确认提交?'))
         return;
@@ -574,6 +576,10 @@ function doUpdQuestion(questionid){
                 alert(rmsg.msg);
             }else{
                 alert(rmsg.msg);
+                if(paperid.length>0){
+                    window.returnValue='ok';
+                    window.close();
+                }
                 location.href="question?m=toQuestionList&courseid="+courseid;
             }
         }

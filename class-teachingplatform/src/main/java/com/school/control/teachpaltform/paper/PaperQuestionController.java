@@ -992,14 +992,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             if(flag){
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                 je.setType("success");
-                Float SumScore=this.paperQuestionManager.getSumScore(maxidx);
-                if(SumScore!=null&&SumScore>0){
-                    PaperInfo paper=new PaperInfo();
-                    paper.setPaperid(Long.parseLong(paperid));
-                    paper.setScore(SumScore);
-                    this.paperManager.doUpdate(paper);
-                }
-
+                this.modifyPaperTotalScore(maxidx.getPaperid());
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
@@ -1117,7 +1110,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         maxp.setPageSize(1);
         maxp.setPageNo(1);
         List<PaperQuestion>maxList=this.paperQuestionManager.getList(maxidx,maxp);
-        Integer maxIdx=1;
+        Integer maxIdx=0;
         if(maxList!=null&&maxList.size()>0)
             maxIdx=maxList.get(0).getOrderidx();
 
@@ -1163,14 +1156,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             if(flag){
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                 je.setType("success");
-                Float SumScore=this.paperQuestionManager.getSumScore(maxidx);
-                if(SumScore!=null&&SumScore>0){
-                    PaperInfo paper=new PaperInfo();
-                    paper.setPaperid(Long.parseLong(paperid));
-                    paper.setScore(SumScore);
-                    this.paperManager.doUpdate(paper);
-                }
-
+                this.modifyPaperTotalScore(maxidx.getPaperid());
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
@@ -1266,14 +1252,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             if(flag){
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                 je.setType("success");
-                Float SumScore=this.paperQuestionManager.getSumScore(maxidx);
-                if(SumScore!=null&&SumScore>0){
-                    PaperInfo paper=new PaperInfo();
-                    paper.setPaperid(Long.parseLong(paperid));
-                    paper.setScore(SumScore);
-                    this.paperManager.doUpdate(paper);
-                }
-
+                this.modifyPaperTotalScore(maxidx.getPaperid());
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
@@ -1300,11 +1279,6 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().print(je.toJSON());
             return;
         }
-        if(!UtilTool.isNumber(score)){
-            je.setMsg("分数类型错误!");
-            response.getWriter().print(je.toJSON());
-            return;
-        }
         PaperQuestion pq=new PaperQuestion();
         pq.setPaperid(Long.parseLong(paperid));
         pq.setQuestionid(Long.parseLong(questionid));
@@ -1313,12 +1287,108 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");
             Float sumScore=this.paperQuestionManager.getSumScore(pq);
+            this.modifyPaperTotalScore(pq.getPaperid());
             je.getObjList().add(sumScore);
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         response.getWriter().print(je.toJSON());
     }
 
+
+    /**
+     * 删除试卷试题
+     * @throws Exception
+     */
+    @RequestMapping(params="m=doDelPaperQues",method=RequestMethod.POST)
+    public void doDelPaperQues(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String paperid=request.getParameter("paperid");
+        String questionid=request.getParameter("questionid");
+        if(paperid==null||paperid.trim().length()<1||
+                questionid==null||questionid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(Long.parseLong(paperid));
+        pq.setQuestionid(Long.parseLong(questionid));
+        List<PaperQuestion>tmpList=this.paperQuestionManager.getList(pq,null);
+        if(tmpList==null||tmpList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        pq=tmpList.get(0);
+
+        PageResult p=new PageResult();
+        p.setOrderBy("u.order_idx");
+        PaperQuestion paperQuestion=new PaperQuestion();
+        paperQuestion.setPaperid(Long.parseLong(paperid));
+        List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(paperQuestion,p);
+
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+
+
+        Integer orderIdx=pq.getOrderidx();
+        if(paperQuestionList!=null&&paperQuestionList.size()>0){
+            for(PaperQuestion paperQues:paperQuestionList){
+                if(paperQues.getOrderidx()!=null){
+                    if(paperQues.getOrderidx()>orderIdx){
+                        PaperQuestion upd=new PaperQuestion();
+                        upd.setPaperid(paperQues.getPaperid());
+                        upd.setQuestionid(paperQues.getQuestionid());
+                        upd.setOrderidx(paperQues.getOrderidx()-1);
+                        sql=new StringBuilder();
+                        objList=this.paperQuestionManager.getUpdateSql(upd,sql);
+                        if(sql!=null&&sql.toString().trim().length()>0){
+                            objListArray.add(objList);
+                            sqlListArray.add(sql.toString());
+                        }
+                    }
+                }
+            }
+        }
+
+        PaperQuestion del=new PaperQuestion();
+        del.setRef(pq.getRef());
+        sql=new StringBuilder();
+        objList=this.paperQuestionManager.getDeleteSql(del,sql);
+        if(sql!=null&&objList!=null){
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+        if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size())
+        if(this.paperQuestionManager.doExcetueArrayProc(sqlListArray,objListArray)){
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            je.setType("success");
+            this.modifyPaperTotalScore(pq.getPaperid());
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 修改总分
+     * @param paperid
+     */
+    private void modifyPaperTotalScore(Long paperid){
+        if(paperid==null||paperid.toString().length()<1)
+            return;
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(paperid);
+        Float sumScore=this.paperQuestionManager.getSumScore(pq);
+        if(sumScore!=null){
+            PaperInfo paper=new PaperInfo();
+            paper.setPaperid(pq.getPaperid());
+            paper.setScore(sumScore);
+            this.paperManager.doUpdate(paper);
+        }
+    }
 
     /**
      * 任务修改
