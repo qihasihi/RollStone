@@ -68,11 +68,16 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
 		} else
 			sqlbuilder.append("null,");
 
-		if (stupaperlogs.getUserid() != null) {
-			sqlbuilder.append("?,");
-			objList.add(stupaperlogs.getUserid());
-		} else
-			sqlbuilder.append("null,");
+        if (stupaperlogs.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperlogs.getUserid());
+        } else
+            sqlbuilder.append("null,");
+        if (stupaperlogs.getIsinpaper() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperlogs.getIsinpaper());
+        } else
+            sqlbuilder.append("null,");
 
 
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
@@ -118,6 +123,11 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
 				objList.add(stupaperlogs.getScore());
 			} else
 				sqlbuilder.append("null,");
+            if (stupaperlogs.getIsinpaper() != null) {
+                sqlbuilder.append("?,");
+                objList.add(stupaperlogs.getIsinpaper());
+            } else
+                sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -167,6 +177,11 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
 				objList.add(stupaperlogs.getScore());
 			} else
 				sqlbuilder.append("null,");
+            if (stupaperlogs.getIsinpaper() != null) {
+                sqlbuilder.append("?,");
+                objList.add(stupaperlogs.getIsinpaper());
+            } else
+                sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList; 
 	}
@@ -175,7 +190,7 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
 			List<List<Object>> objArrayList) {
 		return this.executeArray_SQL(sqlArrayList, objArrayList);
 	}
-	
+
 	public String getNextId() {
 		// TODO Auto-generated method stub
 		return null;

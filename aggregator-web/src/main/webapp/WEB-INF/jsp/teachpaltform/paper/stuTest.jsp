@@ -37,7 +37,8 @@
             }
             if(pnoDiv.length<1){
                 if(typeof(t)=="undefined"||t>=0)
-                    if(confirm('已经答到最后一题了，是否交卷?'))
+                    if(confirm('已经答到最后一题了!是否提交试卷?'))
+                      //  location.href="paperques?m=toTestDetail&paperid="+$("#hd_paper_id").val();
                         subPaper();//交卷
                 else if(t==-1)
                     alert('已经是第一题了!');
@@ -51,10 +52,42 @@
         *提交测试
          */
         function subPaper(){
-            var quesAnswerObj=$("#dv_question div input[name='hd_answer']");
-            var quesidObj=$("#dv_question div input[name='hd_quesid']");
-            var scoreObj=$("#dv_question div input[name='hd_stu_score']");
-            var questype=$("#dv_question div input[name='hd_questiontype']");
+
+            //提交
+            var pid=$("#hd_paper_id").val();
+            if(pid.length<1){
+                alert('异常错误，参数异常!');return;
+            }
+            if(!confirm('您确认提交该试卷吗?\n\n提示：每道题答完后都已经存入，如您现在交卷则在相关时间段内无法再次做答!'))
+            return;
+
+            $.ajax({
+                url:"paperques?m=doInPaper",
+                dataType:'json',
+                type:'post',
+                data:{paperid:pid},
+                cache: false,
+                error:function(){
+                    alert('异常错误!系统未响应!');
+                },success:function(rps){
+                    if(rps.type=="success"){
+                        //alert(rps.msg);
+                        // 进入详情页面
+                        location.href="paperques?m=toTestDetail&paperid="+pid;
+                    }else
+                         alert(rps.msg);
+                }
+            })
+        }
+
+        /**
+         *提交测试
+         */
+        function subOnePaper(quesid){
+            var quesAnswerObj=$("#dv_question div input[id='hs_val_"+quesid+"']");
+            var quesidObj=$("#dv_question div input[id='hd_quesid_"+quesid+"']");
+            var scoreObj=$("#dv_question div input[id='hs_score_"+quesid+"']");
+            var questype=$("#dv_question div input[id='hd_questiontype_"+quesid+"']");
             var data=new Array(),noanswer=new Array();
             if(quesAnswerObj.length>0&&quesAnswerObj.length==quesidObj.length&&scoreObj.length==quesidObj.length){
                 for(var i=0;i<quesidObj.length;i++){
@@ -64,16 +97,16 @@
                     data[i]={questionid:quesidObj[i].value,answer:quesAnswerObj[i].value,score:scoreObj[i].value,questype:questype[i].value};
                 }
             }
-            if(noanswer.length>0){
-                var msg="您还有 "+noanswer.length+"道题没有做!是"
-                for(var i=0;i<noanswer.length;i++){
-                    msg+="第"+noanswer[i]+"题 "
-                }
-                msg+="是否继续提交?";
-                if(!confirm(msg)){
-                    next(noanswer[0]);
-                }
-            }
+//            if(noanswer.length>0){
+//                var msg="您还有 "+noanswer.length+"道题没有做!是"
+//                for(var i=0;i<noanswer.length;i++){
+//                    msg+="第"+noanswer[i]+"题 "
+//                }
+//                msg+="是否继续提交?";
+//                if(!confirm(msg)){
+//                    next(noanswer[0]);
+//                }
+//            }
             //提交
             var pid=$("#hd_paper_id").val();
             if(pid.length<1){
@@ -88,15 +121,15 @@
                 error:function(){
                     alert('异常错误!系统未响应!');
                 },success:function(rps){
-                    if(rps.type=="sucess"){
-                        //alert(rps.msg);
-                        // 进入详情页面
-                        location.href="paperques?m=watchAnswer&paperid="+pid;
+                    if(rps.type=="success"){
+                        next();
                     }else
-                         alert(rps.msg);
+                        alert(rps.msg);
                 }
             })
         }
+
+
         /**
         *答完一题
         * @param quesid 问题ID
@@ -113,7 +146,7 @@
                     }else
                         $("#hs_val_stu_"+quesid).val(0);
                   }else if(questype==4){
-                    var ckSeledtedBox=$("#quesOption_"+quesid+" ul li input[type='checkbox']:checked");
+                    var ckSeledtedBox=$("#quesOption_"+quesid+"~ul li input[type='checkbox']:checked");
                     var answer="";
                     var isright=true;
                     if(ckSeledtedBox.length>0){
@@ -145,7 +178,7 @@
                     $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
                 }
                 //
-                next();
+                subOnePaper(quesid);
             }
         }
     </script>
@@ -179,7 +212,7 @@
                     <textarea id="txt_answer_${q.questionid}" name="txt_answer"></textarea>
                     <input type="button" value="确定" onclick="doAnswerOne(${q.questionid},undefined,undefined,${q.questiontype})"/>
                 </c:if>
-                    <span id="quesOption_${q.questionid}">
+                    <p id="quesOption_${q.questionid}">
                          <c:if test="${q.questiontype==3||q.questiontype==4}">
                              <c:if test="${!empty q.questioninfo.questionOption}">
                                  <ul>
@@ -201,7 +234,7 @@
                                  </c:if>
                              </c:if>
                          </c:if>
-                    </span>
+                    </p>
 
 
             </div>

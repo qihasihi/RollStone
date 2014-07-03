@@ -6,10 +6,7 @@ import com.school.entity.DictionaryInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
-import com.school.entity.teachpaltform.paper.PaperInfo;
-import com.school.entity.teachpaltform.paper.PaperQuestion;
-import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
-import com.school.entity.teachpaltform.paper.TpCoursePaper;
+import com.school.entity.teachpaltform.paper.*;
 import com.school.manager.ClassManager;
 import com.school.manager.DictionaryManager;
 import com.school.manager.SmsManager;
@@ -21,17 +18,11 @@ import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
-import com.school.manager.inter.teachpaltform.paper.IPaperManager;
-import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
-import com.school.manager.inter.teachpaltform.paper.IStuPaperQuesLogsManager;
-import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
+import com.school.manager.inter.teachpaltform.paper.*;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
-import com.school.manager.teachpaltform.paper.PaperManager;
-import com.school.manager.teachpaltform.paper.PaperQuestionManager;
-import com.school.manager.teachpaltform.paper.StuPaperQuesLogsManager;
-import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
+import com.school.manager.teachpaltform.paper.*;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -83,6 +74,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     private IPaperManager paperManager;
     private ITpCoursePaperManager tpCoursePaperManager;
     private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
+    private IStuPaperLogsManager stuPaperLogsManager;
     public PaperQuestionController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -110,6 +102,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         this.paperManager=this.getManager(PaperManager.class);
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
         this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
+        this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
     }
     /**
      * 根据课题ID，加载试卷列表
@@ -3222,17 +3215,17 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
-        //验证是否已经答题
-        StuPaperQuesLogs stuPaperQuesLogs=new StuPaperQuesLogs();
-        stuPaperQuesLogs.setUserid(this.logined(request).getUserid());
-        stuPaperQuesLogs.setPaperid(Long.parseLong(paperid.trim()));
-        PageResult presult=new PageResult();
-        presult.setPageSize(1);
-        List<StuPaperQuesLogs> stuPageQuesList=this.stuPaperQuesLogsManager.getList(stuPaperQuesLogs,presult);
-        if(stuPageQuesList!=null&&stuPageQuesList.size()>0){//已经做过，则跳入显示页面
-
+        //验证是否已经交卷
+        StuPaperLogs splog=new StuPaperLogs();
+        splog.setUserid(this.logined(request).getUserid());
+        splog.setPaperid(Long.parseLong(paperid));
+        splog.setIsinpaper(2);
+        PageResult pr=new PageResult();
+        pr.setPageSize(1);
+        List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,pr);
+        if(spList!=null&&spList.size()>0){ //已经交卷，不能再进入
+            response.sendRedirect("paperques?m=toTestDetail&paperid="+paperid);return null;
         }
-
         //得到当前的所有问题
         PaperQuestion pq=new PaperQuestion();
         pq.setPaperid(Long.parseLong(paperid));
@@ -3253,6 +3246,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         return new ModelAndView("/teachpaltform/paper/stuTest",mp);
     }
 
+
     /**
      * 进入详情页面
      * @param request
@@ -3270,11 +3264,21 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
         //验证是否已经答题
+        StuPaperLogs splog=new StuPaperLogs();
+        splog.setUserid(this.logined(request).getUserid());
+        splog.setPaperid(Long.parseLong(paperid));
+        splog.setIsinpaper(2);
+        PageResult pr=new PageResult();
+        pr.setPageSize(1);
+        List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,pr);
+        if(spList==null||spList.size()<1){
+            return testPaper(request,response,mp);
+        }
+
+        //验证是否已经答题
         StuPaperQuesLogs stuPaperQuesLogs=new StuPaperQuesLogs();
         stuPaperQuesLogs.setUserid(this.logined(request).getUserid());
         stuPaperQuesLogs.setPaperid(Long.parseLong(paperid.trim()));
-//        PageResult presult=new PageResult();
-//        presult.setPageSize(1);
         List<StuPaperQuesLogs> stuPageQuesList=this.stuPaperQuesLogsManager.getList(stuPaperQuesLogs,null);
         if(stuPageQuesList==null||stuPageQuesList.size()<1){//已经做过，则跳入显示页面
             return testPaper(request,response,mp);
@@ -3299,6 +3303,43 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         mp.put("stuAnswer",stuPageQuesList);
 
        return new ModelAndView("/teachpaltform/paper/stuTestDetail",mp);
+    }
+
+    /**
+     * 交卷
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params ="m=doInPaper",method=RequestMethod.POST)
+    public void doInPaper(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String paperid=request.getParameter("paperid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(paperid==null||paperid.length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+        Integer userid=this.logined(request).getUserid();
+        Integer isinpaper=2;
+        StuPaperLogs splog=new StuPaperLogs();
+        splog.setUserid(userid);
+        splog.setPaperid(Long.parseLong(paperid));
+        splog.setIsinpaper(isinpaper);
+
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,presult);
+        if(spList!=null&&spList.size()>0){
+            jsonEntity.setMsg("异常错误，您已经提交过该试卷。无法进行修改!");
+            response.getWriter().print(jsonEntity.toJSON());return;
+        }
+
+        if(this.stuPaperLogsManager.doSave(splog)){
+            jsonEntity.setType("success");
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+        }else
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().println(jsonEntity.toJSON());
     }
 
 
@@ -3334,13 +3375,27 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             Long questionid=Long.parseLong(questionidObj.toString());
             StuPaperQuesLogs stpq=new StuPaperQuesLogs();
             stpq.setPaperid(Long.parseLong(paperid));
-            stpq.setAnswer(answer);
             stpq.setQuesid(questionid);
-            stpq.setScore(score);
             stpq.setUserid(userid);
+            PageResult presult=new PageResult();
+            presult.setPageSize(1);
+            //查询是否存在
+            List<StuPaperQuesLogs> spqlogList=this.stuPaperQuesLogsManager.getList(stpq,presult);
+            stpq.setAnswer(answer);
+            stpq.setScore(score);
             Integer questype=Integer.parseInt(questypeObj.toString());
             if(questype==4||questype==3)
                 stpq.setIsright(score>0?1:2);
+            //如果存在，则修改
+            if(spqlogList!=null&&spqlogList.size()>0){
+                StringBuilder sqlbuilder=new StringBuilder();
+                List<Object> objList=stuPaperQuesLogsManager.getUpdateSql(stpq,sqlbuilder);
+                if(sqlbuilder.toString().length()>0){
+                    sqlArrayList.add(sqlbuilder.toString());
+                    objArrayList.add(objList);
+                }
+                continue;
+            }
             StringBuilder sqlbuilder=new StringBuilder();
             List<Object> objList=stuPaperQuesLogsManager.getSaveSql(stpq,sqlbuilder);
             if(sqlbuilder.toString().length()>0){
@@ -3357,5 +3412,6 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         }else{
             jsonEntity.setMsg("交卷失败!原因：暂未发现您要提交的数据!");
         }
+        response.getWriter().println(jsonEntity.toJSON());
     }
 }

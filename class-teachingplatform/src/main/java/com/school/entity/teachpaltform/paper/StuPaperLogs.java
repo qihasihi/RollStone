@@ -11,6 +11,15 @@ public class StuPaperLogs {
     private Float score;
     private Integer ismarking;
     private String stuname;
+    private Integer isinpaper;
+
+    public Integer getIsinpaper() {
+        return isinpaper;
+    }
+
+    public void setIsinpaper(Integer isinpaper) {
+        this.isinpaper = isinpaper;
+    }
 
     public Integer getIsmarking() {
         return ismarking;

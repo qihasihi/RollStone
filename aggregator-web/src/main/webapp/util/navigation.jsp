@@ -158,7 +158,10 @@
     if(ettColumnInfos!=null&&ettColumnInfos.size()>0){
         for (EttColumnInfo ectmp:ettColumnInfos){
             if(ectmp!=null){
-                writeHtml.append("<li><a target='_blank' href='"+ectmp.getEttcolumnurl()+"'><span class='"+ectmp.getStyle()+"'></span>"+ectmp.getEttcolumnname()+"</a></li>");
+                if(ectmp.getStatus()==0){
+                    writeHtml.append("<li><a target='_blank' href='"+ectmp.getEttcolumnurl()+"'><span class='"+ectmp.getStyle()+"'></span>"+ectmp.getEttcolumnname()+"</a></li>");
+                }else
+                    writeHtml.append("<li><a  href=\"javascript:alert('权限不足!');\"><span class='"+ectmp.getStyle()+"'></span>"+ectmp.getEttcolumnname()+"</a></li>");
             }
         }
     }

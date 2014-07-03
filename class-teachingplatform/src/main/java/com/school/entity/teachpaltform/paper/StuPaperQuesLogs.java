@@ -1,8 +1,9 @@
 package  com.school.entity.teachpaltform.paper;
 
+import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.Date;
-
+@Entity
 public class StuPaperQuesLogs implements  Serializable {
 
 	public void StuPaperQuesLogs (){}
@@ -15,6 +16,13 @@ public class StuPaperQuesLogs implements  Serializable {
     private java.lang.Long quesid;
     private java.lang.Integer userid;
     private Float score;
+
+    public String getAnswerString(){
+        String returnVal=answer;
+        if(answer!=null&&answer.length()>0)
+            returnVal=returnVal.replaceAll("\\\\r\\\\n","</br>").replaceAll("\\n","</br>");
+        return returnVal;
+    }
 
     public java.lang.Integer getIsright(){
       return isright;

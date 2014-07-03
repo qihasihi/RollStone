@@ -221,6 +221,11 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
             objList.add(stupaperqueslogs.getAnswer());
         } else
             sqlbuilder.append("null,");
+        if (stupaperqueslogs.getIsright() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getIsright());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList; 
 	}
