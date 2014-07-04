@@ -11,6 +11,7 @@
 		<script type="text/javascript">
 		var courseid="${courseid}";
 		var taskid="${taskid}";
+        var objectiveQuesCount="${objectiveQuesCount}";
 		$(function(){
 			//任务
 			<c:if test="${!empty taskInfo}">
@@ -19,6 +20,8 @@
                 $("#task_remark").val('${taskInfo.taskremark}');
 				initTaskCriteria("${taskInfo.tasktype}");
 			</c:if>
+
+
 
             var taskstatus;
             <c:if test="${!empty taskgroupList}">
@@ -31,7 +34,7 @@
                 </c:forEach>
             </c:if>
 			//任务类型
-			changeTaskType("${taskInfo.questiontype}",${taskInfo.taskvalueid},taskstatus);
+			changeTaskType("${taskInfo.questiontype}",${taskInfo.taskvalueid},taskstatus,"${taskInfo.quesnum}");
 
             $("input[name='ck_criteria']").filter(function(){return this.value=${taskInfo.criteria}}).attr({"checked":true});
             <c:if test="${!empty operatetype}">
@@ -88,7 +91,7 @@
                 }
             });
 		});
-		function changeTaskType(questype,taskvalueid,taskstatus){
+		function changeTaskType(questype,taskvalueid,taskstatus,quesnum){
             $("#tr_ques_obj").hide();
 			var tasktype=$("#task_type").val();
 			if(tasktype=="1"){//资源 
@@ -97,7 +100,11 @@
 				queryInteraction(courseid,'tr_task_obj',taskvalueid,taskstatus);
 			}else if(tasktype=="3"){ //问题类型
 				queryQuestionType('tr_task_obj',questype,false,${taskInfo.taskvalueid});
-			}
+			}else if(tasktype=="4"){ //成卷
+                queryPaper(courseid,'tr_task_obj',4,${taskInfo.taskvalueid},taskstatus);
+            }else if(tasktype=="5"){ // 自主测试
+                queryPaper(courseid,'tr_task_obj',5,${taskInfo.taskvalueid},taskstatus,quesnum);
+            }
 		}
 
 
@@ -250,8 +257,8 @@
 
                       <c:if test="${!empty tg.btime&& !empty tg.etime}">
                         <c:if test="${tg.usertype ne 2}">
-                            $("#b_time_${tg.usertypeid}").val("${tg.btimeString}").parent().show();
-                            $("#e_time_${tg.usertypeid}").val("${tg.etimeString}").parent().show();
+                            $("#b_time_${tg.usertypeid}").val("${tg.btimeString}").parent().parent('p').show();
+                            $("#e_time_${tg.usertypeid}").val("${tg.etimeString}").parent().parent('p').show();
 
                             <c:if test="${tg.taskstatus ne '1'}">
                                 $("#b_time_${tg.usertypeid}").attr("disabled",true);

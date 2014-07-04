@@ -59,6 +59,16 @@
                             case 4:questype="多&nbsp;&nbsp;&nbsp;&nbsp;选：";break;
                         }
                         break;
+                    case 4:
+                        criteria=itm.criteria==1?"提交试卷":"";
+                        type="成卷测试&nbsp;&nbsp;&nbsp;&nbsp;";
+                        //answertype='您的互动';
+                        break;
+                    case 5:
+                        criteria=itm.criteria==1?"提交试卷":"";
+                        type="自主测试&nbsp;&nbsp;&nbsp;&nbsp;";
+                        //answertype='您的互动';
+                        break;
                 }
 
                 if(itm.questionAnswerList!=null&&itm.questionAnswerList.length>0){
@@ -144,6 +154,10 @@
                 if(itm.tasktype==1){
                     html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==2){
+                    html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
+                }else if(itm.tasktype==4){
+                    html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
+                }else if(itm.tasktype==5){
                     html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
                 }
                 if(typeof itm.iscomplete!='undefined'&&itm.iscomplete>0)

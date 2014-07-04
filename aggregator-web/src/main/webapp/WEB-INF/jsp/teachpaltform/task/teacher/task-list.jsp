@@ -108,6 +108,14 @@ function getInvestReturnMethod(rps){
                     criteria=itm.criteria==1?"提交":"";
                     type="试&nbsp;&nbsp;&nbsp;&nbsp;题&nbsp;&nbsp;&nbsp;&nbsp;";
                     break;
+                case 4:
+                    criteria=itm.criteria==1?"提交试卷":"";
+                    type="成卷测试&nbsp;&nbsp;&nbsp;&nbsp;";
+                    break;
+                case 5:
+                    criteria=itm.criteria==1?"提交试卷":"";
+                    type="自主测试&nbsp;&nbsp;&nbsp;&nbsp;";
+                    break;
             }
             if(typeof itm.taskobjname!='undefined')
                 taskObj=itm.taskobjname;//taskObj=replaceAll(replaceAll(itm.taskobjname.toLowerCase(),"<p>",""),"</p>","");
@@ -129,6 +137,10 @@ function getInvestReturnMethod(rps){
                 html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==2){
                 html+='<a href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'" class="font-blue">'+taskObj+'</a>';
+            }else if(itm.tasktype==4){
+                html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'" class="font-blue">'+taskObj+'</a>';
+            }else if(itm.tasktype==5){
+                html+='<a href="#" class="font-blue">'+taskObj+'</a>';
             }
             html+='</p>';
             html+='</div>';
@@ -299,6 +311,14 @@ function getBankInvestReturnMethod(rps){
                         case 4:questype="_多选";break;
                     }
                     break;
+                case 4:
+                    criteria=itm.criteria==1?"提交试卷":"";
+                    type="成卷测试";
+                    break;
+                case 5:
+                    criteria=itm.criteria==1?"提交试卷":"";
+                    type="自主测试";
+                    break;
             }
             if((typeof itm.cloudstatus!='undefined') && (itm.cloudstatus==3||itm.cloudstatus==4) ){
                 status='参考';
@@ -316,6 +336,10 @@ function getBankInvestReturnMethod(rps){
                 html+='<a target="_blank" href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'">';
             }else if(itm.tasktype==3){
                 html+='<a target="_blank" href="question?m=todetail&id='+itm.taskvalueid+'">';
+            }else if(itm.tasktype==4){
+                html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+            }else if(itm.tasktype==5){
+                html+='<a href="#" >';
             }
             if(typeof itm.taskobjname!='undefined')
                 html+=replaceAll(itm.taskobjname.toLowerCase(),'<span name="fillbank"></span>',"_______")+'</a></p>';

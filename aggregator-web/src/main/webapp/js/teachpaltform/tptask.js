@@ -223,7 +223,7 @@ function queryResource(courseid,trobj,taskvalueid,taskstatus){
  * @param trobj
  * @return
  */
-function queryPaper(courseid,trobj,type,taskvalueid,taskstatus){
+function queryPaper(courseid,trobj,type,taskvalueid,taskstatus,quesnum){
     if(typeof(courseid)=='undefined'||courseid.length<1){
         alert('异常错误，系统未获取到课题标识!');
         return;
@@ -261,6 +261,11 @@ function queryPaper(courseid,trobj,type,taskvalueid,taskstatus){
             htm+='</td>';
             $("#"+trobj).html(htm);
             $("#tb_ques").hide();
+
+            if(typeof quesnum!='undefined'&&quesnum.toString().length>0)
+                $("select[id='sel_ques_num']").val(quesnum);
+            if(typeof taskstatus!='undefined')
+                $("select[id='sel_ques_num']").attr("disabled",true);
 
             if(json.objList.length>0&&typeof taskvalueid!='undefined'&&taskvalueid.toString().length>0){
                 $("#dv_paper_name").html(json.objList[0].papername);

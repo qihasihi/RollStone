@@ -636,9 +636,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 			response.getWriter().print(je.getAlertMsgAndBack());
 			return null;
 		}
-        TpCourseQuestion cq=new TpCourseQuestion();
-        cq.setCourseid(Long.parseLong(courseid));
-        Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);
+
 		
 		//验证是否所有学生都已有小组
 		/*for (TpCourseClass cc : courseclassList) {
@@ -811,6 +809,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
         mp.put("courseclassList",courseclassList);
         mp.put("groupList", groupList);
         mp.put("termid", termid);
+        TpCourseQuestion cq=new TpCourseQuestion();
+        cq.setCourseid(Long.parseLong(courseid));
+        Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);
         mp.put("objectiveQuesCount", objectiveQuesCount);   //专题下客观题数量
 		return new ModelAndView("/teachpaltform/task/teacher/task-add",mp);
 	}
@@ -839,7 +840,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		String taskname=request.getParameter("taskname");
 		String taskvalueid=request.getParameter("taskvalueid");
 		String taskremark=request.getParameter("taskremark");
-        String quesnum=request.getParameter("quesname");
+        String quesnum=request.getParameter("quesnum");
 		if(tasktype==null||tasktype.trim().length()<1
 			//||StringUtils.isBlank(taskname
                 ){
@@ -1217,6 +1218,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		request.setAttribute("taskgroupList", taskgroupList);
 		request.setAttribute("courseid", courseid);
 		request.setAttribute("taskid", taskid);
+        TpCourseQuestion cq=new TpCourseQuestion();
+        cq.setCourseid(Long.parseLong(courseid));
+        Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);
+        request.setAttribute("objectiveQuesCount", objectiveQuesCount);   //专题下客观题数量
 		return new ModelAndView("/teachpaltform/task/teacher/task-update"); 
 	}
 	
@@ -1342,6 +1347,23 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     sqlListArray.add(sql.toString());
                 }
             }
+        }else if(tasktype.toString().equals("4")){//成卷测试
+            if(taskvalueid==null||taskvalueid.trim().length()<1){
+                je.setMsg("异常错误，系统未获取到试卷标识!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            TpCoursePaper tpCoursePaper=new TpCoursePaper();
+            tpCoursePaper.setPaperid(Long.parseLong(taskvalueid));
+            List<TpCoursePaper>iList=this.tpCoursePaperManager.getList(tpCoursePaper,null);
+            if(iList==null||iList.size()<1){
+                je.setMsg("提示：当前试卷已不存在或删除，请刷新页面后重试!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            ta.setTaskvalueid(Long.parseLong(taskvalueid));
+        }else if(tasktype.toString().equals("5")){//自主测试
+
         }
         //获取任务
         TpTaskInfo sel=new TpTaskInfo();
@@ -1368,6 +1390,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setCriteria(Integer.parseInt(criteriaArray[0]));
             if(taskremark!=null)
                 ta.setTaskremark(taskremark);
+            if(quesnum!=null&&quesnum.trim().length()>0)
+                ta.setQuesnum(Integer.parseInt(quesnum));
             tasknextid=this.tpTaskManager.getNextId(true);
             ta.setCuserid(this.logined(request).getRef());
             sql=new StringBuilder();
@@ -1406,6 +1430,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setCriteria(Integer.parseInt(criteriaArray[0]));
             if(taskremark!=null)
                 ta.setTaskremark(taskremark);
+            if(quesnum!=null&&quesnum.trim().length()>0)
+                ta.setQuesnum(Integer.parseInt(quesnum));
             sql=new StringBuilder();
             objList=this.tpTaskManager.getUpdateSql(ta, sql);
             if(objList!=null&&sql!=null&&sql.length()>0){
