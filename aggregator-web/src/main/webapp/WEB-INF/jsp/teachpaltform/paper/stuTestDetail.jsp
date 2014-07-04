@@ -9,7 +9,7 @@
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 <html>
 <head>
-    <title></title>
+    <title></title>　
 
     <script type="text/javascript">
         $(function(){

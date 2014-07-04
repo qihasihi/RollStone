@@ -152,6 +152,12 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
         } else
             sqlbuilder.append("null,");
 
+        if (stupaperqueslogs.getIsmarking() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getIsmarking());
+        } else
+            sqlbuilder.append("null,");
+
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -224,6 +230,11 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
         if (stupaperqueslogs.getIsright() != null) {
             sqlbuilder.append("?,");
             objList.add(stupaperqueslogs.getIsright());
+        } else
+            sqlbuilder.append("null,");
+        if (stupaperqueslogs.getIsmarking() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getIsmarking());
         } else
             sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");

@@ -16,6 +16,15 @@ public class StuPaperQuesLogs implements  Serializable {
     private java.lang.Long quesid;
     private java.lang.Integer userid;
     private Float score;
+    private Integer ismarking;
+
+    public Integer getIsmarking() {
+        return ismarking;
+    }
+
+    public void setIsmarking(Integer iamarking) {
+        this.ismarking = iamarking;
+    }
 
     public String getAnswerString(){
         String returnVal=answer;

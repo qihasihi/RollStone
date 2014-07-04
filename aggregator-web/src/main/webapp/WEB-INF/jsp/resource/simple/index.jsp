@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="header">
-    <div class="title">合作学校资源系统<a href="helps/help.html" class="help" title="帮助"></a></div>
+    <div class="title">合作学校资源系统<a target="_blank" href="helps/help.html" class="help" title="帮助"></a></div>
     <p><span></span><img src="images/logo_140616.png" width="253" height="64" /></p>
 </div>
 <div class="content2">
@@ -38,8 +38,6 @@
         </form>
     </div>
 </div>
-
-
 <%@include file="/util/foot.jsp" %>
 </body>
 </html>

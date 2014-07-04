@@ -3384,8 +3384,10 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             stpq.setAnswer(answer);
             stpq.setScore(score);
             Integer questype=Integer.parseInt(questypeObj.toString());
-            if(questype==4||questype==3)
+            if(questype==4||questype==3){
                 stpq.setIsright(score>0?1:2);
+                stpq.setIsmarking(0);
+            }
             //如果存在，则修改
             if(spqlogList!=null&&spqlogList.size()>0){
                 StringBuilder sqlbuilder=new StringBuilder();
