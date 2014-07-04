@@ -16,6 +16,8 @@
                 case '1':url='tpres?toQueryResourceList';break;
                 case '2':url='task?toQryTopicList';break;
                 case '3':url='question?m=questionAjaxList';break;
+                case '4':url='paper?toQueryTaskPaperList';break;
+                case '5':url='question?m=questionAjaxList';break;
             }
 
             pList = new PageControl( {
@@ -49,6 +51,10 @@
             var param={courseid:courseid};
             if(tasktype=="3")
                 param.questype=questiontype;
+            else if(tasktype=="4")
+                param.type=4;
+            else if(tasktype=="5")
+                param.type=5;
             param.taskflag=1;
             pObj.setPostParams(param);
         }
@@ -102,6 +108,14 @@
                             htm+='</tr>';
                             break;
                         }
+                        case '4':{
+                            htm+='<tr><td><input type="radio" name="rdo_data" id="rdo_data" value="'+itm.paperid+'"></td>';
+                            htm+='<td><p><a href="#" >'+itm.papername+'</a></p>';
+                            //htm+='<p>'+itm.topiccontent+'</p>';
+                            //<p class="jxxt_zhuanti_zy_add_text">北京四中_李静</p>
+                            htm+='</td></tr>';
+                            break;
+                        }
                     }
                 });
             }
@@ -123,7 +137,7 @@
 
         function sub_data(){
             var dataObj=$('input[name="rdo_data"]:checked');
-            var type=tasktype=='1'?"资源":tasktype=='2'?"论题":"试题";
+            var type=tasktype=='1'?"资源":tasktype=='2'?"论题":tasktype=='3'?"试题":tasktype=='4'?"试卷":"";
             if(dataObj.length<1){
                 alert('请选择'+type+'!');
                 return;
@@ -155,7 +169,7 @@
 
 </head>
 <body>
-<div class="subpage_head"><span class="ico55"></span><strong>添加任务&mdash;&mdash;选择${!empty param.tasktype and param.tasktype eq '1'?"资源":param.tasktype eq '2'?"论题":"试题"}</strong></div>
+<div class="subpage_head"><span class="ico55"></span><strong>添加任务&mdash;&mdash;选择${!empty param.tasktype and param.tasktype eq '1'?"资源":param.tasktype eq '2'?"论题":param.tasktype eq '3'?"试题":param.tasktype eq '4'?"试卷":""}</strong></div>
 <div class="content1">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
         <col class="w50"/>

@@ -13,6 +13,8 @@ import com.school.entity.*;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
+import com.school.entity.teachpaltform.paper.PaperInfo;
+import com.school.entity.teachpaltform.paper.TpCoursePaper;
 import com.school.manager.ClassManager;
 import com.school.manager.DictionaryManager;
 import com.school.manager.SmsManager;
@@ -24,9 +26,13 @@ import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
+import com.school.manager.inter.teachpaltform.paper.IPaperManager;
+import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
+import com.school.manager.teachpaltform.paper.PaperManager;
+import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
 import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -69,6 +75,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private ITaskSuggestManager taskSuggestManager;
     private ITpCourseTeachingMaterialManager tpCourseTeachingMaterialManager;
     private ISmsManager smsManager;
+    private ITpCoursePaperManager tpCoursePaperManager;
+    private IPaperManager paperManager;
     public TaskController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -92,6 +100,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         this.tpVirtualClassManager=this.getManager(TpVirtualClassManager.class);
         this.taskSuggestManager=this.getManager(TaskSuggestManager.class);
         this.smsManager=this.getManager(SmsManager.class);
+        this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
+        this.paperManager=this.getManager(PaperManager.class);
     }
     /**
 	 * 根据课题ID，加载任务列表
@@ -829,6 +839,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		String taskname=request.getParameter("taskname");
 		String taskvalueid=request.getParameter("taskvalueid");
 		String taskremark=request.getParameter("taskremark");
+        String quesnum=request.getParameter("quesname");
 		if(tasktype==null||tasktype.trim().length()<1
 			//||StringUtils.isBlank(taskname
                 ){
@@ -949,7 +960,48 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     sqlListArray.add(sql.toString());
                 }
             }
-		}
+		}else if(tasktype.toString().equals("4")){//成卷测试
+            if(taskvalueid==null||taskvalueid.trim().length()<1){
+                je.setMsg("异常错误，系统未获取到试卷标识!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            TpCoursePaper tpCoursePaper=new TpCoursePaper();
+            tpCoursePaper.setPaperid(Long.parseLong(taskvalueid));
+            List<TpCoursePaper>iList=this.tpCoursePaperManager.getList(tpCoursePaper,null);
+            if(iList==null||iList.size()<1){
+                je.setMsg("提示：当前试卷已不存在或删除，请刷新页面后重试!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            ta.setTaskvalueid(Long.parseLong(taskvalueid));
+        }else if(tasktype.toString().equals("5")){//自主测试
+            //添加试卷
+            Long paperid=this.paperManager.getNextId(true);
+            PaperInfo p=new PaperInfo();
+            p.setPaperid(paperid);
+            p.setPapername("自主测试");
+            p.setCuserid(this.logined(request).getUserid());
+            p.setPapertype(PaperInfo.PAPER_TYPE.ORGANIZE.getValue());
+            sql=new StringBuilder();
+            objList=this.paperManager.getSaveSql(p,sql);
+            if(objList!=null&&sql!=null){
+                objListArray.add(objList);
+                sqlListArray.add(sql.toString());
+            }
+
+            //添加数据与专题关联
+            TpCoursePaper tpCoursePaper=new TpCoursePaper();
+            tpCoursePaper.setPaperid(paperid);
+            tpCoursePaper.setCourseid(Long.parseLong(courseid));
+            sql=new StringBuilder();
+            objList=this.tpCoursePaperManager.getSaveSql(tpCoursePaper,sql);
+            if(objList!=null&&sql!=null){
+                objListArray.add(objList);
+                sqlListArray.add(sql.toString());
+            }
+            ta.setTaskvalueid(paperid);
+        }
         /**
          *查询出当前专题有效的任务个数，排序用
          */
@@ -978,6 +1030,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         ta.setOrderidx(orderIdx);
 		if(taskremark!=null)
 			ta.setTaskremark(taskremark);
+        if(quesnum!=null&&quesnum.trim().length()>0)
+            ta.setQuesnum(Integer.parseInt(quesnum));
 		sql=new StringBuilder();
 		objList=this.tpTaskManager.getSaveSql(ta, sql);
 		if(objList!=null&&sql!=null&&sql.length()>0){
@@ -1179,6 +1233,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
       //  String taskname=request.getParameter("taskname");
         String taskvalueid=request.getParameter("taskvalueid");
         String taskremark=request.getParameter("taskremark");
+        String quesnum=request.getParameter("quesnum");
         if(tasktype==null||tasktype.trim().length()<1
             ||taskid==null||taskvalueid==null
                // ||taskname==null||taskname.trim().length()<1

@@ -308,7 +308,7 @@ public class PaperController extends BaseController<PaperInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("u.operate_time desc ");
+        p.setOrderBy("u.paper_id,u.c_time desc ");
         TpCoursePaper t= new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
         t.setLocalstatus(1);

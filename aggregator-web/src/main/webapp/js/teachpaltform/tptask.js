@@ -63,6 +63,8 @@ function showTaskElement(type){
                 }
             }
         });
+    }else if(type==4){
+        queryPaper(courseid,'tr_task_obj',4,returnValue);
     }
 }
 
@@ -239,20 +241,29 @@ function queryPaper(courseid,trobj,type,taskvalueid,taskstatus){
             var htm='';
             htm+='<th><span class="ico06"></span>选择试卷：</th>';
             htm+='<td class="font-black">';
-            if(typeof taskstatus=='undefined'&&type==4)
+            if(typeof taskstatus=='undefined'&&type==4){
                 htm+='<p><a class="font-darkblue"  href="javascript:showTaskElement('+type+')">>> 选择试卷</a></p>';
-            else if(type==5){
+                htm+='<div class="jxxt_zhuanti_add_ziyuan" id="dv_paper_name"></div>';
+            }else if(type==5){
                 htm='<th><span class="ico06"></span>试题数量：</th>';
                 htm+='<td class="font-black">';
+                if(objectiveQuesCount.length<1||parseInt(objectiveQuesCount)<1)
+                    htm+='当前专题暂无客观题!';
+                else{
+                    htm+='<select id="sel_ques_num">';
+                    for(var i=1;i<=objectiveQuesCount;i++){
+                        htm+='<option value="'+i+'">'+i+'</option>'
+                    }
+                    htm+='</select>';
+                }
             }
-            htm+='<div class="jxxt_zhuanti_add_ziyuan" id="dv_paper_name"></div>';
             htm+='<input type="hidden" id="hd_elementid"/>';
             htm+='</td>';
             $("#"+trobj).html(htm);
             $("#tb_ques").hide();
 
             if(json.objList.length>0&&typeof taskvalueid!='undefined'&&taskvalueid.toString().length>0){
-                $("#dv_res_name").html('<span class='+json.objList[0].suffixtype+'></span>'+json.objList[0].papername);
+                $("#dv_paper_name").html(json.objList[0].papername);
                 $("#hd_elementid").val(json.objList[0].paperid);
             }
             if(typeof(taskvalueid)!='undefined'&&taskvalueid.toString().length>0)
@@ -569,7 +580,9 @@ function initTaskCriteria(tasktype){
 	}else if(tasktype=="3"){//课后作业
 		htm+='<input value="1" name="ck_criteria" type="radio" />提交&nbsp;';
 		//htm+='<input value="right" name="ck_criteria" type="radio" />提交并正确';
-	}
+	}else{
+        htm+='<input checked value="1" name="ck_criteria" type="radio" />提交试卷';
+    }
 	$("#td_criteria").html(htm);
 }
 
@@ -596,6 +609,8 @@ function doSubManageTask(taskid){
     var quesid=$("#hd_questionid").val();
 	var resourceid=$("#hd_elementid").val();
     var topicid=$("#hd_elementid").val();
+    var paperid=$("#hd_elementid").val();
+    var quesNum=$("#sel_ques_num").val();
 	var url='',iserror='',param={},paramStr='?t='+new Date().getTime(),rflag=false,btimeArray='',etimeArray='',clsArray='';
 
 
@@ -729,7 +744,19 @@ function doSubManageTask(taskid){
 			return;
 		}
         param.taskvalueid=resourceid;
-	}
+	}else if(tasktype.val()=="4"){
+        if(paperid.length<1){
+            alert('请选择试卷!');
+            return;
+        }
+        param.taskvalueid=paperid;
+    }else if(tasktype.val()=="5"){
+        if(quesNum.length<1){
+            alert('请选择试卷题目数量!');
+            return;
+        }
+        param.quesnum=quesNum;
+    }
 	param.courseid=courseid; 
 	param.taskremark=taskremark;   
 	if(!(typeof(questype)!='undefined'&&questype=='5')&&criteriatype.length<1){
