@@ -1,6 +1,7 @@
 package com.school.dao.teachpaltform;
 
 import java.sql.Types;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -253,5 +254,20 @@ public class TpCourseQuestionDAO extends CommonDAO<TpCourseQuestion> implements 
         sqlbuilder.append("?)}");
 
         return objList;
+    }
+
+    @Override
+    public Integer getObjectiveQuesCount(TpCourseQuestion tpCourseQuestion) {
+        if (tpCourseQuestion == null||tpCourseQuestion.getCourseid()==null)
+            return null;
+        StringBuilder sqlbuilder = new StringBuilder("{CALL objective_course_question_count(?,?)}");
+        List<Object> objList = new ArrayList<Object>();
+        objList.add(tpCourseQuestion.getCourseid());
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0){
+            return Integer.parseInt(afficeObj.toString());
+        }
+        return null;
     }
 }

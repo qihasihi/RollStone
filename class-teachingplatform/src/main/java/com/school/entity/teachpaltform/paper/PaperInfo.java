@@ -16,6 +16,7 @@ public class PaperInfo implements Serializable {
     private Float score;
 
 
+
     public java.lang.Integer getCuserid(){
       return cuserid;
     }

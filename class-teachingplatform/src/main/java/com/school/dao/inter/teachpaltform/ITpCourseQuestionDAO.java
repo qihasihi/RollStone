@@ -14,4 +14,11 @@ public interface ITpCourseQuestionDAO extends ICommonDAO<TpCourseQuestion>{
      * @return
      */
     public List<Object> getSynchroSql(TpCourseQuestion entity,StringBuilder sqlbuilder);
+
+    /**
+     * 获取专题下客观题数量
+     * @param tpCourseQuestion
+     * @return
+     */
+    Integer getObjectiveQuesCount(TpCourseQuestion tpCourseQuestion);
 }

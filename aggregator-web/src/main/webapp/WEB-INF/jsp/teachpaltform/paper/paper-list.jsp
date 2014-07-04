@@ -56,18 +56,18 @@ function getInvestReturnMethod(rps){
     var html='';
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
+            html+='<p>';
             if(itm.paperid>0){
-                html+='<p><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a>';
+                html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a>';
                 html+='&nbsp;客观题：'+itm.objectivenum+'&nbsp;主观题：'+itm.subjectivenum;
-                html+='</p>';
-
             }else{
-                html+='<p>';
                 html+='<a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a>';
                 html+='&nbsp;客观题：'+itm.objectivenum+'&nbsp;主观题：'+itm.subjectivenum;
                 html+='&nbsp;<a href="javascript:doDelPaper('+itm.ref+')">删除</a>';
-                html+='</p>';
             }
+            if(itm.taskflag<1)
+                html+='&nbsp;<a>发任务</a>';
+            html+='</p>';
 
         });
     }
@@ -156,7 +156,7 @@ function showCourseList(){
 
 <div class="subpage_nav">
     <ul>
-        <li><a>学习任务</a></li>
+        <li ><a href="task?toTaskList&courseid=${courseid }">学习任务</a></li>
         <li><a  href="tpres?toTeacherIdx&courseid=${courseid }&termid=${termid}">专题资源</a></li>
         <li><a href="tptopic?m=index&courseid=${courseid }">互动空间</a></li>
         <!--<li>

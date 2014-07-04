@@ -2026,7 +2026,6 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         je.setPresult(p);
         je.setObjList(resList);
         je.setType("success");
-        //    System.out.println(je.toJSON());
         response.getWriter().print(je.toJSON());
     }
 

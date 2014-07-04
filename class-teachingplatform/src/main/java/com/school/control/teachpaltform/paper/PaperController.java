@@ -290,6 +290,44 @@ public class PaperController extends BaseController<PaperInfo>{
         response.getWriter().print(je.toJSON());
     }
 
+    /**
+     * 任务添加页 获取试卷
+     * @throws Exception
+     */
+    @RequestMapping(params="toQueryTaskPaperList",method=RequestMethod.POST)
+    public void toQueryResourceList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String type=request.getParameter("type");
+        String paperid=request.getParameter("paperid");
+        String taskflag=request.getParameter("taskflag");
+        if(courseid==null||courseid.trim().length()<1||
+                type==null||type.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        PageResult p=this.getPageResultParameter(request);
+        p.setOrderBy("u.operate_time desc ");
+        TpCoursePaper t= new TpCoursePaper();
+        t.setCourseid(Long.parseLong(courseid));
+        t.setLocalstatus(1);
+        t.setSelecttype(Integer.parseInt(type));
+        if(paperid!=null&&paperid.trim().length()>0)
+            t.setPaperid(Long.parseLong(paperid));
+        //学习参考
+        //t.setResourcetype(1);
+        //查询没有发任务的资源
+        if(taskflag!=null&&taskflag.trim().length()>0)
+            t.setTaskflag(1);
+        List<TpCoursePaper>paperList=this.tpCoursePaperManager.getList(t, p);
+        je.setPresult(p);
+        je.setObjList(paperList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+
 
     /**
      * 获取学生任务列表

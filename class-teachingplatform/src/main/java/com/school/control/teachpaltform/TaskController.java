@@ -625,7 +625,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
 			je.setMsg("异常错误，未获取到该课题的班级信息!请设置后操作任务!");
 			response.getWriter().print(je.getAlertMsgAndBack());
 			return null;
-		} 
+		}
+        TpCourseQuestion cq=new TpCourseQuestion();
+        cq.setCourseid(Long.parseLong(courseid));
+        Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);
 		
 		//验证是否所有学生都已有小组
 		/*for (TpCourseClass cc : courseclassList) {
@@ -798,6 +801,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         mp.put("courseclassList",courseclassList);
         mp.put("groupList", groupList);
         mp.put("termid", termid);
+        mp.put("objectiveQuesCount", objectiveQuesCount);   //专题下客观题数量
 		return new ModelAndView("/teachpaltform/task/teacher/task-add",mp);
 	}
 	

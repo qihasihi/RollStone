@@ -12,6 +12,7 @@
     <script type="text/javascript">
         var courseid="${param.courseid}";
         var questype="${param.questype}";
+        var objectiveQuesCount="${objectiveQuesCount}";
         $(function(){
             $("#task_type").val(${param.tasktype});
             if(questype.length<1)
@@ -77,6 +78,10 @@
                 queryInteraction(courseid,'tr_task_obj',taskvalueid);
             }else if(tasktype=="3"){ //问题类型
                 queryQuestionType('tr_task_obj',questype,true,taskvalueid);
+            }else if(tasktype=="4"){
+                queryPaper(courseid,'tr_task_obj',4,taskvalueid);
+            }else if(tasktype=="5"){
+                queryPaper(courseid,'tr_task_obj',5,taskvalueid);
             }
             //加载完成标准
             initTaskCriteria(tasktype);

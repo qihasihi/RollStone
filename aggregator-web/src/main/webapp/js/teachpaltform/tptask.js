@@ -213,6 +213,54 @@ function queryResource(courseid,trobj,taskvalueid,taskstatus){
 	 }); 
 }
 
+
+
+/**
+ * 获取资源
+ * @param courseid
+ * @param trobj
+ * @return
+ */
+function queryPaper(courseid,trobj,type,taskvalueid,taskstatus){
+    if(typeof(courseid)=='undefined'||courseid.length<1){
+        alert('异常错误，系统未获取到课题标识!');
+        return;
+    }
+
+    $.ajax({
+        url:'paper?toQueryTaskPaperList',
+        type:'post',
+        data:{courseid:courseid,paperid:taskvalueid,type:type},
+        dataType:'json',
+        error:function(){
+            alert('网络异常!');
+        },
+        success:function(json){
+            var htm='';
+            htm+='<th><span class="ico06"></span>选择试卷：</th>';
+            htm+='<td class="font-black">';
+            if(typeof taskstatus=='undefined'&&type==4)
+                htm+='<p><a class="font-darkblue"  href="javascript:showTaskElement('+type+')">>> 选择试卷</a></p>';
+            else if(type==5){
+                htm='<th><span class="ico06"></span>试题数量：</th>';
+                htm+='<td class="font-black">';
+            }
+            htm+='<div class="jxxt_zhuanti_add_ziyuan" id="dv_paper_name"></div>';
+            htm+='<input type="hidden" id="hd_elementid"/>';
+            htm+='</td>';
+            $("#"+trobj).html(htm);
+            $("#tb_ques").hide();
+
+            if(json.objList.length>0&&typeof taskvalueid!='undefined'&&taskvalueid.toString().length>0){
+                $("#dv_res_name").html('<span class='+json.objList[0].suffixtype+'></span>'+json.objList[0].papername);
+                $("#hd_elementid").val(json.objList[0].paperid);
+            }
+            if(typeof(taskvalueid)!='undefined'&&taskvalueid.toString().length>0)
+                $("select[id='sel_resource']").val(taskvalueid);
+        }
+    });
+}
+
 function qryTopicByCls(taskvalueid){
 	var task_type=$("#task_type").val();
 	if(task_type.length>0&&task_type=="2"){ 

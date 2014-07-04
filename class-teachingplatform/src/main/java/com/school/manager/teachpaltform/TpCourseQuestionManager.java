@@ -69,7 +69,12 @@ public class  TpCourseQuestionManager extends BaseManager<TpCourseQuestion> impl
         return this.tpcoursequestiondao.getSynchroSql(entity,sqlbuilder);
     }
 
-	@Override
+    @Override
+    public Integer getObjectiveQuesCount(TpCourseQuestion tpCourseQuestion) {
+        return this.tpcoursequestiondao.getObjectiveQuesCount(tpCourseQuestion);
+    }
+
+    @Override
 	protected ICommonDAO<TpCourseQuestion> getBaseDAO() {
 		// TODO Auto-generated method stub
 		return tpcoursequestiondao;

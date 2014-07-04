@@ -316,6 +316,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
                     operateInfo.setDatatype(TpOperateInfo.OPERATE_TYPE.COURSE_QUESTION.getValue()); //试题
                     operateInfo.setCuserid(this.logined(request).getUserid());
                     operateInfo.setRef(operateNextId);
+                    sqlbuilder=new StringBuilder();
                     objList=this.tpOperateManager.getSaveSql(operateInfo, sqlbuilder);
                     if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
                         objListArray.add(objList);
@@ -335,6 +336,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
         TpCourseQuestion quesUpdate=new TpCourseQuestion();
         quesUpdate.setLocalstatus(2);//逻辑删除        此操作会在回收站中显示
         quesUpdate.setRef(Long.parseLong(ref));
+        sqlbuilder=new StringBuilder();
         objList=this.tpCourseQuestionManager.getUpdateSql(quesUpdate,sqlbuilder);
         if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
             objListArray.add(objList);

@@ -30,6 +30,17 @@ public class TpCoursePaper {
     private Object taskflag;    //任务状态
     private Float score;
 
+
+    private Integer selecttype; //4:成卷 5:自主测试 6:微视频
+
+    public Integer getSelecttype() {
+        return selecttype;
+    }
+
+    public void setSelecttype(Integer selecttype) {
+        this.selecttype = selecttype;
+    }
+
     public Float getScore() {
         return score;
     }
