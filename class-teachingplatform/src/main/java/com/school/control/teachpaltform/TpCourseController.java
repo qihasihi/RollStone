@@ -1990,6 +1990,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         cu.setClassgrade(gradeInfos.get(0).getGradevalue());
         cu.setUserid(this.logined(request).getRef());
         cu.setRelationtype("хн©нюой╕");
+        cu.setSubjectid(Integer.parseInt(subjectid));
         cu.setYear(termInfoList.get(0).getYear());
         List<ClassUser>classList=this.classUserManager.getList(cu,null);
 
