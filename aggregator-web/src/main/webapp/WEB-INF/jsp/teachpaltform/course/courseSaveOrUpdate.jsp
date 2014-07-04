@@ -155,13 +155,9 @@
             <tr>
                 <th>&nbsp;&nbsp;关联专题：</th>
                 <td id="related_p">
-                    <input type="text" id="related" class="w430"/>
+                   <div> <input type="text" id="related" class="w430"/>
                     <input type="hidden" id="hcourse_id"/>
-                </td>
-            </tr>
-            <tr>
-                <th></th>
-                <td id="">
+                   </div>
                     <ul  class="p_t_10" id="selectedCourse">
                         <c:if test="${!empty trList}">
                             <c:forEach items="${trList}" var="itm">
@@ -171,6 +167,7 @@
                     </ul>
                 </td>
             </tr>
+
             <tr>
                 <th>&nbsp;</th>
                 <td>

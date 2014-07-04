@@ -3,6 +3,7 @@ package com.school.dao.teachpaltform.paper;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -215,5 +216,47 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
         sqlbuilder.append(")}");
         List<StuPaperLogs> logsList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,StuPaperLogs.class,null);
         return logsList;
+    }
+
+    public List<Map<String, Object>> getMarkingDetail(Integer paperid, Integer quesid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_paper_marking_proc_getdetail(");
+        List<Object> objList=new ArrayList<Object>();
+        if(paperid!=null){
+            sqlbuilder.append("?,");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(quesid!=null){
+            sqlbuilder.append("?");
+            objList.add(quesid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        return list;
+    }
+
+    public List<Map<String, Object>> getMarkingNum(Integer paperid, Integer quesid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_paper_marking_proc_getnum(");
+        List<Object> objList=new ArrayList<Object>();
+        if(paperid!=null){
+            sqlbuilder.append("?,");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(quesid!=null){
+            sqlbuilder.append("?");
+            objList.add(quesid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        return list;
     }
 }

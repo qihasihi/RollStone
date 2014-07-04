@@ -2952,5 +2952,51 @@ public class PaperController extends BaseController<PaperInfo>{
         return new ModelAndView("teachpaltform/paper/marking/marking-logs");
     }
 
+    /**
+     * 进入批阅试卷页面
+     * @return
+     */
+    @RequestMapping(params="m=toMarkingDetail",method=RequestMethod.GET)
+    public ModelAndView toMarkingDetail(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        String paperid = request.getParameter("paperid");
+        String quesid = request.getParameter("quesid");
+        String idx = request.getParameter("idx");
+        JsonEntity je = new JsonEntity();
+        if(paperid==null||paperid.length()<1||quesid==null||quesid.length()<1){
+            je.setMsg("异常错误，请刷新页面重试");
+            je.getAlertMsgAndBack();
+        }
+        List<Map<String,Object>> detailList = this.stuPaperLogsManager.getMarkingDetail(Integer.parseInt(paperid),Integer.parseInt(quesid));
+        List<Map<String,Object>> numList = this.stuPaperLogsManager.getMarkingNum(Integer.parseInt(paperid),Integer.parseInt(quesid));
+        request.setAttribute("detail",detailList.get(0));
+        request.setAttribute("num",numList.get(0));
+        return new ModelAndView("teachpaltform/paper/marking/marking-detail");
+    }
+
+    /**
+     * 进入批阅试卷页面
+     * @return
+     */
+    @RequestMapping(params="m=doMarking",method=RequestMethod.POST)
+    public void doMarking(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        String ref = request.getParameter("ref");
+        String score = request.getParameter("score");
+        JsonEntity je = new JsonEntity();
+        if(ref==null||ref.length()<1||score==null||score.length()<1){
+            je.setMsg("异常错误，请刷新页面重试");
+            je.getAlertMsgAndBack();
+        }
+        StuPaperLogs sp = new StuPaperLogs();
+        sp.setRef(Long.parseLong(ref));
+        sp.setScore(Float.parseFloat(score));
+        Boolean b = this.stuPaperLogsManager.doUpdate(sp);
+        if(b){
+            je.setType("success");
+        }else{
+            je.setType("error");
+            je.setMsg("系统异常，请刷新页面重试");
+        }
+        response.getWriter().print(je.toJSON());
+    }
 
 }

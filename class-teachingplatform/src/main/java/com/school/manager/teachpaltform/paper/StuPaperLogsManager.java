@@ -2,6 +2,8 @@
 package  com.school.manager.teachpaltform.paper;
 
 import java.util.List;
+import java.util.Map;
+
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +81,16 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
     @Override
     public List<StuPaperLogs> getMarkingLogs(Integer paperid, Integer quesid) {
         return this.stupaperlogsdao.getMarkingLogs(paperid,quesid);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMarkingDetail(Integer paperid, Integer quesid) {
+        return this.stupaperlogsdao.getMarkingDetail(paperid,quesid);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMarkingNum(Integer paperid, Integer quesid) {
+        return this.stupaperlogsdao.getMarkingNum(paperid,quesid);
     }
 }
 

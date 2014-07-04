@@ -437,6 +437,10 @@ function addRelatedItem(){
         n++;
     }
     var htm='';
+    if($("#"+courseid).html()!=null){
+        alert("当前专题已添加为关联专题，请勿重复添加");
+        return;
+    }
     htm+='<li id="'+courseid+'">'+coursename+'<a class="ico_delete" title="删除" href="javascript:delLi(\''+courseid+'\')"></a></li>';
     $("#selectedCourse").append(htm);
     $("#related").val('');
@@ -465,7 +469,7 @@ function inputThinking() {
     }
 
 // 定义联想输入页面HTML, 定义输入框及联想输入页面的状态,状态1表示焦点状态，状态0表示非焦点状态
-    var tipHTML = "<div id='thinking' style='background-color:white;position:fixed;z-index:999999;border:1px solid #CDE4EF; width:" + width + "px;overflow:hidden;overflow:hidden;display:none;background-image: theme/default/imagesmember_right1.png'><li>&nbsp;</li></div><input type='hidden' id='inputId' value='" + inputId + "'><input type='hidden' id='status' value='1'><input type='hidden' id='thinking_status' value='0'><style>li.sel{background:#4d77bb;color:white;}li{font-size:14px;height:18px;overflow:hidden;}</style>"
+    var tipHTML = "<div id='thinking' style='background-color:white;position:fixed;z-index:999999;border:1px solid #CDE4EF; width:" + width + "px;overflow:hidden;overflow:hidden;display:none;background-image: theme/default/imagesmember_right1.png'><li>&nbsp;</li></div><input type='hidden' id='inputId' value='" + inputId + "'><input type='hidden' id='status' value='1'><input type='hidden' id='thinking_status' value='0'><style>li.sel{background:#4d77bb;color:white;}li{font-size:14px;overflow:hidden;}</style>"
 
     /********** 将联想输入页面嵌入原始页面 **********/
     $("#" + inputId).parent().append(tipHTML);

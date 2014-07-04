@@ -164,7 +164,7 @@
                     },success:function(rps){
                         if(rps.type=="success"){
                             alert("添加成功!");
-                            window.location.href="teachercourse?m=toTeacherCourseList&gradeid="+gradeid+"&currentSubjectid"+subjectid;
+                            window.location.href="teachercourse?toTeacherCourseList&gradeid="+gradeid.val()+"&currentSubjectid="+subjectid.val();
                         }else{
                             alert("无法添加!"+rps.msg);
                         }
