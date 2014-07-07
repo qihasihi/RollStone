@@ -2,10 +2,12 @@
 <%@page import="com.school.util.UtilTool"%>
 <%
 String outputHtml="";
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ request.getContextPath() + "/";
-String jsoncallback=request.getParameter("jsoncallback");
+    String proc_name=UtilTool.utilproperty.getProperty("PROC_NAME");
+    String basePath = request.getScheme() + "://"
+            + UtilTool.utilproperty.getProperty("IP_ADDRESS")
+            +"/"+proc_name + "/";
+
+    String jsoncallback=request.getParameter("jsoncallback");
 String ettYsRole=UtilTool.utilproperty.getProperty("ETT_YS_ROLE");
 int type=0;
 if(ettYsRole==null||ettYsRole.trim().length()<1){
