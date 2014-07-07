@@ -66,7 +66,7 @@ function getInvestReturnMethod(rps){
                 html+='&nbsp;<a href="javascript:doDelPaper('+itm.ref+')">删除</a>';
             }
             if(itm.taskflag<1)
-                html+='&nbsp;<a>发任务</a>';
+                html+='&nbsp;<a href="task?toAddTask&courseid='+courseid+'&tasktype=4&taskvalueid='+itm.paperid+'"" title="发任务" class="ico51"></a>';
             html+='</p>';
 
         });
