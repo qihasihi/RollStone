@@ -125,10 +125,10 @@ function getInvestReturnMethod(rps){
             html+='<div class="jxxt_zhuanti_rwR">';
             html+='<div class="title">';
             html+='<p class="f_right"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b>';
-            if(itm.taskstatus!="3")
-                html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
-            else{
+            if(itm.taskstatus=="3"||(itm.taskstatus!="1"&&itm.flag<2))
                 html+='<a class="ico37" title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+itm.questiontype+'"></a>';
+            else if(itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)){
+                html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
             }
             html+='<a title="删除" class="ico04" href="javascript:doDelTask('+itm.taskid+','+itm.stucount+')"></a>';
             html+='</p>';
