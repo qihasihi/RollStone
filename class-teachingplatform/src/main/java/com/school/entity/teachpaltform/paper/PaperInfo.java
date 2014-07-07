@@ -14,8 +14,15 @@ public class PaperInfo implements Serializable {
     private java.lang.Long ref;
     private java.lang.String papername;
     private Float score;
+    private Long parentpaperid;
 
+    public Long getParentpaperid() {
+        return parentpaperid;
+    }
 
+    public void setParentpaperid(Long parentpaperid) {
+        this.parentpaperid = parentpaperid;
+    }
 
     public java.lang.Integer getCuserid(){
       return cuserid;

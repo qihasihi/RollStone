@@ -203,6 +203,30 @@ public class PaperDAO extends CommonDAO<PaperInfo> implements IPaperDAO {
 		return objList; 
 	}
 
+    /**
+     * 生成自主测试试卷
+     * @param taskid
+     * @param userid
+     * @return
+     */
+    public Boolean doGenderZiZhuPaper(Long taskid,Integer userid) {
+        if (taskid == null||userid==null)
+            return false;
+        StringBuilder sqlbuilder = new StringBuilder("{CALL j_paper_question_zizhuzujuan(?,?,?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(taskid);
+        objList.add(userid);
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0
+                && Integer.parseInt(afficeObj.toString()) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+
+
 	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
 			List<List<Object>> objArrayList) {
 		return this.executeArray_SQL(sqlArrayList, objArrayList);

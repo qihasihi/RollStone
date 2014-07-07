@@ -1250,9 +1250,15 @@ public class BaseController<T extends java.io.Serializable> {
         String  fileSuffix = _file.getName().substring(
                 (_file.getName().lastIndexOf(".") + 1),
                 (_file.getName().length()));
-        File    destFile    = new File(srcFile.getPath().substring(0,
-                (srcFile.getPath().lastIndexOf(".")))
-                + srcFile.getName().substring(0,srcFile.getName().lastIndexOf(".")) + "_"+(w+h)/100+"." + fileSuffix);
+        String fname=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH").toString()+"/tmp/imgCache/"+srcFile.getParentFile().getName()+"/";
+        File parF=new File(fname);
+        if(!parF.exists())
+            parF.mkdirs();
+        fname+="001"+(w+h)/100+"."+fileSuffix;
+//        String fname=srcFile.getPath().substring(0,
+//                (srcFile.getPath().lastIndexOf(".")))
+//                + srcFile.getName().substring(0,srcFile.getName().lastIndexOf(".")) + "_"+(w+h)/100+"." + fileSuffix;
+        File    destFile    = new File(fname);
         if(!destFile.exists()){
             Image srcImage  = javax.imageio.ImageIO.read(_file);
             //得到图片的原始大小， 以便按比例压缩。

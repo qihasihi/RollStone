@@ -63,8 +63,17 @@ public class  PaperManager extends BaseManager<PaperInfo> implements IPaperManag
 		// TODO Auto-generated method stub
 		return null;
 	}
+    /**
+     * 生成自主测试试卷
+     * @param taskid
+     * @param userid
+     * @return
+     */
+    public Boolean doGenderZiZhuPaper(Long taskid,Integer userid){
+        return this.paperdao.doGenderZiZhuPaper(taskid,userid);
+    }
 
-	@Override
+    @Override
 	protected ICommonDAO<PaperInfo> getBaseDAO() {
 		// TODO Auto-generated method stub
 		return paperdao;

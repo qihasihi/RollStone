@@ -1102,16 +1102,16 @@ public class UserController extends BaseController<UserInfo> {
 		if(autolo!=null&&autolo.equals("1"))autoLogin=true;
         je=loginBase(userinfo,request,response);
         if(je.getType().trim().equals("success")){
-
-            //栏目
-            IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
-            EttColumnInfo ec=new EttColumnInfo();
-            if(this.validateRole(request,UtilTool._ROLE_STU_ID))
-                ec.setRoletype(2);//学生
-            else
-                ec.setRoletype(1);
-            request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
-
+            if(UtilTool._IS_SIMPLE_RESOURCE!=2){
+                //栏目
+                IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
+                EttColumnInfo ec=new EttColumnInfo();
+                if(this.validateRole(request,UtilTool._ROLE_STU_ID))
+                    ec.setRoletype(2);//学生
+                else
+                    ec.setRoletype(1);
+                request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
+            }
             request.getSession().setAttribute("fromType","szchool");
 //                    System.out.println("loginUser:"+(UserInfo) request.getSession().getAttribute("CURRENT_USER"));
 					if (remember) {

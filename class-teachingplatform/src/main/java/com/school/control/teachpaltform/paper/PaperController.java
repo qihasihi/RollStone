@@ -2999,4 +2999,55 @@ public class PaperController extends BaseController<PaperInfo>{
         response.getWriter().print(je.toJSON());
     }
 
+    /**
+     * 学生自主组卷(参数)
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=genderZiZhuPaper",method = RequestMethod.GET)
+    public ModelAndView doGenderZiZhuPaper(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        String taskid=request.getParameter("taskid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(taskid==null||taskid.toString().trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());
+            return null;
+        }
+        //得到任务信息
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid.trim()));
+        tk.setTasktype(5);
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
+        if(tkList==null||tkList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());
+            return null;
+        }
+        TpTaskInfo tkEntity=tkList.get(0);
+        //得到创建任务时生成的TaskValueId
+        Long tkvalueid=tkEntity.getTaskvalueid();
+
+        PaperInfo pentity=new PaperInfo();
+      //  pentity.setpar
+        pentity.setParentpaperid(tkvalueid);
+        pentity.setCuserid(this.logined(request).getUserid());
+        List<PaperInfo> paperList=this.paperManager.getList(pentity,null);
+        if(paperList==null||paperList.size()>0){
+            //生成试题
+            if(!this.paperManager.doGenderZiZhuPaper(tkEntity.getTaskid(),this.logined(request).getUserid())){
+                jsonEntity.setMsg("生成试卷失败!原因：未知");
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            //再查一遍
+            paperList=this.paperManager.getList(pentity,null);
+        }
+
+        Long paperid=paperList.get(0).getPaperid();
+        jsonEntity.setMsg("生成试卷成功!共生成" + tkEntity.getQuesnum() + "道题!");
+        response.getWriter().println(jsonEntity.getAlertMsgAndSendRedirect("paperques?m=testPaper&paperid=" + paperid));
+        return null;
+    }
 }
