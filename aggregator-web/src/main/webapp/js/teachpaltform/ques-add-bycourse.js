@@ -19,7 +19,7 @@ function questionListReturn(rps){
             $.each(rps.objList,function(idx,itm){
                 shtml+='<tr><td>';
                 shtml+='<input type="checkbox" onclick="getQuestionIds(this,'+itm.questionid+')" value="'+itm.questionid+'" name="question"';
-                if(questionids.length>0){alert(questionids[0]);
+                if(questionids.length>0){
                     $.each(questionids,function(x,m){
                         if(m==itm.questionid){
                             shtml+='checked="checked"';

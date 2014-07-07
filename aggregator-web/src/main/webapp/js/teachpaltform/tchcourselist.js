@@ -316,7 +316,7 @@ function getTermCondition(tid,termname){
                 $("#claList").html("");
                 return ;
             }
-            if(rps.objList[1]==null || rps.objList[1].length==0){
+            if(rps.objList[0]==null || rps.objList[0].length==0){
                 alert("您在当前学年没有教授年级。");
                 $("#ul_grade").html("");
                 $("#courseTable").html("<tr><td colspan='4'>沒有数据！</td></tr>");
@@ -326,18 +326,16 @@ function getTermCondition(tid,termname){
                 return ;
             }
             //当前学期
-            if(rps.objList[2]!=null && typeof rps.objList[2]!='undefined'){
-                $("#hd_term_flag").val(rps.objList[2].flag);
-                if(currtterm!=rps.objList[2].ref)
+            if(rps.objList[1]!=null && typeof rps.objList[1]!='undefined'){
+                $("#hd_term_flag").val(rps.objList[1].flag);
+                if(currtterm!=rps.objList[1].ref)
                     $("a[name='a_hide']").hide();
             }
             var html="";
-            $.each(rps.objList[1],function(idx,gitm){
-                $.each(rps.objList[0],function(subIdx,subItm){
-                    html+="<li id='li_"+gitm.gradeid+"_"+subItm.subjectinfo.subjectid+"_"+subIdx+"'>";
-                    html+="<a href="+"javascript:changeGrade("+gitm.gradeid+","+subItm.subjectinfo.subjectid+","+subIdx+");"+">";
-                    html+="<span id='t_grade_sub_"+subIdx+"'>"+gitm.gradevalue+subItm.subjectinfo.subjectname+"</span></a>";
-                });
+            $.each(rps.objList[0],function(idx,gitm){
+                html+="<li id='li_"+gitm.gradeid+"_"+gitm.subjectid+"_"+idx+"'>";
+                html+="<a href="+"javascript:changeGrade("+gitm.gradeid+","+gitm.subjectid+","+idx+");"+">";
+                html+="<span id='t_grade_sub_"+idx+"'>"+gitm.gradevalue+gitm.subjectname+"</span></a>";
             });
             $("#ul_grade").html(html);
             changeTab('back');

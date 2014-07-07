@@ -311,15 +311,43 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             return;
         }
         String year = tmList.get(0).getYear();
-
+        List<Map<String,Object>> gradeSubjectList = new ArrayList<Map<String, Object>>();
         SubjectUser su = new SubjectUser();
         su.setUserid(this.logined(request).getRef());
         List<SubjectUser> subuserList = this.subjectUserManager.getList(su, null);
-        List<GradeInfo> gradeList = this.gradeManager.getTchGradeList(this.logined(request).getUserid(), year);
 
+        List<GradeInfo> gradeList = this.gradeManager.getTchGradeList(this.logined(request).getUserid(), year);
+        if(gradeList!=null&&gradeList.size()>0){
+            for(int i = 0;i<subuserList.size();i++){
+                //当前学期、学科、年级下的授课班级
+                for(int j=0;j<gradeList.size();j++){
+                    ClassUser cu = new ClassUser();
+                    cu.setClassgrade(gradeList.get(j).getGradevalue());
+                    cu.setUserid(this.logined(request).getRef());
+                    cu.setRelationtype("任课老师");
+                    cu.setSubjectid(subuserList.get(j).getSubjectid());
+                    cu.setYear(year);
+                    List<ClassUser>classList=this.classUserManager.getList(cu,null);
+
+                    TpVirtualClassInfo tpVirtualClassInfo=new TpVirtualClassInfo();
+                    tpVirtualClassInfo.setCuserid(this.logined(request).getUserid());
+                    tpVirtualClassInfo.setStatus(1);
+                    List<TpVirtualClassInfo>virtualClassInfoList=this.tpVirtualClassManager.getList(tpVirtualClassInfo,null);
+                    if(classList!=null||virtualClassInfoList!=null){
+                        Map<String,Object> map = new HashMap<String, Object>();
+                        map.put("gradeid",gradeList.get(j).getGradeid());
+                        map.put("gradevalue",gradeList.get(j).getGradevalue());
+                        map.put("subjectid",subuserList.get(i).getSubjectid());
+                        map.put("subjectname",subuserList.get(i).getSubjectname());
+                        gradeSubjectList.add(map);
+                    }
+                }
+            }
+        }
         List ls = new ArrayList();
-        ls.add(subuserList);
-        ls.add(gradeList);
+      //  ls.add(subuserList);
+       // ls.add(gradeList);
+        ls.add(gradeSubjectList);
         ls.add(tmList.get(0));
         jeEntity.setObjList(ls);
         response.getWriter().print(jeEntity.toJSON());
@@ -339,7 +367,11 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("currtTerm", currtTerm);
         List<SubjectInfo> subjectList = this.subjectManager.getHavaCourseSubject(currtTerm.getRef(),u.getRef(),u.getUserid());
         mp.put("subjectList", subjectList);
-        return new ModelAndView("/teachpaltform/course/studentCourseList");
+        if(subjectList!=null&&subjectList.size()>0){
+            return new ModelAndView("/teachpaltform/course/studentCourseList");
+        }else{
+            return new ModelAndView("/teachpaltform/course/noCourse");
+        }
     }
 
     /**
@@ -2131,7 +2163,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
         //获取教学班级
         cu.setUserid(user.getRef());
+        cu.setClassgrade(grade.getGradevalue());
         cu.setYear(ti.getYear());
+        cu.setSubjectid(Integer.parseInt(subjectid));
         List<ClassUser> clsList = this.classUserManager.getList(cu, null);
 
         //获取虚拟班级
@@ -2140,37 +2174,37 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         tvc.setStatus(1);
         List<TpVirtualClassInfo> tvcList = this.tpVirtualClassManager.getList(tvc, null);
 
-        TrusteeShipClass tsc = new TrusteeShipClass();
-        tsc.setTrustteacherid(user.getUserid());
-        tsc.setIsaccept(1);
-        //tsc.setTrustclasstype(1);
-        List<TrusteeShipClass> tscList = this.trusteeShipClassManager.getList(tsc, null);
-        //去除被托管出去的班级
-        for (TrusteeShipClass tmp_ts : tscList) {
-            for (ClassUser tmp_cu : clsList) {
-                if (tmp_ts.getTrustclassid().toString().equals(tmp_cu.getClassid().toString())) {
-                    clsList.remove(tmp_cu);
-                    break;
-                }
-            }
-            for (TpVirtualClassInfo tmp_vcu : tvcList) {
-                if (tmp_ts.getTrustclassid().toString().equals(tmp_vcu.getVirtualclassid().toString())) {
-                    tvcList.remove(tmp_vcu);
-                    break;
-                }
-            }
-        }
+//        TrusteeShipClass tsc = new TrusteeShipClass();
+//        tsc.setTrustteacherid(user.getUserid());
+//        tsc.setIsaccept(1);
+//        //tsc.setTrustclasstype(1);
+//        List<TrusteeShipClass> tscList = this.trusteeShipClassManager.getList(tsc, null);
+//        //去除被托管出去的班级
+//        for (TrusteeShipClass tmp_ts : tscList) {
+//            for (ClassUser tmp_cu : clsList) {
+//                if (tmp_ts.getTrustclassid().toString().equals(tmp_cu.getClassid().toString())) {
+//                    clsList.remove(tmp_cu);
+//                    break;
+//                }
+//            }
+//            for (TpVirtualClassInfo tmp_vcu : tvcList) {
+//                if (tmp_ts.getTrustclassid().toString().equals(tmp_vcu.getVirtualclassid().toString())) {
+//                    tvcList.remove(tmp_vcu);
+//                    break;
+//                }
+//            }
+//        }
 
-        //获取受托管班级
-        tsc = new TrusteeShipClass();
-        tsc.setReceiveteacherid(user.getUserid());
-        tsc.setYear(ti.getYear());
-        List<Map<String, Object>> tsList = this.trusteeShipClassManager.getTsClassList(tsc);
+//        //获取受托管班级
+//        tsc = new TrusteeShipClass();
+//        tsc.setReceiveteacherid(user.getUserid());
+//        tsc.setYear(ti.getYear());
+ //       List<Map<String, Object>> tsList = this.trusteeShipClassManager.getTsClassList(tsc);
 
 
 
         mp.put("cuList", clsList);
-        mp.put("tsList", tsList);
+       // mp.put("tsList", tsList);
         mp.put("tvcList", tvcList);
         mp.put("grade", grade);
         mp.put("subject", sub);

@@ -43,9 +43,6 @@
             });
             pageGo("p1");
 
-            $("$hideDiv").children.each(function(idx,itm){
-                alert(1);
-            });
         });
 
 
