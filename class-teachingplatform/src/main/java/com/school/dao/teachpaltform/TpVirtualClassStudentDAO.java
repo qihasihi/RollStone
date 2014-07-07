@@ -83,6 +83,11 @@ public class TpVirtualClassStudentDAO extends CommonDAO<TpVirtualClassStudent> i
             objList.add(tpvirtualclassstudent.getStateid());
         } else
             sqlbuilder.append("null,");
+        if(tpvirtualclassstudent.getIscomplete()!=null){
+            sqlbuilder.append("?,");
+            objList.add(tpvirtualclassstudent.getIscomplete());
+        }else
+            sqlbuilder.append("null,");
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objList.add(presult.getPageNo());

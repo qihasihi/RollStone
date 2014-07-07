@@ -325,7 +325,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                     cu.setClassgrade(gradeList.get(j).getGradevalue());
                     cu.setUserid(this.logined(request).getRef());
                     cu.setRelationtype("»ŒøŒ¿œ ¶");
-                    cu.setSubjectid(subuserList.get(j).getSubjectid());
+                    cu.setSubjectid(subuserList.get(i).getSubjectid());
                     cu.setYear(year);
                     List<ClassUser>classList=this.classUserManager.getList(cu,null);
 
@@ -333,7 +333,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                     tpVirtualClassInfo.setCuserid(this.logined(request).getUserid());
                     tpVirtualClassInfo.setStatus(1);
                     List<TpVirtualClassInfo>virtualClassInfoList=this.tpVirtualClassManager.getList(tpVirtualClassInfo,null);
-                    if(classList!=null||virtualClassInfoList!=null){
+                    if((classList!=null&&classList.size()>0)||(virtualClassInfoList!=null&&virtualClassInfoList.size()>0)){
                         Map<String,Object> map = new HashMap<String, Object>();
                         map.put("gradeid",gradeList.get(j).getGradeid());
                         map.put("gradevalue",gradeList.get(j).getGradevalue());

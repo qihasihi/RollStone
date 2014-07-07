@@ -14,7 +14,15 @@ public class TpVirtualClassStudent implements Serializable {
     private java.lang.Integer userid;
     private java.lang.Integer cuserid;
     private Integer stateid;
+    private Integer iscomplete;
 
+    public Integer getIscomplete() {
+        return iscomplete;
+    }
+
+    public void setIscomplete(Integer iscomplete) {
+        this.iscomplete = iscomplete;
+    }
 
     private java.lang.String stuname;
     private java.lang.String stuno;

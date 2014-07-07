@@ -200,7 +200,7 @@ function getInvestReturnMethod(rps){
 
 
 function toUpdCoursePage(courseid){
-    var url= "teachercourse?m=toSaveOrUpdate&courseid="+courseid;
+    var url= "teachercourse?m=toSaveOrUpdate&courseid="+courseid+"&gradeid="+global_gradeid+"&subjectid="+global_subjectid;
     if($("#material_id").val()!=0){
         url+="&materialid="+$("#material_id").val();
     }
