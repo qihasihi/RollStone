@@ -83,11 +83,16 @@ public class PaperDAO extends CommonDAO<PaperInfo> implements IPaperDAO {
         } else
             sqlbuilder.append("null,");
 
-		if (paperinfo.getPapertype() != null) {
-			sqlbuilder.append("?,");
-			objList.add(paperinfo.getPapertype());
-		} else
-			sqlbuilder.append("null,");
+        if (paperinfo.getPapertype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(paperinfo.getPapertype());
+        } else
+            sqlbuilder.append("null,");
+        if (paperinfo.getParentpaperid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(paperinfo.getParentpaperid());
+        } else
+            sqlbuilder.append("null,");
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objList.add(presult.getPageNo());

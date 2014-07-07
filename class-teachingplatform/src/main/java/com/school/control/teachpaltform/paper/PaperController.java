@@ -3035,18 +3035,20 @@ public class PaperController extends BaseController<PaperInfo>{
         pentity.setParentpaperid(tkvalueid);
         pentity.setCuserid(this.logined(request).getUserid());
         List<PaperInfo> paperList=this.paperManager.getList(pentity,null);
-        if(paperList==null||paperList.size()>0){
+        if(paperList==null||paperList.size()<1){
             //生成试题
             if(!this.paperManager.doGenderZiZhuPaper(tkEntity.getTaskid(),this.logined(request).getUserid())){
                 jsonEntity.setMsg("生成试卷失败!原因：未知");
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
-            }
+            }else
+                jsonEntity.setMsg("生成试卷成功!共生成" + tkEntity.getQuesnum() + "道题!");
             //再查一遍
             paperList=this.paperManager.getList(pentity,null);
-        }
+        }else
+            jsonEntity.setMsg("试卷已存在!共" + tkEntity.getQuesnum() + "道题!");
 
         Long paperid=paperList.get(0).getPaperid();
-        jsonEntity.setMsg("生成试卷成功!共生成" + tkEntity.getQuesnum() + "道题!");
+
         response.getWriter().println(jsonEntity.getAlertMsgAndSendRedirect("paperques?m=testPaper&paperid=" + paperid));
         return null;
     }

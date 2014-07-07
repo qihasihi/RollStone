@@ -3281,7 +3281,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         stuPaperQuesLogs.setPaperid(Long.parseLong(paperid.trim()));
         List<StuPaperQuesLogs> stuPageQuesList=this.stuPaperQuesLogsManager.getList(stuPaperQuesLogs,null);
         if(stuPageQuesList==null||stuPageQuesList.size()<1){//已经做过，则跳入显示页面
-            return testPaper(request,response,mp);
+            jsonEntity.setMsg("异常错误，原因：没有您的答题记录，但是有交卷记录!");
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
 
         //得到当前的所有问题
