@@ -121,7 +121,7 @@
                             status='<span class="ico12" title="完成"></span>';
                         }else{
                             if(validateTwoDate(now,im.E_TIME)){
-                                status='<span class="ico24a" title="进行中"></span>';
+                                status='<span class="ico24" title="进行中"></span>';
                             }else{
                                 status='<span class="ico24b" title="已结束"></span>';
                             }

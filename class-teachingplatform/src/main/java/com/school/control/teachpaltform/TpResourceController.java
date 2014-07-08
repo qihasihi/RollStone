@@ -2494,7 +2494,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
      * 获取远程资源列表
      * ycy
      * */
-    @RequestMapping(params="getRemoteResources",method={RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(params="m=getRemoteResources",method={RequestMethod.POST,RequestMethod.GET})
     public void getRemoteResources(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         String pageNow = request.getParameter("pageNow");
@@ -2504,30 +2504,42 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String versionid = request.getParameter("versionid");
         String schoolid = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
         String courseIDList = request.getParameter("courseids");
-        String pvgStr = "320";
+        courseIDList = "1000029790,1000029791,1000029792";
+        String[] courseids = courseIDList.split(",");
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0;i<courseids.length;i++){
+            sb.append("{course_id:\""+courseids[i]+"\"}");
+        }
+        String courseidlist = "["+sb.toString()+"]";
+
+        String pvgStr = "7";
         Date d = new Date();
         Long timestamp=d.getTime();
+        //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
         String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
         String signature= MD5_NEW.getMD5Result(md5key);
-        String url="http://school.etiantian.com/lezhixingt1/term?m=addLzxTerm";
+        String url="http://langyilin.etiantian.com:8080/ett20/study/studydir/webservice/queryForWebservice.jsp";
         String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
-                gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize"+
-                pageSize+"&courseIDList="+courseIDList;
+                gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
+                pageSize+"&courseIDList="+courseidlist;
         String returnval=sendPostURL(url,param);
+      //  System.out.println(new String(returnval.getBytes("8859_1"),"GBK"));
         if(returnval.length()>0){
             //转换成JSON
             JSONObject jb=JSONObject.fromObject(returnval);
             String type=jb.containsKey("type")?jb.getString("type"):"";
+            Object objList=jb.containsKey("dataList")?jb.get("dataList"):null;
             if(type!=null&&type.trim().toLowerCase().equals("error")){
                 je.setMsg("获取资源失败");
                 je.setType("error");
             }else{
                 je.setType("success");
-                JSONArray jr=JSONArray.fromObject(returnval);
+                JSONArray jr=JSONArray.fromObject(objList);
                 if(jr.size()>0)
                     je.setObjList(jr);
             }
         }
+      //  response.setCharacterEncoding("GBK");
         response.getWriter().print(je.toJSON());
     }
 
@@ -2596,13 +2608,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             System.out.println("异常错误!500错误，请联系管理人员!");
             return null;
         }
-        String returnContent=null;
-        try {
-            returnContent=new String(stringBuffer.toString().getBytes("gbk"),"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        String  returnContent=stringBuffer.toString();
 //        Map<String,Object> returnMap=null;
 //        //转换成JSON
 //        System.out.println(returnContent);
