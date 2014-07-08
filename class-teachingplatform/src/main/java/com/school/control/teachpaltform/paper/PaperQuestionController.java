@@ -3273,7 +3273,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
         if(tkList==null||tkList.size()<1){
             jsonEntity.setMsg("异常错误，没有发现要查询的任务信息!该任务已经不存在!");
-            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
         Integer tktype =tkList.get(0).getTasktype();
         Long tkvalueid=tkList.get(0).getTaskvalueid();
@@ -3288,7 +3288,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             List<PaperInfo> paperList=this.paperManager.getList(pinfo,null);
             if(paperList==null||paperList.size()<1){
                 jsonEntity.setMsg("该学生暂未作答!");
-                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+                response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
             }
             request.setAttribute("paperid",paperList.get(0).getPaperid());
             return toStuTestDetail(request,response,mp);
@@ -3310,7 +3310,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         JsonEntity jsonEntity=new JsonEntity();
         if(paperid==null||paperid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
         Integer uid=this.logined(request).getUserid();
         if(userid!=null&&userid.trim().length()>0)
@@ -3329,12 +3329,12 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
         //验证是否已经答题
         StuPaperQuesLogs stuPaperQuesLogs=new StuPaperQuesLogs();
-        stuPaperQuesLogs.setUserid(this.logined(request).getUserid());
+        stuPaperQuesLogs.setUserid(uid);
         stuPaperQuesLogs.setPaperid(Long.parseLong(paperid.trim()));
         List<StuPaperQuesLogs> stuPageQuesList=this.stuPaperQuesLogsManager.getList(stuPaperQuesLogs,null);
         if(stuPageQuesList==null||stuPageQuesList.size()<1){//已经做过，则跳入显示页面
             jsonEntity.setMsg("异常错误，原因：没有您的答题记录，但是有交卷记录!");
-            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
 
         //得到当前的所有问题
