@@ -98,7 +98,7 @@ public class TpVirtualClassStudentController extends BaseController<TpVirtualCla
             return ;
         }
         //检查小组名是否存在
-        tvc.setIscomplete(1);
+        tvc.setIscomplete(0);
         List<TpVirtualClassStudent> stuList = this.tpVirtualClassStudentManager.getList(tvc,null);
         je.setObjList(stuList);
         je.setType("success");

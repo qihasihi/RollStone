@@ -1,9 +1,10 @@
 package com.school.control.teachpaltform;
 
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,9 @@ import com.school.manager.resource.AccessManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.resource.StoreManager;
 import com.school.manager.teachpaltform.*;
+import com.school.util.MD5_NEW;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -2484,6 +2488,147 @@ public class TpResourceController extends BaseController<TpCourseResource>{
 
             }
         }
+    }
+
+    /**
+     * 获取远程资源列表
+     * ycy
+     * */
+    @RequestMapping(params="getRemoteResources",method={RequestMethod.POST,RequestMethod.GET})
+    public void getRemoteResources(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String pageNow = request.getParameter("pageNow");
+        String pageSize = request.getParameter("pageSize");
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String versionid = request.getParameter("versionid");
+        String schoolid = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
+        String courseIDList = request.getParameter("courseids");
+        String pvgStr = "320";
+        Date d = new Date();
+        Long timestamp=d.getTime();
+        String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
+        String signature= MD5_NEW.getMD5Result(md5key);
+        String url="http://school.etiantian.com/lezhixingt1/term?m=addLzxTerm";
+        String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
+                gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize"+
+                pageSize+"&courseIDList="+courseIDList;
+        String returnval=sendPostURL(url,param);
+        if(returnval.length()>0){
+            //转换成JSON
+            JSONObject jb=JSONObject.fromObject(returnval);
+            String type=jb.containsKey("type")?jb.getString("type"):"";
+            if(type!=null&&type.trim().toLowerCase().equals("error")){
+                je.setMsg("获取资源失败");
+                je.setType("error");
+            }else{
+                je.setType("success");
+                JSONArray jr=JSONArray.fromObject(returnval);
+                if(jr.size()>0)
+                    je.setObjList(jr);
+            }
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     *后台调用接口
+     * @param urlstr
+     * @return
+     */
+    public static String sendPostURL(String urlstr,String params){
+        HttpURLConnection httpConnection;
+        URL url;
+        int code;
+        try {
+            url = new URL(urlstr);
+
+            httpConnection = (HttpURLConnection) url.openConnection();
+
+            httpConnection.setRequestMethod("POST");
+            if(params!=null)
+                httpConnection.setRequestProperty("Content-Length",
+                        String.valueOf(params.length()));
+            httpConnection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+
+            httpConnection.setDoOutput(true);
+            httpConnection.setDoInput(true);
+			/*
+			 * PrintWriter printWriter = new
+			 * PrintWriter(httpConnection.getOutputStream());
+			 * printWriter.print(parameters); printWriter.close();
+			 */
+
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                    httpConnection.getOutputStream(), "8859_1");
+            if(params!=null)
+                outputStreamWriter.write(params);
+
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+
+            code = httpConnection.getResponseCode();
+        } catch (Exception e) {			// 异常提示
+            System.out.println("异常错误!TOTALSCHOOL未响应!");
+            return null;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        if (code == HttpURLConnection.HTTP_OK) {
+            try {
+                String strCurrentLine;
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(httpConnection.getInputStream()));
+                while ((strCurrentLine = reader.readLine()) != null) {
+                    stringBuffer.append(strCurrentLine).append("\n");
+                }
+                reader.close();
+            } catch (IOException e) {
+                System.out.println("异常错误!");
+                e.printStackTrace();;
+                return null;
+            }
+        }else if(code==404){
+            // 提示 返回
+            System.out.println("异常错误!404错误，请联系管理人员!");
+            return null;
+        }else if(code==500){
+            System.out.println("异常错误!500错误，请联系管理人员!");
+            return null;
+        }
+        String returnContent=null;
+        try {
+            returnContent=new String(stringBuffer.toString().getBytes("gbk"),"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+//        Map<String,Object> returnMap=null;
+//        //转换成JSON
+//        System.out.println(returnContent);
+//        JSONObject jb=JSONObject.fromObject(returnContent);
+//        String type=jb.containsKey("type")?jb.getString("type"):"";
+//        String msg=jb.containsKey("msg")?jb.getString("msg"):"";
+//        Object objList=jb.containsKey("objList")?jb.get("objList"):null;
+//
+//        returnMap=new HashMap<String,Object>();
+//        returnMap.put("type",type);
+//        returnMap.put("msg",msg);
+//        System.out.println(msg);
+//
+//        if(type!=null&&type.trim().toLowerCase().equals("success")){
+//            System.out.println(msg);
+//            JSONArray jr=JSONArray.fromObject(objList);
+//            String val="";
+//            if(jr.size()>0)
+//                val=jr.get(0).toString();
+//            returnMap.put("objList",val);
+//
+//        }else{
+//            System.out.println(msg);
+//        }
+
+        return returnContent;
     }
 }
 
