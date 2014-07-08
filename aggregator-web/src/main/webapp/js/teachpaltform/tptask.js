@@ -1535,7 +1535,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                 if(rmsg.objList[2]!=null&&rmsg.objList[2].length>0){
                     $.each(rmsg.objList[2],function(ix,im){
                         htm+='<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
-                        htm+='<colgroup span="4" class="w190"></colgroup>';
+                        htm+='<colgroup span="5" class="w190"></colgroup>';
                         htm+='<colgroup class="w180"></colgroup>';
                         htm+='<caption>'+im.groupname+'</caption>';
                         htm+='<tr>';
@@ -1565,7 +1565,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                                     } else{
                                         htm+='<td>---</td>';
                                     }
-                                    htm+='<a href="#">查看试卷</a>'
+                                    htm+='<td><a href="paperques?m=teaViewStuPaper&taskid='+itm.taskid+'&userid='+itm.uid+'">查看卷面</a></td>'
                                     htm+='</tr>';
                                 }
                             });
@@ -1575,7 +1575,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                     });
                 }else{
                     htm+='<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
-                    htm+='<colgroup span="4" class="w190"></colgroup>';
+                    htm+='<colgroup span="5" class="w190"></colgroup>';
                     htm+='<colgroup class="w180"></colgroup>';
                     htm+='<tr>';
                     htm+='<th>学号</th>';
@@ -1602,7 +1602,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                         }else{
                             htm+='<td>---</td>';
                         }
-                        htm+='<td><a href="#">查看卷面</a></td>'
+                        htm+='<td><a href="paperques?m=teaViewStuPaper&taskid='+itm.taskid+'&userid='+itm.uid+'">查看卷面</a></td>'
                         htm+='</tr>';
                     });
                     htm+='</table>';

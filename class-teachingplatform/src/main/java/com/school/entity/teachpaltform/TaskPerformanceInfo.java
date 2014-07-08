@@ -72,6 +72,13 @@ public class TaskPerformanceInfo  implements java.io.Serializable{
     public void setUserid(String userid){
     	this.getUserinfo().setRef(userid);
     }
+
+    public Integer getUid(){
+        return this.getUserinfo().getUserid();
+    }
+    public void setUid(Integer userid){
+        this.getUserinfo().setUserid(userid);
+    }
     
     public void setStuno(String stuno){
     	this.getUserinfo().setStuNo(stuno);

@@ -2894,7 +2894,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
         JsonEntity je=new JsonEntity();
         String classid=request.getParameter("classid");
         String taskid=request.getParameter("taskid");
-        String questype = request.getParameter("questype");
         String type=request.getParameter("classtype");
         if(classid==null||classid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -2917,7 +2916,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //任务记录
         List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getPerformListByTaskid(t,clsid,Integer.parseInt(type));
         //数量统计
-        List<Map<String,Object>> numList = new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>> numList;
+        numList = new ArrayList<Map<String, Object>>();
         List<TpGroupInfo> tiList=new ArrayList<TpGroupInfo>();
         if(Integer.parseInt(type)==8||Integer.parseInt(type)==9){
             numList=this.taskPerformanceManager.getPerformanceNum2(Long.parseLong(taskid),clsid);
@@ -2928,7 +2928,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ti.setClassid(Integer.parseInt(classid));
             tiList = this.tpGroupManager.getList(ti,null);
             for(int i = 0;i<tiList.size();i++){
-                TpGroupStudent ts = new TpGroupStudent();
                 for(int j = 0;j<tgsList.size();j++){
                     if(tiList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
                         tiList.get(i).setTpgroupstudent2(tgsList.get(j));
