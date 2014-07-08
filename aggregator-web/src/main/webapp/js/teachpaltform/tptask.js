@@ -1473,3 +1473,149 @@ function zgloadStuPerformance(classid,tasktype,questionid,classtype){
 }
 
 
+
+
+
+/**
+ * 查询学生试卷完成情况
+ * @return
+ */
+function loadPaperPerformance(classid,tasktype,paperid,classtype){
+    $("#a_class_"+classid).parent("li").siblings().removeClass("crumb").end().addClass("crumb");
+
+    if(typeof(classid)=='undefined'||isNaN(classid)){
+        alert('异常错误，参数错误! \n\nClassd is undefined!');
+        return;
+    }
+    if(typeof(taskid)=='undefined'||taskid.length<1){
+        alert('异常错误，参数错误! \n\n Taskid is undefined!');
+        return;
+    }
+    var param={};
+    param.taskid=taskid;
+    if(classid!=null&&classid.length>0){
+        param.classid=classid;
+        param.classtype=classtype;
+    }else{
+        param.classid=0;
+        param.classtype=0;
+    }
+    if(tasktype==4||tasktype==5){
+        param.paperid=paperid;
+    }
+    $.ajax({
+        url:'task?loadPaperPerformance',
+        type:"post",
+        data:param,
+        dataType:'json',
+        cache: false,
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+        },success:function(rmsg){
+            if(rmsg.objList[0]!=null&&rmsg.objList[0].length>0){
+                var totalnum=0;
+                var rightnum=0;
+                var finishnum=0;
+                $.each(rmsg.objList[0],function(idx,itm){
+                    totalnum+=parseInt(itm.TOTALNUM);
+                    rightnum+=parseInt(itm.RIGHTNUM);
+                    finishnum+=parseInt(itm.FINISHNUM);
+
+                });
+                var fn =parseFloat(parseInt(finishnum))/parseInt(totalnum)*100;
+                var finishhtml= fn.toFixed(2);
+                finishhtml+="%";
+                $("#finishnum").html(finishhtml);
+            }else{
+                $("#finishnum").html("0");
+            }
+            var htm='';
+
+            if(rmsg.objList[1]!=null&&typeof rmsg.objList[1]!='undefined'&&rmsg.objList[1].length>0){
+                if(rmsg.objList[2]!=null&&rmsg.objList[2].length>0){
+                    $.each(rmsg.objList[2],function(ix,im){
+                        htm+='<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
+                        htm+='<colgroup span="4" class="w190"></colgroup>';
+                        htm+='<colgroup class="w180"></colgroup>';
+                        htm+='<caption>'+im.groupname+'</caption>';
+                        htm+='<tr>';
+                        htm+='<th>学号</th>';
+                        htm+='<th>姓名</th>';
+                        htm+='<th>学习时间</th>';
+                        htm+='<th>是否完成</th>';
+                        htm+='<th>得分</th>';
+                        htm+='<th>查看试卷</th>';
+                        htm+='</tr>';
+                        $.each(rmsg.objList[1],function(idx,itm){
+                            $.each(im.tpgroupstudent2,function(i,m){
+                                if(m.stuno==itm.userinfo.stuNo){
+                                    htm+='<tr>';
+                                    htm+='<td>'+itm.userinfo.stuNo+'</td>';
+                                    htm+='<td>'+itm.userinfo.stuname+'</td>';
+                                    if(typeof(itm.ctimeString)!='undefined')
+                                        htm+='<td>'+itm.ctimeString+'</td>';
+                                    else
+                                        htm+='<td></td>';
+                                    if(itm.status>0)
+                                        htm+='<td><span class="ico12" title="完成"></span></td>';
+                                    else
+                                        htm+='<td><span class="ico24" title="进行中"></span></td>';
+                                    if(typeof(itm.score)!='undefined'){
+                                        htm+='<td>'+itm.score+'</td>';
+                                    } else{
+                                        htm+='<td>---</td>';
+                                    }
+                                    htm+='<a href="#">查看试卷</a>'
+                                    htm+='</tr>';
+                                }
+                            });
+
+                        });
+                        htm+='</table>';
+                    });
+                }else{
+                    htm+='<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
+                    htm+='<colgroup span="4" class="w190"></colgroup>';
+                    htm+='<colgroup class="w180"></colgroup>';
+                    htm+='<tr>';
+                    htm+='<th>学号</th>';
+                    htm+='<th>姓名</th>';
+                    htm+='<th>学习时间</th>';
+                    htm+='<th>是否完成</th>';
+                    htm+='<th>得分</th>';
+                    htm+='<th>查看试卷</th>';
+                    htm+='</tr>';
+                    $.each(rmsg.objList[1],function(idx,itm){
+                        htm+='<tr>';
+                        htm+='<td>'+itm.userinfo.stuNo+'</td>';
+                        htm+='<td>'+itm.userinfo.stuname+'</td>';
+                        if(typeof(itm.ctimeString)!='undefined')
+                            htm+='<td>'+itm.ctimeString+'</td>';
+                        else
+                            htm+='<td></td>';
+                        if(itm.status>0)
+                            htm+='<td><span class="ico12" title="完成"></span></td>';
+                        else
+                            htm+='<td><span class="ico24" title="进行中"></span></td>';
+                        if(typeof(itm.score)!='undefined'){
+                            htm+='<td>'+itm.score+'</td>';
+                        }else{
+                            htm+='<td>---</td>';
+                        }
+                        htm+='<td><a href="#">查看卷面</a></td>'
+                        htm+='</tr>';
+                    });
+                    htm+='</table>';
+                }
+
+            }else{
+                htm+='<table><tr><td>暂无数据!</td></tr></table>';
+            }
+            $("#mainTbl").hide();
+            $("#mainTbl").html(htm);
+            $("#mainTbl").show("");
+        }
+    });
+}
+
+

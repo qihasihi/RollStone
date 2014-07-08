@@ -19,7 +19,7 @@
                 questype=3
             //任务类型
             changeTaskType("${param.tasktype}","${param.taskvalueid}");
-            $("#time_rdo").attr("checked",true);
+            $("#time_rdo0").attr("checked",true);
 
 
             $("input[name='time_rdo']").bind("click",function(){

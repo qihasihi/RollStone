@@ -1806,9 +1806,9 @@ public class UserController extends BaseController<UserInfo> {
 		
 		if(ref==null||ref.trim().length()<1
 				||isTea==null||isTea.trim().length()<1
-				||isStu==null||isStu.trim().length()<1
-				||clsstr==null||clsstr.trim().length()<1){
+				||isStu==null||isStu.trim().length()<1){
 			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
 			return;
 		}
 		List<String>sqllist=new ArrayList<String>();
@@ -1819,6 +1819,7 @@ public class UserController extends BaseController<UserInfo> {
 		List<ClassYearInfo>clsyearList=this.classYearManager.getCurrentYearList(null);
 		if(clsyearList==null||clsyearList.size()<1){
 			je.setMsg(UtilTool.msgproperty.getProperty("YEAR_EMPTY"));
+            response.getWriter().print(je.toJSON());
 			return;
 		}
 		

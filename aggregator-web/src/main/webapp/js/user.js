@@ -1899,8 +1899,11 @@ function save_info(uid){
 			if(subjectstr.length>0)
 				subjectstr+=',';
 			subjectstr+=itm.value;
-		}); 
-		param.majorstr=majorstr,param.subjectstr=subjectstr;
+		});
+        if(majorstr.length>0)
+            param.majorstr=majorstr;
+        if(subjectstr.length>0)
+            param.subjectstr=subjectstr;
 		
 		//班级
 		var clsstr='',cls_result=$("#view_body ol[id='cls_result']").children('li');
@@ -1911,7 +1914,6 @@ function save_info(uid){
 		}); 
 		if(clsstr.length>0)
 			param.clsstr=clsstr;
-		 
 	}
 	
 	$ajax('user?m=edit_info',param,'POST','json',function(rps){

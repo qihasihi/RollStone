@@ -125,9 +125,13 @@ function getInvestReturnMethod(rps){
             html+='<div class="jxxt_zhuanti_rwR">';
             html+='<div class="title">';
             html+='<p class="f_right"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b>';
-            if(itm.taskstatus=="3"||(itm.taskstatus!="1"&&itm.flag<2))
-                html+='<a class="ico37" title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+itm.questiontype+'"></a>';
-            else if(itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)){
+            if(itm.taskstatus=="3"||(itm.taskstatus!="1"&&itm.flag<2)){
+                if(itm.tasktype==4||itm.tasktype==5)
+                    html+='<a class="ico37" title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype=-1"></a>';
+                else
+                    html+='<a class="ico37" title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+itm.questiontype+'"></a>';
+
+            }else if(itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)){
                 html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
             }
             html+='<a title="删除" class="ico04" href="javascript:doDelTask('+itm.taskid+','+itm.stucount+')"></a>';
@@ -138,7 +142,7 @@ function getInvestReturnMethod(rps){
             }else if(itm.tasktype==2){
                 html+='<a href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==4){
-                html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'" class="font-blue">'+taskObj+'</a>';
+                html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==5){
                 html+='<a href="#" class="font-blue">'+taskObj+'</a>';
             }

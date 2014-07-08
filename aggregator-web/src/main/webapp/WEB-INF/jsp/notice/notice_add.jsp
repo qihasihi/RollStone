@@ -20,8 +20,7 @@ int idx=0;
 	-->
 	<script type="text/javascript">
 		$(function(){
-			$('#content')
-			.xheditor(
+			$('#content').xheditor(
 					{
 						tool : "mfull",
 						html5Upload:false,		//是否应用 html5上传，如果应用，则不允许上传大文件

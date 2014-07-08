@@ -2707,6 +2707,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         request.setAttribute("classList",classList);
         if(questype.equals("3")||questype.equals("4")){
             return new ModelAndView("/teachpaltform/task/teacher/task-performance-xz");
+        }else if(questype.equals("-1")){//试卷
+            return new ModelAndView("/teachpaltform/task/teacher/paper-task-performance");
         }else{
             return new ModelAndView("/teachpaltform/task/teacher/task-performance-zg");
         }
@@ -2829,6 +2831,66 @@ public class TaskController extends BaseController<TpTaskInfo>{
      */
     @RequestMapping(params="zgloadStuPerformance",method=RequestMethod.POST)
     public void zgloadStuPerformance(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String classid=request.getParameter("classid");
+        String taskid=request.getParameter("taskid");
+        String questype = request.getParameter("questype");
+        String type=request.getParameter("classtype");
+        if(classid==null||classid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TaskPerformanceInfo t=new TaskPerformanceInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        Long clsid=null;
+        if(classid!=null&&classid.length()>0&&!classid.equals("null")){
+            clsid=Long.parseLong(classid);
+        }else{
+            clsid=Long.parseLong("0");
+        }
+        //任务记录
+        List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getPerformListByTaskid(t,clsid,Integer.parseInt(type));
+        //数量统计
+        List<Map<String,Object>> numList = new ArrayList<Map<String, Object>>();
+        List<TpGroupInfo> tiList=new ArrayList<TpGroupInfo>();
+        if(Integer.parseInt(type)==8||Integer.parseInt(type)==9){
+            numList=this.taskPerformanceManager.getPerformanceNum2(Long.parseLong(taskid),clsid);
+            TpGroupStudent tgsinfo = new TpGroupStudent();
+            tgsinfo.setClassid(Integer.parseInt(classid));
+            List<TpGroupStudent> tgsList = this.tpGroupStudentManager.getGroupStudentByClass(tgsinfo,null);
+            TpGroupInfo ti = new TpGroupInfo();
+            ti.setClassid(Integer.parseInt(classid));
+            tiList = this.tpGroupManager.getList(ti,null);
+            for(int i = 0;i<tiList.size();i++){
+                TpGroupStudent ts = new TpGroupStudent();
+                for(int j = 0;j<tgsList.size();j++){
+                    if(tiList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
+                        tiList.get(i).setTpgroupstudent2(tgsList.get(j));
+                    }
+                }
+            }
+        }else{
+            numList=this.taskPerformanceManager.getPerformanceNum(Long.parseLong(taskid),clsid,Integer.parseInt(type));
+        }
+        je.getObjList().add(numList);
+        je.getObjList().add(tList);
+        je.getObjList().add(tiList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 查询学生试卷任务完成情况
+     * @throws Exception
+     */
+    @RequestMapping(params="loadPaperPerformance",method=RequestMethod.POST)
+    public void loadPaperPerformance(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();
         String classid=request.getParameter("classid");
         String taskid=request.getParameter("taskid");

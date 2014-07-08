@@ -261,9 +261,9 @@ function afterAjaxCourseResList(rps) {
             html += '<tr>';
             html += '<td>';
             if(itm.resflag>0)
-                html+='<input type="checkbox" disabled checked>';
+                html+='<input type="radio" disabled checked>';
             else
-                html+='<input type="checkbox"  name="ck_course_resource" value=' + itm.resid + '>';
+                html+='<input type="radio"  name="ck_course_resource" value=' + itm.resid + '>';
             html+='<span class="' + itm.suffixtype + '"></span></td>';
             html += '<td>';
             html += '<p><a href="resource?m=todetail&resid=' + itm.resid + '" target="_blank">' + itm.resname + '</a></p>';
