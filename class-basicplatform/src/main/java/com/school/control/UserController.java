@@ -5124,6 +5124,7 @@ public class UserController extends BaseController<UserInfo> {
             paramMap.put("s",UserTool.zuzhiStudentSParameter(uid.toString(), gradeidList, realname, usertype.toString(), sex+"", email, schoolid, time.toString(), key));
             requestUrl=UtilTool.utilproperty.getProperty("STU_TO_ETT_REQUEST_URL").toString(); //学生进入ett入口
         }
+        paramMap.put("srcId",UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID").tosString());
         paramMap.put("schoolid",schoolid);
         //得到学生名称
         paramMap.put("schoolname", java.net.URLEncoder.encode(schoolname,"UTF-8"));

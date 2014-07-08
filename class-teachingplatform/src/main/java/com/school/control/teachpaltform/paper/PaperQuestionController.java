@@ -3210,8 +3210,10 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     @RequestMapping(params="m=testPaper",method = RequestMethod.GET)
     public ModelAndView testPaper(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
         String paperid=request.getParameter("paperid");
+        String courseid=request.getParameter("courseid");
+        String taskid=request.getParameter("taskid");
         JsonEntity jsonEntity=new JsonEntity();
-        if(paperid==null||paperid.trim().length()<1){
+        if(paperid==null||paperid.trim().length()<1||courseid==null||courseid.trim().length()<1||taskid==null||taskid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
@@ -3240,6 +3242,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 }
             }
         }
+        mp.put("taskid",taskid);
+        mp.put("courseid",courseid);
         mp.put("quesList",pqList);
         mp.put("quesSize",pqList.size());
         mp.put("paperid",paperid);
@@ -3315,11 +3319,24 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     @RequestMapping(params ="m=doInPaper",method=RequestMethod.POST)
     public void doInPaper(HttpServletRequest request,HttpServletResponse response) throws Exception{
         String paperid=request.getParameter("paperid");
+        String courseid=request.getParameter("courseid");
+        String taskid=request.getParameter("taskid");
         JsonEntity jsonEntity=new JsonEntity();
-        if(paperid==null||paperid.length()<1){
+        if(paperid==null||paperid.length()<1||courseid==null||courseid.trim().length()<1||taskid==null||taskid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
+        //验证任务
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
+        if(tkList==null||tkList.size()<1||!tkList.get(0).getCourseid().toString().equals(courseid.trim())){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+        tk=tkList.get(0);
+
+
         Integer userid=this.logined(request).getUserid();
         Integer isinpaper=2;
         StuPaperLogs splog=new StuPaperLogs();
@@ -3334,6 +3351,14 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg("异常错误，您已经提交过该试卷。无法进行修改!");
             response.getWriter().print(jsonEntity.toJSON());return;
         }
+//
+        TaskPerformanceInfo tpf=new TaskPerformanceInfo();
+        tpf.setCourseid(Long.parseLong(courseid.trim()));
+        tpf.setTaskid(tk.getTaskid());
+        tpf.setIsright(1);
+        tpf.setTasktype(tk.getTasktype());
+        tpf.setUserid(this.logined(request).getRef());
+        tpf.setCriteria(1);//提交试卷
 
         if(this.stuPaperLogsManager.doSave(splog)){
             jsonEntity.setType("success");

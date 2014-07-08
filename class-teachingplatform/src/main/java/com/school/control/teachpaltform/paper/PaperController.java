@@ -3049,7 +3049,9 @@ public class PaperController extends BaseController<PaperInfo>{
 
         Long paperid=paperList.get(0).getPaperid();
 
-        response.getWriter().println(jsonEntity.getAlertMsgAndSendRedirect("paperques?m=testPaper&paperid=" + paperid));
+        response.getWriter().println(
+                jsonEntity.getAlertMsgAndSendRedirect("paperques?m=testPaper&paperid=" + paperid+"&courseid="+tkEntity.getCourseid()+"&taskid="+taskid)
+        );
         return null;
     }
 }
