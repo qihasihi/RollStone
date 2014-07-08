@@ -11,6 +11,8 @@
 <head>
     <script type="text/javascript">
         var quesSize="${quesSize}";
+        var courseid="${courseid}";
+        var taskid="${taskid}";
         $(function(){
             loadQuesNumberTool();
             next(1);
@@ -65,7 +67,7 @@
                 url:"paperques?m=doInPaper",
                 dataType:'json',
                 type:'post',
-                data:{paperid:pid},
+                data:{paperid:pid,courseid:courseid,taskid:taskid},
                 cache: false,
                 error:function(){
                     alert('异常错误!系统未响应!');
@@ -86,7 +88,7 @@
         function subOnePaper(quesid){
             var quesAnswerObj=$("#dv_question div input[id='hs_val_"+quesid+"']");
             var quesidObj=$("#dv_question div input[id='hd_quesid_"+quesid+"']");
-            var scoreObj=$("#dv_question div input[id='hs_score_"+quesid+"']");
+            var scoreObj=$("#dv_question div input[id='hs_val_stu_"+quesid+"']");
             var questype=$("#dv_question div input[id='hd_questiontype_"+quesid+"']");
             var data=new Array(),noanswer=new Array();
             if(quesAnswerObj.length>0&&quesAnswerObj.length==quesidObj.length&&scoreObj.length==quesidObj.length){

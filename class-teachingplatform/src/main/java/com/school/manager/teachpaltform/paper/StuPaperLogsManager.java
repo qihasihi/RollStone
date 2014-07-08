@@ -56,11 +56,11 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
 		return this.stupaperlogsdao.getUpdateSql(stupaperlogs,sqlbuilder);
 	}
 
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
-			List<List<Object>> objArrayList) {
-		return this.stupaperlogsdao.doExcetueArrayProc(sqlArrayList,objArrayList);
-	}
-	
+//	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
+//			List<List<Object>> objArrayList) {
+//		return this.stupaperlogsdao.doExcetueArrayProc(sqlArrayList,objArrayList);
+//	}
+//
 	public StuPaperLogs getOfExcel(Sheet rs, int cols, int d, String type) {
 		// TODO Auto-generated method stub
 		return null;

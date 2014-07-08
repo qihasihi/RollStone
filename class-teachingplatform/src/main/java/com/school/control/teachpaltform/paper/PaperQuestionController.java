@@ -3250,6 +3250,50 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         return new ModelAndView("/teachpaltform/paper/stuTest",mp);
     }
 
+    /**
+     * 教师进入学生答卷详情页面
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=teaViewStuPaper",method=RequestMethod.GET)
+    public ModelAndView teaToViewStuPaper(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        String userid=request.getParameter("userid");
+        String taskid=request.getParameter("taskid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(userid==null||userid.trim().length()<1||taskid==null||taskid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        //根据任务，得到该学生的试卷信息
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid.trim()));
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
+        if(tkList==null||tkList.size()<1){
+            jsonEntity.setMsg("异常错误，没有发现要查询的任务信息!该任务已经不存在!");
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        Integer tktype =tkList.get(0).getTasktype();
+        Long tkvalueid=tkList.get(0).getTaskvalueid();
+        // 4:成卷测试  5：自主测试
+        if(tktype==4){
+            request.setAttribute("paperid",tkvalueid);
+            return toStuTestDetail(request,response,mp);
+        }else{
+            PaperInfo pinfo=new PaperInfo();
+            pinfo.setParentpaperid(tkvalueid);
+            pinfo.setCuserid(Integer.parseInt(userid.trim()));
+            List<PaperInfo> paperList=this.paperManager.getList(pinfo,null);
+            if(paperList==null||paperList.size()<1){
+                jsonEntity.setMsg("该学生暂未作答!");
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            request.setAttribute("paperid",paperList.get(0).getPaperid());
+            return toStuTestDetail(request,response,mp);
+        }
+    }
 
     /**
      * 进入详情页面
@@ -3261,15 +3305,19 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
      */
     @RequestMapping(params = "m=toTestDetail",method=RequestMethod.GET)
     public ModelAndView toStuTestDetail(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
-        String paperid=request.getParameter("paperid");
+        String paperid=(request.getAttribute("paperid")==null?request.getParameter("paperid"):request.getAttribute("paperid").toString());
+        String userid=request.getParameter("userid");
         JsonEntity jsonEntity=new JsonEntity();
         if(paperid==null||paperid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+        Integer uid=this.logined(request).getUserid();
+        if(userid!=null&&userid.trim().length()>0)
+            uid=Integer.parseInt(userid.trim());
         //验证是否已经答题
         StuPaperLogs splog=new StuPaperLogs();
-        splog.setUserid(this.logined(request).getUserid());
+        splog.setUserid(uid);
         splog.setPaperid(Long.parseLong(paperid));
         splog.setIsinpaper(2);
         PageResult pr=new PageResult();
@@ -3352,6 +3400,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().print(jsonEntity.toJSON());return;
         }
 //
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
         TaskPerformanceInfo tpf=new TaskPerformanceInfo();
         tpf.setCourseid(Long.parseLong(courseid.trim()));
         tpf.setTaskid(tk.getTaskid());
@@ -3359,12 +3409,26 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         tpf.setTasktype(tk.getTasktype());
         tpf.setUserid(this.logined(request).getRef());
         tpf.setCriteria(1);//提交试卷
-
-        if(this.stuPaperLogsManager.doSave(splog)){
-            jsonEntity.setType("success");
-            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+        StringBuilder sqlbuilder=new StringBuilder();
+        List<Object> objList=this.taskPerformanceManager.getSaveSql(tpf,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            objArrayList.add(objList);
+            sqlArrayList.add(sqlbuilder.toString());
+        }
+        sqlbuilder=new StringBuilder();
+        objList=this.stuPaperLogsManager.getSaveSql(splog,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            objArrayList.add(objList);
+            sqlArrayList.add(sqlbuilder.toString());
+        }
+        if(sqlArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
+            if(this.stuPaperLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+                jsonEntity.setType("success");
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            }else
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }else
-            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         response.getWriter().println(jsonEntity.toJSON());
     }
 
