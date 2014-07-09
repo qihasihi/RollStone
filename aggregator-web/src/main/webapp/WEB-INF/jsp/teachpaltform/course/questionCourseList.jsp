@@ -11,6 +11,8 @@
 <script type="text/javascript">
     var subjectid="${subjectid}";
     var courseid="${addCourseId}";
+    var operate_type="${param.operate_type}";
+    var questype="${param.questype}";
     var p1;
     $(function(){
 
@@ -56,6 +58,8 @@
         if(name.length>0){
             param.coursename = name;
         }
+        if(questype.length>0)
+            param.questiontype=questype;
         param.currentcourseid=courseid;
         param.subjectid=subjectid;
         tObj.setPostParams(param);
@@ -92,7 +96,7 @@
                     var versionname= typeof itm.versionname == 'undefined'||itm.versionname.length<1 ? "" :itm.versionname;
                     var materialname=typeof itm.materialname=='undefined'||itm.materialname.length<1?'':"("+itm.materialname+versionname+")";
                     shtml+='<tr>';
-                    shtml+='<td><p><a href="question?m=toAddQuestionByCourse&selectCourseid='+itm.courseid+'&addCourseId='+addCourseId+'" >'+itm.coursename+'&nbsp;&nbsp;'+materialname+'</a></p></td>';
+                    shtml+='<td><p><a href="question?m=toAddQuestionByCourse&selectCourseid='+itm.courseid+'&addCourseId='+addCourseId+'&operate_type=1&questype='+questype+'" >'+itm.coursename+'&nbsp;&nbsp;'+materialname+'</a></p></td>';
                     shtml+='<td>'+itm.questionnum+'</td>';
                     shtml+='<td>'+tname+'</td>';
                     shtml+='<td>'+itm.gradename+'</td>';

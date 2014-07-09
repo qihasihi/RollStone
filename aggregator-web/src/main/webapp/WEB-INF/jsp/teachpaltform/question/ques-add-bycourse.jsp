@@ -15,6 +15,8 @@
 <head>
     <title></title>
     <script type="text/javascript">
+        var operate_type="${param.operate_type}";
+        var questype="${param.questype}";
         var questionids=[];
         var p1;
         var addCourseId = "${param.addCourseId}";
@@ -30,6 +32,8 @@
                     var param={};
                     param.selectCourseid = "${param.selectCourseid}";
                     param.addCourseid=addCourseId;
+                    if(questype.length>0)
+                        param.questype=questype;
                     p.setPostParams(param);
 
                 },

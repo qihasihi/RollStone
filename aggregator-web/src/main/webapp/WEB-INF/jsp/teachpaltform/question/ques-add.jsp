@@ -52,7 +52,15 @@
     <ul>
         <li class="crumb"><a>新建试题</a></li>
 
-        <li id="li_quote"><a href="teachercourse?m=toCourseQuestionList&addCourseId=${param.courseid}">引用试题</a></li>
+        <li id="li_quote">
+            <c:if test="${!empty param.operate_type and !empty param.flag}">
+                <a href="teachercourse?m=toCourseQuestionList&addCourseId=${param.courseid}&questype=${param.questype}&operate_type=${param.operate_type}">引用试题</a>
+            </c:if>
+
+            <c:if test="${empty param.operate_type}">
+                <a href="teachercourse?m=toCourseQuestionList&addCourseId=${param.courseid}">引用试题</a>
+            </c:if>
+        </li>
 
     </ul>
 </div>

@@ -201,7 +201,7 @@ function addTopic(){
                 /**
                  * 发任务-建论题返回topicid
                  */
-                if(operate_type.length){
+                if(operate_type.length>0){
                     window.returnValue=rps.objList[0];
                     window.close();
                 }

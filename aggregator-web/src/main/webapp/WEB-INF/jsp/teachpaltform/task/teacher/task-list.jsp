@@ -443,7 +443,7 @@ function showCourseList(){
 </div>
 <div class="content2">
     <div class="subpage_lm">
-        <p class="f_right"><a class="ico15" target="_blank" href="tpres?m=toRecycleIdx&type=1&courseid=${courseid}" title="回收站"></a></p>
+        <!--<p class="f_right"><a class="ico15" target="_blank" href="tpres?m=toRecycleIdx&type=1&courseid=${courseid}" title="回收站"></a></p>-->
         <ul>
             <li name="li_nav" id="li_" class="crumb"><a href='javascript:pageGo("pList")'>已发任务</a></li>
             <li name="li_nav"><a href='javascript:pageGo("pBankList")'>任务库</a></li>

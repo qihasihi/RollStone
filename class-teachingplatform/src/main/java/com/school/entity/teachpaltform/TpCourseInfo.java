@@ -73,6 +73,15 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Object topiccount;
     private Integer filterquote;    //去除被引用的专题
     private Integer uncompletenum;
+    private Integer questiontype;
+
+    public Integer getQuestiontype() {
+        return questiontype;
+    }
+
+    public void setQuestiontype(Integer questiontype) {
+        this.questiontype = questiontype;
+    }
 
     private String subjectvalues;
 

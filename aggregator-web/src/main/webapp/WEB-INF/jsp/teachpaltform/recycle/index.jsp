@@ -317,7 +317,7 @@
 <div class="subpage_head"><span class="ico15"></span><strong>回收站——${coursename}</strong></div>
 <div class="subpage_nav">
     <ul>
-        <li id="li_1"><a href="javascript:;" onclick="changePannel(1)">任务</a></li>
+        <!--<li id="li_1"><a href="javascript:;" onclick="changePannel(1)">任务</a></li>-->
         <li id="li_2"><a href="javascript:;" onclick="changePannel(2)">资源</a></li>
         <li id="li_4"><a href="javascript:;" onclick="changePannel(4)">论题</a></li>
         <li id="li_3"><a  href="javascript:;" onclick="changePannel(3)">试题</a></li>

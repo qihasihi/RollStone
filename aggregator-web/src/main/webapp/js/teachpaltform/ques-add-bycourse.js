@@ -18,7 +18,8 @@ function questionListReturn(rps){
         }else{
             $.each(rps.objList,function(idx,itm){
                 shtml+='<tr><td>';
-                shtml+='<input type="radio" onclick="getQuestionIds(this,'+itm.questionid+')" value="'+itm.questionid+'" name="question"';
+                var type=operate_type.length>0?"radio":"checkbox";
+                shtml+='<input type="'+type+'" onclick="getQuestionIds(this,'+itm.questionid+')" value="'+itm.questionid+'" ';
                 if(questionids.length>0){
                     $.each(questionids,function(x,m){
                         if(m==itm.questionid){
@@ -28,7 +29,9 @@ function questionListReturn(rps){
                 }
                 if(itm.state!=null&&itm.state>0){
                     shtml+='checked="checked" disabled="disabled"';
-                }
+                }else
+                    shtml+='name="question"';
+
                 var content=replaceAll(itm.content.toLowerCase(),'<span name="fillbank"></span>','______');
                 shtml+='/>';
                 shtml+='</td>';
@@ -121,6 +124,10 @@ function questionSubmit(){
                 },success:function(rps){
                     if(rps.type="success"){
                         alert(rps.msg);
+                        if(operate_type.length>0){
+                            window.parent.returnValue=ids;
+                            window.close();
+                        }
                        pageGo("p1");
                     }else{
                         alert(rps.msg);

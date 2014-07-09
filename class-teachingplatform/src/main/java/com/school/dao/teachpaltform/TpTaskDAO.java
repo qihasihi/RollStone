@@ -231,36 +231,6 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
 			return null;
 		sqlbuilder.append("{CALL tp_task_info_proc_delete(");
 		List<Object>objList = new ArrayList<Object>();
-			if (tptaskinfo.getTaskname() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskinfo.getTaskname());
-			} else
-				sqlbuilder.append("null,");
-			if (tptaskinfo.getTaskvalueid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskinfo.getTaskvalueid());
-			} else
-				sqlbuilder.append("null,");
-			if (tptaskinfo.getCtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskinfo.getCtime());
-			} else
-				sqlbuilder.append("null,");
-			if (tptaskinfo.getMtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskinfo.getMtime());
-			} else
-				sqlbuilder.append("null,");
-			if (tptaskinfo.getTaskremark() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskinfo.getTaskremark());
-			} else
-				sqlbuilder.append("null,");
-			if (tptaskinfo.getCuserid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskinfo.getCuserid());
-			} else
-				sqlbuilder.append("null,");
 			if (tptaskinfo.getTaskid() != null) {
 				sqlbuilder.append("?,");
 				objList.add(tptaskinfo.getTaskid());
@@ -269,16 +239,6 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
 			if (tptaskinfo.getCourseid() != null) {
 				sqlbuilder.append("?,");
 				objList.add(tptaskinfo.getCourseid());
-			} else
-				sqlbuilder.append("null,");
-			if (tptaskinfo.getCloudstatus() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskinfo.getCloudstatus());
-			} else
-				sqlbuilder.append("null,");
-			if (tptaskinfo.getTasktype() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskinfo.getTasktype());
 			} else
 				sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");

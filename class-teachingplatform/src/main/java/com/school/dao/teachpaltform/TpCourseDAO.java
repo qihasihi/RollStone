@@ -996,7 +996,7 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
         sqlbuilder.append("{CALL tp_course_question_proc_split(");
         List<Object> objList=new ArrayList<Object>();
         if(tpcourseinfo==null){
-            sqlbuilder.append("NULL,NULL,NULL,NULL,NULL,NULL,NULL,");
+            sqlbuilder.append("NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,");
         }else{
             if (tpcourseinfo.getCourseid() != null) {
                 sqlbuilder.append("?,");
@@ -1034,7 +1034,11 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
                 objList.add(tpcourseinfo.getSubjectid());
             } else
                 sqlbuilder.append("null,");
-
+            if (tpcourseinfo.getQuestiontype() != null) {
+                sqlbuilder.append("?,");
+                objList.add(tpcourseinfo.getQuestiontype());
+            } else
+                sqlbuilder.append("null,");
         }
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){

@@ -555,8 +555,20 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
         }
 
-       /* if(tmpTask.getCloudstatus()!=null&&(tmpTask.getCloudstatus().intValue()==3||tmpTask.getCloudstatus().intValue()==4)){
-            TpOperateInfo to=new TpOperateInfo();
+
+        TpTaskAllotInfo ta=new TpTaskAllotInfo();
+        ta.setTaskid(tmpTask.getTaskid());
+        ta.setCourseid(tmpTask.getCourseid());
+        sql=new StringBuilder();
+        objList=this.tpTaskAllotManager.getDeleteSql(ta,sql);
+        if(objList!=null&&sql!=null){
+            sqlStrList.add(sql.toString());
+            objListArray.add(objList);
+        }
+
+        if(tmpTask.getTaskid()>0){
+
+            /*TpOperateInfo to=new TpOperateInfo();
             to.setRef(this.tpOperateManager.getNextId(true));
             to.setCuserid(this.logined(request).getUserid());
             to.setCourseid(tmpTask.getCourseid());
@@ -577,17 +589,19 @@ public class TaskController extends BaseController<TpTaskInfo>{
             if(sql!=null&&sql.toString().trim().length()>0){
                 objListArray.add(objList);
                 sqlStrList.add(sql.toString());
-            }
-        }else{*/
-            t.setStatus(2); //修改本地状态为已删除
-            t.setOrderidx(-1);
+            }*/
+        }else{
+            TpTaskInfo del=new TpTaskInfo();
+            del.setTaskid(tmpTask.getTaskid());
+            //t.setStatus(2); //修改本地状态为已删除
+            //t.setOrderidx(-1);
             sql=new StringBuilder();
-            objList=this.tpTaskManager.getUpdateSql(t,sql);
+            objList=this.tpTaskManager.getDeleteSql(del, sql);
             if(sql!=null&&sql.toString().trim().length()>0){
                 objListArray.add(objList);
                 sqlStrList.add(sql.toString());
             }
-
+        }
         //操作日志
        /* sql=new StringBuilder();
         objList=this.tpOperateManager.getAddOperateLog(this.logined(request).getRef(),"TP_TASK_INFO", t.getTaskid().toString(),null,null,"UPDATE"

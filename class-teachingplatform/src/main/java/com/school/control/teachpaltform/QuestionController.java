@@ -440,9 +440,12 @@ public class QuestionController extends BaseController<QuestionInfo> {
         PageResult presult = this.getPageResultParameter(request);
         String addCourseId = request.getParameter("addCourseid");
         String selectCourseid = request.getParameter("selectCourseid");
+        String questype=request.getParameter("questype");
         TpCourseQuestion tpCourseQuestion = new TpCourseQuestion();
         tpCourseQuestion.setCourseid(Long.parseLong(selectCourseid));
         tpCourseQuestion.setStatus(1);
+        if(questype!=null)
+            tpCourseQuestion.setQuestiontype(Integer.parseInt(questype));
         List<TpCourseQuestion> questionList = this.tpCourseQuestionManager.getList(tpCourseQuestion,presult);
         //“——°‘Ò ‘Ã‚
         tpCourseQuestion = new TpCourseQuestion();
