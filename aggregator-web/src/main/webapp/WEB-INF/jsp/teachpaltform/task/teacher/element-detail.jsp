@@ -161,7 +161,13 @@
                 });
             }*/
 
-            window.returnValue=dataObj.val();
+            if (window.opener != undefined) {
+                //for chrome
+                window.opener.returnValue =dataObj.val();
+            }
+            else {
+                window.returnValue =dataObj.val();
+            }
             window.close();
         }
     </script>
