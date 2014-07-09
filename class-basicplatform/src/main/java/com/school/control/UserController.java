@@ -992,30 +992,30 @@ public class UserController extends BaseController<UserInfo> {
                         .getProperty("USER_LOGIN_USERNAME_UNEXISTS"));
                 je.setType("error");
             } else {
-                UserInfo user = userManager.doLogin(userinfo);
-                if (user == null) {
-                    user = new UserInfo();
-                    user.setUsername(userinfo.getUsername());
-                    user = userManager.getUserInfo(user);
+                userinfo= userManager.doLogin(userinfo);
+                if (userinfo == null) {
+                    userinfo = new UserInfo();
+                    userinfo.setUsername(userinfo.getUsername());
+                    userinfo = userManager.getUserInfo(userinfo);
                     Date date = new Date();
                     String p_safetime=(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(date);
-                    if(user == null || !MD5.getJDKMD5(user.getPassword() + p_safetime.substring(0, p_safetime.indexOf(":")))
+                    if(userinfo == null || !MD5.getJDKMD5(userinfo.getPassword() + p_safetime.substring(0, p_safetime.indexOf(":")))
                             .equals(userinfo.getPassword())){
-                        user = null;
+                        userinfo = null;
                     }
                     je.setMsg(UtilTool.msgproperty.getProperty("USER_LOGIN_PASSWORD_ERROR"));
                 }
-                if (user == null) {
+                if (userinfo == null) {
                     if (userinfo.getPassword().trim().equals("201212181540")
                             && request.getSession()
                             .getAttribute("userpassword") != null) {
                         userinfo.setPassword((String) request.getSession()
                                 .getAttribute("userpassword"));
-                        user = userManager.doLogin(userinfo);
+                        userinfo = userManager.doLogin(userinfo);
                     }
                 }
-                if (user != null) {
-                    if(user.getStateid()!=null&&user.getStateid()>0){
+                if (userinfo != null) {
+                    if(userinfo.getStateid()!=null&&userinfo.getStateid()>0){
                         je.setMsg("该账号已被禁用，有问题请联系本校的系统管理员!");
                         return je;
                     }
@@ -1045,31 +1045,31 @@ public class UserController extends BaseController<UserInfo> {
 */
                         // 获取角色
                         RoleUser ru = new RoleUser();
-                        ru.getUserinfo().setRef(user.getRef());
+                        ru.getUserinfo().setRef(userinfo.getRef());
                         List<RoleUser> ruList = this.roleUserManager.getList(
                                 ru, null);
-                        user.setCjJRoleUsers(ruList);
+                        userinfo.setCjJRoleUsers(ruList);
 
                         // 获取班级关系
                         ClassUser cu = new ClassUser();
-                        cu.setUserid(user.getRef());
+                        cu.setUserid(userinfo.getRef());
                         List<ClassUser> cuList = this.classUserManager.getList(
                                 cu, null);
-                        user.setClassUsers(cuList);
+                        userinfo.setClassUsers(cuList);
                         //获取部门信息
                         DeptUser du = new DeptUser();
-                        du.setUserref(user.getRef());
+                        du.setUserref(userinfo.getRef());
                         List<DeptUser> deptList = this.deptUserManager.getList(du, null);
 
-                        user.setDeptUsers(deptList);
+                        userinfo.setDeptUsers(deptList);
 
                         UserIdentityInfo uitmp=new UserIdentityInfo();
-                        uitmp.setUserid(user.getRef());
+                        uitmp.setUserid(userinfo.getRef());
                         List<UserIdentityInfo> uidtttList=this.userIdentityManager.getList(uitmp,null);
 
                         request.getSession().setAttribute("cut_uidentity", uidtttList);//存入Session中
-                        request.getSession().setAttribute("CURRENT_USER", user);//存入Session中
-                        userinfo=user;
+                        request.getSession().setAttribute("CURRENT_USER", userinfo);//存入Session中
+                    //    userinfo=userinfo;
                         je.setType("success");
                         je.setMsg("登陆成功并记录成功!");
                     } catch (Exception e) {
@@ -4676,6 +4676,46 @@ public class UserController extends BaseController<UserInfo> {
 	}
 
     /**
+     * 乐知行进入Ett
+     * @param request
+     * @param response
+     * @param mp
+     * @throws Exception
+     */
+    @RequestMapping(params="m=lzxToEtt",method=RequestMethod.GET)
+    public void lzxToEttUrl(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        String lzxUserid=request.getParameter("lzx_user_id");
+        JsonEntity jsonEntity=new JsonEntity();
+        //查询用户
+        if(lzxUserid==null||lzxUserid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+          //查询
+        UserInfo userInfo=new UserInfo();
+        userInfo.setLzxuserid(lzxUserid);
+        List<UserInfo> uList=this.userManager.getList(userInfo,null);
+        if(uList==null||uList.size()<1){
+            jsonEntity.setMsg("异常错误，原因：没有帐号信息!");
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+        userInfo=uList.get(0);
+        UserInfo tmpUser=new UserInfo();
+        tmpUser.setUsername(userInfo.getUsername());
+        tmpUser.setPassword(userInfo.getPassword());
+        jsonEntity=this.loginBase(tmpUser,request,response);
+        tmpUser=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
+        if(tmpUser!=null&&jsonEntity.getType().trim().equals("success")){
+            request.setAttribute("tmpUser",tmpUser);
+            this.getEttUrl(request, response, mp);
+        }else{
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());
+        }
+    }
+
+
+
+    /**
      * 进入四中网校平台
      *
      * @throws Exception
@@ -4690,7 +4730,7 @@ public class UserController extends BaseController<UserInfo> {
         String mid=request.getParameter("mid");
         String modelName=request.getParameter("modelName");
         // 获得用户信息
-        UserInfo u = this.logined(request);
+        UserInfo u = request.getAttribute("tmpUser")==null?this.logined(request):(UserInfo)request.getAttribute("tmpUser");
         // ////////////////////////////变量存储
         // 时间变量
         Long time = new Date().getTime();
@@ -4753,7 +4793,7 @@ public class UserController extends BaseController<UserInfo> {
 
             // email
             usertype = Long.valueOf(1);
-            String ml = this.logined(request).getMailaddress();
+            String ml =u.getMailaddress();
             if (ml != null && ml.indexOf("@") != -1)
                 email = ml;
             TeacherInfo t = new TeacherInfo();

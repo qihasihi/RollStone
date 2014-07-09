@@ -801,7 +801,7 @@ public class BaseController<T extends java.io.Serializable> {
      */
     public boolean validateRole(HttpServletRequest request,Integer rid) {
         boolean returnVal = false;
-        UserInfo cuuser = this.logined(request);
+        UserInfo cuuser = request.getAttribute("tmpUser")==null?this.logined(request):(UserInfo)request.getAttribute("tmpUser");
         if (cuuser != null && cuuser.getCjJRoleUsers().size() > 0) {
             for (Object ruObj : cuuser.getCjJRoleUsers()) {
                 RoleUser ru = (RoleUser) ruObj;
