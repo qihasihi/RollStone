@@ -125,7 +125,13 @@ function questionSubmit(){
                     if(rps.type="success"){
                         alert(rps.msg);
                         if(operate_type.length>0){
-                            window.parent.returnValue=ids;
+                            if (window.opener != undefined) {
+                                //for chrome
+                                window.opener.returnValue =ids;
+                            }
+                            else {
+                                window.returnValue =ids;
+                            }
                             window.close();
                         }
                        pageGo("p1");

@@ -323,7 +323,13 @@ function sub_res(dvobj,resourcetype) {
             } else {
                 alert(rps.msg);
                 if (typeof operate_type!='undefined' && operate_type.length>0) {
-                    window.returnValue = resArray.split(",")[0];
+                    if (window.opener != undefined) {
+                        //for chrome
+                        window.opener.returnValue =resArray.split(",")[0];
+                    }
+                    else {
+                        window.returnValue =resArray.split(",")[0];
+                    }
                     window.close();
                 }
                 hideUploadDiv();
@@ -659,7 +665,13 @@ function doUploadResource(usertype) {
                 } else {
                     alert(rps.msg);
                     if (operate_type.length) {
-                        window.returnValue = nextid;
+                        if (window.opener != undefined) {
+                            //for chrome
+                            window.opener.returnValue =nextid;
+                        }
+                        else {
+                            window.returnValue =nextid;
+                        }
                         window.close();
                     }
                     $("#dv_obj").html('');
@@ -736,7 +748,13 @@ function doUploadResource(usertype) {
                             } else {
                                 alert(rps.msg);
                                 if (operate_type.length) {
-                                    window.returnValue = nextid;
+                                    if (window.opener != undefined) {
+                                        //for chrome
+                                        window.opener.returnValue =nextid;
+                                    }
+                                    else {
+                                        window.returnValue =nextid;
+                                    }
                                     window.close();
                                 }
                                 $("#dv_obj").html('');

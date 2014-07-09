@@ -448,7 +448,13 @@ function doAddQuestion(){
 			}else{
 				alert(rmsg.msg);
                 if(typeof operate_type!='undefined'&&operate_type.length){
-                    window.returnValue=rmsg.objList[0];
+                    if (window.opener != undefined) {
+                        //for chrome
+                        window.opener.returnValue =rmsg.objList[0];
+                    }
+                    else {
+                        window.returnValue =rmsg.objList[0];
+                    }
                     window.close();
                 }
                 location.href='question?m=toQuestionList&courseid='+courseid;

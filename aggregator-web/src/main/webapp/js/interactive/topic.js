@@ -202,7 +202,13 @@ function addTopic(){
                  * 发任务-建论题返回topicid
                  */
                 if(operate_type.length>0){
-                    window.returnValue=rps.objList[0];
+                    if (window.opener != undefined) {
+                        //for chrome
+                        window.opener.returnValue =rps.objList[0];
+                    }
+                    else {
+                        window.returnValue =rps.objList[0];
+                    }
                     window.close();
                 }
                if(confirm("新建论题已完成，是否退出该页面?\n\n提示：不退出，可继续创建!"))

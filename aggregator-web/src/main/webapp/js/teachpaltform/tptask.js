@@ -25,8 +25,11 @@ function showTaskElement(type){
         url+='&questype='+questype;
     }
 
-    var param = "dialogWidth:500px;dialogHeight:700px;status:no;location:no";
-    var returnValue=window.showModalDialog(url,param);
+    var param ="dialogHeight=800px;dialogWidth=900px;center:yes;status:no;scroll:yes;help:no";
+    var returnValue=window.showModalDialog(url,"",param);
+    if (returnValue == undefined) {
+        returnValue = window.returnValue;
+    }
     if(returnValue==null||returnValue.toString().length<1){
         alert("操作取消!");
         return;
@@ -82,8 +85,11 @@ function showDialogPage(type){
         var questype=$("input[name='rdo_ques_type']:checked").val();
         url='question?m=toAddQuestion&operate_type=1&questype='+questype+'&courseid='+courseid+'&flag=1';
     }
-    var param = "dialogWidth:500px;dialogHeight:700px;status:no;location:no";
-    var returnValue=window.showModalDialog(url,param);
+    var param ="dialogHeight=800px;dialogWidth=900px;center:yes;status:no;scroll:yes;help:no";
+    var returnValue=window.showModalDialog(url,"",param);
+    if (returnValue == undefined) {
+        returnValue = window.returnValue;
+    }
     if(returnValue==null||returnValue.toString().length<1){
         alert("操作取消!");
         return;
