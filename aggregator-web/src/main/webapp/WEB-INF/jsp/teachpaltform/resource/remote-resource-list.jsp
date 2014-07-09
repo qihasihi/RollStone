@@ -10,8 +10,18 @@
 <html>
 <head>
     <title></title>
+    <script src="js/teachpaltform/resource.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function(){
+            getRemoteResources();
+        });
+    </script>
 </head>
 <body>
-
+    <p>高清课堂</p><p><input type="text" id="keyword"/><input type="button" onclick="getLikeRemoteResources()" value="查询"/> </p>
+    <div>
+        <ul id="gaoqing">
+        </ul>
+    </div>
 </body>
 </html>

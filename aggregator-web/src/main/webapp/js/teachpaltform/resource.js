@@ -3132,3 +3132,76 @@ function showModelOther(playAddress, fname, resbaseid) {
     $("#" + playAddress).html(htm);
     showModel("swfplayer", false);
 }
+
+/*******************************************************远程资源****************************************************/
+
+function getRemoteResources(){
+//    var param=[];
+//    param.gradeid=3;
+//    param.subjectid=4;
+//    param.versionid=44;
+//    param.pageNow=1;
+//    param.pageSize=10;
+//    var keyword = $("#keyword").val().Trim();
+//    if(keyword.length>0)
+//        param.keyword=keyword;
+    $.ajax({
+        url:'tpres?m=getRemoteResources',
+        data:{
+            gradeid:3,
+            subjectid:4,
+            versionid:44,
+            pageNow:1,
+            pageSize:10
+        },
+        type:'POST',
+        dataType:'json',
+        error:function(){
+            alert('异常错误,系统未响应！');
+        },success:function(rps){
+            if(rps.type=="success"){
+                if(rps.objList.length>0){
+                    var htm='';
+                    $.each(rps.objList,function(idx,itm){
+                        htm+='<li><a href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.hd_res_id+'"><img  src="'+itm.img_url+'"/><br>'+itm.teacher_name+'&nbsp;&nbsp;'+itm.hd_name+'</a></li>';
+                    });
+                    $("#gaoqing").append(htm);
+                }
+            }else{
+
+            }
+        }
+    });
+}
+function getLikeRemoteResources(){
+    var param={};
+    param.gradeid=3;
+    param.subjectid=4;
+    param.versionid=44;
+    param.pageNow=1;
+    param.pageSize=10;
+    var keyword = $("#keyword").val().Trim();
+    if(keyword.length>0)
+        param.keyword=keyword;
+    $.ajax({
+        url:'tpres?m=getLikeRemoteResources',
+        data:param,
+        type:'POST',
+        dataType:'json',
+        error:function(){
+            alert('异常错误,系统未响应！');
+        },success:function(rps){
+            if(rps.type=="success"){
+                if(rps.objList.length>0){
+                    var htm='';
+                    $.each(rps.objList,function(idx,itm){
+                        htm+='<li><a href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.hd_res_id+'"><img  src="'+itm.img_url+'"/><br>'+itm.teacher_name+'&nbsp;&nbsp;'+itm.hd_name+'</a></li>';
+                    });
+                    $("#gaoqing").html(htm);
+                }
+            }else{
+
+            }
+        }
+    });
+}

@@ -4,6 +4,8 @@ package com.school.control.teachpaltform;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -2494,6 +2496,30 @@ public class TpResourceController extends BaseController<TpCourseResource>{
      * 获取远程资源列表
      * ycy
      * */
+    @RequestMapping(params="m=toRemoteResourcesDetail",method=RequestMethod.GET)
+    public void toRemoteResourcesDetail(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        String hd_res_id=request.getParameter("hd_res_id");
+        Date d = new Date();
+        Long timestamp=d.getTime();
+        String md5key = hd_res_id+timestamp.toString()+"ett_dc_20146305645645647";
+        String signature= MD5_NEW.getMD5Result(md5key);
+        String url="http://langyilin.etiantian.com:8080/ett20/study/studydir/webservice/openUrlById.jsp?hd_res_id="+hd_res_id+"&timestamp="+timestamp+"&signature="+signature;
+        response.sendRedirect(url);
+    }
+
+    /**
+     * 获取远程资源列表
+     * ycy
+     * */
+    @RequestMapping(params="m=toRemoteResources",method=RequestMethod.GET)
+    public ModelAndView toRemoteResources(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        return new ModelAndView("/teachpaltform/resource/remote-resource-list");
+    }
+
+    /**
+     * 获取远程资源列表
+     * ycy
+     * */
     @RequestMapping(params="m=getRemoteResources",method={RequestMethod.POST,RequestMethod.GET})
     public void getRemoteResources(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
@@ -2505,14 +2531,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String schoolid = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
         String courseIDList = request.getParameter("courseids");
         courseIDList = "1000029790,1000029791,1000029792";
-        String[] courseids = courseIDList.split(",");
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0;i<courseids.length;i++){
-            sb.append("{course_id:\""+courseids[i]+"\"}");
-        }
-        String courseidlist = "["+sb.toString()+"]";
 
-        String pvgStr = "7";
+
+        String pvgStr = "320";
         Date d = new Date();
         Long timestamp=d.getTime();
         //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
@@ -2521,7 +2542,16 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String url="http://langyilin.etiantian.com:8080/ett20/study/studydir/webservice/queryForWebservice.jsp";
         String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
                 gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
-                pageSize+"&courseIDList="+courseidlist;
+                pageSize;
+        if(courseIDList!=null&&courseIDList.length()>0){
+            String[] courseids = courseIDList.split(",");
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0;i<courseids.length;i++){
+                sb.append("{course_id:\""+courseids[i]+"\"}");
+            }
+            String courseidlist = "["+sb.toString()+"]";
+            param+="&courseIDList="+courseidlist;
+        }
         String returnval=sendPostURL(url,param);
       //  System.out.println(new String(returnval.getBytes("8859_1"),"GBK"));
         if(returnval.length()>0){
@@ -2540,6 +2570,61 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             }
         }
       //  response.setCharacterEncoding("GBK");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 获取远程资源列表
+     * ycy
+     * */
+    @RequestMapping(params="m=getLikeRemoteResources",method={RequestMethod.POST,RequestMethod.GET})
+    public void getLikeRemoteResources(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String pageNow = request.getParameter("pageNow");
+        String pageSize = request.getParameter("pageSize");
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String versionid = request.getParameter("versionid");
+        String keyword = request.getParameter("keyword");
+        String schoolid = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
+
+
+        String pvgStr = "320";
+        versionid="484023358";
+        Date d = new Date();
+        Long timestamp=d.getTime();
+        //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
+        String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
+        String signature= MD5_NEW.getMD5Result(md5key);
+        String url="http://langyilin.etiantian.com:8080/ett20/study/studydir/webservice/queryForWebservice.jsp";
+        String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
+                gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
+                pageSize;
+        if(keyword!=null&&keyword.length()>0){
+            keyword= URLEncoder.encode(keyword,"GBK");
+            String k = URLDecoder.decode(keyword,"utf-8");
+            System.out.println(keyword);
+            System.out.println(k);
+            param+="&keyword="+keyword;
+        }
+        String returnval=sendPostURL(url,param);
+        //  System.out.println(new String(returnval.getBytes("8859_1"),"GBK"));
+        if(returnval.length()>0){
+            //转换成JSON
+            JSONObject jb=JSONObject.fromObject(returnval);
+            String type=jb.containsKey("type")?jb.getString("type"):"";
+            Object objList=jb.containsKey("dataList")?jb.get("dataList"):null;
+            if(type!=null&&type.trim().toLowerCase().equals("error")){
+                je.setMsg("获取资源失败");
+                je.setType("error");
+            }else{
+                je.setType("success");
+                JSONArray jr=JSONArray.fromObject(objList);
+                if(jr.size()>0)
+                    je.setObjList(jr);
+            }
+        }
+        //  response.setCharacterEncoding("GBK");
         response.getWriter().print(je.toJSON());
     }
 
