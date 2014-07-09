@@ -1,13 +1,15 @@
 $(function(){
-    $("label").filter(function(){return $(this).attr('for').indexOf('ck_group_')!=-1}).hover(function(){
+
+    $("label").filter(function(){return $(this).attr('for').indexOf('ck_group_')!=-1}).bind("mouseover",function(){
         var groupid=$(this).prev('input').val();
         genderShowdiv(groupid);
-    },function(){
+    });
+    $("label").filter(function(){return $(this).attr('for').indexOf('ck_group_')!=-1}).bind("mouseout",function(){
         var divObj=$("div").filter(function(){return this.id.indexOf('div_tmp_show')!=-1});
         if(divObj.length>0)
             $(divObj).remove();
     });
-    $("body").bind("click",function(){
+    $("body").bind("mouseover",function(){
         var divObj=$("div").filter(function(){return this.id.indexOf('div_tmp_show')!=-1});
         if(divObj.length>0)
             $(divObj).remove();
