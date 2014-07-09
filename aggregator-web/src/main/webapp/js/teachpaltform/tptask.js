@@ -516,8 +516,8 @@ function load_task_detial(taskid){
                                 var str=isIE?obj.get(0).innerText:obj.get(0).textContent;
                                 var tmpStr=itm.allotobj;
                                 //123+123>5  5-3
-                                if(str.length+itm.allotobj.length>58){
-                                    tmpStr=itm.allotobj.substring(0,58-str.length)+'...';
+                                if(str.length+itm.allotobj.length>52){
+                                    tmpStr=itm.allotobj.substring(0,52-str.length)+'...';
                                     if(str.lastIndexOf('...')==-1){
                                         $(obj).append(tmpStr+"&nbsp;");
                                         $(obj).hover(
@@ -589,7 +589,7 @@ function initTaskCriteria(tasktype){
 		htm+='<input value="1" name="ck_criteria" type="radio" />查看&nbsp;';
 		htm+='<input value="2" name="ck_criteria" type="radio" />发主帖&nbsp;';
 	}else if(tasktype=="3"){//课后作业
-		htm+='<input value="1" name="ck_criteria" type="radio" />提交&nbsp;';
+		htm+='<input checked value="1" name="ck_criteria" type="radio" />提交&nbsp;';
 		//htm+='<input value="right" name="ck_criteria" type="radio" />提交并正确';
 	}else{
         htm+='<input checked value="1" name="ck_criteria" type="radio" />提交试卷';

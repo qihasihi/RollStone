@@ -240,11 +240,6 @@ public class QuestionAnswerDAO extends CommonDAO<QuestionAnswer> implements IQue
 				objList.add(questionanswer.getTasktype());
 			} else
 				sqlbuilder.append("null,");
-			if (questionanswer.getGroupid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(questionanswer.getGroupid());
-			} else
-				sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}

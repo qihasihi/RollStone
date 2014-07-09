@@ -342,7 +342,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("t.c_time desc");
+        p.setOrderBy("t.order_idx desc");
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
         t.setUserid(this.logined(request).getUserid());
@@ -565,9 +565,17 @@ public class TaskController extends BaseController<TpTaskInfo>{
             sqlStrList.add(sql.toString());
             objListArray.add(objList);
         }
+        QuestionAnswer qa=new QuestionAnswer();
+        qa.setTaskid(tmpTask.getTaskid());
+        qa.setCourseid(tmpTask.getCourseid());
+        sql=new StringBuilder();
+        objList=this.questionAnswerManager.getDeleteSql(qa,sql);
+        if(objList!=null&&sql!=null){
+            sqlStrList.add(sql.toString());
+            objListArray.add(objList);
+        }
 
         if(tmpTask.getTaskid()>0){
-
             /*TpOperateInfo to=new TpOperateInfo();
             to.setRef(this.tpOperateManager.getNextId(true));
             to.setCuserid(this.logined(request).getUserid());
@@ -650,6 +658,17 @@ public class TaskController extends BaseController<TpTaskInfo>{
 			response.getWriter().print(je.getAlertMsgAndBack());
 			return null;
 		}
+        String subjectid=null,gradeid=null;
+
+        //获取当前专题教材
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(Long.parseLong(courseid));
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0){
+            subjectid=materialList.get(0).getSubjectid().toString();
+            gradeid=materialList.get(0).getGradeid().toString();
+        }
+
 
 		
 		//验证是否所有学生都已有小组
@@ -823,6 +842,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         mp.put("courseclassList",courseclassList);
         mp.put("groupList", groupList);
         mp.put("termid", termid);
+        mp.put("gradeid", gradeid);
+        mp.put("subjectid", subjectid);
         TpCourseQuestion cq=new TpCourseQuestion();
         cq.setCourseid(Long.parseLong(courseid));
         Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);
