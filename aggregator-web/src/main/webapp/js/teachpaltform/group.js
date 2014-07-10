@@ -238,7 +238,7 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
 			function(responseText){
 		if(responseText==null||responseText.objList==null||responseText.objList.length==0){
             gtHtml+="<tr><td class='v_c'>"+groupName+"<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'></td>";
-			gtHtml+="<td colspan='2'>没有小组成员！</td></tr>";
+			gtHtml+="<td colspan='4'>没有小组成员！</td></tr>";
 			$("#group_"+groupId).html(gtHtml);
 			return;
 		}

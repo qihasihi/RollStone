@@ -132,7 +132,7 @@ function getInvestReturnMethod(rps){
                         html+="<p><span class='f_right'>"+classTemp.CLASS_TIME.substring(0,16)+"</span>"+classTemp.CLASS_NAME+"</p>";
                     });
                 }else{
-                    html+="<p><a href='teachercourse?m=toSaveOrUpdate&courseid="+itm.courseid+"' class='font-blue'>" +
+                    html+="<p><a href='javascript:toUpdCoursePage("+itm.courseid+")' class='font-blue'>" +
                         "<img width='15' height='15' src='images/an02_131126.png'/>设置</a></p>";
                 }
             }else{

@@ -2499,11 +2499,20 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     @RequestMapping(params="m=toRemoteResourcesDetail",method=RequestMethod.GET)
     public void toRemoteResourcesDetail(HttpServletRequest request,HttpServletResponse response) throws Exception {
         String hd_res_id=request.getParameter("hd_res_id");
+        String res_id = request.getParameter("res_id");
         Date d = new Date();
-        Long timestamp=d.getTime();
-        String md5key = hd_res_id+timestamp.toString()+"ett_dc_20146305645645647";
-        String signature= MD5_NEW.getMD5Result(md5key);
-        String url="http://langyilin.etiantian.com:8080/ett20/study/studydir/webservice/openUrlById.jsp?hd_res_id="+hd_res_id+"&timestamp="+timestamp+"&signature="+signature;
+        String url="http://langyilin.etiantian.com:8080/ett20/study/jx/openUrlById.jsp";
+        if(hd_res_id!=null&&hd_res_id.length()>0){
+            Long timestamp=d.getTime();
+            String md5key = hd_res_id+timestamp.toString()+"ett_dc_20146305645645647";
+            String signature= MD5_NEW.getMD5Result(md5key);
+            url+="?hd_res_id="+hd_res_id+"&timestamp="+timestamp+"&signature="+signature;
+        }else if(res_id!=null&&res_id.length()>0){
+            Long timestamp=d.getTime();
+            String md5key = res_id+timestamp.toString()+"ett_dc_20146305645645647";
+            String signature= MD5_NEW.getMD5Result(md5key);
+            url+="?res_id="+res_id+"&timestamp="+timestamp+"&signature="+signature;
+        }
         response.sendRedirect(url);
     }
 
@@ -2513,6 +2522,11 @@ public class TpResourceController extends BaseController<TpCourseResource>{
      * */
     @RequestMapping(params="m=toRemoteResources",method=RequestMethod.GET)
     public ModelAndView toRemoteResources(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        String courseid = request.getParameter("courseid");
+        TpCourseTeachingMaterial obj= new TpCourseTeachingMaterial();
+        obj.setCourseid(Long.parseLong(courseid));
+        List<TpCourseTeachingMaterial> objList = tpCourseTeachingMaterialManager.getList(obj,null);
+        request.setAttribute("versionid",objList.get(0).getTeachingmaterialid());
         return new ModelAndView("/teachpaltform/resource/remote-resource-list");
     }
 
@@ -2530,7 +2544,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String versionid = request.getParameter("versionid");
         String schoolid = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
         String courseIDList = request.getParameter("courseids");
-        courseIDList = "1000029790,1000029791,1000029792";
+        courseIDList = "\n" +
+                "1000029790,1000029790,1000029791,1000029792,1000029793,1000029794,1000029795,1000029797,1000029798,1000029799,1000029800,1000029801,1000029802,1000029803,1000029804,1000029804,1000029805,1000029806,1000029807";
 
 
         String pvgStr = "320";
@@ -2539,7 +2554,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
         String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
         String signature= MD5_NEW.getMD5Result(md5key);
-        String url="http://langyilin.etiantian.com:8080/ett20/study/studydir/webservice/queryForWebservice.jsp";
+        String url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
         String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
                 gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
                 pageSize;
@@ -2558,6 +2573,43 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             //转换成JSON
             JSONObject jb=JSONObject.fromObject(returnval);
             String type=jb.containsKey("type")?jb.getString("type"):"";
+            String ispage=jb.containsKey("ispage")?jb.getString("ispage"):"";
+            Object objList=jb.containsKey("dataList")?jb.get("dataList"):null;
+            if(type!=null&&type.trim().toLowerCase().equals("error")){
+                je.setMsg("获取资源失败");
+                je.setType("error");
+            }else{
+                je.setType("success");
+                JSONArray jr=JSONArray.fromObject(objList);
+                if(jr.size()>0);
+                    je.getObjList().add(jr);
+                je.getObjList().add(ispage);
+            }
+        }
+        pvgStr="7";
+        timestamp=d.getTime();
+        //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
+        md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
+        signature= MD5_NEW.getMD5Result(md5key);
+        url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
+        param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
+                gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
+                pageSize;
+        if(courseIDList!=null&&courseIDList.length()>0){
+            String[] courseids = courseIDList.split(",");
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0;i<courseids.length;i++){
+                sb.append("{course_id:\""+courseids[i]+"\"}");
+            }
+            String courseidlist = "["+sb.toString()+"]";
+            param+="&courseIDList="+courseidlist;
+        }
+        String returnval2=sendPostURL(url,param);
+        if(returnval2.length()>0){
+            //转换成JSON
+            JSONObject jb=JSONObject.fromObject(returnval2);
+            String type=jb.containsKey("type")?jb.getString("type"):"";
+            String ispage=jb.containsKey("ispage")?jb.getString("ispage"):"";
             Object objList=jb.containsKey("dataList")?jb.get("dataList"):null;
             if(type!=null&&type.trim().toLowerCase().equals("error")){
                 je.setMsg("获取资源失败");
@@ -2566,10 +2618,143 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                 je.setType("success");
                 JSONArray jr=JSONArray.fromObject(objList);
                 if(jr.size()>0)
-                    je.setObjList(jr);
+                    je.getObjList().add(jr);
+                je.getObjList().add(ispage);
             }
         }
       //  response.setCharacterEncoding("GBK");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 获取远程资源列表
+     * ycy
+     * */
+    @RequestMapping(params="m=getMoreResources",method={RequestMethod.POST,RequestMethod.GET})
+    public void getMoreResources(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String pageNow = request.getParameter("pageNow");
+        String pageSize = request.getParameter("pageSize");
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String versionid = request.getParameter("versionid");
+        String schoolid = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
+        String courseIDList = request.getParameter("courseids");
+        courseIDList = "\n" +
+                "1000029790,1000029790,1000029791,1000029792,1000029793,1000029794,1000029795,1000029797,1000029798,1000029799,1000029800,1000029801,1000029802,1000029803,1000029804,1000029804,1000029805,1000029806,1000029807";
+
+
+        String pvgStr = "320";
+        Date d = new Date();
+        Long timestamp=d.getTime();
+        //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
+        String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
+        String signature= MD5_NEW.getMD5Result(md5key);
+        String url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
+        String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
+                gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
+                pageSize;
+        if(courseIDList!=null&&courseIDList.length()>0){
+            String[] courseids = courseIDList.split(",");
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0;i<courseids.length;i++){
+                sb.append("{course_id:\""+courseids[i]+"\"}");
+            }
+            String courseidlist = "["+sb.toString()+"]";
+            param+="&courseIDList="+courseidlist;
+        }
+        String returnval=sendPostURL(url,param);
+        //  System.out.println(new String(returnval.getBytes("8859_1"),"GBK"));
+        if(returnval.length()>0){
+            //转换成JSON
+            JSONObject jb=JSONObject.fromObject(returnval);
+            String type=jb.containsKey("type")?jb.getString("type"):"";
+            String ispage=jb.containsKey("ispage")?jb.getString("ispage"):"";
+            Object objList=jb.containsKey("dataList")?jb.get("dataList"):null;
+            if(type!=null&&type.trim().toLowerCase().equals("error")){
+                je.setMsg("获取资源失败");
+                je.setType("error");
+            }else{
+                je.setType("success");
+                JSONArray jr=JSONArray.fromObject(objList);
+                if(jr.size()>0);
+                je.getObjList().add(jr);
+                je.getObjList().add(ispage);
+            }
+        }
+
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 获取远程资源列表
+     * ycy
+     * */
+    @RequestMapping(params="m=getMoreZhishi",method={RequestMethod.POST,RequestMethod.GET})
+    public void getMoreZhishi(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String pageNow = request.getParameter("pageNow");
+        String pageSize = request.getParameter("pageSize");
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String versionid = request.getParameter("versionid");
+        String schoolid = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
+        String courseid = request.getParameter("courseid");
+        String courseIDList = "";
+        //获取关联专题集合
+        TpCourseRelatedInfo tr = new TpCourseRelatedInfo();
+        tr.setCourseid(Long.parseLong(courseid));
+        List<TpCourseRelatedInfo> trList = this.tpCourseRelatedManager.getList(tr,null);
+        courseIDList = "\n" +
+                "1000029790,1000029790,1000029791,1000029792,1000029793,1000029794,1000029795,1000029797,1000029798,1000029799,1000029800,1000029801,1000029802,1000029803,1000029804,1000029804,1000029805,1000029806,1000029807";
+
+
+        String pvgStr = "7";
+        Date d = new Date();
+        Long timestamp=d.getTime();
+        //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
+        String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
+        String signature= MD5_NEW.getMD5Result(md5key);
+        String url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
+        String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
+                gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
+                pageSize;
+        if(trList!=null&&trList.size()>0){
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0;i<trList.size();i++){
+                sb.append("{course_id:\""+trList.get(i).getCourseid()+"\"}");
+            }
+            String courseidlist = "["+sb.toString()+"]";
+            param+="&courseIDList="+courseidlist;
+        }else{
+            String[] courseids = courseIDList.split(",");
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0;i<courseids.length;i++){
+                sb.append("{course_id:\""+courseids[i]+"\"}");
+            }
+            String courseidlist = "["+sb.toString()+"]";
+            param+="&courseIDList="+courseidlist;
+        }
+        String returnval=sendPostURL(url,param);
+        //  System.out.println(new String(returnval.getBytes("8859_1"),"GBK"));
+        if(returnval.length()>0){
+            //转换成JSON
+            JSONObject jb=JSONObject.fromObject(returnval);
+            String type=jb.containsKey("type")?jb.getString("type"):"";
+            String ispage=jb.containsKey("ispage")?jb.getString("ispage"):"";
+            Object objList=jb.containsKey("dataList")?jb.get("dataList"):null;
+            if(type!=null&&type.trim().toLowerCase().equals("error")){
+                je.setMsg("获取资源失败");
+                je.setType("error");
+            }else{
+                je.setType("success");
+                JSONArray jr=JSONArray.fromObject(objList);
+                if(jr.size()>0);
+                je.getObjList().add(jr);
+                je.getObjList().add(ispage);
+            }
+        }
+
         response.getWriter().print(je.toJSON());
     }
 
@@ -2587,8 +2772,6 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String versionid = request.getParameter("versionid");
         String keyword = request.getParameter("keyword");
         String schoolid = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
-
-
         String pvgStr = "320";
         versionid="484023358";
         Date d = new Date();
@@ -2596,15 +2779,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
         String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
         String signature= MD5_NEW.getMD5Result(md5key);
-        String url="http://langyilin.etiantian.com:8080/ett20/study/studydir/webservice/queryForWebservice.jsp";
+        String url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
         String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
                 gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
                 pageSize;
         if(keyword!=null&&keyword.length()>0){
             keyword= URLEncoder.encode(keyword,"GBK");
-            String k = URLDecoder.decode(keyword,"utf-8");
-            System.out.println(keyword);
-            System.out.println(k);
             param+="&keyword="+keyword;
         }
         String returnval=sendPostURL(url,param);
@@ -2621,7 +2801,39 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                 je.setType("success");
                 JSONArray jr=JSONArray.fromObject(objList);
                 if(jr.size()>0)
-                    je.setObjList(jr);
+                    je.getObjList().add(jr);
+            }
+        }
+        pvgStr="7";
+        timestamp=d.getTime();
+        //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
+        md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
+        signature= MD5_NEW.getMD5Result(md5key);
+        url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
+        param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
+                gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
+                pageSize;
+        if(keyword!=null&&keyword.length()>0){
+            keyword= URLEncoder.encode(keyword,"GBK");
+            String k = URLDecoder.decode(keyword,"utf-8");
+            System.out.println(keyword);
+            System.out.println(k);
+            param+="&keyword="+keyword;
+        }
+        String returnval2=sendPostURL(url,param);
+        if(returnval2.length()>0){
+            //转换成JSON
+            JSONObject jb=JSONObject.fromObject(returnval2);
+            String type=jb.containsKey("type")?jb.getString("type"):"";
+            Object objList=jb.containsKey("dataList")?jb.get("dataList"):null;
+            if(type!=null&&type.trim().toLowerCase().equals("error")){
+                je.setMsg("获取资源失败");
+                je.setType("error");
+            }else{
+                je.setType("success");
+                JSONArray jr=JSONArray.fromObject(objList);
+                if(jr.size()>0)
+                    je.getObjList().add(jr);
             }
         }
         //  response.setCharacterEncoding("GBK");
