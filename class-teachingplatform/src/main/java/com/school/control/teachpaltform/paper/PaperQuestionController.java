@@ -938,7 +938,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         maxp.setPageSize(1);
         maxp.setPageNo(1);
         List<PaperQuestion>maxList=this.paperQuestionManager.getList(maxidx,maxp);
-        Integer maxIdx=1;
+        Integer maxIdx=0;
         if(maxList!=null&&maxList.size()>0)
             maxIdx=maxList.get(0).getOrderidx();
 
@@ -990,7 +990,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
         }else{
-            je.setMsg("您的操作没有执行!");
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
         }
         response.getWriter().print(je.toJSON());
     }

@@ -45,10 +45,12 @@
 	h5{ border-bottom: 1px dashed #cdcdcd;margin: 10px auto;}
 	h6{ border-bottom: 1px solid #cfcfcf;margin: 15px auto 20px;}
 
+	.p_t_5 {padding-top: 5px;}
 	.p_t_10 {padding-top: 10px;}
 	.p_t_20 {padding-top: 20px;}
 	.p_t_30 {padding-top: 30px;}
 	.p_b_10 {padding-bottom: 10px;}
+	.p_b_20 {padding-bottom: 20px;}
 	.p_tb_10 {padding: 10px 0;}
 
 	.m_a {margin: 0 auto;}
@@ -61,6 +63,7 @@
 	.w40{width:40px;}
 	.w50{width:50px;}
 	.w60{width:60px;}
+	.w70{width:70px;}
 	.w80{width:80px;}
 	.w85{width:85px;}
 	.w90{width:90px;}
@@ -94,13 +97,17 @@
 	.w650{width:650px;}
 	.w700{width:700px;}
 	.w720{width:720px;}
-	.w770{width:770px;}
+	.w730{width:730px;}
 	.w750{width:750px;}
+	.w770{width:770px;}
 	.w800{width:800px;}
 	.w820{width:820px;}
+	.w850{width:850px;}
 	.w860{width:860px;}
 	.w880{width:880px;}
 	.w900{width:900px;}
+	.w910{width:910px;}
+	.w940{width:940px;}
 
 	.h90{height:90px;}
 	.h210{height:210px;}
@@ -164,6 +171,8 @@
 	vertical-align:top;
 }
     .public_tab3 td p{padding:0 5px;text-align:left;}
+
+    table.public_tab1 td table.tab td, table.public_tab1 td table.tab th{padding-top:4px;}
 
     .public_input input[type=text],.public_input input[type=password]{
 	height:16px;
@@ -342,7 +351,26 @@
 }
     a.an_lightblue,a.an_lightblue:visited{color:#2ca9a6;}
     a.an_lightblue:hover,a.an_lightblue:active{color:#15d0cc;}
-	
+
+	.an_test1,.an_test2{
+	width:84px;
+	height:26px;
+	background: url(images/bg29_131230.png) no-repeat -814px -108px;
+	text-align: center;
+	line-height:20px;
+	font-size:14px;
+	font-weight:bold;
+	padding-top:3px;
+	display: inline-block;
+	margin:0 6px;
+	color:#fff;
+	vertical-align:middle;
+}
+    a.an_test1,a.an_test2{color:#fff;}
+	.an_test1:hover{ background-position:-814px -138px; padding-top:4px;height:25px;}
+	.an_test2{ background-position:-899px -108px;}
+	.an_test2:hover{ background-position:-899px -138px; padding-top:4px;height:25px;}
+
 	a.an_search{
 	width:35px;
 	height:25px;
@@ -388,7 +416,7 @@
 	.ico10{background-position:-116px -34px;}
 	.ico11{background-position:0 -272px;}
 
-	.ico02,.ico13,.ico14,.ico15,.ico16,.ico17,.ico18,.ico19,.ico20,.ico21,.ico22,.ico23,.ico24a,.ico24b,.ico25,.ico_star1,.ico_star2,.ico_star3{
+	.ico02,.ico13,.ico14,.ico15,.ico16,.ico17,.ico18,.ico19,.ico20,.ico21,.ico22,.ico23,.ico24,.ico24b,.ico25,.ico_star1,.ico_star2,.ico_star3{
 	width:17px;
 	height:17px;
 	background: url(images/ico03_131230.png) no-repeat;
@@ -408,7 +436,7 @@
 	.ico21{background-position:-89px -18px;}
 	.ico22{background-position:-107px -18px;}
 	.ico23{background-position:-118px 0;}
-	.ico24a{background-position:-125px -18px;}
+	.ico24{background-position:-125px -18px;}
 	.ico24b{background-position:-23px -24px;}
 	.ico25{background-position:-136px 0;}
 	.ico_star1{background-position:-143px -18px;margin:0 1px;}
@@ -459,7 +487,7 @@
 	.ico49b{width:7px;height:11px;background-position:-328px 0;}
 	.ico49c{width:7px;height:11px;background-position:-911px 0;}
 
-	.ico50,.ico51,.ico52,.ico53,.ico54,.ico55,.ico56,.ico57,.ico58a,.ico58b,.ico59,.ico60,.ico_doc1,.ico_doc2,.ico_pdf1,.ico_pdf2,.ico_xls1,.ico_xls2,.ico_txt1,.ico_txt2,.ico_ppt1,.ico_ppt2,.ico_rtf1,.ico_rtf2,.ico_vsd1,.ico_vsd2,.ico_mp31,.ico_mp32,.ico_swf1,.ico_swf2,.ico_mp41,.ico_mp42,.ico_jpg1,.ico_jpg2,.ico_wps1,.ico_wps2,.ico_other1,.ico_other2{
+	.ico50,.ico51,.ico52,.ico53,.ico54,.ico55,.ico56,.ico57,.ico58a,.ico58b,.ico59,.ico60,.ico_doc1,.ico_doc2,.ico_pdf1,.ico_pdf2,.ico_xls1,.ico_xls2,.ico_txt1,.ico_txt2,.ico_ppt1,.ico_ppt2,.ico_rtf1,.ico_rtf2,.ico_vsd1,.ico_vsd2,.ico_mp31,.ico_mp32,.ico_swf1,.ico_swf2,.ico_mp41,.ico_mp42,.ico_jpg1,.ico_jpg2,.ico_wps1,.ico_wps2,.ico_other1,.ico_other2,.ico_wsp1,.ico_wsp2{
 	width:17px;
 	height:17px;
 	background: url(images/ico04_131230.png) no-repeat -192px 0;
@@ -504,8 +532,10 @@
 	.ico_wps2{background-position:-838px 0;}
 	.ico_other1{background-position:-873px 0;}
 	.ico_other2{background-position:-890px 0;}
+	.ico_wsp1{background-position:-921px 0;}
+	.ico_wsp2{background-position:-938px 0;}
 
-	.ico61,.ico62,.ico63,.ico64,.ico65,.ico66,.ico67,.ico68,.ico69,.ico70,.ico71,.ico72,.ico73,.ico74,.ico75,.ico76{
+	.ico61,.ico62,.ico63,.ico64,.ico65,.ico66,.ico67,.ico68,.ico69,.ico70,.ico71,.ico72,.ico73,.ico74,.ico75,.ico76,.ico77,.ico78{
 	width:17px;
 	height:17px;
 	background: url(images/ico05_131230.png) no-repeat 0 0;
@@ -529,3 +559,19 @@
 	.ico74{background-position:-248px 0;}
 	.ico75{background-position:-265px 0;}
 	.ico76{background-position:-282px 0;}
+	.ico77{width:18px;background: url(images/ico07_131230.png) no-repeat -549px -32px;}
+	.ico78{background-position:-356px 0;}
+
+	.ico79,.ico80,.ico81,.ico82,.ico83{
+	width:19px;
+	height:14px;
+	background: url(images/ico02_131230.png) no-repeat -116px 0;
+	display: inline-block;
+	vertical-align:middle;
+	margin-right:5px;
+}
+	.ico79{background-position:-213px -62px; height:17px;}
+	.ico80{background-position:-232px -62px;}
+	.ico81{background-position:-234px -41px;}
+	.ico82{background-position:-213px 0; width:42px; height:40px;}
+	.ico83{background-position:-118px -61px; width:14px; height:18px;}

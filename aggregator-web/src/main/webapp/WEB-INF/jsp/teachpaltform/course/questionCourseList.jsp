@@ -96,7 +96,7 @@
                     var versionname= typeof itm.versionname == 'undefined'||itm.versionname.length<1 ? "" :itm.versionname;
                     var materialname=typeof itm.materialname=='undefined'||itm.materialname.length<1?'':"("+itm.materialname+versionname+")";
                     shtml+='<tr>';
-                    shtml+='<td><p><a href="question?m=toAddQuestionByCourse&selectCourseid='+itm.courseid+'&addCourseId='+addCourseId+'&operate_type=1&questype='+questype+'" >'+itm.coursename+'&nbsp;&nbsp;'+materialname+'</a></p></td>';
+                    shtml+='<td><p><a href="question?m=toAddQuestionByCourse&selectCourseid='+itm.courseid+'&addCourseId='+addCourseId+'&operate_type='+operate_type+'&questype='+questype+'" >'+itm.coursename+'&nbsp;&nbsp;'+materialname+'</a></p></td>';
                     shtml+='<td>'+itm.questionnum+'</td>';
                     shtml+='<td>'+tname+'</td>';
                     shtml+='<td>'+itm.gradename+'</td>';
