@@ -9,4 +9,6 @@ import java.util.List;
 public interface IPaperQuestionDAO extends ICommonDAO<PaperQuestion>{
     Float getSumScore(PaperQuestion paperQuestion);
     public List<PaperQuestion> getQuestionByPaper(Integer paperid);
+
+    public List<Object> getSynchroSql(PaperQuestion paperquestion, StringBuilder sqlbuilder);
 }

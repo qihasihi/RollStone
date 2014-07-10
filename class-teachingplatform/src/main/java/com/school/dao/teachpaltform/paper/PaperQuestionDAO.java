@@ -94,7 +94,41 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
 			presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));				
 		return paperquestionList;	
 	}
-	
+
+    /**
+     * Í¬²½PaperQuestion
+     * @param paperquestion
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getSynchroSql(PaperQuestion paperquestion, StringBuilder sqlbuilder){
+        if(paperquestion==null || sqlbuilder==null)
+            return null;
+        sqlbuilder.append("{CALL j_paper_question_proc_synchro(");
+        List<Object>objList = new ArrayList<Object>();
+        if (paperquestion.getPaperid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(paperquestion.getPaperid());
+        } else
+            sqlbuilder.append("null,");
+        if (paperquestion.getQuestionid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(paperquestion.getQuestionid());
+        } else
+            sqlbuilder.append("null,");
+        if (paperquestion.getOrderidx() != null) {
+            sqlbuilder.append("?,");
+            objList.add(paperquestion.getOrderidx());
+        } else
+            sqlbuilder.append("null,");
+        if (paperquestion.getScore() != null) {
+            sqlbuilder.append("?,");
+            objList.add(paperquestion.getScore());
+        } else
+            sqlbuilder.append("null,");
+        sqlbuilder.append("?)}");
+        return objList;
+    }
 	public List<Object> getSaveSql(PaperQuestion paperquestion, StringBuilder sqlbuilder) {
 		if(paperquestion==null || sqlbuilder==null)
 			return null;

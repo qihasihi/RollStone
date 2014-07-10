@@ -30,6 +30,15 @@ public class TpCoursePaper {
     private Object taskflag;    //任务状态
     private Float score;
 
+    private Integer papertype;  //paperinfo papertype
+
+    public Integer getPapertype() {
+        return papertype;
+    }
+
+    public void setPapertype(Integer papertype) {
+        this.papertype = papertype;
+    }
 
     private Integer selecttype; //4:成卷 5:自主测试 6:微视频
 

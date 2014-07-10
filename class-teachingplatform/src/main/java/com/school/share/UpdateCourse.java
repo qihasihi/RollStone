@@ -6,16 +6,25 @@ import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
+import com.school.entity.teachpaltform.paper.PaperInfo;
+import com.school.entity.teachpaltform.paper.PaperQuestion;
+import com.school.entity.teachpaltform.paper.TpCoursePaper;
 import com.school.manager.DictionaryManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
+import com.school.manager.inter.teachpaltform.paper.IPaperManager;
+import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
+import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
+import com.school.manager.teachpaltform.paper.PaperManager;
+import com.school.manager.teachpaltform.paper.PaperQuestionManager;
+import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
 import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -149,6 +158,14 @@ public class UpdateCourse extends TimerTask{
         ITpCourseQuestionManager courseQuestionManager=(TpCourseQuestionManager)SpringBeanUtil.getBean("tpCourseQuestionManager");
         //专题教材
         ITpCourseTeachingMaterialManager tchMaterialManager=(TpCourseTeachingMaterialManager)SpringBeanUtil.getBean("tpCourseTeachingMaterialManager");
+        //专题试卷
+        ITpCoursePaperManager coursePaperManager=(TpCoursePaperManager)SpringBeanUtil.getBean("tpCoursePaperManager");
+        //试卷
+        IPaperManager paperManager=(PaperManager)SpringBeanUtil.getBean("paperManager");
+        //试卷与专题
+        ITpCoursePaperManager tpCoursePaperManager=(TpCoursePaperManager)SpringBeanUtil.getBean("tpCoursePaperManager");
+        //试卷与试题连接
+        IPaperQuestionManager paperQuestionManager=(PaperQuestionManager)SpringBeanUtil.getBean("paperQuestionManager");
         //取出相关前100个文件记录，进行循环
         while(true){
             List<String> xmlPathList=new ArrayList<String>();
@@ -429,17 +446,6 @@ public class UpdateCourse extends TimerTask{
                                          objArrayList=new ArrayList<List<Object>>();
                                      }
                                  }
-
-                                 //每条记录执行执行添加
-                                 if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()&&sqlArrayList.size()>0){
-                                     istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
-                                     if(!istrue){
-                                         System.out.println("更新专题失败!记录日志");
-                                         break;
-                                     }
-                                     sqlArrayList=new ArrayList<String>();
-                                     objArrayList=new ArrayList<List<Object>>();
-                                 }
                              }
                              //每条记录执行执行添加
                              if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()&&sqlArrayList.size()>0){
@@ -451,6 +457,77 @@ public class UpdateCourse extends TimerTask{
                                  sqlArrayList=new ArrayList<String>();
                                  objArrayList=new ArrayList<List<Object>>();
                              }
+                             //得到问题的SQL语句
+                             List<Map<String,Object>> quesTypeList=UpdateCourseUtil.getQuesPaperTypeByXml(tmp.getPath(),ctmp.getCourseid());
+                            if(quesTypeList!=null&&quesTypeList.size()>0){
+                                for(Map<String,Object> soMap:quesTypeList){
+                                    if(soMap==null)continue;
+
+                                    TpCoursePaper coursePaper=new TpCoursePaper();
+                                    String papertype=soMap.get("Papertype").toString();
+                                    String questionid=soMap.get("Questionid").toString();
+                                    if(papertype.trim().toLowerCase().equals("a"))
+                                        coursePaper.setPapertype(1);
+                                    else if(papertype.trim().toLowerCase().equals("b"))
+                                        coursePaper.setPapertype(2);
+                                    coursePaper.setCourseid(ctmp.getCourseid());
+                                    PageResult presult=new PageResult();
+                                    List<TpCoursePaper> cpList=coursePaperManager.getList(coursePaper, presult);
+                                    //得到ID
+                                     Long paperid=coursePaperManager.getNextId(true);
+                                    //如果不存在，则添加试卷信息
+                                    if(cpList==null||cpList.size()<1){
+                                        PaperInfo p=new PaperInfo();
+                                        p.setPaperid(paperid);
+                                        p.setPapername(ctmp.getCourseid() + papertype + "卷");
+                                        p.setPapertype(coursePaper.getPapertype());
+                                        p.setScore(10F);
+                                        p.setCuserid(0);
+                                        sqlbuilder=new StringBuilder();
+                                        objList=paperManager.getSaveSql(p, sqlbuilder);
+                                        if(sqlbuilder!=null){
+                                            objArrayList.add(objList);
+                                            sqlArrayList.add(sqlbuilder.toString());
+                                        }
+                                        //向TPCoursePaper表添加数据
+                                        TpCoursePaper cp=new TpCoursePaper();
+                                        cp.setCourseid(ctmp.getCourseid());
+                                        cp.setPaperid(paperid);
+                                        cp.setScore(10F);
+                                        sqlbuilder=new StringBuilder();
+                                        objList=tpCoursePaperManager.getSaveSql(cp, sqlbuilder);
+                                        if(sqlbuilder!=null){
+                                            objArrayList.add(objList);
+                                            sqlArrayList.add(sqlbuilder.toString());
+                                        }
+                                        //执行
+                                        //每条记录执行执行添加
+                                        if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()&&sqlArrayList.size()>0){
+                                            istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
+                                            if(!istrue){
+                                                System.out.println("更新试卷失败!记录日志");
+                                                break;
+                                            }
+                                            sqlArrayList=new ArrayList<String>();
+                                            objArrayList=new ArrayList<List<Object>>();
+                                        }
+
+                                    }else
+                                        paperid=cpList.get(0).getPaperid();
+
+                                    //向PaperQuestion表中添加数据
+                                    PaperQuestion pq=new PaperQuestion();
+                                    pq.setPaperid(paperid);
+                                    pq.setQuestionid(Long.parseLong(questionid.toString()));
+                                    pq.setScore(10F);
+                                    sqlbuilder=new StringBuilder();
+                                    objList=paperQuestionManager.getSynchroSql(pq,sqlbuilder);
+                                    if(sqlbuilder!=null){
+                                        objArrayList.add(objList);
+                                        sqlArrayList.add(sqlbuilder.toString());
+                                    }
+                                }
+                            }
 
                              //得到专题问题的SQL语句
                              List<TpCourseQuestion> cqlist=UpdateCourseUtil.getCourseQuesByXml(tmp.getPath(),ctmp.getCourseid());
@@ -1074,6 +1151,36 @@ class UpdateCourseUtil{
 //                            ques.setSchoolName(schoolname);
                             returnList.add(ques);
                         }
+                    }
+                }
+            }
+        }
+        return returnList;
+    }
+
+    /**
+     * 从XML中得到问题信息
+     * @param xmlFullName
+     * @param courseid
+     * @return
+     */
+    public static List<Map<String,Object>> getQuesPaperTypeByXml(String xmlFullName,Long courseid){
+        if(xmlFullName==null||courseid==null) return null;
+        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
+        if(list==null||list.size()<1)return null;
+        List<Map<String,Object>> returnList=new ArrayList<Map<String,Object>>();	//返回的集合
+        //循环得到相关实体
+        for (Object mapObj : list) {
+            Map<String,Object> courseMap=(Map<String,Object>)mapObj;
+            //相关ID,不能为空
+            if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
+                    &&!courseMap.get("CourseId").toString().trim().toUpperCase().equals("NULL")){
+                if(courseMap.get("CourseId").toString().trim().equals(courseid.toString())){
+                    if(courseMap.containsKey("QuesPaperTypeInfoList")){
+                        List<Map<String,Object>> quesList=(List<Map<String,Object>>)courseMap.get("QuesPaperTypeInfoList");
+                        if(quesList==null||quesList.size()<1)return returnList;
+                        //循环得到信息
+                        returnList=quesList;
                     }
                 }
             }

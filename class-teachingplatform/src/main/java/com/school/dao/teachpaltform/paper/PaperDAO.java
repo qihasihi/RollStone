@@ -93,7 +93,9 @@ public class PaperDAO extends CommonDAO<PaperInfo> implements IPaperDAO {
             objList.add(paperinfo.getParentpaperid());
         } else
             sqlbuilder.append("null,");
-		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+
+
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objList.add(presult.getPageNo());
 			objList.add(presult.getPageSize());
@@ -146,6 +148,7 @@ public class PaperDAO extends CommonDAO<PaperInfo> implements IPaperDAO {
 				objList.add(paperinfo.getPapertype());
 			} else
 				sqlbuilder.append("null,");
+
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -165,6 +168,7 @@ public class PaperDAO extends CommonDAO<PaperInfo> implements IPaperDAO {
 				objList.add(paperinfo.getPaperid());
 			} else
 				sqlbuilder.append("null,");
+
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -204,6 +208,7 @@ public class PaperDAO extends CommonDAO<PaperInfo> implements IPaperDAO {
 				objList.add(paperinfo.getPapertype());
 			} else
 				sqlbuilder.append("null,");
+
 		sqlbuilder.append("?)}");
 		return objList; 
 	}

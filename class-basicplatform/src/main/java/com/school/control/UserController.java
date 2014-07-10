@@ -3854,525 +3854,7 @@ public class UserController extends BaseController<UserInfo> {
 	    return new ModelAndView("index");
 	}
 
-/*	
-	public void toEttURL(HttpServletRequest request,HttpServletResponse response) throws Exception{
 
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
-
-		// 获得用户信息
-		UserInfo u = this.logined(request);
-		if (u == null) {
-			String msg = "您尚未登录，请登录后重试!";
-			response.getWriter().print(
-					"<script type='text/javascript'>alert('" + msg
-							+ "');history.go(-1);</script>");
-			return;
-		}
-		// ////////////////////////////变量存储
-		// 时间变量
-		Long time = new Date().getTime();
-		Integer uid = u.getUserid(); // 当前登录的ID
-		String uidref=u.getRef();
-		List<Integer> gradeidList = new ArrayList<Integer>(); // 年级列表
-		String realname = null;
-		Long usertype = null;
-		List<Long> subjectid = new ArrayList<Long>();
-		int sex = 3;
-		String email = null;
-		String key = "beijing0705sizhong2011jiekou";
-		// 连接地址"http://web.etiantian.com/ett20/study/common/szreg.jsp
-		StringBuilder http_1 = new StringBuilder(
-				"http://web.etiantian.com/ett20/study/common/szreg.jsp");
-
-		int isLearnGuide = 2; // 判断是否为学案导学用户 1：是 2:否
-
-		// 加载老师的细节角色部分。
-		boolean isflag = false, ishasflag = false, ishasgrade = false, isstuflag = false;
-		;
-		if (u.getCjJRoleUsers() != null && u.getCjJRoleUsers().size() > 0) {
-			for (Object obj : u.getCjJRoleUsers()) {
-				RoleUser ru = (RoleUser) obj;
-				if (ru != null) {
-					// 为班级，管理员，班主任为全部
-					if (ru.getRoleid()==UtilTool._ROLE_CLASSADVISE_ID							
-							|| ru.getRoleid()==UtilTool._ROLE_ADMIN_ID) {
-						// 全部学科
-						usertype = Long.valueOf(1);
-						subjectid.add(Long.valueOf(0));
-
-						if (ru.getRoleid()==UtilTool._ROLE_ADMIN_ID) {
-							// 全部年纪
-							gradeidList.add(0);
-							realname = ru.getRolename();
-							ishasgrade = true;
-						}
-						isflag = true;
-					}
-					if (ru.getRoleid()==UtilTool._ROLE_STU_ID)
-						isstuflag = true;
-
-				}
-			}
-		}
-		boolean isteacher=false;
-		// 判断是否为教师
-		// usertype
-		RoleUser ru=new RoleUser();
-		ru.getUserinfo().setRef(uidref);
-		ru.setRoleid(UtilTool._ROLE_TEACHER_ID);
-		List<RoleUser> ruList=this.roleUserManager.getList(ru, null);
-		if (ruList!=null&&ruList.size()>0) {
-			isteacher=true;
-			// 教师显示全部年纪 2012-02-03 11:06
-			gradeidList.clear();
-			gradeidList.add(0);
-			ishasgrade = true;// 已经存在年级的处理
-
-			// email
-			usertype = Long.valueOf(1);
-			TeacherInfo tea=new TeacherInfo();
-			tea.setUserid(uidref);
-			String ml=null; 
-			List<TeacherInfo> teaList= this.teacherManager.getList(tea,null);
-			if(teaList!=null&&teaList.size()>0)
-				ml=teaList.get(0).getTeacherpost();					
-			if (ml != null && ml.indexOf("@") != -1)
-				email = ml;
-		
-			if (teaList != null && teaList.size() > 0) {
-				if (teaList.get(0).getTeachername() != null
-						&& teaList.get(0).getTeachername().trim().length() > 0)
-					realname = teaList.get(0).getTeachername();
-				if (teaList.get(0).getTeachersex().trim().equals("女"))
-					sex = 2;
-				else
-					sex = 1;
-			} else {
-				String msg = "异常错误!您的信息中详细信息，请联系管理人员!!";
-				response.getWriter().print(
-						"<script type='text/javascript'>alert('" + msg
-								+ "');history.go(-1);</script>");
-				return;
-			}
-
-			// 如果不存在教务，班主任角色 则按课程显示
-			if (!isflag) {
-				Object[] courseArray = teaList.get(0).getSubjects().split(
-						"\\,");
-				if (courseArray != null && courseArray.length > 0 && !ishasflag) {
-					// 存储学科临时参数
-					for (Object obj : courseArray) {
-						if (obj != null && obj.toString().trim().length() > 0) {
-							if (obj.toString().trim().indexOf("语文") != -1) {
-								subjectid.add(Long.valueOf(1));
-								ishasflag = true;
-							} else if (obj.toString().trim().indexOf("数学") != -1) {
-								subjectid.add(Long.valueOf(2));
-								ishasflag = true;
-							} else if (obj.toString().trim().indexOf("英语") != -1
-									|| obj.toString().trim().indexOf("外语") != -1) {
-								subjectid.add(Long.valueOf(3));
-								ishasflag = true;
-							} else if (obj.toString().trim().indexOf("物理") != -1) {
-								subjectid.add(Long.valueOf(4));
-								ishasflag = true;
-							} else if (obj.toString().trim().indexOf("化学") != -1) {
-								subjectid.add(Long.valueOf(5));
-								ishasflag = true;
-							} else if (obj.toString().trim().indexOf("历史") != -1) {
-								subjectid.add(Long.valueOf(6));
-								ishasflag = true;
-							} else if (obj.toString().trim().indexOf("生物") != -1) {
-								subjectid.add(Long.valueOf(7));
-								ishasflag = true;
-							} else if (obj.toString().trim().indexOf("地理") != -1) {
-								subjectid.add(Long.valueOf(8));
-								ishasflag = true;
-							} else if (obj.toString().trim().indexOf("政治") != -1) {
-								subjectid.add(Long.valueOf(9));
-								ishasflag = true;
-							} else if (obj.toString().trim().indexOf("自然科学") != -1) {
-								subjectid.add(Long.valueOf(10));
-								ishasflag = true;
-							} else if (obj.toString().trim().indexOf("学生处") != -1
-									|| obj.toString().trim().indexOf("电教组") != -1
-									|| obj.toString().trim().indexOf("校办") != -1
-									|| obj.toString().trim().indexOf("教学处") != -1
-									|| obj.toString().trim().indexOf("总务处") != -1
-									|| obj.toString().trim().indexOf("网络") != -1) {
-								if (!gradeidList.contains(0)) {
-									gradeidList.add(0);
-								}
-								subjectid.add(Long.valueOf(0));
-								ishasflag = true;
-								ishasgrade = true;
-							}
-						}
-					}
-					// 不显示学科信息
-					if (!ishasflag) {
-						subjectid.add(Long.valueOf(-1));
-					}
-				}
-			}
-
-		} else {
-			StudentInfo stu=new StudentInfo();
-			stu.setUserref(uidref);
-			//StudentInfo stu 
-			List<StudentInfo> stuList= this.studentManager.getList(stu,null);
-			if(stuList!=null&&stuList.size()>0)
-				stu=stuList.get(0);
-			else
-				stu=null;
-			if (stu != null) {
-				usertype = Long.valueOf(3);
-				realname = stu.getStuname();
-				if (stu.getStusex().trim().equals("0"))
-					sex = 2;
-				else
-					sex = 1;
-				// 处理是否是学案导学学生。
-//				if (stu.getIslearnGuide() != null
-//						&& stu.getIslearnGuide().trim().equals("是")) {
-//					isLearnGuide = 1;
-//				}
-
-			} else if (!isflag) {
-				String msg = "异常错误!您的信息中存在异常，请联系管理人员!!";
-				response.getWriter().print(
-						"<script type='text/javascript'>alert('" + msg
-								+ "');history.go(-1);</script>");
-				return;
-			}
-		}
-		TermInfo t = this.termManager.getAutoTerm();
-		// 加载年级
-		if (!ishasgrade) {
-			ClassUser cu = new ClassUser();
-			cu.setUserid(uidref);
-			// 查询当前的年级  如果当前学期没有数据，则不存入学期
-			String tmYear = t.getYear().trim();
-			 cu.setYear(tmYear);
-			List<ClassUser> cuList = this.classUserManager.getList(cu, null);
-			// 加载老师教授最新年级GradeId
-			// 标识是否在7.15 - 1.1号之间
-			boolean isshengji = false;
-			if(cuList==null||cuList.size()<1){
-				cu.setYear(null);
-				cuList =  this.classUserManager.getList(cu, null);
-				// 现在的
-				Date nowd = new Date();
-				Date d = UtilTool.StringConvertToDate(nowd.getYear() + "-07-15");
-
-				if (nowd.getTime() >= d.getTime() && usertype == 3)
-					isshengji = true;
-			}
-				
-			if (cuList != null && cuList.size() > 0) {
-				boolean isbiye = false;
-				for (ClassUser cuObj : cuList) {
-					String clsGrade = cuObj.getClassgrade();
-					if (clsGrade != null) {
-						if (clsGrade.trim().equals("高三")
-								|| clsGrade.trim().equals("高中三年级")) {
-							// 说明是毕业学生
-							if (!cuObj.getYear().trim()
-									.equals(tmYear)) {
-								isbiye = true;
-								break;
-							}
-							if (!gradeidList.contains(1))
-								gradeidList.add(1);
-						} else if (clsGrade.trim().equals("高二")
-								|| clsGrade.trim().equals("高中二年级")) {
-							int currentClsCode = 2;
-							// 如果但前年级不等于班级年级，说明未升级操作。则
-							if (isshengji
-									&& !cuObj.getYear().trim()
-											.equals(tmYear.trim()))
-								currentClsCode -= 1;
-							if (!gradeidList.contains(currentClsCode))
-								gradeidList.add(currentClsCode);
-						} else
-
-						if (clsGrade.trim().equals("高一")
-								|| clsGrade.trim().equals("高中一年级")) {
-							int currentClsCode = 3;
-							// 如果但前年级不等于班级年级，说明未升级操作。则
-							if (isshengji
-									&& !cuObj.getYear().trim()
-											.equals(tmYear.trim()))
-								currentClsCode -= 1;
-							if (!gradeidList.contains(currentClsCode))
-								gradeidList.add(currentClsCode);
-						} else if (clsGrade.trim().equals("初三")
-								|| clsGrade.trim().equals("初中三年级")) {
-							int currentClsCode = 4;
-							// 如果但前年级不等于班级年级，说明未升级操作。则
-							if (isshengji
-									&& !cuObj.getYear().trim()
-											.equals(tmYear.trim()))
-								currentClsCode -= 1;
-							if (!gradeidList.contains(currentClsCode))
-								gradeidList.add(currentClsCode);
-						} else if (clsGrade.trim().equals("初二")
-								|| clsGrade.trim().equals("初中二年级")) {
-							int currentClsCode = 5;
-							// 如果但前年级不等于班级年级，说明未升级操作。则
-							if (isshengji
-									&& !cuObj.getYear().trim()
-											.equals(tmYear.trim()))
-								currentClsCode -= 1;
-							if (!gradeidList.contains(currentClsCode))
-								gradeidList.add(currentClsCode);
-						} else if (clsGrade.trim().equals("初一")
-								|| clsGrade.trim().equals("初中一年级")) {
-							int currentClsCode = 6;
-							// 如果但前年级不等于班级年级，说明未升级操作。则
-							if (isshengji
-									&& !cuObj.getYear().trim()
-											.equals(tmYear.trim()))
-								currentClsCode -= 1;
-							if (!gradeidList.contains(currentClsCode))
-								gradeidList.add(currentClsCode);
-						} else if (clsGrade.trim().equals("小学六年级")
-								|| clsGrade.trim().equals("小六")) {
-							int currentClsCode = 7;
-							// 如果但前年级不等于班级年级，说明未升级操作。则
-							if (isshengji
-									&& !cuObj.getYear().trim()
-											.equals(tmYear.trim()))
-								currentClsCode -= 1;
-							if (!gradeidList.contains(currentClsCode))
-								gradeidList.add(currentClsCode);
-						} else if (clsGrade.trim().equals("小学五年级")
-								|| clsGrade.trim().equals("小五")) {
-							int currentClsCode = 8;
-							// 如果但前年级不等于班级年级，说明未升级操作。则
-							if (isshengji
-									&& !cuObj.getYear().trim()
-											.equals(tmYear.trim()))
-								currentClsCode -= 1;
-							if (!gradeidList.contains(currentClsCode))
-								gradeidList.add(currentClsCode);
-						} else if (clsGrade.trim().equals("小学四年级")
-								|| clsGrade.trim().equals("小四")) {
-							int currentClsCode = 9;
-							// 如果但前年级不等于班级年级，说明未升级操作。则
-							if (isshengji
-									&& !cuObj.getYear().trim()
-											.equals(tmYear.trim()))
-								currentClsCode -= 1;
-							if (!gradeidList.contains(currentClsCode))
-								gradeidList.add(currentClsCode);
-						} else if (clsGrade.trim().equals("小学三年级")
-								|| clsGrade.trim().equals("小三")) {
-							int currentClsCode = 10;
-							// 如果但前年级不等于班级年级，说明未升级操作。则
-							if (isshengji
-									&& !cuObj.getYear().trim()
-											.equals(tmYear.trim()))
-								currentClsCode -= 1;
-							if (!gradeidList.contains(currentClsCode))
-								gradeidList.add(currentClsCode);
-						}
-
-						if (gradeidList != null && gradeidList.size() > 0) {
-							if (isstuflag)
-								break;
-						}
-					}
-				}
-				if (isbiye && !isteacher && !isflag) {
-					String msg = "抱歉!您已经毕业，将无法使用网校平台!";
-					response.getWriter().print(
-							"<script type='text/javascript'>alert('" + msg
-									+ "');history.go(-1);</script>");
-					return;
-				}
-			} else {
-				String msg = "抱歉!您在本学期中没有新的班级信息!无法进入!详情请联系管理人员!";
-				response.getWriter().print(
-						"<script type='text/javascript'>alert('" + msg
-								+ "');history.go(-1);</script>");
-				return;
-			}
-		}
-
-		// 加密
-		StringBuilder md5Builder = new StringBuilder(time.toString());
-		if (gradeidList != null && gradeidList.size() > 0) {
-			StringBuilder gradeidBuilder = new StringBuilder();
-			for (Integer gl : gradeidList) {
-				gradeidBuilder.append(gl);
-				if (gl != gradeidList.get(gradeidList.size() - 1))
-					gradeidBuilder.append(",");
-			}
-			if (gradeidBuilder.toString().trim().length() > 0)
-				md5Builder.append(gradeidBuilder);
-		}
-		md5Builder.append(uid);
-		md5Builder.append(realname);
-		md5Builder.append(usertype);
-		if (subjectid != null && subjectid.size() > 0) {
-			for (Long sid : subjectid) {
-				md5Builder.append(sid);
-			}
-		}
-		md5Builder.append(sex);
-		if (email != null) {
-			md5Builder.append(email);
-		}
-		// 为了应用性，可以测试以及兼容性，不带此参数
-		// if(usertype==3){
-		// md5Builder.append(isLearnGuide);
-		// }
-		md5Builder.append(time);
-		md5Builder.append(key);
-
-		String md5Str = MD5_NEW.getJDKMD5(md5Builder.toString());
-		// 加载整个连接
-		http_1.append("?uid=" + uid); // a
-		http_1.append("&realname="
-				+ java.net.URLEncoder.encode(realname, "UTF-8")); // b
-		http_1.append("&usertype=" + usertype); // c
-		http_1.append("&sex=" + sex); // d
-		http_1.append("&time=" + time); // e
-		if (email != null && email.trim().indexOf("@") != -1)
-			http_1.append("&email="
-					+ java.net.URLEncoder.encode(email.trim(), "UTF-8")); // f
-		if (gradeidList != null && gradeidList.size() > 0) {
-			StringBuilder gradeidBuilder = new StringBuilder();
-			for (Integer gl : gradeidList) {
-				gradeidBuilder.append(gl);
-				if (gl != gradeidList.get(gradeidList.size() - 1))
-					gradeidBuilder.append(",");
-				// if(gl!=gradeidList.get(gradeidList.size()-1))
-				// gradeidBuilder.append(",");
-			}
-			if (gradeidBuilder.toString().trim().length() > 0)
-				http_1.append("&gradeid=" + gradeidBuilder.toString());
-		}
-		if (subjectid != null && subjectid.size() > 0) {
-			for (Long sl : subjectid) {
-				http_1.append("&subjectid=" + sl); // h
-			}
-		}
-		if (usertype == 3) {
-
-			http_1.append("&islearnguide=" + isLearnGuide);
-		}
-		http_1.append("&s=" + md5Str); // i
-		// 执行链接(为了安全性)
-
-		HttpURLConnection httpConnection;
-		URL url;
-		int code;
-		try {
-			url = new URL(http_1.toString());
-
-			httpConnection = (HttpURLConnection) url.openConnection();
-
-			httpConnection.setRequestMethod("POST");
-			// httpConnection.setRequestProperty("Content-Length",
-			// String.valueOf(parameters.length()));
-			httpConnection.setRequestProperty("Content-Type",
-					"application/x-www-form-urlencoded");
-
-			httpConnection.setDoOutput(true);
-			httpConnection.setDoInput(true);
-			/*
-			 * PrintWriter printWriter = new
-			 * PrintWriter(httpConnection.getOutputStream());
-			 * printWriter.print(parameters); printWriter.close();
-			 */
-
-	/*		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-					httpConnection.getOutputStream(), "8859_1");
-			// outputStreamWriter.write(parameters);
-			outputStreamWriter.flush();
-			outputStreamWriter.close();
-
-			code = httpConnection.getResponseCode();
-		} catch (Exception e) {
-			// 异常提示
-			response
-					.getWriter()
-					.print(
-							"<script type='text/javascript'>alert('异常错误!ETT未响应!');</script>");
-			return;
-		}
-		StringBuffer stringBuffer = new StringBuffer();
-		if (code == HttpURLConnection.HTTP_OK) {
-			try {
-				String strCurrentLine;
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(httpConnection.getInputStream()));
-				while ((strCurrentLine = reader.readLine()) != null) {
-					stringBuffer.append(strCurrentLine).append("\n");
-				}
-				reader.close();
-			} catch (IOException e) {
-				response
-						.getWriter()
-						.print(
-								"<script type='text/javascript'>alert('异常错误!');</script>");
-				return;
-			}
-		}
-
-		String codeStr = null;
-		String resultStr = null;
-		if (stringBuffer.toString().trim().length() > 0) {
-			String[] objArray = stringBuffer.toString().split(",");
-			if (objArray.length > 0) {
-				for (String strObj : objArray) {
-					String[] keyValueObj = strObj.toString().trim().split(":");
-					if (keyValueObj.length == 2) {
-						String tempName = keyValueObj[0].replace("\"", "")
-								.replace("null", "").replace("{", "").replace(
-										"(", "").trim();
-						String tempValue = keyValueObj[1].replace("\"", "");
-						if (tempName.equals("code")) {
-							codeStr = tempValue.trim();
-						}
-						if (tempName.equals("result")) {
-							resultStr = tempValue.trim();
-						}
-					}
-				}
-			} else {
-				response
-						.getWriter()
-						.print(
-								"<script type='text/javascript'>alert('异常错误!返回值必须是JSON格式!');</script>");
-				return;
-			}
-
-		} else {
-			// 执行提示
-		}
-		if (resultStr == null || resultStr.trim().equals("-1")) {
-			// 提示 返回
-			response
-					.getWriter()
-					.print(
-							"<script type='text/javascript'>alert('异常错误!您的信息不完整并且验证失败!请重新登陆后重试!');window.close();</script>");
-			return;
-		}
-		String urlStr = "http://web.etiantian.com/ett20/study/common/szlogin.jsp?code="
-				+ codeStr;
-		response.sendRedirect(urlStr);
-		return;
-
-		// response.getWriter().
-		// print("{\"type\":\"success\",\"msg\":\""+http_1.toString()+"\"}");
-	
-		
-	}*/
 	@RequestMapping(params="m=testPageIndex",method=RequestMethod.GET)
 	public void testPageIndex(HttpServletRequest request,HttpServletResponse response)throws Exception{
 //		System.out.println("1");
@@ -4713,7 +4195,460 @@ public class UserController extends BaseController<UserInfo> {
         }
     }
 
+    /**
+     * 恶心的四中免费进入。。
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=mfToEttUrl",method=RequestMethod.GET)
+    public void toEttURL(HttpServletRequest request,HttpServletResponse response) throws Exception{
 
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+
+        // 获得用户信息
+        UserInfo u = this.logined(request);
+        if (u == null) {
+            String msg = "您尚未登录，请登录后重试!";
+            response.getWriter().print(
+                    "<script type='text/javascript'>alert('" + msg
+                            + "');history.go(-1);</script>");
+            return;
+        }
+        // ////////////////////////////变量存储
+        // 时间变量
+        Long time = new Date().getTime();
+        Integer uid = u.getUserid(); // 当前登录的ID
+        String uidref=u.getRef();
+        List<Integer> gradeidList = new ArrayList<Integer>(); // 年级列表
+        String realname = null;
+        Long usertype = null;
+        List<Long> subjectid = new ArrayList<Long>();
+        int sex = 3;
+        String email = null;
+        String key = "beijing0705sizhong2011jiekou";
+        // 连接地址"http://web.etiantian.com/ett20/study/common/szreg.jsp
+
+        StringBuilder http_1 = new StringBuilder(
+                "http://langyilin.etiantian.com:8080/ett20/study/common/szreg.jsp");
+
+        int isLearnGuide = 2; // 判断是否为学案导学用户 1：是 2:否
+
+        // 加载老师的细节角色部分。
+        boolean isflag = false, ishasflag = false, ishasgrade = false, isstuflag = false;
+        ;
+        if (u.getCjJRoleUsers() != null && u.getCjJRoleUsers().size() > 0) {
+            for (Object obj : u.getCjJRoleUsers()) {
+                RoleUser ru = (RoleUser) obj;
+                if (ru != null) {
+                    // 为班级，管理员，班主任为全部
+                    if (ru.getRoleid()==UtilTool._ROLE_CLASSADVISE_ID
+                            || ru.getRoleid()==UtilTool._ROLE_ADMIN_ID) {
+                        // 全部学科
+                        usertype = Long.valueOf(1);
+                        subjectid.add(Long.valueOf(0));
+
+                        if (ru.getRoleid()==UtilTool._ROLE_ADMIN_ID) {
+                            // 全部年纪
+                            gradeidList.add(0);
+                            realname = ru.getRolename();
+                            ishasgrade = true;
+                        }
+                        isflag = true;
+                    }
+                    if (ru.getRoleid()==UtilTool._ROLE_STU_ID)
+                        isstuflag = true;
+
+                }
+            }
+        }
+        boolean isteacher=false;
+        // 判断是否为教师
+        // usertype
+        RoleUser ru=new RoleUser();
+        ru.getUserinfo().setRef(uidref);
+        ru.setRoleidstr(UtilTool._ROLE_TEACHER_ID.toString());
+        List<RoleUser> ruList=this.roleUserManager.getList(ru, null);
+        if (ruList!=null&&ruList.size()>0) {
+            isteacher=true;
+            // 教师显示全部年纪 2012-02-03 11:06
+            gradeidList.clear();
+            gradeidList.add(0);
+            ishasgrade = true;// 已经存在年级的处理
+
+            // email
+            usertype = Long.valueOf(1);
+            TeacherInfo tea=new TeacherInfo();
+            tea.setUserid(uidref);
+            String ml=null;
+            List<TeacherInfo> teaList= this.teacherManager.getList(tea,null);
+            if(teaList!=null&&teaList.size()>0)
+                ml=teaList.get(0).getTeacherpost();
+            if (ml != null && ml.indexOf("@") != -1)
+                email = ml;
+
+            if (teaList != null && teaList.size() > 0) {
+                if (teaList.get(0).getTeachername() != null
+                        && teaList.get(0).getTeachername().trim().length() > 0)
+                    realname = teaList.get(0).getTeachername();
+                if (teaList.get(0).getTeachersex().trim().equals("女"))
+                    sex = 2;
+                else
+                    sex = 1;
+            } else {
+                String msg = "异常错误!您的信息中没有详细信息，请联系管理人员!!";
+                response.getWriter().print(
+                        "<script type='text/javascript'>alert('" + msg
+                                + "');history.go(-1);</script>");
+                return;
+            }
+
+            // 如果不存在教务，班主任角色 则按课程显示
+            if (!isflag) {
+                Object[] courseArray = teaList.get(0).getSubjects().split(
+                        "\\,");
+                if (courseArray != null && courseArray.length > 0 && !ishasflag) {
+                    // 存储学科临时参数
+                    for (Object obj : courseArray) {
+                        if (obj != null && obj.toString().trim().length() > 0) {
+                            if (obj.toString().trim().indexOf("语文") != -1) {
+                                subjectid.add(Long.valueOf(1));
+                                ishasflag = true;
+                            } else if (obj.toString().trim().indexOf("数学") != -1) {
+                                subjectid.add(Long.valueOf(2));
+                                ishasflag = true;
+                            } else if (obj.toString().trim().indexOf("英语") != -1
+                                    || obj.toString().trim().indexOf("外语") != -1) {
+                                subjectid.add(Long.valueOf(3));
+                                ishasflag = true;
+                            } else if (obj.toString().trim().indexOf("物理") != -1) {
+                                subjectid.add(Long.valueOf(4));
+                                ishasflag = true;
+                            } else if (obj.toString().trim().indexOf("化学") != -1) {
+                                subjectid.add(Long.valueOf(5));
+                                ishasflag = true;
+                            } else if (obj.toString().trim().indexOf("历史") != -1) {
+                                subjectid.add(Long.valueOf(6));
+                                ishasflag = true;
+                            } else if (obj.toString().trim().indexOf("生物") != -1) {
+                                subjectid.add(Long.valueOf(7));
+                                ishasflag = true;
+                            } else if (obj.toString().trim().indexOf("地理") != -1) {
+                                subjectid.add(Long.valueOf(8));
+                                ishasflag = true;
+                            } else if (obj.toString().trim().indexOf("政治") != -1) {
+                                subjectid.add(Long.valueOf(9));
+                                ishasflag = true;
+                            } else if (obj.toString().trim().indexOf("自然科学") != -1) {
+                                subjectid.add(Long.valueOf(10));
+                                ishasflag = true;
+                            } else if (obj.toString().trim().indexOf("学生处") != -1
+                                    || obj.toString().trim().indexOf("电教组") != -1
+                                    || obj.toString().trim().indexOf("校办") != -1
+                                    || obj.toString().trim().indexOf("教学处") != -1
+                                    || obj.toString().trim().indexOf("总务处") != -1
+                                    || obj.toString().trim().indexOf("网络") != -1) {
+                                if (!gradeidList.contains(0)) {
+                                    gradeidList.add(0);
+                                }
+                                subjectid.add(Long.valueOf(0));
+                                ishasflag = true;
+                                ishasgrade = true;
+                            }
+                        }
+                    }
+                    // 不显示学科信息
+                    if (!ishasflag) {
+                        subjectid.add(Long.valueOf(-1));
+                    }
+                }
+            }
+
+        } else {
+            StudentInfo stu=new StudentInfo();
+            stu.setUserref(uidref);
+            //StudentInfo stu
+            List<StudentInfo> stuList= this.studentManager.getList(stu,null);
+            if(stuList!=null&&stuList.size()>0)
+                stu=stuList.get(0);
+            else
+                stu=null;
+            if (stu != null) {
+                usertype = Long.valueOf(3);
+                realname = stu.getStuname();
+                if (stu.getStusex().trim().equals("0"))
+                    sex = 2;
+                else
+                    sex = 1;
+                // 处理是否是学案导学学生。
+//				if (stu.getIslearnGuide() != null
+//						&& stu.getIslearnGuide().trim().equals("是")) {
+//					isLearnGuide = 1;
+//				}
+
+            } else if (!isflag) {
+                String msg = "异常错误!您的信息中存在异常，请联系管理人员!!";
+                response.getWriter().print(
+                        "<script type='text/javascript'>alert('" + msg
+                                + "');history.go(-1);</script>");
+                return;
+            }
+        }
+        TermInfo t = this.termManager.getAutoTerm();
+        // 加载年级
+        if (!ishasgrade) {
+            ClassUser cu = new ClassUser();
+            cu.setUserid(uidref);
+            // 查询当前的年级  如果当前学期没有数据，则不存入学期
+            String tmYear = t.getYear().trim();
+            cu.setYear(tmYear);
+            List<ClassUser> cuList = this.classUserManager.getList(cu, null);
+            // 加载老师教授最新年级GradeId
+            // 标识是否在7.15 - 1.1号之间
+            boolean isshengji = false;
+            if(cuList==null||cuList.size()<1){
+                cu.setYear(null);
+                cuList =  this.classUserManager.getList(cu, null);
+                // 现在的
+                Date nowd = new Date();
+                Date d = UtilTool.StringConvertToDate(nowd.getYear() + "-07-15");
+
+                if (nowd.getTime() >= d.getTime() && usertype == 3)
+                    isshengji = true;
+            }
+
+            if (cuList != null && cuList.size() > 0) {
+                boolean isbiye = false;
+                for (ClassUser cuObj : cuList) {
+                    String clsGrade = cuObj.getClassgrade();
+                    if (clsGrade != null) {
+                        if (clsGrade.trim().equals("高三")
+                                || clsGrade.trim().equals("高中三年级")) {
+                            // 说明是毕业学生
+                            if (!cuObj.getYear().trim()
+                                    .equals(tmYear)) {
+                                isbiye = true;
+                                break;
+                            }
+                            if (!gradeidList.contains(1))
+                                gradeidList.add(1);
+                        } else if (clsGrade.trim().equals("高二")
+                                || clsGrade.trim().equals("高中二年级")) {
+                            int currentClsCode = 2;
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode -= 1;
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else
+
+                        if (clsGrade.trim().equals("高一")
+                                || clsGrade.trim().equals("高中一年级")) {
+                            int currentClsCode = 3;
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode -= 1;
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("初三")
+                                || clsGrade.trim().equals("初中三年级")) {
+                            int currentClsCode = 4;
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode -= 1;
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("初二")
+                                || clsGrade.trim().equals("初中二年级")) {
+                            int currentClsCode = 5;
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode -= 1;
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("初一")
+                                || clsGrade.trim().equals("初中一年级")) {
+                            int currentClsCode = 6;
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode -= 1;
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("小学六年级")
+                                || clsGrade.trim().equals("小六")) {
+                            int currentClsCode = 7;
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode -= 1;
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("小学五年级")
+                                || clsGrade.trim().equals("小五")) {
+                            int currentClsCode = 8;
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode -= 1;
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("小学四年级")
+                                || clsGrade.trim().equals("小四")) {
+                            int currentClsCode = 9;
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode -= 1;
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("小学三年级")
+                                || clsGrade.trim().equals("小三")) {
+                            int currentClsCode = 10;
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode -= 1;
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        }
+
+                        if (gradeidList != null && gradeidList.size() > 0) {
+                            if (isstuflag)
+                                break;
+                        }
+                    }
+                }
+                if (isbiye && !isteacher && !isflag) {
+                    String msg = "抱歉!您已经毕业，将无法使用网校平台!";
+                    response.getWriter().print(
+                            "<script type='text/javascript'>alert('" + msg
+                                    + "');history.go(-1);</script>");
+                    return;
+                }
+            } else {
+                String msg = "抱歉!您在本学期中没有新的班级信息!无法进入!详情请联系管理人员!";
+                response.getWriter().print(
+                        "<script type='text/javascript'>alert('" + msg
+                                + "');history.go(-1);</script>");
+                return;
+            }
+        }
+
+        // 加密
+        StringBuilder md5Builder = new StringBuilder(time.toString());
+        if (gradeidList != null && gradeidList.size() > 0) {
+            StringBuilder gradeidBuilder = new StringBuilder();
+            for (Integer gl : gradeidList) {
+                gradeidBuilder.append(gl);
+                if (gl != gradeidList.get(gradeidList.size() - 1))
+                    gradeidBuilder.append(",");
+            }
+            if (gradeidBuilder.toString().trim().length() > 0)
+                md5Builder.append(gradeidBuilder);
+        }
+        md5Builder.append(uid);
+        md5Builder.append(realname);
+        md5Builder.append(usertype);
+        if (subjectid != null && subjectid.size() > 0) {
+            for (Long sid : subjectid) {
+                md5Builder.append(sid);
+            }
+        }
+        md5Builder.append(sex);
+        if (email != null) {
+            md5Builder.append(email);
+        }
+        // 为了应用性，可以测试以及兼容性，不带此参数
+        // if(usertype==3){
+        // md5Builder.append(isLearnGuide);
+        // }
+        md5Builder.append(time);
+        md5Builder.append(key);
+
+        String md5Str = Encrypt.byte2hex(Encrypt.encryptString(md5Builder.toString(), ""));
+        // 加载整个连接
+        http_1.append("?uid=" + uid); // a
+        http_1.append("&realname="
+                + java.net.URLEncoder.encode(realname, "UTF-8")); // b
+        http_1.append("&usertype=" + usertype); // c
+        http_1.append("&sex=" + sex); // d
+        http_1.append("&time=" + time); // e
+        if (email != null && email.trim().indexOf("@") != -1)
+            http_1.append("&email="
+                    + java.net.URLEncoder.encode(email.trim(), "UTF-8")); // f
+        if (gradeidList != null && gradeidList.size() > 0) {
+            StringBuilder gradeidBuilder = new StringBuilder();
+            for (Integer gl : gradeidList) {
+                gradeidBuilder.append(gl);
+                if (gl != gradeidList.get(gradeidList.size() - 1))
+                    gradeidBuilder.append(",");
+                // if(gl!=gradeidList.get(gradeidList.size()-1))
+                // gradeidBuilder.append(",");
+            }
+            if (gradeidBuilder.toString().trim().length() > 0)
+                http_1.append("&gradeid=" + gradeidBuilder.toString());
+        }
+        if (subjectid != null && subjectid.size() > 0) {
+            for (Long sl : subjectid) {
+                http_1.append("&subjectid=" + sl); // h
+            }
+        }
+        if (usertype == 3) {
+
+            http_1.append("&islearnguide=" + isLearnGuide);
+        }
+        http_1.append("&s=" + md5Str); // i
+        http_1.append("&srcId="+50006);
+        // 执行链接(为了安全性)
+      //  String responseHTML=UserTool.getOutputHTML(http_1.toString(),null);
+        String responseHTML=UserTool.sendPostURL(http_1.toString(),null); 
+
+        if (responseHTML == null) {
+            // 提示 返回
+            response
+                    .getWriter()
+                    .print(
+                            "<script type='text/javascript'>alert('异常错误!您的信息不完整并且验证失败!请重新登陆后重试!');window.close();</script>");
+            return;
+        }
+        JSONObject jo=JSONObject.fromObject(responseHTML);
+        if(jo==null||jo.get("result")==null||jo.get("result").toString().trim().equals("-1")
+                ||!jo.containsKey("code")||jo.get("code")==null||jo.get("code").toString().trim().length()<1){
+            response
+                    .getWriter()
+                    .print(
+                            "<script type='text/javascript'>alert('异常错误!您的信息不完整并且验证失败!请重新登陆后重试!');window.close();</script>");
+            return;
+        }
+//        String urlStr = "http://web.etiantian.com/ett20/study/common/szlogin.jsp?code="
+//                + responseHTML;
+        String urlStr = "http://langyilin.etiantian.com:8080/ett20/study/common/szlogin.jsp?code="
+                + jo.get("code");
+        System.out.println(responseHTML);
+        response.sendRedirect(urlStr);
+        return;
+
+        // response.getWriter().
+        // print("{\"type\":\"success\",\"msg\":\""+http_1.toString()+"\"}");
+
+
+    }
 
     /**
      * 进入四中网校平台
@@ -4726,9 +4661,16 @@ public class UserController extends BaseController<UserInfo> {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+
+
+
         //功能ID
         String mid=request.getParameter("mid");
         String modelName=request.getParameter("modelName");
+        if(isEttNoRegSchool()&&mid==null&&modelName==null){ //如果是免费版本，则进入该系统
+            response.sendRedirect("user?m=mfToEttUrl");return;
+        }
+
         // 获得用户信息
         UserInfo u = request.getAttribute("tmpUser")==null?this.logined(request):(UserInfo)request.getAttribute("tmpUser");
         // ////////////////////////////变量存储
@@ -5131,6 +5073,45 @@ public class UserController extends BaseController<UserInfo> {
                 }
                 paramMap.put("subjectid",subjectidStr);
             }
+
+
+
+            // 加密
+            StringBuilder md5Builder = new StringBuilder(time.toString());
+            if (gradeidList != null && gradeidList.size() > 0) {
+                StringBuilder gradeidBuilder = new StringBuilder();
+                for (Integer gl : gradeidList) {
+                    gradeidBuilder.append(gl);
+                    if (gl != gradeidList.get(gradeidList.size() - 1))
+                        gradeidBuilder.append(",");
+                }
+                if (gradeidBuilder.toString().trim().length() > 0)
+                    md5Builder.append(gradeidBuilder);
+            }
+            md5Builder.append(uid);
+            md5Builder.append(realname);
+            md5Builder.append(usertype);
+            if (subjectid != null && subjectid.size() > 0) {
+                for (Long sid : subjectid) {
+                    md5Builder.append(sid);
+                }
+            }
+            md5Builder.append(sex);
+            if (email != null) {
+                md5Builder.append(email);
+            }
+            // 为了应用性，可以测试以及兼容性，不带此参数
+            // if(usertype==3){
+            // md5Builder.append(isLearnGuide);
+            // }
+            md5Builder.append(time);
+            md5Builder.append(key);
+
+            String md5Str = MD5_NEW.getMD5Result(md5Builder.toString());
+
+           // http_1.append("&s=" + md5Str); // i
+
+
             paramMap.put("serverendtime",servertime);
             paramMap.put("s",UserTool.zuzhiTeacherSParameter(uid.toString(),gradeidList,realname,usertype.toString(),sex+"",email,schoolid,servertime,time.toString(),key));
             if(modelName==null)
@@ -5161,11 +5142,44 @@ public class UserController extends BaseController<UserInfo> {
                 if (gradeidBuilder.toString().trim().length() > 0)
                     paramMap.put("gradeid", gradeidBuilder.toString());
             }
+            // 加密
+            StringBuilder md5Builder = new StringBuilder(time.toString());
+            if (gradeidList != null && gradeidList.size() > 0) {
+                StringBuilder gradeidBuilder = new StringBuilder();
+                for (Integer gl : gradeidList) {
+                    gradeidBuilder.append(gl);
+                    if (gl != gradeidList.get(gradeidList.size() - 1))
+                        gradeidBuilder.append(",");
+                }
+                if (gradeidBuilder.toString().trim().length() > 0)
+                    md5Builder.append(gradeidBuilder);
+            }
+            md5Builder.append(uid);
+            md5Builder.append(realname);
+            md5Builder.append(usertype);
+            if (subjectid != null && subjectid.size() > 0) {
+                for (Long sid : subjectid) {
+                    md5Builder.append(sid);
+                }
+            }
+            md5Builder.append(sex);
+            if (email != null) {
+                md5Builder.append(email);
+            }
+            // 为了应用性，可以测试以及兼容性，不带此参数
+            // if(usertype==3){
+            // md5Builder.append(isLearnGuide);
+            // }
+            md5Builder.append(time);
+            md5Builder.append(key);
+
+            String md5Str = MD5_NEW.getMD5Result(md5Builder.toString());
+
             //学校名称
             paramMap.put("s",UserTool.zuzhiStudentSParameter(uid.toString(), gradeidList, realname, usertype.toString(), sex+"", email, schoolid, time.toString(), key));
-            requestUrl=UtilTool.utilproperty.getProperty("STU_TO_ETT_REQUEST_URL").toString(); //学生进入ett入口
+                requestUrl=UtilTool.utilproperty.getProperty("STU_TO_ETT_REQUEST_URL").toString(); //学生进入ett入口
         }
-        paramMap.put("srcId",UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID").toString());
+        paramMap.put("srcId",50006);//UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID").toString());
         paramMap.put("schoolid",schoolid);
         //得到学生名称
         paramMap.put("schoolname", java.net.URLEncoder.encode(schoolname,"UTF-8"));
@@ -5188,6 +5202,30 @@ public class UserController extends BaseController<UserInfo> {
         // print("{\"type\":\"success\",\"msg\":\""+http_1.toString()+"\"}");
     }
 
+    /**
+     * 是否是进网校不用注册
+     * @return
+     */
+    private boolean isEttNoRegSchool(){
+        String noRegSchoolId=UtilTool.utilproperty.getProperty("ETT_NO_REG_SCHOOL_ID");
+        if(noRegSchoolId==null||noRegSchoolId.trim().length()<1)
+            return false;
+        String currentSchoolId=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID").trim();
+        if(noRegSchoolId.indexOf(",")>-1){
+            String[] noRegSchoolArray=noRegSchoolId.split(",");
+            if(noRegSchoolArray!=null&&noRegSchoolArray.length>0){
+                for (int i=0;i<noRegSchoolArray.length;i++){
+                    if(noRegSchoolArray[i].trim().equals(currentSchoolId)){
+                        return true;
+                    }
+                }
+            }
+        }else{
+            if(noRegSchoolId.trim().equals(currentSchoolId))
+                return true;
+        }
+        return false;
+    }
 
 
 
@@ -6074,6 +6112,77 @@ public class UserController extends BaseController<UserInfo> {
  */
 class UserTool{
     /**
+     *后台调用接口
+     * @param urlstr
+     * @return
+     */
+    public static String sendPostURL(String urlstr,String params) throws UnsupportedEncodingException {
+        HttpURLConnection httpConnection;
+        URL url;
+        int code;
+        try {
+            url = new URL(urlstr);
+
+            httpConnection = (HttpURLConnection) url.openConnection();
+
+            httpConnection.setRequestMethod("POST");
+            if(params!=null)
+                httpConnection.setRequestProperty("Content-Length",
+                        String.valueOf(params.length()));
+            httpConnection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+
+            httpConnection.setDoOutput(true);
+            httpConnection.setDoInput(true);
+			/*
+			 * PrintWriter printWriter = new
+			 * PrintWriter(httpConnection.getOutputStream());
+			 * printWriter.print(parameters); printWriter.close();
+			 */
+
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                    httpConnection.getOutputStream(), "8859_1");
+            if(params!=null)
+                outputStreamWriter.write(params);
+
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+
+            code = httpConnection.getResponseCode();
+        } catch (Exception e) {			// 异常提示
+            System.out.println("异常错误!TOTALSCHOOL未响应!");
+            return null;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        if (code == HttpURLConnection.HTTP_OK) {
+            try {
+                String strCurrentLine;
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(httpConnection.getInputStream()));
+                while ((strCurrentLine = reader.readLine()) != null) {
+                    stringBuffer.append(strCurrentLine);
+                }
+                reader.close();
+            } catch (IOException e) {
+                System.out.println("异常错误!");
+                e.printStackTrace();;
+                return null;
+            }
+        }else if(code==404){
+            // 提示 返回
+            System.out.println("异常错误!404错误，请联系管理人员!");
+            return null;
+        }else if(code==500){
+            System.out.println("异常错误!500错误，请联系管理人员!");
+            return null;
+        }
+       String returnVal= new String(stringBuffer.toString().getBytes("gbk"),"UTF-8");//new String(stringBuffer.toString().getBytes("GBK"),"UTF-8");
+        return returnVal;
+
+    }
+
+    /**
+     *
      * 组织分校MD5参数
      * @param uid   产品分校用户ID
      * @param gradeidList  年级标识(List<Integer>)

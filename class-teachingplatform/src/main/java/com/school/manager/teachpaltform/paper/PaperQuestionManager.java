@@ -59,6 +59,15 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+    /**
+     * 得到同步SQL语句
+     * @param paperquestion
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getSynchroSql(PaperQuestion paperquestion, StringBuilder sqlbuilder){
+        return this.paperquestiondao.getSynchroSql(paperquestion,sqlbuilder);
+    }
 
 	@Override
 	protected ICommonDAO<PaperQuestion> getBaseDAO() {
