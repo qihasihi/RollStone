@@ -2305,7 +2305,8 @@ function generXheditor(resdetailid, isstuipt) {
         editor = new UE.ui.Editor({
             //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
             toolbars: [
-                ['emotion','attachment','superscript','subscript','fullscreen','insertimage']
+                //['emotion','attachment','superscript','subscript','fullscreen','insertimage']
+                ['emotion','attachment','fullscreen']
             ],
             // initialFrameWidth: "580px",
             // initialFrameHeight: "500px",
@@ -2448,6 +2449,7 @@ function preeDoStuNotePageSub(pObj) {
     var flag = $("#hd_comment_flag").val();
     if (resdetailid.Trim().length > 0 && flag.Trim().length < 1)
         param.resdetailid = resdetailid;
+    param.usertype=usertype;
     pObj.setPostParams(param);
 }
 

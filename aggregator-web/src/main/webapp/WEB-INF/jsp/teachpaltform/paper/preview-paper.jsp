@@ -116,11 +116,11 @@ function preeDoPageSub(pObj){
                             </c:if>
                         </td>
                         <td><span class="bg">${pq.questiontype==1?"其他":pq.questiontype==2?"填空题":pq.questiontype==3?"单选题":pq.questiontype==4?"多选题":""}：</span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
-                            <c:if test="${!empty pq.questioninfo.questionOption}">
+                            <c:if test="${!empty pq.questionOption}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <col class="w30"/>
                                     <col class="w880"/>
-                                    <c:forEach items="${pq.questioninfo.questionOption}" var="option">
+                                    <c:forEach items="${pq.questionOption}" var="option">
                                         <tr>
                                             <th>
                                                 <c:if test="${pq.questiontype eq 3 }">
@@ -152,7 +152,7 @@ function preeDoPageSub(pObj){
                                     ${pq.correctanswer}
                                 </c:if>
                                 <c:if test="${pq.questiontype eq 3 or  pq.questiontype eq 4 }">
-                                    <c:forEach items="${pq.questioninfo.questionOption}" var="option">
+                                    <c:forEach items="${pq.questionOption}" var="option">
                                         <c:if test="${option.isright eq 1}">
                                             ${option.optiontype}&nbsp;
                                         </c:if>

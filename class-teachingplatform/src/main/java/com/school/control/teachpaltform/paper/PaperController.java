@@ -225,7 +225,7 @@ public class PaperController extends BaseController<PaperInfo>{
                     pchild.setPageSize(0);
                     pchild.setOrderBy("u.option_type");
                     List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,pchild);
-                    ques.getQuestioninfo().setQuestionOption(questionOptionList);
+                    ques.setQuestionOption(questionOptionList);
                 }
                 tmpList.add(ques);
             }
@@ -999,7 +999,7 @@ public class PaperController extends BaseController<PaperInfo>{
                     pchild.setPageSize(0);
                     pchild.setOrderBy("u.option_type");
                     List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,pchild);
-                    ques.getQuestioninfo().setQuestionOption(questionOptionList);
+                    ques.setQuestionOption(questionOptionList);
                 }
                 tmpList.add(ques);
             }

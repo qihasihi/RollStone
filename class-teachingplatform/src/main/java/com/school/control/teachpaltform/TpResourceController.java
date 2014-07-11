@@ -2047,11 +2047,55 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         JsonEntity je =new JsonEntity();
         String courseid=request.getParameter("courseid");
         String resid=request.getParameter("resdetailid");
+        String usertype=request.getParameter("usertype");
         if(resid==null||courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
         }
+
+         /*
+        * 查询当前资源是否发任务
+        */
+        boolean isTaskEnd=false;
+        if(usertype!=null&&usertype.equals("1")){
+            PageResult p=new PageResult();
+            p.setPageNo(1);
+            p.setPageSize(1);
+            TpTaskInfo taskInfo=new TpTaskInfo();
+            taskInfo.setCourseid(Long.parseLong(courseid));
+            taskInfo.setTaskvalueid(Long.parseLong(resid));
+            List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(taskInfo,p);
+            if(taskList!=null&&taskList.size()>0&&taskList.get(0).getTaskstatus()!=null){
+                /**
+                 * 查询当前学生是否被分配该任务
+                 * */
+                boolean isAllot=false;
+                TpTaskInfo t=new TpTaskInfo();
+                t.setCourseid(taskList.get(0).getCourseid());
+                t.setUserid(this.logined(request).getUserid());
+                List<TpTaskInfo> taskStuList=this.tpTaskManager.getListbyStu(t,null);
+                if(taskStuList!=null&&taskStuList.size()>0){
+                    for(TpTaskInfo tmpTask:taskStuList){
+                        if(tmpTask.getTaskid().equals(taskList.get(0).getTaskid())
+                                &&taskList.get(0).getCriteria()!=null&&taskList.get(0).getCriteria().intValue()==2){
+                            isAllot=true;
+                        }
+                    }
+                }
+                if(!taskList.get(0).getTaskstatus().equals("1")&&!taskList.get(0).getTaskstatus().equals("3")&&isAllot){
+                    je.getObjList().add("on");
+                }else if(taskList.get(0).getTaskstatus().equals("3")&&isAllot){
+                    je.getObjList().add("off");
+                    isTaskEnd=true;
+                }
+
+            }
+
+        }
+
+
+
         PageResult presult=this.getPageResultParameter(request);
         presult.setOrderBy(" t.c_time ");
         QuestionAnswer t=new QuestionAnswer();
@@ -2063,9 +2107,10 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         List<QuestionAnswer>commentReplyList=this.questionAnswerManager.getResouceStuNoteTreeList(t, presult);
 
 
-
-        presult.getList().add(commentList);
-        presult.getList().add(commentReplyList);
+        if(usertype!=null&&usertype.equals("2")||isTaskEnd){
+            presult.getList().add(commentList);
+            presult.getList().add(commentReplyList);
+        }
         je.setPresult(presult);
         je.setType("success");
         response.getWriter().print(je.toJSON());

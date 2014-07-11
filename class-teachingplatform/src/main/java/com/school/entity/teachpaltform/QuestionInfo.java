@@ -82,7 +82,7 @@ public class QuestionInfo implements java.io.Serializable {
             String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(content.indexOf("_QUESTIONPIC+")!=-1)
                 content=content.replace("_QUESTIONPIC+",t);
-            while (content.indexOf("\r\n\t")!=-1||content.indexOf("\n")!=-1||content.indexOf("\n\r")!=-1||content.indexOf("\t")!=-1||content.indexOf(" ")!=-1){
+            while (content.indexOf("\r\n\t")!=-1||content.indexOf("\n")!=-1||content.indexOf("\n\r")!=-1||content.indexOf("\t")!=-1){
                 content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
                 content=content.replace("\r\n", "&nbsp;&nbsp;<br>");
                 content=content.replace("\n", "<br>");

@@ -381,7 +381,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                     pchild.setPageSize(0);
                     pchild.setOrderBy("u.option_type");
                     List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,pchild);
-                    ques.getQuestioninfo().setQuestionOption(questionOptionList);
+                    ques.setQuestionOption(questionOptionList);
                 }
                 tmpList.add(ques);
             }
@@ -3238,7 +3238,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 if(pqentity!=null&&pqentity.getQuestionid()!=null){
                     QuestionOption qo=new QuestionOption();
                     qo.setQuestionid(pqentity.getQuestionid());
-                    pqentity.getQuestioninfo().setQuestionOption(this.questionOptionManager.getList(qo,null));
+                    pqentity.setQuestionOption(this.questionOptionManager.getList(qo,null));
                 }
             }
         }
@@ -3347,7 +3347,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 if(pqentity!=null&&pqentity.getQuestionid()!=null){
                     QuestionOption qo=new QuestionOption();
                     qo.setQuestionid(pqentity.getQuestionid());
-                    pqentity.getQuestioninfo().setQuestionOption(this.questionOptionManager.getList(qo,null));
+                    pqentity.setQuestionOption(this.questionOptionManager.getList(qo,null));
                 }
             }
         }
