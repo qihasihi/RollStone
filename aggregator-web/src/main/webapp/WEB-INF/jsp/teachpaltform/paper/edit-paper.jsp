@@ -97,7 +97,10 @@ function showDialogPage(type,paperid,quesid){
         url='question?m=toUpdQuestion&courseid='+courseid+"&paperid="+paperid+"&questionid="+quesid;
     }
     var param = "dialogWidth:500px;dialogHeight:700px;status:no;location:no";
-    var returnValue=window.showModalDialog(url,param);
+    var returnValue=window.showModalDialog(url,"",param);
+    if (returnValue == undefined) {
+        returnValue = window.returnValue;
+    }
     if(returnValue==null||returnValue.toString().length<1){
         alert("操作取消!");
         return;
@@ -356,20 +359,20 @@ function reSetScrollDiv(){
                          <span class="font-blue"  style="cursor: pointer" data-bind="${pq.questionid}" id="score_${pq.questionid}">${pq.score}</span>分</span></span>
                         <span id="idx_${pq.questionid}" data-bind="${pq.questionid}"  class="font-blue">${pq.orderidx}</span>/${fn:length(pqList)}</caption>
 
-
                     <tr>
                         <td>
                             <c:if test="${pq.questionid>0}">
                                 <span class="ico44"></span>
                             </c:if>
                         </td>
-                        <td><span class="bg">${pq.questiontype==1?"其他":pq.questiontype==2?"填空题":pq.questiontype==3?"单选题":pq.questiontype==4?"多选题":""}：</span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
-                            <c:if test="${!empty pq.questioninfo.questionOption}">
+                        <td>
+                            <span class="bg">${pq.questiontype==1?"其他":pq.questiontype==2?"填空题":pq.questiontype==3?"单选题":pq.questiontype==4?"多选题":""}：
+                            </span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+                            <c:if test="${!empty pq.questionOption}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <col class="w30"/>
                                     <col class="w880"/>
-
-                                <c:forEach items="${pq.questioninfo.questionOption}" var="option">
+                                <c:forEach items="${pq.questionOption}" var="option">
                                     <tr>
                                         <th>
                                             <c:if test="${pq.questiontype eq 3 }">
@@ -386,8 +389,7 @@ function reSetScrollDiv(){
                                         </c:if>
                                         </td>
                                     </tr>
-
-                                </c:forEach>
+                                  </c:forEach>
                                 </table>
                             </c:if>
                         </td>
@@ -402,11 +404,13 @@ function reSetScrollDiv(){
                                     ${pq.correctanswer}
                                 </c:if>
                                 <c:if test="${pq.questiontype eq 3 or  pq.questiontype eq 4 }">
-                                    <c:forEach items="${pq.questioninfo.questionOption}" var="option">
-                                        <c:if test="${option.isright eq 1}">
-                                            ${option.optiontype}&nbsp;
-                                        </c:if>
-                                    </c:forEach>
+                                    <c:if test="${!empty pq.questionOption}">
+                                        <c:forEach items="${pq.questionOption}" var="option">
+                                            <c:if test="${option.isright eq 1}">
+                                                ${option.optiontype}&nbsp;
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:if>
                                 </c:if>
                             </p>
                             <p>
