@@ -96,7 +96,7 @@ function showDialogPage(type,paperid,quesid){
     }else if(type==4){
         url='question?m=toUpdQuestion&courseid='+courseid+"&paperid="+paperid+"&questionid="+quesid;
     }
-    var param = "dialogWidth:500px;dialogHeight:700px;status:no;location:no";
+    var param = "dialogWidth:900px;dialogHeight:700px;status:no;location:no";
     var returnValue=window.showModalDialog(url,"",param);
     if (returnValue == undefined) {
         returnValue = window.returnValue;
