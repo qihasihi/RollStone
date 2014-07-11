@@ -786,6 +786,14 @@
 	text-align:center;
 	display:inline-block;
 }
+	.jxxt_zhuanti_shijuan_add_an {
+	width:1000px;
+	height:55px;
+	background-color:#f1f1f1;
+	padding-top:15px;
+	text-align:center;
+}
+
 	.content1 div.jxxt_zhuanti_zy_add_info{width:920px; padding:0 10px;}
 	div.w430 p{ margin-bottom:8px;}
 	div.w430 input[type=text]{ float:right; width:150px;}

@@ -276,13 +276,19 @@ public class TaskPerformanceDAO extends CommonDAO<TaskPerformanceInfo> implement
 		objList.add(t.getTaskid());
 		sqlbuilder.append("?,");
         if(classid!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(classid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?,");
+        objList.add(classtype);
+        if(t.getOrderstr()!=null){
+            sqlbuilder.append("?");
+            objList.add(t.getOrderstr());
         }else{
             sqlbuilder.append("NULL");
         }
-        sqlbuilder.append(",?");
-        objList.add(classtype);
         sqlbuilder.append(")}");
 		List<Integer> types=new ArrayList<Integer>();
 		List<TaskPerformanceInfo> taskperformanceinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TaskPerformanceInfo.class, null);

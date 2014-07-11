@@ -2930,6 +2930,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String classid=request.getParameter("classid");
         String taskid=request.getParameter("taskid");
         String type=request.getParameter("classtype");
+        String orderstr=request.getParameter("orderstr");
         if(classid==null||classid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
@@ -2948,6 +2949,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }else{
             clsid=Long.parseLong("0");
         }
+        if(orderstr!=null&&orderstr.trim().length()>0)
+            t.setOrderstr(orderstr);
+        else
+            t.setOrderstr("t.c_time desc");
         //任务记录
         List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getPerformListByTaskid(t,clsid,Integer.parseInt(type));
         //数量统计

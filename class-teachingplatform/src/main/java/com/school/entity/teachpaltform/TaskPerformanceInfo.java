@@ -27,6 +27,24 @@ public class TaskPerformanceInfo  implements java.io.Serializable{
     private Long courseid;
     private Integer tasktype;
     private Object score;
+    private String orderstr;
+    private Object rank;
+
+    public Object getRank() {
+        return rank;
+    }
+
+    public void setRank(Object rank) {
+        this.rank = rank;
+    }
+
+    public String getOrderstr() {
+        return orderstr;
+    }
+
+    public void setOrderstr(String orderstr) {
+        this.orderstr = orderstr;
+    }
 
     public Object getScore() {
         return score;

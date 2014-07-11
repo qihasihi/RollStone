@@ -28,7 +28,7 @@ $(function(){
         operate_id : "initItemList"
     });
   //  pageGo('pList');
-
+  //  $("#p_operate").css("left",(findDimensions().width/2-parseFloat($("#p_operate").css("width"))/2)+"px");
   reSetScrollDiv();
 });
 
@@ -310,19 +310,7 @@ function doDelPaperQues(quesid){
 
 
 function reSetScrollDiv(){
-    var posX,posY;
-    if (window.innerHeight) {
-        posX = window.pageXOffset;
-        posY = window.pageYOffset;
-    }
-    else if (document.documentElement && document.documentElement.scrollTop) {
-        posX = document.documentElement.scrollLeft;
-        posY = document.documentElement.scrollTop;
-    }
-    else if (document.body) {
-        posX = document.body.scrollLeft;
-        posY = document.body.scrollTop;
-    }
+    //$("#p_operate").css({"left":(findDimensions().width/2-parseFloat($("#p_operate").css("width"))/2)+"px"});
     var divObj=document.getElementById("p_operate");
     if(getScrollTop()>parseInt(divObj.style.top)){
         divObj.style.top="0px";
@@ -339,14 +327,7 @@ function reSetScrollDiv(){
 <div class="subpage_head"><span class="ico55"></span><strong>添加试卷</strong></div>
 <div class="content2">
 
-    <!--
-       background: url("images/bg02_131230.png") no-repeat scroll 0 -69px rgba(0, 0, 0, 0);
-    height: 30px;
-    margin: 0 auto;
-    padding: 35px 5px 0;
-    width: 990px;
-    -->
-    <p  id="p_operate" style="top: 100px;" class="t_c p_tb_10"><a href="javascript:showDialogPage(1,'${paper.paperid}')" class="an_big">导入试卷</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(2,'${paper.paperid}')" class="an_big">导入试题</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}')" class="an_big">新建试题</a></p>
+     <div  id="p_operate" class="jxxt_zhuanti_shijuan_add_an"    ><a href="javascript:showDialogPage(1,'${paper.paperid}')" class="an_big">导入试卷</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(2,'${paper.paperid}')" class="an_big">导入试题</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}')" class="an_big">新建试题</a></div>
     <div class="jxxt_zhuanti_shijuan_add font-black public_input">
         <p class="title"><strong class="f_right">总分值：<span id="total_score" class="font-blue">${paper.score}&nbsp;分</span></strong><strong>${paper.papername}</strong></p>
 
