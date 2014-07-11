@@ -264,7 +264,7 @@ function sub_option(){
     }
     if(questype==2&&hdobj=='ques_name'){
         $("#dv_filter").html(editor.getContent());
-        var dvobj=$("#dv_filter  > span[name='span']");
+        var dvobj=$("#dv_filter span[name='span']");
         if(dvobj.length<1){
             alert('提示：填空题未发现占位符号!');
             return;
@@ -372,7 +372,7 @@ function doAddQuestion(){
     if(questype=="1"){
         param.correctanswer =correctanswer;
     }else if(questype=="2"){
-        var dvobj=$("#dv_filter > span[name='span']");
+        var dvobj=$("#dv_filter span[name='span']");
         if(dvobj.length<1){
             alert('提示：填空题未发现占位符号!');
             return;
