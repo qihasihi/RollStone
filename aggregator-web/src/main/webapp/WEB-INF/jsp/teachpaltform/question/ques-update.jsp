@@ -40,7 +40,7 @@
                 //$("#tr_analysis").hide();
                 $("#correct_answer").html('${question.correctanswer}');
                 $("#dv_filter").html('${question.content}');
-                var spanObj=$("#dv_filter p > span[name=fillbank]");
+                var spanObj=$("#dv_filter span[name=fillbank]");
                 var answerArray="${question.correctanswer}".split("|");
                 $.each(spanObj,function(idx,itm){
                    var tmpobj='<span name="span" style="text-decoration:underline;color:#FF0000;">'+answerArray[idx]+'</span>';
