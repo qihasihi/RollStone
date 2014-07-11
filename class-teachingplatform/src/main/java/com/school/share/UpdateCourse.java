@@ -466,6 +466,7 @@ public class UpdateCourse extends TimerTask{
                                     TpCoursePaper coursePaper=new TpCoursePaper();
                                     String papertype=soMap.get("Papertype").toString();
                                     String questionid=soMap.get("Questionid").toString();
+                                    String sort=soMap.containsKey("Sort")?soMap.get("Sort").toString():null;
                                     if(papertype.trim().toLowerCase().equals("a"))
                                         coursePaper.setPapertype(1);
                                     else if(papertype.trim().toLowerCase().equals("b"))
@@ -519,6 +520,7 @@ public class UpdateCourse extends TimerTask{
                                     PaperQuestion pq=new PaperQuestion();
                                     pq.setPaperid(paperid);
                                     pq.setQuestionid(Long.parseLong(questionid.toString()));
+                                    pq.setOrderidx(sort==null?null:Integer.parseInt(sort.trim()));
                                     pq.setScore(10F);
                                     sqlbuilder=new StringBuilder();
                                     objList=paperQuestionManager.getSynchroSql(pq,sqlbuilder);
