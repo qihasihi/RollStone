@@ -91,9 +91,16 @@
             var cid=courseid;
             $("a[id='a_award_"+groupid+"']").attr("onclick","");
             $("a[id='a_award_"+groupid+"']").unbind("click");
-            var h='<input name="txt_update_num" type="text" id="txt_update_num" maxlength="4" class="w40" value="'+$("#sp_grp_award"+groupid).html().Trim()+'"/>';
+            var h='<input name="txt_update_num" type="text"' +
+                    ' id="txt_update_num" maxlength="4" class="w40" value="'+$("#sp_grp_award"+groupid).html().Trim()+'"/>';
             $("span[id='sp_grp_award"+groupid+"']").html(h);
             $("#txt_update_num").focus();
+
+            $('input[name="txt_update_num"]').bind("keyup afterpaste",function(){
+                this.value=this.value.replace(/\D/g,'');
+            });
+
+
             $("#txt_update_num").bind("blur",function(){
                 if(this.value.Trim().length<1||isNaN(this.value.Trim())){
                     $("#txt_update_num").focus();return;
@@ -130,13 +137,24 @@
             var cid=courseid;
             //alert(uid+"   "+groupid+"  "+this.innerText+" "+type);
             //生成数据
-            var h='<input name="txt_update_num" type="text" id="txt_update_num" maxlength="4" class="w40" value="'+this.innerText+'"/>';
+            var t=this.innerText.replace(/\-/g,'');
+            if(type=="violationDisNum")
+                t=this.innerText.replace(/\-/g,'');
+            var h='<input name="txt_update_num" type="text" id="txt_update_num" maxlength="4" class="w40" value="'+t+'"/>';
             $(this).html(h);
             $("#txt_update_num").focus();
+
+            $("#txt_update_num").bind("keyup afterpaste",function(){
+                this.value=this.value.replace(/\D/g,'');
+            });
+
+
             $("#txt_update_num").bind("blur",function(){
                 if(this.value.Trim().length<1||isNaN(this.value.Trim())){
                     $("#txt_update_num").focus();return;
                 }
+                if(type=="violationDisNum")
+                    this.value="-"+this.value;
                 var subid=$("#subjectid").val().Trim();
                 //更新数据库
                 var p={userid:uid,groupid:groupid,courseid:cid,subjectid:subid};
