@@ -3217,6 +3217,15 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+        //验证paperid是否存在
+        PaperInfo paperInfo=new PaperInfo();
+        paperInfo.setPaperid(Long.parseLong(paperid.trim()));
+        List<PaperInfo> paperList=this.paperManager.getList(paperInfo,null);
+        if(paperList==null||paperList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+
         //验证是否已经交卷
         StuPaperLogs splog=new StuPaperLogs();
         splog.setUserid(this.logined(request).getUserid());
@@ -3242,6 +3251,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 }
             }
         }
+        mp.put("paperObj",paperList.get(0));
         mp.put("taskid",taskid);
         mp.put("courseid",courseid);
         mp.put("quesList",pqList);
@@ -3312,9 +3322,19 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
+
+        //验证paperid是否存在
+        PaperInfo paperInfo=new PaperInfo();
+        paperInfo.setPaperid(Long.parseLong(paperid.trim()));
+        List<PaperInfo> paperList=this.paperManager.getList(paperInfo,null);
+        if(paperList==null||paperList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
         Integer uid=this.logined(request).getUserid();
         if(userid!=null&&userid.trim().length()>0)
             uid=Integer.parseInt(userid.trim());
+
         //验证是否已经答题
         StuPaperLogs splog=new StuPaperLogs();
         splog.setUserid(uid);
@@ -3352,6 +3372,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             }
         }
         mp.put("quesList",pqList);
+        mp.put("paperObj",paperList.get(0));
         //得到当前学生答案
         mp.put("stuAnswer",stuPageQuesList);
 

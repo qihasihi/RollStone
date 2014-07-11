@@ -27,7 +27,7 @@
         }
 
         function next(no,t){
-            var pnoDiv=$("#dv_question div").filter(function(){return this.style.display!='none';});
+            var pnoDiv=$("#dv_question>div").filter(function(){return this.style.display!='none';});
             $("#dv_ques_number li").attr("class","");
             //加载已经做过的题
             if(subQuesId.length>1){
@@ -54,7 +54,7 @@
                    tmpno=tmpno-1;
                 else
                     tmpno=tmpno-2;
-                pnoDiv=$("#dv_question div").eq(tmpno);
+                pnoDiv=$("#dv_question>div").eq(tmpno);
                 $("#dv_ques_number li").eq(tmpno).attr("class","yellow");
             }
 
@@ -69,7 +69,7 @@
                 else if(t==-1)
                     alert('已经是第一题了!');
             }else{
-                $("#dv_question div").css("display","none");
+                $("#dv_question>div").css("display","none");
                 pnoDiv.show();
             }
         //ques=pnoDiv.children().filter(function(){return this.name=='hd_quesid'}).val()
@@ -279,16 +279,15 @@
             <c:if test="${q.questiontype==1}">
                 <div class="p_t_20"><textarea name="txt_answer" id="txt_answer_${q.questionid}"  placeholder="输入你的答案"></textarea></div>
             </c:if>
-
             <%--<c:if test="${q.questiontype==4}">--%>
                 <%--<input type="button"  onclick="doAnswerOne(${q.questionid},undefined,undefined,${q.questiontype})" value="确定"/>--%>
             <%--</c:if>--%>
             <c:if test="${q.questiontype==3||q.questiontype==4}">
-                <c:if test="${!empty q.questioninfo.questionOption}">
+                <c:if test="${!empty q.questionOption}">
                     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="quesOption_${q.questionid}">
                         <col class="w30"/>
                         <col class="w860"/>
-                        <c:forEach items="${q.questioninfo.questionOption}" var="qo">
+                        <c:forEach items="${q.questionOption}" var="qo">
                         <tr>
                             <th>
                                 <c:if test="${q.questiontype==3}">
@@ -314,5 +313,6 @@
 </c:if>
     </div>
 </div>
+<%@include file="/util/foot.jsp"%>
 </body>
 </html>
