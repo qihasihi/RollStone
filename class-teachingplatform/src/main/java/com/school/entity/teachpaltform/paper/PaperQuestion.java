@@ -1,6 +1,7 @@
 package  com.school.entity.teachpaltform.paper;
 
 import com.school.entity.teachpaltform.QuestionInfo;
+import com.school.entity.teachpaltform.QuestionOption;
 import com.school.util.UtilTool;
 
 import javax.persistence.Entity;
@@ -99,6 +100,15 @@ public class  PaperQuestion implements Serializable{
 
 
 
+    public List<QuestionOption> questionOption;//选择题试题选项
+
+    public List<QuestionOption> getQuestionOption() {
+        return questionOption;
+    }
+
+    public void setQuestionOption(List<QuestionOption> questionOption) {
+        this.questionOption = questionOption;
+    }
 
     private QuestionInfo questioninfo;
 
