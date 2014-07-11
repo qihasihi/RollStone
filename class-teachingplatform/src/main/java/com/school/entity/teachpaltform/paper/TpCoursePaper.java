@@ -27,8 +27,10 @@ public class TpCoursePaper {
     private Integer localstatus;
     private Object subjectivenum; //主观题数量
     private Object objectivenum; //客观题数量
+    private Integer quesnum;
     private Object taskflag;    //任务状态
     private Float score;
+    private Integer selecttype; //4:成卷 5:自主测试 6:微视频
 
     private Integer papertype;  //paperinfo papertype
 
@@ -40,7 +42,13 @@ public class TpCoursePaper {
         this.papertype = papertype;
     }
 
-    private Integer selecttype; //4:成卷 5:自主测试 6:微视频
+    public Integer getQuesnum() {
+        return quesnum;
+    }
+
+    public void setQuesnum(Integer quesnum) {
+        this.quesnum = quesnum;
+    }
 
     public Integer getSelecttype() {
         return selecttype;

@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 
@@ -22,7 +21,7 @@ $(function(){
         http_operate_handler : getInvestReturnMethod, //执行成功后返回方法
         return_type : 'json', //放回的值类型
         page_no : 1, //当前的页数
-        page_size : 999, //当前页面显示的数量
+        page_size : 9999, //当前页面显示的数量
         rectotal : 0, //一共多少
         pagetotal : 1,
         operate_id : "initItemList"
@@ -53,25 +52,57 @@ function showOrhide(aobj, taskid) {
 
 
 function getInvestReturnMethod(rps){
-    var html='';
+    var html='',shtml='<li><a href="javascript:void(0);" onclick="showModel(\'dv_paper_name\')" class="kapian"><span class="ico82"></span></a></li>';
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
-            html+='<p>';
             if(itm.paperid>0){
-                html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a>';
-                html+='&nbsp;客观题：'+itm.objectivenum+'&nbsp;主观题：'+itm.subjectivenum;
+                html+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                html+='<p class="one">'+itm.papername+'</p>';
+                html+='<p class="two">';
+                if(itm.objectivenum>0&&itm.subjectivenum>0)
+                    html+='<span class="bg1" style="width:50%">'+itm.objectivenum+'</span><span class="bg2" style="width:50%">'+itm.subjectivenum+'</span>';
+                else if(itm.objectivenum>0)
+                    html+='<span class="bg2" style="width:100%">'+itm.objectivenum+'</span>';
+                else if(itm.subjectivenum>0)
+                    html+='<span class="bg1" style="width:100%">'+itm.subjectivenum+'</span>';
+                html+='</p></a>';
+                html+='<p class="pic">';
+                if(itm.taskflag<1)
+                    html+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=4&taskvalueid='+itm.paperid+'""><b><span class="ico51" title="发任务"></span></b></a>';
+                else
+                    html+='<b><span class="ico52" title="已发任务"></span></b>';
+                html+='</p>';
+                html+='</li>';
             }else{
-                html+='<a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a>';
-                html+='&nbsp;客观题：'+itm.objectivenum+'&nbsp;主观题：'+itm.subjectivenum;
-                html+='&nbsp;<a href="javascript:doDelPaper('+itm.ref+')">删除</a>';
+                shtml+='<li>';
+                if(itm.papertype==4)
+                    shtml+='<a>';
+                else
+                    shtml+='<a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                shtml+='<p class="one">'+itm.papername+'</p>';
+                shtml+='<p class="two">';
+                if(itm.objectivenum>0&&itm.subjectivenum>0)
+                    shtml+='<span class="bg1" style="width:50%">'+itm.objectivenum+'</span><span class="bg2" style="width:50%">'+itm.subjectivenum+'</span>';
+                else if(itm.objectivenum>0)
+                    shtml+='<span class="bg1" style="width:100%">'+itm.objectivenum+'</span>';
+                else if(itm.subjectivenum>0)
+                    shtml+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
+                else if(typeof itm.quesnum!='undefined')
+                    shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
+                shtml+='</p></a>';
+                shtml+='<p class="pic">';
+                if(itm.taskflag<1)
+                    shtml+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=4&taskvalueid='+itm.paperid+'""><b><span class="ico51" title="发任务"></span></b></a>';
+                else
+                    shtml+='<b><span class="ico52" title="已发任务"></span></b>';
+                shtml+='<a  href="javascript:doDelPaper('+itm.ref+')"><b><span class="ico04" title="删除"></span></b></a>';
+                shtml+='</p>';
+                shtml+='</li>';
             }
-            if(itm.taskflag<1)
-                html+='&nbsp;<a href="task?toAddTask&courseid='+courseid+'&tasktype=4&taskvalueid='+itm.paperid+'"" title="发任务" class="ico51"></a>';
-            html+='</p>';
-
         });
     }
-    $("#initItemList").html(html);
+    $("#ul_standard").html(html);
+    $("#ul_native").html(shtml);
 
 
     if(rps.objList.length>0){
@@ -166,7 +197,82 @@ function showCourseList(){
         <li class="crumb"><a href="javascript:void (0);">试&nbsp;&nbsp;卷</a></li>
     </ul>
 </div>
-<div class="content2">
+
+
+
+<div class="content1 font-black">
+    <p class="jxxt_zhuanti_shijuan_text">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题<a class="ico15" href="tpres?m=toRecycleIdx&type=5&courseid=${courseid}" title="回收站"></a></p>
+    <p><strong>标准试卷</strong></p>
+    <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
+        <li><a href="1" target="_blank">
+            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
+            <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
+            <p class="pic"><a class="ico_wsp1" title="微视频"></a><a href="1"><b><span class="ico51" title="发任务"></span></b></a><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
+        </li>
+        <li><a href="1" target="_blank">
+            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
+            <p class="two"><span class="bg2" style="width:100%">8</span></p></a>
+            <p class="pic"><a class="ico_wsp1" title="微视频"></a><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
+        </li>
+        <li><a href="1" target="_blank">
+            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
+            <p class="two"><span class="bg1" style="width:50%">8</span><span class="bg2" style="width:50%">2</span></p></a>
+            <p class="pic"><a class="ico_wsp1" title="微视频"></a><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
+        </li>
+        <li><a href="1" target="_blank">
+            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
+            <p class="two"><span class="bg1" style="width:50%">6</span><span class="bg2" style="width:50%">4</span></p></a>
+            <p class="pic"><a class="ico_wsp1" title="微视频"></a><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
+        </li>
+    </ul>
+    <p class="p_t_10"><strong>自建试卷</strong></p>
+    <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
+        <li><a href="1" target="_blank" class="kapian"><span class="ico82"></span></a></li>
+        <li><a href="1" target="_blank">
+            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
+            <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
+            <p class="pic"><a href="1"><b><span class="ico51" title="发任务"></span></b></a><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
+        </li>
+        <li><a href="1" target="_blank">
+            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
+            <p class="two"><span class="bg2" style="width:100%">8</span></p></a>
+            <p class="pic"><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
+        </li>
+        <li><a href="1" target="_blank">
+            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
+            <p class="two"><span class="bg1" style="width:50%">8</span><span class="bg2" style="width:50%">2</span></p></a>
+            <p class="pic"><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
+        </li>
+        <li><a href="1" target="_blank">
+            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
+            <p class="two"><span class="bg1" style="width:50%">6</span><span class="bg2" style="width:50%">4</span></p></a>
+            <p class="pic"><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
+        </li>
+        <li><a href="1" target="_blank">
+            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
+            <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
+            <p class="pic"><a href="1"><b><span class="ico51" title="发任务"></span></b></a><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
+        </li>
+    </ul>
+</div>
+
+<div class="public_windows public_input"  style="display: none;" id="dv_paper_name">
+    <h3><a href="javascript:closeModel('dv_paper_name')"  title="关闭"></a>添加试卷</h3>
+    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 ">
+        <col class="w80"/>
+        <col class="w320"/>
+        <tr>
+            <th>试卷名称：</th>
+            <td><input name="papername" id="papername" type="text" class="w300"/></td>
+        </tr>
+        <tr>
+            <th>&nbsp;</th>
+            <td><a href="javascript:closeModel('dv_paper_name')" class="an_public1">取&nbsp;消</a>&nbsp;&nbsp;<a href="javascript:addPaper()" class="an_public1">下一步</a></td>
+        </tr>
+    </table>
+</div>
+
+<div class="content2" style="display: none">
     <div class="subpage_lm">
         <p class="f_right"><a class="ico15" target="_blank" href="tpres?m=toRecycleIdx&type=5&courseid=${courseid}" title="回收站"></a></p>
 
@@ -178,11 +284,6 @@ function showCourseList(){
 
         </div>
     </div>
-<div style="display: none;" id="dv_paper_name">
-    试卷名称：<input value="" id="papername"/>
-    <a href="javascript:closeModel('dv_paper_name')">取消</a><a href="javascript:addPaper()">下一步</a>
-</div>
-
     <form id="pListForm" name="pListForm" style="display: none;">
         <p class="Mt20" id="pListaddress" align="center"></p>
     </form>

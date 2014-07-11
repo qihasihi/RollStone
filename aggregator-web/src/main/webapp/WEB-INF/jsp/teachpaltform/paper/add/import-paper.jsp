@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 
@@ -39,13 +39,47 @@ $(function(){
 
 
 function getInvestReturnMethod(rps){
-    var html='';
+    var html='',shtml='';
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
-            html+='<p><a  href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">'+itm.papername+'</a>&nbsp;<a href="javascript:importPaperQues('+itm.courseid+','+itm.paperid+')">添加</a></p>';
+            if(itm.paperid>0){
+                html+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                html+='<p class="one">'+itm.papername+'</p>';
+                html+='<p class="two">';
+                if(itm.objectivenum>0&&itm.subjectivenum>0)
+                    html+='<span class="bg1" style="width:50%">'+itm.objectivenum+'</span><span class="bg2" style="width:50%">'+itm.subjectivenum+'</span>';
+                else if(itm.objectivenum>0)
+                    html+='<span class="bg1" style="width:100%">'+itm.objectivenum+'</span>';
+                else if(itm.subjectivenum>0)
+                    html+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
+                html+='</p></a>';
+                html+='<p class="pic">';
+                html+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico02" title="导入"></span></b></a>';
+                html+='</p>';
+                html+='</li>';
+            }else{
+                shtml+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                shtml+='<p class="one">'+itm.papername+'</p>';
+                shtml+='<p class="two">';
+                if(itm.objectivenum>0&&itm.subjectivenum>0)
+                    shtml+='<span class="bg1" style="width:50%">'+itm.objectivenum+'</span><span class="bg2" style="width:50%">'+itm.subjectivenum+'</span>';
+                else if(itm.objectivenum>0)
+                    shtml+='<span class="bg1" style="width:100%">'+itm.objectivenum+'</span>';
+                else if(itm.subjectivenum>0)
+                    shtml+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
+                else if(typeof itm.quesnum!='undefined')
+                    shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
+                shtml+='</p></a>';
+                shtml+='<p class="pic">';
+                shtml+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico02" title="导入"></span></b></a>';
+                shtml+='</p>';
+                shtml+='</li>';
+            }
         });
     }
-    $("#dv_data").html(html);
+    $("#ul_standard").html(html);
+    $("#ul_native").html(shtml);
+
 
 
 
@@ -114,32 +148,82 @@ function preeDoPageSub(pObj){
 </script>
 </head>
 <body>
-<div>
-    <a href="#">添加试题----导入试卷</a>
+<div class="subpage_head"><span class="ico55"></span><strong>添加试卷—导入试卷</strong></div>
+<div class="content1 font-black">
+    <p class="public_input f_right">
+        <input id="txt_search" name="textfield2" type="text" class="w240" placeholder="资源名称/专题名称" />
+        <a  href="javascript:pageGo('pList');" class="an_search" title="查询"></a></p>
+    <p class="p_b_10">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
+    <p><strong>标准试卷</strong></p>
+    <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
+       <!-- <li><a href="1" target="_blank">
+            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
+            <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
+            <p class="pic"><a href="1"><b><span class="ico02" title="导入"></span></b></a></p>
+        </li> -->
+        <c:if test="${!empty coursePaperList}">
+            <c:forEach items="${coursePaperList}" var="c">
+                <c:if test="${c.paperid>0}">
+                    <li>
+                        <a href="paper?toPreviewPaper&courseid=${c.courseid}&paperid=${c.paperid}">
+                            <p class="one">${c.papername}</p>
+                            <p class="two">
+                                <c:if test="${c.objectivenum>0 and c.subjectivenum>0}">
+                                    <span class="bg1" style="width:50%">${c.objectivenum}</span><span class="bg2" style="width:50%">${c.subjectivenum}</span>
+                                </c:if>
+
+                                <c:if test="${c.objectivenum>0}">
+                                    <span class="bg1" style="width:100%">${c.objectivenum}</span>
+                                </c:if>
+                                <c:if test="${c.subjectivenum>0}">
+                                    <span class="bg2" style="width:100%">${c.subjectivenum}</span>
+                                </c:if>
+                            </p>
+                        </a>
+                        <p class="pic">
+                            <a href="javascript:importPaperQues('${c.courseid}','${c.paperid}')"><b><span class="ico02" title="导入"></span></b></a>
+                        </p>
+                    </li>
+                </c:if>
+            </c:forEach>
+        </c:if>
+    </ul>
+    <p><strong>自建试卷</strong></p>
+    <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
+        <c:forEach items="${coursePaperList}" var="c">
+            <c:if test="${c.paperid<0}">
+                <li>
+                    <a href="paper?toPreviewPaper&courseid=${c.courseid}&paperid=${c.paperid}">
+                        <p class="one">${c.papername}</p>
+                        <p class="two">
+                            <c:if test="${c.objectivenum>0 and c.subjectivenum>0}">
+                                <span class="bg1" style="width:50%">${c.objectivenum}</span><span class="bg2" style="width:50%">${c.subjectivenum}</span>
+                            </c:if>
+
+                            <c:if test="${c.objectivenum>0}">
+                                <span class="bg1" style="width:100%">${c.objectivenum}</span>
+                            </c:if>
+                            <c:if test="${c.subjectivenum>0}">
+                                <span class="bg2" style="width:100%">${c.subjectivenum}</span>
+                            </c:if>
+                            <c:if test="${!empty c.quesnum}">
+                                <span class="bg1" style="width:100%">${c.quesnum}</span>
+                            </c:if>
+                        </p>
+                    </a>
+                    <p class="pic">
+                        <a href="javascript:importPaperQues('${c.courseid}','${c.paperid}')"><b><span class="ico02" title="导入"></span></b></a>
+                    </p>
+                </li>
+            </c:if>
+        </c:forEach>
+    </ul>
 </div>
-<div class="zhuanti">
-    <input type="text" id="txt_search" onfocus="if(this.value=='输入专题名称'){this.value=''}" onblur="if(this.value==''){this.value='输入专题名称'}"/><a href="javascript:pageGo('pList');">搜索</a>
-</div>
-<div class="content2">
-    <div class="subpage_lm" id="dv_data">
-         <c:if test="${!empty coursePaperList}">
-             <c:forEach items="${coursePaperList}" var="c">
-                 <p>
-                     <a target="_top" href="paper?toPreviewPaper&courseid=${c.courseid}&paperid=${c.paperid}">${c.papername}</a>
-                     <a href="javascript:importPaperQues('${c.courseid}','${c.paperid}')">添加</a>
-                     主观题：${c.objectivenum}&nbsp;客观题：${c.subjectivenum}
-                 </p>
-             </c:forEach>
-         </c:if>
-    </div>
 
 
-    <form id="pListForm" name="pListForm" style="display: none;">
-        <p class="Mt20" id="pListaddress" align="center"></p>
-    </form>
-</div>
-
-
+<form id="pListForm" name="pListForm" style="display: none;">
+    <p class="Mt20" id="pListaddress" align="center"></p>
+</form>
 
 <%@include file="/util/foot.jsp" %>
 

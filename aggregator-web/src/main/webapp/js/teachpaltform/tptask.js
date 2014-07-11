@@ -25,6 +25,8 @@ function showTaskElement(type){
     if(type==3){
         var questype=$("input[name='rdo_ques_type']:checked").val();
         url+='&questype='+questype;
+    }else if(type==4){
+        url='paper?m=toSelTaskPaper&tasktype='+type+'&courseid='+courseid;
     }
 
     var param ="dialogHeight=800px;dialogWidth=900px;center:yes;status:no;scroll:yes;help:no";
@@ -1573,7 +1575,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                                     } else{
                                         htm+='<td>---</td>';
                                     }
-                                    htm+='<td><a href="paperques?m=teaViewStuPaper&taskid='+itm.taskid+'&userid='+itm.uid+'">查看卷面</a></td>'
+                                    htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+itm.taskid+'&userid='+itm.uid+'">查看卷面</a></td>'
                                     htm+='</tr>';
                                 }
                             });
@@ -1610,7 +1612,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                         }else{
                             htm+='<td>---</td>';
                         }
-                        htm+='<td><a href="paperques?m=teaViewStuPaper&taskid='+itm.taskid+'&userid='+itm.uid+'">查看卷面</a></td>'
+                        htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+itm.taskid+'&userid='+itm.uid+'">查看卷面</a></td>'
                         htm+='</tr>';
                     });
                     htm+='</table>';

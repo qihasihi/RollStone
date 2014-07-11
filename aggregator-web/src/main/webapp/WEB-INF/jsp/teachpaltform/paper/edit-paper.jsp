@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 
@@ -30,8 +29,7 @@ $(function(){
     });
   //  pageGo('pList');
 
-
-
+  reSetScrollDiv();
 });
 
 
@@ -306,74 +304,122 @@ function doDelPaperQues(quesid){
         }
     });
 }
+
+
+function reSetScrollDiv(){
+    var posX,posY;
+    if (window.innerHeight) {
+        posX = window.pageXOffset;
+        posY = window.pageYOffset;
+    }
+    else if (document.documentElement && document.documentElement.scrollTop) {
+        posX = document.documentElement.scrollLeft;
+        posY = document.documentElement.scrollTop;
+    }
+    else if (document.body) {
+        posX = document.body.scrollLeft;
+        posY = document.body.scrollTop;
+    }
+    var divObj=document.getElementById("p_operate");
+    if(getScrollTop()>parseInt(divObj.style.top)){
+        divObj.style.top="0px";
+        $("#p_operate").css({"position":"fixed"})
+    }else{
+        divObj.style.top="100px";
+        $("#p_operate").css("position","");
+    }
+    setTimeout("reSetScrollDiv()",100);
+}
 </script>
 </head>
 <body>
-<div>
-    <a href="javascript:showDialogPage(1,'${paper.paperid}')">导入试卷</a>
-    <a href="javascript:showDialogPage(2,'${paper.paperid}')">导入试题</a>
-    <a href="javascript:showDialogPage(3,'${paper.paperid}')">新建试题</a>
-</div>
-<div class="zhuanti">
-    <p>${paper.papername }</p>
-    <p style="float: right">主观题：${paper.subjectivenum}&nbsp;客观题：${paper.objectivenum}&nbsp;</p>
-    <p style="float: right"><span id="total_score">${paper.score}</span></p>
-</div>
+<div class="subpage_head"><span class="ico55"></span><strong>添加试卷</strong></div>
 <div class="content2">
-    <div class="subpage_lm">
+
+    <!--
+       background: url("images/bg02_131230.png") no-repeat scroll 0 -69px rgba(0, 0, 0, 0);
+    height: 30px;
+    margin: 0 auto;
+    padding: 35px 5px 0;
+    width: 990px;
+    -->
+    <p  id="p_operate" style="top: 100px;" class="t_c p_tb_10"><a href="javascript:showDialogPage(1,'${paper.paperid}')" class="an_big">导入试卷</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(2,'${paper.paperid}')" class="an_big">导入试题</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}')" class="an_big">新建试题</a></p>
+    <div class="jxxt_zhuanti_shijuan_add font-black public_input">
+        <p class="title"><strong class="f_right">总分值：<span id="total_score" class="font-blue">${paper.score}&nbsp;分</span></strong><strong>${paper.papername}</strong></p>
+
         <c:if test="${!empty pqList}">
             <c:forEach items="${pqList}" var="pq">
-                <div id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}">
-                <p id="edit_${pq.questionid}" style="display: none;">
-                   <a href="javascript:showDialogPage(4,'${pq.paperid}','${pq.questionid}')" >编辑</a>&nbsp;<a href="javascript:doDelPaperQues('${pq.questionid}')">删除</a>
-                </p>
+                <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}">
+                    <col class="w30"/>
+                    <col class="w910"/>
+                    <caption><span class="f_right"><a   href="javascript:showDialogPage(4,'${pq.paperid}','${pq.questionid}')" class="ico11" title="编辑"></a><a href="javascript:doDelPaperQues('${pq.questionid}')" class="ico04" title="删除"></a>&nbsp;<span class="font-blue">
+                         <span class="font-blue"  style="cursor: pointer" data-bind="${pq.questionid}" id="score_${pq.questionid}">${pq.score}</span>分</span></span>
+                        <span id="idx_${pq.questionid}" data-bind="${pq.questionid}"  class="font-blue">${pq.orderidx}</span>/${fn:length(pqList)}</caption>
 
-                <p><span id="idx_${pq.questionid}" data-bind="${pq.questionid}" style="color: lightseagreen;font-size: 14px;">${pq.orderidx}</span>/${fn:length(pqList)}</p>
-                <p>
-                    <c:if test="${pq.paperid>0}">
-                        参
-                    </c:if>
-                        ${pq.questiontype==1?"其他":pq.questiontype==2?"填空题":pq.questiontype==3?"单选题":pq.questiontype==4?"多选题":""}&nbsp;
-                        ${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
-                    <c:forEach items="${pq.questioninfo.questionOption}" var="option">
-                        <c:if test="${pq.questiontype eq 3 }">
-                            <br><input disabled type="radio">
-                        </c:if>
-                        <c:if test="${pq.questiontype eq 4 }">
-                            <br><input disabled type="checkbox">
-                        </c:if>
-                        ${option.optiontype}&nbsp;${option.content};
-                        <c:if test="${option.isright eq 1}">
-                            <span class="ico12"></span>
-                        </c:if>
-                    </c:forEach>
-                </p>
-                <p style="float: right">
-                        <span  style="cursor: pointer" data-bind="${pq.questionid}" id="score_${pq.questionid}">${pq.score}</span>
-                </p>
-                <p>
-                    正确答案：
-                    <c:if test="${pq.questiontype eq 1 or  pq.questiontype eq 2 }">
-                        ${pq.correctanswer}
-                    </c:if>
-                    <c:if test="${pq.questiontype eq 3 or  pq.questiontype eq 4 }">
-                        <c:forEach items="${pq.questioninfo.questionOption}" var="option">
-                            <c:if test="${option.isright eq 1}">
-                                ${option.optiontype}&nbsp;
+
+                    <tr>
+                        <td>
+                            <c:if test="${pq.questionid>0}">
+                                <span class="ico44"></span>
                             </c:if>
-                        </c:forEach>
-                    </c:if>
-                </p>
-                <p>
-                    答案解析：${pq.analysis}
-                </p>
-                <br><br><br>
-                </div>
+                        </td>
+                        <td><span class="bg">${pq.questiontype==1?"其他":pq.questiontype==2?"填空题":pq.questiontype==3?"单选题":pq.questiontype==4?"多选题":""}：</span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+                            <c:if test="${!empty pq.questioninfo.questionOption}">
+                                <table border="0" cellpadding="0" cellspacing="0">
+                                    <col class="w30"/>
+                                    <col class="w880"/>
+
+                                <c:forEach items="${pq.questioninfo.questionOption}" var="option">
+                                    <tr>
+                                        <th>
+                                            <c:if test="${pq.questiontype eq 3 }">
+                                                <input disabled type="radio">
+                                            </c:if>
+                                            <c:if test="${pq.questiontype eq 4 }">
+                                                <input disabled type="checkbox">
+                                            </c:if>
+                                        </th>
+                                        <td>
+                                            ${option.optiontype}&nbsp;${option.content};
+                                        <c:if test="${option.isright eq 1}">
+                                            <span class="ico12"></span>
+                                        </c:if>
+                                        </td>
+                                    </tr>
+
+                                </c:forEach>
+                                </table>
+                            </c:if>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>
+                            <p>
+                                <strong>正确答案：</strong>
+                                <c:if test="${pq.questiontype eq 1 or  pq.questiontype eq 2 }">
+                                    ${pq.correctanswer}
+                                </c:if>
+                                <c:if test="${pq.questiontype eq 3 or  pq.questiontype eq 4 }">
+                                    <c:forEach items="${pq.questioninfo.questionOption}" var="option">
+                                        <c:if test="${option.isright eq 1}">
+                                            ${option.optiontype}&nbsp;
+                                        </c:if>
+                                    </c:forEach>
+                                </c:if>
+                            </p>
+                            <p>
+                                <strong>答案解析：</strong>${pq.analysis}
+                            </p>
+                        </td>
+                    </tr>
+                    </table>
             </c:forEach>
         </c:if>
     </div>
+    <p class="t_c p_tb_10"><a href="javascript:history.go(-1);" class="an_small">提&nbsp;交</a>&nbsp;&nbsp;&nbsp;&nbsp;<!--<a href="1" target="_blank" class="an_small">取&nbsp;消</a>--></p>
 </div>
-
 
 
 <%@include file="/util/foot.jsp" %>

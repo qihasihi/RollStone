@@ -1018,7 +1018,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             p.setPaperid(paperid);
             p.setPapername("×ÔÖ÷²âÊÔ");
             p.setCuserid(this.logined(request).getUserid());
-            p.setPapertype(PaperInfo.PAPER_TYPE.ORGANIZE.getValue());
+            p.setPapertype(PaperInfo.PAPER_TYPE.FREE.getValue());
             sql=new StringBuilder();
             objList=this.paperManager.getSaveSql(p,sql);
             if(objList!=null&&sql!=null){

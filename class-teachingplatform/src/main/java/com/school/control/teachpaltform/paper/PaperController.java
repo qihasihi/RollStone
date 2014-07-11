@@ -234,6 +234,7 @@ public class PaperController extends BaseController<PaperInfo>{
         request.setAttribute("pqList", tmpList);
         request.setAttribute("paper", tpCoursePaperList.get(0));
         request.setAttribute("courseid", courseid);
+        request.setAttribute("coursename",teacherCourseList.get(0).getCoursename());
         return new ModelAndView("/teachpaltform/paper/preview-paper");
     }
 
@@ -407,6 +408,26 @@ public class PaperController extends BaseController<PaperInfo>{
         je.setPresult(p);
         je.setType("success");
         response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 添加任务--选择试卷
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=toSelTaskPaper",method=RequestMethod.GET)
+    public ModelAndView toSelTaskPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        request.setAttribute("courseid",courseid);
+        return new ModelAndView("/teachpaltform/paper/select-paper");
     }
 
 
@@ -935,7 +956,7 @@ public class PaperController extends BaseController<PaperInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=editPaperQuestion",method=RequestMethod.GET)
+    @RequestMapping(params="m=editPaperQuestion",method={RequestMethod.GET,RequestMethod.POST})
     public ModelAndView toEditPaperQuestion(HttpServletRequest request)throws Exception{
         JsonEntity je =new JsonEntity();//
         String courseid=request.getParameter("courseid");

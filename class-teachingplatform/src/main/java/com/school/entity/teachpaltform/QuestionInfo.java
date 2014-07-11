@@ -86,10 +86,9 @@ public class QuestionInfo implements java.io.Serializable {
                 content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
                 content=content.replace("\r\n", "&nbsp;&nbsp;<br>");
                 content=content.replace("\n", "<br>");
-                content=content.replace(" ", "&nbsp;");
+               // content=content.replace(" ", "&nbsp;");
                 content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
                 content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                //content=content.replace(" ", "&nbsp;");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
         }
