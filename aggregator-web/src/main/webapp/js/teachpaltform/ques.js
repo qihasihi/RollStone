@@ -385,7 +385,7 @@ function doAddQuestion(){
 //         });
         param.correctanswer= $("#fill_answer").html();
 
-        $("#dv_filter  > span[name='span']").after("<span name=fillbank></span>").andSelf().remove()
+        $("#dv_filter span[name='span']").after("<span name=fillbank></span>").andSelf().remove()
         param.quesname=$("#dv_filter").html();
     }else if(questype=="3"||questype=="4"){
         if(quesoptionArray.length>0){
@@ -517,7 +517,7 @@ function doUpdQuestion(questionid){
 //        param.quesname=$("#dv_filter").html();
        param.correctanswer= $("#fill_answer").html();
 
-       $("#dv_filter p > span[name='span']").after("<span name=fillbank></span>").andSelf().remove()
+       $("#dv_filter span[name='span']").after("<span name=fillbank></span>").andSelf().remove()
        param.quesname=$("#dv_filter").html();
     }else if(questype=="3"||questype=="4"){
         if(quesoptionArray.length>0){
