@@ -255,7 +255,8 @@ function queryPaper(courseid,trobj,type,taskvalueid,taskstatus,quesnum){
                 htm+='<p><a class="font-darkblue"  href="javascript:showTaskElement('+type+')">>> 选择试卷</a></p>';
                 htm+='<div class="jxxt_zhuanti_add_ziyuan" id="dv_paper_name"></div>';
             }else if(type==5){
-                htm='<th><span class="ico06"></span>试题数量：</th>';
+                htm='';
+                /*htm='<th><span class="ico06"></span>试题数量：</th>';
                 htm+='<td class="font-black">';
                 if(objectiveQuesCount.length<1||parseInt(objectiveQuesCount)<1)
                     htm+='当前专题暂无客观题!';
@@ -265,7 +266,7 @@ function queryPaper(courseid,trobj,type,taskvalueid,taskstatus,quesnum){
                         htm+='<option value="'+i+'">'+i+'</option>'
                     }
                     htm+='</select>';
-                }
+                }*/
             }
             htm+='<input type="hidden" id="hd_elementid"/>';
             htm+='</td>';

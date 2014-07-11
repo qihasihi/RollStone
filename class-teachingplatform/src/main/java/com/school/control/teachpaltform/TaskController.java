@@ -1068,6 +1068,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
 			ta.setTaskremark(taskremark);
         if(quesnum!=null&&quesnum.trim().length()>0)
             ta.setQuesnum(Integer.parseInt(quesnum));
+        else
+            ta.setQuesnum(10);
 		sql=new StringBuilder();
 		objList=this.tpTaskManager.getSaveSql(ta, sql);
 		if(objList!=null&&sql!=null&&sql.length()>0){
@@ -1427,6 +1429,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 ta.setTaskremark(taskremark);
             if(quesnum!=null&&quesnum.trim().length()>0)
                 ta.setQuesnum(Integer.parseInt(quesnum));
+            else
+                ta.setQuesnum(10);
             tasknextid=this.tpTaskManager.getNextId(true);
             ta.setCuserid(this.logined(request).getRef());
             sql=new StringBuilder();
@@ -1467,6 +1471,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 ta.setTaskremark(taskremark);
             if(quesnum!=null&&quesnum.trim().length()>0)
                 ta.setQuesnum(Integer.parseInt(quesnum));
+            else
+                ta.setQuesnum(10);
             sql=new StringBuilder();
             objList=this.tpTaskManager.getUpdateSql(ta, sql);
             if(objList!=null&&sql!=null&&sql.length()>0){
