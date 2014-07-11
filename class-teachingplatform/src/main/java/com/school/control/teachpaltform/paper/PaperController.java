@@ -6,10 +6,7 @@ import com.school.entity.DictionaryInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
-import com.school.entity.teachpaltform.paper.PaperInfo;
-import com.school.entity.teachpaltform.paper.PaperQuestion;
-import com.school.entity.teachpaltform.paper.StuPaperLogs;
-import com.school.entity.teachpaltform.paper.TpCoursePaper;
+import com.school.entity.teachpaltform.paper.*;
 import com.school.manager.ClassManager;
 import com.school.manager.DictionaryManager;
 import com.school.manager.SmsManager;
@@ -21,17 +18,11 @@ import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
-import com.school.manager.inter.teachpaltform.paper.IPaperManager;
-import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
-import com.school.manager.inter.teachpaltform.paper.IStuPaperLogsManager;
-import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
+import com.school.manager.inter.teachpaltform.paper.*;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
-import com.school.manager.teachpaltform.paper.PaperManager;
-import com.school.manager.teachpaltform.paper.PaperQuestionManager;
-import com.school.manager.teachpaltform.paper.StuPaperLogsManager;
-import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
+import com.school.manager.teachpaltform.paper.*;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -82,6 +73,7 @@ public class PaperController extends BaseController<PaperInfo>{
     private IPaperManager paperManager;
     private ITpCoursePaperManager tpCoursePaperManager;
     private IStuPaperLogsManager stuPaperLogsManager;
+    private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
     public PaperController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -109,6 +101,7 @@ public class PaperController extends BaseController<PaperInfo>{
         this.paperManager=this.getManager(PaperManager.class);
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
         this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
+        this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
     }
     /**
 	 * 根据课题ID，加载试卷列表
@@ -2947,7 +2940,7 @@ public class PaperController extends BaseController<PaperInfo>{
             je.setMsg("异常错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
-        List<PaperQuestion> objList = this.paperQuestionManager.getQuestionByPaper(Integer.parseInt(paperid));
+        List<PaperQuestion> objList = this.paperQuestionManager.getQuestionByPaper(Long.parseLong(paperid));
         request.setAttribute("questionList",objList);
         request.setAttribute("papername",objList.get(0).getPapername());
         return new ModelAndView("teachpaltform/paper/marking/marking-list");
@@ -2967,7 +2960,7 @@ public class PaperController extends BaseController<PaperInfo>{
             je.setMsg("异常错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
-        List<StuPaperLogs> logsList = this.stuPaperLogsManager.getMarkingLogs(Integer.parseInt(paperid),Integer.parseInt(quesid));
+        List<StuPaperLogs> logsList = this.stuPaperLogsManager.getMarkingLogs(Long.parseLong(paperid),Long.parseLong(quesid));
         request.setAttribute("logs",logsList);
         request.setAttribute("idx",idx);
         return new ModelAndView("teachpaltform/paper/marking/marking-logs");
@@ -2987,8 +2980,8 @@ public class PaperController extends BaseController<PaperInfo>{
             je.setMsg("异常错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
-        List<Map<String,Object>> detailList = this.stuPaperLogsManager.getMarkingDetail(Integer.parseInt(paperid),Integer.parseInt(quesid));
-        List<Map<String,Object>> numList = this.stuPaperLogsManager.getMarkingNum(Integer.parseInt(paperid),Integer.parseInt(quesid));
+        List<Map<String,Object>> detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),Long.parseLong(quesid));
+        List<Map<String,Object>> numList = this.stuPaperLogsManager.getMarkingNum(Long.parseLong(paperid),Long.parseLong(quesid));
         request.setAttribute("detail",detailList.get(0));
         request.setAttribute("num",numList.get(0));
         return new ModelAndView("teachpaltform/paper/marking/marking-detail");
@@ -3007,10 +3000,10 @@ public class PaperController extends BaseController<PaperInfo>{
             je.setMsg("异常错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
-        StuPaperLogs sp = new StuPaperLogs();
-        sp.setRef(Long.parseLong(ref));
+        StuPaperQuesLogs sp = new StuPaperQuesLogs();
+        sp.setRef(Integer.parseInt(ref));
         sp.setScore(Float.parseFloat(score));
-        Boolean b = this.stuPaperLogsManager.doUpdate(sp);
+        Boolean b =this.stuPaperQuesLogsManager.doUpdate(sp);
         if(b){
             je.setType("success");
         }else{

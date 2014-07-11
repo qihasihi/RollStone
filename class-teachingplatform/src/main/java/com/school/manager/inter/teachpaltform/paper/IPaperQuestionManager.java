@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> { 
     Float getSumScore(PaperQuestion paperQuestion);
-    public List<PaperQuestion> getQuestionByPaper(Integer paperid);
+    public List<PaperQuestion> getQuestionByPaper(Long paperid);
 
     /**
      * 得到同步SQL语句

@@ -239,7 +239,7 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
         return null;
     }
 
-    public List<PaperQuestion> getQuestionByPaper(Integer paperid) {
+    public List<PaperQuestion> getQuestionByPaper(Long paperid) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_paper_marking_proc_list(");
         List<Object> objList=new ArrayList<Object>();

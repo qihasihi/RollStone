@@ -168,6 +168,11 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
 				objList.add(stupaperlogs.getRef());
 			} else
 				sqlbuilder.append("null,");
+            if (stupaperlogs.getUserid() != null) {
+                sqlbuilder.append("?,");
+                objList.add(stupaperlogs.getUserid());
+            } else
+                sqlbuilder.append("null,");
             if (stupaperlogs.getPaperid() != null) {
                 sqlbuilder.append("?,");
                 objList.add(stupaperlogs.getPaperid());
@@ -181,6 +186,11 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
             if (stupaperlogs.getIsinpaper() != null) {
                 sqlbuilder.append("?,");
                 objList.add(stupaperlogs.getIsinpaper());
+            } else
+                sqlbuilder.append("null,");
+            if (stupaperlogs.getIsmarking() != null) {
+                sqlbuilder.append("?,");
+                objList.add(stupaperlogs.getIsmarking());
             } else
                 sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
@@ -197,7 +207,7 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
 		return null;
 	}
 
-    public List<StuPaperLogs> getMarkingLogs(Integer paperid, Integer quesid) {
+    public List<StuPaperLogs> getMarkingLogs(Long paperid, Long quesid) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_paper_marking_logs_proc_list(");
         List<Object> objList=new ArrayList<Object>();
@@ -218,7 +228,7 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
         return logsList;
     }
 
-    public List<Map<String, Object>> getMarkingDetail(Integer paperid, Integer quesid) {
+    public List<Map<String, Object>> getMarkingDetail(Long paperid, Long quesid) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_paper_marking_proc_getdetail(");
         List<Object> objList=new ArrayList<Object>();
@@ -239,7 +249,7 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
         return list;
     }
 
-    public List<Map<String, Object>> getMarkingNum(Integer paperid, Integer quesid) {
+    public List<Map<String, Object>> getMarkingNum(Long paperid, Long quesid) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_paper_marking_proc_getnum(");
         List<Object> objList=new ArrayList<Object>();

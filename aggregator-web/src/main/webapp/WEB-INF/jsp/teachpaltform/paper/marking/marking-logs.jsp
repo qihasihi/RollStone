@@ -13,22 +13,35 @@
     <title></title>
 </head>
 <body>
-    试题序号：${idx}
-<table>
-    <tr>
-        <th>学生姓名</th>
-        <th>批阅情况</th>
-        <th>得分</th>
-    </tr>
-    <c:if test="${!empty logs}">
-        <c:forEach items="${logs}" var="itm">
+    <div class="subpage_head"><span class="ico55"></span><strong>批阅试卷—试题统计</strong></div>
+    <div class="content1">
+        <p><strong>试题序号：${idx}</strong></p>
+        <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
+            <col class="w310"/>
+            <col class="w310"/>
+            <col class="w310"/>
             <tr>
-                <td>${itm.stuname}</td>
-                <td>${itm.ismarking}</td>
-                <td>${itm.score}</td>
+                <th>学生</th>
+                <th>是否批改</th>
+                <th>得分</th>
             </tr>
-        </c:forEach>
-    </c:if>
-</table>
+            <c:if test="${!empty logs}">
+                <c:forEach items="${logs}" var="itm">
+                    <tr>
+                        <td>${itm.stuname}</td>
+                        <c:if test="${itm.ismarking==0}">
+                            <td><span class="ico12" title="完成"></span></td>
+                        </c:if>
+                        <c:if test="${itm.ismarking==1}">
+                            <td><span class="ico24" title="进行中"></span></td>
+                        </c:if>
+                        <td>${itm.score}</td>
+                    </tr>
+                </c:forEach>
+            </c:if>
+        </table>
+        <br>
+    </div>
+    <%@include file="/util/foot.jsp" %>
 </body>
 </html>

@@ -79,17 +79,17 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
 	}
 
     @Override
-    public List<StuPaperLogs> getMarkingLogs(Integer paperid, Integer quesid) {
+    public List<StuPaperLogs> getMarkingLogs(Long paperid, Long quesid) {
         return this.stupaperlogsdao.getMarkingLogs(paperid,quesid);
     }
 
     @Override
-    public List<Map<String, Object>> getMarkingDetail(Integer paperid, Integer quesid) {
+    public List<Map<String, Object>> getMarkingDetail(Long paperid, Long quesid) {
         return this.stupaperlogsdao.getMarkingDetail(paperid,quesid);
     }
 
     @Override
-    public List<Map<String, Object>> getMarkingNum(Integer paperid, Integer quesid) {
+    public List<Map<String, Object>> getMarkingNum(Long paperid, Long quesid) {
         return this.stupaperlogsdao.getMarkingNum(paperid,quesid);
     }
 }

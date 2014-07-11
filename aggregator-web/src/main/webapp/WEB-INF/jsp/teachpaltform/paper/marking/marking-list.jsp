@@ -13,20 +13,25 @@
     <title>批阅试卷主页</title>
 </head>
 <body>
-    <table>
-        <c:if test="${!empty questionList}">
-            <tr><td colspan="5">${papername}</td></tr>
-            <tr height="100">
-                <c:forEach items="${questionList}" var="itm" varStatus="idx">
-
-                        <td width="100" style="text-align: center">${itm.orderidx} &nbsp;&nbsp; ${itm.markingnum}/${itm.submitnum}</td>
-                    <c:if test="${(idx.index+1)%5==0}">
-                      </tr><tr height="100">
-                    </c:if>
-
-                </c:forEach>
-            </tr>
-        </c:if>
-    </table>
+    <div class="subpage_head"><span class="ico55"></span><strong>批阅试卷</strong></div>
+    <div class="content1">
+        <div class="jxxt_zhuanti_rw_piyue">
+            <h2>${papername}</h2>
+            <h3>注：客观题系统已自动完成批改</h3>
+            <ul class="shiti">
+                <c:if test="${!empty questionList}">
+                    <c:forEach items="${questionList}" var="itm" varStatus="idx">
+                        <c:if test="${itm.markingnum==itm.submitnum}">
+                            <li class="over"><a href="1">${itm.orderidx}<b>${itm.markingnum}/${itm.submitnum}</b></a></li>
+                        </c:if>
+                        <c:if test="${itm.markingnum!=itm.submitnum}">
+                            <li><a href="1">${itm.orderidx}<b>${itm.markingnum}/${itm.submitnum}</b></a></li>
+                        </c:if>
+                    </c:forEach>
+                </c:if>
+            </ul>
+        </div>
+    </div>
+    <%@include file="/util/foot.jsp" %>
 </body>
 </html>
