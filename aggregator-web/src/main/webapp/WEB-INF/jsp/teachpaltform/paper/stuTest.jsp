@@ -13,6 +13,7 @@
         var quesSize="${quesSize}";
         var courseid="${courseid}";
         var taskid="${taskid}";
+        var subQuesId=",";
         $(function(){
             loadQuesNumberTool();
             next(1);
@@ -20,23 +21,46 @@
         function loadQuesNumberTool(){
             var h='';
             for(i=1;i<=quesSize;i++){
-                h+='<a href="javascript:;" onclick="next('+i+')">['+i+']</a>&nbsp;&nbsp;'
+                h+=' <li class="blue"><a href="javascript:next('+i+');">'+i+'</a></li>'
             }
             $("#dv_ques_number").html(h);
         }
 
         function next(no,t){
             var pnoDiv=$("#dv_question div").filter(function(){return this.style.display!='none';});
+            $("#dv_ques_number li").attr("class","");
+            //加载已经做过的题
+            if(subQuesId.length>1){
+                var tmpsubid=subQuesId.substring(1)
+                tmpsubid=tmpsubid.substring(0,tmpsubid.length-1);
+                var idxArray=tmpsubid.split(",");
+                if(idxArray.length>0){
+                    for(z=0;z<idxArray.length;z++){
+                        var orderIdx=$("#hd_ques_"+idxArray[z]+"_idx").val();
+                        $("#dv_ques_number li").eq(orderIdx).attr("class","blue");
+                    }
+                }
+            }
+            //定位正在做的任务（题号及题正文）
                 if(typeof(t)=="undefined"||t>=0)
                     pnoDiv=pnoDiv.next();
                 else
                     pnoDiv=pnoDiv.prev();
+            if(typeof(no)=="undefined"||isNaN(no))
+                $("#dv_ques_number li").eq(pnoDiv.children("input[id*='_idx']").val()).attr("class","yellow");
             if(typeof(no)!="undefined"&&!isNaN(no)){
+                var tmpno=no;
                 if(no>0&&parseInt(quesSize)>=no)
-                    pnoDiv=$("#dv_question div").eq(no-1);
+                   tmpno=tmpno-1;
                 else
-                    pnoDiv=$("#dv_question div").eq(no-2);
+                    tmpno=tmpno-2;
+                pnoDiv=$("#dv_question div").eq(tmpno);
+                $("#dv_ques_number li").eq(tmpno).attr("class","yellow");
             }
+
+
+
+
             if(pnoDiv.length<1){
                 if(typeof(t)=="undefined"||t>=0)
                     if(confirm('已经答到最后一题了!是否提交试卷?'))
@@ -124,6 +148,8 @@
                     alert('异常错误!系统未响应!');
                 },success:function(rps){
                     if(rps.type=="success"){
+                        if(subQuesId.indexOf(","+quesid+",")<0)
+                            subQuesId+=quesid+","
                         next();
                     }else
                         alert(rps.msg);
@@ -138,17 +164,28 @@
         * @param quesAnswerid 问题答案ID
          */
         function doAnswerOne(quesid,quesAnswerid,o){
+            var isanswer=true;
             if(typeof(quesid)!="undefined"){
                 //得到题目类型   3,4自动判断     其它的教师评阅
                 var questype=$("#hd_questiontype_"+quesid).val();
                 if(questype==3){
-                    $("#hs_val_"+quesid).val(quesAnswerid);
-                    if(o==1){
-                        $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
-                    }else
-                        $("#hs_val_stu_"+quesid).val(0);
+                    var answerid=quesAnswerid;
+                    if(typeof(quesAnswerid)=="undefined"||quesAnswerid.length<1){
+                        var rdoVal=$("#quesOption_"+quesid+"~th input[type='radio']:checked");
+                        if(rdoVal.length>0){
+                            answerid=rdoVal.val();
+                        }else
+                            isanswer=false;
+                    }
+                    if(isanswer){
+                        $("#hs_val_"+quesid).val(quesAnswerid);
+                        if(o==1){
+                            $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
+                        }else
+                            $("#hs_val_stu_"+quesid).val(0);
+                    }
                   }else if(questype==4){
-                    var ckSeledtedBox=$("#quesOption_"+quesid+"~ul li input[type='checkbox']:checked");
+                    var ckSeledtedBox=$("#quesOption_"+quesid+" th input[type='checkbox']:checked");
                     var answer="";
                     var isright=true;
                     if(ckSeledtedBox.length>0){
@@ -163,7 +200,10 @@
                         else
                             $("#hs_val_stu_"+quesid).val(0);
                     }
-                    $("#hs_val_"+quesid).val(answer);
+                    if(answer.length>0){
+                     $("#hs_val_"+quesid).val(answer);
+                    }else
+                        isanswer=false;
                 }else if(questype==2){
                     var tkObj=$("#dv_qs_"+quesid+" input[name='txt_tk']");
                     var answer="";
@@ -172,81 +212,107 @@
                             answer+=(answer.length>0?"|":"")+itm.value;
                         });
                     }
-                    $("#hs_val_"+quesid).val(answer);
-                    $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
+                    if(answer.length>0){
+                        $("#hs_val_"+quesid).val(answer);
+                        $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
+                    }else
+                        isanswer=false;
                 }else if(questype==1){
-                    $("#hs_val_"+quesid).val($("#txt_answer_"+quesid).val());;
-
-                    $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
+                    var answerVal=$("#txt_answer_"+quesid).val();
+                    if(answerVal.length>0){
+                        $("#hs_val_"+quesid).val(answerVal);
+                        $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
+                    }else
+                        isanswer=false;
                 }
                 //
-                subOnePaper(quesid);
+                if(isanswer)
+                    subOnePaper(quesid);
+                else
+                    next();
             }
         }
     </script>
 </head>
 <body>
 <input type="hidden" value="${paperid}" name="hd_paper_id" id="hd_paper_id"/>
-    <div id="dv_ques_number">
+<div class="subpage_head"><span class="ico55"></span><strong>
+    <c:if test="${!empty paperObj&&paperObj.papertype==3}">成卷测试</c:if>
+    <c:if test="${!empty paperObj&&paperObj.papertype==4}">自主测试</c:if>
+</strong></div>
+<div class="content1">
+    <p class="t_r"><span class="ico_time"></span><strong>14天19时54分</strong></p>
+    <div class="jxxt_zhuanti_rw_ceshi">
+        <h2> <c:if test="${!empty paperObj&&paperObj.papertype==3}">
+         ${paperObj.papername}
+        </c:if></h2>
+        <ul id="dv_ques_number">
+            <%--<li class="blue"><a href="1">1</a></li>--%>
+            <%--<li class="blue"><a href="1">2</a></li>--%>
+            <%--<li class="blue"><a href="1">3</a></li>--%>
+            <%--<li class="yellow"><a href="1">4</a></li>--%>
+
+        </ul>
     </div>
-   <div id="dv_question">
-        <c:if test="${!empty quesList}">
-            <c:forEach items="${quesList}" var="q" varStatus="qidx">
-            <div style="display:none" id="dv_qs_${q.questionid}">
-                <input type="hidden" value="${q.questionid}" id="hd_quesid_${q.questionid}" name="hd_quesid"/>
-                <input type="hidden" value="" name="hd_answer" id="hs_val_${q.questionid}"/>
-                <input type="hidden" value="0" name="hd_stu_score" id="hs_val_stu_${q.questionid}"/>
-                <input type="hidden" value="${q.score}" name="hd_score" id="hs_score_${q.questionid}"/>
-                <input  type="hidden" value="${q.questiontype}" name="hd_questiontype" id="hd_questiontype_${q.questionid}"/>
-                    ${qidx.index+1}、
-               <c:if test="${q.questiontype==2}">
+    <div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_question">
+<c:if test="${!empty quesList}">
+    <c:forEach items="${quesList}" var="q" varStatus="qidx">
+        <div  id="dv_qs_${q.questionid}">
+            <input type="hidden" value="${qidx.index}" id="hd_ques_${q.questionid}_idx"/>
+            <input type="hidden" value="${q.questionid}" id="hd_quesid_${q.questionid}" name="hd_quesid"/>
+            <input type="hidden" value="" name="hd_answer" id="hs_val_${q.questionid}"/>
+            <input type="hidden" value="0" name="hd_stu_score" id="hs_val_stu_${q.questionid}"/>
+            <input type="hidden" value="${q.score}" name="hd_score" id="hs_score_${q.questionid}"/>
+            <input  type="hidden" value="${q.questiontype}" name="hd_questiontype" id="hd_questiontype_${q.questionid}"/>
+        <p> ${qidx.index+1}.
+            <c:if test="${q.questiontype==2}">
                 <script type="text/javascript">
                     var h1='${q.content}';
-                    h1=replaceAll(h1,'<span name="fillbank"></span>','<input type="text" name="txt_tk" id="txt_tk_${q.questionid}" style="width:50px"/>');
+                    h1=replaceAll(h1,'<span name="fillbank"></span>','<input type="text" name="txt_tk" id="txt_tk_${q.questionid}"/>');
                     document.write(h1);
                 </script>
-                   <p><input type="button" value="确定" onclick="doAnswerOne(${q.questionid},undefined,undefined,${q.questiontype})"/></p>
-                </c:if>
-                <c:if test="${q.questiontype!=2}">
-                    ${q.content}
-                </c:if>
-                <c:if test="${q.questiontype==1}">
-                    <textarea id="txt_answer_${q.questionid}" name="txt_answer"></textarea>
-                    <input type="button" value="确定" onclick="doAnswerOne(${q.questionid},undefined,undefined,${q.questiontype})"/>
-                </c:if>
-                    <p id="quesOption_${q.questionid}">
-                         <c:if test="${q.questiontype==3||q.questiontype==4}">
-                             <c:if test="${!empty q.questioninfo.questionOption}">
-                                 <ul>
-                                     <c:forEach items="${q.questioninfo.questionOption}" var="qo">
-                                         <li>
-                                             <%//单选 %>
-                                             <c:if test="${q.questiontype==3}">
-                                                 <input type="radio" onclick="doAnswerOne(${q.questionid},this.value,${qo.isright})" value="${qo.optiontype}" name="rdo_answer${qo.questionid}">${qo.optiontype}.${qo.content}
-                                             </c:if>
-                                             <%//多选 %>
-                                             <c:if test="${q.questiontype==4}">
-                                                 <input type="checkbox" value="${qo.optiontype}|${qo.isright}" name="rdo_answer${qo.questionid}">${qo.optiontype}.${qo.content}
-                                             </c:if>
-                                         </li>
-                                     </c:forEach>
-                                 </ul>
-                                 <c:if test="${q.questiontype==4}">
-                                     <input type="button"  onclick="doAnswerOne(${q.questionid},undefined,undefined,${q.questiontype})" value="确定"/>
-                                 </c:if>
-                             </c:if>
-                         </c:if>
-                    </p>
+            </c:if>
+            <c:if test="${q.questiontype!=2}">
+                ${q.content}
+            </c:if>
+            </p>
+            <c:if test="${q.questiontype==1}">
+                <div class="p_t_20"><textarea name="txt_answer" id="txt_answer_${q.questionid}"  placeholder="输入你的答案"></textarea></div>
+            </c:if>
 
-
-            </div>
-            </c:forEach>
-        </c:if>
-   </div>
-    <div id="dv_ques_tool">
-        <a href="javascript:;" onclick="next(undefined,-1)">上一题</a>
-        <a href="javascript:;" onclick="next()">下一题</a>
-        <a href="javascript:;" onclick="subPaper()">交卷</a>
+            <%--<c:if test="${q.questiontype==4}">--%>
+                <%--<input type="button"  onclick="doAnswerOne(${q.questionid},undefined,undefined,${q.questiontype})" value="确定"/>--%>
+            <%--</c:if>--%>
+            <c:if test="${q.questiontype==3||q.questiontype==4}">
+                <c:if test="${!empty q.questioninfo.questionOption}">
+                    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="quesOption_${q.questionid}">
+                        <col class="w30"/>
+                        <col class="w860"/>
+                        <c:forEach items="${q.questioninfo.questionOption}" var="qo">
+                        <tr>
+                            <th>
+                                <c:if test="${q.questiontype==3}">
+                                    <input type="radio"  id="rdo_answer${qo.questionid}${qo.optiontype}"  onclick="doAnswerOne(${q.questionid},this.value,${qo.isright})" value="${qo.optiontype}" name="rdo_answer${qo.questionid}">
+                                </c:if>
+                                <%//多选 %>
+                                <c:if test="${q.questiontype==4}">
+                                    <input type="checkbox" value="${qo.optiontype}|${qo.isright}" id="rdo_answer${qo.questionid}${qo.optiontype}" name="rdo_answer${qo.questionid}">
+                                </c:if>
+                                </th>
+                            <td><label for="rdo_answer${qo.questionid}${qo.optiontype}">${qo.optiontype}.${qo.content}</label></td>
+                        </tr>
+                        </c:forEach>
+                    </table>
+                </c:if>
+            </c:if>
+            <p class="jxxt_zhuanti_rw_ceshi_an">
+                <a  href="javascript:;" onclick="next(undefined,-1)" class="an_test1">上一题</a>
+                <a href="javascript:;" onclick="doAnswerOne(${q.questionid},undefined,undefined,${q.questiontype})" class="an_test1">下一题</a>
+                <a href="javascript:;" onclick="subPaper()"  class="an_test2">交卷</a></p>
+        </div>
+    </c:forEach>
+</c:if>
     </div>
+</div>
 </body>
 </html>
