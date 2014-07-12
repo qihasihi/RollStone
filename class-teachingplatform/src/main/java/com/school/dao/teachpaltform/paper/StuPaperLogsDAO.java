@@ -269,4 +269,50 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
         List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
         return list;
     }
+
+    public List<Object> getUpdateScoreSql(StuPaperLogs stupaperlogs, StringBuilder sqlbuilder) {
+        if(stupaperlogs==null){
+            return null;
+        }
+        sqlbuilder.append("{CALL stu_paper_logs_proc_update_score(");
+        List<Object>objList = new ArrayList<Object>();
+        if (stupaperlogs.getUserid()!= null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperlogs.getUserid());
+        } else
+            sqlbuilder.append("null,");
+        if (stupaperlogs.getPaperid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperlogs.getPaperid());
+        } else
+            sqlbuilder.append("null,");
+
+        if (stupaperlogs.getScore() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperlogs.getScore());
+        } else
+            sqlbuilder.append("null,");
+
+        if (stupaperlogs.getIsmarking() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperlogs.getIsmarking());
+        } else
+            sqlbuilder.append("null,");
+        sqlbuilder.append("?)}");
+        return objList;
+    }
+
+    public Boolean doUpdateScore(StuPaperLogs stupaperlogs) {
+        if (stupaperlogs == null)
+            return false;
+        StringBuilder sqlbuilder = new StringBuilder();
+        List<Object> objList = this.getUpdateScoreSql(stupaperlogs, sqlbuilder);
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0
+                && Integer.parseInt(afficeObj.toString()) > 0) {
+            return true;
+        }
+        return false;
+    }
 }

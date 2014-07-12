@@ -2995,17 +2995,56 @@ public class PaperController extends BaseController<PaperInfo>{
     public void doMarking(HttpServletRequest request,HttpServletResponse response)throws Exception{
         String ref = request.getParameter("ref");
         String score = request.getParameter("score");
+        String userid = request.getParameter("userid");
         JsonEntity je = new JsonEntity();
         if(ref==null||ref.length()<1||score==null||score.length()<1){
             je.setMsg("异常错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
+        //批量操作记录
+        List<List<Object>> objListArray=new ArrayList<List<Object>>();
+        List<String> sqlStrList=new ArrayList<String>();
+        StringBuilder sql=null;
+        List<Object>objList=null;
+        //学生答题记录
         StuPaperQuesLogs sp = new StuPaperQuesLogs();
         sp.setRef(Integer.parseInt(ref));
         sp.setScore(Float.parseFloat(score));
-        Boolean b =this.stuPaperQuesLogsManager.doUpdate(sp);
+        List<StuPaperQuesLogs> quesLogs = this.stuPaperQuesLogsManager.getList(sp,null);
+        objList = this.stuPaperQuesLogsManager.getUpdateSql(sp,sql);
+        objListArray.add(objList);
+        sqlStrList.add(sql.toString());
+        //试卷得分跟新
+        sql = new StringBuilder();
+        objList = new ArrayList<Object>();
+        StuPaperLogs sl = new StuPaperLogs();
+        sl.setUserid(quesLogs.get(0).getUserid());
+        sl.setPaperid(quesLogs.get(0).getPaperid());
+        sl.setScore(Float.parseFloat(score));
+        objList=this.stuPaperLogsManager.getUpdateScoreSql(sl,sql);
+        objListArray.add(objList);
+        sqlStrList.add(sql.toString());
+        Boolean b =this.stuPaperLogsManager.doExcetueArrayProc(sqlStrList,objListArray);
         if(b){
             je.setType("success");
+            //判断试卷是否批改完毕，首先得到试卷的试题数量
+            PaperQuestion paperQuestion = new PaperQuestion();
+            paperQuestion.setPaperid(quesLogs.get(0).getPaperid());
+            List<PaperQuestion> paperQuestionList = this.paperQuestionManager.getList(paperQuestion,null);
+            //然后得到批改的数量
+            StuPaperQuesLogs stuPaperQuesLogs = new StuPaperQuesLogs();
+            stuPaperQuesLogs.setPaperid(quesLogs.get(0).getPaperid());
+            stuPaperQuesLogs.setIsmarking(0);
+            stuPaperQuesLogs.setUserid(quesLogs.get(0).getUserid());
+            List<StuPaperQuesLogs> stuPaperQuesLogsList = this.stuPaperQuesLogsManager.getList(stuPaperQuesLogs,null);
+            //对比数量，如果相等，那么批改完毕，进行试卷的状态更新
+            if(paperQuestionList.size()==stuPaperQuesLogsList.size()){
+                StuPaperLogs stuPaperLogs = new StuPaperLogs();
+                stuPaperLogs.setPaperid(quesLogs.get(0).getPaperid());
+                stuPaperLogs.setUserid(quesLogs.get(0).getUserid());
+                stuPaperLogs.setIsmarking(0);
+                Boolean bl = this.stuPaperLogsManager.doUpdateScore(stuPaperLogs);
+            }
         }else{
             je.setType("error");
             je.setMsg("系统异常，请刷新页面重试");

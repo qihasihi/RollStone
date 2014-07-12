@@ -18,7 +18,7 @@ import com.school.manager.inter.teachpaltform.paper.IStuPaperLogsManager;
 import com.school.util.PageResult;
 
 @Service
-public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements IStuPaperLogsManager  { 
+public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements IStuPaperLogsManager  {
 	
 	private IStuPaperLogsDAO stupaperlogsdao;
 	
@@ -91,6 +91,16 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
     @Override
     public List<Map<String, Object>> getMarkingNum(Long paperid, Long quesid) {
         return this.stupaperlogsdao.getMarkingNum(paperid,quesid);
+    }
+
+    @Override
+    public List<Object> getUpdateScoreSql(StuPaperLogs stupaperlogs, StringBuilder sqlbuilder) {
+        return this.stupaperlogsdao.getUpdateScoreSql(stupaperlogs,sqlbuilder);
+    }
+
+    @Override
+    public Boolean doUpdateScore(StuPaperLogs stupaperlogs) {
+        return this.stupaperlogsdao.doUpdate(stupaperlogs);
     }
 }
 

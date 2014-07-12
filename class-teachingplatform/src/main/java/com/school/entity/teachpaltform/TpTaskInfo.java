@@ -28,6 +28,24 @@ public class TpTaskInfo implements Serializable {
     private Long quoteid;
     private Integer orderidx;
     private Integer quesnum;
+    private Integer resourcetype;
+    private Integer remotetype;
+
+    public Integer getResourcetype() {
+        return resourcetype;
+    }
+
+    public void setResourcetype(Integer resourcetype) {
+        this.resourcetype = resourcetype;
+    }
+
+    public Integer getRemotetype() {
+        return remotetype;
+    }
+
+    public void setRemotetype(Integer remotetype) {
+        this.remotetype = remotetype;
+    }
 
     public Integer getQuesnum() {
         return quesnum;
