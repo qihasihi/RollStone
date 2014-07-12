@@ -1514,6 +1514,8 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
     if(tasktype==4||tasktype==5){
         param.paperid=paperid;
     }
+    if(orderstr.length>0)
+        param.orderstr=orderstr;
     $.ajax({
         url:'task?loadPaperPerformance',
         type:"post",
@@ -1541,7 +1543,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                 $("#finishnum").html("0");
             }
             var htm='';
-
+            var css=cssObj==1?'ico48a':'ico48b';
             if(rmsg.objList[1]!=null&&typeof rmsg.objList[1]!='undefined'&&rmsg.objList[1].length>0){
                 if(rmsg.objList[2]!=null&&rmsg.objList[2].length>0){
                     $.each(rmsg.objList[2],function(ix,im){
@@ -1559,7 +1561,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                         htm+='<th>是否完成</th>';
                         htm+='<th>得分</th>';
                         if(tasktype==4)
-                            htm+='<th>排名</th>';
+                            htm+='<th>排名<a href="javascript:void(0);"  onclick="DataSort(\'t.rank\',this)"  class="'+css+'"></a></th>';
                         htm+='<th>查看试卷</th>';
                         htm+='</tr>';
                         $.each(rmsg.objList[1],function(idx,itm){
@@ -1607,7 +1609,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                     htm+='<th>是否完成</th>';
                     htm+='<th>得分</th>';
                     if(tasktype==4)
-                        htm+='<th>排名</th>';
+                        htm+='<th>排名<a href="javascript:void(0);"  onclick="DataSort(\'t.rank\',this)"  class="'+css+'"></a></th>';
                     htm+='<th>查看试卷</th>';
                     htm+='</tr>';
                     $.each(rmsg.objList[1],function(idx,itm){

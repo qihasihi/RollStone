@@ -12,11 +12,27 @@
         var taskid="${taskid}";
         var questype="${questype}";
         var tasktype="${taskInfo.tasktype}";
+        var orderstr="";
         $(function(){
             <c:if test="${!empty classList}">
             loadPaperPerformance(null,"${taskInfo.tasktype}");
             </c:if>
         });
+
+        var cssObj=1;
+        function DataSort(orderby,obj){
+            cssObj=cssObj==0?1:0;
+            var cls=$(obj).attr("class");
+            if(cls=='ico48a'){
+                orderstr=orderby;
+            }else{
+                orderstr=orderby+' desc';
+            }
+            var clsid=$("input[name='classradio']:checked").val().split('|')[0];
+            var clstype=$("input[name='classradio']:checked").val().split('|')[1];
+
+            loadPaperPerformance(clsid,"${taskInfo.tasktype}","",clstype);
+        }
     </script>
 
 
@@ -32,7 +48,7 @@
         全部&nbsp;&nbsp;&nbsp;&nbsp;
         <c:if test="${!empty classList}">
             <c:forEach items="${classList}" var="c">
-                <input type="radio" id="radio${c.classid}" name="classradio" onclick="loadPaperPerformance('${c.classid }','${taskInfo.tasktype}','${taskInfo.taskvalueid}',${c.classtype})"/>${c.classname }
+                <input type="radio" id="radio${c.classid}" value="${c.classid}|${c.classtype}"  name="classradio" onclick="loadPaperPerformance('${c.classid }','${taskInfo.tasktype}','${taskInfo.taskvalueid}',${c.classtype})"/>${c.classname }
             </c:forEach>
         </c:if></p>
     <p class="font-black p_t_10"><strong>完成比率：</strong><span id="finishnum"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--a href="" id="showdetail" target="_blank" class="font-darkblue">查看题目</a--></p>
