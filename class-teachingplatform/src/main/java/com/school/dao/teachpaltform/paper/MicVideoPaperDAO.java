@@ -187,11 +187,6 @@ public class MicVideoPaperDAO extends CommonDAO<MicVideoPaperInfo> implements IM
 		return objList; 
 	}
 
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
-			List<List<Object>> objArrayList) {
-		return this.executeArray_SQL(sqlArrayList, objArrayList);
-	}
-	
 	public String getNextId() {
 		// TODO Auto-generated method stub
 		return null;

@@ -58,7 +58,7 @@ public class  StuViewMicVideoLogManager extends BaseManager<StuViewMicVideoLog> 
 			List<List<Object>> objArrayList) {
 		return this.stuviewmicvideologdao.doExcetueArrayProc(sqlArrayList,objArrayList);
 	}
-	
+
 	public StuViewMicVideoLog getOfExcel(Sheet rs, int cols, int d, String type) {
 		// TODO Auto-generated method stub
 		return null;
