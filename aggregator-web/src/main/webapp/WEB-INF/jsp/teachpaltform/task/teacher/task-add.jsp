@@ -105,6 +105,9 @@
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
         <col class="w120"/>
         <col class="w700"/>
+        <input type="hidden" id="resource_type"/>
+        <input type="hidden" id="remote_type"/>
+        <input type="hidden" id="resource_name"/>
         <tr>
             <th><span class="ico06"></span>任务类型：</th>
             <td>  <select name="select" id="task_type" onchange="changeTaskType()">

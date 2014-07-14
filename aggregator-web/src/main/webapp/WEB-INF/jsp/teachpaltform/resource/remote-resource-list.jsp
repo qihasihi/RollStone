@@ -18,6 +18,10 @@
         $(function(){
             getRemoteResources();
         });
+        function dosub(taskvalueid,resourcetype,remotetype,resname){
+            window.returnValue=taskvalueid+","+resourcetype+","+remotetype+","+resname;
+            window.close();
+        }
     </script>
 </head>
 <body>

@@ -177,13 +177,18 @@ public class TaskController extends BaseController<TpTaskInfo>{
     public ModelAndView toTaskElementDetailPage(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();
         String courseid=request.getParameter("courseid");
+        String type = request.getParameter("tasktype");
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
         request.setAttribute("courseid",courseid);
-        return new ModelAndView("/teachpaltform/task/teacher/element-detail");
+        if(type.equals("1")){
+             return new ModelAndView("/teachpaltform/task/teacher/resource-element-detail");
+        }else{
+             return new ModelAndView("/teachpaltform/task/teacher/element-detail");
+        }
     }
 
     /**
@@ -960,41 +965,51 @@ public class TaskController extends BaseController<TpTaskInfo>{
 			}
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
 		}else if(tasktype.toString().equals("1")){//资源
-			if(taskvalueid==null||taskvalueid.trim().length()<1){
-				je.setMsg("异常错误，系统未获取到资源标识!");
-				response.getWriter().print(je.toJSON());
-				return;
-			}
-			TpCourseResource t=new TpCourseResource();
-			t.setResid(Long.parseLong(taskvalueid));
-			List<TpCourseResource>resList=this.tpCourseResourceManager.getList(t, null);
-			if(resList==null||resList.size()<1){
-				je.setMsg("提示：当前资源已不存在或删除，请刷新页面后重试!");
-				response.getWriter().print(je.toJSON());
-				return;
-			}
-            ta.setTaskvalueid(Long.parseLong(taskvalueid));
-
-
-
-            TpCourseResource tt=new TpCourseResource();
-            tt.setCourseid(Long.parseLong(courseid));
-            tt.setResid(Long.parseLong(taskvalueid));
-            List<TpCourseResource>tpCourseResourceList=this.tpCourseResourceManager.getList(tt,null);
-            if(tpCourseResourceList==null||tpCourseResourceList.size()<1){
-                je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
-                response.getWriter().print(je.toJSON());
-                return;
-            }
-            if(tpCourseResourceList.get(0).getResourcetype().equals(2)){
-                tt.setRef(tpCourseResourceList.get(0).getRef());
-                tt.setResourcetype(1);
-                sql=new StringBuilder();
-                objList=this.tpCourseResourceManager.getUpdateSql(tt,sql);
-                if(objList!=null&&sql!=null&&sql.length()>0){
-                    objListArray.add(objList);
-                    sqlListArray.add(sql.toString());
+            String resourcetype=request.getParameter("resourcetype");
+            if(resourcetype.equals("1")){
+                if(taskvalueid==null||taskvalueid.trim().length()<1){
+                    je.setMsg("异常错误，系统未获取到资源标识!");
+                    response.getWriter().print(je.toJSON());
+                    return;
                 }
+                TpCourseResource t=new TpCourseResource();
+                t.setResid(Long.parseLong(taskvalueid));
+                List<TpCourseResource>resList=this.tpCourseResourceManager.getList(t, null);
+                if(resList==null||resList.size()<1){
+                    je.setMsg("提示：当前资源已不存在或删除，请刷新页面后重试!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                ta.setTaskvalueid(Long.parseLong(taskvalueid));
+                ta.setResourcetype(1);
+
+
+                TpCourseResource tt=new TpCourseResource();
+                tt.setCourseid(Long.parseLong(courseid));
+                tt.setResid(Long.parseLong(taskvalueid));
+                List<TpCourseResource>tpCourseResourceList=this.tpCourseResourceManager.getList(tt,null);
+                if(tpCourseResourceList==null||tpCourseResourceList.size()<1){
+                    je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                if(tpCourseResourceList.get(0).getResourcetype().equals(2)){
+                    tt.setRef(tpCourseResourceList.get(0).getRef());
+                    tt.setResourcetype(1);
+                    sql=new StringBuilder();
+                    objList=this.tpCourseResourceManager.getUpdateSql(tt,sql);
+                    if(objList!=null&&sql!=null&&sql.length()>0){
+                        objListArray.add(objList);
+                        sqlListArray.add(sql.toString());
+                    }
+                }
+            }else{
+                String remotetype=request.getParameter("remotetype");
+                String resourcename=request.getParameter("resourcename");
+                ta.setTaskvalueid(Long.parseLong(taskvalueid));
+                ta.setResourcetype(2);
+                ta.setRemotetype(Integer.parseInt(remotetype));
+                ta.setResourcename(resourcename);
             }
 		}else if(tasktype.toString().equals("4")){//成卷测试
             if(taskvalueid==null||taskvalueid.trim().length()<1){

@@ -31,6 +31,16 @@ public class TpTaskInfo implements Serializable {
     private Integer resourcetype;
     private Integer remotetype;
 
+    public String getResourcename() {
+        return resourcename;
+    }
+
+    public void setResourcename(String resourcename) {
+        this.resourcename = resourcename;
+    }
+
+    private String resourcename;
+
     public Integer getResourcetype() {
         return resourcetype;
     }

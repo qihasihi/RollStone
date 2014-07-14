@@ -232,6 +232,11 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
                 objList.add(tptaskinfo.getRemotetype());
             } else
                 sqlbuilder.append("null,");
+            if (tptaskinfo.getResourcename() != null) {
+                sqlbuilder.append("?,");
+                objList.add(tptaskinfo.getResourcename());
+            } else
+                sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -323,6 +328,11 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
         if (tptaskinfo.getRemotetype() != null) {
             sqlbuilder.append("?,");
             objList.add(tptaskinfo.getRemotetype());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskinfo.getResourcename() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getResourcename());
         } else
             sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");

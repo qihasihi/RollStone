@@ -194,43 +194,44 @@ function queryQuestionType(trobj, questype, boo, questionid) {
     });
 }
 
+
 /**
  * 获取资源
  * @param courseid
  * @param trobj
  * @return
  */
-function queryResource(courseid, trobj, taskvalueid, taskstatus) {
-    if (typeof(courseid) == 'undefined' || courseid.length < 1) {
+function queryResource(courseid,trobj,taskvalueid,taskstatus){
+    if(typeof(courseid)=='undefined'||courseid.length<1){
         alert('异常错误，系统未获取到课题标识!');
         return;
     }
 
     $.ajax({
-        url: 'tpres?toQueryResourceList',
-        type: 'post',
-        data: {courseid: courseid, resid: taskvalueid},
-        dataType: 'json',
-        error: function () {
+        url:'tpres?toQueryResourceList',
+        type:'post',
+        data:{courseid:courseid,resid:taskvalueid},
+        dataType:'json',
+        error:function(){
             alert('网络异常!');
         },
-        success: function (json) {
-            var htm = '';
-            htm += '<th><span class="ico06"></span>选择资源：</th>';
-            htm += '<td class="font-black">';
-            if (typeof taskstatus == 'undefined')
-                htm += '<p><a class="font-darkblue"  href="javascript:showTaskElement(1)">>> 选择已有资源</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue"  href="javascript:showDialogPage(1)">>> 添加资源</a></p>';
-            htm += '<div class="jxxt_zhuanti_add_ziyuan" id="dv_res_name"></div>';
-            htm += '<input type="hidden" id="hd_elementid"/>';
-            htm += '</td>';
-            $("#" + trobj).html(htm);
+        success:function(json){
+            var htm='';
+            htm+='<th><span class="ico06"></span>选择资源：</th>';
+            htm+='<td class="font-black">';
+            if(typeof taskstatus=='undefined')
+                htm+='<p><a class="font-darkblue"  href="javascript:showResourceElementJsp()">>> 选择已有资源</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue"  href="javascript:showDialogPage(1)">>> 添加资源</a></p>';
+            htm+='<div class="jxxt_zhuanti_add_ziyuan" id="dv_res_name"></div>';
+            htm+='<input type="hidden" id="hd_elementid"/>';
+            htm+='</td>';
+            $("#"+trobj).html(htm);
             $("#tb_ques").hide();
 
-            if (json.objList.length > 0 && typeof taskvalueid != 'undefined' && taskvalueid.toString().length > 0) {
-                $("#dv_res_name").html('<span class=' + json.objList[0].suffixtype + '></span>' + json.objList[0].resname);
+            if(json.objList.length>0&&typeof taskvalueid!='undefined'&&taskvalueid.toString().length>0){
+                $("#dv_res_name").html('<span class='+json.objList[0].suffixtype+'></span>'+json.objList[0].resname);
                 $("#hd_elementid").val(json.objList[0].resid);
             }
-            if (typeof(taskvalueid) != 'undefined' && taskvalueid.toString().length > 0)
+            if(typeof(taskvalueid)!='undefined'&&taskvalueid.toString().length>0)
                 $("select[id='sel_resource']").val(taskvalueid);
         }
     });
@@ -790,7 +791,10 @@ function doSubManageTask(taskid) {
             alert('请选择资源!');
             return;
         }
-        param.taskvalueid = resourceid;
+        param.taskvalueid=resourceid;
+        param.resourcetype=$("#resource_type").val();
+        param.remotetype=$("#remote_type").val();
+        param.resourcename=$("#resource_name").val();
     } else if (tasktype.val() == "4") {
         if (paperid.length < 1) {
             alert('请选择试卷!');
