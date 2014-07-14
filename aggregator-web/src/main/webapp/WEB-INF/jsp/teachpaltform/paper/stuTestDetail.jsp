@@ -14,7 +14,7 @@
             <c:if test="${!empty stuAnswer}">
             <c:forEach items="${stuAnswer}" var="sa">
             //得到quesid的questype
-            userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}");
+            userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","${sa.annexNameFull}");
             </c:forEach>
             var sumScore=0;
              $("strong[id*='you_score']").each(function(idx,itm){
@@ -24,13 +24,18 @@
             </c:if>
         });
 
-        function userAnswer(t,t1,score){
+        function userAnswer(t,t1,score,nexName){
            var qtObj=$("#hd_questiontype_"+t);
             if(qtObj.val().length>0){
                 $("#you_score"+t).html(score);
 
                 if(qtObj.val().Trim()==1){
                     $("#dv_you_as"+t).html(t1);
+                    if(nexName!="undefined"&&nexName.length>0){
+                        $("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");
+                        $("#fujian"+t).parent().show();
+                    }
+
                 }else if(qtObj.val().Trim()==2){ //1:问题  2：填空 3：单选  4：多选
                     var t2=t1.split("|");
                     var t3=$("#dv_qs_"+t+" span[name='fillbank']");
@@ -40,6 +45,12 @@
                         });
                     }
                     $("span[name='fillbank']").css("border-bottom","1px solid black");
+
+                    if(nexName!="undefined"&&nexName.length>0){
+                        $("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");
+                        $("#fujian"+t).parent().show();
+                    }
+
                 }else if(qtObj.val().Trim()==3){
                     $("input[name='rdo_answer"+t+"']").filter(function(){return this.value.Trim()==t1}).attr("checked",true);
                 }else if(qtObj.val().Trim()==4){
@@ -79,16 +90,19 @@
                 <input  type="hidden" value="${q.questiontype}" name="hd_questiontype" id="hd_questiontype_${q.questionid}"/><c:if test="${q.questiontype==1}">问答题</c:if><c:if test="${q.questiontype==2}">填空题</c:if><c:if test="${q.questiontype==3}">单选题</c:if><c:if test="${q.questiontype==4}">多选题</c:if>：</span>
                     ${q.content}
                     <c:if test="${q.questiontype==2}"><%//填空题%>
+                    <p><strong>答题附件：</strong><span class="font-blue" id="fujian${q.questionid}"></span></p>
                       </td></tr>
-                       <tr><td><p><strong>正确答案：</strong>${q.correctanswer}</p>
+                       <tr><td><p>
+                           <strong>正确答案：</strong>${q.correctanswer}</p>
                             <p><strong>题目解析：</strong><div id="dv_right_as${q.questionid}">${q.analysis}</div></p>
-                            </td>
+                       </td>
                         </tr>
                     </c:if>
                     <c:if test="${q.questiontype==1}">
                         </td></tr>
-                        <tr><td><p><strong>学生答案：</strong><span id="dv_you_as${q.questionid}"></span></p>
-
+                        <tr><td>
+                            <p><strong>学生答案：</strong><span id="dv_you_as${q.questionid}"></span></p>
+                            <p><strong>答题附件：</strong><span  class="font-blue" id="fujian${q.questionid}"></span></p>
                         <p><strong>正确答案：</strong>${q.correctanswer}</p>
                         <p><strong>题目解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>
                          </td>

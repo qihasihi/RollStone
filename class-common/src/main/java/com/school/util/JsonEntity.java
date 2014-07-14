@@ -181,8 +181,10 @@ public class JsonEntity {
 					return true;
 				String vType = value.getClass().getName();
 				// ∑¿÷πÀ¿—≠ª∑.
-				if (vType.indexOf("org.hibernate.collection.PersistentSet") != -1) {
-					return true;
+                if (name.indexOf("alertMsg") != -1)
+                    return true;
+                if (vType.indexOf("org.hibernate.collection.PersistentSet") != -1) {
+                    return true;
 					
 				} else if(vType.indexOf("java.sql")!=-1){
 					return true;

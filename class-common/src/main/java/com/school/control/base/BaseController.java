@@ -916,7 +916,7 @@ public class BaseController<T extends java.io.Serializable> {
             }
             String filename = this.getFname();
             File imageFile = new File(request.getRealPath("/")
-                    + "uploadfile/"+ filename);
+                    + UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ filename);
             if(myFile==null)
                 myFile=this.getUpload(request)[0];
             copy(myFile.getInputStream(),imageFile);
@@ -937,7 +937,7 @@ public class BaseController<T extends java.io.Serializable> {
         if(this.getUpload(request)!=null&&this.getUpload(request).length>0){
             try {
                 for(;i<this.getUpload(request).length;i++){
-                    File f=new File(request.getRealPath("/")+"uploadfile/"+this.getFileNameList().get(i));
+                    File f=new File(request.getRealPath("/")+UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+this.getFileNameList().get(i));
                     copy(this.getUpload(request)[i].getInputStream(),f);
                 }
             }catch (Exception e) {
@@ -946,7 +946,7 @@ public class BaseController<T extends java.io.Serializable> {
             }
             if(!flag){
                 for(int j=0;j<i;j++){
-                    File f=new File(request.getRealPath("/")+"uploadfile/"+this.getFileNameList().get(i));
+                    File f=new File(request.getRealPath("/")+UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+this.getFileNameList().get(i));
                     if(f.exists())
                         f.delete();
                 }
@@ -1017,7 +1017,7 @@ public class BaseController<T extends java.io.Serializable> {
     public void doloadLocalFile(HttpServletRequest request,HttpServletResponse response,String fname)
             throws Exception{
         JsonEntity je = new JsonEntity();
-        String filename=request.getRealPath("/")+"uploadfile/"+fname;
+        String filename=request.getRealPath("/")+UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fname;
         File f=new File(filename);
         if(!f.exists()){
             je.setMsg("系统中未发现该文件!请联系管理员审查!");

@@ -30,9 +30,9 @@
    	<!-- 上传拦截，如最大上传值及最小上传值 -->  
     <bean id="multipartResolver"  
         class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
-   		 <!--1024*1024*2即2M--> 
+   		 <!--1024*1024*50即2M-->
         <property name="resolveLazily" value="true" /> 
-        <property name="maxUploadSize" value="2097152" />      
+        <property name="maxUploadSize" value="31457280" />
     </bean>
    
     <!-- 对静态资源文件的访问 (公 共)-->    

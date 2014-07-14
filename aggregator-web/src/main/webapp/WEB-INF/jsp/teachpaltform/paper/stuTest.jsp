@@ -120,7 +120,11 @@
                     if(quesAnswerObj[i].value.length<1){
                         noanswer[noanswer.length]=i+1;
                     }
-                    data[i]={questionid:quesidObj[i].value,answer:quesAnswerObj[i].value,score:scoreObj[i].value,questype:questype[i].value};
+                    var tpanswer=quesAnswerObj[i].value;
+                    if(tpanswer.Trim().length>0){
+                     tpanswer=encodeURIComponent(tpanswer.replaceAll('"',"&quot;"));
+                    }
+                    data[i]={questionid:quesidObj[i].value,answer:tpanswer,score:scoreObj[i].value,questype:questype[i].value};
                 }
             }
 //            if(noanswer.length>0){
@@ -138,23 +142,52 @@
             if(pid.length<1){
                 alert('异常错误，参数异常!');return;
             }
-            $.ajax({
-                url:"paperques?m=doSaveTestPaper",
-                dataType:'json',
-                type:'post',
-                data:{paperid:pid,testQuesData:$.toJSON(data)},
-                cache: false,
-                error:function(){
-                    alert('异常错误!系统未响应!');
-                },success:function(rps){
-                    if(rps.type=="success"){
-                        if(subQuesId.indexOf(","+quesid+",")<0)
-                            subQuesId+=quesid+","
-                        next();
-                    }else
-                        alert(rps.msg);
-                }
-            })
+            //选择题
+            var annexObj=$("#txt_f_"+quesid);
+            //附件上传
+            if(annexObj.length>0&&annexObj.val().Trim().length>0){
+                //先附件上传
+                alert("该题您选择了附件上传,将会先提交附件再提交数据，请耐心等待上传完毕!\n\n上传完毕后，会自动进行下一题!");
+
+             //   var lastname = annexObj.val().substring(annexObj.val().lastIndex("/"));
+                var url="paperques?m=doSaveTestPaper";
+                $.ajaxFileUpload({
+                    url: url + "&paperid="+pid+"&hasannex=1&testQuesData="+ $.toJSON(data),
+                    fileElementId: 'txt_f_'+quesid,
+                    dataType: 'json',
+                    secureuri: false,
+                    type: 'POST',
+                    success: function (rps, status) {
+                        if(rps.type=="success"){
+                            if(subQuesId.indexOf(","+quesid+",")<0)
+                                subQuesId+=quesid+","
+                            next();
+                        }else
+                            alert(rps.msg);
+                    },
+                    error: function (data, status, e) {
+                        alert(e);
+                    }
+                });
+            }else{
+                $.ajax({
+                    url:"paperques?m=doSaveTestPaper",
+                    dataType:'json',
+                    type:'post',
+                    data:{paperid:pid,testQuesData:$.toJSON(data)},
+                    cache: false,
+                    error:function(){
+                        alert('异常错误!系统未响应!');
+                    },success:function(rps){
+                        if(rps.type=="success"){
+                            if(subQuesId.indexOf(","+quesid+",")<0)
+                                subQuesId+=quesid+","
+                            next();
+                        }else
+                            alert(rps.msg);
+                    }
+                })
+            }
         }
 
 
@@ -275,9 +308,15 @@
             <c:if test="${q.questiontype!=2}">
                 ${q.content}
             </c:if>
-            </p>
+
             <c:if test="${q.questiontype==1}">
                 <div class="p_t_20"><textarea name="txt_answer" id="txt_answer_${q.questionid}"  placeholder="输入你的答案"></textarea></div>
+            </c:if>
+            </p>
+            <c:if test="${q.questiontype==1||q.questiontype==2}">
+                <p>上传附件：<input type="text" readonly value="" id="txt_f2${q.questionid}">
+                    <input type="button" onclick="document.getElementById('txt_f_${q.questionid}').click();" value="选择"/>
+                    <input type="file" onchange="document.getElementById('txt_f2${q.questionid}').value=this.value;" name="txt_f_${q.questionid}2" style="display:none" id="txt_f_${q.questionid}"/></p>
             </c:if>
             <%--<c:if test="${q.questiontype==4}">--%>
                 <%--<input type="button"  onclick="doAnswerOne(${q.questionid},undefined,undefined,${q.questiontype})" value="确定"/>--%>

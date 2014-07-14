@@ -36,6 +36,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -3467,6 +3468,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
      */
     @RequestMapping(params="m=doSaveTestPaper",method=RequestMethod.POST)
     public void doSaveTestPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
+       // request.setCharacterEncoding("GBK");
         String testQuesData=request.getParameter("testQuesData");
         String paperid=request.getParameter("paperid");
         JsonEntity jsonEntity=new JsonEntity();
@@ -3474,6 +3476,29 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
+      //  testQuesData=new String(testQuesData.getBytes("UTF-8"),"GBK");
+        String hasannex=request.getParameter("hasannex");
+        String annexName=null;
+        boolean isfileOk=true;
+        if(hasannex!=null&&hasannex.trim().equals("1")){
+            testQuesData=new String(testQuesData.getBytes("iso-8859-1"),"UTF-8");
+            MultipartFile[] muFile=this.getUpload(request);
+            if(muFile!=null&&muFile.length>0){//文件上传
+                //this.setFname(annexName=this.getUploadFileName()[0]);
+                this.setFname(annexName=new Date().getTime()+""
+                        +this.getUploadFileName()[0].substring(this.getUploadFileName()[0].lastIndexOf("."))
+                );
+                if(!fileupLoad(request)){
+                    isfileOk=!isfileOk;
+                }
+            }
+        }
+        if(!isfileOk){
+            jsonEntity.setMsg("文件上传失败!请刷新页面后重试");
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+        //去换行符
+        testQuesData=testQuesData.replace("\n","\\\\n");
         Integer userid=this.logined(request).getUserid();
         JSONArray jsonArray=JSONArray.fromObject(testQuesData);
         List<String> sqlArrayList=new ArrayList<String>();
@@ -3499,6 +3524,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             List<StuPaperQuesLogs> spqlogList=this.stuPaperQuesLogsManager.getList(stpq,presult);
             stpq.setAnswer(answer);
             stpq.setScore(score);
+            stpq.setAnnexName(annexName);
             Integer questype=Integer.parseInt(questypeObj.toString());
             if(questype==4||questype==3){
                 stpq.setIsright(score>0?1:2);

@@ -1,5 +1,7 @@
 package  com.school.entity.teachpaltform.paper;
 
+import com.school.util.UtilTool;
+
 import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,6 +19,7 @@ public class StuPaperQuesLogs implements  Serializable {
     private java.lang.Integer userid;
     private Float score;
     private Integer ismarking;
+    private String annexName;
 
     public Integer getIsmarking() {
         return ismarking;
@@ -28,9 +31,25 @@ public class StuPaperQuesLogs implements  Serializable {
 
     public String getAnswerString(){
         String returnVal=answer;
-        if(answer!=null&&answer.length()>0)
+        if(answer!=null&&answer.length()>0){
             returnVal=returnVal.replaceAll("\\\\r\\\\n","</br>").replaceAll("\\n","</br>");
+        }
         return returnVal;
+    }
+    public String getAnnexNameFull(){
+        String returnVal="";
+        if(getAnnexName()!=null){
+            returnVal=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getAnnexName();
+        }
+        return returnVal;
+    }
+
+    public String getAnnexName() {
+        return annexName;
+    }
+
+    public void setAnnexName(String annexName) {
+        this.annexName = annexName;
     }
 
     public java.lang.Integer getIsright(){

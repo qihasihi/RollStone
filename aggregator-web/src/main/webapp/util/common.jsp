@@ -187,7 +187,7 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 		<!-- 文件上传
 		<script src="<%=basePath %>js/common/ajaxUpload.js"	type="text/javascript"></script> -->
 			<script src="<%=basePath %>js/common/notes-zhengzhou-0.1-zh-cn.js"	type="text/javascript"></script>
-		<!--<script src="<%=basePath %>js/common/ajaxfileupload.js" type="text/javascript"></script>-->
+		<script src="<%=basePath %>js/common/ajaxfileupload.js" type="text/javascript"></script>
 
 		<script type="text/javascript" src="<%=basePath %>js/common/jquery.json-2.4.js"></script>
 <%--<script type="text/javascript" src="<%=basePath %>js/common/jquery.rotate.1-1.js"></script>--%>
