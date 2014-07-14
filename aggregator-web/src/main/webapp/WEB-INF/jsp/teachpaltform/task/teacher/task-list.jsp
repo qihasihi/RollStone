@@ -125,6 +125,10 @@ function getInvestReturnMethod(rps){
             html+='<div class="jxxt_zhuanti_rwR">';
             html+='<div class="title">';
             html+='<p class="f_right"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b>';
+            if(itm.tasktype==4){
+                html+='<a class="ico79" title="批阅" href="paper?m=toMarking&paperid='+itm.taskvalueid+'"></a>';
+            }
+
             //if(itm.taskstatus=="3"||(itm.taskstatus!="1"&&itm.flag<2)){
             if(itm.taskstatus!="1"){
                 if(itm.tasktype==4||itm.tasktype==5)
