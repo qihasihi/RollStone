@@ -153,9 +153,9 @@
                     html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==2){
                     html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
-                }else if(itm.tasktype==4){
+                }else if(itm.tasktype==4&&itm.taskstatus!="1"){
                     html+='<a  class="font-blue" href="paperques?m=testPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
-                }else if(itm.tasktype==5){
+                }else if(itm.tasktype==5&&itm.taskstatus!="1"){
                     html+='<a  class="font-blue" href="paper?m=genderZiZhuPaper&taskid='+itm.taskid+'"  style="color: blue;">'+itm.taskobjname+'</a>';
                 }
                 if(typeof itm.iscomplete!='undefined'&&itm.iscomplete>0)
