@@ -1504,7 +1504,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
     }
     var param={};
     param.taskid=taskid;
-    if(classid!=null&&classid.length>0){
+    if(classid!=null&&classid.length>0&&classid!='0'){
         param.classid=classid;
         param.classtype=classtype;
     }else{
@@ -1579,7 +1579,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                                     else
                                         htm+='<td><span class="ico24" title="进行中"></span></td>';
                                     if(typeof(itm.score)!='undefined'){
-                                        htm+='<td>'+itm.score+'</td>';
+                                        htm+='<td>'+parseFloat(itm.score)+'</td>';
                                     } else{
                                         htm+='<td>---</td>';
                                     }
@@ -1625,7 +1625,7 @@ function loadPaperPerformance(classid,tasktype,paperid,classtype){
                         else
                             htm+='<td><span class="ico24" title="进行中"></span></td>';
                         if(typeof(itm.score)!='undefined'){
-                            htm+='<td>'+itm.score+'</td>';
+                            htm+='<td>'+parseFloat(itm.score)+'</td>';
                         }else{
                             htm+='<td>---</td>';
                         }
