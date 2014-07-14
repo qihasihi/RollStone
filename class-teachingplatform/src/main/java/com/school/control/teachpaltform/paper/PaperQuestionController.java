@@ -3436,6 +3436,11 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             objArrayList.add(objList);
             sqlArrayList.add(sqlbuilder.toString());
         }
+        //得到判断题得分记录得到总分，进行记录
+        List<Map<String,Object>> stuScoreSumList=this.stuPaperLogsManager.getStuPaperSumScore(this.logined(request).getUserid(),splog.getPaperid());
+        if(stuScoreSumList!=null&&stuScoreSumList.get(0)!=null&&stuScoreSumList.get(0).containsKey("V_SCORE"));
+         splog.setScore(Float.parseFloat(stuScoreSumList.get(0).get("V_SCORE").toString()));
+
         sqlbuilder=new StringBuilder();
         objList=this.stuPaperLogsManager.getSaveSql(splog,sqlbuilder);
         if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){

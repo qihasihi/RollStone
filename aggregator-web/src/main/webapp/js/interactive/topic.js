@@ -982,7 +982,10 @@ function listReturn(rps){
                             h+='<a href="javascript:;" onclick="updateTopicStatus('+itm.topicid+',2)" id="a_status_'+itm.topicid+'" class="ico54" title="关闭论题"></a>';
                         }
                         h+='<a href="tptopic?m=toAdmin&topicid='+itm.topicid+'&courseid='+itm.courseid+'" class="ico11" title="编辑"></a>';
+                        if(itm.isPublishTask==0)
                         h+='<a href="javascript:;" onclick="if(confirm(\'您确定要删除此论题吗?\\n\\n提示：删除该论题后可在回收站里恢复!\')){updateTopicStatus('+itm.topicid+',3);}" class="ico04" title="删除"></a>';
+                        else
+                            h+='<span class="ico03"  title="已发任务，无法删除"></a>';
                     }
                     h+='</p>';
                     h+='<p>';

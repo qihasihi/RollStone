@@ -102,5 +102,15 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
     public Boolean doUpdateScore(StuPaperLogs stupaperlogs) {
         return this.stupaperlogsdao.doUpdate(stupaperlogs);
     }
+    /**
+     * 根据学生ID,试卷ID,得到学生得分
+     * @param userid
+     * @param paperid
+     * @return
+     */
+    public List<Map<String,Object>> getStuPaperSumScore(Integer userid,Long paperid){
+        return this.stupaperlogsdao.getStuPaperSumScore(userid,paperid);
+    }
 }
+
 

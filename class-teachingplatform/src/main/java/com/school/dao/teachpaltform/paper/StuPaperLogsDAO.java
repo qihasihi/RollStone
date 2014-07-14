@@ -228,6 +228,32 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
         return logsList;
     }
 
+    /**
+     * 根据学生ID,试卷ID,得到学生得分
+     * @param userid
+     * @param paperid
+     * @return
+     */
+    public List<Map<String,Object>> getStuPaperSumScore(Integer userid,Long paperid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL stu_paper_logs_scoresum(");
+        List<Object> objList=new ArrayList<Object>();
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(paperid!=null){
+            sqlbuilder.append("?");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        return  this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
+
     public List<Map<String, Object>> getMarkingDetail(Long paperid, Long quesid) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_paper_marking_proc_getdetail(");
