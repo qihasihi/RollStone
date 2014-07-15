@@ -194,6 +194,35 @@ function queryQuestionType(trobj, questype, boo, questionid) {
     });
 }
 
+/**
+ * 弹出选择资源页面
+ * */
+function showResourceElementJsp(){
+    var url = 'task?m=toTaskElementDetial&tasktype=&courseid=' + courseid;
+    var param = "dialogHeight=800px;dialogWidth=900px;center:yes;status:no;scroll:no;help:no";
+    var returnValue = window.showModalDialog(url, "", param);
+    if (returnValue == undefined) {
+        returnValue = window.returnValue;
+    }
+    if (returnValue == null || returnValue.toString().length < 1) {
+        alert("操作取消!");
+        return;
+    }
+    var values=returnValue.split(",");
+    if(values.length>0){
+        if(values.length==2){
+            $("#hd_elementid").val(values[0]);
+            $("#resource_type").val(values[1]);
+        }else{
+            $("#hd_elementid").val(values[0]);
+            $("#resource_type").val(values[1]);
+            $("#remote_type").val(values[2]);
+            $("#dv_res_name").html('<span class=""></span>'+values[3]);
+            $("#resource_name").val(values[3]);
+        }
+    }
+
+}
 
 /**
  * 获取资源
