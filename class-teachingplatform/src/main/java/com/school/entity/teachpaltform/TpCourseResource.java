@@ -293,6 +293,12 @@ public class TpCourseResource implements Serializable {
     public void setFilesize(Long filesize){
         this.getResourceinfo().setFilesize(filesize);
     }
+    public Integer getDifftype(){
+        return this.getResourceinfo().getDifftype();
+    }
+    public  void setDifftype(Integer difftype){
+        this.getResourceinfo().setDifftype(difftype);
+    }
 
 
     private List<Object> viewResdocumentSizeList = new ArrayList<Object>();

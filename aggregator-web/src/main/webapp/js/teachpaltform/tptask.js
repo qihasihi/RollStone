@@ -656,9 +656,12 @@ function initTaskCriteria(tasktype) {
     } else if (tasktype == "3") {//课后作业
         htm += '<input checked value="1" name="ck_criteria" type="radio" />提交&nbsp;';
         //htm+='<input value="right" name="ck_criteria" type="radio" />提交并正确';
-    } else {
+    } else if(tasktype=="4"||tasktype=="5") {
         htm += '<input checked value="1" name="ck_criteria" type="radio" />提交试卷';
+    } else if(tasktype=="6"){
+
     }
+
     $("#td_criteria").html(htm);
 }
 

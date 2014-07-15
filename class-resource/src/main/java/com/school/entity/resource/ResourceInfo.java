@@ -93,7 +93,15 @@ public class ResourceInfo implements java.io.Serializable {
     private String subjectname; //学科名称
     private Integer isunion; //关联专题教材查询资源
     private Integer convertstatus;
+    private Integer difftype;   //区分类型
 
+    public Integer getDifftype() {
+        return difftype;
+    }
+
+    public void setDifftype(Integer difftype) {
+        this.difftype = difftype;
+    }
 
     public Integer getSourceType() {
         return sourceType;

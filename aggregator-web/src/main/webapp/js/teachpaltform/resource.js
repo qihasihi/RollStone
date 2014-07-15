@@ -196,7 +196,8 @@ function beforeQryCourseList(p) {
         courselevel: sel_courselevel,
         coursename: txt_course,
         subjectid: courseSubject,
-        currentcourseid:courseid
+        currentcourseid:courseid,
+        difftype:0
     };
     p.setPostParams(param);
 }
@@ -251,6 +252,7 @@ function beforeAjaxCourseResList(p) {
     var selcourseid = $("#hd_courseid").val();
     param.courseid = selcourseid;
     param.currentcourseid=courseid;
+    param.difftype=0;
     p.setPostParams(param);
 }
 
@@ -824,9 +826,12 @@ function load_resource(type, pageno, isinit) {
                             } else {
                                 dvhtm += '<p class="c" style="display: none;">';
                                 if (itm.taskflag < 1) {
-                                    dvhtm += '<a  class="ico11" title="编辑" href="javascript:toUpdResource(\'' + itm.resid + '\')"></a>';
-                                    dvhtm += '<a  class="ico51" title="发任务" href="task?toAddTask&courseid=' + courseid + '&tasktype=1&taskvalueid=' + itm.resid + '"></a>';
-                                    dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
+                                    var tasktype=itm.difftype==1?6:1;
+                                    if(itm.difftype!=1){
+                                        dvhtm += '<a  class="ico11" title="编辑" href="javascript:toUpdResource(\'' + itm.resid + '\')"></a>';
+                                        dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
+                                    }
+                                    dvhtm += '<a  class="ico51" title="发任务" href="task?toAddTask&courseid=' + courseid + '&tasktype='+tasktype+'&taskvalueid=' + itm.resid + '"></a>';
                                 }
                                 dvhtm += '</p>';
                                 dvhtm += '<p class="b"><span class="ico44" title="参考"></span></p>';
@@ -884,12 +889,14 @@ function load_resource(type, pageno, isinit) {
                             }
 
                         } else {
+                            if(itm.difftype!=1){
+                                dvhtm += '<p class="c" style="display: none;">';
+                                dvhtm += '<a  class="ico11" title="编辑" href="javascript:toUpdResource(\'' + itm.resid + '\')"></a>';
+                                dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
+                                dvhtm += '<a  class="ico46" title="添加到学习资源" href="javascript:doUpdResType(' + itm.ref + ')"></a>';
+                                dvhtm += '</p>';
+                            }
 
-                            dvhtm += '<p class="c" style="display: none;">';
-                            dvhtm += '<a  class="ico11" title="编辑" href="javascript:toUpdResource(\'' + itm.resid + '\')"></a>';
-                            dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
-                            dvhtm += '<a  class="ico46" title="添加到学习资源" href="javascript:doUpdResType(' + itm.ref + ')"></a>';
-                            dvhtm += '</p>';
 
                             htm += '<li id="li_' + itm.resid + '" >';
                             htm += '<p class="a"><span class="' + itm.suffixtype + '"></span></p>';
