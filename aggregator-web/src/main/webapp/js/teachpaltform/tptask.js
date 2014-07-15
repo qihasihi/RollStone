@@ -198,7 +198,7 @@ function queryQuestionType(trobj, questype, boo, questionid) {
  * 弹出选择资源页面
  * */
 function showResourceElementJsp(){
-    var url = 'task?m=toTaskElementDetial&tasktype=&courseid=' + courseid;
+    var url = 'task?m=toTaskElementDetial&tasktype=1&courseid=' + courseid;
     var param = "dialogHeight=800px;dialogWidth=900px;center:yes;status:no;scroll:no;help:no";
     var returnValue = window.showModalDialog(url, "", param);
     if (returnValue == undefined) {

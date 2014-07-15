@@ -15,6 +15,7 @@
         var pageNo=1;
         var pageNo2=1;
         var versionid="${versionid}";
+        var courseid="${courseid}";
         $(function(){
             getRemoteResources();
         });

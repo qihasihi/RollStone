@@ -2,6 +2,7 @@
 package com.school.dao.inter.teachpaltform;
 
 import com.school.dao.base.ICommonDAO;
+import com.school.entity.teachpaltform.TpTaskAllotInfo;
 import com.school.entity.teachpaltform.TpTaskInfo;
 import com.school.util.PageResult;
 
@@ -32,4 +33,9 @@ public interface ITpTaskDAO extends ICommonDAO<TpTaskInfo>{
     public List<Object> getSynchroSql(TpTaskInfo entity,StringBuilder sqlbuilder);
 
     public Boolean doSaveTaskMsg(TpTaskInfo t);
-}
+
+    /**
+     * 查询已发布任务的资源id
+     * */
+    public List<TpTaskInfo> getDoTaskResourceId(TpTaskInfo obj);       
+ }

@@ -34,4 +34,6 @@ public interface ITpTaskManager  extends IBaseManager<TpTaskInfo> {
 
     public Boolean doSaveTaskMsg(TpTaskInfo t);
 
+    public List<TpTaskInfo> getDoTaskResourceId(TpTaskInfo obj);
+
 } 

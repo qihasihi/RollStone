@@ -74,6 +74,11 @@ public class  TpTaskManager extends BaseManager<TpTaskInfo> implements ITpTaskMa
     }
 
     @Override
+    public List<TpTaskInfo> getDoTaskResourceId(TpTaskInfo obj) {
+        return this.tptaskdao.getDoTaskResourceId(obj);
+    }
+
+    @Override
 	protected ICommonDAO<TpTaskInfo> getBaseDAO() {
 		// TODO Auto-generated method stub
 		return tptaskdao;

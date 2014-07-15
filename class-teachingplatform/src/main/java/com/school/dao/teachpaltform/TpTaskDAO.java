@@ -540,4 +540,25 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
         }
         return false;
     }
+
+    public List<TpTaskInfo> getDoTaskResourceId(TpTaskInfo obj) {
+        if(obj==null)
+            return null;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_resource_remote_dotask(");
+        List<Object> objList=new ArrayList<Object>();
+        if(obj.getCourseid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getCourseid());
+        }else
+            sqlbuilder.append("null,");
+        if(obj.getRemotetype()!=null){
+            sqlbuilder.append("?");
+            objList.add(obj.getRemotetype());
+        }else
+            sqlbuilder.append("null");
+        sqlbuilder.append(")}");
+        List<TpTaskInfo> taskList=this.executeResult_PROC(sqlbuilder.toString(),objList,null,TpTaskInfo.class,null);
+        return taskList;
+    }
 }

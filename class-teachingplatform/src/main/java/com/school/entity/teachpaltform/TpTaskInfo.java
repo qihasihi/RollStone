@@ -171,6 +171,7 @@ public class TpTaskInfo implements Serializable {
     }
 
     public Object getTaskobjname() {
+        if(taskobjname==null)return null;
         String content=taskobjname.toString();
         if(content!=null&&content.trim().length()>0){
             String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getTaskvalueid()+"/";
@@ -335,18 +336,20 @@ public class TpTaskInfo implements Serializable {
         }
     }
 
-    private List<QuestionOption>questionOptionList=new ArrayList<QuestionOption>();
-    private List<QuestionInfo>questionList=new ArrayList<QuestionInfo>();
-    private List<QuestionAnswer>questionAnswerList=new ArrayList<QuestionAnswer>();
-    private List<TaskPerformanceInfo>taskPerformanceList=new ArrayList<TaskPerformanceInfo>();
-    private List<TpTopicThemeInfo>tpTopicThemeInfoList=new ArrayList<TpTopicThemeInfo>();
+    private List<QuestionOption>questionOptionList;
+    private List<QuestionInfo>questionList;
+    private List<QuestionAnswer>questionAnswerList;
+    private List<TaskPerformanceInfo>taskPerformanceList;
+    private List<TpTopicThemeInfo>tpTopicThemeInfoList;
 
     //问题
-    private List rightAnswerList=new ArrayList();
+    private List rightAnswerList;
     //问题选项
-    private List rightOptionAnswerList=new ArrayList();
+    private List rightOptionAnswerList;
 
     public List getRightOptionAnswerList() {
+        if(rightOptionAnswerList==null)
+            rightOptionAnswerList=new ArrayList();
         return rightOptionAnswerList;
     }
 
@@ -354,6 +357,8 @@ public class TpTaskInfo implements Serializable {
         this.rightOptionAnswerList = rightOptionAnswerList;
     }
     public List getRightAnswerList() {
+        if(rightAnswerList==null)
+            rightAnswerList = new ArrayList();
         return rightAnswerList;
     }
 
@@ -362,6 +367,8 @@ public class TpTaskInfo implements Serializable {
     }
 
     public List<QuestionAnswer> getQuestionAnswerList() {
+        if(questionAnswerList==null)
+            questionAnswerList=new ArrayList<QuestionAnswer>();
         return questionAnswerList;
     }
 
@@ -370,6 +377,8 @@ public class TpTaskInfo implements Serializable {
     }
 
     public List<QuestionInfo> getQuestionList() {
+        if(questionList==null)
+            questionList=new ArrayList<QuestionInfo>();
         return questionList;
     }
 
@@ -378,6 +387,8 @@ public class TpTaskInfo implements Serializable {
     }
 
     public List<QuestionOption> getQuestionOptionList() {
+        if(questionOptionList==null)
+            questionOptionList=new ArrayList<QuestionOption>();
         return questionOptionList;
     }
 
@@ -387,6 +398,8 @@ public class TpTaskInfo implements Serializable {
 
 
     public List<TaskPerformanceInfo> getTaskPerformanceList() {
+        if(taskPerformanceList==null)
+            taskPerformanceList=new ArrayList<TaskPerformanceInfo>();
         return taskPerformanceList;
     }
 
@@ -396,6 +409,8 @@ public class TpTaskInfo implements Serializable {
 
 
     public List<TpTopicThemeInfo> getTpTopicThemeInfoList() {
+        if(tpTopicThemeInfoList==null)
+            tpTopicThemeInfoList=new ArrayList<TpTopicThemeInfo>();
         return tpTopicThemeInfoList;
     }
 
