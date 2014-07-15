@@ -946,7 +946,6 @@ function doUpdOrderIdx(taskid, orderidx) {
 function doStuSubmitQues(tasktype, taskid, quesid, groupid, questype) {
     if (typeof(tasktype) == 'undefined' || typeof(taskid) == 'undefined' ||
         typeof(quesid) == 'undefined' || courseid.length < 1
-    //typeof(groupid)=='undefined'
         ) {
         alert('未知的任务信息!请联系相关人员!');
         return;
@@ -1002,11 +1001,20 @@ function doStuSubmitQues(tasktype, taskid, quesid, groupid, questype) {
             });
         }
     } else if (tasktype == 1) {
-        if (txt_taskanswer.val().Trim().length < 1) {
+        var tmp=null;
+        if(ueditorArray.length>0){
+            $.each(ueditorArray,function(idx,itm){
+                if(itm==taskid){
+                    tmp=ueditorObjArray[idx];return;
+                }
+            });
+        }
+        var obj=tmp.getContent();
+        if (obj.Trim().length < 1) {
             alert('请输入学习心得后提交!');
             return;
         }
-        param.quesanswer = txt_taskanswer.val().Trim();
+        param.quesanswer = obj;
     }
 
     //alert(paramStr);

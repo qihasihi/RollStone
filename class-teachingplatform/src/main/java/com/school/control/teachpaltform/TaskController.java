@@ -2090,38 +2090,47 @@ public class TaskController extends BaseController<TpTaskInfo>{
 				je.setMsg("异常错误,未获取到资源学习心得!");
 				response.getWriter().print(je.toJSON());
 				return;
-			} 
-			
-			QuestionAnswer qa=new QuestionAnswer();
-            qa.setTaskid(t.getTaskid());
-            qa.setCourseid(t.getCourseid());
-            qa.setTasktype(t.getTasktype());
-			//qa.setGroupid(groupid);
-			qa.setUserid(this.logined(request).getRef());
-			qa.setQuesparentid(Long.parseLong(quesid));
-			qa.setAnswercontent(quesanswer);
-			qa.setRightanswer(1);
-			sql=new StringBuilder();
-			objList=this.questionAnswerManager.getSaveSql(qa, sql);
-			if(objList!=null&&sql!=null){
-				sqlListArray.add(sql.toString());
-				objListArray.add(objList);
 			}
-			
-			//录入完成状态
-			TaskPerformanceInfo tp=new TaskPerformanceInfo();
-            tp.setTaskid(t.getTaskid());
-            tp.setTasktype(t.getTasktype());
-            tp.setCourseid(t.getCourseid());
-			tp.setCriteria(tmpTask.getCriteria());
-			tp.setIsright(1);
-			tp.setUserid(this.logined(request).getRef());
-			sql=new StringBuilder();
-			objList=this.taskPerformanceManager.getSaveSql(tp, sql);
-			if(objList!=null&&sql!=null){
-				sqlListArray.add(sql.toString());
-				objListArray.add(objList);
-			} 
+
+            QuestionAnswer qa=new QuestionAnswer();
+            qa.setCourseid(Long.parseLong(courseid));
+            qa.setQuesparentid(Long.parseLong(quesid));
+            qa.setQuesid(Long.parseLong("0"));
+            qa.setUserid(this.logined(request).getRef());
+            qa.setAnswercontent(quesanswer);
+            qa.setRightanswer(1);
+            qa.setTasktype(tmpTask.getTasktype());
+            qa.setTaskid(tmpTask.getTaskid());
+            sql=new StringBuilder();
+            objList=this.questionAnswerManager.getSaveSql(qa,sql);
+            if(sql!=null&&objList!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+
+            if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){
+                TaskPerformanceInfo tp=new TaskPerformanceInfo();
+                tp.setTaskid(taskList.get(0).getTaskid());
+                tp.setTasktype(taskList.get(0).getTasktype());
+                tp.setCourseid(taskList.get(0).getCourseid());
+                tp.setCriteria(2);//提交心得
+                tp.setUserid(this.logined(request).getRef());
+                tp.setIsright(1);
+                List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
+                if(tpList==null||tpList.size()<1){
+                    sql=new StringBuilder();
+                    objList=this.taskPerformanceManager.getSaveSql(tp,sql);
+                    if(sql!=null&&objList!=null){
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }else{
+                je.setMsg("当前资源没有分配提交学习心得任务!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
 		}
 		
 		if(objListArray.size()>0&&sqlListArray.size()>0){

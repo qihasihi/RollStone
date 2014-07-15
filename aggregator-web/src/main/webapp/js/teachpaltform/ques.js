@@ -631,8 +631,7 @@ function doDelQuestion(ref){
 
 function doStuSubmitQues(tasktype,taskid,quesid,groupid,questype){
 	if(typeof(tasktype)=='undefined'||typeof(taskid)=='undefined'||
-			typeof(quesid)=='undefined'||courseid.length<1||
-			typeof(groupid)=='undefined'){
+			typeof(quesid)=='undefined'||courseid.length<1){
 		alert('未知的任务信息!请联系相关人员!');
 		return;
 	}
@@ -685,11 +684,11 @@ function doStuSubmitQues(tasktype,taskid,quesid,groupid,questype){
 			});
 		}
 	}else if(tasktype==1){
-		if(txt_taskanswer.val().Trim().length<1){
-			alert('请输入学习心得后提交!');
-			return; 
-		}
-		param.quesanswer=txt_taskanswer.val().Trim(); 
+        if ("ue"+taskid.getContent().Trim().length < 1) {
+            alert('请输入学习心得后提交!');
+            return;
+        }
+        param.quesanswer = "ue"+taskid..getContent().Trim();
 	}
 	
 	//alert(paramStr);

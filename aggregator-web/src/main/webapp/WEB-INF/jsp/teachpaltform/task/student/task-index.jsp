@@ -1,15 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
-<html xmlns="http://www.w3.org/1999/xhtml">  
-	<head>
-		<script type="text/javascript" src="js/teachpaltform/tptask.js"></script>
+<html>
+<head>
+<script type="text/javascript"
+        src="<%=basePath %>js/teachpaltform/tptask.js"></script>
 		<script type="text/javascript">
 	var courseid = "${courseid}";
 	var termid = "${termid}";
     var pList;
+    var ueditorArray=new Array();
+    var ueditorObjArray=[];
 	$(function() {
-
         pList = new PageControl( {
             post_url : 'task?m=ajaxStuTaskList',
             page_id : 'page1',
@@ -26,8 +28,94 @@
             operate_id : "initItemList"
         });
         pageGo('pList');
- 
+
 	});
+
+
+    function doUpdStuNote(ref,taskid) {
+        if (typeof  ref == 'undefined'||typeof  taskid == 'undefined')
+            return;
+
+        var tmp=null;
+        if(ueditorArray.length>0){
+            $.each(ueditorArray,function(idx,itm){
+                if(itm==taskid){
+                    tmp=ueditorObjArray[idx];return;
+                }
+            });
+        }
+        var obj=tmp.getContent();
+        if (obj.Trim().length < 1) {
+            alert('请输入学习心得后提交!');
+            return;
+        }
+
+
+        $.ajax({
+                    url: "task?doUpdStudyNotes",
+                    dataType: 'json',
+                    type: "post",
+                    cache: false,
+                    data: {
+                        ref: ref,
+                        content: obj
+                    },
+                    error: function () {
+                        alert('系统未响应!');
+                    },
+                    success: function (rps) {
+                        if (rps.type == "error") {
+                            alert(rps.msg);
+                        } else {
+                            pageGo('pList');
+                        }
+                    }
+                });
+    }
+
+
+
+    /**
+     * 加载学习心得编辑框
+     * href="javascript:doStuSubmitQues('+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+',\'\','+itm.questiontype+')"
+     * @return
+     */
+    function genderStuNoteUpdText(ref,tasktype,taskid,taskvalueid) {
+        if (typeof (tasktype) == 'undefined'||typeof (taskid) == 'undefined'
+                ||typeof (taskvalueid) == 'undefined')
+            return;
+        var spObj=$('#sp_note_'+taskid+'');
+        var content=$('#sp_note_'+taskid+' > font').html();
+        var queshtm='<tr>';
+        queshtm+='<td><strong>学习心得：</strong></td>';
+        queshtm+='<td><textarea  id="txt_taskanswer_'+taskid+'">'+content+'</textarea></td>';
+        queshtm+='</tr>';
+        queshtm+='<tr>';
+        queshtm+='<td>&nbsp;</td>';
+        queshtm+='<td><a class="an_public3" href="javascript:doUpdStuNote('+ref+','+taskid+')">修&nbsp;改</a></td>';
+        queshtm+='</tr>';
+
+        $("#tbl_"+taskid).append(queshtm);
+        $(spObj).parent().remove();
+        ueditorArray.push(taskid);
+
+        var id=taskid;
+        id= new UE.ui.Editor({
+            //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+            toolbars: [
+                //['emotion','attachment','superscript','subscript','fullscreen','insertimage']
+                ['emotion','attachment','fullscreen']
+            ],
+            initialFrameWidth: "600px",
+            initialFrameHeight: "90px",
+            autoHeightEnabled: false
+        });
+        textarea:'txt_taskanswer_'+taskid+''; //与textarea的name值保持一致
+        id.setDataId(taskid);
+        id.render('txt_taskanswer_'+taskid+'');
+        ueditorObjArray.push(id);
+
+    }
 
 
 
@@ -102,7 +190,11 @@
                         answerhtm+='<p><strong>答案解析：</strong><span class="width">'+(typeof(itm.rightAnswerList[0].analysis)=='undefined'?"":itm.rightAnswerList[0].analysis)+'</span></p>';
                     }else if(itm.tasktype==1){
                         answerhtm+='<p><strong>学习时间：</strong><span class="width">'+itm.taskPerformanceList[0].ctimeString+'</span></p>';
-                        answerhtm+='<p><strong>学习心得：</strong><span class="width">'+itm.questionAnswerList[0].answercontent+'</span></p>';
+                        answerhtm+='<p><strong>学习心得：</strong><span class="width"  id="sp_note_'+itm.taskid+'"><font>'+itm.questionAnswerList[0].answercontent+'</font>';
+                        if(itm.taskstatus!="1" && itm.taskstatus!="3"){
+                            answerhtm+='<a class="ico11" title="编辑" href="javascript:genderStuNoteUpdText('+itm.questionAnswerList[0].ref+','+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+')"></a>';
+                        }
+                        answerhtm+='</span></p>';
                     }
                 }else{
                     if(itm.tasktype==3){
@@ -120,6 +212,16 @@
                         }
                     }else if(itm.tasktype==1&&itm.taskPerformanceList[0]!=null){
                         answerhtm+='<p><strong>学习时间：</strong><span class="width">'+itm.taskPerformanceList[0].ctimeString+'</span></p>';
+                    }else if(itm.tasktype==1&&itm.taskstatus!="1" && itm.taskstatus!="3"&&itm.criteria==2){
+                        queshtm+='<tr>';
+                        queshtm+='<td><strong>学习心得：</strong></td>';
+                        queshtm+='<td><textarea  id="txt_taskanswer_'+itm.taskid+'"></textarea></td>';
+                        queshtm+='</tr>';
+                        queshtm+='<tr>';
+                        queshtm+='<td>&nbsp;</td>';
+                        queshtm+='<td><a class="an_public3" href="javascript:doStuSubmitQues('+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+',\'\','+itm.questiontype+')">保&nbsp;存</a></td>';
+                        queshtm+='</tr>';
+                        ueditorArray.push(itm.taskid);
                     }else if(itm.tasktype==2&&itm.taskPerformanceList[0]!=null){
                         answerhtm+='<p><strong>学习时间：</strong><span class="width">'+itm.taskPerformanceList[0].ctimeString+'</span></p>';
                         if(itm.tpTopicThemeInfoList!=null){
@@ -150,7 +252,14 @@
                 html+='        <p class="f_right"><span class="ico35" style="cursor:pointer" onclick="loadNoCompleteStu(\''+itm.taskid+'\',\''+itm.usertypeid+'\',\''+itm.taskstatus+'\')"></span><b><a   class="font-red">'+itm.stucount+'/'+itm.totalcount+'</a></b></p>';
                 html+='        <p><a class="ico49b" id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务'+(rps.presult.pageSize*(rps.presult.pageNo-1)+(idx+1))+'：'+type+'</a>';
                 if(itm.tasktype==1){
-                    html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
+                    if(typeof itm.resourcetype=='undeinfed'|| itm.resourcetype==1)
+                        html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
+                    else{
+                        if(typeof itm.remotetype!='undefined'){
+                            var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
+                            html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" class="font-blue">'+itm.taskobjname+'</a>';
+                        }
+                    }
                 }else if(itm.tasktype==2){
                     html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==4&&itm.taskstatus!="1"){
@@ -168,9 +277,14 @@
                 html+='        <p><strong>任务描述：</strong><span class="width">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
                 if(itm.taskstatus=="1")
                     html+='<p class="font-black"><span class="ico33"></span>任务尚未开始，您的作答将不计入任务的统计结果中，请在任务开始之后重新作答！</p>';
-                html+='<table border="0" cellspacing="0" cellpadding="0" class="black">';
-                html+='        <col class="w50"/>';
-                html+='        <col class="w750"/>';
+                html+='<table border="0" cellspacing="0" cellpadding="0" class="black" id="tbl_'+itm.taskid+'">';
+                if(itm.tasktype==3){
+                    html+='        <col class="w50"/>';
+                    html+='        <col class="w750"/>';
+                }else{
+                    html+='        <col class="w70"/>';
+                    html+='        <col class="w730"/>';
+                }
                 html+='        <tr>';
                 html+='        <td><strong>'+questype+'</strong></td>';
                 html+='        <td>';
@@ -229,6 +343,29 @@
             var taskid=$("input[name='hd_task_status']").get(0).value;
             $('a[id="a_show_'+taskid+'"]').click();
         }
+
+
+        if(ueditorArray.length>0){
+            for(var i=0;i<ueditorArray.length;i++){
+                var id=ueditorArray[i];
+                id= new UE.ui.Editor({
+                    //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+                    toolbars: [
+                        //['emotion','attachment','superscript','subscript','fullscreen','insertimage']
+                        ['emotion','attachment','fullscreen']
+                    ],
+                     initialFrameWidth: "600px",
+                     initialFrameHeight: "90px",
+                    autoHeightEnabled: false
+                });
+                textarea:'txt_taskanswer_'+ueditorArray[i]+''; //与textarea的name值保持一致
+                id.setDataId(ueditorArray[i]);
+                id.render('txt_taskanswer_'+ueditorArray[i]+'');
+                ueditorObjArray.push(id);
+            }
+        }
+
+
 
 
         if(rps.objList.length>0){
@@ -470,4 +607,5 @@
 		<div id="fade" class="black_overlay"
 			style="background: black; filter: alpha(opacity =         50); opacity: 0.5; -moz-opacity: 0.5;"></div>
 </body>
+
 </html>
