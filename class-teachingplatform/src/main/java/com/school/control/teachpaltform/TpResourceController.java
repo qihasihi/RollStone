@@ -2612,7 +2612,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         if(trList!=null&&trList.size()>0){
             StringBuilder sb = new StringBuilder();
             for(int i = 0;i<trList.size();i++){
-                sb.append("{course_id:\""+trList.get(i).getCourseid()+"\"}");
+                sb.append("{course_id:\""+trList.get(i).getRelatedcourseid()+"\"}");
             }
             String courseidlist = "["+sb.toString()+"]";
             param+="&courseIDList="+courseidlist;
@@ -2639,16 +2639,14 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             }else{
                 je.setType("success");
                 JSONArray jr=JSONArray.fromObject(objList);
-                if(jr.size()>0);
-                    je.getObjList().add(jr);
+                je.getObjList().add(jr);
                 je.getObjList().add(ispage);
                 TpTaskInfo task = new TpTaskInfo();
                 task.setCourseid(Long.parseLong(courseid));
                 task.setRemotetype(1);
                 List<TpTaskInfo> taskList = this.tpTaskManager.getDoTaskResourceId(task);
-                if(taskList!=null&&taskList.size()>0){
-                    je.getObjList().add(taskList);
-                }
+                je.getObjList().add(taskList);
+
             }
         }
         pvgStr="7";
@@ -2660,7 +2658,14 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
                 gradeid+"&subjectId="+subjectid+"&tchVersionId="+versionid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
                 pageSize;
-        if(courseIDList!=null&&courseIDList.length()>0){
+        if(trList!=null&&trList.size()>0){
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0;i<trList.size();i++){
+                sb.append("{course_id:\""+trList.get(i).getRelatedcourseid()+"\"}");
+            }
+            String courseidlist = "["+sb.toString()+"]";
+            param+="&courseIDList="+courseidlist;
+        }else{
             String[] courseids = courseIDList.split(",");
             StringBuilder sb = new StringBuilder();
             for(int i = 0;i<courseids.length;i++){
@@ -2682,17 +2687,14 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             }else{
                 je.setType("success");
                 JSONArray jr=JSONArray.fromObject(objList);
-                if(jr.size()>0)
-                    je.getObjList().add(jr);
+                je.getObjList().add(jr);
                 je.getObjList().add(ispage);
 
                 TpTaskInfo task = new TpTaskInfo();
                 task.setCourseid(Long.parseLong(courseid));
                 task.setRemotetype(2);
                 List<TpTaskInfo> taskList = this.tpTaskManager.getDoTaskResourceId(task);
-                if(taskList!=null&&taskList.size()>0){
-                    je.getObjList().add(taskList);
-                }
+                je.getObjList().add(taskList);
             }
         }
       //  response.setCharacterEncoding("GBK");
@@ -2735,7 +2737,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         if(trList!=null&&trList.size()>0){
             StringBuilder sb = new StringBuilder();
             for(int i = 0;i<trList.size();i++){
-                sb.append("{course_id:\""+trList.get(i).getCourseid()+"\"}");
+                sb.append("{course_id:\""+trList.get(i).getRelatedcourseid()+"\"}");
             }
             String courseidlist = "["+sb.toString()+"]";
             param+="&courseIDList="+courseidlist;
@@ -2762,16 +2764,13 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             }else{
                 je.setType("success");
                 JSONArray jr=JSONArray.fromObject(objList);
-                if(jr.size()>0);
-                    je.getObjList().add(jr);
+                je.getObjList().add(jr);
                 je.getObjList().add(ispage);
                 TpTaskInfo task = new TpTaskInfo();
                 task.setCourseid(Long.parseLong(courseid));
                 task.setRemotetype(1);
                 List<TpTaskInfo> taskList = this.tpTaskManager.getDoTaskResourceId(task);
-                if(taskList!=null&&taskList.size()>0){
-                    je.getObjList().add(taskList);
-                }
+                je.getObjList().add(taskList);
             }
         }
 
@@ -2814,7 +2813,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         if(trList!=null&&trList.size()>0){
             StringBuilder sb = new StringBuilder();
             for(int i = 0;i<trList.size();i++){
-                sb.append("{course_id:\""+trList.get(i).getCourseid()+"\"}");
+                sb.append("{course_id:\""+trList.get(i).getRelatedcourseid()+"\"}");
             }
             String courseidlist = "["+sb.toString()+"]";
             param+="&courseIDList="+courseidlist;
@@ -2841,16 +2840,13 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             }else{
                 je.setType("success");
                 JSONArray jr=JSONArray.fromObject(objList);
-                if(jr.size()>0);
-                    je.getObjList().add(jr);
+                je.getObjList().add(jr);
                 je.getObjList().add(ispage);
                 TpTaskInfo task = new TpTaskInfo();
                 task.setCourseid(Long.parseLong(courseid));
                 task.setRemotetype(2);
                 List<TpTaskInfo> taskList = this.tpTaskManager.getDoTaskResourceId(task);
-                if(taskList!=null&&taskList.size()>0){
-                    je.getObjList().add(taskList);
-                }
+                je.getObjList().add(taskList);
             }
         }
 
@@ -2900,15 +2896,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             }else{
                 je.setType("success");
                 JSONArray jr=JSONArray.fromObject(objList);
-                if(jr.size()>0)
-                    je.getObjList().add(jr);
+                je.getObjList().add(jr);
                 TpTaskInfo task = new TpTaskInfo();
                 task.setCourseid(Long.parseLong(courseid));
                 task.setRemotetype(1);
                 List<TpTaskInfo> taskList = this.tpTaskManager.getDoTaskResourceId(task);
-                if(taskList!=null&&taskList.size()>0){
-                    je.getObjList().add(taskList);
-                }
+                je.getObjList().add(taskList);
             }
         }
         pvgStr="7";
@@ -2922,9 +2915,6 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                 pageSize;
         if(keyword!=null&&keyword.length()>0){
             keyword= URLEncoder.encode(keyword,"GBK");
-            String k = URLDecoder.decode(keyword,"utf-8");
-            System.out.println(keyword);
-            System.out.println(k);
             param+="&keyword="+keyword;
         }
         String returnval2=sendPostURL(url,param);
@@ -2939,15 +2929,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             }else{
                 je.setType("success");
                 JSONArray jr=JSONArray.fromObject(objList);
-                if(jr.size()>0)
-                    je.getObjList().add(jr);
+                je.getObjList().add(jr);
                 TpTaskInfo task = new TpTaskInfo();
                 task.setCourseid(Long.parseLong(courseid));
                 task.setRemotetype(2);
                 List<TpTaskInfo> taskList = this.tpTaskManager.getDoTaskResourceId(task);
-                if(taskList!=null&&taskList.size()>0){
-                    je.getObjList().add(taskList);
-                }
+                je.getObjList().add(taskList);
             }
         }
         //  response.setCharacterEncoding("GBK");
