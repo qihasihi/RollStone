@@ -3145,15 +3145,17 @@ function showModelOther(playAddress, fname, resbaseid) {
 /*******************************************************远程资源****************************************************/
 //获取更多高清资源
 function getMoreResources(){
+    pageNo=pageNo+1;
     $.ajax({
         url:'tpres?m=getMoreResources',
         data:{
             gradeid:3,
             subjectid:4,
-            versionid:44,
+            versionid:versionid,
             pageNow:pageNo,
             pageSize:8,
-            courseid:courseid
+            courseid:courseid,
+            keyword:$("#keyword").val()
         },
         type:'POST',
         dataType:'json',
@@ -3186,7 +3188,7 @@ function getMoreResources(){
                 if(rps.objList[1]!=null){
                     if(rps.objList[1]=="0"){
                         $("#moreGaoqing").show();
-                        pageNo=pageNo+1;
+                        //pageNo=pageNo+1;
                     }else{
                         $("#moreGaoqing").hide();
                     }
@@ -3199,15 +3201,17 @@ function getMoreResources(){
 }
 //获取更多知识导学
 function getMoreZhishi(){
+    pageNo2=pageNo2+1;
     $.ajax({
         url:'tpres?m=getMoreZhishi',
         data:{
             gradeid:3,
             subjectid:4,
-            versionid:44,
+            versionid:versionid,
             pageNow:pageNo2,
             pageSize:8,
-            courseid:courseid
+            courseid:courseid,
+            keyword:$("#keyword").val()
         },
         type:'POST',
         dataType:'json',
@@ -3238,7 +3242,7 @@ function getMoreZhishi(){
                 if(rps.objList[1]!=null){
                     if(rps.objList[1]=="0"){
                         $("#moreZhishi").show();
-                        pageNo2=pageNo2+1;
+                        //pageNo2=pageNo2+1;
                     }else{
                         $("#moreZhishi").hide();
                     }
@@ -3250,16 +3254,21 @@ function getMoreZhishi(){
     });
 }
 //进入远程资源页
-function getRemoteResources(){
+function getRemoteResources(type){
+    if(!type){
+        pageNo=1;
+        pageNo2=1;
+    }
     $.ajax({
         url:'tpres?m=getRemoteResources',
         data:{
             gradeid:3,
             subjectid:4,
-            versionid:44,
+            versionid:versionid,
             pageNow:pageNo,
             pageSize:8,
-            courseid:courseid
+            courseid:courseid,
+            keyword:$("#keyword").val()
         },
         type:'POST',
         dataType:'json',
@@ -3286,12 +3295,14 @@ function getRemoteResources(){
                                 '<p class="pic"><a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a></p></li>';
                         }
                     });
-                    $("#gaoqing").append(htm);
+                    $("#gaoqing").html(htm);
+                }else{
+                    $("#gaoqing").html('没有数据');
                 }
                 if(rps.objList[1]!=null){
                     if(rps.objList[1]=="0"){
                         $("#moreGaoqing").show();
-                        pageNo=pageNo+1;
+                       // pageNo=pageNo+1;
                     }else{
                         $("#moreGaoqing").hide();
                     }
@@ -3313,12 +3324,14 @@ function getRemoteResources(){
                             htm+='<li><a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a></li>';
                         }
                     });
-                    $("#zhishi").append(htm);
+                    $("#zhishi").html(htm);
+                }else{
+                    $("#zhishi").html('没有数据');
                 }
                 if(rps.objList[4]!=null){
                     if(rps.objList[4]=="0"){
                         $("#moreZhishi").show();
-                        pageNo2=pageNo2+1;
+                       // pageNo2=pageNo2+1;
                     }else{
                         $("#moreZhishi").hide();
                     }
@@ -3329,72 +3342,72 @@ function getRemoteResources(){
         }
     });
 }
-//模糊查询
-function getLikeRemoteResources(){
-    var param={};
-    param.gradeid=3;
-    param.subjectid=4;
-    param.versionid=versionid;
-    param.pageNow=1;
-    param.pageSize=8;
-    param.courseid=courseid;
-    var keyword = $("#keyword").val().Trim();
-    if(keyword.length>0)
-        param.keyword=keyword;
-    $.ajax({
-        url:'tpres?m=getLikeRemoteResources',
-        data:param,
-        type:'POST',
-        dataType:'json',
-        error:function(){
-            alert('异常错误,系统未响应！');
-        },success:function(rps){
-            if(rps.type=="success"){
-                if(rps.objList[0]!=null&&rps.objList[0].length>0){
-                    var htm='';
-                    $.each(rps.objList[0],function(idx,itm){
-                        var h="";
-                        h='<a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a>';
-                        if(rps.objList[1]!=null&&rps.objList[1].length>0){
-                            $.each(rps.objList[1],function(ix,im){
-                                if(itm.HD_RES_ID==im.taskvalueid){
-                                    h='<span class="ico52" title="已发任务"></span>';
-                                    return false;
-                                }
-                            });
-                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+itm.HD_NAME+'</p></a>' +
-                                '<p class="pic">'+h+'</p></li>';
-                        }else{
-                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+itm.HD_NAME+'</p></a>' +
-                                '<p class="pic"><a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a></p></li>';
-                        }
-                    });
-                    $("#gaoqing").append(htm);
-                }
-                if(rps.objList[2]!=null&&rps.objList[2].length>0){
-                    var htm='';
-                    $.each(rps.objList[2],function(idx,itm){
-                        var h="";
-                        h='<a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a>';
-                        if(rps.objList[3]!=null&&rps.objList[3].length>0){
-                            $.each(rps.objList[3],function(ix,im){
-                                if(itm.RES_ID==im.taskvalueid){
-                                    h='<b class="ico52" title="已发任务"></b>';
-                                    return false;
-                                }
-                            });
-                            htm+='<li><a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a>'+h+'</li>';
-                        }else{
-                            htm+='<li><a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a></li>';
-                        }
-                    });
-                    $("#zhishi").append(htm);
-                }
-                $("#moreGaoqing").hide();
-                $("#moreZhishi").hide();
-            }else{
-
-            }
-        }
-    });
-}
+////模糊查询
+//function getLikeRemoteResources(){
+//    var param={};
+//    param.gradeid=3;
+//    param.subjectid=4;
+//    param.versionid=versionid;
+//    param.pageNow=1;
+//    param.pageSize=8;
+//    param.courseid=courseid;
+//    var keyword = $("#keyword").val().Trim();
+//    if(keyword.length>0)
+//        param.keyword=keyword;
+//    $.ajax({
+//        url:'tpres?m=getLikeRemoteResources',
+//        data:param,
+//        type:'POST',
+//        dataType:'json',
+//        error:function(){
+//            alert('异常错误,系统未响应！');
+//        },success:function(rps){
+//            if(rps.type=="success"){
+//                if(rps.objList[0]!=null&&rps.objList[0].length>0){
+//                    var htm='';
+//                    $.each(rps.objList[0],function(idx,itm){
+//                        var h="";
+//                        h='<a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a>';
+//                        if(rps.objList[1]!=null&&rps.objList[1].length>0){
+//                            $.each(rps.objList[1],function(ix,im){
+//                                if(itm.HD_RES_ID==im.taskvalueid){
+//                                    h='<span class="ico52" title="已发任务"></span>';
+//                                    return false;
+//                                }
+//                            });
+//                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+itm.HD_NAME+'</p></a>' +
+//                                '<p class="pic">'+h+'</p></li>';
+//                        }else{
+//                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+itm.HD_NAME+'</p></a>' +
+//                                '<p class="pic"><a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a></p></li>';
+//                        }
+//                    });
+//                    $("#gaoqing").html(htm);
+//                }
+//                if(rps.objList[2]!=null&&rps.objList[2].length>0){
+//                    var htm='';
+//                    $.each(rps.objList[2],function(idx,itm){
+//                        var h="";
+//                        h='<a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a>';
+//                        if(rps.objList[3]!=null&&rps.objList[3].length>0){
+//                            $.each(rps.objList[3],function(ix,im){
+//                                if(itm.RES_ID==im.taskvalueid){
+//                                    h='<b class="ico52" title="已发任务"></b>';
+//                                    return false;
+//                                }
+//                            });
+//                            htm+='<li><a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a>'+h+'</li>';
+//                        }else{
+//                            htm+='<li><a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a></li>';
+//                        }
+//                    });
+//                    $("#zhishi").html(htm);
+//                }
+//                $("#moreGaoqing").hide();
+//                $("#moreZhishi").hide();
+//            }else{
+//
+//            }
+//        }
+//    });
+//}

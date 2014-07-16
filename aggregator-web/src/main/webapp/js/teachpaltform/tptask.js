@@ -217,7 +217,7 @@ function showResourceElementJsp(){
             $("#hd_elementid").val(values[0]);
             $("#resource_type").val(values[1]);
             $("#remote_type").val(values[2]);
-            $("#dv_res_name").html('<span class=""></span>'+values[3]);
+            $("#dv_res_name").html('<span class="ico_mp41"></span>'+values[3]);
             $("#resource_name").val(values[3]);
         }
     }

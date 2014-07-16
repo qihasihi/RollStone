@@ -17,10 +17,16 @@
         var versionid="${versionid}";
         var courseid="${courseid}";
         $(function(){
-            getRemoteResources();
+            getRemoteResources(true);
         });
         function dosub(taskvalueid,resourcetype,remotetype,resname){
-            window.returnValue=taskvalueid+","+resourcetype+","+remotetype+","+resname;
+            if (window.opener != undefined) {
+                //for chrome
+                window.opener.returnValue =taskvalueid+","+resourcetype+","+remotetype+","+resname;
+            }
+            else {
+                window.returnValue =taskvalueid+","+resourcetype+","+remotetype+","+resname;
+            }
             window.close();
         }
     </script>
@@ -37,13 +43,13 @@
 
         <div class="jxxt_zhuanti_rw_add">
             <p class="public_input t_r">
-                <select name="select3" id="select3">
-                    <option selected>高一</option>
-                    <option>教职工</option>
-                    <option>学生</option>
-                </select>
+                <%--<select name="select3" id="select3">--%>
+                    <%--<option selected>高一</option>--%>
+                    <%--<option>教职工</option>--%>
+                    <%--<option>学生</option>--%>
+                <%--</select>--%>
                 <input name="textfield2"  id="keyword" type="text" class="w240" placeholder="资源名称/专题名称" />
-                <a href="javascript:getLikeRemoteResources()" class="an_search" title="查询"></a></p>
+                <a href="javascript:getRemoteResources(false)" class="an_search" title="查询"></a></p>
             <p class="font-black p_b_10"><strong>高清课堂</strong></p>
             <ul class="gqkt font-black" id="gaoqing">
 
