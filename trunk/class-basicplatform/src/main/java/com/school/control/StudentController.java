@@ -1,0 +1,371 @@
+package com.school.control;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.school.manager.*;
+import com.school.manager.inter.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.school.util.UtilTool.DateType;
+import com.school.control.base.BaseController;
+import com.school.entity.ClassInfo;
+import com.school.entity.ClassUser;
+import com.school.entity.ClassYearInfo;
+import com.school.entity.GradeInfo;
+import com.school.entity.RoleUser;
+import com.school.entity.StudentInfo;
+import com.school.entity.UserIdentityInfo;
+import com.school.entity.UserInfo;
+import com.school.manager.base.IBaseManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+
+@Controller
+@Scope("prototype") 
+@RequestMapping(value="/student")
+public class StudentController extends BaseController<StudentInfo> {
+    private IClassYearManager classYearManager;
+    private IGradeManager gradeManager;
+    private IStudentManager studentManager;
+    private IOperateExcelManager operaterexcelmanager;
+    private IClassManager classManager;
+    private IClassUserManager classUserManager;
+    private IUserManager userManager;
+    private IUserIdentityManager userIdentityManager;
+    private IRoleUserManager roleUserManager;
+    public StudentController(){
+        this.classYearManager=this.getManager(ClassYearManager.class);
+        this.gradeManager=this.getManager(GradeManager.class);
+        this.studentManager=this.getManager(StudentManager.class);
+        this.operaterexcelmanager=this.getManager(OperateExcelManager.class);
+        this.classManager=this.getManager(ClassManager.class);
+        this.classUserManager=this.getManager(ClassUserManager.class);
+        this.userManager=this.getManager(UserManager.class);
+        this.userIdentityManager=this.getManager(UserIdentityManager.class);
+        this.roleUserManager=this.getManager(RoleUserManager.class);
+    }
+
+	@RequestMapping(params="m=list",method=RequestMethod.GET)
+	public ModelAndView toStudentList(HttpServletRequest request,ModelAndView mp )throws Exception{
+		PageResult p = new PageResult();
+		p.setOrderBy("c.e_time desc"); 
+		List<ClassYearInfo>classyearList=this.classYearManager.getList(null, p); 
+		List<GradeInfo>gradeList=this.gradeManager.getList(null, null);
+		request.setAttribute("classyearList", classyearList);
+		request.setAttribute("gradeList", gradeList);
+		return new ModelAndView("/student/list");  
+	}
+	
+	
+	@RequestMapping(params="m=ajaxlist",method=RequestMethod.POST) 
+	public void getAjaxStudentList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+		JsonEntity je=new JsonEntity();
+		String stuno=request.getParameter("stuno");
+		if(stuno==null||stuno.trim().length()<1){
+			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+			response.getWriter().print(je.toJSON());
+			return;
+		}
+		StudentInfo s=new StudentInfo();
+		s.setStuno(stuno);
+		List<StudentInfo>stuList=this.studentManager.getList(s, null);
+		je.setType("success");
+		je.setObjList(stuList);
+		response.getWriter().print(je.toJSON());
+	}
+	
+	@RequestMapping(params="m=loadExlForStudent",method=RequestMethod.POST)  
+	public void toLoadStudentExcel(MultipartHttpServletRequest request,HttpServletResponse response) 
+		throws Exception{
+		JsonEntity je = new JsonEntity();
+		if(this.getUpload(request)==null||this.getUpload(request).length<1){
+			je.setMsg("系统未发现您上传的文件!");
+			response.getWriter().print(je.toJSON());
+			return;
+		}		
+		List<String>fname=this.getFileArrayName(1);
+		String msg="{\"type\":\"error\",\"msg\":\"文件名获取失败!\"}";
+		if(fname!=null&&fname.size()>0){
+			if(this.fileupLoad(request)){
+				String filename=request.getRealPath("/")+"uploadfile/"+fname.get(0); 
+				msg=this.loadExlForStudent(filename,request);
+				File f=new File(filename);
+				if(f.exists()){
+					f.delete();
+				}
+			}
+		}
+		response.getWriter().print(msg);
+	}
+	
+	public String loadExlForStudent(String filename,HttpServletRequest request) {
+		String msg = "{\"type\":\"success\",\"msg\":\"操作成功!\"}";
+		if (filename==null||filename.trim().length() < 1)
+			return "{\"type\":\"error\",\"msg\":\"文件上传失败!\"}";
+		List<Object>objList=null;
+		String clsid=request.getParameter("classid");
+		try{
+			//Excel存在值
+			objList=this.operaterexcelmanager.includeExcel(filename, new StudentManager());
+			
+			Integer freeClsid=null;
+			if(objList!=null&&objList.size()>0){
+				String impName="用户导入:"+UtilTool.DateConvertToString(new Date(), com.school.util.UtilTool.DateType.type2);
+				List<String>sqlListArray=new ArrayList<String>();
+				List<List<Object>>objListArray=new ArrayList<List<Object>>();
+				for (Object stuObj : objList) {
+					StringBuilder sqlbuilder = new StringBuilder();
+					List<Object> objparaList = null;
+					StudentInfo stu=(StudentInfo)stuObj;
+					ClassInfo cls=new ClassInfo();
+					cls.setClassgrade(stu.getClassinfo().getClassgrade().trim());
+					cls.setYear(stu.getClassinfo().getYear().trim());
+					cls.setClassname(stu.getClassinfo().getClassname().trim());
+					cls.setIslike(1);
+					//验证班级存在
+					List<ClassInfo>clsList=this.classManager.getList(cls, null);
+					if(clsList==null||clsList.size()<1){
+						msg= "{\"type\":\"error\",\"msg\":\"当前班级不存在,请先设置班级再导入成员!\"}";
+						return msg;
+					}
+					if(clsid!=null&&clsid.toString().trim().length()>0&&!clsid.trim().equals("undefined")){
+						if(!clsid.trim().equals(clsList.get(0).getClassid().toString())){
+							msg="{\"type\":\"error\",\"msg\":\"异常错误，当前导入只能导入该班学生!\"}";
+							return msg;
+						}
+					}
+					
+					//删除该班级下的所有学生
+					if(freeClsid==null||(freeClsid!=null&&clsList.get(0).getClassid().intValue()!=freeClsid.intValue())){
+						ClassUser cutmp=new ClassUser();
+						cutmp.setClassid(clsList.get(0).getClassid());
+						cutmp.setRelationtype("学生");
+
+						objparaList=this.classUserManager.getDeleteSql(cutmp, sqlbuilder);
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());
+						freeClsid=clsList.get(0).getClassid();
+						sqlbuilder=new StringBuilder();
+						objparaList=this.classUserManager.getAddOperateLog(this.logined(request).getRef()
+								,"class_user_info",null,null,null,"DELETE","导入学生名册，根据班级ID批量删除数据!", sqlbuilder);
+
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());
+					}
+
+					StudentInfo selstu=new StudentInfo();
+					selstu.setStuno(stu.getStuno());
+					//验证学生存在
+					List<StudentInfo> selstuList=this.studentManager.getList(selstu, null);
+					if(selstuList!=null&&selstuList.size()>0
+							&&selstuList.get(0)!=null){
+						ClassUser cu=new ClassUser();
+						cu.getClassinfo().setClassid(clsList.get(0).getClassid());
+						cu.getUserinfo().setRef(selstuList.get(0).getUserref());
+						cu.setRelationtype("学生");
+						//验证学生班级关系不存在
+						System.out.println(cu.getClassinfo().getClassid()+"     学生ref:"+cu.getUserinfo().getRef());
+//						List<ClassUser>cuList=this.classUserManager.getList(cu, null);
+//						
+//						if(cuList!=null&&cuList.size()>0){//
+							String cuNextID=UUID.randomUUID().toString();
+							cu.setRef(cuNextID);
+							sqlbuilder=new StringBuilder();
+							objparaList=this.classUserManager.getSaveSql(cu, sqlbuilder);
+							
+							objListArray.add(objparaList);
+							sqlListArray.add(sqlbuilder.toString());							
+							//添加操作记录
+							sqlbuilder=new StringBuilder();
+							objparaList=this.classUserManager.getAddOperateLog(this.logined(request).getRef()
+									,"class_user_info",cuNextID,null,null,"ADD","导入学生名册，添加学生班级关系 数据!", sqlbuilder);
+							
+							objListArray.add(objparaList);
+							sqlListArray.add(sqlbuilder.toString());	
+					//	}
+					}else{ 
+						UserInfo u=new UserInfo();
+						String userNextID=UUID.randomUUID().toString();
+						u.setRef(userNextID);
+						u.setUsername(stu.getStuno());
+						u.setPassword("111111");
+						u.setStateid(0);
+						sqlbuilder=new StringBuilder();
+						objparaList=this.userManager.getSaveSql(u, sqlbuilder);
+						
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());
+						
+						//添加操作记录
+						sqlbuilder=new StringBuilder();
+						objparaList=this.userManager.getAddOperateLog(this.logined(request).getRef()
+								,"user_info",userNextID,null,null,"ADD","导入学生名册，添加用户数据!", sqlbuilder);
+						
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());
+						
+						
+						String stuNextID=stu.getRef();
+						stu.getUserinfo().setRef(userNextID);
+						if(stuNextID==null||stuNextID.trim().length()<1){
+							stuNextID=UUID.randomUUID().toString();
+							stu.setRef(stuNextID);
+							
+							//添加学生操作记录	
+						}						
+						sqlbuilder=new StringBuilder();
+						objparaList=this.studentManager.getSaveSql(stu, sqlbuilder);
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());						
+						
+						//添加操作记录
+						sqlbuilder=new StringBuilder();
+						objparaList=this.studentManager.getAddOperateLog(this.logined(request).getRef()
+								,"student_info",stuNextID,null,null,"ADD","导入学生名册，添加学生信息数据!", sqlbuilder);
+						
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());
+						
+						//学生与班级
+						ClassUser cu=new ClassUser();
+						String cuNextId=UUID.randomUUID().toString();
+						cu.setRef(cuNextId);
+						cu.getClassinfo().setClassid(clsList.get(0).getClassid());
+						System.out.println("clsList.size:"+clsList.size()+" clsid:"+clsList.get(0).getClassid());
+						cu.getUserinfo().setRef(userNextID);
+						cu.setRelationtype("学生");
+						
+						sqlbuilder=new StringBuilder();
+						objparaList=this.classUserManager.getSaveSql(cu, sqlbuilder);
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());
+					
+						//添加操作记录
+						sqlbuilder=new StringBuilder();
+						objparaList=this.classUserManager.getAddOperateLog(this.logined(request).getRef()
+								,"class_user_info",cuNextId,null,null,"ADD","导入学生名册，添加学生班级关系数据!", sqlbuilder);
+						
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());
+						
+						
+						String uidentityNextRef=this.userIdentityManager.getNextId();
+						UserIdentityInfo uidentity=new UserIdentityInfo();
+						uidentity.setIdentityname(UtilTool._IDENTITY_STUDENT);//
+						uidentity.setUserid(userNextID);
+						uidentity.setRef(uidentityNextRef);
+						sqlbuilder=new StringBuilder();
+						objparaList=this.userIdentityManager.getSaveSql(uidentity, sqlbuilder);
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());
+						
+						//添加操作记录
+						sqlbuilder=new StringBuilder();
+						objparaList=this.userIdentityManager.getAddOperateLog(this.logined(request).getRef()
+								,"j_user_identity_info",uidentityNextRef,null,null,"ADD","导入学生名册，添加学生身份关系数据!", sqlbuilder);						
+						
+						//学生与角色
+						RoleUser ru=new RoleUser();
+						String ruNextID=UUID.randomUUID().toString();
+						ru.setRef(ruNextID);
+						ru.getUserinfo().setRef(userNextID);
+						ru.getRoleinfo().setRoleid(UtilTool._ROLE_STU_ID);  
+						
+						sqlbuilder=new StringBuilder();
+						objparaList=this.roleUserManager.getSaveSql(ru, sqlbuilder);
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());
+												
+						//添加操作记录
+						sqlbuilder=new StringBuilder();
+						objparaList=this.roleUserManager.getAddOperateLog(this.logined(request).getRef()
+								,"j_role_user",ruNextID,null,null,"ADD","导入学生名册，添加学生角色关系数据!", sqlbuilder);
+						
+						objListArray.add(objparaList);
+						sqlListArray.add(sqlbuilder.toString());
+						
+						
+					}
+				}
+				
+				if(sqlListArray.size()<1||objListArray.size()<1){
+					msg= "{\"type\":\"error\",\"msg\":\"您上传的文件中不存在数据或该数据已存在于班级中!请仔细核对!\"}";    
+				}else{
+					boolean flag=this.studentManager.doExcetueArrayProc(sqlListArray, objListArray);
+					if(flag)
+						msg="{\"type\":\"success\",\"msg\":\"操作成功!\"}";
+					else
+						msg="{\"type\":\"error\",\"msg\":\"导入班级成员失败!请重试!\"}"; 
+				}
+			}
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace(); 
+			return "{\"type\":\"error\",\"msg\":\"您上传的文件中数据出现错误!请仔细核对!\"}"; 
+		}
+		return msg; 
+	}
+	/**
+	 * 根据班级信息得到学生数据
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(params="m=getstudent",method=RequestMethod.POST) 
+	public void getStudentByClass(HttpServletRequest request,HttpServletResponse response)throws Exception{
+		JsonEntity jeEntity=new JsonEntity();
+		String classIdStr=request.getParameter("classId");
+		String year=request.getParameter("year");
+		String pattern=request.getParameter("pattern");
+		if(classIdStr==null||classIdStr.trim().length()<1){
+			jeEntity.setMsg("异常错误，班级未接收到，请刷新页面后重试！");
+			response.getWriter().print(jeEntity.toJSON());
+			return;
+		}
+		
+		List<StudentInfo> stuList = this.studentManager.getStudentByClass(Integer.parseInt(classIdStr), year, pattern);
+		jeEntity.setObjList(stuList);
+		jeEntity.setType("success");
+		response.getWriter().print(jeEntity.toJSON());
+		
+		
+	}
+	/**
+	 * 根据学号得到学生信息
+	 * @param request
+	 * @param response
+	 * @throws Exception 
+	 */
+	@RequestMapping(params="m=getref",method=RequestMethod.POST) 
+	public void getStudentByStuno(HttpServletRequest request,HttpServletResponse response)throws Exception{
+		JsonEntity jeEntity=new JsonEntity();
+		String stuno = request.getParameter("stuno");
+		if(stuno==null||stuno.trim().length()<1){
+			jeEntity.setMsg("异常错误，学号未接收到，请刷新页面后重试！");
+			response.getWriter().print(jeEntity.toJSON());
+			return;
+		}
+		StudentInfo obj = new StudentInfo();
+		obj.setStuno(stuno);
+		List<StudentInfo> stuList = this.studentManager.getList(obj, null);
+		jeEntity.setObjList(stuList);
+		jeEntity.setType("success");
+		response.getWriter().print(jeEntity.toJSON());
+		
+		
+	}
+	
+}

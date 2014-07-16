@@ -1,0 +1,18 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\MozillaPlugins\@itstructures.com/ffactivex]
+"Description"="Firefox ActiveX Plugin r39"
+"ProductName"="Firefox ActiveX Plugin r39"
+"Path"="%path%"
+"Version"="r39"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\MozillaPlugins\@itstructures.com/ffactivex\MimeTypes]
+"Dummy"="r39"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\MozillaPlugins\@itstructures.com/ffactivex\MimeTypes\application/x-itst-activex]
+"Dummy"="r39"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\MozillaPlugins\@itstructures.com/ffactivex\MimeTypes\application/x-itst-activex\clsid]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\MozillaPlugins\@itstructures.com/ffactivex\MimeTypes\application/x-itst-activex\clsid\*]
+"*"="true"

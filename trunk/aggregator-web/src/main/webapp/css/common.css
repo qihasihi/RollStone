@@ -1,0 +1,316 @@
+@charset "utf-8";
+
+/* 全局样式 
+body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div {
+	margin: 0;
+	padding: 0;
+	border: 0 none;
+}*/
+/*
+body {
+	background: #fff;
+}
+
+ul,ol {
+	list-style-type: none;
+}
+
+select,input,select,img {
+	vertical-align: middle;
+}
+
+a:hover,a:active,a:focus {
+	color: #FF0000;
+	text-decoration: none;
+}*/
+
+.zyfx_htWindows1 {
+	background: url(images/bg13_110331.gif) no-repeat scroll 0 0 transparent
+		;
+	height: 102px;
+	padding: 12px 7px 7px 0;
+	width: 109px;
+}
+
+ul.zyfx_htList li {
+	height: 18px;
+	line-height: 18px;
+	padding: 3px 15px;
+	width: 79px;
+	list-style-type: none;
+	font-family: "宋体";
+	font-size: 12px;
+	border: 0;
+	margin: 0;
+}
+
+.IndexWindows2 {
+	background: url(images/bg07_100618.gif) no-repeat scroll 0 -174px
+		transparent;
+	height: 166px;
+	line-height: 22px;
+	padding: 10px 12px;
+	position: absolute;
+	top: 28px;
+	width: 269px;
+	z-index: 1;
+}
+
+/*模式窗口的样式。*/
+.black_overlay {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	filter: Alpha(opacity =     50); /* IE */
+	-moz-opacity: 0.5; /* FF 主要是为了兼容老版本的FF */
+	opacity: 0.5; /* FF */
+	background-color: black;
+	z-index: 1001;
+}
+.Pt10{
+ 	padding-top:10px;
+ }
+
+/*内容层样式*/
+.white_content {
+	display: none;
+	position: absolute;
+	top: 20%;
+	left: 33%;
+	z-index: 1002;
+	overflow: auto;
+}
+
+.modelLeftTop {
+	background: url(images/leftTop.jpg) no-repeat;
+	width: 5px;
+	height: 5px;
+}
+
+.modelTop {
+	background: url(images/top.jpg) repeat-x;
+}
+
+.modelRightTop {
+	background: url(images/righttop.jpg) no-repeat;
+	width: 6px;
+	height: 5px;
+}
+
+.modelLeft {
+	background: url(images/left.jpg) repeat-y;
+	width: 2px;
+}
+
+.modelRight {
+	background: url(images/right.jpg) repeat-y;
+	width: 4px;
+}
+
+.modelLeftBottom {
+	background: url(images/leftbottom.jpg) no-repeat;
+	width: 5px;
+	height: 7px;
+}
+
+.modelBottom {
+	background: url(images/bottom.jpg) repeat-x;
+	height: 7px;
+}
+
+.modelRightBottom {
+	background: url(images/rightbottom.jpg) no-repeat;
+	height: 9px;
+	width: 6px;
+}
+
+/*-----------------互动空间------------批注样式*/ /*删除样式*/
+.notes_del {
+	color: red;
+	text-decoration: line-through;
+}
+
+/*病句样式*/
+.notes_errsen {
+	color: red;
+}
+
+.notes_errsen u {
+	color: red;
+}
+
+.notes_errsen u span {
+	color: black;
+}
+
+/*好句*/
+.notes_goodsen {
+	color: red;
+}
+
+.notes_goodsen u {
+	color: red;
+}
+
+.notes_goodsen u span {
+	color: black;
+}
+
+/*错别字*/
+.notes_errorword {
+	color: red;
+}
+
+.notes_errorword u {
+	color: red;
+}
+
+.notes_errorword u span {
+	color: black;
+}
+
+/*用词不当*/
+.notes_misnomer {
+	color: red;
+}
+
+/*.notes_misnomer span{border: 1px solid red;}*/
+.notes_misnomer span span {
+	color: black;
+	border: 1px solid red;
+}
+
+/*插入*/
+.notes_insert {
+	color: #4EFEB3;
+}
+
+/*修改*/
+.notes_update strike {
+	color: red;;
+}
+
+.notes_update span {
+	text-decoration: none;
+	color: #00FFFF;
+}
+
+/*注释*/
+.notes_note a {
+	color: #FFE153;
+	font-weight: bold;
+}
+
+.notes_note a:link {
+	text-decoration: none;
+	color: #FFE153;
+	font-weight: bold;
+}
+
+.notes_note a:hover {
+	text-decoration: none;
+	color: #FFE153;
+	font-weight: bold;
+}
+
+/*点评*/
+.notes_critique u {
+	color: red;;
+}
+
+.notes_critique u span {
+	color: black;
+}
+
+.notes_critique span {
+	color: red;
+}
+
+/*引用*/
+.fieldset {
+	border: 1px solid #FF6B02;
+	display: block;
+	margin-bottom: 10px;
+	padding: 0 10px;
+}
+
+/***********上传控件*********************/
+.info-pb-container {
+	height: 24px;
+	padding: 2px 10px;
+}
+
+.info-pb-label {
+	float: left;
+	margin-left: 50%;
+	margin-top: 2px;
+	font-weight: bold;
+	text-shadow: 1px 1px 0 #fff;
+}
+
+.info-pb {
+	height: 20px;
+}
+
+.info-button {
+	display: block;
+	float: left;
+	margin-left: 10px;
+	/*height: 1.2em;
+            width: 1.2em;*/
+}
+
+.info-filename {
+	display: block;
+	float: left;
+	margin-left: 15px;
+}
+
+.info-text-right {
+	display: block;
+	float: right;
+	margin-right: 15px;
+}
+
+<!--
+-->ul.selected_item {
+	
+}
+
+ul.selected_item li {
+	float: left;
+	background: #F9F8F4;
+	margin-right: 3px;
+	border: 2px solid #32D7FF;
+	padding: 2px, 2px, 2px, 2px;
+}
+
+ul.selected_item li a {
+	text-decoration: none;
+	font-size: 20;
+	padding: 2px;
+}
+
+ul.selected_item li a:link,li a:visited {
+	color: black;
+	font-family: arial;
+}
+
+li.selected {
+	
+}
+
+li.selected a {
+	border: 2px solid red;
+	text-decoration: none;
+	font-size: 20;
+	padding: 1px;
+}
+
+.more_select {
+	float: left;
+}

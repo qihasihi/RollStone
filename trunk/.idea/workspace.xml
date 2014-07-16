@@ -1,0 +1,1903 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" readonly="true" id="18acd0f4-a376-4b78-afa2-6fd0cdc84b8e" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/1.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/10.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/100.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/101.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/102.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/103.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/104.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/105.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/106.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/107.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/108.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/109.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/11.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/110.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/111.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/112.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/113.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/114.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/115.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/116.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/117.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/118.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/12.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/13.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/14.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/15.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/16.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/17.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/18.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/19.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/2.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/20.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/21.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/22.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/23.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/24.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/25.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/26.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/27.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/28.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/29.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/3.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/30.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/31.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/32.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/33.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/34.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/35.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/36.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/37.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/38.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/39.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/4.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/40.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/41.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/42.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/43.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/44.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/45.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/46.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/47.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/48.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/49.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/5.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/50.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/51.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/52.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/53.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/54.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/55.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/56.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/57.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/58.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/59.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/6.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/60.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/61.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/62.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/63.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/64.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/65.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/66.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/67.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/68.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/69.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/7.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/70.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/71.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/72.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/73.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/74.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/75.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/76.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/77.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/78.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/79.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/8.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/80.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/81.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/82.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/83.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/84.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/85.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/86.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/87.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/88.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/89.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/9.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/90.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/91.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/92.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/93.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/94.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/95.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/96.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/97.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/98.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq/99.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/Thumbs.db" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/about" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link/images/anchor.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/images/arrow.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/clipboard" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/images/close.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/dialog" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/about/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/clipboard/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/image/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/table/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/tabletools/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/dialogs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/fakeobjects" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/pastefromword/filter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/magicline/images/icon.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/icons.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/icons.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/image" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/fakeobjects/images" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/image/images" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link/images" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/magicline/images" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/images" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/lang" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/about/dialogs/logo_ckeditor.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/magicline" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/images/mini.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/image/images/noimage.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/pastefromword" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley/qq" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/smiley" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/fakeobjects/images/spacer.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/table" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/tabletools" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/CHANGES.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/_translationstatus.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/_translationstatus.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/a11yhelp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/about/dialogs/about.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link/dialogs/anchor.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/bg.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/build-config.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ca.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/ca.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/dialogs/ciframe.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/ckeditor.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/config.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/contents.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/cs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/cs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/cy.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/cy.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/da.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/de.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/de.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/pastefromword/filter/default.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/dialog/dialogDefinition.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog_ie.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog_ie7.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog_ie8.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog_iequirks.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/dialog_opera.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor_gecko.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor_ie.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor_ie7.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor_ie8.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/editor_iequirks.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/el.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/el.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/lang/en.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/en.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/en.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/eo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/eo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/es.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/et.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/et.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/fa.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/fa.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/fi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/fi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/fr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/fr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/gu.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/he.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/he.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/hi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/hr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/hr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/hu.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/image/dialogs/image.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/it.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/it.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ja.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ku.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/ku.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/link/dialogs/link.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/lt.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/lv.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/lv.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/mk.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/mn.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/nb.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/nb.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/nl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/nl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/no.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/no.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt/dialogs/options.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/clipboard/dialogs/paste.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/pl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/pt-br.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/pt-br.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/pt.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/skins/moono/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ro.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ru.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/sk.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/sk.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/sl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/specialchar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/styles.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/sv.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/sv.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/table/dialogs/table.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/tabletools/dialogs/tableCell.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/dialogs/tmpFrameset.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/scayt/dialogs/toolbar.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/tr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/tr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/ug.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/ug.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/uk.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/vi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/dialogs/wsc.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/wsc/dialogs/wsc.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/lang/zh-cn.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/a11yhelp/dialogs/lang/zh-cn.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aggregator-web/src/main/webapp/ckeditor/plugins/specialchar/dialogs/lang/zh-cn.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-resource/src/main/java/com/school/dao/resource/CheckDAO.java" afterPath="$PROJECT_DIR$/class-resource/src/main/java/com/school/dao/resource/CheckDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/ClassCadresDAO.java" afterPath="$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/ClassCadresDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-common/src/main/java/com/school/util/PageUtil/PageUtilTool.java" afterPath="$PROJECT_DIR$/class-common/src/main/java/com/school/util/PageUtil/PageUtilTool.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/TpResourceCollectDAO.java" afterPath="$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/TpResourceCollectDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aggregator-web/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/aggregator-web/src/main/resources/rebel.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-basicplatform/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/class-basicplatform/src/main/resources/rebel.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-common/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/class-common/src/main/resources/rebel.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-personalspace/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/class-personalspace/src/main/resources/rebel.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-resource/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/class-resource/src/main/resources/rebel.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/class-teachingplatform/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/class-teachingplatform/src/main/resources/rebel.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/src/main/resources/rebel.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-chanpin/src/main/resources/rebel.xml" afterPath="$PROJECT_DIR$/web-chanpin/src/main/resources/rebel.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
+    <ignored path="sz_school_m_chanpin_0605.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="DebuggerManager">
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <breakpoint_rules />
+    <ui_properties />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="sz_school_m_chanpin_0605" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aggregator-web/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="53" column="0" selection-start="1448" selection-end="1448" vertical-scroll-proportion="0.0" vertical-offset="827" max-vertical-offset="2300">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web-chanpin/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="16" column="0" selection-start="493" selection-end="493" vertical-scroll-proportion="0.0" vertical-offset="501" max-vertical-offset="1175">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rebel.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web-chanpin/src/main/resources/rebel.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="10" max-vertical-offset="550">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CheckDAO.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/dao/resource/CheckDAO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="16" column="50" selection-start="461" selection-end="461" vertical-scroll-proportion="0.3812636" vertical-offset="0" max-vertical-offset="4925">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rebel.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aggregator-web/src/main/resources/rebel.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="10" column="68" selection-start="445" selection-end="445" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="550">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rebel.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/class-basicplatform/src/main/resources/rebel.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rebel.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/class-common/src/main/resources/rebel.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rebel.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/class-personalspace/src/main/resources/rebel.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rebel.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/class-resource/src/main/resources/rebel.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rebel.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/class-teachingplatform/src/main/resources/rebel.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/class-basicplatform/pom.xml" />
+        <option value="$PROJECT_DIR$/class-common/pom.xml" />
+        <option value="$PROJECT_DIR$/class-resource/pom.xml" />
+        <option value="$PROJECT_DIR$/class-teachingplatform/pom.xml" />
+        <option value="$PROJECT_DIR$/class-common/src/main/java/com/school/listener/TimerTaskListener.java" />
+        <option value="$PROJECT_DIR$/class-personalspace/pom.xml" />
+        <option value="$PROJECT_DIR$/aggregator-class/pom.xml" />
+        <option value="$PROJECT_DIR$/class-basicplatform/src/main/java/com/school/dao/ClassDAO.java" />
+        <option value="$PROJECT_DIR$/class-common/src/main/java/com/school/dao/DictionaryDAO.java" />
+        <option value="$PROJECT_DIR$/class-basicplatform/src/main/java/com/school/control/notice/NoticeController.java" />
+        <option value="$PROJECT_DIR$/class-resource/src/main/java/com/school/control/resource/ResourceController.java" />
+        <option value="$PROJECT_DIR$/web-chanpin/src/main/webapp/login.jsp" />
+        <option value="$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/TpResourceCollectDAO.java" />
+        <option value="$PROJECT_DIR$/class-common/src/main/java/com/school/util/PageUtil/PageUtilTool.java" />
+        <option value="$PROJECT_DIR$/aggregator-web/src/main/resources/properties/util.properties" />
+        <option value="$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/ClassCadresDAO.java" />
+        <option value="$PROJECT_DIR$/aggregator-web/pom.xml" />
+        <option value="$PROJECT_DIR$/web-chanpin/pom.xml" />
+        <option value="$PROJECT_DIR$/aggregator-web/src/main/resources/rebel.xml" />
+        <option value="$PROJECT_DIR$/class-resource/src/main/java/com/school/dao/resource/CheckDAO.java" />
+      </list>
+    </option>
+  </component>
+  <component name="LogFilters">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="FILTER_DEBUG" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="D:\apache-maven-3.0.2" />
+        <option name="userSettingsFile" value="D:\.m2 (lujianing)\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="sz_school" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="sz_school" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Lifecycle" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$LifecycleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="class-teachingplatform" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="class-resource" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="class-personalspace" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+    </treeState>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <OptionsSetting value="true" id="Undo Check Out" />
+    <OptionsSetting value="true" id="Get Latest Version" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectStructureProblems">
+    <ignored-problems>
+      <problem id="module-missing-from-artifact(artifact:class-personalspace:war exploded,WEB-INF/classes/module-output)" />
+      <problem id="module-missing-from-artifact(artifact:class-personalspace:war,WEB-INF/classes/module-output)" />
+      <problem id="module-missing-from-artifact(artifact:class-resource:war exploded,WEB-INF/classes/module-output)" />
+      <problem id="module-missing-from-artifact(artifact:class-resource:war exploded,WEB-INF/classes/module-output)" />
+      <problem id="module-missing-from-artifact(artifact:class-resource:war,WEB-INF/classes/module-output)" />
+      <problem id="module-missing-from-artifact(artifact:class-resource:war,WEB-INF/classes/module-output)" />
+      <problem id="module-missing-from-artifact(artifact:class-teachingplatform:war exploded,WEB-INF/classes/module-output)" />
+      <problem id="module-missing-from-artifact(artifact:class-teachingplatform:war exploded,WEB-INF/classes/module-output)" />
+      <problem id="module-missing-from-artifact(artifact:class-teachingplatform:war,WEB-INF/classes/module-output)" />
+      <problem id="module-missing-from-artifact(artifact:class-teachingplatform:war,WEB-INF/classes/module-output)" />
+    </ignored-problems>
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="web-chanpin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="web-chanpin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="web-chanpin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aggregator-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aggregator-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aggregator-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aggregator-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sz_school_chanpin_m_pan" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aggregator-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="GoToClass.includeLibraries" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="options.lastSelected" value="File.Encoding" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="true" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="FullScreen" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="45" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder0" value="0" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="99" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="97" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="30" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder3" value="3" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth4" value="85" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder4" value="4" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth5" value="552" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder5" value="5" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth0" value="57" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth1" value="62" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth2" value="61" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth3" value="57" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder3" value="3" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth4" value="57" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder4" value="4" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth5" value="614" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder5" value="5" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\sz_school_chanpin_m_pan\aggregator-web\src\main\webapp\ueditor\jsp" />
+      <recent name="E:\sz_school_m_chanpin_0605\web-chanpin\src\main\webapp" />
+      <recent name="E:\sz_school_m_chanpin_0605\web-chanpin\src\main\resources" />
+      <recent name="E:\sz_school_m_chanpin_0605" />
+      <recent name="E:\sz_school_m_chanpin_0605\aggregator-web\src\main\webapp" />
+    </key>
+  </component>
+  <component name="RestoreUpdateTree">
+    <UpdateInfo date="Moments ago" ActionInfo="_Update">
+      <UpdatedFiles>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated from server" />
+          <option name="myStatusName" value="Changed on server" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CHANGED_ON_SERVER" />
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Updated" />
+            <option name="myStatusName" value="Changed" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="UPDATED" />
+            <PATH vcs="svn" revision="5111">D:\sz_school_chanpin_m_pan\class-basicplatform\src\main\java\com\school\control\UserController.java</PATH>
+            <PATH vcs="svn" revision="5111">D:\sz_school_chanpin_m_pan\class-teachingplatform\src\main\java\com\school\share\ShareCourse.java</PATH>
+            <PATH vcs="svn" revision="5111">D:\sz_school_chanpin_m_pan\class-teachingplatform\src\main\java\com\school\entity\teachpaltform\QuestionInfo.java</PATH>
+            <PATH vcs="svn" revision="5111">D:\sz_school_chanpin_m_pan\aggregator-web\src\main\resources\properties\util.properties</PATH>
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Created" />
+            <option name="myStatusName" value="Created" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="CREATED" />
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Deleted" />
+            <option name="myStatusName" value="Deleted" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="true" />
+            <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Restored" />
+            <option name="myStatusName" value="Will be restored" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="RESTORED" />
+          </FILE-GROUP>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Modified" />
+          <option name="myStatusName" value="Modified" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MODIFIED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Skipped" />
+          <option name="myStatusName" value="Skipped" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="SKIPPED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged with conflicts" />
+          <option name="myStatusName" value="Will be merged with conflicts" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED_WITH_CONFLICTS" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged with tree conflicts" />
+          <option name="myStatusName" value="Merged with tree conflicts" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged with property conflicts" />
+          <option name="myStatusName" value="Will be merged with property conflicts" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged" />
+          <option name="myStatusName" value="Will be merged" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Not in repository" />
+          <option name="myStatusName" value="Not in repository" />
+          <option name="mySupportsDeletion" value="true" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UNKNOWN" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Locally added" />
+          <option name="myStatusName" value="Locally added" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="LOCALLY_ADDED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Locally removed" />
+          <option name="myStatusName" value="Locally removed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="LOCALLY_REMOVED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Switched" />
+          <option name="myStatusName" value="Switched" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="SWITCHED" />
+        </FILE-GROUP>
+      </UpdatedFiles>
+    </UpdateInfo>
+  </component>
+  <component name="RunManager" selected="Tomcat Server.Tomcat 7">
+    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails" singleton="true">
+      <module name="" />
+      <setting name="vmparams" value="" />
+      <setting name="cmdLine" value="run-app" />
+      <setting name="depsClasspath" value="false" />
+      <setting name="passParentEnv" value="true" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <setting name="launchBrowser" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin" singleton="true">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
+    <configuration default="true" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list />
+            </option>
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" ALTERNATIVE_JRE_ENABLED="false">
+      <deployment />
+      <server-settings />
+      <predefined_log_file id="Tomcat" enabled="true" />
+      <predefined_log_file id="Tomcat Catalina" enabled="true" />
+      <predefined_log_file id="Tomcat Manager" enabled="false" />
+      <predefined_log_file id="Tomcat Host Manager" enabled="false" />
+      <predefined_log_file id="Tomcat Localhost Access" enabled="false" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
+      <option name="BCName" value="" />
+      <option name="IOSSimulatorSdkPath" value="" />
+      <option name="adlOptions" value="" />
+      <option name="airProgramParameters" value="" />
+      <option name="appDescriptorForEmulator" value="Android" />
+      <option name="debugTransport" value="USB" />
+      <option name="debuggerSdkRaw" value="BC SDK" />
+      <option name="emulator" value="NexusOne" />
+      <option name="emulatorAdlOptions" value="" />
+      <option name="fastPackaging" value="true" />
+      <option name="fullScreenHeight" value="0" />
+      <option name="fullScreenWidth" value="0" />
+      <option name="launchUrl" value="false" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browserFamily" value="FIREFOX" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="FlashPlayerDebugger.exe" />
+        </LauncherParameters>
+      </option>
+      <option name="mobileRunTarget" value="Emulator" />
+      <option name="moduleName" value="" />
+      <option name="overriddenMainClass" value="" />
+      <option name="overriddenOutputFileName" value="" />
+      <option name="overrideMainClass" value="false" />
+      <option name="runTrusted" value="true" />
+      <option name="screenDpi" value="0" />
+      <option name="screenHeight" value="0" />
+      <option name="screenWidth" value="0" />
+      <option name="url" value="http://" />
+      <option name="usbDebugPort" value="7936" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" output_log_level="null" package_name="" scope="Class">
+      <option name="BCName" value="" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browserFamily" value="FIREFOX" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="FlashPlayerDebugger.exe" />
+        </LauncherParameters>
+      </option>
+      <option name="moduleName" value="" />
+      <option name="trusted" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="myFilePath" />
+      <option name="GLUE" />
+      <option name="myNameFilter" />
+      <option name="myGeneratedName" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Tomcat 7" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 7" ALTERNATIVE_JRE_ENABLED="false" ALTERNATIVE_JRE_PATH="">
+      <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/" />
+      <option name="UPDATE_ON_FRAME_DEACTIVATION" value="true" />
+      <option name="UPDATE_CLASSES_ON_FRAME_DEACTIVATION" value="true" />
+      <deployment>
+        <artifact name="aggregator-web:war exploded">
+          <settings>
+            <option name="CONTEXT_PATH" value="/sz_school" />
+          </settings>
+        </artifact>
+      </deployment>
+      <server-settings>
+        <option name="BASE_DIRECTORY_NAME" value="Tomcat_7_sz_school_m_chanpin_0605" />
+      </server-settings>
+      <predefined_log_file id="Tomcat" enabled="true" />
+      <predefined_log_file id="Tomcat Catalina" enabled="true" />
+      <predefined_log_file id="Tomcat Manager" enabled="false" />
+      <predefined_log_file id="Tomcat Host Manager" enabled="false" />
+      <predefined_log_file id="Tomcat Localhost Access" enabled="false" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <RunnerSettings RunnerId="Cover" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="57158" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="JRebel Debug">
+        <option name="DEBUG_PORT" value="57159" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="JRebel Executor" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="JRebel Debug">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="JRebel Executor">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <method>
+        <option name="Make" enabled="false" />
+      </method>
+    </configuration>
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="JUnit.AppTests" />
+      <item index="1" class="java.lang.String" itemvalue="Tomcat Server.Tomcat 7" />
+    </list>
+    <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="true" SSL_PROTOCOLS="all">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <configuration useDefault="false">C:\Users\panfei\AppData\Roaming\Subversion</configuration>
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="SvnFileUrlMappingImpl">
+    <option name="myMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan\.idea" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan\.idea" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan\aggregator-class" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan\aggregator-class" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan\aggregator-web" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan\aggregator-web" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan\class-basicplatform" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan\class-basicplatform" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan\class-common" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan\class-common" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan\class-personalspace" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan\class-personalspace" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan\class-resource" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan\class-resource" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan\class-teachingplatform" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan\class-teachingplatform" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan\web-chanpin" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan\web-chanpin" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+    <option name="myMoreRealMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="D:\sz_school_chanpin_m_pan" />
+          <option name="myCopyRoot" value="D:\sz_school_chanpin_m_pan" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="18acd0f4-a376-4b78-afa2-6fd0cdc84b8e" name="Default" comment="" />
+      <created>1401933313328</created>
+      <updated>1401933313328</updated>
+      <workItem from="1401933316253" duration="4128000" />
+      <workItem from="1401937720147" duration="1052000" />
+      <workItem from="1401938885252" duration="2015000" />
+      <workItem from="1401941353837" duration="2660000" />
+      <workItem from="1401945930869" duration="26000" />
+      <workItem from="1401946244012" duration="425000" />
+      <workItem from="1401947311476" duration="6269000" />
+      <workItem from="1402279050725" duration="700000" />
+      <workItem from="1402283730066" duration="13638000" />
+    </task>
+    <task id="LOCAL-00001" summary="for test">
+      <created>1402042143131</created>
+      <updated>1402042143131</updated>
+    </task>
+    <task id="LOCAL-00002" summary="for test">
+      <created>1402366147129</created>
+      <updated>1402366147129</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="30913000" />
+  </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="JRebel Executor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32887402" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32887402" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41917503" sideWeight="0.23535676" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21516165" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="JSF" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="SVN Repositories" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.458194" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32887402" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32887402" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36208734" sideWeight="0.7344322" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33779263" sideWeight="0.58519703" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32887402" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
+      <window_info id="JRebel Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41917503" sideWeight="0.76464325" order="16" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36900958" sideWeight="0.54229933" order="5" side_tool="true" content_ui="tabs" />
+      <window_info id="JRebel" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36208734" sideWeight="0.26373628" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27982163" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36900958" sideWeight="0.54229933" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973376" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30404687" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USERS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+    <MESSAGE value="数字校园按功能分模块，2014年6月5日12:28:53" />
+    <MESSAGE value="for test" />
+    <option name="LAST_COMMIT_MESSAGE" value="for test" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/control/resource/SimpleResController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="13" selection-start="1987" selection-end="1987" vertical-scroll-proportion="0.0" vertical-offset="62" max-vertical-offset="11525" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/control/resource/StoreController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="13" selection-start="931" selection-end="931" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4100" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/PaperQuestionDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="379" selection-end="379" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5925" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/PaperTypeDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="375" selection-end="375" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6925" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/QuestionAnswerDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="381" selection-end="381" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="9950" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/QuestionDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="13" selection-start="424" selection-end="424" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="11700" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-basicplatform/src/main/java/com/school/dao/ColumnRightDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="335" selection-end="335" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5900" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-basicplatform/src/main/java/com/school/dao/ColumnRightPageRightDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="353" selection-end="353" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5850" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-basicplatform/src/main/java/com/school/dao/CommentDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="350" selection-end="350" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="11875" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-basicplatform/src/main/java/com/school/dao/DeptDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="13" selection-start="360" selection-end="360" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6500" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-basicplatform/src/main/java/com/school/dao/FnClickDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="13" selection-start="474" selection-end="474" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2950" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-basicplatform/src/main/java/com/school/dao/ClassDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="46" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7750" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-common/src/main/java/com/school/dao/DictionaryDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="60" selection-start="492" selection-end="492" vertical-scroll-proportion="0.0" vertical-offset="100" max-vertical-offset="5325" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aggregator-web/aggregator-web.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1225" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-basicplatform/src/main/java/com/school/control/notice/NoticeController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="199" column="10" selection-start="7005" selection-end="7005" vertical-scroll-proportion="0.0" vertical-offset="4975" max-vertical-offset="9050" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/control/resource/CheckController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="13" selection-start="985" selection-end="985" vertical-scroll-proportion="0.0" vertical-offset="62" max-vertical-offset="4700" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/control/resource/DownloadAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="13" selection-start="1017" selection-end="1017" vertical-scroll-proportion="0.0" vertical-offset="513" max-vertical-offset="3025" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/control/resource/ExtendController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="13" selection-start="1044" selection-end="1044" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5425" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/control/resource/OperateRecordController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="13" selection-start="661" selection-end="661" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1925" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/control/resource/RecommendController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="13" selection-start="876" selection-end="876" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1425" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/control/resource/ResourceReportController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="13" selection-start="769" selection-end="769" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1675" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/control/resource/ResourceController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="37" selection-start="2612" selection-end="2612" vertical-scroll-proportion="0.0" vertical-offset="1400" max-vertical-offset="59350" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/rebel.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="585">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/TpResourceCollectDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="66" selection-start="544" selection-end="544" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4725">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ReadMe.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="112" max-vertical-offset="675">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="24" selection-start="1816" selection-end="1816" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6550">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-chanpin/web-chanpin.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2000">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-common/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="41" selection-start="439" selection-end="439" vertical-scroll-proportion="0.0" vertical-offset="1125" max-vertical-offset="4800">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-personalspace/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="19" selection-start="922" selection-end="922" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1000">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="925">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aggregator-class/aggregator-class.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1400">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-common/src/main/java/com/school/util/PageUtil/PageUtilTool.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="48" selection-start="313" selection-end="313" vertical-scroll-proportion="0.0" vertical-offset="200" max-vertical-offset="2550">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aggregator-web/src/main/resources/properties/util.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="20" selection-start="54" selection-end="54" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2625">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aggregator-web/src/main/resources/properties/msg.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2025">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aggregator-web/src/main/resources/properties/ethosStudentScoreRule.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="848">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aggregator-class/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2000">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aggregator-web/src/main/resources/properties/SimpleResUtil.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="848">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-teachingplatform/src/main/java/com/school/dao/teachpaltform/ClassCadresDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="64" selection-start="520" selection-end="520" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6425">
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2116#2124#0" expanded="false" />
+            <element signature="e#3735#3744#0" expanded="false" />
+            <element signature="e#4398#4406#0" expanded="false" />
+            <element signature="e#5872#5880#0" expanded="false" />
+            <element signature="e#7344#7352#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aggregator-web/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="0" selection-start="1448" selection-end="1448" vertical-scroll-proportion="0.0" vertical-offset="827" max-vertical-offset="2300">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-chanpin/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="0" selection-start="493" selection-end="493" vertical-scroll-proportion="0.0" vertical-offset="501" max-vertical-offset="1175">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aggregator-web/src/main/resources/rebel.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="68" selection-start="445" selection-end="445" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="550">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-basicplatform/src/main/resources/rebel.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-common/src/main/resources/rebel.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-personalspace/src/main/resources/rebel.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/resources/rebel.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-teachingplatform/src/main/resources/rebel.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-chanpin/src/main/resources/rebel.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="10" max-vertical-offset="550">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/class-resource/src/main/java/com/school/dao/resource/CheckDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="50" selection-start="461" selection-end="461" vertical-scroll-proportion="0.3812636" vertical-offset="0" max-vertical-offset="4925">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <last-edited>aggregator-web:war</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.5" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Spring</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>aggregator-class</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: aopalliance:aopalliance:1.0</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
+

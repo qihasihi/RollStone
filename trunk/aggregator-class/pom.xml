@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>sz_school</artifactId>
+        <groupId>sz_school</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>aggregator-class</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>aggregator-class</name>
+
+
+
+    <dependencies>
+        <dependency>
+            <groupId>sz_school</groupId>
+            <artifactId>class-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+    <properties>
+        <project.build.sourceEncoding>GBK</project.build.sourceEncoding>
+        <module.a.src>../class-resource/src/main/java</module.a.src>
+        <module.b.src>../class-basicplatform/src/main/java</module.b.src>
+        <module.c.src>../class-teachingplatform/src/main/java</module.c.src>
+        <module.d.src>../class-personalspace/src/main/java</module.d.src>
+    </properties>
+    <build>
+        <plugins>
+            <!-- 解决模块相互依赖,综合所有相互依赖代码统一编译 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${module.a.src}</source>
+                                <source>${module.b.src}</source>
+                                <source>${module.c.src}</source>
+                                <source>${module.d.src}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
