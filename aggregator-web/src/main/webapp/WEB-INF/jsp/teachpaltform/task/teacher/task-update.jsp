@@ -104,6 +104,8 @@
                 queryPaper(courseid,'tr_task_obj',4,${taskInfo.taskvalueid},taskstatus);
             }else if(tasktype=="5"){ // 自主测试
                 queryPaper(courseid,'tr_task_obj',5,${taskInfo.taskvalueid},taskstatus,quesnum);
+            }else if(tasktype=="6"){ // 微视频
+                queryMicView(courseid,'tr_task_obj',6,${taskInfo.taskvalueid},taskstatus);
             }
 		}
 

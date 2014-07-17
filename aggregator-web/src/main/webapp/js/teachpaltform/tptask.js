@@ -346,7 +346,7 @@ function queryPaper(courseid, trobj, type, taskvalueid, taskstatus, quesnum) {
  * @param taskstatus
  * @param quesnum
  */
-function queryMicView(courseid, trobj, type, taskvalueid) {
+function queryMicView(courseid, trobj, type, taskvalueid,taskstatus) {
     if (typeof(courseid) == 'undefined' || courseid.length < 1) {
         alert('异常错误，系统未获取到课题标识!');
         return;
@@ -364,15 +364,16 @@ function queryMicView(courseid, trobj, type, taskvalueid) {
             var htm = '';
             htm += '<th><span class="ico06"></span>选择微视频：</th>';
             htm += '<td class="font-black">';
-            htm += '<p><a class="font-darkblue"  href="javascript:showTaskElement(' + type + ')">>> 选择微视频</a></p>';
+            if(typeof taskstatus=='undefined')
+                htm += '<p><a class="font-darkblue"  href="javascript:showTaskElement(' + type + ')">>> 选择微视频</a></p>';
             htm += '<div class="jxxt_zhuanti_add_ziyuan" id="dv_res_name"></div>';
             htm += '<input type="hidden" id="hd_elementid"/>';
             htm += '</td>';
             $("#" + trobj).html(htm);
             $("#tb_ques").hide();
 
-            if (json.objList.length > 0 && typeof taskvalueid != 'undefined' && taskvalueid.toString().length > 0) {
-                $("#dv_res_name").html(json.objList[0].resname);
+            if(json.objList.length>0&&typeof taskvalueid!='undefined'&&taskvalueid.toString().length>0){
+                $("#dv_res_name").html('<span class='+json.objList[0].suffixtype+'></span>'+json.objList[0].resname);
                 $("#hd_elementid").val(json.objList[0].resid);
             }
             if (typeof(taskvalueid) != 'undefined' && taskvalueid.toString().length > 0)
@@ -1691,7 +1692,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                         htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
                         if (tasktype == 4)
                             htm += '<colgroup span="6" class="w190"></colgroup>';
-                        else if (tasktype == 5)
+                        else if (tasktype == 5||tasktype==6)
                             htm += '<colgroup span="5" class="w190"></colgroup>';
                         htm += '<colgroup class="w180"></colgroup>';
                         htm += '<caption>' + im.groupname + '</caption>';
@@ -1699,8 +1700,13 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                         htm += '<th>学号</th>';
                         htm += '<th>姓名</th>';
                         htm += '<th>学习时间</th>';
-                        htm += '<th>是否完成</th>';
-                        htm += '<th>得分</th>';
+                        if(tasktype==6){
+                            htm += '<th>微视频学习</th>';
+                            htm += '<th>试卷</th>';
+                        }else
+                            htm += '<th>是否完成</th>';
+                        if(tasktype!=6)
+                            htm += '<th>得分</th>';
                         if (tasktype == 4)
                             htm += '<th>排名<a href="javascript:void(0);"  onclick="DataSort(\'t.rank\',this)"  class="' + css + '"></a></th>';
                         htm += '<th>查看试卷</th>';
@@ -1715,19 +1721,32 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                                         htm += '<td>' + itm.ctimeString + '</td>';
                                     else
                                         htm += '<td></td>';
-                                    if (itm.status > 0)
-                                        htm += '<td><span class="ico12" title="完成"></span></td>';
-                                    else
-                                        htm += '<td><span class="ico24" title="进行中"></span></td>';
-                                    if (typeof(itm.score) != 'undefined') {
-                                        htm += '<td>' + parseFloat(itm.score) + '</td>';
-                                    } else {
-                                        htm += '<td>---</td>';
+                                    if(tasktype==6){
+                                        if (itm.criteriatype==2){
+                                            htm += '<td><span class="ico12" title="完成"></span></td>';
+                                            htm += '<td><span class="ico12" title="完成"></span></td>';
+                                        }else{
+                                            htm += '<td><span class="ico12" title="完成"></span></td>';
+                                            htm += '<td><span>---</span></td>';
+                                        }
+
+                                    }else{
+                                        if (itm.status > 0)
+                                            htm += '<td><span class="ico12" title="完成"></span></td>';
+                                        else
+                                            htm += '<td><span class="ico24" title="进行中"></span></td>';
+                                        if (typeof(itm.score) != 'undefined') {
+                                            htm += '<td>' + parseFloat(itm.score) + '</td>';
+                                        } else {
+                                            htm += '<td>---</td>';
+                                        }
                                     }
-                                    if (tasktype == 4 && typeof itm.rank != 'undefined' && typeof(itm.score) != 'undefined')
-                                        htm += '<td>' + parseInt(itm.rank) + '</td>';
-                                    else if (typeof itm.rank == 'undefined' || typeof(itm.score) == 'undefined')
-                                        htm += '<td>---</td>';
+                                    if (tasktype == 4){
+                                        if(typeof itm.rank != 'undefined' && typeof(itm.score) != 'undefined')
+                                            htm += '<td>' + parseInt(itm.rank) + '</td>';
+                                        else
+                                            htm += '<td>---</td>';
+                                    }
                                     htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '">查看卷面</a></td>'
                                     htm += '</tr>';
                                 }
@@ -1740,15 +1759,21 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                     htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
                     if (tasktype == 4)
                         htm += '<colgroup span="6" class="w190"></colgroup>';
-                    else if (tasktype == 5)
+                    else if (tasktype == 5||tasktype==6)
                         htm += '<colgroup span="5" class="w190"></colgroup>';
+
                     htm += '<colgroup class="w180"></colgroup>';
                     htm += '<tr>';
                     htm += '<th>学号</th>';
                     htm += '<th>姓名</th>';
                     htm += '<th>学习时间</th>';
-                    htm += '<th>是否完成</th>';
-                    htm += '<th>得分</th>';
+                    if(tasktype==6){
+                        htm += '<th>微视频学习</th>';
+                        htm += '<th>试卷</th>';
+                    }else
+                        htm += '<th>是否完成</th>';
+                    if(tasktype!=6)
+                        htm += '<th>得分</th>';
                     if (tasktype == 4)
                         htm += '<th>排名<a href="javascript:void(0);"  onclick="DataSort(\'t.rank\',this)"  class="' + css + '"></a></th>';
                     htm += '<th>查看试卷</th>';
@@ -1761,19 +1786,33 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                             htm += '<td>' + itm.ctimeString + '</td>';
                         else
                             htm += '<td></td>';
-                        if (itm.status > 0)
-                            htm += '<td><span class="ico12" title="完成"></span></td>';
-                        else
-                            htm += '<td><span class="ico24" title="进行中"></span></td>';
-                        if (typeof(itm.score) != 'undefined') {
-                            htm += '<td>' + parseFloat(itm.score) + '</td>';
-                        } else {
-                            htm += '<td>---</td>';
+                        if(tasktype==6){
+                            if (itm.criteriatype==2){
+                                htm += '<td><span class="ico12" title="完成"></span></td>';
+                                htm += '<td><span class="ico12" title="完成"></span></td>';
+                            }else{
+                                htm += '<td><span class="ico12" title="完成"></span></td>';
+                                htm += '<td><span>---</span></td>';
+                            }
+
+                        }else{
+                            if (itm.status > 0)
+                                htm += '<td><span class="ico12" title="完成"></span></td>';
+                            else
+                                htm += '<td><span class="ico24" title="进行中"></span></td>';
+                            if (typeof(itm.score) != 'undefined') {
+                                htm += '<td>' + parseFloat(itm.score) + '</td>';
+                            } else {
+                                htm += '<td>---</td>';
+                            }
                         }
-                        if (tasktype == 4 && typeof itm.rank != 'undefined' && typeof(itm.score) != 'undefined')
-                            htm += '<td>' + parseInt(itm.rank) + '</td>';
-                        else if (typeof itm.rank == 'undefined' || typeof(itm.score) == 'undefined')
-                            htm += '<td>---</td>';
+
+                        if (tasktype == 4){
+                            if(typeof itm.rank != 'undefined' && typeof(itm.score) != 'undefined')
+                                htm += '<td>' + parseInt(itm.rank) + '</td>';
+                            else
+                                htm += '<td>---</td>';
+                        }
                         htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '">查看卷面</a></td>'
                         htm += '</tr>';
                     });

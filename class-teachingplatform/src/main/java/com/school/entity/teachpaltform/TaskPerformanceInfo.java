@@ -29,6 +29,15 @@ public class TaskPerformanceInfo  implements java.io.Serializable{
     private Object score;
     private String orderstr;
     private Object rank;
+    private Integer creteriatype;
+
+    public Integer getCreteriatype() {
+        return creteriatype;
+    }
+
+    public void setCreteriatype(Integer creteriatype) {
+        this.creteriatype = creteriatype;
+    }
 
     public Object getRank() {
         return rank;

@@ -2345,6 +2345,34 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     }
 
     /**
+     * 根据课题ID，加载试卷列表
+     * @return
+     */
+    @RequestMapping(params="toPaperList",method=RequestMethod.GET)
+    public ModelAndView toPaperList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        //得到该课题的所有任务，任务完成情况。
+        JsonEntity je= new JsonEntity();
+        String courseid=request.getParameter("courseid");
+
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setCourseid(Long.parseLong(courseid));
+        tc.setLocalstatus(1);//正常
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        request.setAttribute("courseid",courseid);
+        return new ModelAndView("/teachpaltform/preview/course-paper-index");
+    }
+
+    /**
      * 专题详情--资源
      * 进入教师资源首页
      * @return

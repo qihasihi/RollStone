@@ -134,7 +134,7 @@ function getInvestReturnMethod(rps){
 
             //if(itm.taskstatus=="3"||(itm.taskstatus!="1"&&itm.flag<2)){
             if(itm.taskstatus!="1"){
-                if(itm.tasktype==4||itm.tasktype==5)
+                if(itm.tasktype==4||itm.tasktype==5||itm.tasktype==6)
                     html+='<a class="ico37" title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype=-1"></a>';
                 else
                     html+='<a class="ico37" title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+itm.questiontype+'"></a>';

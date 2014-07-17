@@ -38,6 +38,7 @@
         <div class="jxxt_zhuanti_zy_layoutR" >　
             <div id="dv_obj"></div>
             <div id="dv_init">
+                <h2 id="relate_paper"><!--<a href="1" class="font-blue"><span class="ico83"></span>关联试卷</a>--></h2>
                 <h1 id="h1_resname"></h1><h1 style="color: #0000ff" id="h1_promt"></h1>
                 <div class="right">
                     <div id="dv_res_detail">

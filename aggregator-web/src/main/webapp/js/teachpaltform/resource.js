@@ -889,13 +889,13 @@ function load_resource(type, pageno, isinit) {
                             }
 
                         } else {
+                            dvhtm += '<p class="c" style="display: none;">';
                             if(itm.difftype!=1){
-                                dvhtm += '<p class="c" style="display: none;">';
                                 dvhtm += '<a  class="ico11" title="编辑" href="javascript:toUpdResource(\'' + itm.resid + '\')"></a>';
                                 dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
-                                dvhtm += '<a  class="ico46" title="添加到学习资源" href="javascript:doUpdResType(' + itm.ref + ')"></a>';
-                                dvhtm += '</p>';
                             }
+                            dvhtm += '<a  class="ico46" title="添加到学习资源" href="javascript:doUpdResType(' + itm.ref + ')"></a>';
+                            dvhtm += '</p>';
 
 
                             htm += '<li id="li_' + itm.resid + '" >';
@@ -1755,10 +1755,33 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     // 评论 
     loadAllComment();
     checkStudyNotes(resid);
+    //关联试卷
+    if(!isStudent)
+        loadRelatePaper(resid);
 
     //学习心得
     if(typeof tpresdetailid!='undeinfed'&& tpresdetailid.toString().length>0)
         loadStudyNotes(1);
+}
+
+function loadRelatePaper(resid){
+    if(isNaN(resid))
+        return;
+    $.ajax({
+        url:'paperques?m=loadRelatePaper',
+        type:'POST',
+        data:{resid:resid,courseid:courseid},
+        dataType:'json',
+        error:function(){alert("网络异常")},
+        success:function(rps){
+            if(rps.type=="error"){
+                alert(rps.msg);
+            }else{
+                var h='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>'+rps.objList[0].papername+'</a>';
+                $("#relate_paper").html(h);
+            }
+        }
+    });
 }
 
 

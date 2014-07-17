@@ -8,6 +8,15 @@ public class MicVideoPaperInfo {
     private java.lang.Long micvideoid;
     private java.lang.Integer ref;
     private java.sql.Timestamp ctime;
+    private String papername;
+
+    public String getPapername() {
+        return papername;
+    }
+
+    public void setPapername(String papername) {
+        this.papername = papername;
+    }
 
     public java.lang.Long getPaperid(){
       return paperid;

@@ -3207,6 +3207,27 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }
+    @RequestMapping(params = "m=loadRelatePaper",method=RequestMethod.POST)
+    public void loadRelatePaper(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        String resid=request.getParameter("resid");
+        String courseid=request.getParameter("courseid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(courseid==null||courseid.trim().length()<1||resid==null||resid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+
+        //得到相关的试卷ID
+        MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
+        mvpaper.setMicvideoid(Long.parseLong(resid));
+        List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,null);
+        if(mvpaperList!=null&&mvpaperList.size()>0){
+            jsonEntity.getObjList().add(mvpaperList.get(0));
+        }
+        jsonEntity.setType("success");
+        response.getWriter().println(jsonEntity.toJSON());
+    }
+
 
 
     /**

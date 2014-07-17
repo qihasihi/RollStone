@@ -317,6 +317,10 @@ public class TpCourseResource implements Serializable {
     public  void setDifftype(Integer difftype){
         this.getResourceinfo().setDifftype(difftype);
     }
+    public String getPath(){
+        return this.getResourceinfo().getPath();
+    }
+
 
 
     private List<Object> viewResdocumentSizeList = new ArrayList<Object>();
@@ -671,7 +675,7 @@ public class TpCourseResource implements Serializable {
     public String getSuffixtype(){
         if(this.getResourseType()=="jpeg"){
             return "ico_jpg1";
-        }else if(this.getResourseType()=="video"){
+        }else if(this.getResourseType()=="video"&&(this.getDifftype()==null||this.getDifftype()!=1)){
             return "ico_mp41";
         }else if(this.getResourseType()=="mp3"){
             return "ico_mp31";
@@ -696,6 +700,8 @@ public class TpCourseResource implements Serializable {
             return "ico_wps1";
         }else if(this.getResourseType()=="swf"){
             return "ico_swf1";
+        }else if(this.getDifftype()!=null&&this.getDifftype()==1){
+            return "ico_wsp1";
         }else{
             return "ico_other1";
         }

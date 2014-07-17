@@ -15,6 +15,25 @@ public class PaperInfo implements Serializable {
     private java.lang.String papername;
     private Float score;
     private Long parentpaperid;
+    private Object subjectivenum;
+    private Object objectivenum;
+
+    public Object getObjectivenum() {
+        return objectivenum;
+    }
+
+    public void setObjectivenum(Object objectivenum) {
+        this.objectivenum = objectivenum;
+    }
+
+    public Object getSubjectivenum() {
+
+        return subjectivenum;
+    }
+
+    public void setSubjectivenum(Object subjectivenum) {
+        this.subjectivenum = subjectivenum;
+    }
 
     public Long getParentpaperid() {
         return parentpaperid;

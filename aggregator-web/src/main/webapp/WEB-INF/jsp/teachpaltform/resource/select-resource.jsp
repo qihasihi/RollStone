@@ -140,13 +140,44 @@
             }
             window.close();
         }
+
+        function showLi(){
+            $("li").filter(function(){return this.id.indexOf('li_')!=-1}).show();
+        }
     </script>
 
 
 </head>
 <body>
 <div class="subpage_head"><span class="ico55"></span><strong>添加任务—选择微视频</strong></div>
-<div class="content1 font-black">
+<div class="content2">
+    <div class="jxxt_zhuanti_rw_add p_t_20">
+        <ul class="gqkt font-black">
+            <c:if test="${!empty resList}">
+                <c:forEach    items="${resList}" var="r" varStatus="idx" >
+                    <c:if test="${idx.index>12}">
+                        <li id="li_${r.resid}" style="display: none;">
+                    </c:if>
+
+                    <c:if test="${idx.index<=12}">
+                        <li>
+                    </c:if>
+                    <a href="#"  class="kapian"><p><img src="<%=fileSystemIpPort%>${r.resid>0?'clouduploadfile':'/uploadfile/'}${r.path}/001${r.filesuffixname}.pre.jpg" width="215" height="122"></p>
+                        <p class="text">${r.realname}&nbsp;&nbsp;${r.resname}</p></a>
+                        <p class="pic"><a class="ico51" href="javascript:sub_data('${r.resid}')" title="发任务"></a></p>
+                    </li>
+
+                </c:forEach>
+            </c:if>
+        </ul>
+        <c:if test="${fn:length(resList)>12}">
+            <p class="font-darkblue t_c clearit"><a href="javascript:showLi();" ><span class="ico49a"></span>查看更多微视频</a></p>
+        </c:if>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="content1 font-black" style="display: none;">
 
     <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
         <!--<li><a href="1" target="_blank">
@@ -164,11 +195,13 @@
         </c:if>
 
     </ul>
-</div>
 
-<form id="pListForm" name="pListForm" style="display: none;">
-    <p class="Mt20" id="pListaddress" align="center"></p>
-</form>
+
+
+    <form id="pListForm" name="pListForm" style="display: none;">
+        <p class="Mt20" id="pListaddress" align="center"></p>
+    </form>
+</div>
 
 <%@include file="/util/foot.jsp" %>
 </body>

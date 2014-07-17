@@ -300,14 +300,38 @@
             $("#sp_download").html('<a class="ico59" title="下载" href="javascript:resourceDownLoadFile(\'' + resid + '\',\'' + fname + '\',1)"></a>');
             //资源详情
             load_resdetail(resid);
+            loadRelatePaper(resid);
 
         }
+
+
+        function loadRelatePaper(resid){
+            if(isNaN(resid))
+                return;
+            $.ajax({
+                url:'paperques?m=loadRelatePaper',
+                type:'POST',
+                data:{resid:resid,courseid:courseid},
+                dataType:'json',
+                error:function(){alert("网络异常")},
+                success:function(rps){
+                    if(rps.type=="error"){
+                        alert(rps.msg);
+                    }else{
+                        var h='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>'+rps.objList[0].papername+'</a>';
+                        $("#relate_paper").html(h);
+                    }
+                }
+            });
+        }
+
         </script>
 	</head>
     <div class="content2">
             <div class="jxxt_zhuanti_zy_layout">
                 <div class="jxxt_zhuanti_zy_layoutR" >
                   <div id="dv_init">
+                    <h2 id="relate_paper"><!--<a href="1" class="font-blue"><span class="ico83"></span>关联试卷</a>--></h2>
                     <h1 id="h1_resname"></h1><h1 style="color: #0000ff" id="h1_promt"></h1>
                     <div class="right">
                         <div id="dv_res_detail">

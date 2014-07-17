@@ -25,6 +25,7 @@
                 case  2: url='teachercourse?toTeacherIdx&courseid='+courseid;break;
                 case  3: url='teachercourse?m=toQuestionList&courseid='+courseid;break;
                 case  4: url='tptopic?m=courseDetailIdx&courseid='+courseid;break;
+                case  5: url='teachercourse?toPaperList&courseid='+courseid;break;
             }
             $("li[name='li_nav']").each(function(idx,itm){
                 $(itm).bind("click",function(){
@@ -52,6 +53,7 @@
         <li name="li_nav"><a href="javascript:loadDetial(2)">专题资源</a></li>
         <li name="li_nav"><a href="javascript:loadDetial(4)">互动空间</a></li>
         <li name="li_nav"><a href="javascript:loadDetial(3)">试&nbsp;&nbsp;题</a></li>
+        <li name="li_nav"><a href="javascript:loadDetial(5)">试&nbsp;&nbsp;卷</a></li>
     </ul>
 </div>
     <div id="dv_course_element">

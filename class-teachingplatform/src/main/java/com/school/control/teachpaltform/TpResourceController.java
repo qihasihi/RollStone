@@ -16,6 +16,10 @@ import com.school.entity.*;
 import com.school.entity.resource.AccessInfo;
 import com.school.entity.resource.StoreInfo;
 import com.school.entity.teachpaltform.*;
+import com.school.entity.teachpaltform.paper.MicVideoPaperInfo;
+import com.school.entity.teachpaltform.paper.PaperInfo;
+import com.school.entity.teachpaltform.paper.PaperQuestion;
+import com.school.entity.teachpaltform.paper.TpCoursePaper;
 import com.school.manager.DictionaryManager;
 import com.school.manager.GradeManager;
 import com.school.manager.StudentManager;
@@ -28,10 +32,16 @@ import com.school.manager.inter.resource.IAccessManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.resource.IStoreManager;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.paper.IMicVideoPaperManager;
+import com.school.manager.inter.teachpaltform.paper.IPaperManager;
+import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
 import com.school.manager.resource.AccessManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.resource.StoreManager;
 import com.school.manager.teachpaltform.*;
+import com.school.manager.teachpaltform.paper.MicVideoPaperManager;
+import com.school.manager.teachpaltform.paper.PaperManager;
+import com.school.manager.teachpaltform.paper.PaperQuestionManager;
 import com.school.util.MD5_NEW;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -69,6 +79,10 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     private IAccessManager accessManager;
     private IStoreManager storeManager;
     private ITpCourseRelatedManager tpCourseRelatedManager;
+    private IMicVideoPaperManager micVideoPaperManager;
+    private IPaperQuestionManager paperQuestionManager;
+    private IPaperManager paperManager;
+    private IQuestionOptionManager questionOptionManager;
     public TpResourceController(){
         this.tpCourseManager=this.getManager(TpCourseManager.class);
         this.tpOperateManager=this.getManager(TpOperateManager.class);
@@ -88,6 +102,10 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         this.accessManager=this.getManager(AccessManager.class);
         this.storeManager=this.getManager(StoreManager.class);
         this.tpCourseRelatedManager=this.getManager(TpCourseRelatedManager.class);
+        this.micVideoPaperManager=this.getManager(MicVideoPaperManager.class);
+        this.paperManager=this.getManager(PaperManager.class);
+        this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
+        this.questionOptionManager=this.getManager(QuestionOptionManager.class);
     }
 
     /**
@@ -2473,9 +2491,57 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(je.getAlertMsgAndCloseWin());return null;
         }
+
+        //得到相关的试卷ID
+        MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
+        mvpaper.setMicvideoid(resList.get(0).getResid());
+        List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,null);
+        if(mvpaperList==null||mvpaperList.size()<1||mvpaperList.get(0)==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(je.getAlertMsgAndCloseWin());return null;
+        }
+
+        PaperInfo pp=new PaperInfo();
+        pp.setPaperid(mvpaperList.get(0).getPaperid());
+        List<PaperInfo>tpCoursePaperList=this.paperManager.getList(pp, null);
+        if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
+            je.setMsg("抱歉该试卷已不存在!");
+            je.getAlertMsgAndBack();
+            return null;
+        }
+
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(mvpaperList.get(0).getPaperid());
+        PageResult p=new PageResult();
+        p.setOrderBy("u.order_idx");
+        p.setPageNo(0);
+        p.setPageSize(0);
+        List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+        List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+        if(pqList!=null&&pqList.size()>0){
+            for (PaperQuestion ques:pqList){
+                if(ques.getQuestiontype()==3||ques.getQuestiontype()==4){
+                    QuestionOption questionOption=new QuestionOption();
+                    questionOption.setQuestionid(ques.getQuestionid());
+                    PageResult pchild = new PageResult();
+                    pchild.setPageNo(0);
+                    pchild.setPageSize(0);
+                    pchild.setOrderBy("u.option_type");
+                    List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,pchild);
+                    ques.setQuestionOption(questionOptionList);
+                }
+                tmpList.add(ques);
+            }
+        }
+
+        request.setAttribute("pqList", tmpList);
+        request.setAttribute("paper", tpCoursePaperList.get(0));
+
+
         mp.put("resObj", resList.get(0));
-        if(resList!=null&&resList.size()>0)
-            mp.put("resObj",resList.get(0));
+        mp.put("paperid", mvpaperList.get(0).getPaperid().toString());
+        mp.put("courseid",courseid);
+
         return new ModelAndView("/teachpaltform/resource/mic-view-detail",mp);
     }
 

@@ -177,6 +177,7 @@ public class PaperController extends BaseController<PaperInfo>{
         JsonEntity je= new JsonEntity();
         String courseid=request.getParameter("courseid");
         String paperid=request.getParameter("paperid");
+        String mic=request.getParameter("mic");
         if(courseid==null||courseid.trim().length()<1||paperid==null||paperid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.getAlertMsgAndBack());
@@ -184,22 +185,34 @@ public class PaperController extends BaseController<PaperInfo>{
         }
         TpCourseInfo tc=new TpCourseInfo();
         tc.setCourseid(Long.parseLong(courseid));
-        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getList(tc, null);
         if(teacherCourseList==null||teacherCourseList.size()<1){
             je.setMsg("找不到指定课题!");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-
-        TpCoursePaper t=new TpCoursePaper();
-        t.setCourseid(Long.parseLong(courseid));
-        t.setPaperid(Long.parseLong(paperid));
-        List<TpCoursePaper>tpCoursePaperList=this.tpCoursePaperManager.getList(t, null);
-        if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
-            je.setMsg("抱歉该试卷已不存在!");
-            je.getAlertMsgAndBack();
-            return null;
+        List tpCoursePaperList=null;
+        if(mic==null){
+            TpCoursePaper t=new TpCoursePaper();
+            t.setCourseid(Long.parseLong(courseid));
+            t.setPaperid(Long.parseLong(paperid));
+            tpCoursePaperList=this.tpCoursePaperManager.getList(t, null);
+            if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
+                je.setMsg("抱歉该试卷已不存在!");
+                je.getAlertMsgAndBack();
+                return null;
+            }
+        }else{
+            PaperInfo pp=new PaperInfo();
+            pp.setPaperid(Long.parseLong(paperid));
+            tpCoursePaperList=this.paperManager.getList(pp, null);
+            if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
+                je.setMsg("抱歉该试卷已不存在!");
+                je.getAlertMsgAndBack();
+                return null;
+            }
         }
+
         PaperQuestion pq=new PaperQuestion();
         pq.setPaperid(Long.parseLong(paperid));
         PageResult p=new PageResult();

@@ -110,6 +110,12 @@ public class TpResourceCollect  implements java.io.Serializable{
     public void setFilesize(Long filesize){
     	this.getResourceinfo().setFilesize(filesize);
     }
+    public Integer getDifftype(){
+        return this.getResourceinfo().getDifftype();
+    }
+    public  void setDifftype(Integer difftype){
+        this.getResourceinfo().setDifftype(difftype);
+    }
 
 
     public String getMd5filename(){
@@ -162,7 +168,7 @@ public class TpResourceCollect  implements java.io.Serializable{
     public String getSuffixtype(){
         if(this.getResourseType()=="jpeg"){
             return "ico_jpg1";
-        }else if(this.getResourseType()=="video"){
+        }else if(this.getResourseType()=="video"&&(this.getDifftype()==null||this.getDifftype()!=1)){
             return "ico_mp41";
         }else if(this.getResourseType()=="mp3"){
             return "ico_mp31";
@@ -187,6 +193,8 @@ public class TpResourceCollect  implements java.io.Serializable{
             return "ico_wps1";
         }else if(this.getResourseType()=="swf"){
             return "ico_swf1";
+        }else if(this.getDifftype()!=null&&this.getDifftype()==1){
+            return "ico_wsp1";
         }else{
             return "ico_other1";
         }

@@ -2982,10 +2982,25 @@ public class TaskController extends BaseController<TpTaskInfo>{
         response.getWriter().print(je.toJSON());
     }
 
-    /**
-     * 查询学生试卷任务完成情况
-     * @throws Exception
-     */
+    @RequestMapping(params="loadStuMicQuesPerformance",method=RequestMethod.POST)
+    public void loadStuMicQuesPerformance(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String questionid=request.getParameter("questionid");
+        String type=request.getParameter("type"); //1:主观 2:客观
+        if(courseid==null||courseid.trim().length()<1
+                ||questionid==null||questionid.trim().length()<1
+                ||type==null||type.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+    }
+        /**
+         * 查询学生试卷任务完成情况
+         * @throws Exception
+         */
     @RequestMapping(params="loadPaperPerformance",method=RequestMethod.POST)
     public void loadPaperPerformance(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();

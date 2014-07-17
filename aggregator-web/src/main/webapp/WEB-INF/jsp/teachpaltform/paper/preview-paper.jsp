@@ -97,8 +97,9 @@ function preeDoPageSub(pObj){
 <div class="content2">
     <div class="jxxt_zhuanti_shijuan_add font-black public_input">
         <p class="p_b_10 font-gray">${coursename}</p>
-        <p class="title"><span class="f_right"><strong>主观题：<span class="font-blue">${paper.subjectivenum}</span></strong>&nbsp;&nbsp;&nbsp;&nbsp;<strong>客观题：<span class="font-blue">${paper.objectivenum}</span></strong></span><strong>${paper.papername }</strong></p>
-
+        <c:if test="${!empty paper.subjectivenum and !empty paper.objectivenum}">
+            <p class="title"><span class="f_right"><strong>主观题：<span class="font-blue">${paper.subjectivenum}</span></strong>&nbsp;&nbsp;&nbsp;&nbsp;<strong>客观题：<span class="font-blue">${paper.objectivenum}</span></strong></span><strong>${paper.papername }</strong></p>
+        </c:if>
         <c:if test="${!empty pqList}">
             <c:forEach items="${pqList}" var="pq">
                 <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}">
