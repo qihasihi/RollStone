@@ -7,6 +7,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
+<%
+
+%>
 <html>
 <head>
     <script type="text/javascript">
@@ -54,10 +57,14 @@
                 }else if(qtObj.val().Trim()==3){
                     $("input[name='rdo_answer"+t+"']").filter(function(){return this.value.Trim()==t1}).attr("checked",true);
                 }else if(qtObj.val().Trim()==4){
-                   var tv2=t1.split("|");
+                    var splitChar="|";
+                    if(t1.indexOf("%7C")!=-1)
+                        splitChar="%7C";
+                   var tv2=t1.split(splitChar);
+
                     $("input[name='ckx_answer"+t+"']").each(function(d,c){
                         for(var l=0;l<tv2.length;l++){
-                            if(tv2[l]==c.value.split('|')[0]){
+                            if(tv2[l]==c.value.split("|")[0]){
                                 c.checked=true;
                             }
                         }

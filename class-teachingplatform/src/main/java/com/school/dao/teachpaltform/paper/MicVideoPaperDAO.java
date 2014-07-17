@@ -62,21 +62,17 @@ public class MicVideoPaperDAO extends CommonDAO<MicVideoPaperInfo> implements IM
 			objList.add(micvideopaperinfo.getPaperid());
 		} else
 			sqlbuilder.append("null,");
-		if (micvideopaperinfo.getMicvideoid() != null) {
-			sqlbuilder.append("?,");
-			objList.add(micvideopaperinfo.getMicvideoid());
-		} else
-			sqlbuilder.append("null,");
+
 		if (micvideopaperinfo.getRef() != null) {
 			sqlbuilder.append("?,");
 			objList.add(micvideopaperinfo.getRef());
 		} else
 			sqlbuilder.append("null,");
-		if (micvideopaperinfo.getCtime() != null) {
-			sqlbuilder.append("?,");
-			objList.add(micvideopaperinfo.getCtime());
-		} else
-			sqlbuilder.append("null,");
+        if (micvideopaperinfo.getMicvideoid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(micvideopaperinfo.getMicvideoid());
+        } else
+            sqlbuilder.append("null,");
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objList.add(presult.getPageNo());
@@ -105,26 +101,22 @@ public class MicVideoPaperDAO extends CommonDAO<MicVideoPaperInfo> implements IM
 			return null;
 		sqlbuilder.append("{CALL j_mic_video_paper_proc_add(");
 		List<Object>objList = new ArrayList<Object>();
-			if (micvideopaperinfo.getPaperid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getPaperid());
-			} else
-				sqlbuilder.append("null,");
-			if (micvideopaperinfo.getMicvideoid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getMicvideoid());
-			} else
-				sqlbuilder.append("null,");
-			if (micvideopaperinfo.getRef() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getRef());
-			} else
-				sqlbuilder.append("null,");
-			if (micvideopaperinfo.getCtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getCtime());
-			} else
-				sqlbuilder.append("null,");
+        if (micvideopaperinfo.getPaperid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(micvideopaperinfo.getPaperid());
+        } else
+            sqlbuilder.append("null,");
+
+        if (micvideopaperinfo.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(micvideopaperinfo.getRef());
+        } else
+            sqlbuilder.append("null,");
+        if (micvideopaperinfo.getMicvideoid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(micvideopaperinfo.getMicvideoid());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -134,26 +126,22 @@ public class MicVideoPaperDAO extends CommonDAO<MicVideoPaperInfo> implements IM
 			return null;
 		sqlbuilder.append("{CALL j_mic_video_paper_proc_delete(");
 		List<Object>objList = new ArrayList<Object>();
-			if (micvideopaperinfo.getPaperid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getPaperid());
-			} else
-				sqlbuilder.append("null,");
-			if (micvideopaperinfo.getMicvideoid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getMicvideoid());
-			} else
-				sqlbuilder.append("null,");
-			if (micvideopaperinfo.getRef() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getRef());
-			} else
-				sqlbuilder.append("null,");
-			if (micvideopaperinfo.getCtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getCtime());
-			} else
-				sqlbuilder.append("null,");
+        if (micvideopaperinfo.getPaperid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(micvideopaperinfo.getPaperid());
+        } else
+            sqlbuilder.append("null,");
+
+        if (micvideopaperinfo.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(micvideopaperinfo.getRef());
+        } else
+            sqlbuilder.append("null,");
+        if (micvideopaperinfo.getMicvideoid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(micvideopaperinfo.getMicvideoid());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -163,33 +151,23 @@ public class MicVideoPaperDAO extends CommonDAO<MicVideoPaperInfo> implements IM
 			return null;
 		sqlbuilder.append("{CALL j_mic_video_paper_proc_update(");
 		List<Object>objList = new ArrayList<Object>();
-			if (micvideopaperinfo.getPaperid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getPaperid());
-			} else
-				sqlbuilder.append("null,");
-			if (micvideopaperinfo.getMicvideoid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getMicvideoid());
-			} else
-				sqlbuilder.append("null,");
-			if (micvideopaperinfo.getRef() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getRef());
-			} else
-				sqlbuilder.append("null,");
-			if (micvideopaperinfo.getCtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(micvideopaperinfo.getCtime());
-			} else
-				sqlbuilder.append("null,");
+        if (micvideopaperinfo.getPaperid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(micvideopaperinfo.getPaperid());
+        } else
+            sqlbuilder.append("null,");
+
+        if (micvideopaperinfo.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(micvideopaperinfo.getRef());
+        } else
+            sqlbuilder.append("null,");
+        if (micvideopaperinfo.getMicvideoid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(micvideopaperinfo.getMicvideoid());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList; 
 	}
-
-	public String getNextId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

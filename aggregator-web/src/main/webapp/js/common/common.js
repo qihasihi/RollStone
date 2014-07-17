@@ -43,7 +43,7 @@ var tarray=new Array();
  * @param idxstate	第几个视频资源
  * @return
  */
-function videoConvertProgress(resid,fname,md5fname,idxstate,path,baseIpPort,imgpath,width,height){
+function videoConvertProgress(resid,fname,md5fname,idxstate,path,baseIpPort,imgpath,width,height,isshowBar,playEndMethod){
     tarray[idxstate]=null;
     if(typeof(resid)!="undefined"&&resid!=null&&
         typeof(fname)!="undefined"&&fname!=null){
@@ -69,7 +69,7 @@ function videoConvertProgress(resid,fname,md5fname,idxstate,path,baseIpPort,imgp
                         var tmp="uploadfile/";
                         if(resid>0)
                             tmp="clouduploadfile/";
-                        loadSWFPlayer(baseIpPort+tmp+path+"/"+fname+".mp4",'div_show'+idxstate,imgpath,resid,width,height);
+                        loadSWFPlayer(baseIpPort+tmp+path+"/"+fname+".mp4",'div_show'+idxstate,imgpath,resid,width,height,isshowBar,playEndMethod);
                         return;
                         //});
 
@@ -97,7 +97,6 @@ function videoConvertProgress(resid,fname,md5fname,idxstate,path,baseIpPort,imgp
         });
     }
 }
-
 /**
  * 加载SWF视频播放器
  * @param resmd5id    RES_ID标识的MD5加密
@@ -105,7 +104,7 @@ function videoConvertProgress(resid,fname,md5fname,idxstate,path,baseIpPort,imgp
  * @param playeraddressid 播放器的位置
  * @return
  */
-function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height){
+function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,isshowBar,playEndMethod){
     if(typeof(width)=="undefined"&&typeof(height)=="undefined"){
         width=435;
         height:270;
@@ -119,9 +118,9 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height){
         'height': height,
         //'playlistfile': "/ett20/studyrvice_class/free/toxml.jsp?resourceID=<%=resourceID%>&frame=1",
         'file':  filepath,
-        'primary': 'flash',
+     //   'primary': 'flash',
         'controlbar':'over',
-        'controlbar.idlehide':'true',
+        'controlbar.idlehide':'false',
         'modes': [
             {type: 'flash', src: 'js/common/videoPlayer/new/jwplayer.flash.swf', //
                 config: {
@@ -139,10 +138,18 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height){
 //        }
     };
 
+    if(typeof(isshowBar)!="undefined"&&!isshowBar){
+        jwplayerSetup.controls=false;
+    }
+
+
     if(typeof(imagepath)!="undefined"&&imagepath.Trim().length>0)
         jwplayerSetup.image=imagepath;
-    jwplayer(playeraddressid).setup(jwplayerSetup);
-    if(typeof(resid)!="undefined"){
+    var returnPobj= jwplayer(playeraddressid).setup(jwplayerSetup);
+    if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+        jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
+
+     if(typeof(resid)!="undefined"){
         var suffixName=filepath;
         if(filepath.lastIndexOf(".mp4")!=-1){
             suffixName=filepath.substring(filepath.lastIndexOf(".mp4",filepath.lastIndexOf("/")),filepath.lastIndexOf(".mp4"));
@@ -160,6 +167,7 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height){
             );
         }
     }
+    return returnPobj;
 }
 
 function swfobjPlayer(path, playeraddressid,width,height, isshow,imagepath) {

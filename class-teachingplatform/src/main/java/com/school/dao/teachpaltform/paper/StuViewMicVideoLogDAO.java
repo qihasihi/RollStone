@@ -57,26 +57,22 @@ public class StuViewMicVideoLogDAO extends CommonDAO<StuViewMicVideoLog> impleme
 		StringBuilder sqlbuilder = new StringBuilder();
 		sqlbuilder.append("{CALL stu_view_mic_video_logs_proc_split(");
 		List<Object> objList=new ArrayList<Object>();
+        if (stuviewmicvideolog.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getRef());
+        } else
+            sqlbuilder.append("null,");
+        if (stuviewmicvideolog.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getUserid());
+        } else
+            sqlbuilder.append("null,");
 		if (stuviewmicvideolog.getMicvideoid() != null) {
 			sqlbuilder.append("?,");
 			objList.add(stuviewmicvideolog.getMicvideoid());
 		} else
 			sqlbuilder.append("null,");
-		if (stuviewmicvideolog.getRef() != null) {
-			sqlbuilder.append("?,");
-			objList.add(stuviewmicvideolog.getRef());
-		} else
-			sqlbuilder.append("null,");
-		if (stuviewmicvideolog.getCtime() != null) {
-			sqlbuilder.append("?,");
-			objList.add(stuviewmicvideolog.getCtime());
-		} else
-			sqlbuilder.append("null,");
-		if (stuviewmicvideolog.getUserid() != null) {
-			sqlbuilder.append("?,");
-			objList.add(stuviewmicvideolog.getUserid());
-		} else
-			sqlbuilder.append("null,");
+
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objList.add(presult.getPageNo());
@@ -105,26 +101,25 @@ public class StuViewMicVideoLogDAO extends CommonDAO<StuViewMicVideoLog> impleme
 			return null;
 		sqlbuilder.append("{CALL stu_view_mic_video_logs_proc_add(");
 		List<Object>objList = new ArrayList<Object>();
-			if (stuviewmicvideolog.getMicvideoid() != null) {
+
+
+        if (stuviewmicvideolog.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getRef());
+        } else
+            sqlbuilder.append("null,");
+
+        if (stuviewmicvideolog.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getUserid());
+        } else
+            sqlbuilder.append("null,");
+	    if (stuviewmicvideolog.getMicvideoid() != null) {
 				sqlbuilder.append("?,");
 				objList.add(stuviewmicvideolog.getMicvideoid());
-			} else
+		} else
 				sqlbuilder.append("null,");
-			if (stuviewmicvideolog.getRef() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getRef());
-			} else
-				sqlbuilder.append("null,");
-			if (stuviewmicvideolog.getCtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getCtime());
-			} else
-				sqlbuilder.append("null,");
-			if (stuviewmicvideolog.getUserid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getUserid());
-			} else
-				sqlbuilder.append("null,");
+
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -134,26 +129,22 @@ public class StuViewMicVideoLogDAO extends CommonDAO<StuViewMicVideoLog> impleme
 			return null;
 		sqlbuilder.append("{CALL stu_view_mic_video_logs_proc_delete(");
 		List<Object>objList = new ArrayList<Object>();
-			if (stuviewmicvideolog.getMicvideoid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getMicvideoid());
-			} else
-				sqlbuilder.append("null,");
-			if (stuviewmicvideolog.getRef() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getRef());
-			} else
-				sqlbuilder.append("null,");
-			if (stuviewmicvideolog.getCtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getCtime());
-			} else
-				sqlbuilder.append("null,");
-			if (stuviewmicvideolog.getUserid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getUserid());
-			} else
-				sqlbuilder.append("null,");
+        if (stuviewmicvideolog.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getRef());
+        } else
+            sqlbuilder.append("null,");
+
+        if (stuviewmicvideolog.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getUserid());
+        } else
+            sqlbuilder.append("null,");
+        if (stuviewmicvideolog.getMicvideoid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getMicvideoid());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -163,26 +154,22 @@ public class StuViewMicVideoLogDAO extends CommonDAO<StuViewMicVideoLog> impleme
 			return null;
 		sqlbuilder.append("{CALL stu_view_mic_video_logs_proc_update(");
 		List<Object>objList = new ArrayList<Object>();
-			if (stuviewmicvideolog.getMicvideoid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getMicvideoid());
-			} else
-				sqlbuilder.append("null,");
-			if (stuviewmicvideolog.getRef() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getRef());
-			} else
-				sqlbuilder.append("null,");
-			if (stuviewmicvideolog.getCtime() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getCtime());
-			} else
-				sqlbuilder.append("null,");
-			if (stuviewmicvideolog.getUserid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getUserid());
-			} else
-				sqlbuilder.append("null,");
+        if (stuviewmicvideolog.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getRef());
+        } else
+            sqlbuilder.append("null,");
+
+        if (stuviewmicvideolog.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getUserid());
+        } else
+            sqlbuilder.append("null,");
+        if (stuviewmicvideolog.getMicvideoid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getMicvideoid());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList; 
 	}

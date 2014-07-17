@@ -3,6 +3,7 @@ package com.school.control.teachpaltform.paper;
 import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
 import com.school.entity.DictionaryInfo;
+import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
@@ -15,10 +16,12 @@ import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.ISmsManager;
 import com.school.manager.inter.IUserManager;
+import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.*;
+import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
@@ -76,6 +79,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     private ITpCoursePaperManager tpCoursePaperManager;
     private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
     private IStuPaperLogsManager stuPaperLogsManager;
+    private IResourceManager resourceManager;
+    private IMicVideoPaperManager micVideoPaperManager;
+    private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
     public PaperQuestionController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -104,6 +110,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
         this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
         this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
+        this.resourceManager=this.getManager(ResourceManager.class);
+        this.micVideoPaperManager=this.getManager(MicVideoPaperManager.class);
+        this.stuViewMicVideoLogManager=this.getManager(StuViewMicVideoLogManager.class);
     }
     /**
      * 根据课题ID，加载试卷列表
@@ -3201,15 +3210,15 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
 
     /**
-     * 进入测评系统刚开测试。
+     * 进入测试页面
      * @param request
      * @param response
      * @param mp
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=testPaper",method = RequestMethod.GET)
-    public ModelAndView testPaper(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+    @RequestMapping(params = "m=toTestPaper",method=RequestMethod.GET)
+    public ModelAndView toTestPaper(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         String paperid=request.getParameter("paperid");
         String courseid=request.getParameter("courseid");
         String taskid=request.getParameter("taskid");
@@ -3218,6 +3227,92 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+
+        //验证任务是否存在
+        TpTaskInfo tpTask=new TpTaskInfo();
+        tpTask.setTaskid(Long.parseLong(taskid));
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tpTask,presult);
+        if(tkList==null||tkList.size()<1||tkList.get(0)==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        //验证任务是否在相应时间范围内
+        tpTask=tkList.get(0);
+        if(tpTask.getTasktype().intValue()==6){//6：微视频
+            //得到taskvalueid 得到相关资源
+            ResourceInfo rtmp=new ResourceInfo();
+            rtmp.setResid(Long.parseLong(tpTask.getTaskvalueid().toString()));
+            List<ResourceInfo> resList=this.resourceManager.getList(rtmp,presult);
+            //验证微视频是否存在相关数据
+            if(resList==null||resList.size()<1||resList.get(0)==null){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            mp.put("resObj", resList.get(0));
+            //得到相关的试卷ID
+            MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
+            mvpaper.setMicvideoid(resList.get(0).getResid());
+            List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,presult);
+            if(mvpaperList==null||mvpaperList.size()<1||mvpaperList.get(0)==null){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            paperid=mvpaperList.get(0).getPaperid().toString();
+            //得到学生是否已经有过相关查看记录
+            StuViewMicVideoLog svm=new StuViewMicVideoLog();
+            svm.setUserid(this.logined(request).getUserid());
+            svm.setMicvideoid(resList.get(0).getResid());
+            List<StuViewMicVideoLog> stuViewMicList=this.stuViewMicVideoLogManager.getList(svm,presult);
+            if(stuViewMicList!=null&&stuViewMicList.size()>0){
+                mp.put("isViewVideo",1);
+            }
+            //验证是否已经交卷
+            StuPaperLogs splog=new StuPaperLogs();
+            splog.setUserid(this.logined(request).getUserid());
+            splog.setPaperid(Long.parseLong(paperid));
+            splog.setIsinpaper(2);
+            PageResult pr=new PageResult();
+            pr.setPageSize(1);
+            List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,pr);
+            if(spList!=null&&spList.size()>0){ //已经交卷，不能再进入
+                response.sendRedirect("paperques?m=toTestDetail&paperid="+paperid);return null;
+            }
+
+
+            //如果是微视频测试，则进入相关测试页面
+            mp.put("taskid",taskid);
+            mp.put("courseid",courseid);
+            mp.put("paperid",paperid);
+            return new ModelAndView("/teachpaltform/paper/stuSmailViewTest",mp);
+        }
+        //重定向，但不换地址
+        request.getRequestDispatcher("paperques?m=testPaper&paperid="+paperid+"&courseid="+courseid+"taskid="+taskid).forward(request,response);
+        return null; 
+    }
+
+    /**
+     * 进入测评系统开测试。
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=testPaper",method = RequestMethod.GET)
+    public ModelAndView testPaper(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        //最后要跳入的页面
+        String toPage="stuTest";
+        String paperid=request.getParameter("paperid");
+        String courseid=request.getParameter("courseid");
+        String taskid=request.getParameter("taskid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(paperid==null||paperid.trim().length()<1||courseid==null||courseid.trim().length()<1||taskid==null||taskid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+
         //验证paperid是否存在
         PaperInfo paperInfo=new PaperInfo();
         paperInfo.setPaperid(Long.parseLong(paperid.trim()));
@@ -3258,7 +3353,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         mp.put("quesList",pqList);
         mp.put("quesSize",pqList.size());
         mp.put("paperid",paperid);
-        return new ModelAndView("/teachpaltform/paper/stuTest",mp);
+        return new ModelAndView("/teachpaltform/paper/"+toPage,mp);
     }
 
     /**
@@ -3556,6 +3651,39 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         }else{
             jsonEntity.setMsg("交卷失败!原因：暂未发现您要提交的数据!");
         }
+        response.getWriter().println(jsonEntity.toJSON());
+    }
+
+    /**
+     * 保存学生与微视频的记录
+     * @param request
+     * @param response
+     */
+    @RequestMapping(params="m=saveStuMic",method=RequestMethod.POST)
+    public void doSaveStuMicVideo(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JsonEntity jsonEntity=new JsonEntity();
+        //微视频的iD
+        String resid=request.getParameter("resid");
+        if(resid==null||resid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.toJSON());return;
+        }
+        StuViewMicVideoLog svmvlog=new StuViewMicVideoLog();
+        svmvlog.setMicvideoid(Long.parseLong(resid.trim()));
+        svmvlog.setUserid(this.logined(request).getUserid());
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        //验证是否已经查看过。
+        List<StuViewMicVideoLog> stuViewMList=this.stuViewMicVideoLogManager.getList(svmvlog,presult);
+        if(stuViewMList==null||stuViewMList.size()<1){
+            //如果没有，则添加
+            if(this.stuViewMicVideoLogManager.doSave(svmvlog))
+                jsonEntity.setType("success");
+            else
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+
+        }else
+            jsonEntity.setType("success");
         response.getWriter().println(jsonEntity.toJSON());
     }
 
