@@ -216,7 +216,7 @@
             <tr>
                 <th>&nbsp;&nbsp;任务描述：</th>
                 <td>
-                    <textarea id="task_remark" name="task_remark" class="ckeditor" class="h90 w600"></textarea>
+                    <textarea id="task_remark" name="task_remark"  class="h90 w600"></textarea>
                 </td>
             </tr>
 

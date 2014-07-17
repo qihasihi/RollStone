@@ -113,6 +113,11 @@ public class TpCourseResourceDAO extends CommonDAO<TpCourseResource> implements 
             objList.add(tpcourseresource.getDifftype());
         } else
             sqlbuilder.append("null,");
+        if (tpcourseresource.getSeldatetype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getSeldatetype());
+        } else
+            sqlbuilder.append("null,");
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");

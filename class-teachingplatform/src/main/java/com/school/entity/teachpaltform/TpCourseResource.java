@@ -29,6 +29,15 @@ public class TpCourseResource implements Serializable {
 
     private Long currentcourseid;   //查询条件：通过专题资源、资源库查找资源使用
     private Object resflag;         //显示条件与currentcourseid配合使用   大于0表示已存在于当前专题
+    private Integer seldatetype;    //查询日期条件
+
+    public Integer getSeldatetype() {
+        return seldatetype;
+    }
+
+    public void setSeldatetype(Integer seldatetype) {
+        this.seldatetype = seldatetype;
+    }
 
     public Long getCurrentcourseid() {
         return currentcourseid;

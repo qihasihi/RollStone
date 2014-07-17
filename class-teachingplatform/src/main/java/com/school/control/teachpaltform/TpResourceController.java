@@ -2255,6 +2255,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         TpCourseResource tpCourseResource=new TpCourseResource();
         tpCourseResource.setCourseid(Long.parseLong(courseid));
         tpCourseResource.setLocalstatus(2); //已删除
+        tpCourseResource.setSeldatetype(1);//最近一个月的资源
         //tpCourseResource.setUserid(this.logined(request).getUserid());
         PageResult pageResult=this.getPageResultParameter(request);
         pageResult.setOrderBy(" aa.operate_time desc");
@@ -2311,6 +2312,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         TpCourseQuestion tpCourseQuestion=new TpCourseQuestion();
         tpCourseQuestion.setCourseid(Long.parseLong(courseid));
         tpCourseQuestion.setLocalstatus(2); //已删除
+        tpCourseQuestion.setSeldatetype(1);//最近1个月的
         PageResult pageResult=this.getPageResultParameter(request);
         pageResult.setOrderBy(" u.operate_time desc");
         List<TpCourseQuestion>tpCourseQuestionList=this.tpCourseQuestionManager.getList(tpCourseQuestion,pageResult);

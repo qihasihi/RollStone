@@ -21,6 +21,15 @@ public class TpCourseQuestion implements Serializable{
     private Integer gradeid;
     private Integer subjectid;
     private Integer materialid;
+    private Integer seldatetype;        //查询用 时间条件
+
+    public Integer getSeldatetype() {
+        return seldatetype;
+    }
+
+    public void setSeldatetype(Integer seldatetype) {
+        this.seldatetype = seldatetype;
+    }
 
     public Integer getGradeid() {
         return gradeid;

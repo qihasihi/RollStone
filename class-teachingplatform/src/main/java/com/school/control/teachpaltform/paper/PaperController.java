@@ -276,6 +276,7 @@ public class PaperController extends BaseController<PaperInfo>{
         TpCoursePaper coursePaper=new TpCoursePaper();
         coursePaper.setCourseid(Long.parseLong(courseid));
         coursePaper.setLocalstatus(2); //已删除
+        coursePaper.setSeldatetype(1);//最近一个月
         PageResult pageResult=this.getPageResultParameter(request);
         pageResult.setOrderBy(" u.m_time desc");
         List<TpCoursePaper>tpCoursePaperList=this.tpCoursePaperManager.getList(coursePaper,pageResult);

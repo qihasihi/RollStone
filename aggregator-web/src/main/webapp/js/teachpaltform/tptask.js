@@ -676,7 +676,8 @@ function doSubManageTask(taskid) {
     var timeType = $("input[name='time_rdo']:checked").val();
     var all_btime = $("#all_class_btime"), all_etime = $("#all_class_etime");
     //var taskname=$("#task_name");
-    var taskremark = CKEDITOR.instances["task_remark"].getData();
+    //var taskremark = CKEDITOR.instances["task_remark"].getData();
+    var taskremark=$("#task_remark").val();
     var criteriatype = $("input[name='ck_criteria']:checked");
     var groupvalidate = $("input[name='ck_group']");
     var grouparr = $("input[name='ck_group']:checked");

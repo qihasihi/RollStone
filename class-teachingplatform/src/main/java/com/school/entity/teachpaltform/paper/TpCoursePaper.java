@@ -33,6 +33,15 @@ public class TpCoursePaper {
     private Integer selecttype; //4:成卷 5:自主测试 6:微视频
 
     private Integer papertype;  //paperinfo papertype
+    private Integer seldatetype;    //查询用 时间条件
+
+    public Integer getSeldatetype() {
+        return seldatetype;
+    }
+
+    public void setSeldatetype(Integer seldatetype) {
+        this.seldatetype = seldatetype;
+    }
 
     public Integer getPapertype() {
         return papertype;
