@@ -6,6 +6,7 @@ import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
+import com.school.entity.teachpaltform.paper.MicVideoPaperInfo;
 import com.school.entity.teachpaltform.paper.PaperInfo;
 import com.school.entity.teachpaltform.paper.PaperQuestion;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
@@ -15,6 +16,7 @@ import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
+import com.school.manager.inter.teachpaltform.paper.IMicVideoPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
 import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
@@ -22,6 +24,7 @@ import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
+import com.school.manager.teachpaltform.paper.MicVideoPaperManager;
 import com.school.manager.teachpaltform.paper.PaperManager;
 import com.school.manager.teachpaltform.paper.PaperQuestionManager;
 import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
@@ -166,6 +169,9 @@ public class UpdateCourse extends TimerTask{
         ITpCoursePaperManager tpCoursePaperManager=(TpCoursePaperManager)SpringBeanUtil.getBean("tpCoursePaperManager");
         //试卷与试题连接
         IPaperQuestionManager paperQuestionManager=(PaperQuestionManager)SpringBeanUtil.getBean("paperQuestionManager");
+        //微视频与试卷关系
+        IMicVideoPaperManager micVideoPaperManager=(MicVideoPaperManager)SpringBeanUtil.getBean("micVideoPaperManager");
+
         //取出相关前100个文件记录，进行循环
         while(true){
             List<String> xmlPathList=new ArrayList<String>();
@@ -610,72 +616,149 @@ public class UpdateCourse extends TimerTask{
                                      objArrayList=new ArrayList<List<Object>>();
                                  }
                              }
+
+                             ///////////////////////////////////微视频表///////////////////////////
                              //微视频资源添加
-//                             List<ResourceInfo> resList=UpdateCourseUtil.getResourceByXml(tmp.getPath(),ctmp.getCourseid(),null,1);
-//                             if(resList!=null&&resList.size()>0){//执行
-//                                 for(ResourceInfo rsEntity:resList){
-//                                     sqlbuilder=new StringBuilder();
-//                                     //得到资源的同步语句
-//                                     objList=resourceManager.getSynchroSql(rsEntity,sqlbuilder);
-//                                     if(sqlbuilder!=null){
-//                                         objArrayList.add(objList);
-//                                         sqlArrayList.add(sqlbuilder.toString());
-//                                     }
-//                                     //得到附件
-//                                     topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(resList.get(0).getResid().toString());
-//                                     System.out.println("资源文件"+topath);
-//                                     if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,resList.get(0).getResid().toString(),key,1,topath,resList.get(0).getFilename(),null)){
-//                                         //文件失败
-//                                         System.out.println("资源文件下载失败!");istrue=false;break;
-//                                     }
-//                                     //得到该资源对应的问题
-//                                     //得到问题答案的SQL语句  difftype 1代表微视频问题
-//                                     UpdateCourseUtil.getQuestionByXml(tmp.getPath(),ctmp.getCourseid(),1);
-//
-//
-//
-//                                     List<QuestionOption> quesOptsList=UpdateCourseUtil.getQuestionOptsByXml(tmp.getPath(),ctmp.getCourseid(),null);
-//                                    if(quesOpt)
-//                                     //先删除,再添加
-//                                     sqlbuilder=new StringBuilder();
-//                                     QuestionOption delObj=new QuestionOption();
-//                                     delObj.setQuestionid(ques.getQuestionid());
-//                                     objList=questionOptionManager.getDeleteSql(delObj,sqlbuilder);
-//                                     if(sqlbuilder!=null){
-//                                         objArrayList.add(objList);
-//                                         sqlArrayList.add(sqlbuilder.toString());
-//                                     }
-//                                     for(QuestionOption option:quesOptsList){
-//                                         //得到问题答案的SQL语句
-//                                         sqlbuilder=new StringBuilder();
-//                                         objList=questionOptionManager.getSynchroSql(option,sqlbuilder);
-//                                         if(sqlbuilder!=null){
-//                                             objArrayList.add(objList);
-//                                             sqlArrayList.add(sqlbuilder.toString());
-//                                         }
-//
-//                                         //每条记录执行执行添加
-//                                         if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()&&sqlArrayList.size()==50){
-//                                             istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
-//                                             if(!istrue){
-//                                                 System.out.println("更新专题失败!记录日志");
-//                                                 break;
-//                                             }
-//                                             sqlArrayList=new ArrayList<String>();
-//                                             objArrayList=new ArrayList<List<Object>>();
-//                                         }
-//
-//                                         topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(option.getRef().toString());
-//                                         if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,option.getRef().toString(),key,2,topath,null,null)){
-//                                             //文件失败
-//                                             System.out.println("问题选项附件文件下载失败!");//istrue=false;break;
-//                                         }
-//                                     }
-//
-//
-//
-//                                 }
-//                             }
+                             List<ResourceInfo> resList=UpdateCourseUtil.getResourceByXml(tmp.getPath(),ctmp.getCourseid(),null,1);
+                             if(resList!=null&&resList.size()>0){//执行
+                                 for(ResourceInfo rsEntity:resList){
+                                     sqlbuilder=new StringBuilder();
+                                     //得到资源的同步语句
+                                     objList=resourceManager.getSynchroSql(rsEntity,sqlbuilder);
+                                     if(sqlbuilder!=null){
+                                         objArrayList.add(objList);
+                                         sqlArrayList.add(sqlbuilder.toString());
+                                     }
+                                     //得到附件
+                                     topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(resList.get(0).getResid().toString());
+                                     System.out.println("微视频资源文件"+topath);
+                                     //下载微视频文件
+                                     if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,resList.get(0).getResid().toString(),key,3,topath,resList.get(0).getFilename(),null)){
+                                         //文件失败
+                                         System.out.println("资源文件下载失败!");istrue=false;break;
+                                     }
+                                     //查询是否有与试卷的对应关系
+                                     MicVideoPaperInfo mvp=new MicVideoPaperInfo();
+                                     mvp.setMicvideoid(rsEntity.getResid());
+                                     PageResult pSearch=new PageResult();
+                                     pSearch.setPageSize(1);
+                                     List<MicVideoPaperInfo> mvpList=micVideoPaperManager.getList(mvp,pSearch);
+                                     Long newPaperid=null;
+                                     if(mvpList==null||mvpList.size()<1){
+                                         //创建试卷
+                                         newPaperid=paperManager.getNextId(true);
+                                         PaperInfo tmpPaper=new PaperInfo();
+                                         tmpPaper.setPaperid(newPaperid);
+                                         tmpPaper.setScore(100F);
+                                         tmpPaper.setPapertype(5);//微视频试卷
+                                         tmpPaper.setCuserid(0);
+                                         tmpPaper.setPapername("微课程试卷"+newPaperid);
+                                         sqlbuilder=new StringBuilder();
+                                         objList=paperManager.getSaveSql(tmpPaper,sqlbuilder);
+                                         if(sqlbuilder!=null){
+                                             objArrayList.add(objList);
+                                             sqlArrayList.add(sqlbuilder.toString());
+                                         }
+                                     }else
+                                         newPaperid=mvpList.get(0).getPaperid();
+                                     //得到该资源对应的问题
+
+                                     ///////////////////////////////////微视频对应的试卷///////////////////////////
+                                     List<QuestionInfo> littleViewQuesList=UpdateCourseUtil.getLittleViewQuesByXml(tmp.getPath(),ctmp.getCourseid(),rsEntity.getResid());
+                                     if(littleViewQuesList==null||littleViewQuesList.size()<1)continue;
+
+                                     for(int iv=0;iv<littleViewQuesList.size();iv++){
+                                         QuestionInfo q=littleViewQuesList.get(iv);
+                                         sqlbuilder=new StringBuilder();
+                                         //得到资源的同步语句
+                                         objList=resourceManager.getSynchroSql(rsEntity,sqlbuilder);
+                                         if(sqlbuilder!=null){
+                                             objArrayList.add(objList);
+                                             sqlArrayList.add(sqlbuilder.toString());
+                                         }
+                                         //添加试卷与试题的关系 数据
+                                         ///////////////////////////////////微视频与试卷关系表///////////////////////////
+                                         //判断该试卷下是否存在该试题
+                                         PaperQuestion pq=new PaperQuestion();
+                                         pq.setPaperid(newPaperid);
+                                         pq.setQuestionid(q.getQuestionid());
+                                         List<PaperQuestion> pqList=paperQuestionManager.getList(pq,pSearch);
+                                         if(pqList==null|| xmlPathList.size()<1){
+                                             //没有则添加,有则过。
+                                             pq.setOrderidx(iv+1);
+                                             //添加
+                                             sqlbuilder=new StringBuilder();
+                                             //得到资源的同步语句
+                                             objList=paperQuestionManager.getSaveSql(pq,sqlbuilder);
+                                             if(sqlbuilder!=null){
+                                                 objArrayList.add(objList);
+                                                 sqlArrayList.add(sqlbuilder.toString());
+                                             }
+                                         }else{
+                                             //修改序号
+                                             pq=pqList.get(0);
+                                             pq.setOrderidx(iv+1);
+                                             sqlbuilder=new StringBuilder();
+                                             //得到资源的同步语句
+                                             objList=paperQuestionManager.getUpdateSql(pq, sqlbuilder);
+                                             if(sqlbuilder!=null){
+                                                 objArrayList.add(objList);
+                                                 sqlArrayList.add(sqlbuilder.toString());
+                                             }
+                                         }
+                                         //每条记录执行执行添加
+                                         if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()&&sqlArrayList.size()>0){
+                                             istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
+                                             if(!istrue){
+                                                 System.out.println("更新专题失败!记录日志");
+                                                 break;
+                                             }
+                                             sqlArrayList=new ArrayList<String>();
+                                             objArrayList=new ArrayList<List<Object>>();
+                                         }
+
+                                         ///////////////////////////////////微视频问题选项///////////////////////////
+                                         //先删除,再添加
+                                         sqlbuilder=new StringBuilder();
+                                         QuestionOption delObj=new QuestionOption();
+                                         delObj.setQuestionid(q.getQuestionid());
+                                         objList=questionOptionManager.getDeleteSql(delObj,sqlbuilder);
+                                         if(sqlbuilder!=null){
+                                             objArrayList.add(objList);
+                                             sqlArrayList.add(sqlbuilder.toString());
+                                         }
+
+                                         List<QuestionOption> quesOptsList=UpdateCourseUtil.getQuestionOptsByXml(tmp.getPath(),ctmp.getCourseid(),q.getQuestionid());
+                                         if(quesOptsList==null||quesOptsList.size()<1)continue;
+                                         for(QuestionOption option:quesOptsList){
+                                             //得到问题答案的SQL语句
+                                             sqlbuilder=new StringBuilder();
+                                             objList=questionOptionManager.getSynchroSql(option,sqlbuilder);
+                                             if(sqlbuilder!=null){
+                                                 objArrayList.add(objList);
+                                                 sqlArrayList.add(sqlbuilder.toString());
+                                             }
+
+                                             //每条记录执行执行添加
+                                             if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()&&sqlArrayList.size()==50){
+                                                 istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
+                                                 if(!istrue){
+                                                     System.out.println("更新专题失败!记录日志");
+                                                     break;
+                                                 }
+                                                 sqlArrayList=new ArrayList<String>();
+                                                 objArrayList=new ArrayList<List<Object>>();
+                                             }
+                                             topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(option.getRef().toString());
+                                             if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,option.getRef().toString(),key,2,topath,null,null)){
+                                                 //文件失败
+                                                 System.out.println("问题选项附件文件下载失败!");//istrue=false;break;
+                                             }
+                                         }
+                                     }
+
+                                 }
+                             }
                          }
                     }
                    if(!istrue)break;
@@ -712,7 +795,7 @@ class UpdateCourseUtil{
      */
     public static boolean copyResourceToPath(String locapath,String id,String key,Integer type,String topath,String fname,Integer sourceType){
         if(locapath==null||id==null||key==null||topath==null)return false;
-        if(type==null)type=2;  //1：资源文件   2：附件
+        if(type==null)type=2;  //1：资源文件   2：附件   3:微视频文件
 
         //查看topath是否存在
         File topathF=new File(topath+"/");
@@ -1097,6 +1180,147 @@ class UpdateCourseUtil{
         return returnList;
     }
 
+
+
+    /**
+     * 得到微视频对应的试题
+     * @param xmlFullName
+     * @param courseid
+     * @param resourceid
+     * @return
+     */
+    public static List<QuestionInfo> getLittleViewQuesByXml(String xmlFullName,Long courseid,Long resourceid){
+        if(xmlFullName==null||courseid==null) return null;
+        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
+        if(list==null||list.size()<1)return null;
+        List<QuestionInfo> returnList=new ArrayList<QuestionInfo>();	//返回的集合
+        //循环得到相关实体
+        for (Object mapObj : list) {
+            Map<String,Object> courseMap=(Map<String,Object>)mapObj;
+            //相关ID,不能为空
+            if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
+                    &&!courseMap.get("CourseId").toString().trim().toUpperCase().equals("NULL")){
+                if(courseMap.get("CourseId").toString().trim().equals(courseid.toString())){
+                    if(courseMap.containsKey("LittleViewQuesInfo")){
+                        List<Map<String,Object>> quesList=(List<Map<String,Object>>)courseMap.get("LittleViewQuesInfo");
+                        if(quesList==null||quesList.size()<1)return returnList;
+                        if(resourceid==null)
+                        //循环得到信息
+                        for (Map<String, Object> quesMap : quesList) {
+                            QuestionInfo ques=new QuestionInfo();
+                            if(quesMap.containsKey("Resourceid")&&quesMap.get("Resourceid")!=null
+                                    &&!quesMap.get("Resourceid").toString().trim().toUpperCase().equals("NULL")&&
+                                    !quesMap.get("Resourceid").toString().equals(resourceid.toString())){
+                                continue;
+                            }
+                            if(quesMap.containsKey("Body")&&quesMap.get("Body")!=null
+                                    &&!quesMap.get("Body").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setContent(quesMap.get("Body").toString().replaceAll("\\\\","\\\\\\\\"));
+                            }
+                            if(quesMap.containsKey("Status")&&quesMap.get("Status")!=null
+                                    &&!quesMap.get("Status").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setStatus(Integer.parseInt(quesMap.get("Status").toString()));
+                            }
+                            if(quesMap.containsKey("Ctime")&&quesMap.get("Ctime")!=null
+                                    &&!quesMap.get("Ctime").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setCtime(UtilTool.StringConvertToDate(quesMap.get("CtimeString").toString()));
+                            }
+                            if(quesMap.containsKey("SourceType")&&quesMap.get("SourceType")!=null
+                                    &&!quesMap.get("SourceType").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setSourceType(Integer.parseInt(quesMap.get("SourceType").toString().trim()));
+                            }
+                            if(quesMap.containsKey("Type")&&quesMap.get("Type")!=null
+                                    &&!quesMap.get("Type").toString().trim().toUpperCase().equals("NULL")){
+                                Integer type=Integer.parseInt(quesMap.get("Type").toString());
+                                switch(type){
+                                    case -1:
+                                        type=-2;
+                                        break;
+                                    case -2:
+                                        type=2;
+                                        break;
+                                    case 1:
+                                        type=2;
+                                        ques.setQuestionlevel(3);
+                                        break;
+                                    case 2:
+                                        type=4;
+                                        ques.setQuestionlevel(4);
+                                        break;
+                                }
+
+                                ques.setCloudstatus(type);
+                            }
+                            //类型（-1：恶意   -2：已删除   0：待审核   1：共享   2：标准）
+                            //云端共享状态 -2:恶意 -1:未上传 0：待审核 1：未通过 2：已删除 3：共享 4：标准
+
+                            if(quesMap.containsKey("AnswerType")&&quesMap.get("AnswerType")!=null
+                                    &&!quesMap.get("AnswerType").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setQuestiontype(Integer.parseInt(quesMap.get("AnswerType").toString()));
+                            }
+                            if(quesMap.containsKey("QuestionId")&&quesMap.get("QuestionId")!=null
+                                    &&!quesMap.get("QuestionId").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setQuestionid(Long.parseLong(quesMap.get("QuestionId").toString()));
+                            }
+                            if(quesMap.containsKey("Resolve")&&quesMap.get("Resolve")!=null
+                                    &&!quesMap.get("Resolve").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setAnalysis(quesMap.get("Resolve").toString().replaceAll("\\\\","\\\\\\\\"));
+                            }
+                            if(quesMap.containsKey("CuserId")&&quesMap.get("CuserId")!=null
+                                    &&!quesMap.get("CuserId").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setCuserid(quesMap.get("CuserId").toString());
+                            }
+                            if(quesMap.containsKey("CuserName")&&quesMap.get("CuserName")!=null
+                                    &&!quesMap.get("CuserName").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setCusername(quesMap.get("CuserName").toString());
+                            }
+                            if(quesMap.containsKey("Grade")&&quesMap.get("Grade")!=null
+                                    &&!quesMap.get("Grade").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setGrade(quesMap.get("Grade").toString());
+                            }
+                            if(quesMap.containsKey("PaperType")&&quesMap.get("PaperType")!=null
+                                    &&!quesMap.get("PaperType").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setPapertypeid(Integer.parseInt(quesMap.get("PaperType").toString()));
+                            }
+                            if(quesMap.containsKey("ExamType")&&quesMap.get("ExamType")!=null
+                                    &&!quesMap.get("ExamType").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setExamtype(Integer.parseInt(quesMap.get("ExamType").toString()));
+                            }
+                            if(quesMap.containsKey("ExamSubjectTyp")&&quesMap.get("ExamSubjectTyp")!=null
+                                    &&!quesMap.get("ExamSubjectTyp").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setExamsubjecttype(Integer.parseInt(quesMap.get("ExamSubjectTyp").toString()));
+                            }
+                            if(quesMap.containsKey("ExamArea")&&quesMap.get("ExamArea")!=null
+                                    &&!quesMap.get("ExamArea").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setAxamarea(quesMap.get("ExamArea").toString().replaceAll("\\\\","\\\\\\\\"));
+                            }
+                            if(quesMap.containsKey("ExamYear")&&quesMap.get("ExamYear")!=null
+                                    &&!quesMap.get("ExamYear").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setExamyear(quesMap.get("ExamYear").toString().replaceAll("\\\\","\\\\\\\\"));
+                            }
+                            if(quesMap.containsKey("Province")&&quesMap.get("Province")!=null
+                                    &&!quesMap.get("Province").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setProvince(quesMap.get("Province").toString().replaceAll("\\\\","\\\\\\\\"));
+                            }
+                            if(quesMap.containsKey("City")&&quesMap.get("City")!=null
+                                    &&!quesMap.get("City").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setCity(quesMap.get("City").toString().replaceAll("\\\\","\\\\\\\\"));
+                            }
+                            if(quesMap.containsKey("correctanswer")&&quesMap.get("City")!=null
+                                    &&!quesMap.get("correctanswer").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setCorrectanswer(quesMap.get("correctanswer").toString().replaceAll("\\\\","\\\\\\\\"));
+                            }
+//
+//                            ques.setSchoolId(schoolid);
+//                            ques.setSchoolName(schoolname);
+                            returnList.add(ques);
+                        }
+                    }
+                }
+            }
+        }
+        return returnList;
+    }
 
     /**
      * 从XML中得到问题信息
