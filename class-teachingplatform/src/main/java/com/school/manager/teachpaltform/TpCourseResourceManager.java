@@ -90,5 +90,15 @@ public class  TpCourseResourceManager extends BaseManager<TpCourseResource> impl
     public Boolean doAddDynamic(TpCourseResource courseres) {
         return this.tpcourseresourcedao.doAddDynamic(courseres);
     }
+
+    @Override
+    public List<TpCourseResource> getResourceForRelatedCourse(TpCourseResource tpcourseresource, PageResult presult) {
+        return this.tpcourseresourcedao.getResourceForRelatedCourse(tpcourseresource,presult);
+    }
+
+    @Override
+    public List<TpCourseResource> getLikeResource(Integer gradeid, Integer subjectid, String name, PageResult presult) {
+        return this.tpcourseresourcedao.getLikeResource(gradeid,subjectid,name,presult);
+    }
 }
 

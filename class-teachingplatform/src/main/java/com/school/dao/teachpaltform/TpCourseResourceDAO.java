@@ -280,6 +280,131 @@ public class TpCourseResourceDAO extends CommonDAO<TpCourseResource> implements 
         return false;
     }
 
+    public List<TpCourseResource> getResourceForRelatedCourse(TpCourseResource tpcourseresource, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_j_course_resource_info_proc_forrelated(");
+        List<Object> objList=new ArrayList<Object>();
+        if (tpcourseresource.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getRef());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseresource.getResid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getResid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseresource.getCourseids() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getCourseids());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseresource.getResourcetype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getResourcetype());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseresource.getResstatus() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getResstatus());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseresource.getUsertype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getUsertype());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseresource.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getUserid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseresource.getLocalstatus() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getLocalstatus());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseresource.getTaskflag() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getTaskflag());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseresource.getCurrentcourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getCurrentcourseid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseresource.getDifftype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getDifftype());
+        } else
+            sqlbuilder.append("null,");
+
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<TpCourseResource> tpcourseresourceList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpCourseResource.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return tpcourseresourceList;
+    }
+
+    public List<TpCourseResource> getLikeResource(Integer gradeid, Integer subjectid, String name, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_task_resource_by_values(");
+        List<Object> objList=new ArrayList<Object>();
+        if(gradeid!=null){
+            sqlbuilder.append("?,");
+            objList.add(gradeid);
+        }else
+            sqlbuilder.append("null,");
+        if(subjectid!=null){
+            sqlbuilder.append("?,");
+            objList.add(subjectid);
+        }else
+            sqlbuilder.append("null,");
+        if(name!=null){
+            sqlbuilder.append("?,");
+            objList.add(name);
+        }else
+            sqlbuilder.append("null,");
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<TpCourseResource> tpcourseresourceList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpCourseResource.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return tpcourseresourceList;
+    }
+
     public String getNextId() {
 		// TODO Auto-generated method stub
 		return null;

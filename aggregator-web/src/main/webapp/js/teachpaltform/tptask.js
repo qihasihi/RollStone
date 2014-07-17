@@ -202,7 +202,7 @@ function queryQuestionType(trobj, questype, boo, questionid) {
  * 弹出选择资源页面
  * */
 function showResourceElementJsp(){
-    var url = 'task?m=toTaskElementDetial&tasktype=1&courseid=' + courseid;
+    var url = 'task?m=toTaskElementDetial&subjectid='+subjectid+'&tasktype=1&courseid=' + courseid;
     var param = "dialogHeight=800px;dialogWidth=900px;center:yes;status:no;scroll:no;help:no";
     var returnValue = window.showModalDialog(url, "", param);
     if (returnValue == undefined) {
@@ -217,6 +217,11 @@ function showResourceElementJsp(){
         if(values.length==2){
             $("#hd_elementid").val(values[0]);
             $("#resource_type").val(values[1]);
+            queryResource(courseid, 'tr_task_obj', values[0]);
+        }else if(values.length==3){
+            $("#hd_elementid").val(values[0]);
+            $("#resource_type").val(values[1]);
+            queryResource(values[2], 'tr_task_obj', values[0]);
         }else{
             $("#hd_elementid").val(values[0]);
             $("#resource_type").val(values[1]);

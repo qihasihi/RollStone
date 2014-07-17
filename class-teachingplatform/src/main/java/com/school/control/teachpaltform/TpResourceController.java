@@ -216,7 +216,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
         }else{
-            je.setMsg("当前选择资源已存在!");
+            je.setType("success");
+            //je.setMsg("当前选择资源已存在!");
         }
         response.getWriter().print(je.toJSON());
     }
@@ -2039,7 +2040,77 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         response.getWriter().print(je.toJSON());
     }
 
+    /**
+     * 任务添加页 获取关联专题资源
+     * @throws Exception
+     */
+    @RequestMapping(params="toQueryRelatedResourceList",method=RequestMethod.POST)
+    public void toQueryRelatedResourceList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String resid=request.getParameter("resid");
+        String taskflag=request.getParameter("taskflag");
+        String difftype=request.getParameter("difftype");//微视频
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpCourseRelatedInfo tr = new TpCourseRelatedInfo();
+        tr.setCourseid(Long.parseLong(courseid));
+        List<TpCourseRelatedInfo> trList = this.tpCourseRelatedManager.getList(tr,null);
+        if(trList!=null&&trList.size()>0){
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0;i<trList.size();i++){
+                sb.append(trList.get(i).getRelatedcourseid());
+                if(i<trList.size()-1){
+                    sb.append("|");
+                }
+            }
+            PageResult p=this.getPageResultParameter(request);
+            p.setOrderBy("aa.diff_type desc,aa.resource_type,aa.ctime desc,aa.operate_time desc ");
+            TpCourseResource t= new TpCourseResource();
+            t.setCourseids(sb.toString());
+            t.setResstatus(1);
+            if(resid!=null&&resid.trim().length()>0)
+                t.setResid(Long.parseLong(resid));
+            if(difftype!=null&&difftype.trim().length()>0)
+                t.setDifftype(Integer.parseInt(difftype));
+            //学习参考
+            //t.setResourcetype(1);
+            //查询没有发任务的资源
+            if(taskflag!=null&&taskflag.trim().length()>0)
+                t.setTaskflag(1);
+            List<TpCourseResource>resList=this.tpCourseResourceManager.getResourceForRelatedCourse(t, p);
+            je.setPresult(p);
+            je.setObjList(resList);
+            je.setType("success");
+        }else{
+            PageResult p = new PageResult();
+            je.setPresult(p);
+            je.setObjList(null);
+        }
 
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 任务添加页 获取资源
+     * @throws Exception
+     */
+    @RequestMapping(params="toQueryLikeResourceList",method=RequestMethod.POST)
+    public void toQueryLikeResourceList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String gradeid = request.getParameter("gradeid");
+        String subjectid=request.getParameter("subjectid");
+        String name=request.getParameter("name");
+        PageResult p = this.getPageResultParameter(request);
+        List<TpCourseResource>resList=this.tpCourseResourceManager.getLikeResource(Integer.parseInt(gradeid),Integer.parseInt(subjectid),name,p);
+        je.setPresult(p);
+        je.setObjList(resList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
 
 
     /**

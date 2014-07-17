@@ -26,6 +26,15 @@ public class TpCourseResource implements Serializable {
     private String username;
     private Integer localstatus;
     private Date operatetime;
+    private String courseids;//查询多个专题下资源用的
+
+    public String getCourseids() {
+        return courseids;
+    }
+
+    public void setCourseids(String courseids) {
+        this.courseids = courseids;
+    }
 
     private Long currentcourseid;   //查询条件：通过专题资源、资源库查找资源使用
     private Object resflag;         //显示条件与currentcourseid配合使用   大于0表示已存在于当前专题
