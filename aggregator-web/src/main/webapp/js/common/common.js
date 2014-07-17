@@ -119,7 +119,7 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
         //'playlistfile': "/ett20/studyrvice_class/free/toxml.jsp?resourceID=<%=resourceID%>&frame=1",
         'file':  filepath,
      //   'primary': 'flash',
-        'controlbar':'over',
+        'controlbar':'bottom',
         'controlbar.idlehide':'false',
         'modes': [
             {type: 'flash', src: 'js/common/videoPlayer/new/jwplayer.flash.swf', //
@@ -148,25 +148,30 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
     var returnPobj= jwplayer(playeraddressid).setup(jwplayerSetup);
     if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
         jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
-
-     if(typeof(resid)!="undefined"){
-        var suffixName=filepath;
-        if(filepath.lastIndexOf(".mp4")!=-1){
-            suffixName=filepath.substring(filepath.lastIndexOf(".mp4",filepath.lastIndexOf("/")),filepath.lastIndexOf(".mp4"));
-        }else
-            suffixName=filepath.substring(filepath.lastIndexOf("."));
-        if(suffixName.indexOf(".")>-1){
-            jwplayer().addButton(
-                "images/down.png",
-                "下载文件",
-                function() {
-                    resourceDownLoadFile(resid+"",suffixName);
-                    try{sp_downnum.innerHTML=parseInt(sp_downnum.innerHTML)+1;}catch(e){}
-                },
-                "download"
-            );
-        }
+    if(typeof(isshowBar)!="undefined"&&!isshowBar){
+        jwplayer(playeraddressid).onReady(function(){
+            jwplayer(playeraddressid).play(); //.seek(0)
+        });
     }
+
+//     if(typeof(resid)!="undefined"){
+//        var suffixName=filepath;
+//        if(filepath.lastIndexOf(".mp4")!=-1){
+//            suffixName=filepath.substring(filepath.lastIndexOf(".mp4",filepath.lastIndexOf("/")),filepath.lastIndexOf(".mp4"));
+//        }else
+//            suffixName=filepath.substring(filepath.lastIndexOf("."));
+//        if(suffixName.indexOf(".")>-1){
+//            jwplayer().addButton(
+//                "images/down.png",
+//                "下载文件",
+//                function() {
+//                    resourceDownLoadFile(resid+"",suffixName);
+//                    try{sp_downnum.innerHTML=parseInt(sp_downnum.innerHTML)+1;}catch(e){}
+//                },
+//                "download"
+//            );
+//        }
+//    }
     return returnPobj;
 }
 

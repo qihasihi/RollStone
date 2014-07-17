@@ -271,7 +271,7 @@
                     html+='<a  class="font-blue" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==5&&itm.taskstatus!="1"){
                     html+='<a  class="font-blue" href="paper?m=genderZiZhuPaper&taskid='+itm.taskid+'"  style="color: blue;">'+itm.taskobjname+'</a>';
-                }else if(itm.tasktype==6){
+                }else if(itm.tasktype==6&&itm.taskstatus!="1"){
                     html+='<a  class="font-blue" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
                 }
                 if(typeof itm.iscomplete!='undefined'&&itm.iscomplete>0)

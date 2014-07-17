@@ -34,7 +34,8 @@
     <c:if test="${!empty paperObj&&paperObj.papertype==4}">自主测试</c:if>
 </strong></div>
 <div class="content1">
-    <p class="t_r"><span class="ico_time"></span><strong>14天19时54分</strong></p>
+    <p class="t_r"><span class="ico_time"></span><strong>${taskstatus}</strong></p>
+    <div id="dv_test">
     <div class="jxxt_zhuanti_rw_ceshi">
         <h2> <c:if test="${!empty paperObj&&paperObj.papertype==3}">
          ${paperObj.papername}
@@ -102,6 +103,7 @@
 </c:if>
 
 
+    </div>
     </div>
 </div>
 <%@include file="/util/foot.jsp"%>

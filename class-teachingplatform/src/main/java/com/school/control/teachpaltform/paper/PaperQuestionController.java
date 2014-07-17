@@ -3238,6 +3238,18 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+
+        TpTaskInfo t=new TpTaskInfo();
+        t.setUserid(this.logined(request).getUserid());
+        t.setTaskid(Long.parseLong(taskid));
+        // 学生任务
+        List<TpTaskInfo>taskList=this.tpTaskManager.getListbyStu(t, presult);
+        if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+
+        mp.put("taskstatus", taskList.get(0).getTaskstatus());
         //验证任务是否在相应时间范围内
         tpTask=tkList.get(0);
         if(tpTask.getTasktype().intValue()==6){//6：微视频
@@ -3322,13 +3334,25 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
 
+        TpTaskInfo t=new TpTaskInfo();
+        t.setUserid(this.logined(request).getUserid());
+        t.setTaskid(Long.parseLong(taskid));
+        PageResult pr=new PageResult();
+        pr.setPageSize(1);
+        // 学生任务
+        List<TpTaskInfo>taskList=this.tpTaskManager.getListbyStu(t, pr);
+        if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+
+        mp.put("taskstatus", taskList.get(0).getTaskstatus());
         //验证是否已经交卷
         StuPaperLogs splog=new StuPaperLogs();
         splog.setUserid(this.logined(request).getUserid());
         splog.setPaperid(Long.parseLong(paperid));
         splog.setIsinpaper(2);
-        PageResult pr=new PageResult();
-        pr.setPageSize(1);
+
         List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,pr);
         if(spList!=null&&spList.size()>0){ //已经交卷，不能再进入
             response.sendRedirect("paperques?m=toTestDetail&paperid="+paperid);return null;
@@ -3442,6 +3466,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         if(spList==null||spList.size()<1){
             return testPaper(request,response,mp);
         }
+
 
         //验证是否已经答题
         StuPaperQuesLogs stuPaperQuesLogs=new StuPaperQuesLogs();
