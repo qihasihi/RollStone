@@ -1052,10 +1052,26 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 sqlListArray.add(sql.toString());
             }
             ta.setTaskvalueid(paperid);
+        }else if(tasktype.toString().equals("6")){//微视频测试
+            if(taskvalueid==null||taskvalueid.trim().length()<1){
+                je.setMsg("异常错误，系统未获取到微视频标识!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            TpCourseResource tpCourseResource=new TpCourseResource();
+            tpCourseResource.setResid(Long.parseLong(taskvalueid));
+            tpCourseResource.setCourseid(Long.parseLong(courseid));
+            List<TpCourseResource>iList=this.tpCourseResourceManager.getList(tpCourseResource,null);
+            if(iList==null||iList.size()<1){
+                je.setMsg("提示：当前资源已不存在或删除，请刷新页面后重试!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }
-        /**
-         *查询出当前专题有效的任务个数，排序用
-         */
+            /**
+             *查询出当前专题有效的任务个数，排序用
+             */
 
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
@@ -1416,6 +1432,22 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }else if(tasktype.toString().equals("5")){//自主测试
 
+        }else if(tasktype.toString().equals("6")){//微视频测试
+            if(taskvalueid==null||taskvalueid.trim().length()<1){
+                je.setMsg("异常错误，系统未获取到微视频标识!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            TpCourseResource tpCourseResource=new TpCourseResource();
+            tpCourseResource.setResid(Long.parseLong(taskvalueid));
+            tpCourseResource.setCourseid(Long.parseLong(courseid));
+            List<TpCourseResource>iList=this.tpCourseResourceManager.getList(tpCourseResource,null);
+            if(iList==null||iList.size()<1){
+                je.setMsg("提示：当前资源已不存在或删除，请刷新页面后重试!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }
         //获取任务
         TpTaskInfo sel=new TpTaskInfo();

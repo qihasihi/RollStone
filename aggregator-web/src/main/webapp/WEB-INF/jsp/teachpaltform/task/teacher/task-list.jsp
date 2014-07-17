@@ -115,6 +115,10 @@ function getInvestReturnMethod(rps){
                     criteria=itm.criteria==1?"提交试卷":"";
                     type="自主测试&nbsp;&nbsp;&nbsp;&nbsp;";
                     break;
+                case 6:
+                    criteria="";
+                    type="微课程学习&nbsp;&nbsp;&nbsp;";
+                    break;
             }
             if(typeof itm.taskobjname!='undefined')
                 taskObj=itm.taskobjname;//taskObj=replaceAll(replaceAll(itm.taskobjname.toLowerCase(),"<p>",""),"</p>","");
@@ -157,13 +161,16 @@ function getInvestReturnMethod(rps){
                 html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==5){
                 html+='<a href="#" class="font-blue">'+taskObj+'</a>';
+            }else if(itm.tasktype==6){
+                html+='<a class="font-blue" href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'" >'+taskObj+'</a>';
             }
             html+='</p>';
             html+='</div>';
             html+='<div id="div_task_'+itm.taskid+'" style="display:none;"  class="text">';
             html+='<p class="f_right"><a href="task?m=toTaskSuggestList&courseid='+courseid+'&taskid='+itm.taskid+'" target="_blank" class="font-darkblue">学生建议</a></p>';
             html+='<p class="time" id="p_obj_'+itm.taskid+'"></p>';//<strong>任务对象：</strong>
-            html+='<p><strong>完成标准：</strong> '+criteria+'</p>';
+            if(itm.tasktype!=6)
+                html+='<p><strong>完成标准：</strong> '+criteria+'</p>';
             html+='<p><strong>任务描述：</strong><span  style="color:#000000;">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';//class="width"
             html+='<table border="0" cellspacing="0" cellpadding="0" class="black">';
             html+='<col class="w50"/>'
@@ -335,6 +342,10 @@ function getBankInvestReturnMethod(rps){
                     criteria=itm.criteria==1?"提交试卷":"";
                     type="自主测试";
                     break;
+                case 6:
+                    criteria="";
+                    type="微课程学习";
+                    break;
             }
             if((typeof itm.cloudstatus!='undefined') && (itm.cloudstatus==3||itm.cloudstatus==4) ){
                 status='参考';
@@ -356,6 +367,8 @@ function getBankInvestReturnMethod(rps){
                 html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
             }else if(itm.tasktype==5){
                 html+='<a href="#" >';
+            }else if(itm.tasktype==6){
+                html+='<a href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'" >';
             }
             if(typeof itm.taskobjname!='undefined')
                 html+=replaceAll(itm.taskobjname.toLowerCase(),'<span name="fillbank"></span>',"_______")+'</a></p>';

@@ -33,8 +33,10 @@ function showTaskElement(type) {
     if (type == 3) {
         var questype = $("input[name='rdo_ques_type']:checked").val();
         url += '&questype=' + questype;
-    } else if (type == 4) {
+    } else if (type == 4) {//成卷测试
         url = 'paper?m=toSelTaskPaper&tasktype=' + type + '&courseid=' + courseid;
+    } else if (type == 6){//微视频
+        url = 'tpres?m=queryMicViewList&tasktype=' + type + '&courseid=' + courseid;
     }
 
     var param = "dialogHeight=800px;dialogWidth=900px;center:yes;status:no;scroll:no;help:no";
@@ -80,6 +82,8 @@ function showTaskElement(type) {
         });
     } else if (type == 4) {
         queryPaper(courseid, 'tr_task_obj', 4, returnValue);
+    } else if (type == 6) {
+        queryMicView(courseid, 'tr_task_obj', 6, returnValue);
     }
 }
 
@@ -268,7 +272,7 @@ function queryResource(courseid,trobj,taskvalueid,taskstatus){
 
 
 /**
- * 获取资源
+ * 获取试卷
  * @param courseid
  * @param trobj
  * @return
@@ -321,6 +325,50 @@ function queryPaper(courseid, trobj, type, taskvalueid, taskstatus, quesnum) {
             if (json.objList.length > 0 && typeof taskvalueid != 'undefined' && taskvalueid.toString().length > 0) {
                 $("#dv_paper_name").html(json.objList[0].papername);
                 $("#hd_elementid").val(json.objList[0].paperid);
+            }
+            if (typeof(taskvalueid) != 'undefined' && taskvalueid.toString().length > 0)
+                $("select[id='sel_resource']").val(taskvalueid);
+        }
+    });
+}
+
+/**
+ * 获取微视频资源
+ * @param courseid
+ * @param trobj
+ * @param type
+ * @param taskvalueid
+ * @param taskstatus
+ * @param quesnum
+ */
+function queryMicView(courseid, trobj, type, taskvalueid) {
+    if (typeof(courseid) == 'undefined' || courseid.length < 1) {
+        alert('异常错误，系统未获取到课题标识!');
+        return;
+    }
+
+    $.ajax({
+        url: 'tpres?toQueryResourceList',
+        type: 'post',
+        data: {courseid: courseid, resid: taskvalueid, difftype: 1},
+        dataType: 'json',
+        error: function () {
+            alert('网络异常!');
+        },
+        success: function (json) {
+            var htm = '';
+            htm += '<th><span class="ico06"></span>选择微视频：</th>';
+            htm += '<td class="font-black">';
+            htm += '<p><a class="font-darkblue"  href="javascript:showTaskElement(' + type + ')">>> 选择微视频</a></p>';
+            htm += '<div class="jxxt_zhuanti_add_ziyuan" id="dv_res_name"></div>';
+            htm += '<input type="hidden" id="hd_elementid"/>';
+            htm += '</td>';
+            $("#" + trobj).html(htm);
+            $("#tb_ques").hide();
+
+            if (json.objList.length > 0 && typeof taskvalueid != 'undefined' && taskvalueid.toString().length > 0) {
+                $("#dv_res_name").html(json.objList[0].resname);
+                $("#hd_elementid").val(json.objList[0].resid);
             }
             if (typeof(taskvalueid) != 'undefined' && taskvalueid.toString().length > 0)
                 $("select[id='sel_resource']").val(taskvalueid);
@@ -645,6 +693,8 @@ function initTaskCriteria(tasktype) {
         alert('未获取到任务类型,无法设置任务完成标准!');
         return;
     }
+    $("#td_criteria").parent().show();
+
     var htm = '';
     if (tasktype == "1") {//资源学习
         htm += '<input value="1" name="ck_criteria" type="radio" />查看&nbsp;';
@@ -659,7 +709,9 @@ function initTaskCriteria(tasktype) {
     } else if(tasktype=="4"||tasktype=="5") {
         htm += '<input checked value="1" name="ck_criteria" type="radio" />提交试卷';
     } else if(tasktype=="6"){
-
+        htm += '<input  value="1" name="ck_criteria" type="radio" />查看视频';
+        htm += '<input checked value="2" name="ck_criteria" type="radio" />提交试卷';
+        $("#td_criteria").parent().hide();
     }
 
     $("#td_criteria").html(htm);
@@ -691,7 +743,9 @@ function doSubManageTask(taskid) {
     var resourceid = $("#hd_elementid").val();
     var topicid = $("#hd_elementid").val();
     var paperid = $("#hd_elementid").val();
+    var micresid = $("#hd_elementid").val();
     var quesNum = $("#sel_ques_num").val();
+
     var url = '', iserror = '', param = {}, paramStr = '?t=' + new Date().getTime(), rflag = false, btimeArray = '', etimeArray = '', clsArray = '';
 
 
@@ -701,6 +755,9 @@ function doSubManageTask(taskid) {
         return;
     }
     param.tasktype = tasktype.val();
+
+    if(tasktype==6)
+        criteriatype=2
 
     if (grouparr.length < 1 && clsarr.length < 1) {
         alert("请选择任务对象!");
@@ -840,6 +897,12 @@ function doSubManageTask(taskid) {
             return;
         }
         param.quesnum = quesNum;
+    }else if (tasktype.val() == "6") {
+        if (micresid.length < 1) {
+            alert('请选择微视频!');
+            return;
+        }
+        param.taskvalueid = micresid;
     }
     param.courseid = courseid;
     param.taskremark = taskremark;

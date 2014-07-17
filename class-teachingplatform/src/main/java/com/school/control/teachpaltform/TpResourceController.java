@@ -2012,6 +2012,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String courseid=request.getParameter("courseid");
         String resid=request.getParameter("resid");
         String taskflag=request.getParameter("taskflag");
+        String difftype=request.getParameter("difftype");//微视频
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
@@ -2024,6 +2025,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         t.setResstatus(1);
         if(resid!=null&&resid.trim().length()>0)
             t.setResid(Long.parseLong(resid));
+        if(difftype!=null&&difftype.trim().length()>0)
+            t.setDifftype(Integer.parseInt(difftype));
         //学习参考
         //t.setResourcetype(1);
         //查询没有发任务的资源
@@ -2347,6 +2350,67 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         response.getWriter().print(je.toJSON());
     }
+
+    /**
+     * 查询微视频列表 发任务
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=queryMicViewList",method=RequestMethod.GET)
+    public ModelAndView queryMicViewList(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return null;
+        }
+        PageResult p=this.getPageResultParameter(request);
+        p.setOrderBy("aa.diff_type desc,aa.resource_type,aa.ctime desc,aa.operate_time desc ");
+        TpCourseResource t= new TpCourseResource();
+        t.setCourseid(Long.parseLong(courseid));
+        t.setResstatus(1);
+        t.setTaskflag(1);//查询没有发任务的资源
+        t.setDifftype(1);//微视频类型
+        List<TpCourseResource>resList=this.tpCourseResourceManager.getList(t, p);
+        mp.put("resList",resList);
+        return new ModelAndView("/teachpaltform/resource/select-resource",mp);
+    }
+
+    /**
+     * 查询微视频列表 发任务
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=previewMic",method=RequestMethod.GET)
+    public ModelAndView previewMic(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String resid=request.getParameter("resid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return null;
+        }
+        ResourceInfo rtmp=new ResourceInfo();
+        rtmp.setResid(Long.parseLong(resid));
+        List<ResourceInfo> resList=this.resourceManager.getList(rtmp,null);
+        //验证微视频是否存在相关数据
+        if(resList==null||resList.size()<1||resList.get(0)==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(je.getAlertMsgAndCloseWin());return null;
+        }
+        mp.put("resObj", resList.get(0));
+        if(resList!=null&&resList.size()>0)
+            mp.put("resObj",resList.get(0));
+        return new ModelAndView("/teachpaltform/resource/mic-view-detail",mp);
+    }
+
+
+
+
 
     /**
      * ??????????

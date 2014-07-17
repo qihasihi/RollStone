@@ -84,6 +84,8 @@
                 queryPaper(courseid,'tr_task_obj',4,taskvalueid);
             }else if(tasktype=="5"){
                 queryPaper(courseid,'tr_task_obj',5,taskvalueid);
+            }else if(tasktype=="6"){
+                queryMicView(courseid,'tr_task_obj',6,taskvalueid)
             }
             //加载完成标准
             initTaskCriteria(tasktype);
