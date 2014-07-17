@@ -157,6 +157,11 @@
                         type="自主测试&nbsp;&nbsp;&nbsp;&nbsp;";
                         //answertype='您的互动';
                         break;
+                    case 6:
+                        criteria="";
+                        type="微课程学习&nbsp;&nbsp;&nbsp;";
+                        //answertype='您的互动';
+                        break;
                 }
 
                 if(itm.questionAnswerList!=null&&itm.questionAnswerList.length>0){
@@ -263,9 +268,11 @@
                 }else if(itm.tasktype==2){
                     html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==4&&itm.taskstatus!="1"){
-                    html+='<a  class="font-blue" href="paperques?m=testPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a  class="font-blue" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==5&&itm.taskstatus!="1"){
                     html+='<a  class="font-blue" href="paper?m=genderZiZhuPaper&taskid='+itm.taskid+'"  style="color: blue;">'+itm.taskobjname+'</a>';
+                }else if(itm.tasktype==6){
+                    html+='<a  class="font-blue" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
                 }
                 if(typeof itm.iscomplete!='undefined'&&itm.iscomplete>0)
                     html+='&nbsp;&nbsp;&nbsp;<img src="css/images/an06_131126.png" width="49" height="21" align="absmiddle">';
@@ -273,7 +280,8 @@
                 html+='</div>';
                 html+='<div class="text" id="div_task_'+itm.taskid+'" style="display:none;">';
                 html+='        <p class="f_right"><a href="javascript:void(0);" onclick="showModel(\'div_suggest_'+itm.taskid+'\')" class="font-darkblue">提建议</a></p>';
-                html+='        <p><strong>完成标准：</strong><span class="font-black">'+criteria+'</span></p>';
+                if(itm.tasktype!=6)
+                    html+='        <p><strong>完成标准：</strong><span class="font-black">'+criteria+'</span></p>';
                 html+='        <p><strong>任务描述：</strong><span class="width">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
                 if(itm.taskstatus=="1")
                     html+='<p class="font-black"><span class="ico33"></span>任务尚未开始，您的作答将不计入任务的统计结果中，请在任务开始之后重新作答！</p>';
