@@ -202,7 +202,7 @@ function queryQuestionType(trobj, questype, boo, questionid) {
  * 弹出选择资源页面
  * */
 function showResourceElementJsp(){
-    var url = 'task?m=toTaskElementDetial&subjectid='+subjectid+'&tasktype=1&courseid=' + courseid;
+    var url = 'task?m=toTaskElementDetial&operate_type=1&subjectid='+subjectid+'&tasktype=1&courseid=' + courseid;
     var param = "dialogHeight=800px;dialogWidth=900px;center:yes;status:no;scroll:no;help:no";
     var returnValue = window.showModalDialog(url, "", param);
     if (returnValue == undefined) {
@@ -258,7 +258,7 @@ function queryResource(courseid,trobj,taskvalueid,taskstatus){
             htm+='<th><span class="ico06"></span>选择资源：</th>';
             htm+='<td class="font-black">';
             if(typeof taskstatus=='undefined')
-                htm+='<p><a class="font-darkblue"  href="javascript:showResourceElementJsp()">>> 选择已有资源</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue"  href="javascript:showDialogPage(1)">>> 添加资源</a></p>';
+                htm+='<p><a class="font-darkblue"  href="javascript:showResourceElementJsp()">>> 选择资源</a><!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue"  href="javascript:showDialogPage(1)">>> 添加资源</a>--></p>';
             htm+='<div class="jxxt_zhuanti_add_ziyuan" id="dv_res_name"></div>';
             htm+='<input type="hidden" id="hd_elementid"/>';
             htm+='</td>';

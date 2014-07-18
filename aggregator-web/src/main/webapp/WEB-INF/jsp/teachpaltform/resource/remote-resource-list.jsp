@@ -36,8 +36,8 @@
     <div class="content2">
         <div class="subpage_lm">
             <ul>
-                <li><a href="1">本地资源</a></li>
-                <li class="crumb"><a href="1">远程资源</a></li>
+                <li><a href="task?m=toTaskElementDetial&operate_type=1&subjectid=${param.subjectid}&tasktype=1&courseid=${param.courseid}">本地资源</a></li>
+                <li class="crumb"><a href="tpres?m=toRemoteResources&courseid=${courseid}&subjectid=${param.subjectid}">远程资源</a></li>
             </ul>
         </div>
 

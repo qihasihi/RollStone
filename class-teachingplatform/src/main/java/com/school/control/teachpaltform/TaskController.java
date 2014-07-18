@@ -23,11 +23,13 @@ import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.ISmsManager;
 import com.school.manager.inter.IUserManager;
+import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
 import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
+import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
@@ -77,7 +79,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private ISmsManager smsManager;
     private ITpCoursePaperManager tpCoursePaperManager;
     private IPaperManager paperManager;
+    private IResourceManager resourceManager;
     public TaskController(){
+        this.resourceManager=this.getManager(ResourceManager.class);
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
         this.tpTaskAllotManager=this.getManager(TpTaskAllotManager.class);
@@ -178,12 +182,17 @@ public class TaskController extends BaseController<TpTaskInfo>{
         JsonEntity je=new JsonEntity();
         String courseid=request.getParameter("courseid");
         String type = request.getParameter("tasktype");
+        //资源类型
+        List<DictionaryInfo>resourceTypeList=this.dictionaryManager.getDictionaryByType("RES_TYPE");
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
         request.setAttribute("courseid",courseid);
+        request.setAttribute("resType", resourceTypeList);
+        request.setAttribute("fileSystemIpPort", UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD"));
+        request.setAttribute("nextid", this.resourceManager.getNextId(true));
         if(type.equals("1")){
              return new ModelAndView("/teachpaltform/task/teacher/resource-element-detail");
         }else{
