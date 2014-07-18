@@ -129,15 +129,7 @@
 <%@include file="/util/head.jsp" %>
 <%@include file="/util/nav-base.jsp" %>
 <!--当前学期-->
-<input type="hidden" id="hd_term_flag"/>z
-<div class="jxxt_xueqi">
-    <div class="menu"><span id="checkedTerm"></span><a class="ico13" href="javascript:void(0);" onclick="displayObj('termList');"></a></div>
-    <ul id="termList" style="display:none;">
-        <c:forEach var="tl" items="${termList }">
-            <li><a href="javascript:void(0);" onclick="getTermCondition('${tl.ref }','${tl.year } ${tl.termname }');">${tl.year } ${tl.termname }</a></li>
-        </c:forEach>
-    </ul>
-</div>
+<input type="hidden" id="hd_term_flag"/>
 
 <div id="nav">
     <div class="arr"><a href="javascript:changeTab2('front');"><span class="up"></span></a><a href="javascript:changeTab2('back');"><span class="next"></span></a></div>

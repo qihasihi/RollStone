@@ -6,10 +6,10 @@
 <%@page import="com.school.entity.UserInfo"%>
 <%@page import="com.school.entity.SmsReceiver"%>
 <%@page import="com.school.dao.SmsReceiverDAO"%>
- <%
+<%@ page import="com.school.entity.EttColumnInfo" %>
+<%
      //如果是乐知行过来，则不显示头尾
  Object fromType=session.getAttribute("fromType");
- if(fromType==null||!fromType.toString().trim().equals("lzx")){
     String pageType=null;
   	if(request.getAttribute("pageType")!=null)
   		pageType=(String)request.getAttribute("pageType");
@@ -26,18 +26,63 @@
 	List receiveSMSList = smsReceiverManagerac.getList(smsreceiver, null);
      String logoSrc=UtilTool.utilproperty.getProperty("LOGO_SRC");
 
+
+    List<EttColumnInfo> ettColumnInfos =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
   %>
+<c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
+    <div class="jxxt_lzx_header">
+</c:if>
+<c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
 <div id="header">
+</c:if>
   <ul>
       <c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
              <li <%= (pageType!=null&&pageType=="index"?"class='one crumb'":"one")%>><a href="<%=basePath %>user?m=toIndex">首&nbsp;页</a></li>
+         　　 <li class="four"><a href="javascript:;" onclick="loginDestory('<%=basePath %>')">退出</a></li>
       </c:if>
+    <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
+        <%
+            if(!isStudent){
+            //加载乐知行，教学首页，左上角的链接
+            if(ettColumnInfos!=null&&ettColumnInfos.size()>0){
+                String headcolumnico=UtilTool.utilproperty.getProperty("LZX_HEAD_COLUMN_ICO");
+                for (EttColumnInfo ectmp:ettColumnInfos){
+                    if(ectmp!=null){
+                        String cls="";
+                        if(headcolumnico.indexOf(ectmp.getEttcolumnid().toString())!=-1){
+                            String tmpa=headcolumnico.substring(headcolumnico.indexOf(ectmp.getEttcolumnid().toString()));
+                            String[] tmparray=null;
+                            if(tmpa.indexOf(",")!=-1)
+                                 tmparray=tmpa.substring(0,tmpa.indexOf(",")).split("\\|");
+                            else
+                                tmparray=tmpa.split("\\|");
+                            if(tmparray.length>1)
+                                cls=tmparray[1];
+                        }
+                        if(ectmp.getStatus()==0){
+                            %>
+                            <li class="<%=cls%>"><a href="<%=ectmp.getEttcolumnurl()%>" target="_blank"><%=ectmp.getEttcolumnname()%></a></li>
+                        <%}else{%>
+                           <li class="<%=cls%>"><a  href="javascript:alert('权限不足!');"><%=ectmp.getEttcolumnname()%></a></li>;
+                    <%}}
+                }
+            }
+                    }
+        %>
+        <%--<li class="two"><a href="" target="_blank"></a></li>--%>
+        <%--<li class="one"><a href="1" target="_blank">四中公开课</a></li>--%>
+        <%--<li><a href="1" target="_blank">远程教研</a></li>--%>
+    </c:if>
    <!-- <li <%= (pageType!=null&&pageType=="userview"?"class='two crumb'":"two")%>><a href="user?m=userview">个人主页</a></li>
     <li class="three"><a href="sms?m=inbox" target="_blank">
   	消息中心<%=receiveSMSList!=null&&receiveSMSList.size()>0?"(<font color='red'>"+receiveSMSList.size()+"</font>)":"" %>
   	</a></li>-->
-    <li class="four"><a href="javascript:;" onclick="loginDestory('<%=basePath %>')">退出</a></li>
-  </ul>     
+
+  </ul>
+<c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
  <p><span></span><img src="<%=basePath %>images/<%=logoSrc %>" width="253" height="64"/></p>
+</c:if>
+<c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
+<p></p>
+</c:if>
 </div>
-<%}%>

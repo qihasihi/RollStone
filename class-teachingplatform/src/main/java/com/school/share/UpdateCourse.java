@@ -633,7 +633,7 @@ public class UpdateCourse extends TimerTask{
                                      topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(resList.get(0).getResid().toString());
                                      System.out.println("微视频资源文件"+topath);
                                      //下载微视频文件
-                                     if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,resList.get(0).getResid().toString(),key,3,topath,resList.get(0).getFilename(),null)){
+                                     if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,resList.get(0).getResid().toString(),key,-1,topath,resList.get(0).getFilename(),null)){
                                          //文件失败
                                          System.out.println("资源文件下载失败!");istrue=false;break;
                                      }
@@ -828,47 +828,56 @@ class UpdateCourseUtil{
         String lastName="";
         String fileName="001";
         //默认为001.后缀
-        String tmp=fileUrl.substring(fileUrl.lastIndexOf("/"));
-        if(tmp.indexOf(".")!=-1)
-            lastName=tmp.substring(tmp.lastIndexOf("."));
-        String downPath=topath+"/001"+lastName;
-        String unzipPath=topath+"/";
-        if(lastName.trim().length()<1){
-            lastName=".zip";
-            fileName=topath.substring(topath.lastIndexOf("/")+1);
-            downPath =topath+"/../"+fileName+lastName;
-            unzipPath+="/";
+        String[] filepatharray={fileUrl};
+        if(fileUrl.indexOf("|")!=-1){
+            String[] fileUrlArray=fileUrl.split("\\|");
+            filepatharray=fileUrlArray;
         }
-        if(!topathF.exists()){
-          //没有目录则创建
-            topathF.mkdirs();
-        }
-        if(!downLoadZipFile(fileUrl,downPath)){
-            //异常错误，原因：无法下载+fileUrl的文件
-            System.out.println("异常错误，原因：无法下载"+fileUrl+"的文件");
-            return false;
-        }
-        //文件名称
-        fileName+=lastName;
-        //更名
-      //  new File(topath+"/001").renameTo(new File(topath+"/",fileName));
-        //如果是ZIP就解压
-        if(lastName!=null&&lastName.trim().length()>0&&lastName.trim().toUpperCase().equals(".ZIP")){
-            try {
-                ZipUtil.unzip(downPath,unzipPath);
-                //改名
-                if(fname!=null){
-                    new File(topath+"/"+fname).renameTo(new File(topath+"/"+"001"+fname.substring(fname.lastIndexOf("."))));
-                }
-                //删除压缩包
-                System.gc();
-                FileUtils.delete(new File(downPath));
-            } catch (Exception e) {
-                e.printStackTrace();
+        for(String tfirurl:filepatharray){
+            if(tfirurl==null||tfirurl.trim().length()<1)
+                break;
+            String tmp=tfirurl.substring(tfirurl.lastIndexOf("/"));
+            if(tmp.indexOf(".")!=-1)
+                lastName=tmp.substring(tmp.lastIndexOf("."));
+            String downPath=topath+"/001"+lastName;
+            String unzipPath=topath+"/";
+            if(lastName.trim().length()<1){
+                lastName=".zip";
+                fileName=topath.substring(topath.lastIndexOf("/")+1);
+                downPath =topath+"/../"+fileName+lastName;
+                unzipPath+="/";
+            }
+            if(!topathF.exists()){
+              //没有目录则创建
+                topathF.mkdirs();
+            }
+            if(!downLoadZipFile(tfirurl,downPath)){
+                //异常错误，原因：无法下载+fileUrl的文件
+                System.out.println("异常错误，原因：无法下载"+fileUrl+"的文件");
                 return false;
             }
-            //解压后，将文件复制出来
+            //文件名称
+            fileName+=lastName;
+            //更名
+          //  new File(topath+"/001").renameTo(new File(topath+"/",fileName));
+            //如果是ZIP就解压
+            if(lastName!=null&&lastName.trim().length()>0&&lastName.trim().toUpperCase().equals(".ZIP")){
+                try {
+                    ZipUtil.unzip(downPath,unzipPath);
+                    //改名
+                    if(fname!=null){
+                        new File(topath+"/"+fname).renameTo(new File(topath+"/"+"001"+fname.substring(fname.lastIndexOf("."))));
+                    }
+                    //删除压缩包
+                    System.gc();
+                    FileUtils.delete(new File(downPath));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                //解压后，将文件复制出来
 
+            }
         }
         return true;
 

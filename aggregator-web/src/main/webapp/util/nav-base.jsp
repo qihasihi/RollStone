@@ -35,14 +35,37 @@ String url=parenturl.substring(0,parenturl.lastIndexOf("/"));
 			}  
 		}	  
 	}
+   // Object fromType=session.getAttribute("fromType");
 %>
-<c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
-<script type="text/javascript">var current_parent_path="<%=url%>";</script>
+
+<script type="text/javascript">var current_parent_path="<%=url%>";
+href="user?m=toIndex";
+<c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
+$(function(){
+    $(".head_crumb a[href='user?m=toIndex']").attr("href","<%=UtilTool.utilproperty.getProperty("LZX_WELCOME_PAGE_ADDRESS")%>");
+});
+
+</c:if>
+</script>
 <div class="head_crumb">
  <p><strong>
     <%=current_user.getRealname()!=null
     	&&current_user.getRealname().trim().length()>0?
     			current_user.getRealname():current_user.getUsername()%></strong>&nbsp;您好！&nbsp;&nbsp;当前位置：<%=pageName %></p>
+    <c:if test="${!empty termList}">
+    <div class="jxxt_xueqi">
+        <div class="menu"><span id="checkedTerm">${currtTerm.year } ${currtTerm.termname }</span><a class="ico13" href="javascript:void(0);" onclick="displayObj('termList');"></a></div>
+        <ul id="termList" style="display:none;">
+            <c:forEach var="tl" items="${termList }">
+                <%if(isStudent){%>
+                     <li><a href="javascript:void(0);" onclick="changeTerm('${tl.ref }','${tl.year } ${tl.termname }');">${tl.year } ${tl.termname }</a></li>
+                <%}else{%>
+                    <li><a href="javascript:void(0);" onclick="getTermCondition('${tl.ref }','${tl.year } ${tl.termname }');">${tl.year } ${tl.termname }</a></li>
+                <%}%>
+            </c:forEach>
+        </ul>
+    </div>
+    </c:if>
 </div>
-</c:if>
+
 	

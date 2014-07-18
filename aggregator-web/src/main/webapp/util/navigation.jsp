@@ -154,14 +154,14 @@
             }
         }
     }
-    List<EttColumnInfo> ettColumnInfos =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
-    if(ettColumnInfos!=null&&ettColumnInfos.size()>0){
-        for (EttColumnInfo ectmp:ettColumnInfos){
-            if(ectmp!=null){
-                if(ectmp.getStatus()==0){
-                    writeHtml.append("<li><a target='_blank' href='"+ectmp.getEttcolumnurl()+"'><span class='"+ectmp.getStyle()+"'></span>"+ectmp.getEttcolumnname()+"</a></li>");
+    List<EttColumnInfo> ettColumnInfos1 =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
+    if(ettColumnInfos1!=null&&ettColumnInfos1.size()>0){
+        for (EttColumnInfo ectmp1:ettColumnInfos1){
+            if(ectmp1!=null){
+                if(ectmp1.getStatus()==0){
+                    writeHtml.append("<li><a target='_blank' href='"+ectmp1.getEttcolumnurl()+"'><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
                 }else
-                    writeHtml.append("<li><a  href=\"javascript:alert('权限不足!');\"><span class='"+ectmp.getStyle()+"'></span>"+ectmp.getEttcolumnname()+"</a></li>");
+                    writeHtml.append("<li><a  href=\"javascript:alert('权限不足!');\"><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
             }
         }
     }
