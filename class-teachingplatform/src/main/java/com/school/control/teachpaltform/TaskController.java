@@ -273,10 +273,21 @@ public class TaskController extends BaseController<TpTaskInfo>{
         t.setSelecttype(1);
         t.setLoginuserid(this.logined(request).getUserid());
         t.setStatus(1);
+        PageResult pageResult=new PageResult();
+        pageResult.setOrderBy("u.order_idx desc");
+        pageResult.setPageNo(0);
+        pageResult.setPageSize(0);
         //1 2 3 4 5 6 7 8 9 10
         //已发布的任务
         Integer descIdx=Integer.parseInt(orderix);
-        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t,null);
+        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t,pageResult);
+
+
+        //0是调至最后获取最大索引
+        if(descIdx==0)
+            descIdx=taskList.get(0).getOrderidx();
+        else
+            descIdx=descIdx-1<0?1:descIdx-1;
 
         if(taskList!=null&&taskList.size()>0){
             if(tmpTask.getOrderidx()>descIdx){  //从7往3调
@@ -314,7 +325,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
         TpTaskInfo upd=new TpTaskInfo();
         upd.setTaskid(tmpTask.getTaskid());
-        upd.setOrderidx(Integer.parseInt(orderix));
+        upd.setOrderidx(descIdx);
         sql=new StringBuilder();
         objList=this.tpTaskManager.getUpdateSql(upd,sql);
         if(sql!=null&&objList!=null){

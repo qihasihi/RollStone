@@ -144,6 +144,7 @@ function spanClick(obj,total){
     for(var i=1;i<=total;i++){
         h+='<option value="'+i+'">'+i+'</option>';
     }
+    h+='<option value="0">调至最后</option>';
     h+='</select>';
     $(obj).html(h);
     $("select[id='sel_order_idx']").focus();

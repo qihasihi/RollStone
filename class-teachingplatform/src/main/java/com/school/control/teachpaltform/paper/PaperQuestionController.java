@@ -212,7 +212,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         pq=tmpList.get(0);
 
         PageResult p=new PageResult();
-        p.setOrderBy("u.order_idx");
+        p.setOrderBy("u.order_idx desc");
         PaperQuestion paperQuestion=new PaperQuestion();
         paperQuestion.setPaperid(Long.parseLong(paperid));
         List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(paperQuestion,p);
@@ -223,6 +223,12 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         List<String>sqlListArray=new ArrayList<String>();
 
         Integer descIdx=Integer.parseInt(orderix);
+        //0是调至最后获取最大索引
+        if(descIdx==0)
+            descIdx=paperQuestionList.get(0).getOrderidx();
+        else
+            descIdx=descIdx-1<0?1:descIdx-1;
+
         if(paperQuestionList!=null&&paperQuestionList.size()>0){
             if(pq.getOrderidx()>descIdx){  //从7往3调
                 for(PaperQuestion paperQues:paperQuestionList){
@@ -259,7 +265,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
         PaperQuestion upd=new PaperQuestion();
         upd.setPaperid(pq.getPaperid());
-        upd.setOrderidx(Integer.parseInt(orderix));
+        upd.setOrderidx(descIdx);
         upd.setQuestionid(pq.getQuestionid());
         sql=new StringBuilder();
         objList=this.paperQuestionManager.getUpdateSql(upd,sql);
