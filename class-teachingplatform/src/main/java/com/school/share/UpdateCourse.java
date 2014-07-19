@@ -171,6 +171,8 @@ public class UpdateCourse extends TimerTask{
         IPaperQuestionManager paperQuestionManager=(PaperQuestionManager)SpringBeanUtil.getBean("paperQuestionManager");
         //微视频与试卷关系
         IMicVideoPaperManager micVideoPaperManager=(MicVideoPaperManager)SpringBeanUtil.getBean("micVideoPaperManager");
+        //视频组关联关系
+        IQuesTeamRelaManager quesTeamRelaManager=(QuesTeamRelaManager)SpringBeanUtil.getBean("quesTeamRelaManager");
 
         //取出相关前100个文件记录，进行循环
         while(true){
@@ -385,7 +387,7 @@ public class UpdateCourse extends TimerTask{
                              }
 
 
-                             //得到问题的SQL语句
+                             //得到问题的SQL语句     试题组      试题答案
                              List<QuestionInfo> quesList=UpdateCourseUtil.getQuestionByXml(tmp.getPath(),ctmp.getCourseid());
                              if(quesList!=null&&quesList.size()>0){
                                  for(QuestionInfo ques:quesList){
@@ -450,6 +452,30 @@ public class UpdateCourse extends TimerTask{
                                          }
                                          sqlArrayList=new ArrayList<String>();
                                          objArrayList=new ArrayList<List<Object>>();
+                                     }
+                                     //得到问题下的试题组
+                                     List<QuesTeamRela> qtrList=UpdateCourseUtil.getEttQuesTeamRelaByXml(tmp.getPath(),ctmp.getCourseid(),ques.getQuestionid());
+                                     if(qtrList!=null&&qtrList.size()>0){
+                                         //先删除再添加
+                                         sqlbuilder=new StringBuilder();
+                                         QuesTeamRela delTmp=new QuesTeamRela();
+                                         delTmp.setTeamid(ques.getQuestionid());
+                                         objList =quesTeamRelaManager.getDeleteSql(delTmp,sqlbuilder);
+                                         if(sqlbuilder!=null){
+                                             objArrayList.add(objList);
+                                             sqlArrayList.add(sqlbuilder.toString());
+                                         }
+                                         //循环添加
+                                         for(QuesTeamRela qtTmp:qtrList){
+                                             if(qtTmp!=null){
+                                                 sqlbuilder=new StringBuilder();
+                                                objList=quesTeamRelaManager.getSaveSql(qtTmp,sqlbuilder);
+                                                 if(sqlbuilder!=null){
+                                                     objArrayList.add(objList);
+                                                     sqlArrayList.add(sqlbuilder.toString());
+                                                 }
+                                             }
+                                         }
                                      }
                                  }
                              }
@@ -1820,6 +1846,55 @@ class UpdateCourseUtil{
             }
         }
         return topicList;
+    }
+
+    /**
+     * 解析得到专题论题的集合
+     * @param xmlFullName 分解析的XML完整路径
+     * @param courseId 得到CourseId下的文件
+     */
+    public static List getEttQuesTeamRelaByXml(String xmlFullName,Long courseId,Long teamid) {
+        List<QuesTeamRela> qtrList=new ArrayList<QuesTeamRela>();
+
+        //得到要解析后的实体  (不加载子项)
+        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
+        if(list==null||list.size()<1)return null;
+        for (Object obj : list) {
+            Map<String,Object> courseMap=(Map<String,Object>)obj;
+            if(courseMap.containsKey("CourseId")&&courseMap.containsKey("QuesTeamRelaList")){
+                if(courseMap.get("CourseId")!=null
+                        &&!courseMap.get("CourseId").toString().trim().toUpperCase().equals("NULL")
+                        &&courseMap.get("CourseId").toString().trim().equals(courseId.toString())){
+                    Object courseIdObj=courseMap.get("CourseId");
+                    if(courseIdObj!=null&&courseIdObj.toString().trim().length()>0){
+                        if(courseIdObj.toString().trim().equals(courseId.toString())){
+                            List<Map<String,Object>> topicMapList=(List<Map<String,Object>>)courseMap.get("QuesTeamRelaList");
+                            for (Map<String, Object> mp : topicMapList) {
+                                if(mp.containsKey("Teamid")&&mp.get("Teamid")!=null&&mp.get("Teamid").toString().trim().equals(teamid.toString())){
+                                    QuesTeamRela qtr=new QuesTeamRela();//
+                                    //Status
+                                    if(mp.containsKey("Ref")&&mp.get("Ref")!=null&&!mp.get("Ref").toString().toUpperCase().equals("NULL"))
+                                        qtr.setRef(Long.parseLong(mp.get("Ref").toString().trim()));
+                                    //Quesid
+                                    if(mp.containsKey("Quesid")&&mp.get("Quesid")!=null&&!mp.get("Quesid").toString().toUpperCase().equals("NULL"))
+                                        qtr.setQuesid(Long.parseLong(mp.get("Quesid").toString().trim()));
+                                    //Teamid
+                                    if(mp.containsKey("Teamid")&&mp.get("Teamid")!=null&&!mp.get("Teamid").toString().toUpperCase().equals("NULL"))
+                                        qtr.setTeamid(Long.parseLong(mp.get("Teamid").toString().trim()));
+                                    //Orderid
+                                    if(mp.containsKey("Orderid")&&mp.get("Orderid")!=null&&!mp.get("Orderid").toString().toUpperCase().equals("NULL"))
+                                        qtr.setOrderid(Integer.parseInt(mp.get("Orderid").toString().trim()));
+
+                                    qtrList.add(qtr);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return qtrList;
     }
     /**
      * 解析得到问题答案信息

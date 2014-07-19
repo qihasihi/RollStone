@@ -90,15 +90,16 @@ public class QuestionDAO extends CommonDAO<QuestionInfo> implements IQuestionDAO
             objList.add(questioninfo.getCloudstatus());
         } else
             sqlbuilder.append("null,");
-		if (questioninfo.getStatus() != null) {
-			sqlbuilder.append("?,");
-			objList.add(questioninfo.getStatus());
-		} else
-			sqlbuilder.append("null,");
-
-
-
-
+        if (questioninfo.getStatus() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questioninfo.getStatus());
+        } else
+            sqlbuilder.append("null,");
+        if (questioninfo.getExtension() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questioninfo.getExtension());
+        } else
+            sqlbuilder.append("null,");
 
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
@@ -222,6 +223,11 @@ public class QuestionDAO extends CommonDAO<QuestionInfo> implements IQuestionDAO
             if(questioninfo.getCorrectanswer()!=null){
                 sqlbuilder.append("?,");
                 objList.add(questioninfo.getCorrectanswer());
+            }else
+                sqlbuilder.append("null,");
+            if(questioninfo.getExtension()!=null){
+                sqlbuilder.append("?,");
+                objList.add(questioninfo.getExtension());
             }else
                 sqlbuilder.append("null,");
 
@@ -350,6 +356,11 @@ public class QuestionDAO extends CommonDAO<QuestionInfo> implements IQuestionDAO
             objList.add(questioninfo.getCorrectanswer());
         }else
             sqlbuilder.append("null,");
+        if(questioninfo.getExtension()!=null){
+            sqlbuilder.append("?,");
+            objList.add(questioninfo.getExtension());
+        }else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList; 
 	}
@@ -463,6 +474,11 @@ public class QuestionDAO extends CommonDAO<QuestionInfo> implements IQuestionDAO
         if(entity.getCorrectanswer()!=null){
             sqlbuilder.append("?,");
             objList.add(entity.getCorrectanswer());
+        }else
+            sqlbuilder.append("null,");
+        if(entity.getExtension()!=null){
+            sqlbuilder.append("?,");
+            objList.add(entity.getExtension());
         }else
             sqlbuilder.append("null,");
         sqlbuilder.append("?)}");

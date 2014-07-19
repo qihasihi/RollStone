@@ -28,9 +28,19 @@ public class QuestionInfo implements java.io.Serializable {
     private java.lang.Integer questionlevel;
     private java.lang.String analysis;//答案解析，填空题将不作为正确答案
     private java.lang.String province;
+    private Integer extension;
+
 
 
     private String correctanswer;//正确答案
+
+    public Integer getExtension() {
+        return extension;
+    }
+
+    public void setExtension(Integer extension) {
+        this.extension = extension;
+    }
 
     public List<QuestionOption> questionOption;//选择题试题选项
 
