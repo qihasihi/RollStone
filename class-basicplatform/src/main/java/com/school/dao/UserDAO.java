@@ -557,16 +557,15 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
 		return null;
 	}
 
-    public List<UserInfo> getUserNotCompleteTask(TpTaskInfo t,String flag) {
+     public List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag){
         StringBuilder sqlbuilder = new StringBuilder("{call tp_task_notcomplete_proc_split(");
         List<Object> objList = new ArrayList<Object>();
-        if(t==null||t.getTaskid()==null||t.getCourseid()==null)
+        if(taskid==null)
             return null;
-        sqlbuilder.append("?,?,");
-        objList.add(t.getTaskid());
-        objList.add(t.getCourseid());
-        if(t.getUserid()!=null){
-            objList.add(t.getUserid());
+        sqlbuilder.append("?,NULL,");
+        objList.add(taskid);
+        if(userid!=null){
+            objList.add(userid);
             sqlbuilder.append("?,");
         }else
             sqlbuilder.append("null,");
@@ -575,6 +574,12 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
             sqlbuilder.append("?,");
         }else
             sqlbuilder.append("null,");
+        if(classid!=null){
+            objList.add(classid);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("null,");
+
         sqlbuilder.append("?)}");
         List<Integer> types=new ArrayList<Integer>();
         types.add(Types.INTEGER);

@@ -40,6 +40,14 @@ public interface ITaskPerformanceManager  extends IBaseManager<TaskPerformanceIn
 
     public List<Map<String,Object>> getPerformanceOptionNum2(Long taskid,Long classid);
 
+    /**
+     * 微视频统计
+     * @param taskid
+     * @param questionid
+     * @return
+     */
+    public List<Map<String,Object>> getMicPerformanceOptionNum(Long taskid,Long questionid);
+
 	/**
 	 * 查询回答论题的人数
 	 * @param t

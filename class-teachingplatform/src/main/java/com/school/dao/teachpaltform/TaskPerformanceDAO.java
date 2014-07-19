@@ -333,8 +333,23 @@ public class TaskPerformanceDAO extends CommonDAO<TaskPerformanceInfo> implement
         return numList;
     }
 
+    @Override
+    public List<Map<String, Object>> getMicPerformanceOptionNum(Long taskid, Long questionid) {
+        if(taskid==null||questionid==null)
+            return null;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_qry_stu_mic_perform_option_num(");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(taskid);
+        objList.add(questionid);
+        sqlbuilder.append("?,?");
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> numList = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        return numList;
+    }
+
     public List<Map<String, Object>> getPerformanceNum(Long taskid, Long classid,Integer type) {
-        if(taskid==null||classid==null)
+        if(taskid==null)
             return null;
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_qry_stu_performance_num(");
@@ -347,8 +362,11 @@ public class TaskPerformanceDAO extends CommonDAO<TaskPerformanceInfo> implement
         }else{
             sqlbuilder.append("NULL,");
         }
-        sqlbuilder.append("?");
-        objList.add(type);
+        if(type!=null){
+            sqlbuilder.append("?");
+            objList.add(type);
+        }else
+            sqlbuilder.append("NULL");
         sqlbuilder.append(")}");
         List<Map<String,Object>> numList = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
         return numList;

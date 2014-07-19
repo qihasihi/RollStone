@@ -30,6 +30,15 @@ public class TpTaskInfo implements Serializable {
     private Integer quesnum;
     private Integer resourcetype;
     private Integer remotetype;
+    private Object classid;
+
+    public Object getClassid() {
+        return classid;
+    }
+
+    public void setClassid(Object classid) {
+        this.classid = classid;
+    }
 
     public String getResourcename() {
         return resourcename;
@@ -323,6 +332,21 @@ public class TpTaskInfo implements Serializable {
         if(etime==null)
             return null;
         return UtilTool.DateConvertToString(UtilTool.StringConvertToDate(etime.toString()), UtilTool.DateType.type1);
+    }
+
+    public String getTaskTypeName(){
+        if(this.getTasktype()==null)
+            return null;
+        String tasktype=null;
+        switch (this.getTasktype()){
+            case 1:tasktype="资源学习";break;
+            case 2:tasktype="互动交流";break;
+            case 3:tasktype="试题";break;
+            case 4:tasktype="成卷测试";break;
+            case 5:tasktype="自主测试";break;
+            case 6:tasktype="微课程学习";break;
+        }
+        return  tasktype;
     }
 
 

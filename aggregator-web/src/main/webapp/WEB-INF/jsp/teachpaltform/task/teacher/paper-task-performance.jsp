@@ -44,19 +44,35 @@
 <div class="subpage_head"><span class="ico55"></span><strong>任务统计</strong></div>
 <div class="content1">
     <p class="font-black">
-        <input type="radio" name="classradio" id="radio" checked="checked" value="0" onclick="loadPaperPerformance(null,'${taskInfo.tasktype}','${taskInfo.taskvalueid}')">
-        全部&nbsp;&nbsp;&nbsp;&nbsp;
+
         <c:if test="${!empty classList}">
             <c:forEach items="${classList}" var="c">
                 <input type="radio" id="radio${c.classid}" value="${c.classid}|${c.classtype}"  name="classradio" onclick="loadPaperPerformance('${c.classid }','${taskInfo.tasktype}','${taskInfo.taskvalueid}',${c.classtype})"/>${c.classname }
             </c:forEach>
-        </c:if></p>
+        </c:if>&nbsp;&nbsp;&nbsp;&nbsp;
+        <c:if test="${fn:length(classList)>1}">
+            <input type="radio" name="classradio" id="radio" checked="checked" value="0" onclick="loadPaperPerformance(null,'${taskInfo.tasktype}','${taskInfo.taskvalueid}')">
+            全部
+        </c:if>
+    </p>
     <p class="font-black p_t_10"><strong>完成比率：</strong><span id="finishnum"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--a href="" id="showdetail" target="_blank" class="font-darkblue">查看题目</a--></p>
+    <p class="font-black p_t_10">未完成任务：<span id="notcomplete" onmousemove="var dvstyle=dv_nocomplete.style;dvstyle.left=(mousePostion.x+5)+'px';dvstyle.top=(mousePostion.y+5)+'px';dvstyle.display='block'"
+                                             onmouseout="dv_nocomplete.style.display='none';"></span>人&nbsp;&nbsp;&nbsp;<!--a href="" id="showdetail" target="_blank" class="font-darkblue">查看题目</a-->
+        <span  id="sendMsg"></span>
+    </p>
     <div id="mainTbl">
 
     </div>
     <br/>
 </div>
+
+<div class="public_windows" id="dv_nocomplete" style="display: none;position: absolute;" >
+    <h3></a>未完成任务人员</h3>
+    <div class="jxxt_student_rw_float" id="dv_nocomplete_data">
+
+    </div>
+</div>
+
 <%@include file="/util/foot.jsp" %>
 </body>
 </html>

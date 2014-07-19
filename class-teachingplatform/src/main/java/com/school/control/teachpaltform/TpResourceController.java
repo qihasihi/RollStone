@@ -2478,7 +2478,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         JsonEntity je = new JsonEntity();
         String courseid=request.getParameter("courseid");
         String resid=request.getParameter("resid");
-        if(courseid==null||courseid.trim().length()<1){
+        String taskid=request.getParameter("taskid");
+        if(courseid==null||courseid.trim().length()<1||taskid==null||taskid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return null;
@@ -2541,6 +2542,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         mp.put("resObj", resList.get(0));
         mp.put("paperid", mvpaperList.get(0).getPaperid().toString());
         mp.put("courseid",courseid);
+        mp.put("taskid",taskid);
 
         return new ModelAndView("/teachpaltform/resource/mic-view-detail",mp);
     }

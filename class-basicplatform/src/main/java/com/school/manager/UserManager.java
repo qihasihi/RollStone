@@ -126,8 +126,8 @@ public class UserManager extends BaseManager<UserInfo> implements IUserManager{
 		return this.userdao.getTestUser(year,relation,presult);
 	}
 
-    public List<UserInfo> getUserNotCompleteTask(TpTaskInfo t,String flag) {
-        return this.userdao.getUserNotCompleteTask(t,flag);
+    public List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag){
+        return this.userdao.getUserNotCompleteTask(taskid,userid,classid,flag);
     }
 
 }

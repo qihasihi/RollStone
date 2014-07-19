@@ -35,9 +35,8 @@ public interface IUserDAO extends ICommonDAO<UserInfo> {
 
     /**
      * 获取未完成任务的学生名单
-     * @param t
      * @param flag=1 查询未完成
      * @return
      */
-    List<UserInfo>getUserNotCompleteTask(TpTaskInfo t,String flag);
+    List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag);
 }

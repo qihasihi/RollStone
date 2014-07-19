@@ -81,10 +81,10 @@
                     <col class="w880"/>
                     <caption>
                         <c:if test="${pq.questiontype==1||pq.questiontype==2}">
-                            <a href="task?loadMicPerformance&courseid=${courseid}&questionid=${pq.questionid}&type=1" class="font-blue f_right">查看回答</a>
+                            <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${pq.questionid}&type=1&paperid=${paperid}" class="font-blue f_right">查看回答</a>
                         </c:if>
                         <c:if test="${pq.questiontype==3||pq.questiontype==4}">
-                            <a href="task?loadMicPerformance&courseid=${courseid}&questionid=${pq.questionid}&type=2" class="font-blue f_right">查看回答</a>
+                            <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${pq.questionid}&type=2&paperid=${paperid}" class="font-blue f_right">查看回答</a>
                         </c:if>
                         <span class="font-blue">${idx.index+1}</span>/${fn:length(pqList)}
                     </caption>

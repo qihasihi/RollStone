@@ -14,6 +14,8 @@ import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.entity.teachpaltform.paper.PaperInfo;
+import com.school.entity.teachpaltform.paper.StuPaperLogs;
+import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
 import com.school.manager.ClassManager;
 import com.school.manager.DictionaryManager;
@@ -28,12 +30,14 @@ import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
+import com.school.manager.inter.teachpaltform.paper.IStuPaperQuesLogsManager;
 import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.PaperManager;
+import com.school.manager.teachpaltform.paper.StuPaperQuesLogsManager;
 import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
 import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.ChartFactory;
@@ -79,6 +83,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private ISmsManager smsManager;
     private ITpCoursePaperManager tpCoursePaperManager;
     private IPaperManager paperManager;
+    private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
     private IResourceManager resourceManager;
     public TaskController(){
         this.resourceManager=this.getManager(ResourceManager.class);
@@ -106,6 +111,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         this.smsManager=this.getManager(SmsManager.class);
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
         this.paperManager=this.getManager(PaperManager.class);
+        this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
     }
     /**
 	 * 根据课题ID，加载任务列表
@@ -452,7 +458,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         t.setCourseid(Long.parseLong(courseid));
         t.setTaskid(Long.parseLong(taskid));
         t.setUserid(this.logined(request).getUserid());
-        List<UserInfo>stuList=this.userManager.getUserNotCompleteTask(t,"1");
+        List<UserInfo>stuList=this.userManager.getUserNotCompleteTask(t.getTaskid(),this.logined(request).getUserid(),null,"1");
         je.setType("success");//
         je.setObjList(stuList);//
         response.getWriter().print(je.toJSON());
@@ -2380,9 +2386,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		}
 
 
-
-
-		
 		QuestionAnswer qa=new QuestionAnswer();
 		qa.setCourseid(Long.parseLong(courseid));
 		qa.setQuesparentid(Long.parseLong(resourceid));
@@ -3002,20 +3005,93 @@ public class TaskController extends BaseController<TpTaskInfo>{
         response.getWriter().print(je.toJSON());
     }
 
-    @RequestMapping(params="loadStuMicQuesPerformance",method=RequestMethod.POST)
-    public void loadStuMicQuesPerformance(HttpServletRequest request,HttpServletResponse response)throws Exception{
+    @RequestMapping(params="loadStuMicQuesPerformance",method=RequestMethod.GET)
+    public ModelAndView loadStuMicQuesPerformance(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je=new JsonEntity();
         String courseid=request.getParameter("courseid");
         String questionid=request.getParameter("questionid");
+        String paperid=request.getParameter("paperid");
+        String taskid=request.getParameter("taskid");
         String type=request.getParameter("type"); //1:主观 2:客观
         if(courseid==null||courseid.trim().length()<1
                 ||questionid==null||questionid.trim().length()<1
-                ||type==null||type.trim().length()<1){
+                ||type==null||type.trim().length()<1
+                ||paperid==null||paperid.trim().length()<1
+                ||taskid==null||taskid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-            response.getWriter().print(je.toJSON());
-            return;
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
         }
+        StuPaperQuesLogs logs=new StuPaperQuesLogs();
+        logs.setPaperid(Long.parseLong(paperid));
+        logs.setQuesid(Long.parseLong(questionid));
+        List<StuPaperQuesLogs>logsList=this.stuPaperQuesLogsManager.getList(logs,null);
+        mp.put("logList",logsList);
+        if(type.equals("1")){
+            return new ModelAndView("/teachpaltform/task/teacher/mic-paper-zg", mp);
+        }else{
+            List<Map<String,Object>> numList =this.taskPerformanceManager.getPerformanceNum(Long.parseLong(taskid),null,null);
+            List<Map<String,Object>> optionnumList =this.taskPerformanceManager.getMicPerformanceOptionNum(Long.parseLong(taskid),Long.parseLong(questionid));
+            QuestionOption qo = new QuestionOption();
+            qo.setQuestionid(Long.parseLong(questionid));
+            PageResult pr = new PageResult();
+            pr.setOrderBy("u.option_type");
+            List<QuestionOption> optionList = this.questionOptionManager.getList(qo,pr);
+            int totalNum = 0;
+            for(int i =0;i<optionnumList.size();i++){
+                totalNum+=Integer.parseInt(optionnumList.get(i).get("NUM").toString());
+            }
+            List<Map<String,Object>> option = new ArrayList<Map<String, Object>>();
+            //动态拼成想要的选项表分布比例
+            DecimalFormat di = new DecimalFormat("#.00");
+            for(QuestionOption o:optionList){
+                Map m = new HashMap();
+                if(optionnumList.size()>0){
+                    for(int i =0;i<optionnumList.size();i++){
+                        if(o.getOptiontype().equals(optionnumList.get(i).get("OPTION_TYPE"))){
+                            m.put("OPTION_TYPE",o.getOptiontype());
+                            m.put("NUM",di.format((double)Integer.parseInt(optionnumList.get(i).get("NUM").toString())/totalNum*100));
+                            break;
+                        }else{
+                            m.put("OPTION_TYPE",o.getOptiontype());
+                            m.put("NUM",0);
+                        }
+                    }
+                }else{
+                    m.put("OPTION_TYPE",o.getOptiontype());
+                    m.put("NUM",0);
+                }
+                option.add(m);
+            }
+            //以下是生成统计图
+            DefaultPieDataset dataset = new DefaultPieDataset();
+            for(Map o:optionnumList){
+                dataset.setValue(o.get("OPTION_TYPE").toString(),Integer.parseInt(o.get("NUM").toString()));
+            }
+            JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
+            FileOutputStream fos = null;
 
+            try{
+                fos = new FileOutputStream(request.getRealPath("/")+"images/taskMicPie.png");
+                ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
+            }finally{
+                fos.close();
+            }
+
+            mp.put("numList",numList);
+            mp.put("optionList",option);
+
+            Integer right=0;
+            if(option!=null)
+            {
+                for(StuPaperQuesLogs p:logsList){
+                    if(p.getIsright().toString().equals("1"))
+                        right+=1;
+                }
+            }
+            mp.put("right",right);
+            return new ModelAndView("/teachpaltform/task/teacher/mic-paper-kg", mp);
+        }
     }
         /**
          * 查询学生试卷任务完成情况
@@ -3050,6 +3126,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
             t.setOrderstr(orderstr);
         else
             t.setOrderstr("t.c_time desc");
+        //未完成人数
+        TpTaskInfo task=new TpTaskInfo();
+        task.setTaskid(Long.parseLong(taskid));
+        Integer cid=null;
+        if(classid!=null&&!classid.equals("0"))
+            cid=Integer.parseInt(classid);
+
+        List<UserInfo>notCompleteList=this.userManager.getUserNotCompleteTask(task.getTaskid(),null,cid,"1");
         //任务记录
         List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getPerformListByTaskid(t,clsid,Integer.parseInt(type));
         //数量统计
@@ -3077,6 +3161,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         je.getObjList().add(numList);
         je.getObjList().add(tList);
         je.getObjList().add(tiList);
+        je.getObjList().add(notCompleteList);
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }
@@ -3252,7 +3337,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String usertypeid=request.getParameter("usertypeid");
         if(uidArray==null||uidArray.trim().length()<1
                 ||taskid==null||taskid.trim().length()<1
-                ||usertypeid==null||usertypeid.trim().length()<1){
+                //||usertypeid==null||usertypeid.trim().length()<1
+                ){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
@@ -3282,29 +3368,41 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
         TpTaskAllotInfo ta=new TpTaskAllotInfo();
         ta.setTaskid(tmpTask.getTaskid());
-        ta.setUsertypeid(Long.parseLong(usertypeid));
+        if(usertypeid!=null&&!usertypeid.equals("null")&&!"0".equals(usertypeid))
+            ta.setUsertypeid(Long.parseLong(usertypeid));
         List<TpTaskAllotInfo>taskAllotInfoList=this.tpTaskAllotManager.getList(ta,null);
         if(tpTaskInfoList==null||tpTaskInfoList.size()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().print(je.toJSON());
             return;
         }
-        TpTaskAllotInfo tmpTaskAllot=taskAllotInfoList.get(0);
-        //任务1：资源学习 野生动物.wmv 截止时间是XXX（此处具体到分钟即可），特提醒你尽快完成任务。
-        String tasktype=tmpTask.getTasktype()==1?"资源学习":tmpTask.getTasktype()==2?"互动交流":tmpTask.getTasktype()==3?"试题":"";
-        String content="";
-        try {
-            content="任务："+tasktype+" "+tmpTask.getTaskobjname()+" 截止时间是"+tmpTaskAllot.getEtimeString()+"，请尽快完成任务!";
-        }catch (Exception e){
-            content="";
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+        for (TpTaskAllotInfo tmpTaskAllot:taskAllotInfoList){
+            //任务1：资源学习 野生动物.wmv 截止时间是XXX（此处具体到分钟即可），特提醒你尽快完成任务。
+
+            String content="";
+            try {
+                content="任务："+tmpTask.getTaskTypeName()+" "+tmpTask.getTaskobjname()+" 截止时间是"+tmpTaskAllot.getEtimeString()+"，请尽快完成任务!";
+            }catch (Exception e){
+                content="";
+            }
+            SmsInfo smsInfo=new SmsInfo();
+            smsInfo.setReceiverlist(userName);
+            smsInfo.setSmstitle("任务未完成提醒");
+            smsInfo.setSenderid(this.logined(request).getUserid());
+            smsInfo.setSmscontent(content);
+            smsInfo.setSmsstatus(1);
+            sql=new StringBuilder();
+            objList=this.smsManager.getSaveSql(smsInfo,sql);
+            if(sql!=null&&objList!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
         }
-        SmsInfo smsInfo=new SmsInfo();
-        smsInfo.setReceiverlist(userName);
-        smsInfo.setSmstitle("任务未完成提醒");
-        smsInfo.setSenderid(this.logined(request).getUserid());
-        smsInfo.setSmscontent(content);
-        smsInfo.setSmsstatus(1);
-        if(this.smsManager.doSave(smsInfo)){
+        if(this.smsManager.doExcetueArrayProc(sqlListArray,objListArray)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");
         }else

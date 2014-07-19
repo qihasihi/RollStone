@@ -36,8 +36,7 @@ public interface IUserManager extends IBaseManager<UserInfo> {
 
     /**
      * 获取未完成任务的学生名单
-     * @param t
      * @return
      */
-    List<UserInfo>getUserNotCompleteTask(TpTaskInfo t,String flag);
+    List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag);
 }

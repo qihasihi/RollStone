@@ -28,6 +28,14 @@ public interface ITaskPerformanceDAO extends ICommonDAO<TaskPerformanceInfo>{
     public List<Map<String,Object>> getPerformanceOptionNum2(Long taskid,Long classid);
 
     /**
+     * 微视频统计
+     * @param taskid
+     * @param questionid
+     * @return
+     */
+    public List<Map<String,Object>> getMicPerformanceOptionNum(Long taskid,Long questionid);
+
+    /**
      * 查询答题完成率和正确率
      * */
 

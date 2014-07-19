@@ -104,6 +104,11 @@ public class  TaskPerformanceManager extends BaseManager<TaskPerformanceInfo> im
         return this.taskperformancedao.getPerformanceOptionNum2(taskid,classid);
     }
 
+    @Override
+    public List<Map<String, Object>> getMicPerformanceOptionNum(Long taskid, Long questionid) {
+        return this.taskperformancedao.getMicPerformanceOptionNum(taskid,questionid);
+    }
+
     public List<TaskPerformanceInfo> getReplyColumsCount(TaskPerformanceInfo t) {
 		// TODO Auto-generated method stub
 		return this.taskperformancedao.getReplyColumsCount(t);

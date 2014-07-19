@@ -1163,7 +1163,7 @@ function loadNoCompleteStu(taskid, usertypeid, taskstatus) {
 
 
 function doSendTaskMsg(taskid, usertypeid) {
-    if (typeof taskid == 'undefined' || typeof usertypeid == 'undefined') {
+    if (typeof taskid == 'undefined') {
         alert('参数异常!请刷新页面重试!');
         return;
     }
@@ -1822,6 +1822,31 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
             } else {
                 htm += '<table><tr><td>暂无数据!</td></tr></table>';
             }
+
+
+            if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
+                $.each(rmsg.objList[3], function (idx, itm) {
+                    if ($('p[id="p_stu_' + itm.classid + '"]').length > 0)
+                        if ($('ul[id="ul_stu_' + itm.classid + '"]').length > 0)
+                            $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                        else {
+                            $("#dv_nocomplete_data").append('<ul id="ul_stu_' + itm.classid + '"></ul>');
+                            $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                        }
+                    else {
+                        $("#dv_nocomplete_data").append('<p id="p_stu_' + itm.classid + '"><strong>' + itm.taskobjname + '</strong><span class="font-red"></span></p>');
+                        $("#dv_nocomplete_data").append('<ul id="ul_stu_' + itm.classid + '"></ul>');
+                        $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                    }
+
+                });
+            }
+            $("#notcomplete").html(rmsg.objList[3].length)
+            if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
+                $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public1">发提醒</a>');
+
+            }
+
             $("#mainTbl").hide();
             $("#mainTbl").html(htm);
             $("#mainTbl").show("");

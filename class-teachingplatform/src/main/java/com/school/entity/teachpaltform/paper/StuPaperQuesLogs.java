@@ -21,6 +21,25 @@ public class StuPaperQuesLogs implements  Serializable {
     private Integer ismarking;
     private String annexName;
 
+    private String stuname;
+    private String stuno;
+
+    public String getStuname() {
+        return stuname;
+    }
+
+    public void setStuname(String stuname) {
+        this.stuname = stuname;
+    }
+
+    public String getStuno() {
+        return stuno;
+    }
+
+    public void setStuno(String stuno) {
+        this.stuno = stuno;
+    }
+
     public Integer getIsmarking() {
         return ismarking;
     }

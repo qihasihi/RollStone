@@ -162,7 +162,7 @@ function getInvestReturnMethod(rps){
             }else if(itm.tasktype==5){
                 html+='<a href="#" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==6){
-                html+='<a class="font-blue" href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'" >'+taskObj+'</a>';
+                html+='<a class="font-blue" href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >'+taskObj+'</a>';
             }
             html+='</p>';
             html+='</div>';
