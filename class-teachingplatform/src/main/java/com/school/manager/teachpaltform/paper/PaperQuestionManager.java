@@ -90,5 +90,10 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
     public List<PaperQuestion> getQuestionByPaper(Long paperid) {
         return this.paperquestiondao.getQuestionByPaper(paperid);
     }
+
+    @Override
+    public List<PaperQuestion> getPaperTeamQuestionList(PaperQuestion p, PageResult pageResult) {
+        return this.paperquestiondao.getPaperTeamQuestionList(p,pageResult);
+    }
 }
 

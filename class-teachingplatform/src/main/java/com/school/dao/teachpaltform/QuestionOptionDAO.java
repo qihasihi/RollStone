@@ -190,6 +190,59 @@ public class QuestionOptionDAO extends CommonDAO<QuestionOption> implements IQue
 		return null;
 	}
 
+    @Override
+    public List<QuestionOption> getPaperQuesOptionList(QuestionOption questionoption, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL j_paper_question_option_proc_split(");
+        List<Object> objList=new ArrayList<Object>();
+        if (questionoption.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questionoption.getRef());
+        } else
+            sqlbuilder.append("null,");
+        if (questionoption.getQuestionid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questionoption.getQuestionid());
+        } else
+            sqlbuilder.append("null,");
+        if (questionoption.getOptiontype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questionoption.getOptiontype());
+        } else
+            sqlbuilder.append("null,");
+        if (questionoption.getIsright() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questionoption.getIsright());
+        } else
+            sqlbuilder.append("null,");
+        if (questionoption.getPaperid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questionoption.getPaperid());
+        } else
+            sqlbuilder.append("null,");
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<QuestionOption> questionoptionList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, QuestionOption.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return questionoptionList;
+    }
+
     /**
      * 得到同步的SQL
      * @param entity  对象实体

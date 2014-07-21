@@ -377,6 +377,10 @@
 	color:#000;
 	margin-bottom:3px;
 }
+    .jxxt_zhuanti_rw_ceshi_shiti .files {padding-top:20px;}
+	.jxxt_zhuanti_rw_ceshi_shiti .files input[type=text] { width:300px;}
+	.jxxt_zhuanti_rw_ceshi_shiti .files a.an_public3{ color:#fff;}
+	
     .jxxt_zhuanti_rw_ceshi_an {	text-align: center;	padding:20px;}
 
 	.jxxt_zhuanti_rw_add ul.gqkt{
@@ -421,6 +425,58 @@
 	top:8px;
 	right:25px;
 }
+	.jxxt_zhuanti_rw_wkc { width:910px; height:30px; margin:10px auto 25px;}
+	.jxxt_zhuanti_rw_wkc li{
+	width:435px;
+	height:28px;
+	float:left;
+}
+	.jxxt_zhuanti_rw_wkc li strong{
+	width:435px;
+	height:28px;
+	background: url(images/bg31_131230.png) no-repeat -1308px 0;
+	text-align:center;
+	font-size:12px;
+	line-height:26px;
+	display:block;
+	color:#fff;
+}
+	.jxxt_zhuanti_rw_wkc li a{color:#fff;}
+	.jxxt_zhuanti_rw_wkc li a strong{ background-position:-1744px 0;}
+	.jxxt_zhuanti_rw_wkc li a strong:hover{ background-position:-2180px 0;}
+	.jxxt_zhuanti_rw_wkc li:first-child{ margin-right:-4px;}
+	.jxxt_zhuanti_rw_wkc li:first-child strong{ background-position:-436px 0;}
+	.jxxt_zhuanti_rw_wkc li:first-child a strong{ background-position:-436px 0;}
+	.jxxt_zhuanti_rw_wkc li:first-child a strong:hover{ background-position:-872px 0;}
+	.jxxt_zhuanti_rw_wkc li.crumb a strong,.jxxt_zhuanti_rw_wkc li.crumb:first-child strong{ font-size:16px;line-height:28px;}
+
+	.jxxt_zhuanti_rw_wkc_sp {
+	width:769px;
+	height:432px;
+	margin:0 auto;
+	padding:10px 0 40px;
+}
+	.jxxt_zhuanti_rw_wkc_sj{
+	width:940px;
+	background-color: #fff;
+	padding:15px 0 10px;
+}
+	.jxxt_zhuanti_rw_wkc_sj table.public_tab1{background-color:#f8f8f8;}
+	.jxxt_zhuanti_rw_wkc_sj table.public_tab1 caption{ padding:10px 0 4px; text-align:left;}
+	.jxxt_zhuanti_rw_wkc_sj table.public_tab1 caption input.w30{ text-align: center; margin-right:5px;}
+	.jxxt_zhuanti_rw_wkc_sj table.public_tab1 table td{ padding-top:5px;}
+	.jxxt_zhuanti_rw_wkc_sj table.public_tab1 table th{ padding-top:2px; text-align:center;}
+	.jxxt_zhuanti_rw_wkc_sj span.bg{
+	width:54px;
+	height:16px;
+	background: url(images/bg29_131230.png) no-repeat -444px -148px;
+	line-height:16px;
+	color:#fff;
+	font-weight:bold;
+	text-align:center;
+	display:inline-block;
+}
+
 	.jxxt_zhuanti_zy_layout{
 	width: 1000px;
 	background: url(images/bg19_131230.png) repeat-y 198px 0;
@@ -460,6 +516,7 @@
 
 	.jxxt_zhuanti_zy_layoutR{width:775px; padding:0 10px 0 15px; float:right;}
 	.jxxt_zhuanti_zy_layoutR h1{ font-size:14px; font-weight:normal;color:#000;padding-bottom:5px;}
+	.jxxt_zhuanti_zy_layoutR h2{ font-size:12px; font-weight:normal;padding-bottom:5px; float:right;width:183px; margin-left:15px;}
 	.jxxt_zhuanti_zy_layoutR div.left{ width:578px; height:480px;}
 	.jxxt_zhuanti_zy_layoutR div.right{ width:183px; height:440px; float:right; position:relative;padding-bottom:40px;}
 	.jxxt_zhuanti_zy_layoutR div.right p.number{position: absolute;bottom:-3px; left:0;}
@@ -786,6 +843,13 @@
 	text-align:center;
 	display:inline-block;
 }
+	.jxxt_zhuanti_shijuan_add_an {
+	width:1000px;
+	height:55px;
+	background-color:#f1f1f1;
+	padding-top:15px;
+	text-align:center;
+}
 	.content1 div.jxxt_zhuanti_zy_add_info{width:920px; padding:0 10px;}
 	div.w430 p{ margin-bottom:8px;}
 	div.w430 input[type=text]{ float:right; width:150px;}
@@ -850,3 +914,41 @@
 	.jxxt_student_rw_float {width:430px; margin:5px auto 0;color:#000;}
 	.jxxt_student_rw_float ul{ margin:5px 0 10px;}
 	.jxxt_student_rw_float ul li{ display:inline-block; width:65px;}
+	
+	.jxxt_lzx_header{
+	width: 968px;
+	height: 78px;
+	padding:22px 12px 0 20px;
+	background: url(images/bg02_131230.png) no-repeat;
+	margin: 0 auto;
+	position:relative;
+}
+	.jxxt_lzx_header p{
+	width:142px;
+	height:34px;
+	background: url(images/bg30_131230.png) no-repeat;
+	position:absolute;
+	top:38px;
+	left:20px;
+}
+	.jxxt_lzx_header ul li{
+	width:75px;
+	height:75px;
+	background: url(images/bg30_131230.png) no-repeat 0 -36px;
+	text-align:center;
+	float:right;
+}
+	.jxxt_lzx_header ul li a{
+	width:75px;
+	height:22px;
+	display:block;
+	padding-top:53px;
+	line-height:20px;
+	color:#000;
+	font-family:Microsoft YaHei;
+}
+    .jxxt_lzx_header ul li a:link,.jxxt_lzx_header ul li a:visited{color:#000;}
+    .jxxt_lzx_header ul li a:hover,.jxxt_lzx_header ul li a:active{color:#34a4c6; text-decoration: none;}
+
+	.jxxt_lzx_header ul li.one{ background-position:-75px -36px;}
+	.jxxt_lzx_header ul li.two{ background-position:-150px -36px;}

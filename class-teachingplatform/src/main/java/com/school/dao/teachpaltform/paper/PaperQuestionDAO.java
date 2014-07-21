@@ -253,4 +253,47 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
         List<PaperQuestion> questionList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,PaperQuestion.class,null);
         return questionList;
     }
+
+    @Override
+    public List<PaperQuestion> getPaperTeamQuestionList(PaperQuestion paperquestion, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL j_paper_team_question_proc_split(");
+        List<Object> objList=new ArrayList<Object>();
+        if (paperquestion.getRef() != null) {
+            sqlbuilder.append("?,");
+            objList.add(paperquestion.getRef());
+        } else
+            sqlbuilder.append("null,");
+        if (paperquestion.getPaperid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(paperquestion.getPaperid());
+        } else
+            sqlbuilder.append("null,");
+        if (paperquestion.getQuestionid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(paperquestion.getQuestionid());
+        } else
+            sqlbuilder.append("null,");
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<PaperQuestion> paperquestionList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, PaperQuestion.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return paperquestionList;
+    }
 }

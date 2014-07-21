@@ -1150,7 +1150,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 addPaper.setPaperid(Long.parseLong(paperid));
                 addPaper.setQuestionid(Long.parseLong(questionid));
                 addPaper.setOrderidx(maxIdx);
-                addPaper.setScore(new Float(10));
+                addPaper.setScore(new Float(5));
                 sql=new StringBuilder();
                 objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
                 if(objList!=null&&sql!=null){
@@ -1247,7 +1247,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             addPaper.setPaperid(Long.parseLong(paperid));
             addPaper.setQuestionid(Long.parseLong(questionid));
             addPaper.setOrderidx(maxIdx);
-            addPaper.setScore(new Float(10));
+            addPaper.setScore(new Float(5));
             sql=new StringBuilder();
             objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
             if(objList!=null&&sql!=null){

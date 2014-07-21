@@ -15,6 +15,17 @@ public class QuesTeamRela implements  Serializable{
     private java.lang.Long teamid;
     private java.lang.Long ref;
 
+    private QuestionInfo questioninfo;
+
+    public QuestionInfo getQuestioninfo() {
+        if(questioninfo==null)
+            questioninfo=new QuestionInfo();
+        return questioninfo;
+    }
+    public void setQuestioninfo(QuestionInfo questioninfo) {
+        this.questioninfo = questioninfo;
+    }
+
     public Date getCtime(){
       return ctime;
     }

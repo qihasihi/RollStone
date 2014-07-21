@@ -987,7 +987,7 @@ public class PaperController extends BaseController<PaperInfo>{
             return null;
         }
 
-
+        //获取提干
         PaperQuestion pq=new PaperQuestion();
         pq.setPaperid(Long.parseLong(paperid));
         PageResult p=new PageResult();
@@ -995,6 +995,23 @@ public class PaperController extends BaseController<PaperInfo>{
         p.setPageNo(0);
         p.setPageSize(0);
         List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+
+        //获取试题组下题目
+        PaperQuestion child =new PaperQuestion();
+        child.setPaperid(pq.getPaperid());
+        List<PaperQuestion>childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
+
+        //获取选项
+        QuestionOption questionOption=new QuestionOption();
+        questionOption.setPaperid(pq.getPaperid());
+        PageResult pchild = new PageResult();
+        pchild.setPageNo(0);
+        pchild.setPageSize(0);
+        pchild.setOrderBy("u.option_type");
+        List<QuestionOption>questionOptionList=this.questionOptionManager.getPaperQuesOptionList(questionOption, pchild);
+
+
+    /*
         List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
         if(pqList!=null&&pqList.size()>0){
             for (PaperQuestion ques:pqList){
@@ -1011,8 +1028,9 @@ public class PaperController extends BaseController<PaperInfo>{
                 tmpList.add(ques);
             }
         }
+    */
 
-        request.setAttribute("pqList", tmpList);
+        request.setAttribute("pqList", pqList);
         request.setAttribute("courseid", courseid);
         request.setAttribute("paper", tpCoursePaperList.get(0));
         return new ModelAndView("/teachpaltform/paper/edit-paper");

@@ -67,7 +67,13 @@ public class  QuestionOptionManager extends BaseManager<QuestionOption> implemen
     public List<Object> getSynchroSql(QuestionOption entity,StringBuilder sqlbuilder){
         return this.questionoptiondao.getSynchroSql(entity,sqlbuilder);
     }
-	public QuestionOption getOfExcel(Sheet rs, int cols, int d, String type) {
+
+    @Override
+    public List<QuestionOption> getPaperQuesOptionList(QuestionOption questionOption, PageResult presult) {
+        return this.questionoptiondao.getPaperQuesOptionList(questionOption,presult);
+    }
+
+    public QuestionOption getOfExcel(Sheet rs, int cols, int d, String type) {
 		// TODO Auto-generated method stub
 		return null;
 	}

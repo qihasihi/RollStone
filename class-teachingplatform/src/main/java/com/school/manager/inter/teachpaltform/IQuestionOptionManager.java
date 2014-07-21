@@ -3,6 +3,7 @@ package  com.school.manager.inter.teachpaltform;
 
 import com.school.entity.teachpaltform.QuestionOption;
 import com.school.manager.base.IBaseManager;
+import com.school.util.PageResult;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface IQuestionOptionManager  extends IBaseManager<QuestionOption> {
      * @return
      */
     public List<Object> getSynchroSql(QuestionOption entity,StringBuilder sqlbuilder);
+
+    public List<QuestionOption>getPaperQuesOptionList(QuestionOption questionOption,PageResult presult);
 } 

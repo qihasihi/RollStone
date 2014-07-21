@@ -1,5 +1,6 @@
 package  com.school.entity.teachpaltform.paper;
 
+import com.school.entity.teachpaltform.QuesTeamRela;
 import com.school.entity.teachpaltform.QuestionInfo;
 import com.school.entity.teachpaltform.QuestionOption;
 import com.school.util.UtilTool;
@@ -99,6 +100,15 @@ public class  PaperQuestion implements Serializable{
     }
 
 
+    public List<QuesTeamRela>  questionTeam;  //试题组
+
+    public List<QuesTeamRela> getQuestionTeam() {
+        return questionTeam;
+    }
+
+    public void setQuestionTeam(List<QuesTeamRela> questionTeam) {
+        this.questionTeam = questionTeam;
+    }
 
     public List<QuestionOption> questionOption;//选择题试题选项
 

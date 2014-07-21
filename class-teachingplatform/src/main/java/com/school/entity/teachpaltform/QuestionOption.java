@@ -17,6 +17,15 @@ public class QuestionOption implements Serializable{
     private java.lang.Integer score;
     private Long questionid;
     private Integer questiontype;
+    private Long paperid;
+
+    public Long getPaperid() {
+        return paperid;
+    }
+
+    public void setPaperid(Long paperid) {
+        this.paperid = paperid;
+    }
 
     public Long getQuestionid() {
         return questionid;
