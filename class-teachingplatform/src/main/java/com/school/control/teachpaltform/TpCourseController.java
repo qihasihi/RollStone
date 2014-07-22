@@ -2165,6 +2165,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         cu.setUserid(user.getRef());
         cu.setClassgrade(grade.getGradevalue());
         cu.setYear(ti.getYear());
+        cu.setRelationtype("хн©нюой╕");
         cu.setSubjectid(Integer.parseInt(subjectid));
         List<ClassUser> clsList = this.classUserManager.getList(cu, null);
 
