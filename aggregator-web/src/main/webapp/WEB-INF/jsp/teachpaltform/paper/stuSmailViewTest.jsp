@@ -23,8 +23,9 @@
         var taskid="${taskid}";
         var paperid="${paperid}";
         var subQuesId=",";
-        var quesSize=0;
-
+        var quesSize="${quesSize}";
+        var allquesidObj="${allquesidObj}";
+        var sumScore=100,avgScore=100/quesSize;
         var t=1;
         $(function(){
 
@@ -43,9 +44,6 @@
         });
 
 
-
-
-
         /**
          *微视频播放完毕执行，数据添加
          */
@@ -55,7 +53,7 @@
                 $.ajax({
                     url:"paperques?m=saveStuMic",
                     type:"post",
-                    data:{resid:resid},
+                    data:{resid:resid,courseid:courseid,taskid:taskid},
                     dataType:'json',
                     cache: false,
                     error:function(){
@@ -82,14 +80,10 @@
             if($("#div_exam").html().Trim().length<1){
                 var url="paperques?m=testPaper&courseid="+courseid+"&taskid="+taskid+"&paperid="+paperid;
                 $("#div_exam").load(url+" #dv_test",function(){
-                    quesSize=$("#dv_question>div").length;
-                    $("span[name='fillbank']").each(function(idx,itm){
-                        $(this).replaceWith('<input type="text" name="txt_tk" id="txt_tk_'+$(this).parent().parent().children("input[name='hd_quesid']").val()+'"/>');
-                    });
                     //加载
                     loadQuesNumberTool(quesSize);
-                    next(1);
-                });//
+                     nextNum(0);
+                });
             }
 
             $("#li_exam").unbind("click");
@@ -134,7 +128,7 @@
             </script>
         </div>
      </div>
-       <%--<a href="javascript:;" onclick="jwplayEnd()">看完了（测试）</a>--%>
+       <a href="javascript:;" onclick="jwplayEnd()">看完了（测试）</a>
    </div>
     <div id="div_exam" style="display:none">
     </div>

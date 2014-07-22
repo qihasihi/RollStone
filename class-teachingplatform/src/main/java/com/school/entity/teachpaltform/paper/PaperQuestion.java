@@ -131,8 +131,6 @@ public class  PaperQuestion implements Serializable{
         this.questioninfo = questioninfo;
     }
 
-
-
     //paper_type_id
     public Integer getPapertypeid(){
         return this.getQuestioninfo().getPapertypeid();

@@ -2,6 +2,8 @@
 package  com.school.manager.teachpaltform.paper;
 
 import java.util.List;
+import java.util.Map;
+
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +91,10 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
     @Override
     public List<PaperQuestion> getQuestionByPaper(Long paperid) {
         return this.paperquestiondao.getQuestionByPaper(paperid);
+    }
+
+    public List<Map<String,Object>> getPaperQuesAllId(Long paperid){
+        return this.paperquestiondao.getPaperQuesAllId(paperid);
     }
 
     @Override

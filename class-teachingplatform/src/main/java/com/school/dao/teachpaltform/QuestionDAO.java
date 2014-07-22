@@ -100,6 +100,11 @@ public class QuestionDAO extends CommonDAO<QuestionInfo> implements IQuestionDAO
             objList.add(questioninfo.getExtension());
         } else
             sqlbuilder.append("null,");
+        if (questioninfo.getQuestionidStr() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questioninfo.getQuestionidStr());
+        } else
+            sqlbuilder.append("null,");
 
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");

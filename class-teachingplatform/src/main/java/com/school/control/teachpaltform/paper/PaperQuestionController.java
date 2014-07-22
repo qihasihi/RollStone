@@ -82,6 +82,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     private IResourceManager resourceManager;
     private IMicVideoPaperManager micVideoPaperManager;
     private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
+    private IQuesTeamRelaManager quesTeamRelaManager;
     public PaperQuestionController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -113,6 +114,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         this.resourceManager=this.getManager(ResourceManager.class);
         this.micVideoPaperManager=this.getManager(MicVideoPaperManager.class);
         this.stuViewMicVideoLogManager=this.getManager(StuViewMicVideoLogManager.class);
+        this.quesTeamRelaManager=this.getManager(QuesTeamRelaManager.class);
     }
     /**
      * 根据课题ID，加载试卷列表
@@ -3320,14 +3322,29 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             }
 
 
+            //得到当前的所有问题ID
+            List<Map<String,Object>> listMapStr=this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
+            if(listMapStr==null||listMapStr.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            Object allquesidObj=listMapStr.get(0).get("ALLQUESID");
+            if(allquesidObj==null||allquesidObj.toString().trim().length()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            mp.put("allquesidObj",allquesidObj);
+
+
             //如果是微视频测试，则进入相关测试页面
+            mp.put("quesSize",allquesidObj.toString().split(",").length);
             mp.put("taskid",taskid);
             mp.put("courseid",courseid);
             mp.put("paperid",paperid);
             return new ModelAndView("/teachpaltform/paper/stuSmailViewTest",mp);
         }
         //重定向，但不换地址
-        request.getRequestDispatcher("paperques?m=testPaper&paperid="+paperid+"&courseid="+courseid+"taskid="+taskid).forward(request,response);
+        request.getRequestDispatcher("paperques?m=testPaper&paperid="+paperid+"&courseid="+courseid+"&taskid="+taskid).forward(request,response);
         return null; 
     }
 
@@ -3384,27 +3401,119 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         if(spList!=null&&spList.size()>0){ //已经交卷，不能再进入
             response.sendRedirect("paperques?m=toTestDetail&paperid="+paperid);return null;
         }
+
         //得到当前的所有问题
-        PaperQuestion pq=new PaperQuestion();
-        pq.setPaperid(Long.parseLong(paperid));
-        List<PaperQuestion> pqList=this.paperQuestionManager.getList(pq,null);
-        //保存入ModelMap中
-        if(pqList!=null&&pqList.size()>0){
-            for (PaperQuestion pqentity:pqList){
-                if(pqentity!=null&&pqentity.getQuestionid()!=null){
-                    QuestionOption qo=new QuestionOption();
-                    qo.setQuestionid(pqentity.getQuestionid());
-                    pqentity.setQuestionOption(this.questionOptionManager.getList(qo,null));
-                }
-            }
+        List<Map<String,Object>> listMapStr=this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
+        if(listMapStr==null||listMapStr.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+        Object allquesidObj=listMapStr.get(0).get("ALLQUESID");
+        if(allquesidObj==null||allquesidObj.toString().trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        mp.put("allquesidObj",allquesidObj);
         mp.put("paperObj",paperList.get(0));
         mp.put("taskid",taskid);
         mp.put("courseid",courseid);
-        mp.put("quesList",pqList);
-        mp.put("quesSize",pqList.size());
+        mp.put("allquesidObj",allquesidObj);
+        mp.put("quesSize",allquesidObj.toString().split(",").length);
         mp.put("paperid",paperid);
         return new ModelAndView("/teachpaltform/paper/"+toPage,mp);
+    }
+
+    /**
+     * 试卷测试，下一个试题
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=nextTestQues",method = RequestMethod.POST)
+    public void testNextQues(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String quesid=request.getParameter("quesid");
+        String paperid=request.getParameter("paperid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(quesid==null||quesid.toString().trim().length()<1||paperid==null||paperid.toString().trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+        String q=quesid;
+
+        if(q.indexOf("|")!=-1){
+            Object[] quesObjArray=quesid.split("\\|");
+            quesid=quesObjArray[1].toString();
+            String parentQuesid=quesObjArray[0].toString();
+            if(parentQuesid!=null&&parentQuesid.toString().trim().length()>0){
+                //查询题干
+                QuestionInfo parentQues=new QuestionInfo();
+                parentQues.setQuestionid(Long.parseLong(parentQuesid));
+                List<QuestionInfo> pquesList=this.questionManager.getList(parentQues,null);
+                if(pquesList==null||pquesList.size()<1){
+                    jsonEntity.setMsg("错误，主试题题干不存在!请刷新重试!");
+                    response.getWriter().println(jsonEntity.toJSON());return ;
+                }
+               jsonEntity.getObjList().add(pquesList.get(0));
+            }
+        }
+        //验证试题
+        QuestionInfo quest=new QuestionInfo();
+        quest.setQuestionid(Long.parseLong(quesid.trim()));
+        List<QuestionInfo> quesList=this.questionManager.getList(quest,null);
+        if(quesList==null||quesList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+
+        //得到是否存在于当前试卷中
+        //得到当前的所有问题
+        List<Map<String,Object>> listMapStr=this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
+        if(listMapStr==null||listMapStr.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+        Object allquesidObj=listMapStr.get(0).get("ALLQUESID");
+        if(allquesidObj==null||allquesidObj.toString().trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+        String[] quesArray=allquesidObj.toString().trim().split(",");
+        if(quesArray.length<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+
+        boolean ishas=false;
+        for (String qid:quesArray){
+            if(qid==null||qid.length()<1)continue;
+            if(qid.indexOf("|")!=-1)
+                if(qid.split("\\|")[1].equals(quesid)){
+                    ishas=true;
+                    break;
+                }
+            if(qid.equals(quesid)){
+                ishas=true;
+                break;
+            }
+        }
+        //加载选项
+        QuestionOption qo=new QuestionOption();
+        qo.setQuestionid(Long.parseLong(quesid));
+        List<QuestionOption> qoList=questionOptionManager.getList(qo,null);
+        quesList.get(0).setQuestionOption(qoList);
+
+        if(!ishas){
+            jsonEntity.setMsg("错误。当前试题不存在于试卷中。请核对!");
+            response.getWriter().println(jsonEntity.toJSON());return;
+        }
+
+
+
+
+        //试题
+        jsonEntity.getObjList().add(quesList.get(0));
+        jsonEntity.setType("success");
+        response.getWriter().println(jsonEntity.toJSON());
     }
 
     /**
@@ -3504,14 +3613,78 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg("异常错误，原因：没有您的答题记录，但是有交卷记录!");
             response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
-
         //得到当前的所有问题
-        PaperQuestion pq=new PaperQuestion();
-        pq.setPaperid(Long.parseLong(paperid));
-        List<PaperQuestion> pqList=this.paperQuestionManager.getList(pq,null);
+        List<Map<String,Object>> listMapStr=this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
+        if(listMapStr==null||listMapStr.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+        }
+        Object allquesidObj=listMapStr.get(0).get("ALLQUESID");
+        if(allquesidObj==null||allquesidObj.toString().trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+        }
+        String[] quesArray=allquesidObj.toString().trim().split(",");
+        if(quesArray.length<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+        }
+        String qidStr="",pqidStr=",";
+        Map<String,Object> relationMap=new HashMap<String, Object>(); //key:questionid   value:parentQuestionid
+        for (String qid:quesArray){
+            if(qid!=null&&qid.trim().length()>0){
+                String tmpQid=qid.trim();
+                if(qid.trim().indexOf("|")!=-1){
+                    String[] qidArrayStr=qid.trim().split("\\|");
+                    tmpQid=qidArrayStr[1];
+                    if(pqidStr.trim().indexOf(","+qidArrayStr[0]+",")==-1){
+                            pqidStr+=qidArrayStr[0]+",";
+                    }
+                    //添加关系
+                    relationMap.put(qidArrayStr[1],qidArrayStr[0]);
+                }
+                qidStr+=tmpQid+",";
+            }
+        }
+        if(qidStr.trim().length()>0)
+            qidStr=qidStr.substring(0,qidStr.trim().length()-1);
+        QuestionInfo searchQues=new QuestionInfo();
+        searchQues.setQuestionidStr(qidStr);
+        List<QuestionInfo> quesList=this.questionManager.getList(searchQues,null);
+
+//        PaperQuestion pq=new PaperQuestion();
+//        pq.setPaperid(Long.parseLong(paperid));
+//        List<PaperQuestion> pqList=this.paperQuestionManager.getList(pq,null);
         //保存入ModelMap中
-        if(pqList!=null&&pqList.size()>0){
-            for (PaperQuestion pqentity:pqList){
+        if(quesList!=null&&quesList.size()>0){
+            //查询父试题的题干
+            if(pqidStr!=null&&pqidStr.trim().length()>1){
+                pqidStr=pqidStr.substring(1);
+                pqidStr=pqidStr.substring(0,pqidStr.trim().length()-1);
+                QuestionInfo searchPQues=new QuestionInfo();
+                searchPQues.setQuestionidStr(pqidStr);
+                List<QuestionInfo> parentQuesList=this.questionManager.getList(searchPQues,null);
+                //比较
+                if(parentQuesList!=null&&parentQuesList.size()>0&&relationMap.size()>0){
+                    for (QuestionInfo qentity:quesList){
+                        if(qentity!=null&&qentity.getQuestionid()!=null){
+                            //检索是否存在于Map中。
+                            if(relationMap.containsKey(qentity.getQuestionid().toString())){
+                                //得到存于value中的parentQues实体
+                                for (QuestionInfo pq:parentQuesList){
+                                    if(pq!=null&&pq.getQuestionid()!=null){
+                                        if(pq.getQuestionid().toString().equals(relationMap.get(qentity.getQuestionid().toString()))){
+                                            qentity.setParentQues(pq); //加入ques中
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //查询所有题的选项
+            for (QuestionInfo pqentity:quesList){
                 if(pqentity!=null&&pqentity.getQuestionid()!=null){
                     QuestionOption qo=new QuestionOption();
                     qo.setQuestionid(pqentity.getQuestionid());
@@ -3519,13 +3692,13 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 }
             }
         }
-        mp.put("quesList",pqList);
+        mp.put("allquesidObj",allquesidObj);
+        mp.put("quesList",quesList);
         mp.put("paperObj",paperList.get(0));
         //得到当前学生答案
         mp.put("stuAnswer",stuPageQuesList);
 
-       return new ModelAndView("/teachpaltform/paper/stuTestDetail",mp);
-    }
+       return new ModelAndView("/teachpaltform/paper/stuTestDetail",mp); }
 
     /**
      * 交卷
@@ -3574,23 +3747,39 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         TaskPerformanceInfo tpf=new TaskPerformanceInfo();
         tpf.setCourseid(Long.parseLong(courseid.trim()));
         tpf.setTaskid(tk.getTaskid());
+        tpf.setUserid(this.logined(request).getRef());
+
+        List<TaskPerformanceInfo> tpfList=this.taskPerformanceManager.getList(tpf,null);
+        //查询是否存在数据，如果存在，则更新
         tpf.setIsright(1);
         tpf.setTasktype(tk.getTasktype());
-        tpf.setUserid(this.logined(request).getRef());
-        tpf.setCriteria(1);//提交试卷
+        if(tkList.get(0).getTasktype()==6)
+            tpf.setCriteria(2);//如果是微视频
+        else
+            tpf.setCriteria(1);//提交试卷
         StringBuilder sqlbuilder=new StringBuilder();
-        List<Object> objList=this.taskPerformanceManager.getSaveSql(tpf,sqlbuilder);
-        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
-            objArrayList.add(objList);
-            sqlArrayList.add(sqlbuilder.toString());
+        if(tpfList==null||tpfList.size()<1){
+            List<Object> objList=this.taskPerformanceManager.getSaveSql(tpf,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                objArrayList.add(objList);
+                sqlArrayList.add(sqlbuilder.toString());
+            }
+        }else{
+            tpf.setRef(tpfList.get(0).getRef());
+            List<Object> objList=this.taskPerformanceManager.getUpdateSql(tpf, sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                objArrayList.add(objList);
+                sqlArrayList.add(sqlbuilder.toString());
+            }
         }
+
         //得到判断题得分记录得到总分，进行记录
         List<Map<String,Object>> stuScoreSumList=this.stuPaperLogsManager.getStuPaperSumScore(this.logined(request).getUserid(),splog.getPaperid());
         if(stuScoreSumList!=null&&stuScoreSumList.get(0)!=null&&stuScoreSumList.get(0).containsKey("V_SCORE"));
          splog.setScore(Float.parseFloat(stuScoreSumList.get(0).get("V_SCORE").toString()));
 
         sqlbuilder=new StringBuilder();
-        objList=this.stuPaperLogsManager.getSaveSql(splog,sqlbuilder);
+        List<Object> objList=this.stuPaperLogsManager.getSaveSql(splog,sqlbuilder);
         if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
             objArrayList.add(objList);
             sqlArrayList.add(sqlbuilder.toString());
@@ -3623,7 +3812,6 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
-      //  testQuesData=new String(testQuesData.getBytes("UTF-8"),"GBK");
         String hasannex=request.getParameter("hasannex");
         String annexName=null;
         boolean isfileOk=true;
@@ -3639,7 +3827,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                     isfileOk=!isfileOk;
                 }
             }
-        }
+        }else
+            testQuesData=java.net.URLDecoder.decode(testQuesData,"UTF-8");
+
         if(!isfileOk){
             jsonEntity.setMsg("文件上传失败!请刷新页面后重试");
             response.getWriter().println(jsonEntity.toJSON());return ;
@@ -3715,11 +3905,37 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     public void doSaveStuMicVideo(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity jsonEntity=new JsonEntity();
         //微视频的iD
+        String courseid=request.getParameter("courseid");
+        String taskid=request.getParameter("taskid");
         String resid=request.getParameter("resid");
-        if(resid==null||resid.trim().length()<1){
+        if(resid==null||resid.trim().length()<1||taskid==null||taskid.trim().length()<1||courseid==null||courseid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.toJSON());return;
         }
+        //验证任务
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
+        if(tkList==null||tkList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+        tk=tkList.get(0);
+        if(tk.getTasktype().intValue()==6){
+            //添加完成相关记录(微视频)
+            TaskPerformanceInfo tpf=new TaskPerformanceInfo();
+            tpf.setCourseid(Long.parseLong(courseid.trim()));
+            tpf.setTaskid(tk.getTaskid());
+            tpf.setUserid(this.logined(request).getRef());
+            tpf.setIsright(1);
+            tpf.setTasktype(tk.getTasktype());
+            tpf.setCriteria(2);//如果是微视频
+             if(!this.taskPerformanceManager.doSave(tpf)){
+                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+                 response.getWriter().println(jsonEntity.toJSON());return;
+             }
+        }
+        //添加视频浏览记录
         StuViewMicVideoLog svmvlog=new StuViewMicVideoLog();
         svmvlog.setMicvideoid(Long.parseLong(resid.trim()));
         svmvlog.setUserid(this.logined(request).getUserid());

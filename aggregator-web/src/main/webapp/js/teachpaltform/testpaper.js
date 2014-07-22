@@ -4,59 +4,257 @@
 function loadQuesNumberTool(qsize){
     var h='';
     for(i=1;i<=qsize;i++){
-        h+=' <li class="blue"><a href="javascript:next('+i+');">'+i+'</a></li>'
+        h+=' <li><a href="javascript:nextNum('+(i-1)+');">'+i+'</a></li>'
     }
     $("#dv_ques_number").html(h);
 }
+//下一题
+function nextNum(i){
+    var vi=(typeof(i)=="undefined"||i==null)?0:i;
+    if(typeof(allquesidObj)=="undefined"||allquesidObj.length<1){
+        alert('异常错误，参数异常!');return;
+    }
+    var type=1,quesid=undefined;
+    vi--;
+    if(vi<0){
+        type=undefined;
+    }
+    if(type==undefined){
+        next(type,cuQuesid,paperid,allquesidObj,undefined,1);
+    }else  if(allquesidObj.indexOf(",")!=-1){
+        var arrayObj=allquesidObj.split(",");
+        if(arrayObj.length>0){
+             var cuQuesid=arrayObj[vi];
+            if(cuQuesid.indexOf("|")!=-1)
+            cuQuesid=cuQuesid.split("|")[1];
+            next(type,cuQuesid,paperid,allquesidObj,undefined,1);
+        }
+    }
+}
 
-function next(no,t){
-    var pnoDiv=$("#dv_question>div").filter(function(){return this.style.display!='none';});
-    $("#dv_ques_number li").attr("class","");
-    //加载已经做过的题
-    if(subQuesId.length>1){
-        var tmpsubid=subQuesId.substring(1)
-        tmpsubid=tmpsubid.substring(0,tmpsubid.length-1);
-        var idxArray=tmpsubid.split(",");
-        if(idxArray.length>0){
-            for(z=0;z<idxArray.length;z++){
-                var orderIdx=$("#hd_ques_"+idxArray[z]+"_idx").val();
-                $("#dv_ques_number li").eq(orderIdx).attr("class","blue");
+/**
+ * 更新
+ */
+function updateNumState(idx){
+    //allquesidObj;
+   // subQuesId;
+    if(subQuesId.length>0&&allquesidObj!=null&&allquesidObj.length>0){
+        var allQuesArray=allquesidObj.split(",");
+        var subQuesIdArray=subQuesId.split(",");
+        if(subQuesIdArray.length>0&&allQuesArray.length>0){
+            $("#dv_ques_number>li").removeClass("blue");
+            $("#dv_ques_number>li").removeClass("yellow");
+            for(z=0;z<subQuesIdArray.length;z++){
+                for(b=0;b<allQuesArray.length;b++){
+                    if(allQuesArray[b].indexOf("|")!=-1){
+                        if(allQuesArray[b].split("|")[1]==subQuesIdArray[z]){
+                            $("#dv_ques_number>li").eq(b).addClass("blue");
+                            continue;
+                        }
+                    }
+                    if(allQuesArray[b]==subQuesIdArray[z]){
+                         $("#dv_ques_number>li").eq(b).addClass("blue");
+                        continue;
+                    }
+                }
             }
         }
     }
-    //定位正在做的任务（题号及题正文）
-    if(typeof(t)=="undefined"||t>=0)
-        pnoDiv=pnoDiv.next();
-    else
-        pnoDiv=pnoDiv.prev();
-    if(typeof(no)=="undefined"||isNaN(no))
-        $("#dv_ques_number li").eq(pnoDiv.children("input[id*='_idx']").val()).attr("class","yellow");
-    if(typeof(no)!="undefined"&&!isNaN(no)){
-        var tmpno=no;
-        if(no>0&&parseInt(quesSize)>=no)
-            tmpno=tmpno-1;
-        else
-            tmpno=tmpno-2;
-        pnoDiv=$("#dv_question>div").eq(tmpno);
-        $("#dv_ques_number li").eq(tmpno).attr("class","yellow");
-    }
-
-
-
-
-    if(pnoDiv.length<1){
-        if(typeof(t)=="undefined"||t>=0)
-            if(confirm('已经答到最后一题了!是否提交试卷?'))
-            //  location.href="paperques?m=toTestDetail&paperid="+$("#hd_paper_id").val();
-                subPaper();//交卷
-            else if(t==-1)
-                alert('已经是第一题了!');
-    }else{
-        $("#dv_question>div").css("display","none");
-        pnoDiv.show();
-    }
-    //ques=pnoDiv.children().filter(function(){return this.name=='hd_quesid'}).val()
+    $("#dv_ques_number>li").eq(idx).addClass("yellow")
 }
+
+/**
+ * 下(上)一题
+ * @param type   1:下一题  0 OR NULL:上一题
+ * @param quesid  当前的Quesid
+ * @param allquesid 所有的QuesId
+ * @param isright 是否正确
+ * @param issub 是否提交前一位数据
+ */
+function next(type,quesid,paperid,allquesid,isright,issub){
+    if(typeof(allquesid)=="undefined"||allquesid==null){
+        alert('错误，没有题!参数异常');return;
+    }
+
+
+    if(typeof(type)=="undefined"||type==null)
+        type=0;
+    var nextIdx=-1;
+    //下一题
+    if(allquesid.indexOf(",")!=-1){
+        var arrayObj=allquesid.split(",");
+        if(arrayObj.length>0){
+            if(typeof(quesid)!="undefined"&&quesid!=null){
+                for(var i=0;i<arrayObj.length;i++){
+                    var a=arrayObj[i];
+                    if(a.indexOf('|')!=-1){
+                        if(a.split("|")[1]==quesid){
+                            if(type==0)
+                                nextIdx=i-1;
+                            else
+                                nextIdx=i+1;
+                        }
+                    }else{
+                        if(a==quesid){
+                            if(type==0)
+                                nextIdx=i-1;
+                            else
+                                nextIdx=i+1;
+                        }
+                    }
+                }
+            }else
+                 nextIdx=0;
+            if(nextIdx==-1){
+                return;
+            }
+            //存入数据库
+            if(typeof(quesid)!="undefined"&&quesid!=null&&issub!=1)
+                freeSubOnePaper(quesid,isright,nextIdx);
+            else
+                updateNumState(nextIdx);    //更新状态
+
+            //nextIdx
+            if(nextIdx==arrayObj.length){
+                if(confirm("最后一题了,是否提交试卷?")){
+                    subPaper();
+                }
+            }else{
+
+                //隐藏相关数据
+                $("div[id*='dv_qs_']").hide();
+                $("div[id*='dv_pqs_']").hide();
+              var nextQuesId=arrayObj[nextIdx];
+                if(nextQuesId.indexOf("|")!=-1){
+                    var nextQuesIdArr=nextQuesId.split("|");
+                    $("#dv_pqs_"+nextQuesIdArr[0]).show();
+                    nextQuesId=nextQuesIdArr[1];
+                }
+
+               if($("div[id='dv_qs_"+nextQuesId+"']").length<1){
+                    loadNextQues(arrayObj[nextIdx],paperid);
+
+               }else{
+                   $("div[id='dv_qs_"+nextQuesId+"']").show();
+               }
+
+            }
+        }
+    }
+}
+/**
+ * 加载下一题
+ * @param quesid
+ * @param paperid
+ */
+function loadNextQues(quesid,paperid){
+    if(typeof(quesid)=="undefined"||quesid==null||typeof(paperid)=="undefined"||paperid==null){
+        alert('参数异常!');return;
+    }
+    //paperques?m=nextTestQues
+    var ajxObj={
+        url:'paperques?m=nextTestQues',
+        dataType:'json',
+        type:'post',
+        data:{quesid:quesid,paperid:paperid},
+        error:function(){alert('异常错误，原因：未知!');},
+        success:function(rps){
+            //失败
+            if(rps.type=="error"){
+                 alert(rps.msg);return;
+            }
+            var h='';
+            //成功：
+            if(rps.type=="success"){
+                var quesObj=rps.objList[0];
+                var parentQuesObj=null;
+                //加载题干
+                if(rps.objList.length>1){ //如果是组试题，则 0:题干   1：题
+                    quesObj=rps.objList[1];//
+                    parentQuesObj=rps.objList[0];
+                    h+='<div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_pqs_'+parentQuesObj.questionid+'">';
+                    h+='<p>1.'+parentQuesObj.content+'</p>';
+//                    h+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
+//                    h+='<col class="w30"/><col class="w860"/>';
+//                    h+='<tr><th><input type="radio" name="radio" id="radio9" value="radio"></th>';
+//                    h+=' <td>A. 民族性我国公安交通部门规定，从1993年7月1日起，在各种小轿车前排乘坐的人（包括司机）必须系好安全带。主要是防止汽车突然停止的时候，乘客会向前倾倒而发生事故。则汽车刹车时，乘客向前倾倒的原因是由于</td>';
+//                    h+='</tr>';
+//                    h+='</table>';
+                    h+='<div id="dv_child_'+parentQuesObj.questionid+'"></div>';
+                    h+='</div>';
+//                    h+='<p class="jxxt_zhuanti_rw_ceshi_an"><a href="1" class="an_test1">上一题</a><a href="1" class="an_test1">下一题</a><a href="1" class="an_test2">交卷</a></p>';
+//                    h+='</div>';
+                    //加入当中
+                    if($("div[id='dv_question'] #dv_pqs_"+parentQuesObj.questionid).length<1){
+                        $("#dv_question").append(h);
+                    }else
+                        $("div[id='dv_question'] #dv_pqs_"+parentQuesObj.questionid).show();
+
+                }
+                //要答的题
+                h='<div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_qs_'+quesObj.questionid+'">';
+                h+='<input type="hidden" value="'+quesObj.questionid+'" id="hd_quesid_'+quesObj.questionid+'" name="hd_quesid"/>';
+                h+='<input type="hidden" value="" name="hd_answer" id="hs_val_'+quesObj.questionid+'"/>';
+                h+='<input type="hidden" value="0" name="hd_stu_score" id="hs_val_stu_'+quesObj.questionid+'"/>';
+                h+='<input type="hidden" value="'+avgScore+'" name="hd_score" id="hs_score_'+quesObj.questionid+'"/>';
+                h+='<input  type="hidden" value="'+quesObj.questiontype+'" name="hd_questiontype" id="hd_questiontype_'+quesObj.questionid+'"/>';
+
+
+                h+='<p>1.'+quesObj.content+'</p>';
+                if(quesObj.questiontype==1){//问答题
+                    h+='<div class="p_t_20"><textarea name="txt_answer" id="txt_answer_'+quesObj.questionid+'"  placeholder="输入你的答案"></textarea></div>';
+                }
+                if(quesObj.questiontype==1||quesObj.questiontype==2){
+                    h+=' <div class="files"><strong>上传附件：</strong><input   id="txt_f2'+quesObj.questionid+'" readonly type="text" />';
+                    h+=' <a href="javascript:;"   onclick="document.getElementById(\'txt_f_'+quesObj.questionid+'\').click();"  class="an_public3">选择</a></div>';
+                    h+=' <input type="file" onchange="document.getElementById(\'txt_f2'+quesObj.questionid+'\').value=this.value.substring(this.value.lastIndexOf(\'\\\\\')+1);"' +
+                         ' name="txt_f_'+quesObj.questionid+'2" style="display:none" id="txt_f_'+quesObj.questionid+'"/></p>';
+                }
+                //选项
+                if(quesObj.questiontype==3||quesObj.questiontype==4){
+                    if(typeof(quesObj.questionOption)!="undefined"&&quesObj.questionOption.length>0){
+                        h+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
+                        h+='<col class="w30"/><col class="w860"/>';
+                        $.each(quesObj.questionOption,function(x,m){
+                            h+='<tr><th>' ;
+                            if(quesObj.questiontype==3)
+                                h+='<input type="radio" id="rdo_answer'+m.questionid+m.optiontype+'" onclick="next(1,'+ m.questionid+','+paperid+',\''+allquesidObj+'\','+ m.isright+')" value="'+ m.optiontype+'" name="rdo_answer'+ m.questionid+'">';
+                            if(quesObj.questiontype==4)
+                                h+='<input type="checkbox" value="'+m.optiontype+'|'+m.isright+'" id="rdo_answer'+m.questionid+m.optiontype+'" name="rdo_answer'+m.questionid+'">';
+                             h+='</th>';
+                            h+=' <td><label for="rdo_answer'+m.questionid+m.optiontype+'">'+m.optiontype+'.'+m.content+'</label></td>';
+                            h+='</tr>';
+                        });
+                        h+='</table>';
+                    }
+                }
+                h+='<p class="jxxt_zhuanti_rw_ceshi_an"><a href="javascript:;" onclick="next(0,'+quesObj.questionid+','+paperid+',\''+allquesidObj+'\')" class="an_test1">上一题</a>' +
+                    '<a  href="javascript:;" onclick="next(1,'+quesObj.questionid+','+paperid+',\''+allquesidObj+'\')" class="an_test1">下一题</a>' +
+                    '<a href="javascript:;" onclick="subPaper()" class="an_test2">交卷</a>' +
+                    '</p>';
+                h+='</div>';
+
+
+                if($("#dv_qs_"+quesObj.questionid).length<1){
+                     if(parentQuesObj!=null&&$("div[id='dv_qs_"+parentQuesObj.questionid+"']").length>0){
+                         $("#dv_child_"+parentQuesObj.questionid).append(h);
+                      }else
+                            $("#dv_question").append(h);
+                }else
+                    $("#dv_qs_"+quesObj.questionid).show();
+
+
+                //空格出来
+                $("span[name='fillbank']").each(function(idx,itm){
+                    $(this).replaceWith('<input type="text" name="txt_tk" id="txt_tk_'+$(this).parent().parent().children("input[name='hd_quesid']").val()+'"/>');
+                });
+            }
+        }
+    };
+    //发送请求
+    $.ajax(ajxObj);
+}
+
 /**
  *提交测试
  */
@@ -70,11 +268,13 @@ function subPaper(){
     if(!confirm('您确认提交该试卷吗?\n\n提示：每道题答完后都已经存入，如您现在交卷则在相关时间段内无法再次做答!'))
         return;
 
+
+    var cid=courseid;
     $.ajax({
         url:"paperques?m=doInPaper",
         dataType:'json',
         type:'post',
-        data:{paperid:pid,courseid:courseid,taskid:taskid},
+        data:{paperid:pid,courseid:cid,taskid:taskid},
         cache: false,
         error:function(){
             alert('异常错误!系统未响应!');
@@ -89,10 +289,71 @@ function subPaper(){
     })
 }
 
+function freeSubOnePaper(quesid,isright,nextid){
+    var questype=$("#dv_question div input[id='hd_questiontype_"+quesid+"']").val();
+    var scoreObj=$("#dv_question div input[id='hs_score_"+quesid+"']");
+    var score=scoreObj.val();
+    var answer="";
+
+    var issubmit=true;
+    if(questype==3||questype==4){
+        var ckLen=$("input[name='rdo_answer"+quesid+"']:checked");
+        if(ckLen.length>0){
+            if(questype==4){
+                var len=$("input[name='rdo_answer"+quesid+"'][value*='1']").length;
+                var iserror=false;
+                $.each(ckLen,function(idx,itm){
+                    answer+=itm.value.split("|")[0]+"|";
+                    if(!iserror){
+                        if(this.value.indexOf("|")!=-1){
+                           if(this.value.split("|")[1]==0){
+                               iserror=true;
+                           }
+                        }
+                    }
+                })
+                answer=answer.substring(0,answer.length-1);
+                if(!iserror){
+                    if(ckLen.length!=len)//答对相关题，判正确，给半分
+                        score=parseInt(score/2);
+                }else                   //答错，不给分
+                    score=0;
+            }else{
+                answer+=ckLen.val();
+                if(isright==0)
+                    score=0;
+            }
+        }else
+            issubmit=false;
+      }else if(questype==1){
+            answer=$("#txt_answer_"+quesid).val().Trim();
+            if(answer.length<1&&$("#txt_f2"+quesid).val().length<1)
+                issubmit=false;
+       }else if(questype==2){
+            var tkLen=$("#dv_qs_"+quesid+" input[name='txt_tk']");
+            if(tkLen.length>0){
+                $.each(tkLen,function(ix,im){
+                    answer+=im.value.Trim()+"|";
+                });
+                answer=answer.substring(0,answer.length-1);
+            }
+
+             if(answer.replace(/\|/g,"").Trim().length<1&&$("#txt_f2"+quesid).val().length<1)
+                issubmit=false;
+        }
+    $("input[id='hs_val_stu_"+quesid+"']").val(score);
+    $("input[id='hs_val_"+quesid+"']").val(answer);
+    if(issubmit)
+        subOnePaper(quesid,nextid);
+}
+
+
+
+
 /**
  *提交测试
  */
-function subOnePaper(quesid){
+function subOnePaper(quesid,nextid){
     var quesAnswerObj=$("#dv_question div input[id='hs_val_"+quesid+"']");
     var quesidObj=$("#dv_question div input[id='hd_quesid_"+quesid+"']");
     var scoreObj=$("#dv_question div input[id='hs_val_stu_"+quesid+"']");
@@ -120,6 +381,15 @@ function subOnePaper(quesid){
 //                    next(noanswer[0]);
 //                }
 //            }
+//    var isanswer=false;
+//    $.each(data,function(idx,itm){
+//        if(itm!=null&&itm.length>0){
+//            isanswer=true;
+//            return;
+//        }
+//    });
+//    if(!isanswer)return;
+
     //提交
     var pid=$("#hd_paper_id").val();
     if(pid.length<1){
@@ -143,8 +413,9 @@ function subOnePaper(quesid){
             success: function (rps, status) {
                 if(rps.type=="success"){
                     if(subQuesId.indexOf(","+quesid+",")<0)
-                        subQuesId+=quesid+","
-                    next();
+                        subQuesId+=quesid+",";
+                    updateNumState(nextid);
+                   // next(1,quesid,paperid,allquesidObj);
                 }else
                     alert(rps.msg);
             },
@@ -165,87 +436,12 @@ function subOnePaper(quesid){
                 if(rps.type=="success"){
                     if(subQuesId.indexOf(","+quesid+",")<0)
                         subQuesId+=quesid+","
-                    next();
+                    updateNumState(nextid);
+                  //  next(1,quesid,paperid,allquesidObj);
                 }else
                     alert(rps.msg);
             }
         })
-    }
-}
-
-
-/**
- *答完一题
- * @param quesid 问题ID
- * @param quesAnswerid 问题答案ID
- */
-function doAnswerOne(quesid,quesAnswerid,o){
-    var isanswer=true;
-    if(typeof(quesid)!="undefined"){
-        //得到题目类型   3,4自动判断     其它的教师评阅
-        var questype=$("#hd_questiontype_"+quesid).val();
-        if(questype==3){
-            var answerid=quesAnswerid;
-            if(typeof(quesAnswerid)=="undefined"||quesAnswerid.length<1){
-                var rdoVal=$("#quesOption_"+quesid+"~th input[type='radio']:checked");
-                if(rdoVal.length>0){
-                    answerid=rdoVal.val();
-                }else
-                    isanswer=false;
-            }
-            if(isanswer){
-                $("#hs_val_"+quesid).val(quesAnswerid);
-                if(o==1){
-                    $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
-                }else
-                    $("#hs_val_stu_"+quesid).val(0);
-            }
-        }else if(questype==4){
-            var ckSeledtedBox=$("#quesOption_"+quesid+" th input[type='checkbox']:checked");
-            var answer="";
-            var isright=true;
-            if(ckSeledtedBox.length>0){
-                $.each(ckSeledtedBox,function(idx,itm){
-                    var val=itm.value;
-                    if(val.split("|")[1]!=1)
-                        isright=false;
-                    answer+=(answer.length>0?"|":"")+val.split("|")[0];
-                });
-                if(isright)
-                    $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
-                else
-                    $("#hs_val_stu_"+quesid).val(0);
-            }
-            if(answer.length>0){
-                $("#hs_val_"+quesid).val(answer);
-            }else
-                isanswer=false;
-        }else if(questype==2){
-            var tkObj=$("#dv_qs_"+quesid+" input[name='txt_tk']");
-            var answer="";
-            if(tkObj.length>0){
-                $.each(tkObj,function(idx,itm){
-                    answer+=(answer.length>0?"|":"")+itm.value;
-                });
-            }
-            if(answer.length>0){
-                $("#hs_val_"+quesid).val(answer);
-                $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
-            }else
-                isanswer=false;
-        }else if(questype==1){
-            var answerVal=$("#txt_answer_"+quesid).val();
-            if(answerVal.length>0){
-                $("#hs_val_"+quesid).val(answerVal);
-                $("#hs_val_stu_"+quesid).val($("#hs_score_"+quesid).val());
-            }else
-                isanswer=false;
-        }
-        //
-        if(isanswer)
-            subOnePaper(quesid);
-        else
-            next();
     }
 }
 

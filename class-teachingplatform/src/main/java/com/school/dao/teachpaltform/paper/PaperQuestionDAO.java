@@ -3,6 +3,7 @@ package com.school.dao.teachpaltform.paper;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -252,6 +253,26 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
         sqlbuilder.append(")}");
         List<PaperQuestion> questionList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,PaperQuestion.class,null);
         return questionList;
+    }
+
+
+    /**
+     * 得到一个试卷下所有的试题ID(包含试题组等)
+     * @param paperid
+     * @return
+     */
+    public List<Map<String,Object>> getPaperQuesAllId(Long paperid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL j_paper_ques_info_getAllQuesId(");
+        List<Object> objList=new ArrayList<Object>();
+        if(paperid!=null){
+            sqlbuilder.append("?");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
     }
 
     @Override

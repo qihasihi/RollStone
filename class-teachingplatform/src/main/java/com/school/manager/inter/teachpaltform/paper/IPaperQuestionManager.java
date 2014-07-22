@@ -6,6 +6,7 @@ import com.school.manager.base.IBaseManager;
 import com.school.util.PageResult;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> { 
     Float getSumScore(PaperQuestion paperQuestion);
@@ -20,4 +21,6 @@ public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> {
      * @return
      */
     public List<Object> getSynchroSql(PaperQuestion paperQuestion, StringBuilder sqlbuilder);
+
+    public List<Map<String,Object>> getPaperQuesAllId(Long paperid);
 }
