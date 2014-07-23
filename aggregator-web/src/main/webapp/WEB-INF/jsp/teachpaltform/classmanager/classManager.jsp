@@ -67,52 +67,69 @@
                 <th>学生人数</th>
                 <th>操作</th>
             </tr>
-            <c:forEach var="cla" items="${classes }">
-                <tr>
-                    <td>
-                        <a href="teachercourse?m=toClassStudentList&classid=${cla.CLASS_ID }&classtype=${cla.CLASS_TYPE}&subjectid=${param.subjectid}" target="_blank">${cla.CLASS_NAME }</a>
-                    </td>
-                    <td>
-                        <c:if test="${cla.CLASS_TYPE==1}">
-                            教学班
-                        </c:if>
-                        <c:if test="${cla.CLASS_TYPE==2}">
-                            虚拟班
-                        </c:if>
-                    </td>
-                    <td>${cla.STU_NUM }</td>
-                    <td>
-                       <!-- <c:if test="${cla.TRUSTEESHIP_TYPE==1}">
-                            <a href="javascript:void(0)"  class="ico31" title="取消托管"
-                               onclick="delTrusteeShip(${cla.CLASS_ID },${cla.CLASS_TYPE});"></a>
-                        </c:if>
-                        <c:if test="${cla.TRUSTEESHIP_TYPE==0 and cla.CLASS_TYPE==1 }">
-                            <a href="javascript:void(0)"  class="ico30" title="托管"
-                               onclick="getTrusteeShipTeacher('${cla.CLASS_NAME }',${cla.CLASS_ID },${cla.CLASS_TYPE});showModel('TrusteeShipClass_Div')"></a>
-                        </c:if>-->
-                        <c:if test="${cla.CLASS_TYPE==2}">
-                            <a href="javascript:void(0)" class="ico36" title="添加学生"
-                               onclick="getVirClassStudents(${cla.CLASS_ID });
-                                       showModel('class_student_manager');"></a>&nbsp;
-                            <a href="javascript:void(0)" class="ico04" title="删除"
-                               onclick="changeVirClassStatus(${cla.CLASS_ID },false);"></a>
-                            <%--
-                              <c:if test="${cla.STATUS==1}">
-                            <span id="virclass_status_${cla.CLASS_ID }">
-                            <a href="javascript:void(0)" class="ico01" title="禁用"
-                               onclick="changeVirClassStatus(${cla.CLASS_ID },false);"></a></span>
-                              </c:if>
-                              <c:if test="${cla.STATUS==2}">
-                            <span id="virclass_status_${cla.CLASS_ID }">
-                            <a href="javascript:void(0)" class="ico02" title="启用"
-                               onclick="changeVirClassStatus(${cla.CLASS_ID },true);"></a></span>
-                              </c:if>
-                              --%>
-                        </c:if>
+            <c:if test="${!empty classes}">
+                <c:forEach var="cla" items="${classes }">
+                    <c:if test="${cla.CLASS_TYPE==2}">
+                        <tr>
+                            <td>
+                                <a href="teachercourse?m=toClassStudentList&classid=${cla.CLASS_ID }&classtype=${cla.CLASS_TYPE}&subjectid=${param.subjectid}&gradeid=${param.gradeid}" target="_blank">${cla.CLASS_NAME }</a>
+                            </td>
+                            <td>
+                                    虚拟班
+                            </td>
+                            <td>${cla.STU_NUM }</td>
+                            <td>
+                                <!-- <c:if test="${cla.TRUSTEESHIP_TYPE==1}">
+                                <a href="javascript:void(0)"  class="ico31" title="取消托管"
+                                   onclick="delTrusteeShip(${cla.CLASS_ID },${cla.CLASS_TYPE});"></a>
+                            </c:if>
+                            <c:if test="${cla.TRUSTEESHIP_TYPE==0 and cla.CLASS_TYPE==1 }">
+                                <a href="javascript:void(0)"  class="ico30" title="托管"
+                                   onclick="getTrusteeShipTeacher('${cla.CLASS_NAME }',${cla.CLASS_ID },${cla.CLASS_TYPE});showModel('TrusteeShipClass_Div')"></a>
+                            </c:if>-->
+                                <c:if test="${cla.CLASS_TYPE==2}">
+                                    <a href="javascript:void(0)" class="ico36" title="添加学生"
+                                       onclick="getVirClassStudents(${cla.CLASS_ID });
+                                               showModel('class_student_manager');"></a>&nbsp;
+                                    <a href="javascript:void(0)" class="ico04" title="删除"
+                                       onclick="changeVirClassStatus(${cla.CLASS_ID },false);"></a>
+                                    <%--
+                                      <c:if test="${cla.STATUS==1}">
+                                    <span id="virclass_status_${cla.CLASS_ID }">
+                                    <a href="javascript:void(0)" class="ico01" title="禁用"
+                                       onclick="changeVirClassStatus(${cla.CLASS_ID },false);"></a></span>
+                                      </c:if>
+                                      <c:if test="${cla.STATUS==2}">
+                                    <span id="virclass_status_${cla.CLASS_ID }">
+                                    <a href="javascript:void(0)" class="ico02" title="启用"
+                                       onclick="changeVirClassStatus(${cla.CLASS_ID },true);"></a></span>
+                                      </c:if>
+                                      --%>
+                                </c:if>
 
-                    </td>
-                </tr>
-            </c:forEach>
+                            </td>
+                        </tr>
+                    </c:if>
+
+                </c:forEach>
+            </c:if>
+            <c:if test="${!empty classList}">
+                <c:forEach items="${classList}" var="itm">
+                    <tr>
+                        <td>
+                            <a href="teachercourse?m=toClassStudentList&classid=${itm.classid }&classtype=1&subjectid=${param.subjectid}&gradeid=${param.gradeid}" target="_blank">${itm.classname }</a>
+                        </td>
+                        <td>
+                            行政班
+                        </td>
+                        <td>${itm.stuno }</td>
+                        <td>
+
+
+                        </td>
+                    </tr>
+                </c:forEach>
+            </c:if>
         </table>
     </div>
 <%@include file="/util/foot.jsp" %>

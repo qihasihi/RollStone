@@ -7,8 +7,10 @@ import com.school.entity.TermInfo;
 import com.school.entity.UserInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.manager.ClassUserManager;
+import com.school.manager.GradeManager;
 import com.school.manager.TermManager;
 import com.school.manager.inter.IClassUserManager;
+import com.school.manager.inter.IGradeManager;
 import com.school.manager.inter.ITermManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.teachpaltform.*;
@@ -36,6 +38,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
     private ITrusteeShipClassManager trusteeShipClassManager;
     private ITpGroupStudentManager tpGroupStudentManager;
     private ITpTaskAllotManager tpTaskAllotManager;
+    private IGradeManager gradeManager;
     public GroupController(){
         this.termManager=this.getManager(TermManager.class);
         this.tpGroupManager=this.getManager(TpGroupManager.class);
@@ -44,6 +47,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
         this.trusteeShipClassManager=this.getManager(TrusteeShipClassManager.class);
         this.tpGroupStudentManager=this.getManager(TpGroupStudentManager.class);
         this.tpTaskAllotManager=this.getManager(TpTaskAllotManager.class);
+        this.gradeManager=this.getManager(GradeManager.class);
     }
 
 	/**
@@ -58,6 +62,8 @@ public class GroupController extends BaseController<TpGroupInfo>{
         JsonEntity jeEntity = new JsonEntity();
         String classid = request.getParameter("classid");
         String classtype = request.getParameter("classtype");
+        String subjectid=request.getParameter("subjectid");
+        String gradeid = request.getParameter("gradeid");
         UserInfo u=this.logined(request);
         TermInfo ti = this.termManager.getMaxIdTerm(false);
         if (ti == null || classid==null || classtype==null) {
@@ -65,8 +71,19 @@ public class GroupController extends BaseController<TpGroupInfo>{
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
             return null;
         }
-
-        List<ClassUser> clsList = this.classUserManager.getListByTchYear(u.getRef(), ti.getYear());
+        //查询年级数据
+        GradeInfo gi = new GradeInfo();
+        gi.setGradeid(Integer.parseInt(gradeid));
+        List<GradeInfo> giList = this.gradeManager.getList(gi,null);
+        ClassUser c = new ClassUser();
+        //当前学期、学科、年级下的授课班级
+        c.setClassgrade(giList.get(0).getGradevalue());
+        c.setUserid(this.logined(request).getRef());
+        c.setRelationtype("任课老师");
+        c.setSubjectid(Integer.parseInt(subjectid));
+        c.setYear(ti.getYear());
+        List<ClassUser>clsList=this.classUserManager.getList(c,null);
+       // List<ClassUser> clsList = this.classUserManager.getListByTchYear(u.getRef(), ti.getYear());
         TpVirtualClassInfo tvc= new TpVirtualClassInfo();
         tvc.setCuserid(u.getUserid());
         tvc.setStatus(1);

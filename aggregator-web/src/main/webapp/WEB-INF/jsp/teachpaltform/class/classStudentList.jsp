@@ -205,7 +205,7 @@
             <ul>
                 <li class="crumb"><a href="teachercourse?m=toClassStudentList&classid=${classid}&classtype=${classtype}&subjectid=${param.subjectid}&gradeid=${param.gradeid}">班级成员</a></li>
                 <li><a href="group?m=toGroupManager&classid=${classid}&classtype=${classtype}&subjectid=${param.subjectid}&gradeid=${param.gradeid}">小组管理</a></li>
-                <li><a href="teachercourse?m=toClassCourseList&classid=${classid}&classtype=${classtype}&subjectid=${param.subjectid}&gradeid=${param.gradeid}">专题列表</a></li>
+                <li><a href="teachercourse?m=toClassCourseList&classid=${classid}&classtype=${classtype}&subjectid=${param.subjectid}&gradeid=${param.gradeid}">课程表</a></li>
             </ul>
         </div>
         <div class="clear"></div>

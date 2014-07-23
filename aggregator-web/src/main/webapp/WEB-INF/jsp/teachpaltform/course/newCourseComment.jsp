@@ -30,10 +30,10 @@ function addcomment(){
 		alert("请打分！");
 		return;
 	}
-	if($("#commentcontext").val()==null||$("#commentcontext").val().length<1){
-		alert("请输入评论内容！");
-		return;
-	}
+//	if($("#commentcontext").val()==null||$("#commentcontext").val().length<1){
+//		alert("请输入评论内容！");
+//		return;
+//	}
 	var dat={
 			commenttype:commenttype,
 			commentobjectid:commentobjectid,

@@ -214,6 +214,7 @@ function delGroupStudent(ref){
 			function(rps){
 		if(rps.type=="success"){
 			alert(rps.msg);
+            $("#nogroup").show();
             getNoGroupStudentsByClassId();
             getClassGroups();
 		}else{

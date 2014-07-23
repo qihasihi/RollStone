@@ -450,6 +450,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity jeEntity = new JsonEntity();
         String classid = request.getParameter("classid");
         String classtype = request.getParameter("classtype");
+        String subjectid=request.getParameter("subjectid");
+        String gradeid = request.getParameter("gradeid");
         UserInfo u=this.logined(request);
         TermInfo ti = this.termManager.getMaxIdTerm(false);
         if (ti == null || classid==null || classtype==null) {
@@ -457,8 +459,19 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
             return null;
         }
-
-        List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
+        //查询年级数据
+        GradeInfo gi = new GradeInfo();
+        gi.setGradeid(Integer.parseInt(gradeid));
+        List<GradeInfo> giList = this.gradeManager.getList(gi,null);
+        ClassUser c = new ClassUser();
+        //当前学期、学科、年级下的授课班级
+        c.setClassgrade(giList.get(0).getGradevalue());
+        c.setUserid(this.logined(request).getRef());
+        c.setRelationtype("任课老师");
+        c.setSubjectid(Integer.parseInt(subjectid));
+        c.setYear(ti.getYear());
+        List<ClassUser>clsList=this.classUserManager.getList(c,null);
+        //List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
         TpVirtualClassInfo tvc= new TpVirtualClassInfo();
         tvc.setCuserid(u.getUserid());
         tvc.setStatus(1);
@@ -513,6 +526,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String classid = request.getParameter("classid");
         String classtype = request.getParameter("classtype");
         String subjectid=request.getParameter("subjectid");
+        String gradeid = request.getParameter("gradeid");
         UserInfo u=this.logined(request);
         TermInfo ti = this.termManager.getMaxIdTerm(false);
         if (ti == null || classid==null || classtype==null||subjectid==null) {
@@ -520,8 +534,19 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
             return null;
         }
-
-        List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
+        //查询年级数据
+        GradeInfo gi = new GradeInfo();
+        gi.setGradeid(Integer.parseInt(gradeid));
+        List<GradeInfo> giList = this.gradeManager.getList(gi,null);
+        ClassUser c = new ClassUser();
+        //当前学期、学科、年级下的授课班级
+        c.setClassgrade(giList.get(0).getGradevalue());
+        c.setUserid(this.logined(request).getRef());
+        c.setRelationtype("任课老师");
+        c.setSubjectid(Integer.parseInt(subjectid));
+        c.setYear(ti.getYear());
+        List<ClassUser>clsList=this.classUserManager.getList(c,null);
+        //List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
         TpVirtualClassInfo tvc= new TpVirtualClassInfo();
         tvc.setCuserid(u.getUserid());
         tvc.setStatus(1);
