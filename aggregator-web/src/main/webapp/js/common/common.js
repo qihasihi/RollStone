@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 退出
  *
  * @return
@@ -284,57 +284,65 @@ function operateSound(idx, md5id, filereadlyname, type,tmppathipport) {
         resourceHead="http://202.99.47.104:81/uploadfile/";
     else
         resourceHead+="uploadfile";
+
+}
+
+function playSound(type,mp3Url,width,height,address,autoplay){
     // 路径
     if ($.trim(type) == "play") {
         // 播放文件地址
-        var mp3url = resourceHead+"/" + md5id + "/"
-            + filereadlyname;
+        var mp3url =mp3Url;
         $("#b_sound").remove();
         // 修改提示文字
-        $("span")
-            .filter(function() {
-                return this.id.indexOf("play_operate_") != -1;
-            })
-            .each(
-            function(ix, itm) {
-                itm.innerHTML = '<a href="javascript:;" onclick="operateSound('
-                    + ix
-                    + ',\''
-                    + md5id
-                    + '\',\''
-                    + $(this).attr("filemd5name")
-                    + '\',\'play\')">试听</a>';
-            });
+//        $("span[id*='play_operate_']").each(
+//            function(ix, itm) {
+//                itm.innerHTML = '<a href="javascript:;" onclick="operateSound('
+//                    + ix
+//                    + ',\''
+//                    + md5id
+//                    + '\',\''
+//                    + $(this).attr("filemd5name")
+//                    + '\',\'play\')">播放</a>';
+//            });
+        if(typeof(autoplay)=="undefined"||autoplay==true)
+            autoplay='yes';
+        else
+             autoplay='no';
         // 播放器。
-        var mp3Play = '<object id="b_sound" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" ' + 'codebase="http://202.99.47.104/resource/jscript/swfupload/swflash.cab#version=7,0,19,0"' + ' width="1" height="1">';
+        var mp3Play = '<object id="b_sound" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" ' + 'codebase="js/common/videoPlayer/new/swflash.cab#version=7,0,19,0"' + ' width="'+width+'" height="'+height+'">';
         mp3Play += '<param name="movie" '
-            + 'value="http://202.99.47.104/resource/jscript/swfupload/musicPlay.swf?'
+            + 'value="js/common/videoPlayer/new/musicPlay.swf?'
             + 'soundFile='
             + mp3url
             + '&bg=0xCDDFF3&'
             + 'leftbg=0x357DCE&lefticon=0xF2F2F2&rightbg=0x357DCE&rightbghover=0x4499EE&'
             + 'righticon=0xF2F2F2&righticonhover=0xFFFFFF&text=0x357DCE&slider=0x357DCE&'
-            + 'track=0xFFFFFF&border=0xFFFFFF&loader=0x8EC2F4&autostart=yes&loop=no" />';
-        mp3Play += ' <param name="quality" value="high" />' + '<param value="transparent" name="wmode" />';
-        mp3Play += '<embed src="http://202.99.47.104/resource/jscript/'
-            + 'swfupload/musicPlay.swf?soundFile='
+            + 'track=0xFFFFFF&border=0xFFFFFF&loader=0x8EC2F4&autostart='+autoplay+'&loop=no&" />';
+        mp3Play += ' <param name="quality" value="high" />'
+        mp3Play += '<param value="transparent" name="wmode" />';
+        mp3Play+='<param value="CONTROLS" name="playbutton"/>';
+        mp3Play += '<embed controls="playbutton" src="js/common/videoPlayer/new/musicPlay.swf?soundFile='
             + mp3url
             + '&bg=0xCDDFF3&leftbg=0x357DCE&lefticon=0xF2F2F2&rightbg='
             + '0x357DCE&rightbghover=0x4499EE&righticon=0xF2F2F2&righticonhover='
             + '0xFFFFFF&text=0x357DCE&slider=0x357DCE&track=0xFFFFFF&border='
-            + '0xFFFFFF&loader=0x8EC2F4&autostart=yes&loop=no" width="1" '
-            + 'height="1" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" '
-            + 'type="application/x-shockwave-flash"></embed>';
+            + '0xFFFFFF&loader=0x8EC2F4&autostart='+autoplay+'&loop=no" width="'+width+'" '
+            + 'height="'+height+'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" '
+            + ' type="application/x-shockwave-flash">' +
+            '</embed>';
         mp3Play += '</object>';
         // var mp3Play='<embed src="'+mp3url+'" style="FILTER: invert()"
         // type=audio/mpeg loop="1" autostart="true" volume="100" id="b_sound"
         // name="b_sound" hidden="true"/>';
-        $("body").append(mp3Play);
+        $("#"+address).append(mp3Play);
         // 修改提示文件
-        $("#play_operate_" + idx).html(
+       /* $("#play_operate_" + idx).html(
             '<a href="javascript:;" onclick="operateSound(' + idx + ',\''
                 + md5id + '\',\'' + filereadlyname
                 + '\',\'stop\',\''+tmppathipport+'\')">停止</a>');
+                */
+    }else{
+        $("#"+address).empty();
     }
 }
 
@@ -549,8 +557,7 @@ function toPostURL(url,params,isblank,windowName){
     if(typeof(isblank)=="undefined"||isblank==true){
 
         if(typeof(windowName)!="undefined"&&windowName!=""&&windowName!=null){
-            $("#targetToAddFrm").attr("target",windowName);
-            window.open("about:blank",windowName);
+            $("#targetToAddFrm").attr("target","_blank");
         }else{
             var datawindow=new Date().getTime();
             $("#targetToAddFrm").attr("target","window_"+datawindow);

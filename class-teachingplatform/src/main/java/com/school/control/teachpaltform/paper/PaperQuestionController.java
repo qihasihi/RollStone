@@ -3604,7 +3604,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
         String q=quesid;
-
+         boolean is75=false;
         if(q.indexOf("|")!=-1){
             Object[] quesObjArray=quesid.split("\\|");
             quesid=quesObjArray[1].toString();
@@ -3618,7 +3618,19 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                     jsonEntity.setMsg("错误，主试题题干不存在!请刷新重试!");
                     response.getWriter().println(jsonEntity.toJSON());return ;
                 }
-               jsonEntity.getObjList().add(pquesList.get(0));
+
+                QuestionInfo pques=pquesList.get(0);
+                if(pques!=null&&pques.getExtension().intValue()==5){
+                    //加载选项
+                    QuestionOption qo=new QuestionOption();
+                    qo.setQuestionid(pques.getQuestionid());
+                    List<QuestionOption> qoList=questionOptionManager.getList(qo,null);
+                    pques.setQuestionOption(qoList);
+                    //是七选五，则选项中只查正确的
+                    is75=true;
+                }
+                //
+               jsonEntity.getObjList().add(pques);
             }
         }
         //验证试题
@@ -3664,6 +3676,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         //加载选项
         QuestionOption qo=new QuestionOption();
         qo.setQuestionid(Long.parseLong(quesid));
+        if(is75)
+            qo.setIsright(1);
         List<QuestionOption> qoList=questionOptionManager.getList(qo,null);
         quesList.get(0).setQuestionOption(qoList);
 
@@ -3831,6 +3845,17 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 List<QuestionInfo> parentQuesList=this.questionManager.getList(searchPQues,null);
                 //比较
                 if(parentQuesList!=null&&parentQuesList.size()>0&&relationMap.size()>0){
+                    //查询是否是七选五题
+                    for (QuestionInfo qentity:parentQuesList){
+                        if(qentity!=null&&qentity.getExtension().intValue()==5){
+                            //加载选项
+                            QuestionOption qo=new QuestionOption();
+                            qo.setQuestionid(qentity.getQuestionid());
+                            List<QuestionOption> qoList=questionOptionManager.getList(qo,null);
+                            qentity.setQuestionOption(qoList);
+                            //是七选五，则选项中只查正确的
+                        }
+                    }
                     for (QuestionInfo qentity:quesList){
                         if(qentity!=null&&qentity.getQuestionid()!=null){
                             //检索是否存在于Map中。
@@ -3848,11 +3873,13 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                     }
                 }
             }
-            //查询所有题的选项
+            //查询所有题的选项(查询七选五题的正确答案)
             for (QuestionInfo pqentity:quesList){
                 if(pqentity!=null&&pqentity.getQuestionid()!=null){
                     QuestionOption qo=new QuestionOption();
                     qo.setQuestionid(pqentity.getQuestionid());
+                    if(pqentity.getParentQues()!=null&&pqentity.getParentQues().getExtension()!=null&&pqentity.getParentQues().getExtension().intValue()==5)
+                        qo.setIsright(1);
                     pqentity.setQuestionOption(this.questionOptionManager.getList(qo,null));
                 }
             }

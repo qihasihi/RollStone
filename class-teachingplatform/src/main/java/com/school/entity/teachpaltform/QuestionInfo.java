@@ -40,7 +40,7 @@ public class QuestionInfo implements java.io.Serializable {
         this.parentQues = parentQues;
     }
 
-    private List<QuestionInfo> childQues=null;
+//    private List<QuestionInfo> childQues=null;
 
     public String getQuestionidStr() {
         return questionidStr;
@@ -50,13 +50,13 @@ public class QuestionInfo implements java.io.Serializable {
         this.questionidStr = questionidStr;
     }
 
-    public List<QuestionInfo> getChildQues() {
-        return childQues=(childQues==null?new ArrayList<QuestionInfo>():childQues);
-    }
+//    public List<QuestionInfo> getChildQues() {
+//        return childQues=(childQues==null?new ArrayList<QuestionInfo>():childQues);
+//    }
 
-    public void setChildQues(List<QuestionInfo> childQues) {
-        this.childQues = childQues;
-    }
+//    public void setChildQues(List<QuestionInfo> childQues) {
+//        this.childQues = childQues;
+//    }
 
     private String correctanswer;//ÕýÈ·´ð°¸
 
@@ -83,11 +83,12 @@ public class QuestionInfo implements java.io.Serializable {
             String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(correctanswer.indexOf("_QUESTIONPIC+")!=-1)
                 correctanswer=correctanswer.replace("_QUESTIONPIC+",t);
-            while (correctanswer.indexOf("\r\n\t")!=-1||correctanswer.indexOf("\n")!=-1||correctanswer.indexOf("\n\r")!=-1||correctanswer.indexOf("\t")!=-1||correctanswer.indexOf(" ")!=-1){
+            while (correctanswer.indexOf("\r\n\t")!=-1||
+                    correctanswer.indexOf("\r\n")!=-1||
+                    correctanswer.indexOf("\n")!=-1||correctanswer.indexOf("\n\r")!=-1||correctanswer.indexOf("\t")!=-1){
                 correctanswer=correctanswer.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
                 correctanswer=correctanswer.replace("\r\n", "&nbsp;&nbsp;<br>");
                 correctanswer=correctanswer.replace("\n", "<br>");
-                correctanswer=correctanswer.replace(" ", "&nbsp;");
                 correctanswer=correctanswer.replace("\n\r", "<br>&nbsp;&nbsp;");
                 correctanswer=correctanswer.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
                 //content=content.replace(" ", "&nbsp;");
@@ -118,7 +119,11 @@ public class QuestionInfo implements java.io.Serializable {
             String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(content.indexOf("_QUESTIONPIC+")!=-1)
                 content=content.replace("_QUESTIONPIC+",t);
-            while (content.indexOf("\r\n\t")!=-1||content.indexOf("\n")!=-1||content.indexOf("\n\r")!=-1||content.indexOf("\t")!=-1){
+            while (content.indexOf("\r\n\t")!=-1||
+                    content.indexOf("\r\n")!=-1||
+                    content.indexOf("\n")!=-1||
+                    content.indexOf("\n\r")!=-1||
+                    content.indexOf("\t")!=-1){
                 content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
                 content=content.replace("\r\n", "&nbsp;&nbsp;<br>");
                 content=content.replace("\n", "<br>");

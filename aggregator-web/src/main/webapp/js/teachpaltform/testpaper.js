@@ -173,7 +173,28 @@ function loadNextQues(quesid,paperid){
                     quesObj=rps.objList[1];//
                     parentQuesObj=rps.objList[0];
                     h+='<div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_pqs_'+parentQuesObj.questionid+'">';
-                    h+='<p>1.'+parentQuesObj.content+'</p>';
+                    var ex=parentQuesObj.extension;
+                    h+='<input type="hidden" id="hd_p_extension'+parentQuesObj.questionid+'" id="hd_p_extension" value="'+ex+'"/>';
+                    if(ex!=4&&ex!=5){
+                        h+='<p>1.'+parentQuesObj.content+'</p>';
+                    }else if(ex==5){    //七选五
+                        //显示题干
+                        h+='<p>1.'+parentQuesObj.content+'</p>';
+                        //题选项
+                        h+='<div style="display:none" id="p_option_'+parentQuesObj.questionid+'">';
+                        //选项
+                         if(typeof(parentQuesObj.questionOption)!="undefined"&&parentQuesObj.questionOption.length>0){
+                             $.each(parentQuesObj.questionOption,function(x,m){
+                                h+='<div id="p_optchild'+ m.optiontype+'">'+m.optiontype+'.'+m.content
+                                    +'<input type="hidden" name="opt_quesid" value="'+ m.questionid+'"/>' +
+                                    '<input type="hidden" name="opt_optiontype" value="'+ m.optiontype+'"/></div>';
+                             });
+                         }
+                        h+='</div>';
+                    }
+                    else{
+                        h+='<p id="p_mp3_'+parentQuesObj.questionid+'"></p>';
+                    }
 //                    h+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
 //                    h+='<col class="w30"/><col class="w860"/>';
 //                    h+='<tr><th><input type="radio" name="radio" id="radio9" value="radio"></th>';
@@ -187,6 +208,18 @@ function loadNextQues(quesid,paperid){
                     //加入当中
                     if($("div[id='dv_question'] #dv_pqs_"+parentQuesObj.questionid).length<1){
                         $("#dv_question").append(h);
+                        if(ex==4){
+                            var mp3url=_QUES_IMG_URL+"/"+parentQuesObj.questionid+"/001.mp3";
+//                            loadSWFPlayer(mp3url,
+//                                ,undefined
+//                                ,undefined,45,45,true,undefined);
+                            playSound('play',mp3url,1,1,'p_mp3_'+parentQuesObj.questionid);
+                            $("#p_mp3_"+parentQuesObj.questionid+" object").hide();
+
+                            $("#p_mp3_"+parentQuesObj.questionid).append(
+                                '<a href="javascript:;" ' +
+                                'onclick="$(\'#p_mp3_'+parentQuesObj.questionid+' object\').show()">播放</a>')
+                        }
                     }else
                         $("div[id='dv_question'] #dv_pqs_"+parentQuesObj.questionid).show();
 
@@ -199,8 +232,8 @@ function loadNextQues(quesid,paperid){
                 h+='<input type="hidden" value="'+avgScore+'" name="hd_score" id="hs_score_'+quesObj.questionid+'"/>';
                 h+='<input  type="hidden" value="'+quesObj.questiontype+'" name="hd_questiontype" id="hd_questiontype_'+quesObj.questionid+'"/>';
 
-
-                h+='<p>1.'+quesObj.content+'</p>';
+                if(typeof(quesObj.content)!="undefined")
+                    h+='<p>1.'+quesObj.content+'</p>';
                 if(quesObj.questiontype==1){//问答题
                     h+='<div class="p_t_20"><textarea name="txt_answer" id="txt_answer_'+quesObj.questionid+'"  placeholder="输入你的答案"></textarea></div>';
                 }
@@ -210,8 +243,34 @@ function loadNextQues(quesid,paperid){
                     h+=' <input type="file" onchange="document.getElementById(\'txt_f2'+quesObj.questionid+'\').value=this.value.substring(this.value.lastIndexOf(\'\\\\\')+1);"' +
                          ' name="txt_f_'+quesObj.questionid+'2" style="display:none" id="txt_f_'+quesObj.questionid+'"/></p>';
                 }
-                //选项
-                if(quesObj.questiontype==3||quesObj.questiontype==4){
+                //选项(如果是七选五。则直接提取选项进行输出)
+                if(parentQuesObj!=null&&$("div[id='p_option_"+parentQuesObj.questionid+"']").length>0&&parentQuesObj.extension==5){
+                    h+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
+                    h+='<col class="w30"/><col class="w860"/>';
+                    var optionPObj=$("#p_option_"+parentQuesObj.questionid+">div");
+                    $.each(optionPObj,function(x,m){
+                        var opttype=$("#"+ m.id+" input[name='opt_optiontype']").val();
+                        var optid=$("#"+ m.id+" input[name='opt_quesid']").val();
+
+                        var ishas=false;
+                        if(typeof(quesObj.questionOption)!="undefined"&&quesObj.questionOption.length>0){
+                            $.each(quesObj.questionOption,function(ix,im){
+                                if(im.isright==1&&im.optiontype==opttype){
+                                    ishas=true;return;
+                                }
+                            });
+                        }
+                        h+='<tr><th>' ;
+                        if(quesObj.questiontype==3||quesObj.questiontype==7)
+                            h+='<input type="radio" id="rdo_answer'+quesObj.questionid+opttype+'" onclick="next(1,'+quesObj.questionid+','+paperid+',\''+allquesidObj+'\','+ (ishas?1:0)+')" value="'+ opttype+'" name="rdo_answer'+quesObj.questionid+'">';
+                        if(quesObj.questiontype==4||quesObj.questiontype==8)
+                            h+='<input type="checkbox" value="'+opttype+'|'+(ishas?1:0)+'" id="rdo_answer'+quesObj.questionid+opttype+'" name="rdo_answer'+quesObj.questionid+'">';
+                        h+='</th>';
+                        h+=' <td><label for="rdo_answer'+quesObj.questionid+opttype+'">'+$(m).html().Trim()+'</lable></td>';
+                        h+='</tr>';
+                    });
+                    h+='</table>';
+                }else  if(quesObj.questiontype==3||quesObj.questiontype==4){
                     if(typeof(quesObj.questionOption)!="undefined"&&quesObj.questionOption.length>0){
                         h+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
                         h+='<col class="w30"/><col class="w860"/>';
@@ -296,6 +355,10 @@ function freeSubOnePaper(quesid,isright,nextid){
     var answer="";
 
     var issubmit=true;
+    if(questype==7) //单选组 按单选入库
+        questype=3;
+    else if(questype==8)   //复选组，按复选入库
+        questype=4;
     if(questype==3||questype==4){
         var ckLen=$("input[name='rdo_answer"+quesid+"']:checked");
         if(ckLen.length>0){

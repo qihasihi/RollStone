@@ -47,9 +47,18 @@ public class QuestionOption implements Serializable{
             String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(content.indexOf("_QUESTIONPIC+")!=-1)
                 content=content.replace("_QUESTIONPIC+",t);
-            while (content.indexOf("\n")!=-1||content.indexOf("\n\r")!=-1||content.indexOf("\t")!=-1){
-                content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
+            while (
+                    content.indexOf("\r\n\t")!=-1||
+                            content.indexOf("\r\n")!=-1||
+                            content.indexOf("\n")!=-1||
+                            content.indexOf("\n\r")!=-1||
+                            content.indexOf("\t")!=-1
+                    ){
+                content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                content=content.replace("\r\n", "&nbsp;&nbsp;<br>");
                 content=content.replace("\n", "<br>");
+//                content=content.replace(" ", "&nbsp;");
+                content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
                 content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
                 //content=content.replace(" ", "&nbsp;");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号

@@ -18,6 +18,7 @@
         var paperid="${paperid}";
         var allquesidObj="${allquesidObj}";
         var sumScore=100,avgScore=parseInt(100/quesSize);
+        var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         $(function(){
             loadQuesNumberTool(quesSize);
             nextNum(0);
