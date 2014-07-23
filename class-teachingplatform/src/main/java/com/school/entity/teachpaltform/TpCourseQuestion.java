@@ -3,6 +3,7 @@ package  com.school.entity.teachpaltform;
 import com.school.util.UtilTool;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -256,7 +257,19 @@ public class TpCourseQuestion implements Serializable{
         this.operatetime = operatetime;
     }
 
-    public List<QuestionOption>questionOptionList;
+
+    public List<TpCourseQuestion>  questionTeam=new ArrayList<TpCourseQuestion>();  // ‘Ã‚◊È
+
+    public List<TpCourseQuestion> getQuestionTeam() {
+        return questionTeam;
+    }
+
+    public void setQuestionTeam(List<TpCourseQuestion> questionTeam) {
+        this.questionTeam = questionTeam;
+    }
+
+
+    public List<QuestionOption>questionOptionList=new ArrayList<QuestionOption>();
 
     public List<QuestionOption> getQuestionOptionList() {
         return questionOptionList;

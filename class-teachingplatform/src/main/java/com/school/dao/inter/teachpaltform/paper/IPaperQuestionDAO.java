@@ -10,6 +10,7 @@ import java.util.Map;
 
 public interface IPaperQuestionDAO extends ICommonDAO<PaperQuestion>{
     Float getSumScore(PaperQuestion paperQuestion);
+    Boolean updateQuesTeamScore(PaperQuestion paperQuestion);
     public List<PaperQuestion> getQuestionByPaper(Long paperid);
     public List<PaperQuestion> getPaperTeamQuestionList(PaperQuestion p,PageResult pageResult);
 

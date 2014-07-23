@@ -101,12 +101,12 @@
         function DataSort(type,orderby,obj){
             var cls=$(obj).attr("class");
             $(obj).removeClass();
-            if(cls=='ico48a'){
+            if(cls=='ico48b'){
                 stuorder=orderby;
-                $(obj).addClass("ico48b");
+                $(obj).addClass("ico48a");
             }else{
                 stuorder=orderby+' desc';
-                $(obj).addClass("ico48a");
+                $(obj).addClass("ico48b");
             }
             pageGo('pStuList');
         }

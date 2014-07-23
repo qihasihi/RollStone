@@ -7,6 +7,7 @@ import com.school.util.UtilTool;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -48,12 +49,64 @@ public class  PaperQuestion implements Serializable{
         this.getQuestioninfo().setQuestionid(questionid);
     }
 
+    public String getQuestiontypename(){
+        if(this.getQuestiontype()==null)
+            return null;
+        String type=null;
+        switch (this.getQuestiontype()){
+            case 1:type="其他";break;
+            case 2:type="填空题";break;
+            case 3:type="单选题";break;
+            case 4:type="多选题";break;
+            case 6:
+                switch (this.getExtension()){
+                    case 0:type="客观";break;
+                    case 1:type="主观";break;
+                    case 2:type="阅读理解";break;
+                    case 3:type="完型填空";break;
+                    case 4:type="英语听力";break;
+                    case 5:type="七选五";break;
+                    case 6:type="组试题";break;
+                }
+                break;
+            case 7:
+                switch (this.getExtension()){
+                    case 0:type="客观";break;
+                    case 1:type="主观";break;
+                    case 2:type="阅读理解";break;
+                    case 3:type="完型填空";break;
+                    case 4:type="英语听力";break;
+                    case 5:type="七选五";break;
+                    case 6:type="组试题";break;
+                }
+                break;
+            case 8:
+                switch (this.getExtension()){
+                    case 0:type="客观";break;
+                    case 1:type="主观";break;
+                    case 2:type="阅读理解";break;
+                    case 3:type="完型填空";break;
+                    case 4:type="英语听力";break;
+                    case 5:type="七选五";break;
+                    case 6:type="组试题";break;
+                }
+                break;
+        }
+        return type;
+    }
+
 
     public java.lang.Integer getQuestiontype(){
         return this.getQuestioninfo().getQuestiontype();
     }
     public void setQuestiontype(java.lang.Integer questiontype){
         this.getQuestioninfo().setQuestiontype(questiontype);
+    }
+    public java.lang.Integer getExtension(){
+        return this.getQuestioninfo().getExtension();
+    }
+    public void setExtension(java.lang.Integer extension){
+        this.getQuestioninfo().setExtension(extension);
     }
     public java.lang.String getContent(){
         String content=this.getQuestioninfo().getContent();
@@ -100,17 +153,17 @@ public class  PaperQuestion implements Serializable{
     }
 
 
-    public List<QuesTeamRela>  questionTeam;  //试题组
+    public List<PaperQuestion>  questionTeam=new ArrayList<PaperQuestion>();  //试题组
 
-    public List<QuesTeamRela> getQuestionTeam() {
+    public List<PaperQuestion> getQuestionTeam() {
         return questionTeam;
     }
 
-    public void setQuestionTeam(List<QuesTeamRela> questionTeam) {
+    public void setQuestionTeam(List<PaperQuestion> questionTeam) {
         this.questionTeam = questionTeam;
     }
 
-    public List<QuestionOption> questionOption;//选择题试题选项
+    public List<QuestionOption> questionOption=new ArrayList<QuestionOption>();//选择题试题选项
 
     public List<QuestionOption> getQuestionOption() {
         return questionOption;

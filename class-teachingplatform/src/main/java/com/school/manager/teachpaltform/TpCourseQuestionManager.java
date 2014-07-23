@@ -70,6 +70,11 @@ public class  TpCourseQuestionManager extends BaseManager<TpCourseQuestion> impl
     }
 
     @Override
+    public List<TpCourseQuestion> getQuestionTeamList(TpCourseQuestion tpCourseQuestion, PageResult pageResult) {
+        return this.tpcoursequestiondao.getQuestionTeamList(tpCourseQuestion,pageResult);
+    }
+
+    @Override
     public Integer getObjectiveQuesCount(TpCourseQuestion tpCourseQuestion) {
         return this.tpcoursequestiondao.getObjectiveQuesCount(tpCourseQuestion);
     }

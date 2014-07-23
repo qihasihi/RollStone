@@ -14,6 +14,15 @@ public class QuesTeamRela implements  Serializable{
     private java.lang.Long quesid;
     private java.lang.Long teamid;
     private java.lang.Long ref;
+    private Float score;
+
+    public Float getScore() {
+        return score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
+    }
 
     private QuestionInfo questioninfo;
 

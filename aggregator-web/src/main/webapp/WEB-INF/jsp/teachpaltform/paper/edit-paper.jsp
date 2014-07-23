@@ -137,13 +137,17 @@ function spanClick(obj,total){
     var idxObj=$("select[id='sel_order_idx']");
     if(idxObj.length>0)
         idxChange(idxObj,total);
-    mousePostion
-    var idxVal=$(obj).html();
-// style="position: absolute;left: '+mousePostion.x+'px;top:'+mousePostion.y+'px"
+    var idxVal=$(obj).data().bind.split("|")[1];
     var h='<select id="sel_order_idx">';
-    for(var i=1;i<=total;i++){
-        h+='<option value="'+i+'">'+i+'</option>';
-    }
+    var bindObj=$("span").filter(function(){return this.id.indexOf("idx_")!=-1});
+    $.each(bindObj,function(idx,itm){
+        var maxnum=$(itm).data().bind.split("|")[1];
+        var num=$(itm).html();
+        var htm=parseInt(maxnum)<=parseInt(num)?$(itm).html():$(itm).html()+'-'+maxnum;
+        if(parseInt(maxnum) > parseInt(num) )
+            num=maxnum;
+        h+='<option data-bind="'+$(itm).html()+'" value="'+num+'">'+htm+'</option>';
+    });
     h+='<option value="0">调至最后</option>';
     h+='</select>';
     $(obj).html(h);
@@ -154,7 +158,7 @@ function spanClick(obj,total){
 
     $("select[id='sel_order_idx']").bind("blur",function(){
         var spanObj=$(this).parent();
-        spanObj.html(this.value);
+        spanObj.html($(this).find('option:selected').data().bind);
         $(spanObj).bind("click",function(){
             spanClick(spanObj,total);
         });
@@ -171,7 +175,7 @@ function idxChange(obj,total){
         spanClick(this,total);
     });
     var h=$(obj).find('option:selected').val();
-    var quesid=$(obj).parent().data().bind;
+    var quesid=$(obj).parent().data().bind.split('|')[0];
     editQuesIdx(quesid,h);
     $(obj).parent().html(h);
 }
@@ -217,7 +221,7 @@ function genderInput(obj,score){
     var iptObj=$("input[id='score_input']");
     if(iptObj.length>0)
         scoreChange(iptObj,score);
-    var h='<input type="text" id="score_input" value="'+score+'" />';
+    var h='<input type="text" width="10" id="score_input" value="'+score+'" />';
     $(obj).html(h);
     $("input[id='score_input']").focus();
     $(obj).unbind('click');
@@ -227,8 +231,9 @@ function genderInput(obj,score){
         if(score<1)
             return;
         spanObj.html(score);
-        var quesid=$(spanObj).data().bind;
-        updateQuesScore(score,quesid);
+        var quesid=$(spanObj).data().bind.split("|")[0];
+        var ref=$(spanObj).data().bind.split("|")[1];
+        updateQuesScore(score,quesid,ref);
         $(spanObj).bind("click",function(){
             genderInput(spanObj,score);
         });
@@ -248,8 +253,9 @@ function scoreChange(obj,score){
         genderInput(this,score);
     });
     $(obj).parent().html(score);
-    var quesid=$(obj).parent().data().bind;
-    updateQuesScore(score,quesid);
+    var quesid=$(obj).parent().data().bind.split("|")[0];
+    var ref=$(obj).parent().data().bind.split("|")[1];
+    updateQuesScore(score,quesid,ref);
 }
 
 
@@ -258,13 +264,16 @@ function scoreChange(obj,score){
  * @param score
  * @param quesid
  */
-function updateQuesScore(score,quesid){
+function updateQuesScore(score,quesid,ref){
     if(typeof score=='undefined'||isNaN(score))
         return;
+    var param={questionid:quesid,paperid:paperid,score:score};
+    if(typeof ref!='undefined')
+        param.ref=ref;
     $.ajax({
         url:"paperques?m=doUpdPaperQuesScore",
         type:"post",
-        data:{questionid:quesid,paperid:paperid,score:score},
+        data:param,
         dataType:'json',
         cache: false,
         error:function(){
@@ -275,7 +284,9 @@ function updateQuesScore(score,quesid){
             }else{
                 alert(rmsg.msg);
                 if(rmsg.objList.length>0){
-                      $("#total_score").html(rmsg.objList[0]);
+                   $("#total_score").html(rmsg.objList[0]);
+                   if(typeof ref!='undefined')
+                       $("#group_"+ref).html(rmsg.objList[1])
                 }
             }
         }
@@ -337,9 +348,22 @@ function reSetScrollDiv(){
                 <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}">
                     <col class="w30"/>
                     <col class="w910"/>
-                    <caption><span class="f_right"><a   href="javascript:showDialogPage(4,'${pq.paperid}','${pq.questionid}')" class="ico11" title="编辑"></a><a href="javascript:doDelPaperQues('${pq.questionid}')" class="ico04" title="删除"></a>&nbsp;<span class="font-blue">
-                         <span class="font-blue"  style="cursor: pointer" data-bind="${pq.questionid}" id="score_${pq.questionid}">${pq.score}</span>分</span></span>
-                        <span id="idx_${pq.questionid}" data-bind="${pq.questionid}"  class="font-blue">${pq.orderidx}</span>/${fn:length(pqList)}</caption>
+                    <caption><span class="f_right">
+                        <c:if test="${pq.questiontype<6}">
+                            <a   href="javascript:showDialogPage(4,'${pq.paperid}','${pq.questionid}')" class="ico11" title="编辑"></a>
+                        </c:if>
+                        <a href="javascript:doDelPaperQues('${pq.questionid}')" class="ico04" title="删除"></a>&nbsp;<span class="font-blue">
+                        <c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0}">
+                            <span class="font-blue"  style="cursor: pointer" data-bind="${pq.questionid}" id="group_${pq.ref}">
+                        </c:if>
+                        <c:if test="${empty pq.questionTeam and fn:length(pq.questionTeam)==0}">
+                            <span class="font-blue"  style="cursor: pointer" data-bind="${pq.questionid}|" id="score_${pq.questionid}">
+                        </c:if>
+                         ${pq.score}</span>分</span>
+                    </span>
+                        <span id="idx_${pq.questionid}" data-bind="${pq.questionid}|${pq.orderidx+fn:length(pq.questionTeam)}"  class="font-blue">${pq.orderidx}</span><c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0}">-${pq.orderidx+fn:length(pq.questionTeam)}</c:if>
+                        <!--/${fn:length(pqList)+fn:length(childList)}-->
+                            </caption>
 
                     <tr>
                         <td>
@@ -348,7 +372,7 @@ function reSetScrollDiv(){
                             </c:if>
                         </td>
                         <td>
-                            <span class="bg">${pq.questiontype==1?"其他":pq.questiontype==2?"填空题":pq.questiontype==3?"单选题":pq.questiontype==4?"多选题":""}：
+                            <span class="bg">${pq.questiontypename}：
                             </span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
                             <c:if test="${!empty pq.questionOption}">
                                 <table border="0" cellpadding="0" cellspacing="0">
@@ -374,8 +398,54 @@ function reSetScrollDiv(){
                                   </c:forEach>
                                 </table>
                             </c:if>
+
+
                         </td>
                     </tr>
+
+                    <c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0}">
+
+                        <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
+                            <tr>
+                            <td>
+                                <span data-bind="${c.questionid}"  class="font-blue">${(cidx.index+1)+pq.orderidx}</span>
+                            </td>
+                            <td>
+                                ${c.content}
+                            <table border="0" cellpadding="0" cellspacing="0">
+                                <col class="w30"/>
+                                <col class="w880"/>
+
+                                <caption><span class="f_right">
+                                   <span class="font-blue">
+                                        <span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}" id="score_${c.questionid}">
+                                                ${c.score}</span>分</span>
+                                </span>
+                                </caption>
+
+                                <c:forEach items="${pq.questionOption}" var="option">
+                                    <tr>
+                                        <th>
+                                            <c:if test="${pq.questiontype eq 3 }">
+                                                <input disabled type="radio">
+                                            </c:if>
+                                            <c:if test="${pq.questiontype eq 4 }">
+                                                <input disabled type="checkbox">
+                                            </c:if>
+                                        </th>
+                                        <td>
+                                                ${option.optiontype}&nbsp;${option.content};
+                                            <c:if test="${option.isright eq 1}">
+                                                <span class="ico12"></span>
+                                            </c:if>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                            </td>
+                            </tr>
+                        </c:forEach>
+                    </c:if>
 
                     <tr>
                         <td>&nbsp;</td>
@@ -412,7 +482,7 @@ function reSetScrollDiv(){
 <script type="text/javascript">
     $("span").filter(function(){return this.id.indexOf('score_')!=-1}).each(function(idx,itm){
        $(itm).bind("click",function(){
-           genderInput(itm,$(itm).html());
+           genderInput(itm,$(itm).html().Trim());
        });
     });
 

@@ -89,6 +89,11 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
     }
 
     @Override
+    public Boolean updateQuesTeamScore(PaperQuestion paperQuestion) {
+        return this.paperquestiondao.updateQuesTeamScore(paperQuestion);
+    }
+
+    @Override
     public List<PaperQuestion> getQuestionByPaper(Long paperid) {
         return this.paperquestiondao.getQuestionByPaper(paperid);
     }

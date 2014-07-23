@@ -10,6 +10,8 @@ import java.util.Map;
 
 public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> { 
     Float getSumScore(PaperQuestion paperQuestion);
+
+    Boolean updateQuesTeamScore(PaperQuestion paperQuestion);
     public List<PaperQuestion> getQuestionByPaper(Long paperid);
 
     public List<PaperQuestion> getPaperTeamQuestionList(PaperQuestion p,PageResult pageResult);

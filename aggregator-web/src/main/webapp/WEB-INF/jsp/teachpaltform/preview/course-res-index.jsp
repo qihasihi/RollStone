@@ -88,27 +88,27 @@
                                     htm += '</p>';
 
                                     if (itm.resourseType == "other") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '"  href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '"  href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     if (itm.resourseType == "doc") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     if (itm.resourseType == "jpeg") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     if (itm.resourseType == "video") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     if (itm.resourseType == "swf") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     if (itm.resourseType == "mp3") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     htm += '</li>';
@@ -139,27 +139,27 @@
                                     htm += '<li id="li_' + itm.resid + '" >';
                                     htm += '<p class="a"><span class="' + itm.suffixtype + '"></span></p>';
                                     if (itm.resourseType == "other") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     if (itm.resourseType == "doc") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     if (itm.resourseType == "jpeg") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     if (itm.resourseType == "video") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     if (itm.resourseType == "swf") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     if (itm.resourseType == "mp3") {
-                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)">' + filename + '</a></p>';
+                                        htm += '<p id="p_' + itm.resid + '"><a id="a_for_' + itm.resid + '" href="javascript:void(0);" onclick="showResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)">' + itm.resname + '</a></p>';
                                         htm += dvhtm;
                                     }
                                     htm += '</li>';

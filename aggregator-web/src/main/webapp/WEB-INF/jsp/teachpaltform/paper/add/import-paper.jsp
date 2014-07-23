@@ -172,10 +172,10 @@ function preeDoPageSub(pObj){
                                     <span class="bg1" style="width:50%">${c.objectivenum}</span><span class="bg2" style="width:50%">${c.subjectivenum}</span>
                                 </c:if>
 
-                                <c:if test="${c.objectivenum>0}">
+                                <c:if test="${c.objectivenum>0 and c.subjectivenum<1}">
                                     <span class="bg1" style="width:100%">${c.objectivenum}</span>
                                 </c:if>
-                                <c:if test="${c.subjectivenum>0}">
+                                <c:if test="${c.subjectivenum>0 and c.objectivenum<1}">
                                     <span class="bg2" style="width:100%">${c.subjectivenum}</span>
                                 </c:if>
                             </p>
@@ -200,10 +200,10 @@ function preeDoPageSub(pObj){
                                 <span class="bg1" style="width:50%">${c.objectivenum}</span><span class="bg2" style="width:50%">${c.subjectivenum}</span>
                             </c:if>
 
-                            <c:if test="${c.objectivenum>0}">
+                            <c:if test="${c.objectivenum>0 and c.subjectivenum<0}">
                                 <span class="bg1" style="width:100%">${c.objectivenum}</span>
                             </c:if>
-                            <c:if test="${c.subjectivenum>0}">
+                            <c:if test="${c.subjectivenum>0 and c.objectivenum<0}">
                                 <span class="bg2" style="width:100%">${c.subjectivenum}</span>
                             </c:if>
                             <c:if test="${!empty c.quesnum}">

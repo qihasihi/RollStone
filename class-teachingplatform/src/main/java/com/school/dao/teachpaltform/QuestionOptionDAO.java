@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.school.entity.teachpaltform.QuestionInfo;
+import com.school.entity.teachpaltform.TpCourseQuestion;
 import org.springframework.stereotype.Component;
 
 import com.school.dao.base.CommonDAO;
@@ -242,6 +243,75 @@ public class QuestionOptionDAO extends CommonDAO<QuestionOption> implements IQue
             presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
         return questionoptionList;
     }
+
+    @Override
+    public List<QuestionOption> getCourseQuesOptionList(TpCourseQuestion tpcoursequestion, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL j_course_question_option_proc_split(");
+        List<Object> objList=new ArrayList<Object>();
+        if (tpcoursequestion.getQuestionid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getQuestionid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursequestion.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursequestion.getQuestiontype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getQuestiontype());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursequestion.getStatus() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getStatus());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursequestion.getCoursename() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getCoursename());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursequestion.getMaterialid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getMaterialid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursequestion.getGradeid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getGradeid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcoursequestion.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursequestion.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<QuestionOption> questionoptionList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, QuestionOption.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return questionoptionList;
+    }
+
 
     /**
      * 得到同步的SQL

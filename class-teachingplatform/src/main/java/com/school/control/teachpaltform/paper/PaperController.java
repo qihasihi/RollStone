@@ -213,6 +213,8 @@ public class PaperController extends BaseController<PaperInfo>{
             }
         }
 
+
+        //获取提干
         PaperQuestion pq=new PaperQuestion();
         pq.setPaperid(Long.parseLong(paperid));
         PageResult p=new PageResult();
@@ -220,8 +222,64 @@ public class PaperController extends BaseController<PaperInfo>{
         p.setPageNo(0);
         p.setPageSize(0);
         List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+
+        //获取试题组下题目
+        PaperQuestion child =new PaperQuestion();
+        child.setPaperid(pq.getPaperid());
+        List<PaperQuestion>childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
+
+        //获取选项
+        QuestionOption questionOption=new QuestionOption();
+        questionOption.setPaperid(pq.getPaperid());
+        PageResult pchild = new PageResult();
+        pchild.setPageNo(0);
+        pchild.setPageSize(0);
+        pchild.setOrderBy("option_type");
+        List<QuestionOption>questionOptionList=this.questionOptionManager.getPaperQuesOptionList(questionOption, pchild);
+
+        //整合试题组与选项
         List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+        List<QuestionOption>tmpOptionList;
+        List<PaperQuestion>questionTeam;
         if(pqList!=null&&pqList.size()>0){
+            for(PaperQuestion paperQuestion:pqList){
+                questionTeam=new ArrayList<PaperQuestion>();
+                //试题组
+                if(childList!=null&&childList.size()>0){
+                    for (PaperQuestion childp :childList){
+                        //试题组选项
+                        if(paperQuestion.getRef().equals(childp.getRef())){
+                            if(questionOptionList!=null&&questionOptionList.size()>0){
+                                tmpOptionList=new ArrayList<QuestionOption>();
+                                for(QuestionOption qo:questionOptionList){
+                                    if(qo.getQuestionid().equals(childp.getQuestionid())){
+                                        tmpOptionList.add(qo);
+                                    }
+                                }
+                                childp.setQuestionOption(tmpOptionList);
+                                questionTeam.add(childp);
+                            }
+                        }
+                    }
+                    paperQuestion.setQuestionTeam(questionTeam);
+                }
+
+                if(questionOptionList!=null&&questionOptionList.size()>0){
+                    //普通试题选项
+                    List<QuestionOption> tmp1OptionList=new ArrayList<QuestionOption>();
+                    for(QuestionOption qo:questionOptionList){
+                        if(qo.getQuestionid().equals(paperQuestion.getQuestionid())){
+                            tmp1OptionList.add(qo);
+                        }
+                    }
+
+                    paperQuestion.setQuestionOption(tmp1OptionList);
+                }
+                tmpList.add(paperQuestion);
+            }
+        }
+
+       /* if(pqList!=null&&pqList.size()>0){
             for (PaperQuestion ques:pqList){
                 if(ques.getQuestiontype()==3||ques.getQuestiontype()==4){
                     QuestionOption questionOption=new QuestionOption();
@@ -235,7 +293,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 }
                 tmpList.add(ques);
             }
-        }
+        }*/
 
         request.setAttribute("pqList", tmpList);
         request.setAttribute("paper", tpCoursePaperList.get(0));
@@ -1007,8 +1065,50 @@ public class PaperController extends BaseController<PaperInfo>{
         PageResult pchild = new PageResult();
         pchild.setPageNo(0);
         pchild.setPageSize(0);
-        pchild.setOrderBy("u.option_type");
+        pchild.setOrderBy("option_type");
         List<QuestionOption>questionOptionList=this.questionOptionManager.getPaperQuesOptionList(questionOption, pchild);
+
+        //整合试题组与选项
+        List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+        List<QuestionOption>tmpOptionList;
+        List<PaperQuestion>questionTeam;
+        if(pqList!=null&&pqList.size()>0){
+            for(PaperQuestion paperQuestion:pqList){
+                questionTeam=new ArrayList<PaperQuestion>();
+                 //试题组
+                if(childList!=null&&childList.size()>0){
+                    for (PaperQuestion childp :childList){
+                        //试题组选项
+                        if(paperQuestion.getRef().equals(childp.getRef())){
+                            if(questionOptionList!=null&&questionOptionList.size()>0){
+                                tmpOptionList=new ArrayList<QuestionOption>();
+                                for(QuestionOption qo:questionOptionList){
+                                    if(qo.getQuestionid().equals(childp.getQuestionid())){
+                                        tmpOptionList.add(qo);
+                                    }
+                                }
+                                childp.setQuestionOption(tmpOptionList);
+                                questionTeam.add(childp);
+                            }
+                        }
+                    }
+                    paperQuestion.setQuestionTeam(questionTeam);
+                }
+
+                if(questionOptionList!=null&&questionOptionList.size()>0){
+                    //普通试题选项
+                    List<QuestionOption> tmp1OptionList=new ArrayList<QuestionOption>();
+                    for(QuestionOption qo:questionOptionList){
+                        if(qo.getQuestionid().equals(paperQuestion.getQuestionid())){
+                            tmp1OptionList.add(qo);
+                        }
+                    }
+
+                    paperQuestion.setQuestionOption(tmp1OptionList);
+                }
+                tmpList.add(paperQuestion);
+            }
+        }
 
 
     /*
@@ -1030,9 +1130,11 @@ public class PaperController extends BaseController<PaperInfo>{
         }
     */
 
-        request.setAttribute("pqList", pqList);
-        request.setAttribute("courseid", courseid);
+        request.setAttribute("pqList", tmpList);
+        request.setAttribute("childList", childList);
+        /*request.setAttribute("optionList", questionOptionList);*/
         request.setAttribute("paper", tpCoursePaperList.get(0));
+        request.setAttribute("courseid",courseid);
         return new ModelAndView("/teachpaltform/paper/edit-paper");
     }
 

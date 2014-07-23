@@ -297,12 +297,12 @@ public class TaskController extends BaseController<TpTaskInfo>{
         Integer descIdx=Integer.parseInt(orderix);
         List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t,pageResult);
 
-
+        Integer objIdx=descIdx;
         //0是调至最后获取最大索引
         if(descIdx==0)
             descIdx=taskList.get(0).getOrderidx();
         else
-            descIdx=descIdx-1<0?1:descIdx-1;
+            //descIdx=descIdx-1<0?1:descIdx-1;
 
         if(taskList!=null&&taskList.size()>0){
             if(tmpTask.getOrderidx()>descIdx){  //从7往3调
@@ -322,8 +322,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     }
                 }
             }else if(tmpTask.getOrderidx()<descIdx){ //从1往9调
+                objIdx=objIdx-1<=0?1:objIdx-1;
                 for(TpTaskInfo task:taskList){
-                    if(task.getOrderidx()>tmpTask.getOrderidx()&&task.getOrderidx()<=descIdx){
+                    if(task.getOrderidx()>tmpTask.getOrderidx()&&task.getOrderidx()<descIdx){
                         TpTaskInfo upd=new TpTaskInfo();
                         upd.setTaskid(task.getTaskid());
                         upd.setOrderidx(task.getOrderidx()-1);
@@ -340,7 +341,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
         TpTaskInfo upd=new TpTaskInfo();
         upd.setTaskid(tmpTask.getTaskid());
-        upd.setOrderidx(descIdx);
+        if(orderix.equals("0"))
+            upd.setOrderidx(descIdx);
+        else
+            upd.setOrderidx(objIdx);
         sql=new StringBuilder();
         objList=this.tpTaskManager.getUpdateSql(upd,sql);
         if(sql!=null&&objList!=null){

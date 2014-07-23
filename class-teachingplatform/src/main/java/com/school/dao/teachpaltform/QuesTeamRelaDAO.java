@@ -190,6 +190,11 @@ public class QuesTeamRelaDAO extends CommonDAO<QuesTeamRela> implements IQuesTea
 				objList.add(questeamrela.getRef());
 			} else
 				sqlbuilder.append("null,");
+            if (questeamrela.getScore() != null) {
+                sqlbuilder.append("?,");
+                objList.add(questeamrela.getScore());
+            } else
+                sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList; 
 	}

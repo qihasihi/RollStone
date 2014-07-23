@@ -2,6 +2,8 @@
 package  com.school.manager.teachpaltform;
 
 import java.util.List;
+
+import com.school.entity.teachpaltform.TpCourseQuestion;
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +73,11 @@ public class  QuestionOptionManager extends BaseManager<QuestionOption> implemen
     @Override
     public List<QuestionOption> getPaperQuesOptionList(QuestionOption questionOption, PageResult presult) {
         return this.questionoptiondao.getPaperQuesOptionList(questionOption,presult);
+    }
+
+    @Override
+    public List<QuestionOption> getCourseQuesOptionList(TpCourseQuestion courseQuestion, PageResult presult) {
+        return this.questionoptiondao.getCourseQuesOptionList(courseQuestion,presult);
     }
 
     public QuestionOption getOfExcel(Sheet rs, int cols, int d, String type) {
