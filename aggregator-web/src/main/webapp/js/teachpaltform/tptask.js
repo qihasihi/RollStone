@@ -1851,7 +1851,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
             }
             $("#notcomplete").html(rmsg.objList[3].length)
             if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
-                $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public1">发提醒</a>');
+                $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
 
             }
 

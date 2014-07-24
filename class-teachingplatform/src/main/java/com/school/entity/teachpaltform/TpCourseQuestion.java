@@ -248,6 +248,13 @@ public class TpCourseQuestion implements Serializable{
         this.getQuestioninfo().setExtension(extension);
     }
 
+    public String getCorrectanswer(){
+        return  this.getQuestioninfo().getCorrectanswer();
+    }
+    public void setCorrectanswer(String correctanswer){
+       this.getQuestioninfo().setCorrectanswer(correctanswer);
+    }
+
     public java.lang.Integer getQuestiontype(){
         return this.getQuestioninfo().getQuestiontype();
     }

@@ -353,9 +353,9 @@
     a.an_lightblue:hover,a.an_lightblue:active{color:#15d0cc;}
 
 	.an_test1,.an_test2{
-	width:84px;
+	width:58px;
 	height:26px;
-	background: url(images/bg29_131230.png) no-repeat -814px -108px;
+	background: url(images/bg29_131230.png) no-repeat -615px -108px;
 	text-align: center;
 	line-height:20px;
 	font-size:14px;
@@ -367,9 +367,9 @@
 	vertical-align:middle;
 }
     a.an_test1,a.an_test2{color:#fff;}
-	.an_test1:hover{ background-position:-814px -138px; padding-top:4px;height:25px;}
-	.an_test2{ background-position:-899px -108px;}
-	.an_test2:hover{ background-position:-899px -138px; padding-top:4px;height:25px;}
+	.an_test1:hover{ background-position:-615px -138px; padding-top:4px;height:25px;}
+	.an_test2{ background-position:-674px -108px;}
+	.an_test2:hover{ background-position:-674px -138px; padding-top:4px;height:25px;}
 
 	a.an_search{
 	width:35px;
@@ -535,7 +535,7 @@
 	.ico_wsp1{background-position:-921px 0;}
 	.ico_wsp2{background-position:-938px 0;}
 
-	.ico61,.ico62,.ico63,.ico64,.ico65,.ico66,.ico67,.ico68,.ico69,.ico70,.ico71,.ico72,.ico73,.ico74,.ico75,.ico76,.ico77,.ico78{
+	.ico61,.ico62,.ico63,.ico64,.ico65,.ico66,.ico67,.ico68,.ico69,.ico70,.ico71,.ico72,.ico73,.ico74,.ico75,.ico76,.ico77,.ico78,.ico84{
 	width:17px;
 	height:17px;
 	background: url(images/ico05_131230.png) no-repeat 0 0;
@@ -575,3 +575,4 @@
 	.ico81{background-position:-234px -41px;}
 	.ico82{background-position:-213px 0; width:42px; height:40px;}
 	.ico83{background-position:-118px -61px; width:14px; height:18px;}
+	.ico84{background-position:-373px 0; width:31px; height:18px; margin:0 10px;}

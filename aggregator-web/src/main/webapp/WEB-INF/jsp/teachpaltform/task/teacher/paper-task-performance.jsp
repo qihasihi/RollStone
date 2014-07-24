@@ -56,10 +56,11 @@
         </c:if>
     </p>
     <p class="font-black p_t_10"><strong>完成比率：</strong><span id="finishnum"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--a href="" id="showdetail" target="_blank" class="font-darkblue">查看题目</a--></p>
-    <p class="font-black p_t_10">未完成任务：<span id="notcomplete" onmousemove="var dvstyle=dv_nocomplete.style;dvstyle.left=(mousePostion.x+5)+'px';dvstyle.top=(mousePostion.y+5)+'px';dvstyle.display='block'"
-                                             onmouseout="dv_nocomplete.style.display='none';"></span>人&nbsp;&nbsp;&nbsp;<!--a href="" id="showdetail" target="_blank" class="font-darkblue">查看题目</a-->
-        <span  id="sendMsg"></span>
-    </p>
+    <p class="p_tb_10"><span class="font-black"><strong>未完成任务：</strong><span id="notcomplete" onmousemove="var dvstyle=dv_nocomplete.style;dvstyle.left=(mousePostion.x+5)+'px';dvstyle.top=(mousePostion.y+5)+'px';dvstyle.display='block'"
+                                                                             onmouseout="dv_nocomplete.style.display='none';"></span>人</span>&nbsp;&nbsp;<span  id="sendMsg"></span></p>
+
+
+
     <div id="mainTbl">
 
     </div>

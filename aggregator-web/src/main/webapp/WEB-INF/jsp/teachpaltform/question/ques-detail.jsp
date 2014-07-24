@@ -37,7 +37,7 @@
             <th>题&nbsp;&nbsp;&nbsp;&nbsp;干：</th>
             <td id="questionname">${question.content}<br>
                 <c:if test="${question.questiontype==3||question.questiontype==4}">
-                    <c:forEach items="${question.questionOption}" var="itm">
+                    <c:forEach items="${question.questionOptionList}" var="itm">
                         <c:if test="${question.questiontype==3}">
                             <input type="radio" name="option"/>${itm.optiontype}.&nbsp;
                         </c:if>
@@ -59,8 +59,8 @@
                 <c:if test="${question.correctanswer!=null}">
                     ${question.correctanswer}
                 </c:if>
-                <c:if test="${question.questionOption!=null}">
-                    <c:forEach items="${question.questionOption}" var="itm">
+                <c:if test="${question.questionOptionList!=null}">
+                    <c:forEach items="${question.questionOptionList}" var="itm">
                         <c:if test="${itm.isright==1}">${itm.optiontype}</c:if>
                     </c:forEach>
                 </c:if>
@@ -73,39 +73,6 @@
     </table>
     <br>
 </div>
-    <!--<p>试题详情——<span id="question_type"></span></p>
-    <table>
-        <tr>
-            <td width="100">题干</td>
-            <td width="800" id="questionname">${question.content}<br>
-                <c:if test="${question.questiontype==3||question.questiontype==4}">
-                    <c:forEach items="${question.questionOption}" var="itm">
-                        <input type="radio" name="option"/>${itm.optiontype}.${itm.content}<c:if test="${itm.isright==1}">√</c:if>
-                    </c:forEach>
-                </c:if>
-            </td>
-        </tr>
-        <tr><td>正确答案</td>
-            <td>
-                <c:if test="${question.correctanswer!=null}">
-                    ${question.correctanswer}
-                </c:if>
-                <c:if test="${question.questionOption!=null}">
-                    <c:forEach items="${question.questionOption}" var="itm">
-                        <c:if test="${itm.isright==1}">${itm.optiontype}</c:if>
-                    </c:forEach>
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                答案解析
-            </td>
-            <td>
-                ${question.analysis}
-            </td>
-        </tr>
-    </table>-->
 <%@include file="/util/foot.jsp" %>
 </body>
 </html>
