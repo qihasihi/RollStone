@@ -911,6 +911,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		String taskvalueid=request.getParameter("taskvalueid");
 		String taskremark=request.getParameter("taskremark");
         String quesnum=request.getParameter("quesnum");
+        String clstype=request.getParameter("clstype");
 		if(tasktype==null||tasktype.trim().length()<1
 			//||StringUtils.isBlank(taskname
                 ){
@@ -1160,21 +1161,26 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
         //添加任务对象 班级
         if(clsArray!=null&&clsArray.length>0){
+            if(clstype==null||clstype.trim().length()<1){
+                je.setMsg("异常错误!系统未获取到班级类型!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            String[]classTypeArray=clstype.split(",");
             for (int i=0;i<clsArray.length;i++) {
                 TpTaskAllotInfo tal=new TpTaskAllotInfo();
-                //验证是什么类型的班级
-                ClassInfo c=new ClassInfo();
-                c.setClassid(Integer.parseInt(clsArray[i]));
-                List<ClassInfo>clsList=this.classManager.getList(c,null);
-
-                TpVirtualClassInfo tv=new TpVirtualClassInfo();
-                tv.setVirtualclassid(Integer.parseInt(clsArray[i]));
-                List<TpVirtualClassInfo>vclsList=this.tpVirtualClassManager.getList(tv,null);
-                if(clsList!=null&&clsList.size()>0){
+                //验证班级类型
+                if(classTypeArray[i].equals("1")){
+                    /*ClassInfo c=new ClassInfo();
+                    c.setClassid(Integer.parseInt(clsArray[i]));
+                    List<ClassInfo>clsList=this.classManager.getList(c,null);*/
                     tal.setUsertype(0);
-                }else if(vclsList!=null&&vclsList.size()>0){
+                }else if(classTypeArray[i].equals("2")){
+                    /*TpVirtualClassInfo tv=new TpVirtualClassInfo();
+                    tv.setVirtualclassid(Integer.parseInt(clsArray[i]));
+                    List<TpVirtualClassInfo>vclsList=this.tpVirtualClassManager.getList(tv,null);*/
                     tal.setUsertype(1);
-                }else {
+                }else{
                     je.setMsg("异常错误!任务班级无效!");
                     response.getWriter().print(je.toJSON());
                     return;
@@ -1337,6 +1343,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String taskvalueid=request.getParameter("taskvalueid");
         String taskremark=request.getParameter("taskremark");
         String quesnum=request.getParameter("quesnum");
+        String clstype=request.getParameter("clstype");
         if(tasktype==null||tasktype.trim().length()<1
             ||taskid==null||taskvalueid==null
                // ||taskname==null||taskname.trim().length()<1
@@ -1591,21 +1598,26 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
         //添加任务对象 班级
         if(clsArray!=null&&clsArray.length>0){
+            if(clstype==null||clstype.trim().length()<1){
+                je.setMsg("异常错误!系统未获取到班级类型!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            String[]classTypeArray=clstype.split(",");
             for (int i=0;i<clsArray.length;i++) {
                 TpTaskAllotInfo tal=new TpTaskAllotInfo();
                 //验证是什么类型的班级
-                ClassInfo c=new ClassInfo();
-                c.setClassid(Integer.parseInt(clsArray[i]));
-                List<ClassInfo>clsList=this.classManager.getList(c,null);
-
-                TpVirtualClassInfo tv=new TpVirtualClassInfo();
-                tv.setVirtualclassid(Integer.parseInt(clsArray[i]));
-                List<TpVirtualClassInfo>vclsList=this.tpVirtualClassManager.getList(tv,null);
-                if(clsList!=null&&clsList.size()>0){
+                if(classTypeArray[i].equals("1")){
+                    /*ClassInfo c=new ClassInfo();
+                    c.setClassid(Integer.parseInt(clsArray[i]));
+                    List<ClassInfo>clsList=this.classManager.getList(c,null);*/
                     tal.setUsertype(0);
-                }else if(vclsList!=null&&vclsList.size()>0){
+                }else if(classTypeArray[i].equals("2")){
+                    /*TpVirtualClassInfo tv=new TpVirtualClassInfo();
+                    tv.setVirtualclassid(Integer.parseInt(clsArray[i]));
+                    List<TpVirtualClassInfo>vclsList=this.tpVirtualClassManager.getList(tv,null);*/
                     tal.setUsertype(1);
-                }else {
+                }else{
                     je.setMsg("异常错误!任务班级无效!");
                     response.getWriter().print(je.toJSON());
                     return;

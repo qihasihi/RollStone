@@ -239,21 +239,56 @@ public class QuestionController extends BaseController<QuestionInfo> {
         tpCourseQuestion.setUserid(this.logined(request).getUserid());
         presult.setOrderBy(" u.c_time DESC,q.c_time DESC ");
         List<TpCourseQuestion> tpCourseQuestionList=this.tpCourseQuestionManager.getList(tpCourseQuestion,presult);
+        //试题组子集
+        List<TpCourseQuestion> childList=this.tpCourseQuestionManager.getQuestionTeamList(tpCourseQuestion,null);
+        PageResult pchild = new PageResult();
+        pchild.setPageNo(0);
+        pchild.setPageSize(0);
+        pchild.setOrderBy("option_type");
+        //选项
+        List<QuestionOption>questionOptionList=this.questionOptionManager.getCourseQuesOptionList(tpCourseQuestion, pchild);
+
+
+        List<QuestionOption>tmpOptionList;
+        List<TpCourseQuestion>questionTeam;
         if(tpCourseQuestionList!=null&&tpCourseQuestionList.size()>0){
             for(TpCourseQuestion tq :tpCourseQuestionList){
-                if(tq.getQuestiontype()==3||tq.getQuestiontype()==4){
-                    QuestionOption questionOption=new QuestionOption();
-                    questionOption.setQuestionid(tq.getQuestionid());
-                    PageResult p = new PageResult();
-                    p.setPageNo(0);
-                    p.setPageSize(0);
-                    p.setOrderBy("u.option_type");
-                    List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,p);
-                    tq.setQuestionOptionList(questionOptionList);
+                questionTeam=new ArrayList<TpCourseQuestion>();
+                //试题组
+                if(childList!=null&&childList.size()>0){
+                    for (TpCourseQuestion childp :childList){
+                        //试题组选项
+                        if(tq.getRef().equals(childp.getRef())){
+                            if(questionOptionList!=null&&questionOptionList.size()>0){
+                                tmpOptionList=new ArrayList<QuestionOption>();
+                                for(QuestionOption qo:questionOptionList){
+                                    if(qo.getQuestionid().equals(childp.getQuestionid())){
+                                        tmpOptionList.add(qo);
+                                    }
+                                }
+                                childp.setQuestionOptionList(tmpOptionList);
+                                questionTeam.add(childp);
+                            }
+                        }
+                    }
+                    tq.setQuestionTeam(questionTeam);
+                }
+
+                if(questionOptionList!=null&&questionOptionList.size()>0){
+                    //普通试题选项
+                    List<QuestionOption> tmp1OptionList=new ArrayList<QuestionOption>();
+                    for(QuestionOption qo:questionOptionList){
+                        if(qo.getQuestionid().equals(tq.getQuestionid())){
+                            tmp1OptionList.add(qo);
+                        }
+                    }
+
+                    tq.setQuestionOptionList(tmp1OptionList);
                 }
                 tmpList.add(tq);
             }
         }
+
         presult.setList(tmpList);
         jsonEntity.setPresult(presult);
         jsonEntity.setType("success");

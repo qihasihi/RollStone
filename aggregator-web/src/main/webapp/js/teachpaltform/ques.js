@@ -684,11 +684,11 @@ function doStuSubmitQues(tasktype,taskid,quesid,groupid,questype){
 			});
 		}
 	}else if(tasktype==1){
-        if ("ue"+taskid.getContent().Trim().length < 1) {
+       /* if ("ue"+taskid.getContent().Trim().length < 1) {
             alert('请输入学习心得后提交!');
             return;
         }
-        param.quesanswer = "ue"+taskid..getContent().Trim();
+        param.quesanswer = "ue"+taskid..getContent().Trim(); */
 	}
 	
 	//alert(paramStr);

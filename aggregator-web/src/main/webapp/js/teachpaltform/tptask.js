@@ -740,6 +740,7 @@ function doSubManageTask(taskid) {
     var groupvalidate = $("input[name='ck_group']");
     var grouparr = $("input[name='ck_group']:checked");
     var clsarr = $("input[name='ck_cls']:checked");
+    var clstype=new Array();
     /*.filter(function(){
      var tmpId=this.id.substring(this.id.lastIndexOf('_')+1);
      return $('#p_group_'+tmpId+' input').length<1;
@@ -850,12 +851,19 @@ function doSubManageTask(taskid) {
             paramStr += '&';
         paramStr += 'clsArray=' + $(itm).val();
 
-
     });
 
     if (iserror.length) {
         alert(iserror);
         return;
+    }
+
+    if(clsarr.length>0){
+        $.each(clsarr,function(ix,im){
+            var type=$(im).data().bind;
+            clstype.push(type);
+        });
+        param.clstype=clstype.join(",");
     }
 
 

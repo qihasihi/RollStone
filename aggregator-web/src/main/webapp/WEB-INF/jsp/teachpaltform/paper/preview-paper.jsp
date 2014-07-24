@@ -116,7 +116,7 @@ function preeDoPageSub(pObj){
                                 <span class="ico44"></span>
                             </c:if>
                         </td>
-                        <td><span class="bg">${pq.questiontype==1?"其他":pq.questiontype==2?"填空题":pq.questiontype==3?"单选题":pq.questiontype==4?"多选题":""}：</span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+                        <td><span class="bg">${pq.questiontypename}：</span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
                             <c:if test="${!empty pq.questionOption}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <col class="w30"/>

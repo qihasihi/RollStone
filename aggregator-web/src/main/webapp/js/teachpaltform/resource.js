@@ -2396,7 +2396,7 @@ function doSubStudyNote(resid) {
             } else {
                 alert(rps.msg);
                 $("#div_xheditor").hide();
-                loadStudyNotes(2);
+                loadStudyNotes(usertype);
                 try {
                     $("#xheditor").setContent("");
                 } catch (e) {

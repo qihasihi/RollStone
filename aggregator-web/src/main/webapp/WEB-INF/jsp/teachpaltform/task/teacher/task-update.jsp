@@ -175,7 +175,7 @@
                     <c:if test="${!empty courseclassList}">
                         <c:forEach var="cc" items="${courseclassList}" varStatus="idx">
 
-                            <p class="font-black"><input name="ck_cls" type="checkbox"  onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
+                            <p class="font-black"><input name="ck_cls" data-bind="${cc.classtype}" type="checkbox"  onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
 
 
                             <ul class="public_list3" id="p_group_${cc.classid }">

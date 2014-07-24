@@ -163,7 +163,7 @@
                                     <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" class="public_input w140" />~
                                     <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly" id="e_time_${cc.classid}" type="text"class="public_input w140" />
                                 </p> -->
-                                <p class="font-black"><input name="ck_cls" type="checkbox"  onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
+                                <p class="font-black"><input name="ck_cls" data-bind="${cc.classtype}" type="checkbox"   onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
 
 
                            <!-- <c:if test="${idx.index!=0}">
