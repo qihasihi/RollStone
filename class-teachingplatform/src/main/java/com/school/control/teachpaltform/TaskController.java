@@ -300,8 +300,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         Integer objIdx=descIdx;
         //0是调至最后获取最大索引
         if(descIdx==0)
-            descIdx=taskList.get(0).getOrderidx();
-        else
+            descIdx=taskList.get(0).getOrderidx()+1;
             //descIdx=descIdx-1<0?1:descIdx-1;
 
         if(taskList!=null&&taskList.size()>0){
@@ -342,7 +341,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         TpTaskInfo upd=new TpTaskInfo();
         upd.setTaskid(tmpTask.getTaskid());
         if(orderix.equals("0"))
-            upd.setOrderidx(descIdx);
+            upd.setOrderidx(descIdx-1<=0?1:descIdx-1);
         else
             upd.setOrderidx(objIdx);
         sql=new StringBuilder();

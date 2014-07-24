@@ -114,19 +114,68 @@ public class QuestionController extends BaseController<QuestionInfo> {
     @RequestMapping(params = "m=todetail", method = RequestMethod.GET)
     public ModelAndView toQuestionDetail(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
         String questionid = request.getParameter("id");
+        String courseid=request.getParameter("courseid");
         JsonEntity je = new JsonEntity();
-        if (questionid == null || questionid.trim().length() < 1) {
+        if (questionid == null || questionid.trim().length() < 1||
+                courseid==null||courseid.trim().length()<1) {
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        QuestionInfo question = new QuestionInfo();
+        TpCourseQuestion  question = new TpCourseQuestion();
         question.setQuestionid(Long.parseLong(questionid));
-        List<QuestionInfo> objList = this.questionManager.getList(question,null);
+        question.setCourseid(Long.parseLong(courseid));
+        List<TpCourseQuestion> objList = this.tpCourseQuestionManager.getList(question,null);
+
+        List<TpCourseQuestion> tmpList=new ArrayList<TpCourseQuestion>();
         if(objList!=null){
-            question = new QuestionInfo();
-            question=objList.get(0);
-            if(question.getQuestiontype()==3||question.getQuestiontype()==4){
+            List<TpCourseQuestion> childList=this.tpCourseQuestionManager.getQuestionTeamList(question,null);
+            PageResult pchild = new PageResult();
+            pchild.setPageNo(0);
+            pchild.setPageSize(0);
+            pchild.setOrderBy("option_type");
+            List<QuestionOption>questionOptionList=this.questionOptionManager.getCourseQuesOptionList(question, pchild);
+
+            List<QuestionOption>tmpOptionList;
+            List<TpCourseQuestion>questionTeam;
+            if(objList!=null&&objList.size()>0){
+                for(TpCourseQuestion tq :objList){
+                    questionTeam=new ArrayList<TpCourseQuestion>();
+                    //试题组
+                    if(childList!=null&&childList.size()>0){
+                        for (TpCourseQuestion childp :childList){
+                            //试题组选项
+                            if(tq.getRef().equals(childp.getRef())){
+                                if(questionOptionList!=null&&questionOptionList.size()>0){
+                                    tmpOptionList=new ArrayList<QuestionOption>();
+                                    for(QuestionOption qo:questionOptionList){
+                                        if(qo.getQuestionid().equals(childp.getQuestionid())){
+                                            tmpOptionList.add(qo);
+                                        }
+                                    }
+                                    childp.setQuestionOptionList(tmpOptionList);
+                                    questionTeam.add(childp);
+                                }
+                            }
+                        }
+                        tq.setQuestionTeam(questionTeam);
+                    }
+
+                    if(questionOptionList!=null&&questionOptionList.size()>0){
+                        //普通试题选项
+                        List<QuestionOption> tmp1OptionList=new ArrayList<QuestionOption>();
+                        for(QuestionOption qo:questionOptionList){
+                            if(qo.getQuestionid().equals(tq.getQuestionid())){
+                                tmp1OptionList.add(qo);
+                            }
+                        }
+
+                        tq.setQuestionOptionList(tmp1OptionList);
+                    }
+                    tmpList.add(tq);
+                }
+            }
+           /* if(question.getQuestiontype()==3||question.getQuestiontype()==4){
                 QuestionOption qo = new QuestionOption();
                 qo.setQuestionid(question.getQuestionid());
                 PageResult p = new PageResult();
@@ -139,13 +188,13 @@ public class QuestionController extends BaseController<QuestionInfo> {
                     response.getWriter().print(je.getAlertMsgAndBack());
                     return null;
                 }
-            }
+            }*/
         }else{
             je.setMsg("系统异常，请稍后再试");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        mp.put("question",question);
+        mp.put("question",tmpList.get(0));
         return new ModelAndView("/teachpaltform/question/ques-detail",mp);
     }
 
@@ -482,12 +531,68 @@ public class QuestionController extends BaseController<QuestionInfo> {
         if(questype!=null)
             tpCourseQuestion.setQuestiontype(Integer.parseInt(questype));
         List<TpCourseQuestion> questionList = this.tpCourseQuestionManager.getList(tpCourseQuestion,presult);
+        List<TpCourseQuestion> childList=this.tpCourseQuestionManager.getQuestionTeamList(tpCourseQuestion,null);
+        PageResult pchild = new PageResult();
+        pchild.setPageNo(0);
+        pchild.setPageSize(0);
+        pchild.setOrderBy("option_type");
+        List<QuestionOption>questionOptionList=this.questionOptionManager.getCourseQuesOptionList(tpCourseQuestion, pchild);
         //已选择试题
         tpCourseQuestion = new TpCourseQuestion();
         tpCourseQuestion.setCourseid(Long.parseLong(addCourseId));
         tpCourseQuestion.setStatus(1);
         List<TpCourseQuestion> selectedQuestionList = this.tpCourseQuestionManager.getList(tpCourseQuestion,null);
-        for(TpCourseQuestion tcq:questionList){
+
+        List<TpCourseQuestion> tmpList=new ArrayList<TpCourseQuestion>();
+        List<QuestionOption>tmpOptionList;
+        List<TpCourseQuestion>questionTeam;
+        if(questionList!=null&&questionList.size()>0){
+            for(TpCourseQuestion tq :questionList){
+                questionTeam=new ArrayList<TpCourseQuestion>();
+                //试题组
+                if(childList!=null&&childList.size()>0){
+                    for (TpCourseQuestion childp :childList){
+                        //试题组选项
+                        if(tq.getRef().equals(childp.getRef())){
+                            if(questionOptionList!=null&&questionOptionList.size()>0){
+                                tmpOptionList=new ArrayList<QuestionOption>();
+                                for(QuestionOption qo:questionOptionList){
+                                    if(qo.getQuestionid().equals(childp.getQuestionid())){
+                                        tmpOptionList.add(qo);
+                                    }
+                                }
+                                childp.setQuestionOptionList(tmpOptionList);
+                                questionTeam.add(childp);
+                            }
+                        }
+                    }
+                    tq.setQuestionTeam(questionTeam);
+                }
+
+                if(questionOptionList!=null&&questionOptionList.size()>0){
+                    //普通试题选项
+                    List<QuestionOption> tmp1OptionList=new ArrayList<QuestionOption>();
+                    for(QuestionOption qo:questionOptionList){
+                        if(qo.getQuestionid().equals(tq.getQuestionid())){
+                            tmp1OptionList.add(qo);
+                        }
+                    }
+
+                    tq.setQuestionOptionList(tmp1OptionList);
+                }
+
+                //标记已选过的
+                for(TpCourseQuestion o:selectedQuestionList){
+                    if(tq.getQuestionid().toString().equals(o.getQuestionid().toString())){
+                        tq.setState(1);
+                        break;
+                    }
+                }
+                tmpList.add(tq);
+            }
+        }
+
+    /*    for(TpCourseQuestion tcq:questionList){
             QuestionOption obj = new QuestionOption();
             obj.setQuestionid(tcq.getQuestionid());
             PageResult p=new PageResult();
@@ -504,6 +609,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
                 }
             }
         }
+    */
         presult.setList(questionList);
         je.setPresult(presult);
         je.setType("success");

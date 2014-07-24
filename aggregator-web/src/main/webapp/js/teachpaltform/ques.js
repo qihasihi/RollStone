@@ -65,7 +65,7 @@ function questionReturn(rps){
             else{
                 htm+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=3&questype='+itm.questiontype+'&taskvalueid='+itm.questionid+'"" title="发任务" class="ico51"></a>';
             }
-            htm+='<a target="_blank" href="question?m=todetail&id='+itm.questionid+'" title="浏览详情" class="ico46"></a>';
+            htm+='<a target="_blank" href="question?m=todetail&id='+itm.questionid+'&courseid='+itm.courseid+'" title="浏览详情" class="ico46"></a>';
             htm+='<a href="question?m=toUpdQuestion&questionid='+itm.questionid+'&courseid='+itm.courseid+'" title="编辑" class="ico11"></a>';
             if(parseInt(itm.flag)>0){
                 htm+='<a title="不可删除" class="ico03"></a>';

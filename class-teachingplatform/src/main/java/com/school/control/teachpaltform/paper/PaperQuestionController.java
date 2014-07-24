@@ -252,7 +252,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         Integer Idx=descIdx;
         //0是调至最后获取最大索引
         if(descIdx==0)
-            descIdx=(pqList==null?0:pqList.size())+(childList==null?0:childList.size());
+            descIdx=(pqList==null?0:pqList.size())+(childList==null?0:childList.size())+1;
 
 
         if(paperQuestionList!=null&&paperQuestionList.size()>0){
@@ -296,7 +296,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         PaperQuestion upd=new PaperQuestion();
         upd.setPaperid(pq.getPaperid());
         if(orderix.equals("0"))
-            upd.setOrderidx(descIdx);
+            upd.setOrderidx(descIdx-1<=0?1:descIdx-1);
         else
             upd.setOrderidx(Idx);
         upd.setQuestionid(pq.getQuestionid());
