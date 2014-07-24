@@ -81,6 +81,12 @@
             <artifactId>class-personalspace</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>sz_school</groupId>
+            <artifactId>class-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 

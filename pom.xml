@@ -17,6 +17,7 @@
         <module>class-teachingplatform</module>
         <module>class-basicplatform</module>
         <module>class-personalspace</module>
+        <module>class-interface</module>
         <module>aggregator-class</module>
         <module>web-chanpin</module>
         <module>aggregator-web</module>

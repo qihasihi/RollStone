@@ -29,6 +29,7 @@
         <module.b.src>../class-basicplatform/src/main/java</module.b.src>
         <module.c.src>../class-teachingplatform/src/main/java</module.c.src>
         <module.d.src>../class-personalspace/src/main/java</module.d.src>
+        <module.e.src>../class-interface/src/main/java</module.e.src>
     </properties>
     <build>
         <plugins>
@@ -49,6 +50,7 @@
                                 <source>${module.b.src}</source>
                                 <source>${module.c.src}</source>
                                 <source>${module.d.src}</source>
+                                <source>${module.e.src}</source>
                             </sources>
                         </configuration>
                     </execution>
