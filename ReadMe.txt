@@ -9,6 +9,7 @@ sz_school_chanpi_m                  project
     class-resource                  module  资源系统模块业务包。业务层等，专用配置文件。
     class-teachingplatform          module  教学平台模块业务包。业务层等，专用配置文件。
     class-basicplatform             module  基础平台模块业务包。业务层等，专用配置文件。
+    class-interface                 module  与网校，IM的接口模块业务包。业务层等，专用配置文件。
     class-common                    module  所有模块公用包。
 
 依赖关系：
