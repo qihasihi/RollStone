@@ -238,6 +238,25 @@ public class MD5_NEW {
     }
 
     /**
+     * MD5加密字符串
+     * @param strIn 要加密的字符串
+     * @return 加密后的字符串
+     */
+    public static String getMD5ResultImCode(String strIn)
+    {
+        String code="im_api_code";
+        try {
+            if (strIn == null)
+                return null;
+            else
+                return getMD5Result((strIn+code).getBytes("utf-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * MD5加密数组，可以对文件进行相应的操作
      * @param b 要加密的byte数组
      * @return 加密后的字符串
