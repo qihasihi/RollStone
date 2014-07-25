@@ -15,6 +15,8 @@
         var paperSumScore=100;
         var allquesid="${allquesidObj}";
         $(function(){
+            //序号重排
+            updateQuesIdx();
             <c:if test="${!empty stuAnswer}">
                     <c:forEach items="${stuAnswer}" var="sa">
                 //得到quesid的questype
@@ -31,7 +33,7 @@
                 $("#"+this.id+" #p_s_score").html($("#"+this.id+" td[id*='td_child_']").children().length*avgScore);
                 var YSumScore=0;
                 $("#"+this.id+" strong[id*='you_score']").each(function(x,m){
-                    YSumScore+= parseInt($(this).html());
+                    YSumScore+=parseInt($(this).html());
                 });
                 $("#"+this.id+" #you_sum").html(YSumScore);
             });
@@ -50,7 +52,7 @@
 
         function userAnswer(t,t1,score,nexName){
             var qtObj=$("#hd_questiontype_"+t);
-            if(qtObj.val().length>0){
+            if(qtObj.length>0&&qtObj.val().length>0){
                 $("#you_score"+t).html(score);
                   var qtype=qtObj.val().Trim();
                 if(qtype==7) //单选组 按单选入库
@@ -98,6 +100,25 @@
                 }
             }
         }
+
+
+        function updateQuesIdx(){
+            $("table[id*='dv_pqs_']").each(function(idx,itm){
+                //得到主题干的ID
+                var pqid=$(this).attr("id").replace("dv_pqs_","");
+                //子项的数量
+                var childLen=$("#td_child_"+pqid+">table").length;
+                //得到他当前的索引
+                var cidx= $.trim($("#sp_qidx"+pqid).html());
+                var h='';
+                if(childLen<1)
+                    h=cidx;
+                else
+                    h=cidx+"-"+(parseInt(cidx)+childLen-1);
+                $("#sp_qidx"+pqid).html(h);
+            })
+
+        }
     </script>
 </head>
 <body>
@@ -106,13 +127,13 @@
 <div class="content2">
     <div class="jxxt_zhuanti_shijuan_add font-black public_input"  id="dv_question">
         <p class="title"><span class="f_right"><strong>得分：<span class="font-blue"><span id="sp_sumScore"></span>分/待批改</span></strong></span>
-            <c:if test="${!empty paperObj&&paperObj.papertype==3}">
-                <strong>${paperObj.papername}</strong>
-            </c:if>
+            <strong>&nbsp;<c:if test="${!empty paperObj&&paperObj.papertype==3}">
+                ${paperObj.papername}
+            </c:if></strong>
         </p>
         <script type="text/javascript">
             <c:if test="${!empty quesList}">
-                    <c:forEach items="${quesList}" var="q" varStatus="qidx">
+             <c:forEach items="${quesList}" var="q" varStatus="qidx">
             var h='';
             //如果有父节点，则显示
             <c:if test="${!empty q.parentQues}">
@@ -120,7 +141,7 @@
             if(qslength.length<1){
                 var pextension="${q.parentQues.extension}";
                 h+=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_pqs_${q.parentQues.questionid}">';
-                h+='<caption><span class="font-blue f_right"><strong id="you_sum">0</strong>分/<span id=p_s_score></span>分</span><span class="font-blue">${qidx.index+1}</span>/'+allquesid.split(",").length+'</caption>';
+                h+='<caption class="font-blue"><span class="f_right"><strong id="you_sum">0</strong>分/<span id=p_s_score></span>分</span><span id="sp_qidx${q.parentQues.questionid}"">${qidx.index+1}</span></caption>';
                 h+='<tr><td><span class="bg">';
                 if(pextension==2)//2阅读理解  3完型填空  4英语听力  5七选五
                     h+='阅读理解：</span>${q.parentQues.content}';
@@ -128,7 +149,7 @@
                     h+='完型填空：</span>${q.parentQues.content}';
                 else if(pextension==4){
                     //如果是英语听力，则还需要添加控件，不用添加内容。
-                    h+='英语听力：</span><span id="sp_mp3_${q.parentQues.questionid}"></span>';
+                    h+='英语听力：</span>${q.parentQues.content}<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div>';
                 }else if(pextension==5){
                     h+='七选五：</span>${q.parentQues.content}';
                     h+='<div style="display:none" id="p_option_${q.parentQues.questionid}">';
@@ -156,7 +177,7 @@
 
             var h1=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_qs_${q.questionid}">';
             <c:if test="${empty q.parentQues}">
-                    h1+='<caption><span class="font-blue f_right"><strong id="you_score${q.questionid}">0</strong>分/<span id="avg_score">0</span>分</span><span class="font-blue">${qidx.index+1}</span>/'+allquesid.split(",").length+'</caption>';
+                    h1+='<caption class="font-blue"><span class="f_right"><strong id="you_score${q.questionid}">0</strong>分/<span id="avg_score">0</span>分</span><span class="font-blue">${qidx.index+1}</span></caption>';
             </c:if>
             <c:if test="${!empty q.parentQues}">
                     h1+='<caption style="display:none"><span class="font-blue f_right"><strong id="you_score${q.questionid}">0</strong>分/<span id="avg_score">0</span>分</span></caption>';
@@ -180,12 +201,12 @@
             </c:if>
             <c:if test="${empty q.parentQues||q.parentQues.extension!=5}">
                 if(questype==2){
-                    h1+=' <p><strong>答题附件：</strong><span class="font-blue" id="fujian${q.questionid}"></span></p></td></tr>';
-                    h1+='<tr><td><p><strong>正确答案：</strong>${q.correctanswer}</p>';
+                    h1+='</td></tr><tr><td><p><strong>答题附件：</strong><span class="font-blue" id="fujian${q.questionid}"></span></p>';
+                    h1+='<p><strong>正确答案：</strong>${q.correctanswer}</p>';
                     h1+='<p><strong>题目解析：</strong><div id="dv_right_as${q.questionid}">${q.analysis}</div></p></td></tr>';
                 }else if(questype==1){
                     h1+='</td></tr><tr><td><p><strong>学生答案：</strong><span id="dv_you_as${q.questionid}"></span></p>';
-                    h1+='<p><strong>答题附件：</strong><span  class="font-blue" id="fujian${q.questionid}"></span></p>';
+                    h1+='<p><strong>附件：</strong><span  class="font-blue" id="fujian${q.questionid}"></span></p>';
                     h1+='<p><strong>正确答案：</strong>${q.correctanswer}</p>';
                     h1+='<p><strong>题目解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>';
                     h1+='</td></tr>';
@@ -266,5 +287,6 @@
         </script>
     </div>
 </div>
+<%@include file="/util/foot.jsp"%>
 </body>
 </html>

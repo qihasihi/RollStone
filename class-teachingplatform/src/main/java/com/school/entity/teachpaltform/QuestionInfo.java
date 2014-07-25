@@ -91,7 +91,6 @@ public class QuestionInfo implements java.io.Serializable {
                 correctanswer=correctanswer.replace("\n", "<br>");
                 correctanswer=correctanswer.replace("\n\r", "<br>&nbsp;&nbsp;");
                 correctanswer=correctanswer.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                //content=content.replace(" ", "&nbsp;");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
         }
@@ -127,10 +126,8 @@ public class QuestionInfo implements java.io.Serializable {
                 content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
                 content=content.replace("\r\n", "&nbsp;&nbsp;<br>");
                 content=content.replace("\n", "<br>");
-               // content=content.replace(" ", "&nbsp;");
                 content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
                 content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
         }
         return content;
@@ -250,11 +247,10 @@ public class QuestionInfo implements java.io.Serializable {
             String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(analysis.indexOf("_QUESTIONPIC+")!=-1)
                 analysis=analysis.replace("_QUESTIONPIC+",t);
-            while (analysis.indexOf("\r\n\t")!=-1||analysis.indexOf("\n")!=-1||analysis.indexOf("\n\r")!=-1||analysis.indexOf("\t")!=-1||analysis.indexOf(" ")!=-1){
+            while (analysis.indexOf("\r\n\t")!=-1||analysis.indexOf("\n")!=-1||analysis.indexOf("\n\r")!=-1||analysis.indexOf("\t")!=-1){
                 analysis=analysis.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
                 analysis=analysis.replace("\r\n", "&nbsp;&nbsp;<br>");
                 analysis=analysis.replace("\n", "<br>");
-                analysis=analysis.replace(" ", "&nbsp;");
                 analysis=analysis.replace("\n\r", "<br>&nbsp;&nbsp;");
                 analysis=analysis.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
                 //content=content.replace(" ", "&nbsp;");

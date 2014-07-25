@@ -27,23 +27,27 @@
 </head>
 <body>
 <input type="hidden" value="${paperid}" name="hd_paper_id" id="hd_paper_id"/>
-<div class="subpage_head"><span class="ico55"></span><strong>
+<div class="subpage_head">
+    <p class="back"><span class="ico_time"></span>${taskstatus}</p>
+    <span class="ico55"></span><strong>
     <c:if test="${!empty paperObj&&paperObj.papertype==3}">成卷测试</c:if>
     <c:if test="${!empty paperObj&&paperObj.papertype==4}">自主测试</c:if>
-</strong></div>
-<div class="content1">
-    <p class="t_r"><span class="ico_time"></span><strong>${taskstatus}</strong></p>
-    <div id="dv_test">
-    <div class="jxxt_zhuanti_rw_ceshi">
-        <h2> <c:if test="${!empty paperObj&&paperObj.papertype==3}">
-         ${paperObj.papername}
-        </c:if></h2>
-        <ul id="dv_ques_number">
-        </ul>
-    </div>
-    <div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_question">
+    <c:if test="${!empty paperObj&&paperObj.papertype==3}">
+        —${paperObj.papername}
+    </c:if>
+    </strong>
+</div>
 
-    </div>
+<div class="content1">
+    <div id="dv_test">
+        <div class="jxxt_zhuanti_rw_ceshi">
+            <p class="jxxt_zhuanti_rw_ceshi_an" id="p_operate">
+            </p>
+            <ul id="dv_ques_number">
+            </ul>
+            <div class="clear"></div>
+     </div>
+    <div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_question">
     </div>
 </div>
 <%@include file="/util/foot.jsp"%>

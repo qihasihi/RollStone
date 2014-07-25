@@ -985,7 +985,7 @@ function listReturn(rps){
                         if(itm.isPublishTask==0)
                         h+='<a href="javascript:;" onclick="if(confirm(\'您确定要删除此论题吗?\\n\\n提示：删除该论题后可在回收站里恢复!\')){updateTopicStatus('+itm.topicid+',3);}" class="ico04" title="删除"></a>';
                         else
-                            h+='<span class="ico03"  title="已发任务，无法删除"></a>';
+                            h+='<span class="ico03"  title="不可删除"></a>';
                     }
                     h+='</p>';
                     h+='<p>';

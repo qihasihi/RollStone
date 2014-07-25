@@ -7,7 +7,49 @@ function loadQuesNumberTool(qsize){
         h+=' <li><a href="javascript:nextNum('+(i-1)+');">'+i+'</a></li>'
     }
     $("#dv_ques_number").html(h);
+    //试题组，样式
+    if(typeof(allquesidObj)=="undefined"||allquesidObj.length<1){
+        alert('异常错误，参数异常!');return;
+    }
+    var obj=[],startIdx=-1,isbegin=false,freeId=null;
+    var allarray=allquesidObj.split(",");
+    if(allarray.length>0){
+        for(z=0;z<allarray.length;z++){
+            if(allarray[z].indexOf("|")!=-1){
+                var tmpArray=allarray[z].split("|");
+                if((freeId!=tmpArray[0]||z==allarray.length-1)&&isbegin){
+                    isbegin=false;
+                    freeId=null;
+                    obj[obj.length]={beginIdx:startIdx,endIdx:z-1};
+                    if(z==allarray.length-1)
+                     obj[obj.length-1].endIdx=z;
+                    startIdx=-1;
+                }
+                 if(!isbegin){
+                    isbegin=true;
+                    startIdx=z;
+                    freeId=tmpArray[0];
+                }
+            }
+        }
+    }
+    if(obj.length>0){
+        $.each(obj,function(ix,im){
+            for(n=im.beginIdx;n<=im.endIdx;n++){
+                var clasName='';
+                if(n==im.beginIdx)
+                    clasName='bgR';
+                else if(n==im.endIdx)
+                     clasName='bgL';
+                else
+                    clasName='bgC';
+                $("#dv_ques_number>li").eq(n).addClass(clasName);
+            }
+        })
+    }
 }
+
+
 //下一题
 function nextNum(i){
     var vi=(typeof(i)=="undefined"||i==null)?0:i;
@@ -43,7 +85,7 @@ function updateNumState(idx){
         var subQuesIdArray=subQuesId.split(",");
         if(subQuesIdArray.length>0&&allQuesArray.length>0){
             $("#dv_ques_number>li").removeClass("blue");
-            $("#dv_ques_number>li").removeClass("yellow");
+            $("#dv_ques_number>li").removeClass("gray_big");
             for(z=0;z<subQuesIdArray.length;z++){
                 for(b=0;b<allQuesArray.length;b++){
                     if(allQuesArray[b].indexOf("|")!=-1){
@@ -60,7 +102,7 @@ function updateNumState(idx){
             }
         }
     }
-    $("#dv_ques_number>li").eq(idx).addClass("yellow")
+    $("#dv_ques_number>li").eq(idx).addClass("gray_big")
 }
 
 /**
@@ -111,8 +153,8 @@ function next(type,quesid,paperid,allquesid,isright,issub){
             //存入数据库
             if(typeof(quesid)!="undefined"&&quesid!=null&&issub!=1)
                 freeSubOnePaper(quesid,isright,nextIdx);
-            else
-                updateNumState(nextIdx);    //更新状态
+
+            updateNumState(nextIdx);    //更新状态
 
             //nextIdx
             if(nextIdx==arrayObj.length){
@@ -133,10 +175,13 @@ function next(type,quesid,paperid,allquesid,isright,issub){
 
                if($("div[id='dv_qs_"+nextQuesId+"']").length<1){
                     loadNextQues(arrayObj[nextIdx],paperid);
-
                }else{
                    $("div[id='dv_qs_"+nextQuesId+"']").show();
+                   $("#p_operate>span").hide();
+                   $("#p_operate>#sp_operate_"+nextQuesId).show();
+
                }
+
 
             }
         }
@@ -179,7 +224,8 @@ function loadNextQues(quesid,paperid){
                         h+='<p>1.'+parentQuesObj.content+'</p>';
                     }else if(ex==5){    //七选五
                         //显示题干
-                        h+='<p>1.'+parentQuesObj.content+'</p>';
+                        h+='<div class="p_b_20"><strong>七选五（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><br>';
+                        h+=parentQuesObj.content;
                         //题选项
                         h+='<div style="display:none" id="p_option_'+parentQuesObj.questionid+'">';
                         //选项
@@ -190,10 +236,11 @@ function loadNextQues(quesid,paperid){
                                     '<input type="hidden" name="opt_optiontype" value="'+ m.optiontype+'"/></div>';
                              });
                          }
-                        h+='</div>';
+                        h+='</div></div>';
                     }
                     else{
-                        h+='<p id="p_mp3_'+parentQuesObj.questionid+'"></p>';
+
+                        h+='<p><strong>英语听力（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><span id="p_mp3_'+parentQuesObj.questionid+'"></span></p>';
                     }
 //                    h+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
 //                    h+='<col class="w30"/><col class="w860"/>';
@@ -217,9 +264,27 @@ function loadNextQues(quesid,paperid){
                             $("#p_mp3_"+parentQuesObj.questionid+" object").hide();
 
                             $("#p_mp3_"+parentQuesObj.questionid).append(
-                                '<a href="javascript:;" ' +
-                                'onclick="$(\'#p_mp3_'+parentQuesObj.questionid+' object\').show()">播放</a>')
+                                '<div class="p_t_10"><a href="javascript:;" ' +
+                                'onclick="$(\'#p_mp3_'+parentQuesObj.questionid+' object\').show()">'+
+                                    '<img src="images/pic05_140722.png" width="39" height="27"></a></div>')
                         }
+                        //检测组数量
+                        var allArray=allquesidObj.split(",");
+                        var isbegin=false,beignIdx=-1,endIdx=-1;
+                        if(allArray.length>0){
+                            for(i=0;i<allArray.length;i++){
+                                if(allArray[i].indexOf("|")!=-1){
+                                    var tmpArray=allArray[i].split("|");
+                                    if(tmpArray[0]==parentQuesObj.questionid){
+                                        if(!isbegin){
+                                            isbegin=true;beginIdx=i+1;
+                                        }
+                                        endIdx=i+1;
+                                    }
+                                }
+                            }
+                        }
+                        $("#sp_num"+parentQuesObj.questionid).html(beginIdx+"-"+endIdx);
                     }else
                         $("div[id='dv_question'] #dv_pqs_"+parentQuesObj.questionid).show();
 
@@ -233,7 +298,7 @@ function loadNextQues(quesid,paperid){
                 h+='<input  type="hidden" value="'+quesObj.questiontype+'" name="hd_questiontype" id="hd_questiontype_'+quesObj.questionid+'"/>';
 
                 if(typeof(quesObj.content)!="undefined")
-                    h+='<p>1.'+quesObj.content+'</p>';
+                    h+='<p><span id="p_num_'+quesObj.questionid+'"></span>.'+quesObj.content+'</p>';
                 if(quesObj.questiontype==1){//问答题
                     h+='<div class="p_t_20"><textarea name="txt_answer" id="txt_answer_'+quesObj.questionid+'"  placeholder="输入你的答案"></textarea></div>';
                 }
@@ -245,7 +310,7 @@ function loadNextQues(quesid,paperid){
                 }
                 //选项(如果是七选五。则直接提取选项进行输出)
                 if(parentQuesObj!=null&&$("div[id='p_option_"+parentQuesObj.questionid+"']").length>0&&parentQuesObj.extension==5){
-                    h+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
+                    h+='<p><span id="p_num_'+quesObj.questionid+'"></span>.</p><table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
                     h+='<col class="w30"/><col class="w860"/>';
                     var optionPObj=$("#p_option_"+parentQuesObj.questionid+">div");
                     $.each(optionPObj,function(x,m){
@@ -287,11 +352,6 @@ function loadNextQues(quesid,paperid){
                         h+='</table>';
                     }
                 }
-                h+='<p class="jxxt_zhuanti_rw_ceshi_an"><a href="javascript:;" onclick="next(0,'+quesObj.questionid+','+paperid+',\''+allquesidObj+'\')" class="an_test1">上一题</a>' +
-                    '<a  href="javascript:;" onclick="next(1,'+quesObj.questionid+','+paperid+',\''+allquesidObj+'\')" class="an_test1">下一题</a>' +
-                    '<a href="javascript:;" onclick="subPaper()" class="an_test2">交卷</a>' +
-                    '</p>';
-                h+='</div>';
 
 
                 if($("#dv_qs_"+quesObj.questionid).length<1){
@@ -299,8 +359,37 @@ function loadNextQues(quesid,paperid){
                          $("#dv_child_"+parentQuesObj.questionid).append(h);
                       }else
                             $("#dv_question").append(h);
+
+
+  //                  var idxObj=$("#dv_question div[id*='dv_qs_']");
+//$("#p_num_"+quesObj.questionid).html(idxObj.length);
+                    var allquesArray=allquesidObj.split(",");
+                    if(allquesArray.length>0){
+                        $.each(allquesArray,function(z,m){
+                            if(m.indexOf('|')!=-1){
+                                if(m.split('|')[1]==quesObj.questionid){
+                                    $("#p_num_"+quesObj.questionid).html(z+1);
+                                }
+                            }else if(m==quesObj.questionid){
+                                $("#p_num_"+quesObj.questionid).html(z+1);
+                            }
+                        })
+                    }
+
+
                 }else
                     $("#dv_qs_"+quesObj.questionid).show();
+
+
+                var h3='<span id="sp_operate_'+quesObj.questionid+'"><a href="javascript:;" onclick="next(0,'+quesObj.questionid+','+paperid+',\''+allquesidObj+'\')" class="an_test1">上一题</a>' +
+                    '<a  href="javascript:;" onclick="next(1,'+quesObj.questionid+','+paperid+',\''+allquesidObj+'\')" class="an_test1">下一题</a>' +
+                    '<a href="javascript:;" onclick="subPaper()" class="an_test2">交卷</a>';
+                h3+='</span>';
+                $("#p_operate>span").hide();
+                if($("#sp_operate_"+quesObj.questionid).length>0){
+                    $("#p_operate>#sp_operate_"+quesObj.questionid).show();
+                }else{$("#p_operate").append(h3);
+                }
 
 
                 //空格出来
