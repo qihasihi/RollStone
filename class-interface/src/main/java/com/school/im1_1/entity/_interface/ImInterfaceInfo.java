@@ -11,6 +11,15 @@ public class ImInterfaceInfo implements Serializable {
     private Integer userid;
     private String classname;
     private Integer usertype;
+    private Integer courseid;
+
+    public Integer getCourseid() {
+        return courseid;
+    }
+
+    public void setCourseid(Integer courseid) {
+        this.courseid = courseid;
+    }
 
     public Integer getUsertype() {
         return usertype;

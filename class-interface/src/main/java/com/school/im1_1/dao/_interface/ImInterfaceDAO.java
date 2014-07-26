@@ -79,4 +79,50 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
             return list;
         return null;
     }
+
+    public List<Map<String, Object>> getClassTaskCourse(ImInterfaceInfo obj) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_classtask_proc_course(");
+        List<Object> objList=new ArrayList<Object>();
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?");
+            objList.add(obj.getClassid());
+        }else{
+            sqlbuilder.append("null");
+        }
+//        if(obj.getSchoolid()!=null){
+//            sqlbuilder.append("?");
+//            objList.add(obj.getSchoolid());
+//        }else{
+//            sqlbuilder.append("null");
+//        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
+
+    public List<Map<String, Object>> getClassTaskTask(Long courseid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_classtask_proc_task(");
+        List<Object> objList=new ArrayList<Object>();
+        if(courseid!=null){
+            sqlbuilder.append("?");
+            objList.add(courseid);
+        }else{
+            sqlbuilder.append("null");
+        }
+//        if(obj.getSchoolid()!=null){
+//            sqlbuilder.append("?");
+//            objList.add(obj.getSchoolid());
+//        }else{
+//            sqlbuilder.append("null");
+//        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
 }

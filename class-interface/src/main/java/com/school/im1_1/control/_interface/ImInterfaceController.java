@@ -3,7 +3,10 @@ package com.school.im1_1.control._interface;
 import com.school.control.base.BaseController;
 import com.school.im1_1.entity._interface.ImInterfaceInfo;
 import com.school.im1_1.manager._interface.ImInterfaceManager;
+import com.school.util.JsonEntity;
 import com.school.util.MD5_NEW;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,5 +75,46 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             sb.append("{\"result\":\"error\",\"message\":\"当前用户没有学习目录，请联系管理员\"}");
         }
         response.getWriter().print(sb.toString());
+    }
+
+    /**
+     * 进入小组管理页面
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=getClassTask",method= RequestMethod.GET)
+    public void getClassTask(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String classid = request.getParameter("classid");
+        String schoolid = request.getParameter("schoolid");
+//        String timestamp = request.getParameter("timestamp");
+//        String checkcode = request.getParameter("checkcode");
+//        String md5key = classid+schoolid+timestamp;
+//        String md5code = MD5_NEW.getMD5ResultImCode(md5key);
+//        if(!checkcode.trim().equals(md5code)){
+//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+//            return;
+//        }
+        ImInterfaceInfo obj = new ImInterfaceInfo();
+        obj.setSchoolid(Integer.parseInt(schoolid));
+        obj.setClassid(Integer.parseInt(classid));
+        List<Map<String,Object>> courseList = this.imInterfaceManager.getClassTaskCourse(obj);
+        StringBuilder sb = new StringBuilder();
+        if(courseList!=null&&courseList.size()>0){
+            for(int i = 0;i<courseList.size();i++){
+                List<Map<String,Object>> taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSE_ID").toString()));
+                courseList.get(i).put("taskList",taskList);
+            }
+        }else{
+            sb.append("{\"result\":\"error\",\"message\":\"当前用户没有学习目录，请联系管理员\"}");
+        }
+        Map m = new HashMap();
+        m.put("result","success");
+        m.put("message","成功");
+        m.put("courses",courseList);
+        JSONObject object = JSONObject.fromObject(m);
+        response.getWriter().print(object.toString());
     }
 }

@@ -75,4 +75,14 @@ public class ImInterfaceManager extends BaseManager<ImInterfaceInfo> implements 
     public List<Map<String, Object>> getStudyModule(ImInterfaceInfo obj) {
         return this.imInterfaceDAO.getStudyModule(obj);
     }
+
+    @Override
+    public List<Map<String, Object>> getClassTaskCourse(ImInterfaceInfo obj) {
+        return this.imInterfaceDAO.getClassTaskCourse(obj);
+    }
+
+    @Override
+    public List<Map<String, Object>> getClassTaskTask(Long courseid) {
+        return this.imInterfaceDAO.getClassTaskTask(courseid);
+    }
 }

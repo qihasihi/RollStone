@@ -9,4 +9,6 @@ import java.util.*;
  */
 public interface IImInterfaceDAO extends ICommonDAO<ImInterfaceInfo>{
     public List<Map<String ,Object>> getStudyModule(ImInterfaceInfo obj);
+    public List<Map<String,Object>> getClassTaskCourse(ImInterfaceInfo obj);
+    public List<Map<String,Object>> getClassTaskTask(Long courseid);
 }
