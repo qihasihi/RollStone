@@ -241,6 +241,22 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
     }
 
     @Override
+    public Integer paperQuesCount(Long paperid) {
+        if (paperid == null)
+            return null;
+        StringBuilder sqlbuilder = new StringBuilder("{CALL j_paper_ques_count(?,?)}");
+
+        List<Object> objList = new ArrayList<Object>();
+        objList.add(paperid);
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null) {
+            return  Integer.parseInt(afficeObj.toString());
+        }
+        return 0;
+    }
+
+    @Override
     public Boolean updateQuesTeamScore(PaperQuestion paperQuestion) {
         if (paperQuestion == null)
             return null;

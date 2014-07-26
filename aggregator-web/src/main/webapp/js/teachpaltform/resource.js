@@ -2425,7 +2425,7 @@ function getStuNoteReturnMethod(rps) {
             html += '</div>';
         });
     } else {
-        html = '<p>暂无数据!</p>';
+        //html = '<p>暂无数据!</p>';
     }
     $("div[id='div_comment_htm']").html(html);
     $("div[id='div_comment_htm']").hide();

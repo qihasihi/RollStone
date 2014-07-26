@@ -220,19 +220,10 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(paperQuestion,p);
 
 
-        //获取提干
-        PaperQuestion pp=new PaperQuestion();
-        pp.setPaperid(Long.parseLong(paperid));
-        PageResult pre=new PageResult();
-        pre.setOrderBy("u.order_idx");
-        pre.setPageNo(0);
-        pre.setPageSize(0);
-        List<PaperQuestion>pqList=this.paperQuestionManager.getList(pp,pre);
+        //当前试卷包含试题数（去题干）
+        Integer paperQuesSize=this.paperQuestionManager.paperQuesCount(Long.parseLong(paperid));
 
-        //获取试题组下题目
-        PaperQuestion child =new PaperQuestion();
-        child.setPaperid(pq.getPaperid());
-        List<PaperQuestion>childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
+
 
         //获取试题组试题Size
         QuesTeamRela qtr=new QuesTeamRela();
@@ -240,7 +231,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         List<QuesTeamRela>qtrList=this.quesTeamRelaManager.getList(qtr,null);
         Integer childSize=0;
         if(qtrList!=null&&qtrList.size()>0)
-            childSize=qtrList.size();
+            childSize=qtrList.size()-1;
 
 
         List<Object>objList=null;
@@ -252,7 +243,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         Integer Idx=descIdx;
         //0是调至最后获取最大索引
         if(descIdx==0)
-            descIdx=(pqList==null?0:pqList.size())+(childList==null?0:childList.size())+1;
+            descIdx=paperQuesSize+1;
 
 
         if(paperQuestionList!=null&&paperQuestionList.size()>0){
@@ -273,7 +264,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                         }
                     }
                 }
-            }else if(objIdx<descIdx){ //2<10
+            }else if(objIdx<descIdx){ //从2调10
                 Idx=Idx-1<=0?1:childSize>0?Idx-childSize:Idx-1;
                 for(PaperQuestion paperQues:paperQuestionList){
                     Integer listIdx=paperQues.getOrderidx();
@@ -295,9 +286,12 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
         PaperQuestion upd=new PaperQuestion();
         upd.setPaperid(pq.getPaperid());
-        if(orderix.equals("0"))
-            upd.setOrderidx(descIdx-1<=0?1:descIdx-1);
-        else
+        if(orderix.equals("0")){
+            if(qtrList!=null&&qtrList.size()>0)
+                upd.setOrderidx(descIdx-qtrList.size()<=0?1:descIdx-qtrList.size());
+            else
+                upd.setOrderidx(descIdx-1<=0?1:descIdx-1);
+        }else
             upd.setOrderidx(Idx);
         upd.setQuestionid(pq.getQuestionid());
         sql=new StringBuilder();
@@ -1018,16 +1012,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
 
             if(paperQuestionList==null||paperQuestionList.size()<1){
-                //获取试题组下提干+试题组数量用于排序
-                PaperQuestion parent=new PaperQuestion();
-                parent.setPaperid(Long.parseLong(paperid));
-                List<PaperQuestion>parentList=this.paperQuestionManager.getList(parent,p);
-
-                PaperQuestion child =new PaperQuestion();
-                child.setPaperid(pq.getPaperid());
-                List<PaperQuestion>childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
-                Integer maxIdx=(parentList==null?0:parentList.size())+(childList==null?0:childList.size());
-                maxIdx+=1;
+                //获取试卷试题数量
+                Integer papperQuesSize=this.paperQuestionManager.paperQuesCount(Long.parseLong(paperid));
+                Integer maxIdx=papperQuesSize+1;
 
                 PaperQuestion addPaper=new PaperQuestion();
                 addPaper.setPaperid(Long.parseLong(paperid));
@@ -1240,19 +1227,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(paperQuestion,null);
             if(paperQuestionList==null||paperQuestionList.size()<1){
                 //获取试题组下提干+试题组数量用于排序
-                PaperQuestion parent=new PaperQuestion();
-                parent.setPaperid(Long.parseLong(paperid));
-                PageResult p=new PageResult();
-                p.setOrderBy("u.order_idx");
-                p.setPageNo(0);
-                p.setPageSize(0);
-                List<PaperQuestion>parentList=this.paperQuestionManager.getList(parent,p);
-
-                PaperQuestion child =new PaperQuestion();
-                child.setPaperid(Long.parseLong(paperid));
-                List<PaperQuestion>childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
-                Integer maxIdx=(parentList==null?0:parentList.size())+(childList==null?0:childList.size());
-                maxIdx+=1;
+                Integer papperQuesSize=this.paperQuestionManager.paperQuesCount(Long.parseLong(paperid));
+                Integer maxIdx=papperQuesSize+1;
 
                 PaperQuestion addPaper=new PaperQuestion();
                 addPaper.setPaperid(Long.parseLong(paperid));
@@ -1318,16 +1294,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
 
         //添加试题至试卷中
-        PaperQuestion maxidx=new PaperQuestion();
-        maxidx.setPaperid(Long.parseLong(paperid));
-        PageResult maxp=new PageResult();
-        maxp.setOrderBy("u.order_idx desc");
-        maxp.setPageSize(1);
-        maxp.setPageNo(1);
-        List<PaperQuestion>maxList=this.paperQuestionManager.getList(maxidx,maxp);
-        Integer maxIdx=1;
-        if(maxList!=null&&maxList.size()>0)
-            maxIdx=maxList.get(0).getOrderidx();
+        Integer papperQuesSize=this.paperQuestionManager.paperQuesCount(Long.parseLong(paperid));
+        Integer maxIdx=papperQuesSize+1;
 
 
         //操作试卷中的试题,添加至专题试题库
@@ -1351,7 +1319,6 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         paperQuestion.setQuestionid(Long.parseLong(questionid));
         List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(paperQuestion,null);
         if(paperQuestionList==null||paperQuestionList.size()<1){
-            maxIdx+=1;
             PaperQuestion addPaper=new PaperQuestion();
             addPaper.setPaperid(Long.parseLong(paperid));
             addPaper.setQuestionid(Long.parseLong(questionid));
@@ -1370,7 +1337,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             if(flag){
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                 je.setType("success");
-                this.modifyPaperTotalScore(maxidx.getPaperid());
+                this.modifyPaperTotalScore(Long.parseLong(paperid));
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
@@ -1518,7 +1485,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                         PaperQuestion upd=new PaperQuestion();
                         upd.setPaperid(paperQues.getPaperid());
                         upd.setQuestionid(paperQues.getQuestionid());
-                        upd.setOrderidx(paperQues.getOrderidx()-1-(childList==null?0:childList.size()));
+                        upd.setOrderidx(paperQues.getOrderidx()-1-(childList==null||childList.size()<1?0:childList.size()-1));
                         sql=new StringBuilder();
                         objList=this.paperQuestionManager.getUpdateSql(upd,sql);
                         if(sql!=null&&sql.toString().trim().length()>0){

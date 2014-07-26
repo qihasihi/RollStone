@@ -11,6 +11,13 @@ import java.util.Map;
 public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> { 
     Float getSumScore(PaperQuestion paperQuestion);
 
+    /**
+     * 查询试卷下试题数量（包含组试题子集）
+     * @param paperid
+     * @return
+     */
+    Integer paperQuesCount(Long paperid);
+
     Boolean updateQuesTeamScore(PaperQuestion paperQuestion);
     public List<PaperQuestion> getQuestionByPaper(Long paperid);
 
