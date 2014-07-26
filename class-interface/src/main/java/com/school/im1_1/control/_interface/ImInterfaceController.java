@@ -52,29 +52,20 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         obj.setUserid(Integer.parseInt(userid));
         obj.setUsertype(Integer.parseInt(usertype));
         List<Map<String,Object>> list = this.imInterfaceManager.getStudyModule(obj);
-        StringBuilder sb = new StringBuilder();
+        Map m = new HashMap();
+        Map m2 = new HashMap();
         if(list!=null&&list.size()>0){
-            sb.append("{\"result\":\"success\"");
-            sb.append(",\"msg\":\"成功\"");
-            sb.append(",\"data\":{\"classes\":[");
-            for(int i = 0;i<list.size();i++){
-                sb.append("{");
-                sb.append("\"classId\":\""+list.get(i).get("CLASS_ID")+"\"");
-                sb.append(",\"className\":\""+list.get(i).get("CLASS_NAME")+"\"");
-                sb.append(",\"notifyNum\":\""+list.get(i).get("UNCOMPLETENUM")+"\"");
-                sb.append("}");
-                if(i!=list.size()-1){
-                    sb.append(",");
-                }
-            }
-            sb.append("]");
-            sb.append(",\"activityNotifyNum\":\"12\"");
-            sb.append("}");
-            sb.append("}");
+            m2.put("classes",list);
+            m2.put("activityNotifyNum","12");
         }else{
-            sb.append("{\"result\":\"error\",\"message\":\"当前用户没有学习目录，请联系管理员\"}");
+            m.put("result","error");
+            m.put("message","当前用户没有学习目录，请联系管理员");
         }
-        response.getWriter().print(sb.toString());
+        m.put("result","success");
+        m.put("message","成功");
+        m.put("data",m2);
+        JSONObject object = JSONObject.fromObject(m);
+        response.getWriter().print(object.toString());
     }
 
     /**
@@ -101,19 +92,67 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
         List<Map<String,Object>> courseList = this.imInterfaceManager.getClassTaskCourse(obj);
-        StringBuilder sb = new StringBuilder();
+        Map m = new HashMap();
         if(courseList!=null&&courseList.size()>0){
             for(int i = 0;i<courseList.size();i++){
-                List<Map<String,Object>> taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSE_ID").toString()));
+                List<Map<String,Object>> taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()));
                 courseList.get(i).put("taskList",taskList);
             }
         }else{
-            sb.append("{\"result\":\"error\",\"message\":\"当前用户没有学习目录，请联系管理员\"}");
+            m.put("result","error");
+            m.put("message","当前没有专题");
         }
-        Map m = new HashMap();
+
         m.put("result","success");
         m.put("message","成功");
-        m.put("courses",courseList);
+        m.put("data",courseList);
+        JSONObject object = JSONObject.fromObject(m);
+        response.getWriter().print(object.toString());
+    }
+
+    /**
+     * 进入小组管理页面
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=getClassCalendar",method= RequestMethod.GET)
+    public void getClassCalendar(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String userid = request.getParameter("userid");
+        String usertype=request.getParameter("usertype");
+        String classid = request.getParameter("classid");
+        String schoolid = request.getParameter("schoolid");
+//        String timestamp = request.getParameter("timestamp");
+//        String checkcode = request.getParameter("checkcode");
+//        String md5key = classid+schoolid+timestamp;
+//        String md5code = MD5_NEW.getMD5ResultImCode(md5key);
+//        if(!checkcode.trim().equals(md5code)){
+//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+//            return;
+//        }
+        ImInterfaceInfo obj = new ImInterfaceInfo();
+        obj.setSchoolid(Integer.parseInt(schoolid));
+        obj.setClassid(Integer.parseInt(classid));
+        List<Map<String,Object>> courseList = this.imInterfaceManager.getClassTaskCourse(obj);
+        Map m = new HashMap();
+        Map m2 = new HashMap();
+        if(courseList!=null&&courseList.size()>0){
+           m2.put("courseList",courseList);
+        }else{
+            m.put("result","error");
+            m.put("message","当前没有专题");
+        }
+        m2.put("personTotalScore","350");
+        m2.put("teamScore","130");
+        m2.put("taskScore","150");
+        m2.put("presenceScore","50");
+        m2.put("smileScore","10");
+        m2.put("illegalScore","10");
+        m.put("result","success");
+        m.put("message","成功");
+        m.put("data",m2);
         JSONObject object = JSONObject.fromObject(m);
         response.getWriter().print(object.toString());
     }
