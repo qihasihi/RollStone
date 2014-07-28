@@ -259,11 +259,6 @@ public class QuestionOptionDAO extends CommonDAO<QuestionOption> implements IQue
             objList.add(tpcoursequestion.getCourseid());
         } else
             sqlbuilder.append("null,");
-        if (tpcoursequestion.getQuestiontype() != null) {
-            sqlbuilder.append("?,");
-            objList.add(tpcoursequestion.getQuestiontype());
-        } else
-            sqlbuilder.append("null,");
         if (tpcoursequestion.getStatus() != null) {
             sqlbuilder.append("?,");
             objList.add(tpcoursequestion.getStatus());

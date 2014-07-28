@@ -281,11 +281,6 @@ public class TpCourseQuestionDAO extends CommonDAO<TpCourseQuestion> implements 
             objList.add(tpcoursequestion.getCourseid());
         } else
             sqlbuilder.append("null,");
-        if (tpcoursequestion.getQuestiontype() != null) {
-            sqlbuilder.append("?,");
-            objList.add(tpcoursequestion.getQuestiontype());
-        } else
-            sqlbuilder.append("null,");
         if (tpcoursequestion.getStatus() != null) {
             sqlbuilder.append("?,");
             objList.add(tpcoursequestion.getStatus());
