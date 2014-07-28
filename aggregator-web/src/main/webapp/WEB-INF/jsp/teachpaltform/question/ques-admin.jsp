@@ -8,6 +8,7 @@
 			var courseid="${courseid}";
 			var p1;
             var quesType=0;
+
 			$(function(){
                 $("input[name='rdo_ques_type']").each(function(idx,itm){
                     $(itm).bind("click",function(){
@@ -99,10 +100,11 @@
                                     <label for="rdo_type_${idx.index+1}">${t.dictionaryname}</label>-->
                                     <li id="li_${t.dictionaryvalue}"><a href="javascript:changeLiCss(${t.dictionaryvalue});pageGo('p1');" target="_self">${t.dictionaryname}</a></li>
                                 </c:forEach>
+                                <li id="li_6"><a href="javascript:changeLiCss(6);pageGo('p1');" target="_self">试题组</a></li>
                             </c:if>
                         </ul>
               </div>
-        <div class="jxxt_zhuanti_shiti" id="tbl_body_data">
+        <div class="jxxt_zhuanti_shijuan_add font-black public_input" id="tbl_body_data">
 
    	    </div>
              <form name="page1form" id="page1form" action="" method="post">

@@ -14,64 +14,144 @@
     <title>试题详细页面</title>
     <script type="text/javascript">
         $(function(){
-            var type=${question.questiontype};
-            var typename="";
-            switch(parseInt(type)){
-                case 1:typename="问答";break;
-                case 2:typename="填空";break;
-                case 3:typename="单选";break;
-                case 4:typename="多选";break;
-            }
-            $("#question_type").html(typename);
-            $("#questionname  p>span[name='fillbank']").html("_______");
+
         });
     </script>
 </head>
 <body>
-<div class="subpage_head"><span class="ico55"></span><strong>试题详情&mdash;&mdash;<span id="question_type"></span></strong></div>
-<div class="content1">
-    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 black">
-        <col class="w100"/>
-        <col class="w700"/>
-        <tr>
-            <th>题&nbsp;&nbsp;&nbsp;&nbsp;干：</th>
-            <td id="questionname">${question.content}<br>
-                <c:if test="${question.questiontype==3||question.questiontype==4}">
-                    <c:forEach items="${question.questionOptionList}" var="itm">
-                        <c:if test="${question.questiontype==3}">
-                            <input type="radio" name="option"/>${itm.optiontype}.&nbsp;
-                        </c:if>
-                        <c:if test="${question.questiontype==4}">
-                            <input type="checkbox" name="option"/>${itm.optiontype}.&nbsp;
-                        </c:if>
-                        <script>
-                            var content=replaceAll(replaceAll(replaceAll('${itm.content}'.toLowerCase(),"<p>",""),"</p>",""),"<br>","");
-                            document.write(content);
+<div class="subpage_head"><span class="ico55"></span><strong>试题详情</strong></div>
+<div class="content2">
+    <div class="jxxt_zhuanti_shijuan_add font-black public_input">
+<c:if test="${!empty pqList}">
+    <c:forEach items="${pqList}" var="pq">
+        <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940">
+            <tr>
+                <td>
+                    <span class="bg">${pq.questiontypename}</span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+                    <c:if test="${pq.extension eq 4}">
+                        <div  class="p_t_10" id="sp_mp3_${pq.questionid}" ></div>
+                        <script type="text/javascript">
+                            playSound('play','<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/${pq.questionid}/001.mp3',270,22,'sp_mp3_${pq.questionid}',false);
                         </script>
-                        <c:if test="${itm.isright==1}"><span class="ico12"></span></c:if><br>
-                    </c:forEach>
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <th>正确答案：</th>
-            <td>
-                <c:if test="${question.correctanswer!=null}">
-                    ${question.correctanswer}
-                </c:if>
-                <c:if test="${question.questionOptionList!=null}">
-                    <c:forEach items="${question.questionOptionList}" var="itm">
-                        <c:if test="${itm.isright==1}">${itm.optiontype}</c:if>
-                    </c:forEach>
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <th>答案解析：</th>
-            <td> ${question.analysis}</td>
-        </tr>
-    </table>
-    <br>
+                    </c:if>
+                    <c:if test="${!empty pq.questionOptionList}">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <col class="w30"/>
+                            <col class="w880"/>
+                            <c:forEach items="${pq.questionOptionList}" var="option">
+                                <tr>
+                                    <th>
+                                        <c:if test="${pq.questiontype eq 3 or pq.questiontype eq 7 }">
+                                            <input disabled type="radio">
+                                        </c:if>
+                                        <c:if test="${pq.questiontype eq 4 or pq.questiontype eq 8 }">
+                                            <input disabled type="checkbox">
+                                        </c:if>
+                                    </th>
+                                    <td>
+                                            ${option.optiontype}&nbsp;${option.content};
+                                        <c:if test="${option.isright eq 1}">
+                                            <span class="ico12"></span>
+                                        </c:if>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </c:if>
+
+
+                </td>
+            </tr>
+
+            <c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0 and pq.extension ne 5}">
+                <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
+                    <tr>
+                        <td><p><span   class="font-blue">${(cidx.index+1)}</span>. ${c.content}</p>
+                            <table border="0" cellpadding="0" cellspacing="0">
+                                <col class="w30"/>
+                                <col class="w880"/>
+                                <c:forEach items="${c.questionOptionList}" var="option">
+                                    <tr>
+                                        <th>
+                                            <c:if test="${c.questiontype eq 3 or c.questiontype eq 7}">
+                                                <input disabled type="radio">
+                                            </c:if>
+                                            <c:if test="${c.questiontype eq 4 or c.questiontype eq 8 }">
+                                                <input disabled type="checkbox">
+                                            </c:if>
+                                        </th>
+                                        <td>
+                                                ${option.optiontype}&nbsp;${option.content};
+                                            <c:if test="${option.isright eq 1}">
+                                                <span class="ico12"></span>
+                                            </c:if>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <c:if test="${c.questiontype<3 }">
+                                <p>
+                                    <strong>正确答案：</strong>${c.correctanswer}
+                                </p>
+                            </c:if>
+                            <p><strong>答案解析：</strong>${c.analysis}</p>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </c:if>
+
+
+            <c:if test="${pq.questiontype<6}">
+                <tr>
+                    <td>
+                        <p>
+                            <strong>正确答案：</strong>
+                            <c:if test="${pq.questiontype eq 1 or  pq.questiontype eq 2 }">
+                                ${pq.correctanswer}
+                            </c:if>
+                            <c:if test="${pq.questiontype eq 3 or  pq.questiontype eq 4 }">
+                                <c:if test="${!empty pq.questionOptionList}">
+                                    <c:forEach items="${pq.questionOptionList}" var="option">
+                                        <c:if test="${option.isright eq 1}">
+                                            ${option.optiontype}&nbsp;
+                                        </c:if>
+                                    </c:forEach>
+                                </c:if>
+                            </c:if>
+                        </p>
+                        <p>
+                            <strong>答案解析：</strong>${pq.analysis}
+                        </p>
+                    </td>
+                </tr>
+            </c:if>
+
+
+            <c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0 and pq.extension eq 5}">
+                <tr>
+                    <td><p><strong>正确答案及答案解析：</strong></p>
+                        <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
+                            <p><span data-bind="${c.questionid}"  class="font-blue">${(cidx.index+1)}</span>.
+                                <c:forEach items="${c.questionOptionList}" var="option">
+                                    <c:if test="${option.isright eq 1}">
+                                        ${option.optiontype}
+                                    </c:if>
+                                </c:forEach>
+                                &nbsp;&nbsp;${c.analysis}
+                            </p>
+                        </c:forEach>
+                    </td>
+                </tr>
+            </c:if>
+        </table>
+    </c:forEach>
+ </c:if>
+    </div>
 </div>
 <%@include file="/util/foot.jsp" %>
 </body>

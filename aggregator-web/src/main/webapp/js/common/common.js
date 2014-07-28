@@ -309,7 +309,7 @@ function playSound(type,mp3Url,width,height,address,autoplay){
         else
              autoplay='no';
         // 播放器。
-        var mp3Play = '<object id="b_sound" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" ' + 'codebase="js/common/videoPlayer/new/swflash.cab#version=7,0,19,0"' + ' width="'+width+'" height="'+height+'">';
+        var mp3Play = '<object  id="b_sound" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" ' + 'codebase="js/common/videoPlayer/new/swflash.cab#version=7,0,19,0"' + ' width="'+width+'" height="'+height+'">';
         mp3Play += '<param name="movie" '
             + 'value="js/common/videoPlayer/new/musicPlay.swf?'
             + 'soundFile='

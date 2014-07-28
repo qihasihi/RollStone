@@ -21,59 +21,86 @@ function questionReturn(rps){
             $("#dv_filter").html(itm.content);
             var content=itm.content;
             var queslevel=itm.questionlevel==3?'':'<span class="ico44"></span>';
-            var questype='';
-            switch (itm.questiontype){
-                case 1:questype='问答：';break;
-                case 2:questype='填空：';break;
-                case 3:questype='单选：';break;
-                case 4:questype='多选：';break;
-            }
+            var questype=itm.questiontypename;
             if(itm.questiontype==2){
                 content=replaceAll(content.toLowerCase(),'<span name="fillbank"></span>','______');
             }
-            htm+='<table id="tbl_data" border="0" cellspacing="0" cellpadding="0">';
+            htm+='<table class="public_tab1" border="0" cellspacing="0" cellpadding="0">';
             htm+='<col class="w30"/>';
-            htm+='<col class="w50"/>';
-            htm+='<col class="w720"/>';
-            htm+='<col class="w140"/>';
+            htm+='<col class="w910"/>';
+            htm+='<caption>';
+            htm+='<p class="t_r">';
+            htm+='<a target="_blank" href="question?m=todetail&id='+itm.questionid+'&courseid='+itm.courseid+'" title="浏览详情" class="ico46"></a>';
+            if(itm.questiontype<6){
+                if(parseInt(itm.flag)>0)
+                    htm+='<a  title="已发任务" class="ico52"></a><a title="不可删除" class="ico03"></a>';
+                else{
+                    htm+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=3&questype='+itm.questiontype+'&taskvalueid='+itm.questionid+'"" title="发任务" class="ico51"></a>';
+                    htm+='<a href="javascript:void(0);" onclick="doDelQuestion(\''+itm.ref+'\')" title="删除" class="ico04"></a>';
+                }
+                htm+='<a href="question?m=toUpdQuestion&questionid='+itm.questionid+'&courseid='+itm.courseid+'" title="编辑" class="ico11"></a>';
+            }else
+                htm+='<a href="javascript:void(0);" onclick="doDelQuestion(\''+itm.ref+'\')" title="删除" class="ico04"></a>';
+            htm+='</p>';
+            htm+='</caption>';
+
             htm+='<tr id="tr_'+itm.questionid+'"';
             if(idx%2==1)
                 htm+=' class="trbg2"';
             htm+='><td';
             htm+='>'+queslevel+'</td>';
-            htm+='<td><strong>'+questype+'</strong></td>';
-            //htm+='<td>'+replaceAll(replaceAll(replaceAll(content.toLowerCase(),"<p>",""),"</p>",""),"<br>","");
-            htm+='<td>'+content;
-            htm+='<br>';
-            if(itm.questionOptionList!=null&&itm.questionOptionList.length>0){
-                $.each(itm.questionOptionList,function(idx,im){
+            htm+='<td><span class="bg">'+questype+'</span>';
+            htm+=content;
+            if(itm.extension=='4'){
+                htm+='<div  class="p_t_10" id="sp_mp3_'+itm.questionid+'" ></div>'
+                htm+='<script type="text/javascript">';
+                htm+='playSound(\'play\',\''+ques_mp3_path+itm.questionid+'/001.mp3\',270,22,\'sp_mp3_'+itm.questionid+'\',false)';
+                htm+='<\/script>';
+            }
+            if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0){
+                htm+='<table border="0" cellpadding="0" cellspacing="0" class="tab">';
+                htm+='<col class="w30"/>';
+                htm+='<col class="w850"/>';
+                $.each(itm.questionOptionList,function(ix,im){
+                    htm+='<tr>';
                     var type=itm.questiontype==3?"radio":"checkbox";
-                    htm+='<input disabled type="'+type+'"/>';
-                    htm+=im.optiontype+".&nbsp;";
-                    //htm+=replaceAll(replaceAll(replaceAll(im.content.toLowerCase(),"<p>",""),"</p>",""),"<br>","");
-                    htm+=im.content;
+                    htm+='<th><input  type="'+type+'"/></th>';
+                    htm+='<td>'+im.optiontype+".&nbsp;";
+                    htm+=replaceAll(replaceAll(replaceAll(im.content.toLowerCase(),"<p>",""),"</p>",""),"<br>","");
                     if(im.isright==1)
                         htm+='<span class="ico12"></span>';
-                    htm+='<br>';
+                    htm+='</td>';
+                    htm+='</tr>';
+                });
+                htm+='</table>';
+            }
+
+            if(typeof itm.questionTeam!='undefined'&&itm.questionTeam.length>0&&itm.extension!='5'){
+                $.each(itm.questionTeam,function(ix,m){
+                    htm+='<tr>';
+                    htm+='<td>&nbsp;</td>';
+                    htm+='<td>'+(ix+1)+'.'+m.content;
+                    if(typeof m.questionOptionList!='undefined'&&m.questionOptionList.length>0){
+                        htm+='<table border="0" cellpadding="0" cellspacing="0" class="tab">';
+                        htm+='<col class="w30"/>';
+                        htm+='<col class="w850"/>';
+                        $.each(m.questionOptionList,function(ix,im){
+                            htm+='<tr>';
+                            var type=im.questiontype==3||im.questiontype==7?"radio":"checkbox";
+                            htm+='<th><input  type="'+type+'"/></th>';
+                            htm+='<td>'+im.optiontype+".&nbsp;";
+                            htm+=replaceAll(replaceAll(replaceAll(im.content.toLowerCase(),"<p>",""),"</p>",""),"<br>","");
+                            if(im.isright==1)
+                                htm+='<span class="ico12"></span>';
+                            htm+='</td>';
+                            htm+='</tr>';
+                        });
+                        htm+='</table>';
+                    }
+                    htm+='</td>';
+                    htm+='</tr>';
                 });
             }
-            htm+='</td>';
-            htm+='<td>';
-            htm+='<p class="ico">';
-            if(parseInt(itm.flag)>0)
-                htm+='<span title="已发任务" class="ico52"></span>';
-            else{
-                htm+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=3&questype='+itm.questiontype+'&taskvalueid='+itm.questionid+'"" title="发任务" class="ico51"></a>';
-            }
-            htm+='<a target="_blank" href="question?m=todetail&id='+itm.questionid+'&courseid='+itm.courseid+'" title="浏览详情" class="ico46"></a>';
-            htm+='<a href="question?m=toUpdQuestion&questionid='+itm.questionid+'&courseid='+itm.courseid+'" title="编辑" class="ico11"></a>';
-            if(parseInt(itm.flag)>0){
-                htm+='<a title="不可删除" class="ico03"></a>';
-
-            }else{
-                htm+='<a href="javascript:void(0);" onclick="doDelQuestion(\''+itm.ref+'\')" title="删除" class="ico04"></a>';
-            }
-            htm+='</p>';
             htm+='</td>';
             htm+='</tr>';
             htm+='</table>';

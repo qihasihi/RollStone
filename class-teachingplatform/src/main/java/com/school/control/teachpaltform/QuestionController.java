@@ -175,26 +175,12 @@ public class QuestionController extends BaseController<QuestionInfo> {
                     tmpList.add(tq);
                 }
             }
-           /* if(question.getQuestiontype()==3||question.getQuestiontype()==4){
-                QuestionOption qo = new QuestionOption();
-                qo.setQuestionid(question.getQuestionid());
-                PageResult p = new PageResult();
-                p.setOrderBy("option_type");
-                List<QuestionOption> qoList = this.questionOptionManager.getList(qo,p);
-                if(qoList!=null&&qoList.size()>0){
-                    question.setQuestionOption(qoList);
-                }else{
-                    je.setMsg("未查到试题选项，请联系管理员");
-                    response.getWriter().print(je.getAlertMsgAndBack());
-                    return null;
-                }
-            }*/
         }else{
             je.setMsg("系统异常，请稍后再试");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        mp.put("question",tmpList.get(0));
+        mp.put("pqList",tmpList);
         return new ModelAndView("/teachpaltform/question/ques-detail",mp);
     }
 

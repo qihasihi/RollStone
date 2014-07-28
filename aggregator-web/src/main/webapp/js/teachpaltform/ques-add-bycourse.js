@@ -37,6 +37,13 @@ function questionListReturn(rps){
                 shtml+='</td>';
                 shtml+='<td>';
                 shtml+='<p>'+content+'</p>';
+                if(itm.extension=='4'){
+
+                    shtml+='<br><div  class="p_t_10" id="sp_mp3_'+itm.questionid+'" ></div>'
+                    shtml+='<script type="text/javascript">';
+                    shtml+='playSound(\'play\',\''+ques_mp3_path+itm.questionid+'/001.mp3\',270,22,\'sp_mp3_'+itm.questionid+'\',false)';
+                    shtml+='<\/script>';
+                }
                 shtml+='<p>';
                 $.each(itm.questionOptionList,function(ix,im){
                     var type=itm.questiontype==3?"radio":"checkbox";
@@ -47,6 +54,37 @@ function questionListReturn(rps){
                         shtml+='<span class="ico12"></span>';
                     shtml+='<br>';
                 });
+
+                if(typeof itm.questionTeam!='undefined'&&itm.questionTeam.length>0&&itm.extension!='5'){
+                    $.each(itm.questionTeam,function(ix,m){
+                        shtml+='<tr>';
+                        shtml+='<td>&nbsp;</td>';
+                        shtml+='<td>'+(ix+1)+'.'+m.content;
+                        if(typeof m.questionOptionList!='undefined'&&m.questionOptionList.length>0){
+                            shtml+='<table border="0" cellpadding="0" cellspacing="0" class="tab">';
+                            shtml+='<col class="w30"/>';
+                            shtml+='<col class="w850"/>';
+                            $.each(m.questionOptionList,function(ix,im){
+                                shtml+='<tr>';
+                                var type=im.questiontype==3||im.questiontype==7?"radio":"checkbox";
+                                shtml+='<th><input  type="'+type+'"/></th>';
+                                shtml+='<td>'+im.optiontype+".&nbsp;";
+                                shtml+=replaceAll(replaceAll(replaceAll(im.content.toLowerCase(),"<p>",""),"</p>",""),"<br>","");
+                                if(im.isright==1)
+                                    shtml+='<span class="ico12"></span>';
+                                shtml+='</td>';
+                                shtml+='</tr>';
+                            });
+                            shtml+='</table>';
+                        }
+                        shtml+='</td>';
+                        shtml+='</tr>';
+                    });
+                }
+
+
+
+
                 shtml+='</p>';
                 shtml+='</td>';
                 shtml+='</tr>';
