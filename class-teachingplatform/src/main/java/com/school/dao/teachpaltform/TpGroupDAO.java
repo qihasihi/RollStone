@@ -156,6 +156,11 @@ public class TpGroupDAO extends CommonDAO<TpGroupInfo> implements ITpGroupDAO {
             objList.add(tpgroupinfo.getGroupname());
         } else
             sqlbuilder.append("null,");
+        if (tpgroupinfo.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpgroupinfo.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -212,6 +217,11 @@ public class TpGroupDAO extends CommonDAO<TpGroupInfo> implements ITpGroupDAO {
         if (tpgroupinfo.getGroupname() != null) {
             sqlbuilder.append("?,");
             objList.add(tpgroupinfo.getGroupname());
+        } else
+            sqlbuilder.append("null,");
+        if (tpgroupinfo.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpgroupinfo.getSubjectid());
         } else
             sqlbuilder.append("null,");
 

@@ -42,7 +42,9 @@ String url=parenturl.substring(0,parenturl.lastIndexOf("/"));
 href="user?m=toIndex";
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
 $(function(){
-    $(".head_crumb a[href='user?m=toIndex']").attr("href","<%=UtilTool.utilproperty.getProperty("LZX_WELCOME_PAGE_ADDRESS")%>");
+    //$(".head_crumb a[href='user?m=toIndex']").attr("href","<%=UtilTool.utilproperty.getProperty("LZX_WELCOME_PAGE_ADDRESS")%>");
+    //直接去掉。删除
+    $(".head_crumb a[href='user?m=toIndex']").parent().remove();
 });
 
 </c:if>

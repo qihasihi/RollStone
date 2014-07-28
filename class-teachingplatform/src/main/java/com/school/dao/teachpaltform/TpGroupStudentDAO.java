@@ -83,6 +83,11 @@ public class TpGroupStudentDAO extends CommonDAO<TpGroupStudent> implements ITpG
             objList.add(tpgroupstudent.getStateid());
         } else
             sqlbuilder.append("null,");
+        if (tpgroupstudent.getTpgroupinfo().getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpgroupstudent.getTpgroupinfo().getSubjectid());
+        } else
+            sqlbuilder.append("null,");
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objList.add(presult.getPageNo());
