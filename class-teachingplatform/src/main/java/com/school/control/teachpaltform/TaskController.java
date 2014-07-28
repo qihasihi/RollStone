@@ -3155,27 +3155,48 @@ public class TaskController extends BaseController<TpTaskInfo>{
         List<Map<String,Object>> numList;
         numList = new ArrayList<Map<String, Object>>();
         List<TpGroupInfo> tiList=new ArrayList<TpGroupInfo>();
+        List<TpGroupInfo>tmpGroupList=new ArrayList<TpGroupInfo>();
         if(Integer.parseInt(type)==8||Integer.parseInt(type)==9){
             numList=this.taskPerformanceManager.getPerformanceNum2(Long.parseLong(taskid),clsid);
             TpGroupStudent tgsinfo = new TpGroupStudent();
             tgsinfo.setClassid(Integer.parseInt(classid));
             List<TpGroupStudent> tgsList = this.tpGroupStudentManager.getGroupStudentByClass(tgsinfo,null);
+
+
             TpGroupInfo ti = new TpGroupInfo();
             ti.setClassid(Integer.parseInt(classid));
             tiList = this.tpGroupManager.getList(ti,null);
-            for(int i = 0;i<tiList.size();i++){
-                for(int j = 0;j<tgsList.size();j++){
-                    if(tiList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
-                        tiList.get(i).setTpgroupstudent2(tgsList.get(j));
+
+
+            TpTaskAllotInfo ta=new TpTaskAllotInfo();
+            ta.setTaskid(Long.parseLong(taskid));
+            ta.setUsertype(2);
+            List<TpTaskAllotInfo> taskAllotInfoList=this.tpTaskAllotManager.getList(ta,null);
+            if(taskAllotInfoList!=null&&taskAllotInfoList.size()>0&&tiList!=null){
+                for(TpTaskAllotInfo allotInfo:taskAllotInfoList){
+                    for(TpGroupInfo groupInfo:tiList){
+                        if(allotInfo.getUsertypeid().equals(groupInfo.getGroupid()))
+                            tmpGroupList.add(groupInfo);
                     }
                 }
             }
+
+            if(tmpGroupList.size()>0){
+                for(int i = 0;i<tmpGroupList.size();i++){
+                    for(int j = 0;j<tgsList.size();j++){
+                        if(tmpGroupList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
+                            tmpGroupList.get(i).setTpgroupstudent2(tgsList.get(j));
+                        }
+                    }
+                }
+            }
+
         }else{
             numList=this.taskPerformanceManager.getPerformanceNum(Long.parseLong(taskid),clsid,Integer.parseInt(type));
         }
         je.getObjList().add(numList);
         je.getObjList().add(tList);
-        je.getObjList().add(tiList);
+        je.getObjList().add(tmpGroupList);
         je.getObjList().add(notCompleteList);
         je.setType("success");
         response.getWriter().print(je.toJSON());

@@ -28,8 +28,9 @@
             }else{
                 orderstr=orderby+' desc';
             }
-            var clsid=$("input[name='classradio']:checked").val().split('|')[0];
-            var clstype=$("input[name='classradio']:checked").val().split('|')[1];
+            var clsid=typeof $("input[name='classradio']:checked").val()=='undefined'?0:$("input[name='classradio']:checked").val().split('|')[0];
+
+            var clstype=typeof $("input[name='classradio']:checked").val()=='undefined'?0:$("input[name='classradio']:checked").val().split('|')[1];
 
             loadPaperPerformance(clsid,"${taskInfo.tasktype}","",clstype);
         }

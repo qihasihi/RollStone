@@ -32,6 +32,14 @@ public class TaskPerformanceInfo  implements java.io.Serializable{
     private Integer creteriatype;
     private Object clsname; //ÁÙÊ±×Ö¶Î
 
+    public Object getClsname() {
+        return clsname;
+    }
+
+    public void setClsname(Object clsname) {
+        this.clsname = clsname;
+    }
+
     public Integer getCreteriatype() {
         return creteriatype;
     }
