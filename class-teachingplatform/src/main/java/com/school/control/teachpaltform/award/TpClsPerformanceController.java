@@ -79,6 +79,7 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
             mp.put("coursename",courseList.get(0).getCoursename());
         }
         String groupid=",";
+
         if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
             //参数验证。
             if(termid==null){
@@ -87,6 +88,7 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
             }
             TpGroupStudent gs=new TpGroupStudent();
             gs.setUserid(this.logined(request).getUserid());
+            gs.getTpgroupinfo().setSubjectid(Integer.parseInt(subjectid));
             gs.setIsleader(1);
             List<TpGroupStudent> tgList=this.tpGroupStudentManager.getList(gs,null);
 
@@ -104,9 +106,12 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
             }
             clsid=tpccList.get(0).get("CLASS_ID").toString();
             typeid=tpccList.get(0).get("CLASS_TYPE").toString();
-        }
-        if(groupid.length()<2){
-            groupid="";
+            if(groupid.trim().length()>1)
+                mp.put("ctUid",this.logined(request).getUserid());
+        }else{
+            if(groupid.length()<2){
+                groupid="";
+            }
         }
         mp.put("leanderGrpid",groupid);
         mp.put("courseid",courseid);

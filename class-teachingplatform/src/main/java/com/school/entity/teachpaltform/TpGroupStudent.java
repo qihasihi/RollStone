@@ -66,7 +66,7 @@ public class TpGroupStudent {
     }
 
     public TpGroupInfo getTpgroupinfo() {
-        return tpgroupinfo;
+        return tpgroupinfo=(tpgroupinfo==null?new TpGroupInfo():tpgroupinfo);
     }
 
     public void setTpgroupinfo(TpGroupInfo tpgroupinfo) {

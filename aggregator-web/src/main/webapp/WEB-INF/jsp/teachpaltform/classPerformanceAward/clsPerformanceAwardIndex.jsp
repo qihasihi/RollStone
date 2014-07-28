@@ -35,6 +35,7 @@
     <script type="text/javascript">
         var courseid=${courseid};
         var groupidstr="${leanderGrpid}";
+        var ctumid="${!empty ctUid?ctUid:''}";
         $(function(){
             <c:if test="${empty subjectid}">
               alert('参数异常，请重试!');
@@ -50,7 +51,7 @@
                     h+='${dlm.GROUP_NAME}<br><span class="ico78"></span> <a href="javascript:;" onclick="updateGroupAward(${dlm.GROUP_ID})" id="a_award_${dlm.GROUP_ID}"><span id="sp_grp_award${dlm.GROUP_ID}">${dlm.AWARD_NUMBER}</span></a>个</td>';
                     h+='<td>${dlm.STU_NO}</td>';
                     h+='<td>${dlm.STU_NAME}</td>';
-                    if(groupidstr.length<1||groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1){
+                    if(groupidstr.length<1||(groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1&&ctumid!=${dlm.USER_ID})){
                             h+='<td name="td_data">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
                             h+='<td name="td_data">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
                             h+='<td name="td_data">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/>';
@@ -69,7 +70,7 @@
                         h+='<input type="hidden" name="group_id" id="hd_group_id" value="${dl1m.GROUP_ID}"/>';
                         h+='<input type="hidden" name="user_id" id="hd_user_id" value="${dl1m.USER_ID}"/>';
                         h+='</td><td>${dl1m.STU_NAME}</td>';
-                         if(groupidstr.length<1||groupidstr.indexOf(",${dl1m.GROUP_ID},")!=-1){
+                         if(groupidstr.length<1||(groupidstr.indexOf(",${dl1m.GROUP_ID},")!=-1&&ctumid!=${dl1m.USER_ID})){
                             h+='<td name="td_data">${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
                             h+='<td name="td_data">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
                             h+='<td name="td_data">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td></tr>';
