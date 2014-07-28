@@ -82,7 +82,7 @@
             });
             pageGo('pList1');
             pageGo('pList2');
-            pageGo('pList3');
+           // pageGo('pList3');
         });
 
         function preeDoPageSub1(pObj){
@@ -119,7 +119,13 @@
             var param={};
             param.gradeid =$("#grade").val();
             param.subjectid=${param.subjectid};
-            param.name=$("#likename").val();
+            var name = $("#likename").val();
+            if(name==null||name.length<1){
+                alert("请输入专题或者资源关键字");
+                return;
+            }else{
+                param.name=$("#likename").val();
+            }
             pObj.setPostParams(param);
         }
         function getInvestReturnMethod1(rps){
@@ -266,6 +272,11 @@
 
         }
     function showLike(){
+        var name = $("#likename").val();
+        if(name==null||name.length<1){
+            alert("请输入专题或者资源关键字");
+            return;
+        }
         $("#local").hide();
         $("#dv_upload_local").hide();
         $("#like").show();

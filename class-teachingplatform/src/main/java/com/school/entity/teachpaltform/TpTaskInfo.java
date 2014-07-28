@@ -31,6 +31,24 @@ public class TpTaskInfo implements Serializable {
     private Integer resourcetype;
     private Integer remotetype;
     private Object classid;
+    private String imtaskcontent;
+    private String imtaskattach;
+
+    public String getImtaskcontent() {
+        return imtaskcontent;
+    }
+
+    public void setImtaskcontent(String imtaskcontent) {
+        this.imtaskcontent = imtaskcontent;
+    }
+
+    public String getImtaskattach() {
+        return imtaskattach;
+    }
+
+    public void setImtaskattach(String imtaskattach) {
+        this.imtaskattach = imtaskattach;
+    }
 
     public Object getClassid() {
         return classid;

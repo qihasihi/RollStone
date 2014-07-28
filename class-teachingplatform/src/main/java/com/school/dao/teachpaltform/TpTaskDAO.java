@@ -237,6 +237,16 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
                 objList.add(tptaskinfo.getResourcename());
             } else
                 sqlbuilder.append("null,");
+            if (tptaskinfo.getImtaskattach() != null) {
+                sqlbuilder.append("?,");
+                objList.add(tptaskinfo.getImtaskattach());
+            } else
+                sqlbuilder.append("null,");
+            if (tptaskinfo.getImtaskcontent() != null) {
+                sqlbuilder.append("?,");
+                objList.add(tptaskinfo.getImtaskcontent());
+            } else
+                sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
