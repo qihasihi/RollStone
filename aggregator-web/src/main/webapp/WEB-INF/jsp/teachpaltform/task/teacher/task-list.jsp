@@ -130,11 +130,10 @@ function getInvestReturnMethod(rps){
             html+='<p class="f_right">';
 
             if(itm.taskstatus!="1"){
+                var qtype=itm.questiontype;
                 if(itm.tasktype==4||itm.tasktype==5||itm.tasktype==6)
-                    html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype=-1"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b></a>';
-                else
-                    html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+itm.questiontype+'"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b></a>';
-
+                    qtype=-1;
+                html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b></a>';
             }else
                 html+='<span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b>';
 
