@@ -1647,7 +1647,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
         alert('异常错误，参数错误! \n\nClassd is undefined!');
         return;
     }
-    if (typeof(taskid) == 'undefined' || taskid.length < 1) {
+    if (typeof(taskid) == 'undefined' || taskid.toString().length < 1) {
         alert('异常错误，参数错误! \n\n Taskid is undefined!');
         return;
     }
@@ -1850,6 +1850,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
 
 
             if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
+                $("#dv_nocomplete_data").html('');
                 $.each(rmsg.objList[3], function (idx, itm) {
                     if ($('p[id="p_stu_' + itm.classid + '"]').length > 0)
                         if ($('ul[id="ul_stu_' + itm.classid + '"]').length > 0)

@@ -3020,6 +3020,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
         response.getWriter().print(je.toJSON());
     }
 
+    /**
+     * 微视频试卷 查看回答
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(params="loadStuMicQuesPerformance",method=RequestMethod.GET)
     public ModelAndView loadStuMicQuesPerformance(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je=new JsonEntity();
