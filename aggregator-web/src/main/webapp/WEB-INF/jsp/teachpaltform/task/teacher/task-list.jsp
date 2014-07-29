@@ -127,18 +127,19 @@ function getInvestReturnMethod(rps){
             html+='<div class="jxxt_zhuanti_rw">';
             html+='<div class="jxxt_zhuanti_rwR">';
             html+='<div class="title">';
-            html+='<p class="f_right"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b>';
-            if(itm.tasktype==4&&itm.taskstatus=="3"){
-                html+='<a class="ico79" title="批阅" href="paper?m=toMarking&paperid='+itm.taskvalueid+'"></a>';
-            }
+            html+='<p class="f_right">';
 
-            //if(itm.taskstatus=="3"||(itm.taskstatus!="1"&&itm.flag<2)){
             if(itm.taskstatus!="1"){
                 if(itm.tasktype==4||itm.tasktype==5||itm.tasktype==6)
-                    html+='<a class="ico37" title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype=-1"></a>';
+                    html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype=-1"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b></a>';
                 else
-                    html+='<a class="ico37" title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+itm.questiontype+'"></a>';
+                    html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+itm.questiontype+'"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b></a>';
 
+            }else
+                html+='<span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b>';
+
+            if(itm.tasktype==4&&itm.taskstatus=="3"){
+                html+='<a class="ico79" title="批阅" href="paper?m=toMarking&paperid='+itm.taskvalueid+'"></a>';
             }
             if(itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)){
                 html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
