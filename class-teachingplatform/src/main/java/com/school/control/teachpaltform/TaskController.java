@@ -3100,7 +3100,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             if(option!=null)
             {
                 for(StuPaperQuesLogs p:logsList){
-                    if(p.getIsright().toString().equals("1"))
+                    if(p.getIsright()!=null&&p.getIsright().toString().equals("1"))
                         right+=1;
                 }
             }
