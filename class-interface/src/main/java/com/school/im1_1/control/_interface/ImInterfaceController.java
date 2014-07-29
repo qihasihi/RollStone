@@ -229,6 +229,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         //组织任务数据
         TpTaskInfo tpTaskInfo = new TpTaskInfo();
         tpTaskInfo.setCriteria(2);
+        tpTaskInfo.setTaskvalueid(Long.valueOf(1));
+        tpTaskInfo.setOrderidx(orderIdx);
         tpTaskInfo.setTaskid(tasknextid);
         tpTaskInfo.setTaskname(tasktitle);
         tpTaskInfo.setTaskremark(taskanalysis);
