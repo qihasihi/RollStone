@@ -83,7 +83,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     private IPaperQuestionManager paperQuestionManager;
     private IPaperManager paperManager;
     private IQuestionOptionManager questionOptionManager;
+    private ITaskPerformanceManager taskPerformanceManager;
     public TpResourceController(){
+        this.taskPerformanceManager=this.getManager(TaskPerformanceManager.class);
         this.tpCourseManager=this.getManager(TpCourseManager.class);
         this.tpOperateManager=this.getManager(TpOperateManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
@@ -2749,8 +2751,47 @@ public class TpResourceController extends BaseController<TpCourseResource>{
      * */
     @RequestMapping(params="m=toRemoteResourcesDetail",method=RequestMethod.GET)
     public void toRemoteResourcesDetail(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
         String hd_res_id=request.getParameter("hd_res_id");
         String res_id = request.getParameter("res_id");
+        String taskid=request.getParameter("taskid");
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        //检测是否有查看标准
+        TpTaskInfo t=new TpTaskInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        t.setCriteria(1);
+        List<TpTaskInfo>taskCriList=this.tpTaskManager.getList(t, null);
+        if(taskCriList!=null&&taskCriList.size()>0){
+            TpTaskInfo task=taskCriList.get(0);
+
+            //录入完成状态
+            TaskPerformanceInfo tp=new TaskPerformanceInfo();
+            tp.setTaskid(task.getTaskid());
+            tp.setCourseid(task.getCourseid());
+            tp.setTasktype(task.getTasktype());
+            tp.setCriteria(1);
+            tp.setUserid(this.logined(request).getRef());
+            tp.setIsright(1);
+            List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getList(tp,null);
+            if(taskCriList!=null&&taskCriList.size()>0&&taskCriList.get(0).getTaskstatus()!=null
+                    &&!taskCriList.get(0).getTaskstatus().equals("1")&&!taskCriList.get(0).getTaskstatus().equals("3")){
+                if(tList==null||tList.size()<1){
+                    if(this.taskPerformanceManager.doSave(tp)){
+                        System.out.println("添加资源查看记录成功...");
+                    }else{
+                        je.setMsg("异常错误!添加查看记录失败!请重试!");
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }
+                }
+            }
+        }
+
         Date d = new Date();
         String url=UtilTool.utilproperty.getProperty("REMOTE_RESOURCE_IP")+"ett20/study/jx/openUrlById.jsp";
         if(hd_res_id!=null&&hd_res_id.length()>0){

@@ -262,7 +262,7 @@
                     else{
                         if(typeof itm.remotetype!='undefined'){
                             var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
-                            html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" class="font-blue">'+itm.taskobjname+'</a>';
+                            html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+itm.taskobjname+'</a>';
                         }
                     }
                 }else if(itm.tasktype==2){
