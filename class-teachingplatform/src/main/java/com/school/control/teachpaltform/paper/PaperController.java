@@ -3122,7 +3122,7 @@ public class PaperController extends BaseController<PaperInfo>{
     }
 
     /**
-     * 进入批阅试卷页面
+     * 进行批阅试卷
      * @return
      */
     @RequestMapping(params="m=doMarking",method=RequestMethod.POST)
