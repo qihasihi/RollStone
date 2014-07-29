@@ -1653,7 +1653,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
     }
     var param = {};
     param.taskid = taskid;
-    if (classid != null && classid.length > 0 && classid != '0') {
+    if (classid != null && classid.toString().length > 0 && classid != '0') {
         param.classid = classid;
         param.classtype = classtype;
     } else {
@@ -1699,12 +1699,19 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                     $.each(rmsg.objList[2], function (ix, im) {
                         htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
                         if (tasktype == 4)
-                            htm += '<colgroup span="6" class="w190"></colgroup>';
+                            if(classid==0)
+                                htm += '<colgroup class="w240"></colgroup><colgroup class="w110" span="2"></colgroup><colgroup class="w150"></colgroup><colgroup class="w110" span="3"></colgroup>';
+                            else
+                                htm += '<colgroup class="w130" span="2"></colgroup><colgroup class="w160"></colgroup><colgroup class="w130" span="4"></colgroup>';
                         else if (tasktype == 5||tasktype==6)
-                            htm += '<colgroup span="5" class="w190"></colgroup>';
-                        htm += '<colgroup class="w180"></colgroup>';
+                            if(classid==0)
+                                htm += '<colgroup class="w130" span="2"></colgroup><colgroup class="w160"></colgroup><colgroup class="w130" span="4"></colgroup>';
+                            else
+                                htm += '<colgroup class="w150" span="2"></colgroup><colgroup class="w190"></colgroup><colgroup class="w150" span="3"></colgroup>';
                         htm += '<caption>' + im.groupname + '</caption>';
                         htm += '<tr>';
+                        if(classid==0)
+                            htm += '<th>班级</th>';
                         htm += '<th>学号</th>';
                         htm += '<th>姓名</th>';
                         htm += '<th>学习时间</th>';
@@ -1723,6 +1730,8 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                             $.each(im.tpgroupstudent2, function (i, m) {
                                 if (m.stuno == itm.userinfo.stuNo) {
                                     htm += '<tr>';
+                                    if(classid==0)
+                                        htm += '<td>' + itm.clsname + '</td>';
                                     htm += '<td>' + itm.userinfo.stuNo + '</td>';
                                     htm += '<td>' + itm.userinfo.stuname + '</td>';
                                     if (typeof(itm.ctimeString) != 'undefined')
@@ -1766,12 +1775,18 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                 } else {
                     htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
                     if (tasktype == 4)
-                        htm += '<colgroup span="6" class="w190"></colgroup>';
+                        if(classid==0)
+                            htm += '<colgroup class="w240"></colgroup><colgroup class="w110" span="2"></colgroup><colgroup class="w150"></colgroup><colgroup class="w110" span="3"></colgroup>';
+                        else
+                            htm += '<colgroup class="w130" span="2"></colgroup><colgroup class="w160"></colgroup><colgroup class="w130" span="4"></colgroup>';
                     else if (tasktype == 5||tasktype==6)
-                        htm += '<colgroup span="5" class="w190"></colgroup>';
-
-                    htm += '<colgroup class="w180"></colgroup>';
+                        if(classid==0)
+                            htm += '<colgroup class="w130" span="2"></colgroup><colgroup class="w160"></colgroup><colgroup class="w130" span="4"></colgroup>';
+                        else
+                            htm += '<colgroup class="w150" span="2"></colgroup><colgroup class="w190"></colgroup><colgroup class="w150" span="3"></colgroup>';
                     htm += '<tr>';
+                    if(classid==0)
+                        htm += '<th>班级</th>';
                     htm += '<th>学号</th>';
                     htm += '<th>姓名</th>';
                     htm += '<th>学习时间</th>';
@@ -1788,6 +1803,8 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                     htm += '</tr>';
                     $.each(rmsg.objList[1], function (idx, itm) {
                         htm += '<tr>';
+                        if(classid==0)
+                            htm += '<td>' + itm.clsname + '</td>';
                         htm += '<td>' + itm.userinfo.stuNo + '</td>';
                         htm += '<td>' + itm.userinfo.stuname + '</td>';
                         if (typeof(itm.ctimeString) != 'undefined')

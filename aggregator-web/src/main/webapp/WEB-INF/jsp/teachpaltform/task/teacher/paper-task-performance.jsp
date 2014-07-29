@@ -14,8 +14,10 @@
         var tasktype="${taskInfo.tasktype}";
         var orderstr="";
         $(function(){
+            $("input[name='classradio']").eq(0).attr("checked",true);
+
             <c:if test="${!empty classList}">
-            loadPaperPerformance(null,"${taskInfo.tasktype}");
+                loadPaperPerformance(${classList[0].classid},"${taskInfo.tasktype}","${taskInfo.taskvalueid}",${classList[0].classtype});
             </c:if>
         });
 
@@ -52,7 +54,7 @@
             </c:forEach>
         </c:if>&nbsp;&nbsp;&nbsp;&nbsp;
         <c:if test="${fn:length(classList)>1}">
-            <input type="radio" name="classradio" id="radio" checked="checked" value="0" onclick="loadPaperPerformance(null,'${taskInfo.tasktype}','${taskInfo.taskvalueid}')">
+            <input type="radio" name="classradio" id="radio"  value="0" onclick="loadPaperPerformance(null,'${taskInfo.tasktype}','${taskInfo.taskvalueid}')">
             全部
         </c:if>
     </p>
