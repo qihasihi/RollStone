@@ -1658,6 +1658,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
         param.classtype = classtype;
     } else {
         param.classid = 0;
+        classid=0;
         param.classtype = 0;
     }
     if (tasktype == 4 || tasktype == 5) {
@@ -1700,12 +1701,12 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                         htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
                         if (tasktype == 4)
                             if(classid==0)
-                                htm += '<colgroup class="w240"></colgroup><colgroup class="w110" span="2"></colgroup><colgroup class="w150"></colgroup><colgroup class="w110" span="3"></colgroup>';
+                                htm += '<colgroup class="w190"></colgroup><colgroup class="w100" span="2"></colgroup><colgroup class="w150"></colgroup><colgroup class="w100" span="4"></colgroup>';
                             else
                                 htm += '<colgroup class="w130" span="2"></colgroup><colgroup class="w160"></colgroup><colgroup class="w130" span="4"></colgroup>';
                         else if (tasktype == 5||tasktype==6)
                             if(classid==0)
-                                htm += '<colgroup class="w130" span="2"></colgroup><colgroup class="w160"></colgroup><colgroup class="w130" span="4"></colgroup>';
+                                htm += '<colgroup class="w240"></colgroup><colgroup class="w110" span="2"></colgroup><colgroup class="w150"></colgroup><colgroup class="w110" span="3"></colgroup>';
                             else
                                 htm += '<colgroup class="w150" span="2"></colgroup><colgroup class="w190"></colgroup><colgroup class="w150" span="3"></colgroup>';
                         htm += '<caption>' + im.groupname + '</caption>';
@@ -1776,12 +1777,12 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                     htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
                     if (tasktype == 4)
                         if(classid==0)
-                            htm += '<colgroup class="w240"></colgroup><colgroup class="w110" span="2"></colgroup><colgroup class="w150"></colgroup><colgroup class="w110" span="3"></colgroup>';
+                            htm += '<colgroup class="w190"></colgroup><colgroup class="w100" span="2"></colgroup><colgroup class="w150"></colgroup><colgroup class="w100" span="4"></colgroup>';
                         else
                             htm += '<colgroup class="w130" span="2"></colgroup><colgroup class="w160"></colgroup><colgroup class="w130" span="4"></colgroup>';
                     else if (tasktype == 5||tasktype==6)
                         if(classid==0)
-                            htm += '<colgroup class="w130" span="2"></colgroup><colgroup class="w160"></colgroup><colgroup class="w130" span="4"></colgroup>';
+                            htm += '<colgroup class="w240"></colgroup><colgroup class="w110" span="2"></colgroup><colgroup class="w150"></colgroup><colgroup class="w110" span="3"></colgroup>';
                         else
                             htm += '<colgroup class="w150" span="2"></colgroup><colgroup class="w190"></colgroup><colgroup class="w150" span="3"></colgroup>';
                     htm += '<tr>';

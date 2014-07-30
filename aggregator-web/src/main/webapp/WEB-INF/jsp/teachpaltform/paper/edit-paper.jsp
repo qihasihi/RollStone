@@ -85,7 +85,7 @@ function preeDoPageSub(pObj){
 }
 
 
-function showDialogPage(type,paperid,quesid){
+function showDialogPage(type,paperid,quesid,e){
     var url;
     if(type==1){
         url="paper?m=dialogPaper&courseid="+courseid+"&paperid="+paperid;
@@ -96,7 +96,14 @@ function showDialogPage(type,paperid,quesid){
     }else if(type==4){
         url='question?m=toUpdQuestion&courseid='+courseid+"&paperid="+paperid+"&questionid="+quesid;
     }
-    var param = "dialogWidth:900px;dialogHeight:700px;status:no;location:no";
+
+    var paramObj={width:1000,height:700}
+
+    var left =findDimensions().width/2-parseFloat($("#p_operate").css("width"))/2;
+    var top =100;//findDimensions().height/2-parseFloat($("#p_operate").css("height"))/2-120;
+
+
+    var param = 'dialogWidth:'+paramObj.width+'px;dialogHeight:'+paramObj.height+'px;dialogLeft:'+left+'px;dialogTop:'+top+'px;status:no;location:no';
     var returnValue=window.showModalDialog(url,"",param);
     if (returnValue == undefined) {
         returnValue = window.returnValue;
@@ -323,6 +330,14 @@ function doDelPaperQues(quesid){
 
 function reSetScrollDiv(){
     //$("#p_operate").css({"left":(findDimensions().width/2-parseFloat($("#p_operate").css("width"))/2)+"px"});
+   /* var divObj=document.getElementById("p_operate");
+    if(getScrollTop()>parseInt(divObj.style.top)){
+        divObj.style.top="0px";
+        $("#p_operate").css({"position":"fixed"})
+    }else{
+        divObj.style.top="100px";
+        $("#p_operate").css("position","");
+    } */
     var divObj=document.getElementById("p_operate");
     if(getScrollTop()>parseInt(divObj.style.top)){
         divObj.style.top="0px";
@@ -339,9 +354,11 @@ function reSetScrollDiv(){
 <div class="subpage_head"><span class="ico55"></span><strong>添加试卷</strong></div>
 <div class="content2">
 
-     <div  id="p_operate" class="jxxt_zhuanti_shijuan_add_an"    ><a href="javascript:showDialogPage(1,'${paper.paperid}')" class="an_big">导入试卷</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(2,'${paper.paperid}')" class="an_big">导入试题</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}')" class="an_big">新建试题</a></div>
+     <div  id="p_operate" class="jxxt_zhuanti_shijuan_add_an"    ><a href="javascript:showDialogPage(1,'${paper.paperid}','',this)" class="an_big">导入试卷</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(2,'${paper.paperid}','',this)" class="an_big">导入试题</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}','',this)" class="an_big">新建试题</a></div>
     <div class="jxxt_zhuanti_shijuan_add font-black public_input">
-        <p class="title"><strong class="f_right">总分值：<span id="total_score" class="font-blue">${paper.score}&nbsp;分</span></strong><strong>${paper.papername}</strong></p>
+        <p class="title">
+            <strong class="f_right" >总分值：<span id="total_score" class="font-blue">${paper.score}&nbsp;分</span></strong><strong>${paper.papername}</strong>
+        </p>
 
         <c:if test="${!empty pqList}">
             <c:forEach items="${pqList}" var="pq">
@@ -350,7 +367,7 @@ function reSetScrollDiv(){
                     <col class="w910"/>
                     <caption><span class="f_right">
                         <c:if test="${pq.questiontype<6}">
-                            <a   href="javascript:showDialogPage(4,'${pq.paperid}','${pq.questionid}')" class="ico11" title="编辑"></a>
+                            <a   href="javascript:showDialogPage(4,'${pq.paperid}','${pq.questionid}',this)" class="ico11" title="编辑"></a>
                         </c:if>
                         <a href="javascript:doDelPaperQues('${pq.questionid}')" class="ico04" title="删除"></a>&nbsp;<span class="font-blue">
                         <c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0}">

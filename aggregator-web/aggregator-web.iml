@@ -89,6 +89,7 @@
     <orderEntry type="module" module-name="class-teachingplatform" />
     <orderEntry type="module" module-name="class-resource" />
     <orderEntry type="module" module-name="class-personalspace" />
+    <orderEntry type="module" module-name="class-interface" />
   </component>
 </module>
 

@@ -947,7 +947,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
                 sqlListArray.add(sql.toString());
             }
 
-            //修改试题与试卷关系
+            //修改试题与试卷关系 不关联专题试题
             if(paperid!=null&&paperid.trim().length()>0){
                 PaperQuestion sel=new PaperQuestion();
                 sel.setQuestionid(q.getQuestionid());
@@ -998,14 +998,14 @@ public class QuestionController extends BaseController<QuestionInfo> {
                         sqlListArray.add(sql.toString());
                     }
                     //操作日志
-                    sql=new StringBuilder();
+                  /*  sql=new StringBuilder();
                     objList=this.tpTopicManager.getAddOperateLog(this.logined(request).getRef(),"TP_OPERATE_INFO"
                             ,questionid.toString(),null,null,"UPDATE","根据试题ID修改，由于是共享或者标准论题，则记录至操作元素表中!",sql);
                     //此操作会在回收站中显示
                     if(sql!=null&&sql.toString().trim().length()>0){
                         objListArray.add(objList);
                         sqlListArray.add(sql.toString());
-                    }
+                    } */
                 }
 
             }
