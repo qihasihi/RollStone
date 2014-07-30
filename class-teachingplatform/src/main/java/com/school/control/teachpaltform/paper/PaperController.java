@@ -3069,12 +3069,93 @@ public class PaperController extends BaseController<PaperInfo>{
     @RequestMapping(params="m=toMarking",method=RequestMethod.GET)
     public ModelAndView toMarkingPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
         String paperid = request.getParameter("paperid");
+        String taskid = request.getParameter("taskid");
         JsonEntity je = new JsonEntity();
         if(paperid==null||paperid.length()<1){
             je.setMsg("异常错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
+//        //获取任务相关的班级
+//        TpTaskAllotInfo ta = new TpTaskAllotInfo();
+////        ta.setTaskid(Long.parseLong(taskid));
+//        List<TpTaskAllotInfo> taList = this.tpTaskAllotManager.getList(ta,null);
+//
+//        List<Map> classList = new ArrayList<Map>();
+//        for(TpTaskAllotInfo o:taList){
+//            if(o.getUsertype()==0){
+//                ClassInfo ci = new ClassInfo();
+//                ci.setClassid(Integer.parseInt(o.getUsertypeid().toString()));
+//                List<ClassInfo> ciList = this.classManager.getList(ci,null);
+//                Map map = new HashMap();
+//                map.put("classid",ciList.get(0).getClassid());
+//                map.put("classname",ciList.get(0).getClassname());
+//                map.put("classtype",1);
+//                classList.add(map);
+//            }else if(o.getUsertype()==1){
+//                TpVirtualClassInfo vci = new TpVirtualClassInfo();
+//                vci.setVirtualclassid(Integer.parseInt(o.getUsertypeid().toString()));
+//                List<TpVirtualClassInfo> vciList = this.tpVirtualClassManager.getList(vci,null);
+//                Map map = new HashMap();
+//                map.put("classid",vciList.get(0).getVirtualclassid());
+//                map.put("classname",vciList.get(0).getVirtualclassname());
+//                map.put("classtype",2);
+//                classList.add(map);
+//            }else if(o.getUsertype()==2){
+//                TpGroupInfo tg = new TpGroupInfo();
+//                tg.setGroupid(o.getUsertypeid());
+//                List<TpGroupInfo> tgList = this.tpGroupManager.getList(tg,null);
+//                Integer classid=tgList.get(0).getClassid();
+//                if(tgList.get(0).getClasstype()==1){
+//                    ClassInfo ci = new ClassInfo();
+//                    ci.setClassid(classid);
+//                    List<ClassInfo> objList = this.classManager.getList(ci,null);
+//                    Map map = new HashMap();
+//                    map.put("classid",objList.get(0).getClassid());
+//                    map.put("classname",objList.get(0).getClassname());
+//                    map.put("classtype",8);
+//                    if(classList.size()>0){
+//                        Boolean b = false;
+//                        for(Map m:classList){
+//                            if(Integer.parseInt(m.get("classid").toString())==Integer.parseInt(map.get("classid").toString())){
+//                                b=true;
+//                            }
+//                        }
+//                        if(b==false)
+//                            classList.add(map);
+//                    }else{
+//                        classList.add(map);
+//                    }
+//                }else{
+//                    TpVirtualClassInfo vc = new TpVirtualClassInfo();
+//                    vc.setVirtualclassid(classid);
+//                    List<TpVirtualClassInfo> objList = this.tpVirtualClassManager.getList(vc,null);
+//                    Map map = new HashMap();
+//                    map.put("classid",objList.get(0).getVirtualclassid());
+//                    map.put("classname",objList.get(0).getVirtualclassname());
+//                    map.put("classtype",9);
+//                    if(classList.size()>0){
+//                        Boolean b = false;
+//                        for(Map m:classList){
+//                            if(Integer.parseInt(m.get("classid").toString())==Integer.parseInt(map.get("classid").toString())){
+//                                b=true;
+//                            }
+//                        }
+//                        if(b==false)
+//                            classList.add(map);
+//                    }else{
+//                        classList.add(map);
+//                    }
+//                }
+//            }
+//        }
+        //获取试卷内所有试题的提交人数和审批人数
         List<PaperQuestion> objList = this.paperQuestionManager.getQuestionByPaper(Long.parseLong(paperid));
+        //获取试卷内所有试题
+        List<Map<String,Object>> quesIdList = this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
+        if(quesIdList!=null&&quesIdList.size()>0){
+            String quesidsStr = quesIdList.get(0).get("ALLQUESID").toString();
+            request.setAttribute("quesidStr",quesidsStr);
+        }
         request.setAttribute("questionList",objList);
         request.setAttribute("papername",objList.get(0).getPapername());
         return new ModelAndView("teachpaltform/paper/marking/marking-list");
@@ -3107,6 +3188,7 @@ public class PaperController extends BaseController<PaperInfo>{
     @RequestMapping(params="m=toMarkingDetail",method=RequestMethod.GET)
     public ModelAndView toMarkingDetail(HttpServletRequest request,HttpServletResponse response)throws Exception{
         String paperid = request.getParameter("paperid");
+        String questionid = request.getParameter("questionid");
         String quesid = request.getParameter("quesid");
         String idx = request.getParameter("idx");
         JsonEntity je = new JsonEntity();
@@ -3114,7 +3196,7 @@ public class PaperController extends BaseController<PaperInfo>{
             je.setMsg("异常错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
-        List<Map<String,Object>> detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),Long.parseLong(quesid));
+        List<Map<String,Object>> detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),Long.parseLong(questionid),Long.parseLong(quesid));
         List<Map<String,Object>> numList = this.stuPaperLogsManager.getMarkingNum(Long.parseLong(paperid),Long.parseLong(quesid));
         request.setAttribute("detail",detailList.get(0));
         request.setAttribute("num",numList.get(0));

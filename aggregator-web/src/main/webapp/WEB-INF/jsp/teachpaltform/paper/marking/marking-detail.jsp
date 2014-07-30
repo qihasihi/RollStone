@@ -68,13 +68,10 @@
 <body>
     <div class="subpage_head"><span class="ico55"></span><strong>批阅试卷</strong></div>
     <div class="content2">
-        <p class="jxxt_zhuanti_rw_piyue_info"><strong>试题分数：</strong><span class="font-blue">${num.SCORE}
-        </span>分&nbsp;&nbsp;&nbsp;&nbsp;<strong>平均分：</strong><span class="font-blue">${num.AVGSCORE}</span>分
-            &nbsp;&nbsp;&nbsp;&nbsp;<strong>已批改：</strong><span class="font-blue">${num.MARKINGNUM}/${num.SUBMITNUM}
-</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="1" class="font-blue">查看统计</a></p>
+        <p class="jxxt_zhuanti_rw_piyue_info"><a href="1" class="an_public3">下一题</a>
+            <a href="1" class="an_public3">上一题</a><strong class="font-blue">${param.idx}</strong>&nbsp;&nbsp;试题分数：<span class="font-blue">${num.SCORE}</span>&nbsp;分</p>
         <div class="jxxt_zhuanti_shijuan_add public_input font-black">
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940">
-                <caption><span class="font-blue">1</span>/10</caption>
                 <tr>
                     <td><span class="bg">填空题：</span>${detail.CONTENT}</td>
                 </tr>
@@ -86,8 +83,11 @@
         </div>
         <div class="jxxt_zhuanti_rw_piyue_defen" id="score">
             <h5></h5>
+            <p class="p_b_20"><strong>平均分：</strong><span class="font-blue">${num.AVGSCORE}</span>分
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong>已批改：</strong><span class="font-blue">${num.MARKINGNUM}/${num.SUBMITNUM}</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="1" class="font-blue">查看统计</a></p>
             <p><strong>学生：</strong>${detail.STUNAME} </p>
             <p><strong>答案：</strong>${detail.ANSWER}</p>
+            <p><strong>附件：</strong><a href="1" target="_blank" class="font-blue">我的答案.jpg</a></p>
             <p><strong>评分：</strong>请选择该学生的得分。</p>
         </div>
     </div>
