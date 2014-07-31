@@ -203,7 +203,7 @@ function queryQuestionType(trobj, questype, boo, questionid) {
  * */
 function showResourceElementJsp(){
     var url = 'task?m=toTaskElementDetial&operate_type=1&subjectid='+subjectid+'&tasktype=1&courseid=' + courseid;
-    var param = "dialogHeight=800px;dialogWidth=900px;center:yes;status:no;scroll:no;help:no";
+    var param = "dialogHeight:800px;dialogWidth:900px;status:no;location:no";
     var returnValue = window.showModalDialog(url, "", param);
     if (returnValue == undefined) {
         returnValue = window.returnValue;

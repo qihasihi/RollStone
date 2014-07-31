@@ -9,6 +9,7 @@
 <%@include file="/util/common-jsp/common-jxpt.jsp" %>
 <html>
 <head>
+`
     <title>${sessionScope.CURRENT_TITLE}</title>
     <!-- 上传控件 -->
     <script type="text/javascript" src="<%=basePath %>js/common/uploadControl.js"></script>
@@ -139,7 +140,7 @@
                     htm+='<tr>';
                     htm+='<td><a href="javascript:subData('+itm.resid+')" class="ico51" title="发任务"></a>';
                     htm+='<span class="'+itm.suffixtype+'"></span></td>';
-                    htm+='<td><p><a href="javascript:void(0);" target="_blank">'+itm.resname+'</a></p>';
+                    htm+='<td><p><a href="javascript:void(0);" >'+itm.resname+'</a></p>';
                     htm+='<p>'+introduce+'</p>';
                     htm+='<p class="jxxt_zhuanti_zy_add_text">'+username+'&nbsp;&nbsp;&nbsp;'+type+'&nbsp;&nbsp;&nbsp;'+itm.restypename+'</p></td>';
                     htm+='</tr>';
@@ -488,7 +489,7 @@
     <div class="subpage_lm">
         <ul>
             <li class="crumb"><a href="task?m=toTaskElementDetial&operate_type=1&subjectid=${param.subjectid}&tasktype=1&courseid=${param.courseid}">本地资源</a></li>
-            <li><a href="tpres?m=toRemoteResources&courseid=${courseid}&subjectid=${param.subjectid}">远程资源</a></li>
+            <li><a href="tpres?m=toRemoteResources&courseid=${courseid}&subjectid=${param.subjectid}"  >远程资源</a></li>
         </ul>
     </div>
 

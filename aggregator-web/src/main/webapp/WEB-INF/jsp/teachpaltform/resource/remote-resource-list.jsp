@@ -9,6 +9,7 @@
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 <html>
 <head>
+    <base target="_self">
     <title></title>
     <script src="js/teachpaltform/resource.js" type="text/javascript"></script>
     <script type="text/javascript">
