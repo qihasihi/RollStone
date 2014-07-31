@@ -222,6 +222,8 @@ public class QuestionController extends BaseController<QuestionInfo> {
             QuestionOption questionOption=new QuestionOption();
             questionOption.setQuestionid(ques.getQuestionid());
             PageResult p = new PageResult();
+            p.setPageSize(0);
+            p.setPageNo(0);
             p.setOrderBy("option_type");
             List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,p);
             mp.put("quesOptionList",questionOptionList);

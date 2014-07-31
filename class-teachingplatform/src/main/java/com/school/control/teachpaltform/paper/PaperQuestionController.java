@@ -2903,6 +2903,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             QuestionOption qo = new QuestionOption();
             qo.setQuestionid(tiList.get(0).getTaskvalueid());
             PageResult pr = new PageResult();
+            pr.setPageSize(0);
+            pr.setPageNo(0);
             pr.setOrderBy("u.option_type");
             List<QuestionOption> optionList = this.questionOptionManager.getList(qo,pr);
             for(QuestionOption o : optionList){
@@ -3059,6 +3061,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         QuestionOption qo = new QuestionOption();
         qo.setQuestionid(Long.parseLong(questionid));
         PageResult pr = new PageResult();
+        pr.setPageSize(0);
+        pr.setPageNo(0);
         pr.setOrderBy("u.option_type");
         List<QuestionOption> optionList = this.questionOptionManager.getList(qo,pr);
         int totalNum = 0;
