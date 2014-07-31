@@ -147,12 +147,12 @@ function getInvestReturnMethod(rps){
             html+='</p>';
             html+='<p><a class="ico49b"  id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务</a><span data-bind="'+itm.taskid+'" id="order_'+itm.taskid+'" class="m_lr_10">'+itm.orderidx+'</span>：'+type+'';
             if(itm.tasktype==1){
-                if(typeof itm.resourcetype=='undeinfed'|| itm.resourcetype==1)
-                    html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+taskObj+'</a>';
-                else{
-                    if(typeof itm.remotetype!='undefined'){
-                        var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
-                        html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
+                if(typeof itm.remotetype!='undefined'){
+                    var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
+                    html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
+                }else{
+                    if( itm.resourcetype==1||typeof itm.resourcetype=='undefined'){
+                        html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+taskObj+'</a>';
                     }
                 }
             }else if(itm.tasktype==2){
