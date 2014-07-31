@@ -2797,7 +2797,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String res_id = request.getParameter("res_id");
         String taskid=request.getParameter("taskid");
         //检测是否有查看标准
-        if(taskid!=null&&taskid.trim().length()>0){
+        if(taskid!=null&&taskid.trim().length()>0&&this.validateRole(request,UtilTool._ROLE_STU_ID)){
             TpTaskInfo t=new TpTaskInfo();
             t.setTaskid(Long.parseLong(taskid));
             t.setCriteria(1);
