@@ -3192,7 +3192,11 @@ public class PaperController extends BaseController<PaperInfo>{
     @RequestMapping(params="m=toMarkingDetail",method=RequestMethod.GET)
     public ModelAndView toMarkingDetail(HttpServletRequest request,HttpServletResponse response)throws Exception{
         String paperid = request.getParameter("paperid");
-        String questionid = request.getParameter("questionid");
+        String qid = request.getParameter("questionid");
+        Long questionid = null;
+        if(qid!=null){
+            questionid=Long.parseLong(qid);
+        }
         String quesid = request.getParameter("quesid");
         String idx = request.getParameter("idx");
         JsonEntity je = new JsonEntity();
@@ -3200,8 +3204,37 @@ public class PaperController extends BaseController<PaperInfo>{
             je.setMsg("“Ï≥£¥ÌŒÛ£¨«ÎÀ¢–¬“≥√Ê÷ÿ ‘");
             je.getAlertMsgAndBack();
         }
-        List<Map<String,Object>> detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),Long.parseLong(questionid),Long.parseLong(quesid));
+        List<Map<String,Object>> detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),questionid,Long.parseLong(quesid),1);
         List<Map<String,Object>> numList = this.stuPaperLogsManager.getMarkingNum(Long.parseLong(paperid),Long.parseLong(quesid));
+        if(detailList==null||detailList.size()==0){
+            detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),questionid,Long.parseLong(quesid),0);
+            request.setAttribute("sign",true);
+        }else{
+            request.setAttribute("sign",false);
+        }
+        int type = Integer.parseInt(detailList.get(0).get("QUESTION_TYPE").toString());
+        int type2 =  Integer.parseInt(detailList.get(0).get("QUESTION_TYPE2").toString());
+        int extension = Integer.parseInt(detailList.get(0).get("EXTENSION2").toString());
+        if(type2>0&&type2==6){
+            if(extension==5){
+                QuestionOption qo = new QuestionOption();
+                qo.setQuestionid(Long.parseLong(qid));
+                List<QuestionOption> optionList = this.questionOptionManager.getList(qo,null);
+                request.setAttribute("option",optionList);
+
+                QuestionOption q = new QuestionOption();
+                q.setQuestionid(Long.parseLong(quesid));
+                List<QuestionOption> rightoption = this.questionOptionManager.getList(q,null);
+                request.setAttribute("rightoption",rightoption);
+            }
+        }else{
+            if(type==3||type==4||type==7||type==8){
+                QuestionOption qo = new QuestionOption();
+                qo.setQuestionid(Long.parseLong(quesid));
+                List<QuestionOption> optionList = this.questionOptionManager.getList(qo,null);
+                request.setAttribute("option",optionList);
+            }
+        }
         request.setAttribute("detail",detailList.get(0));
         request.setAttribute("num",numList.get(0));
         return new ModelAndView("teachpaltform/paper/marking/marking-detail");

@@ -254,7 +254,7 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
         return  this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
     }
 
-    public List<Map<String, Object>> getMarkingDetail(Long paperid, Long questionid,Long quesid) {
+    public List<Map<String, Object>> getMarkingDetail(Long paperid, Long questionid,Long quesid,Integer ismark) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_paper_marking_proc_getdetail(");
         List<Object> objList=new ArrayList<Object>();
@@ -271,10 +271,16 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
             sqlbuilder.append("NULL,");
         }
         if(quesid!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(quesid);
         }else{
-            sqlbuilder.append("NULL");
+            sqlbuilder.append("NULL,");
+        }
+        if(ismark!=null){
+            sqlbuilder.append("?");
+            objList.add(ismark);
+        }else{
+            sqlbuilder.append("NULL,");
         }
         sqlbuilder.append(")}");
         List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
