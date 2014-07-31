@@ -960,8 +960,8 @@ function load_resource(type, pageno, isinit) {
                 //分页
                 $("#p_xnrj_page").html('');
                 if (rps.presult.recTotal > 0 && rps.presult.pageTotal > 1) {
-                    var prev = (pageno - 1) > 0 ? (pageno - 1) : 1;
-                    var next = (pageno + 1) >= rps.presult.pageTotal ? rps.presult.pageTotal : (pageno + 1);
+                    var prev = (parseInt(pageno) - 1) > 0 ? (parseInt(pageno) - 1) : 1;
+                    var next = (parseInt(pageno) + 1) >= rps.presult.pageTotal ? rps.presult.pageTotal : (parseInt(pageno) + 1);
                     var page_split = '<span><a href="javascript:load_resource(' + type + ',1)"><b class="first"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + next + ')"><b class="after"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + rps.presult.pageTotal + ')"><b class="last"></b></a></span>';
                     $("#p_xnrj_page").html(page_split);
                 }
@@ -1077,8 +1077,8 @@ function load_stu_resource(type, pageno, isinit) {
                 //分页
                 $("#p_xnrj_page").html('');
                 if (rps.presult.recTotal > 0 && rps.presult.pageTotal > 1) {
-                    var prev = (pageno - 1) > 0 ? (pageno - 1) : 1;
-                    var next = (pageno + 1) >= rps.presult.pageTotal ? rps.presult.pageTotal : (pageno + 1);
+                    var prev = (parseInt(pageno) - 1) > 0 ? (parseInt(pageno) - 1) : 1;
+                    var next = (parseInt(pageno) + 1) >= rps.presult.pageTotal ? rps.presult.pageTotal : (parseInt(pageno) + 1);
                     var page_split = '<span><a href="javascript:load_stu_resource(' + type + ',1)"><b class="first"></b></a></span><span><a href="javascript:load_stu_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span><span><a href="javascript:load_stu_resource(' + type + ',' + next + ')"><b class="after"></b></a></span><span><a href="javascript:load_stu_resource(' + type + ',' + rps.presult.pageTotal + ')"><b class="last"></b></a></span>';
                     $("#p_xnrj_page").html(page_split);
                 }
