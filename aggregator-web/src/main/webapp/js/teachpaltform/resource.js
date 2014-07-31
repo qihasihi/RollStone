@@ -1767,6 +1767,7 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
 function loadRelatePaper(resid){
     if(isNaN(resid))
         return;
+
     $.ajax({
         url:'paperques?m=loadRelatePaper',
         type:'POST',
@@ -1774,6 +1775,7 @@ function loadRelatePaper(resid){
         dataType:'json',
         error:function(){alert("网络异常")},
         success:function(rps){
+            $("#relate_paper").html('');
             if(rps.type=="error"){
                 alert(rps.msg);
             }else{
