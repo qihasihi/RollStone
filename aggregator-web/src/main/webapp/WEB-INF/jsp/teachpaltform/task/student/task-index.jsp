@@ -121,6 +121,8 @@
 
 
     function getInvestReturnMethod(rps){
+        ueditorArray=new Array();
+        ueditorObjArray=new Array();
         var html='';
         if(rps.objList!=null&&rps.objList.length>0){
             $.each(rps.objList,function(idx,itm){
@@ -257,13 +259,12 @@
                 html+='        <p class="f_right"><span class="ico35" style="cursor:pointer" onclick="loadNoCompleteStu(\''+itm.taskid+'\',\''+itm.usertypeid+'\',\''+itm.taskstatus+'\')"></span><b><a   class="font-red">'+itm.stucount+'/'+itm.totalcount+'</a></b></p>';
                 html+='        <p><a class="ico49b" id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务'+(rps.presult.pageSize*(rps.presult.pageNo-1)+(idx+1))+'：'+type+'</a>';
                 if(itm.tasktype==1){
-                    if(typeof itm.resourcetype=='undeinfed'|| itm.resourcetype==1)
-                        html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
-                    else{
-                        if(typeof itm.remotetype!='undefined'){
-                            var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
-                            html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+itm.taskobjname+'</a>';
-                        }
+                    if(typeof itm.remotetype!='undefined'){
+                        var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
+                        html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+itm.taskobjname+'</a>';
+                    }else{
+                        if(itm.resourcetype==1||typeof itm.resourcetype=='undeinfed')
+                            html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
                     }
                 }else if(itm.tasktype==2){
                     html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
@@ -399,6 +400,7 @@
             alert('异常错误，系统未获取到专题标识!');
             return;
         }
+
         var param={courseid:courseid};
         pObj.setPostParams(param);
     }
