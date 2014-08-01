@@ -238,6 +238,36 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
 
     /**
+     * 获取任务列表
+     * @throws Exception
+     */
+    @RequestMapping(params="toQueryLiveList",method=RequestMethod.POST)
+    public void toQueryLiveList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String taskid=request.getParameter("taskid");
+        if(courseid==null||courseid.trim().length()<1||taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpTaskInfo t=new TpTaskInfo();
+        t.setCourseid(Long.parseLong(courseid));
+        t.setTaskid(Long.parseLong(taskid));
+        //查询没被我删除的任务
+        t.setSelecttype(1);
+        t.setLoginuserid(this.logined(request).getUserid());
+        t.setStatus(1);
+
+        //已发布的任务
+        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t, null);
+        je.setObjList(taskList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
      * 修改任务排序
      * @throws Exception
      */
@@ -1098,6 +1128,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 return;
             }
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
+        }else if(tasktype.toString().equals("10")){//直播课
+            if(taskname==null||taskname.trim().length()<1){
+                je.setMsg("异常错误，系统未获取到直播主题!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            ta.setTaskvalueid(Long.valueOf(1));
+            ta.setTaskname(taskname);
         }
             /**
              *查询出当前专题有效的任务个数，排序用
@@ -1338,7 +1376,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         JsonEntity je=new JsonEntity();
         String taskid=request.getParameter("taskid");
         String tasktype=request.getParameter("tasktype");
-      //  String taskname=request.getParameter("taskname");
+        String taskname=request.getParameter("taskname");
         String taskvalueid=request.getParameter("taskvalueid");
         String taskremark=request.getParameter("taskremark");
         String quesnum=request.getParameter("quesnum");
@@ -1484,6 +1522,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 return;
             }
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
+        }else if(tasktype.toString().equals("10")){//直播课
+            if(taskname==null||taskname.trim().length()<1){
+                je.setMsg("异常错误，系统未获取到直播主题!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            ta.setTaskname(taskname);
+            ta.setTaskvalueid(Long.valueOf(1));
         }
         //获取任务
         TpTaskInfo sel=new TpTaskInfo();
@@ -1510,6 +1556,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setCriteria(Integer.parseInt(criteriaArray[0]));
             if(taskremark!=null)
                 ta.setTaskremark(taskremark);
+            if(taskname!=null)
+                ta.setTaskname(taskname);
             if(quesnum!=null&&quesnum.trim().length()>0)
                 ta.setQuesnum(Integer.parseInt(quesnum));
             else
@@ -1545,7 +1593,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
              */
             tasknextid=tmpTask.getTaskid();
             ta.setTaskid(tasknextid);
-            //ta.setTaskname(taskname);
+            if(taskname!=null)
+                ta.setTaskname(taskname);
             ta.setTasktype(Integer.parseInt(tasktype));
             ta.setCourseid(Long.parseLong(courseid));
             ta.setCuserid(this.logined(request).getRef());
@@ -2846,6 +2895,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return new ModelAndView("/teachpaltform/task/teacher/task-performance-xz");
         }else if(questype.equals("-1")){//试卷
             return new ModelAndView("/teachpaltform/task/teacher/paper-task-performance");
+        }else if(questype.equals("-2")){//直播课
+            return new ModelAndView("/teachpaltform/task/teacher/live-task-performance");
         }else{
             return new ModelAndView("/teachpaltform/task/teacher/task-performance-zg");
         }

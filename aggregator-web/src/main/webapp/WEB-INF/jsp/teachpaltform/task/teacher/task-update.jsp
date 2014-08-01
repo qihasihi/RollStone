@@ -34,7 +34,7 @@
                 </c:forEach>
             </c:if>
 			//任务类型
-			changeTaskType("${taskInfo.questiontype}",${taskInfo.taskvalueid},taskstatus,"${taskInfo.quesnum}");
+			changeTaskType("${taskInfo.questiontype}",${taskInfo.tasktype eq 10?taskInfo.taskid:taskInfo.taskvalueid},taskstatus,"${taskInfo.quesnum}");
 
             $("input[name='ck_criteria']").filter(function(){return this.value=${taskInfo.criteria}}).attr({"checked":true});
             <c:if test="${!empty operatetype}">
@@ -106,6 +106,8 @@
                 queryPaper(courseid,'tr_task_obj',5,${taskInfo.taskvalueid},taskstatus,quesnum);
             }else if(tasktype=="6"){ // 微视频
                 queryMicView(courseid,'tr_task_obj',6,${taskInfo.taskvalueid},taskstatus);
+            }else if(tasktype=="10"){ // 直播课
+                queryLiveLession(courseid,'tr_task_obj',10,taskvalueid,taskstatus);
             }
 		}
 

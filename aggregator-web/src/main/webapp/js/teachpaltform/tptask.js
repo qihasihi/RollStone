@@ -382,6 +382,43 @@ function queryMicView(courseid, trobj, type, taskvalueid,taskstatus) {
     });
 }
 
+
+function queryLiveLession(courseid, trobj, type, taskvalueid,taskstatus) {
+    if (typeof(courseid) == 'undefined' || courseid.length < 1) {
+        alert('异常错误，系统未获取到课题标识!');
+        return;
+    }
+
+    $.ajax({
+        url: 'task?toQueryLiveList',
+        type: 'post',
+        data: {courseid: courseid, taskid: taskvalueid},
+        dataType: 'json',
+        error: function () {
+            alert('网络异常!');
+        },
+        success: function (json) {
+            var htm = '';
+            htm += '<th><span class="ico06"></span>直播主题：</th>';
+            htm += '<td class="font-black">';
+            htm += '<input type="text" id="task_name"';
+            if(typeof taskstatus!='undefined')
+                htm+=' disabled ';
+            htm+='>';
+            htm += '<input type="hidden" id="hd_elementid"/>';
+            htm += '</td>';
+            $("#" + trobj).html(htm);
+            $("#tb_ques").hide();
+
+            if(json.objList.length>0&&typeof taskvalueid!='undefined'&&taskvalueid.toString().length>0){
+                $("#task_name").val(json.objList[0].taskname);
+                $("#hd_elementid").val(json.objList[0].taskid);
+            }
+        }
+    });
+
+}
+
 function qryTopicByCls(taskvalueid) {
     var task_type = $("#task_type").val();
     if (task_type.length > 0 && task_type == "2") {
@@ -718,6 +755,9 @@ function initTaskCriteria(tasktype) {
         htm += '<input  value="1" name="ck_criteria" type="radio" />查看视频';
         htm += '<input checked value="2" name="ck_criteria" type="radio" />提交试卷';
         $("#td_criteria").parent().hide();
+    } else if(tasktype=="10"){
+        htm += '<input checked value="1" name="ck_criteria" type="radio" />进入直播课';
+        $("#td_criteria").parent().hide();
     }
 
     $("#td_criteria").html(htm);
@@ -733,7 +773,7 @@ function doSubManageTask(taskid) {
     var tasktype = $("#task_type");
     var timeType = $("input[name='time_rdo']:checked").val();
     var all_btime = $("#all_class_btime"), all_etime = $("#all_class_etime");
-    //var taskname=$("#task_name");
+    var taskname=$("#task_name");
     //var taskremark = CKEDITOR.instances["task_remark"].getData();
     var taskremark=$("#task_remark").val();
     var criteriatype = $("input[name='ck_criteria']:checked");
@@ -917,7 +957,15 @@ function doSubManageTask(taskid) {
             return;
         }
         param.taskvalueid = micresid;
+    }else if (tasktype.val() == "10") {
+        if(taskname.val().Trim().length<1){
+             alert('请填写任务名称!');
+             return;
+         }
+         param.taskname=taskname.val();
     }
+
+
     param.courseid = courseid;
     param.taskremark = taskremark;
     if (!(typeof(questype) != 'undefined' && questype == '5') && criteriatype.length < 1) {
@@ -1880,5 +1928,177 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
         }
     });
 }
+
+
+
+
+/**
+ * 查询学生直播课完成情况
+ * @return
+ */
+function loadLiveLessionPerformance(classid, tasktype, paperid, classtype) {
+    $("#a_class_" + classid).parent("li").siblings().removeClass("crumb").end().addClass("crumb");
+
+    if (typeof(classid) == 'undefined' || isNaN(classid)) {
+        alert('异常错误，参数错误! \n\nClassd is undefined!');
+        return;
+    }
+    if (typeof(taskid) == 'undefined' || taskid.toString().length < 1) {
+        alert('异常错误，参数错误! \n\n Taskid is undefined!');
+        return;
+    }
+    var param = {};
+    param.taskid = taskid;
+    if (classid != null && classid.toString().length > 0 && classid != '0') {
+        param.classid = classid;
+        param.classtype = classtype;
+    } else {
+        param.classid = 0;
+        classid=0;
+        param.classtype = 0;
+    }
+    if (tasktype == 4 || tasktype == 5) {
+        param.paperid = paperid;
+    }
+    if (orderstr.length > 0)
+        param.orderstr = orderstr;
+    $.ajax({
+        url: 'task?loadPaperPerformance',
+        type: "post",
+        data: param,
+        dataType: 'json',
+        cache: false,
+        error: function () {
+            alert('系统未响应，请稍候重试!');
+        }, success: function (rmsg) {
+            if (rmsg.objList[0] != null && rmsg.objList[0].length > 0) {
+                var totalnum = 0;
+                var rightnum = 0;
+                var finishnum = 0;
+                $.each(rmsg.objList[0], function (idx, itm) {
+                    totalnum += parseInt(itm.TOTALNUM);
+                    rightnum += parseInt(itm.RIGHTNUM);
+                    finishnum += parseInt(itm.FINISHNUM);
+
+                });
+                var fn = parseFloat(parseInt(finishnum)) / parseInt(totalnum) * 100;
+                fn=isNaN(fn)?0:fn;
+                var finishhtml = fn.toFixed(2);
+                finishhtml += "%";
+                $("#finishnum").html(finishhtml);
+            } else {
+                $("#finishnum").html("0");
+            }
+            var htm = '';
+            var css = cssObj == 1 ? 'ico48a' : 'ico48b';
+            if (rmsg.objList[1] != null && typeof rmsg.objList[1] != 'undefined' && rmsg.objList[1].length > 0) {
+                if (rmsg.objList[2] != null && rmsg.objList[2].length > 0) {
+                    $.each(rmsg.objList[2], function (ix, im) {
+                        htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
+                        if(classid==0)
+                            htm += '<colgroup class="w240"></colgroup><colgroup class="w150" span="2"></colgroup><colgroup class="w150" span="2">';
+                        else
+                            htm += '<colgroup class="w190" span="2"></colgroup><colgroup class="w190" span="2">';
+                        htm += '<caption>' + im.groupname + '</caption>';
+                        htm += '<tr>';
+                        if(classid==0)
+                            htm += '<th>班级</th>';
+                        htm += '<th>学号</th>';
+                        htm += '<th>姓名</th>';
+                        htm += '<th>学习时间</th>';
+                        htm += '<th>是否完成</th>';
+                        htm += '</tr>';
+                        $.each(rmsg.objList[1], function (idx, itm) {
+                            $.each(im.tpgroupstudent2, function (i, m) {
+                                if (m.stuno == itm.userinfo.stuNo) {
+                                    htm += '<tr>';
+                                    if(classid==0)
+                                        htm += '<td>' + itm.clsname + '</td>';
+                                    htm += '<td>' + itm.userinfo.stuNo + '</td>';
+                                    htm += '<td>' + itm.userinfo.stuname + '</td>';
+                                    if (typeof(itm.ctimeString) != 'undefined')
+                                        htm += '<td>' + itm.ctimeString + '</td>';
+                                    else
+                                        htm += '<td></td>';
+                                    if (itm.status > 0)
+                                        htm += '<td><span class="ico12" title="完成"></span></td>';
+                                    else
+                                        htm += '<td><span class="ico24" title="进行中"></span></td>';
+                                    htm += '</tr>';
+                                }
+                            });
+
+                        });
+                        htm += '</table>';
+                    });
+                } else {
+                    htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
+                    if(classid==0)
+                        htm += '<colgroup class="w240"></colgroup><colgroup class="w150" span="2"></colgroup><colgroup class="w150" span="2">';
+                    else
+                        htm += '<colgroup class="w190" span="2"></colgroup><colgroup class="w190" span="2">';
+                    htm += '<tr>';
+                    if(classid==0)
+                        htm += '<th>班级</th>';
+                    htm += '<th>学号</th>';
+                    htm += '<th>姓名</th>';
+                    htm += '<th>学习时间</th>';
+                    htm += '<th>是否完成</th>';
+                    htm += '</tr>';
+                    $.each(rmsg.objList[1], function (idx, itm) {
+                        htm += '<tr>';
+                        if(classid==0)
+                            htm += '<td>' + itm.clsname + '</td>';
+                        htm += '<td>' + itm.userinfo.stuNo + '</td>';
+                        htm += '<td>' + itm.userinfo.stuname + '</td>';
+                        if (typeof(itm.ctimeString) != 'undefined')
+                            htm += '<td>' + itm.ctimeString + '</td>';
+                        else
+                            htm += '<td></td>';
+                        if (itm.status > 0)
+                            htm += '<td><span class="ico12" title="完成"></span></td>';
+                        else
+                            htm += '<td><span class="ico24" title="进行中"></span></td>';
+                        htm += '</tr>';
+                    });
+                    htm += '</table>';
+                }
+
+            } else {
+                htm += '<table><tr><td>暂无数据!</td></tr></table>';
+            }
+
+
+            if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
+                $("#dv_nocomplete_data").html('');
+                $.each(rmsg.objList[3], function (idx, itm) {
+                    if ($('p[id="p_stu_' + itm.classid + '"]').length > 0)
+                        if ($('ul[id="ul_stu_' + itm.classid + '"]').length > 0)
+                            $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                        else {
+                            $("#dv_nocomplete_data").append('<ul id="ul_stu_' + itm.classid + '"></ul>');
+                            $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                        }
+                    else {
+                        $("#dv_nocomplete_data").append('<p id="p_stu_' + itm.classid + '"><strong>' + itm.taskobjname + '</strong><span class="font-red"></span></p>');
+                        $("#dv_nocomplete_data").append('<ul id="ul_stu_' + itm.classid + '"></ul>');
+                        $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                    }
+
+                });
+            }
+            $("#notcomplete").html(rmsg.objList[3].length)
+            if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
+                $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
+
+            }
+
+            $("#mainTbl").hide();
+            $("#mainTbl").html(htm);
+            $("#mainTbl").show("");
+        }
+    });
+}
+
 
 

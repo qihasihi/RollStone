@@ -164,6 +164,22 @@
                         type="微课程学习&nbsp;&nbsp;&nbsp;";
                         //answertype='您的互动';
                         break;
+                    case 7:
+                        criteria="";
+                        type="语&nbsp;&nbsp;&nbsp;&nbsp;音";
+                        break;
+                    case 8:
+                        criteria="";
+                        type="图&nbsp;&nbsp;&nbsp;&nbsp;片";
+                        break;
+                    case 9:
+                        criteria="";
+                        type="文&nbsp;&nbsp;&nbsp;&nbsp;字";
+                        break;
+                    case 10:
+                        criteria="";
+                        type="直播课&nbsp;&nbsp;&nbsp;&nbsp;";
+                        break;
                 }
 
                 if(itm.questionAnswerList!=null&&itm.questionAnswerList.length>0){
@@ -262,10 +278,9 @@
                     if(typeof itm.remotetype!='undefined'){
                         var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
                         html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+itm.taskobjname+'</a>';
-                    }else{
-                        if(itm.resourcetype==1||typeof itm.resourcetype=='undeinfed')
-                            html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
-                    }
+                    }else
+                        html+='<a class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
+
                 }else if(itm.tasktype==2){
                     html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==4&&itm.taskstatus!="1"){
@@ -274,6 +289,8 @@
                     html+='<a  class="font-blue" href="paper?m=genderZiZhuPaper&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==6&&itm.taskstatus!="1"){
                     html+='<a  class="font-blue" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
+                }else if(itm.tasktype==10&&itm.taskstatus!="1"){
+                    html+='<a  class="font-blue" href="#" style="color: blue;">'+itm.taskobjname+'</a>';
                 }
                 if(typeof itm.iscomplete!='undefined'&&itm.iscomplete>0)
                     html+='&nbsp;&nbsp;&nbsp;<img src="css/images/an06_131126.png" width="49" height="21" align="absmiddle">';
@@ -281,7 +298,7 @@
                 html+='</div>';
                 html+='<div class="text" id="div_task_'+itm.taskid+'" style="display:none;">';
                 html+='        <p class="f_right"><a href="javascript:void(0);" onclick="showModel(\'div_suggest_'+itm.taskid+'\')" class="font-darkblue">提建议</a></p>';
-                if(itm.tasktype!=6)
+                if(itm.tasktype<6)
                     html+='        <p><strong>完成标准：</strong><span class="font-black">'+criteria+'</span></p>';
                 html+='        <p><strong>任务描述：</strong><span class="width">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
                 if(itm.taskstatus=="1")

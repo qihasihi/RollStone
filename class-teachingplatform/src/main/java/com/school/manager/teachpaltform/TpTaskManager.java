@@ -2,6 +2,9 @@
 package  com.school.manager.teachpaltform;
 
 import java.util.List;
+import java.util.UUID;
+
+import com.school.util.UtilTool;
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +90,7 @@ public class  TpTaskManager extends BaseManager<TpTaskInfo> implements ITpTaskMa
 	@Override
 	public String getNextId() {
 		// TODO Auto-generated method stub
-		return null;
+		return UUID.randomUUID().toString();
 	}
 
     public List<TpTaskInfo> getTaskReleaseList(TpTaskInfo t, PageResult presult) {

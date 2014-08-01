@@ -21,6 +21,7 @@
                 questype=3
             //任务类型
             changeTaskType("${param.tasktype}","${param.taskvalueid}");
+
             $("#time_rdo0").attr("checked",true);
 
 
@@ -86,6 +87,8 @@
                 queryPaper(courseid,'tr_task_obj',5,taskvalueid);
             }else if(tasktype=="6"){
                 queryMicView(courseid,'tr_task_obj',6,taskvalueid)
+            }else if(tasktype=="10"){
+                queryLiveLession(courseid,'tr_task_obj',10,taskvalueid)
             }
             //加载完成标准
             initTaskCriteria(tasktype);

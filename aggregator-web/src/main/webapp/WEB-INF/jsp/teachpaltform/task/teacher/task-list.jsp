@@ -119,6 +119,22 @@ function getInvestReturnMethod(rps){
                     criteria="";
                     type="微课程学习&nbsp;&nbsp;&nbsp;";
                     break;
+                case 7:
+                    criteria="";
+                    type="语&nbsp;&nbsp;&nbsp;&nbsp;音&nbsp;&nbsp;&nbsp;&nbsp;";
+                    break;
+                case 8:
+                    criteria="";
+                    type="图&nbsp;&nbsp;&nbsp;&nbsp;片&nbsp;&nbsp;&nbsp;&nbsp;";
+                    break;
+                case 9:
+                    criteria="";
+                    type="文&nbsp;&nbsp;&nbsp;&nbsp;字&nbsp;&nbsp;&nbsp;&nbsp;";
+                    break;
+                case 10:
+                    criteria="";
+                    type="直播课&nbsp;&nbsp;&nbsp;&nbsp;";
+                    break;
             }
             if(typeof itm.taskobjname!='undefined')
                 taskObj=itm.taskobjname;//taskObj=replaceAll(replaceAll(itm.taskobjname.toLowerCase(),"<p>",""),"</p>","");
@@ -129,10 +145,12 @@ function getInvestReturnMethod(rps){
             html+='<div class="title">';
             html+='<p class="f_right">';
 
-            if(itm.taskstatus!="1"){
+            if(itm.taskstatus!="1"&&!(itm.tasktype>6&&itm.tasktype<10)){
                 var qtype=itm.questiontype;
                 if(itm.tasktype==4||itm.tasktype==5||itm.tasktype==6)
                     qtype=-1;
+                else if(itm.tasktype==10)
+                    qtype=-2;
                 html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b></a>';
             }else
                 html+='<span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b>';
@@ -150,11 +168,8 @@ function getInvestReturnMethod(rps){
                 if(typeof itm.remotetype!='undefined'){
                     var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
                     html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
-                }else{
-                    if( itm.resourcetype==1||typeof itm.resourcetype=='undefined'){
-                        html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+taskObj+'</a>';
-                    }
-                }
+                }else
+                    html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==2){
                 html+='<a href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==4){
@@ -163,13 +178,15 @@ function getInvestReturnMethod(rps){
                 html+='<a href="#" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==6){
                 html+='<a class="font-blue" href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >'+taskObj+'</a>';
+            }else if(itm.tasktype==10){
+                html+='<a class="font-blue" href="#" >'+taskObj+'</a>';
             }
             html+='</p>';
             html+='</div>';
             html+='<div id="div_task_'+itm.taskid+'" style="display:none;"  class="text">';
             html+='<p class="f_right"><a href="task?m=toTaskSuggestList&courseid='+courseid+'&taskid='+itm.taskid+'" target="_blank" class="font-darkblue">学生建议</a></p>';
             html+='<p class="time" id="p_obj_'+itm.taskid+'"></p>';//<strong>任务对象：</strong>
-            if(itm.tasktype!=6)
+            if(itm.tasktype<6)
                 html+='<p><strong>完成标准：</strong> '+criteria+'</p>';
             html+='<p><strong>任务描述：</strong><span  style="color:#000000;">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';//class="width"
             html+='<table border="0" cellspacing="0" cellpadding="0" class="black">';
@@ -347,6 +364,22 @@ function getBankInvestReturnMethod(rps){
                     criteria="";
                     type="微课程学习";
                     break;
+                case 7:
+                    criteria="";
+                    type="语音";
+                    break;
+                case 8:
+                    criteria="";
+                    type="图片";
+                    break;
+                case 9:
+                    criteria="";
+                    type="文字";
+                    break;
+                case 10:
+                    criteria="";
+                    type="直播课";
+                    break;
             }
             if((typeof itm.cloudstatus!='undefined') && (itm.cloudstatus==3||itm.cloudstatus==4) ){
                 status='参考';
@@ -359,7 +392,15 @@ function getBankInvestReturnMethod(rps){
             html+='<td>'+status+'</td>';
             html+='<td><p>';
             if(itm.tasktype==1){
-                html+='<a target="_blank" href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >';
+                if(typeof itm.remotetype!='undefined'){
+                    var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
+                    html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" >'+itm.resourcename;
+                }else{
+                    if( itm.resourcetype==1||typeof itm.resourcetype=='undefined'){
+                        html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >';
+                    }
+                }
+                //html+='<a target="_blank" href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >';
             }else if(itm.tasktype==2){
                 html+='<a target="_blank" href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'">';
             }else if(itm.tasktype==3){
@@ -370,6 +411,8 @@ function getBankInvestReturnMethod(rps){
                 html+='<a href="#" >';
             }else if(itm.tasktype==6){
                 html+='<a href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'" >';
+            }else if(itm.tasktype==10){
+                html+='<a href="#" >';
             }
             if(typeof itm.taskobjname!='undefined')
                 html+=replaceAll(itm.taskobjname.toLowerCase(),'<span name="fillbank"></span>',"_______")+'</a></p>';
