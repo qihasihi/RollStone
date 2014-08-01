@@ -48,6 +48,7 @@ import java.util.*;
  */
 public class UpdateCourse extends TimerTask{
 
+
     private static final String _xmlDataFolder="xmlData";
     private ServletContext request;
     public UpdateCourse(ServletContext application){
@@ -392,6 +393,9 @@ public class UpdateCourse extends TimerTask{
                              if(quesList!=null&&quesList.size()>0){
                                  for(QuestionInfo ques:quesList){
                                      if(ques==null)continue;
+                                     if(ques.getQuestionid().intValue()==493355){
+                                         System.out.println("493355");
+                                     }
                                      //得到问题的SQL语句
                                      sqlbuilder=new StringBuilder();
                                      objList=questionManager.getSynchroSql(ques,sqlbuilder);
@@ -407,40 +411,41 @@ public class UpdateCourse extends TimerTask{
 
                                      //得到问题答案的SQL语句
                                      List<QuestionOption> quesOptsList=UpdateCourseUtil.getQuestionOptsByXml(tmp.getPath(),ctmp.getCourseid(),ques.getQuestionid());
-                                     if(quesOptsList==null||quesOptsList.size()<1)continue;
-                                    //先删除,再添加
-                                     sqlbuilder=new StringBuilder();
-                                     QuestionOption delObj=new QuestionOption();
-                                     delObj.setQuestionid(ques.getQuestionid());
-                                     objList=questionOptionManager.getDeleteSql(delObj,sqlbuilder);
-                                     if(sqlbuilder!=null){
-                                         objArrayList.add(objList);
-                                         sqlArrayList.add(sqlbuilder.toString());
-                                     }
-                                     for(QuestionOption option:quesOptsList){
-                                         //得到问题答案的SQL语句
+                                     if(quesOptsList!=null&&quesOptsList.size()>0){
+                                        //先删除,再添加
                                          sqlbuilder=new StringBuilder();
-                                         objList=questionOptionManager.getSynchroSql(option,sqlbuilder);
+                                         QuestionOption delObj=new QuestionOption();
+                                         delObj.setQuestionid(ques.getQuestionid());
+                                         objList=questionOptionManager.getDeleteSql(delObj,sqlbuilder);
                                          if(sqlbuilder!=null){
                                              objArrayList.add(objList);
                                              sqlArrayList.add(sqlbuilder.toString());
                                          }
-
-                                         //每条记录执行执行添加
-                                         if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()&&sqlArrayList.size()==50){
-                                             istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
-                                             if(!istrue){
-                                                 System.out.println("更新专题失败!记录日志");
-                                                 break;
+                                         for(QuestionOption option:quesOptsList){
+                                             //得到问题答案的SQL语句
+                                             sqlbuilder=new StringBuilder();
+                                             objList=questionOptionManager.getSynchroSql(option,sqlbuilder);
+                                             if(sqlbuilder!=null){
+                                                 objArrayList.add(objList);
+                                                 sqlArrayList.add(sqlbuilder.toString());
                                              }
-                                             sqlArrayList=new ArrayList<String>();
-                                             objArrayList=new ArrayList<List<Object>>();
-                                         }
 
-                                         topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(option.getRef().toString());
-                                         if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,option.getRef().toString(),key,2,topath,null,null)){
-                                             //文件失败
-                                             System.out.println("问题选项附件文件下载失败!");//istrue=false;break;
+                                             //每条记录执行执行添加
+                                             if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()&&sqlArrayList.size()==50){
+                                                 istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
+                                                 if(!istrue){
+                                                     System.out.println("更新专题失败!记录日志");
+                                                     break;
+                                                 }
+                                                 sqlArrayList=new ArrayList<String>();
+                                                 objArrayList=new ArrayList<List<Object>>();
+                                             }
+
+                                             topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(option.getRef().toString());
+                                             if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,option.getRef().toString(),key,2,topath,null,null)){
+                                                 //文件失败
+                                                 System.out.println("问题选项附件文件下载失败!");//istrue=false;break;
+                                             }
                                          }
                                      }
                                      //每条记录执行执行添加
@@ -809,7 +814,8 @@ public class UpdateCourse extends TimerTask{
  * 更新专题接口工具类
  */
 class UpdateCourseUtil{
-
+    private static List _list=null;
+    private static String _path=null;
     /**
      * 从服务器得到相关附件，资源地址，然后下载到指定目录下
      * @param locapath
@@ -921,11 +927,14 @@ class UpdateCourseUtil{
                                                            Long schoolCourseId,Long resid,Integer difftype) {
         // TODO Auto-generated method stub
         if(xmlFullName==null||schoolCourseId==null) return null;
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
         List<ResourceInfo> returnList=new ArrayList<ResourceInfo>();
         //循环得到相关实体
-        for (Object mapObj : list) {
+        for (Object mapObj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)mapObj;
             //相关ID,不能为空
             if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
@@ -988,10 +997,10 @@ class UpdateCourseUtil{
                                 if(map.containsKey("SourceType")&&map.get("SourceType")!=null&&!map.get("SourceType").toString().trim().toUpperCase().equals("NULL")){
                                     res.setSourceType(Integer.parseInt(map.get("SourceType").toString()));
                                 }
-                                if(map.containsKey("Difftype")&&map.get("Difftype")!=null&&!map.get("Difftype").toString().trim().toUpperCase().equals("NULL")){
+                                if(map.containsKey("努力来")&&map.get("Difftype")!=null&&!map.get("Difftype").toString().trim().toUpperCase().equals("NULL")){
                                     res.setDifftype(Integer.parseInt(map.get("Difftype").toString()));
                                 }
-                                if(difftype!=null&&res.getDifftype().intValue()!=difftype.intValue())
+                                if(difftype!=null&&res.getDifftype()!=null&&res.getDifftype().intValue()!=difftype.intValue())
                                     continue;
                                 if(map.containsKey("Type")&&map.get("Type")!=null&&!map.get("Type").toString().trim().toUpperCase().equals("NULL")){
                                     //类型( -1:删除 -2:恶意   1:待审核   2:共享3:标准  )
@@ -1042,11 +1051,14 @@ class UpdateCourseUtil{
      */
     public static List<TpCourseResource> getTpCourseResourceByXml(String xmlFullName,Long courseid){
         if(xmlFullName==null||courseid==null) return null;
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
         List<TpCourseResource> returnList=new ArrayList<TpCourseResource>();
         //循环得到相关实体
-        for (Object mapObj : list) {
+        for (Object mapObj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)mapObj;
             //相关ID,不能为空
             if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
@@ -1096,12 +1108,15 @@ class UpdateCourseUtil{
      */
     public static List<TpCourseTeachingMaterial> getTpCourseTchMateriaByXml(String xmlFullName,Long courseid){
         if(xmlFullName==null||courseid==null) return null;
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
         List<TpCourseTeachingMaterial> returnList=new ArrayList<TpCourseTeachingMaterial>();
 
         //循环得到相关实体
-        for (Object mapObj : list) {
+        for (Object mapObj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)mapObj;
             //相关ID,不能为空
             if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
@@ -1141,11 +1156,14 @@ class UpdateCourseUtil{
      */
     public static List<TpTaskInfo> getTpTaskByXml(String xmlFullName,Long courseid){
         if(xmlFullName==null||courseid==null) return null;
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
         List<TpTaskInfo> returnList=new ArrayList<TpTaskInfo>();
         //循环得到相关实体
-        for (Object mapObj : list) {
+        for (Object mapObj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)mapObj;
             //相关ID,不能为空
             if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
@@ -1226,11 +1244,14 @@ class UpdateCourseUtil{
      */
     public static List<QuestionInfo> getLittleViewQuesByXml(String xmlFullName,Long courseid,Long resourceid){
         if(xmlFullName==null||courseid==null) return null;
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
         List<QuestionInfo> returnList=new ArrayList<QuestionInfo>();	//返回的集合
         //循环得到相关实体
-        for (Object mapObj : list) {
+        for (Object mapObj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)mapObj;
             //相关ID,不能为空
             if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
@@ -1365,11 +1386,14 @@ class UpdateCourseUtil{
      */
     public static List<QuestionInfo> getQuestionByXml(String xmlFullName,Long courseid){
         if(xmlFullName==null||courseid==null) return null;
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
         List<QuestionInfo> returnList=new ArrayList<QuestionInfo>();	//返回的集合
         //循环得到相关实体
-        for (Object mapObj : list) {
+        for (Object mapObj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)mapObj;
             //相关ID,不能为空
             if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
@@ -1498,11 +1522,14 @@ class UpdateCourseUtil{
      */
     public static List<Map<String,Object>> getQuesPaperTypeByXml(String xmlFullName,Long courseid){
         if(xmlFullName==null||courseid==null) return null;
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
         List<Map<String,Object>> returnList=new ArrayList<Map<String,Object>>();	//返回的集合
         //循环得到相关实体
-        for (Object mapObj : list) {
+        for (Object mapObj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)mapObj;
             //相关ID,不能为空
             if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
@@ -1526,13 +1553,15 @@ class UpdateCourseUtil{
      * @param xmlpath 分解析的XML完整路径
      */
     public static List<TpCourseInfo> getTpCourseByXml(String xmlpath){
-        //得到要解析后的实体  (不加载子项)
-        List list=OperateXMLUtil.findXml(xmlpath, "//table //row", false);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlpath.equals(_path)||_list==null){
+            _path=xmlpath;
+            _list=OperateXMLUtil.findXml(xmlpath, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
 
         List<TpCourseInfo> returnList=new ArrayList<TpCourseInfo>();
         //循环得到相关实体
-        for (Object mapObj : list) {
+        for (Object mapObj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)mapObj;
             //建立实体
             Object obj=null;
@@ -1676,11 +1705,14 @@ class UpdateCourseUtil{
      */
     public static List<TpTopicThemeInfo> getTpTopicThemeByXml(
             String xmlFullName, Long schoolCourseId, Long schoolTopicId) {
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
 
         List<TpTopicThemeInfo> returnList=new ArrayList<TpTopicThemeInfo>();
-        for (Object obj : list) {
+        for (Object obj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)obj;
             if(courseMap.containsKey("CourseId")&&courseMap.containsKey("TpTopicThemeInfoList")){
                 if(courseMap.get("CourseId")!=null
@@ -1770,9 +1802,12 @@ class UpdateCourseUtil{
         List<TpTopicInfo> topicList=new ArrayList<TpTopicInfo>();
 
         //得到要解析后的实体  (不加载子项)
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
-        for (Object obj : list) {
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
+        for (Object obj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)obj;
             if(courseMap.containsKey("CourseId")&&courseMap.containsKey("TpTopicInfoList")){
                 if(courseMap.get("CourseId")!=null
@@ -1855,11 +1890,13 @@ class UpdateCourseUtil{
      */
     public static List getEttQuesTeamRelaByXml(String xmlFullName,Long courseId,Long teamid) {
         List<QuesTeamRela> qtrList=new ArrayList<QuesTeamRela>();
-
         //得到要解析后的实体  (不加载子项)
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
-        for (Object obj : list) {
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
+        for (Object obj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)obj;
             if(courseMap.containsKey("CourseId")&&courseMap.containsKey("QuesTeamRelaList")){
                 if(courseMap.get("CourseId")!=null
@@ -1905,11 +1942,14 @@ class UpdateCourseUtil{
     public static List<QuestionOption> getQuestionOptsByXml(String xmlFullName,Long courseId,Long schQuestionid) {
         if(xmlFullName==null||courseId==null)return null;
         //得到要解析后的实体  (不加载子项)
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
         List<QuestionOption> returnList=new ArrayList<QuestionOption>();	//返回的集合
         //循环得到相关实体
-        for (Object mapObj : list) {
+        for (Object mapObj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)mapObj;
             //相关ID,不能为空
             if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
@@ -1975,11 +2015,14 @@ class UpdateCourseUtil{
     public static List<TpCourseQuestion> getCourseQuesByXml(String xmlFullName,Long courseId){
         if(xmlFullName==null||courseId==null)return null;
         //得到要解析后的实体  (不加载子项)
-        List list=OperateXMLUtil.findXml(xmlFullName,"//table //row",true);
-        if(list==null||list.size()<1)return null;
+        if(_path==null||!xmlFullName.equals(_path)||_list==null){
+            _path=xmlFullName;
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+        }
+        if(_list==null||_list.size()<1)return null;
         List<TpCourseQuestion> returnList=new ArrayList<TpCourseQuestion>();	//返回的集合
         //循环得到相关实体
-        for (Object mapObj : list) {
+        for (Object mapObj : _list) {
             Map<String,Object> courseMap=(Map<String,Object>)mapObj;
             //相关ID,不能为空
             if(courseMap.containsKey("CourseId")&&courseMap.get("CourseId")!=null
