@@ -1,5 +1,7 @@
 package com.school.im1_1.control._interface;
 
+import com.etiantian.unite.utils.CodecUtil;
+import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
 import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.entity.teachpaltform.TpTaskAllotInfo;
@@ -33,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created by yuechunyang on 14-7-25.
  */
 @Controller
-@RequestMapping(value="/imapi")
+@RequestMapping(value="/imapi1_1")
 public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private ImInterfaceManager imInterfaceManager;
     private ITpCourseManager tpCourseManager;
@@ -53,19 +55,23 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=getStudyModule",method= RequestMethod.GET)
+    @RequestMapping(params="m=StudyModule",method= RequestMethod.GET)
     public void getStudyModule(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
-        String userid = request.getParameter("userid");
-        String usertype=request.getParameter("usertype");
-        String schoolid = request.getParameter("schoolid");
-//        String timestamp = request.getParameter("timestamp");
-//        String checkcode = request.getParameter("checkcode");
-//        String md5key = userid+usertype+schoolid+timestamp;
-//        String md5code = MD5_NEW.getMD5ResultImCode(md5key);
-//        if(!checkcode.trim().equals(md5code)){
-//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-//            return;
-//        }
+        String userid = request.getParameter("jid");
+        String usertype=request.getParameter("userType");
+        String schoolid = request.getParameter("schoolId");
+        String timestamp = request.getParameter("timeStamp");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("jid",userid);
+        map.put("userType",usertype);
+        map.put("schoolId",schoolid);
+        map.put("timeStamp",timestamp);
+        Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setUserid(Integer.parseInt(userid));
@@ -94,19 +100,22 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=getClassTask",method= RequestMethod.GET)
+    @RequestMapping(params="m=ClassTask",method= RequestMethod.GET)
     public void getClassTask(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
-        String classid = request.getParameter("classid");
-        String schoolid = request.getParameter("schoolid");
-//        String timestamp = request.getParameter("timestamp");
-//        String checkcode = request.getParameter("checkcode");
-//        String md5key = classid+schoolid+timestamp;
-//        String md5code = MD5_NEW.getMD5ResultImCode(md5key);
-//        if(!checkcode.trim().equals(md5code)){
-//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-//            return;
-//        }
+        String classid = request.getParameter("classId");
+        String schoolid = request.getParameter("schoolId");
+        String timestamp = request.getParameter("timeStamp");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("classId",classid);
+        map.put("schoolId",schoolid);
+        map.put("timeStamp",timestamp);
+        Boolean b = UrlSigUtil.verifySigSimple("ClassTask",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
@@ -136,21 +145,26 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=getClassCalendar",method= RequestMethod.GET)
+    @RequestMapping(params="m=ClassCalendar",method= RequestMethod.GET)
     public void getClassCalendar(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
-        String userid = request.getParameter("userid");
-        String usertype=request.getParameter("usertype");
-        String classid = request.getParameter("classid");
-        String schoolid = request.getParameter("schoolid");
-//        String timestamp = request.getParameter("timestamp");
-//        String checkcode = request.getParameter("checkcode");
-//        String md5key = classid+schoolid+timestamp;
-//        String md5code = MD5_NEW.getMD5ResultImCode(md5key);
-//        if(!checkcode.trim().equals(md5code)){
-//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-//            return;
-//        }
+        String userid = request.getParameter("jid");
+        String usertype=request.getParameter("userType");
+        String classid = request.getParameter("classId");
+        String schoolid = request.getParameter("schoolId");
+        String timestamp = request.getParameter("timeStamp");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("jid",userid);
+        map.put("userType",usertype);
+        map.put("classId",classid);
+        map.put("schoolId",schoolid);
+        map.put("timeStamp",timestamp);
+        Boolean b = UrlSigUtil.verifySigSimple("ClassCalendar",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
@@ -183,9 +197,23 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=addTask",method= {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(params="m=AddTask",method= {RequestMethod.POST,RequestMethod.GET})
     public void addTask(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         String dataStr = request.getParameter("data");
+        String userid = request.getParameter("jid");
+        String schoolid = request.getParameter("schoolId");
+        String timestamp = request.getParameter("timeStamp");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("data",dataStr);
+        map.put("jid",userid);
+        map.put("schoolId",schoolid);
+        map.put("timeStamp",timestamp);
+        Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
         JSONObject jb=JSONObject.fromObject(dataStr);
         //拆分json字符串，得到各个参数
         String courseid=jb.containsKey("courseid")?jb.getString("courseid"):"";
@@ -267,16 +295,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 objListArray.add(objList);
             }
         }
-        Map map = new HashMap();
-        Boolean b = this.imInterfaceManager.doExcetueArrayProc(sqlListArray,objListArray);
-        if(b){
-            map.put("result","success");
-            map.put("message","添加成功");
+        Map m = new HashMap();
+        Boolean bl = this.imInterfaceManager.doExcetueArrayProc(sqlListArray,objListArray);
+        if(bl){
+            m.put("result","success");
+            m.put("message","添加成功");
         }else{
-            map.put("result","error");
-            map.put("message","添加失败");
+            m.put("result","error");
+            m.put("message","添加失败");
         }
-        JSONObject jbStr=JSONObject.fromObject(map);
+        JSONObject jbStr=JSONObject.fromObject(m);
         response.getWriter().print(jbStr.toString());
     }
 
