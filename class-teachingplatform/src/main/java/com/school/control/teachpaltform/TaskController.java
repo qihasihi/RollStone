@@ -515,6 +515,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
         PageResult p=this.getPageResultParameter(request);
         p.setOrderBy("u.cloud_status desc,u.c_time desc");
+        if(p.getPageNo()==0)
+            p.setPageNo(1);
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
         //查询没被我删除的任务
