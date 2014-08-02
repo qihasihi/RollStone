@@ -105,7 +105,4 @@ public class ClassEthosManager extends BaseManager<ClassEthosInfo> implements
 		// TODO Auto-generated method stub
 		return this.classethosdao.getEthosForClass(termid, grade, weekid, classid);
 	}
-
-	
-
 }

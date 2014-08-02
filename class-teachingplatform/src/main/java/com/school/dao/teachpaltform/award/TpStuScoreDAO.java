@@ -1,8 +1,8 @@
 package com.school.dao.teachpaltform.award;
 
 import com.school.dao.base.CommonDAO;
-import com.school.dao.inter.teachpaltform.award.ITpClassPerformanceAwardDAO;
-import com.school.entity.teachpaltform.award.TpClassPerformanceAwardInfo;
+import com.school.dao.inter.teachpaltform.award.ITpStuScoreDAO;
+import com.school.entity.teachpaltform.award.TpStuScore;
 import com.school.util.PageResult;
 import org.springframework.stereotype.Component;
 
@@ -13,9 +13,9 @@ import java.util.List;
  * Created by zhengzhou on 14-6-24.
  */
 @Component
-public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwardInfo> implements ITpClassPerformanceAwardDAO {
+public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreDAO {
     @Override
-    public Boolean doSave(TpClassPerformanceAwardInfo obj) {
+    public Boolean doSave(TpStuScore obj) {
         if(obj==null)
             return false;
         StringBuilder sqlbuilder=new StringBuilder();
@@ -26,7 +26,7 @@ public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwar
     }
 
     @Override
-    public Boolean doUpdate(TpClassPerformanceAwardInfo obj) {
+    public Boolean doUpdate(TpStuScore obj) {
         if(obj==null)
             return false;
         StringBuilder sqlbuilder=new StringBuilder();
@@ -37,7 +37,7 @@ public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwar
     }
 
     @Override
-    public Boolean doDelete(TpClassPerformanceAwardInfo obj) {
+    public Boolean doDelete(TpStuScore obj) {
         if(obj==null)
             return false;
         StringBuilder sqlbuilder=new StringBuilder();
@@ -48,12 +48,12 @@ public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwar
     }
 
     @Override
-    public List<TpClassPerformanceAwardInfo> getList(TpClassPerformanceAwardInfo obj, PageResult presult) {
+    public List<TpStuScore> getList(TpStuScore obj, PageResult presult) {
         return null;
     }
 
     @Override
-    public List<Object> getSaveSql(TpClassPerformanceAwardInfo obj, StringBuilder sqlbuilder) {
+    public List<Object> getSaveSql(TpStuScore obj, StringBuilder sqlbuilder) {
         if(obj==null||sqlbuilder==null)
             return null;
         List<Object> rturnVal=new ArrayList<Object>();
@@ -83,7 +83,7 @@ public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwar
     }
 
     @Override
-    public List<Object> getUpdateSql(TpClassPerformanceAwardInfo obj, StringBuilder sqlbuilder) {
+    public List<Object> getUpdateSql(TpStuScore obj, StringBuilder sqlbuilder) {
         if(obj==null||sqlbuilder==null)
             return null;
         List<Object> returnVal=new ArrayList<Object>();
@@ -122,7 +122,7 @@ public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwar
      * @param obj
      * @return
      */
-    public boolean AddOrUpdate(final TpClassPerformanceAwardInfo obj){
+    public boolean AddOrUpdate(final TpStuScore obj){
 
         List<Object> returnVal=new ArrayList<Object>();
         StringBuilder sqlbuilder=new StringBuilder();
@@ -153,7 +153,7 @@ public class TpClassPerformanceAwardDAO extends CommonDAO<TpClassPerformanceAwar
     }
 
     @Override
-    public List<Object> getDeleteSql(TpClassPerformanceAwardInfo obj, StringBuilder sqlbuilder) {
+    public List<Object> getDeleteSql(TpStuScore obj, StringBuilder sqlbuilder) {
         return null;
     }
 }

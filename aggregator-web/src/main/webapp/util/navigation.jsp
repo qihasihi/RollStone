@@ -9,6 +9,7 @@
 <%@page import="com.school.util.DESPlus"%>
 <%@page import="com.school.manager.inter.IColumnManager"%>
 <%@page import="com.school.manager.ColumnManager"%>
+<%@ page import="com.school.util.MD5_NEW" %>
 <%
     //得到Spring配置信息
     ApplicationContext ac = WebApplicationContextUtils
@@ -158,10 +159,10 @@
     if(ettColumnInfos1!=null&&ettColumnInfos1.size()>0){
         for (EttColumnInfo ectmp1:ettColumnInfos1){
             if(ectmp1!=null){
-                if(ectmp1.getStatus()==0){
-                    writeHtml.append("<li><a target='_blank' href='"+ectmp1.getEttcolumnurl()+"'><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
-                }else
-                    writeHtml.append("<li><a  href=\"javascript:alert('权限不足!');\"><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
+//                if(ectmp1.getStatus()==0){
+                    writeHtml.append("<li><a target='_blank' href='"+ectmp1.getEttcolumnurl()+"&isVip="+ectmp1.getStatus()+"'><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
+//                }else
+//                    writeHtml.append("<li><a  href=\"javascript:alert('权限不足!');\"><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
             }
         }
     }

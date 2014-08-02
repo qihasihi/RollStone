@@ -1,23 +1,21 @@
 package com.school.control.teachpaltform.award;
 
 import com.school.control.base.BaseController;
-import com.school.entity.teachpaltform.TpCourseClass;
 import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.entity.teachpaltform.TpGroupStudent;
-import com.school.entity.teachpaltform.award.TpClassPerformanceAwardInfo;
-import com.school.entity.teachpaltform.award.TpClsPerformanceInfo;
+import com.school.entity.teachpaltform.award.TpGroupScore;
+import com.school.entity.teachpaltform.award.TpStuScore;
 import com.school.manager.inter.teachpaltform.ITpCourseClassManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
 import com.school.manager.inter.teachpaltform.ITpGroupStudentManager;
-import com.school.manager.inter.teachpaltform.award.ITpClassPerformanceAwardManager;
-import com.school.manager.inter.teachpaltform.award.ITpClsPerformanceManager;
+import com.school.manager.inter.teachpaltform.award.ITpGroupScoreManager;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreManager;
 import com.school.manager.teachpaltform.TpCourseClassManager;
 import com.school.manager.teachpaltform.TpCourseManager;
 import com.school.manager.teachpaltform.TpGroupStudentManager;
-import com.school.manager.teachpaltform.award.TpClassPerformanceAwardManager;
-import com.school.manager.teachpaltform.award.TpClsPerformanceManager;
+import com.school.manager.teachpaltform.award.TpStuScoreManager;
+import com.school.manager.teachpaltform.award.TpGroupScoreManager;
 import com.school.util.JsonEntity;
-import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -36,17 +34,17 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value="/clsperformance")
-public class TpClsPerformanceController  extends BaseController<TpClsPerformanceInfo>{
+public class TpGroupScoreController extends BaseController<TpGroupScore>{
 
     private ITpCourseManager courseManager;
-    private ITpClsPerformanceManager tpClsPerformanceManager;
-    private ITpClassPerformanceAwardManager tpClsPerformanceAwardManager;
+    private ITpGroupScoreManager tpClsPerformanceManager;
+    private ITpStuScoreManager tpClsPerformanceAwardManager;
     private ITpCourseClassManager tpCourseClassManager;
     private ITpGroupStudentManager tpGroupStudentManager;
-    public TpClsPerformanceController(){
-        this.tpClsPerformanceManager=this.getManager(TpClsPerformanceManager.class);
+    public TpGroupScoreController(){
+        this.tpClsPerformanceManager=this.getManager(TpGroupScoreManager.class);
         this.courseManager=this.getManager(TpCourseManager.class);
-        this.tpClsPerformanceAwardManager=this.getManager(TpClassPerformanceAwardManager.class);
+        this.tpClsPerformanceAwardManager=this.getManager(TpStuScoreManager.class);
         this.tpCourseClassManager=this.getManager(TpCourseClassManager.class);
         this.tpGroupStudentManager=this.getManager(TpGroupStudentManager.class);
     }
@@ -132,7 +130,7 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
     @RequestMapping(params="m=doAddOrUpdate",method = RequestMethod.POST)
     public void doAddOrUpdate(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity jsonEntity=new JsonEntity();
-        TpClsPerformanceInfo entity=this.getParameter(request,TpClsPerformanceInfo.class);
+        TpGroupScore entity=this.getParameter(request,TpGroupScore.class);
         if(entity.getUserid()==null||entity.getCourseid()==null||entity.getGroupid()==null||entity.getSubjectid()==null){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return;
@@ -162,7 +160,7 @@ public class TpClsPerformanceController  extends BaseController<TpClsPerformance
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return;
         }
-        TpClassPerformanceAwardInfo entity=new TpClassPerformanceAwardInfo();
+        TpStuScore entity=new TpStuScore();
         entity.setAwardnumber(Integer.parseInt(awardnumber.trim()));
         entity.setCourseid(Long.parseLong(courseid.trim()));
         entity.setGroupid(Long.parseLong(groupid.trim()));

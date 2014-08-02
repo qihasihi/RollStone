@@ -60,7 +60,6 @@ public class UserController extends BaseController<UserInfo> {
     private IActivityManager activityManager;
     private IMyInfoUserManager myInfoUserManager;
     private IInitWizardManager initWizardManager;
-
     public UserController(){
         userManager=this.getManager(UserManager.class);
         this.classYearManager=this.getManager(ClassYearManager.class);
@@ -1112,7 +1111,7 @@ public class UserController extends BaseController<UserInfo> {
                     ec.setRoletype(1);
                 request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
             }
-            request.getSession().setAttribute("fromType","szchool");  //lzx
+            request.getSession().setAttribute("fromType","lzx");  //szchool
 //                    System.out.println("loginUser:"+(UserInfo) request.getSession().getAttribute("CURRENT_USER"));
 					if (remember) {
 						Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef());
@@ -4208,6 +4207,7 @@ public class UserController extends BaseController<UserInfo> {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
 
+
         // 获得用户信息
         UserInfo u = this.logined(request);
         if (u == null) {
@@ -4667,9 +4667,10 @@ public class UserController extends BaseController<UserInfo> {
         //功能ID
         String mid=request.getParameter("mid");
         String modelName=request.getParameter("modelName");
-        if(isEttNoRegSchool()&&mid==null&&modelName==null){ //如果是免费版本，则进入该系统
-            response.sendRedirect("user?m=mfToEttUrl");return;
-        }
+//        if(isEttNoRegSchool()&&mid==null&&modelName==null){ //如果是免费版本，则进入该系统
+//            response.sendRedirect("user?m=mfToEttUrl");return;
+//        }
+
 
         // 获得用户信息
         UserInfo u = request.getAttribute("tmpUser")==null?this.logined(request):(UserInfo)request.getAttribute("tmpUser");
@@ -4725,7 +4726,13 @@ public class UserController extends BaseController<UserInfo> {
         // 判断是否为教师
         // usertype
         //boolean isteacher = this.getRolemanager().isTeacher(u.getUserId());
-        boolean  isteacher=this.validateRole(request, UtilTool._ROLE_TEACHER_ID);
+        boolean isteacher=this.validateRole(request, UtilTool._ROLE_TEACHER_ID);
+//        if(isteacher&&Integer.parseInt(isVip)==0){
+//            response.sendRedirect(UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_FREE_URL").toString()); //教师进入ett入口
+//            return;
+//        }
+
+
         if (isteacher||!isstuflag) {
 
             // 教师显示全部年纪 2012-02-03 11:06
@@ -5039,6 +5046,17 @@ public class UserController extends BaseController<UserInfo> {
         String schoolid=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
         String schoolname=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME");
         if(isteacher){
+            //教师。
+            String isVip=request.getParameter("isVip");
+            if(isVip==null||isVip.length()<1){
+                String msg = "异常错误，没有权限相关信息。";
+                response.getWriter().print(
+                        "<script type='text/javascript'>alert('" + msg
+                                + "');this.close();</script>");
+                return;
+            }
+
+
             //得到Servertime
             String serverTtime=null;
              List<DictionaryInfo> dicList= this.dictionaryManager.getDictionaryByType("SERVER_TIME_END");
@@ -5051,6 +5069,8 @@ public class UserController extends BaseController<UserInfo> {
             paramMap.put("realname", java.net.URLEncoder.encode(realname, "UTF-8"));
             paramMap.put("usertype", usertype);
             paramMap.put("sex",sex);
+            if(isVip!=null)
+                paramMap.put("isVip",isVip);
             paramMap.put("time", time);
             if (email != null && email.trim().indexOf("@") != -1)
                 paramMap.put("email",email.trim());
@@ -5074,56 +5094,45 @@ public class UserController extends BaseController<UserInfo> {
                 paramMap.put("subjectid",subjectidStr);
             }
 
-
-
-            // 加密
-            StringBuilder md5Builder = new StringBuilder(time.toString());
-            if (gradeidList != null && gradeidList.size() > 0) {
-                StringBuilder gradeidBuilder = new StringBuilder();
-                for (Integer gl : gradeidList) {
-                    gradeidBuilder.append(gl);
-                    if (gl != gradeidList.get(gradeidList.size() - 1))
-                        gradeidBuilder.append(",");
-                }
-                if (gradeidBuilder.toString().trim().length() > 0)
-                    md5Builder.append(gradeidBuilder);
-            }
-            md5Builder.append(uid);
-            md5Builder.append(realname);
-            md5Builder.append(usertype);
-            if (subjectid != null && subjectid.size() > 0) {
-                for (Long sid : subjectid) {
-                    md5Builder.append(sid);
-                }
-            }
-            md5Builder.append(sex);
-            if (email != null) {
-                md5Builder.append(email);
-            }
-            // 为了应用性，可以测试以及兼容性，不带此参数
-            // if(usertype==3){
-            // md5Builder.append(isLearnGuide);
-            // }
-            md5Builder.append(time);
-            md5Builder.append(key);
-
-            String md5Str = MD5_NEW.getMD5Result(md5Builder.toString());
-
            // http_1.append("&s=" + md5Str); // i
 
 
             paramMap.put("serverendtime",servertime);
-            paramMap.put("s",UserTool.zuzhiTeacherSParameter(uid.toString(),gradeidList,realname,usertype.toString(),sex+"",email,schoolid,servertime,time.toString(),key));
+            paramMap.put("s",UserTool.zuzhiTeacherSParameter(uid.toString(),gradeidList,realname,usertype.toString(),sex+"",email,schoolid,servertime,isVip,time.toString(),key));
             if(modelName==null)
                 modelName="";
             paramMap.put("modelName",modelName);
-            requestUrl=UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_URL").toString(); //教师进入ett入口
+            requestUrl=UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_VIP_URL").toString(); //教师进入ett入口
         }else if(isstuflag){
             //组织学生参数
+
+            //就否免费   0:免 费   1:收费   只有学生才有该参数
+            String isVipJson="";
+            List<EttColumnInfo> ettColumnInfos1 =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
+            if(ettColumnInfos1!=null&& ettColumnInfos1.size()>0){
+                for (EttColumnInfo ettc:ettColumnInfos1){
+                    if(ettc!=null&&ettc.getEttcolumnurl()!=null&&
+                            ettc.getRoletype()!=null&&ettc.getRoletype()==2){
+                        String[] ecArray=ettc.getEttcolumnurl().split("mid=");
+                        if(ecArray!=null&&ecArray.length>0){
+                            if(isVipJson.trim().length()>0)
+                                isVipJson+=",";
+                            isVipJson+="\""+ecArray[ecArray.length-1]+"\":{\"isVip\":"+ettc.getStatus()+"}";
+                        }
+                    }
+                }
+            }
+            if(isVipJson.trim().length()>0){
+                isVipJson="{"+isVipJson+"}";
+            }else{
+                isVipJson=null;
+            }
 
             paramMap.put("uid",uid);
             if(mid!=null)
                 paramMap.put("mid",mid);
+            if(isVipJson!=null)
+                paramMap.put("isVip",isVipJson);
             paramMap.put("realname",  java.net.URLEncoder.encode(realname,"UTF-8"));
             paramMap.put("usertype", usertype);
             paramMap.put("sex",sex);
@@ -5142,41 +5151,8 @@ public class UserController extends BaseController<UserInfo> {
                 if (gradeidBuilder.toString().trim().length() > 0)
                     paramMap.put("gradeid", gradeidBuilder.toString());
             }
-            // 加密
-            StringBuilder md5Builder = new StringBuilder(time.toString());
-            if (gradeidList != null && gradeidList.size() > 0) {
-                StringBuilder gradeidBuilder = new StringBuilder();
-                for (Integer gl : gradeidList) {
-                    gradeidBuilder.append(gl);
-                    if (gl != gradeidList.get(gradeidList.size() - 1))
-                        gradeidBuilder.append(",");
-                }
-                if (gradeidBuilder.toString().trim().length() > 0)
-                    md5Builder.append(gradeidBuilder);
-            }
-            md5Builder.append(uid);
-            md5Builder.append(realname);
-            md5Builder.append(usertype);
-            if (subjectid != null && subjectid.size() > 0) {
-                for (Long sid : subjectid) {
-                    md5Builder.append(sid);
-                }
-            }
-            md5Builder.append(sex);
-            if (email != null) {
-                md5Builder.append(email);
-            }
-            // 为了应用性，可以测试以及兼容性，不带此参数
-            // if(usertype==3){
-            // md5Builder.append(isLearnGuide);
-            // }
-            md5Builder.append(time);
-            md5Builder.append(key);
-
-            String md5Str = MD5_NEW.getMD5Result(md5Builder.toString());
-
             //学校名称
-            paramMap.put("s",UserTool.zuzhiStudentSParameter(uid.toString(), gradeidList, realname, usertype.toString(), sex+"", email, schoolid, time.toString(), key));
+            paramMap.put("s",UserTool.zuzhiStudentSParameter(uid.toString(), gradeidList, realname, usertype.toString(), sex+"", email, schoolid,isVipJson, time.toString(), key));
                 requestUrl=UtilTool.utilproperty.getProperty("STU_TO_ETT_REQUEST_URL").toString(); //学生进入ett入口
         }
         paramMap.put("srcId",50006);//UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID").toString());
@@ -6195,7 +6171,7 @@ class UserTool{
      * @param key   组织码(一般为固定码)
      * @return  s
      */
-    public static String zuzhiStudentSParameter(String uid,List<Integer> gradeidList,String realname,String usertype,String sex,String email,String schoolid,String time,String key) throws Exception{
+    public static String zuzhiStudentSParameter(String uid,List<Integer> gradeidList,String realname,String usertype,String sex,String email,String schoolid,String isvip,String time,String key) throws Exception{
         // 加密
         StringBuilder md5Builder = new StringBuilder(time.toString());
         if (gradeidList != null && gradeidList.size() > 0) {
@@ -6222,6 +6198,8 @@ class UserTool{
         // }
         md5Builder.append(schoolid);
         md5Builder.append(time);
+        if(isvip!=null&&isvip.length()>0)
+             md5Builder.append(isvip);
         md5Builder.append(key);
 
         return MD5_NEW.getMD5Result(md5Builder.toString());
@@ -6241,7 +6219,7 @@ class UserTool{
      * @param key   组织码(一般为固定码)
      * @return  s
      */
-    public static String zuzhiTeacherSParameter(String uid,List<Integer> gradeidList,String realname,String usertype,String sex,String email,String schoolid,Long servertime,String time,String key) throws Exception{
+    public static String zuzhiTeacherSParameter(String uid,List<Integer> gradeidList,String realname,String usertype,String sex,String email,String schoolid,Long servertime,String isVip,String time,String key) throws Exception{
         // 加密
         StringBuilder md5Builder = new StringBuilder(time.toString());
         if (gradeidList != null && gradeidList.size() > 0) {
@@ -6265,6 +6243,8 @@ class UserTool{
 
         md5Builder.append(schoolid);
         md5Builder.append(servertime.toString());
+        if(isVip!=null)
+            md5Builder.append(isVip);
         md5Builder.append(time);
         md5Builder.append(key);
         return MD5_NEW.getMD5Result(md5Builder.toString());

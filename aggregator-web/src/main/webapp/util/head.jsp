@@ -7,6 +7,7 @@
 <%@page import="com.school.entity.SmsReceiver"%>
 <%@page import="com.school.dao.SmsReceiverDAO"%>
 <%@ page import="com.school.entity.EttColumnInfo" %>
+<%@ page import="com.school.util.MD5_NEW" %>
 <%
      //如果是乐知行过来，则不显示头尾
  Object fromType=session.getAttribute("fromType");
@@ -59,15 +60,12 @@
                             if(tmparray.length>1)
                                 cls=tmparray[1];
                         }
-                        if(ectmp.getStatus()==0){
                             %>
-                            <li class="<%=cls%>"><a href="<%=ectmp.getEttcolumnurl()%>" target="_blank"><%=ectmp.getEttcolumnname()%></a></li>
-                        <%}else{%>
-                           <li class="<%=cls%>"><a  href="javascript:alert('权限不足!');"><%=ectmp.getEttcolumnname()%></a></li>;
-                    <%}}
+                            <li class="<%=cls%>"><a href="<%=ectmp.getEttcolumnurl()%>&isVip=<%=ectmp.getStatus()%>" target="_blank"><%=ectmp.getEttcolumnname()%></a></li>
+                        <%}
                 }
             }
-                    }
+          }
         %>
         <%--<li class="two"><a href="" target="_blank"></a></li>--%>
         <%--<li class="one"><a href="1" target="_blank">四中公开课</a></li>--%>

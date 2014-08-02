@@ -948,6 +948,11 @@ class UpdateCourseUtil{
                                     &&!map.get("Resid").toString().trim().toUpperCase().equals("NULL")){
                                 if(resid!=null&&!map.get("Resid").toString().trim().equals(resid.toString()))continue;
                                 ResourceInfo res=new ResourceInfo();
+                                if(map.containsKey("Difftype")&&map.get("Difftype")!=null&&!map.get("Difftype").toString().trim().toUpperCase().equals("NULL")){
+                                    res.setDifftype(Integer.parseInt(map.get("Difftype").toString()));
+                                }
+                                if(difftype!=null&&res.getDifftype()!=null&&res.getDifftype().intValue()!=difftype.intValue())
+                                    continue;
                                 if(map.containsKey("Appobj")&&map.get("Appobj")!=null&&!map.get("Appobj").toString().trim().toUpperCase().equals("NULL")){
                                     res.setUseobject(map.get("Appobj").toString());
                                 }
@@ -967,12 +972,13 @@ class UpdateCourseUtil{
                                 if(map.containsKey("Resremark")&&map.get("Resremark")!=null&&!map.get("Resremark").toString().trim().toUpperCase().equals("NULL")){
                                     res.setResintroduce(map.get("Resremark").toString().replaceAll("\\\\", "\\\\\\\\"));
                                 }
-                                if(map.containsKey("Restype")&&map.get("Restype")!=null&&!map.get("Restype").toString().trim().toUpperCase().equals("NULL")){
+                                //修改 微视频学习资源，从学生版同步到资源系统中，其资源类型标签为课件。( http://192.168.10.8:8080/browse/PZYXT-171)
+                                if(res.getDifftype()!=null&&res.getDifftype().intValue()==1){
+                                    res.setRestype(3);  //3:课件  资源类型
+                                }else if(map.containsKey("Restype")&&map.get("Restype")!=null&&!map.get("Restype").toString().trim().toUpperCase().equals("NULL")){
                                     res.setRestype(Integer.parseInt(map.get("Restype").toString()));
                                 }
-                                if(map.containsKey("Filetype")&&map.get("Filetype")!=null&&!map.get("Filetype").toString().trim().toUpperCase().equals("NULL")){
-                                    res.setFiletype(Integer.parseInt(map.get("Filetype").toString()));
-                                }
+
                                 if(map.containsKey("Filesize")&&map.get("Filesize")!=null&&!map.get("Filesize").toString().trim().toUpperCase().equals("NULL")){
                                     res.setFilesize(Long.parseLong(map.get("Filesize").toString()));
                                 }
@@ -997,11 +1003,9 @@ class UpdateCourseUtil{
                                 if(map.containsKey("SourceType")&&map.get("SourceType")!=null&&!map.get("SourceType").toString().trim().toUpperCase().equals("NULL")){
                                     res.setSourceType(Integer.parseInt(map.get("SourceType").toString()));
                                 }
-                                if(map.containsKey("努力来")&&map.get("Difftype")!=null&&!map.get("Difftype").toString().trim().toUpperCase().equals("NULL")){
-                                    res.setDifftype(Integer.parseInt(map.get("Difftype").toString()));
+                                if(map.containsKey("Filetype")&&map.get("Filetype")!=null&&!map.get("Filetype").toString().trim().toUpperCase().equals("NULL")){
+                                    res.setFiletype(Integer.parseInt(map.get("Filetype").toString()));
                                 }
-                                if(difftype!=null&&res.getDifftype()!=null&&res.getDifftype().intValue()!=difftype.intValue())
-                                    continue;
                                 if(map.containsKey("Type")&&map.get("Type")!=null&&!map.get("Type").toString().trim().toUpperCase().equals("NULL")){
                                     //类型( -1:删除 -2:恶意   1:待审核   2:共享3:标准  )
                                     //资源状态：0：待审核 1:已通过 2:未通过 3：已删除

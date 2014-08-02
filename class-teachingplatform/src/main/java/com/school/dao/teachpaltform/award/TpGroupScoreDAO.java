@@ -1,8 +1,8 @@
 package com.school.dao.teachpaltform.award;
 
 import com.school.dao.base.CommonDAO;
-import com.school.dao.inter.teachpaltform.award.ITpClsPerformanceDAO;
-import com.school.entity.teachpaltform.award.TpClsPerformanceInfo;
+import com.school.dao.inter.teachpaltform.award.ITpGroupScoreDAO;
+import com.school.entity.teachpaltform.award.TpGroupScore;
 import com.school.util.PageResult;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +14,9 @@ import java.util.Map;
  * Created by zhengzhou on 14-6-24.
  */
 @Component
-public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> implements ITpClsPerformanceDAO {
+public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroupScoreDAO {
     @Override
-    public Boolean doSave(final TpClsPerformanceInfo obj) {
+    public Boolean doSave(final TpGroupScore obj) {
         if(obj==null)
             return false;
         StringBuilder sqlbuilder=new StringBuilder();
@@ -27,7 +27,7 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
     }
 
     @Override
-    public Boolean doUpdate(final TpClsPerformanceInfo obj) {
+    public Boolean doUpdate(final TpGroupScore obj) {
         if(obj==null)
             return false;
         StringBuilder sqlbuilder=new StringBuilder();
@@ -38,7 +38,7 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
     }
 
     @Override
-    public Boolean doDelete(final TpClsPerformanceInfo obj) {
+    public Boolean doDelete(final TpGroupScore obj) {
         if(obj==null)
             return false;
         StringBuilder sqlbuilder=new StringBuilder();
@@ -49,16 +49,16 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
     }
 
     @Override
-    public List<TpClsPerformanceInfo> getList(final TpClsPerformanceInfo obj, PageResult presult) {
+    public List<TpGroupScore> getList(final TpGroupScore obj, PageResult presult) {
         return null;
     }
 
     @Override
-    public List<Object> getSaveSql(final TpClsPerformanceInfo obj, StringBuilder sqlbuilder) {
+    public List<Object> getSaveSql(final TpGroupScore obj, StringBuilder sqlbuilder) {
         if(obj==null||sqlbuilder==null)
             return null;
         List<Object> objlist=new ArrayList<Object>();
-        sqlbuilder.append("{CALL tp_class_performance_info_add(");
+        sqlbuilder.append("{CALL tp_stu_score_add(");
         if(obj.getUserid()!=null){
             sqlbuilder.append("?,");
             objlist.add(obj.getUserid());
@@ -88,11 +88,11 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
     }
 
     @Override
-    public List<Object> getUpdateSql(final TpClsPerformanceInfo obj, StringBuilder sqlbuilder) {
+    public List<Object> getUpdateSql(final TpGroupScore obj, StringBuilder sqlbuilder) {
         if(obj==null||sqlbuilder==null)
             return null;
         List<Object> objlist=new ArrayList<Object>();
-        sqlbuilder.append("{CALL tp_class_performance_info_update(");
+        sqlbuilder.append("{CALL tp_stu_score_update(");
         if(obj.getRef()!=null){
             sqlbuilder.append("?,");
             objlist.add(obj.getRef());
@@ -146,7 +146,7 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
      */
     public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid){
         List<Object> objList=new ArrayList<Object>();
-        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_cls_performance_info_list(");
+        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_group_score_list(");
         if(courseid!=null){
             sqlbuilder.append("?,");
             objList.add(courseid);
@@ -177,10 +177,10 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
      * @param obj
      * @return
      */
-    public boolean AddOrUpdate(final TpClsPerformanceInfo obj){
+    public boolean AddOrUpdate(final TpGroupScore obj){
         StringBuilder sqlbuilder=new StringBuilder();
         List<Object> objlist=new ArrayList<Object>();
-        sqlbuilder.append("{CALL tp_class_performance_info_addOrupdate(");
+        sqlbuilder.append("{CALL tp_stu_score_addOrupdate(");
 
         if(obj.getUserid()!=null){
             sqlbuilder.append("?,");
@@ -222,7 +222,7 @@ public class TpClsPerformanceDAO extends CommonDAO<TpClsPerformanceInfo> impleme
     }
 
     @Override
-    public List<Object> getDeleteSql(final TpClsPerformanceInfo obj, StringBuilder sqlbuilder) {
+    public List<Object> getDeleteSql(final TpGroupScore obj, StringBuilder sqlbuilder) {
         return null;
     }
 }

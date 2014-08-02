@@ -8,7 +8,7 @@ import java.util.Date;
  * Created by zhengzhou on 14-6-24.
  */
 @Entity
-public class TpClassPerformanceAwardInfo implements Serializable {
+public class TpStuScore implements Serializable {
     private Integer ref;
     private Long groupid;
     private Integer awardnumber;

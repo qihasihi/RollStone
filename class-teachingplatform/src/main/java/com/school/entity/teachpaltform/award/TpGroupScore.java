@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Created by zhengzhou on 14-6-24.
  */
 @Entity
-public class TpClsPerformanceInfo implements  Serializable{
+public class TpGroupScore implements  Serializable{
     private Integer ref;
     private Long userid;
     private  Integer attendanceNum;
