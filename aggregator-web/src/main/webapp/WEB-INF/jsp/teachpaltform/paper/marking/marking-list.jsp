@@ -13,6 +13,7 @@
     <title>批阅试卷主页</title>
     <script type="text/javascript">
         var quesidStr = "${quesidStr}";
+        var paperid = "${param.paperid}";
         $(function(){
             var quesids = quesidStr.split(",");
             if(quesids.length>0){
@@ -45,6 +46,37 @@
                 $("#question").html(htm);
             }
         });
+        function getPercentScoreByType(type){
+            $.ajax({
+                url:"paper?m=getpercentscore",
+                type:"post",
+                data:{type:type,paperid:paperid},
+                dataType:'json',
+                cache: false,
+                error:function(){
+                    alert('系统未响应，请稍候重试!');
+                },success:function(rmsg){
+                    if(rmsg.type=="error"){
+                        alert(rmsg.msg);
+                    }else{
+                        if(type==1){
+                            if(rmsg.objList!=null&&rmsg.objList.length>0){
+                                $.each(rmsg.objList,function(idx,itm){
+                                    $("#percentScore").html(itm.htm);
+                                });
+                            }
+                        }else{
+                            if(rmsg.objList!=null&&rmsg.objList.length>0){
+                                $.each(rmsg.objList,function(idx,itm){
+                                    var htm = '';
+                                    $("#percentScore").html(itm.htm);
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </head>
 <body>
@@ -62,7 +94,7 @@
             </ul>
         <div class="jxxt_zhuanti_rw_tongji">
             <p><strong>分数段分布统计：</strong><a href="1" target="_blank" class="font-darkblue">按百分制统计</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="1" target="_blank" class="font-darkblue">按实际分数统计</a></p>
-            <div class="right"><img src="../images/pic03_140226.jpg" width="193" height="140"></div>
+            <div class="right"><img src="images/paperScorePie.png" width="193" height="140"></div>
             <div class="left">
                 <table border="0" cellspacing="0" cellpadding="0" class="public_tab3">
                     <colgroup span="2" class="w140"></colgroup>
@@ -70,22 +102,9 @@
                         <td>分数段</td>
                         <td>学生人数</td>
                     </tr>
-                    <tr>
-                        <td>90-100</td>
-                        <td>22</td>
-                    </tr>
-                    <tr>
-                        <td>80-90</td>
-                        <td>1</td>
-                    </tr>
-                    <tr>
-                        <td>70-80</td>
-                        <td>22</td>
-                    </tr>
-                    <tr>
-                        <td>60以下</td>
-                        <td>18</td>
-                    </tr>
+                    <tbody id="percentScore">
+                        ${htm}
+                    </tbody>
                 </table>
             </div>
         </div>

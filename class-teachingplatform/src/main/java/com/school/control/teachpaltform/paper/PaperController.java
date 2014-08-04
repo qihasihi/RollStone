@@ -39,6 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.geom.FlatteningPathIterator;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -3160,15 +3161,118 @@ public class PaperController extends BaseController<PaperInfo>{
             String quesidsStr = quesIdList.get(0).get("ALLQUESID").toString();
             request.setAttribute("quesidStr",quesidsStr);
         }
+
         request.setAttribute("questionList",objList);
         request.setAttribute("papername",objList.get(0).getPapername());
         return new ModelAndView("teachpaltform/paper/marking/marking-list");
     }
 
-    /**
-     * 进入批阅试卷统计
-     * @return
-     */
+        /**
+         * 进行批阅试卷
+         * @return
+         */
+        @RequestMapping(params="m=getpercentscore",method=RequestMethod.POST)
+        public void getPercentScore(HttpServletRequest request,HttpServletResponse response)throws Exception{
+            JsonEntity je = new JsonEntity();
+            String paperid = request.getParameter("paperid");
+            String type = request.getParameter("type");
+            //获取试卷的总分和各分数段的人数
+            PaperInfo pi = new PaperInfo();
+            pi.setPaperid(Long.parseLong(paperid));
+            List<PaperInfo> piList = this.paperManager.getList(pi,null);
+            List<Map<String,Object>> objList = new ArrayList<Map<String, Object>>();
+            Map map = new HashMap();
+            if(piList!=null&&piList.size()==1){
+               if(type.equals("1")){
+                   Float totalScore = piList.get(0).getScore();
+                   double percentNum = Math.ceil((totalScore-totalScore*0.6)/4);
+                   List<Map<String,Object>> percentList = new ArrayList<Map<String, Object>>();
+                   //以下是生成统计图
+                   DefaultPieDataset dataset = new DefaultPieDataset();
+                   String htm = "";
+                   for(int i = 0;i<5;i++){
+                       double dbnum = totalScore-percentNum*i;
+                       double dbnum2;
+                       if(i<4){
+                           dbnum2 = totalScore-percentNum*(i+1);
+                       }else{
+                           dbnum2=0.0;
+                       }
+                       int bignum = Integer.parseInt(new java.text.DecimalFormat("0").format(dbnum));
+                       int smallnum = Integer.parseInt(new java.text.DecimalFormat("0").format(dbnum2));
+                       List<Map<String,Object>> numList = this.stuPaperLogsManager.getPaperPercentNum(Long.parseLong(paperid),bignum,smallnum);
+                       //m.put(smallnum + "~" + bignum, numList.get(0).get("NUM"));
+                       htm+="<tr><td>"+smallnum + "~" + bignum+"</td><td>"+numList.get(0).get("NUM")+"</td></tr>";
+                       int num = Integer.parseInt(numList.get(0).get("NUM").toString());
+                       int totalnum = Integer.parseInt(numList.get(0).get("TOTALNUM").toString());
+                       if(totalnum>0){
+                           dataset.setValue(smallnum + "~" + bignum, (double) num / totalnum);
+                       }
+                   }
+                   map.put("htm",htm);
+                   objList.add(map);
+                   je.setObjList(objList);
+                   je.setType("success");
+                   JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
+                   FileOutputStream fos = null;
+
+                   try{
+                       fos = new FileOutputStream(request.getRealPath("/")+"images/paperScorePie.png");
+                       ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
+                   }finally{
+                       fos.close();
+                   }
+               }else{
+                   int totalScore = 100;
+                   int percentNum = 10;
+                   List<Map<String,Object>> percentList = new ArrayList<Map<String, Object>>();
+                   Map m = new HashMap();
+                   //以下是生成统计图
+                   DefaultPieDataset dataset = new DefaultPieDataset();
+                   String htm = "";
+                   for(int i = 0;i<5;i++){
+                       int dbnum = totalScore-percentNum*i;
+                       int dbnum2;
+                       if(i<4){
+                           dbnum2 = totalScore-percentNum*(i+1);
+                       }else{
+                           dbnum2=0;
+                       }
+                       int bignum = dbnum;
+                       int smallnum = dbnum2;
+                       List<Map<String,Object>> numList = this.stuPaperLogsManager.getPaperPercentNum(Long.parseLong(paperid),bignum,smallnum);
+                       m.put(smallnum + "~" + bignum, numList.get(0).get("NUM"));
+                       int num = Integer.parseInt(numList.get(0).get("NUM").toString());
+                       int totalnum = Integer.parseInt(numList.get(0).get("TOTALNUM").toString());
+                       if(totalnum>0){
+                           dataset.setValue(smallnum + "~" + bignum, (double) num / totalnum);
+                       }
+                   }
+                   percentList.add(m);
+                   je.setObjList(percentList);
+                   je.setType("success");
+                   JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
+                   FileOutputStream fos = null;
+
+                   try{
+                       fos = new FileOutputStream(request.getRealPath("/")+"images/paperScorePie.png");
+                       ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
+                   }finally{
+                       fos.close();
+                   }
+               }
+            }else{
+                je.setType("error");
+                je.setMsg("参数有误，未获取到试卷信息");
+            }
+            response.getWriter().print(je.toJSON());
+        }
+
+
+        /**
+         * 进入批阅试卷统计
+         * @return
+         */
     @RequestMapping(params="m=toMarkingLogs",method=RequestMethod.GET)
     public ModelAndView toMarkingLogs(HttpServletRequest request,HttpServletResponse response)throws Exception{
         String paperid = request.getParameter("paperid");
@@ -3213,8 +3317,13 @@ public class PaperController extends BaseController<PaperInfo>{
             request.setAttribute("sign",false);
         }
         int type = Integer.parseInt(detailList.get(0).get("QUESTION_TYPE").toString());
-        int type2 =  Integer.parseInt(detailList.get(0).get("QUESTION_TYPE2").toString());
-        int extension = Integer.parseInt(detailList.get(0).get("EXTENSION2").toString());
+        int type2 = 0;
+        if(detailList.get(0).get("QUESTION_TYPE2")!=null){
+            type2 =  Integer.parseInt(detailList.get(0).get("QUESTION_TYPE2").toString());
+        }
+        int extension=0;
+        if(detailList.get(0).get("EXTENSION2")!=null)
+            extension = Integer.parseInt(detailList.get(0).get("EXTENSION2").toString());
         if(type2>0&&type2==6){
             if(extension==5){
                 QuestionOption qo = new QuestionOption();
@@ -3239,6 +3348,7 @@ public class PaperController extends BaseController<PaperInfo>{
         request.setAttribute("num",numList.get(0));
         return new ModelAndView("teachpaltform/paper/marking/marking-detail");
     }
+
 
     /**
      * 进行批阅试卷

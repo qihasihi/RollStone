@@ -67,8 +67,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("userType",usertype);
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
-        Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
-        if(!b){
+        String sign = UrlSigUtil.makeSigSimple("StudyModule",map,"*ETT#HONER#2014*");
+       // Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
+        if(!sig.equals(sign)){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
@@ -111,8 +112,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("classId",classid);
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
-        Boolean b = UrlSigUtil.verifySigSimple("ClassTask",map,sig);
-        if(!b){
+        String sign = UrlSigUtil.makeSigSimple("ClassTask",map,"*ETT#HONER#2014*");
+       // Boolean b = UrlSigUtil.verifySigSimple("ClassTask",map,sig);
+        if(!sig.equals(sign)){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
@@ -160,8 +162,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("classId",classid);
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
-        Boolean b = UrlSigUtil.verifySigSimple("ClassCalendar",map,sig);
-        if(!b){
+        String sign = UrlSigUtil.makeSigSimple("ClassCalendar",map,"*ETT#HONER#2014*");
+       // Boolean b = UrlSigUtil.verifySigSimple("ClassCalendar",map,sig);
+        if(!sig.equals(sign)){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
@@ -209,8 +212,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("jid",userid);
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
-        Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
-        if(!b){
+        String sign = UrlSigUtil.makeSigSimple("AddTask",map,"*ETT#HONER#2014*");
+       // Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
+        if(!sig.equals(sign)){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }

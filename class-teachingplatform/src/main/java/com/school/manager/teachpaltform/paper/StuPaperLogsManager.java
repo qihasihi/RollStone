@@ -94,6 +94,16 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
     }
 
     @Override
+    public List<Map<String, Object>> getPaperPercentNum(Long paperid, int bignum, int smallnum) {
+        return this.stupaperlogsdao.getPaperPercentNum(paperid,bignum,smallnum);
+    }
+
+    @Override
+    public List<Map<String, Object>> getPaperPercentNum2(Long paperid, int bignum, int smallnum) {
+        return this.stupaperlogsdao.getPaperPercentNum2(paperid,bignum,smallnum);
+    }
+
+    @Override
     public List<Object> getUpdateScoreSql(StuPaperLogs stupaperlogs, StringBuilder sqlbuilder) {
         return this.stupaperlogsdao.getUpdateScoreSql(stupaperlogs,sqlbuilder);
     }

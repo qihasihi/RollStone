@@ -289,7 +289,7 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
 
     public List<Map<String, Object>> getMarkingNum(Long paperid, Long quesid) {
         StringBuilder sqlbuilder = new StringBuilder();
-        sqlbuilder.append("{CALL tp_paper_marking_proc_getnum(");
+        sqlbuilder.append("{CALL tp_paper_marking_proc_getlogs(");
         List<Object> objList=new ArrayList<Object>();
         if(paperid!=null){
             sqlbuilder.append("?,");
@@ -303,6 +303,51 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
         }else{
             sqlbuilder.append("NULL");
         }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        return list;
+    }
+
+    public List<Map<String, Object>> getPaperPercentNum(Long paperid, int bignum, int smallnum) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_paper_marking_percent_proc_logs(");
+        List<Object> objList=new ArrayList<Object>();
+        if(paperid!=null){
+            sqlbuilder.append("?,");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(bignum>0){
+            sqlbuilder.append("?,");
+            objList.add(bignum);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?");
+        objList.add(smallnum);
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        return list;
+    }
+    public List<Map<String, Object>> getPaperPercentNum2(Long paperid, int bignum, int smallnum) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_paper_marking_percent_proc_logs2(");
+        List<Object> objList=new ArrayList<Object>();
+        if(paperid!=null){
+            sqlbuilder.append("?,");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(bignum>0){
+            sqlbuilder.append("?,");
+            objList.add(bignum);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?");
+        objList.add(smallnum);
         sqlbuilder.append(")}");
         List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
         return list;
