@@ -83,6 +83,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     private IMicVideoPaperManager micVideoPaperManager;
     private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
     private IQuesTeamRelaManager quesTeamRelaManager;
+    private IPaperQuesTeamScoreManager paperQuesTeamScoreManager;
     public PaperQuestionController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -115,6 +116,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         this.micVideoPaperManager=this.getManager(MicVideoPaperManager.class);
         this.stuViewMicVideoLogManager=this.getManager(StuViewMicVideoLogManager.class);
         this.quesTeamRelaManager=this.getManager(QuesTeamRelaManager.class);
+        this.paperQuesTeamScoreManager=this.getManager(PaperQuesTeamScoreManager.class);
     }
     /**
      * 根据课题ID，加载试卷列表
@@ -1358,7 +1360,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         String questionid=request.getParameter("questionid");
         String score=request.getParameter("score");
         String ref=request.getParameter("ref");
-        if(paperid==null||paperid.trim().length()<1||
+        String courseid=request.getParameter("courseid");
+        if(courseid==null||courseid.trim().length()<1||
+                paperid==null||paperid.trim().length()<1||
                 questionid==null||questionid.trim().length()<1||
                 score==null||score.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -1383,13 +1387,35 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             QuesTeamRela qt=new QuesTeamRela();
             qt.setTeamid(pList.get(0).getQuestionid());
             qt.setQuesid(Long.parseLong(questionid));
-            qt.setScore(new Float(score));
-            sql=new StringBuilder();
-            objList=this.quesTeamRelaManager.getUpdateSql(qt,sql);
-            if(sql!=null&&objList!=null){
-                objListArray.add(objList);
-                sqlListArray.add(sql.toString());
+            List<QuesTeamRela>quesTeamRelaList=this.quesTeamRelaManager.getList(qt,null);
+            if(quesTeamRelaList!=null&&quesTeamRelaList.size()>0){
+                PaperQuesTeamScore pqts=new PaperQuesTeamScore();
+                pqts.setPaperid(Long.parseLong(paperid));
+                pqts.setQuesref(quesTeamRelaList.get(0).getRef());
+                pqts.setCourseid(Long.parseLong(courseid));
+                List<PaperQuesTeamScore>paperQuesTeamScoreList=this.paperQuesTeamScoreManager.getList(pqts,null);
+                if(paperQuesTeamScoreList!=null&&paperQuesTeamScoreList.size()>0){
+                    pqts=new PaperQuesTeamScore();
+                    pqts.setScore(Float.parseFloat(score));
+                    pqts.setRef(paperQuesTeamScoreList.get(0).getRef());
+                    sql=new StringBuilder();
+                    objList=this.paperQuesTeamScoreManager.getUpdateSql(pqts,sql);
+                    if(sql!=null&&objList!=null){
+                        objListArray.add(objList);
+                        sqlListArray.add(sql.toString());
+                    }
+                }else { //添加
+                    sql=new StringBuilder();
+                    pqts.setScore(Float.parseFloat(score));
+                    sql=new StringBuilder();
+                    objList=this.paperQuesTeamScoreManager.getSaveSql(pqts,sql);
+                    if(sql!=null&&objList!=null){
+                        objListArray.add(objList);
+                        sqlListArray.add(sql.toString());
+                    }
+                }
             }
+
         }else{
             PaperQuestion pq=new PaperQuestion();
             pq.setPaperid(Long.parseLong(paperid));

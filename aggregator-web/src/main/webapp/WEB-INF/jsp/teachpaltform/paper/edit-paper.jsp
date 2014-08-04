@@ -274,7 +274,7 @@ function scoreChange(obj,score){
 function updateQuesScore(score,quesid,ref){
     if(typeof score=='undefined'||isNaN(score))
         return;
-    var param={questionid:quesid,paperid:paperid,score:score};
+    var param={courseid:courseid,questionid:quesid,paperid:paperid,score:score};
     if(typeof ref!='undefined')
         param.ref=ref;
     $.ajax({
