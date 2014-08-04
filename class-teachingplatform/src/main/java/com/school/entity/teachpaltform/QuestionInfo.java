@@ -32,6 +32,8 @@ public class QuestionInfo implements java.io.Serializable {
     private String questionidStr;
     private QuestionInfo parentQues;
 
+    private Float score;
+
     public QuestionInfo getParentQues() {
         return parentQues;
     }
@@ -41,6 +43,15 @@ public class QuestionInfo implements java.io.Serializable {
     }
 
 //    private List<QuestionInfo> childQues=null;
+
+
+    public Float getScore() {
+        return score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
+    }
 
     public String getQuestionidStr() {
         return questionidStr;

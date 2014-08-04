@@ -308,6 +308,32 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
         return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
     }
 
+    /**
+     * 得到试卷下的所有分数或某题分数
+     * @param paperid
+     * @param quesid
+     * @return
+     */
+    public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid){
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL j_paper_ques_info_getAllScore(");
+        List<Object> objList=new ArrayList<Object>();
+        if(paperid!=null){
+            sqlbuilder.append("?,");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(quesid!=null){
+            sqlbuilder.append("?");
+            objList.add(quesid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
+
     @Override
     public List<PaperQuestion> getPaperTeamQuestionList(PaperQuestion paperquestion, PageResult presult) {
         StringBuilder sqlbuilder = new StringBuilder();

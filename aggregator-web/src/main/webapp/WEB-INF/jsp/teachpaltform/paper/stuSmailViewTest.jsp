@@ -25,13 +25,16 @@
         var subQuesId=",";
         var quesSize="${quesSize}";
         var allquesidObj="${allquesidObj}";
-        var sumScore=100,avgScore=100/quesSize;
+        var papertype="${paperObj.papertype}";
+        var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
+        var sumScore=${!empty paperObj.score?paperObj.score:100},avgScore=parseInt(sumScore/quesSize);
+        var scoreArray=[];
         var t=1;
         $(function(){
 
             <c:if test="${!empty isViewVideo&&isViewVideo!=0}">
-                $("#li_exam").bind("click",loadExam);
-                $("#li_exam").html("<a><strong>试卷</strong></a>");
+                //如果已经预览过。则显示。
+                isViewVideo();
             </c:if>
 
             jwplayer('div_show0').onTime(function(){
@@ -42,6 +45,23 @@
                 }
             });
         });
+
+        function isViewVideo(){
+            $("#li_exam").bind("click",function(){
+                jwplayer('div_show0').stop();
+                loadExam();
+            });
+            $("#li_exam").html("<a><strong>试卷</strong></a>");
+
+            $("#li_view").bind("click",function(){
+                div_exam.style.display='none';
+                div_video.style.display='block';
+                li_view.className='crumb';
+                li_exam.className='';
+                jwplayer('div_show0').play();
+            });
+        }
+
 
 
         /**
@@ -66,6 +86,7 @@
                         }
                     }
                 });
+                isViewVideo();
             </c:if>
             <c:if test="${!empty isViewVideo&&isViewVideo!=0}">
              loadExam();
@@ -75,11 +96,27 @@
          * 加载试卷中的试题
          */
         function loadExam(){
-            jwplayer('div_show0').pause();
+            //jwplayer('div_show0').pause();
             //如果存在，则不加载
             if($("#div_exam").html().Trim().length<1){
                 var url="paperques?m=testPaper&courseid="+courseid+"&taskid="+taskid+"&paperid="+paperid;
                 $("#div_exam").load(url+" #dv_test",function(){
+                  if(papertype!=3){
+                    //分数
+                    for(i=0;i<quesSize;i++){
+                        scoreArray[scoreArray.length]=avgScore;
+                    }
+                    //如果分数有余数。则从最后分数开始算
+                    var yuScore=sumScore%quesSize;
+                    if(yuScore>0){
+                        scoreArray=scoreArray.reverse();
+                        $.each(scoreArray,function(idx,itm){
+                            scoreArray[idx]=parseFloat(itm)+1;
+                            yuScore-=1;
+                        });
+                        scoreArray=scoreArray.reverse();
+                    }
+                  }
                     //加载
                     loadQuesNumberTool(quesSize);
                      nextNum(0);
@@ -87,7 +124,7 @@
             }
 
             $("#li_exam").unbind("click");
-            $("#li_exam").bind("click",loadExam);
+            $("#li_exam").bind("click",isViewVideo);
 
             $("#li_view").html("<a><strong>微视频</strong></a>");
             $("#li_exam").html("<a><strong>试卷</strong></a>");
@@ -106,9 +143,7 @@
     <p class="t_r"><span class="ico_time"></span><strong><span id="sp_howlongt">${taskstatus}</span></strong></p>
 
     <ul class="jxxt_zhuanti_rw_wkc">
-        <li class="crumb" id="li_view"
-            onclick="div_exam.style.display='none';div_video.style.display='block';li_view.className='crumb';li_exam.className='';"
-                ><strong>微视频</strong></li>
+        <li class="crumb" id="li_view"><strong>微视频</strong></li>
         <li id="li_exam"><strong>试卷</strong></li>
     </ul>
    <div id="div_video">

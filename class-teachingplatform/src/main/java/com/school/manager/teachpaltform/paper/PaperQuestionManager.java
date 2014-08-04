@@ -111,5 +111,14 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
     public List<PaperQuestion> getPaperTeamQuestionList(PaperQuestion p, PageResult pageResult) {
         return this.paperquestiondao.getPaperTeamQuestionList(p,pageResult);
     }
+    /**
+     * 得到试卷下的所有分数或某题分数
+     * @param paperid
+     * @param quesid
+     * @return
+     */
+    public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid){
+        return this.paperquestiondao.getPaperQuesAllScore(paperid,quesid);
+    }
 }
 

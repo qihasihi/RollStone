@@ -3463,6 +3463,16 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
             }
             paperid=mvpaperList.get(0).getPaperid().toString();
+            //验证paperinfo
+            PaperInfo paper=new PaperInfo();
+            paper.setPaperid(Long.parseLong(paperid.trim()));
+            List<PaperInfo> paperList=this.paperManager.getList(paper,null);
+            if(paperList==null||paperList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+
+
             //得到学生是否已经有过相关查看记录
             StuViewMicVideoLog svm=new StuViewMicVideoLog();
             svm.setUserid(this.logined(request).getUserid());
@@ -3497,11 +3507,11 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             }
             mp.put("allquesidObj",allquesidObj);
 
-
             //如果是微视频测试，则进入相关测试页面
             mp.put("quesSize",allquesidObj.toString().split(",").length);
             mp.put("taskid",taskid);
             mp.put("courseid",courseid);
+            mp.put("paperObj",paperList.get(0));
             mp.put("paperid",paperid);
             return new ModelAndView("/teachpaltform/paper/stuSmailViewTest",mp);
         }
@@ -3657,7 +3667,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
 
-        boolean ishas=false;
+        boolean ishas=false;Float score=0F;
         for (String qid:quesArray){
             if(qid==null||qid.length()<1)continue;
             if(qid.indexOf("|")!=-1)
@@ -3670,6 +3680,18 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 break;
             }
         }
+        //加载数据
+//        PaperQuestion pq=new PaperQuestion();
+//        pq.setQuestionid(Long.parseLong(quesid));
+//        pq.setPaperid(Long.parseLong(paperid));
+//        List<PaperQuestion> pqList=this.paperQuestionManager.getList(pq,null);
+//        if(pqList==null||pqList.size()<1){//
+//            jsonEntity.setMsg("错误。当前试题不存在于试卷中。请核对!");
+//            response.getWriter().println(jsonEntity.toJSON());return;
+//        }
+
+
+
         //加载选项
         QuestionOption qo=new QuestionOption();
         qo.setQuestionid(Long.parseLong(quesid));
@@ -3682,12 +3704,17 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg("错误。当前试题不存在于试卷中。请核对!");
             response.getWriter().println(jsonEntity.toJSON());return;
         }
-
-
-
+        QuestionInfo tmpq=quesList.get(0);
+        //加载分数
+        List<Map<String,Object>> scoreMapList=this.paperQuestionManager.getPaperQuesAllScore(Long.parseLong(paperid.trim()),Long.parseLong(quesid));
+        if(scoreMapList==null||scoreMapList.size()<1||!scoreMapList.get(0).containsKey("SCORE")||scoreMapList.get(0).get("SCORE")==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+        tmpq.setScore(Float.parseFloat(scoreMapList.get(0).get("SCORE").toString()));
 
         //试题
-        jsonEntity.getObjList().add(quesList.get(0));
+        jsonEntity.getObjList().add(tmpq);
         jsonEntity.setType("success");
         response.getWriter().println(jsonEntity.toJSON());
     }
@@ -3800,6 +3827,17 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
+
+
+        //加载分数
+        List<Map<String,Object>> scoreMapList=this.paperQuestionManager.getPaperQuesAllScore(Long.parseLong(paperid.trim()),null);
+        if(scoreMapList==null||scoreMapList.size()<1||!scoreMapList.get(0).containsKey("SCORE")||scoreMapList.get(0).get("SCORE")==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+        }
+
+
+
         String[] quesArray=allquesidObj.toString().trim().split(",");
         if(quesArray.length<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
@@ -3881,6 +3919,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 }
             }
         }
+
+
+        mp.put("allscoreObj",scoreMapList.get(0).get("SCORE"));
         mp.put("allquesidObj",allquesidObj);
         mp.put("quesList",quesList);
         mp.put("paperObj",paperList.get(0));

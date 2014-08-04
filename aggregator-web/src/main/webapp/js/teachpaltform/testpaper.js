@@ -30,6 +30,13 @@ function loadQuesNumberTool(qsize){
                     startIdx=z;
                     freeId=tmpArray[0];
                 }
+            }else if(isbegin){
+                isbegin=false;
+                freeId=null;
+                obj[obj.length]={beginIdx:startIdx,endIdx:z-1};
+                if(z==allarray.length-1)
+                    obj[obj.length-1].endIdx=z;
+                startIdx=-1;
             }
         }
     }
@@ -174,7 +181,7 @@ function next(type,quesid,paperid,allquesid,isright,issub){
                 }
 
                if($("div[id='dv_qs_"+nextQuesId+"']").length<1){
-                    loadNextQues(arrayObj[nextIdx],paperid);
+                    loadNextQues(arrayObj[nextIdx],paperid,nextIdx);
                }else{
                    $("div[id='dv_qs_"+nextQuesId+"']").show();
                    $("#p_operate>span").hide();
@@ -192,7 +199,7 @@ function next(type,quesid,paperid,allquesid,isright,issub){
  * @param quesid
  * @param paperid
  */
-function loadNextQues(quesid,paperid){
+function loadNextQues(quesid,paperid,idx){
     if(typeof(quesid)=="undefined"||quesid==null||typeof(paperid)=="undefined"||paperid==null){
         alert('参数异常!');return;
     }
@@ -289,12 +296,17 @@ function loadNextQues(quesid,paperid){
                         $("div[id='dv_question'] #dv_pqs_"+parentQuesObj.questionid).show();
 
                 }
+
+                var sc=scoreArray[idx];
+                if(typeof(papertype)!="undefined"&&papertype==3)
+                    sc=quesObj.score;
+
                 //要答的题
                 h='<div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_qs_'+quesObj.questionid+'">';
                 h+='<input type="hidden" value="'+quesObj.questionid+'" id="hd_quesid_'+quesObj.questionid+'" name="hd_quesid"/>';
                 h+='<input type="hidden" value="" name="hd_answer" id="hs_val_'+quesObj.questionid+'"/>';
                 h+='<input type="hidden" value="0" name="hd_stu_score" id="hs_val_stu_'+quesObj.questionid+'"/>';
-                h+='<input type="hidden" value="'+avgScore+'" name="hd_score" id="hs_score_'+quesObj.questionid+'"/>';
+                h+='<input type="hidden" value="'+sc+'" name="hd_score" id="hs_score_'+quesObj.questionid+'"/>';
                 h+='<input  type="hidden" value="'+quesObj.questiontype+'" name="hd_questiontype" id="hd_questiontype_'+quesObj.questionid+'"/>';
 
                 if(typeof(quesObj.content)!="undefined")
@@ -335,15 +347,15 @@ function loadNextQues(quesid,paperid){
                         h+='</tr>';
                     });
                     h+='</table>';
-                }else  if(quesObj.questiontype==3||quesObj.questiontype==4){
+                }else  if(quesObj.questiontype==3||quesObj.questiontype==7||quesObj.questiontype==8||quesObj.questiontype==4){
                     if(typeof(quesObj.questionOption)!="undefined"&&quesObj.questionOption.length>0){
                         h+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
                         h+='<col class="w30"/><col class="w860"/>';
                         $.each(quesObj.questionOption,function(x,m){
                             h+='<tr><th>' ;
-                            if(quesObj.questiontype==3)
+                            if(quesObj.questiontype==3||quesObj.questiontype==7)
                                 h+='<input type="radio" id="rdo_answer'+m.questionid+m.optiontype+'" onclick="next(1,'+ m.questionid+','+paperid+',\''+allquesidObj+'\','+ m.isright+')" value="'+ m.optiontype+'" name="rdo_answer'+ m.questionid+'">';
-                            if(quesObj.questiontype==4)
+                            if(quesObj.questiontype==4||quesObj.questiontype==8)
                                 h+='<input type="checkbox" value="'+m.optiontype+'|'+m.isright+'" id="rdo_answer'+m.questionid+m.optiontype+'" name="rdo_answer'+m.questionid+'">';
                              h+='</th>';
                             h+=' <td><label for="rdo_answer'+m.questionid+m.optiontype+'">'+m.optiontype+'.'+m.content+'</label></td>';

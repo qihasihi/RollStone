@@ -17,9 +17,26 @@
         var subQuesId=",";
         var paperid="${paperid}";
         var allquesidObj="${allquesidObj}";
-        var sumScore=100,avgScore=parseInt(100/quesSize);
+        var sumScore=${!empty paperObj.score?paperObj.score:100},avgScore=parseInt(sumScore/quesSize);
+        var scoreArray=[];
+        var papertype="${paperObj.papertype}";
         var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         $(function(){
+            //分数
+            for(i=0;i<quesSize;i++){
+                scoreArray[scoreArray.length]=avgScore;
+            }
+            //如果分数有余数。则从最后分数开始算
+            var yuScore=sumScore%quesSize;
+            if(yuScore>0){
+                scoreArray=scoreArray.reverse();
+                $.each(scoreArray,function(idx,itm){
+                    if(yuScore<1)return;
+                    scoreArray[idx]=parseFloat(itm)+1;
+                    yuScore-=1;
+                });
+                scoreArray=scoreArray.reverse();
+            }
             loadQuesNumberTool(quesSize);
             nextNum(0);
         });

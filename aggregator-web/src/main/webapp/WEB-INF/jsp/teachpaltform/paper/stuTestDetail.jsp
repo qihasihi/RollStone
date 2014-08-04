@@ -12,22 +12,43 @@
     <script type="text/javascript" src="js/common/videoPlayer/new/jwplayer.js"></script>
     <script type="text/javascript" src="flexpaper/swfobject/swfobject.js"></script>
     <script type="text/javascript">
-        var paperSumScore=100;
+        var paperSumScore=${!empty paperObj.score?paperObj.score:100};
+        var papertype="${paperObj.papertype}";
         var allquesid="${allquesidObj}";
+        var allscore="${allscoreObj}";
+
         $(function(){
             //序号重排
             updateQuesIdx();
             <c:if test="${!empty stuAnswer}">
-                    <c:forEach items="${stuAnswer}" var="sa">
+               <c:forEach items="${stuAnswer}" var="sa">
                 //得到quesid的questype
                   userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","${sa.annexNameFull}");
-            </c:forEach>
+               </c:forEach>
             //计算每题的分数
-            var allqueslength=allquesid.split(",").length;
-            var avgScore=parseInt(paperSumScore/allqueslength);
-            $("span[id='avg_score']").html(avgScore);
-            if(paperSumScore%allqueslength>0)
-                $("span[id='avg_score']").last().html(avgScore+(paperSumScore%allqueslength));
+            if(papertype!=3){
+                var allqueslength=allquesid.split(",").length;
+                var avgScore=parseInt(paperSumScore/allqueslength);
+                $("span[id='avg_score']").html(avgScore);
+                if(paperSumScore%allqueslength>0){
+                    //$("span[id='avg_score']").last().html(avgScore+());
+                    //// 使用数组翻转函数
+                    var yuScore=paperSumScore%allqueslength;
+                   $.each(jQuery.makeArray($("span[id='avg_score']")).reverse(),function(idx,itm){
+                       if(yuScore<1)return;
+                        $(itm).html(parseFloat($(itm).html())+1);
+                        yuScore-=1;
+
+                    });
+                }
+            }else{
+                var scoreArray=allscore.split(",");
+                $("span[id='avg_score']").each(function(idx,itm){
+                    if(typeof(scoreArray[idx])!="undefined"){
+                        $(itm).html(scoreArray[idx]);
+                    }
+                })
+            }
             //计算是否存在试题组等题
             $("table[id*='dv_pqs_']").each(function(idx,itm){
                 $("#"+this.id+" #p_s_score").html($("#"+this.id+" td[id*='td_child_']").children().length*avgScore);
@@ -37,17 +58,12 @@
                 });
                 $("#"+this.id+" #you_sum").html(YSumScore);
             });
-
             var sumScore=0;
             $("strong[id*='you_score']").each(function(idx,itm){
                 sumScore+=parseFloat($(itm).html().Trim());
             });
             $("#sp_sumScore").html(sumScore);
             </c:if>
-
-
-
-
         });
 
         function userAnswer(t,t1,score,nexName){
@@ -141,17 +157,20 @@
             if(qslength.length<1){
                 var pextension="${q.parentQues.extension}";
                 h+=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_pqs_${q.parentQues.questionid}">';
-                h+='<caption class="font-blue"><span class="f_right"><strong id="you_sum">0</strong>分/<span id=p_s_score></span>分</span><span id="sp_qidx${q.parentQues.questionid}"">${qidx.index+1}</span></caption>';
+                h+='<caption class="font-blue"><span class="f_right"><strong id="you_sum">0</strong>分/<span id=p_s_score>';
+                if(papertype==3)
+                    h+=${q.score}+"";
+                h+='</span>分</span><span id="sp_qidx${q.parentQues.questionid}"">${qidx.index+1}</span></caption>';
                 h+='<tr><td><span class="bg">';
                 if(pextension==2)//2阅读理解  3完型填空  4英语听力  5七选五
-                    h+='阅读理解：</span>${q.parentQues.content}';
+                    h+='阅读理解</span>：${q.parentQues.content}';
                 else if(pextension==3)
-                    h+='完型填空：</span>${q.parentQues.content}';
+                    h+='完型填空</span>：${q.parentQues.content}';
                 else if(pextension==4){
                     //如果是英语听力，则还需要添加控件，不用添加内容。
-                    h+='英语听力：</span>${q.parentQues.content}<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div>';
+                    h+='英语听力</span>：${q.parentQues.content}<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div>';
                 }else if(pextension==5){
-                    h+='七选五：</span>${q.parentQues.content}';
+                    h+='七选五</span>：${q.parentQues.content}';
                     h+='<div style="display:none" id="p_option_${q.parentQues.questionid}">';
                     //选项
                 <c:if test="${!empty q.parentQues.questionOption}">
@@ -187,13 +206,13 @@
             <c:if test="${empty q.parentQues}">
             //试题类型 1：其它 2：填空 3：单选 4：多选 6:试题组 7：单选组试题 8：多选组试题
                 if(questype==1)
-                    h1+='<span class="bg">问答：</span>';
+                    h1+='<span class="bg">问答</span>：';
                 else if(questype==2)
-                    h1+='<span class="bg">填空：</span>';
+                    h1+='<span class="bg">填空</span>：';
                 else if(questype==3)
-                    h1+='<span class="bg">单选：</span>';
+                    h1+='<span class="bg">单选</span>：';
                 else if(questype==4)
-                    h1+='<span class="bg">多选：</span>';
+                    h1+='<span class="bg">多选</span>：';
             </c:if>
             h1+='${qidx.index+1}、';
             <c:if test="${!empty q.content}">
@@ -248,19 +267,19 @@
                 }
             </c:if>
             <c:if test="${empty q.parentQues||q.parentQues.extension!=5}">
-                    if(questype==3||questype==4){
+                    if(questype==3||questype==4||questype==7||questype==8){
                     <c:if test="${!empty q.questionOption}">
                                 h1+='<table border="0" cellpadding="0" cellspacing="0">';
                         h1+='<col class="w30"/><col class="w910"/>';
                     <c:forEach items="${q.questionOption}" var="qo">
                                 h1+=' <tr><th>';
-                        if(questype==3)
+                        if(questype==3||questype==7)
                             h1+='<input type="radio" disabled="true" value="${qo.optiontype}" name="rdo_answer${qo.questionid}" id="rdo_answer${qo.ref}">';
                         else
                             h1+='<input type="checkbox" disabled="true" value="${qo.optiontype}|${qo.isright}" id="ckx_answer${qo.ref}" name="ckx_answer${qo.questionid}">';
 
                         h1+='</th><td>';
-                        if(questype==3)
+                        if(questype==3||questype==7)
                             h1+='<label for="rdo_answer${qo.ref}">${qo.optiontype}.${qo.content}</label>';
                         else
                             h1+='<label for="rdo_answer${qo.ref}">${qo.optiontype}.${qo.content}</label>';

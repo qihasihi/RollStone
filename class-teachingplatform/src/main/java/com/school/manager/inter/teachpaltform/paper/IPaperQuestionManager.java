@@ -32,4 +32,12 @@ public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> {
     public List<Object> getSynchroSql(PaperQuestion paperQuestion, StringBuilder sqlbuilder);
 
     public List<Map<String,Object>> getPaperQuesAllId(Long paperid);
+
+    /**
+     * 得到试卷下的所有分数或某题分数
+     * @param paperid
+     * @param quesid
+     * @return
+     */
+    public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid);
 }
