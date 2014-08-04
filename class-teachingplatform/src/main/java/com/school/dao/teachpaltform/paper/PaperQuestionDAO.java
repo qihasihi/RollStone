@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.asm.Type;
 import org.springframework.stereotype.Component;
 
 import com.school.dao.base.CommonDAO;
@@ -232,7 +233,7 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
 
         List<Object> objList = new ArrayList<Object>();
         objList.add(paperQuestion.getPaperid());
-        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+        Object afficeObj = this.executeSacle_PROC(Type.FLOAT,sqlbuilder.toString(),
                 objList.toArray());
         if (afficeObj != null && afficeObj.toString().trim().length() > 0) {
             return  Float.parseFloat(afficeObj.toString());
