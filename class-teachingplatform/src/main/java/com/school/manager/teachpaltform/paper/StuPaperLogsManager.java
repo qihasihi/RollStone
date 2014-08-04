@@ -84,13 +84,13 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
     }
 
     @Override
-    public List<Map<String, Object>> getMarkingDetail(Long paperid, Long questionid,Long quesid,Integer ismark) {
-        return this.stupaperlogsdao.getMarkingDetail(paperid,questionid,quesid,ismark);
+    public List<Map<String, Object>> getMarkingDetail(Long paperid, Long questionid,Long quesid,Integer ismark,Integer classid,Integer classtype) {
+        return this.stupaperlogsdao.getMarkingDetail(paperid,questionid,quesid,ismark,classid,classtype);
     }
 
     @Override
-    public List<Map<String, Object>> getMarkingNum(Long paperid, Long quesid) {
-        return this.stupaperlogsdao.getMarkingNum(paperid,quesid);
+    public List<Map<String, Object>> getMarkingNum(Long paperid, Long quesid,Integer classid,Integer classtype) {
+        return this.stupaperlogsdao.getMarkingNum(paperid,quesid,classid,classtype);
     }
 
     @Override

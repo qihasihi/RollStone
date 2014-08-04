@@ -13,6 +13,8 @@
     <script type="text/javascript">
         var questiontype = "${detail.QUESTION_TYPE2!=null?detail.QUESTION_TYPE2:detail.QUESTION_TYPE}";
         var extension = "${detail.EXTENSION2!=null?detail.EXTENSION2:detail.EXTENSION}";
+        var tabidx = "${param.tabidx}";
+        var quesids = "${param.quesids}";
         var typename;
         var extenname;
         var sign=${sign};
@@ -70,6 +72,10 @@
                 $("#score").hide();
             }else{
                 var totalnum= "${num.SCORE}";
+                var totalnum2 = "${detail.SCORE}";
+                if(totalnum2!=null){
+                    totalnum=totalnum2;
+                }
                 var n = Math.ceil((parseFloat(totalnum)+0.5)/10);
                 var divhtm='';
                 for(var i = 0;i<n;i++){
@@ -100,35 +106,62 @@
                 }
                 $("#score").append(divhtm);
             }
-            <%--for(var i = 0;i<${num.SCORE+1};i++){--%>
-                <%--htm+='<li class="crumb"><a href="javascript:submitScore(${detail.REF},'+num1+')">'+num1;--%>
-                <%--num1++;--%>
-                <%--htm+='</a><br><hr><a href="javascript:submitScore(${detail.REF},'+num2+')">'+num2;--%>
-                <%--if(i<${num.SCORE-1}){--%>
-                    <%--num2++;--%>
-                <%--}else{--%>
-                    <%--num2="";--%>
-                <%--}--%>
-                <%--htm+='</a></td>';--%>
-                <%--if(i==5){--%>
-                    <%--htm+='</tr><tr>';--%>
-                <%--}--%>
-            <%--}--%>
-            <%--htm+='</tr>';--%>
-            <%--$("#score").html(htm);--%>
-
             $("#tname").html(typename);
+
         });
         function submitScore(ref,score){
 
+        }
+        function tabQuestion(type){
+            if(type==1){
+                //处理上一题下一题按钮
+                if(quesids.length>0){
+                    var htm = '';
+                    var orderidx = tabidx;
+                    var id = quesids[tabidx-1];
+                    var sign = false;
+                    var questionid;
+                    if(quesids[tabidx-1].split("|").length>1){
+                        questionid = quesids[tabidx-1].split("|")[0];
+                        sign = true;
+                        id=quesids[tabidx-1].split("|")[1];
+                    }
+                    htm+='paper?m=toMarkingDetail';
+                    if(sign){
+                        htm+='&questionid='+questionid;
+                    }
+                    htm+='&quesids='+quesids+'&tabidx='+(tabidx-1)+'&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx;
+                    $("#upquestion").attr("href",htm);
+                }
+            }else{
+                //处理上一题下一题按钮
+                if(quesids.length>0){
+                    var htm = '';
+                    var orderidx = tabidx+2;
+                    var id = quesids[tabidx+1];
+                    var sign = false;
+                    var questionid;
+                    if(quesids[tabidx+1].split("|").length>1){
+                        questionid = quesids[tabidx+1].split("|")[0];
+                        sign = true;
+                        id=quesids[tabidx+1].split("|")[1];
+                    }
+                    htm+='paper?m=toMarkingDetail';
+                    if(sign){
+                        htm+='&questionid='+questionid;
+                    }
+                    htm+='&quesids='+quesids+'&tabidx='+(tabidx+1)+'&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx;
+                    $("#nextquestion").attr("href",htm);
+                }
+            }
         }
     </script>
 </head>
 <body>
     <div class="subpage_head"><span class="ico55"></span><strong>批阅试卷</strong></div>
     <div class="content2">
-        <p class="jxxt_zhuanti_rw_piyue_info"><a href="1" class="an_public3">下一题</a>
-            <a href="1" class="an_public3">上一题</a><strong class="font-blue">${param.idx}</strong>&nbsp;&nbsp;试题分数：<span class="font-blue">${num.SCORE}</span>&nbsp;分</p>
+        <p class="jxxt_zhuanti_rw_piyue_info"><a href="" id="nextquestion" class="an_public3">下一题</a>
+            <a href="" id="upquestion" class="an_public3">上一题</a><strong class="font-blue">${param.idx}</strong>&nbsp;&nbsp;试题分数：<span class="font-blue">${num.SCORE}</span>&nbsp;分</p>
         <div class="jxxt_zhuanti_shijuan_add public_input font-black">
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940">
                 <c:if test="${!empty detail.CONTENT2}">

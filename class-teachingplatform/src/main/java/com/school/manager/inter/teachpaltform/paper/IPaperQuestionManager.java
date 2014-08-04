@@ -19,7 +19,7 @@ public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> {
     Integer paperQuesCount(Long paperid);
 
     Boolean updateQuesTeamScore(PaperQuestion paperQuestion);
-    public List<PaperQuestion> getQuestionByPaper(Long paperid);
+    public List<PaperQuestion> getQuestionByPaper(Long paperid,Integer classid,Integer classtype);
 
     public List<PaperQuestion> getPaperTeamQuestionList(PaperQuestion p,PageResult pageResult);
 

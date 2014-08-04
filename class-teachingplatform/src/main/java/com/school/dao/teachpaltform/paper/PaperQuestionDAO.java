@@ -273,13 +273,25 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
         return false;
     }
 
-    public List<PaperQuestion> getQuestionByPaper(Long paperid) {
+    public List<PaperQuestion> getQuestionByPaper(Long paperid,Integer classid,Integer classtype) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_paper_marking_proc_list(");
         List<Object> objList=new ArrayList<Object>();
         if(paperid!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?,");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(classtype!=null){
+            sqlbuilder.append("?");
+            objList.add(classtype);
         }else{
             sqlbuilder.append("NULL");
         }

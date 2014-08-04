@@ -38,12 +38,13 @@
                            if(sign){
                                htm+='&questionid='+questionid;
                            }
-                           htm+='&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx+'">'+orderidx+'<b>${itm.markingnum}/${itm.submitnum}</b></a>';
+                           htm+='&quesids='+quesids+'&tabidx='+i+'&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx+'">'+orderidx+'<b>${itm.markingnum}/${itm.submitnum}</b></a>';
                        }
                     </c:forEach>
                     htm+='</li>';
                 }
                 $("#question").html(htm);
+                getPercentScoreByType(2);
             }
         });
         function getPercentScoreByType(type){
@@ -65,14 +66,24 @@
                                     $("#percentScore").html(itm.htm);
                                 });
                             }
+                            var h='<img src="images/paperScorePie1.png" name="'+new Date().getTime()+'a" id="percentImg"/>';
+                            $("#percentImg").parent().html(h);
                         }else{
                             if(rmsg.objList!=null&&rmsg.objList.length>0){
                                 $.each(rmsg.objList,function(idx,itm){
                                     var htm = '';
-                                    $("#percentScore").html(itm.htm);
+                                    htm+='<tr><td>90~100</td><td>'+itm["90~100"]+'</td></tr>';
+                                    htm+='<tr><td>80~90</td><td>'+itm["80~90"]+'</td></tr>';
+                                    htm+='<tr><td>70~80</td><td>'+itm["70~80"]+'</td></tr>';
+                                    htm+='<tr><td>60~70</td><td>'+itm["60~70"]+'</td></tr>';
+                                    htm+='<tr><td>0~60</td><td>'+itm["0~60"]+'</td></tr>';
+                                    $("#percentScore").html(htm);
                                 });
                             }
+                            var h='<img src="images/paperScorePie2.png" name="'+new Date().getTime()+'a" id="percentImg"/>';
+                            $("#percentImg").parent().html(h);
                         }
+
                     }
                 }
             });
@@ -93,8 +104,8 @@
 
             </ul>
         <div class="jxxt_zhuanti_rw_tongji">
-            <p><strong>分数段分布统计：</strong><a href="1" target="_blank" class="font-darkblue">按百分制统计</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="1" target="_blank" class="font-darkblue">按实际分数统计</a></p>
-            <div class="right"><img src="images/paperScorePie.png" width="193" height="140"></div>
+            <p><strong>分数段分布统计：</strong><a href="javascript:getPercentScoreByType(2)" class="font-darkblue">按百分制统计</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:getPercentScoreByType(1)"  class="font-darkblue">按实际分数统计</a></p>
+            <div class="right"><img id="percentImg" src="images/paperScorePie.png" width="193" height="140"></div>
             <div class="left">
                 <table border="0" cellspacing="0" cellpadding="0" class="public_tab3">
                     <colgroup span="2" class="w140"></colgroup>
@@ -103,7 +114,6 @@
                         <td>学生人数</td>
                     </tr>
                     <tbody id="percentScore">
-                        ${htm}
                     </tbody>
                 </table>
             </div>

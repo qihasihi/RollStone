@@ -99,8 +99,8 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
     }
 
     @Override
-    public List<PaperQuestion> getQuestionByPaper(Long paperid) {
-        return this.paperquestiondao.getQuestionByPaper(paperid);
+    public List<PaperQuestion> getQuestionByPaper(Long paperid,Integer classid,Integer classtype) {
+        return this.paperquestiondao.getQuestionByPaper(paperid,classid,classtype);
     }
 
     public List<Map<String,Object>> getPaperQuesAllId(Long paperid){
