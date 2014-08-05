@@ -38,6 +38,15 @@ public class UserInfo implements java.io.Serializable {
     private String lzxuserid;   //乐知行用户ID
     private String schoolid;
 
+    public Integer getDcschoolid() {
+        return dcschoolid;
+    }
+
+    public void setDcschoolid(Integer dcschoolid) {
+        this.dcschoolid = dcschoolid;
+    }
+
+    private Integer dcschoolid;//数校分校id
     public String getSchoolid() {
         return schoolid;
     }

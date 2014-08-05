@@ -1,6 +1,10 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
-<%@include file="/util/common-jsp/common-yhqx.jsp" %> 
-
+<%@include file="/util/common-jsp/common-yhqx.jsp" %>
+<%@page import="com.school.entity.UserInfo"%>
+<%
+    UserInfo user=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
+    int dcSchoolID=user.getDcschoolid().intValue();
+%>
 <%
 request.setAttribute("isSelect",true);
 request.setAttribute("isAdd",true);
@@ -131,6 +135,7 @@ request.setAttribute("isSetService",true);
         <td>&nbsp;</td>
         <td><input  id="sel_username" value="用户名/姓名" onblur="if(this.value==''){this.value='用户名/姓名';}" onfocus="if(this.value=='用户名/姓名'){this.value='';}" name="textfield28" type="text"  class="w200"></td>
         <td colspan="2"><a href="javascript:pageGo('p1');" class="an_search" title="搜索"></a></td>
+          <input type="hidden" id="dcSchoolID" name="dcSchoolID" value="<%=dcSchoolID%>">
         </tr>
     </table>
     </div>

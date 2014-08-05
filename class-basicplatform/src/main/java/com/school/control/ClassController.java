@@ -235,6 +235,7 @@ public class ClassController extends BaseController<ClassInfo>{
         }
         PageResult pageresult = this.getPageResultParameter(request);
         pageresult.setOrderBy(" u.c_time desc ");//排序，启用，在前，禁用在后
+        classinfo.setDcschoolid(this.logined(request).getDcschoolid());
         List<ClassInfo> classList =classManager.getList(classinfo, pageresult);
         pageresult.setList(classList);
         JsonEntity je = new JsonEntity();
@@ -308,8 +309,8 @@ public class ClassController extends BaseController<ClassInfo>{
             }
         }
 
-
-        String filename=classList.get(0).getYear()+"学年班级学生导入模板";
+       String stemp="学年班级学生导入模板";
+        String filename=classList.get(0).getYear()+stemp;
         //导出
         this.operaterexcelmanager.ExplortExcel(response, filename,sheetNameList,columnsList
                 ,datalist,titleList,entityClsList,explortObjList);

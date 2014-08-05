@@ -49,7 +49,7 @@ public class  ClassManager extends BaseManager<ClassInfo> implements IClassManag
 
 	@Override
 	public List<ClassInfo> getList(ClassInfo obj, PageResult presult) {
-		return this.classdao.getList(obj, presult);
+        return this.classdao.getList(obj, presult);
 	}
 
 

@@ -5,11 +5,9 @@ import com.school.entity.*;
 import com.school.entity.teachpaltform.TpVirtualClassInfo;
 import com.school.entity.teachpaltform.TpVirtualClassStudent;
 import com.school.manager.ClassManager;
-import com.school.manager.ClassUserManager;
 import com.school.manager.GradeManager;
 import com.school.manager.TermManager;
 import com.school.manager.inter.IClassManager;
-import com.school.manager.inter.IClassUserManager;
 import com.school.manager.inter.IGradeManager;
 import com.school.manager.inter.ITermManager;
 import com.school.manager.inter.teachpaltform.ITpVirtualClassManager;
@@ -33,14 +31,12 @@ public class TpVirtualClassController extends BaseController<TpVirtualClassInfo>
     private ITermManager termManager;
     private IGradeManager gradeManager;
     private IClassManager classManager;
-    private IClassUserManager classUserManager;
 
     public TpVirtualClassController(){
         this.tpVirtualClassManager=this.getManager(TpVirtualClassManager.class);
         this.termManager=this.getManager(TermManager.class);
         this.gradeManager=this.getManager(GradeManager.class);
         this.classManager=this.getManager(ClassManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
     }
     /**
      * 进入教师课题页
@@ -76,17 +72,9 @@ public class TpVirtualClassController extends BaseController<TpVirtualClassInfo>
         GradeInfo g=new GradeInfo();
         g.setGradeid(Integer.parseInt(gradeid));
         List<GradeInfo> gradeList = this.gradeManager.getList(g,null);
-//        ClassInfo cla = new ClassInfo();
-//        cla.setYear(ti.getYear());
-//        List<ClassInfo> classList = this.classManager.getList(cla,null);
-        ClassUser c = new ClassUser();
-        //当前学期、学科、年级下的授课班级
-        c.setClassgrade(gradeList.get(0).getGradevalue());
-        c.setUserid(this.logined(request).getRef());
-        c.setRelationtype("任课老师");
-        c.setSubjectid(Integer.parseInt(subjectid));
-        c.setYear(ti.getYear());
-        List<ClassUser>classList=this.classUserManager.getList(c,null);
+        ClassInfo cla = new ClassInfo();
+        cla.setYear(ti.getYear());
+        List<ClassInfo> classList = this.classManager.getList(cla,null);
         UserInfo u=this.logined(request);
         List<Map<String,Object>> clsList=this.tpVirtualClassManager.getListBytch(u.getRef(), ti.getYear());
         mp.put("classes", clsList);
@@ -103,6 +91,7 @@ public class TpVirtualClassController extends BaseController<TpVirtualClassInfo>
                                     HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         TpVirtualClassInfo tvc = this.getParameter(request, TpVirtualClassInfo.class);
+        tvc.setDcschoolid(this.logined(request).getDcschoolid());
         if(tvc == null
                 || tvc.getVirtualclassname()==null
                 || tvc.getVirtualclassname().trim().length()==0) {

@@ -134,6 +134,7 @@ public class StudentController extends BaseController<StudentInfo> {
 					cls.setClassgrade(stu.getClassinfo().getClassgrade().trim());
 					cls.setYear(stu.getClassinfo().getYear().trim());
 					cls.setClassname(stu.getClassinfo().getClassname().trim());
+                    cls.setDcschoolid(this.logined(request).getDcschoolid());
 					cls.setIslike(1);
 					//验证班级存在
 					List<ClassInfo>clsList=this.classManager.getList(cls, null);
@@ -168,6 +169,7 @@ public class StudentController extends BaseController<StudentInfo> {
 
 					StudentInfo selstu=new StudentInfo();
 					selstu.setStuno(stu.getStuno());
+                    //selstu.setDcschoolid(this.logined(request).getDcschoolid());
 					//验证学生存在
 					List<StudentInfo> selstuList=this.studentManager.getList(selstu, null);
 					if(selstuList!=null&&selstuList.size()>0
@@ -176,6 +178,7 @@ public class StudentController extends BaseController<StudentInfo> {
 						cu.getClassinfo().setClassid(clsList.get(0).getClassid());
 						cu.getUserinfo().setRef(selstuList.get(0).getUserref());
 						cu.setRelationtype("学生");
+                       // cu.getClassinfo().setDcschoolid(this.logined(request).getDcschoolid());
 						//验证学生班级关系不存在
 						System.out.println(cu.getClassinfo().getClassid()+"     学生ref:"+cu.getUserinfo().getRef());
 //						List<ClassUser>cuList=this.classUserManager.getList(cu, null);
@@ -203,6 +206,7 @@ public class StudentController extends BaseController<StudentInfo> {
 						u.setUsername(stu.getStuno());
 						u.setPassword("111111");
 						u.setStateid(0);
+                        u.setDcschoolid(this.logined(request).getDcschoolid());
 						sqlbuilder=new StringBuilder();
 						objparaList=this.userManager.getSaveSql(u, sqlbuilder);
 						

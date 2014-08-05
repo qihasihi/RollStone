@@ -34,6 +34,15 @@ public class NoticeInfo implements Serializable{
 	private String realname;
     private Integer istime;
 
+    public Integer getDcschoolid() {
+        return dcschoolid;
+    }
+
+    public void setDcschoolid(Integer dcschoolid) {
+        this.dcschoolid = dcschoolid;
+    }
+
+    private Integer dcschoolid;
     public Integer getIstime() {
         return istime;
     }

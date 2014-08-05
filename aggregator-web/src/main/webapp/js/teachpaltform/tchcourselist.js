@@ -362,15 +362,15 @@ function getFTermCondition(){
         },
         success:function(rps){
             var html="";
+     //       alert("rps.objList.length"+rps.objList.length+"   rps.objList[0].length"+rps.objList[0].length+"   rps.objList[1].length"+rps.objList[1].length);
             if(rps.objList.length>0
-                &&rps.objList[0].length>0
-                &&rps.objList[1].length>0){
-                $.each(rps.objList[1],function(idx,gitm){
+                &&rps.objList[0].length>0){
+
                     $.each(rps.objList[0],function(subIdx,subItm){
-                        html+="<option value='"+gitm.gradeid+"_"+subItm.subjectinfo.subjectid+"'>"
-                            +gitm.gradevalue+subItm.subjectinfo.subjectname+"</option>";
+                       html+="<option value='"+subItm.gradeid+"_"+subItm.subjectid+"'>"
+                            +subItm.gradevalue+subItm.subjectname+"</option>";
                     });
-                });
+
             }else{
                 html+="<option value='0'>-- 无 --</option>";
             }
@@ -559,7 +559,7 @@ function addTeacherCourse(type){
         },success:function(rps){
             if(rps.type=="success"){
                 alert("添加成功!");
-                window.location.href="teachercourse?m=toTeacherCourseList&materialid="+materialid;
+                window.location.href="teachercourse?toTeacherCourseList&materialid="+materialid;
             }else{
                 alert("无法添加!"+rps.msg);
             }

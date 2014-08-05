@@ -117,6 +117,10 @@ public class NoticeDAO extends CommonDAO<NoticeInfo> implements INoticeDAO {
 		}else{
 			sqlbuilder.append("NULL,");
 		}
+
+        sqlbuilder.append("?,");
+        objlist.add(obj.getDcschoolid() );
+
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objlist.add(presult.getPageNo());
@@ -225,6 +229,8 @@ public class NoticeDAO extends CommonDAO<NoticeInfo> implements INoticeDAO {
             }else{
                 sqlbuilder.append("NULL,");
             }
+            sqlbuilder.append("?,");
+            objlist.add(obj.getDcschoolid());
 			sqlbuilder.append("?)}");
 		}
 		return objlist;
@@ -352,6 +358,8 @@ public class NoticeDAO extends CommonDAO<NoticeInfo> implements INoticeDAO {
 		}else{
 			sqlbuilder.append("NULL,");
 		}
+        sqlbuilder.append("?,");
+        objlist.add(obj.getDcschoolid());
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objlist.add(presult.getPageNo());

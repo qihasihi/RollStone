@@ -27,7 +27,7 @@ public interface IUserDAO extends ICommonDAO<UserInfo> {
 	 * @return
 	 */
 	 
-	public List<UserInfo>getUserByCondition(String year,boolean isselstu,boolean isseljz,RoleUser ru,PageResult presult);
+	public List<UserInfo>getUserByCondition(String year,boolean isselstu,boolean isseljz,RoleUser ru,int dc_school_id,PageResult presult);
 	
 	public List<UserInfo> getUserForSelect(String roleid,String clsid,String cname,String grade,String username,PageResult presult);
 
@@ -35,8 +35,9 @@ public interface IUserDAO extends ICommonDAO<UserInfo> {
 
     /**
      * 获取未完成任务的学生名单
+     * @param t
      * @param flag=1 查询未完成
      * @return
      */
-    List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag);
+    List<UserInfo>getUserNotCompleteTask(TpTaskInfo t,String flag);
 }

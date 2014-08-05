@@ -104,9 +104,9 @@ public class UserManager extends BaseManager<UserInfo> implements IUserManager{
 
 
 	public List<UserInfo> getUserByCondition(String year, boolean isselstu,boolean isseljz,
-			RoleUser ru, PageResult presult) {
+			RoleUser ru,int dc_school_id, PageResult presult) {
 		// TODO Auto-generated method stub
-		return this.userdao.getUserByCondition(year, isselstu,isseljz, ru, presult); 
+		return this.userdao.getUserByCondition(year, isselstu,isseljz, ru,dc_school_id, presult);
 	}
 
 
@@ -126,8 +126,8 @@ public class UserManager extends BaseManager<UserInfo> implements IUserManager{
 		return this.userdao.getTestUser(year,relation,presult);
 	}
 
-    public List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag){
-        return this.userdao.getUserNotCompleteTask(taskid,userid,classid,flag);
+    public List<UserInfo> getUserNotCompleteTask(TpTaskInfo t,String flag) {
+        return this.userdao.getUserNotCompleteTask(t,flag);
     }
 
 }

@@ -77,7 +77,8 @@ public class TpVirtualClassStudentController extends BaseController<TpVirtualCla
                         classid != null ? Integer.parseInt(classid) : null,
                         stuname,
                         ti.getYear(),
-                        tvc.getVirtualclassid()
+                        tvc.getVirtualclassid(),
+                        this.logined(request).getDcschoolid()
                         );
         je.setObjList(stuList);
         je.setType("success");

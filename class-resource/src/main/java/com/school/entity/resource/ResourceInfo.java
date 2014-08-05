@@ -95,6 +95,15 @@ public class ResourceInfo implements java.io.Serializable {
     private Integer convertstatus;
     private Integer difftype;   //区分类型
 
+    public Integer getDcschoolid() {
+        return dcschoolid;
+    }
+
+    public void setDcschoolid(Integer dcschoolid) {
+        this.dcschoolid = dcschoolid;
+    }
+
+    private Integer dcschoolid;
     public Integer getDifftype() {
         return difftype;
     }

@@ -39,7 +39,7 @@ public class NoticeManager extends BaseManager<NoticeInfo> implements
 	@Override
 	public Boolean doSave(NoticeInfo obj) {
 		// TODO Auto-generated method stub
-		return this.noticedao.doSave(obj);
+        return this.noticedao.doSave(obj);
 	}
 
 	@Override

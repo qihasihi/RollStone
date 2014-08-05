@@ -450,8 +450,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity jeEntity = new JsonEntity();
         String classid = request.getParameter("classid");
         String classtype = request.getParameter("classtype");
-        String subjectid=request.getParameter("subjectid");
-        String gradeid = request.getParameter("gradeid");
         UserInfo u=this.logined(request);
         TermInfo ti = this.termManager.getMaxIdTerm(false);
         if (ti == null || classid==null || classtype==null) {
@@ -459,19 +457,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
             return null;
         }
-        //查询年级数据
-        GradeInfo gi = new GradeInfo();
-        gi.setGradeid(Integer.parseInt(gradeid));
-        List<GradeInfo> giList = this.gradeManager.getList(gi,null);
-        ClassUser c = new ClassUser();
-        //当前学期、学科、年级下的授课班级
-        c.setClassgrade(giList.get(0).getGradevalue());
-        c.setUserid(this.logined(request).getRef());
-        c.setRelationtype("任课老师");
-        c.setSubjectid(Integer.parseInt(subjectid));
-        c.setYear(ti.getYear());
-        List<ClassUser>clsList=this.classUserManager.getList(c,null);
-        //List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
+
+        List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
         TpVirtualClassInfo tvc= new TpVirtualClassInfo();
         tvc.setCuserid(u.getUserid());
         tvc.setStatus(1);
@@ -526,7 +513,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String classid = request.getParameter("classid");
         String classtype = request.getParameter("classtype");
         String subjectid=request.getParameter("subjectid");
-        String gradeid = request.getParameter("gradeid");
         UserInfo u=this.logined(request);
         TermInfo ti = this.termManager.getMaxIdTerm(false);
         if (ti == null || classid==null || classtype==null||subjectid==null) {
@@ -534,19 +520,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
             return null;
         }
-        //查询年级数据
-        GradeInfo gi = new GradeInfo();
-        gi.setGradeid(Integer.parseInt(gradeid));
-        List<GradeInfo> giList = this.gradeManager.getList(gi,null);
-        ClassUser c = new ClassUser();
-        //当前学期、学科、年级下的授课班级
-        c.setClassgrade(giList.get(0).getGradevalue());
-        c.setUserid(this.logined(request).getRef());
-        c.setRelationtype("任课老师");
-        c.setSubjectid(Integer.parseInt(subjectid));
-        c.setYear(ti.getYear());
-        List<ClassUser>clsList=this.classUserManager.getList(c,null);
-        //List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
+
+        List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
         TpVirtualClassInfo tvc= new TpVirtualClassInfo();
         tvc.setCuserid(u.getUserid());
         tvc.setStatus(1);
@@ -760,6 +735,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                             HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        tc.setDcschoolid(this.logined(request).getDcschoolid());
         if (tc.getCoursename() == null || tc.getCoursename().length() < 1) {
             je.setMsg("没有专题名称参数！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");
@@ -1052,7 +1028,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             tc.setTeachername(t.getTeachername());
             tc.setCourseid(nextCourseId);
             tc.setCuserid(user.getUserid());
-
+            tc.setDcschoolid(this.logined(request).getDcschoolid());
             sql = new StringBuilder();
             objList = this.tpCourseManager.getSaveSql(tc, sql);
 
@@ -1145,6 +1121,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                     }
                 }
                 //试题
+                /* 测试多校版本添加专题，卡到这，先注释
                 TpCourseQuestion tq=new TpCourseQuestion();
                 tq.setCourseid(courseid);
                 List<TpCourseQuestion>courseQuestionList=this.tpCourseQuestionManager.getList(tq,null);
@@ -1161,7 +1138,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                         }
                     }
                 }
-
+                */
                 //论题
                 TpTopicInfo tt=new TpTopicInfo();
                 tt.setCourseid(courseid);
@@ -1932,7 +1909,14 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             tcInfo.setCourselevel(-3); // -3标识不共享反义，即所有符合共享条件的专题 或者校内共享
             tcInfo.setFilterquote(1);//去除当前教师引用过的专题
             tcInfo.setCuserid(this.logined(request).getUserid());
+
         }
+        else
+        {
+            //如果是资源系统查询--按知识点查询，也需要加此条件
+            tcInfo.setCourselevel(-3); // -3标识不共享反义，即所有符合共享条件的专题 或者校内共享
+        }
+        tcInfo.setDcschoolid(this.logined(request).getDcschoolid());
         List<TpCourseInfo> courseList = this.tpCourseManager.getList(tcInfo, presult);
         presult.setList(courseList);
         je.setPresult(presult);
@@ -2190,7 +2174,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         cu.setUserid(user.getRef());
         cu.setClassgrade(grade.getGradevalue());
         cu.setYear(ti.getYear());
-        cu.setRelationtype("任课老师");
         cu.setSubjectid(Integer.parseInt(subjectid));
         List<ClassUser> clsList = this.classUserManager.getList(cu, null);
 
@@ -2368,34 +2351,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         }
         request.setAttribute("courseid", courseid);
         return new ModelAndView("/teachpaltform/preview/course-task-list");
-    }
-
-    /**
-     * 根据课题ID，加载试卷列表
-     * @return
-     */
-    @RequestMapping(params="toPaperList",method=RequestMethod.GET)
-    public ModelAndView toPaperList(HttpServletRequest request,HttpServletResponse response)throws Exception{
-        //得到该课题的所有任务，任务完成情况。
-        JsonEntity je= new JsonEntity();
-        String courseid=request.getParameter("courseid");
-
-        if(courseid==null||courseid.trim().length()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-            response.getWriter().print(je.getAlertMsgAndBack());
-            return null;
-        }
-        TpCourseInfo tc=new TpCourseInfo();
-        tc.setCourseid(Long.parseLong(courseid));
-        tc.setLocalstatus(1);//正常
-        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getList(tc, null);
-        if(teacherCourseList==null||teacherCourseList.size()<1){
-            je.setMsg("找不到指定课题!");
-            response.getWriter().print(je.getAlertMsgAndBack());
-            return null;
-        }
-        request.setAttribute("courseid",courseid);
-        return new ModelAndView("/teachpaltform/preview/course-paper-index");
     }
 
     /**

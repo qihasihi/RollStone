@@ -61,7 +61,8 @@ function closeModel(showId){
 			param.roleidstr=roleid; 
 		//param.year = year;   
 		if(usernameOrRealName.length>0&&usernameOrRealName!='用户名/姓名')  
-			param.username = usernameOrRealName;  
+			param.username = usernameOrRealName;
+        param.dcschoolid=$("#dcSchoolID").val();
 		p.setPostParams(param);      
 	} 
 	
@@ -847,7 +848,8 @@ function closeModel(showId){
 				}
 				param.clsbzrstr=clsStr; 
 			}  
-		}  
+		}
+        param.dcschoolid=$("#dcSchoolID").val();
 		//提示
 		if(!confirm('确定新建此账户?'))
 			return; 

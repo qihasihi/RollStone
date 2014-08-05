@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.school.entity.RoleUser;
 import com.school.entity.UserInfo;
+import com.school.entity.teachpaltform.TpTaskInfo;
 import com.school.manager.base.IBaseManager;
 import com.school.util.PageResult;
 
@@ -26,7 +27,7 @@ public interface IUserManager extends IBaseManager<UserInfo> {
 	 * @return
 	 */
 	 
-	public List<UserInfo>getUserByCondition(String year,boolean isselstu,boolean isseljz,RoleUser ru,PageResult presult);
+	public List<UserInfo>getUserByCondition(String year,boolean isselstu,boolean isseljz,RoleUser ru,int dc_school_id,PageResult presult);
 	
 	public List<UserInfo> getUserForSelect(String roleid,String clsid,String cname,String grade,String username,PageResult presult);
 
@@ -35,7 +36,8 @@ public interface IUserManager extends IBaseManager<UserInfo> {
 
     /**
      * 获取未完成任务的学生名单
+     * @param t
      * @return
      */
-    List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag);
+    List<UserInfo>getUserNotCompleteTask(TpTaskInfo t,String flag);
 }

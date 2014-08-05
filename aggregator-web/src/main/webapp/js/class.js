@@ -22,6 +22,8 @@
 		if(types.value.Trim().length>0){ 
 			param.dtype=types.value.Trim(); 
 		}
+
+        param.dcschoolid=$("#dcSchoolID").val();
 		p.setPostParams(param);
 	}
 	
@@ -265,12 +267,13 @@
 		var classgrade =$("#add_sel_grade").val();
 		var pattern = $("#add_sel_pattern").val();
 		var type=$("#add_sel_type").val();
-		
+        var dcschoolid=$("#dcSchoolID").val();
 		var data1={
 			classgrade : classgrade,
 			classname : classname,
 			dpattern : pattern,
 			dtype : type,
+            dcschoolid : dcschoolid,
 			dyear : year
 		};
 		if(pattern=="分层班"){

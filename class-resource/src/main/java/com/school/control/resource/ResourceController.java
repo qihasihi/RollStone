@@ -1019,6 +1019,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
                               HttpServletResponse response) throws Exception {
         // 得到参数
         ResourceInfo resInfo = this.getParameter(request, ResourceInfo.class);
+        resInfo.setDcschoolid(this.logined(request).getDcschoolid());
         JsonEntity jeEntity = new JsonEntity();
         if (resInfo.getResid() == null) {
             jeEntity.setMsg(UtilTool.msgproperty
@@ -1284,7 +1285,8 @@ public class ResourceController extends BaseController<ResourceInfo> {
         if(userid!=null&&userid.trim().length()>0)
             uid=Integer.parseInt(userid.trim());
         //得到教师
-        List<ResourceInfo> rsList=this.resourceManager.getListByUser(username,uid,presult);
+        Integer dcSchoolID=this.logined(request).getDcschoolid();
+        List<ResourceInfo> rsList=this.resourceManager.getListByUser(username,uid,presult,dcSchoolID);
         presult.getList().add(rsList);
         //得到分校
         if(username!=null&&username.trim().length()>0){
@@ -1401,6 +1403,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
                                    HttpServletResponse response) throws Exception {
         ResourceInfo resourceinfo = this.getParameter(request,
                 ResourceInfo.class);
+        resourceinfo.setDcschoolid(this.logined(request).getDcschoolid());
         resourceinfo.setResstatus(1);
         String timeRange = request.getParameter("timerange");
         if (timeRange != null && timeRange.trim().length() > 0) {
@@ -1544,6 +1547,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         ResourceInfo resourceinfo = this.getParameter(request,
                 ResourceInfo.class);
         resourceinfo.setResstatus(1);
+        resourceinfo.setDcschoolid(this.logined(request).getDcschoolid());
         PageResult presult = this.getPageResultParameter(request);
         String type = request.getParameter("type");
         if(type!=null&&type.equals("video")){           //视频包括视频与动画
@@ -1641,6 +1645,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
     public void getCheckResultList(HttpServletRequest request,
                                    HttpServletResponse response) throws Exception {
         ResourceInfo resourceinfo = this.getParameter(request,ResourceInfo.class);
+        resourceinfo.setDcschoolid(this.logined(request).getDcschoolid());
         JsonEntity je = new JsonEntity();
         PageResult presult = this.getPageResultParameter(request);
         presult.setOrderBy(" r.RES_STATUS ASC,r.REPORTNUM DESC,r.C_time DESC ");

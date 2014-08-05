@@ -1,10 +1,17 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@include file="/util/common-jsp/common-yhqx.jsp"%>
+<%@page import="com.school.entity.UserInfo"%>
 <%  
 	request.setAttribute("isSelect",true);	 //查询功能权限
     request.setAttribute("isAdd",true);	 //添加功能权限
     request.setAttribute("isUpdate",true);	 //修改功能权限
- %> 
+ %>
+
+<%
+    UserInfo user=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
+    int dcSchoolID=user.getDcschoolid().intValue();
+%>
+
  <%
 jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.school.util.PageUtil.PageUtilTool.class);
 %>
@@ -116,8 +123,9 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
       <tr>
         <td>
         <input type="text" name="sel_clsname" placeholder="按班级名称进行模糊查询" class="w200" id="sel_clsname"/>
-	    	&nbsp;<a href="javascript:pageGo('p1')"  class="an_search" title="搜索"></a>	
-      </td>
+	    	&nbsp;<a href="javascript:pageGo('p1')"  class="an_search" title="搜索"></a>
+            <input type="hidden" id="dcSchoolID" name="dcSchoolID" value="<%=dcSchoolID%>">
+        </td>
       </tr>
       </table>
     </div>

@@ -283,7 +283,7 @@
                 <%--文理：<input type="radio" name="radio" value="radio">文&nbsp;&nbsp;--%>
                 <%--<input type="radio" name="radio" value="radio">理--%>
                 <input id="coursename" name="coursename" type="text" class="w300" />
-                <a href="javascript:pageGo('pList');" class="an_search" title="查询"></a></p>
+                <a href="javascript:pageGo('pList',1);" class="an_search" title="查询"></a></p>
             <!-- 按教师搜索 -->
             <p id="tchSrhType" class="public_input" style="display:none;">
                 <select name="schoolname" id="schoolname">
@@ -301,7 +301,7 @@
                     </c:if>
                 </select>
                 <input id="teachername" name="teachername" type="text" class="w300" />
-                <a href="javascript:pageGo('pList');" class="an_search" title="查询"></a></p>
+                <a href="javascript:pageGo('pList',1);" class="an_search" title="查询"></a></p>
             <p class="font-darkblue">搜到的专题&nbsp;<span id="srhTotal" class="font-red">0</span></p>
         </div>
         <div class="jxxt_add_zhuanti_nr">

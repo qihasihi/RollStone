@@ -111,6 +111,8 @@ public class TeacherController extends BaseController<TeacherInfo>{
 		String realname=request.getParameter("realname");
 		if(realname!=null&&realname.trim().length()>0)
 			t.getUserinfo().setRealname(realname);
+
+        t.getUserinfo().setDcschoolid(this.logined(request).getDcschoolid());
 		List<TeacherInfo>teacherList=this.teacherManager.getListByTchnameOrUsername(t, pageresult);
 		pageresult.setList(teacherList);
 		je.setPresult(pageresult); 

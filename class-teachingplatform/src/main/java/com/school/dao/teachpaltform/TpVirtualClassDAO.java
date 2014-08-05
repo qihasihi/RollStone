@@ -131,6 +131,8 @@ public class TpVirtualClassDAO extends CommonDAO<TpVirtualClassInfo> implements 
             objList.add(tpvirtualclassinfo.getCuserid());
         } else
             sqlbuilder.append("null,");
+        sqlbuilder.append("?,");
+        objList.add(tpvirtualclassinfo.getDcschoolid());
 		sqlbuilder.append("?)}");
 		return objList;
 	}

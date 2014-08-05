@@ -12,6 +12,16 @@ public class TpVirtualClassInfo implements Serializable {
     private java.lang.Integer cuserid;
     private java.lang.Integer status;
 
+    public Integer getDcschoolid() {
+        return dcschoolid;
+    }
+
+    public void setDcschoolid(Integer dcschoolid) {
+        this.dcschoolid = dcschoolid;
+    }
+
+    private Integer dcschoolid;
+
     public java.lang.Integer getVirtualclassid(){
       return virtualclassid;
     }

@@ -1,6 +1,10 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@include file="/util/common-jsp/common-yhqx.jsp"%>
-
+<%@page import="com.school.entity.UserInfo"%>
+<%
+    UserInfo user=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
+    int dcSchoolID=user.getDcschoolid().intValue();
+%>
 <head>
 	<style type="text/css">
 span {
@@ -64,7 +68,7 @@ p {
 	<div class="content">
 		<div class="contentT">
 			<div class="contentR public_input">
-
+            <input type="hidden" id="dcSchoolID" name="dcSchoolID" value="<%=dcSchoolID%>">
 				<h4 class="m_t_15">
 					基本信息
 				</h4>

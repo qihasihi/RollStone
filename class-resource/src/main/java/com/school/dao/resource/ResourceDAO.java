@@ -490,6 +490,9 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
             objList.add(resourceinfo.getFilename());
         } else
             sqlbuilder.append("null,");
+
+        sqlbuilder.append("?,");
+        objList.add(resourceinfo.getDcschoolid());
         sqlbuilder.append("?)}");
         return objList;
     }
@@ -931,7 +934,8 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
             objList.add(resourceinfo.getCurrentcourseid());
         } else
             sqlbuilder.append("null,");
-
+        sqlbuilder.append("?,");
+        objList.add(resourceinfo.getDcschoolid());
         if (presult != null && presult.getPageNo() > 0
                 && presult.getPageSize() > 0) {
             sqlbuilder.append("?,?,");
@@ -940,6 +944,7 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
         } else {
             sqlbuilder.append("NULL,NULL,");
         }
+
         if (presult != null && presult.getOrderBy() != null
                 && presult.getOrderBy().trim().length() > 0) {
             sqlbuilder.append("?,");
@@ -1384,7 +1389,7 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
      * @return
      */
     public List<ResourceInfo> getListByUser(String usernamelike,Integer userid,
-                                            PageResult presult) {
+                                            PageResult presult,Integer dcSchoolID) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL rs_resource_info_by_username_split(");
         List<Object> objList = new ArrayList<Object>();
@@ -1415,6 +1420,8 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
         } else {
             sqlbuilder.append("NULL,");
         }
+        sqlbuilder.append("?,");
+        objList.add(dcSchoolID);
         sqlbuilder.append("?)}");
         List<Integer> types = new ArrayList<Integer>();
         types.add(Types.INTEGER);

@@ -9,5 +9,5 @@ import java.util.Map;
 
 public interface ITpVirtualClassStudentDAO extends ICommonDAO<TpVirtualClassStudent>{
 
-    public List<Map<String,Object>> getStudentList(String grade,Integer classid,String stuname,String year,Integer virclassid);
+    public List<Map<String,Object>> getStudentList(String grade,Integer classid,String stuname,String year,Integer virclassid,Integer dcSchoolID);
 }

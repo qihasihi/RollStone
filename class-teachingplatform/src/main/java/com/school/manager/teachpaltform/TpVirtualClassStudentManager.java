@@ -78,8 +78,8 @@ public class  TpVirtualClassStudentManager extends BaseManager<TpVirtualClassStu
 		return null;
 	}
 
-    public List<Map<String, Object>> getStudentList(String grade, Integer classid, String stuname,String year,Integer virclassid) {
-        return tpvirtualclassstudentdao.getStudentList(grade,classid,stuname,year,virclassid);
+    public List<Map<String, Object>> getStudentList(String grade, Integer classid, String stuname,String year,Integer virclassid,Integer dcSchoolID) {
+        return tpvirtualclassstudentdao.getStudentList(grade,classid,stuname,year,virclassid,dcSchoolID);
     }
 }
 

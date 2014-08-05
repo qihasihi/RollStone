@@ -49,7 +49,7 @@ public interface IResourceManager extends IBaseManager<ResourceInfo> {
      * @return
      */
     public List<ResourceInfo> getListByUser(String usernamelike,Integer userid,
-                                            PageResult presult);
+                                            PageResult presult,Integer dcSchoolID);
     public List<ResourceInfo> getListBySchoolName(String schoolnameLike,Integer iseq,PageResult presult);
 
     /**

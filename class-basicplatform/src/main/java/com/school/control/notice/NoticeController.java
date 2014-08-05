@@ -108,6 +108,8 @@ public class NoticeController extends BaseController<NoticeInfo> {
 		NoticeInfo obj = this.getParameter(request, NoticeInfo.class);
 		Date d=new Date();
 		System.out.println(d.getTime());
+        Integer dcSchoolID=this.logined(request).getDcschoolid();
+        obj.setDcschoolid(dcSchoolID);
 		List<NoticeInfo> objlist = this.noticeManager.getList(obj, p);
 		
 		Date d1=new Date();
@@ -131,6 +133,7 @@ public class NoticeController extends BaseController<NoticeInfo> {
 		p.setOrderBy(" n.is_top asc,n.c_time desc");
 		NoticeInfo obj = this.getParameter(request, NoticeInfo.class);
 		obj.setCuserid(this.logined(request).getRef());
+        obj.setDcschoolid(this.logined(request).getDcschoolid());
 		List<NoticeInfo> objlist = this.noticeManager.getUserList(obj, p);
 		p.setList(objlist);
 		je.setType("success");
@@ -176,6 +179,7 @@ public class NoticeController extends BaseController<NoticeInfo> {
 			obj.setRef(ref);
 			String userid = this.logined(request).getRef();
 			obj.setCuserid(userid);
+            obj.setDcschoolid(this.logined(request).getDcschoolid());
 			Boolean b = this.noticeManager.doSave(obj);
 			if(b){			
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));

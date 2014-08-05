@@ -205,6 +205,8 @@ public class TeacherDAO extends CommonDAO<TeacherInfo> implements ITeacherDAO {
 		}else{
 			sqlbuilder.append("NULL,");
 		}
+        sqlbuilder.append("?,");
+        objList.add(obj.getUserinfo().getDcschoolid());
 		sqlbuilder.append("?)}");	
 		List<Integer> types=new ArrayList<Integer>();
 		types.add(Types.INTEGER);

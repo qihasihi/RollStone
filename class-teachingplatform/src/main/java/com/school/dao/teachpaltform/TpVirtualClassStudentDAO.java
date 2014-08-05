@@ -111,7 +111,7 @@ public class TpVirtualClassStudentDAO extends CommonDAO<TpVirtualClassStudent> i
 		return tpvirtualclassstudentList;	
 	}
 
-    public List<Map<String,Object>> getStudentList(String grade,Integer classid,String stuname,String year,Integer virclassid){
+    public List<Map<String,Object>> getStudentList(String grade,Integer classid,String stuname,String year,Integer virclassid,Integer dcSchoolID){
         StringBuilder sqlbuilder = new StringBuilder();
         if(virclassid==null)
             return null;
@@ -142,6 +142,8 @@ public class TpVirtualClassStudentDAO extends CommonDAO<TpVirtualClassStudent> i
             objList.add(virclassid);
         } else
             sqlbuilder.append("null,");
+        sqlbuilder.append("?,");
+        objList.add(dcSchoolID);
         sqlbuilder.append("?)}");
 
         List<Map<String,Object>> tpvirtualclassstudentList=this.executeResultListMap_PROC(sqlbuilder.toString(), objList);

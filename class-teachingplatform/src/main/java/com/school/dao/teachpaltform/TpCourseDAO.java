@@ -206,6 +206,10 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
             objList.add(tpcourseinfo.getCourseid());
         } else
             sqlbuilder.append("null,");
+
+        sqlbuilder.append("?,");
+        objList.add(tpcourseinfo.getDcschoolid());
+
         if (tpcourseinfo.getCuserid() != null) {
             sqlbuilder.append("?,");
             objList.add(tpcourseinfo.getCuserid());
@@ -689,6 +693,9 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
             objList.add(tpcourseinfo.getQuoteid());
         } else
             sqlbuilder.append("null,");
+
+        sqlbuilder.append("?,");
+        objList.add(tpcourseinfo.getDcschoolid());
         sqlbuilder.append("?)}");
         return objList;
     }

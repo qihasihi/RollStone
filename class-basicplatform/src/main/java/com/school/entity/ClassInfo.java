@@ -21,6 +21,16 @@ public class ClassInfo implements java.io.Serializable {
     private SubjectInfo subjectinfo;    
     private Integer isflag; //是否启用：  1：启用   2：禁用
     private Integer lzxclassid;
+
+    public Integer getDcschoolid() {
+        return dcschoolid;
+    }
+
+    public void setDcschoolid(Integer dcschoolid) {
+        this.dcschoolid = dcschoolid;
+    }
+
+    private Integer dcschoolid;
         
     private String classyearname;
 

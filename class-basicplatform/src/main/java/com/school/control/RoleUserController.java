@@ -106,7 +106,12 @@ public class RoleUserController extends BaseController<RoleUser> {
 		request.setAttribute("indentityname", ru.getIdentityname());
 		request.setAttribute("rolestr", ru.getRoleidstr());
 		request.setAttribute("username", ru.getUsername());
-		
+        int dcSchoolID=0;
+        String strDcSchoolID=        request.getParameter("dcschoolid");
+        if(strDcSchoolID!=null&&strDcSchoolID.length()>0)
+        {
+            dcSchoolID=Integer.parseInt(strDcSchoolID);
+        }
 		
 		String year=request.getParameter("year");
 //		if(year==null||year.trim().length()<1){
@@ -126,8 +131,9 @@ public class RoleUserController extends BaseController<RoleUser> {
 						isseljz=true;
 				} 
 			}	
-		} 	
-		List<UserInfo>userList=this.userManager.getUserByCondition(year, isselstu,isseljz, ru, pageresult);
+		}
+
+		List<UserInfo>userList=this.userManager.getUserByCondition(year, isselstu,isseljz, ru,dcSchoolID, pageresult);
 		pageresult.setList(userList);
 		je.setPresult(pageresult); 
 		je.setType("success"); 

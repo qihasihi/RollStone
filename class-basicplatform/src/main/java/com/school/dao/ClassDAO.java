@@ -90,7 +90,7 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 		StringBuilder sqlbuilder=new StringBuilder("{CALL class_info_proc_split(");
 		List<Object> objList=new ArrayList<Object>(); 
 		if(obj==null)  
-			sqlbuilder.append("null,null,null,null,null,null,null,null,0,null,null,");
+			sqlbuilder.append("null,null,null,null,null,null,null,null,null,null,0,null,null,");
 		else{
             if(obj.getClassid()!=null){
                 sqlbuilder.append("?,");
@@ -102,6 +102,10 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
                 objList.add(obj.getLzxclassid());
             }else
                 sqlbuilder.append("NULL,");
+
+            sqlbuilder.append("?,");
+            objList.add(obj.getDcschoolid());
+
 			if(obj.getClassname()!=null){ 
 				sqlbuilder.append("?,");
 				objList.add(obj.getClassname());
@@ -217,6 +221,10 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
             objList.add(obj.getLzxclassid());
         }else
             sqlbuilder.append("NULL,");
+
+        sqlbuilder.append("?,");
+        objList.add(obj.getDcschoolid());
+
         if(obj.getClassgrade()!=null){
             sqlbuilder.append("?,");
             objList.add(obj.getClassgrade());

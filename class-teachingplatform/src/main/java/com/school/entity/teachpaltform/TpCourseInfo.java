@@ -75,6 +75,15 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Integer uncompletenum;
     private Integer questiontype;
 
+    public Integer getDcschoolid() {
+        return dcschoolid;
+    }
+
+    public void setDcschoolid(Integer dcschoolid) {
+        this.dcschoolid = dcschoolid;
+    }
+
+    private Integer dcschoolid;
     public Integer getQuestiontype() {
         return questiontype;
     }

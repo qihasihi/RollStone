@@ -132,8 +132,8 @@ public class  ResourceManager extends BaseManager<ResourceInfo> implements IReso
      * @return
      */
     public List<ResourceInfo> getListByUser(String usernamelike,Integer userid,
-                                            PageResult presult){
-        return resourcedao.getListByUser(usernamelike,userid,presult);
+                                            PageResult presult,Integer dcSchoolID){
+        return resourcedao.getListByUser(usernamelike,userid,presult,dcSchoolID);
     }
     public List<ResourceInfo> getListBySchoolName(String schoolnameLike,Integer iseq,PageResult presult){
         return resourcedao.getListBySchoolName(schoolnameLike,iseq,presult);
