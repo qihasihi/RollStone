@@ -334,7 +334,7 @@ public class UpdateCourse extends TimerTask{
                                         System.out.println("资源文件"+topath);
                                         if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,resList.get(0).getResid().toString(),key,1,topath,resList.get(0).getFilename(),null)){
                                             //文件失败
-                                            System.out.println("资源文件下载失败!");istrue=false;break;
+                                            System.out.println("资源文件下载失败!");//istrue=false;break;
                                         }
                                         //判断是否是教学资源
 //                                        if(rsEntity.getSourceType()!=null){
@@ -666,7 +666,7 @@ public class UpdateCourse extends TimerTask{
                                      //下载微视频文件
                                      if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,resList.get(0).getResid().toString(),key,-1,topath,resList.get(0).getFilename(),null)){
                                          //文件失败
-                                         System.out.println("资源文件下载失败!");istrue=false;break;
+                                         System.out.println("资源文件下载失败!");
                                      }
                                      //查询是否有与试卷的对应关系
                                      MicVideoPaperInfo mvp=new MicVideoPaperInfo();
@@ -843,6 +843,7 @@ class UpdateCourseUtil{
         params.append("&type=").append(type);
         if(type==2&&sourceType!=null)
             params.append("&sourcetype=").append(sourceType);
+        System.out.println(postURL+"   "+params.toString());
         Map<String,Object> map=sendPostURL(postURL.toString(),params.toString());
         if(map==null||map.get("type")==null||!map.get("type").toString().trim().equals("success")
                 ||!map.containsKey("objList")||map.get("objList")==null){
@@ -929,7 +930,7 @@ class UpdateCourseUtil{
         if(xmlFullName==null||schoolCourseId==null) return null;
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         List<ResourceInfo> returnList=new ArrayList<ResourceInfo>();
@@ -1057,7 +1058,7 @@ class UpdateCourseUtil{
         if(xmlFullName==null||courseid==null) return null;
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         List<TpCourseResource> returnList=new ArrayList<TpCourseResource>();
@@ -1114,7 +1115,7 @@ class UpdateCourseUtil{
         if(xmlFullName==null||courseid==null) return null;
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         List<TpCourseTeachingMaterial> returnList=new ArrayList<TpCourseTeachingMaterial>();
@@ -1162,7 +1163,7 @@ class UpdateCourseUtil{
         if(xmlFullName==null||courseid==null) return null;
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         List<TpTaskInfo> returnList=new ArrayList<TpTaskInfo>();
@@ -1250,7 +1251,7 @@ class UpdateCourseUtil{
         if(xmlFullName==null||courseid==null) return null;
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         List<QuestionInfo> returnList=new ArrayList<QuestionInfo>();	//返回的集合
@@ -1392,7 +1393,7 @@ class UpdateCourseUtil{
         if(xmlFullName==null||courseid==null) return null;
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         List<QuestionInfo> returnList=new ArrayList<QuestionInfo>();	//返回的集合
@@ -1528,7 +1529,7 @@ class UpdateCourseUtil{
         if(xmlFullName==null||courseid==null) return null;
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         List<Map<String,Object>> returnList=new ArrayList<Map<String,Object>>();	//返回的集合
@@ -1559,7 +1560,7 @@ class UpdateCourseUtil{
     public static List<TpCourseInfo> getTpCourseByXml(String xmlpath){
         if(_path==null||!xmlpath.equals(_path)||_list==null){
             _path=xmlpath;
-            _list=OperateXMLUtil.findXml(xmlpath, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlpath, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
 
@@ -1711,7 +1712,7 @@ class UpdateCourseUtil{
             String xmlFullName, Long schoolCourseId, Long schoolTopicId) {
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
 
@@ -1808,7 +1809,7 @@ class UpdateCourseUtil{
         //得到要解析后的实体  (不加载子项)
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         for (Object obj : _list) {
@@ -1897,7 +1898,7 @@ class UpdateCourseUtil{
         //得到要解析后的实体  (不加载子项)
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         for (Object obj : _list) {
@@ -1948,7 +1949,7 @@ class UpdateCourseUtil{
         //得到要解析后的实体  (不加载子项)
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         List<QuestionOption> returnList=new ArrayList<QuestionOption>();	//返回的集合
@@ -2021,7 +2022,7 @@ class UpdateCourseUtil{
         //得到要解析后的实体  (不加载子项)
         if(_path==null||!xmlFullName.equals(_path)||_list==null){
             _path=xmlFullName;
-            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", false);
+            _list=OperateXMLUtil.findXml(xmlFullName, "//table //row", true);
         }
         if(_list==null||_list.size()<1)return null;
         List<TpCourseQuestion> returnList=new ArrayList<TpCourseQuestion>();	//返回的集合
