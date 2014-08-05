@@ -68,7 +68,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
         String sign = UrlSigUtil.makeSigSimple("StudyModule",map,"*ETT#HONER#2014*");
-       Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
+        Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
         if(b){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
@@ -91,7 +91,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         m.put("message","成功");
         m.put("data",m2);
         JSONObject object = JSONObject.fromObject(m);
-        response.setContentType("text/json");
         response.getWriter().print(object.toString());
     }
 
@@ -176,7 +175,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Map m = new HashMap();
         Map m2 = new HashMap();
         if(courseList!=null&&courseList.size()>0){
-           m2.put("courseList",courseList);
+            m2.put("courseList",courseList);
         }else{
             m.put("result","error");
             m.put("message","当前没有专题");
@@ -214,7 +213,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
         String sign = UrlSigUtil.makeSigSimple("AddTask",map,"*ETT#HONER#2014*");
-       // Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
+        // Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
         if(!sig.equals(sign)){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
