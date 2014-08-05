@@ -60,7 +60,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String userid = request.getParameter("jid");
         String usertype=request.getParameter("userType");
         String schoolid = request.getParameter("schoolId");
-        String timestamp = request.getParameter("timeStamp");
+        String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
         HashMap<String,String> map = new HashMap();
         map.put("jid",userid);
@@ -68,8 +68,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
         String sign = UrlSigUtil.makeSigSimple("StudyModule",map,"*ETT#HONER#2014*");
-       // Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
-        if(!sig.equals(sign)){
+       Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
+        if(b){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
@@ -107,15 +107,15 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         JsonEntity je = new JsonEntity();
         String classid = request.getParameter("classId");
         String schoolid = request.getParameter("schoolId");
-        String timestamp = request.getParameter("timeStamp");
+        String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
         HashMap<String,String> map = new HashMap();
         map.put("classId",classid);
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
         String sign = UrlSigUtil.makeSigSimple("ClassTask",map,"*ETT#HONER#2014*");
-       // Boolean b = UrlSigUtil.verifySigSimple("ClassTask",map,sig);
-        if(!sig.equals(sign)){
+        Boolean b = UrlSigUtil.verifySigSimple("ClassTask",map,sig);
+        if(b){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
@@ -155,7 +155,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String usertype=request.getParameter("userType");
         String classid = request.getParameter("classId");
         String schoolid = request.getParameter("schoolId");
-        String timestamp = request.getParameter("timeStamp");
+        String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
         HashMap<String,String> map = new HashMap();
         map.put("jid",userid);
@@ -164,8 +164,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
         String sign = UrlSigUtil.makeSigSimple("ClassCalendar",map,"*ETT#HONER#2014*");
-       // Boolean b = UrlSigUtil.verifySigSimple("ClassCalendar",map,sig);
-        if(!sig.equals(sign)){
+        Boolean b = UrlSigUtil.verifySigSimple("ClassCalendar",map,sig);
+        if(b){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
@@ -206,7 +206,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String dataStr = request.getParameter("data");
         String userid = request.getParameter("jid");
         String schoolid = request.getParameter("schoolId");
-        String timestamp = request.getParameter("timeStamp");
+        String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
         HashMap<String,String> map = new HashMap();
         map.put("data",dataStr);
