@@ -177,7 +177,7 @@
 //        writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl&modelName=gkk'><span class='lm_ico11'></span>四中公开课</a></li>");
 //    }
 
-    writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl'><span class='lm_ico07'></span>四中网校</a></li>");
+   // writeHtml.append("<li><a target='_blank' href='user?m=toEttUrl'><span class='lm_ico07'></span>四中网校</a></li>");
     writeHtml.append("</ul></div>");
 
 %>
