@@ -2,11 +2,16 @@ package  com.school.entity.teachpaltform;
 
 import com.school.util.UtilTool;
 
+import java.util.Date;
+
 public class TpCourseClass {
 
 	public void TpCourseClass (){}
 
     private java.util.Date begintime;
+    private java.util.Date endtime;
+
+
     private java.lang.Integer ref;
     private java.util.Date ctime;
     private java.lang.Integer classid;
@@ -149,6 +154,15 @@ public class TpCourseClass {
     public void setBegintime(java.util.Date begintime){
       this.begintime = begintime;
     }
+
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
+    }
+
     public java.lang.Integer getRef(){
       return ref;
     }
@@ -193,6 +207,10 @@ public class TpCourseClass {
 
     public String getBegintimeString() {
         return (begintime == null ? "" : UtilTool.DateConvertToString(begintime,
+                UtilTool.DateType.type1));
+    }
+    public String getEndtimeString() {
+        return (endtime == null ? "" : UtilTool.DateConvertToString(endtime,
                 UtilTool.DateType.type1));
     }
 }

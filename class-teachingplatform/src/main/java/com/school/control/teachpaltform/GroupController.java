@@ -448,11 +448,70 @@ public class GroupController extends BaseController<TpGroupInfo>{
 			response.getWriter().print(je.toJSON());
 			return;
 		}
-		TpGroupStudent gs=new TpGroupStudent();
-		gs.setRef(Integer.parseInt(ref));
-		gs.setGroupid(Long.parseLong(groupid));
-        gs.setIsleader(Integer.parseInt(isleader));
-		if(this.tpGroupStudentManager.doUpdate(gs)){
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+
+        TpGroupStudent gsSel=new TpGroupStudent();
+        gsSel.setRef(Integer.parseInt(ref));
+        List<TpGroupStudent>gsList=this.tpGroupStudentManager.getList(gsSel,null);
+        if(gsList==null||gsList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+
+        if(isleader.equals("1")){
+            //清空GroupId组长
+            TpGroupStudent gsUpd= new TpGroupStudent();
+            gsUpd.setGroupid(Long.parseLong(groupid));
+            gsUpd.setIsleader(2);
+            sql=new StringBuilder();
+            objList=this.tpGroupStudentManager.getUpdateSql(gsUpd,sql);
+            if(sql!=null&&objList!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+
+        TpGroupStudent groupStudent=gsList.get(0);
+        //组ID相同
+        if(groupStudent.getGroupid().toString().equals(groupid)){
+            TpGroupStudent gs=new TpGroupStudent();
+            gs.setRef(Integer.parseInt(ref));
+            gs.setIsleader(Integer.parseInt(isleader));
+            sql=new StringBuilder();
+            objList=this.tpGroupStudentManager.getUpdateSql(gs,sql);
+            if(sql!=null&&objList!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }else{ //组ID不同删除关联数据，重新添加，加入小组时间改变
+            TpGroupStudent gsDel=new TpGroupStudent();
+            gsDel.setRef(Integer.parseInt(ref));
+            sql=new StringBuilder();
+            objList=this.tpGroupStudentManager.getDeleteSql(gsDel, sql);
+            if(sql!=null&&objList!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //添加TpGroupStudent数据
+            TpGroupStudent gsAdd=new TpGroupStudent();
+            gsAdd.setUserid(groupStudent.getUserid());
+            gsAdd.setIsleader(Integer.parseInt(isleader));
+            gsAdd.setGroupid(Long.parseLong(groupid));
+            sql=new StringBuilder();
+            objList=this.tpGroupStudentManager.getSaveSql(gsAdd, sql);
+            if(sql!=null&&objList!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+
+		if(this.tpGroupStudentManager.doExcetueArrayProc(sqlListArray,objListArray)){
 			je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
 			je.setType("success");
 		}else{ 

@@ -208,7 +208,7 @@
         </tr>
         <tr>
             <td>&nbsp;</td>
-            <td><input type="checkbox" id="isleader" name="isleader" value="1">
+            <td><input type="radio" id="isleader" name="isleader" value="1">
                 指定为组长</td>
         </tr>
         <tr>

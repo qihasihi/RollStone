@@ -112,7 +112,8 @@ function getMyGroup(){
                 var html="";
                 $.each(rps.objList,function(idx,itm){
                     html+='<ul>';
-                    html+='<li>'+itm.teachername+'教师'+itm.groupname+'</li>';
+                    //html+='<li>'+itm.teachername+'教师'+itm.groupname+'</li>';
+                    html+='<li>'+itm.groupname+'</li>';
                     if(itm.tpgroupstudent!=null&&itm.tpgroupstudent.length>0){
                         $.each(itm.tpgroupstudent,function(ix,im){
                             html+="<li>"+im.stuname+"</li>";

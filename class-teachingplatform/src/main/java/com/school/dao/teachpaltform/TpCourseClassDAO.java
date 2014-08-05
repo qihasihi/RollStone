@@ -211,6 +211,11 @@ public class TpCourseClassDAO extends CommonDAO<TpCourseClass> implements ITpCou
             objList.add(tpcourseclass.getBegintimeString());
         } else
             sqlbuilder.append("null,");
+        if (tpcourseclass.getEndtime() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseclass.getEndtimeString());
+        } else
+            sqlbuilder.append("null,");
         if (tpcourseclass.getClasstype() != null) {
             sqlbuilder.append("?,");
             objList.add(tpcourseclass.getClasstype());
