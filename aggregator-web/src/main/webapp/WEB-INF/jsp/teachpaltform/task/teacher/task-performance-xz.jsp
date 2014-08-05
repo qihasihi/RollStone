@@ -12,8 +12,9 @@
         var taskid="${taskid}";
         var questype="${questype}";
         $(function(){
+            $("input[name='classradio']").eq(0).attr("checked",true);
             <c:if test="${!empty classList}">
-            xzloadStuPerformance(null,"${taskInfo.tasktype}","${taskInfo.taskvalueid}");
+            xzloadStuPerformance(${classList[0].classid},"${taskInfo.tasktype}","${taskInfo.taskvalueid}");
             </c:if>
             if(${taskInfo.tasktype==3}){
                 var uri="question?m=todetail&id=${taskInfo.taskvalueid}";
@@ -31,17 +32,22 @@
 <div class="subpage_head"><span class="ico55"></span><strong>任务统计</strong></div>
 <div class="content1">
     <p class="font-black">
-        <input type="radio" name="classradio" id="radio" checked="checked" value="0" onclick="xzloadStuPerformance(null,'${taskInfo.tasktype}','${taskInfo.taskvalueid}')">
-        全部&nbsp;&nbsp;&nbsp;&nbsp;
         <c:if test="${!empty classList}">
             <c:forEach items="${classList}" var="c">
                 <!-- <li><a id="a_class_${c.classid }" href="javascript:loadStuPerformance(${c.classid })">${c.classname }</a></li>-->
 
                 <input type="radio" id="radio${c.classid}" name="classradio" onclick="xzloadStuPerformance('${c.classid }','${taskInfo.tasktype}','${taskInfo.taskvalueid}',${c.classtype})"/>${c.classname }
             </c:forEach>
-        </c:if></p>
+        </c:if>
+    <c:if test="${fn:length(classList)>1}">
+        <input type="radio" name="classradio" id="radio" checked="checked" value="0" onclick="xzloadStuPerformance(null,'${taskInfo.tasktype}','${taskInfo.taskvalueid}')">
+        全部&nbsp;&nbsp;&nbsp;&nbsp;
+    </c:if>
+    </p>
     <div class="jxxt_zhuanti_rw_tongji">
         <p><strong>完成比率：</strong><span id="finishnum"></span>&nbsp;&nbsp;&nbsp;&nbsp;<strong>正确率：</strong><span id="rightnum"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="" id="showdetail" target="_blank" class="font-darkblue">查看题目</a></p>
+        <p class="p_tb_10"><span class="font-black"><strong>未完成任务：</strong><span id="notcomplete" onmousemove="var dvstyle=dv_nocomplete.style;dvstyle.left=(mousePostion.x+5)+'px';dvstyle.top=(mousePostion.y+5)+'px';dvstyle.display='block'"
+                                                                                 onmouseout="dv_nocomplete.style.display='none';"></span>人</span>&nbsp;&nbsp;<span  id="sendMsg"></span></p>
         <div id="piediv" class="right"></div>
         <div class="left"><strong>分项统计：</strong>
             <table id="optionList" border="0" cellspacing="0" cellpadding="0" class="public_tab3">
@@ -56,6 +62,13 @@
     </div>
 
     <br/>
+
+</div>
+<div class="public_windows" id="dv_nocomplete" style="display: none;position: absolute;" >
+    <h3></a>未完成任务人员</h3>
+    <div class="jxxt_student_rw_float" id="dv_nocomplete_data">
+
+    </div>
 </div>
 <%@include file="/util/foot.jsp" %>
 </body>

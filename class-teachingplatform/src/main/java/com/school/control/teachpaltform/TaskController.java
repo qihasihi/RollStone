@@ -200,6 +200,16 @@ public class TaskController extends BaseController<TpTaskInfo>{
         request.setAttribute("fileSystemIpPort", UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD"));
         request.setAttribute("nextid", this.resourceManager.getNextId(true));
         if(type.equals("1")){
+            List<EttColumnInfo> columnList = (List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
+            if(columnList!=null&&columnList.size()>0){
+                Boolean b= false;
+                for(EttColumnInfo obj:columnList){
+                    if(obj.getEttcolumnid()==7||obj.getEttcolumnid()==320){
+                        b=true;
+                    }
+                }
+                request.setAttribute("sign",b);
+            }
              return new ModelAndView("/teachpaltform/task/teacher/resource-element-detail");
         }else{
              return new ModelAndView("/teachpaltform/task/teacher/element-detail");
@@ -3010,10 +3020,19 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }finally{
             fos.close();
         }
+        //未完成人数
+        TpTaskInfo task=new TpTaskInfo();
+        task.setTaskid(Long.parseLong(taskid));
+        Integer cid=null;
+        if(classid!=null&&!classid.equals("0"))
+            cid=Integer.parseInt(classid);
+
+        List<UserInfo>notCompleteList=this.userManager.getUserNotCompleteTask(task.getTaskid(),null,cid,"1");
         je.getObjList().add(numList);
         je.getObjList().add(option);
         je.getObjList().add(tList);
         je.getObjList().add(tiList);
+        je.getObjList().add(notCompleteList);
 		je.setType("success");
 		response.getWriter().print(je.toJSON());
 	}
@@ -3070,9 +3089,18 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }else{
             numList=this.taskPerformanceManager.getPerformanceNum(Long.parseLong(taskid),clsid,Integer.parseInt(type));
         }
+        //未完成人数
+        TpTaskInfo task=new TpTaskInfo();
+        task.setTaskid(Long.parseLong(taskid));
+        Integer cid=null;
+        if(classid!=null&&!classid.equals("0"))
+            cid=Integer.parseInt(classid);
+
+        List<UserInfo>notCompleteList=this.userManager.getUserNotCompleteTask(task.getTaskid(),null,cid,"1");
         je.getObjList().add(numList);
         je.getObjList().add(tList);
         je.getObjList().add(tiList);
+        je.getObjList().add(notCompleteList);
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }

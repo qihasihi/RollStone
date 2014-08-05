@@ -18,6 +18,18 @@
         var versionid="${versionid}";
         var courseid="${courseid}";
         $(function(){
+            var bl1 = ${sign1};
+            var bl2 = ${sign2};
+            if(bl1){
+                $("#gaoDiv").show();
+            }else{
+                $("#gaoDiv").hide();
+            }
+            if(bl2){
+                $("#zhiDiv").show();
+            }else{
+                $("#zhiDiv").hide();
+            }
             getRemoteResources(true);
         });
         function dosub(taskvalueid,resourcetype,remotetype,resname){
@@ -51,16 +63,20 @@
                 <%--</select>--%>
                 <input name="textfield2"  id="keyword" type="text" class="w240" placeholder="资源名称/专题名称" />
                 <a href="javascript:getRemoteResources(false)" class="an_search" title="查询"></a></p>
-            <p class="font-black p_b_10"><strong>高清课堂</strong></p>
-            <ul class="gqkt font-black" id="gaoqing">
+           <div id="gaoDiv">
+                <p class="font-black p_b_10"><strong>高清课堂</strong></p>
+                <ul class="gqkt font-black" id="gaoqing">
 
-            </ul>
-            <p class="font-darkblue t_c clearit" id="moreGaoqing"><a href="javascript:getMoreResources()" ><span class="ico49a"></span>查看更多资源</a></p>
-            <p class="font-black p_tb_10 clearit"><strong>知识导学</strong></p>
-            <ul class="zsdx font-black" id="zhishi">
+                </ul>
+                <p class="font-darkblue t_c clearit" id="moreGaoqing"><a href="javascript:getMoreResources()" ><span class="ico49a"></span>查看更多资源</a></p>
+           </div>
+            <div id="zhiDiv">
+                <p class="font-black p_tb_10 clearit"><strong>知识导学</strong></p>
+                <ul class="zsdx font-black" id="zhishi">
 
-            </ul>
-            <p class="font-darkblue t_c" id="moreZhishi"><a href="javascript:getMoreZhishi()" ><span class="ico49a"></span>查看更多资源</a></p>
+                </ul>
+                <p class="font-darkblue t_c" id="moreZhishi"><a href="javascript:getMoreZhishi()" ><span class="ico49a"></span>查看更多资源</a></p>
+            </div>
         </div>
     </div>
 </body>

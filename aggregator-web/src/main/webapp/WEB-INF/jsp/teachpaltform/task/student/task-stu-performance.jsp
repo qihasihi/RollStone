@@ -108,7 +108,15 @@
                         timestring = timestring.substring(0,timestring.lastIndexOf("."));
                         if(im.TASK_TYPE==1){
                             typename="资源学习";
-                            details="tpres?toTeacherIdx&courseid="+im.COURSE_ID+"&tpresdetailid="+im.TASK_VALUE_ID+"&taskid="+im.TASK_ID;
+                            if(im.RESOURCE_TYPE==1){
+                                 details="tpres?toTeacherIdx&courseid="+im.COURSE_ID+"&tpresdetailid="+im.TASK_VALUE_ID+"&taskid="+im.TASK_ID;
+                            }else{
+                                if(im.REMOTE_TYPE==1){
+                                    details='tpres?m=toRemoteResourcesDetail&hd_res_id='+im.TASK_VALUE_ID;
+                                }else{
+                                    details='tpres?m=toRemoteResourcesDetail&res_id='+im.TASK_VALUE_ID;
+                                }
+                            }
                         }else if(im.TASK_TYPE==2){
                             typename="互动交流";
                             details="tptopic?m=toDetailTopic&topicid="+im.TASK_VALUE_ID;
@@ -137,16 +145,18 @@
                                 content="";
                             }
                         }
+                        var zhongjianshu = 0;
                        if($("#tr_"+im.COURSE_ID+" td").length<2){
-                           var h='<td>任务'+''+(ix+1)+''+typename+'</td>';
+                           var h='<td>任务'+''+(ix+1-zhongjianshu)+''+typename+'</td>';
                            h+='<td>'+timestring+'</td>';
                            h+='<td>'+content+'</td>';
                            h+='<td class="v_c"><a href="'+details+'" class="ico46" title="浏览详情"></a></td> ';
                            h+='<td>'+status+'</td>';
                            $("#tr_"+im.COURSE_ID).append(h);
                        }else{
+                           zhongjianshu=ix;
                            var h='<tr id="tr_'+im.COURSE_ID+'">';
-                           h+='<td>任务'+''+(ix+1)+''+typename+'</td>';
+                           h+='<td>任务'+''+1+''+typename+'</td>';
                            h+='<td>'+timestring+'</td>';
                            h+='<td>'+content+'</td>';
                            h+='<td class="v_c"><a href="'+details+'" class="ico46" title="浏览详情"></a></td> ';

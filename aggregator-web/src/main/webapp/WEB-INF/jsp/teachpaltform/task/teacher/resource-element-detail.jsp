@@ -35,6 +35,12 @@
         var url="${fileSystemIpPort}upload1.jsp?jsessionid=aaatCu3yQxMmN-Rru135t&res_id="+nextid;
         var operate_type="${param.operate_type}";
         $(function () {
+            var bl = ${sign};
+            if(bl){
+                $("#remoteLi").show();
+            }else{
+                $("#remoteLi").hide();
+            }
             var url='tpres?toQueryResourceList';
             pList1 = new PageControl( {
                 post_url : url,
@@ -194,7 +200,8 @@
                 }
                 pList2.Refresh();
             }else{
-                $("#mainTab2").html('没有数据');
+                htm+='<tr><td>没有数据</td></tr>';
+                $("#mainTab2").html(htm);
             }
         }
         function getInvestReturnMethod3(rps){
@@ -489,7 +496,7 @@
     <div class="subpage_lm">
         <ul>
             <li class="crumb"><a href="task?m=toTaskElementDetial&operate_type=1&subjectid=${param.subjectid}&tasktype=1&courseid=${param.courseid}">本地资源</a></li>
-            <li><a href="tpres?m=toRemoteResources&courseid=${courseid}&subjectid=${param.subjectid}"  >远程资源</a></li>
+            <li id="remoteLi"><a href="tpres?m=toRemoteResources&courseid=${courseid}&subjectid=${param.subjectid}"  >远程资源</a></li>
         </ul>
     </div>
 

@@ -1524,6 +1524,29 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
             } else {
                 recordhtm += '<table><tr><td>暂无数据!</td></tr></table>';
             }
+            if(rmsg.objList[4]!=null&&rmsg.objList[4].length>0){
+                $("#dv_nocomplete_data").html('');
+                $.each(rmsg.objList[4], function (idx, itm) {
+                    if ($('p[id="p_stu_' + itm.classid + '"]').length > 0)
+                        if ($('ul[id="ul_stu_' + itm.classid + '"]').length > 0)
+                            $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                        else {
+                            $("#dv_nocomplete_data").append('<ul id="ul_stu_' + itm.classid + '"></ul>');
+                            $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                        }
+                    else {
+                        $("#dv_nocomplete_data").append('<p id="p_stu_' + itm.classid + '"><strong>' + itm.taskobjname + '</strong><span class="font-red"></span></p>');
+                        $("#dv_nocomplete_data").append('<ul id="ul_stu_' + itm.classid + '"></ul>');
+                        $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                    }
+
+                });
+            }
+            $("#notcomplete").html(rmsg.objList[4].length)
+            if(rmsg.objList[4]!=null&&rmsg.objList[4].length>0){
+                $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
+
+            }
             $("#optionTbl").hide();
             $("#optionTbl").html(optionhtm);
             $("#optionTbl").show("");
@@ -1675,6 +1698,29 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
 
             } else {
                 htm += '<table><tr><td>暂无数据!</td></tr></table>';
+            }
+            if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
+                $("#dv_nocomplete_data").html('');
+                $.each(rmsg.objList[3], function (idx, itm) {
+                    if ($('p[id="p_stu_' + itm.classid + '"]').length > 0)
+                        if ($('ul[id="ul_stu_' + itm.classid + '"]').length > 0)
+                            $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                        else {
+                            $("#dv_nocomplete_data").append('<ul id="ul_stu_' + itm.classid + '"></ul>');
+                            $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                        }
+                    else {
+                        $("#dv_nocomplete_data").append('<p id="p_stu_' + itm.classid + '"><strong>' + itm.taskobjname + '</strong><span class="font-red"></span></p>');
+                        $("#dv_nocomplete_data").append('<ul id="ul_stu_' + itm.classid + '"></ul>');
+                        $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                    }
+
+                });
+            }
+            $("#notcomplete").html(rmsg.objList[3].length)
+            if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
+                $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
+
             }
             $("#mainTbl").hide();
             $("#mainTbl").html(htm);
