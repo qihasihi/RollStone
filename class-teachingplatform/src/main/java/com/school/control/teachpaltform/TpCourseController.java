@@ -760,6 +760,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                             HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        tc.setDcschoolid(this.logined(request).getDcschoolid());
         if (tc.getCoursename() == null || tc.getCoursename().length() < 1) {
             je.setMsg("没有专题名称参数！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");
@@ -1062,7 +1063,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             tc.setTeachername(t.getTeachername());
             tc.setCourseid(nextCourseId);
             tc.setCuserid(user.getUserid());
-
+            tc.setDcschoolid(this.logined(request).getDcschoolid());
             sql = new StringBuilder();
             objList = this.tpCourseManager.getSaveSql(tc, sql);
 
@@ -1955,7 +1956,15 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             tcInfo.setCourselevel(-3); // -3标识不共享反义，即所有符合共享条件的专题 或者校内共享
             tcInfo.setFilterquote(1);//去除当前教师引用过的专题
             tcInfo.setCuserid(this.logined(request).getUserid());
+
         }
+        else
+        {
+            //如果是资源系统查询--按知识点查询，也需要加此条件
+            tcInfo.setCourselevel(-3); // -3标识不共享反义，即所有符合共享条件的专题 或者校内共享
+        }
+        tcInfo.setDcschoolid(this.logined(request).getDcschoolid());
+
         List<TpCourseInfo> courseList = this.tpCourseManager.getList(tcInfo, presult);
         presult.setList(courseList);
         je.setPresult(presult);
