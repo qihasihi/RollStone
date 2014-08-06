@@ -9,8 +9,8 @@ import java.util.*;
 @Entity
 public class TpCourseInfo  implements java.io.Serializable{
 
-	public void TpCourseInfo (){}
-   
+    public void TpCourseInfo (){}
+
     private java.lang.String schoolname;
     private java.util.Date ctime;
     private java.lang.String teachername;
@@ -43,6 +43,15 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Object classesid;
     private Object classtype;
     private Object classtimes;
+    private Object classendtimes;
+
+    public Object getClassendtimes() {
+        return classendtimes;
+    }
+
+    public void setClassendtimes(Object classendtimes) {
+        this.classendtimes = classendtimes;
+    }
 
     private boolean beginClass=true;
     private boolean classtimetype=true;
@@ -75,15 +84,6 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Integer uncompletenum;
     private Integer questiontype;
 
-    public Integer getDcschoolid() {
-        return dcschoolid;
-    }
-
-    public void setDcschoolid(Integer dcschoolid) {
-        this.dcschoolid = dcschoolid;
-    }
-
-    private Integer dcschoolid;
     public Integer getQuestiontype() {
         return questiontype;
     }
@@ -393,32 +393,32 @@ public class TpCourseInfo  implements java.io.Serializable{
     }
 
     public java.lang.String getSchoolname(){
-      return schoolname;
+        return schoolname;
     }
     public void setSchoolname(java.lang.String schoolname){
-      this.schoolname = schoolname;
+        this.schoolname = schoolname;
     }
     public void setCtime(java.sql.Timestamp ctime){
-      this.ctime = ctime;
+        this.ctime = ctime;
     }
 
     public java.lang.String getTeachername(){
-      return teachername;
+        return teachername;
     }
     public void setTeachername(java.lang.String teachername){
-      this.teachername = teachername;
+        this.teachername = teachername;
     }
     public java.lang.Integer getCloudstatus(){
-      return cloudstatus;
+        return cloudstatus;
     }
     public void setCloudstatus(java.lang.Integer cloudstatus){
-      this.cloudstatus = cloudstatus;
+        this.cloudstatus = cloudstatus;
     }
     public java.lang.Integer getCoursestatus(){
-      return coursestatus;
+        return coursestatus;
     }
     public void setCoursestatus(java.lang.Integer coursestatus){
-      this.coursestatus = coursestatus;
+        this.coursestatus = coursestatus;
     }
 
     public Date getCtime() {
@@ -448,7 +448,7 @@ public class TpCourseInfo  implements java.io.Serializable{
     }
 
     public void setMtime(java.sql.Timestamp mtime){
-      this.mtime = mtime;
+        this.mtime = mtime;
     }
 
     public Integer getCuserid() {
@@ -460,10 +460,10 @@ public class TpCourseInfo  implements java.io.Serializable{
     }
 
     public java.lang.Integer getLocalstatus(){
-      return localstatus;
+        return localstatus;
     }
     public void setLocalstatus(java.lang.Integer localstatus){
-      this.localstatus = localstatus;
+        this.localstatus = localstatus;
     }
 
     public Long getCourseid() {
@@ -475,22 +475,22 @@ public class TpCourseInfo  implements java.io.Serializable{
     }
 
     public java.lang.Integer getSharetype(){
-      return sharetype;
+        return sharetype;
     }
     public void setSharetype(java.lang.Integer sharetype){
-      this.sharetype = sharetype;
+        this.sharetype = sharetype;
     }
     public java.lang.Integer getCourselevel(){
-      return courselevel;
+        return courselevel;
     }
     public void setCourselevel(java.lang.Integer courselevel){
-      this.courselevel = courselevel;
+        this.courselevel = courselevel;
     }
     public java.lang.String getCoursename(){
-      return coursename;
+        return coursename;
     }
     public void setCoursename(java.lang.String coursename){
-      this.coursename = coursename;
+        this.coursename = coursename;
     }
 
     public Object getClasses() {
@@ -545,6 +545,12 @@ public class TpCourseInfo  implements java.io.Serializable{
             return null;
         return getClasstimes().toString().split(",");
     }
+    public String[] getClassEndTimeArray(){
+        if(getClassendtimes()==null)
+            return null;
+        return getClassendtimes().toString().split(",");
+    }
+
 
     public String getVersionvalues() {
         return versionvalues;
