@@ -41,6 +41,7 @@
                 quesType=idx;
             }
 
+
             function showCourseList(){
                 var ulobj=$("#ul_courselist");
                 if(ulobj.css("display")=="none")
@@ -48,8 +49,6 @@
                 else
                     ulobj.hide();
             }
-
-
         </script>
 	</head>
   
