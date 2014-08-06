@@ -39,5 +39,5 @@ public interface IUserDAO extends ICommonDAO<UserInfo> {
      * @param flag=1 ²éÑ¯Î´Íê³É
      * @return
      */
-    List<UserInfo>getUserNotCompleteTask(TpTaskInfo t,String flag);
+    List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag);
 }
