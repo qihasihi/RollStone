@@ -35,7 +35,6 @@ public interface IUserDAO extends ICommonDAO<UserInfo> {
 
     /**
      * 获取未完成任务的学生名单
-     * @param t
      * @param flag=1 查询未完成
      * @return
      */
