@@ -18,6 +18,7 @@
         var typename;
         var extenname;
         var sign=${sign};
+        var isHaveParent = ${param.sign};
         switch (parseInt(extension)){
             case 0:
                 extenname="客观";
@@ -87,7 +88,7 @@
                         if(j==0){
                             lihtm+=' class="crumb"';
                         }
-                        lihtm+=' ><a href="1">'+(j+i*10)+'</a></li>';
+                        lihtm+=' ><a href="javascript:submitScore(${detail.REF},'+(j+i*10)+')">'+(j+i*10)+'</a></li>';
                         if(parseFloat((j+i*10))>=parseFloat(totalnum-0.5)){
                             break;
                         }
@@ -99,7 +100,7 @@
                     for(var k =0.5;k<10.5;k++){
                         if(parseFloat((k+i*10))>=parseFloat(totalnum))
                             break;
-                        lihtm2+='<li><a href="1">'+(k+i*10)+'</a></li>';
+                        lihtm2+='<li><a href="javascript:submitScore(${detail.REF},'+(K+i*10)+')">'+(k+i*10)+'</a></li>';
                     }
                     ulhtm2+=lihtm2+'</ul>';
                     divhtm+=ulhtm+ulhtm2+'</div>';
@@ -110,7 +111,23 @@
 
         });
         function submitScore(ref,score){
-
+            $.ajax({
+                url:"paper?m=doMarking",
+                type:"post",
+                data:{ref:ref,score:score},
+                dataType:'json',
+                cache: false,
+                error:function(){
+                    alert('系统未响应，请稍候重试!');
+                },success:function(rmsg){
+                    var htm='paper?m=toMarkingDetail';
+                    if(isHaveParent){
+                        htm+='&questionid=${param.questionid}';
+                    }
+                    htm+='&quesids=${quesids}&tabidx=${tabidx}&paperid=${param.paperid}&quesid=${quesid}&idx=${param.idx}';
+                    window.localtion.href=htm;
+                }
+            });
         }
         function tabQuestion(type){
             if(type==1){
@@ -158,81 +175,81 @@
     </script>
 </head>
 <body>
-    <div class="subpage_head"><span class="ico55"></span><strong>批阅试卷</strong></div>
-    <div class="content2">
-        <p class="jxxt_zhuanti_rw_piyue_info"><a href="" id="nextquestion" class="an_public3">下一题</a>
-            <a href="" id="upquestion" class="an_public3">上一题</a><strong class="font-blue">${param.idx}</strong>&nbsp;&nbsp;试题分数：<span class="font-blue">${num.SCORE}</span>&nbsp;分</p>
-        <div class="jxxt_zhuanti_shijuan_add public_input font-black">
-            <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940">
-                <c:if test="${!empty detail.CONTENT2}">
-                    <tr>
-                        <td><span class="bg"><span id="tname"></span>：</span>${detail.CONTENT2}
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>${detail.ORDERIDX}、${detail.CONTENT}
-                            <c:if test="${!empty option}">
-                                <table border="0" cellpadding="0" cellspacing="0">
-                                    <col class="w30"/>
-                                    <col class="w910"/>
-                                    <c:forEach items="${option}" var="itm">
-                                        <tr>
-                                            <th><input type="radio" name="radio"  value="radio"></th>
-                                            <td>${itm.optiontype}. ${itm.content}
-                                                <c:if test="${!empty rightoption}">
-                                                    <c:forEach items="${rightoption}" var="im">
-                                                        <c:if test="${itm.optiontype==im.optiontype}">
-                                                            <span class="ico12"></span>
-                                                        </c:if>
-                                                    </c:forEach>
-                                                </c:if>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                </table>
-                            </c:if>
-                        </td>
-                    </tr>
-                </c:if>
-                <c:if test="${empty detail.CONTENT2}">
-                    <tr>
-                        <td><span class="bg"><span id="tname"></span>：</span>${detail.CONTENT}
-                            <c:if test="${!empty option}">
-                                <table border="0" cellpadding="0" cellspacing="0">
-                                    <col class="w30"/>
-                                    <col class="w910"/>
-                                    <c:forEach items="${option}" var="itm">
-                                        <tr>
-                                            <th><input type="radio" name="radio"  value="radio"></th>
-                                            <td>${itm.optiontype}. ${itm.content}
-                                                <c:if test="${itm.isright==1}">
-                                                    <span class="ico12"></span>
-                                                </c:if>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                </table>
-                            </c:if>
-                        </td>
-                    </tr>
-                </c:if>
+<div class="subpage_head"><span class="ico55"></span><strong>批阅试卷</strong></div>
+<div class="content2">
+    <p class="jxxt_zhuanti_rw_piyue_info"><a href="" id="nextquestion" class="an_public3">下一题</a>
+        <a href="" id="upquestion" class="an_public3">上一题</a><strong class="font-blue">${param.idx}</strong>&nbsp;&nbsp;试题分数：<span class="font-blue">${num.SCORE}</span>&nbsp;分</p>
+    <div class="jxxt_zhuanti_shijuan_add public_input font-black">
+        <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940">
+            <c:if test="${!empty detail.CONTENT2}">
                 <tr>
-                    <td><p><strong>正确答案：</strong>${detail.CURRENTANSWER}</p>
-                        <p><strong>答案解析：</strong>${detail.ANALYSIS}</p></td>
+                    <td><span class="bg"><span id="tname"></span>：</span>${detail.CONTENT2}
+
+                    </td>
                 </tr>
-            </table>
-        </div>
-        <div class="jxxt_zhuanti_rw_piyue_defen" id="score">
-            <h5></h5>
-            <p class="p_b_20"><strong>平均分：</strong><span class="font-blue">${num.AVGSCORE}</span>分
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong>已批改：</strong><span class="font-blue">${num.MARKINGNUM}/${num.SUBMITNUM}</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="1" class="font-blue">查看统计</a></p>
-            <p><strong>学生：</strong>${detail.STU_NAME} </p>
-            <p><strong>答案：</strong>${detail.ANSWER}</p>
-            <p><strong>附件：</strong><a href="${detail.ANNEXNAME}" target="_blank" class="font-blue">我的答案</a></p>
-            <p><strong>评分：</strong>请选择该学生的得分。</p>
-        </div>
+                <tr>
+                    <td>${detail.ORDERIDX}、${detail.CONTENT}
+                        <c:if test="${!empty option}">
+                            <table border="0" cellpadding="0" cellspacing="0">
+                                <col class="w30"/>
+                                <col class="w910"/>
+                                <c:forEach items="${option}" var="itm">
+                                    <tr>
+                                        <th><input type="radio" name="radio"  value="radio"></th>
+                                        <td>${itm.optiontype}. ${itm.content}
+                                            <c:if test="${!empty rightoption}">
+                                                <c:forEach items="${rightoption}" var="im">
+                                                    <c:if test="${itm.optiontype==im.optiontype}">
+                                                        <span class="ico12"></span>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </c:if>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </c:if>
+                    </td>
+                </tr>
+            </c:if>
+            <c:if test="${empty detail.CONTENT2}">
+                <tr>
+                    <td><span class="bg"><span id="tname"></span>：</span>${detail.CONTENT}
+                        <c:if test="${!empty option}">
+                            <table border="0" cellpadding="0" cellspacing="0">
+                                <col class="w30"/>
+                                <col class="w910"/>
+                                <c:forEach items="${option}" var="itm">
+                                    <tr>
+                                        <th><input type="radio" name="radio"  value="radio"></th>
+                                        <td>${itm.optiontype}. ${itm.content}
+                                            <c:if test="${itm.isright==1}">
+                                                <span class="ico12"></span>
+                                            </c:if>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </c:if>
+                    </td>
+                </tr>
+            </c:if>
+            <tr>
+                <td><p><strong>正确答案：</strong>${detail.CURRENTANSWER}</p>
+                    <p><strong>答案解析：</strong>${detail.ANALYSIS}</p></td>
+            </tr>
+        </table>
     </div>
-    <%@include file="/util/foot.jsp" %>
+    <div class="jxxt_zhuanti_rw_piyue_defen" id="score">
+        <h5></h5>
+        <p class="p_b_20"><strong>平均分：</strong><span class="font-blue">${num.AVGSCORE}</span>分
+            &nbsp;&nbsp;&nbsp;&nbsp;<strong>已批改：</strong><span class="font-blue">${num.MARKINGNUM}/${num.SUBMITNUM}</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="1" class="font-blue">查看统计</a></p>
+        <p><strong>学生：</strong>${detail.STU_NAME} </p>
+        <p><strong>答案：</strong>${detail.ANSWER}</p>
+        <p><strong>附件：</strong><a href="${detail.ANNEXNAME}" target="_blank" class="font-blue">我的答案</a></p>
+        <p><strong>评分：</strong>请选择该学生的得分。</p>
+    </div>
+</div>
+<%@include file="/util/foot.jsp" %>
 </body>
 </html>
