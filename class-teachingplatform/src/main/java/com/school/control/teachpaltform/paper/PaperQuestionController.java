@@ -1237,7 +1237,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 addPaper.setQuestionid(Long.parseLong(questionid));
                 addPaper.setOrderidx(maxIdx);
                 addPaper.setScore(new Float(5));
-                this.paperQuestionManager.getSaveSql(addPaper,sql);
+                this.paperQuestionManager.doSave(addPaper);
                /* sql=new StringBuilder();
                 objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
                 if(objList!=null&&sql!=null){
@@ -1257,7 +1257,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
         }else{
-            je.setMsg("您的操作没有执行!");
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            je.setType("success");
         }
         response.getWriter().print(je.toJSON());
     }
@@ -1532,12 +1533,12 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             objListArray.add(objList);
         }
         if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size())
-        if(this.paperQuestionManager.doExcetueArrayProc(sqlListArray,objListArray)){
-            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-            je.setType("success");
-            this.modifyPaperTotalScore(pq.getPaperid());
-        }else
-            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            if(this.paperQuestionManager.doExcetueArrayProc(sqlListArray,objListArray)){
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+                this.modifyPaperTotalScore(pq.getPaperid());
+            }else
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         response.getWriter().print(je.toJSON());
     }
 
@@ -3517,7 +3518,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         }
         //重定向，但不换地址
         request.getRequestDispatcher("paperques?m=testPaper&paperid="+paperid+"&courseid="+courseid+"&taskid="+taskid).forward(request,response);
-        return null; 
+        return null;
     }
 
     /**
@@ -3611,7 +3612,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
         String q=quesid;
-         boolean is75=false;
+        boolean is75=false;
         if(q.indexOf("|")!=-1){
             Object[] quesObjArray=quesid.split("\\|");
             quesid=quesObjArray[1].toString();
@@ -3637,7 +3638,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                     is75=true;
                 }
                 //
-               jsonEntity.getObjList().add(pques);
+                jsonEntity.getObjList().add(pques);
             }
         }
         //验证试题
@@ -3852,7 +3853,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                     String[] qidArrayStr=qid.trim().split("\\|");
                     tmpQid=qidArrayStr[1];
                     if(pqidStr.trim().indexOf(","+qidArrayStr[0]+",")==-1){
-                            pqidStr+=qidArrayStr[0]+",";
+                        pqidStr+=qidArrayStr[0]+",";
                     }
                     //添加关系
                     relationMap.put(qidArrayStr[1],qidArrayStr[0]);
@@ -3928,7 +3929,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         //得到当前学生答案
         mp.put("stuAnswer",stuPageQuesList);
 
-       return new ModelAndView("/teachpaltform/paper/stuTestDetail",mp); }
+        return new ModelAndView("/teachpaltform/paper/stuTestDetail",mp); }
 
     /**
      * 交卷
@@ -4006,7 +4007,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         //得到判断题得分记录得到总分，进行记录
         List<Map<String,Object>> stuScoreSumList=this.stuPaperLogsManager.getStuPaperSumScore(this.logined(request).getUserid(),splog.getPaperid());
         if(stuScoreSumList!=null&&stuScoreSumList.get(0)!=null&&stuScoreSumList.get(0).containsKey("V_SCORE"));
-         splog.setScore(Float.parseFloat(stuScoreSumList.get(0).get("V_SCORE").toString()));
+        splog.setScore(Float.parseFloat(stuScoreSumList.get(0).get("V_SCORE").toString()));
 
         sqlbuilder=new StringBuilder();
         List<Object> objList=this.stuPaperLogsManager.getSaveSql(splog,sqlbuilder);
@@ -4034,7 +4035,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
      */
     @RequestMapping(params="m=doSaveTestPaper",method=RequestMethod.POST)
     public void doSaveTestPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
-       // request.setCharacterEncoding("GBK");
+        // request.setCharacterEncoding("GBK");
         String testQuesData=request.getParameter("testQuesData");
         String paperid=request.getParameter("paperid");
         JsonEntity jsonEntity=new JsonEntity();
@@ -4160,10 +4161,10 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             tpf.setIsright(1);
             tpf.setTasktype(tk.getTasktype());
             tpf.setCriteria(2);//如果是微视频
-             if(!this.taskPerformanceManager.doSave(tpf)){
-                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-                 response.getWriter().println(jsonEntity.toJSON());return;
-             }
+            if(!this.taskPerformanceManager.doSave(tpf)){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+                response.getWriter().println(jsonEntity.toJSON());return;
+            }
         }
         //添加视频浏览记录
         StuViewMicVideoLog svmvlog=new StuViewMicVideoLog();
