@@ -827,6 +827,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         //获取当前专题教材
         TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
         ttm.setCourseid(teacherCourseList.get(0).getCourseid());
+        Object gradeid=request.getSession().getAttribute("session_grade");
+        if(gradeid!=null&&gradeid.toString().trim().length()>0)
+            ttm.setGradeid(Integer.parseInt(gradeid.toString()));
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0)
             mp.put("materialInfo",materialList.get(0));

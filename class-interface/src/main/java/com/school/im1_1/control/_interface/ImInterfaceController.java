@@ -70,7 +70,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String sign = UrlSigUtil.makeSigSimple("StudyModule",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
         if(b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return;
         }
         ImInterfaceInfo obj = new ImInterfaceInfo();
@@ -78,17 +78,20 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         obj.setUserid(Integer.parseInt(userid));
         obj.setUsertype(Integer.parseInt(usertype));
         List<Map<String,Object>> list = this.imInterfaceManager.getStudyModule(obj);
+        for(Map map1:list){
+            map1.put("SCHOOLID" ,schoolid);
+        }
         Map m = new HashMap();
         Map m2 = new HashMap();
         if(list!=null&&list.size()>0){
             m2.put("classes",list);
             m2.put("activityNotifyNum","12");
         }else{
-            m.put("result","error");
-            m.put("message","当前用户没有学习目录，请联系管理员");
+            m.put("result","0");
+            m.put("msg","当前用户没有学习目录，请联系管理员");
         }
-        m.put("result","success");
-        m.put("message","成功");
+        m.put("result","1");
+        m.put("msg","成功");
         m.put("data",m2);
         JSONObject object = JSONObject.fromObject(m);
         response.getWriter().print(object.toString());
@@ -115,7 +118,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String sign = UrlSigUtil.makeSigSimple("ClassTask",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("ClassTask",map,sig);
         if(b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return;
         }
         ImInterfaceInfo obj = new ImInterfaceInfo();
@@ -129,12 +132,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 courseList.get(i).put("taskList",taskList);
             }
         }else{
-            m.put("result","error");
-            m.put("message","当前没有专题");
+            m.put("result","0");
+            m.put("msg","当前没有专题");
         }
 
-        m.put("result","success");
-        m.put("message","成功");
+        m.put("result","1");
+        m.put("msg","成功");
         m.put("data",courseList);
         JSONObject object = JSONObject.fromObject(m);
         response.getWriter().print(object.toString());

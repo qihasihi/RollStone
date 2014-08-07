@@ -175,7 +175,7 @@ function getInvestReturnMethod(rps){
             }else if(itm.tasktype==4){
                 html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==5){
-                html+='<a href="#" class="font-blue">'+taskObj+'</a>';
+               // html+='<a href="#" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==6){
                 html+='<a class="font-blue" href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >'+taskObj+'</a>';
             }else if(itm.tasktype==10){

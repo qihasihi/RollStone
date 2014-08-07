@@ -37,8 +37,9 @@ function questionReturn(rps){
                 else{
                     htm+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=3&questype='+itm.questiontype+'&taskvalueid='+itm.questionid+'"" title="发任务" class="ico51"></a>';
                     htm+='<a href="javascript:void(0);" onclick="doDelQuestion(\''+itm.ref+'\')" title="删除" class="ico04"></a>';
+                    htm+='<a href="question?m=toUpdQuestion&questionid='+itm.questionid+'&courseid='+itm.courseid+'" title="编辑" class="ico11"></a>';
                 }
-                htm+='<a href="question?m=toUpdQuestion&questionid='+itm.questionid+'&courseid='+itm.courseid+'" title="编辑" class="ico11"></a>';
+
             }else
                 htm+='<a href="javascript:void(0);" onclick="doDelQuestion(\''+itm.ref+'\')" title="删除" class="ico04"></a>';
             htm+='</p>';

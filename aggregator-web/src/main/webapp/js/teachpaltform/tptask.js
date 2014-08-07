@@ -946,11 +946,11 @@ function doSubManageTask(taskid) {
         }
         param.taskvalueid = paperid;
     } else if (tasktype.val() == "5") {
-        if (quesNum.length < 1) {
+        /*if (quesNum.length < 1) {
             alert('请选择试卷题目数量!');
             return;
         }
-        param.quesnum = quesNum;
+        param.quesnum = quesNum;*/
     }else if (tasktype.val() == "6") {
         if (micresid.length < 1) {
             alert('请选择微视频!');

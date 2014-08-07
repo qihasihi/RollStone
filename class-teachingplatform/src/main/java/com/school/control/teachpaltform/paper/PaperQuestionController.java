@@ -1024,7 +1024,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 addPaper.setOrderidx(maxIdx);
                 if(question.getScore()!=null)
                     addPaper.setScore(question.getScore());
-                this.paperQuestionManager.getSaveSql(addPaper,sql);
+                this.paperQuestionManager.doSave(addPaper);
                 /*sql=new StringBuilder();
                 objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
                 if(objList!=null&&sql!=null){
@@ -1046,6 +1046,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             }
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            je.setType("success");
         }
         response.getWriter().print(je.toJSON());
     }

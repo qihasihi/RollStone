@@ -123,6 +123,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		JsonEntity je= new JsonEntity();
 		String courseid=request.getParameter("courseid");
         String subjectid=request.getParameter("subjectid");
+        String gradeid=request.getParameter("gradeid");
+        String materialid=request.getParameter("material_id");
         String addresstype = request.getParameter("addresstype");
 		if(courseid==null||courseid.trim().length()<1){
 			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -168,6 +170,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		request.setAttribute("courseid", courseid);
 		request.setAttribute("termid", termid);
         request.setAttribute("subjectid", subjectid);
+        if(gradeid!=null&&!gradeid.toString().equals("0"))
+            request.getSession().setAttribute("session_grade",gradeid);
+        if(subjectid!=null&&!subjectid.toString().equals("0"))
+            request.getSession().setAttribute("session_subject",subjectid);
+        if(materialid!=null&&!materialid.toString().equals("0"))
+            request.getSession().setAttribute("session_material",materialid);
+
         //任务库
         List<DictionaryInfo>courselevel=this.dictionaryManager.getDictionaryByType("COURSE_LEVEL");
         request.setAttribute("courselevel",courselevel);
@@ -737,13 +746,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String subjectid=null,gradeid=null;
 
         //获取当前专题教材
-        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+     /*   TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
         ttm.setCourseid(Long.parseLong(courseid));
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0){
             subjectid=materialList.get(0).getSubjectid().toString();
             gradeid=materialList.get(0).getGradeid().toString();
-        }
+        }*/
 
 
 		
@@ -918,8 +927,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         mp.put("courseclassList",courseclassList);
         mp.put("groupList", groupList);
         mp.put("termid", termid);
-        mp.put("gradeid", gradeid);
-        mp.put("subjectid", subjectid);
+        mp.put("gradeid", request.getSession().getAttribute("session_grade"));
+        mp.put("subjectid",request.getSession().getAttribute("session_subject"));
         TpCourseQuestion cq=new TpCourseQuestion();
         cq.setCourseid(Long.parseLong(courseid));
         Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);

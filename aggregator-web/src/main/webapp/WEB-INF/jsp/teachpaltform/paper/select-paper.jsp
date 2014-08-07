@@ -78,7 +78,7 @@
                                 html+='</p></a>';
                                 html+='<p class="pic">';
                                 if(itm.taskflag<1)
-                                    shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico51" title="发任务"></span></b></a>';
+                                    html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico51" title="发任务"></span></b></a>';
                                 else
                                     html+='<b><span class="ico52" title="已发任务"></span></b>';
                                 html+='</p>';
@@ -150,19 +150,11 @@
     <p class="p_b_10">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
     <p><strong>标准试卷</strong></p>
     <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
-            <p class="pic"><a class="ico_wsp1" title="微视频"></a><a href="1"><b><span class="ico51" title="发任务"></span></b></a></p>
-        </li>
+
     </ul>
     <p><strong>自建试卷</strong></p>
     <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
-            <p class="pic"><a href="1"><b><span class="ico51" title="发任务"></span></b></a></p>
-        </li>
+
     </ul>
 </div>
 

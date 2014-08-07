@@ -393,9 +393,6 @@ public class UpdateCourse extends TimerTask{
                              if(quesList!=null&&quesList.size()>0){
                                  for(QuestionInfo ques:quesList){
                                      if(ques==null)continue;
-                                     if(ques.getQuestionid().intValue()==493355){
-                                         System.out.println("493355");
-                                     }
                                      //得到问题的SQL语句
                                      sqlbuilder=new StringBuilder();
                                      objList=questionManager.getSynchroSql(ques,sqlbuilder);
@@ -512,7 +509,7 @@ public class UpdateCourse extends TimerTask{
                                     PageResult presult=new PageResult();
                                     List<TpCoursePaper> cpList=coursePaperManager.getList(coursePaper, presult);
                                     //得到ID
-                                     Long paperid=coursePaperManager.getNextId(true);
+                                     Long paperid=coursePaperManager.getNextId(false);
                                     //如果不存在，则添加试卷信息
                                     if(cpList==null||cpList.size()<1){
                                         PaperInfo p=new PaperInfo();

@@ -67,6 +67,7 @@
     <div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_question">
     </div>
 </div>
+</div>
 <%@include file="/util/foot.jsp"%>
 </body>
 </html>

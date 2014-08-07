@@ -161,6 +161,7 @@ function preeDoPageSub(pObj){
             <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
             <p class="pic"><a href="1"><b><span class="ico02" title="导入"></span></b></a></p>
         </li> -->
+
         <c:if test="${!empty coursePaperList}">
             <c:forEach items="${coursePaperList}" var="c">
                 <c:if test="${c.paperid>0}">
@@ -187,9 +188,12 @@ function preeDoPageSub(pObj){
                 </c:if>
             </c:forEach>
         </c:if>
+
+
     </ul>
     <p><strong>自建试卷</strong></p>
     <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
+
         <c:forEach items="${coursePaperList}" var="c">
             <c:if test="${c.paperid<0}">
                 <li>
@@ -200,10 +204,10 @@ function preeDoPageSub(pObj){
                                 <span class="bg1" style="width:50%">${c.objectivenum}</span><span class="bg2" style="width:50%">${c.subjectivenum}</span>
                             </c:if>
 
-                            <c:if test="${c.objectivenum>0 and c.subjectivenum<0}">
+                            <c:if test="${c.objectivenum>0 and c.subjectivenum<1}">
                                 <span class="bg1" style="width:100%">${c.objectivenum}</span>
                             </c:if>
-                            <c:if test="${c.subjectivenum>0 and c.objectivenum<0}">
+                            <c:if test="${c.subjectivenum>0 and c.objectivenum<1}">
                                 <span class="bg2" style="width:100%">${c.subjectivenum}</span>
                             </c:if>
                             <c:if test="${!empty c.quesnum}">

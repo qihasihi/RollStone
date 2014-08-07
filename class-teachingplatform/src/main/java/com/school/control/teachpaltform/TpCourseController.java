@@ -19,6 +19,7 @@ import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
+import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
 import com.school.util.JsonEntity;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
@@ -66,6 +67,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         this.schoolManager=this.getManager(SchoolManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
         this.tpCourseRelatedManager=this.getManager(TpCourseRelatedManager.class);
+        this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
     }
     private ITpTaskManager tpTaskManager;
     private ITpCourseManager tpCourseManager;
@@ -260,6 +262,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         if(addCourseId!=null&&addCourseId.length()>0){
             TpCourseTeachingMaterial tct=new TpCourseTeachingMaterial();
             tct.setCourseid(Long.parseLong(addCourseId));
+            Object gradeid=request.getSession().getAttribute("session_grade");
+            if(gradeid!=null&&gradeid.toString().length()>0)
+                tct.setGradeid(Integer.parseInt(gradeid.toString()));
             List<TpCourseTeachingMaterial>tctList=tpCourseTeachingMaterialManager.getList(tct,null);
             if(tctList!=null&&tctList.size()>0){
                 request.setAttribute("subjectid",tctList.get(0).getSubjectid());

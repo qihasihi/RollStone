@@ -515,6 +515,7 @@ public class PaperController extends BaseController<PaperInfo>{
         TpCoursePaper t=new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
         t.setLocalstatus(1);
+        t.setSelecttype(7); //查询不包括自主测试的试卷
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t,p);
         p.setList(coursePaperList);
         je.setPresult(p);
@@ -1170,10 +1171,19 @@ public class PaperController extends BaseController<PaperInfo>{
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        String subjectid=null,materialid=null,gradeid=null;
+
         //获取当前专题教材
         TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
         ttm.setCourseid(Long.parseLong(courseid));
+        Object subjectid=request.getSession().getAttribute("session_subject");
+        Object gradeid=request.getSession().getAttribute("session_grade");
+        Object materialid=request.getSession().getAttribute("session_material");
+        if(subjectid!=null)
+            ttm.setSubjectid(Integer.parseInt(subjectid.toString()));
+        if(gradeid!=null)
+            ttm.setGradeid(Integer.parseInt(gradeid.toString()));
+        if(materialid!=null)
+            ttm.setTeachingmaterialid(Integer.parseInt(materialid.toString()));
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0){
             subjectid=materialList.get(0).getSubjectid().toString();
@@ -1223,10 +1233,20 @@ public class PaperController extends BaseController<PaperInfo>{
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        String subjectid=null,materialid=null,gradeid=null;
+
         //获取当前专题教材
+
         TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
         ttm.setCourseid(Long.parseLong(courseid));
+        Object subjectid=request.getSession().getAttribute("session_subject");
+        Object gradeid=request.getSession().getAttribute("session_grade");
+        Object materialid=request.getSession().getAttribute("session_material");
+        if(subjectid!=null)
+            ttm.setSubjectid(Integer.parseInt(subjectid.toString()));
+        if(gradeid!=null)
+            ttm.setGradeid(Integer.parseInt(gradeid.toString()));
+        if(materialid!=null)
+            ttm.setTeachingmaterialid(Integer.parseInt(materialid.toString()));
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0){
             subjectid=materialList.get(0).getSubjectid().toString();

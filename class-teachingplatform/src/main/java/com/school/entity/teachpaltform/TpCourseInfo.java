@@ -571,7 +571,7 @@ public class TpCourseInfo  implements java.io.Serializable{
     }
 
     /**
-     * 得到集合
+     * 得到集合 1
      * @return
      */
     public List<Map<String, Object>> getClassEntity(){

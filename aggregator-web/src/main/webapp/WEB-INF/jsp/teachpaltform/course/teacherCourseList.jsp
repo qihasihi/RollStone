@@ -11,6 +11,7 @@
         var teacherid="${teacherid}";
         var global_gradeid=0;
         var global_subjectid=0;
+
         var userid=${userid};
         var materialid="${param.materialid}";
         var currentSubjectid = "${param.currentSubjectid}";

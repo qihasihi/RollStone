@@ -140,7 +140,7 @@ function preeDoPageSub(pObj){
                                                 </c:if>
                                             </th>
                                             <td>
-                                                    ${option.optiontype}&nbsp;${option.content};
+                                                    ${option.optiontype}&nbsp;${option.content}
                                                 <c:if test="${option.isright eq 1}">
                                                     <span class="ico12"></span>
                                                 </c:if>
@@ -174,7 +174,7 @@ function preeDoPageSub(pObj){
                                                     </c:if>
                                                 </th>
                                                 <td>
-                                                        ${option.optiontype}&nbsp;${option.content};
+                                                        ${option.optiontype}&nbsp;${option.content}
                                                     <c:if test="${option.isright eq 1}">
                                                         <span class="ico12"></span>
                                                     </c:if>

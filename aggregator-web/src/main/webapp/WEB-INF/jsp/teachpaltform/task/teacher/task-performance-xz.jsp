@@ -26,7 +26,6 @@
 
 </head>
 <body>
-<%@include file="/util/head.jsp" %>
 
 
 <div class="subpage_head"><span class="ico55"></span><strong>任务统计</strong></div>
@@ -36,11 +35,11 @@
             <c:forEach items="${classList}" var="c">
                 <!-- <li><a id="a_class_${c.classid }" href="javascript:loadStuPerformance(${c.classid })">${c.classname }</a></li>-->
 
-                <input type="radio" id="radio${c.classid}" name="classradio" onclick="xzloadStuPerformance('${c.classid }','${taskInfo.tasktype}','${taskInfo.taskvalueid}',${c.classtype})"/>${c.classname }
+                <input type="radio" id="radio${c.classid}" name="classradio" onclick="xzloadStuPerformance('${c.classid }','${taskInfo.tasktype}','${taskInfo.taskvalueid}',${c.classtype})"/>${c.classname }&nbsp;&nbsp;&nbsp;&nbsp;
             </c:forEach>
         </c:if>
     <c:if test="${fn:length(classList)>1}">
-        <input type="radio" name="classradio" id="radio" checked="checked" value="0" onclick="xzloadStuPerformance(null,'${taskInfo.tasktype}','${taskInfo.taskvalueid}')">
+        <input type="radio" name="classradio" id="radio"  value="0" onclick="xzloadStuPerformance(null,'${taskInfo.tasktype}','${taskInfo.taskvalueid}')">
         全部&nbsp;&nbsp;&nbsp;&nbsp;
     </c:if>
     </p>

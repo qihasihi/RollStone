@@ -124,7 +124,7 @@ function getInvestReturnMethod(rps){
             else
                 html+="<span class='ico17' title='共享'></span>";
 
-            html+="<a target='_blank' href='task?toTaskList&courseid="+itm.courseid+"&subjectid="+global_subjectid+"'>"+itm.coursename+"</p></td>";
+            html+="<a target='_blank' href='task?toTaskList&courseid="+itm.courseid+"&subjectid="+global_subjectid+"&gradeid="+global_gradeid+"&material_id="+$("#material_id").val()+"'>"+itm.coursename+"</p></td>";
             html+="<td>";
             if(typeof(itm.classEntity)!='undefined'&&itm.classEntity.length>0){
                 if(itm.classEntity[0].CLASS_NAME!="0"){

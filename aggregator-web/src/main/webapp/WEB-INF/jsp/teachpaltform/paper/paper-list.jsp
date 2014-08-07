@@ -62,11 +62,13 @@ function getInvestReturnMethod(rps){
                 if(itm.objectivenum>0&&itm.subjectivenum>0)
                     html+='<span class="bg1" style="width:50%">'+itm.objectivenum+'</span><span class="bg2" style="width:50%">'+itm.subjectivenum+'</span>';
                 else if(itm.objectivenum>0)
-                    html+='<span class="bg2" style="width:100%">'+itm.objectivenum+'</span>';
+                    html+='<span class="bg1" style="width:100%">'+itm.objectivenum+'</span>';
                 else if(itm.subjectivenum>0)
-                    html+='<span class="bg1" style="width:100%">'+itm.subjectivenum+'</span>';
+                    html+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
                 html+='</p></a>';
                 html+='<p class="pic">';
+                if(itm.papertype==5)
+                    html+='<a class="ico_wsp1" title="微视频"></a>';
                 if(itm.taskflag<1)
                     html+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=4&taskvalueid='+itm.paperid+'""><b><span class="ico51" title="发任务"></span></b></a>';
                 else
@@ -77,8 +79,13 @@ function getInvestReturnMethod(rps){
                 shtml+='<li>';
                 if(itm.papertype==4)
                     shtml+='<a>';
-                else
-                    shtml+='<a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                else{
+                    if(itm.taskflag<1)
+                        shtml+='<a href=aper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                    else
+                        shtml+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                }
+
                 shtml+='<p class="one">'+itm.papername+'</p>';
                 shtml+='<p class="two">';
                 if(itm.objectivenum>0&&itm.subjectivenum>0)
@@ -91,11 +98,14 @@ function getInvestReturnMethod(rps){
                     shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
                 shtml+='</p></a>';
                 shtml+='<p class="pic">';
-                if(itm.taskflag<1)
+                if(itm.papertype==5)
+                    shtml+='<a class="ico_wsp1" title="微视频"></a>';
+                if(itm.taskflag<1){
                     shtml+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=4&taskvalueid='+itm.paperid+'""><b><span class="ico51" title="发任务"></span></b></a>';
-                else
+                    shtml+='<a  href="javascript:doDelPaper('+itm.ref+')"><b><span class="ico04" title="删除"></span></b></a>';
+                }else{
                     shtml+='<b><span class="ico52" title="已发任务"></span></b>';
-                shtml+='<a  href="javascript:doDelPaper('+itm.ref+')"><b><span class="ico04" title="删除"></span></b></a>';
+                }
                 shtml+='</p>';
                 shtml+='</li>';
             }
@@ -204,55 +214,11 @@ function showCourseList(){
     <p class="jxxt_zhuanti_shijuan_text">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题<a class="ico15" href="tpres?m=toRecycleIdx&type=5&courseid=${courseid}" title="回收站"></a></p>
     <p><strong>标准试卷</strong></p>
     <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
-            <p class="pic"><a class="ico_wsp1" title="微视频"></a><a href="1"><b><span class="ico51" title="发任务"></span></b></a><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
-        </li>
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg2" style="width:100%">8</span></p></a>
-            <p class="pic"><a class="ico_wsp1" title="微视频"></a><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
-        </li>
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg1" style="width:50%">8</span><span class="bg2" style="width:50%">2</span></p></a>
-            <p class="pic"><a class="ico_wsp1" title="微视频"></a><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
-        </li>
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg1" style="width:50%">6</span><span class="bg2" style="width:50%">4</span></p></a>
-            <p class="pic"><a class="ico_wsp1" title="微视频"></a><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
-        </li>
+
     </ul>
     <p class="p_t_10"><strong>自建试卷</strong></p>
     <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
-        <li><a href="1" target="_blank" class="kapian"><span class="ico82"></span></a></li>
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
-            <p class="pic"><a href="1"><b><span class="ico51" title="发任务"></span></b></a><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
-        </li>
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg2" style="width:100%">8</span></p></a>
-            <p class="pic"><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
-        </li>
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg1" style="width:50%">8</span><span class="bg2" style="width:50%">2</span></p></a>
-            <p class="pic"><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
-        </li>
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg1" style="width:50%">6</span><span class="bg2" style="width:50%">4</span></p></a>
-            <p class="pic"><b><span class="ico52" title="已发任务"></span></b><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
-        </li>
-        <li><a href="1" target="_blank">
-            <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
-            <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
-            <p class="pic"><a href="1"><b><span class="ico51" title="发任务"></span></b></a><a href="1"><b><span class="ico04" title="删除"></span></b></a></p>
-        </li>
+
     </ul>
 </div>
 

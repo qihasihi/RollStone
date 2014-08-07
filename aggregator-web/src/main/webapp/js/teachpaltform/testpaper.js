@@ -302,7 +302,7 @@ function loadNextQues(quesid,paperid,idx){
                     sc=quesObj.score;
 
                 //要答的题
-                h='<div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_qs_'+quesObj.questionid+'">';
+                h='<div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" style="width:850px" id="dv_qs_'+quesObj.questionid+'">';
                 h+='<input type="hidden" value="'+quesObj.questionid+'" id="hd_quesid_'+quesObj.questionid+'" name="hd_quesid"/>';
                 h+='<input type="hidden" value="" name="hd_answer" id="hs_val_'+quesObj.questionid+'"/>';
                 h+='<input type="hidden" value="0" name="hd_stu_score" id="hs_val_stu_'+quesObj.questionid+'"/>';
@@ -364,7 +364,6 @@ function loadNextQues(quesid,paperid,idx){
                         h+='</table>';
                     }
                 }
-
 
                 if($("#dv_qs_"+quesObj.questionid).length<1){
                      if(parentQuesObj!=null&&$("div[id='dv_qs_"+parentQuesObj.questionid+"']").length>0){
