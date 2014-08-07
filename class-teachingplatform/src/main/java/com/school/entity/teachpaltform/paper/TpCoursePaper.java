@@ -34,6 +34,15 @@ public class TpCoursePaper {
 
     private Integer papertype;  //paperinfo papertype
     private Integer seldatetype;    //查询用 时间条件
+    private String coursepapername;
+
+    public String getCoursepapername() {
+        return coursepapername;
+    }
+
+    public void setCoursepapername(String coursepapername) {
+        this.coursepapername = coursepapername;
+    }
 
     public Integer getSeldatetype() {
         return seldatetype;

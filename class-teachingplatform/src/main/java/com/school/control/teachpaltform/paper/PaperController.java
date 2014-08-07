@@ -534,8 +534,8 @@ public class PaperController extends BaseController<PaperInfo>{
         String gradeid=request.getParameter("gradeid");
         String subjectid=request.getParameter("subjectid");
         String coursename=request.getParameter("coursename");
-        if(courseid==null||courseid.trim().length()<1
-                ||coursename==null||coursename.trim().length()<1){
+        if(courseid==null||courseid.trim().length()<1 //||coursename==null||coursename.trim().length()<1
+                ){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
@@ -545,7 +545,11 @@ public class PaperController extends BaseController<PaperInfo>{
         TpCoursePaper t=new TpCoursePaper();
         t.setFiltercourseid(Long.parseLong(courseid));//排除当前专题
         t.setLocalstatus(1);
-        t.setCoursename(coursename);
+        if(coursename!=null&&coursename.trim().length()>0){
+            t.setCoursepapername(coursename);
+        }
+
+
         if(materialid!=null&&materialid.length()>0)
             t.setMaterialid(Integer.parseInt(materialid));
         if(gradeid!=null&&gradeid.length()>0)
@@ -3462,10 +3466,15 @@ public class PaperController extends BaseController<PaperInfo>{
             if(!this.paperManager.doGenderZiZhuPaper(tkEntity.getTaskid(),this.logined(request).getUserid())){
                 jsonEntity.setMsg("生成试卷失败!原因：未知");
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
-            }else
-                jsonEntity.setMsg("生成试卷成功!共生成" + tkEntity.getQuesnum() + "道题!");
-            //再查一遍
-            paperList=this.paperManager.getList(pentity,null);
+            }else{
+                //再查一遍
+                paperList=this.paperManager.getList(pentity,null);
+                PaperQuestion pqSearch=new PaperQuestion();
+                pqSearch.setPaperid(paperList.get(0).getPaperid());
+                List<PaperQuestion> paList=this.paperQuestionManager.getList(pqSearch,null);
+                jsonEntity.setMsg("生成试卷成功!共生成" + (paList==null?0:paList.size()) + "道题!");
+            }
+
         }else
             jsonEntity.setMsg("试卷已存在!共" + tkEntity.getQuesnum() + "道题!");
 

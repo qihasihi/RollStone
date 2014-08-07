@@ -11,7 +11,7 @@ $(function(){
                 $("#p_ts_"+$(this).val()).show();
             });
             $("input[name='vclasses']:checked").each(function(idx,itm) {
-                $("#p_v_"+$(this).val()).show();
+              $("#p_v_"+$(this).val()).show();
             });
             $("#all_ct").hide();
             $("#list_ct").show('fast');
@@ -185,16 +185,16 @@ function addTeacherCourse(){
                 vclassEndTimeArray.push($("#"+$(this).val()+"_v_classEndTime").val().Trim().length<1?'0':$("#"+$(this).val()+"_v_classEndTime").val())}
         );
         /*if(flag){
-         alert('请选择开课时间!');
-         $("#addButton").attr("href","javascript:getTchingMaterial();");
-         return;
-         }*/
+            alert('请选择开课时间!');
+            $("#addButton").attr("href","javascript:getTchingMaterial();");
+            return;
+        }*/
     }else{
-        /* if(classEndTime.Trim().length<1){
-         alert('请选择开课时间!');
-         $("#addButton").attr("href","javascript:getTchingMaterial();");
-         return;
-         }*/
+       /* if(classEndTime.Trim().length<1){
+            alert('请选择开课时间!');
+            $("#addButton").attr("href","javascript:getTchingMaterial();");
+            return;
+        }*/
         $("input[type='checkbox'][name='classes']:checked").each(function() {classEndTimeArray.push(classEndTime)});
         $("input[type='checkbox'][name='tsclasses']:checked").each(function() {classEndTimeArray.push(classEndTime)});
         $("input[type='checkbox'][name='vclasses']:checked").each(function() {vclassEndTimeArray.push(classEndTime)});
@@ -244,15 +244,15 @@ function addTeacherCourse(){
         },success:function(rps){
             if(rps.type=="success"){
                 if(maid!=null&&maid>0){
-                    window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&materialid="+maid+"&currentSubjectid="+$("#subjectid").val();
-                }else{
-                    var param={gradeid:$("#gradeid").val(),subjectid:$("#subjectid").val(),termid:term.val(),materialid:material_id};
-                    $.ajax({
-                        url:'tpteacherteamater?m=doSaveOrUpdate',
-                        data:param,
-                        type:'POST',
-                        dataType:'json',
-                        error:function(){
+                            window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&materialid="+maid+"&currentSubjectid="+$("#subjectid").val();
+                        }else{
+                            var param={gradeid:$("#gradeid").val(),subjectid:$("#subjectid").val(),termid:term.val(),materialid:material_id};
+                            $.ajax({
+                                url:'tpteacherteamater?m=doSaveOrUpdate',
+                                data:param,
+                                type:'POST',
+                                dataType:'json',
+                                error:function(){
                             alert('异常错误,系统未响应！');
                         },success:function(rps){
                             if(rps.type=="success"){
@@ -424,7 +424,7 @@ function updateTeacherCourse(){
             subjectid:$("#subjectid").val(),
             classidstr:classes.join(','),
             vclassidstr:vclasses.join(','),
-            // materialidvalues:materiaids.join(','),
+           // materialidvalues:materiaids.join(','),
             classTimeArray:classTimeArray.join(','),
             vclassTimeArray:vclassTimeArray.join(','),
             classEndTimeArray:classEndTimeArray.join(','),
@@ -680,7 +680,7 @@ function showThinking(inputId) {
                         $.each(rps.objList,function(idx,itm){
                             htm+='<a href="javascript:selectCourseName(\''+itm.COURSE_NAME+'\','+itm.COURSE_ID+')" >'+itm.COURSE_NAME+'</a><br>';
                         });
-                    }
+                     }
                     $("#thinking").html(htm);
                     $("#thinking").css("display", "block");
                 }else{

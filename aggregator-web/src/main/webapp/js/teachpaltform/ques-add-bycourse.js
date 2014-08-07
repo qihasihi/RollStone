@@ -31,8 +31,8 @@ function questionListReturn(rps){
                     shtml+='checked="checked" disabled="disabled"';
                 }else
                     shtml+='name="question"';
-
-                var content=replaceAll(itm.content.toLowerCase(),'<span name="fillbank"></span>','______');
+                var tiankong = '<u>&nbsp;&nbsp;'+itm.correctanswer+'&nbsp;&nbsp;</u>';
+                var content=replaceAll(itm.content.toLowerCase(),'<span name="fillbank"></span>',tiankong);
                 shtml+='/>';
                 shtml+='</td>';
                 shtml+='<td>';
@@ -81,13 +81,15 @@ function questionListReturn(rps){
                         shtml+='</tr>';
                     });
                 }
-
-
-
-
                 shtml+='</p>';
                 shtml+='</td>';
                 shtml+='</tr>';
+                if(itm.questiontype==1){
+                    shtml+='<tr>';
+                    shtml+='<td>&nbsp;</td>';
+                    shtml+='<td><strong>正确答案：</strong>'+itm.correctanswer+'</td>';
+                    shtml+='</tr>';
+                }
             });
         }
         $("#mainTbl").hide();

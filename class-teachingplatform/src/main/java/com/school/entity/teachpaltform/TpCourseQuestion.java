@@ -215,28 +215,8 @@ public class TpCourseQuestion implements Serializable{
                     case 6:type="组试题";break;
                 }
                 break;
-            case 7:
-                switch (this.getExtension()){
-                    case 0:type="客观";break;
-                    case 1:type="主观";break;
-                    case 2:type="阅读理解";break;
-                    case 3:type="完型填空";break;
-                    case 4:type="英语听力";break;
-                    case 5:type="七选五";break;
-                    case 6:type="组试题";break;
-                }
-                break;
-            case 8:
-                switch (this.getExtension()){
-                    case 0:type="客观";break;
-                    case 1:type="主观";break;
-                    case 2:type="阅读理解";break;
-                    case 3:type="完型填空";break;
-                    case 4:type="英语听力";break;
-                    case 5:type="七选五";break;
-                    case 6:type="组试题";break;
-                }
-                break;
+            case 7:type="单选试题组";break;
+            case 8:type="多选试题组";break;
         }
         return type;
     }

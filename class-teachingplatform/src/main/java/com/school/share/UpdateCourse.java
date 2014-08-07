@@ -668,6 +668,7 @@ public class UpdateCourse extends TimerTask{
                                          //文件失败
                                          System.out.println("资源文件下载失败!");
                                      }
+                           //          查询是否有与试卷的对应关系
                                      //查询是否有与试卷的对应关系
                                      MicVideoPaperInfo mvp=new MicVideoPaperInfo();
                                      mvp.setMicvideoid(rsEntity.getResid());
@@ -748,6 +749,7 @@ public class UpdateCourse extends TimerTask{
                                              objArrayList=new ArrayList<List<Object>>();
                                          }
 
+
                                          ///////////////////////////////////微视频问题选项///////////////////////////
                                          //先删除,再添加
                                          sqlbuilder=new StringBuilder();
@@ -787,7 +789,6 @@ public class UpdateCourse extends TimerTask{
                                              }
                                          }
                                      }
-
                                  }
                              }
                          }
@@ -1339,9 +1340,10 @@ class UpdateCourseUtil{
                                     &&!quesMap.get("Grade").toString().trim().toUpperCase().equals("NULL")){
                                 ques.setGrade(quesMap.get("Grade").toString());
                             }
+                            //Extension==PaperType
                             if(quesMap.containsKey("PaperType")&&quesMap.get("PaperType")!=null
                                     &&!quesMap.get("PaperType").toString().trim().toUpperCase().equals("NULL")){
-                                ques.setPapertypeid(Integer.parseInt(quesMap.get("PaperType").toString()));
+                                ques.setExtension(Integer.parseInt(quesMap.get("PaperType").toString()));
                             }
                             if(quesMap.containsKey("ExamType")&&quesMap.get("ExamType")!=null
                                     &&!quesMap.get("ExamType").toString().trim().toUpperCase().equals("NULL")){
@@ -1477,7 +1479,7 @@ class UpdateCourseUtil{
                             }
                             if(quesMap.containsKey("PaperType")&&quesMap.get("PaperType")!=null
                                     &&!quesMap.get("PaperType").toString().trim().toUpperCase().equals("NULL")){
-                                ques.setPapertypeid(Integer.parseInt(quesMap.get("PaperType").toString()));
+                                ques.setExtension(Integer.parseInt(quesMap.get("PaperType").toString()));
                             }
                             if(quesMap.containsKey("ExamType")&&quesMap.get("ExamType")!=null
                                     &&!quesMap.get("ExamType").toString().trim().toUpperCase().equals("NULL")){
@@ -1967,8 +1969,9 @@ class UpdateCourseUtil{
                         if(schQuestionid==null||(quesOptMap.get("QuestionId")!=null&&quesOptMap.get("QuestionId").toString().trim().equals(schQuestionid.toString()))){
                             QuestionOption quesAnswer=new QuestionOption();
 
-                            if(courseMap.containsKey("QuestionId")&&courseMap.get("CourseId")!=null&&!quesOptMap.get("CourseId").toString().trim().toUpperCase().equals("NULL")){
-                                quesAnswer.setQuestionid(Long.parseLong(courseMap.get("CourseId").toString()));//云端的ID
+                            if(quesOptMap.containsKey("QuestionId")&&quesOptMap.get("QuestionId")!=null
+                                    &&!quesOptMap.get("QuestionId").toString().trim().toUpperCase().equals("NULL")){
+                                quesAnswer.setQuestionid(Long.parseLong(quesOptMap.get("QuestionId").toString()));//云端的ID
                             }
 
                             if(quesOptMap.containsKey("Body")&&quesOptMap.get("Body")!=null

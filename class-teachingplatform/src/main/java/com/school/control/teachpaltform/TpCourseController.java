@@ -5,6 +5,7 @@ import com.school.entity.*;
 
 import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
+import com.school.entity.teachpaltform.paper.TpCoursePaper;
 import com.school.manager.*;
 import com.school.manager.inter.*;
 
@@ -13,6 +14,7 @@ import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 
+import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
@@ -92,6 +94,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     private ISchoolManager schoolManager;
     private IResourceManager resourceManager;
     private ITpCourseRelatedManager tpCourseRelatedManager;
+    private ITpCoursePaperManager tpCoursePaperManager;
     /**
      * 进入教师课题页
      * @param request
@@ -1166,6 +1169,23 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                         tmpQues.setReferenceid(Long.parseLong("1"));
                         sql=new StringBuilder();
                         objList=this.tpCourseQuestionManager.getSaveSql(tmpQues,sql);
+                        if(sql!=null&&objList!=null){
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                }
+
+
+                //试卷
+                TpCoursePaper coursePaper=new TpCoursePaper();
+                coursePaper.setCourseid(courseid);
+                List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(coursePaper,null);
+                if(coursePaperList!=null&&coursePaperList.size()>0){
+                    for (TpCoursePaper tmpPaper : coursePaperList){
+                        tmpPaper.setCourseid(nextCourseId);
+                        sql=new StringBuilder();
+                        objList=this.tpCoursePaperManager.getSaveSql(tmpPaper,sql);
                         if(sql!=null&&objList!=null){
                             sqlListArray.add(sql.toString());
                             objListArray.add(objList);

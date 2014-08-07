@@ -27,9 +27,9 @@ $(function(){
         pagetotal : 1,
         operate_id : "initItemList"
     });
-    //  pageGo('pList');
-    //  $("#p_operate").css("left",(findDimensions().width/2-parseFloat($("#p_operate").css("width"))/2)+"px");
-    reSetScrollDiv();
+  //  pageGo('pList');
+  //  $("#p_operate").css("left",(findDimensions().width/2-parseFloat($("#p_operate").css("width"))/2)+"px");
+  reSetScrollDiv();
 });
 
 
@@ -129,8 +129,8 @@ function showDialogPage(type,paperid,quesid,e){
                 if(rmsg.type=="error"){
                     alert(rmsg.msg);
                 }else{
-                    alert(rmsg.msg);
-                    window.reload();
+                   alert(rmsg.msg);
+                   window.reload();
                 }
             }
         });
@@ -235,8 +235,8 @@ function genderInput(obj,score){
     $("input[id='score_input']").bind("blur",function(){
         var spanObj=$(this).parent();
         var score=this.value
-        //   if(score<1)
-        //       return;
+     //   if(score<1)
+     //       return;
         spanObj.html(score);
         var quesid=$(spanObj).data().bind.split("|")[0];
         var ref=$(spanObj).data().bind.split("|")[1];
@@ -291,9 +291,9 @@ function updateQuesScore(score,quesid,ref){
             }else{
                 alert(rmsg.msg);
                 if(rmsg.objList.length>0){
-                    $("#total_score").html(rmsg.objList[0]);
-                    if(typeof ref!='undefined')
-                        $("#group_"+ref).html(rmsg.objList[1])
+                   $("#total_score").html(rmsg.objList[0]);
+                   if(typeof ref!='undefined')
+                       $("#group_"+ref).html(rmsg.objList[1])
                 }
             }
         }
@@ -330,14 +330,14 @@ function doDelPaperQues(quesid){
 
 function reSetScrollDiv(){
     //$("#p_operate").css({"left":(findDimensions().width/2-parseFloat($("#p_operate").css("width"))/2)+"px"});
-    /* var divObj=document.getElementById("p_operate");
-     if(getScrollTop()>parseInt(divObj.style.top)){
-     divObj.style.top="0px";
-     $("#p_operate").css({"position":"fixed"})
-     }else{
-     divObj.style.top="100px";
-     $("#p_operate").css("position","");
-     } */
+   /* var divObj=document.getElementById("p_operate");
+    if(getScrollTop()>parseInt(divObj.style.top)){
+        divObj.style.top="0px";
+        $("#p_operate").css({"position":"fixed"})
+    }else{
+        divObj.style.top="100px";
+        $("#p_operate").css("position","");
+    } */
     var divObj=document.getElementById("p_operate");
     if(getScrollTop()>parseInt(divObj.style.top)){
         divObj.style.top="0px";
@@ -354,7 +354,7 @@ function reSetScrollDiv(){
 <div class="subpage_head"><span class="ico55"></span><strong>添加试卷</strong></div>
 <div class="content2">
 
-    <div  id="p_operate" class="jxxt_zhuanti_shijuan_add_an"    ><a href="javascript:showDialogPage(1,'${paper.paperid}','',this)" class="an_big">导入试卷</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(2,'${paper.paperid}','',this)" class="an_big">导入试题</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}','',this)" class="an_big">新建试题</a></div>
+     <div  id="p_operate" class="jxxt_zhuanti_shijuan_add_an"    ><a href="javascript:showDialogPage(1,'${paper.paperid}','',this)" class="an_big">导入试卷</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(2,'${paper.paperid}','',this)" class="an_big">导入试题</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}','',this)" class="an_big">新建试题</a></div>
     <div class="jxxt_zhuanti_shijuan_add font-black public_input">
         <p class="title">
             <strong class="f_right" >总分值：<span id="total_score" class="font-blue">${paper.score}&nbsp;分</span></strong><strong>${paper.papername}</strong>
@@ -376,11 +376,11 @@ function reSetScrollDiv(){
                         <c:if test="${empty pq.questionTeam and fn:length(pq.questionTeam)==0}">
                             <span class="font-blue"  style="cursor: pointer" data-bind="${pq.questionid}|" id="score_${pq.questionid}">
                         </c:if>
-                                    ${pq.score}</span>分</span>
+                         ${pq.score}</span>分</span>
                     </span>
                         <span id="idx_${pq.questionid}" data-bind="${pq.questionid}|${pq.orderidx+(fn:length(pq.questionTeam)>0?fn:length(pq.questionTeam)-1:0)}"  class="font-blue">${pq.orderidx}</span><c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0}">-${pq.orderidx+fn:length(pq.questionTeam)-1}</c:if>
                         <!--/${fn:length(pqList)+fn:length(childList)}-->
-                    </caption>
+                            </caption>
 
                     <tr>
                         <td>
@@ -400,24 +400,24 @@ function reSetScrollDiv(){
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <col class="w30"/>
                                     <col class="w880"/>
-                                    <c:forEach items="${pq.questionOption}" var="option">
-                                        <tr>
-                                            <th>
-                                                <c:if test="${pq.questiontype eq 3 or pq.questiontype eq 7 }">
-                                                    <input disabled type="radio">
-                                                </c:if>
-                                                <c:if test="${pq.questiontype eq 4 or pq.questiontype eq 8 }">
-                                                    <input disabled type="checkbox">
-                                                </c:if>
-                                            </th>
-                                            <td>
-                                                    ${option.optiontype}&nbsp;${option.content};
-                                                <c:if test="${option.isright eq 1}">
-                                                    <span class="ico12"></span>
-                                                </c:if>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
+                                <c:forEach items="${pq.questionOption}" var="option">
+                                    <tr>
+                                        <th>
+                                            <c:if test="${pq.questiontype eq 3 or pq.questiontype eq 7 }">
+                                                <input disabled type="radio">
+                                            </c:if>
+                                            <c:if test="${pq.questiontype eq 4 or pq.questiontype eq 8 }">
+                                                <input disabled type="checkbox">
+                                            </c:if>
+                                        </th>
+                                        <td>
+                                            ${option.optiontype}&nbsp;${option.content};
+                                        <c:if test="${option.isright eq 1}">
+                                            <span class="ico12"></span>
+                                        </c:if>
+                                        </td>
+                                    </tr>
+                                  </c:forEach>
                                 </table>
                             </c:if>
 
@@ -500,25 +500,25 @@ function reSetScrollDiv(){
 
                     <c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0 and pq.extension eq 5}">
                         <tr>
-                            <td>&nbsp;</td>
-                            <td><p><strong>正确答案及答案解析：</strong></p>
-                                <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
-                                    <p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}" id="score_${c.questionid}">${c.score}</span>
+                        <td>&nbsp;</td>
+                        <td><p><strong>正确答案及答案解析：</strong></p>
+                        <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
+                           <p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}" id="score_${c.questionid}">${c.score}</span>
                                         分</span><span data-bind="${c.questionid}"  class="font-blue">${(cidx.index+1)+(pq.orderidx-1)}</span>.
-                                        <c:forEach items="${c.questionOption}" var="option">
-                                            <c:if test="${option.isright eq 1}">
-                                                ${option.optiontype}
-                                            </c:if>
-                                        </c:forEach>
-                                        &nbsp;&nbsp;${c.analysis}
-                                    </p>
-                                </c:forEach>
-                            </td>
+                               <c:forEach items="${c.questionOption}" var="option">
+                                   <c:if test="${option.isright eq 1}">
+                                       ${option.optiontype}
+                                   </c:if>
+                               </c:forEach>
+                               &nbsp;&nbsp;${c.analysis}
+                           </p>
+                        </c:forEach>
+                        </td>
                         </tr>
                     </c:if>
 
 
-                </table>
+                    </table>
             </c:forEach>
         </c:if>
     </div>
@@ -529,9 +529,9 @@ function reSetScrollDiv(){
 <%@include file="/util/foot.jsp" %>
 <script type="text/javascript">
     $("span").filter(function(){return this.id.indexOf('score_')!=-1}).each(function(idx,itm){
-        $(itm).bind("click",function(){
-            genderInput(itm,$(itm).html().Trim());
-        });
+       $(itm).bind("click",function(){
+           genderInput(itm,$(itm).html().Trim());
+       });
     });
 
     total="${fn:length(pqList)}";

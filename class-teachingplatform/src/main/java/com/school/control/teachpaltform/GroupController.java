@@ -118,6 +118,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
 		JsonEntity je =new JsonEntity();
 		String classid=request.getParameter("classId");
         String classtype=request.getParameter("classType");
+        String subjectid = request.getParameter("subjectid");
 		if(classid==null||classid.trim().length()<1
                 || classtype==null||classtype.trim().length()<1){
 			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -128,6 +129,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
                 .getNoGroupStudentList(Integer.parseInt(classid),
                         Integer.parseInt(classtype),
                         this.logined(request).getUserid(),
+                        Integer.parseInt(subjectid),
                         this.termManager.getMaxIdTerm(false).getRef());
 		je.setObjList(stuList);  
 		je.setType("success"); 
