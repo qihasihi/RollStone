@@ -1,18 +1,24 @@
 package com.school.control.teachpaltform.award;
 
 import com.school.control.base.BaseController;
+import com.school.entity.ClassInfo;
 import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.entity.teachpaltform.TpGroupStudent;
+import com.school.entity.teachpaltform.TpVirtualClassInfo;
 import com.school.entity.teachpaltform.award.TpGroupScore;
 import com.school.entity.teachpaltform.award.TpStuScore;
+import com.school.manager.ClassManager;
+import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.teachpaltform.ITpCourseClassManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
 import com.school.manager.inter.teachpaltform.ITpGroupStudentManager;
+import com.school.manager.inter.teachpaltform.ITpVirtualClassManager;
 import com.school.manager.inter.teachpaltform.award.ITpGroupScoreManager;
 import com.school.manager.inter.teachpaltform.award.ITpStuScoreManager;
 import com.school.manager.teachpaltform.TpCourseClassManager;
 import com.school.manager.teachpaltform.TpCourseManager;
 import com.school.manager.teachpaltform.TpGroupStudentManager;
+import com.school.manager.teachpaltform.TpVirtualClassManager;
 import com.school.manager.teachpaltform.award.TpStuScoreManager;
 import com.school.manager.teachpaltform.award.TpGroupScoreManager;
 import com.school.util.JsonEntity;
@@ -34,19 +40,23 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value="/clsperformance")
-public class TpGroupScoreController extends BaseController<TpGroupScore>{
+public class TpGroupScoreController extends BaseController<TpStuScore>{
 
     private ITpCourseManager courseManager;
-    private ITpGroupScoreManager tpClsPerformanceManager;
-    private ITpStuScoreManager tpClsPerformanceAwardManager;
+    private ITpGroupScoreManager tpGroupScoreManager;
+    private ITpStuScoreManager tpStuScoreManager;
     private ITpCourseClassManager tpCourseClassManager;
     private ITpGroupStudentManager tpGroupStudentManager;
+    private IClassManager classManage;
+    private ITpVirtualClassManager virtualClassManager;
     public TpGroupScoreController(){
-        this.tpClsPerformanceManager=this.getManager(TpGroupScoreManager.class);
+        this.tpGroupScoreManager=this.getManager(TpGroupScoreManager.class);
         this.courseManager=this.getManager(TpCourseManager.class);
-        this.tpClsPerformanceAwardManager=this.getManager(TpStuScoreManager.class);
+        this.tpStuScoreManager=this.getManager(TpStuScoreManager.class);
         this.tpCourseClassManager=this.getManager(TpCourseClassManager.class);
         this.tpGroupStudentManager=this.getManager(TpGroupStudentManager.class);
+        this.classManage=this.getManager(ClassManager.class);
+        this.virtualClassManager=this.getManager(TpVirtualClassManager.class);
     }
     /**
      * 进入课堂表现页面的首页(分角色)
@@ -111,11 +121,13 @@ public class TpGroupScoreController extends BaseController<TpGroupScore>{
                 groupid="";
             }
         }
+        mp.put("classid",clsid);
+        mp.put("classtype",typeid);
         mp.put("leanderGrpid",groupid);
         mp.put("courseid",courseid);
         mp.put("subjectid",subjectid);
         //根据参数得到值 。
-        List<Map<String,Object>> dataListMap=tpClsPerformanceManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim()),Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid));
+        List<Map<String,Object>> dataListMap=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim()),Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid));
         mp.put("dataListMap",dataListMap);
         return new ModelAndView("/teachpaltform/classPerformanceAward/clsPerformanceAwardIndex",mp);
     }
@@ -130,12 +142,36 @@ public class TpGroupScoreController extends BaseController<TpGroupScore>{
     @RequestMapping(params="m=doAddOrUpdate",method = RequestMethod.POST)
     public void doAddOrUpdate(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity jsonEntity=new JsonEntity();
-        TpGroupScore entity=this.getParameter(request,TpGroupScore.class);
-        if(entity.getUserid()==null||entity.getCourseid()==null||entity.getGroupid()==null||entity.getSubjectid()==null){
+        TpStuScore entity=this.getParameter(request,TpStuScore.class);
+        String clstype=request.getParameter("clstype");
+        if(entity.getUserid()==null||entity.getCourseid()==null||entity.getGroupid()==null||entity.getSubjectid()==null||entity.getClassid()==null||clstype==null){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return;
         }
-        if(this.tpClsPerformanceManager.AddOrUpdate(entity)){
+
+        //如果classid<>null 则找schoolid  查询实体班级
+        if(Integer.parseInt(clstype.trim())==1){
+            //查询班级的dc_school_id
+            ClassInfo cls=new ClassInfo();
+            cls.setClassid(entity.getClassid().intValue());
+            List<ClassInfo> clsList=classManage.getList(cls,null);
+            if(clsList==null||clsList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(jsonEntity.toJSON());return;
+            }
+            entity.setDcschoolid(clsList.get(0).getDcschoolid().longValue());
+        }else if(Integer.parseInt(clstype.trim())==2){//虚拟班级
+            TpVirtualClassInfo vc=new TpVirtualClassInfo();
+            vc.setVirtualclassid(entity.getClassid().intValue());
+            List<TpVirtualClassInfo> vtclassList=this.virtualClassManager.getList(vc,null);
+            if(vtclassList==null||vtclassList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(jsonEntity.toJSON());return;
+            }
+            entity.setDcschoolid(vtclassList.get(0).getDcschoolid().longValue());
+        }
+
+        if(this.tpStuScoreManager.AddOrUpdate(entity)){
             jsonEntity.setType("success");
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
         }else
@@ -156,16 +192,42 @@ public class TpGroupScoreController extends BaseController<TpGroupScore>{
         String groupid=request.getParameter("groupid");
         String subjectid=request.getParameter("subjectid");
         String awardnumber=request.getParameter("awardNumber");
-        if(courseid==null||groupid==null||awardnumber==null||!UtilTool.isNumber(awardnumber.trim())||subjectid==null){
+        String classid=request.getParameter("classid");
+        String clstype=request.getParameter("clstype");
+        if(courseid==null||groupid==null||awardnumber==null||!UtilTool.isNumber(awardnumber.trim())||subjectid==null||classid==null||clstype==null){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return;
         }
-        TpStuScore entity=new TpStuScore();
+        TpGroupScore entity=new TpGroupScore();
+        entity.setClassid(Long.parseLong(classid));
+        //如果classid<>null 则找schoolid  查询实体班级
+        if(Integer.parseInt(clstype.trim())==1){
+            //查询班级的dc_school_id
+            ClassInfo cls=new ClassInfo();
+            cls.setClassid(entity.getClassid().intValue());
+            List<ClassInfo> clsList=classManage.getList(cls,null);
+            if(clsList==null||clsList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(jsonEntity.toJSON());return;
+            }
+            entity.setDcschoolid(clsList.get(0).getDcschoolid().longValue());
+        }else if(Integer.parseInt(clstype.trim())==2){//虚拟班级
+            TpVirtualClassInfo vc=new TpVirtualClassInfo();
+            vc.setVirtualclassid(entity.getClassid().intValue());
+            List<TpVirtualClassInfo> vtclassList=this.virtualClassManager.getList(vc,null);
+            if(vtclassList==null||vtclassList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(jsonEntity.toJSON());return;
+            }
+            entity.setDcschoolid(vtclassList.get(0).getDcschoolid().longValue());
+        }
+
+
         entity.setAwardnumber(Integer.parseInt(awardnumber.trim()));
         entity.setCourseid(Long.parseLong(courseid.trim()));
         entity.setGroupid(Long.parseLong(groupid.trim()));
         entity.setSubjectid(Integer.parseInt(subjectid.trim()));
-        if(this.tpClsPerformanceAwardManager.AddOrUpdate(entity)){
+        if(this.tpGroupScoreManager.AddOrUpdate(entity)){
             jsonEntity.setType("success");
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
         }else

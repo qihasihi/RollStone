@@ -141,11 +141,16 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 				objList.add(obj.getIslike());
 			}else
 				sqlbuilder.append("0,");
-			if(obj.getSubjectid()!=null){ 
-				sqlbuilder.append("?,");
-				objList.add(obj.getSubjectid());
-			}else
-				sqlbuilder.append("NULL,");
+			if(obj.getSubjectid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getSubjectid());
+            }else
+                sqlbuilder.append("NULL,");
+            if(obj.getDctype()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getDctype());
+            }else
+                sqlbuilder.append("NULL,");
 			if(obj.getIsflag()!=null){ 
 				sqlbuilder.append("?,");
 				objList.add(obj.getIsflag());
@@ -255,6 +260,11 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 			objList.add(obj.getSubjectid());
 		}else
 			sqlbuilder.append("NULL,");
+        if(obj.getDctype()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getDctype());
+        }else
+            sqlbuilder.append("NULL,");
 		if(obj.getIsflag()!=null){
 			sqlbuilder.append("?,");
 			objList.add(obj.getIsflag());
@@ -308,6 +318,11 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 			}
 		}else
 			sqlbuilder.append("NULL,");
+        if(obj.getDctype()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getDctype());
+        }else
+            sqlbuilder.append("NULL,");
 		if(obj.getIsflag()!=null){
 			sqlbuilder.append("?,");
 			objList.add(obj.getIsflag());
@@ -381,6 +396,11 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         if(obj.getSubjectid()!=null){
             sqlbuilder.append("?,");
             objList.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getDctype()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getDctype());
         }else
             sqlbuilder.append("NULL,");
         if(obj.getIsflag()!=null){

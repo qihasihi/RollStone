@@ -2,26 +2,81 @@ package com.school.entity.teachpaltform.award;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Created by zhengzhou on 14-6-24.
  */
 @Entity
-public class TpStuScore implements Serializable {
+public class TpStuScore implements  Serializable{
     private Integer ref;
+    private Long userid;
+    private  Integer attendanceNum;
+    private Integer similingNum;
+    private Integer violationDisNum;
     private Long groupid;
-    private Integer awardnumber;
     private Long courseid;
-    private Date ctime;
-    private Date mtime;
+    private Long classid;
+    private Long dcschoolid;
+    private Long coursetotalscore;
+    private Long groupscore;
+
+    public Long getClassid() {
+        return classid;
+    }
+
+    public void setClassid(Long classid) {
+        this.classid = classid;
+    }
+
+    public Long getDcschoolid() {
+        return dcschoolid;
+    }
+
+    public void setDcschoolid(Long dcschoolid) {
+        this.dcschoolid = dcschoolid;
+    }
+
+    public Long getCoursetotalscore() {
+        return coursetotalscore;
+    }
+
+    public void setCoursetotalscore(Long coursetotalscore) {
+        this.coursetotalscore = coursetotalscore;
+    }
+
+    public Long getGroupscore() {
+        return groupscore;
+    }
+
+    public void setGroupscore(Long groupscore) {
+        this.groupscore = groupscore;
+    }
+
+    private String realName;
+    private String groupName;
     private Integer subjectid;
+
     public Integer getSubjectid() {
         return subjectid;
     }
 
     public void setSubjectid(Integer subjectid) {
         this.subjectid = subjectid;
+    }
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public Integer getRef() {
@@ -32,6 +87,38 @@ public class TpStuScore implements Serializable {
         this.ref = ref;
     }
 
+    public Long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Long userid) {
+        this.userid = userid;
+    }
+
+    public Integer getAttendanceNum() {
+        return attendanceNum;
+    }
+
+    public void setAttendanceNum(int attendanceNum) {
+        this.attendanceNum = attendanceNum;
+    }
+
+    public Integer getSimilingNum() {
+        return similingNum;
+    }
+
+    public void setSimilingNum(int similingNum) {
+        this.similingNum = similingNum;
+    }
+
+    public Integer getViolationDisNum() {
+        return violationDisNum;
+    }
+
+    public void setViolationDisNum(int violationDisNum) {
+        this.violationDisNum = violationDisNum;
+    }
+
     public Long getGroupid() {
         return groupid;
     }
@@ -40,35 +127,11 @@ public class TpStuScore implements Serializable {
         this.groupid = groupid;
     }
 
-    public Integer getAwardnumber() {
-        return awardnumber;
-    }
-
-    public void setAwardnumber(Integer awardnumber) {
-        this.awardnumber = awardnumber;
-    }
-
     public Long getCourseid() {
         return courseid;
     }
 
     public void setCourseid(Long courseid) {
         this.courseid = courseid;
-    }
-
-    public Date getCtime() {
-        return ctime;
-    }
-
-    public void setCtime(Date ctime) {
-        this.ctime = ctime;
-    }
-
-    public Date getMtime() {
-        return mtime;
-    }
-
-    public void setMtime(Date mtime) {
-        this.mtime = mtime;
     }
 }

@@ -3,6 +3,7 @@ package com.school.manager.teachpaltform.award;
 import com.school.dao.base.ICommonDAO;
 import com.school.dao.inter.teachpaltform.award.ITpGroupScoreDAO;
 import com.school.entity.teachpaltform.award.TpGroupScore;
+import com.school.entity.teachpaltform.award.TpGroupScore;
 import com.school.manager.base.BaseManager;
 import com.school.manager.inter.teachpaltform.award.ITpGroupScoreManager;
 import com.school.util.PageResult;
@@ -19,62 +20,53 @@ import java.util.Map;
  */
 @Service
 public class TpGroupScoreManager extends BaseManager<TpGroupScore> implements ITpGroupScoreManager {
-    private ITpGroupScoreDAO tpClsPerformanceDAO;
+    private ITpGroupScoreDAO tpGroupScoreDAO;
     @Autowired
     @Qualifier("tpGroupScoreDAO")
-    public void setTpClsPerformanceDAO(ITpGroupScoreDAO tpClsPerformanceDAO) {
-        this.tpClsPerformanceDAO = tpClsPerformanceDAO;
+    public void setTpGroupScoreDAO(ITpGroupScoreDAO tpGroupScoreDAO) {
+        this.tpGroupScoreDAO = tpGroupScoreDAO;
     }
 
     @Override
     protected ICommonDAO<TpGroupScore> getBaseDAO() {
-        return tpClsPerformanceDAO;
+        return tpGroupScoreDAO;
     }
 
     @Override
     public Boolean doSave(final TpGroupScore obj) {
-        return tpClsPerformanceDAO.doSave(obj);
+        return tpGroupScoreDAO.doSave(obj);
     }
 
     @Override
     public Boolean doUpdate(final TpGroupScore obj) {
-        return tpClsPerformanceDAO.doUpdate(obj);
+        return tpGroupScoreDAO.doUpdate(obj);
     }
 
     @Override
     public Boolean doDelete( final TpGroupScore obj) {
-        return tpClsPerformanceDAO.doDelete(obj);
+        return tpGroupScoreDAO.doDelete(obj);
     }
 
     @Override
     public List<TpGroupScore> getList( final TpGroupScore obj, PageResult presult) {
-        return tpClsPerformanceDAO.getList(obj,presult);
+        return tpGroupScoreDAO.getList(obj,presult);
     }
 
     @Override
     public List<Object> getSaveSql(final TpGroupScore obj, StringBuilder sqlbuilder) {
-        return tpClsPerformanceDAO.getSaveSql(obj,sqlbuilder);
+        return tpGroupScoreDAO.getSaveSql(obj,sqlbuilder);
     }
 
     @Override
     public List<Object> getUpdateSql(final TpGroupScore obj, StringBuilder sqlbuilder) {
-        return tpClsPerformanceDAO.getUpdateSql(obj,sqlbuilder);
+        return tpGroupScoreDAO.getUpdateSql(obj,sqlbuilder);
     }
 
     @Override
     public List<Object> getDeleteSql(final TpGroupScore obj, StringBuilder sqlbuilder) {
-        return tpClsPerformanceDAO.getDeleteSql(obj,sqlbuilder);
+        return tpGroupScoreDAO.getDeleteSql(obj,sqlbuilder);
     }
-    /**
-     * 得到页面上的查询
-     * @param courseid
-     * @param classid
-     * @param classtype
-     * @return
-     */
-    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid){
-        return tpClsPerformanceDAO.getPageDataList(courseid,classid,classtype,subjectid);
-    }
+
 
     @Override
     public TpGroupScore getOfExcel(Sheet rs, int cols, int d, String type) {
@@ -86,6 +78,6 @@ public class TpGroupScoreManager extends BaseManager<TpGroupScore> implements IT
      * @return
      */
     public boolean AddOrUpdate(final TpGroupScore entity){
-        return tpClsPerformanceDAO.AddOrUpdate(entity);
+        return tpGroupScoreDAO.AddOrUpdate(entity);
     }
 }

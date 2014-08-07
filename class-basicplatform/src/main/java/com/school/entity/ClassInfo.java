@@ -11,6 +11,7 @@ public class ClassInfo implements java.io.Serializable {
 	private String type;
     private Date ctime;
     private Date mtime;
+    private Integer dctype; //1:学校班级，2：网校班级，3：爱学课堂
     private String classname;
     private Integer classid;
     private String pattern;
@@ -21,6 +22,14 @@ public class ClassInfo implements java.io.Serializable {
     private SubjectInfo subjectinfo;    
     private Integer isflag; //是否启用：  1：启用   2：禁用
     private Integer lzxclassid;
+
+    public Integer getDctype() {
+        return dctype;
+    }
+
+    public void setDctype(Integer dctype) {
+        this.dctype = dctype;
+    }
 
     public Integer getDcschoolid() {
         return dcschoolid;

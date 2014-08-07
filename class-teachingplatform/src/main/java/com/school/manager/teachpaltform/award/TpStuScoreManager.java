@@ -12,61 +12,73 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhengzhou on 14-6-24.
  */
 @Service
 public class TpStuScoreManager extends BaseManager<TpStuScore> implements ITpStuScoreManager {
-    private ITpStuScoreDAO tpClassPerformanceAwardDAO;
+    private ITpStuScoreDAO tpStuScoreDAO;
     @Autowired
     @Qualifier("tpStuScoreDAO")
-    public void setTpClassPerformanceAwardDAO(final ITpStuScoreDAO tpClassPerformanceAwardDAO) {
-        this.tpClassPerformanceAwardDAO = tpClassPerformanceAwardDAO;
+    public void setTpStuScoreDAO(final ITpStuScoreDAO tpStuScoreDAO) {
+        this.tpStuScoreDAO = tpStuScoreDAO;
     }
 
     @Override
     protected ICommonDAO<TpStuScore> getBaseDAO() {
-        return tpClassPerformanceAwardDAO;
+        return tpStuScoreDAO;
     }
 
     @Override
     public Boolean doSave(final TpStuScore obj) {
-        return tpClassPerformanceAwardDAO.doSave(obj);
+        return tpStuScoreDAO.doSave(obj);
     }
 
     @Override
     public Boolean doUpdate(final TpStuScore obj) {
-        return tpClassPerformanceAwardDAO.doUpdate(obj);
+        return tpStuScoreDAO.doUpdate(obj);
     }
 
     @Override
     public Boolean doDelete(final TpStuScore obj) {
-        return tpClassPerformanceAwardDAO.doDelete(obj);
+        return tpStuScoreDAO.doDelete(obj);
     }
 
     @Override
     public List<TpStuScore> getList(final TpStuScore obj, PageResult presult) {
-        return tpClassPerformanceAwardDAO.getList(obj,presult);
+        return tpStuScoreDAO.getList(obj,presult);
     }
 
     @Override
     public List<Object> getSaveSql(final TpStuScore obj, StringBuilder sqlbuilder) {
-        return tpClassPerformanceAwardDAO.getSaveSql(obj,sqlbuilder);
+        return tpStuScoreDAO.getSaveSql(obj,sqlbuilder);
     }
 
     @Override
     public List<Object> getUpdateSql(final TpStuScore obj, StringBuilder sqlbuilder) {
-        return tpClassPerformanceAwardDAO.getUpdateSql(obj,sqlbuilder);
+        return tpStuScoreDAO.getUpdateSql(obj,sqlbuilder);
     }
 
     @Override
     public List<Object> getDeleteSql(final TpStuScore obj, StringBuilder sqlbuilder) {
-        return tpClassPerformanceAwardDAO.getDeleteSql(obj,sqlbuilder);
+        return tpStuScoreDAO.getDeleteSql(obj,sqlbuilder);
     }
     public boolean AddOrUpdate(final TpStuScore entity){
-        return tpClassPerformanceAwardDAO.AddOrUpdate(entity);
+        return tpStuScoreDAO.AddOrUpdate(entity);
     }
+    /**
+     * 得到页面上的查询
+     * @param courseid
+     * @param classid
+     * @param classtype
+     * @return
+     */
+    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid){
+        return tpStuScoreDAO.getPageDataList(courseid,classid,classtype,subjectid);
+    }
+
     @Override
     public TpStuScore getOfExcel(Sheet rs, int cols, int d, String type) {
         return null;

@@ -48,8 +48,11 @@
                     h+='<td rowspan=1>';
                     h+='<input type="hidden" name="group_id" id="hd_group_id" value="${dlm.GROUP_ID}"/>';
                     h+='<input type="hidden" name="user_id" id="hd_user_id" value="${dlm.USER_ID}"/>';
-                    h+='${dlm.GROUP_NAME}<br><span class="ico78"></span> <a href="javascript:;" onclick="updateGroupAward(${dlm.GROUP_ID})" id="a_award_${dlm.GROUP_ID}"><span id="sp_grp_award${dlm.GROUP_ID}">${dlm.AWARD_NUMBER}</span></a>个</td>';
-                    h+='<td>${dlm.STU_NO}</td>';
+                    h+='${empty dlm.GROUP_NAME?"未分组":dlm.GROUP_NAME}';
+                    <c:if test="${!empty dlm.GROUP_ID}">
+                        h+='<br><span class="ico78"></span> <a href="javascript:;" onclick="updateGroupAward(${dlm.GROUP_ID})" id="a_award_${dlm.GROUP_ID}"><span id="sp_grp_award${dlm.GROUP_ID}">${dlm.AWARD_NUMBER}</span></a>个';
+                    </c:if>
+                    h+='</td><td>${dlm.STU_NO}</td>';
                     h+='<td>${dlm.STU_NAME}</td>';
                     if(groupidstr.length<1||(groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1&&ctumid!=${dlm.USER_ID})){
                             h+='<td name="td_data">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
@@ -119,7 +122,7 @@
                     $("#txt_update_num").focus();return;
                 }
                 var subid=$("#subjectid").val().Trim();
-                var p={courseid:cid,groupid:groupid,awardNumber:this.value.Trim(),subjectid:subid};
+                var p={courseid:cid,groupid:groupid,awardNumber:this.value.Trim(),subjectid:subid,classid:${classid},clstype:${classtype}};
                 $.ajax({
                     url:'clsperformance?m=doAddOrUpdateGroup',
                     data:p,
@@ -170,7 +173,7 @@
                     this.value="-"+this.value;
                 var subid=$("#subjectid").val().Trim();
                 //更新数据库
-                var p={userid:uid,groupid:groupid,courseid:cid,subjectid:subid};
+                var p={userid:uid,groupid:groupid,courseid:cid,subjectid:subid,classid:${classid},clstype:${classtype}};
                 eval("(p."+type+"="+this.value.Trim()+")");
                 $.ajax({
                     url:'clsperformance?m=doAddOrUpdate',

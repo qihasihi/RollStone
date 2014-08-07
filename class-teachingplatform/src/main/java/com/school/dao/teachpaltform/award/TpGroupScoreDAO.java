@@ -2,13 +2,14 @@ package com.school.dao.teachpaltform.award;
 
 import com.school.dao.base.CommonDAO;
 import com.school.dao.inter.teachpaltform.award.ITpGroupScoreDAO;
+import com.school.dao.inter.teachpaltform.award.ITpGroupScoreDAO;
+import com.school.entity.teachpaltform.award.TpGroupScore;
 import com.school.entity.teachpaltform.award.TpGroupScore;
 import com.school.util.PageResult;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zhengzhou on 14-6-24.
@@ -16,7 +17,7 @@ import java.util.Map;
 @Component
 public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroupScoreDAO {
     @Override
-    public Boolean doSave(final TpGroupScore obj) {
+    public Boolean doSave(TpGroupScore obj) {
         if(obj==null)
             return false;
         StringBuilder sqlbuilder=new StringBuilder();
@@ -27,7 +28,7 @@ public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroup
     }
 
     @Override
-    public Boolean doUpdate(final TpGroupScore obj) {
+    public Boolean doUpdate(TpGroupScore obj) {
         if(obj==null)
             return false;
         StringBuilder sqlbuilder=new StringBuilder();
@@ -38,7 +39,7 @@ public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroup
     }
 
     @Override
-    public Boolean doDelete(final TpGroupScore obj) {
+    public Boolean doDelete(TpGroupScore obj) {
         if(obj==null)
             return false;
         StringBuilder sqlbuilder=new StringBuilder();
@@ -49,127 +50,93 @@ public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroup
     }
 
     @Override
-    public List<TpGroupScore> getList(final TpGroupScore obj, PageResult presult) {
+    public List<TpGroupScore> getList(TpGroupScore obj, PageResult presult) {
         return null;
     }
 
     @Override
-    public List<Object> getSaveSql(final TpGroupScore obj, StringBuilder sqlbuilder) {
+    public List<Object> getSaveSql(TpGroupScore obj, StringBuilder sqlbuilder) {
         if(obj==null||sqlbuilder==null)
             return null;
-        List<Object> objlist=new ArrayList<Object>();
-        sqlbuilder.append("{CALL tp_stu_score_add(");
-        if(obj.getUserid()!=null){
-            sqlbuilder.append("?,");
-            objlist.add(obj.getUserid());
-        }else
-            sqlbuilder.append("NULL,");
-         sqlbuilder.append("?,?,?,");
-        objlist.add(obj.getAttendanceNum());
-        objlist.add(obj.getSimilingNum());
-        objlist.add(obj.getViolationDisNum());
-        if(obj.getGroupid()!=null){
-            sqlbuilder.append("?,");
-            objlist.add(obj.getGroupid());
-        }else
-            sqlbuilder.append("NULL,");
+        List<Object> rturnVal=new ArrayList<Object>();
+        sqlbuilder.append("{CALL tp_group_score_add(");
         if(obj.getCourseid()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getCourseid());
+            rturnVal.add(obj.getCourseid());
         }else
-            sqlbuilder.append("NULL,");
+            sqlbuilder.append("null,");
+        if(obj.getGroupid()!=null){
+            sqlbuilder.append("?,");
+            rturnVal.add(obj.getGroupid());
+        }else
+            sqlbuilder.append("null,");
         if(obj.getSubjectid()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getSubjectid());
+            rturnVal.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getAwardnumber()!=null){
+            sqlbuilder.append("?,");
+            rturnVal.add(obj.getAwardnumber());
+        }else
+            sqlbuilder.append("null,");
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            rturnVal.add(obj.getClassid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getDcschoolid()!=null){
+            sqlbuilder.append("?,");
+            rturnVal.add(obj.getDcschoolid());
         }else
             sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
-        return objlist;
+        return rturnVal;
     }
 
     @Override
-    public List<Object> getUpdateSql(final TpGroupScore obj, StringBuilder sqlbuilder) {
+    public List<Object> getUpdateSql(TpGroupScore obj, StringBuilder sqlbuilder) {
         if(obj==null||sqlbuilder==null)
             return null;
-        List<Object> objlist=new ArrayList<Object>();
-        sqlbuilder.append("{CALL tp_stu_score_update(");
+        List<Object> returnVal=new ArrayList<Object>();
+        sqlbuilder.append("{CALL tp_cls_performance_award_info_update(");
         if(obj.getRef()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getRef());
-        }else
-            sqlbuilder.append("NULL,");
-        if(obj.getUserid()!=null){
-            sqlbuilder.append("?,");
-            objlist.add(obj.getUserid());
-        }else
-            sqlbuilder.append("NULL,");
-        if(obj.getAttendanceNum()!=null){
-            sqlbuilder.append("?,");
-            objlist.add(obj.getAttendanceNum());
-        }else
-            sqlbuilder.append("NULL,");
-        if(obj.getSimilingNum()!=null){
-            sqlbuilder.append("?,");
-            objlist.add(obj.getSimilingNum());
-        }else
-            sqlbuilder.append("NULL,");
-        if(obj.getViolationDisNum()!=null){
-            sqlbuilder.append("?,");
-            objlist.add(obj.getViolationDisNum());
-        }else
-            sqlbuilder.append("NULL,");
-        if(obj.getGroupid()!=null){
-            sqlbuilder.append("?,");
-            objlist.add(obj.getGroupid());
+            returnVal.add(obj.getRef());
         }else
             sqlbuilder.append("NULL,");
         if(obj.getCourseid()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getCourseid());
+            returnVal.add(obj.getCourseid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getGroupid()!=null){
+            sqlbuilder.append("?,");
+            returnVal.add(obj.getGroupid());
         }else
             sqlbuilder.append("NULL,");
         if(obj.getSubjectid()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getSubjectid());
+            returnVal.add(obj.getSubjectid());
         }else
             sqlbuilder.append("NULL,");
-        sqlbuilder.append("?)}");
-        return objlist;
-    }
-
-    /**
-     * 得到页面上的查询
-     * @param courseid
-     * @param classid
-     * @param classtype
-     * @return
-     */
-    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid){
-        List<Object> objList=new ArrayList<Object>();
-        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_group_score_list(");
-        if(courseid!=null){
+        if(obj.getAwardnumber()!=null){
             sqlbuilder.append("?,");
-            objList.add(courseid);
+            returnVal.add(obj.getAwardnumber());
         }else
             sqlbuilder.append("NULL,");
-        if(classid!=null){
+        if(obj.getClassid()!=null){
             sqlbuilder.append("?,");
-            objList.add(classid);
+            returnVal.add(obj.getClassid());
         }else
             sqlbuilder.append("NULL,");
-        if(classtype!=null){
+        if(obj.getDcschoolid()!=null){
             sqlbuilder.append("?,");
-            objList.add(classtype);
+            returnVal.add(obj.getDcschoolid());
         }else
             sqlbuilder.append("NULL,");
-        if(subjectid!=null){
-            sqlbuilder.append("?");
-            objList.add(subjectid);
-        }else
-            sqlbuilder.append("NULL");
-        sqlbuilder.append(")}");
-
-        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        sqlbuilder.append("?)}}");
+        return returnVal;
     }
 
     /**
@@ -178,51 +145,47 @@ public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroup
      * @return
      */
     public boolean AddOrUpdate(final TpGroupScore obj){
-        StringBuilder sqlbuilder=new StringBuilder();
-        List<Object> objlist=new ArrayList<Object>();
-        sqlbuilder.append("{CALL tp_stu_score_addOrupdate(");
 
-        if(obj.getUserid()!=null){
+        List<Object> returnVal=new ArrayList<Object>();
+        StringBuilder sqlbuilder=new StringBuilder();
+        sqlbuilder.append("{CALL tp_cls_performance_award_info_addOrUpdate(");
+
+        if(obj.getCourseid()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getUserid());
+            returnVal.add(obj.getCourseid());
         }else
             sqlbuilder.append("NULL,");
         if(obj.getGroupid()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getGroupid());
-        }else
-            sqlbuilder.append("NULL,");
-        if(obj.getCourseid()!=null){
-            sqlbuilder.append("?,");
-            objlist.add(obj.getCourseid());
+            returnVal.add(obj.getGroupid());
         }else
             sqlbuilder.append("NULL,");
         if(obj.getSubjectid()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getSubjectid());
+            returnVal.add(obj.getSubjectid());
         }else
             sqlbuilder.append("NULL,");
-        if(obj.getAttendanceNum()!=null){
+        if(obj.getAwardnumber()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getAttendanceNum());
+            returnVal.add(obj.getAwardnumber());
         }else
             sqlbuilder.append("NULL,");
-        if(obj.getSimilingNum()!=null){
+        if(obj.getClassid()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getSimilingNum());
+            returnVal.add(obj.getClassid());
         }else
             sqlbuilder.append("NULL,");
-        if(obj.getViolationDisNum()!=null){
+        if(obj.getDcschoolid()!=null){
             sqlbuilder.append("?,");
-            objlist.add(obj.getViolationDisNum());
+            returnVal.add(obj.getDcschoolid());
         }else
             sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
-        return this.executeQuery_PROC(sqlbuilder.toString(),objlist.toArray());
+        return this.executeQuery_PROC(sqlbuilder.toString(),returnVal.toArray());
     }
 
     @Override
-    public List<Object> getDeleteSql(final TpGroupScore obj, StringBuilder sqlbuilder) {
+    public List<Object> getDeleteSql(TpGroupScore obj, StringBuilder sqlbuilder) {
         return null;
     }
 }
