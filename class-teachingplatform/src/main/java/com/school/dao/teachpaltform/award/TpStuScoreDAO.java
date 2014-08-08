@@ -96,6 +96,11 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
             objlist.add(obj.getDcschoolid());
         }else
             sqlbuilder.append("NULL,");
+        if(obj.getClasstype()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getClasstype());
+        }else
+            sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
         return objlist;
     }
@@ -156,6 +161,11 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
             objlist.add(obj.getDcschoolid());
         }else
             sqlbuilder.append("NULL,");
+        if(obj.getClasstype()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getClasstype());
+        }else
+            sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
         return objlist;
     }
@@ -167,7 +177,7 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
      * @param classtype
      * @return
      */
-    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid){
+    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid,final String groupidStr){
         List<Object> objList=new ArrayList<Object>();
         StringBuilder sqlbuilder=new StringBuilder("{CALL tp_group_score_list(");
         if(courseid!=null){
@@ -186,8 +196,13 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
         }else
             sqlbuilder.append("NULL,");
         if(subjectid!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(subjectid);
+        }else
+            sqlbuilder.append("NULL,");
+        if(groupidStr!=null){
+            sqlbuilder.append("?");
+            objList.add(groupidStr);
         }else
             sqlbuilder.append("NULL");
         sqlbuilder.append(")}");
@@ -243,6 +258,58 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
         if(obj.getClassid()!=null){
             sqlbuilder.append("?,");
             objlist.add(obj.getClassid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getDcschoolid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getDcschoolid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClasstype()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getClasstype());
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
+        return this.executeQuery_PROC(sqlbuilder.toString(),objlist.toArray());
+    }
+
+    /**
+     * 教师组长提交时，初始化相关数据
+     * @param obj
+     * @return
+     */
+    public boolean stuScoreLastInit(final TpStuScore obj,String groupidArr){
+        StringBuilder sqlbuilder=new StringBuilder();
+        List<Object> objlist=new ArrayList<Object>();
+        sqlbuilder.append("{CALL tp_stu_score_lastInit(");
+
+        if(obj.getCourseid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getCourseid());
+        }else
+            sqlbuilder.append("NULL,");
+
+        if(groupidArr!=null){
+            sqlbuilder.append("?,");
+            objlist.add(groupidArr);
+        }else
+            sqlbuilder.append("NULL,");
+
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
+
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getClassid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClasstype()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getClasstype());
         }else
             sqlbuilder.append("NULL,");
         if(obj.getDcschoolid()!=null){

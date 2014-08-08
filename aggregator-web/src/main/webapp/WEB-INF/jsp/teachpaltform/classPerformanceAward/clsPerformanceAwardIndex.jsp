@@ -16,12 +16,13 @@
 <div class="content1">
     <p class="t_c font-black"><strong>专题名称：${coursename}</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2 public_input">
-        <colgroup class="w400"></colgroup>
-        <colgroup span="5" class="w110"></colgroup>
+        <colgroup class="w350"></colgroup>
+        <colgroup span="6" class="w110"></colgroup>
         <tr>
             <th>小组名称</th>
             <th>学号</th>
             <th>学生姓名</th>
+            <th>网上得分</th>
             <th>出勤</th>
             <th>笑脸</th>
             <th>违反纪律</th>
@@ -31,11 +32,14 @@
         </tbody>
 
     </table>
-
+    <p align="right"><a href="javascript:;" id="a_sub" onclick="doSub()">提交</a></p>
     <script type="text/javascript">
         var courseid=${courseid};
+        var classid=${classid};
+        var classtype=${classtype};
+        var subjectid=${subjectid};
         var groupidstr="${leanderGrpid}";
-        var ctumid="${!empty ctUid?ctUid:''}";
+        var ctumid="-1";//暂不启用//"${!empty ctUid?ctUid:''}";
         $(function(){
             <c:if test="${empty subjectid}">
               alert('参数异常，请重试!');
@@ -50,18 +54,20 @@
                     h+='<input type="hidden" name="user_id" id="hd_user_id" value="${dlm.USER_ID}"/>';
                     h+='${empty dlm.GROUP_NAME?"未分组":dlm.GROUP_NAME}';
                     <c:if test="${!empty dlm.GROUP_ID}">
-                        h+='<br><span class="ico78"></span> <a href="javascript:;" onclick="updateGroupAward(${dlm.GROUP_ID})" id="a_award_${dlm.GROUP_ID}"><span id="sp_grp_award${dlm.GROUP_ID}">${dlm.AWARD_NUMBER}</span></a>个';
+                        h+='<br><span class="ico78"></span> <a href="javascript:;" onclick="updateGroupAward(${dlm.GROUP_ID},${dlm.GROUPSUBMIT_FLAG})" id="a_award_${dlm.GROUP_ID}"><span id="sp_grp_award${dlm.GROUP_ID}">${dlm.AWARD_NUMBER}</span></a>个';
                     </c:if>
                     h+='</td><td>${dlm.STU_NO}</td>';
                     h+='<td>${dlm.STU_NAME}</td>';
-                    if(groupidstr.length<1||(groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1&&ctumid!=${dlm.USER_ID})){
+                    h+='<td  style="color:gray">${dlm.WSSCORE}</td>';
+                    var subFlag1=${dlm.SUBMIT_FLAG};
+                    if((groupidstr.length<1||(groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1&&ctumid!=${dlm.USER_ID}))&&subFlag1==0){
                             h+='<td name="td_data">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
                             h+='<td name="td_data">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
                             h+='<td name="td_data">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/>';
                     }else{
-                        h+='<td>${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
-                        h+='<td>${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
-                        h+='<td>${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td></tr>';
+                        h+='<td style="color:gray">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
+                        h+='<td style="color:gray">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
+                        h+='<td style="color:gray">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td></tr>';
                     }
                     h+='</tr>';
                     if($("tr[id='tr_${dlm.GROUP_ID}']").length<1){
@@ -73,14 +79,16 @@
                         h+='<input type="hidden" name="group_id" id="hd_group_id" value="${dl1m.GROUP_ID}"/>';
                         h+='<input type="hidden" name="user_id" id="hd_user_id" value="${dl1m.USER_ID}"/>';
                         h+='</td><td>${dl1m.STU_NAME}</td>';
-                         if(groupidstr.length<1||(groupidstr.indexOf(",${dl1m.GROUP_ID},")!=-1&&ctumid!=${dl1m.USER_ID})){
+                        h+='<td  style="color:gray">${dl1m.WSSCORE}</td>';
+                        var subFlag=${dl1m.SUBMIT_FLAG};
+                         if((groupidstr.length<1||(groupidstr.indexOf(",${dl1m.GROUP_ID},")!=-1&&ctumid!=${dl1m.USER_ID}))&&subFlag==0){
                             h+='<td name="td_data">${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
                             h+='<td name="td_data">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
                             h+='<td name="td_data">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td></tr>';
                          }else{
-                            h+='<td>${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
-                            h+='<td>${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
-                            h+='<td>${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td></tr>';
+                            h+='<td style="color:gray">${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
+                            h+='<td style="color:gray">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
+                            h+='<td  style="color:gray">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td></tr>';
                          }
                         var ulen=$("input[name='user_id']").filter(function(){return this.value==${dl1m.USER_ID}}).length;
                         if($("tr[id='tr_${dl1m.GROUP_ID}']").length>0&&ulen<1){
@@ -92,18 +100,24 @@
                     </c:forEach>
             </c:if>
             /**
-            *
+            * 事件绑定
              */
             $("td[name='td_data']").bind("click",tdDataClick);
+            if($("td[name='td_data']").length<1){
+                $("#a_sub").remove();
+            }
 
         })
         /**
         *生成奖励框
          */
-        function updateGroupAward(groupid){
-            <%if(isStudent){%>
-            return;
-            <%}%>
+        function updateGroupAward(groupid,adminflag){
+            <%--<%if(isStudent){%>--%>
+            <%--return;--%>
+            <%--<%}%>--%>
+            if(typeof(adminflag)=="undefined"||adminflag==1){
+                return;
+            }
             var cid=courseid;
             $("a[id='a_award_"+groupid+"']").attr("onclick","");
             $("a[id='a_award_"+groupid+"']").unbind("click");
@@ -140,7 +154,7 @@
                 //更新数据库
                 $(this).parent().html(this.value.Trim());
 
-                $("a[id='a_award_"+groupid+"']").bind("click",function(){updateGroupAward(groupid);});
+                $("a[id='a_award_"+groupid+"']").bind("click",function(){updateGroupAward(groupid,adminflag);});
             });
         }
 
@@ -194,6 +208,57 @@
                 $(this).parent().html(this.value+'<input type="hidden" value="'+type+'"/>');
             });
         }
+        /**
+        *提交
+         */
+        function doSub(){
+            var t_courseid=courseid;
+            var t_classid=classid;
+            var t_classtype=classtype;
+            var t_subjectid=subjectid;
+            //得到小组的JSON
+            var jshtml='';
+            $("tr[id*='tr_']").each(function(idx,itm){
+                var trVal=itm.id.replace("tr_","");
+                if(trVal!=null&&trVal.length>0){
+                    var val=$("#sp_grp_award"+trVal).html().Trim();
+                    if(val.length>0){
+                        jshtml+=',"'+trVal+'":'+val;
+                    }
+                }
+            });
+            if(jshtml.length>0){
+                jshtml=jshtml.substring(1);
+                jshtml='{'+jshtml+'}';
+            }
+
+            if(!confirm("您确定编辑完学生在此课中的网下积分吗?\n\n提示：提交后将不能更新，小组组长提交后，教师也无法进行更改!"))
+                return;
+            var p={};
+            if(jshtml.length>0){
+                p.groupJson=jshtml;
+            }
+            //url
+            var url="clsperformance/roleSub/"+t_courseid+"/"+t_classid+"/"+t_classtype+"/"+t_subjectid+"/sub";
+            $.ajax({
+                url:url,
+                data:p,
+                type:'post',
+                dataType:'json',
+                error:function(){
+                    alert('网络异常！');
+                },
+                success:function(rps){
+                    if(rps.type!='success'){
+                        alert(rps.msg);
+                    }else{
+                        history.go(0);
+                    }
+                }
+            });
+
+        }
+
     </script>
 </div>
 <%@include file="/util/foot.jsp"%>

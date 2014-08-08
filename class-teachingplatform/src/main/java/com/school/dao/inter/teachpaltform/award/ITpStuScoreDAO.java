@@ -19,6 +19,13 @@ public interface ITpStuScoreDAO extends ICommonDAO<TpStuScore> {
      * @param classtype
      * @return
      */
-    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid);
+    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid,final String groupidStr);
 
+
+    /**
+     * 教师组长提交时，初始化相关数据
+     * @param obj
+     * @return
+     */
+    public boolean stuScoreLastInit(final TpStuScore obj,final String groupidArr);
 }

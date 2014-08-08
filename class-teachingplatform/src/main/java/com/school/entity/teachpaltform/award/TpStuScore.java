@@ -19,6 +19,15 @@ public class TpStuScore implements  Serializable{
     private Long dcschoolid;
     private Long coursetotalscore;
     private Long groupscore;
+    private Integer classtype;
+
+    public Integer getClasstype() {
+        return classtype;
+    }
+
+    public void setClasstype(Integer classtype) {
+        this.classtype = classtype;
+    }
 
     public Long getClassid() {
         return classid;

@@ -8,6 +8,7 @@ import com.school.entity.teachpaltform.award.TpGroupScore;
 import com.school.util.PageResult;
 import org.springframework.stereotype.Component;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +51,64 @@ public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroup
     }
 
     @Override
-    public List<TpGroupScore> getList(TpGroupScore obj, PageResult presult) {
-        return null;
+    public List<TpGroupScore> getList(final TpGroupScore obj, PageResult presult) {
+        StringBuilder sqlbuilder=new StringBuilder("{call tp_group_score_list_split(");
+        List<Object> objList=new ArrayList<Object>();
+        if(obj==null)
+            sqlbuilder.append("?,?,?,?,?,?,");
+        else{
+            if(obj.getCourseid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getCourseid());
+            }else
+                sqlbuilder.append("NULL,");
+            if(obj.getClassid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getClassid());
+            }else
+                sqlbuilder.append("NULL,");
+            if(obj.getClasstype()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getClasstype());
+            }else
+                sqlbuilder.append("NULL,");
+            if(obj.getSubjectid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getSubjectid());
+            }else
+                sqlbuilder.append("NULL,");
+            if(obj.getGroupid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getGroupid());
+            }else
+                sqlbuilder.append("NULL,");
+            if(obj.getDcschoolid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getDcschoolid());
+            }else
+                sqlbuilder.append("NULL,");
+        }
+
+        if(presult==null){
+            sqlbuilder.append("null,null,null,");
+        }else{
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+            if(presult.getOrderBy()!=null&&presult.getOrderBy().length()>0){
+                sqlbuilder.append("?,");
+                objList.add(presult.getOrderBy());
+            }
+        }
+        sqlbuilder.append("?)}");
+
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<TpGroupScore> papertypeinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpGroupScore.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return papertypeinfoList;
     }
 
     @Override
@@ -90,6 +147,16 @@ public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroup
             rturnVal.add(obj.getDcschoolid());
         }else
             sqlbuilder.append("NULL,");
+        if(obj.getClasstype()!=null){
+            sqlbuilder.append("?,");
+            rturnVal.add(obj.getClasstype());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSubmitflag()!=null){
+            sqlbuilder.append("?,");
+            rturnVal.add(obj.getSubmitflag());
+        }else
+            sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
         return rturnVal;
     }
@@ -99,7 +166,7 @@ public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroup
         if(obj==null||sqlbuilder==null)
             return null;
         List<Object> returnVal=new ArrayList<Object>();
-        sqlbuilder.append("{CALL tp_cls_performance_award_info_update(");
+        sqlbuilder.append("{CALL tp_group_score_update(");
         if(obj.getRef()!=null){
             sqlbuilder.append("?,");
             returnVal.add(obj.getRef());
@@ -135,7 +202,17 @@ public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroup
             returnVal.add(obj.getDcschoolid());
         }else
             sqlbuilder.append("NULL,");
-        sqlbuilder.append("?)}}");
+        if(obj.getSubmitflag()!=null){
+            sqlbuilder.append("?,");
+            returnVal.add(obj.getSubmitflag());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClasstype()!=null){
+            sqlbuilder.append("?,");
+            returnVal.add(obj.getClasstype());
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
         return returnVal;
     }
 
@@ -148,7 +225,7 @@ public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroup
 
         List<Object> returnVal=new ArrayList<Object>();
         StringBuilder sqlbuilder=new StringBuilder();
-        sqlbuilder.append("{CALL tp_cls_performance_award_info_addOrUpdate(");
+        sqlbuilder.append("{CALL tp_group_score_addOrUpdate(");
 
         if(obj.getCourseid()!=null){
             sqlbuilder.append("?,");
@@ -178,6 +255,11 @@ public class TpGroupScoreDAO extends CommonDAO<TpGroupScore> implements ITpGroup
         if(obj.getDcschoolid()!=null){
             sqlbuilder.append("?,");
             returnVal.add(obj.getDcschoolid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClasstype()!=null){
+            sqlbuilder.append("?,");
+            returnVal.add(obj.getClasstype());
         }else
             sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");

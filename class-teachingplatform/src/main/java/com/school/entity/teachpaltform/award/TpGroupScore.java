@@ -27,6 +27,24 @@ public class TpGroupScore implements Serializable {
     private Integer score2total;//本组笑脸总数
     private Integer score4total;//本组违反纪律次数
     private Integer score5avg; //本组完成网上任务平均数
+    private Integer submitflag;//1分数已提交 0 未提交
+    private Integer classtype;
+
+    public Integer getClasstype() {
+        return classtype;
+    }
+
+    public void setClasstype(Integer classtype) {
+        this.classtype = classtype;
+    }
+
+    public Integer getSubmitflag() {
+        return submitflag;
+    }
+
+    public void setSubmitflag(Integer submitflag) {
+        this.submitflag = submitflag;
+    }
 
     public Long getClassid() {
         return classid;
