@@ -166,7 +166,7 @@
                 }
                 pList1.Refresh();
             }else{
-                $("#mainTab1").html('<tr><td colspan=2>没有数据</td></tr>');
+                $("#mainTab1").html('没有数据');
             }
         }
         function getInvestReturnMethod2(rps){
@@ -200,7 +200,8 @@
                 }
                 pList2.Refresh();
             }else{
-                $("#mainTab2").html('<tr><td colspan=2>没有数据</td></tr>');
+                htm+='<tr><td>没有数据</td></tr>';
+                $("#mainTab2").html(htm);
             }
         }
         function getInvestReturnMethod3(rps){
@@ -652,6 +653,5 @@
         </div>
     </div>
 </div>
-<%@include file="/util/foot.jsp"%>
 </body>
 </html>

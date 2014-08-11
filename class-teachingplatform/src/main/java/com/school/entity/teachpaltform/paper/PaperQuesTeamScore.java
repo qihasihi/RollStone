@@ -1,13 +1,15 @@
 package  com.school.entity.teachpaltform.paper;
 
+import java.util.Date;
+
 public class PaperQuesTeamScore {
 
 	public void PaperQuesTeamScore (){}
    
     private java.lang.Long paperid;
     private java.lang.Integer ref;
-    private java.sql.Timestamp ctime;
-    private java.sql.Timestamp mtime;
+    private Date ctime;
+    private Date mtime;
     private Float score;
     private Long quesref;
     private Long courseid;
@@ -24,13 +26,13 @@ public class PaperQuesTeamScore {
     public void setRef(java.lang.Integer ref){
       this.ref = ref;
     }
-    public java.sql.Timestamp getCtime(){
+    public Date getCtime(){
       return ctime;
     }
     public void setCtime(java.sql.Timestamp ctime){
       this.ctime = ctime;
     }
-    public java.sql.Timestamp getMtime(){
+    public Date getMtime(){
       return mtime;
     }
     public void setMtime(java.sql.Timestamp mtime){

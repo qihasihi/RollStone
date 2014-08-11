@@ -82,7 +82,17 @@ public class ImInterfaceManager extends BaseManager<ImInterfaceInfo> implements 
     }
 
     @Override
-    public List<Map<String, Object>> getClassTaskTask(Long courseid) {
-        return this.imInterfaceDAO.getClassTaskTask(courseid);
+    public List<Map<String, Object>> getClassTaskTask(Long courseid,Integer userid) {
+        return this.imInterfaceDAO.getClassTaskTask(courseid,userid);
+    }
+
+    @Override
+    public List<Map<String, Object>> getTaskInfo(Long taskid, Integer classid) {
+        return this.imInterfaceDAO.getTaskInfo(taskid,classid);
+    }
+
+    @Override
+    public List<Map<String, Object>> getTaskUserRecord(Long taskid, Integer classid, Integer isvir,Integer userid) {
+        return this.imInterfaceDAO.getTaskUserRecord(taskid,classid,isvir,userid);
     }
 }

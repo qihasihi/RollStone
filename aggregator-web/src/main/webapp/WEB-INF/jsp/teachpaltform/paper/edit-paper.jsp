@@ -265,6 +265,9 @@ function scoreChange(obj,score){
     updateQuesScore(score,quesid,ref);
 }
 
+function xround(x, num){
+    return Math.round(x * Math.pow(10, num)) / Math.pow(10, num) ;
+}
 
 /**
  * 修改试题分数
@@ -291,9 +294,9 @@ function updateQuesScore(score,quesid,ref){
             }else{
                 alert(rmsg.msg);
                 if(rmsg.objList.length>0){
-                   $("#total_score").html(rmsg.objList[0]);
+                   $("#total_score").html(xround(rmsg.objList[0],1)+"&nbsp;分");
                    if(typeof ref!='undefined')
-                       $("#group_"+ref).html(rmsg.objList[1])
+                       $("#group_"+ref).html(xround(rmsg.objList[1],1)+"&nbsp;分")
                 }
             }
         }

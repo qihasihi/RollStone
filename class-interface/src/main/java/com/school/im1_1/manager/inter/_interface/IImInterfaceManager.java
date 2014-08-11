@@ -12,5 +12,7 @@ import java.util.Map;
 public interface IImInterfaceManager extends IBaseManager<ImInterfaceInfo> {
     public List<Map<String, Object>> getStudyModule(ImInterfaceInfo obj);
     public List<Map<String,Object>> getClassTaskCourse(ImInterfaceInfo obj);
-    public List<Map<String,Object>> getClassTaskTask(Long courseid);
+    public List<Map<String,Object>> getClassTaskTask(Long courseid,Integer userid);
+    public List<Map<String,Object>> getTaskInfo(Long taskid,Integer classid);
+    public List<Map<String,Object>> getTaskUserRecord(Long taskid,Integer classid,Integer isvir,Integer userid);
 }

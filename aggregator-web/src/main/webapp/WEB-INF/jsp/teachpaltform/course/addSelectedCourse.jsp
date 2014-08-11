@@ -17,6 +17,11 @@
             var subjectid="${subject.subjectid}";
             var gradeid="${param.gradeid}";
             $(function(){
+                //定位materialid 选中
+                if(materialid.Trim().length>0){
+                    $("#materialid option[value='"+materialid+"']").attr("selected",true);
+                }
+
                 srhMode(1);
                 <c:if test="${!empty grade}">
                     $("#gradeid").val('${grade.gradeid}');

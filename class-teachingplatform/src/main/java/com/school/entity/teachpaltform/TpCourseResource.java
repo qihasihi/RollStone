@@ -2,6 +2,7 @@ package  com.school.entity.teachpaltform;
 
 import com.school.entity.resource.ResourceInfo;
 import com.school.util.UtilTool;
+import sun.security.util.BigInt;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,6 +28,15 @@ public class TpCourseResource implements Serializable {
     private Integer localstatus;
     private Date operatetime;
     private String courseids;//查询多个专题下资源用的
+    private Long taskCourseid;//在这个专题下是否发过任务
+
+    public Long getTaskCourseid() {
+        return taskCourseid;
+    }
+
+    public void setTaskCourseid(Long taskCourseid) {
+        this.taskCourseid = taskCourseid;
+    }
 
     public String getCourseids() {
         return courseids;

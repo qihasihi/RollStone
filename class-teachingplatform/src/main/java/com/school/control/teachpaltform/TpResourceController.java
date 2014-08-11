@@ -20,14 +20,8 @@ import com.school.entity.teachpaltform.paper.MicVideoPaperInfo;
 import com.school.entity.teachpaltform.paper.PaperInfo;
 import com.school.entity.teachpaltform.paper.PaperQuestion;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
-import com.school.manager.DictionaryManager;
-import com.school.manager.GradeManager;
-import com.school.manager.StudentManager;
-import com.school.manager.UserManager;
-import com.school.manager.inter.IDictionaryManager;
-import com.school.manager.inter.IGradeManager;
-import com.school.manager.inter.IStudentManager;
-import com.school.manager.inter.IUserManager;
+import com.school.manager.*;
+import com.school.manager.inter.*;
 import com.school.manager.inter.resource.IAccessManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.resource.IStoreManager;
@@ -2109,6 +2103,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             //查询没有发任务的资源
             if(taskflag!=null&&taskflag.trim().length()>0)
                 t.setTaskflag(1);
+            t.setTaskCourseid(Long.parseLong(courseid.trim()));
             List<TpCourseResource>resList=this.tpCourseResourceManager.getResourceForRelatedCourse(t, p);
             je.setPresult(p);
             je.setObjList(resList);
@@ -2865,7 +2860,11 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         List<TpCourseTeachingMaterial> objList = tpCourseTeachingMaterialManager.getList(obj,null);
         request.setAttribute("versionid",objList.get(0).getTeachingmaterialid());
         request.setAttribute("courseid",courseid);
-        List<EttColumnInfo> columnList = (List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
+        //栏目
+        IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
+        EttColumnInfo ettColumnInfo = new EttColumnInfo();
+        ettColumnInfo.setRoletype(2);
+        List<EttColumnInfo> columnList =columnManager.getEttColumnSplit(ettColumnInfo,null);
         if(columnList!=null&&columnList.size()>0){
             Boolean b1= false;
             Boolean b2 = false;
@@ -2906,7 +2905,11 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         //先判断有没有    权限
         Boolean b1= false;
         Boolean b2= false;
-        List<EttColumnInfo> columnList = (List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
+        //栏目
+        IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
+        EttColumnInfo ettColumnInfo = new EttColumnInfo();
+        ettColumnInfo.setRoletype(2);
+        List<EttColumnInfo> columnList =columnManager.getEttColumnSplit(ettColumnInfo,null);
         if(columnList!=null&&columnList.size()>0){
             for(EttColumnInfo obj:columnList){
                 if(obj.getEttcolumnid()==7){

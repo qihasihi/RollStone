@@ -58,11 +58,14 @@
                 });
                 $("#"+this.id+" #you_sum").html(YSumScore);
             });
-            var sumScore=0;
-            $("strong[id*='you_score']").each(function(idx,itm){
-                sumScore+=parseFloat($(itm).html().Trim());
-            });
-            $("#sp_sumScore").html(sumScore);
+            if(isshowfen){
+                var sumScore=0;
+                $("strong[id*='you_score']").each(function(idx,itm){
+                    sumScore+=parseFloat($(itm).html().Trim());
+                });
+                $("#sp_sumScore").html(sumScore+"分");
+            }else
+                $("#sp_sumScore").html("待批改");
             </c:if>
         });
 
@@ -142,12 +145,11 @@
 <div class="subpage_head"><span class="ico55"></span><strong>查看试卷</strong></div>
 <div class="content2">
     <div class="jxxt_zhuanti_shijuan_add font-black public_input"  id="dv_question">
-        <p class="title"><span class="f_right"><strong>得分：<span class="font-blue"><span id="sp_sumScore"></span>分/待批改</span></strong></span>
-            <strong>&nbsp;<c:if test="${!empty paperObj&&paperObj.papertype==3}">
-                ${paperObj.papername}
-            </c:if></strong>
+        <p class="title"><span class="f_right"><strong>得分：<span class="font-blue"><span id="sp_sumScore"></span></span></strong></span>
+            <strong><c:if test="${!empty paperObj&&paperObj.papertype==3}">${paperObj.papername}</c:if></strong>
         </p>
         <script type="text/javascript">
+            var isshowfen=true;
             <c:if test="${!empty quesList}">
              <c:forEach items="${quesList}" var="q" varStatus="qidx">
             var h='';
@@ -205,14 +207,16 @@
             h1+='<input  type="hidden" value="${q.questiontype}" name="hd_questiontype" id="hd_questiontype_${q.questionid}"/>';
             <c:if test="${empty q.parentQues}">
             //试题类型 1：其它 2：填空 3：单选 4：多选 6:试题组 7：单选组试题 8：多选组试题
-                if(questype==1)
-                    h1+='<span class="bg">问答</span>：';
-                else if(questype==2)
-                    h1+='<span class="bg">填空</span>：';
-                else if(questype==3)
-                    h1+='<span class="bg">单选</span>：';
+                if(questype==1){
+                    h1+='<span class="bg">问答题</span>：';
+                    isshowfen=false;
+                } else if(questype==2){
+                    h1+='<span class="bg">填空题</span>：';
+                    isshowfen=false;
+                }else if(questype==3)
+                    h1+='<span class="bg">单选题</span>：';
                 else if(questype==4)
-                    h1+='<span class="bg">多选</span>：';
+                    h1+='<span class="bg">多选题</span>：';
             </c:if>
             h1+='${qidx.index+1}、';
             <c:if test="${!empty q.content}">

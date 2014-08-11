@@ -3322,7 +3322,7 @@ function getRemoteResources(type){
                     });
                     $("#gaoqing").html(htm);
                 }else{
-                    $("#gaoqing").html('没有数据');
+                    $("#gaoqing").html('<li>没有数据</li>');
                 }
                 if(rps.objList[1]!=null){
                     if(rps.objList[1]=="0"){
@@ -3351,7 +3351,7 @@ function getRemoteResources(type){
                     });
                     $("#zhishi").html(htm);
                 }else{
-                    $("#zhishi").html('没有数据');
+                    $("#zhishi").html('<li>没有数据</li>');
                 }
                 if(rps.objList[4]!=null){
                     if(rps.objList[4]=="0"){

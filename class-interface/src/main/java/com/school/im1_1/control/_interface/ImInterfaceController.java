@@ -3,14 +3,17 @@ package com.school.im1_1.control._interface;
 import com.etiantian.unite.utils.CodecUtil;
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
+import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.entity.teachpaltform.TpTaskAllotInfo;
 import com.school.entity.teachpaltform.TpTaskInfo;
 import com.school.im1_1.entity._interface.ImInterfaceInfo;
 import com.school.im1_1.manager._interface.ImInterfaceManager;
+import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
 import com.school.manager.inter.teachpaltform.ITpTaskAllotManager;
 import com.school.manager.inter.teachpaltform.ITpTaskManager;
+import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.TpCourseManager;
 import com.school.manager.teachpaltform.TpTaskAllotManager;
 import com.school.manager.teachpaltform.TpTaskManager;
@@ -21,6 +24,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,11 +45,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private ITpCourseManager tpCourseManager;
     private ITpTaskManager tpTaskManager;
     private ITpTaskAllotManager tpTaskAllotManager;
+    private IResourceManager resourceManager;
     public ImInterfaceController(){
         this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
         this.tpCourseManager = this.getManager(TpCourseManager.class);
         this.tpTaskManager = this.getManager(TpTaskManager.class);
         this.tpTaskAllotManager = this.getManager(TpTaskAllotManager.class);
+        this.resourceManager = this.getManager(ResourceManager.class);
     }
 
     /**
@@ -109,11 +115,19 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         JsonEntity je = new JsonEntity();
         String classid = request.getParameter("classId");
         String schoolid = request.getParameter("schoolId");
+        String classtype = request.getParameter("classType");
+        String isvirtual = request.getParameter("isVirtual");
+        String userid = request.getParameter("jid");
+        String usertype = request.getParameter("userType");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
         HashMap<String,String> map = new HashMap();
         map.put("classId",classid);
         map.put("schoolId",schoolid);
+        map.put("classType",classtype);
+        map.put("isVirtual",isvirtual);
+        map.put("jid",userid);
+        map.put("userType",usertype);
         map.put("timeStamp",timestamp);
         String sign = UrlSigUtil.makeSigSimple("ClassTask",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("ClassTask",map,sig);
@@ -124,11 +138,88 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
+        if(usertype.equals("2")){
+            obj.setUserid(Integer.parseInt(userid));
+        }
         List<Map<String,Object>> courseList = this.imInterfaceManager.getClassTaskCourse(obj);
         Map m = new HashMap();
         if(courseList!=null&&courseList.size()>0){
             for(int i = 0;i<courseList.size();i++){
-                List<Map<String,Object>> taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()));
+                List<Map<String,Object>> taskList;
+                if(usertype.equals("2")){
+                    taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),null);
+                }else{
+                    taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),Integer.parseInt(userid));
+                }
+                if(taskList!=null&&taskList.size()>0){
+                    for(int j = 0;j<taskList.size();j++){
+                        int time =Integer.parseInt(taskList.get(j).get("LEFTTIME").toString());
+                        int days = 0;
+                        int hours =0;
+                        int mins = 0;
+                        int seconds = 0;
+                        if(time>0){
+                            seconds = time%60;
+                            if(seconds>0){
+                                mins = time/60;
+                            }else{
+                                seconds = seconds*60;
+                            }
+                            if(mins>0){
+                                hours = mins/60;
+                            }
+                            if(hours>0){
+                                days= hours/24;
+                            }
+                        }
+                        if(days>0){
+                            taskList.get(j).put("LEFTTIME",days+"天");
+                        }else{
+                            if(hours>0){
+                                taskList.get(j).put("LEFTTIME",hours+"小时");
+                            }else{
+                                if(mins>0){
+                                    taskList.get(j).put("LEFTTIME",mins+"分钟");
+                                }else{
+                                    if(seconds>0){
+                                        taskList.get(j).put("LEFTTIME",seconds+"秒");
+                                    }
+                                }
+                            }
+                        }
+                        String typename = "";
+                        switch (Integer.parseInt(taskList.get(j).get("TASKTYPE").toString())){
+                            case 1:
+                                typename="资源学习";
+                                break;
+                            case 2:
+                                typename="互动交流";
+                                break;
+                            case 3:
+                                typename="试题";
+                                break;
+                            case 4:
+                                typename="成卷测试";
+                                break;
+                            case 5:
+                                typename="自主测试";
+                                break;
+                            case 6:
+                                typename="微课程学习";
+                                break;
+                            case 7:
+                                typename="图片";
+                                break;
+                            case 8:
+                                typename="文字";
+                                break;
+                            case 9:
+                                typename="视频";
+                                break;
+                        }
+                        taskList.get(j).put("TASKNAME","任务 "+taskList.get(j).get("ORDERIDX")+" "+typename+" "+taskList.get(j).get("TASKNAME"));
+                    }
+                }
                 courseList.get(i).put("taskList",taskList);
             }
         }else{
@@ -305,14 +396,117 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Map m = new HashMap();
         Boolean bl = this.imInterfaceManager.doExcetueArrayProc(sqlListArray,objListArray);
         if(bl){
-            m.put("result","success");
+            m.put("result","1");
             m.put("message","添加成功");
         }else{
-            m.put("result","error");
+            m.put("result","0");
             m.put("message","添加失败");
         }
         JSONObject jbStr=JSONObject.fromObject(m);
         response.getWriter().print(jbStr.toString());
     }
 
+    /**
+     * 班级课表接口
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=TaskInfo",method= {RequestMethod.POST,RequestMethod.GET})
+    public void getTaskInfo(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        String taskid = request.getParameter("taskId");
+        String classid = request.getParameter("classId");
+        String classtype = request.getParameter("classType");
+        String isvir = request.getParameter("isVirtual");
+        String userid = request.getParameter("jid");
+        String usertype = request.getParameter("userType");
+        String schoolid = request.getParameter("schoolId");
+//        String timestamp = request.getParameter("time");
+//        String sig = request.getParameter("sign");
+//        HashMap<String,String> map = new HashMap();
+//        map.put("taskId",taskid);
+//        map.put("classId",classid);
+//        map.put("classType",classtype);
+//        map.put("isVirtual",isvir);
+//        map.put("jid",userid);
+//        map.put("userType",usertype);
+//        map.put("schoolId",schoolid);
+//        map.put("timeStamp",timestamp);
+//        String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
+//        // Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
+//        if(!sig.equals(sign)){
+//            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
+//            return;
+//        }
+        TpTaskInfo tpTaskInfo = new TpTaskInfo();
+        tpTaskInfo.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
+        if(taskList==null||taskList.size()==0){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"当前任务不存在\"}");
+            return;
+        }
+        List<Map<String,Object>> taskinfo = this.imInterfaceManager.getTaskInfo(taskList.get(0).getTaskid(),Integer.parseInt(classid));
+        if(taskList.get(0).getTasktype()==1){
+            ResourceInfo rs = new ResourceInfo();
+            rs.setResid(taskList.get(0).getTaskvalueid());
+            List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
+            String attchStr = UtilTool.getResourceLocation(rsList.get(0).getResid(),1)+"/"+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+            taskinfo.get(0).put("TASKATTACH",attchStr);
+            taskinfo.get(0).put("ATTACHTYPE",rsList.get(0).getFilesuffixname());
+        }
+        List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
+        if(usertype.equals("2")){
+            taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
+        }else{
+            taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),Integer.parseInt(userid));
+        }
+        if(taskUserRecord!=null&&taskUserRecord.size()>0){
+            for(int i = 0;i<taskUserRecord.size();i++){
+                int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
+                int days = 0;
+                int hours =0;
+                int mins = 0;
+                int seconds = 0;
+                if(time>0){
+                    seconds = time%60;
+                    if(seconds>0){
+                        mins = time/60;
+                    }else{
+                        seconds = seconds*60;
+                    }
+                    if(mins>0){
+                        hours = mins/60;
+                    }
+                    if(hours>0){
+                        days= hours/24;
+                    }
+                }
+                if(days>0){
+                    String t = taskUserRecord.get(i).get("C_TIME").toString();
+                    t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
+                    taskUserRecord.get(i).put("REPLYDATE",t);
+                }else{
+                    if(hours>0){
+                        taskUserRecord.get(i).put("REPLYDATE",hours+"小时");
+                    }else{
+                        if(mins>0){
+                            taskUserRecord.get(i).put("REPLYDATE",mins+"分钟");
+                        }else{
+                            if(seconds>0){
+                                taskUserRecord.get(i).put("REPLYDATE",seconds+"秒");
+                            }
+                        }
+                    }
+                }
+            }
+            taskinfo.get(0).put("REPLYLIST",taskUserRecord);
+        }
+        Map m = new HashMap();
+        m.put("result","1");
+        m.put("msg","成功");
+        m.put("data",taskinfo);
+        JSONObject jbStr=JSONObject.fromObject(m);
+        response.getWriter().print(jbStr.toString());
+    }
 }

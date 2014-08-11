@@ -40,6 +40,7 @@ $(function(){
 
 function getInvestReturnMethod(rps){
     var shtml='';
+    $("#dv_data").html('');
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
             shtml+='<tr><td>';
@@ -101,6 +102,7 @@ function getInvestReturnMethod(rps){
                     shtml+='</tr>';
                 });
             }
+
         });
     }
     $("#dv_data").html(shtml);

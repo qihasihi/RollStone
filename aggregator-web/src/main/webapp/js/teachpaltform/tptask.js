@@ -202,7 +202,7 @@ function queryQuestionType(trobj, questype, boo, questionid) {
  * 弹出选择资源页面
  * */
 function showResourceElementJsp(){
-    var url = 'task?m=toTaskElementDetial&operate_type=1&subjectid='+subjectid+'&tasktype=1&courseid=' + courseid;
+    var url = 'task?m=toTaskElementDetial&operate_type=1&gradeid='+gradeid+'&subjectid='+subjectid+'&tasktype=1&courseid=' + courseid;
     var param = "dialogHeight:800px;dialogWidth:900px;status:no;location:no";
     var returnValue = window.showModalDialog(url, "", param);
     if (returnValue == undefined) {
@@ -1574,7 +1574,7 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
     }
     var param = {};
     param.taskid = taskid;
-    if (classid != null && classid.length > 0) {
+    if (classid != null && classid.toString().length > 0) {
         param.classid = classid;
         param.classtype = classtype;
     } else {

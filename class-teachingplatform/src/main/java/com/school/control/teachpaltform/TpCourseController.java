@@ -2333,6 +2333,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String subjectid = request.getParameter("subjectid");
         String gradeid = request.getParameter("gradeid");
         String termid = request.getParameter("termid");
+        String materialid=request.getParameter("materialid");
+        if(materialid==null||materialid.trim().length()<1)
+            materialid="";
 
         SubjectInfo subject = new SubjectInfo();
         subject.setSubjectid(Integer.parseInt(subjectid));
@@ -2356,6 +2359,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         gradeList = this.gradeManager.getTchGradeList(user.getUserid(), ti.getYear());
 
         mp.put("subject", subject);
+
+        mp.put("materialid",materialid);
         mp.put("grade", grade);
         mp.put("termid", termid);
         mp.put("tmList", tmList);

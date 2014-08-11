@@ -272,7 +272,7 @@
                 html+='<div class="jxxt_zhuanti_rw">';
                 html+='        <div class="jxxt_zhuanti_rwR">';
                 html+='        <div class="title">';
-                html+='        <p class="f_right"><span class="ico35" style="cursor:pointer" onclick="loadNoCompleteStu(\''+itm.taskid+'\',\''+itm.usertypeid+'\',\''+itm.taskstatus+'\')"></span><b><a   class="font-red">'+itm.stucount+'/'+itm.totalcount+'</a></b></p>';
+                html+='        <p class="f_right"><span class="ico35" style="cursor:pointer" onclick="loadNoCompleteStu(\''+itm.taskid+'\',\''+itm.usertypeid+'\',\''+itm.taskstatus+'\')"></span><b><a style="color: gray;">'+itm.stucount+'/'+itm.totalcount+'</a></b></p>';
                 html+='        <p><a class="ico49b" id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务'+(rps.presult.pageSize*(rps.presult.pageNo-1)+(idx+1))+'：'+type+'</a>';
                 if(itm.tasktype==1){
                     if(typeof itm.remotetype!='undefined'){
@@ -331,11 +331,11 @@
 
                 html+='<div class="jxxt_zhuanti_rwL">';
                 if(itm.taskstatus=="3"){
-                    html+='<p><span class="ico_time"></span>任务已结束</p>';
+                    html+='<p>任务已结束</p>';
                 }else if(itm.taskstatus=="1"){
-                    html+='<p class="blue"><span class="ico_time"></span>任务未开始</p>';
+                    html+='<p class="blue">任务未开始</p>';
                 }else{
-                    html+='<p class="green"><span class="ico_time"></span>'+itm.taskstatus+'</p>';
+                    html+='<p class="green">'+itm.taskstatus+'</p>';
                     if(itm.taskPerformanceList[0]==null)
                         html+='<input type="hidden" name="hd_task_status" value="'+itm.taskid+'"/>';
                 }

@@ -17,14 +17,8 @@ import com.school.entity.teachpaltform.paper.PaperInfo;
 import com.school.entity.teachpaltform.paper.StuPaperLogs;
 import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
-import com.school.manager.ClassManager;
-import com.school.manager.DictionaryManager;
-import com.school.manager.SmsManager;
-import com.school.manager.UserManager;
-import com.school.manager.inter.IClassManager;
-import com.school.manager.inter.IDictionaryManager;
-import com.school.manager.inter.ISmsManager;
-import com.school.manager.inter.IUserManager;
+import com.school.manager.*;
+import com.school.manager.inter.*;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
@@ -84,8 +78,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private ITpCoursePaperManager tpCoursePaperManager;
     private IPaperManager paperManager;
     private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
+    private IGradeManager gradeManager;
     private IResourceManager resourceManager;
     public TaskController(){
+        this.gradeManager=this.getManager(GradeManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -208,8 +204,15 @@ public class TaskController extends BaseController<TpTaskInfo>{
         request.setAttribute("resType", resourceTypeList);
         request.setAttribute("fileSystemIpPort", UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD"));
         request.setAttribute("nextid", this.resourceManager.getNextId(true));
+
+
+
         if(type.equals("1")){
-            List<EttColumnInfo> columnList = (List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
+            //À¸Ä¿
+            IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
+            EttColumnInfo ettColumnInfo = new EttColumnInfo();
+            ettColumnInfo.setRoletype(2);
+            List<EttColumnInfo> columnList =columnManager.getEttColumnSplit(ettColumnInfo,null);
             if(columnList!=null&&columnList.size()>0){
                 Boolean b= false;
                 for(EttColumnInfo obj:columnList){
@@ -219,6 +222,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 }
                 request.setAttribute("sign",b);
             }
+             request.setAttribute("gradeList", this.gradeManager.getList(null, null));
              return new ModelAndView("/teachpaltform/task/teacher/resource-element-detail");
         }else{
              return new ModelAndView("/teachpaltform/task/teacher/element-detail");

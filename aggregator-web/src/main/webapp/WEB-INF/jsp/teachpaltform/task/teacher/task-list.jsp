@@ -151,9 +151,9 @@ function getInvestReturnMethod(rps){
                     qtype=-1;
                 else if(itm.tasktype==10)
                     qtype=-2;
-                html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b></a>';
+                html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'"><span class="ico35"></span><b style="color:gray;">'+itm.stucount+'/'+itm.totalcount+'</b></a>';
             }else
-                html+='<span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b>';
+                html+='<span class="ico35"></span><b style="color:gray;">'+itm.stucount+'/'+itm.totalcount+'</b>';
 
             if(itm.tasktype==4&&itm.taskstatus=="3"){
                 html+='<a class="ico79" title="批阅" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
@@ -201,11 +201,11 @@ function getInvestReturnMethod(rps){
             html+='</div>';
             html+='<div class="jxxt_zhuanti_rwL">';
             if(itm.taskstatus=="3"){
-                html+='<p><span class="ico_time"></span>任务已结束</p>';
+                html+='<p>任务已结束</p>';
             }else if(itm.taskstatus=="1"){
-                html+='<p class="blue"><span class="ico_time"></span>任务未开始</p>';
+                html+='<p class="blue">任务未开始</p>';
             }else{
-                html+='<p class="green"><span class="ico_time"></span>任务进行中</p>';
+                html+='<p class="green">任务进行中</p>';
                 html+='<input type="hidden" name="hd_task_status" value="'+itm.taskid+'"/>';
             }
 
@@ -520,7 +520,7 @@ function showCourseList(){
     </div>
 
     <div id="dv_task">
-        <p class="jxxt_zhuanti_add font-darkblue"><a href="task?toAddTask&courseid=${param.courseid }&subjectid=${param.subjectid}&termid=${param.termid}" ><span class="ico26"></span>添加任务</a></p>
+        <p class="jxxt_zhuanti_add font-darkblue"><a href="task?toAddTask&courseid=${param.courseid }&gradeid=${param.gradeid}&subjectid=${param.subjectid}&termid=${param.termid}" ><span class="ico26"></span>添加任务</a></p>
         <div class="jxxt_zhuanti" id="initItemList">
 
         </div>

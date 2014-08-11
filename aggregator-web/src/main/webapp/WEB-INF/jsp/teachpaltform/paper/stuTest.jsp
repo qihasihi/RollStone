@@ -47,9 +47,9 @@
 <div class="subpage_head">
     <p class="back"><span class="ico_time"></span>${taskstatus}</p>
     <span class="ico55"></span><strong>
-    <c:if test="${!empty paperObj&&paperObj.papertype==3}">成卷测试</c:if>
+    <c:if test="${!empty paperObj&&(paperObj.papertype==3||paperObj.papertype==1||paperObj.papertype==2)}">成卷测试</c:if>
     <c:if test="${!empty paperObj&&paperObj.papertype==4}">自主测试</c:if>
-    <c:if test="${!empty paperObj&&paperObj.papertype==3}">
+    <c:if test="${!empty paperObj&&(paperObj.papertype==3||paperObj.papertype==1||paperObj.papertype==2)}">
         —${paperObj.papername}
     </c:if>
     </strong>

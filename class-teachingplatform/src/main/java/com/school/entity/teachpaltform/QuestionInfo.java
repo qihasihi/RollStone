@@ -97,7 +97,8 @@ public class QuestionInfo implements java.io.Serializable {
             while (correctanswer.indexOf("\r\n\t")!=-1||
                     correctanswer.indexOf("\r\n")!=-1||
                     correctanswer.indexOf("\n")!=-1||correctanswer.indexOf("\n\r")!=-1||correctanswer.indexOf("\t")!=-1){
-                correctanswer=correctanswer.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                //correctanswer=correctanswer.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                correctanswer=correctanswer.replace("\r\n\t", "");
                 correctanswer=correctanswer.replace("\r\n", "&nbsp;&nbsp;<br>");
                 correctanswer=correctanswer.replace("\n", "<br>");
                 correctanswer=correctanswer.replace("\n\r", "<br>&nbsp;&nbsp;");
@@ -126,6 +127,8 @@ public class QuestionInfo implements java.io.Serializable {
     }
     public java.lang.String getContent(){
         if(content!=null&&content.trim().length()>0){
+            content=content.trim();
+            if(content.trim().equals("Пе"))content="";
             String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(content.indexOf("_QUESTIONPIC+")!=-1)
                 content=content.replace("_QUESTIONPIC+",t);
@@ -134,7 +137,8 @@ public class QuestionInfo implements java.io.Serializable {
                     content.indexOf("\n")!=-1||
                     content.indexOf("\n\r")!=-1||
                     content.indexOf("\t")!=-1){
-                content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                //content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                content=content.replace("\r\n\t", "");
                 content=content.replace("\r\n", "&nbsp;&nbsp;<br>");
                 content=content.replace("\n", "<br>");
                 content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
@@ -255,11 +259,13 @@ public class QuestionInfo implements java.io.Serializable {
     }
     public java.lang.String getAnalysis(){
         if(analysis!=null&&analysis.trim().length()>0){
+            analysis=analysis.trim();
             String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(analysis.indexOf("_QUESTIONPIC+")!=-1)
                 analysis=analysis.replace("_QUESTIONPIC+",t);
             while (analysis.indexOf("\r\n\t")!=-1||analysis.indexOf("\n")!=-1||analysis.indexOf("\n\r")!=-1||analysis.indexOf("\t")!=-1){
-                analysis=analysis.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                //analysis=analysis.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                analysis=analysis.replace("\r\n\t", "");
                 analysis=analysis.replace("\r\n", "&nbsp;&nbsp;<br>");
                 analysis=analysis.replace("\n", "<br>");
                 analysis=analysis.replace("\n\r", "<br>&nbsp;&nbsp;");

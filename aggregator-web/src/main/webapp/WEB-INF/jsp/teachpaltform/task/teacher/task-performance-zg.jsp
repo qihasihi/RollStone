@@ -15,7 +15,7 @@
         $(function(){
             $("input[name='classradio']").eq(0).attr("checked",true);
             <c:if test="${!empty classList}">
-            zgloadStuPerformance(${classList[0].classid},"${taskInfo.tasktype}");
+                zgloadStuPerformance(${classList[0].classid},"${taskInfo.tasktype}","${taskInfo.taskvalueid}",${classList[0].classtype});
             </c:if>
             if(${taskInfo.tasktype==1}){
                // var uri="resource?m=todetail&resid=${taskInfo.taskvalueid}";

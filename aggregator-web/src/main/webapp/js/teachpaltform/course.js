@@ -536,7 +536,7 @@ function getClassByOptions(){
 function toCourseLibrary(){
     window.location.href="teachercourse?m=toCourseLibrary&subjectid="+$("#subjectid").val()
         +"&gradeid="+$("#gradeid").val()
-        +"&termid="+$("#termid").val();
+        +"&termid="+$("#termid").val()+"&materialid="+materialid;
 
 }
 

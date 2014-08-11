@@ -158,9 +158,11 @@ public class PaperController extends BaseController<PaperInfo>{
         request.setAttribute("courseid", courseid);
         request.setAttribute("termid", termid);
         request.setAttribute("subjectid", subjectid);
-        //任务库
-        List<DictionaryInfo>courselevel=this.dictionaryManager.getDictionaryByType("COURSE_LEVEL");
+
+        //专题等级
+        Integer courselevel=teacherCourseList.get(0).getCourselevel();
         request.setAttribute("courselevel",courselevel);
+
         return new ModelAndView("/teachpaltform/paper/paper-list");
     }
 
@@ -511,7 +513,7 @@ public class PaperController extends BaseController<PaperInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("u.paper_id desc,u.c_time desc");
+        p.setOrderBy(" u.c_time desc,u.paper_id desc ");
         TpCoursePaper t=new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
         t.setLocalstatus(1);
@@ -531,7 +533,7 @@ public class PaperController extends BaseController<PaperInfo>{
     public void getImportPaperList(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
         String courseid=request.getParameter("courseid");
-        String materialid=request.getParameter("materialid");
+       // String materialid=request.getParameter("materialid");
         String gradeid=request.getParameter("gradeid");
         String subjectid=request.getParameter("subjectid");
         String coursename=request.getParameter("coursename");
@@ -541,8 +543,24 @@ public class PaperController extends BaseController<PaperInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
+
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(Long.parseLong(courseid));
+        if(gradeid!=null&&gradeid.length()>0)
+            ttm.setGradeid(Integer.parseInt(gradeid));
+        if(subjectid!=null&&subjectid.length()>0)
+            ttm.setSubjectid(Integer.parseInt(subjectid));
+        String order=" u.c_time desc";
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0){
+            order="field(tcm.teaching_material_id";
+            for(TpCourseTeachingMaterial ctm:materialList){
+                order+=","+ctm.getTeachingmaterialid();
+            }
+            order+=") desc";
+        }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("u.paper_id desc,u.c_time desc");
+        p.setOrderBy(order);
         TpCoursePaper t=new TpCoursePaper();
         t.setFiltercourseid(Long.parseLong(courseid));//排除当前专题
         t.setLocalstatus(1);
@@ -551,14 +569,16 @@ public class PaperController extends BaseController<PaperInfo>{
         }
 
 
-        if(materialid!=null&&materialid.length()>0)
-            t.setMaterialid(Integer.parseInt(materialid));
+
+
+      //  if(materialid!=null&&materialid.length()>0)
+      //      t.setMaterialid(Integer.parseInt(materialid));
         if(gradeid!=null&&gradeid.length()>0)
             t.setGradeid(Integer.parseInt(gradeid));
         if(subjectid!=null&&subjectid.length()>0)
             t.setSubjectid(Integer.parseInt(subjectid));
 
-        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t,p);
+        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t, p);
         p.setList(coursePaperList);
         je.setPresult(p);
         je.setType("success");

@@ -44,6 +44,7 @@ public class QuestionOption implements Serializable{
     }
     public java.lang.String getContent(){
         if(content!=null&&content.trim().length()>0){
+            content=content.trim();
             String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(content.indexOf("_QUESTIONPIC+")!=-1)
                 content=content.replace("_QUESTIONPIC+",t);
@@ -54,7 +55,7 @@ public class QuestionOption implements Serializable{
                             content.indexOf("\n\r")!=-1||
                             content.indexOf("\t")!=-1
                     ){
-                content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                content=content.replace("\r\n\t", "");
                 content=content.replace("\r\n", "&nbsp;&nbsp;<br>");
                 content=content.replace("\n", "<br>");
                 content=content.replace("\n\r", "<br>&nbsp;&nbsp;");

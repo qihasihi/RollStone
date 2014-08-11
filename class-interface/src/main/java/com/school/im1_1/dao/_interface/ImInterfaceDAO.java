@@ -85,10 +85,10 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
         sqlbuilder.append("{CALL imapi_classtask_proc_getcourse(");
         List<Object> objList=new ArrayList<Object>();
         if(obj.getClassid()!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(obj.getClassid());
         }else{
-            sqlbuilder.append("null");
+            sqlbuilder.append("null,");
         }
 //        if(obj.getSchoolid()!=null){
 //            sqlbuilder.append("?");
@@ -96,6 +96,12 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
 //        }else{
 //            sqlbuilder.append("null");
 //        }
+        if(obj.getUserid()!=null){
+            sqlbuilder.append("?");
+            objList.add(obj.getUserid());
+        }else{
+            sqlbuilder.append("NULL");
+        }
         sqlbuilder.append(")}");
         List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
         if(list!=null&&list.size()>0)
@@ -103,22 +109,80 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
         return null;
     }
 
-    public List<Map<String, Object>> getClassTaskTask(Long courseid) {
+    public List<Map<String, Object>> getClassTaskTask(Long courseid,Integer userid) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL imapi_classtask_proc_task(");
         List<Object> objList=new ArrayList<Object>();
         if(courseid!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(courseid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(userid!=null){
+            sqlbuilder.append("?");
+            objList.add(userid);
         }else{
             sqlbuilder.append("null");
         }
-//        if(obj.getSchoolid()!=null){
-//            sqlbuilder.append("?");
-//            objList.add(obj.getSchoolid());
-//        }else{
-//            sqlbuilder.append("null");
-//        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
+
+    public List<Map<String, Object>> getTaskInfo(Long taskid, Integer classid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_taskinfo_proc_gettask(");
+        List<Object> objList=new ArrayList<Object>();
+        if(taskid!=null){
+            sqlbuilder.append("?,");
+            objList.add(taskid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
+
+    public List<Map<String, Object>> getTaskUserRecord(Long taskid, Integer classid, Integer isvir,Integer userid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_taskinfo_proc_getuserrecord_list(");
+        List<Object> objList=new ArrayList<Object>();
+        if(taskid!=null){
+            sqlbuilder.append("?,");
+            objList.add(taskid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?,");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(isvir!=null){
+            sqlbuilder.append("?,");
+            objList.add(isvir);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(userid!=null){
+            sqlbuilder.append("?");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("null");
+        }
         sqlbuilder.append(")}");
         List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
         if(list!=null&&list.size()>0)
