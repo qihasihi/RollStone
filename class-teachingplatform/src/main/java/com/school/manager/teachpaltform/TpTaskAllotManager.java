@@ -92,5 +92,9 @@ public class  TpTaskAllotManager extends BaseManager<TpTaskAllotInfo> implements
     public List<Map<String,Object>> getNum(Long groupid, Long taskid) {
         return this.tptaskallotdao.getNum(groupid,taskid);
     }
+
+    public List<Map<String,Object>> getClassId(final TpTaskAllotInfo tallot){
+        return this.tptaskallotdao.getClassId(tallot);
+    }
 }
 

@@ -83,6 +83,19 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+        Integer clsDcType=2;//默认是网校班级
+        //班级类型(实体班级)，验证班级
+        if(Integer.parseInt(typeid)==1){
+            ClassInfo clsEntity=new ClassInfo();
+            clsEntity.setClassid(Integer.parseInt(clsid.trim()));
+            List<ClassInfo> clsList=this.classManage.getList(clsEntity,null);
+            if(clsList==null||clsList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            clsDcType=clsList.get(0).getDctype();
+        }
+        mp.put("clsDcType",clsDcType);
         //得到专题名称
         TpCourseInfo courseInfo=new TpCourseInfo();
         courseInfo.setCourseid(Long.parseLong(courseid.trim()));
@@ -142,6 +155,10 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         //根据参数得到值 。
         List<Map<String,Object>> dataListMap=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim()),Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid),groupid);
         mp.put("dataListMap",dataListMap);
+
+
+
+
         return new ModelAndView("/teachpaltform/classPerformanceAward/clsPerformanceAwardIndex",mp);
     }
 
@@ -359,6 +376,9 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
                   jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
               }else
                   jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+          }else{
+              jsonEntity.setType("success");
+              jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
           }
         }else{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));

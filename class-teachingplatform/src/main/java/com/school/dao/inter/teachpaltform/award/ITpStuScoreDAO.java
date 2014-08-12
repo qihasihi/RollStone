@@ -28,4 +28,11 @@ public interface ITpStuScoreDAO extends ICommonDAO<TpStuScore> {
      * @return
      */
     public boolean stuScoreLastInit(final TpStuScore obj,final String groupidArr);
+
+    /**
+     * 添加或修改积分
+     * @param obj
+     * @return
+     */
+    public List<Object> getAddOrUpdateColScore(final TpStuScore obj,StringBuilder sqlbuilder);
 }

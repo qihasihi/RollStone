@@ -2529,6 +2529,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         if(this.validateRole(request,UtilTool._ROLE_STU_ID)){ //进入学生首页
             response.sendRedirect("teachercourse?m=toStudentCourseList");
         }else
-            response.sendRedirect("teachercourse?m=toTeacherCourseList"); //进入教师首页
+            response.sendRedirect("teachercourse?toTeacherCourseList"); //进入教师首页
     }
 }

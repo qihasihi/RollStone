@@ -1,19 +1,15 @@
 package com.school.control.teachpaltform.interactive;
 
 import com.school.control.base.BaseController;
-import com.school.entity.teachpaltform.TaskPerformanceInfo;
-import com.school.entity.teachpaltform.TpCourseInfo;
-import com.school.entity.teachpaltform.TpOperateInfo;
-import com.school.entity.teachpaltform.TpTaskInfo;
+import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
-import com.school.manager.teachpaltform.TaskPerformanceManager;
-import com.school.manager.teachpaltform.TpCourseManager;
-import com.school.manager.teachpaltform.TpOperateManager;
-import com.school.manager.teachpaltform.TpTaskManager;
+import com.school.manager.teachpaltform.*;
+import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.util.JsonEntity;
@@ -30,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhengzhou on 14-1-13.
@@ -44,14 +41,17 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
         this.taskPerformanceManager=getManager(TaskPerformanceManager.class);
         this.tpCourseManager=getManager(TpCourseManager.class);
         this.tpOperateManager=getManager(TpOperateManager.class);
+        this.tpStuScoreLogsManager=getManager(TpStuScoreLogsManager.class);
+        this.tpTaskAllotManager=getManager(TpTaskAllotManager.class);
     }
-
+    private ITpTaskAllotManager tpTaskAllotManager;
     private ITpTopicThemeManager tpTopicThemeManager;
     private ITpTopicManager tpTopicManager;
     private ITpTaskManager tpTaskManager;
     private ITaskPerformanceManager taskPerformanceManager;
     private ITpCourseManager tpCourseManager;
     private ITpOperateManager tpOperateManager;
+    private ITpStuScoreLogsManager tpStuScoreLogsManager;
     /**
      * 执行AJAX 查询
      * @param request
@@ -213,9 +213,45 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
                                 tp.setIsright(1);
                                 List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
                                 if(tpList==null||tpList.size()<1)
-                                    if(this.taskPerformanceManager.doSave(tp))
+                                    if(this.taskPerformanceManager.doSave(tp)){
+                                       ///////////////////////////////奖励加分（发主帖）给提示
+                                       //添加奖励积分
+                                        TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                                        tallot.setTaskid(taskList.get(0).getTaskid());
+
+                                        tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+                                        List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                                        if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                                                ||clsMapList.get(0).get("CLASS_ID")==null){
+                                            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                                            response.getWriter().println(jsonEntity.toJSON());return ;
+                                        }
+
+                                        //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                                        //规则转换:    6             7         8
+                                        Integer type=0;
+                                        switch(taskList.get(0).getTasktype()){
+                                            case 3:     //试题
+                                                type=1;break;
+                                            case 1:     //资源学习
+                                                type=3;break;
+                                            case 2:
+                                                type=4;
+                                                break;
+                                        }
+
+                            //                /*奖励加分通过*/
+                                        if(this.tpStuScoreLogsManager.awardStuScore(taskList.get(0).getCourseid()
+                                                ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                                                ,taskList.get(0).getTaskid()
+                                                ,Long.parseLong(this.logined(request).getUserid()+""),type)){
+                                            jsonEntity.setMsg("查看并提交论题:恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
+                                        }else
+                                            System.out.println("awardScore error");
+
+
                                         System.out.println("添加互动论题完成|查看记录成功!");
-                                    else
+                                    }else
                                         System.out.println("添加互动论题完成|查看记录失败!");
                             }
                         }

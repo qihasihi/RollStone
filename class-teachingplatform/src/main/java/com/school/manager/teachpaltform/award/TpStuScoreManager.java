@@ -68,6 +68,16 @@ public class TpStuScoreManager extends BaseManager<TpStuScore> implements ITpStu
     public boolean AddOrUpdate(final TpStuScore entity){
         return tpStuScoreDAO.AddOrUpdate(entity);
     }
+
+    /**
+     * 添加或修改积分
+     * @param obj
+     * @return
+     */
+
+    public List<Object> getAddOrUpdateColScore(final TpStuScore obj,StringBuilder sqlbuilder){
+        return tpStuScoreDAO.getAddOrUpdateColScore(obj, sqlbuilder);
+    }
     /**
      * 得到页面上的查询
      * @param courseid

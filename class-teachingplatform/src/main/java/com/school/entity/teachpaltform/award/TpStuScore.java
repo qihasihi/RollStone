@@ -20,6 +20,24 @@ public class TpStuScore implements  Serializable{
     private Long coursetotalscore;
     private Long groupscore;
     private Integer classtype;
+    private Integer taskscore;
+    private Integer commentscore;
+
+    public Integer getTaskscore() {
+        return taskscore;
+    }
+
+    public void setTaskscore(Integer taskscore) {
+        this.taskscore = taskscore;
+    }
+
+    public Integer getCommentscore() {
+        return commentscore;
+    }
+
+    public void setCommentscore(Integer commentscore) {
+        this.commentscore = commentscore;
+    }
 
     public Integer getClasstype() {
         return classtype;

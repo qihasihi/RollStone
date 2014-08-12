@@ -16,16 +16,26 @@
 <div class="content1">
     <p class="t_c font-black"><strong>专题名称：${coursename}</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2 public_input">
-        <colgroup class="w350"></colgroup>
-        <colgroup span="6" class="w110"></colgroup>
+        <c:if test="${!empty clsDcType&&clsDcType==3}">
+            <colgroup class="w350"></colgroup>
+            <colgroup span="6" class="w110"></colgroup>
+        </c:if>
+        <c:if test="${empty clsDcType||clsDcType!=3}">
+            <colgroup class="w350"></colgroup>
+            <colgroup span="3" class="w110"></colgroup>
+        </c:if>
+
         <tr>
+            <%//只有是 clsDcType==3时，为爱课堂班级，显示小组名称，及出勤，笑脸，违反纪律%>
             <th>小组名称</th>
             <th>学号</th>
             <th>学生姓名</th>
             <th>网上得分</th>
-            <th>出勤</th>
-            <th>笑脸</th>
-            <th>违反纪律</th>
+             <c:if test="${!empty clsDcType&&clsDcType==3}">
+                <th>出勤</th>
+                <th>笑脸</th>
+                <th>违反纪律</th>
+            </c:if>
         </tr>
         <tbody id="d_body">
 
@@ -45,6 +55,7 @@
               alert('参数异常，请重试!');
                 this.close();
             </c:if>
+
             <c:if test="${!empty dataListMap}">
             var h='';
                     <c:forEach items="${dataListMap}" var="dlm" varStatus="dlmidx">
@@ -53,22 +64,28 @@
                     h+='<input type="hidden" name="group_id" id="hd_group_id" value="${dlm.GROUP_ID}"/>';
                     h+='<input type="hidden" name="user_id" id="hd_user_id" value="${dlm.USER_ID}"/>';
                     h+='${empty dlm.GROUP_NAME?"未分组":dlm.GROUP_NAME}';
-                    <c:if test="${!empty dlm.GROUP_ID}">
-                        h+='<br><span class="ico78"></span> <a href="javascript:;" onclick="updateGroupAward(${dlm.GROUP_ID},${dlm.GROUPSUBMIT_FLAG})" id="a_award_${dlm.GROUP_ID}"><span id="sp_grp_award${dlm.GROUP_ID}">${dlm.AWARD_NUMBER}</span></a>个';
+                    <c:if test="${!empty clsDcType&&clsDcType==3}">
+                            <c:if test="${!empty dlm.GROUP_ID}">
+                                h+='<br><span class="ico78"></span> <a href="javascript:;" onclick="updateGroupAward(${dlm.GROUP_ID},${dlm.GROUPSUBMIT_FLAG})" id="a_award_${dlm.GROUP_ID}"><span id="sp_grp_award${dlm.GROUP_ID}">${dlm.AWARD_NUMBER}</span></a>个';
+                            </c:if>
                     </c:if>
                     h+='</td><td>${dlm.STU_NO}</td>';
                     h+='<td>${dlm.STU_NAME}</td>';
                     h+='<td  style="color:gray">${dlm.WSSCORE}</td>';
-                    var subFlag1=${dlm.SUBMIT_FLAG};
-                    if((groupidstr.length<1||(groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1&&ctumid!=${dlm.USER_ID}))&&subFlag1==0){
-                            h+='<td name="td_data">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
-                            h+='<td name="td_data">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
-                            h+='<td name="td_data">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/>';
-                    }else{
-                        h+='<td style="color:gray">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
-                        h+='<td style="color:gray">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
-                        h+='<td style="color:gray">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td></tr>';
-                    }
+
+                    <c:if test="${!empty clsDcType&&clsDcType==3}">
+
+                            var subFlag1=${dlm.SUBMIT_FLAG};
+                            if((groupidstr.length<1||(groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1&&ctumid!=${dlm.USER_ID}))&&subFlag1==0){
+                                    h+='<td name="td_data">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
+                                    h+='<td name="td_data">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
+                                    h+='<td name="td_data">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
+                            }else{
+                                h+='<td style="color:gray">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
+                                h+='<td style="color:gray">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
+                                h+='<td style="color:gray">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
+                            }
+                    </c:if>
                     h+='</tr>';
                     if($("tr[id='tr_${dlm.GROUP_ID}']").length<1){
                         $("#d_body").append(h);
@@ -80,16 +97,19 @@
                         h+='<input type="hidden" name="user_id" id="hd_user_id" value="${dl1m.USER_ID}"/>';
                         h+='</td><td>${dl1m.STU_NAME}</td>';
                         h+='<td  style="color:gray">${dl1m.WSSCORE}</td>';
-                        var subFlag=${dl1m.SUBMIT_FLAG};
-                         if((groupidstr.length<1||(groupidstr.indexOf(",${dl1m.GROUP_ID},")!=-1&&ctumid!=${dl1m.USER_ID}))&&subFlag==0){
-                            h+='<td name="td_data">${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
-                            h+='<td name="td_data">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
-                            h+='<td name="td_data">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td></tr>';
-                         }else{
-                            h+='<td style="color:gray">${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
-                            h+='<td style="color:gray">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
-                            h+='<td  style="color:gray">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td></tr>';
-                         }
+                        <c:if test="${!empty clsDcType&&clsDcType==3}">
+                            var subFlag=${dl1m.SUBMIT_FLAG};
+                             if((groupidstr.length<1||(groupidstr.indexOf(",${dl1m.GROUP_ID},")!=-1&&ctumid!=${dl1m.USER_ID}))&&subFlag==0){
+                                h+='<td name="td_data">${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
+                                h+='<td name="td_data">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
+                                h+='<td name="td_data">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
+                             }else{
+                                h+='<td style="color:gray">${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
+                                h+='<td style="color:gray">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
+                                h+='<td  style="color:gray">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
+                             }
+                        </c:if>
+                        h+='</tr>';
                         var ulen=$("input[name='user_id']").filter(function(){return this.value==${dl1m.USER_ID}}).length;
                         if($("tr[id='tr_${dl1m.GROUP_ID}']").length>0&&ulen<1){
                             var rowspan=$("#tr_${dl1m.GROUP_ID} td:first").attr("rowspan");
@@ -107,6 +127,14 @@
                 $("#a_sub").remove();
             }
 
+            var trJqObj=$("tr[id*='tr_']");
+            if(trJqObj.length==1&&trJqObj.children("td:first").html().Trim().indexOf("未分组")!=-1){
+                $("table colgroup:first").remove();
+                $("table tr:first th:first").remove();
+                trJqObj.each(function(idx,itm){
+                   $(itm).children("td:first").remove();
+                });
+            }
         })
         /**
         *生成奖励框

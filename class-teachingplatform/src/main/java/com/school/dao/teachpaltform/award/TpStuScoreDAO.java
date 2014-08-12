@@ -273,6 +273,134 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
         sqlbuilder.append("?)}");
         return this.executeQuery_PROC(sqlbuilder.toString(),objlist.toArray());
     }
+    /**
+     * 添加或修改积分
+     * @param obj
+     * @return
+     */
+    public boolean AddOrUpdateColScore(final TpStuScore obj){
+        StringBuilder sqlbuilder=new StringBuilder();
+        List<Object> objlist=new ArrayList<Object>();
+        sqlbuilder.append("{CALL tp_stu_score_update_colscore(");
+
+        if(obj.getUserid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getUserid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getClassid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getCourseid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getCourseid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getDcschoolid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getDcschoolid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getAttendanceNum()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getAttendanceNum());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSimilingNum()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getSimilingNum());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getViolationDisNum()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getViolationDisNum());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getTaskscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getTaskscore());
+        }else
+            sqlbuilder.append("NULL,");
+
+        if(obj.getCommentscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getCommentscore());
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
+        return this.executeQuery_PROC(sqlbuilder.toString(),objlist.toArray());
+    }
+
+
+    /**
+     * 添加或修改积分
+     * @param obj
+     * @return
+     */
+    public List<Object> getAddOrUpdateColScore(final TpStuScore obj,StringBuilder sqlbuilder){
+        if(sqlbuilder==null||obj==null)return null;
+        List<Object> objlist=new ArrayList<Object>();
+        sqlbuilder.append("{CALL tp_stu_score_update_colscore(");
+
+        if(obj.getUserid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getUserid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getClassid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getCourseid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getCourseid());
+        }else
+            sqlbuilder.append("NULL,");
+
+        if(obj.getDcschoolid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getDcschoolid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getAttendanceNum()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getAttendanceNum());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSimilingNum()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getSimilingNum());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getViolationDisNum()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getViolationDisNum());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getTaskscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getTaskscore());
+        }else
+            sqlbuilder.append("NULL,");
+
+        if(obj.getCommentscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getCommentscore());
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
+        return objlist;
+    }
+
+
 
     /**
      * 教师组长提交时，初始化相关数据

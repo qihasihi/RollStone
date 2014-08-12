@@ -11,4 +11,6 @@ public interface ITpTaskAllotDAO extends ICommonDAO<TpTaskAllotInfo>{
     public List<TpTaskAllotInfo> getTaskByGroup(Long groupid);
     public List<Map<String,Object>> getCompleteNum(Long groupid,Long taskid);
     public List<Map<String,Object>> getNum(Long groupid,Long taskid);
+
+    public List<Map<String,Object>> getClassId(final TpTaskAllotInfo tallot);
 }

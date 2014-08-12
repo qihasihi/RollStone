@@ -18,11 +18,13 @@ import com.school.manager.inter.ISmsManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.*;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
+import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.*;
@@ -84,6 +86,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
     private IQuesTeamRelaManager quesTeamRelaManager;
     private IPaperQuesTeamScoreManager paperQuesTeamScoreManager;
+    private ITpStuScoreLogsManager tpStuScoreLogsManager;
     public PaperQuestionController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -117,6 +120,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         this.stuViewMicVideoLogManager=this.getManager(StuViewMicVideoLogManager.class);
         this.quesTeamRelaManager=this.getManager(QuesTeamRelaManager.class);
         this.paperQuesTeamScoreManager=this.getManager(PaperQuesTeamScoreManager.class);
+        this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
     }
     /**
      * 根据课题ID，加载试卷列表
@@ -4033,10 +4037,47 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             objArrayList.add(objList);
             sqlArrayList.add(sqlbuilder.toString());
         }
+
+        //得到班级ID
+        TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+        tallot.setTaskid(tk.getTaskid());
+        tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+        List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+        if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                ||clsMapList.get(0).get("CLASS_ID")==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.toJSON());return ;
+        }
+
+
+
         if(sqlArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
             if(this.stuPaperLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+                //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                //规则转换:    6             7         8
+                Integer type=0;
+                switch(tkList.get(0).getTasktype()){
+                    case 6:
+                        type=8;break;
+                    case 4:
+                        type=6;break;
+                    case 5:
+                        type=7;
+                    break;
+                }
+                /*奖励加分通过*/
+                if(this.tpStuScoreLogsManager.awardStuScore(Long.parseLong(courseid.trim())
+                        ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                        ,Long.parseLong(taskid.trim())
+                        ,Long.parseLong(this.logined(request).getUserid()+""),type)){
+                    System.out.println("awardScore success");
+                }else
+                    System.out.println("awardScore error");
+
+
+                //数据添加成功。
                 jsonEntity.setType("success");
-                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                jsonEntity.setMsg("提交试卷成功!\n\n恭喜你获得了1积分和1蓝宝石!");
             }else
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }else

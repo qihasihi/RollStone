@@ -308,4 +308,35 @@ public class TpTaskAllotDAO extends CommonDAO<TpTaskAllotInfo> implements ITpTas
         List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
         return list;
     }
+
+    /**
+     * 根据Userid,Taskid得到当前学生所在的班级
+     * @param tk
+     * @return
+     */
+    public List<Map<String,Object>> getClassId(final TpTaskAllotInfo tk) {
+        if(tk==null||tk.getUserinfo().getUserid()==null||tk.getTaskid()==null){
+            return null;
+        }
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_task_allot_info_proc_searchClsid(");
+        List<Object>objList = new ArrayList<Object>();
+        if(tk.getUserinfo().getUserid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(tk.getUserinfo().getUserid());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(tk.getTaskid()!=null){
+            sqlbuilder.append("?");
+            objList.add(tk.getTaskid());
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+
+    }
+
+
 }

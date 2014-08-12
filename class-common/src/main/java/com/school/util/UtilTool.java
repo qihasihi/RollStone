@@ -75,6 +75,10 @@ public class UtilTool implements java.io.Serializable {
      * 精简版资源系统配置文件
      */
     public final static Properties simpleResUtilProperty=SimpleResUtilProperty.getInstance().prop;
+    /**
+     * 积分道具奖励加分
+     */
+    public final static Properties stuScoreAwardUtilProperty=StuScoreAwardUtilProperty.getInstance().prop;
 
     /**
      * 输出信息配置文件

@@ -4870,7 +4870,7 @@ public class UserController extends BaseController<UserInfo> {
             if (stu != null) {
                 usertype = Long.valueOf(3);
                 realname = stu.getStuname();
-                if (stu.getStusex().trim().equals("Ů"))
+                if (stu.getStusex()!=null&&stu.getStusex().trim().equals("Ů"))
                     sex = 2;
                 else
                     sex = 1;
