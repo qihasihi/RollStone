@@ -539,23 +539,23 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String userid = request.getParameter("jid");
         String usertype = request.getParameter("userType");
         String schoolid = request.getParameter("schoolId");
-        String timestamp = request.getParameter("time");
-        String sig = request.getParameter("sign");
-        HashMap<String,String> map = new HashMap();
-        map.put("taskId",taskid);
-        map.put("classId",classid);
-        map.put("classType",classtype);
-        map.put("isVirtual",isvir);
-        map.put("jid",userid);
-        map.put("userType",usertype);
-        map.put("schoolId",schoolid);
-        map.put("time",timestamp);
-        // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
-        Boolean b = UrlSigUtil.verifySigSimple("toQuestionJsp",map,sig);
-        if(b){
-            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
-            return new ModelAndView("");
-        }
+//        String timestamp = request.getParameter("time");
+//        String sig = request.getParameter("sign");
+//        HashMap<String,String> map = new HashMap();
+//        map.put("taskId",taskid);
+//        map.put("classId",classid);
+//        map.put("classType",classtype);
+//        map.put("isVirtual",isvir);
+//        map.put("jid",userid);
+//        map.put("userType",usertype);
+//        map.put("schoolId",schoolid);
+//        map.put("time",timestamp);
+//        // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
+//        Boolean b = UrlSigUtil.verifySigSimple("toQuestionJsp",map,sig);
+//        if(b){
+//            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
+//            return new ModelAndView("");
+//        }
         TpTaskInfo tpTaskInfo = new TpTaskInfo();
         tpTaskInfo.setTaskid(Long.parseLong(taskid));
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
@@ -567,6 +567,15 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             QuestionInfo questionInfo = new QuestionInfo();
             questionInfo.setQuestionid(taskList.get(0).getTaskvalueid());
             List<QuestionInfo> questionInfoList = this.questionManager.getList(questionInfo,null);
+            request.setAttribute("content",questionInfoList.get(0).getContent());
+            request.setAttribute("analysis",questionInfoList.get(0).getAnalysis());
+            if(questionInfoList.get(0).getQuestiontype()==2){
+                request.setAttribute("type","填空题");
+            }else if(questionInfoList.get(0).getQuestiontype()==3){
+                request.setAttribute("type","单选题");
+            }else if(questionInfoList.get(0).getQuestiontype()==4){
+                request.setAttribute("type","多选题");
+            }
             if(questionInfoList.get(0).getQuestiontype()==3||questionInfoList.get(0).getQuestiontype()==4){
                 QuestionOption questionOption = new QuestionOption();
                 questionOption.setQuestionid(questionInfoList.get(0).getQuestionid());
@@ -589,10 +598,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 if(o.getOptiontype().equals(optionnumList.get(i).get("OPTION_TYPE"))){
                                     m.put("OPTION_TYPE",o.getOptiontype());
                                     m.put("NUM",di.format((double)Integer.parseInt(optionnumList.get(i).get("NUM").toString())/totalNum*100));
+                                    m.put("ISRIGHT",o.getIsright());
+                                    m.put("CONTENT",o.getContent());
                                     break;
                                 }else{
                                     m.put("OPTION_TYPE",o.getOptiontype());
                                     m.put("NUM",0);
+                                    m.put("ISRIGHT",o.getIsright());
+                                    m.put("CONTENT",o.getContent());
                                 }
                             }
                         }else{
@@ -622,14 +635,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
             }
 
-            UserInfo ui = new UserInfo();
-            ui.setUserid(Integer.parseInt(userid));
-            List<UserInfo> uList = this.userManager.getList(ui,null);
-            QuestionAnswer questionAnswer = new QuestionAnswer();
-            questionAnswer.setTaskid(Long.parseLong(taskid));
-            questionAnswer.setUserid(uList.get(0).getRef());
-            List<QuestionAnswer> questionAnswerList=this.questionAnswerManager.getList(questionAnswer,null);
-            request.setAttribute("answer",questionAnswerList);
+            if(!usertype.equals("2")){
+                UserInfo ui = new UserInfo();
+                ui.setUserid(Integer.parseInt(userid));
+                List<UserInfo> uList = this.userManager.getList(ui,null);
+                QuestionAnswer questionAnswer = new QuestionAnswer();
+                questionAnswer.setTaskid(Long.parseLong(taskid));
+                questionAnswer.setUserid(uList.get(0).getRef());
+                List<QuestionAnswer> questionAnswerList=this.questionAnswerManager.getList(questionAnswer,null);
+                request.setAttribute("answer",questionAnswerList);
+            }
             request.setAttribute("question",questionInfoList);
             return new ModelAndView("/imjsp-1.1/task-detail-question");
         }

@@ -1,0 +1,174 @@
+   @charset "utf-8";
+   *{margin:0px; padding:0px;}
+   *:focus {outline: none;}
+
+   body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div{margin:0;padding:0;border:0 none;}
+   body{background-color: transparent;background:#f8f8f8; font-size:14px; font-family:"Lucida Grande", "Lucida Sans Unicode",Tahoma,Helvetica,Arial,Verdana,sans-serif; line-height:24px;color:#191919;-webkit-font-smoothing: antialiased;}
+
+   ul,ol{list-style-type:none;}
+   select,input{vertical-align:middle;font-size: 12px;}
+	
+   a{text-decoration:none; cursor:pointer;}
+   a:link,a:visited{color:#191919;text-decoration: none;}
+   a:hover,a:active,a:focus{text-decoration: none;}
+
+   .font-blue{color:#3498db;}
+   .font-blue a:link,.font-blue a:visited{color:#3498db;}
+   .font-blue a:hover,.font-blue a:active{color:#2682E7;}
+
+   .clearit{clear:both;}
+   .fix{zoom:1;}
+   .fix:after{display:block; content:'clear'; clear:both; line-height:0; visibility:hidden;}
+   .hide{ display:none;}
+   .f_right {float: right;}
+   .f_left {float: left;}
+   
+    .clear {
+	clear: both;
+	display: block;
+	font: 0px/0px sans-serif;
+}
+	.right,.wrong{
+	width:20px;
+	height:20px;
+	background: url(images/bg10_140730.png) no-repeat;
+	background-size:100%;
+	display:inline-block;
+}
+	.wrong {background: url(images/bg11_140730.png) no-repeat;background-size:100%;}
+
+	.layout{
+	width:100%;
+	font-size:1.2em;
+	line-height:1.4em;
+	color:#191919;
+	margin:0 auto;
+	background:#f1f1f1;
+}
+	.zxcs_test{
+	width:96%;
+	font-size:1.2em;
+	line-height:1.4em;
+	color:#191919;
+	margin:0 auto 10px;
+	padding-top:10px;
+}
+    .zxcs_test h1{ font-size:1.2em; line-height:1.4em;font-weight:normal; color:#55b2ef; padding-bottom:10px; }
+	.zxcs_test div.title { padding-bottom:15px; font-weight:bold;}
+	.zxcs_test ul.test li { border-top:1px solid #747474;}
+	.zxcs_test ul.test li:first-child { border-top: none;}
+	.zxcs_test ul.test li a {
+	padding:15px 10px 10px 30px;
+	display:block;
+	position:relative;
+}
+	.zxcs_test ul.test li a span.blue{
+	position: absolute;
+	color:#55b2ef;
+	top:15px;
+	left:4px;
+}
+	.zxcs_test ul.test li.crumb,.zxcs_test ul.test li:hover{ background-color:#eee;}
+
+	.zxcs_test ul.daan li {
+	padding:15px 30px 10px;
+	position:relative;
+	border-top:1px solid #747474;
+}
+	.zxcs_test ul.daan li:first-child { border-top: none;}
+	.zxcs_test ul.daan li span.blue{
+	position: absolute;
+	color:#55b2ef;
+	top:15px;
+	left:4px;
+}
+	.zxcs_test ul.daan li b{
+	position: absolute;
+	bottom:5px;
+	right:0;
+}
+	.zxcs_test p.red,.zxcs_test p.green{
+	font-size:0.8em;
+	margin-right:-20px;
+	color:#ff0101;
+	text-align:right;
+}
+    .zxcs_test p.green{color:#339900;}
+
+	.zxcs_test input[type=text]{
+	width:128px;
+	height:18px;
+	padding: 3px 4px 2px;
+	border:none;
+	border-bottom: 1px double #55b2ef;
+	background-color:transparent;
+	font-size:1em;
+	font-weight:bold;
+	line-height:1.4em;
+	margin-bottom:5px;
+	color:#55b2ef;
+}
+	.zxcs_test u.huida{
+    color:#55b2ef;
+	padding:0 5px;
+}
+	.zxcs_test .zhengquedaan {
+	color:#55b2ef;
+	padding-left:90px;
+	position:relative;
+	padding-top:10px;
+}
+	.zxcs_test .zhengquedaan b {
+	width:90px;
+	height:30px;
+	color:#55b2ef;
+	position:absolute;
+	top:10px;
+	left:0;
+}
+	.zxcs_test .zhengquedaan span { color:#767676;}
+
+	.zxcs_test .jiexi {
+	height:24px;
+	color:#55b2ef;
+	font-weight:bold;
+	padding-left:32px;
+	background: url(images/bg06_140730.png) no-repeat;
+	background-size:25px 25px;
+	padding-top:2px;
+	margin:20px 0 20px;
+}
+	.zxcs_test .jiexi span{ float:right;}
+	
+	.zxcs_test .dajx,.zxcs_test .wenda {
+	border:1px solid #dfdfdf;
+	padding:10px 10px 10px 60px;
+	background-color:#fff;
+	position:relative;
+	margin-top:10px;
+}
+	.zxcs_test .dajx b {
+	width:50px;
+	height:47px;
+	color:#fff;
+	padding-top:3px;
+	background-color:#2ca6df;
+	position: absolute;
+	top:3px;
+	left:3px;
+	letter-spacing: 3px;
+	text-align:center;
+	display:block;
+}
+	.zxcs_test .wenda {	padding:10px 10px 10px 46px;}
+	.zxcs_test .wenda b {
+	width:36px;
+	height:36px;
+	position: absolute;
+	top:3px;
+	left:3px;
+	display:block;
+	font: 0px/0px sans-serif;
+}
+	.zxcs_test .wenda p.title {color:#55b2ef; padding-bottom:10px;}
+	.zxcs_test .wenda p.title span { float:right;color:#878787;}
