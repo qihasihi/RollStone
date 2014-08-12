@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +48,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private IQuestionOptionManager questionOptionManager;
     private IUserManager userManager;
     private IQuestionAnswerManager questionAnswerManager;
+    private ITaskPerformanceManager taskPerformanceManager;
     public ImInterfaceController(){
         this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
         this.tpCourseManager = this.getManager(TpCourseManager.class);
@@ -57,6 +59,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.questionOptionManager = this.getManager(QuestionOptionManager.class);
         this.userManager = this.getManager(UserManager.class);
         this.questionAnswerManager = this.getManager(QuestionAnswerManager.class);
+        this.taskPerformanceManager = this.getManager(TaskPerformanceManager.class);
     }
 
     /**
@@ -568,8 +571,57 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 QuestionOption questionOption = new QuestionOption();
                 questionOption.setQuestionid(questionInfoList.get(0).getQuestionid());
                 List<QuestionOption> questionOptionList=this.questionOptionManager.getList(questionOption,null);
+                List<Map<String,Object>> option = new ArrayList<Map<String, Object>>();
                 request.setAttribute("option",questionOptionList);
+                if(usertype.equals("2")){
+                    List<Map<String,Object>> optionnumList = new ArrayList<Map<String, Object>>();
+                    optionnumList = this.taskPerformanceManager.getPerformanceOptionNum(Long.parseLong(taskid),Long.parseLong(classid));
+                    //动态拼成想要的选项表分布比例
+                    int totalNum = 0;
+                    for(int i =0;i<optionnumList.size();i++){
+                        totalNum+=Integer.parseInt(optionnumList.get(i).get("NUM").toString());
+                    }
+                    DecimalFormat di = new DecimalFormat("#.00");
+                    for(QuestionOption o:questionOptionList){
+                        Map m = new HashMap();
+                        if(optionnumList.size()>0){
+                            for(int i =0;i<optionnumList.size();i++){
+                                if(o.getOptiontype().equals(optionnumList.get(i).get("OPTION_TYPE"))){
+                                    m.put("OPTION_TYPE",o.getOptiontype());
+                                    m.put("NUM",di.format((double)Integer.parseInt(optionnumList.get(i).get("NUM").toString())/totalNum*100));
+                                    break;
+                                }else{
+                                    m.put("OPTION_TYPE",o.getOptiontype());
+                                    m.put("NUM",0);
+                                }
+                            }
+                        }else{
+                            m.put("OPTION_TYPE",o.getOptiontype());
+                            m.put("NUM",0);
+                        }
+                        option.add(m);
+                    }
+                    request.setAttribute("optionNum",option);
+                }else{
+                    List<Map<String,Object>> optionnumList = new ArrayList<Map<String, Object>>();
+                    optionnumList = this.taskPerformanceManager.getPerformanceOptionNum(Long.parseLong(taskid),Long.parseLong(classid));
+                    int totalNum = 0;
+                    for(int i =0;i<optionnumList.size();i++){
+                        totalNum+=Integer.parseInt(optionnumList.get(i).get("NUM").toString());
+                    }
+                    DecimalFormat di = new DecimalFormat("#.00");
+                    for(int i = 0;i<questionOptionList.size();i++){
+                        if(questionOptionList.get(i).getIsright()==1){
+                            for(int j = 0;j<optionnumList.size();j++){
+                                if(questionOptionList.get(i).getOptiontype().equals(optionnumList.get(j).get("OPTION_TYPE"))){
+                                    request.setAttribute("rightNum",di.format((double)Integer.parseInt(optionnumList.get(i).get("NUM").toString())/totalNum*100));
+                                }
+                            }
+                        }
+                    }
+                }
             }
+
             UserInfo ui = new UserInfo();
             ui.setUserid(Integer.parseInt(userid));
             List<UserInfo> uList = this.userManager.getList(ui,null);
