@@ -118,13 +118,14 @@ function preeDoPageSub(pObj){
                             </c:if>
                         </td>
                         <td>
-                            <span class="bg">${pq.questiontypename}</span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+                            <span class="bg">${pq.questiontypename}</span>
                             <c:if test="${pq.extension eq 4}">
                                 <div  class="p_t_10" id="sp_mp3_${pq.questionid}" ></div>
                                 <script type="text/javascript">
                                     playSound('play','<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/${pq.questionid}/001.mp3',270,22,'sp_mp3_${pq.questionid}',false);
                                 </script>
                             </c:if>
+                            ${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
                             <c:if test="${!empty pq.questionOption}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <col class="w30"/>
@@ -159,7 +160,7 @@ function preeDoPageSub(pObj){
                             <tr>
                                 <td>&nbsp;</td>
                                 <td><p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}" id="score_${c.questionid}">
-                                        ${c.score}</span>分</span><span data-bind="${c.questionid}"  class="font-blue">${(cidx.index+1)+(pq.orderidx-1)}</span>. ${c.content}</p>
+                                        ${c.score}</span>分</span><span data-bind="${c.questionid}" >${(cidx.index+1)+(pq.orderidx-1)}</span>. ${c.content}</p>
                                     <table border="0" cellpadding="0" cellspacing="0">
                                         <col class="w30"/>
                                         <col class="w880"/>

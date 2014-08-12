@@ -72,9 +72,9 @@
                                 if(itm.objectivenum>0&&itm.subjectivenum>0)
                                     html+='<span class="bg1" style="width:50%">'+itm.objectivenum+'</span><span class="bg2" style="width:50%">'+itm.subjectivenum+'</span>';
                                 else if(itm.objectivenum>0)
-                                    html+='<span class="bg2" style="width:100%">'+itm.objectivenum+'</span>';
+                                    html+='<span class="bg1" style="width:100%">'+itm.objectivenum+'</span>';
                                 else if(itm.subjectivenum>0)
-                                    html+='<span class="bg1" style="width:100%">'+itm.subjectivenum+'</span>';
+                                    html+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
                                 html+='</p></a>';
                                 html+='<p class="pic">';
                                 if(itm.taskflag<1)

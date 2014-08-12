@@ -105,7 +105,10 @@
                         status=itm.questionlevel==1?'<span class="ico18" title="标准" ></span>':itm.questionlevel==2?'<span class="ico17" title="共享"></span>':'<span class="ico16" title="自建"></span>';
                         //var questype=itm.questiontype==1?"其&nbsp;&nbsp;&nbsp;&nbsp;他：":itm.questiontype==2?"填&nbsp;&nbsp;&nbsp;&nbsp;空：":itm.questiontype=="3"?"单&nbsp;&nbsp;&nbsp;&nbsp;选：":"多&nbsp;&nbsp;&nbsp;&nbsp;选："
                         var questype=itm.questiontypename+"：";
-                        html+='<td><p class="one">'+status+'<span class="left">'+questype+'</span><span class="right">'+replaceAll(itm.content.toLowerCase(), '<span name="fillbank"></span>', "_______")+'</span>';
+                        html+='<td><p class="one">'+status+'<span class="left">'+questype+'</span><span class="right">';
+                        if(itm.extension!='4')
+                            html+=replaceAll(itm.content.toLowerCase(), '<span name="fillbank"></span>', "_______");
+                        html+='</span>';
                         if(itm.questiontype==6&&itm.extension=='4'){
                             html+='<div  class="p_t_10 m_lr_10 t_l" id="sp_mp3_'+itm.questionid+'" ></div>'
                             html+='<script type="text/javascript">';

@@ -149,11 +149,11 @@ function spanClick(obj,total){
     var bindObj=$("span").filter(function(){return this.id.indexOf("idx_")!=-1});
     $.each(bindObj,function(idx,itm){
         var maxnum=$(itm).data().bind.split("|")[1];
-        var num=$(itm).html();
-        var htm=parseInt(maxnum)<=parseInt(num)?$(itm).html():$(itm).html()+'-'+maxnum;
+        var num=$(itm).html().split('-')[0];
+        var htm=$(itm).html()//parseInt(maxnum)<=parseInt(num)?$(itm).html():$(itm).html()+'-'+maxnum;
         if(parseInt(maxnum) > parseInt(num) && idx!=0)
             num=maxnum;
-        h+='<option data-bind="'+$(itm).html()+'" value="'+num+'">'+htm+'</option>';
+        h+='<option data-bind="'+htm+'" value="'+num+'">'+htm+'</option>';
     });
     h+='<option value="0">调至最后</option>';
     h+='</select>';
@@ -165,6 +165,7 @@ function spanClick(obj,total){
 
     $("select[id='sel_order_idx']").bind("blur",function(){
         var spanObj=$(this).parent();
+
         spanObj.html($(this).find('option:selected').data().bind);
         $(spanObj).bind("click",function(){
             spanClick(spanObj,total);
@@ -296,7 +297,7 @@ function updateQuesScore(score,quesid,ref){
                 if(rmsg.objList.length>0){
                    $("#total_score").html(xround(rmsg.objList[0],1)+"&nbsp;分");
                    if(typeof ref!='undefined')
-                       $("#group_"+ref).html(xround(rmsg.objList[1],1)+"&nbsp;分")
+                       $("#group_"+ref).html(xround(rmsg.objList[1],1))
                 }
             }
         }
@@ -381,7 +382,7 @@ function reSetScrollDiv(){
                         </c:if>
                          ${pq.score}</span>分</span>
                     </span>
-                        <span id="idx_${pq.questionid}" data-bind="${pq.questionid}|${pq.orderidx+(fn:length(pq.questionTeam)>0?fn:length(pq.questionTeam)-1:0)}"  class="font-blue">${pq.orderidx}</span><c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0}">-${pq.orderidx+fn:length(pq.questionTeam)-1}</c:if>
+                        <span id="idx_${pq.questionid}" data-bind="${pq.questionid}|${pq.orderidx+(fn:length(pq.questionTeam)>0?fn:length(pq.questionTeam)-1:0)}"  class="font-blue">${pq.orderidx}<c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0}">-${pq.orderidx+fn:length(pq.questionTeam)-1}</c:if></span>
                         <!--/${fn:length(pqList)+fn:length(childList)}-->
                             </caption>
 
@@ -392,13 +393,15 @@ function reSetScrollDiv(){
                             </c:if>
                         </td>
                         <td>
-                            <span class="bg">${pq.questiontypename}</span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+                            <span class="bg">${pq.questiontypename}</span>
                             <c:if test="${pq.extension eq 4}">
                                 <div  class="p_t_10" id="sp_mp3_${pq.questionid}" ></div>
                                 <script type="text/javascript">
                                     playSound('play','<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/${pq.questionid}/001.mp3',270,22,'sp_mp3_${pq.questionid}',false);
                                 </script>
                             </c:if>
+                            ${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+
                             <c:if test="${!empty pq.questionOption}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <col class="w30"/>
@@ -433,7 +436,7 @@ function reSetScrollDiv(){
                             <tr>
                                 <td>&nbsp;</td>
                                 <td><p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}" id="score_${c.questionid}">
-                                        ${c.score}</span>分</span><span data-bind="${c.questionid}"  class="font-blue">${(cidx.index+1)+(pq.orderidx-1)}</span>. ${c.content}</p>
+                                        ${c.score}</span>分</span><span data-bind="${c.questionid}"  >${(cidx.index+1)+(pq.orderidx-1)}</span>. ${c.content}</p>
                                     <table border="0" cellpadding="0" cellspacing="0">
                                         <col class="w30"/>
                                         <col class="w880"/>

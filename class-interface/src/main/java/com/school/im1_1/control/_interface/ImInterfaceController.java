@@ -3,20 +3,17 @@ package com.school.im1_1.control._interface;
 import com.etiantian.unite.utils.CodecUtil;
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
+import com.school.entity.UserInfo;
 import com.school.entity.resource.ResourceInfo;
-import com.school.entity.teachpaltform.TpCourseInfo;
-import com.school.entity.teachpaltform.TpTaskAllotInfo;
-import com.school.entity.teachpaltform.TpTaskInfo;
+import com.school.entity.teachpaltform.*;
 import com.school.im1_1.entity._interface.ImInterfaceInfo;
 import com.school.im1_1.manager._interface.ImInterfaceManager;
+import com.school.manager.UserManager;
+import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
-import com.school.manager.inter.teachpaltform.ITpCourseManager;
-import com.school.manager.inter.teachpaltform.ITpTaskAllotManager;
-import com.school.manager.inter.teachpaltform.ITpTaskManager;
+import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.resource.ResourceManager;
-import com.school.manager.teachpaltform.TpCourseManager;
-import com.school.manager.teachpaltform.TpTaskAllotManager;
-import com.school.manager.teachpaltform.TpTaskManager;
+import com.school.manager.teachpaltform.*;
 import com.school.util.JsonEntity;
 import com.school.util.MD5_NEW;
 import com.school.util.UtilTool;
@@ -46,12 +43,20 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private ITpTaskManager tpTaskManager;
     private ITpTaskAllotManager tpTaskAllotManager;
     private IResourceManager resourceManager;
+    private IQuestionManager questionManager;
+    private IQuestionOptionManager questionOptionManager;
+    private IUserManager userManager;
+    private IQuestionAnswerManager questionAnswerManager;
     public ImInterfaceController(){
         this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
         this.tpCourseManager = this.getManager(TpCourseManager.class);
         this.tpTaskManager = this.getManager(TpTaskManager.class);
         this.tpTaskAllotManager = this.getManager(TpTaskAllotManager.class);
         this.resourceManager = this.getManager(ResourceManager.class);
+        this.questionManager = this.getManager(QuestionManager.class);
+        this.questionOptionManager = this.getManager(QuestionOptionManager.class);
+        this.userManager = this.getManager(UserManager.class);
+        this.questionAnswerManager = this.getManager(QuestionAnswerManager.class);
     }
 
     /**
@@ -422,23 +427,23 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String userid = request.getParameter("jid");
         String usertype = request.getParameter("userType");
         String schoolid = request.getParameter("schoolId");
-//        String timestamp = request.getParameter("time");
-//        String sig = request.getParameter("sign");
-//        HashMap<String,String> map = new HashMap();
-//        map.put("taskId",taskid);
-//        map.put("classId",classid);
-//        map.put("classType",classtype);
-//        map.put("isVirtual",isvir);
-//        map.put("jid",userid);
-//        map.put("userType",usertype);
-//        map.put("schoolId",schoolid);
-//        map.put("timeStamp",timestamp);
-//        String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
-//        // Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
-//        if(!sig.equals(sign)){
-//            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
-//            return;
-//        }
+        String timestamp = request.getParameter("time");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("taskId",taskid);
+        map.put("classId",classid);
+        map.put("classType",classtype);
+        map.put("isVirtual",isvir);
+        map.put("jid",userid);
+        map.put("userType",usertype);
+        map.put("schoolId",schoolid);
+        map.put("time",timestamp);
+       // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
+        if(b){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
         TpTaskInfo tpTaskInfo = new TpTaskInfo();
         tpTaskInfo.setTaskid(Long.parseLong(taskid));
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
@@ -451,8 +456,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             ResourceInfo rs = new ResourceInfo();
             rs.setResid(taskList.get(0).getTaskvalueid());
             List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
-            String attchStr = UtilTool.getResourceLocation(rsList.get(0).getResid(),1)+"/"+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
-            taskinfo.get(0).put("TASKATTACH",attchStr);
+            String attchStr = UtilTool.getResourceLocation(rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+            Map att = new HashMap();
+            att.put("ATTACH",attchStr);
+            List attList = new ArrayList();
+            attList.add(att);
+            taskinfo.get(0).put("ATTACHS",attList);
             taskinfo.get(0).put("ATTACHTYPE",rsList.get(0).getFilesuffixname());
         }
         List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
@@ -500,13 +509,78 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     }
                 }
             }
-            taskinfo.get(0).put("REPLYLIST",taskUserRecord);
         }
+        taskinfo.get(0).put("REPLYLIST",taskUserRecord);
         Map m = new HashMap();
         m.put("result","1");
         m.put("msg","成功");
         m.put("data",taskinfo);
         JSONObject jbStr=JSONObject.fromObject(m);
         response.getWriter().print(jbStr.toString());
+    }
+
+    /**
+     * 进入教师课题页
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+
+    @RequestMapping(params="m=toQuestionJsp",method={RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView toTeacherCourseList(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+        String taskid = request.getParameter("taskId");
+        String classid = request.getParameter("classId");
+        String classtype = request.getParameter("classType");
+        String isvir = request.getParameter("isVirtual");
+        String userid = request.getParameter("jid");
+        String usertype = request.getParameter("userType");
+        String schoolid = request.getParameter("schoolId");
+        String timestamp = request.getParameter("time");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("taskId",taskid);
+        map.put("classId",classid);
+        map.put("classType",classtype);
+        map.put("isVirtual",isvir);
+        map.put("jid",userid);
+        map.put("userType",usertype);
+        map.put("schoolId",schoolid);
+        map.put("time",timestamp);
+        // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("toQuestionJsp",map,sig);
+        if(b){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
+            return new ModelAndView("");
+        }
+        TpTaskInfo tpTaskInfo = new TpTaskInfo();
+        tpTaskInfo.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
+        if(taskList==null||taskList.size()==0){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"当前任务不存在\"}");
+            return new ModelAndView("");
+        }
+        if(taskList.get(0).getTasktype()==3){
+            QuestionInfo questionInfo = new QuestionInfo();
+            questionInfo.setQuestionid(taskList.get(0).getTaskvalueid());
+            List<QuestionInfo> questionInfoList = this.questionManager.getList(questionInfo,null);
+            if(questionInfoList.get(0).getQuestiontype()==3||questionInfoList.get(0).getQuestiontype()==4){
+                QuestionOption questionOption = new QuestionOption();
+                questionOption.setQuestionid(questionInfoList.get(0).getQuestionid());
+                List<QuestionOption> questionOptionList=this.questionOptionManager.getList(questionOption,null);
+                request.setAttribute("option",questionOptionList);
+            }
+            UserInfo ui = new UserInfo();
+            ui.setUserid(Integer.parseInt(userid));
+            List<UserInfo> uList = this.userManager.getList(ui,null);
+            QuestionAnswer questionAnswer = new QuestionAnswer();
+            questionAnswer.setTaskid(Long.parseLong(taskid));
+            questionAnswer.setUserid(uList.get(0).getRef());
+            List<QuestionAnswer> questionAnswerList=this.questionAnswerManager.getList(questionAnswer,null);
+            request.setAttribute("answer",questionAnswerList);
+            request.setAttribute("question",questionInfoList);
+            return new ModelAndView("/imjsp-1.1/task-detail-question");
+        }
+        return new ModelAndView("");
     }
 }

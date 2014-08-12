@@ -1023,8 +1023,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 addPaper.setQuestionid(question.getQuestionid());
                 addPaper.setOrderidx(maxIdx);
                 if(question.getScore()!=null)
-                    addPaper.setScore(question.getScore());
-                this.paperQuestionManager.getSaveSql(addPaper,sql);
+                    addPaper.setScore(new Float(5));
+                this.paperQuestionManager.doSave(addPaper);
                 /*sql=new StringBuilder();
                 objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
                 if(objList!=null&&sql!=null){
@@ -1046,6 +1046,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             }
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            je.setType("success");
+            this.modifyPaperTotalScore(Long.parseLong(paperid));
         }
         response.getWriter().print(je.toJSON());
     }
@@ -1065,7 +1067,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         String courseid=request.getParameter("courseid");
         String paperid=request.getParameter("paperid");
         String coursename=request.getParameter("coursename");
-        String materialid=request.getParameter("materialid");
+        //String materialid=request.getParameter("materialid");
         String gradeid=request.getParameter("gradeid");
         String subjectid=request.getParameter("subjectid");
         if(courseid==null||courseid.trim().length()<1||
@@ -1074,14 +1076,30 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().print(jsonEntity.toJSON());
             return;
         }
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(Long.parseLong(courseid));
+        if(gradeid!=null&&gradeid.length()>0)
+            ttm.setGradeid(Integer.parseInt(gradeid));
+        if(subjectid!=null&&subjectid.length()>0)
+            ttm.setSubjectid(Integer.parseInt(subjectid));
+        String order="paper_ques_flag,u.c_time DESC,q.c_time DESC ";
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0){
+            order="field(tcm.TEACHING_MATERIAL_ID";
+            for(TpCourseTeachingMaterial ctm:materialList){
+                order+=","+ctm.getTeachingmaterialid();
+            }
+            order+=") desc";
+        }
+
         //得到列表
         TpCourseQuestion tpCourseQuestion=new TpCourseQuestion();
         tpCourseQuestion.setCurrentCourseid(Long.parseLong(courseid));
         tpCourseQuestion.setPaperid(Long.parseLong(paperid));
         if(coursename!=null&&coursename.trim().length()>0){
             tpCourseQuestion.setCoursename(coursename);
-            if(materialid!=null&&materialid.length()>0)
-                tpCourseQuestion.setMaterialid(Integer.parseInt(materialid));
+            //if(materialid!=null&&materialid.length()>0)
+            //    tpCourseQuestion.setMaterialid(Integer.parseInt(materialid));
             if(gradeid!=null&&gradeid.length()>0)
                 tpCourseQuestion.setGradeid(Integer.parseInt(gradeid));
             if(subjectid!=null&&subjectid.length()>0)
@@ -1091,7 +1109,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
         //1：有效 2：已删除
         tpCourseQuestion.setStatus(1);
-        presult.setOrderBy("paper_ques_flag,u.c_time DESC,q.c_time DESC ");
+        presult.setOrderBy(order);
         List<TpCourseQuestion> tpCourseQuestionList=this.tpCourseQuestionManager.getList(tpCourseQuestion,presult);
         List<TpCourseQuestion> childList=this.tpCourseQuestionManager.getQuestionTeamList(tpCourseQuestion,null);
         PageResult pchild = new PageResult();
@@ -1259,6 +1277,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");
+            this.modifyPaperTotalScore(Long.parseLong(paperid));
         }
         response.getWriter().print(je.toJSON());
     }
@@ -1408,7 +1427,6 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 }else { //添加
                     sql=new StringBuilder();
                     pqts.setScore(Float.parseFloat(score));
-                    sql=new StringBuilder();
                     objList=this.paperQuesTeamScoreManager.getSaveSql(pqts,sql);
                     if(sql!=null&&objList!=null){
                         objListArray.add(objList);

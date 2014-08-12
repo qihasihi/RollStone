@@ -51,13 +51,15 @@ function getInvestReturnMethod(rps){
             var content=replaceAll(itm.content.toLowerCase(),'<span name="fillbank"></span>','______');
             shtml+='</td>';
             shtml+='<td>';
-            shtml+='<p>'+content+'</p>';
+
             if(itm.extension=='4'){
                 shtml+='<div  class="p_t_10" id="sp_mp3_'+itm.questionid+'" ></div>'
                 shtml+='<script type="text/javascript">';
                 shtml+='playSound(\'play\',\'<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/'+itm.questionid+'/001.mp3\',270,22,\'sp_mp3_'+itm.questionid+'\',false)';
                 shtml+='<\/script>';
             }
+            if(itm.extension!='4')
+                shtml+='<p>'+content+'</p>';
             if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0){
                 shtml+='<table border="0" cellpadding="0" cellspacing="0" class="tab">';
                 shtml+='<col class="w30"/>';

@@ -77,7 +77,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     private ITpCourseClassManager tpCourseClassManager;
     private ITpGroupManager tpGroupManager;
     private ITpTopicManager tpTopicManager;
-    private ITpCourseQuestionManager tpCourseQuestionManager;
+   private ITpCourseQuestionManager tpCourseQuestionManager;
     private ITpCourseResourceManager tpCourseResourceManager;
     private ITpVirtualClassManager tpVirtualClassManager;
     private ITermManager termManager;
@@ -158,7 +158,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
      */
     @RequestMapping(params = "m=toCourseDetial", method = RequestMethod.GET)
     public ModelAndView toCourseDetail(HttpServletRequest request, HttpServletResponse response,
-                                       ModelMap mp) throws Exception {
+                                               ModelMap mp) throws Exception {
         JsonEntity je=new JsonEntity();
         String courseid=request.getParameter("courseid");
         String materialid=request.getParameter("materialid");
@@ -203,7 +203,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
     @RequestMapping(params = "m=toTeacherCourseRecycle", method = RequestMethod.GET)
     public ModelAndView toTeacherCourseRecycle(HttpServletRequest request, HttpServletResponse response,
-                                               ModelMap mp) throws Exception {
+                                            ModelMap mp) throws Exception {
 
         return new ModelAndView("/teachpaltform/course/course-recycle-bin", mp);
     }
@@ -216,7 +216,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
      */
     @RequestMapping(params = "m=getCourseRecycleList", method = RequestMethod.POST)
     public void getCoursRecycleList(HttpServletRequest request,
-                                    HttpServletResponse response) throws Exception {
+                                      HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         UserInfo user = this.logined(request);
 
@@ -353,8 +353,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             }
         }
         List ls = new ArrayList();
-        //  ls.add(subuserList);
-        // ls.add(gradeList);
+      //  ls.add(subuserList);
+       // ls.add(gradeList);
         ls.add(gradeSubjectList);
         ls.add(tmList.get(0));
         jeEntity.setObjList(ls);
@@ -707,7 +707,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                         termid,
                         null,
                         this.logined(request).getUserid(),clsu.getSubjectid());
-                groupList.addAll(gl);
+                 groupList.addAll(gl);
             }
 
         }
@@ -768,7 +768,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                             HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
-        tc.setDcschoolid(this.logined(request).getDcschoolid());
         if (tc.getCoursename() == null || tc.getCoursename().length() < 1) {
             je.setMsg("没有专题名称参数！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");
@@ -1071,7 +1070,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             tc.setTeachername(t.getTeachername());
             tc.setCourseid(nextCourseId);
             tc.setCuserid(user.getUserid());
-            tc.setDcschoolid(this.logined(request).getDcschoolid());
+
             sql = new StringBuilder();
             objList = this.tpCourseManager.getSaveSql(tc, sql);
 
@@ -1212,8 +1211,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                         List<TpTopicThemeInfo>themeInfoList=this.tpTopicThemeManager.getList(themeInfo,null);
                         if(themeInfoList!=null&&themeInfoList.size()>0){
                             for(TpTopicThemeInfo tmpThemeInfo :themeInfoList){
-                                tmpThemeInfo.setQuoteid(tmpThemeInfo.getThemeid());//记录引用的ID
-                                tmpThemeInfo.setCuserid(this.logined(request).getUserid());
+                            	tmpThemeInfo.setQuoteid(tmpThemeInfo.getThemeid());//记录引用的ID
+                            	tmpThemeInfo.setCuserid(this.logined(request).getUserid());
                                 tmpThemeInfo.setThemeid(this.tpTopicThemeManager.getNextId(true));
                                 tmpThemeInfo.setTopicid(nextTopicid);
                                 tmpThemeInfo.setCourseid(nextCourseId);
@@ -1224,17 +1223,17 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                     sqlListArray.add(sql.toString());
                                     objListArray.add(objList);
                                 }
-
+                                
                                 if(tmpThemeInfo.getThemecontent()!=null){
-                                    //得到theme_content的更新语句
+                                	  //得到theme_content的更新语句
                                     this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
                                             , tmpThemeInfo.getThemecontent(), tmpThemeInfo.getThemeid().toString(),sqlListArray,objListArray);
                                 }
                                 if(tmpThemeInfo.getCommentcontent()!=null){
-                                    //得到comment_content的更新语句
+                                	  //得到comment_content的更新语句
                                     this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
                                             , tmpThemeInfo.getCommentcontent(), tmpThemeInfo.getThemeid().toString(),sqlListArray,objListArray);
-
+                            		
                                 }
                             }
                         }
@@ -1280,7 +1279,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
      */
     @RequestMapping(params = "m=doContinueUseCourse", method = RequestMethod.POST)
     public void doContinueUseCourse(HttpServletRequest request,
-                                    HttpServletResponse response) throws Exception {
+                                 HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         UserInfo user = this.logined(request);
 
@@ -1456,7 +1455,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                             tmpTask.setCuserid(this.logined(request).getRef());
                             Long taskid=-1l;
                             taskid=this.tpTaskManager.getNextId(true);
-                            // System.out.println("taskid:"+taskid);
+                           // System.out.println("taskid:"+taskid);
                             tmpTask.setTaskid(taskid);
                             sql=new StringBuilder();
                             objList=this.tpTaskManager.getSaveSql(tmpTask,sql);
@@ -1981,15 +1980,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             tcInfo.setCourselevel(-3); // -3标识不共享反义，即所有符合共享条件的专题 或者校内共享
             tcInfo.setFilterquote(1);//去除当前教师引用过的专题
             tcInfo.setCuserid(this.logined(request).getUserid());
-
         }
-        else
-        {
-            //如果是资源系统查询--按知识点查询，也需要加此条件
-            tcInfo.setCourselevel(-3); // -3标识不共享反义，即所有符合共享条件的专题 或者校内共享
-        }
-        tcInfo.setDcschoolid(this.logined(request).getDcschoolid());
-
         List<TpCourseInfo> courseList = this.tpCourseManager.getList(tcInfo, presult);
         presult.setList(courseList);
         je.setPresult(presult);
@@ -2001,7 +1992,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
      */
     @RequestMapping(params = "m=getClassCommentListAjax", method = RequestMethod.POST)
     public void getClassCommentListAjax(HttpServletRequest request,
-                                        HttpServletResponse response) throws Exception {
+                                HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         String searchType=request.getParameter("searchType");
         PageResult presult = this.getPageResultParameter(request);
@@ -2023,7 +2014,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
      */
     @RequestMapping(params = "m=getRelatedCourse", method = RequestMethod.POST)
     public void getRelatedCourse(HttpServletRequest request,
-                                 HttpServletResponse response) throws Exception {
+                                         HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         String materialid=request.getParameter("materialid");
         String coursename=request.getParameter("course_name");
@@ -2074,8 +2065,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             tentity.setSubjectid(Integer.parseInt(subjectid));
             tentity.setTermid(termid);
             entityList=this.tpTeacherTeachMaterialManager.getList(tentity,null);
-            // if(entityList!=null&&entityList.size()>0)
-            //tcInfo.setMaterialidvalues(entityList.get(0).getMaterialid().toString());
+           // if(entityList!=null&&entityList.size()>0)
+                //tcInfo.setMaterialidvalues(entityList.get(0).getMaterialid().toString());
         }
         TermInfo t=new TermInfo();
         t.setRef(termid);
@@ -2282,12 +2273,12 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 //        tsc = new TrusteeShipClass();
 //        tsc.setReceiveteacherid(user.getUserid());
 //        tsc.setYear(ti.getYear());
-        //       List<Map<String, Object>> tsList = this.trusteeShipClassManager.getTsClassList(tsc);
+ //       List<Map<String, Object>> tsList = this.trusteeShipClassManager.getTsClassList(tsc);
 
 
 
         mp.put("cuList", clsList);
-        // mp.put("tsList", tsList);
+       // mp.put("tsList", tsList);
         mp.put("tvcList", tvcList);
         mp.put("grade", grade);
         mp.put("subject", sub);
@@ -2318,7 +2309,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         response.getWriter().print(je.toJSON());
     }
 
-    /**
+     /**
      * 进入新建专题页面
      *
      * @return

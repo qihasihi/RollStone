@@ -53,13 +53,15 @@ function questionReturn(rps){
             htm+='<td>';
             if(!(quesType>0&&quesType<5))
                 htm+='<span class="bg">'+questype+'</span>';
-            htm+=content;
+
             if(itm.extension=='4'){
                 htm+='<div  class="p_t_10" id="sp_mp3_'+itm.questionid+'" ></div>'
                 htm+='<script type="text/javascript">';
                 htm+='playSound(\'play\',\''+ques_mp3_path+itm.questionid+'/001.mp3\',270,22,\'sp_mp3_'+itm.questionid+'\',false)';
                 htm+='<\/script>';
             }
+            if(itm.extension!=4)
+                htm+=content;
             if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0 && itm.extension !=4){
                 htm+='<table border="0" cellpadding="0" cellspacing="0" class="tab">';
                 htm+='<col class="w30"/>';
