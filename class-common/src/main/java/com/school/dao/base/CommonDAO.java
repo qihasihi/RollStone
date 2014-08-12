@@ -58,7 +58,7 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
 		if (null == envCtx)
 			return null;
 		try {
-			return (DataSource) envCtx.lookup("jdbc/szschool");
+			return (DataSource) envCtx.lookup("jdbc/mschool");
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
