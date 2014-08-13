@@ -1779,7 +1779,7 @@ function loadRelatePaper(resid){
             if(rps.type=="error"){
                 alert(rps.msg);
             }else{
-                var h='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>'+rps.objList[0].papername+'</a>';
+                var h='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>关联试卷</a>';
                 $("#relate_paper").html(h);
             }
         }

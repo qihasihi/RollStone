@@ -16,7 +16,7 @@
         var papertype="${paperObj.papertype}";
         var allquesid="${allquesidObj}";
         var allscore="${allscoreObj}";
-
+        var isshowfen=true;
         $(function(){
             //序号重排
             updateQuesIdx();
@@ -80,6 +80,7 @@
                     qtype=4;
 
                 if(qtype==1){
+                    $("#you_score"+t).html("待批改");
                     $("#dv_you_as"+t).html(t1);
                     if(nexName!="undefined"&&nexName.length>0){
                         $("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");
@@ -87,6 +88,7 @@
                     }
 
                 }else if(qtype==2){ //1:问题  2：填空 3：单选  4：多选
+                    $("#you_score"+t).html("待批改");
                     var t2=t1.split("|");
                     var t3=$("#dv_qs_"+t+" span[name='fillbank']");
                     if(t2.length==t3.length){
@@ -145,11 +147,13 @@
 <div class="subpage_head"><span class="ico55"></span><strong>查看试卷</strong></div>
 <div class="content2">
     <div class="jxxt_zhuanti_shijuan_add font-black public_input"  id="dv_question">
-        <p class="title"><span class="f_right"><strong>得分：<span class="font-blue"><span id="sp_sumScore"></span></span></strong></span>
-            <strong><c:if test="${!empty paperObj&&paperObj.papertype==3}">${paperObj.papername}</c:if></strong>
+        <c:if test="${!empty paperObj&&paperObj.papertype==3}">
+        <p class="title"><span class="f_right"><strong  style="display:none">得分：<span class="font-blue"><span id="sp_sumScore"></span></span></strong></span>
+            <strong>${paperObj.papername}&nbsp;</strong>
         </p>
+        </c:if>
         <script type="text/javascript">
-            var isshowfen=true;
+
             <c:if test="${!empty quesList}">
              <c:forEach items="${quesList}" var="q" varStatus="qidx">
             var h='';
@@ -159,7 +163,7 @@
             if(qslength.length<1){
                 var pextension="${q.parentQues.extension}";
                 h+=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_pqs_${q.parentQues.questionid}">';
-                h+='<caption class="font-blue"><span class="f_right"><strong id="you_sum">0</strong>分/<span id=p_s_score>';
+                h+='<caption class="font-blue"><span class="f_right"  style="display:none"><strong id="you_sum">0</strong>/<span id=p_s_score>';
                 if(papertype==3)
                     h+=${q.score}+"";
                 h+='</span>分</span><span id="sp_qidx${q.parentQues.questionid}"">${qidx.index+1}</span></caption>';
@@ -198,10 +202,10 @@
 
             var h1=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_qs_${q.questionid}">';
             <c:if test="${empty q.parentQues}">
-                    h1+='<caption class="font-blue"><span class="f_right"><strong id="you_score${q.questionid}">0</strong>分/<span id="avg_score">0</span>分</span><span class="font-blue">${qidx.index+1}</span></caption>';
+                    h1+='<caption class="font-blue"><span class="f_right" style="display:none"><strong id="you_score${q.questionid}">待批改</strong>/<span id="avg_score">0</span>分</span><span class="font-blue">${qidx.index+1}</span></caption>';
             </c:if>
             <c:if test="${!empty q.parentQues}">
-                    h1+='<caption style="display:none"><span class="font-blue f_right"><strong id="you_score${q.questionid}">0</strong>分/<span id="avg_score">0</span>分</span></caption>';
+                    h1+='<caption style="display:none"><span class="font-blue f_right"  style="display:none"><strong id="you_score${q.questionid}">待批改</strong>/<span id="avg_score">0</span>分</span></caption>';
             </c:if>
             h1+=' <tr><td>';
             h1+='<input  type="hidden" value="${q.questiontype}" name="hd_questiontype" id="hd_questiontype_${q.questionid}"/>';
@@ -224,14 +228,14 @@
             </c:if>
             <c:if test="${empty q.parentQues||q.parentQues.extension!=5}">
                 if(questype==2){
-                    h1+='</td></tr><tr><td><p><strong>答题附件：</strong><span class="font-blue" id="fujian${q.questionid}"></span></p>';
+                    h1+='</td></tr><tr><td><p  style="display:none"><strong>附件：</strong><span class="font-blue" id="fujian${q.questionid}"></span></p>';
                     h1+='<p><strong>正确答案：</strong>${q.correctanswer}</p>';
-                    h1+='<p><strong>题目解析：</strong><div id="dv_right_as${q.questionid}">${q.analysis}</div></p></td></tr>';
+                    h1+='<p><strong>答案解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p></td></tr>';
                 }else if(questype==1){
                     h1+='</td></tr><tr><td><p><strong>学生答案：</strong><span id="dv_you_as${q.questionid}"></span></p>';
-                    h1+='<p><strong>附件：</strong><span  class="font-blue" id="fujian${q.questionid}"></span></p>';
+                    h1+='<p style="display:none"><strong>附件：</strong><span  class="font-blue" id="fujian${q.questionid}"></span></p>';
                     h1+='<p><strong>正确答案：</strong>${q.correctanswer}</p>';
-                    h1+='<p><strong>题目解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>';
+                    h1+='<p><strong>答案解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>';
                     h1+='</td></tr>';
                 }
             </c:if>

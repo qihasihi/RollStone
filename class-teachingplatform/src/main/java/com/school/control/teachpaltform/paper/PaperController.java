@@ -513,7 +513,7 @@ public class PaperController extends BaseController<PaperInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy(" u.c_time desc,u.paper_id desc ");
+        p.setOrderBy(" p.paper_type,u.c_time desc,u.paper_id desc ");
         TpCoursePaper t=new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
         t.setLocalstatus(1);
@@ -1156,6 +1156,8 @@ public class PaperController extends BaseController<PaperInfo>{
         }
     */
 
+        //当前试卷包含试题数（去题干）
+        request.setAttribute("pageQuesSize",this.paperQuestionManager.paperQuesCount(Long.parseLong(paperid)));
         request.setAttribute("pqList", tmpList);
         request.setAttribute("childList", childList);
         /*request.setAttribute("optionList", questionOptionList);*/
@@ -3205,7 +3207,7 @@ public class PaperController extends BaseController<PaperInfo>{
             String quesidsStr = quesIdList.get(0).get("ALLQUESID").toString();
             request.setAttribute("quesidStr",quesidsStr);
         }
-
+        request.setAttribute("classes",classList);
         request.setAttribute("questionList",objList);
         request.setAttribute("papername",objList.get(0).getPapername());
         return new ModelAndView("teachpaltform/paper/marking/marking-list");

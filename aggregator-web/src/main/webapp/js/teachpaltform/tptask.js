@@ -1377,11 +1377,12 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
     }
     var param = {};
     param.taskid = taskid;
-    if (classid != null && classid.length > 0) {
+    if (classid != null && classid.toString().length > 0) {
         param.classid = classid;
         param.classtype = classtype;
     } else {
         param.classid = 0;
+        classid=0;
         param.classtype = 0;
     }
     if (tasktype == 3) {
@@ -1446,8 +1447,12 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                         recordhtm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
                         recordhtm += '<colgroup span="4" class="w190"></colgroup>';
                         recordhtm += '<colgroup class="w180"></colgroup>';
+                        if(classid==0)
+                            recordhtm += '<colgroup class="w180"></colgroup>';
                         recordhtm += '<caption>' + im.groupname + '</caption>';
                         recordhtm += '<tr>';
+                        if(classid==0)
+                            recordhtm += '<th>班级</th>';
                         recordhtm += '<th>学号</th>';
                         recordhtm += '<th>姓名</th>';
                         recordhtm += '<th>学习时间</th>';
@@ -1461,6 +1466,8 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                                     recordhtm += ' class="trbg1"';
                                 }
                                 recordhtm += '>';
+                                if(classid==0)
+                                    recordhtm += '<td>' + itm.clsname + '</td>';
                                 recordhtm += '<td>' + itm.userinfo.stuNo + '</td>';
                                 recordhtm += '<td>' + itm.userinfo.stuname + '</td>';
                                 if (typeof(itm.ctimeString) != 'undefined')
@@ -1487,7 +1494,11 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                     recordhtm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
                     recordhtm += '<colgroup span="4" class="w190"></colgroup>';
                     recordhtm += '<colgroup class="w180"></colgroup>';
+                    if(classid==0)
+                        recordhtm += '<colgroup class="w180"></colgroup>';
                     recordhtm += '<tr>';
+                    if(classid==0)
+                        recordhtm += '<th>班级</th>';
                     recordhtm += '<th>学号</th>';
                     recordhtm += '<th>姓名</th>';
                     recordhtm += '<th>学习时间</th>';
@@ -1500,6 +1511,8 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                             recordhtm += ' class="trbg1"';
                         }
                         recordhtm += '>';
+                        if(classid==0)
+                            recordhtm += '<td>' + itm.clsname + '</td>';
                         recordhtm += '<td>' + itm.userinfo.stuNo + '</td>';
                         recordhtm += '<td>' + itm.userinfo.stuname + '</td>';
                         if (typeof(itm.ctimeString) != 'undefined')
@@ -1544,7 +1557,7 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
             }
             $("#notcomplete").html(rmsg.objList[4].length)
             if(rmsg.objList[4]!=null&&rmsg.objList[4].length>0){
-                $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
+                //$("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
 
             }
             $("#optionTbl").hide();
@@ -1579,6 +1592,7 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
         param.classtype = classtype;
     } else {
         param.classid = 0;
+        classid=0;
         param.classtype = 0;
     }
     if (tasktype == 3) {
@@ -1619,8 +1633,13 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                         htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
                         htm += '<colgroup span="4" class="w190"></colgroup>';
                         htm += '<colgroup class="w180"></colgroup>';
+                        htm += '<colgroup class="w180"></colgroup>';
+                        if(classid==0)
+                            htm += '<colgroup class="w180"></colgroup>';
                         htm += '<caption>' + im.groupname + '</caption>';
                         htm += '<tr>';
+                        if(classid==0)
+                            htm += '<th>班级</th>';
                         htm += '<th>学号</th>';
                         htm += '<th>姓名</th>';
                         htm += '<th>学习时间</th>';
@@ -1631,6 +1650,8 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                             $.each(im.tpgroupstudent2, function (i, m) {
                                 if (m.stuno == itm.userinfo.stuNo) {
                                     htm += '<tr>';
+                                    if(classid==0)
+                                        htm += '<td>' + itm.clsname + '</td>';
                                     htm += '<td>' + itm.userinfo.stuNo + '</td>';
                                     htm += '<td>' + itm.userinfo.stuname + '</td>';
                                     if (typeof(itm.ctimeString) != 'undefined')
@@ -1662,7 +1683,11 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                     htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
                     htm += '<colgroup span="4" class="w190"></colgroup>';
                     htm += '<colgroup class="w180"></colgroup>';
+                    if(classid==0)
+                        htm += '<colgroup class="w180"></colgroup>';
                     htm += '<tr>';
+                    if(classid==0)
+                        htm += '<th>班级</th>';
                     htm += '<th>学号</th>';
                     htm += '<th>姓名</th>';
                     htm += '<th>学习时间</th>';
@@ -1671,6 +1696,8 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                     htm += '</tr>';
                     $.each(rmsg.objList[1], function (idx, itm) {
                         htm += '<tr>';
+                        if(classid==0)
+                            htm += '<td>' + itm.clsname + '</td>';
                         htm += '<td>' + itm.userinfo.stuNo + '</td>';
                         htm += '<td>' + itm.userinfo.stuname + '</td>';
                         if (typeof(itm.ctimeString) != 'undefined')
@@ -1719,7 +1746,7 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
             }
             $("#notcomplete").html(rmsg.objList[3].length)
             if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
-                $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
+                //$("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
 
             }
             $("#mainTbl").hide();
@@ -1964,7 +1991,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
             }
             $("#notcomplete").html(rmsg.objList[3].length)
             if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
-                $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
+                //$("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
 
             }
 
@@ -2135,7 +2162,7 @@ function loadLiveLessionPerformance(classid, tasktype, paperid, classtype) {
             }
             $("#notcomplete").html(rmsg.objList[3].length)
             if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
-                $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
+               // $("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
 
             }
 

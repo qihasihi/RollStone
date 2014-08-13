@@ -142,7 +142,7 @@
                         criteria=itm.criteria==1?"提交":"";
                         type="试&nbsp;&nbsp;&nbsp;&nbsp;题";
                         answertype='您的答案';
-                        switch (itm.questiontype){
+                        switch (parseInt(itm.questiontype)){
                             case 1:questype="问&nbsp;&nbsp;&nbsp;&nbsp;答：";break;
                             case 2:questype="填&nbsp;&nbsp;&nbsp;&nbsp;空：";break;
                             case 3:questype="单&nbsp;&nbsp;&nbsp;&nbsp;选：";break;
@@ -297,10 +297,12 @@
                 html+='</p>';
                 html+='</div>';
                 html+='<div class="text" id="div_task_'+itm.taskid+'" style="display:none;">';
-                html+='        <p class="f_right"><a href="javascript:void(0);" onclick="showModel(\'div_suggest_'+itm.taskid+'\')" class="font-darkblue">提建议</a></p>';
+                html+='<p class="f_right"><a href="javascript:void(0);" onclick="showModel(\'div_suggest_'+itm.taskid+'\')" class="font-darkblue">提建议</a></p>';
                 if(itm.tasktype<6)
-                    html+='        <p><strong>完成标准：</strong><span class="font-black">'+criteria+'</span></p>';
-                html+='        <p><strong>任务描述：</strong><span class="width">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
+                    html+='<p><strong>完成标准：</strong><span class="font-black">'+criteria+'</span></p>';
+                else
+                    html+='<p><strong</strong><span class="font-black"></span></p>';
+                html+='<p><strong>任务描述：</strong><span class="width">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
                 if(itm.taskstatus=="1")
                     html+='<p class="font-black"><span class="ico33"></span>任务尚未开始，您的作答将不计入任务的统计结果中，请在任务开始之后重新作答！</p>';
                 html+='<table border="0" cellspacing="0" cellpadding="0" class="black" id="tbl_'+itm.taskid+'">';

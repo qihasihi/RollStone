@@ -189,4 +189,164 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
             return list;
         return null;
     }
+
+    public List<Map<String, Object>> getTeacherCalendar(Integer userid, Integer schoolid, Integer year, Integer month) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_getTeacherObtainCalendarProc(");
+        List<Object> objList=new ArrayList<Object>();
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        sqlbuilder.append("null,");
+        if(schoolid!=null){
+            sqlbuilder.append("?,");
+            objList.add(schoolid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(year!=null){
+            sqlbuilder.append("?,");
+            objList.add(year);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(month!=null){
+            sqlbuilder.append("?");
+            objList.add(month);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
+
+    public List<Map<String, Object>> getStudentCalendar(Integer userid, Integer schoolid, Integer classid, Integer year, Integer month) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_getTeacherObtainCalendarProc(");
+        List<Object> objList=new ArrayList<Object>();
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?,");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(schoolid!=null){
+            sqlbuilder.append("?,");
+            objList.add(schoolid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(year!=null){
+            sqlbuilder.append("?,");
+            objList.add(year);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(month!=null){
+            sqlbuilder.append("?");
+            objList.add(month);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
+
+    public List<Map<String, Object>> getTeacherCalendarDetail(Integer userid, Integer usertype, Integer schoolid, String time) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_getClassCalendarByDayProc(");
+        List<Object> objList=new ArrayList<Object>();
+        sqlbuilder.append("null,");
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+//        if(classid!=null){
+//            sqlbuilder.append("?,");
+//            objList.add(classid);
+//        }else{
+//            sqlbuilder.append("null,");
+//        }
+        if(schoolid!=null){
+            sqlbuilder.append("?,");
+            objList.add(schoolid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(usertype!=null){
+            sqlbuilder.append("?,");
+            objList.add(usertype);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(time!=null){
+            sqlbuilder.append("?");
+            objList.add(time);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
+
+    public List<Map<String, Object>> getstudentCalendarDetail(Integer userid, Integer usertype, Integer classid, Integer schoolid, String time) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_getClassCalendarByDayProc(");
+        List<Object> objList=new ArrayList<Object>();
+        if(classid!=null){
+            sqlbuilder.append("?,");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(schoolid!=null){
+            sqlbuilder.append("?,");
+            objList.add(schoolid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(usertype!=null){
+            sqlbuilder.append("?,");
+            objList.add(usertype);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(time!=null){
+            sqlbuilder.append("?");
+            objList.add(time);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
 }

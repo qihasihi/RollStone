@@ -155,9 +155,7 @@ function getInvestReturnMethod(rps){
             }else
                 html+='<span class="ico35"></span><b style="color:gray;">'+itm.stucount+'/'+itm.totalcount+'</b>';
 
-            if(itm.tasktype==4&&itm.taskstatus=="3"){
-                html+='<a class="ico79" title="批阅" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
-            }
+
             if(itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)){
                 html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
             }
@@ -180,6 +178,9 @@ function getInvestReturnMethod(rps){
                 html+='<a class="font-blue" href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >'+taskObj+'</a>';
             }else if(itm.tasktype==10){
                 html+='<a class="font-blue" href="#" >'+taskObj+'</a>';
+            }
+            if(itm.tasktype==4&&itm.taskstatus=="3"){
+                html+='<a class="ico84" title="批阅" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
             }
             html+='</p>';
             html+='</div>';

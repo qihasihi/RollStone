@@ -224,11 +224,13 @@ function loadNextQues(quesid,paperid,idx){
                 if(rps.objList.length>1){ //如果是组试题，则 0:题干   1：题
                     quesObj=rps.objList[1];//
                     parentQuesObj=rps.objList[0];
-                    h+='<div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_pqs_'+parentQuesObj.questionid+'">';
+                    h+='<div class="jxxt_zhuanti_rw_ceshi_shiti font-black public_input" id="dv_pqs_'+parentQuesObj.questionid+'" style="width:850px;">';
                     var ex=parentQuesObj.extension;
                     h+='<input type="hidden" id="hd_p_extension'+parentQuesObj.questionid+'" id="hd_p_extension" value="'+ex+'"/>';
-                    if(ex!=4&&ex!=5){
-                        h+='<p>1.'+parentQuesObj.content+'</p>';
+                    if(ex!=4&&ex!=5&&ex!=3){
+                        h+='<div class="p_b_20"><strong>试题组（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><br>';
+                        h+=parentQuesObj.content;
+                        h+='</div>';
                     }else if(ex==5){    //七选五
                         //显示题干
                         h+='<div class="p_b_20"><strong>七选五（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><br>';
@@ -244,8 +246,14 @@ function loadNextQues(quesid,paperid,idx){
                              });
                          }
                         h+='</div></div>';
-                    }
-                    else{
+                    }else if(ex==3){
+                        h+='<div class="p_b_20"><strong>阅读理解（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><br>';
+                        h+=parentQuesObj.content;
+                        //题选项
+                        h+='<div style="display:none" id="p_option_'+parentQuesObj.questionid+'">';
+                        //选项
+                        h+='</div></div>';
+                    }else{
 
                         h+='<p><strong>英语听力（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><span id="p_mp3_'+parentQuesObj.questionid+'"></span></p>';
                     }

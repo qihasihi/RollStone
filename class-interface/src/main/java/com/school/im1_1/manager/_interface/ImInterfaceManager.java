@@ -95,4 +95,24 @@ public class ImInterfaceManager extends BaseManager<ImInterfaceInfo> implements 
     public List<Map<String, Object>> getTaskUserRecord(Long taskid, Integer classid, Integer isvir,Integer userid) {
         return this.imInterfaceDAO.getTaskUserRecord(taskid,classid,isvir,userid);
     }
+
+    @Override
+    public List<Map<String, Object>> getTeacherCalendar(Integer userid, Integer schoolid, Integer year, Integer month) {
+        return this.imInterfaceDAO.getTeacherCalendar(userid,schoolid,year,month);
+    }
+
+    @Override
+    public List<Map<String, Object>> getStudentCalendar(Integer userid, Integer schoolid, Integer classid, Integer year, Integer month) {
+        return this.imInterfaceDAO.getStudentCalendar(userid,schoolid,classid,year,month);
+    }
+
+    @Override
+    public List<Map<String, Object>> getTeacherCalendarDetail(Integer userid, Integer usertype, Integer schoolid, String time) {
+        return this.imInterfaceDAO.getTeacherCalendarDetail(userid,usertype,schoolid,time);
+    }
+
+    @Override
+    public List<Map<String, Object>> getstudentCalendarDetail(Integer userid, Integer usertype, Integer classid, Integer schoolid, String time) {
+        return this.imInterfaceDAO.getstudentCalendarDetail(userid,usertype,classid,schoolid,time);
+    }
 }

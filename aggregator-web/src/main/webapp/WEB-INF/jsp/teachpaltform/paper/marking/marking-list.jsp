@@ -15,6 +15,12 @@
         var quesidStr = "${quesidStr}";
         var paperid = "${param.paperid}";
         $(function(){
+           queryPaperques();
+        });
+        function queryPaperques(){
+            var classvalue =$("#classSelect").val();
+            var classid = classvalue.split("|")[0];
+            var classtype = classvalue.split("|")[1];
             var quesids = quesidStr.split(",");
             if(quesids.length>0){
                 var htm = '';
@@ -30,23 +36,23 @@
                     }
                     htm+='<li';
                     <c:forEach items="${questionList}" var="itm" varStatus="idx">
-                       if(id==${itm.questionid}){
-                           if(${itm.markingnum==itm.submitnum}){
-                               htm+=' class="over"'
-                           }
-                           htm+='><a href="paper?m=toMarkingDetail';
-                           if(sign){
-                               htm+='&questionid='+questionid;
-                           }
-                           htm+='&quesids='+quesids+'&tabidx='+i+'&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx+'">'+orderidx+'<b>${itm.markingnum}/${itm.submitnum}</b></a>';
-                       }
+                    if(id==${itm.questionid}){
+                        if(${itm.markingnum==itm.submitnum}){
+                            htm+=' class="over"'
+                        }
+                        htm+='><a href="paper?m=toMarkingDetail';
+                        if(sign){
+                            htm+='&questionid='+questionid;
+                        }
+                        htm+='&sign='+sign+'&quesids='+quesids+'&tabidx='+i+'&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx+'&classid='+classid+'&classtype='+classtype+'">'+orderidx+'<b>${itm.markingnum}/${itm.submitnum}</b></a>';
+                    }
                     </c:forEach>
                     htm+='</li>';
                 }
                 $("#question").html(htm);
                 getPercentScoreByType(2);
             }
-        });
+        }
         function getPercentScoreByType(type){
             $.ajax({
                 url:"paper?m=getpercentscore",
@@ -94,10 +100,10 @@
     <div class="subpage_head"><span class="ico55"></span><strong>${papername}</strong></div>
     <div class="content1">
         <div class="jxxt_zhuanti_rw_piyue">
-            <h2><select name="select3" id="select3">
-                <option selected>高一</option>
-                <option>教职工</option>
-                <option>学生</option>
+            <h2><select name="select3" id="classSelect">
+                <c:forEach items="${classes}" var="itm">
+                    <option value="${itm.classid}|${itm.classtype}">${itm.classname}</option>
+                </c:forEach>
             </select></h2>
             <h3>注：客观题系统已自动完成批改</h3>
             <ul class="shiti" id="question">

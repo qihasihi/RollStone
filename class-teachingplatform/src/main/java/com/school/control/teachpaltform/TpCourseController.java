@@ -1392,6 +1392,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 tc.setCourseid(nextCourseId);
                 tc.setCuserid(user.getUserid());
 
+
                 sql = new StringBuilder();
                 objList = this.tpCourseManager.getSaveSql(tc, sql);
 
@@ -1494,6 +1495,23 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                             tmpQues.setReferenceid(Long.parseLong("1"));
                             sql=new StringBuilder();
                             objList=this.tpCourseQuestionManager.getSaveSql(tmpQues,sql);
+                            if(sql!=null&&objList!=null){
+                                sqlListArray.add(sql.toString());
+                                objListArray.add(objList);
+                            }
+                        }
+                    }
+
+
+                    //试卷
+                    TpCoursePaper coursePaper=new TpCoursePaper();
+                    coursePaper.setCourseid(courseid);
+                    List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(coursePaper,null);
+                    if(coursePaperList!=null&&coursePaperList.size()>0){
+                        for (TpCoursePaper tmpPaper : coursePaperList){
+                            tmpPaper.setCourseid(nextCourseId);
+                            sql=new StringBuilder();
+                            objList=this.tpCoursePaperManager.getSaveSql(tmpPaper,sql);
                             if(sql!=null&&objList!=null){
                                 sqlListArray.add(sql.toString());
                                 objListArray.add(objList);
@@ -1754,6 +1772,16 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
+        TpCourseInfo tcSel=new TpCourseInfo();
+        tcSel.setCourseid(tc.getCourseid());
+        List<TpCourseInfo> tpCourseInfos=this.tpCourseManager.getList(tcSel,null);
+        if(tpCourseInfos==null||tpCourseInfos.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        //沿用专题等级
+        tc.setCourselevel(tpCourseInfos.get(0).getCourselevel());
         tc.setTeachername(tl.get(0).getTeachername());
         sql = new StringBuilder();
         objList = this.tpCourseManager.getUpdateSql(tc, sql);

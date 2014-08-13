@@ -35,6 +35,15 @@ public class TpCoursePaper {
     private Integer papertype;  //paperinfo papertype
     private Integer seldatetype;    //查询用 时间条件
     private String coursepapername;
+    private Long micvideoid;
+
+    public Long getMicvideoid() {
+        return micvideoid;
+    }
+
+    public void setMicvideoid(Long micvideoid) {
+        this.micvideoid = micvideoid;
+    }
 
     public String getCoursepapername() {
         return coursepapername;

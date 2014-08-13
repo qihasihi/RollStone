@@ -53,13 +53,15 @@ public class QuestionOption implements Serializable{
                             content.indexOf("\r\n")!=-1||
                             content.indexOf("\n")!=-1||
                             content.indexOf("\n\r")!=-1||
-                            content.indexOf("\t")!=-1
+                            content.indexOf("\t")!=-1||
+                            content.indexOf("'")!=-1
                     ){
                 content=content.replace("\r\n\t", "");
                 content=content.replace("\r\n", "&nbsp;&nbsp;<br>");
                 content=content.replace("\n", "<br>");
                 content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
                 content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                content=content.replace("'", "£§");
             }
         }
 

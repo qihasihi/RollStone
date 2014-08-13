@@ -14,7 +14,7 @@
         $(function(){
             $("input[name='classradio']").eq(0).attr("checked",true);
             <c:if test="${!empty classList}">
-            xzloadStuPerformance(${classList[0].classid},"${taskInfo.tasktype}","${taskInfo.taskvalueid}");
+                xzloadStuPerformance(${classList[0].classid},"${taskInfo.tasktype}","${taskInfo.taskvalueid}",${classList[0].classtype});
             </c:if>
             if(${taskInfo.tasktype==3}){
                 var uri="question?m=todetail&id=${taskInfo.taskvalueid}";
