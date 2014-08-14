@@ -97,6 +97,7 @@ function videoConvertProgress(resid,fname,md5fname,idxstate,path,baseIpPort,imgp
         });
     }
 }
+var jwplayerSetup={};
 /**
  * 加载SWF视频播放器
  * @param resmd5id    RES_ID标识的MD5加密
@@ -112,7 +113,7 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
 
     //清空
     //由于SWFplayer生成的时候，是替换DIV层。如果想重新生成一个,需重新生成DIV并且删除SWFPlayer
-    var jwplayerSetup={
+    jwplayerSetup={
         'id': 'player1',
         'width': width,
         'height': height,

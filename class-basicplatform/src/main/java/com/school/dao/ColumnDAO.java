@@ -333,6 +333,30 @@ public class ColumnDAO extends CommonDAO<ColumnInfo> implements IColumnDAO {
         sqlbuilder.append("?)}");
         return returnObj;
     }
+    public List<Object> getEttDeleteSql(final EttColumnInfo entity, StringBuilder sqlbuilder){
+        if(entity==null||sqlbuilder==null)return null;
+        sqlbuilder.append("{CALL ett_column_info_proc_delete_synchro(");
+        List<Object> returnObj=new ArrayList<Object>();
+        if(entity.getEttcolumnid()!=null){
+            returnObj.add(entity.getEttcolumnid());
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(entity.getStatus()!=null){
+            returnObj.add(entity.getStatus());
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(entity.getRoletype()!=null){
+            returnObj.add(entity.getRoletype());
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
+        return returnObj;
+    }
+
+
 
     /**
      * 查询ETT栏目信息

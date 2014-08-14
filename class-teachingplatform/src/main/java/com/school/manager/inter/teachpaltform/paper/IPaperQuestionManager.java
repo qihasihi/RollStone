@@ -40,4 +40,11 @@ public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> {
      * @return
      */
     public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid);
+
+    /**
+     * 得到一个试卷下主观题的数量
+     * @param paperid
+     * @return
+     */
+    public List<Map<String,Object>> getZGTCount(final Long paperid);
 }

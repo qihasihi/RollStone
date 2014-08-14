@@ -17,57 +17,6 @@
         var allquesid="${allquesidObj}";
         var allscore="${allscoreObj}";
         var isshowfen=true;
-        $(function(){
-            //序号重排
-            updateQuesIdx();
-            <c:if test="${!empty stuAnswer}">
-               <c:forEach items="${stuAnswer}" var="sa">
-                //得到quesid的questype
-                  userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","${sa.annexNameFull}");
-               </c:forEach>
-            //计算每题的分数
-            if(papertype!=3){
-                var allqueslength=allquesid.split(",").length;
-                var avgScore=parseInt(paperSumScore/allqueslength);
-                $("span[id='avg_score']").html(avgScore);
-                if(paperSumScore%allqueslength>0){
-                    //$("span[id='avg_score']").last().html(avgScore+());
-                    //// 使用数组翻转函数
-                    var yuScore=paperSumScore%allqueslength;
-                   $.each(jQuery.makeArray($("span[id='avg_score']")).reverse(),function(idx,itm){
-                       if(yuScore<1)return;
-                        $(itm).html(parseFloat($(itm).html())+1);
-                        yuScore-=1;
-
-                    });
-                }
-            }else{
-                var scoreArray=allscore.split(",");
-                $("span[id='avg_score']").each(function(idx,itm){
-                    if(typeof(scoreArray[idx])!="undefined"){
-                        $(itm).html(scoreArray[idx]);
-                    }
-                })
-            }
-            //计算是否存在试题组等题
-            $("table[id*='dv_pqs_']").each(function(idx,itm){
-                $("#"+this.id+" #p_s_score").html($("#"+this.id+" td[id*='td_child_']").children().length*avgScore);
-                var YSumScore=0;
-                $("#"+this.id+" strong[id*='you_score']").each(function(x,m){
-                    YSumScore+=parseInt($(this).html());
-                });
-                $("#"+this.id+" #you_sum").html(YSumScore);
-            });
-            if(isshowfen){
-                var sumScore=0;
-                $("strong[id*='you_score']").each(function(idx,itm){
-                    sumScore+=parseFloat($(itm).html().Trim());
-                });
-                $("#sp_sumScore").html(sumScore+"分");
-            }else
-                $("#sp_sumScore").html("待批改");
-            </c:if>
-        });
 
         function userAnswer(t,t1,score,nexName){
             var qtObj=$("#hd_questiontype_"+t);
@@ -104,7 +53,9 @@
                     }
 
                 }else if(qtype==3){
-                    $("input[name='rdo_answer"+t+"']").filter(function(){return this.value.Trim()==t1}).attr("checked",true);
+                    var obj=$("input[name='rdo_answer"+t+"']").filter(function(){return this.value.Trim()==t1});
+                    var answerObj={val:obj[0].value,id:obj[0].id,name:obj[0].name};
+                    obj.parent().html("<input type='radio' checked=true id='"+answerObj.id+"' disabled=true name='"+answerObj.name+"' value='"+answerObj.value+"'>");
                 }else if(qtype==4){
                     var splitChar="|";
                     if(t1.indexOf("%7C")!=-1)
@@ -114,8 +65,9 @@
                     $("input[name='ckx_answer"+t+"']").each(function(d,c){
                         for(var l=0;l<tv2.length;l++){
                             if(tv2[l]==c.value.split("|")[0]){
-                                c.checked=true;
-                            }
+                                var answerObj={val:c.value,id:c.id,name:c.name};
+                                $(c).parent().html("<input type='checkbox' checked=true id='"+answerObj.id+"' disabled=true name='"+answerObj.name+"' value='"+answerObj.value+"'>");
+                          }
                         }
                     });
                 }
@@ -144,11 +96,15 @@
 </head>
 <body>
 <body>
-<div class="subpage_head"><span class="ico55"></span><strong>查看试卷</strong></div>
-<div class="content2">
+<div class="subpage_head"><span class="ico55"></span><strong>查看试卷</strong>
+    <c:if test="${taskIsend==1&&empty stuAnswer}">
+     <span style="float:right;color:red;font-weight:bold;font-size:14px;vertical-align: middle;">该任务已结束，您没有作答!&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </c:if>
+</div>
+<div class="content2" id="dv_test">
     <div class="jxxt_zhuanti_shijuan_add font-black public_input"  id="dv_question">
         <c:if test="${!empty paperObj&&paperObj.papertype==3}">
-        <p class="title"><span class="f_right"><strong  style="display:none">得分：<span class="font-blue"><span id="sp_sumScore"></span></span></strong></span>
+        <p class="title"><span class="f_right"><strong>得分：<span class="font-blue"><span id="sp_sumScore"></span></span></strong></span>
             <strong>${paperObj.papername}&nbsp;</strong>
         </p>
         </c:if>
@@ -163,7 +119,7 @@
             if(qslength.length<1){
                 var pextension="${q.parentQues.extension}";
                 h+=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_pqs_${q.parentQues.questionid}">';
-                h+='<caption class="font-blue"><span class="f_right"  style="display:none"><strong id="you_sum">0</strong>/<span id=p_s_score>';
+                h+='<caption class="font-blue"><span class="f_right"><strong id="you_sum">0</strong>/<span id=p_s_score>';
                 if(papertype==3)
                     h+=${q.score}+"";
                 h+='</span>分</span><span id="sp_qidx${q.parentQues.questionid}"">${qidx.index+1}</span></caption>';
@@ -191,7 +147,8 @@
                 h+='</td></tr>';
                 h+='<tr><td id="td_child_${q.parentQues.questionid}"></td></tr>';
                 h+='</table>';
-                document.write(h);
+                //document.write(h);
+                $("#dv_question").append(h);
                 if(pextension==4){
                     var mp3url="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/${q.parentQues.questionid}/001.mp3";
                     playSound('play',mp3url,300,35,'sp_mp3_${q.parentQues.questionid}',false);
@@ -202,10 +159,10 @@
 
             var h1=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_qs_${q.questionid}">';
             <c:if test="${empty q.parentQues}">
-                    h1+='<caption class="font-blue"><span class="f_right" style="display:none"><strong id="you_score${q.questionid}">待批改</strong>/<span id="avg_score">0</span>分</span><span class="font-blue">${qidx.index+1}</span></caption>';
+                    h1+='<caption class="font-blue"><span class="f_right"><strong id="you_score${q.questionid}">待批改</strong>/<span id="avg_score">0</span>分</span><span class="font-blue">${qidx.index+1}</span></caption>';
             </c:if>
             <c:if test="${!empty q.parentQues}">
-                    h1+='<caption style="display:none"><span class="font-blue f_right"  style="display:none"><strong id="you_score${q.questionid}">待批改</strong>/<span id="avg_score">0</span>分</span></caption>';
+                    h1+='<caption style="display:none"><span class="font-blue f_right"><strong id="you_score${q.questionid}">待批改</strong>/<span id="avg_score">0</span>分</span></caption>';
             </c:if>
             h1+=' <tr><td>';
             h1+='<input  type="hidden" value="${q.questiontype}" name="hd_questiontype" id="hd_questiontype_${q.questionid}"/>';
@@ -222,7 +179,7 @@
                 else if(questype==4)
                     h1+='<span class="bg">多选题</span>：';
             </c:if>
-            h1+='${qidx.index+1}、';
+          //  h1+='${qidx.index+1}、';
             <c:if test="${!empty q.content}">
               h1+='${q.content}';
             </c:if>
@@ -295,6 +252,8 @@
                                 h1+='<span class="ico12"></span>';
                     </c:if>
                         h1+='</td></tr>';
+
+
                     </c:forEach>
                      h1+='</table>';
                     </c:if>
@@ -302,18 +261,86 @@
             </c:if>
                 h1+='</span>'
                 h1+='</td></tr>';
+            <c:if test="${empty q.parentQues||q.parentQues.extension!=5}">
+            if(questype==3||questype==4||questype==7||questype==8){
+            h1+='<tr><td>';
+            h1+='<p><strong>答案解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>';
+            h1+='</td></tr>';
+            }</c:if>
             h1+='</table>';
             <c:if test="${!empty q.parentQues}">
                     $("#td_child_${q.parentQues.questionid}").append(h1);
             </c:if>
             <c:if test="${empty q.parentQues}">
-                    document.write(h1);
+             $("#dv_question").append(h1);
             </c:if>
             </c:forEach>
             </c:if>
         </script>
+
+
+
+        <!--答案-->
+        <script type="text/javascript">
+            //序号重排
+            updateQuesIdx();
+            <c:if test="${!empty stuAnswer}">
+            <c:forEach items="${stuAnswer}" var="sa">
+            //得到quesid的questype
+            userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","${sa.annexNameFull}");
+            </c:forEach>
+            //计算每题的分数
+            if(papertype!=3){
+                var allqueslength=allquesid.split(",").length;
+                var avgScore=parseInt(paperSumScore/allqueslength);
+                $("span[id='avg_score']").html(avgScore);
+                if(paperSumScore%allqueslength>0){
+                    //$("span[id='avg_score']").last().html(avgScore+());
+                    //// 使用数组翻转函数
+                    var yuScore=paperSumScore%allqueslength;
+                    $.each(jQuery.makeArray($("span[id='avg_score']")).reverse(),function(idx,itm){
+                        if(yuScore<1)return;
+                        $(itm).html(parseFloat($(itm).html())+1);
+                        yuScore-=1;
+
+                    });
+                }
+            }else{
+                var scoreArray=allscore.split(",");
+                $("span[id='avg_score']").each(function(idx,itm){
+                    if(typeof(scoreArray[idx])!="undefined"){
+                        $(itm).html(scoreArray[idx]);
+                    }
+                })
+            }
+            //计算是否存在试题组等题
+            $("table[id*='dv_pqs_']").each(function(idx,itm){
+                $("#"+this.id+" #p_s_score").html($("#"+this.id+" td[id*='td_child_']").children().length*avgScore);
+                var YSumScore=0;
+                $("#"+this.id+" strong[id*='you_score']").each(function(x,m){
+                    YSumScore+=parseInt($(this).html());
+                });
+                $("#"+this.id+" #you_sum").html(YSumScore);
+            });
+            if(isshowfen){
+                var sumScore=0;
+                $("strong[id*='you_score']").each(function(idx,itm){
+                    sumScore+=parseFloat($(itm).html().Trim());
+                });
+                $("#sp_sumScore").html(sumScore+"分");
+            }else
+                $("#sp_sumScore").html("待批改");
+            </c:if>
+
+        </script>
+
     </div>
+
+
+
+
 </div>
+
 <%@include file="/util/foot.jsp"%>
 </body>
 </html>

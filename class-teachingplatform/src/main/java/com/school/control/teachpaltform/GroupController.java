@@ -225,8 +225,10 @@ public class GroupController extends BaseController<TpGroupInfo>{
         TpGroupInfo tg = this.getParameter(request, TpGroupInfo.class);
 		String groupname=request.getParameter("groupname");
 		String classid=request.getParameter("classid");
+        String subjectid=request.getParameter("subjectid");
         if(tg==null
             ||tg.getClassid() == null
+                ||subjectid==null||subjectid.trim().length()<1
                 || tg.getClasstype() == null
                 || tg.getGroupname()==null
                 || tg.getGroupname().trim().length()==0) {
@@ -243,9 +245,10 @@ public class GroupController extends BaseController<TpGroupInfo>{
 		tg.setTermid(term.getRef());
 		tg.setCuserid(this.logined(request).getUserid());
 		tg.setGroupid(groupid);
+        tg.setSubjectid(Integer.parseInt(subjectid));
 		
 		if(this.tpGroupManager.checkGroupName(tg)){
-			je.setType("errorname");
+			je.setMsg("error");
 			response.getWriter().print(je.toJSON());
 			return;
 		}

@@ -15,6 +15,12 @@
         var quesidStr = "${quesidStr}";
         var paperid = "${param.paperid}";
         $(function(){
+            var currentclsid = ${classid};
+            var currenttype = ${classtype};
+            if(currentclsid>0){
+               // $("#classSelect").val(currentclsid);
+                $("#classSelect").find("option[value='"+currentclsid+"|"+currenttype+"']").attr("selected",true);
+            }
            queryPaperques();
         });
         function queryPaperques(){
@@ -94,13 +100,17 @@
                 }
             });
         }
+        function changeClass(){
+            var clsid = $("#classSelect").val();
+            window.location.href="paper?m=toMarking&paperid=${param.paperid}&taskid=${param.taskid}&classid="+clsid.split("|")[0]+"&classtype="+clsid.split("|")[1];
+        }
     </script>
 </head>
 <body>
     <div class="subpage_head"><span class="ico55"></span><strong>${papername}</strong></div>
     <div class="content1">
         <div class="jxxt_zhuanti_rw_piyue">
-            <h2><select name="select3" id="classSelect">
+            <h2><select name="select3" id="classSelect" onchange="changeClass()">
                 <c:forEach items="${classes}" var="itm">
                     <option value="${itm.classid}|${itm.classtype}">${itm.classname}</option>
                 </c:forEach>

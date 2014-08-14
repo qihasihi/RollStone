@@ -321,6 +321,27 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
     }
 
     /**
+     * 得到试卷下主观题的Count
+     * @param paperid
+     * @return
+     */
+    public List<Map<String,Object>> getZGTCount(final Long paperid){
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL j_paper_question_zgtCount(");
+        List<Object> objList=new ArrayList<Object>();
+        if(paperid!=null){
+            sqlbuilder.append("?");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
+
+
+
+    /**
      * 得到试卷下的所有分数或某题分数
      * @param paperid
      * @param quesid

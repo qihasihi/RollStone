@@ -129,6 +129,11 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
                 objList.add(stupaperlogs.getIsinpaper());
             } else
                 sqlbuilder.append("null,");
+            if (stupaperlogs.getIsmarking() != null) {
+                sqlbuilder.append("?,");
+                objList.add(stupaperlogs.getIsmarking());
+            } else
+                sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}

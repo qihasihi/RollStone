@@ -103,7 +103,7 @@
                     $.each(rps.objList[0],function(ix,im){
                         var typename="";
                         var details="";
-                        var timestring = im.C_TIME;
+                        var timestring = im.C_TIME || "";
                         var now=nowTime();
                         timestring = timestring.substring(0,timestring.lastIndexOf("."));
                         if(im.TASK_TYPE==1){

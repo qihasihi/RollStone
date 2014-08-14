@@ -1155,9 +1155,9 @@ public class PaperController extends BaseController<PaperInfo>{
             }
         }
     */
-
+        Integer paperQuesSize=this.paperQuestionManager.paperQuesCount(Long.parseLong(paperid));
         //当前试卷包含试题数（去题干）
-        request.setAttribute("pageQuesSize",this.paperQuestionManager.paperQuesCount(Long.parseLong(paperid)));
+        request.setAttribute("pageQuesSize",paperQuesSize);
         request.setAttribute("pqList", tmpList);
         request.setAttribute("childList", childList);
         /*request.setAttribute("optionList", questionOptionList);*/
@@ -3121,6 +3121,8 @@ public class PaperController extends BaseController<PaperInfo>{
     public ModelAndView toMarkingPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
         String paperid = request.getParameter("paperid");
         String taskid = request.getParameter("taskid");
+        String clsid = request.getParameter("classid");
+        String classtype=request.getParameter("classtype");
         JsonEntity je = new JsonEntity();
         if(paperid==null||paperid.length()<1){
             je.setMsg("异常错误，请刷新页面重试");
@@ -3199,22 +3201,31 @@ public class PaperController extends BaseController<PaperInfo>{
                 }
             }
         }
+        if(clsid==null||clsid.length()<1){
+            clsid = classList.get(0).get("classid").toString();
+            classtype= classList.get(0).get("classtype").toString();
+        }
         //获取试卷内所有试题的提交人数和审批人数
-        List<PaperQuestion> objList = this.paperQuestionManager.getQuestionByPaper(Long.parseLong(paperid),Integer.parseInt(classList.get(0).get("classid").toString()),Integer.parseInt(classList.get(0).get("classtype").toString()));
+        List<PaperQuestion> objList = this.paperQuestionManager.getQuestionByPaper(Long.parseLong(paperid),Integer.parseInt(clsid),Integer.parseInt(classtype));
         //获取试卷内所有试题
         List<Map<String,Object>> quesIdList = this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
         if(quesIdList!=null&&quesIdList.size()>0){
             String quesidsStr = quesIdList.get(0).get("ALLQUESID").toString();
             request.setAttribute("quesidStr",quesidsStr);
         }
+        PaperInfo pi = new PaperInfo();
+        pi.setPaperid(Long.parseLong(paperid));
+        List<PaperInfo> piList = this.paperManager.getList(pi,null);
+        request.setAttribute("classid",clsid);
+        request.setAttribute("classtype",classtype);
         request.setAttribute("classes",classList);
         request.setAttribute("questionList",objList);
-        request.setAttribute("papername",objList.get(0).getPapername());
+        request.setAttribute("papername",piList.get(0).getPapername());
         return new ModelAndView("teachpaltform/paper/marking/marking-list");
     }
 
         /**
-         * 进行批阅试卷
+         * 分数段统计
          * @return
          */
         @RequestMapping(params="m=getpercentscore",method=RequestMethod.POST)

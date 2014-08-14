@@ -5308,10 +5308,10 @@ public class UserController extends BaseController<UserInfo> {
                         je.setMsg("teachername is empty!");
                         response.getWriter().print(je.toJSON());return;
                     }
-                    if(teachersex.length()<1){
+                  /*  if(teachersex.length()<1){
                         je.setMsg("teachersex is empty!");
                         response.getWriter().print(je.toJSON());return;
-                    }
+                    } */
                 }else if(identityname.length()>0&&identityname.equals("Ñ§Éú")){
                     isStu=true;
                     stuname=obj.containsKey("stu_name")?obj.getString("stu_name"):"";
@@ -5321,10 +5321,10 @@ public class UserController extends BaseController<UserInfo> {
                         je.setMsg("stuname is empty!");
                         response.getWriter().print(je.toJSON());return;
                     }
-                    if(stusex.length()<1){
+                 /*   if(stusex.length()<1){
                         je.setMsg("stusex is empty!");
                         response.getWriter().print(je.toJSON());return;
-                    }
+                    }*/
                 }
 
 

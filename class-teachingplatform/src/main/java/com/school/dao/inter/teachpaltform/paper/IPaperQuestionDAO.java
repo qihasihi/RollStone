@@ -15,14 +15,14 @@ public interface IPaperQuestionDAO extends ICommonDAO<PaperQuestion>{
      * @param paperid
      * @return
      */
-    Integer paperQuesCount(Long paperid);
-    Boolean updateQuesTeamScore(PaperQuestion paperQuestion);
-    public List<PaperQuestion> getQuestionByPaper(Long paperid,Integer classid,Integer classtype);
-    public List<PaperQuestion> getPaperTeamQuestionList(PaperQuestion p,PageResult pageResult);
+    Integer paperQuesCount(final Long paperid);
+    Boolean updateQuesTeamScore(final PaperQuestion paperQuestion);
+    public List<PaperQuestion> getQuestionByPaper(final Long paperid,final Integer classid,final Integer classtype);
+    public List<PaperQuestion> getPaperTeamQuestionList(final PaperQuestion p,PageResult pageResult);
 
-    public List<Object> getSynchroSql(PaperQuestion paperquestion, StringBuilder sqlbuilder);
+    public List<Object> getSynchroSql(final PaperQuestion paperquestion, StringBuilder sqlbuilder);
 
-    public List<Map<String,Object>> getPaperQuesAllId(Long paperid);
+    public List<Map<String,Object>> getPaperQuesAllId(final Long paperid);
 
     /**
      * 得到试卷下的所有分数或某题分数
@@ -30,5 +30,12 @@ public interface IPaperQuestionDAO extends ICommonDAO<PaperQuestion>{
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid);
+    public List<Map<String,Object>> getPaperQuesAllScore(final Long paperid,final Long quesid);
+
+    /**
+     * 得到试卷下主观题的Count
+     * @param paperid
+     * @return
+     */
+    public List<Map<String,Object>> getZGTCount(final Long paperid);
 }

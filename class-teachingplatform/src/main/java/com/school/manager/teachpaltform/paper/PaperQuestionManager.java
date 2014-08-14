@@ -120,5 +120,14 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
     public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid){
         return this.paperquestiondao.getPaperQuesAllScore(paperid,quesid);
     }
+
+    /**
+     * 得到一个试卷下主观题的数量
+     * @param paperid
+     * @return
+     */
+    public List<Map<String,Object>> getZGTCount(final Long paperid){
+        return this.paperquestiondao.getZGTCount(paperid);
+    }
 }
 

@@ -300,8 +300,6 @@
                 html+='<p class="f_right"><a href="javascript:void(0);" onclick="showModel(\'div_suggest_'+itm.taskid+'\')" class="font-darkblue">提建议</a></p>';
                 if(itm.tasktype<6)
                     html+='<p><strong>完成标准：</strong><span class="font-black">'+criteria+'</span></p>';
-                else
-                    html+='<p><strong</strong><span class="font-black"></span></p>';
                 html+='<p><strong>任务描述：</strong><span class="width">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
                 if(itm.taskstatus=="1")
                     html+='<p class="font-black"><span class="ico33"></span>任务尚未开始，您的作答将不计入任务的统计结果中，请在任务开始之后重新作答！</p>';

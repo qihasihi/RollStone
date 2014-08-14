@@ -151,7 +151,7 @@ function getInvestReturnMethod(rps){
                     qtype=-1;
                 else if(itm.tasktype==10)
                     qtype=-2;
-                html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'"><span class="ico35"></span><b style="color:gray;">'+itm.stucount+'/'+itm.totalcount+'</b></a>';
+                html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b></a>';
             }else
                 html+='<span class="ico35"></span><b style="color:gray;">'+itm.stucount+'/'+itm.totalcount+'</b>';
 

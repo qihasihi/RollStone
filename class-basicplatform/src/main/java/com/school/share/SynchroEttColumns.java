@@ -49,6 +49,13 @@ public class SynchroEttColumns  extends TimerTask {
         List<List<Object>> objArrayList=new ArrayList<List<Object>>();
 
         if(mapObj.get("type").toString().equals("success")){
+            EttColumnInfo entity=new EttColumnInfo();
+            StringBuilder sqlbuilder=new StringBuilder();
+            List<Object> objList=columnManager.getEttDeleteSql(entity,sqlbuilder);
+            if(sqlbuilder.toString().length()>0){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
             JSONArray jsonArray=(JSONArray)mapObj.get("objList");
             if(jsonArray!=null){
                 Iterator<Object> itea=jsonArray.iterator();
@@ -69,8 +76,8 @@ public class SynchroEttColumns  extends TimerTask {
                         if(ettstyle!=null)
                             ettEntity.setStyle(ettstyle.toString());
                         ettEntity.setRoletype(Integer.parseInt(ettroletype.toString()));
-                        StringBuilder sqlbuilder=new StringBuilder();
-                        List<Object> objList=columnManager.getEttColumnSynchro(ettEntity,sqlbuilder);
+                        sqlbuilder=new StringBuilder();
+                        objList=columnManager.getEttColumnSynchro(ettEntity,sqlbuilder);
                         if(sqlbuilder.toString().length()>0){
                             sqlArrayList.add(sqlbuilder.toString());
                             objArrayList.add(objList);

@@ -1861,7 +1861,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                                     else
                                         htm += '<td></td>';
                                     if(tasktype==6){
-                                        if (itm.criteriatype==2){
+                                        if (itm.creteriatype==2){
                                             htm += '<td><span class="ico12" title="完成"></span></td>';
                                             htm += '<td><span class="ico12" title="完成"></span></td>';
                                         }else{
@@ -1934,7 +1934,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                         else
                             htm += '<td></td>';
                         if(tasktype==6){
-                            if (itm.criteriatype==2){
+                            if (itm.creteriatype==2){
                                 htm += '<td><span class="ico12" title="完成"></span></td>';
                                 htm += '<td><span class="ico12" title="完成"></span></td>';
                             }else{

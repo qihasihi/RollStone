@@ -30,4 +30,6 @@ public interface IColumnDAO extends ICommonDAO<ColumnInfo>{
      * @return
      */
     public List<EttColumnInfo> getEttColumnSplit(final EttColumnInfo entity,PageResult presult);
+
+    public List<Object> getEttDeleteSql(final EttColumnInfo entity, StringBuilder sqlbuilder);
 }

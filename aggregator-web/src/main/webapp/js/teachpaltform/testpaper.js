@@ -449,7 +449,6 @@ function subPaper(){
             if(rps.type=="success"){
                 //alert(rps.msg);
                 // 进入详情页面
-                alert("  恭喜你获得了1积分和1蓝宝石!  ");
                 location.href="paperques?m=toTestDetail&paperid="+pid;
             }else
                 alert(rps.msg);

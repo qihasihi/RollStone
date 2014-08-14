@@ -172,7 +172,7 @@
 	
 	.jxxt_zhuanti_rwR {width:840px; padding:10px 10px 0; border-left:1px solid #cfcfcf; float:right; }
 	.jxxt_zhuanti_rwR div.title {width:830px; padding:10px 5px 6px; border-bottom:1px solid #cfcfcf; color:#000;}
-	.jxxt_zhuanti_rwR div.title b{width:40px; display:inline-block;color:red; font-weight:normal;}
+	.jxxt_zhuanti_rwR div.title b{width:40px; display:inline-block; font-weight:normal;}
 	.jxxt_zhuanti_rwR div.text {width:800px; padding:10px 15px 6px 25px; background-color:#f8f8f8;}
 	.jxxt_zhuanti_rwR div.text p.time {width:730px;}
 	.jxxt_zhuanti_rwR div.text p.time strong{width:120px; display: inline-block;}

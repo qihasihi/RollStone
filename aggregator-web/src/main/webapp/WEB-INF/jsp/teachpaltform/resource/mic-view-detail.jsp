@@ -106,7 +106,7 @@
                             <c:if test="${!empty pq.questionOption}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <col class="w30"/>
-                                    <col class="w880"/>
+                                    <col class="w850"/>
                                     <c:forEach items="${pq.questionOption}" var="option">
                                         <tr>
                                             <th>
@@ -139,7 +139,7 @@
                                 <td><p><span data-bind="${c.questionid}"  class="font-blue">${(cidx.index+1)+(pq.orderidx-1)}</span>. ${c.content}</p>
                                     <table border="0" cellpadding="0" cellspacing="0">
                                         <col class="w30"/>
-                                        <col class="w880"/>
+                                        <col class="w850"/>
                                         <caption>
                                             <c:if test="${c.questiontype<3}">
                                                 <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${c.questionid}&type=1&paperid=${paperid}" class="font-blue f_right">查看回答</a>

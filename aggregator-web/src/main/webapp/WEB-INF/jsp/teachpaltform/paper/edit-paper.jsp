@@ -151,9 +151,10 @@ function spanClick(obj,total){
         var maxnum=$(itm).data().bind.split("|")[1];
         var num=$(itm).html().split('-')[0];
         var htm=$(itm).html()//parseInt(maxnum)<=parseInt(num)?$(itm).html():$(itm).html()+'-'+maxnum;
+        var quesid=$(itm).data().bind.split("|")[0];
         if(parseInt(maxnum) > parseInt(num) && idx!=0)
             num=maxnum;
-        h+='<option data-bind="'+htm+'" value="'+num+'">'+htm+'</option>';
+        h+='<option data-bind="'+quesid+'|'+htm+'" value="'+num+'">'+htm+'</option>';
     });
     h+='<option value="0">调至最后</option>';
     h+='</select>';
@@ -166,7 +167,7 @@ function spanClick(obj,total){
     $("select[id='sel_order_idx']").bind("blur",function(){
         var spanObj=$(this).parent();
 
-        spanObj.html($(this).find('option:selected').data().bind);
+        spanObj.html($(this).find('option:selected').data().bind.split[1]);
         $(spanObj).bind("click",function(){
             spanClick(spanObj,total);
         });
@@ -183,8 +184,9 @@ function idxChange(obj,total){
         spanClick(this,total);
     });
     var h=$(obj).find('option:selected').val();
+    var descQuesid=$(obj).find('option:selected').data().bind.split('|')[0];
     var quesid=$(obj).parent().data().bind.split('|')[0];
-    editQuesIdx(quesid,h);
+    editQuesIdx(quesid,h,descQuesid);
     $(obj).parent().html(h);
 }
 
@@ -194,18 +196,16 @@ function idxChange(obj,total){
  * @param taskid
  * @param orderidx
  */
-function editQuesIdx(quesid,orderidx){
+function editQuesIdx(quesid,orderidx,descQuesid){
     if(typeof quesid=='undefined'||orderidx=='undefined')
         return;
-
+    var param={ paperid:paperid,orderidx:orderidx,questionid:quesid};
+    if(typeof descQuesid!='undefined')
+        param.descquesid=descQuesid
     $.ajax({
         url:"paperques?m=doUpdOrderIdx",
         type:"post",
-        data:{
-            paperid:paperid,
-            orderidx:orderidx,
-            questionid:quesid
-        },
+        data:param,
         dataType:'json',
         cache: false,
         error:function(){
@@ -361,7 +361,7 @@ function reSetScrollDiv(){
      <div  id="p_operate" class="jxxt_zhuanti_shijuan_add_an"    ><a href="javascript:showDialogPage(1,'${paper.paperid}','',this)" class="an_big">导入试卷</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(2,'${paper.paperid}','',this)" class="an_big">导入试题</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}','',this)" class="an_big">新建试题</a></div>
     <div class="jxxt_zhuanti_shijuan_add font-black public_input">
         <p class="title">
-            <strong class="f_right" >总分值：<span id="total_score" class="font-blue">${paper.score}&nbsp;分</span></strong><strong>${paper.papername}</strong>
+            <strong class="f_right" >试题数：${pageQuesSize} &nbsp;&nbsp;&nbsp;&nbsp;总分值：<span id="total_score" class="font-blue">${paper.score}&nbsp;分</span></strong><strong>${paper.papername}</strong>
         </p>
 
         <c:if test="${!empty pqList}">

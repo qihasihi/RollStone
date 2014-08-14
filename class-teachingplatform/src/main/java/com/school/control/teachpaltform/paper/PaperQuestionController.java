@@ -18,13 +18,11 @@ import com.school.manager.inter.ISmsManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
-import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.*;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
-import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.*;
@@ -86,7 +84,6 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
     private IQuesTeamRelaManager quesTeamRelaManager;
     private IPaperQuesTeamScoreManager paperQuesTeamScoreManager;
-    private ITpStuScoreLogsManager tpStuScoreLogsManager;
     public PaperQuestionController(){
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
@@ -120,7 +117,6 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         this.stuViewMicVideoLogManager=this.getManager(StuViewMicVideoLogManager.class);
         this.quesTeamRelaManager=this.getManager(QuesTeamRelaManager.class);
         this.paperQuesTeamScoreManager=this.getManager(PaperQuesTeamScoreManager.class);
-        this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
     }
     /**
      * 根据课题ID，加载试卷列表
@@ -274,7 +270,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 Idx=Idx-1<=0?1:childSize>0?Idx-childSize:Idx-1;
                 for(PaperQuestion paperQues:paperQuestionList){
                     Integer listIdx=paperQues.getOrderidx();
-                    if(listIdx>(objIdx+childSize)&&listIdx<(descIdx+childSize)){
+                   // if(listIdx>(objIdx+childSize) && listIdx<(descIdx+childSize)){
+                    if(listIdx>(objIdx+childSize) && listIdx<(descIdx)){
                         PaperQuestion upd=new PaperQuestion();
                         upd.setPaperid(Long.parseLong(paperid));
                         upd.setQuestionid(paperQues.getQuestionid());
@@ -1022,12 +1019,18 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 Integer papperQuesSize=this.paperQuestionManager.paperQuesCount(Long.parseLong(paperid));
                 Integer maxIdx=papperQuesSize+1;
 
+                QuesTeamRela t=new QuesTeamRela();
+                t.setTeamid(question.getQuestionid());
+                List<QuesTeamRela>quesTeamRelaList=this.quesTeamRelaManager.getList(t,null);
+                Float quesScore=Float.valueOf(5);
+                if(quesTeamRelaList!=null&&quesTeamRelaList.size()>0)
+                    quesScore=Float.valueOf(2*quesTeamRelaList.size());
+
                 PaperQuestion addPaper=new PaperQuestion();
                 addPaper.setPaperid(Long.parseLong(paperid));
                 addPaper.setQuestionid(question.getQuestionid());
                 addPaper.setOrderidx(maxIdx);
-                if(question.getScore()!=null)
-                    addPaper.setScore(new Float(5));
+                addPaper.setScore(quesScore);
                 this.paperQuestionManager.doSave(addPaper);
                 /*sql=new StringBuilder();
                 objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
@@ -1245,6 +1248,14 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             }
 
 
+            QuesTeamRela t=new QuesTeamRela();
+            t.setTeamid(Long.parseLong(questionid));
+            List<QuesTeamRela>quesTeamRelaList=this.quesTeamRelaManager.getList(t,null);
+            Float quesScore=Float.valueOf(5);
+            if(quesTeamRelaList!=null&&quesTeamRelaList.size()>0)
+                quesScore=Float.valueOf(2*quesTeamRelaList.size());
+
+
             PaperQuestion paperQuestion=new PaperQuestion();
             paperQuestion.setPaperid(Long.parseLong(paperid));
             paperQuestion.setQuestionid(Long.parseLong(questionid));
@@ -1258,7 +1269,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 addPaper.setPaperid(Long.parseLong(paperid));
                 addPaper.setQuestionid(Long.parseLong(questionid));
                 addPaper.setOrderidx(maxIdx);
-                addPaper.setScore(new Float(5));
+                addPaper.setScore(quesScore);
                 this.paperQuestionManager.doSave(addPaper);
                /* sql=new StringBuilder();
                 objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
@@ -4037,47 +4048,10 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             objArrayList.add(objList);
             sqlArrayList.add(sqlbuilder.toString());
         }
-
-        //得到班级ID
-        TpTaskAllotInfo tallot=new TpTaskAllotInfo();
-        tallot.setTaskid(tk.getTaskid());
-        tallot.getUserinfo().setUserid(this.logined(request).getUserid());
-        List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
-        if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
-                ||clsMapList.get(0).get("CLASS_ID")==null){
-            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-            response.getWriter().println(jsonEntity.toJSON());return ;
-        }
-
-
-
         if(sqlArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
             if(this.stuPaperLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
-                //taskinfo:   4:成卷测试  5：自主测试   6:微视频
-                //规则转换:    6             7         8
-                Integer type=0;
-                switch(tkList.get(0).getTasktype()){
-                    case 6:
-                        type=8;break;
-                    case 4:
-                        type=6;break;
-                    case 5:
-                        type=7;
-                    break;
-                }
-                /*奖励加分通过*/
-                if(this.tpStuScoreLogsManager.awardStuScore(Long.parseLong(courseid.trim())
-                        ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
-                        ,Long.parseLong(taskid.trim())
-                        ,Long.parseLong(this.logined(request).getUserid()+""),type)){
-                    System.out.println("awardScore success");
-                }else
-                    System.out.println("awardScore error");
-
-
-                //数据添加成功。
                 jsonEntity.setType("success");
-                jsonEntity.setMsg("提交试卷成功!\n\n恭喜你获得了1积分和1蓝宝石!");
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             }else
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }else

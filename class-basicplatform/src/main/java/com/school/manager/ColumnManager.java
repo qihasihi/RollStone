@@ -97,5 +97,8 @@ public class  ColumnManager extends BaseManager<ColumnInfo> implements IColumnMa
     public List<EttColumnInfo> getEttColumnSplit(final EttColumnInfo entity,PageResult presult){
         return columndao.getEttColumnSplit(entity,presult);
     }
+    public List<Object> getEttDeleteSql(final EttColumnInfo entity, StringBuilder sqlbuilder){
+        return columndao.getEttDeleteSql(entity,sqlbuilder);
+    }
 }
 

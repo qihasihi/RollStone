@@ -3,6 +3,7 @@ function addNewGroup(){
     var classType=$("#classType").val();
 	var groupName=$("#groupName").val();
 
+
 	if(groupName.Trim().length<1){
 		alert('请输入小组名称!');
 		return;
@@ -11,8 +12,12 @@ function addNewGroup(){
         alert('小组名称限50字以内!');
         return;
     }
+    if(subjectid.Trim().length<1){
+        alert('系统未获取到学科标识!');
+        return;
+    }
 
-	var dat={groupname:groupName,classid:classId,classtype:classType};
+	var dat={groupname:groupName,classid:classId,classtype:classType,subjectid:subjectid};
 	$.ajax({
 		url:'group?m=addNewGroup',
 		data:dat,
