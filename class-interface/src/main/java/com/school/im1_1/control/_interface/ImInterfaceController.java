@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +48,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private IQuestionOptionManager questionOptionManager;
     private IUserManager userManager;
     private IQuestionAnswerManager questionAnswerManager;
+    private ITaskPerformanceManager taskPerformanceManager;
     public ImInterfaceController(){
         this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
         this.tpCourseManager = this.getManager(TpCourseManager.class);
@@ -57,6 +59,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.questionOptionManager = this.getManager(QuestionOptionManager.class);
         this.userManager = this.getManager(UserManager.class);
         this.questionAnswerManager = this.getManager(QuestionAnswerManager.class);
+        this.taskPerformanceManager = this.getManager(TaskPerformanceManager.class);
     }
 
     /**
@@ -77,10 +80,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("jid",userid);
         map.put("userType",usertype);
         map.put("schoolId",schoolid);
-        map.put("timeStamp",timestamp);
+        map.put("time",timestamp);
         String sign = UrlSigUtil.makeSigSimple("StudyModule",map,"*ETT#HONER#2014*");
-       Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
-        if(b){
+        Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
+        if(!b){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return;
         }
@@ -133,10 +136,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("isVirtual",isvirtual);
         map.put("jid",userid);
         map.put("userType",usertype);
-        map.put("timeStamp",timestamp);
+        map.put("time",timestamp);
         String sign = UrlSigUtil.makeSigSimple("ClassTask",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("ClassTask",map,sig);
-        if(b){
+        if(!b){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return;
         }
@@ -240,19 +243,21 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     }
 
     /**
-     * 班级课表接口
+     * 学生班级班级课表接口
      * @param request
      * @param mp
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=ClassCalendar",method= RequestMethod.GET)
-    public void getClassCalendar(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+    @RequestMapping(params="m=StuClassCalendar",method= RequestMethod.GET)
+    public void getStuClassCalendar(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String userid = request.getParameter("jid");
         String usertype=request.getParameter("userType");
         String classid = request.getParameter("classId");
         String schoolid = request.getParameter("schoolId");
+        String month = request.getParameter("requestMonth");
+        String year = request.getParameter("requestYear");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
         HashMap<String,String> map = new HashMap();
@@ -260,24 +265,56 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("userType",usertype);
         map.put("classId",classid);
         map.put("schoolId",schoolid);
-        map.put("timeStamp",timestamp);
-        String sign = UrlSigUtil.makeSigSimple("ClassCalendar",map,"*ETT#HONER#2014*");
-        Boolean b = UrlSigUtil.verifySigSimple("ClassCalendar",map,sig);
-        if(b){
+        map.put("time",timestamp);
+        map.put("requestMonth",month);
+        map.put("requestYear",year);
+       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+        if(!b){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
-        List<Map<String,Object>> courseList = this.imInterfaceManager.getClassTaskCourse(obj);
         Map m = new HashMap();
         Map m2 = new HashMap();
+        List<Map<String,Object>> courseList = this.imInterfaceManager.getStudentCalendar(Integer.parseInt(userid),Integer.parseInt(schoolid),Integer.parseInt(classid),Integer.parseInt(year),Integer.parseInt(month));
+        if(!usertype.equals("2")){
+            long mTime = System.currentTimeMillis();
+            int offset = Calendar.getInstance().getTimeZone().getRawOffset();
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date(mTime - offset));
+            String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
+            List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(Integer.parseInt(userid), Integer.parseInt(usertype), Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
+            if(courseArray.size()>0){
+                List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
+                for(int i = 0;i<courseArray.size();i++){
+                    Map o = courseArray.get(i);
+                    Map o2 = new HashMap();
+                    o2.put("courseId",o.get("COURSE_ID"));
+                    o2.put("courseName",o.get("COURSE_NAME"));
+                    o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME"));
+                    o2.put("schoolId",o.get("DC_SCHOOL_ID"));
+                    courseArray2.add(o2);
+                }
+                m2.put("courseArray",courseArray2);
+            }
+
+        }
         if(courseList!=null&&courseList.size()>0){
-           m2.put("courseList",courseList);
+            List<Map<String,Object>> courseList2 = new ArrayList<Map<String, Object>>();
+            for(int i = 0 ;i<courseList.size();i++){
+                Map o = courseList.get(i);
+                Map o2 = new HashMap();
+                o2.put("orderDay",o.get("E_DAY"));
+                o2.put("hasCourse",o.get("HASCOURSE"));
+                courseList2.add(o2);
+            }
+            m2.put("courseList",courseList2);
         }else{
-            m.put("result","error");
-            m.put("message","当前没有专题");
+            m.put("result","0");
+            m.put("msg","当前没有专题");
         }
         m2.put("personTotalScore","350");
         m2.put("teamScore","130");
@@ -285,8 +322,178 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         m2.put("presenceScore","50");
         m2.put("smileScore","10");
         m2.put("illegalScore","10");
-        m.put("result","success");
-        m.put("message","成功");
+        m.put("result","1");
+        m.put("msg","成功");
+        m.put("data",m2);
+        JSONObject object = JSONObject.fromObject(m);
+        response.getWriter().print(object.toString());
+    }
+
+    /**
+     * 教师班级课表接口
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=TeaClassCalendar",method= RequestMethod.GET)
+    public void getTeaClassCalendar(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String userid = request.getParameter("jid");
+        String usertype=request.getParameter("userType");
+        String classid = request.getParameter("classId");
+        String schoolid = request.getParameter("schoolId");
+        String month = request.getParameter("requestMonth");
+        String year = request.getParameter("requestYear");
+        String timestamp = request.getParameter("time");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("jid",userid);
+        map.put("userType",usertype);
+        map.put("classId",classid);
+        map.put("schoolId",schoolid);
+        map.put("time",timestamp);
+        map.put("requestMonth",month);
+        map.put("requestYear",year);
+       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
+        ImInterfaceInfo obj = new ImInterfaceInfo();
+        obj.setSchoolid(Integer.parseInt(schoolid));
+        obj.setClassid(Integer.parseInt(classid));
+        List<Map<String,Object>> courseList = this.imInterfaceManager.getTeacherCalendar(Integer.parseInt(userid),Integer.parseInt(schoolid),Integer.parseInt(year),Integer.parseInt(month));
+        Map m = new HashMap();
+        Map m2 = new HashMap();
+        if(courseList!=null&&courseList.size()>0){
+            List<Map<String,Object>> courseList2 = new ArrayList<Map<String, Object>>();
+            for(int i = 0 ;i<courseList.size();i++){
+                Map o = courseList.get(i);
+                Map o2 = new HashMap();
+                o2.put("orderDay",o.get("E_DAY"));
+                o2.put("hasCourse",o.get("HASCOURSE"));
+                courseList2.add(o2);
+            }
+            m2.put("courseList",courseList2);
+        }else{
+            m.put("result","0");
+            m.put("msg","当前没有专题");
+        }
+        m.put("result","1");
+        m.put("msg","成功");
+        m.put("data",m2);
+        JSONObject object = JSONObject.fromObject(m);
+        response.getWriter().print(object.toString());
+    }
+
+    /**
+     * 教师班级课表接口详细
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=TeaClassCalendarDetail",method= RequestMethod.GET)
+    public void getTeaClassCalendarByDay(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String userid = request.getParameter("jid");
+        String usertype=request.getParameter("userType");
+        String schoolid = request.getParameter("schoolId");
+        String currentDay = request.getParameter("requestDay");
+        String timestamp = request.getParameter("time");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("jid",userid);
+        map.put("userType",usertype);
+        map.put("schoolId",schoolid);
+        map.put("time",timestamp);
+        map.put("requestDay",currentDay);
+       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
+        List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(Integer.parseInt(userid), Integer.parseInt(usertype), Integer.parseInt(schoolid), currentDay);
+        Map m = new HashMap();
+        Map m2 = new HashMap();
+        if(courseArray.size()>0){
+            List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
+            for(int i = 0;i<courseArray.size();i++){
+                Map o = courseArray.get(i);
+                Map o2 = new HashMap();
+                o2.put("courseId",o.get("COURSE_ID"));
+                o2.put("courseName",o.get("COURSE_NAME"));
+                o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME"));
+                o2.put("schoolId",o.get("DC_SCHOOL_ID"));
+                o2.put("classId",o.get("CLASS_ID"));
+                o2.put("classType",o.get("CLASS_TYPE"));
+                o2.put("className",o.get("CLASSNAME"));
+                courseArray2.add(o2);
+            }
+            m2.put("courseArray",courseArray2);
+        }else{
+            m2.put("courseList",null);
+        }
+        m.put("result","1");
+        m.put("msg","成功");
+        m.put("data",m2);
+        JSONObject object = JSONObject.fromObject(m);
+        response.getWriter().print(object.toString());
+    }
+
+    /**
+     * 学生班级课表接口详细
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=StuClassCalendarDetail",method= RequestMethod.GET)
+    public void getStuClassCalendarByDay(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String userid = request.getParameter("jid");
+        String usertype=request.getParameter("userType");
+        String schoolid = request.getParameter("schoolId");
+        String currentDay = request.getParameter("requestDay");
+        String classid = request.getParameter("classId");
+        String timestamp = request.getParameter("time");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("jid",userid);
+        map.put("userType",usertype);
+        map.put("classId",classid);
+        map.put("schoolId",schoolid);
+        map.put("time",timestamp);
+        map.put("requestDay",currentDay);
+       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
+        List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(Integer.parseInt(userid), Integer.parseInt(usertype),Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
+        Map m = new HashMap();
+        Map m2 = new HashMap();
+        if(courseArray.size()>0){
+            List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
+            for(int i = 0;i<courseArray.size();i++){
+                Map o = courseArray.get(i);
+                Map o2 = new HashMap();
+                o2.put("courseId",o.get("COURSE_ID"));
+                o2.put("courseName",o.get("COURSE_NAME"));
+                o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME"));
+                o2.put("schoolId",o.get("DC_SCHOOL_ID"));
+                courseArray2.add(o2);
+            }
+            m2.put("courseArray",courseArray2);
+        }else{
+            m2.put("courseArray",null);
+        }
+        m.put("result","1");
+        m.put("msg","成功");
         m.put("data",m2);
         JSONObject object = JSONObject.fromObject(m);
         response.getWriter().print(object.toString());
@@ -312,7 +519,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
         String sign = UrlSigUtil.makeSigSimple("AddTask",map,"*ETT#HONER#2014*");
-       // Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
+        // Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
         if(!sig.equals(sign)){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
@@ -438,9 +645,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("userType",usertype);
         map.put("schoolId",schoolid);
         map.put("time",timestamp);
-       // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
+        // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
-        if(b){
+        if(!b){
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
@@ -520,13 +727,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     }
 
     /**
-     * 进入教师课题页
+     * 进入任务详情页面（试题选择题和填空题）jsp
      * @param request
      * @param mp
      * @return
      * @throws Exception
      */
-
     @RequestMapping(params="m=toQuestionJsp",method={RequestMethod.GET,RequestMethod.POST})
     public ModelAndView toTeacherCourseList(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
         String taskid = request.getParameter("taskId");
@@ -549,7 +755,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("time",timestamp);
         // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("toQuestionJsp",map,sig);
-        if(b){
+        if(!b){
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return new ModelAndView("");
         }
@@ -564,20 +770,129 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             QuestionInfo questionInfo = new QuestionInfo();
             questionInfo.setQuestionid(taskList.get(0).getTaskvalueid());
             List<QuestionInfo> questionInfoList = this.questionManager.getList(questionInfo,null);
+            request.setAttribute("content",questionInfoList.get(0).getContent());
+            request.setAttribute("analysis",questionInfoList.get(0).getAnalysis());
+            request.setAttribute("currentanswer",questionInfoList.get(0).getCorrectanswer());
+            if(questionInfoList.get(0).getQuestiontype()==2){
+                request.setAttribute("type","填空题");
+            }else if(questionInfoList.get(0).getQuestiontype()==3){
+                request.setAttribute("type","单选题");
+            }else if(questionInfoList.get(0).getQuestiontype()==4){
+                request.setAttribute("type","多选题");
+            }
             if(questionInfoList.get(0).getQuestiontype()==3||questionInfoList.get(0).getQuestiontype()==4){
                 QuestionOption questionOption = new QuestionOption();
                 questionOption.setQuestionid(questionInfoList.get(0).getQuestionid());
                 List<QuestionOption> questionOptionList=this.questionOptionManager.getList(questionOption,null);
+                List<Map<String,Object>> option = new ArrayList<Map<String, Object>>();
                 request.setAttribute("option",questionOptionList);
+                if(usertype.equals("2")){
+                    List<Map<String,Object>> optionnumList = new ArrayList<Map<String, Object>>();
+                    optionnumList = this.taskPerformanceManager.getPerformanceOptionNum(Long.parseLong(taskid),Long.parseLong(classid));
+                    //动态拼成想要的选项表分布比例
+                    int totalNum = 0;
+                    for(int i =0;i<optionnumList.size();i++){
+                        totalNum+=Integer.parseInt(optionnumList.get(i).get("NUM").toString());
+                    }
+                    DecimalFormat di = new DecimalFormat("#.00");
+                    for(QuestionOption o:questionOptionList){
+                        Map m = new HashMap();
+                        if(optionnumList.size()>0){
+                            for(int i =0;i<optionnumList.size();i++){
+                                if(o.getOptiontype().equals(optionnumList.get(i).get("OPTION_TYPE"))){
+                                    m.put("OPTION_TYPE",o.getOptiontype());
+                                    m.put("NUM",di.format((double)Integer.parseInt(optionnumList.get(i).get("NUM").toString())/totalNum*100));
+                                    m.put("ISRIGHT",o.getIsright());
+                                    m.put("CONTENT",o.getContent());
+                                    break;
+                                }else{
+                                    m.put("OPTION_TYPE",o.getOptiontype());
+                                    m.put("NUM",0);
+                                    m.put("ISRIGHT",o.getIsright());
+                                    m.put("CONTENT",o.getContent());
+                                }
+                            }
+                        }else{
+                            m.put("OPTION_TYPE",o.getOptiontype());
+                            m.put("NUM",0);
+                        }
+                        option.add(m);
+                    }
+                    request.setAttribute("optionNum",option);
+                }else{
+                    List<Map<String,Object>> optionnumList = new ArrayList<Map<String, Object>>();
+                    optionnumList = this.taskPerformanceManager.getPerformanceOptionNum(Long.parseLong(taskid),Long.parseLong(classid));
+                    int totalNum = 0;
+                    for(int i =0;i<optionnumList.size();i++){
+                        totalNum+=Integer.parseInt(optionnumList.get(i).get("NUM").toString());
+                    }
+                    DecimalFormat di = new DecimalFormat("#.00");
+                    for(int i = 0;i<questionOptionList.size();i++){
+                        if(questionOptionList.get(i).getIsright()==1){
+                            for(int j = 0;j<optionnumList.size();j++){
+                                if(questionOptionList.get(i).getOptiontype().equals(optionnumList.get(j).get("OPTION_TYPE"))){
+                                    request.setAttribute("rightNum",di.format((double)Integer.parseInt(optionnumList.get(i).get("NUM").toString())/totalNum*100));
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            UserInfo ui = new UserInfo();
-            ui.setUserid(Integer.parseInt(userid));
-            List<UserInfo> uList = this.userManager.getList(ui,null);
-            QuestionAnswer questionAnswer = new QuestionAnswer();
-            questionAnswer.setTaskid(Long.parseLong(taskid));
-            questionAnswer.setUserid(uList.get(0).getRef());
-            List<QuestionAnswer> questionAnswerList=this.questionAnswerManager.getList(questionAnswer,null);
-            request.setAttribute("answer",questionAnswerList);
+            List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
+            if(!usertype.equals("2")){
+                UserInfo ui = new UserInfo();
+                ui.setUserid(Integer.parseInt(userid));
+                List<UserInfo> uList = this.userManager.getList(ui,null);
+                QuestionAnswer questionAnswer = new QuestionAnswer();
+                questionAnswer.setTaskid(Long.parseLong(taskid));
+                questionAnswer.setUserid(uList.get(0).getRef());
+                List<QuestionAnswer> questionAnswerList=this.questionAnswerManager.getList(questionAnswer,null);
+                request.setAttribute("answer",questionAnswerList);
+                request.setAttribute("myanswer",questionAnswerList.get(0).getAnswercontent());
+            }else{
+                taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
+                if(taskUserRecord!=null&&taskUserRecord.size()>0){
+                    for(int i = 0;i<taskUserRecord.size();i++){
+                        int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
+                        int days = 0;
+                        int hours =0;
+                        int mins = 0;
+                        int seconds = 0;
+                        if(time>0){
+                            seconds = time%60;
+                            if(seconds>0){
+                                mins = time/60;
+                            }else{
+                                seconds = seconds*60;
+                            }
+                            if(mins>0){
+                                hours = mins/60;
+                            }
+                            if(hours>0){
+                                days= hours/24;
+                            }
+                        }
+                        if(days>0){
+                            String t = taskUserRecord.get(i).get("C_TIME").toString();
+                            t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
+                            taskUserRecord.get(i).put("REPLYDATE",t);
+                        }else{
+                            if(hours>0){
+                                taskUserRecord.get(i).put("REPLYDATE",hours+"小时");
+                            }else{
+                                if(mins>0){
+                                    taskUserRecord.get(i).put("REPLYDATE",mins+"分钟");
+                                }else{
+                                    if(seconds>0){
+                                        taskUserRecord.get(i).put("REPLYDATE",seconds+"秒");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                request.setAttribute("userRecord",taskUserRecord);
+            }
             request.setAttribute("question",questionInfoList);
             return new ModelAndView("/imjsp-1.1/task-detail-question");
         }
