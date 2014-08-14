@@ -666,8 +666,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("userType",usertype);
         map.put("schoolId",schoolid);
         map.put("time",timestamp);
-        // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
-        Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
+        String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("TaskInfo",map,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
