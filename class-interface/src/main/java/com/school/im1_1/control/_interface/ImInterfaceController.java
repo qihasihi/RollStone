@@ -87,9 +87,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
-        obj.setUserid(Integer.parseInt(userid));
+        obj.setUserid(userList.get(0).getUserid());
         obj.setUsertype(Integer.parseInt(usertype));
         List<Map<String,Object>> list = this.imInterfaceManager.getStudyModule(obj);
         for(Map map1:list){
@@ -143,11 +146,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
         if(usertype.equals("2")){
-            obj.setUserid(Integer.parseInt(userid));
+            obj.setUserid(userList.get(0).getUserid());
         }
         List<Map<String,Object>> courseList = this.imInterfaceManager.getClassTaskCourse(obj);
         Map m = new HashMap();
@@ -157,7 +163,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 if(usertype.equals("2")){
                     taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),null);
                 }else{
-                    taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),Integer.parseInt(userid));
+                    taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),userList.get(0).getUserid());
                 }
                 if(taskList!=null&&taskList.size()>0){
                     for(int j = 0;j<taskList.size();j++){
@@ -274,19 +280,22 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
         Map m = new HashMap();
         Map m2 = new HashMap();
-        List<Map<String,Object>> courseList = this.imInterfaceManager.getStudentCalendar(Integer.parseInt(userid),Integer.parseInt(schoolid),Integer.parseInt(classid),Integer.parseInt(year),Integer.parseInt(month));
+        List<Map<String,Object>> courseList = this.imInterfaceManager.getStudentCalendar(userList.get(0).getUserid(),Integer.parseInt(schoolid),Integer.parseInt(classid),Integer.parseInt(year),Integer.parseInt(month));
         if(!usertype.equals("2")){
             long mTime = System.currentTimeMillis();
             int offset = Calendar.getInstance().getTimeZone().getRawOffset();
             Calendar c = Calendar.getInstance();
             c.setTime(new Date(mTime - offset));
             String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
-            List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(Integer.parseInt(userid), Integer.parseInt(usertype), Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
+            List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
             if(courseArray.size()>0){
                 List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
                 for(int i = 0;i<courseArray.size();i++){
@@ -361,10 +370,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
-        List<Map<String,Object>> courseList = this.imInterfaceManager.getTeacherCalendar(Integer.parseInt(userid),Integer.parseInt(schoolid),Integer.parseInt(year),Integer.parseInt(month));
+        List<Map<String,Object>> courseList = this.imInterfaceManager.getTeacherCalendar(userList.get(0).getUserid(),Integer.parseInt(schoolid),Integer.parseInt(year),Integer.parseInt(month));
         Map m = new HashMap();
         Map m2 = new HashMap();
         if(courseList!=null&&courseList.size()>0){
@@ -416,7 +428,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
-        List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(Integer.parseInt(userid), Integer.parseInt(usertype), Integer.parseInt(schoolid), currentDay);
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
+        List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
         if(courseArray.size()>0){
@@ -474,7 +489,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
-        List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(Integer.parseInt(userid), Integer.parseInt(usertype),Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
+        List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype),Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
         if(courseArray.size()>0){
@@ -519,11 +537,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
         String sign = UrlSigUtil.makeSigSimple("AddTask",map,"*ETT#HONER#2014*");
-        // Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
-        if(!sig.equals(sign)){
+        Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
+        if(!b){
             response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
         JSONObject jb=JSONObject.fromObject(dataStr);
         //拆分json字符串，得到各个参数
         String courseid=jb.containsKey("courseid")?jb.getString("courseid"):"";
@@ -651,6 +672,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
         TpTaskInfo tpTaskInfo = new TpTaskInfo();
         tpTaskInfo.setTaskid(Long.parseLong(taskid));
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
@@ -675,7 +699,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(usertype.equals("2")){
             taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
         }else{
-            taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),Integer.parseInt(userid));
+            taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
         }
         if(taskUserRecord!=null&&taskUserRecord.size()>0){
             for(int i = 0;i<taskUserRecord.size();i++){
@@ -759,6 +783,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return new ModelAndView("");
         }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
         TpTaskInfo tpTaskInfo = new TpTaskInfo();
         tpTaskInfo.setTaskid(Long.parseLong(taskid));
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
@@ -840,12 +867,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
             List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
             if(!usertype.equals("2")){
-                UserInfo ui = new UserInfo();
-                ui.setUserid(Integer.parseInt(userid));
-                List<UserInfo> uList = this.userManager.getList(ui,null);
                 QuestionAnswer questionAnswer = new QuestionAnswer();
                 questionAnswer.setTaskid(Long.parseLong(taskid));
-                questionAnswer.setUserid(uList.get(0).getRef());
+                questionAnswer.setUserid(userList.get(0).getRef());
                 List<QuestionAnswer> questionAnswerList=this.questionAnswerManager.getList(questionAnswer,null);
                 request.setAttribute("answer",questionAnswerList);
                 request.setAttribute("myanswer",questionAnswerList.get(0).getAnswercontent());
