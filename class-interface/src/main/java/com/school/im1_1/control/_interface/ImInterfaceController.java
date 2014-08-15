@@ -655,23 +655,23 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String userid = request.getParameter("jid");
         String usertype = request.getParameter("userType");
         String schoolid = request.getParameter("schoolId");
-//        String timestamp = request.getParameter("time");
-//        String sig = request.getParameter("sign");
-//        HashMap<String,String> map = new HashMap();
-//        map.put("taskId",taskid);
-//        map.put("classId",classid);
-//        map.put("classType",classtype);
-//        map.put("isVirtual",isvir);
-//        map.put("jid",userid);
-//        map.put("userType",usertype);
-//        map.put("schoolId",schoolid);
-//        map.put("time",timestamp);
-//        String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
-//        Boolean b = UrlSigUtil.verifySigSimple("TaskInfo",map,sig);
-//        if(!b){
-//            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
-//            return;
-//        }
+        String timestamp = request.getParameter("time");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("taskId",taskid);
+        map.put("classId",classid);
+        map.put("classType",classtype);
+        map.put("isVirtual",isvir);
+        map.put("jid",userid);
+        map.put("userType",usertype);
+        map.put("schoolId",schoolid);
+        map.put("time",timestamp);
+        String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("TaskInfo",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
