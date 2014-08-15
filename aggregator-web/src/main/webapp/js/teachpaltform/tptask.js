@@ -1886,7 +1886,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                                         else
                                             htm += '<td>---</td>';
                                     }
-                                    htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '">查看卷面</a></td>'
+                                    htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '&flag=1">查看卷面</a></td>'
                                     htm += '</tr>';
                                 }
                             });
@@ -1960,7 +1960,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                             else
                                 htm += '<td>---</td>';
                         }
-                        htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '">查看卷面</a></td>'
+                        htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '&flag=1">查看卷面</a></td>'
                         htm += '</tr>';
                     });
                     htm += '</table>';

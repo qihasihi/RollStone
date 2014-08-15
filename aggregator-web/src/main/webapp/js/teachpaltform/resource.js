@@ -677,7 +677,7 @@ function doUploadResource(usertype) {
                         window.close();
                     }
                     $("#dv_obj").html('');
-                    usertype == 2 ? load_resource(crestype, 1) : loadStuResourcePage(courseid);//load_stu_resource(1, 1)
+                    usertype == 2 ? load_resource(crestype, 1,true) : loadStuResourcePage(courseid);//load_stu_resource(1, 1)
                     // nextid=rps.objList[0];
                 }
             }
@@ -760,7 +760,7 @@ function doUploadResource(usertype) {
                                     window.close();
                                 }
                                 $("#dv_obj").html('');
-                                usertype == 2 ? load_resource(crestype, 1) : loadStuResourcePage(courseid);//load_stu_resource(1, 1)
+                                usertype == 2 ? load_resource(crestype, 1,true) : loadStuResourcePage(courseid);//load_stu_resource(1, 1)
                                 // nextid=rps.objList[0];
                             }
                         }
@@ -826,7 +826,7 @@ function load_resource(type, pageno, isinit) {
                             } else {
                                 dvhtm += '<p class="c" style="display: none;">';
                                 if (itm.taskflag < 1) {
-                                    var tasktype=itm.difftype==1?6:1;
+                                    var tasktype=itm.difftype==1&&itm.haspaper>0?6:1;
                                     if(itm.difftype!=1){
                                         dvhtm += '<a  class="ico11" title="编辑" href="javascript:toUpdResource(\'' + itm.resid + '\')"></a>';
                                         dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
@@ -2940,7 +2940,8 @@ function genderStuNoteTextArea(ref) {
 }
 
 function cancelUpdStuNote() {
-    $("#dv_updnote").html(note_editor.getContent());
+    //$("#dv_updnote").html(note_editor.getContent());
+    loadStudyNotes(1);
 }
 
 function doUpdStuNote(ref) {
@@ -3305,6 +3306,10 @@ function getRemoteResources(type){
                     var htm='';
                     $.each(rps.objList[0],function(idx,itm){
                         var h="";
+                        var hname = itm.HD_NAME;
+                        if(hname.length>25){
+                            hname = hname.substring(0,25);
+                        }
                         h='<a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a>';
                         if(rps.objList[2]!=null&&rps.objList[2].length>0){
                             $.each(rps.objList[2],function(ix,im){
@@ -3313,16 +3318,16 @@ function getRemoteResources(type){
                                     return false;
                                 }
                             });
-                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+itm.HD_NAME+'</p></a>' +
+                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+hname+'</p></a>' +
                                 '<p class="pic">'+h+'</p></li>';
                         }else{
-                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+itm.HD_NAME+'</p></a>' +
+                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+hname+'</p></a>' +
                                 '<p class="pic"><a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a></p></li>';
                         }
                     });
                     $("#gaoqing").html(htm);
                 }else{
-                    $("#gaoqing").html('<li>没有数据</li>');
+                    $("#gaoqing").html(' <li><img src="images/pic06_140722.png" width="215" height="160"></li>');
                 }
                 if(rps.objList[1]!=null){
                     if(rps.objList[1]=="0"){

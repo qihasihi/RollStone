@@ -45,7 +45,7 @@
                             $(this).html("&nbsp;&nbsp;"+t2[a]+"&nbsp;&nbsp;");
                         });
                     }
-                    $("span[name='fillbank']").css("border-bottom","1px solid black");
+
 
                     if(nexName!="undefined"&&nexName.length>0){
                         $("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");
@@ -103,7 +103,7 @@
 </div>
 <div class="content2" id="dv_test">
     <div class="jxxt_zhuanti_shijuan_add font-black public_input"  id="dv_question">
-        <c:if test="${!empty paperObj&&paperObj.papertype==3}">
+        <c:if test="${!empty paperObj&&(paperObj.papertype==3||paperObj.papertype==1||paperObj.papertype==2)}">
         <p class="title"><span class="f_right"><strong>得分：<span class="font-blue"><span id="sp_sumScore"></span></span></strong></span>
             <strong>${paperObj.papername}&nbsp;</strong>
         </p>
@@ -120,27 +120,27 @@
                 var pextension="${q.parentQues.extension}";
                 h+=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_pqs_${q.parentQues.questionid}">';
                 h+='<caption class="font-blue"><span class="f_right"><strong id="you_sum">0</strong>/<span id=p_s_score>';
-                if(papertype==3)
+                if(papertype==3||papertype==1||papertype==2)
                     h+=${q.score}+"";
                 h+='</span>分</span><span id="sp_qidx${q.parentQues.questionid}"">${qidx.index+1}</span></caption>';
                 h+='<tr><td><span class="bg">';
                 if(pextension==2)//2阅读理解  3完型填空  4英语听力  5七选五
                     h+='阅读理解</span>：${q.parentQues.content}';
                 else if(pextension==3)
-                    h+='完型填空</span>：${q.parentQues.content}';
+                    h+='完形填空</span>：${q.parentQues.content}';
                 else if(pextension==4){
                     //如果是英语听力，则还需要添加控件，不用添加内容。
-                    h+='英语听力</span>：${q.parentQues.content}<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div>';
+                    h+='英语听力</span>：<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div><br/>${q.parentQues.content}';
                 }else if(pextension==5){
                     h+='七选五</span>：${q.parentQues.content}';
                     h+='<div style="display:none" id="p_option_${q.parentQues.questionid}">';
                     //选项
-                <c:if test="${!empty q.parentQues.questionOption}">
-                            <c:forEach items="${q.parentQues.questionOption}" var="pqm">
-                            h+='<div id="p_optchild${pqm.optiontype}"><label for="rdo_answer${pqm.questionid}${pqm.optiontype}">${pqm.optiontype}.${pqm.content}'
-                            +'</label><input type="hidden" name="opt_quesid" value="${pqm.questionid}"/>' +
-                            '<input type="hidden" name="opt_optiontype" value="${pqm.optiontype}"/></div>';
-                </c:forEach>
+                    <c:if test="${!empty q.parentQues.questionOption}">
+                                <c:forEach items="${q.parentQues.questionOption}" var="pqm">
+                                h+='<div id="p_optchild${pqm.optiontype}"><label for="rdo_answer${pqm.questionid}${pqm.optiontype}">${pqm.optiontype}.${pqm.content}'
+                                +'</label><input type="hidden" name="opt_quesid" value="${pqm.questionid}"/>' +
+                                '<input type="hidden" name="opt_optiontype" value="${pqm.optiontype}"/></div>';
+                    </c:forEach>
                     </c:if>
                     h+='</div>';
                 }
@@ -159,10 +159,10 @@
 
             var h1=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_qs_${q.questionid}">';
             <c:if test="${empty q.parentQues}">
-                    h1+='<caption class="font-blue"><span class="f_right"><strong id="you_score${q.questionid}">待批改</strong>/<span id="avg_score">0</span>分</span><span class="font-blue">${qidx.index+1}</span></caption>';
+                    h1+='<caption class="font-blue"><span class="f_right"><strong id="you_score${q.questionid}">0</strong>/<span id="avg_score">0</span>分</span><span class="font-blue">${qidx.index+1}</span></caption>';
             </c:if>
             <c:if test="${!empty q.parentQues}">
-                    h1+='<caption style="display:none"><span class="font-blue f_right"><strong id="you_score${q.questionid}">待批改</strong>/<span id="avg_score">0</span>分</span></caption>';
+                    h1+='<caption style="display:none"><span class="font-blue f_right"><strong id="you_score${q.questionid}">0</strong>/<span id="avg_score">0</span>分</span></caption>';
             </c:if>
             h1+=' <tr><td>';
             h1+='<input  type="hidden" value="${q.questiontype}" name="hd_questiontype" id="hd_questiontype_${q.questionid}"/>';
@@ -179,7 +179,7 @@
                 else if(questype==4)
                     h1+='<span class="bg">多选题</span>：';
             </c:if>
-          //  h1+='${qidx.index+1}、';
+            h1+='${qidx.index+1}.';
             <c:if test="${!empty q.content}">
               h1+='${q.content}';
             </c:if>
@@ -261,12 +261,13 @@
             </c:if>
                 h1+='</span>'
                 h1+='</td></tr>';
-            <c:if test="${empty q.parentQues||q.parentQues.extension!=5}">
+            <%--<c:if test="${empty q.parentQues||q.parentQues.extension!=5}">--%>
             if(questype==3||questype==4||questype==7||questype==8){
             h1+='<tr><td>';
             h1+='<p><strong>答案解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>';
             h1+='</td></tr>';
-            }</c:if>
+            }
+            <%--</c:if>--%>
             h1+='</table>';
             <c:if test="${!empty q.parentQues}">
                     $("#td_child_${q.parentQues.questionid}").append(h1);
@@ -282,15 +283,19 @@
 
         <!--答案-->
         <script type="text/javascript">
+            $("span[name='fillbank']").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+            $("span[name='fillbank']").css("border-bottom"," 1px solid black ");
+
             //序号重排
             updateQuesIdx();
             <c:if test="${!empty stuAnswer}">
-            <c:forEach items="${stuAnswer}" var="sa">
-            //得到quesid的questype
-            userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","${sa.annexNameFull}");
-            </c:forEach>
+                <c:forEach items="${stuAnswer}" var="sa">
+                //得到quesid的questype
+                userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","${sa.annexNameFull}");
+                </c:forEach>
+            </c:if>
             //计算每题的分数
-            if(papertype!=3){
+            if(papertype!=3&&papertype!=1&&papertype!=2){
                 var allqueslength=allquesid.split(",").length;
                 var avgScore=parseInt(paperSumScore/allqueslength);
                 $("span[id='avg_score']").html(avgScore);
@@ -315,7 +320,14 @@
             }
             //计算是否存在试题组等题
             $("table[id*='dv_pqs_']").each(function(idx,itm){
-                $("#"+this.id+" #p_s_score").html($("#"+this.id+" td[id*='td_child_']").children().length*avgScore);
+                var teamScore=$("#"+this.id+" td[id*='td_child_']").children().length*avgScore;
+                if(papertype==3||papertype==1||papertype==2){
+                    teamScore=0;
+                    $("#"+itm.id+" #avg_score").each(function(x,m){
+                        teamScore=parseFloat(teamScore)+parseFloat($(this).html());
+                    });
+                }
+                 $("#"+this.id+" #p_s_score").html(teamScore);
                 var YSumScore=0;
                 $("#"+this.id+" strong[id*='you_score']").each(function(x,m){
                     YSumScore+=parseInt($(this).html());
@@ -327,10 +339,18 @@
                 $("strong[id*='you_score']").each(function(idx,itm){
                     sumScore+=parseFloat($(itm).html().Trim());
                 });
-                $("#sp_sumScore").html(sumScore+"分");
-            }else
-                $("#sp_sumScore").html("待批改");
-            </c:if>
+                if((sumScore+"")=="NaN"){
+                    $("#sp_sumScore").parent().parent().hide();
+                }else
+                    $("#sp_sumScore").html(sumScore+"分");
+            }else{
+                var fen="待批改";
+                <c:if test="${empty stuAnswer}">
+                    fen="0分";
+                </c:if>
+                $("#sp_sumScore").html(fen);
+            }
+
 
         </script>
 

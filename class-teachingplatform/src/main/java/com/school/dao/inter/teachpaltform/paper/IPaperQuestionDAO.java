@@ -38,4 +38,20 @@ public interface IPaperQuestionDAO extends ICommonDAO<PaperQuestion>{
      * @return
      */
     public List<Map<String,Object>> getZGTCount(final Long paperid);
+
+    /**
+     * 得到当前班级下，当前试题，试卷下的正确率
+     * @param paperid
+     * @param quesid
+     * @return
+     */
+    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid);
+
+    /**
+     * 得到当前班级下，当前试题，试卷下的正确率
+     * @param paperid
+     * @param quesid
+     * @return
+     */
+    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid);
 }

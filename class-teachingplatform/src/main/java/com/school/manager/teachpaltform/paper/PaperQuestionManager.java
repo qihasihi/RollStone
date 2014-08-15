@@ -4,6 +4,7 @@ package  com.school.manager.teachpaltform.paper;
 import java.util.List;
 import java.util.Map;
 
+import com.school.util.UtilTool;
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,5 +130,26 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
     public List<Map<String,Object>> getZGTCount(final Long paperid){
         return this.paperquestiondao.getZGTCount(paperid);
     }
+
+    /**
+     * 得到当前班级下，当前试题，试卷下的正确率
+     * @param paperid
+     * @param quesid
+     * @return
+     */
+    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid){
+        return this.paperquestiondao.getClsPaperQuesZQLV(paperid, quesid, classid);
+      }
+
+    /**
+     * 得到当前班级下，当前试题，试卷下的正确率
+     * @param paperid
+     * @param quesid
+     * @return
+     */
+    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid){
+        return this.paperquestiondao.getClsPaperQuesOptTJ(paperid,quesid,classid);
+    }
+    
 }
 

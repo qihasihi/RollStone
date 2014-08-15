@@ -29,6 +29,15 @@ public class TpCourseResource implements Serializable {
     private Date operatetime;
     private String courseids;//查询多个专题下资源用的
     private Long taskCourseid;//在这个专题下是否发过任务
+    private Object haspaper;//是否有关联试卷
+
+    public Object getHaspaper() {
+        return haspaper;
+    }
+
+    public void setHaspaper(Object haspaper) {
+        this.haspaper = haspaper;
+    }
 
     public Long getTaskCourseid() {
         return taskCourseid;

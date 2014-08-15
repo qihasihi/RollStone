@@ -14,6 +14,7 @@
     <script type="text/javascript">
         var quesidStr = "${quesidStr}";
         var paperid = "${param.paperid}";
+        var sign = ${ismark};
         $(function(){
             var currentclsid = ${classid};
             var currenttype = ${classtype};
@@ -50,13 +51,15 @@
                         if(sign){
                             htm+='&questionid='+questionid;
                         }
-                        htm+='&sign='+sign+'&quesids='+quesids+'&tabidx='+i+'&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx+'&classid='+classid+'&classtype='+classtype+'">'+orderidx+'<b>${itm.markingnum}/${itm.submitnum}</b></a>';
+                        htm+='&sign='+sign+'&tabidx='+i+'&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx+'&classid='+classid+'&classtype='+classtype+'">'+orderidx+'<b>${itm.markingnum}/${itm.submitnum}</b></a>';
                     }
                     </c:forEach>
                     htm+='</li>';
                 }
                 $("#question").html(htm);
-                getPercentScoreByType(2);
+                if(sign){
+                    getPercentScoreByType(2);
+                }
             }
         }
         function getPercentScoreByType(type){

@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@include file="/util/common-jsp/common-zrxt.jsp" %>
+
 <html>
 <head>
 <script type="text/javascript" src="js/resource/res_index.js"></script>

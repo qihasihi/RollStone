@@ -3518,6 +3518,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             courseObj.add(m);
         }
         mp.put("course",courseObj);
+        mp.put("userid",this.logined(request).getUserid());
         return new ModelAndView("/teachpaltform/task/student/task-stu-performance", mp);
     }
 

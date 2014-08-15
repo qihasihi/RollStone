@@ -366,6 +366,71 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
         sqlbuilder.append(")}");
         return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
     }
+    /**
+     * 得到当前班级下，当前试题，试卷下的正确率
+     * @param paperid
+     * @param quesid
+     * @return
+     */
+    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid){
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL j_paper_ques_info_getZQLV(");
+        List<Object> objList=new ArrayList<Object>();
+        if(paperid!=null){
+            sqlbuilder.append("?,");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(quesid!=null){
+            sqlbuilder.append("?,");
+            objList.add(quesid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
+    /**
+     * 得到当前班级下，当前试题，试卷下的正确率
+     * @param paperid
+     * @param quesid
+     * @return
+     */
+    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid){
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL j_paper_ques_info_getOptTJ(");
+        List<Object> objList=new ArrayList<Object>();
+        if(paperid!=null){
+            sqlbuilder.append("?,");
+            objList.add(paperid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(quesid!=null){
+            sqlbuilder.append("?,");
+            objList.add(quesid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
+
+
+
 
     @Override
     public List<PaperQuestion> getPaperTeamQuestionList(PaperQuestion paperquestion, PageResult presult) {

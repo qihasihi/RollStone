@@ -41,7 +41,7 @@
             }else{
                 $("#remoteLi").hide();
             }
-            var url='tpres?toQueryResourceList';
+            var url='tpres?toQueryLocalResourceList';
             pList1 = new PageControl( {
                 post_url : url,
                 page_id : 'page1',

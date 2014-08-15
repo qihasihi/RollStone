@@ -23,7 +23,12 @@
 	List receiveSMSList = smsReceiverManagerac.getList(smsreceiver, null);
      String logoSrc=UtilTool.utilproperty.getProperty("LOGO_SRC");
   %>
-<div id="header">
+<c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
+    <div class="jxxt_lzx_header">
+</c:if>
+<c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
+    <div id="header">
+</c:if>
   <ul>
     <c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
          <li <%= (pageType!=null&&pageType=="index"?"class='one crumb'":"")%>><a href="<%=basePath %>user?m=toIndex">首&nbsp;页</a></li>
@@ -33,6 +38,12 @@
   	消息中心<%=receiveSMSList!=null&&receiveSMSList.size()>0?"(<font color='red'>"+receiveSMSList.size()+"</font>)":"" %>
   	</a></li>-->
     <li><a href="javascript:;" onclick="loginDestory('<%=basePath %>')">退出</a></li>
-  </ul>     
- <p><span></span><img src="<%=basePath %>images/<%=logoSrc %>" width="253" height="64" /></p>
+  </ul>
+ <c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
+     <p><span></span><img src="<%=basePath %>images/<%=logoSrc %>" width="253" height="64" /></p>
+</c:if>
+ <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
+     <%--<p><span></span><img src=" <%=basePath+UtilTool.utilproperty.getProperty("LZX_LOGO_SRC") %>" width="253" height="64" /></p>--%>
+    <p><span></span></p>
+ </c:if>
 </div>

@@ -1,5 +1,8 @@
 <%@ page language="java" import="java.util.*,java.math.BigDecimal" pageEncoding="UTF-8"%>
 <%@include file="../common.jsp"%>
+<%
+    //资源系统
+    modelType=1;%>
 <%String noAjaxRefreshTime=UtilTool.utilproperty.getProperty("NO_AJAX_REFRESH_TIME");%>
 <link rel="stylesheet" type="text/css" href="<%=basePath %>css/zyxt.css"/>
  <script type="text/javascript">

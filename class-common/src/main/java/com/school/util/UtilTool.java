@@ -24,7 +24,10 @@ package com.school.util;
         import javax.imageio.ImageReader;
         import javax.imageio.stream.ImageInputStream;
         import javax.servlet.ServletContext;
+        import javax.servlet.ServletOutputStream;
         import javax.servlet.http.HttpServletRequest;
+        import javax.servlet.http.HttpServletResponse;
+
         import com.school.entity.RightUser;
         import com.school.entity.UserInfo;
         import com.school.util.Pdf2Swf.Office2Pdf;
@@ -1700,6 +1703,29 @@ public class UtilTool implements java.io.Serializable {
             }
         }
         return OperateXMLUtil.addXml(filepath,columnsList,valueList.toArray());
+    }
+
+
+    /**
+     * 输出图片流
+     * @param response
+     * @param path
+     * @throws Exception
+     */
+    public static void writeImage(HttpServletResponse response,String path) throws Exception {
+        if(new File(path).exists()){
+            response.reset();
+            ServletOutputStream output = response.getOutputStream();
+            InputStream in = new FileInputStream(path);
+            byte tmp[] = new byte[256];
+            int i=0;
+            while ((i = in.read(tmp)) != -1) {
+                output.write(tmp, 0, i);
+            }
+            in.close();
+            output.flush(); //强制清出缓冲区
+            output.close();
+        }
     }
 
 }

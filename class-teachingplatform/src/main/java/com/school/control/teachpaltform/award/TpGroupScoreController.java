@@ -69,7 +69,8 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
      * @return
      */
     @RequestMapping(params="m=toIndex",method = RequestMethod.GET)
-    public ModelAndView toIndex(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception {
+    public ModelAndView toIndex(
+            HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception {
         String courseid=request.getParameter("courseid"); //专题ID
         String clsid=request.getParameter("classid");     //班级ID
         String typeid=request.getParameter("classtype");  //班级类型

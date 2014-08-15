@@ -768,6 +768,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                             HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        tc.setDcschoolid(this.logined(request).getDcschoolid());
         if (tc.getCoursename() == null || tc.getCoursename().length() < 1) {
             je.setMsg("没有专题名称参数！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");

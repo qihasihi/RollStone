@@ -1112,7 +1112,7 @@ public class UserController extends BaseController<UserInfo> {
                     ec.setRoletype(1);
                 request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
             }
-            request.getSession().setAttribute("fromType","szchool");  //lzx
+            request.getSession().setAttribute("fromType","szschool");  //lzx
 //                    System.out.println("loginUser:"+(UserInfo) request.getSession().getAttribute("CURRENT_USER"));
 					if (remember) {
 						Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef());
@@ -5115,7 +5115,7 @@ public class UserController extends BaseController<UserInfo> {
             if(modelName==null)
                 modelName="";
             paramMap.put("modelName",modelName);
-            requestUrl=UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_VIP_URL").toString(); //教师进入ett入口
+            requestUrl=UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_URL").toString(); //教师进入ett入口
         }else if(isstuflag){
             //组织学生参数
             //就否免费   0:免 费   1:收费   只有学生才有该参数

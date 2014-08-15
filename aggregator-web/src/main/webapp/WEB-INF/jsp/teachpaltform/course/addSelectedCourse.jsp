@@ -203,10 +203,10 @@
             }
 
             function closeAddorUpdateWindow(){
-                if(materialid!=null&&parseInt(materialid)>0){
-                    window.location.href="teachercourse?m=toTeacherCourseList&materialid="+materialid;
+                if(typeof(materialid)!='undefined'&&materialid!=null&&parseInt(materialid)>0){
+                    window.location.href="teachercourse?toTeacherCourseList&materialid="+materialid;
                 }else{
-                    window.location.href="teachercourse?m=toTeacherCourseList";
+                    window.location.href="teachercourse?toTeacherCourseList";
                 }
             }
 

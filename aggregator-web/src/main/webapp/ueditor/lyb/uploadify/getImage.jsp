@@ -3,6 +3,7 @@
 <%@ page import="java.awt.image.BufferedImage" %>
 <%@ page import="com.sun.image.codec.jpeg.JPEGImageEncoder" %>
 <%@ page import="com.sun.image.codec.jpeg.JPEGCodec" %>
+<%@ page import="com.school.util.UtilTool" %>
 <%--
   Created by IntelliJ IDEA.
   User: zhengzhou
@@ -23,24 +24,9 @@
     //将图片缩放
     String writepath=ImgResize(path,250,250);
     //将缩略图输出
-    loadImage(response,writepath);
+    UtilTool.writeImage(response, writepath);
 %>
 
-<%!
-    public void loadImage(HttpServletResponse response,String path) throws Exception {
-        response.reset();
-        ServletOutputStream output = response.getOutputStream();
-        InputStream in = new FileInputStream(path);
-        byte tmp[] = new byte[256];
-        int i=0;
-        while ((i = in.read(tmp)) != -1) {
-            output.write(tmp, 0, i);
-        }
-        in.close();
-        output.flush(); //强制清出缓冲区
-        output.close();
-    }
-%>
 <%!
     /**
      * 强制压缩/放大图片到固定的大小

@@ -43,7 +43,7 @@
       </c:if>
     <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
         <%
-            if(!isStudent){
+            if(!isStudent&&modelType==2){
             //加载乐知行，教学首页，左上角的链接
             if(ettColumnInfos!=null&&ettColumnInfos.size()>0){
                 String headcolumnico=UtilTool.utilproperty.getProperty("LZX_HEAD_COLUMN_ICO");
@@ -81,6 +81,7 @@
  <p><span></span><img src="<%=basePath %>images/<%=logoSrc %>" width="253" height="64"/></p>
 </c:if>
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
-<p></p>
+    <p><span></span></p>
+<%--<p><span></span><img src="<%=basePath+UtilTool.utilproperty.getProperty("LZX_LOGO_SRC") %>" width="253" height="64"/></p>--%>
 </c:if>
 </div>

@@ -2062,6 +2062,45 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         response.getWriter().print(je.toJSON());
     }
 
+
+    /**
+     * 任务添加页 获取资源(new)
+     * @throws Exception
+     */
+    @RequestMapping(params="toQueryLocalResourceList",method=RequestMethod.POST)
+    public void toQueryLocalResourceList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String resid=request.getParameter("resid");
+        String taskflag=request.getParameter("taskflag");
+        String difftype=request.getParameter("difftype");//微视频
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        PageResult p=this.getPageResultParameter(request);
+        p.setOrderBy("aa.diff_type desc,aa.resource_type,aa.ctime desc,aa.operate_time desc ");
+        TpCourseResource t= new TpCourseResource();
+        t.setCourseid(Long.parseLong(courseid));
+        t.setResstatus(1);
+        t.setHaspaper(0);//没有试卷的微视频
+        if(resid!=null&&resid.trim().length()>0)
+            t.setResid(Long.parseLong(resid));
+        if(difftype!=null&&difftype.trim().length()>0)
+            t.setDifftype(Integer.parseInt(difftype));
+        //学习参考
+        //t.setResourcetype(1);
+        //查询没有发任务的资源
+        if(taskflag!=null&&taskflag.trim().length()>0)
+            t.setTaskflag(1);
+        List<TpCourseResource>resList=this.tpCourseResourceManager.getList(t, p);
+        je.setPresult(p);
+        je.setObjList(resList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
     /**
      * 任务添加页 获取关联专题资源
      * @throws Exception
@@ -2094,10 +2133,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             TpCourseResource t= new TpCourseResource();
             t.setCourseids(sb.toString());
             t.setResstatus(1);
+            t.setHaspaper(0);   //0：没试卷的微视频 1：带试卷的微视频
             if(resid!=null&&resid.trim().length()>0)
                 t.setResid(Long.parseLong(resid));
             if(difftype!=null&&difftype.trim().length()>0)
                 t.setDifftype(Integer.parseInt(difftype));
+
             //学习参考
             //t.setResourcetype(1);
             //查询没有发任务的资源
@@ -2467,6 +2508,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         t.setResstatus(1);
         t.setTaskflag(1);//查询没有发任务的资源
         t.setDifftype(1);//微视频类型
+        t.setHaspaper(1);//有试卷的视频
         List<TpCourseResource>resList=this.tpCourseResourceManager.getList(t, p);
         mp.put("resList",resList);
         return new ModelAndView("/teachpaltform/resource/select-resource",mp);
@@ -2897,6 +2939,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String schoolid = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
         String courseid = request.getParameter("courseid");
         String keyword = request.getParameter("keyword");
+        if(keyword!=null&&keyword.length()>0){
+            keyword= URLEncoder.encode(keyword,"GBK");
+        }
         String courseIDList = "";
         //获取关联专题集合
         TpCourseRelatedInfo tr = new TpCourseRelatedInfo();
@@ -2927,13 +2972,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
             String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
             String signature= MD5_NEW.getMD5Result(md5key);
-            String url=UtilTool.utilproperty.getProperty("REMOTE_RESOURCE_IP")+"ett20/study/jx/queryForWebservice.jsp";
-            //url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
+            //String url=UtilTool.utilproperty.getProperty("REMOTE_RESOURCE_IP")+"ett20/study/jx/queryForWebservice.jsp";
+            String url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
             String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
                     gradeid+"&subjectId="+subjectid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
                     pageSize;
             if(keyword!=null&&keyword.length()>0){
-                keyword= URLEncoder.encode(keyword,"GBK");
                 param+="&tchVersionId="+versionid+"&keyword="+keyword;
             }else{
                 if(trList!=null&&trList.size()>0){
@@ -2947,7 +2991,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             }
             String returnval=sendPostURL(url,param);
             //  System.out.println(new String(returnval.getBytes("8859_1"),"GBK"));
-            if(returnval.length()>0){
+            if(returnval!=null&&returnval.length()>0){
                 //转换成JSON
                 JSONObject jb=JSONObject.fromObject(returnval);
                 String type=jb.containsKey("type")?jb.getString("type"):"";
@@ -2968,6 +3012,10 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                     je.getObjList().add(taskList);
 
                 }
+            }else{
+                je.getObjList().add(null);
+                je.getObjList().add(1);
+                je.getObjList().add(null);
             }
         }
         if(b1){
@@ -2976,13 +3024,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
             String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
             String signature= MD5_NEW.getMD5Result(md5key);
-            String url=UtilTool.utilproperty.getProperty("REMOTE_RESOURCE_IP")+"ett20/study/jx/queryForWebservice.jsp";
-            //url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
+            //String url=UtilTool.utilproperty.getProperty("REMOTE_RESOURCE_IP")+"ett20/study/jx/queryForWebservice.jsp";
+            String url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
             String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
                     gradeid+"&subjectId="+subjectid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
                     pageSize;
             if(keyword!=null&&keyword.length()>0){
-                keyword= URLEncoder.encode(keyword,"GBK");
                 param+="&tchVersionId="+versionid+"&keyword="+keyword;
             }else{
                 if(trList!=null&&trList.size()>0){
@@ -2995,7 +3042,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                 }
             }
             String returnval2=sendPostURL(url,param);
-            if(returnval2.length()>0){
+            if(returnval2!=null&&returnval2.length()>0){
                 //转换成JSON
                 JSONObject jb=JSONObject.fromObject(returnval2);
                 String type=jb.containsKey("type")?jb.getString("type"):"";

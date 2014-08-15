@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page import="com.school.entity.teachpaltform.paper.PaperQuestion" %>
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 
 
@@ -11,6 +12,7 @@ var courseid="${courseid}";
 var paperid="${paper.paperid}";
 var pList,pBankList;
 var total;
+var quesOrderIdx=1;
 $(function(){
     pList = new PageControl( {
         post_url : 'paperques?m=ajaxPaperQuestionList',
@@ -89,6 +91,8 @@ function preeDoPageSub(pObj){
     pObj.setPostParams(param);
 }
 
+
+
 </script>
 </head>
 <body>
@@ -101,18 +105,35 @@ function preeDoPageSub(pObj){
             <p class="title"><span class="f_right"><strong>主观题：<span class="font-blue">${paper.subjectivenum}</span></strong>&nbsp;&nbsp;&nbsp;&nbsp;<strong>客观题：<span class="font-blue">${paper.objectivenum}</span></strong></span><strong>${paper.papername }</strong></p>
         </c:if>
         <c:if test="${!empty pqList}">
-            <c:forEach items="${pqList}" var="pq">
+
+            <c:forEach items="${pqList}" var="pq" varStatus="pqIdx">
+                <c:set var="teamSize" value="${fn:length(pq.questionTeam)}"/>
                 <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}">
                     <col class="w30"/>
                     <col class="w910"/>
                     <caption><span class="f_right"> ${pq.score}分</span>
                     </span>
-                        <span  class="font-blue">${pq.orderidx}</span><c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0}">-${pq.orderidx+fn:length(pq.questionTeam)-1}</c:if>
-
+                        <span  class="font-blue" id="sp_sortIdx">
+                        <c:if test="${!empty pq.questionTeam}">
+                            <script type="text/javascript">
+                                var qteamSize="${fn:length(pq.questionTeam)}";
+                                var qoIdx=quesOrderIdx;
+                                quesOrderIdx=quesOrderIdx+parseInt(qteamSize);
+                                document.write(qoIdx+"-"+(quesOrderIdx-1));
+                            </script>
+                        </c:if>
+                          <c:if test="${empty pq.questionTeam}">
+                                 <script type="text/javascript">
+                                     quesOrderIdx++;
+                                     document.write(quesOrderIdx-1);
+                                 </script>
+                         </c:if>
+                        </span>
                     </caption>
 
                     <tr>
                         <td>
+
                             <c:if test="${pq.questionid>0}">
                                 <span class="ico44"></span>
                             </c:if>
@@ -160,7 +181,7 @@ function preeDoPageSub(pObj){
                             <tr>
                                 <td>&nbsp;</td>
                                 <td><p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}" id="score_${c.questionid}">
-                                        ${c.score}</span>分</span><span data-bind="${c.questionid}" >${(cidx.index+1)+(pq.orderidx-1)}</span>. ${c.content}</p>
+                                        ${c.score}</span>分</span><span data-bind="${c.questionid}" >${(cidx.index+1)}</span>. ${c.content}</p>
                                     <table border="0" cellpadding="0" cellspacing="0">
                                         <col class="w30"/>
                                         <col class="w880"/>
@@ -234,7 +255,7 @@ function preeDoPageSub(pObj){
                             <td><p><strong>正确答案及答案解析：</strong></p>
                                 <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
                                     <p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}">${c.score}</span>
-                                        分</span><span data-bind="${c.questionid}"  class="font-blue">${(cidx.index+1)+(pq.orderidx-1)}</span>.
+                                        分</span><span data-bind="${c.questionid}"  class="font-blue">${(cidx.index+1)}</span>.
                                         <c:forEach items="${c.questionOption}" var="option">
                                             <c:if test="${option.isright eq 1}">
                                                 ${option.optiontype}

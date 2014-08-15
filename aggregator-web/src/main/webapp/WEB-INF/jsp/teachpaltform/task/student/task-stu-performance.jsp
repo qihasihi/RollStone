@@ -17,6 +17,7 @@
     <script type="text/javascript">
         var term_id="${param.termid}";
         var subject_id="${param.subjectid}";
+        var userid="${userid}";
         $(function(){
             getPerformance();
         });
@@ -99,7 +100,7 @@
                         }
                     });
 
-
+                    var zhongjianshu =0;
                     $.each(rps.objList[0],function(ix,im){
                         var typename="";
                         var details="";
@@ -121,9 +122,20 @@
                             typename="互动交流";
                             details="tptopic?m=toDetailTopic&topicid="+im.TASK_VALUE_ID;
                         }else if(im.TASK_TYPE==3){
-                            typename="课后作业";
+                            typename="试题";
                             details="question?m=todetail&id="+im.TASK_VALUE_ID;
+                        }else if(im.TASK_TYPE==4){
+                            typename="成卷测试";
+                            details="paperques?m=toTestPaper&courseid="+im.COURSE_ID+"&taskid="+im.TASK_ID+"&paperid="+im.TASK_VALUE_ID+"";
+                        }else if(im.TASK_TYPE==5){
+                            typename="自主测试";
+                            details="paper?m=genderZiZhuPaper&taskid="+im.TASK_ID;
+                        }else if(im.TASK_TYPE==6){
+                            typename="微课程学习";
+                            details="paperques?m=toTestPaper&courseid="+im.COURSE_ID+"&taskid="+im.TASK_ID+"&paperid="+im.TASK_VALUE_ID+"";
                         }
+
+
                         var status="";
                         if(im.STATUS>0){
                             status='<span class="ico12" title="完成"></span>';
@@ -134,8 +146,8 @@
                                 status='<span class="ico24b" title="已结束"></span>';
                             }
                         }
-                        var content="";
-                        content=im.ANSWERCONTENT;
+
+                        var  content=im.ANSWERCONTENT || "";
                         if(content==null||typeof(content)=="undefined"||typeof(content)==undefined){
                             if(im.STATUS>0){
                                 if(im.TASK_TYPE==1||im.TASK_TYPE==2){
@@ -145,18 +157,19 @@
                                 content="";
                             }
                         }
-                        var zhongjianshu = 0;
                        if($("#tr_"+im.COURSE_ID+" td").length<2){
-                           var h='<td>任务'+''+(ix+1-zhongjianshu)+''+typename+'</td>';
+                           zhongjianshu=ix;
+                           var h='<td>任务'+''+1+''+typename+'</td>';
                            h+='<td>'+timestring+'</td>';
                            h+='<td>'+content+'</td>';
                            h+='<td class="v_c"><a href="'+details+'" class="ico46" title="浏览详情"></a></td> ';
                            h+='<td>'+status+'</td>';
                            $("#tr_"+im.COURSE_ID).append(h);
                        }else{
-                           zhongjianshu=ix;
+                          // alert("中间数"+zhongjianshu+"---专题"+im.COURSE_ID+"---标示"+ix);
+
                            var h='<tr id="tr_'+im.COURSE_ID+'">';
-                           h+='<td>任务'+''+1+''+typename+'</td>';
+                           h+='<td>任务'+(ix+1-zhongjianshu)+typename+'</td>';
                            h+='<td>'+timestring+'</td>';
                            h+='<td>'+content+'</td>';
                            h+='<td class="v_c"><a href="'+details+'" class="ico46" title="浏览详情"></a></td> ';

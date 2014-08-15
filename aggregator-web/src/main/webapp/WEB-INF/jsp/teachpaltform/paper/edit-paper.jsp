@@ -166,8 +166,8 @@ function spanClick(obj,total){
 
     $("select[id='sel_order_idx']").bind("blur",function(){
         var spanObj=$(this).parent();
-
-        spanObj.html($(this).find('option:selected').data().bind.split[1]);
+        var htm=$(this).find('option:selected').data().bind || "";
+        spanObj.html(htm.split("|")[1]);
         $(spanObj).bind("click",function(){
             spanClick(spanObj,total);
         });
@@ -184,7 +184,8 @@ function idxChange(obj,total){
         spanClick(this,total);
     });
     var h=$(obj).find('option:selected').val();
-    var descQuesid=$(obj).find('option:selected').data().bind.split('|')[0];
+    var htm=$(obj).find('option:selected').data().bind || "";
+    var descQuesid=htm.split('|')[0];
     var quesid=$(obj).parent().data().bind.split('|')[0];
     editQuesIdx(quesid,h,descQuesid);
     $(obj).parent().html(h);
@@ -200,7 +201,7 @@ function editQuesIdx(quesid,orderidx,descQuesid){
     if(typeof quesid=='undefined'||orderidx=='undefined')
         return;
     var param={ paperid:paperid,orderidx:orderidx,questionid:quesid};
-    if(typeof descQuesid!='undefined')
+    if(typeof descQuesid!='undefined'&&descQuesid.toString().length>0)
         param.descquesid=descQuesid
     $.ajax({
         url:"paperques?m=doUpdOrderIdx",
