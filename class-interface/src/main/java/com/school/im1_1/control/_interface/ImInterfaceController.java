@@ -655,23 +655,23 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String userid = request.getParameter("jid");
         String usertype = request.getParameter("userType");
         String schoolid = request.getParameter("schoolId");
-        String timestamp = request.getParameter("time");
-        String sig = request.getParameter("sign");
-        HashMap<String,String> map = new HashMap();
-        map.put("taskId",taskid);
-        map.put("classId",classid);
-        map.put("classType",classtype);
-        map.put("isVirtual",isvir);
-        map.put("jid",userid);
-        map.put("userType",usertype);
-        map.put("schoolId",schoolid);
-        map.put("time",timestamp);
-        String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
-        Boolean b = UrlSigUtil.verifySigSimple("TaskInfo",map,sig);
-        if(!b){
-            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
-            return;
-        }
+//        String timestamp = request.getParameter("time");
+//        String sig = request.getParameter("sign");
+//        HashMap<String,String> map = new HashMap();
+//        map.put("taskId",taskid);
+//        map.put("classId",classid);
+//        map.put("classType",classtype);
+//        map.put("isVirtual",isvir);
+//        map.put("jid",userid);
+//        map.put("userType",usertype);
+//        map.put("schoolId",schoolid);
+//        map.put("time",timestamp);
+//        String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
+//        Boolean b = UrlSigUtil.verifySigSimple("TaskInfo",map,sig);
+//        if(!b){
+//            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
+//            return;
+//        }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -683,19 +683,57 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             return;
         }
         List<Map<String,Object>> taskinfo = this.imInterfaceManager.getTaskInfo(taskList.get(0).getTaskid(),Integer.parseInt(classid));
+        List<Map<String,Object>> returnInfo = new ArrayList<Map<String, Object>>();
+        Map returnMap = new HashMap();
         if(taskList.get(0).getTasktype()==1){
             ResourceInfo rs = new ResourceInfo();
             rs.setResid(taskList.get(0).getTaskvalueid());
             List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
             String attchStr = UtilTool.getResourceLocation(rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
             Map att = new HashMap();
-            att.put("ATTACH",attchStr);
+            att.put("attach",attchStr);
             List attList = new ArrayList();
             attList.add(att);
-            taskinfo.get(0).put("ATTACHS",attList);
-            taskinfo.get(0).put("ATTACHTYPE",rsList.get(0).getFilesuffixname());
+            returnMap.put("attachs", attList);
+            returnMap.put("attachType", rsList.get(0).getFilesuffixname());
+            returnMap.put("isOver",taskinfo.get(0).get("ISOVER"));
+            //拼接tasmname显示任务主体
+            String typename = "";
+            switch (taskList.get(0).getTasktype()){
+                case 1:
+                    typename="资源学习";
+                    break;
+                case 2:
+                    typename="互动交流";
+                    break;
+                case 3:
+                    typename="试题";
+                    break;
+                case 4:
+                    typename="成卷测试";
+                    break;
+                case 5:
+                    typename="自主测试";
+                    break;
+                case 6:
+                    typename="微课程学习";
+                    break;
+                case 7:
+                    typename="图片";
+                    break;
+                case 8:
+                    typename="文字";
+                    break;
+                case 9:
+                    typename="视频";
+                    break;
+            }
+            returnMap.put("taskContent", "任务 " + taskList.get(0).getOrderidx() + " " + typename);
+            returnMap.put("taskAnalysis",taskinfo.get(0).get("TASKANALYSIS"));
         }
         List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
+        Map returnUserMap = new HashMap();
         if(usertype.equals("2")){
             taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
         }else{
@@ -725,27 +763,34 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 if(days>0){
                     String t = taskUserRecord.get(i).get("C_TIME").toString();
                     t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
-                    taskUserRecord.get(i).put("REPLYDATE",t);
+                    returnMap.put("replyDate",t);
                 }else{
                     if(hours>0){
-                        taskUserRecord.get(i).put("REPLYDATE",hours+"小时");
+                        returnMap.put("replyDate",hours+"小时");
                     }else{
                         if(mins>0){
-                            taskUserRecord.get(i).put("REPLYDATE",mins+"分钟");
+                            returnMap.put("replyDate",mins+"分钟");
                         }else{
                             if(seconds>0){
-                                taskUserRecord.get(i).put("REPLYDATE",seconds+"秒");
+                                returnMap.put("replyDate",seconds+"秒");
                             }
                         }
                     }
                 }
+                returnMap.put("jid",taskUserRecord.get(i).get("JID"));
+                returnMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
+                returnMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
+                returnMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                returnMap.put("uPhoto","img");
             }
+            returnUserRecord.add(returnUserMap);
         }
-        taskinfo.get(0).put("REPLYLIST",taskUserRecord);
+        returnMap.put("replyList",returnUserRecord);
+        returnInfo.add(returnMap);
         Map m = new HashMap();
         m.put("result","1");
         m.put("msg","成功");
-        m.put("data",taskinfo);
+        m.put("data",returnInfo);
         JSONObject jbStr=JSONObject.fromObject(m);
         response.getWriter().print(jbStr.toString());
     }
