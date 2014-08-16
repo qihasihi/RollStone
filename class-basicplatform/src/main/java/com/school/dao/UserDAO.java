@@ -6,14 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.school.entity.teachpaltform.TpTaskInfo;
 import org.springframework.stereotype.Component;
 
 import com.school.dao.base.CommonDAO;
 import com.school.dao.inter.IUserDAO;
-import com.school.entity.ClassInfo;
 import com.school.entity.RoleUser;
-import com.school.entity.SubjectInfo;
 import com.school.entity.UserInfo;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -346,6 +343,11 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
         if(obj.getSchoolid()!=null){
             sqlbuilder.append("?,");
             objList.add(obj.getSchoolid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getEttuserid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getEttuserid());
         }else
             sqlbuilder.append("NULL,");
 		sqlbuilder.append("?)}");
