@@ -90,13 +90,19 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setUserid(userList.get(0).getUserid());
         obj.setUsertype(Integer.parseInt(usertype));
         List<Map<String,Object>> list = this.imInterfaceManager.getStudyModule(obj);
-        for(Map map1:list){
-            map1.put("SCHOOLID" ,schoolid);
+        if(list!=null&&list.size()>0){
+            for(Map map1:list){
+                map1.put("SCHOOLID" ,schoolid);
+            }
         }
         Map m = new HashMap();
         Map m2 = new HashMap();
@@ -149,6 +155,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
@@ -283,6 +293,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
@@ -373,6 +387,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
@@ -431,6 +449,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
         List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
@@ -492,6 +514,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
         List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype),Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
@@ -545,6 +571,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
         JSONObject jb=JSONObject.fromObject(dataStr);
         //拆分json字符串，得到各个参数
         String courseid=jb.containsKey("courseid")?jb.getString("courseid"):"";
@@ -675,6 +705,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
         TpTaskInfo tpTaskInfo = new TpTaskInfo();
         tpTaskInfo.setTaskid(Long.parseLong(taskid));
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
@@ -763,27 +797,27 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 if(days>0){
                     String t = taskUserRecord.get(i).get("C_TIME").toString();
                     t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
-                    returnMap.put("replyDate",t);
+                    returnUserMap.put("replyDate",t);
                 }else{
                     if(hours>0){
-                        returnMap.put("replyDate",hours+"小时");
+                        returnUserMap.put("replyDate",hours+"小时");
                     }else{
                         if(mins>0){
-                            returnMap.put("replyDate",mins+"分钟");
+                            returnUserMap.put("replyDate",mins+"分钟");
                         }else{
                             if(seconds>0){
-                                returnMap.put("replyDate",seconds+"秒");
+                                returnUserMap.put("replyDate",seconds+"秒");
                             }
                         }
                     }
                 }
-                returnMap.put("jid",taskUserRecord.get(i).get("JID"));
-                returnMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
-                returnMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
-                returnMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
-                returnMap.put("uPhoto","img");
+                returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
+                returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
+                returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
+                returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                returnUserMap.put("uPhoto","img");
+                returnUserRecord.add(returnUserMap);
             }
-            returnUserRecord.add(returnUserMap);
         }
         returnMap.put("replyList",returnUserRecord);
         returnInfo.add(returnMap);
@@ -825,17 +859,21 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("toQuestionJsp",map,sig);
         if(!b){
-            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return new ModelAndView("");
         }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return new ModelAndView("");
+        }
         TpTaskInfo tpTaskInfo = new TpTaskInfo();
         tpTaskInfo.setTaskid(Long.parseLong(taskid));
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
         if(taskList==null||taskList.size()==0){
-            response.getWriter().print("{\"result\":\"0\",\"message\":\"当前任务不存在\"}");
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务不存在\"}");
             return new ModelAndView("");
         }
         if(taskList.get(0).getTasktype()==3){
@@ -966,5 +1004,54 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             return new ModelAndView("/imjsp-1.1/task-detail-question");
         }
         return new ModelAndView("");
+    }
+    /**
+     * 进入任务详情页面（试题选择题和填空题）jsp
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=ReplyTask",method={RequestMethod.GET,RequestMethod.POST})
+    public void doReplyTask(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String taskid = request.getParameter("taskId");
+        String classid = request.getParameter("classId");
+        String userid = request.getParameter("jid");
+        String usertype = request.getParameter("userType");
+        String schoolid = request.getParameter("schoolId");
+        String replyDetail = request.getParameter("replyDetail");
+        String replyAttach = request.getParameter("replyAttach");
+        String attachType = request.getParameter("attachType");
+        String timestamp = request.getParameter("time");
+        String sig = request.getParameter("sign");
+        HashMap<String,String> map = new HashMap();
+        map.put("taskId",taskid);
+        map.put("classId",classid);
+        map.put("jid",userid);
+        map.put("userType",usertype);
+        map.put("schoolId",schoolid);
+        map.put("replyDetail",replyDetail);
+        map.put("replyAttach",replyAttach);
+        map.put("attachType",attachType);
+        map.put("time",timestamp);
+        // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("ReplyTask",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
+            return;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
+        TpTaskInfo tpTaskInfo = new TpTaskInfo();
+        tpTaskInfo.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
+        if(taskList==null||taskList.size()==0){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务不存在，请查看后重试\"}");
+            return;
+        }
     }
 }
