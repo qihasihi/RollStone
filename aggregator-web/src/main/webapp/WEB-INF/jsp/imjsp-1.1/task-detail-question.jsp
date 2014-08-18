@@ -11,12 +11,14 @@
 <head>
     <title></title>
     <script type="text/javascript">
+        var tasktype = ${taskType};
+        var quesType = ${quesType};
         $(function(){
             var content='${content}';
             var usertype = ${param.userType};
-            content = content.replaceAll('<span name="fillbank"></span>','<input name="textfield4" type="text" />');
             $("#title").html(content);
             if("${type}"=="填空题"){
+                content = content.replaceAll('<span name="fillbank"></span>','<input name="textfield4" type="text" />');
                 if(usertype!=2){
                     var currentanswer = '${currentanswer}';
                     var myanswer = '${myanswer}';
@@ -44,10 +46,38 @@
                 }
             }
         });
+        function submitTask(){
+            //填空
+            var txt_fb_option = $("input[name='txt_fb_" + quesid + "']");
+            var txt_fb_answer = $("input[name='txt_fb_" + quesid + "']").filter(function () {
+                return this.value.Trim().length > 0
+            });
+            //选择
+            var optionArray = new Array();
+            if(tasktype==3){
+                $("ul li[class='crumb'] span").each(function(){
+                        optionArray.push(this);
+                });
+            }
+
+        }
+
+        function changeOption(idx){
+            if(quesType==3){
+                $("ul>li").each(function(){
+                    $(this).removeClass("crumb");
+                });
+            }
+            if($("#li"+idx).hasClass("crumb")){
+                $("#li"+idx).removeClass("crumb");
+            }else{
+                $("#li"+idx).addClass("crumb");
+            }
+        }
     </script>
 </head>
 <body>
-<div class="zxcs_test">
+<div class="zxcs_test"><form id="questionForm" onsubmit="submitTask()"><input type="button" value="aaaa" onclick="submitTask()"></form>
     <h1>${type}</h1>
     <div class="title" id="title"></div>
     <div class="zhengquedaan" id="zhengquedaan">
@@ -62,9 +92,21 @@
         </ul>
     </c:if>
     <c:if test="${!empty option}">
-        <ul class="daan">
-            <c:forEach items="${option}" var="itm">
-                <li><span class="blue">${itm.optiontype}、</span>${itm.content}
+        <c:if test="${empty answer}">
+            <ul class="test">
+        </c:if>
+        <c:if test="${empty answer}">
+            <ul class="daan">
+        </c:if>
+            <c:forEach items="${option}" var="itm" varStatus="idx">
+                    <c:if test="${empty answer}">
+                        <li id="li${idx.index}">
+                       <a href="javascript:changeOption(${idx.index})">
+                    </c:if>
+                    <c:if test="${!empty answer}">
+                        <li>
+                    </c:if>
+                    <span class="blue">${itm.optiontype}、</span>${itm.content}
                     <c:if test="${!empty answer}">
                         <c:forEach items="${answer}" var="im">
                             <c:if test="${itm.optiontype eq im.answercontent and itm.isright==1}">
@@ -76,21 +118,26 @@
                         </c:forEach>
                     </c:if>
                     <c:if test="${empty answer}">
-                        <c:if test="${itm.isright==1}">
-                            <b class="right"></b>
-                        </c:if>
+                       </a>
                     </c:if>
                 </li>
             </c:forEach>
         </ul>
     </c:if>
-    <p class="jiexi"><c:if test="${!empty rightNum}"><span>${rightNum}%答对</span></c:if> 答案与解析</p>
-    <div>${analysis}</div>
+
+    <c:if test="${!empty answer}">
+        <p class="jiexi"><c:if test="${!empty rightNum}"><span>${rightNum}%答对</span></c:if> 答案与解析</p>
+        <div>${analysis}</div>
+    </c:if>
+    <c:if test="${!empty optionNum}">
+        <p class="jiexi"><c:if test="${!empty rightNum}"><span>${rightNum}%答对</span></c:if> 答案与解析</p>
+        <div>${analysis}</div>
+    </c:if>
     <c:if test="${!empty userRecord}">
         <c:forEach items="${userRecord}" var="itm">
             <div class="wenda">
                 <b><img src="images/pic01_140811.png" width="36" height="36"></b>
-                <p class="title"><span>${itm.REPLYDATE}前</span>ceshixiao01</p>
+                <p class="title"><span>${itm.REPLYDATE}前</span>${itm.USERNAME}</p>
                 <p>${itm.REPLYDETAIL}</p>
             </div>
         </c:forEach>

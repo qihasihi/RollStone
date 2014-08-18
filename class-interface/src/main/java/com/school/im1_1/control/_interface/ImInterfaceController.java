@@ -883,6 +883,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             request.setAttribute("content",questionInfoList.get(0).getContent());
             request.setAttribute("analysis",questionInfoList.get(0).getAnalysis());
             request.setAttribute("currentanswer",questionInfoList.get(0).getCorrectanswer());
+            request.setAttribute("quesType",questionInfoList.get(0).getQuestiontype());
             if(questionInfoList.get(0).getQuestiontype()==2){
                 request.setAttribute("type","ÃÓø’Ã‚");
             }else if(questionInfoList.get(0).getQuestiontype()==3){
@@ -955,7 +956,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 questionAnswer.setUserid(userList.get(0).getRef());
                 List<QuestionAnswer> questionAnswerList=this.questionAnswerManager.getList(questionAnswer,null);
                 request.setAttribute("answer",questionAnswerList);
-                request.setAttribute("myanswer",questionAnswerList.get(0).getAnswercontent());
+                request.setAttribute("myanswer",questionAnswerList.size()>0?questionAnswerList.get(0).getAnswercontent():null);
             }else{
                 taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
                 if(taskUserRecord!=null&&taskUserRecord.size()>0){
@@ -1001,6 +1002,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 request.setAttribute("userRecord",taskUserRecord);
             }
             request.setAttribute("question",questionInfoList);
+            request.setAttribute("taskType",taskList.get(0).getTasktype());
             return new ModelAndView("/imjsp-1.1/task-detail-question");
         }
         return new ModelAndView("");
