@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,8 +51,15 @@ public class ToEttInterfaceController extends BaseController<String> {
                 ||schoolid.toString().trim().length()<1
                 ||timestamp.toString().trim().length()<1
                 ||key.toString().trim().length()<1){
-            returnJO.put("msg","异常错误，参数异常!");
+            returnJO.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
             response.getWriter().println(returnJO.toString());return;
+        }
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(timestamp.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+              returnJO.put("msg","响应超时!");
         }
         HashMap<String,String> map = new HashMap();
         map.put("jId",jId);
@@ -86,9 +94,6 @@ public class ToEttInterfaceController extends BaseController<String> {
             returnJO.put("msg","绑定失败!原因：未知，可能执行存储失败!");
         response.getWriter().println(returnJO.toString());
     }
-
-
-
 
 }
 
