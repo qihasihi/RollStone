@@ -456,6 +456,33 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> courseList = this.imInterfaceManager.getTeacherCalendar(userList.get(0).getUserid(),Integer.parseInt(schoolid),Integer.parseInt(year),Integer.parseInt(month));
         Map m = new HashMap();
         Map m2 = new HashMap();
+        long mTime = System.currentTimeMillis();
+        int offset = Calendar.getInstance().getTimeZone().getRawOffset();
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date(mTime - offset));
+        String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
+        String currentMonth = currentDay.split("-")[1];
+        if(Integer.parseInt(month)==Integer.parseInt(currentMonth)){
+            List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(schoolid), currentDay);
+            if(courseArray!=null&&courseArray.size()>0){
+                List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
+                for(int i = 0;i<courseArray.size();i++){
+                    Map o = courseArray.get(i);
+                    Map o2 = new HashMap();
+                    o2.put("courseId",o.get("COURSE_ID"));
+                    o2.put("courseName",o.get("COURSE_NAME"));
+                    o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME"));
+                    o2.put("schoolId",o.get("DC_SCHOOL_ID"));
+                    o2.put("classId",o.get("CLASS_ID"));
+                    o2.put("classType",o.get("CLASS_TYPE"));
+                    o2.put("className",o.get("CLASSNAME"));
+                    courseArray2.add(o2);
+                }
+                m2.put("courseArray",courseArray2);
+            }else{
+                m2.put("courseArray",null);
+            }
+        }
         if(courseList!=null&&courseList.size()>0){
             List<Map<String,Object>> courseList2 = new ArrayList<Map<String, Object>>();
             for(int i = 0 ;i<courseList.size();i++){
@@ -523,7 +550,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
-        if(courseArray.size()>0){
+        if(courseArray!=null&&courseArray.size()>0){
             List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
             for(int i = 0;i<courseArray.size();i++){
                 Map o = courseArray.get(i);
@@ -539,7 +566,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
             m2.put("courseArray",courseArray2);
         }else{
-            m2.put("courseList",null);
+            m2.put("courseArray",null);
         }
         m.put("result","1");
         m.put("msg","³É¹¦");
@@ -596,7 +623,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype),Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
-        if(courseArray.size()>0){
+        if(courseArray!=null&&courseArray.size()>0){
             List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
             for(int i = 0;i<courseArray.size();i++){
                 Map o = courseArray.get(i);
