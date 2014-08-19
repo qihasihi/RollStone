@@ -49,6 +49,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private IUserManager userManager;
     private IQuestionAnswerManager questionAnswerManager;
     private ITaskPerformanceManager taskPerformanceManager;
+    private ITpRecordManager tpRecordManager;
     public ImInterfaceController(){
         this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
         this.tpCourseManager = this.getManager(TpCourseManager.class);
@@ -60,6 +61,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.userManager = this.getManager(UserManager.class);
         this.questionAnswerManager = this.getManager(QuestionAnswerManager.class);
         this.taskPerformanceManager = this.getManager(TaskPerformanceManager.class);
+        this.tpRecordManager=this.getManager(TpRecordManager.class);
     }
     /**
      * 验证RequestParams相关参数
@@ -84,6 +86,27 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
 
         return returnBo;
+    }
+    /**
+     * 验证RequestParams相关参数
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public HashMap<String,String> getRequestParam(HttpServletRequest request) throws Exception{
+        Enumeration eObj=request.getParameterNames();
+        HashMap<String,String> returnMap=null;
+        if(eObj!=null){
+            returnMap=new HashMap<String, String>();
+            while(eObj.hasMoreElements()){
+                Object obj=eObj.nextElement();
+                if(obj==null||obj.toString().trim().length()<1)
+                    continue;
+                Object val=request.getParameter(obj.toString());
+                returnMap.put(obj.toString(),val.toString());
+            }
+        }
+        return returnMap;
     }
     /**
      * 学习目录接口
@@ -1482,4 +1505,278 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             return;
         }
     }
+
+    /**
+     *  添加课程纪实接口
+     *    jid：用户id
+     *    schoolId：schoolId
+     *    classId：班级id
+     *    courseId：课程id
+     *    attachDescribe：附件描述
+     *    attach：附件地址字符串（JSON串）
+     *    time:时间戳
+     *    sign:Md5串
+     *
+     * @param request
+     * @param response
+     */
+    @RequestMapping(params="m=AddCourseRecord",method={RequestMethod.GET,RequestMethod.POST})
+    public void AddCourseRecord(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result",0);//默认失败
+        if(!ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> paramMap=getRequestParam(request);
+        //获取参数
+        String jid=paramMap.get("jid");
+        String schoolId=paramMap.get("schoolId");
+        String classId=paramMap.get("classId");
+        String courseId=paramMap.get("courseId");
+        String content=paramMap.get("attachDescribe");
+        String attach=paramMap.get("attach");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        if(jid==null||schoolId==null||classId==null||time==null||sign==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //验证时间
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(time.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+
+        //验证Md5
+
+        Boolean b = UrlSigUtil.verifySigSimple("AddCourseRecord",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+
+        //验证用户ETTUserId,得到Userid
+        UserInfo validateUid=new UserInfo();
+        validateUid.setEttuserid(Integer.parseInt(jid.trim()));
+        List<UserInfo> userList=this.userManager.getList(validateUid,null);
+        if(userList==null||userList.size()<1||userList.get(0)==null||userList.get(0).getUserid()==null){
+            returnJo.put("msg","当前云帐号未绑定!");
+            response.getWriter().println(returnJo.toString());return;
+        }
+        Integer userid=userList.get(0).getUserid();
+
+        TpRecordInfo tpRecordInfo=new TpRecordInfo();
+        tpRecordInfo.setUserId(Long.parseLong(userid.toString()));
+        tpRecordInfo.setClassId(Long.parseLong(classId.trim()));
+        tpRecordInfo.setCourseId(Long.parseLong(courseId.trim()));
+
+        tpRecordInfo.setDcSchoolId(Long.parseLong(schoolId.trim()));
+        //查询是否已经存在
+        List<TpRecordInfo> tpRecordInfoList=this.tpRecordManager.getList(tpRecordInfo,null);
+        if(tpRecordInfoList!=null&&tpRecordInfoList.size()>0){
+            returnJo.put("msg","添加失败!已经存在该信息!");
+            response.getWriter().println(returnJo.toString());return;
+        }
+        if(attach!=null)
+            tpRecordInfo.setImgUrl(attach.trim());
+        if(content!=null)
+            tpRecordInfo.setImgUrl(content.trim());
+        //添加
+        if(this.tpRecordManager.doSave(tpRecordInfo)){
+            returnJo.put("result",1);//成功
+            returnJo.put("msg","添加课堂纪实成功!");
+        }else
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().println(returnJo.toString());
+    }
+
+
+    /**
+     * 删除课程纪实接口
+     *     jid:用户J Id
+     *     schoolId: 分校ID
+     *     classId:班级Id
+     *     recordId:纪实ID(唯一标识ref)
+     *     sign: Md5串
+     *     time:时间戳
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=DeleteRecord",method={RequestMethod.GET,RequestMethod.POST})
+    public void DelCourseRecord(HttpServletRequest request,HttpServletResponse response) throws  Exception{
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result",0);//默认失败
+        if(!ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> paramMap=getRequestParam(request);
+        //获取参数
+        String jid=paramMap.get("jid");
+        String schoolId=paramMap.get("schoolId");
+        String classId=paramMap.get("classId");
+        String recordId=paramMap.get("recordId");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        if(jid==null||recordId==null||time==null||sign==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //验证时间
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(time.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //验证Md5
+        Boolean b = UrlSigUtil.verifySigSimple("DeleteRecord",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //验证该jid是否已经绑定
+        //验证用户ETTUserId,得到Userid
+        UserInfo validateUid=new UserInfo();
+        validateUid.setEttuserid(Integer.parseInt(jid.trim()));
+        List<UserInfo> userList=this.userManager.getList(validateUid,null);
+        if(userList==null||userList.size()<1||userList.get(0)==null||userList.get(0).getUserid()==null){
+            returnJo.put("msg","当前云帐号未绑定!");
+            response.getWriter().println(returnJo.toString());return;
+        }
+        Integer userid=userList.get(0).getUserid();
+        //验证是否存在该记录
+        TpRecordInfo tpRecordInfo=new TpRecordInfo();
+        tpRecordInfo.setRef(Integer.parseInt(recordId));
+        List<TpRecordInfo> recordList=this.tpRecordManager.getList(tpRecordInfo,null);
+        if(recordList==null||recordList.size()<1){
+            returnJo.put("msg","当前数据不存在，无需删除!");
+            response.getWriter().println(returnJo.toString());return;
+        }
+        if(this.tpRecordManager.doDelete(tpRecordInfo)){
+            returnJo.put("result",1);//成功
+            returnJo.put("msg","删除课堂纪实成功!");
+        }else
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().println(returnJo.toString());
+    }
+
+    /**
+     * 查询课程纪实接口
+     *   classId:班级id
+     *   schoolId:schoolId
+     *   jid:用户id
+     *   userType:用户类型
+     *   courseId: 课程id
+     *   time:毫秒数，时间戳
+     *   sign:Md5验证码
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=GetClassRecord",method={RequestMethod.GET,RequestMethod.POST})
+    public void GetClassRecord(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result",0);//默认失败
+        if(!ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> paramMap=getRequestParam(request);
+        //获取参数
+        String jid=paramMap.get("jid");
+        String schoolId=paramMap.get("schoolId");
+        String classId=paramMap.get("classId");
+        String userType=paramMap.get("userType");
+        String courseId=paramMap.get("courseId");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        if(jid==null||schoolId==null||time==null||sign==null||classId==null||courseId==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //验证时间
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(time.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //验证Md5
+        Boolean b = UrlSigUtil.verifySigSimple("GetClassRecord",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //验证该jid是否已经绑定
+        //验证用户ETTUserId,得到Userid
+        UserInfo validateUid=new UserInfo();
+        validateUid.setEttuserid(Integer.parseInt(jid.trim()));
+        List<UserInfo> userList=this.userManager.getList(validateUid,null);
+        if(userList==null||userList.size()<1||userList.get(0)==null||userList.get(0).getUserid()==null){
+            returnJo.put("msg","当前云帐号未绑定!");
+            response.getWriter().println(returnJo.toString());return;
+        }
+        Integer userid=userList.get(0).getUserid();
+        //查询数据
+        TpRecordInfo entity=new TpRecordInfo();
+        entity.setUserId(Long.parseLong(userid.toString()));
+        entity.setDcSchoolId(Long.parseLong(schoolId.trim()));
+        entity.setClassId(Long.parseLong(classId.trim()));
+        entity.setCourseId(Long.parseLong(courseId.trim()));
+        List<TpRecordInfo> recordList=this.tpRecordManager.getList(entity,null);
+        List<Map<String,Object>> returnMapList=new ArrayList<Map<String, Object>>();
+        JSONObject jo=new JSONObject();
+        if(recordList==null||recordList.size()<1){
+            jo.put("recordList",returnMapList);
+
+            returnJo.put("msg","没有数据!");
+            returnJo.put("data",jo.toString());
+            returnJo.put("result",1);
+            response.getWriter().println(returnJo.toString());return;
+        }
+        for (TpRecordInfo tEntity:recordList){
+            if(tEntity!=null){
+                Map<String,Object> tmpMap=new HashMap<String, Object>();
+                tmpMap.put("recordId",tEntity.getRef());
+                tmpMap.put("attachDescribe",tEntity.getContent());
+                tmpMap.put("attach",tEntity.getImgUrl());
+                returnMapList.add(tmpMap);
+            }
+        }
+
+        jo.put("recordList",returnMapList);
+        returnJo.put("data",jo.toString());
+        returnJo.put("result",1);
+        response.getWriter().print(returnJo.toString());
+    }
+
 }

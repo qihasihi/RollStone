@@ -42,7 +42,7 @@ public class ToEttInterfaceController extends BaseController<String> {
         String userId=request.getParameter("userId");
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("timeStamp");
-        String key = request.getParameter("key");
+        String key = request.getParameter("sign");
         JSONObject returnJO=new JSONObject();
         returnJO.put("type","error");
         if(jId==null||userId==null||schoolid==null||timestamp==null||key==null

@@ -1,5 +1,6 @@
 package  com.school.entity.teachpaltform;
 
+import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
 import com.school.util.UtilTool;
 
 import java.io.Serializable;
@@ -31,6 +32,7 @@ public class QuestionInfo implements java.io.Serializable {
     private Integer extension;
     private String questionidStr;
     private QuestionInfo parentQues;
+
 
     private Float score;
 

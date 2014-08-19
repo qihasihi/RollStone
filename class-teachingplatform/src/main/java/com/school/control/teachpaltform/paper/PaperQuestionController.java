@@ -3747,6 +3747,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         }
         tmpq.setScore(Float.parseFloat(scoreMapList.get(0).get("SCORE").toString()));
 
+
         //สิฬโ
         jsonEntity.getObjList().add(tmpq);
         jsonEntity.setType("success");
