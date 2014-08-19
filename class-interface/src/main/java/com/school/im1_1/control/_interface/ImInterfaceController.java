@@ -929,7 +929,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      */
     @RequestMapping(params="m=toQuestionJsp",method={RequestMethod.GET,RequestMethod.POST})
     public ModelAndView toTeacherCourseList(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
-        System.out.println(System.currentTimeMillis());
+        //System.out.println(System.currentTimeMillis());
         String taskid = request.getParameter("taskId");
         String classid = request.getParameter("classId");
         String classtype = request.getParameter("classType");
@@ -996,9 +996,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             if(questionInfoList.get(0).getQuestiontype()==3||questionInfoList.get(0).getQuestiontype()==4){
                 QuestionOption questionOption = new QuestionOption();
                 questionOption.setQuestionid(questionInfoList.get(0).getQuestionid());
-                System.out.println("查询试题开始："+System.currentTimeMillis());
+               // System.out.println("查询试题开始："+System.currentTimeMillis());
                 List<QuestionOption> questionOptionList=this.questionOptionManager.getList(questionOption,null);
-                System.out.println("查询试题结束："+System.currentTimeMillis());
+              //  System.out.println("查询试题结束："+System.currentTimeMillis());
                 List<Map<String,Object>> option = new ArrayList<Map<String, Object>>();
                 request.setAttribute("option",questionOptionList);
                 if(usertype.equals("2")){
@@ -1035,10 +1035,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     }
                     request.setAttribute("optionNum",option);
                 }else{
-                    System.out.println("查询用户数据："+System.currentTimeMillis());
+                   // System.out.println("查询用户数据："+System.currentTimeMillis());
                     List<Map<String,Object>> optionnumList = new ArrayList<Map<String, Object>>();
                     optionnumList = this.taskPerformanceManager.getPerformanceOptionNum(Long.parseLong(taskid),Long.parseLong(classid));
-                    System.out.println("查询用户数据结束："+System.currentTimeMillis());
+                   // System.out.println("查询用户数据结束："+System.currentTimeMillis());
                     int totalNum = 0;
                     for(int i =0;i<optionnumList.size();i++){
                         totalNum+=Integer.parseInt(optionnumList.get(i).get("NUM").toString());
@@ -1111,7 +1111,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             request.setAttribute("taskType",taskList.get(0).getTasktype());
             request.setAttribute("courseid",taskList.get(0).getCourseid());
             request.setAttribute("taskid",taskList.get(0).getTaskid());
-            System.out.println(System.currentTimeMillis());
+           // System.out.println(System.currentTimeMillis());
             return new ModelAndView("/imjsp-1.1/task-detail-question");
         }
         return new ModelAndView("");
