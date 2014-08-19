@@ -276,6 +276,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String year = request.getParameter("requestYear");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+        if(!ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
         HashMap<String,String> map = new HashMap();
         map.put("jid",userid);
         map.put("userType",usertype);
@@ -284,12 +292,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("time",timestamp);
         map.put("requestMonth",month);
         map.put("requestYear",year);
-       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
-        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
-        if(!b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-            return;
-        }
+       // UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+//        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+//        if(!b){
+//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+//            return;
+//        }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -310,7 +318,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             c.setTime(new Date(mTime - offset));
             String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
             List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
-            if(courseArray.size()>0){
+            if(courseArray!=null&&courseArray.size()>0){
                 List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
                 for(int i = 0;i<courseArray.size();i++){
                     Map o = courseArray.get(i);
@@ -353,6 +361,30 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     }
 
     /**
+     * 验证RequestParams相关参数
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Boolean ValidateRequestParam(HttpServletRequest request) throws Exception{
+        Enumeration eObj=request.getParameterNames();
+        boolean returnBo=true;
+        if(eObj!=null){
+                while(eObj.hasMoreElements()){
+                    Object obj=eObj.nextElement();
+                    if(obj==null||obj.toString().trim().length()<1)
+                        continue;
+                    Object val=request.getParameter(obj.toString());
+                    if(val==null||val.toString().trim().length()<1){
+                        returnBo=!returnBo;
+                        break;
+                    }
+                }
+            }
+
+        return returnBo;
+    }
+    /**
      * 教师班级课表接口
      * @param request
      * @param mp
@@ -370,6 +402,17 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String year = request.getParameter("requestYear");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+
+        if(!ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+
+
         HashMap<String,String> map = new HashMap();
         map.put("jid",userid);
         map.put("userType",usertype);
@@ -379,11 +422,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("requestMonth",month);
         map.put("requestYear",year);
        // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
-        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
-        if(!b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-            return;
-        }
+//        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+//        if(!b){
+//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+//            return;
+//        }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -434,6 +477,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String currentDay = request.getParameter("requestDay");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+        if(!ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
         HashMap<String,String> map = new HashMap();
         map.put("jid",userid);
         map.put("userType",usertype);
@@ -441,11 +492,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("time",timestamp);
         map.put("requestDay",currentDay);
        // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
-        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
-        if(!b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-            return;
-        }
+//        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+//        if(!b){
+//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+//            return;
+//        }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -456,7 +507,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
-        if(courseArray.size()>0){
+        if(courseArray!=null&&courseArray.size()>0){
             List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
             for(int i = 0;i<courseArray.size();i++){
                 Map o = courseArray.get(i);
@@ -498,19 +549,27 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String classid = request.getParameter("classId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+        if(!ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
         HashMap<String,String> map = new HashMap();
         map.put("jid",userid);
         map.put("userType",usertype);
         map.put("classId",classid);
         map.put("schoolId",schoolid);
         map.put("time",timestamp);
-        map.put("requestDay",currentDay);
-       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
-        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
-        if(!b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-            return;
-        }
+//        map.put("requestDay",currentDay);
+//       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+//        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+//        if(!b){
+//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+//            return;
+//        }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -521,7 +580,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype),Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
-        if(courseArray.size()>0){
+        if(courseArray!=null&&courseArray.size()>0){
             List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
             for(int i = 0;i<courseArray.size();i++){
                 Map o = courseArray.get(i);
