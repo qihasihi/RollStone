@@ -357,7 +357,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
        // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
         if(!b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
         UserInfo ui = new UserInfo();
@@ -414,6 +414,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             m.put("msg","当前没有专题");
         }
         m2.put("personTotalScore","350");
+        m2.put("teamShow","本组小红旗总数排全班第一");
         m2.put("teamScore","130");
         m2.put("taskScore","150");
         m2.put("presenceScore","50");
@@ -438,7 +439,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         JsonEntity je = new JsonEntity();
         String userid = request.getParameter("jid");
         String usertype=request.getParameter("userType");
-        String classid = request.getParameter("classId");
         String schoolid = request.getParameter("schoolId");
         String month = request.getParameter("requestMonth");
         String year = request.getParameter("requestYear");
@@ -455,7 +455,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         HashMap<String,String> map = new HashMap();
         map.put("jid",userid);
         map.put("userType",usertype);
-        map.put("classId",classid);
         map.put("schoolId",schoolid);
         map.put("time",timestamp);
         map.put("requestMonth",month);
@@ -463,7 +462,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
        // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("TeaClassCalendar",map,sig);
         if(!b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
         UserInfo ui = new UserInfo();
@@ -473,9 +472,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
             return;
         }
-        ImInterfaceInfo obj = new ImInterfaceInfo();
-        obj.setSchoolid(Integer.parseInt(schoolid));
-        obj.setClassid(Integer.parseInt(classid));
         List<Map<String,Object>> courseList = this.imInterfaceManager.getTeacherCalendar(userList.get(0).getUserid(),Integer.parseInt(schoolid),Integer.parseInt(year),Integer.parseInt(month));
         Map m = new HashMap();
         Map m2 = new HashMap();
@@ -560,7 +556,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
        // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("TeaClassCalendarDetail",map,sig);
         if(!b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
         UserInfo ui = new UserInfo();
@@ -633,7 +629,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
        //String sign = UrlSigUtil.makeSigSimple("StuClassCalendarDetail",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendarDetail",map,sig);
         if(!b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
         UserInfo ui = new UserInfo();
@@ -661,6 +657,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }else{
             m2.put("courseArray",null);
         }
+        m2.put("personTotalScore","350");
+        m2.put("teamShow","本组小红旗总数排全班第一");
+        m2.put("teamScore","130");
+        m2.put("taskScore","150");
+        m2.put("presenceScore","50");
+        m2.put("smileScore","10");
+        m2.put("illegalScore","10");
         m.put("result","1");
         m.put("msg","成功");
         m.put("data",m2);
@@ -698,7 +701,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String sign = UrlSigUtil.makeSigSimple("AddTask",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
         if(!b){
-            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
         UserInfo ui = new UserInfo();
@@ -1502,6 +1505,111 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
         if(taskList==null||taskList.size()==0){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务不存在，请查看后重试\"}");
+            return;
+        }
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        TpTaskInfo tmpTask=taskList.get(0);
+        String quesanswer = replyDetail;
+        if(tmpTask.getTasktype()==1){
+//            if(quesanswer==null||quesanswer.trim().length()<1){
+//                response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务不存在，请查看后重试\"}");
+//                return;
+//            }
+
+            QuestionAnswer qa=new QuestionAnswer();
+            qa.setCourseid(tmpTask.getCourseid());
+            qa.setQuesparentid(tmpTask.getTaskvalueid());
+            qa.setQuesid(Long.parseLong("0"));
+            qa.setUserid(userList.get(0).getRef());
+            qa.setAnswercontent(quesanswer);
+            qa.setRightanswer(1);
+            qa.setTasktype(tmpTask.getTasktype());
+            qa.setTaskid(tmpTask.getTaskid());
+            sql=new StringBuilder();
+            objList=this.questionAnswerManager.getSaveSql(qa,sql);
+            if(sql!=null&&objList!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+
+            if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){
+                TaskPerformanceInfo tp=new TaskPerformanceInfo();
+                tp.setTaskid(taskList.get(0).getTaskid());
+                tp.setTasktype(taskList.get(0).getTasktype());
+                tp.setCourseid(taskList.get(0).getCourseid());
+                tp.setCriteria(2);//提交心得
+                tp.setUserid(userList.get(0).getRef());
+                tp.setIsright(1);
+                List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
+                if(tpList==null||tpList.size()<1){
+                    sql=new StringBuilder();
+                    objList=this.taskPerformanceManager.getSaveSql(tp,sql);
+                    if(sql!=null&&objList!=null){
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }else{
+                response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务没有提交心得要求\"}");
+                return;
+            }
+        }else{
+            QuestionAnswer qa=new QuestionAnswer();
+            qa.setCourseid(tmpTask.getCourseid());
+            qa.setQuesparentid(tmpTask.getTaskvalueid());
+            qa.setQuesid(Long.parseLong("0"));
+            qa.setUserid(userList.get(0).getRef());
+            qa.setAnswercontent(quesanswer);
+            qa.setRightanswer(1);
+            qa.setTasktype(tmpTask.getTasktype());
+            qa.setTaskid(tmpTask.getTaskid());
+            qa.setReplyattach(replyAttach);
+            qa.setReplyattachtype(Integer.parseInt(attachType));
+            sql=new StringBuilder();
+            objList=this.questionAnswerManager.getSaveSql(qa,sql);
+            if(sql!=null&&objList!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){
+                TaskPerformanceInfo tp=new TaskPerformanceInfo();
+                tp.setTaskid(taskList.get(0).getTaskid());
+                tp.setTasktype(taskList.get(0).getTasktype());
+                tp.setCourseid(taskList.get(0).getCourseid());
+                tp.setCriteria(2);//提交心得
+                tp.setUserid(userList.get(0).getRef());
+                tp.setIsright(1);
+                List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
+                if(tpList==null||tpList.size()<1){
+                    sql=new StringBuilder();
+                    objList=this.taskPerformanceManager.getSaveSql(tp,sql);
+                    if(sql!=null&&objList!=null){
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }else{
+                response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务没有提交心得要求\"}");
+                return;
+            }
+        }
+        //执行并返回结果
+        if(objListArray.size()>0&&sqlListArray.size()>0){
+            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
+            if(flag){
+                response.getWriter().print("{\"result\":\"1\",\"msg\":\"回答完成\"}");
+
+            }else{
+                response.getWriter().print("{\"result\":\"0\",\"msg\":\"回答失败\"}");
+                return;
+            }
+        }else{
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"操作没有执行\"}");
             return;
         }
     }
