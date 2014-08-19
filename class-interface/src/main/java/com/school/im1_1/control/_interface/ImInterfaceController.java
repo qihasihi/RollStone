@@ -61,7 +61,30 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.questionAnswerManager = this.getManager(QuestionAnswerManager.class);
         this.taskPerformanceManager = this.getManager(TaskPerformanceManager.class);
     }
+    /**
+     * 验证RequestParams相关参数
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Boolean ValidateRequestParam(HttpServletRequest request) throws Exception{
+        Enumeration eObj=request.getParameterNames();
+        boolean returnBo=true;
+        if(eObj!=null){
+            while(eObj.hasMoreElements()){
+                Object obj=eObj.nextElement();
+                if(obj==null||obj.toString().trim().length()<1)
+                    continue;
+                Object val=request.getParameter(obj.toString());
+                if(val==null||val.toString().trim().length()<1){
+                    returnBo=!returnBo;
+                    break;
+                }
+            }
+        }
 
+        return returnBo;
+    }
     /**
      * 学习目录接口
      * @param request
@@ -76,6 +99,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+        if(!ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
         HashMap<String,String> map = new HashMap();
         map.put("jid",userid);
         map.put("userType",usertype);
@@ -138,6 +169,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String usertype = request.getParameter("userType");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+        if(!ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
         HashMap<String,String> map = new HashMap();
         map.put("classId",classid);
         map.put("schoolId",schoolid);
@@ -292,12 +331,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("time",timestamp);
         map.put("requestMonth",month);
         map.put("requestYear",year);
-       // UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
-//        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
-//        if(!b){
-//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-//            return;
-//        }
+       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -317,21 +356,25 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             Calendar c = Calendar.getInstance();
             c.setTime(new Date(mTime - offset));
             String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
-            List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
-            if(courseArray!=null&&courseArray.size()>0){
-                List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
-                for(int i = 0;i<courseArray.size();i++){
-                    Map o = courseArray.get(i);
-                    Map o2 = new HashMap();
-                    o2.put("courseId",o.get("COURSE_ID"));
-                    o2.put("courseName",o.get("COURSE_NAME"));
-                    o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME"));
-                    o2.put("schoolId",o.get("DC_SCHOOL_ID"));
-                    courseArray2.add(o2);
+            String currentMonth = currentDay.split("-")[1];
+            if(Integer.parseInt(month)==Integer.parseInt(currentMonth)){
+                List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
+                if(courseArray!=null&&courseArray.size()>0){
+                    List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
+                    for(int i = 0;i<courseArray.size();i++){
+                        Map o = courseArray.get(i);
+                        Map o2 = new HashMap();
+                        o2.put("courseId",o.get("COURSE_ID"));
+                        o2.put("courseName",o.get("COURSE_NAME"));
+                        o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME"));
+                        o2.put("schoolId",o.get("DC_SCHOOL_ID"));
+                        courseArray2.add(o2);
+                    }
+                    m2.put("courseArray",courseArray2);
+                }else{
+                    m2.put("courseArray",null);
                 }
-                m2.put("courseArray",courseArray2);
             }
-
         }
         if(courseList!=null&&courseList.size()>0){
             List<Map<String,Object>> courseList2 = new ArrayList<Map<String, Object>>();
@@ -361,30 +404,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     }
 
     /**
-     * 验证RequestParams相关参数
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    public Boolean ValidateRequestParam(HttpServletRequest request) throws Exception{
-        Enumeration eObj=request.getParameterNames();
-        boolean returnBo=true;
-        if(eObj!=null){
-                while(eObj.hasMoreElements()){
-                    Object obj=eObj.nextElement();
-                    if(obj==null||obj.toString().trim().length()<1)
-                        continue;
-                    Object val=request.getParameter(obj.toString());
-                    if(val==null||val.toString().trim().length()<1){
-                        returnBo=!returnBo;
-                        break;
-                    }
-                }
-            }
-
-        return returnBo;
-    }
-    /**
      * 教师班级课表接口
      * @param request
      * @param mp
@@ -402,7 +421,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String year = request.getParameter("requestYear");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-
         if(!ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
@@ -411,8 +429,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(jo.toString());
             return;
         }
-
-
         HashMap<String,String> map = new HashMap();
         map.put("jid",userid);
         map.put("userType",usertype);
@@ -422,11 +438,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("requestMonth",month);
         map.put("requestYear",year);
        // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
-//        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
-//        if(!b){
-//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-//            return;
-//        }
+        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -492,11 +508,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("time",timestamp);
         map.put("requestDay",currentDay);
        // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
-//        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
-//        if(!b){
-//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-//            return;
-//        }
+        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -507,7 +523,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
-        if(courseArray!=null&&courseArray.size()>0){
+        if(courseArray.size()>0){
             List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
             for(int i = 0;i<courseArray.size();i++){
                 Map o = courseArray.get(i);
@@ -563,13 +579,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("classId",classid);
         map.put("schoolId",schoolid);
         map.put("time",timestamp);
-//        map.put("requestDay",currentDay);
-//       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
-//        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
-//        if(!b){
-//            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
-//            return;
-//        }
+        map.put("requestDay",currentDay);
+       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"error\",\"message\":\"验证失败，非法登录\"}");
+            return;
+        }
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -580,7 +596,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype),Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
-        if(courseArray!=null&&courseArray.size()>0){
+        if(courseArray.size()>0){
             List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
             for(int i = 0;i<courseArray.size();i++){
                 Map o = courseArray.get(i);
@@ -616,6 +632,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+        if(!ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
         HashMap<String,String> map = new HashMap();
         map.put("data",dataStr);
         map.put("jid",userid);
@@ -746,6 +770,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+        if(!ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
         HashMap<String,String> map = new HashMap();
         map.put("taskId",taskid);
         map.put("classId",classid);
@@ -906,6 +938,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+        if(!ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return new ModelAndView("");
+        }
         HashMap<String,String> map = new HashMap();
         map.put("taskId",taskid);
         map.put("classId",classid);
@@ -928,6 +968,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
             return new ModelAndView("");
         }
+        request.setAttribute("userRef",userList.get(0).getRef());
         TpTaskInfo tpTaskInfo = new TpTaskInfo();
         tpTaskInfo.setTaskid(Long.parseLong(taskid));
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
@@ -943,6 +984,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             request.setAttribute("analysis",questionInfoList.get(0).getAnalysis());
             request.setAttribute("currentanswer",questionInfoList.get(0).getCorrectanswer());
             request.setAttribute("quesType",questionInfoList.get(0).getQuestiontype());
+            request.setAttribute("quesid",questionInfoList.get(0).getQuestionid());
             if(questionInfoList.get(0).getQuestiontype()==2){
                 request.setAttribute("type","填空题");
             }else if(questionInfoList.get(0).getQuestiontype()==3){
@@ -1062,12 +1104,296 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
             request.setAttribute("question",questionInfoList);
             request.setAttribute("taskType",taskList.get(0).getTasktype());
+            request.setAttribute("courseid",taskList.get(0).getCourseid());
+            request.setAttribute("taskid",taskList.get(0).getTaskid());
             return new ModelAndView("/imjsp-1.1/task-detail-question");
         }
         return new ModelAndView("");
     }
+
     /**
-     * 进入任务详情页面（试题选择题和填空题）jsp
+     * jsp回答任务
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=doStuSubmitTask",method=RequestMethod.POST)
+    public void doStuSubmitTask(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String taskid=request.getParameter("taskid");
+        String tasktype=request.getParameter("tasktype");
+        String userRef = request.getParameter("userRef");
+        //String groupid=request.getParameter("groupid");
+        //资源、论题、课后作业ID
+        String quesid=request.getParameter("quesid");
+        String questype=request.getParameter("questype");
+        if(courseid==null||courseid.trim().length()<1||
+                taskid==null||taskid.trim().length()<1||
+                tasktype==null||tasktype.trim().length()<1||
+                //groupid==null||groupid.trim().length()<1||
+                quesid==null||quesid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        //组织批量执行sql的集合
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+
+        //课后作业
+        String[]fbanswerArray=request.getParameterValues("fbanswerArray");
+        String[]optionArray=request.getParameterValues("optionArray");
+
+        TpTaskInfo t=new TpTaskInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        t.setCourseid(Long.parseLong(courseid));
+        t.setTasktype(Integer.parseInt(tasktype));
+        //t.setGroupid(groupid);
+        List<TpTaskInfo>taskList=this.tpTaskManager.getList(t,null);
+        if(taskList==null||taskList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpTaskInfo tmpTask=taskList.get(0);
+
+        //用得到的参数组织数据并生成存储过程执行
+        if(questype.equals("2")){//填空
+            if(fbanswerArray==null||fbanswerArray.length<1){
+                je.setMsg("异常错误，未获取到问答题答案!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            //得到该题教师设置的答案
+            QuestionInfo qb=new QuestionInfo();
+            qb.setQuestionid(tmpTask.getTaskvalueid());
+            List<QuestionInfo>qbList=this.questionManager.getList(qb, null);
+            if(qbList==null||qbList.size()<1){
+                je.setMsg("异常错误!当前试题已不存在!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            boolean fbflag=false;
+            String fbanswer=qbList.get(0).getCorrectanswer();
+            String[]answerArray=null;
+            if(fbanswer!=null&&fbanswer.length()>0){
+                answerArray=fbanswer.split("\\|");
+                if(answerArray.length<1){
+                    je.setMsg("异常错误!未获取到填空题教师设置的答案!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }else if(answerArray.length!=fbanswerArray.length){
+                    je.setMsg("异常错误!填空题题目或答案有误!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                for (int i = 0; i < answerArray.length; i++) {
+                    if(answerArray[i].equals(fbanswerArray[i])){
+                        fbflag=true;
+                    }else{
+                        fbflag=false;
+                    }
+                }
+            }else{
+                je.setMsg("异常错误!系统未获取到填空题答案!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            //录入答题记录
+            String fbstr="";
+            for (String s : fbanswerArray) {
+                if(fbstr.length()>0)
+                    fbstr+="|";
+                fbstr+=s;
+            }
+            QuestionAnswer qa=new QuestionAnswer();
+            qa.setTaskid(t.getTaskid());
+            qa.setCourseid(t.getCourseid());
+            qa.setTasktype(t.getTasktype());
+            qa.setQuesparentid(Long.parseLong(quesid));
+            qa.setAnswercontent(fbstr);
+            qa.setUserid(userRef);
+            qa.setRightanswer(fbflag==true?1:0);
+            sql=new StringBuilder();
+            objList=this.questionAnswerManager.getSaveSql(qa, sql);
+            if(objList!=null&&sql!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //录入完成状态
+            TaskPerformanceInfo tp=new TaskPerformanceInfo();
+            tp.setTaskid(t.getTaskid());
+            tp.setTasktype(t.getTasktype());
+            tp.setCourseid(t.getCourseid());
+            tp.setUserid(userRef);
+            sql=new StringBuilder();
+            tp.setCriteria(tmpTask.getCriteria());
+            tp.setIsright(fbflag==true?1:0);
+            objList=this.taskPerformanceManager.getSaveSql(tp, sql);
+            if(objList!=null&&sql!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }else if(questype.equals("3")){//单选
+            if(optionArray==null||optionArray.length<1){
+                je.setMsg("异常错误，未获取到选择题答案!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+
+            //得到该题教师设置的答案
+            QuestionOption qo=new QuestionOption();
+            qo.setQuestionid(tmpTask.getTaskvalueid());
+            qo.setIsright(1);
+            List<QuestionOption>qbList=this.questionOptionManager.getList(qo, null);
+            if(qbList==null||qbList.size()<1){
+                je.setMsg("异常错误!未获取到教师设置的选择题答案!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            boolean selflag=false;
+            for (QuestionOption questionBank : qbList) {
+                if(questionBank!=null&&questionBank.getRef().toString().equals(optionArray[0])){
+                    selflag=true;
+                    break;
+                }
+
+            }
+            //得到当前选项名称
+            QuestionOption qstu=new QuestionOption();
+            qstu.setRef(Integer.parseInt(optionArray[0]));
+            List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
+            if(qbstuList==null||qbstuList.size()<1){
+                je.setMsg("异常错误!当前选项已不存在!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+
+            QuestionAnswer qa=new QuestionAnswer();
+            qa.setTaskid(t.getTaskid());
+            qa.setCourseid(t.getCourseid());
+            qa.setTasktype(t.getTasktype());
+            qa.setUserid(userRef);
+            qa.setQuesparentid(Long.parseLong(quesid));
+            qa.setQuesid(Long.parseLong(optionArray[0]));
+            qa.setAnswercontent(qbstuList.get(0).getOptiontype());//选择题答案
+            qa.setRightanswer(selflag==true?1:0);
+            sql=new StringBuilder();
+            objList=this.questionAnswerManager.getSaveSql(qa, sql);
+            if(objList!=null&&sql!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //录入完成状态
+            TaskPerformanceInfo tp=new TaskPerformanceInfo();
+            tp.setTaskid(t.getTaskid());
+            tp.setTasktype(t.getTasktype());
+            tp.setCourseid(t.getCourseid());
+            tp.setUserid(userRef);
+            sql=new StringBuilder();
+            tp.setCriteria(tmpTask.getCriteria());
+            tp.setIsright(selflag==true?1:0);
+            objList=this.taskPerformanceManager.getSaveSql(tp, sql);
+            if(objList!=null&&sql!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+        }else if(questype.equals("4")){//多选
+            if(optionArray==null||optionArray.length<1){
+                je.setMsg("异常错误，未获取到复选题答案!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+
+            //得到该题教师设置的答案
+            QuestionOption qb=new QuestionOption();
+            qb.setQuestionid(tmpTask.getTaskvalueid());
+            qb.setIsright(1);
+            List<QuestionOption>qbList=this.questionOptionManager.getList(qb, null);
+            if(qbList==null||qbList.size()<1){
+                je.setMsg("异常错误!未获取到教师设置的复选题答案!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            boolean selflag=false;
+            int flag=0;
+            for(String opnid : optionArray){
+                selflag=false;
+                for (QuestionOption questionBank : qbList) {
+                    if(questionBank!=null&&
+                            questionBank.getRef().toString().equals(opnid)){
+                        selflag=true;
+                        break;
+                    }
+                }
+                if(!selflag)
+                    ++flag;
+
+                //得到当前选项名称
+                QuestionOption qstu=new QuestionOption();
+                qstu.setRef(Integer.parseInt(opnid));
+                List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
+                if(qbstuList==null||qbstuList.size()<1){
+                    je.setMsg("异常错误!当前选项已不存在!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+
+                QuestionAnswer qa=new QuestionAnswer();
+                qa.setTaskid(t.getTaskid());
+                qa.setCourseid(t.getCourseid());
+                qa.setTasktype(t.getTasktype());
+                //qa.setGroupid(groupid);
+                qa.setUserid(userRef);
+                qa.setQuesparentid(Long.parseLong(quesid));
+                qa.setQuesid(Long.parseLong(opnid));
+                qa.setAnswercontent(qbstuList.get(0).getOptiontype()); //选择题答案
+                qa.setRightanswer(selflag==true?1:0);
+                sql=new StringBuilder();
+                objList=this.questionAnswerManager.getSaveSql(qa, sql);
+                if(objList!=null&&sql!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }
+
+            //录入完成状态
+            TaskPerformanceInfo tp=new TaskPerformanceInfo();
+            tp.setTaskid(t.getTaskid());
+            tp.setTasktype(t.getTasktype());
+            tp.setCourseid(t.getCourseid());
+            tp.setUserid(userRef);
+            tp.setCriteria(tmpTask.getCriteria());
+            tp.setIsright(flag<1?1:0);
+            sql=new StringBuilder();
+            objList=this.taskPerformanceManager.getSaveSql(tp, sql);
+            if(objList!=null&&sql!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+        //执行并返回结果
+        if(objListArray.size()>0&&sqlListArray.size()>0){
+            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
+            if(flag){
+                je.setType("success");
+            }else{
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        }else{
+            je.setMsg("您的操作没有执行!");
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 回答任务接口
      * @param request
      * @return
      * @throws Exception
@@ -1084,6 +1410,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String attachType = request.getParameter("attachType");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+        if(!ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
         HashMap<String,String> map = new HashMap();
         map.put("taskId",taskid);
         map.put("classId",classid);

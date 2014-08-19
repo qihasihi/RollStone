@@ -13,12 +13,13 @@
     <script type="text/javascript">
         var tasktype = ${taskType};
         var quesType = ${quesType};
+        var userRef = "${userRef}";
         $(function(){
             var content='${content}';
             var usertype = ${param.userType};
             $("#title").html(content);
             if("${type}"=="填空题"){
-                content = content.replaceAll('<span name="fillbank"></span>','<input name="textfield4" type="text" />');
+                content = content.replaceAll('<span name="fillbank"></span>','<input name="txt_fb_${quesid}" type="text" />');
                 if(usertype!=2){
                     var currentanswer = '${currentanswer}';
                     var myanswer = '${myanswer}';
@@ -47,19 +48,64 @@
             }
         });
         function submitTask(){
+            var paramStr = 't=' + new Date().getTime();
+            var param = {userRef:userRef,tasktype: ${taskType}, taskid: ${taskid}, quesid: ${quesid}, courseid: ${courseid}};
             //填空
-            var txt_fb_option = $("input[name='txt_fb_" + quesid + "']");
-            var txt_fb_answer = $("input[name='txt_fb_" + quesid + "']").filter(function () {
+            var txt_fb_option = $("input[name='txt_fb_" + ${quesid} + "']");
+            var txt_fb_answer = $("input[name='txt_fb_" + ${quesid} + "']").filter(function () {
                 return this.value.Trim().length > 0
             });
+            if (typeof(quesType) != 'undefined' && !isNaN(quesType))
+                param.questype = quesType;
             //选择
             var optionArray = new Array();
             if(tasktype==3){
-                $("ul li[class='crumb'] span").each(function(){
+                $("ul li[class='crumb'] span input[type='hidden']").each(function(){
                         optionArray.push(this);
                 });
             }
+            if (quesType == 2) {
+                if (txt_fb_option.length < 1) {
+                    alert('抱歉,未发现填空题回答输入框!');
+                    return;
+                }
+                if (txt_fb_option.length > txt_fb_answer.length) {
+                    alert('请完成填空录入后提交!');
+                    return;
+                }
+                $.each(txt_fb_answer, function (idx, itm) {
+                    if (paramStr.length > 0)
+                        paramStr += "&";
+                    paramStr += "fbanswerArray=" + $(itm).val();
+                });
 
+            } else if (quesType == 3 || quesType == 4) {
+                if (optionArray.length < 1) {
+                    alert('请选择选项后提交!');
+                    return;
+                }
+                $.each(optionArray, function (idx, itm) {
+                    if (paramStr.length > 0)
+                        paramStr += "&";
+                    paramStr += "optionArray=" + $(itm).val();
+                });
+            }
+            $.ajax({
+                url:"imapi1_1?m=doStuSubmitTask",
+                type:"post",
+                data:paramStr + '&' + $.param(param),
+                dataType:'json',
+                cache: false,
+                error:function(){
+                    alert('系统未响应，请稍候重试!');
+                },success:function(rmsg){
+                    if (rmsg.type == "error") {
+                        alert(0);
+                    } else {
+                        alert(1);
+                    }
+                }
+            });
         }
 
         function changeOption(idx){
@@ -106,7 +152,7 @@
                     <c:if test="${!empty answer}">
                         <li>
                     </c:if>
-                    <span class="blue">${itm.optiontype}、</span>${itm.content}
+                    <span class="blue"><input type="hidden" id="h_${itm.ref}" value="${itm.ref}"/>${itm.optiontype}、</span>${itm.content}
                     <c:if test="${!empty answer}">
                         <c:forEach items="${answer}" var="im">
                             <c:if test="${itm.optiontype eq im.answercontent and itm.isright==1}">
