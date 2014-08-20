@@ -89,10 +89,10 @@ public class TpRecordDAO  extends CommonDAO<TpRecordInfo> implements ITpRecordDA
         } else
             sqlbuilder.append("null,");
         if (obj.getRef() != null) {
-            sqlbuilder.append("?,");
+            sqlbuilder.append("?");
             objList.add(obj.getRef());
         } else
-            sqlbuilder.append("null,");
+            sqlbuilder.append("null");
 
 //        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 //            sqlbuilder.append("?,?,");
@@ -107,13 +107,12 @@ public class TpRecordDAO  extends CommonDAO<TpRecordInfo> implements ITpRecordDA
 //        }else{
 //            sqlbuilder.append("NULL,");
 //        }
-        sqlbuilder.append("?)}");
-        List<Integer> types=new ArrayList<Integer>();
-        types.add(Types.INTEGER);
-        Object[] objArray=new Object[1];
-        List<TpRecordInfo> questioninfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpRecordInfo.class, objArray);
-        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
-            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        sqlbuilder.append(")}");
+//        List<Integer> types=new ArrayList<Integer>();
+//        types.add(Types.INTEGER);
+        List<TpRecordInfo> questioninfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, null, TpRecordInfo.class, null);
+//        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+//            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
         return questioninfoList;
     }
 

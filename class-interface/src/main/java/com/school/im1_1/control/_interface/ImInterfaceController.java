@@ -1,6 +1,5 @@
 package com.school.im1_1.control._interface;
 
-import com.etiantian.unite.utils.CodecUtil;
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
 import com.school.entity.UserInfo;
@@ -15,13 +14,11 @@ import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.util.JsonEntity;
-import com.school.util.MD5_NEW;
 import com.school.util.UtilTool;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -1634,8 +1631,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             return;
         }
 
+        //去除sign
+        paramMap.remove("sign");
         //验证Md5
-
         Boolean b = UrlSigUtil.verifySigSimple("AddCourseRecord",paramMap,sign);
         if(!b){
             returnJo.put("msg","验证失败，非法登录!");
@@ -1668,7 +1666,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(attach!=null)
             tpRecordInfo.setImgUrl(attach.trim());
         if(content!=null)
-            tpRecordInfo.setImgUrl(content.trim());
+            tpRecordInfo.setContent(content.trim());
         //添加
         if(this.tpRecordManager.doSave(tpRecordInfo)){
             returnJo.put("result",1);//成功
@@ -1725,6 +1723,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(returnJo.toString());
             return;
         }
+        //去除sign
+        paramMap.remove("sign");
         //验证Md5
         Boolean b = UrlSigUtil.verifySigSimple("DeleteRecord",paramMap,sign);
         if(!b){
@@ -1806,6 +1806,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(returnJo.toString());
             return;
         }
+        //去除sign
+        paramMap.remove("sign");
         //验证Md5
         Boolean b = UrlSigUtil.verifySigSimple("GetClassRecord",paramMap,sign);
         if(!b){
@@ -1896,7 +1898,7 @@ class ImUtilTool{
             returnMap=new HashMap<String, String>();
             while(eObj.hasMoreElements()){
                 Object obj=eObj.nextElement();
-                if(obj==null||obj.toString().trim().length()<1)
+                if(obj==null||obj.toString().trim().length()<1||obj.toString().trim().equals("m"))
                     continue;
                 Object val=request.getParameter(obj.toString());
                 returnMap.put(obj.toString(),val.toString());
