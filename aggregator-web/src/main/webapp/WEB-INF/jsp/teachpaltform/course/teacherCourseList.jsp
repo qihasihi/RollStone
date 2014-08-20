@@ -69,6 +69,7 @@
 
 
         });
+
         function initMaterial(){
 //            $.ajax({
 //                url:'teachingmaterial?m=getTchingMaterialList',
@@ -249,8 +250,8 @@
         <ul id="teaching_materia">
         </ul>
 
-        <p class="t_c ">
-            <a id="addReportBtn" class="an_public1"  href="javascript:void(0);" onclick="selectMaterial();">确定</a>
+        <p class="t_c " id="">
+            <a id="addReportBtn" class="an_public1"  href="javascript:selectMaterial();" onclick="">确定</a>
         </p>
     </div>
 </div>

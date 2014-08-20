@@ -168,6 +168,47 @@ public class TpTeacherTeachMaterialDAO extends CommonDAO<TpTeacherTeachMaterial>
 
     @Override
     public List<Object> getDeleteSql(TpTeacherTeachMaterial obj, StringBuilder sqlbuilder) {
-        return null;
+        if(obj==null || sqlbuilder==null)
+            return null;
+        /**
+         p_user_id INT,
+         p_subject_id INT ,
+         p_material_id INT,
+         p_grade_id INT,
+         p_term_id VARCHAR(100),
+         p_current_page INT(10),
+         p_page_size INT(10),
+         p_sort_column VARCHAR(100),
+         OUT sumCount INT
+         */
+        sqlbuilder.append("{CALL tp_j_teacher_material_info_delete(");
+        List<Object>objList = new ArrayList<Object>();
+        if (obj.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(obj.getUserid());
+        } else
+            sqlbuilder.append("null,");
+        if (obj.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(obj.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
+        if (obj.getMaterialid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(obj.getMaterialid());
+        } else
+            sqlbuilder.append("null,");
+        if (obj.getGradeid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(obj.getGradeid());
+        } else
+            sqlbuilder.append("null,");
+        if (obj.getTermid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(obj.getTermid());
+        } else
+            sqlbuilder.append("null,");
+        sqlbuilder.append("?)}");
+        return objList;
     }
 }

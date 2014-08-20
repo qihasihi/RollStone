@@ -26,7 +26,7 @@
                             'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'removeformat',
                             'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist',
                             'lineheight',
-                            'horizontal','spechars', 'snapscreen',
+                            'horizontal','spechars',
                             'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify',
                             'link', 'unlink',
                             'insertvideo','insertimage', 'emotion', 'attachment',
@@ -73,10 +73,10 @@
                 //执行分页
 				pageGo('p1');
 
-				<c:if test="${!empty roleStr&&roleStr=='TEACHER'&&!empty topic.quoteid}">
+				<c:if test="${!empty roleStr&&roleStr=='TEACHER'&&!empty topic.quoteid&&topic.quoteid!=0}">
 				  //加载分页控件  如果是老师，则显示所有的引用专题主题
 					p2=new PageControl({
-						post_url:'tptopictheme?m=themeListjson&cloudstatus=3',
+						post_url:'tptopictheme?m=themeListjson&cloudstatus=3&selectType=-4&status=1',
 						page_id:'page2',
 						page_control_name:"p2",		//分页变量空间的对象名称
 						post_form:document.page2form,		//form
@@ -92,15 +92,15 @@
 					});
 					pageGo('p2');
 				</c:if>
-				<c:if test="${!empty roleStr&&roleStr=='STUDENT'&&!empty topic.quoteid}">
+				<c:if test="${!empty roleStr&&roleStr=='STUDENT'&&!empty topic.quoteid&&topic.quoteid!=0}">
 				  //加载分页控件  如果是老师，则显示所有的引用专题主题
 					p2=new PageControl({
-						post_url:'tptopictheme?m=themeListjson&selectType=-4',//quote_id IS NOT NULL
+						post_url:'tptopictheme?m=themeListjson&selectType=-4&status=1',//quote_id IS NOT NULL
 						page_id:'page2',
 						page_control_name:"p2",		//分页变量空间的对象名称
 						post_form:document.page2form,		//form
 						gender_address_id:'page2address',		//显示的区域
-						http_free_operate_handler:validateParamDetail,		//执行查询前操作的内容
+						http_free_operate_handler:validateParamDetail_quote,		//执行查询前操作的内容
 						http_operate_handler:theme2PageReturn_Detail,	//执行成功后返回方法
 						return_type:'json',								//放回的值类型
 						page_no:1,					//当前的页数
@@ -215,7 +215,8 @@
   <div class="nextpage" id="page1address"></div>
 </form>
 
-<c:if test="${!empty topic.quoteid}">
+<c:if test="${!empty topic.quoteid&&topic.quoteid!=0}">
+    <div id="dv_other_topic">
  <p class="p_t_20 font-black"><span class="ico44"></span>其他学校参考主帖</p>
   <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
   <c:if test="${!empty roleStr&&roleStr=='TEACHER'}">
@@ -239,6 +240,7 @@
   <form name="page2form" id="page2form" method="post">
   <div class="nextpage" id="page2address"></div>
   </form>
+    </div>
  </c:if>
 </div>
 <div id="dv_create" style="display:none">

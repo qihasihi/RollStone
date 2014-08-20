@@ -125,13 +125,18 @@ function queryList(){
 }
 
 function getQuestionIds(obj,quesitonid){
-    if(obj.checked){
-        questionids[questionids.length]=quesitonid;
+    if(operate_type.length>0){
+        questionids=new Array();
+        questionids[0]=quesitonid;
     }else{
-        if(questionids.length>0){
-            for(var i =0;i<questionids.length;i++){
-                if(questionids[i]==questionid){
-                    questionids[i]=null;
+        if(obj.checked){
+            questionids[questionids.length]=quesitonid;
+        }else{
+            if(questionids.length>0){
+                for(var i =0;i<questionids.length;i++){
+                    if(questionids[i]==questionid){
+                        questionids[i]=null;
+                    }
                 }
             }
         }

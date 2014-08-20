@@ -35,7 +35,14 @@
                         <c:if test="${itm.ismarking==1}">
                             <td><span class="ico24" title="进行中"></span></td>
                         </c:if>
-                        <td>${itm.score}</td>
+                        <td>
+                           <c:if test="${itm.ismarking==1}">
+                        <span class="ico24" title="进行中"></span>
+                        </c:if>
+                        <c:if test="${itm.ismarking==0}">
+                        ${itm.score}
+                        </c:if>
+                        </td>
                     </tr>
                 </c:forEach>
             </c:if>

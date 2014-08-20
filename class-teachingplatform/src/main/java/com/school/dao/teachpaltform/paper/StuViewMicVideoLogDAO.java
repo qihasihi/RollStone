@@ -72,6 +72,11 @@ public class StuViewMicVideoLogDAO extends CommonDAO<StuViewMicVideoLog> impleme
 			objList.add(stuviewmicvideolog.getMicvideoid());
 		} else
 			sqlbuilder.append("null,");
+        if (stuviewmicvideolog.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getTaskid());
+        } else
+            sqlbuilder.append("null,");
 
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
@@ -114,11 +119,16 @@ public class StuViewMicVideoLogDAO extends CommonDAO<StuViewMicVideoLog> impleme
             objList.add(stuviewmicvideolog.getUserid());
         } else
             sqlbuilder.append("null,");
-	    if (stuviewmicvideolog.getMicvideoid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(stuviewmicvideolog.getMicvideoid());
-		} else
-				sqlbuilder.append("null,");
+        if (stuviewmicvideolog.getMicvideoid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getMicvideoid());
+        } else
+            sqlbuilder.append("null,");
+        if (stuviewmicvideolog.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getTaskid());
+        } else
+            sqlbuilder.append("null,");
 
 		sqlbuilder.append("?)}");
 		return objList;
@@ -145,6 +155,11 @@ public class StuViewMicVideoLogDAO extends CommonDAO<StuViewMicVideoLog> impleme
             objList.add(stuviewmicvideolog.getMicvideoid());
         } else
             sqlbuilder.append("null,");
+        if (stuviewmicvideolog.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getTaskid());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -168,6 +183,11 @@ public class StuViewMicVideoLogDAO extends CommonDAO<StuViewMicVideoLog> impleme
         if (stuviewmicvideolog.getMicvideoid() != null) {
             sqlbuilder.append("?,");
             objList.add(stuviewmicvideolog.getMicvideoid());
+        } else
+            sqlbuilder.append("null,");
+        if (stuviewmicvideolog.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stuviewmicvideolog.getTaskid());
         } else
             sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");

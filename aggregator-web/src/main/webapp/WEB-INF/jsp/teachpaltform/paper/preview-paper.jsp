@@ -12,7 +12,7 @@ var courseid="${courseid}";
 var paperid="${paper.paperid}";
 var pList,pBankList;
 var total;
-var quesOrderIdx=1;
+var quesOrderIdx=1;childOrderIdx=1;
 $(function(){
     pList = new PageControl( {
         post_url : 'paperques?m=ajaxPaperQuestionList',
@@ -102,7 +102,13 @@ function preeDoPageSub(pObj){
     <div class="jxxt_zhuanti_shijuan_add font-black public_input">
         <p class="p_b_10 font-gray">${coursename}</p>
         <c:if test="${!empty paper.subjectivenum and !empty paper.objectivenum}">
-            <p class="title"><span class="f_right"><strong>主观题：<span class="font-blue">${paper.subjectivenum}</span></strong>&nbsp;&nbsp;&nbsp;&nbsp;<strong>客观题：<span class="font-blue">${paper.objectivenum}</span></strong></span><strong>${paper.papername }</strong></p>
+            <p class="title">
+                <span class="f_right">
+                    <strong>主观题：<span class="font-blue">${paper.subjectivenum}</span></strong>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<strong>客观题：<span class="font-blue">${paper.objectivenum}</span></strong>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<strong>总分值：<span id="" class="font-blue">${paper.score}&nbsp;分</span></strong>
+                </span><strong>${paper.papername }</strong>
+            </p>
         </c:if>
         <c:if test="${!empty pqList}">
 
@@ -181,7 +187,14 @@ function preeDoPageSub(pObj){
                             <tr>
                                 <td>&nbsp;</td>
                                 <td><p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}" id="score_${c.questionid}">
-                                        ${c.score}</span>分</span><span data-bind="${c.questionid}" >${(cidx.index+1)}</span>. ${c.content}</p>
+                                        ${c.score}</span>分</span>
+                                    <span data-bind="${c.questionid}" >
+                                          <script type="text/javascript">
+                                              var qteamSize="${fn:length(pq.questionTeam)}";
+                                              var tmpIdx=quesOrderIdx-qteamSize;
+                                              document.write(tmpIdx+${cidx.index});
+                                          </script>
+                                        </span>. ${c.content}</p>
                                     <table border="0" cellpadding="0" cellspacing="0">
                                         <col class="w30"/>
                                         <col class="w880"/>
@@ -255,7 +268,14 @@ function preeDoPageSub(pObj){
                             <td><p><strong>正确答案及答案解析：</strong></p>
                                 <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
                                     <p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}">${c.score}</span>
-                                        分</span><span data-bind="${c.questionid}"  class="font-blue">${(cidx.index+1)}</span>.
+                                        分</span><span data-bind="${c.questionid}"  class="font-blue">
+                                          <script type="text/javascript">
+                                              var qteamSize="${fn:length(pq.questionTeam)}";
+                                              var qoIdx=quesOrderIdx;
+                                              var tmpIdx=quesOrderIdx-qteamSize;
+                                              document.write(tmpIdx+${cidx.index});
+                                          </script>
+                                        </span>.
                                         <c:forEach items="${c.questionOption}" var="option">
                                             <c:if test="${option.isright eq 1}">
                                                 ${option.optiontype}

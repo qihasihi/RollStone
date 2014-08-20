@@ -14,7 +14,7 @@
         var quesSize="${quesSize}";
         var courseid="${courseid}";
         var taskid="${taskid}";
-        var subQuesId=",";
+        var subQuesId="${!empty answerQuesId?answerQuesId:","}";
         var paperid="${paperid}";
         var allquesidObj="${allquesidObj}";
         var sumScore=${!empty paperObj.score?paperObj.score:100},avgScore=parseInt(sumScore/quesSize);

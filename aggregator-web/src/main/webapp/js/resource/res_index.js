@@ -220,7 +220,7 @@ function doSearch(){
     if(searchType==3){
         var url="resource?m=courseList&srhValue="+$("#searchValue").val();
         url=encodeURI(encodeURI(url));
-        window.location.href=url;
+        window.open(url);
     }
 }
 

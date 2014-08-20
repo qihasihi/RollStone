@@ -100,8 +100,8 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
     }
 
     @Override
-    public List<PaperQuestion> getQuestionByPaper(Long paperid,Integer classid,Integer classtype) {
-        return this.paperquestiondao.getQuestionByPaper(paperid,classid,classtype);
+    public List<PaperQuestion> getQuestionByPaper(Long paperid,Integer classid,Integer classtype,Long taskid) {
+        return this.paperquestiondao.getQuestionByPaper(paperid,classid,classtype,taskid);
     }
 
     public List<Map<String,Object>> getPaperQuesAllId(Long paperid){
@@ -137,8 +137,8 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid){
-        return this.paperquestiondao.getClsPaperQuesZQLV(paperid, quesid, classid);
+    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid,Long taskid){
+        return this.paperquestiondao.getClsPaperQuesZQLV(paperid, quesid, classid,taskid);
       }
 
     /**
@@ -147,8 +147,8 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid){
-        return this.paperquestiondao.getClsPaperQuesOptTJ(paperid,quesid,classid);
+    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid,Long taskid){
+        return this.paperquestiondao.getClsPaperQuesOptTJ(paperid,quesid,classid,taskid);
     }
     
 }

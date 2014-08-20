@@ -89,6 +89,16 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
             objList.add(stupaperqueslogs.getAnswer());
         } else
             sqlbuilder.append("null,");
+        if (stupaperqueslogs.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getTaskid());
+        } else
+            sqlbuilder.append("null,");
+        if (stupaperqueslogs.getIsmarking() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getIsmarking());
+        } else
+            sqlbuilder.append("null,");
 
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
@@ -162,6 +172,11 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
             objList.add(stupaperqueslogs.getAnnexName());
         } else
             sqlbuilder.append("null,");
+        if (stupaperqueslogs.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getTaskid());
+        } else
+            sqlbuilder.append("null,");
 
 		sqlbuilder.append("?)}");
 		return objList;
@@ -191,6 +206,11 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
         if (stupaperqueslogs.getQuesid() != null) {
             sqlbuilder.append("?,");
             objList.add(stupaperqueslogs.getQuesid());
+        } else
+            sqlbuilder.append("null,");
+        if (stupaperqueslogs.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getTaskid());
         } else
             sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
@@ -245,6 +265,11 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
         if (stupaperqueslogs.getAnnexName() != null) {
             sqlbuilder.append("?,");
             objList.add(stupaperqueslogs.getAnnexName());
+        } else
+            sqlbuilder.append("null,");
+        if (stupaperqueslogs.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getTaskid());
         } else
             sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");

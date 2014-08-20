@@ -21,8 +21,20 @@ public class StuPaperQuesLogs implements  Serializable {
     private Integer ismarking;
     private String annexName;
 
+
     private String stuname;
     private String stuno;
+
+    private Long taskid;
+
+    public Long getTaskid() {
+        return taskid;
+    }
+
+    public void setTaskid(Long taskid) {
+        this.taskid = taskid;
+    }
+
 
     public String getStuname() {
         return stuname;

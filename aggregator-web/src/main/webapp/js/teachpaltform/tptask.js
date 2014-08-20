@@ -438,6 +438,7 @@ function selectClassObj(obj, classid) {
             $(this).attr("checked", obj.checked)
         });
     }
+
     // qryTopicByCls();
 }
 
@@ -951,6 +952,7 @@ function doSubManageTask(taskid) {
             return;
         }
         param.quesnum = quesNum;*/
+        param.taskvalueid = paperid;
     }else if (tasktype.val() == "6") {
         if (micresid.length < 1) {
             alert('请选择微视频!');
@@ -1208,8 +1210,10 @@ function loadNoCompleteStu(taskid, usertypeid, taskstatus) {
                         }
 
                     });
-                    if (taskstatus != '3')
-                        $("#dv_nocomplete_data").append('<p class="t_c"><a href="javascript:doSendTaskMsg(' + taskid + ',' + usertypeid + ')"  class="an_public1">发提醒</a></p>');
+                    if (taskstatus != '3'){
+                        //$("#dv_nocomplete_data").append('<p class="t_c"><a href="javascript:doSendTaskMsg(' + taskid + ',' + usertypeid + ')"  class="an_public1">发提醒</a></p>');
+                    }
+
                 }
                 showModel("dv_nocomplete");
             }
@@ -1381,6 +1385,7 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
         param.classid = classid;
         param.classtype = classtype;
     } else {
+        classtype=0;
         param.classid = 0;
         classid=0;
         param.classtype = 0;
@@ -1399,7 +1404,7 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
         error: function () {
             alert('系统未响应，请稍候重试!');
         }, success: function (rmsg) {
-            var img = '<input type="image" src="images/taskPie.png"/>';
+            var img = '<img src="task/img/'+taskid+'/'+classid+'/'+classtype+'/op"/>';
             $("#piediv").html(img);
             if (rmsg.objList[0].length > 0) {
                 var totalnum = 0;
@@ -1415,10 +1420,14 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                 var finishhtml = fn.toFixed(2);
                 finishhtml += "%";
                 $("#finishnum").html(finishhtml);
-                var rn = parseInt(rightnum) / parseInt(finishnum) * 100;
-                var righthtml = rn.toFixed(2);
-                righthtml += "%";
-                $("#rightnum").html(righthtml);
+               if(finishnum>0){
+                   var rn = parseFloat(parseInt(rightnum))/ parseInt(finishnum) * 100;
+                   var righthtml = rn.toFixed(2);
+                   righthtml += "%";
+                   $("#rightnum").html(righthtml);
+               }else{
+                   $("#rightnum").html("0.00%");
+               }
             } else {
                 $("#finishnum").html("0");
                 $("#rightnum").html("0");
@@ -1440,8 +1449,8 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
             } else {
                 optionhtm += '<tr><td>暂无数据!</td></tr>';
             }
+            var recordhtm = '';
             if (rmsg.objList[2].length > 0) {
-                var recordhtm = '';
                 if (rmsg.objList[3].length > 0) {
                     $.each(rmsg.objList[3], function (ix, im) {
                         recordhtm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
@@ -1886,7 +1895,12 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                                         else
                                             htm += '<td>---</td>';
                                     }
-                                    htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '&flag=1">查看卷面</a></td>'
+                                    if(tasktype==6&&itm.creteriatype==2)
+                                        htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '&flag=1">查看卷面</a></td>'
+                                    else if(tasktype==6&&itm.creteriatype==1)
+                                        htm +='<td>---</td>'
+                                    else
+                                        htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '&flag=1">查看卷面</a></td>'
                                     htm += '</tr>';
                                 }
                             });
@@ -1960,7 +1974,12 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                             else
                                 htm += '<td>---</td>';
                         }
-                        htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '&flag=1">查看卷面</a></td>'
+                        if(tasktype==6&&itm.creteriatype==2)
+                            htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '&flag=1">查看卷面</a></td>'
+                        else if(tasktype==6&&itm.creteriatype==1)
+                            htm +='<td>---</td>'
+                        else
+                            htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '&flag=1">查看卷面</a></td>'
                         htm += '</tr>';
                     });
                     htm += '</table>';

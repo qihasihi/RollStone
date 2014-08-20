@@ -18,8 +18,17 @@
                 zgloadStuPerformance(${classList[0].classid},"${taskInfo.tasktype}","${taskInfo.taskvalueid}",${classList[0].classtype});
             </c:if>
             if(${taskInfo.tasktype==1}){
-               // var uri="resource?m=todetail&resid=${taskInfo.taskvalueid}";
-                var uri="tpres?toTeacherIdx&courseid=${courseid}&tpresdetailid=${taskInfo.taskvalueid}&taskid=${taskInfo.taskid}"
+                var uri="";
+                if(${taskInfo.resourcetype==2}){
+                    if(${taskInfo.remotetype==1}){
+                        uri = "tpres?m=toRemoteResourcesDetail&hd_res_id=${taskInfo.taskvalueid}";
+                    }else if(${taskInfo.remotetype==2}){
+                        uri = "tpres?m=toRemoteResourcesDetail&res_id=${taskInfo.taskvalueid}";
+                    }
+
+                }else{
+                    uri="tpres?toTeacherIdx&courseid=${courseid}&tpresdetailid=${taskInfo.taskvalueid}&taskid=${taskInfo.taskid}"
+                }
                 $("#showdetail").attr("href",uri);
             }else if(${taskInfo.tasktype==2}){
                 var uri="tptopic?m=toDetailTopic&topicid=${taskInfo.taskvalueid}";

@@ -12,6 +12,15 @@ public class StuPaperLogs {
     private Integer ismarking;
     private String stuname;
     private Integer isinpaper;
+    private Long taskid;
+
+    public Long getTaskid() {
+        return taskid;
+    }
+
+    public void setTaskid(Long taskid) {
+        this.taskid = taskid;
+    }
 
     public Integer getIsinpaper() {
         return isinpaper;

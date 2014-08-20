@@ -17,7 +17,6 @@ public interface IPaperQuestionDAO extends ICommonDAO<PaperQuestion>{
      */
     Integer paperQuesCount(final Long paperid);
     Boolean updateQuesTeamScore(final PaperQuestion paperQuestion);
-    public List<PaperQuestion> getQuestionByPaper(final Long paperid,final Integer classid,final Integer classtype);
     public List<PaperQuestion> getPaperTeamQuestionList(final PaperQuestion p,PageResult pageResult);
 
     public List<Object> getSynchroSql(final PaperQuestion paperquestion, StringBuilder sqlbuilder);
@@ -45,13 +44,14 @@ public interface IPaperQuestionDAO extends ICommonDAO<PaperQuestion>{
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid);
+    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid,Long taskid);
 
+    public List<PaperQuestion> getQuestionByPaper(final Long paperid,final Integer classid,final Integer classtype,final Long taskid);
     /**
      * 得到当前班级下，当前试题，试卷下的正确率
      * @param paperid
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid);
+    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid,Long taskid);
 }

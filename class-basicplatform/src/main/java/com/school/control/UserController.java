@@ -1005,7 +1005,7 @@ public class UserController extends BaseController<UserInfo> {
                     }
                     je.setMsg(UtilTool.msgproperty.getProperty("USER_LOGIN_PASSWORD_ERROR"));
                 }
-                if (userinfo == null) {
+                if (userinfo != null) {
                     if (userinfo.getPassword().trim().equals("201212181540")
                             && request.getSession()
                             .getAttribute("userpassword") != null) {
@@ -1067,6 +1067,17 @@ public class UserController extends BaseController<UserInfo> {
                         uitmp.setUserid(userinfo.getRef());
                         List<UserIdentityInfo> uidtttList=this.userIdentityManager.getList(uitmp,null);
 
+                        if(UtilTool._IS_SIMPLE_RESOURCE!=2){
+                            //栏目
+                            IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
+                            EttColumnInfo ec=new EttColumnInfo();
+                            if(this.validateRole(request,UtilTool._ROLE_STU_ID))
+                                ec.setRoletype(2);//学生
+                            else
+                                ec.setRoletype(1);
+                            request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
+                        }
+
                         request.getSession().setAttribute("cut_uidentity", uidtttList);//存入Session中
                         request.getSession().setAttribute("CURRENT_USER", userinfo);//存入Session中
                     //    userinfo=userinfo;
@@ -1102,17 +1113,17 @@ public class UserController extends BaseController<UserInfo> {
 		if(autolo!=null&&autolo.equals("1"))autoLogin=true;
         je=loginBase(userinfo,request,response);
         if(je.getType().trim().equals("success")){
-            if(UtilTool._IS_SIMPLE_RESOURCE!=2){
-                //栏目
-                IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
-                EttColumnInfo ec=new EttColumnInfo();
-                if(this.validateRole(request,UtilTool._ROLE_STU_ID))
-                    ec.setRoletype(2);//学生
-                else
-                    ec.setRoletype(1);
-                request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
-            }
-            request.getSession().setAttribute("fromType","szschool");  //lzx
+//            if(UtilTool._IS_SIMPLE_RESOURCE!=2){
+//                //栏目
+//                IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
+//                EttColumnInfo ec=new EttColumnInfo();
+//                if(this.validateRole(request,UtilTool._ROLE_STU_ID))
+//                    ec.setRoletype(2);//学生
+//                else
+//                    ec.setRoletype(1);
+//                request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
+//            }
+            request.getSession().setAttribute("fromType","szschool");  //szschool
 //                    System.out.println("loginUser:"+(UserInfo) request.getSession().getAttribute("CURRENT_USER"));
 					if (remember) {
 						Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef());

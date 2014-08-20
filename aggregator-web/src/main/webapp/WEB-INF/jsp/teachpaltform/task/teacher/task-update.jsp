@@ -47,26 +47,7 @@
 
 
 
-            $("input[name='time_rdo']").bind("click",function(){
-                if($(this).val()==1){
-                    $("#list_ct p").hide();
 
-                    $("input[name='ck_cls']:checked").each(function(idx,itm) {
-                        $("#p_"+$(this).val()).show();
-                    });
-                    $("input[name='ck_group']:checked").each(function(idx,itm) {
-                        var p=$(itm).parent().parent("ul");
-                        var tmpId=p.attr("id").substring(p.attr("id").lastIndexOf('_')+1);
-                        $("#p_"+tmpId).show();
-                    });
-
-                    $("#all_ct").hide();
-                    $("#list_ct").show('fast');
-                }else{
-                    $("#list_ct").hide();
-                    $("#all_ct").show('fast');
-                }
-            });
 
             $("input[name='ck_cls']").bind("click",function(){
                 if($(this).attr("checked")){
@@ -190,7 +171,13 @@
             <tr>
                 <th><span class="ico06"></span>任务时间：</th>
                 <td class="font-black">
-                    <p><input id="time_rdo0" name="time_rdo" type="radio" value="0"/>
+                    <p>
+                        <c:if test="${!empty param.flag}">
+                            <input id="time_rdo0" checked="checked" name="time_rdo" type="radio" value="0"/>
+                        </c:if>
+                        <c:if test="${empty param.flag}">
+                            <input id="time_rdo0"  name="time_rdo" type="radio" value="0"/>
+                        </c:if>
                         所有班级一致&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <input id="time_rdo1"  name="time_rdo" value="1" type="radio"/>不一致</p>
                     <div id="all_ct" class="jxxt_zhuanti_add_time">
@@ -310,7 +297,37 @@
                     $("input[name='time_rdo']").attr("disabled",true);
                     $("#all_ct").hide();
                     $("#list_ct").show();
+                    <c:if test="${!empty param.flag}"> //启用任务
+                        $("input[name='time_rdo']").attr("disabled",false);
+                        $("#time_rdo0").attr("checked",true);
+                        $("#all_ct").show();
+                        $("#list_ct").hide();
+                    </c:if>
+
+
                     //$("#list_ct p").show();
+
+
+                    $("input[name='time_rdo']").bind("click",function(){
+                        if($(this).val()=="1"){
+                            $("#list_ct p").hide();
+
+                            $("input[name='ck_cls']:checked").each(function(idx,itm) {
+                                $("#p_"+$(this).val()).show();
+                            });
+                            $("input[name='ck_group']:checked").each(function(idx,itm) {
+                                var p=$(itm).parent().parent("ul");
+                                var tmpId=p.attr("id").substring(p.attr("id").lastIndexOf('_')+1);
+                                $("#p_"+tmpId).show();
+                            });
+
+                            $("#all_ct").hide();
+                            $("#list_ct").show('fast');
+                        }else{
+                            $("#list_ct").hide();
+                            $("#all_ct").show('fast');
+                        }
+                    });
                 });
 
 			</script>

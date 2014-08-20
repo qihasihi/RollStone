@@ -352,6 +352,12 @@ public class QuestionAnswerDAO extends CommonDAO<QuestionAnswer> implements IQue
             objList.add(questionanswer.getQuesparentid());
         } else
             sqlbuilder.append("null,");
+        if (questionanswer.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questionanswer.getUserid());
+        } else
+            sqlbuilder.append("null,");
+
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
             sqlbuilder.append("?,?,");
             objList.add(presult.getPageNo());

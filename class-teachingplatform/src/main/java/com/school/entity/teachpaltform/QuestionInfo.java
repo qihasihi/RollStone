@@ -35,6 +35,15 @@ public class QuestionInfo implements java.io.Serializable {
 
 
     private Float score;
+    /*学生当前题的答卷情况*/
+    private StuPaperQuesLogs spqLogs;
+    public StuPaperQuesLogs getSpqLogs() {
+        return spqLogs;
+    }
+
+    public void setSpqLogs(StuPaperQuesLogs spqLogs) {
+        this.spqLogs = spqLogs;
+    }
 
     public QuestionInfo getParentQues() {
         return parentQues;

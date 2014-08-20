@@ -159,7 +159,8 @@ function getInvestReturnMethod(rps){
             if(itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)){
                 html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
             }
-            html+='<a title="删除" class="ico04" href="javascript:doDelTask('+itm.taskid+','+itm.stucount+')"></a>';
+            if(itm.taskstatus=="1")
+                html+='<a title="删除" class="ico04" href="javascript:doDelTask('+itm.taskid+','+itm.stucount+')"></a>';
             html+='</p>';
             html+='<p><a class="ico49b"  id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务</a><span data-bind="'+itm.taskid+'" id="order_'+itm.taskid+'" class="m_lr_10">'+itm.orderidx+'</span>：'+type+'';
             if(itm.tasktype==1){
@@ -180,7 +181,7 @@ function getInvestReturnMethod(rps){
                 html+='<a class="font-blue" href="#" >'+taskObj+'</a>';
             }
             if(itm.tasktype==4&&itm.taskstatus=="3"){
-                html+='<a class="ico84" title="批阅" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
+                html+='<a class="ico84" title="批阅" target="_blank" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
             }
             html+='</p>';
             html+='</div>';
@@ -395,7 +396,7 @@ function getBankInvestReturnMethod(rps){
             if(itm.tasktype==1){
                 if(typeof itm.remotetype!='undefined'){
                     var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
-                    html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" >'+itm.resourcename;
+                    html+='<a target="_blank" href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" >'+itm.resourcename;
                 }else{
                     if( itm.resourcetype==1||typeof itm.resourcetype=='undefined'){
                         html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >';
@@ -409,9 +410,9 @@ function getBankInvestReturnMethod(rps){
             }else if(itm.tasktype==4){
                 html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.taskvalueid+'">';
             }else if(itm.tasktype==5){
-                html+='<a href="#" >';
+                html+='<a>';
             }else if(itm.tasktype==6){
-                html+='<a href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'" >';
+                html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >';
             }else if(itm.tasktype==10){
                 html+='<a href="#" >';
             }
@@ -434,17 +435,17 @@ function getBankInvestReturnMethod(rps){
             html+='</td>';
             html+='<td>'+criteria+'</td>';
             html+='<td>';
-            if(itm.tasktype==1){
+           /* if(itm.tasktype==1){
                 html+='<a target="_blank" href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="ico46" title="浏览"></a>&nbsp;';
             }else if(itm.tasktype==2){
                 html+='<a target="_blank" href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'"  class="ico46" title="浏览"></a>&nbsp;';
             }else if(itm.tasktype==3){
                 html+='<a target="_blank" href="question?m=todetail&id='+itm.taskvalueid+'" class="ico46" title="浏览"></a>&nbsp;';
-            }
-            if(typeof itm.flag!='undefined'){
+            }*/
+            if(itm.flag>0||itm.objflag>0){
                 html+='<span class="ico43" title="已启用"></span>';
             }else{
-                html+='<a  class="ico02" title="启用" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
+                html+='<a  class="ico02" title="启用" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'&flag=1"></a>';
             }
             html+='</td></tr>';
 

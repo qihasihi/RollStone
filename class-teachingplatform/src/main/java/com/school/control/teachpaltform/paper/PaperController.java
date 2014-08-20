@@ -379,7 +379,7 @@ public class PaperController extends BaseController<PaperInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("u.paper_id,u.c_time desc ");
+        p.setOrderBy(" p.paper_type,u.c_time desc,u.paper_id desc ");
         TpCoursePaper t= new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
         t.setLocalstatus(1);
@@ -2747,8 +2747,6 @@ public class PaperController extends BaseController<PaperInfo>{
                         classList.add(map);
                     }
                 }
-
-
             }
         }
         request.setAttribute("courseid",taList.get(0).getCourseid());
@@ -3126,7 +3124,7 @@ public class PaperController extends BaseController<PaperInfo>{
         String clsid = request.getParameter("classid");
         String classtype=request.getParameter("classtype");
         JsonEntity je = new JsonEntity();
-        if(paperid==null||paperid.length()<1){
+        if(paperid==null||paperid.length()<1||taskid==null||taskid.trim().length()<1){
             je.setMsg("异常错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
@@ -3137,6 +3135,8 @@ public class PaperController extends BaseController<PaperInfo>{
 
         List<Map> classList = new ArrayList<Map>();
         for(TpTaskAllotInfo o:taList){
+            if(o.getEtime()!=null&&o.getEtime().getTime()>new Date().getTime())
+                continue;
             if(o.getUsertype()==0){
                 ClassInfo ci = new ClassInfo();
                 ci.setClassid(Integer.parseInt(o.getUsertypeid().toString()));
@@ -3208,7 +3208,7 @@ public class PaperController extends BaseController<PaperInfo>{
             classtype= classList.get(0).get("classtype").toString();
         }
         //获取试卷内所有试题的提交人数和审批人数
-        List<PaperQuestion> objList = this.paperQuestionManager.getQuestionByPaper(Long.parseLong(paperid),Integer.parseInt(clsid),Integer.parseInt(classtype));
+        List<PaperQuestion> objList = this.paperQuestionManager.getQuestionByPaper(Long.parseLong(paperid),Integer.parseInt(clsid),Integer.parseInt(classtype),Long.parseLong(taskid.trim()));
         //获取试卷内所有试题
         List<Map<String,Object>> quesIdList = this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
         if(quesIdList!=null&&quesIdList.size()>0){
@@ -3220,18 +3220,27 @@ public class PaperController extends BaseController<PaperInfo>{
         List<PaperInfo> piList = this.paperManager.getList(pi,null);
         StuPaperLogs stuPaperLogs = new StuPaperLogs();
         stuPaperLogs.setPaperid(Long.parseLong(paperid));
+        stuPaperLogs.setTaskid(Long.parseLong(taskid.trim()));
         List<StuPaperLogs> stuPaperLogsList = this.stuPaperLogsManager.getList(stuPaperLogs,null);
         Boolean sign = true;
         if(stuPaperLogsList!=null&&stuPaperLogsList.size()>0){
             for(int i = 0;i<stuPaperLogsList.size();i++){
-                if(stuPaperLogsList.get(i).getIsmarking()==0)
+                if(stuPaperLogsList.get(i).getIsmarking()!=0){
                     sign=false;
+                    break;
+                }
             }
         }
         request.setAttribute("classid",clsid);
         request.setAttribute("classtype",classtype);
         request.setAttribute("classes",classList);
         request.setAttribute("questionList",objList);
+        request.setAttribute("papertype",piList.get(0).getPapertype());
+        Float paperScore=100F;
+        if(piList.get(0).getPapertype()==3)
+            paperScore=piList.get(0).getScore();
+        request.setAttribute("paperScore",paperScore);
+
         request.setAttribute("papername",piList.get(0).getPapername());
         request.setAttribute("ismark",sign);
         return new ModelAndView("teachpaltform/paper/marking/marking-list");
@@ -3246,6 +3255,13 @@ public class PaperController extends BaseController<PaperInfo>{
             JsonEntity je = new JsonEntity();
             String paperid = request.getParameter("paperid");
             String type = request.getParameter("type");
+            String classid=request.getParameter("classid");
+            if(paperid==null||paperid.trim().length()<1||type==null||type.trim().length()<1
+                    ||classid==null||classid.trim().length()<1){
+                je.setType("error");
+                je.setMsg("参数有误!");
+                response.getWriter().println(je.toJSON());return;
+            }
             //获取试卷的总分和各分数段的人数
             PaperInfo pi = new PaperInfo();
             pi.setPaperid(Long.parseLong(paperid));
@@ -3270,7 +3286,7 @@ public class PaperController extends BaseController<PaperInfo>{
                        }
                        int bignum = Integer.parseInt(new java.text.DecimalFormat("0").format(dbnum));
                        int smallnum = Integer.parseInt(new java.text.DecimalFormat("0").format(dbnum2));
-                       List<Map<String,Object>> numList = this.stuPaperLogsManager.getPaperPercentNum(Long.parseLong(paperid),bignum,smallnum);
+                       List<Map<String,Object>> numList = this.stuPaperLogsManager.getPaperPercentNum(Long.parseLong(paperid),bignum,smallnum,Integer.parseInt(classid.trim()));
                        //m.put(smallnum + "~" + bignum, numList.get(0).get("NUM"));
                        htm+="<tr><td>"+smallnum + "~" + bignum+"</td><td>"+numList.get(0).get("NUM")+"</td></tr>";
                        int num = Integer.parseInt(numList.get(0).get("NUM").toString());
@@ -3310,7 +3326,8 @@ public class PaperController extends BaseController<PaperInfo>{
                        }
                        int bignum = dbnum;
                        int smallnum = dbnum2;
-                       List<Map<String,Object>> numList = this.stuPaperLogsManager.getPaperPercentNum(Long.parseLong(paperid),bignum,smallnum);
+                       List<Map<String,Object>> numList = this.stuPaperLogsManager.getPaperPercentNum(Long.parseLong(paperid),
+                               bignum,smallnum,Integer.parseInt(classid.trim()));
                        m.put(smallnum + "~" + bignum, numList.get(0).get("NUM"));
                        int num = Integer.parseInt(numList.get(0).get("NUM").toString());
                        int totalnum = Integer.parseInt(numList.get(0).get("TOTALNUM").toString());
@@ -3352,12 +3369,14 @@ public class PaperController extends BaseController<PaperInfo>{
         String paperid = request.getParameter("paperid");
         String quesid = request.getParameter("quesid");
         String idx = request.getParameter("idx");
+        String classid=request.getParameter("classid");
+       String taskid=request.getParameter("taskid");
         JsonEntity je = new JsonEntity();
-        if(paperid==null||paperid.length()<1||quesid==null||quesid.length()<1){
+        if(paperid==null||paperid.length()<1||quesid==null||quesid.length()<1||classid==null||classid.trim().length()<1||taskid==null||taskid.trim().length()<1){
             je.setMsg("异常错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
-        List<StuPaperLogs> logsList = this.stuPaperLogsManager.getMarkingLogs(Long.parseLong(paperid),Long.parseLong(quesid));
+        List<StuPaperLogs> logsList = this.stuPaperLogsManager.getMarkingLogs(Long.parseLong(paperid),Long.parseLong(quesid),Integer.parseInt(classid),Long.parseLong(taskid.trim()));
         request.setAttribute("logs",logsList);
         request.setAttribute("idx",idx);
         return new ModelAndView("teachpaltform/paper/marking/marking-logs");
@@ -3373,6 +3392,7 @@ public class PaperController extends BaseController<PaperInfo>{
         String qid = request.getParameter("questionid");
         String classid = request.getParameter("classid");
         String classtype = request.getParameter("classtype");
+        String taskid=request.getParameter("taskid");
         Long questionid = null;
         if(qid!=null){
             questionid=Long.parseLong(qid);
@@ -3380,16 +3400,26 @@ public class PaperController extends BaseController<PaperInfo>{
         String quesid = request.getParameter("quesid");
         String idx = request.getParameter("idx");
         JsonEntity je = new JsonEntity();
-        if(paperid==null||paperid.length()<1||quesid==null||quesid.length()<1){
+        if(paperid==null||paperid.length()<1||quesid==null||quesid.length()<1||taskid==null||taskid.trim().length()<1){
             je.setMsg("异常错误，请刷新页面重试");
             response.getWriter().println(je.getAlertMsgAndBack());
             return null;
         }
-        List<Map<String,Object>> detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),questionid,Long.parseLong(quesid),1,Integer.parseInt(classid),Integer.parseInt(classtype));
+        List<Map<String,Object>> detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),questionid,Long.parseLong(quesid),1,Integer.parseInt(classid),Integer.parseInt(classtype),Long.parseLong(taskid.trim()));
+//        if(detailList==null||detailList.size()<1){
+//            je.setMsg("该试卷还没有学生进行答题，无法批阅试卷!");
+//            response.getWriter().print(je.getAlertMsgAndBack());
+//            return null;
+//        }
         List<Map<String,Object>> numList = this.stuPaperLogsManager.getMarkingNum(Long.parseLong(paperid),Long.parseLong(quesid),Integer.parseInt(classid),Integer.parseInt(classtype));
         if(detailList==null||detailList.size()==0){
-            detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),questionid,Long.parseLong(quesid),0,Integer.parseInt(classid),Integer.parseInt(classtype));
+            detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),questionid,Long.parseLong(quesid),0,Integer.parseInt(classid),Integer.parseInt(classtype),Long.parseLong(taskid.trim()));
             request.setAttribute("sign",true);
+            if(detailList==null||detailList.size()<1){
+                je.setMsg("该试卷还没有学生进行答题，无法批阅试卷!");
+                response.getWriter().print(je.getAlertMsgAndBack());
+                return null;
+            }
         }else{
             request.setAttribute("sign",false);
         }
@@ -3401,8 +3431,8 @@ public class PaperController extends BaseController<PaperInfo>{
         int extension=0;
         if(detailList.get(0).get("EXTENSION2")!=null)
             extension = Integer.parseInt(detailList.get(0).get("EXTENSION2").toString());
-        if(type2>0&&type2==6){
-            if(extension==5){
+        if(type2>0&&type2==6&&extension==5){
+//            if(extension==5){
                 QuestionOption qo = new QuestionOption();
                 qo.setQuestionid(Long.parseLong(qid));
                 List<QuestionOption> optionList = this.questionOptionManager.getList(qo,null);
@@ -3410,38 +3440,46 @@ public class PaperController extends BaseController<PaperInfo>{
 
                 QuestionOption q = new QuestionOption();
                 q.setQuestionid(Long.parseLong(quesid));
+                q.setIsright(1);
                 List<QuestionOption> rightoption = this.questionOptionManager.getList(q,null);
                 request.setAttribute("rightoption",rightoption);
-            }
-        }else{
+//            }
+        }
+        else{
             if(type==3||type==4||type==7||type==8){
                 QuestionOption qo = new QuestionOption();
                 qo.setQuestionid(Long.parseLong(quesid));
                 List<QuestionOption> optionList = this.questionOptionManager.getList(qo,null);
                 request.setAttribute("option",optionList);
-                //如果是选择题，则出正确率，选项等分数
-                List<Map<String,Object>> zqlMapList=this.paperQuestionManager.getClsPaperQuesZQLV(
-                        Long.parseLong(paperid),
-                        Long.parseLong(quesid),
-                        Integer.parseInt(classid.trim()));
-                if(zqlMapList==null||zqlMapList.size()<1||zqlMapList.get(0)==null||!zqlMapList.get(0).containsKey("ZQL")){
-                    je.setMsg("异常错误，请刷新页面重试");
-                    response.getWriter().println(je.getAlertMsgAndBack());
-                    return null;
-                }
-                request.setAttribute("zqlMap",zqlMapList.get(0));
-                List<Map<String,Object>> optTJMapList=this.paperQuestionManager.getClsPaperQuesOptTJ(
-                        Long.parseLong(paperid),
-                        Long.parseLong(quesid),
-                        Integer.parseInt(classid.trim()));
-                if(optTJMapList==null||optTJMapList.size()<1||optTJMapList.get(0)==null){
-                    je.setMsg("异常错误，请刷新页面重试");
-                    response.getWriter().println(je.getAlertMsgAndBack());
-                    return null;
-                }
-                request.setAttribute("optTJMapList",optTJMapList);
             }
         }
+        if(type==3||type==4||type==7||type==8){
+            //如果是选择题，则出正确率，选项等分数
+            List<Map<String,Object>> zqlMapList=this.paperQuestionManager.getClsPaperQuesZQLV(
+                    Long.parseLong(paperid),
+                    Long.parseLong(quesid),
+                    Integer.parseInt(classid.trim()),
+                    Long.parseLong(taskid.trim()));
+            if(zqlMapList==null||zqlMapList.size()<1||zqlMapList.get(0)==null||!zqlMapList.get(0).containsKey("ZQL")){
+                je.setMsg("异常错误，请刷新页面重试");
+                response.getWriter().println(je.getAlertMsgAndBack());
+                return null;
+            }
+            request.setAttribute("zqlMap",zqlMapList.get(0));
+            List<Map<String,Object>> optTJMapList=this.paperQuestionManager.getClsPaperQuesOptTJ(
+                    Long.parseLong(paperid),
+                    Long.parseLong(quesid),
+                    Integer.parseInt(classid.trim()),
+                    Long.parseLong(taskid.trim()));
+            if(optTJMapList==null||optTJMapList.size()<1||optTJMapList.get(0)==null){
+                je.setMsg("异常错误，请刷新页面重试");
+                response.getWriter().println(je.getAlertMsgAndBack());
+                return null;
+            }
+            request.setAttribute("optTJMapList",optTJMapList);
+        }
+
+
         //得到当前的所有问题
         List<Map<String,Object>> listMapStr=this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
         if(listMapStr==null||listMapStr.size()<1){
@@ -3453,17 +3491,12 @@ public class PaperController extends BaseController<PaperInfo>{
             je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(je.getAlertMsgAndBack());return null;
         }
-
-
         //加载分数
         List<Map<String,Object>> scoreMapList=this.paperQuestionManager.getPaperQuesAllScore(Long.parseLong(paperid.trim()),Long.parseLong(quesid));
         if(scoreMapList==null||scoreMapList.size()<1||!scoreMapList.get(0).containsKey("SCORE")||scoreMapList.get(0).get("SCORE")==null){
             je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(je.getAlertMsgAndBack());return null;
         }
-
-
-
         request.setAttribute("quesid",quesid);
         request.setAttribute("allscoreObj",allquesidObj);
         request.setAttribute("score",scoreMapList.get(0).get("SCORE"));
@@ -3497,12 +3530,13 @@ public class PaperController extends BaseController<PaperInfo>{
         sp.setRef(Integer.parseInt(ref));
         sp.setScore(Float.parseFloat(score));
         List<StuPaperQuesLogs> quesLogs = this.stuPaperQuesLogsManager.getList(sp,null);
+        sql=new StringBuilder();
+        sp.setIsmarking(0);
         objList = this.stuPaperQuesLogsManager.getUpdateSql(sp,sql);
         objListArray.add(objList);
         sqlStrList.add(sql.toString());
         //试卷得分跟新
         sql = new StringBuilder();
-        objList = new ArrayList<Object>();
         StuPaperLogs sl = new StuPaperLogs();
         sl.setUserid(quesLogs.get(0).getUserid());
         sl.setPaperid(quesLogs.get(0).getPaperid());
@@ -3614,13 +3648,38 @@ public class PaperController extends BaseController<PaperInfo>{
         }
 //        else
 //            jsonEntity.setMsg("试卷已存在!共" + tkEntity.getQuesnum() + "道题!");
-
         Long paperid=paperList.get(0).getPaperid();
-
-        response.getWriter().println(
-                jsonEntity.getAlertMsgAndSendRedirect("paperques?m=testPaper&paperid=" + paperid+"&courseid="+tkEntity.getCourseid()+"&taskid="+taskid)
-        );
+        response.sendRedirect("paperques?m=testPaper&paperid=" + paperid + "&courseid=" + tkEntity.getCourseid() + "&taskid="+taskid);
         return null;
+    }
+
+
+    /**
+     * 得到下一个批阅的试卷
+     * @throws Exception
+     */
+    @RequestMapping(params="m=nextPiYue",method=RequestMethod.POST)
+    public void getPiyueNext(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JsonEntity jsonEntity=new JsonEntity();
+        String taskid=request.getParameter("taskid");
+        String paperid=request.getParameter("paperid");
+        String ismarking=request.getParameter("ismarking");
+        if(taskid==null||paperid==null||ismarking==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.toJSON());
+            return;
+        }
+        StuPaperQuesLogs paperQuesLogs=new StuPaperQuesLogs();
+        paperQuesLogs.setTaskid(Long.parseLong(taskid.trim()));
+        paperQuesLogs.setPaperid(Long.parseLong(paperid.trim()));
+        paperQuesLogs.setIsmarking(Integer.parseInt(ismarking.trim()));
+        List<StuPaperQuesLogs> spqLogs=this.stuPaperQuesLogsManager.getList(paperQuesLogs,null);
+        if(spqLogs!=null&&spqLogs.size()>0){
+            jsonEntity.getObjList().add(spqLogs.get(0));
+        }
+        jsonEntity.setType("success");
+        response.getWriter().println(jsonEntity.toJSON());
+
     }
 
     /**
@@ -3632,17 +3691,18 @@ public class PaperController extends BaseController<PaperInfo>{
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value="/img/{paperid}/{quesid}/{classid}/write",method = {RequestMethod.GET,RequestMethod.GET})
+    @RequestMapping(value="/img/{paperid}/{quesid}/{classid}/{taskid}/write",method = {RequestMethod.GET,RequestMethod.GET})
     public void getOptTJImg(@PathVariable("paperid") Long paperid,
                             @PathVariable("quesid") Long questid,
                             @PathVariable("classid") Long classid,
+                            @PathVariable("taskid") Long taskid,
                             HttpServletRequest request,
                             HttpServletResponse response) throws Exception{
         JsonEntity jsonEntity=new JsonEntity();
         if(paperid==null||questid==null||classid==null)return;
         //得到相关统计值
 
-        List<Map<String,Object>> optTjLvList=this.paperQuestionManager.getClsPaperQuesOptTJ(paperid,questid,classid.intValue());
+        List<Map<String,Object>> optTjLvList=this.paperQuestionManager.getClsPaperQuesOptTJ(paperid,questid,classid.intValue(),taskid);
         if(optTjLvList==null||optTjLvList.size()<1)return;
 
 
@@ -3657,7 +3717,9 @@ public class PaperController extends BaseController<PaperInfo>{
         }
         JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
         FileOutputStream fos = null;
-        String imgRealPath=request.getRealPath("/")+"userUploadFile/tk"+paperid+questid+classid+".png";
+        String imgRealPath=request.getRealPath("/")+"userUploadFile/optionPie/tk"+paperid+questid+classid+".png";
+        File f=new File(imgRealPath);
+
         try{
             fos = new FileOutputStream(imgRealPath);
             ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
@@ -3667,7 +3729,7 @@ public class PaperController extends BaseController<PaperInfo>{
         }
         //清理
         System.gc();
-        //读取图片流
+        //输出图片流
         UtilTool.writeImage(response,imgRealPath);
     }
 }

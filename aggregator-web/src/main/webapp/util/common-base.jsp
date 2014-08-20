@@ -24,8 +24,15 @@
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
 			 boolean isTeacher=false,isStudent=false;
  List<RoleUser> cruList=null;
- System.out.println(request.getRequestURI().trim().replaceAll("/",""));
- System.out.println(request.getServletPath().replaceAll("/",""));
+// System.out.println(request.getRequestURI().trim().replaceAll("/",""));
+// System.out.println(request.getServletPath().replaceAll("/",""));
+
+    /**
+     * 模块名称
+     *   1:资源平台
+     *   2:教学平台
+     */
+    Integer modelType=0;
 
 if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 		||!request.getServletPath().replaceAll("/","").equals(proc_name+"login.jsp")

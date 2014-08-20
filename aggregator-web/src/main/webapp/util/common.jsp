@@ -22,7 +22,7 @@
  *   1:资源平台
  *   2:教学平台
  */
-    Integer modelType=0;
+Integer modelType=0;
 %>
 <jsp:useBean id="htLastURI" class="java.util.Hashtable" scope="session"/>
 <%

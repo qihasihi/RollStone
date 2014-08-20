@@ -159,7 +159,7 @@
         <tr>
             <th><span class="ico06"></span>任务对象：</th>
             <td>
-                <c:if test="${!empty courseclassList}">
+                <c:if test="${!empty courseclassList and courseclassList[0].classid ne 0}">
                     <c:forEach var="cc" items="${courseclassList}" varStatus="idx">
 
                                <!-- <p class="f_right w410">
@@ -180,8 +180,13 @@
                         <ul class="public_list3" id="p_group_${cc.classid }">
                         </ul>
                     </c:forEach>
-                    <p class="font-darkblue"><a href="group?m=toGroupManager&classid=${courseclassList[0].classid}&classtype=${courseclassList[0].classtype}&gradeid=${gradeid}&subjectid=${subjectid}"  target="_blank">&gt;&gt;&nbsp;小组管理</a></p></td>
+                    <p class="font-darkblue"><a href="group?m=toGroupManager&classid=${courseclassList[0].classid}&classtype=${courseclassList[0].classtype}&gradeid=${gradeid}&subjectid=${subjectid}"  target="_blank">&gt;&gt;&nbsp;小组管理</a></p>
                 </c:if>
+
+                <c:if test="${empty courseclassList or courseclassList[0].classid==0}">
+                    请设置任务对象，点击提示链接，进入设置专题的页面进行操作。
+                </c:if>
+            </td>
         </tr>
 
         <tr>

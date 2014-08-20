@@ -21,7 +21,7 @@
             </c:if>
         });
 
-        var cssObj=1;
+        var cssObj=0;
         function DataSort(orderby,obj){
             cssObj=cssObj==0?1:0;
             var cls=$(obj).attr("class");

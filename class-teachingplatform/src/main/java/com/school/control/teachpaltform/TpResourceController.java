@@ -2241,12 +2241,19 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         //得到一级评论
         t.setQuesparentid(Long.parseLong(resid));
         t.setQuesid(Long.parseLong("0"));
+        if(usertype!=null&&usertype.equals("1")&&!isTaskEnd)
+            t.setUserid(this.logined(request).getRef());
         List<QuestionAnswer>commentList=this.questionAnswerManager.getResouceStuNoteList(t, presult);
+
         //得到二级回复
+        t=new QuestionAnswer();
+        t.setQuesparentid(Long.parseLong(resid));
+        t.setQuesid(Long.parseLong("0"));
         List<QuestionAnswer>commentReplyList=this.questionAnswerManager.getResouceStuNoteTreeList(t, presult);
 
 
-        if(usertype!=null&&usertype.equals("2")||isTaskEnd){
+        //if(usertype!=null&&usertype.equals("2")||isTaskEnd){
+        if(usertype!=null){
             presult.getList().add(commentList);
             presult.getList().add(commentReplyList);
         }
@@ -2972,8 +2979,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
             String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
             String signature= MD5_NEW.getMD5Result(md5key);
-            //String url=UtilTool.utilproperty.getProperty("REMOTE_RESOURCE_IP")+"ett20/study/jx/queryForWebservice.jsp";
-            String url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
+            String url=UtilTool.utilproperty.getProperty("REMOTE_RESOURCE_IP")+"ett20/study/jx/queryForWebservice.jsp";
+           // String url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
             String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
                     gradeid+"&subjectId="+subjectid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
                     pageSize;
@@ -3024,8 +3031,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             //http://localhost:8080/sz_school/tpres?m=getRemoteResources&gradeid=3&subjectid=4&versionid=44&pageNow=1&pageSize=10
             String md5key = schoolid+pvgStr+timestamp.toString()+"ett_dc_20146305645645647";
             String signature= MD5_NEW.getMD5Result(md5key);
-            //String url=UtilTool.utilproperty.getProperty("REMOTE_RESOURCE_IP")+"ett20/study/jx/queryForWebservice.jsp";
-            String url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
+            String url=UtilTool.utilproperty.getProperty("REMOTE_RESOURCE_IP")+"ett20/study/jx/queryForWebservice.jsp";
+            //String url="http://langyilin.etiantian.com:8080/ett20/study/jx/queryForWebservice.jsp";
             String param="timestamp="+timestamp+"&schoolId="+schoolid+"&gradeId="+
                     gradeid+"&subjectId="+subjectid+"&pvgStr="+pvgStr+"&signature="+signature+"&pageNow="+pageNow+"&pageSize="+
                     pageSize;

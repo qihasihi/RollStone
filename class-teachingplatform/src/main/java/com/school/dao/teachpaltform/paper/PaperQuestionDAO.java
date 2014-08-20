@@ -273,7 +273,7 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
         return false;
     }
 
-    public List<PaperQuestion> getQuestionByPaper(Long paperid,Integer classid,Integer classtype) {
+    public List<PaperQuestion> getQuestionByPaper(Long paperid,Integer classid,Integer classtype,Long taskid) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_paper_marking_proc_list(");
         List<Object> objList=new ArrayList<Object>();
@@ -290,8 +290,14 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
             sqlbuilder.append("NULL,");
         }
         if(classtype!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(classtype);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(taskid!=null){
+            sqlbuilder.append("?");
+            objList.add(taskid);
         }else{
             sqlbuilder.append("NULL");
         }
@@ -372,7 +378,7 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid){
+    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid,Long taskid){
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL j_paper_ques_info_getZQLV(");
         List<Object> objList=new ArrayList<Object>();
@@ -389,8 +395,14 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
             sqlbuilder.append("NULL,");
         }
         if(classid!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(classid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(taskid!=null){
+            sqlbuilder.append("?");
+            objList.add(taskid);
         }else{
             sqlbuilder.append("NULL");
         }
@@ -403,7 +415,7 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid){
+    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid,Long taskid){
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL j_paper_ques_info_getOptTJ(");
         List<Object> objList=new ArrayList<Object>();
@@ -420,8 +432,14 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
             sqlbuilder.append("NULL,");
         }
         if(classid!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(classid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(taskid!=null){
+            sqlbuilder.append("?");
+            objList.add(taskid);
         }else{
             sqlbuilder.append("NULL");
         }

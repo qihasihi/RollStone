@@ -55,17 +55,17 @@
     <body>
     <div class="subpage_head"><span class="ico28"></span><strong>班级管理--<span id="subjectname"></span></strong></div>
     <div class="content1">
-        <p class="font-darkblue"><a href="javascript:void(0)" onclick="showModel('add_virtual_class_Div');"><span class="ico26"></span>新建虚拟班级</a></p>
+        <!--<p class="font-darkblue"><a href="javascript:void(0)" onclick="showModel('add_virtual_class_Div');"><span class="ico26"></span>新建虚拟班级</a></p>-->
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
             <col class="w350"/>
             <col class="w200"/>
             <col class="w200"/>
-            <col class="w190"/>
+           <col class="w190"/>
             <tr>
                 <th>班级名称</th>
-                <th>班级类型</th>
+                <th colspan="2">班级类型</th>
                 <th>学生人数</th>
-                <th>操作</th>
+                <!--<th>操作</th>-->
             </tr>
             <c:if test="${!empty classes}">
                 <c:forEach var="cla" items="${classes }">
@@ -74,40 +74,14 @@
                             <td>
                                 <a href="teachercourse?m=toClassStudentList&classid=${cla.CLASS_ID }&classtype=${cla.CLASS_TYPE}&subjectid=${param.subjectid}&gradeid=${param.gradeid}" target="_blank">${cla.CLASS_NAME }</a>
                             </td>
-                            <td>
+                            <td colspan="2">
                                     虚拟班
                             </td>
                             <td>${cla.STU_NUM }</td>
-                            <td>
-                                <!-- <c:if test="${cla.TRUSTEESHIP_TYPE==1}">
-                                <a href="javascript:void(0)"  class="ico31" title="取消托管"
-                                   onclick="delTrusteeShip(${cla.CLASS_ID },${cla.CLASS_TYPE});"></a>
-                            </c:if>
-                            <c:if test="${cla.TRUSTEESHIP_TYPE==0 and cla.CLASS_TYPE==1 }">
-                                <a href="javascript:void(0)"  class="ico30" title="托管"
-                                   onclick="getTrusteeShipTeacher('${cla.CLASS_NAME }',${cla.CLASS_ID },${cla.CLASS_TYPE});showModel('TrusteeShipClass_Div')"></a>
-                            </c:if>-->
-                                <c:if test="${cla.CLASS_TYPE==2}">
-                                    <a href="javascript:void(0)" class="ico36" title="添加学生"
-                                       onclick="getVirClassStudents(${cla.CLASS_ID });
-                                               showModel('class_student_manager');"></a>&nbsp;
-                                    <a href="javascript:void(0)" class="ico04" title="删除"
-                                       onclick="changeVirClassStatus(${cla.CLASS_ID },false);"></a>
-                                    <%--
-                                      <c:if test="${cla.STATUS==1}">
-                                    <span id="virclass_status_${cla.CLASS_ID }">
-                                    <a href="javascript:void(0)" class="ico01" title="禁用"
-                                       onclick="changeVirClassStatus(${cla.CLASS_ID },false);"></a></span>
-                                      </c:if>
-                                      <c:if test="${cla.STATUS==2}">
-                                    <span id="virclass_status_${cla.CLASS_ID }">
-                                    <a href="javascript:void(0)" class="ico02" title="启用"
-                                       onclick="changeVirClassStatus(${cla.CLASS_ID },true);"></a></span>
-                                      </c:if>
-                                      --%>
-                                </c:if>
+                            <!--
 
-                            </td>
+
+                            -->
                         </tr>
                     </c:if>
 
@@ -119,7 +93,7 @@
                         <td>
                             <a href="teachercourse?m=toClassStudentList&classid=${itm.classid }&classtype=1&subjectid=${param.subjectid}&gradeid=${param.gradeid}" target="_blank">${itm.classname }</a>
                         </td>
-                        <td>
+                        <td colspan="2">
                             行政班
                         </td>
                         <td>${itm.stuno }</td>

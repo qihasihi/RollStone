@@ -16,6 +16,7 @@
 		var clickcount=0;
         var usertype=2;
 		var pList,p2,editor,child_editor;
+        var tpresdetailid="${param.tpresdetailid}";
 		$(function(){
             load_resource(1,1,true);
 		});
@@ -183,11 +184,17 @@
                             });
                         }
 
-                        var aObj = $('a').filter(function () {
-                            return this.id.indexOf('a_for_') != -1
-                        });
-                        if (isinit && aObj.length > 0)
-                            $(aObj).get(0).click();
+                        if (typeof(tpresdetailid) != 'undefined' && tpresdetailid.toString().length > 0) {
+                            if( $('a[id="a_for_' + tpresdetailid + '"]').length>0)
+                                $('a[id="a_for_' + tpresdetailid + '"]').get(0).click();
+                            //eval(f);
+                        } else {
+                            var aObj = $('a').filter(function () {
+                                return this.id.indexOf('a_for_') != -1
+                            });
+                            if (isinit && aObj.length > 0)
+                                $(aObj).get(0).click();
+                        }
 
 
                         //分页
@@ -318,7 +325,7 @@
                     if(rps.type=="error"){
                         alert(rps.msg);
                     }else{
-                        var h='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>'+rps.objList[0].papername+'</a>';
+                        var h='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>关联试卷</a>';
                         $("#relate_paper").html(h);
                     }
                 }

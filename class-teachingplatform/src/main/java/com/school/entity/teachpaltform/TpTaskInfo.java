@@ -106,6 +106,16 @@ public class TpTaskInfo implements Serializable {
 
     private Object taskobjname; //关联名称
     private Object flag;    //1：已发布
+    private Object objflag;
+
+    public Object getObjflag() {
+        return objflag;
+    }
+
+    public void setObjflag(Object objflag) {
+        this.objflag = objflag;
+    }
+
     private Object questiontype; //任务类型
     private Integer cloudtype;  //查询使用
     private Integer selecttype; //查询使用

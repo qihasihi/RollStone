@@ -17,7 +17,7 @@
                 xzloadStuPerformance(${classList[0].classid},"${taskInfo.tasktype}","${taskInfo.taskvalueid}",${classList[0].classtype});
             </c:if>
             if(${taskInfo.tasktype==3}){
-                var uri="question?m=todetail&id=${taskInfo.taskvalueid}";
+                var uri="question?m=todetail&id=${taskInfo.taskvalueid}&courseid=${courseid}";
                 $("#showdetail").attr("href",uri);
             }
         });

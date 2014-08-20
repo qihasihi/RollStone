@@ -79,13 +79,13 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
 	}
 
     @Override
-    public List<StuPaperLogs> getMarkingLogs(Long paperid, Long quesid) {
-        return this.stupaperlogsdao.getMarkingLogs(paperid,quesid);
+    public List<StuPaperLogs> getMarkingLogs(Long paperid, Long quesid,Integer classid,Long taskid) {
+        return this.stupaperlogsdao.getMarkingLogs(paperid,quesid,classid,taskid);
     }
 
     @Override
-    public List<Map<String, Object>> getMarkingDetail(Long paperid, Long questionid,Long quesid,Integer ismark,Integer classid,Integer classtype) {
-        return this.stupaperlogsdao.getMarkingDetail(paperid,questionid,quesid,ismark,classid,classtype);
+    public List<Map<String, Object>> getMarkingDetail(Long paperid, Long questionid,Long quesid,Integer ismark,Integer classid,Integer classtype,Long taskid) {
+        return this.stupaperlogsdao.getMarkingDetail(paperid,questionid,quesid,ismark,classid,classtype,taskid);
     }
 
     @Override
@@ -94,8 +94,8 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
     }
 
     @Override
-    public List<Map<String, Object>> getPaperPercentNum(Long paperid, int bignum, int smallnum) {
-        return this.stupaperlogsdao.getPaperPercentNum(paperid,bignum,smallnum);
+    public List<Map<String, Object>> getPaperPercentNum(Long paperid, int bignum, int smallnum,Integer classid) {
+        return this.stupaperlogsdao.getPaperPercentNum(paperid,bignum,smallnum,classid);
     }
 
     @Override

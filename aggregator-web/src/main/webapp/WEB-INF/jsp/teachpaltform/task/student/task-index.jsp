@@ -97,6 +97,7 @@
 
         $("#tbl_"+taskid).append(queshtm);
         $(spObj).parent().remove();
+        $(spObj).remove();
         ueditorArray.push(taskid);
 
         var id=taskid;
@@ -213,7 +214,7 @@
                         answerhtm+='<p><strong>答案解析：</strong><span class="width">'+(typeof(itm.rightAnswerList[0].analysis)=='undefined'?"":itm.rightAnswerList[0].analysis)+'</span></p>';
                     }else if(itm.tasktype==1){
                         answerhtm+='<p><strong>学习时间：</strong><span class="width">'+itm.taskPerformanceList[0].ctimeString+'</span></p>';
-                        answerhtm+='<p><strong>学习心得：</strong><span class="width"  id="sp_note_'+itm.taskid+'"><font>'+itm.questionAnswerList[0].answercontent+'</font>';
+                        answerhtm+='<p><strong>学习心得：</strong><span class="width"  id="sp_note_'+itm.taskid+'"><font>'+(typeof(itm.questionAnswerList[0].answercontent)!='undefined'?replaceAll(replaceAll(itm.questionAnswerList[0].answercontent,"<p>",""),"</p>",""):"")+'</font>';
                         if(itm.taskstatus!="1" && itm.taskstatus!="3"){
                             answerhtm+='<a class="ico11" title="编辑" href="javascript:genderStuNoteUpdText('+itm.questionAnswerList[0].ref+','+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+')"></a>';
                         }
@@ -284,11 +285,11 @@
                 }else if(itm.tasktype==2){
                     html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==4&&itm.taskstatus!="1"){
-                    html+='<a  class="font-blue" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a  class="font-blue" target="_blank" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==5&&itm.taskstatus!="1"){
-                    html+='<a  class="font-blue" href="paper?m=genderZiZhuPaper&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a  class="font-blue" target="_blank" href="paper?m=genderZiZhuPaper&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==6&&itm.taskstatus!="1"){
-                    html+='<a  class="font-blue" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a  class="font-blue target="_blank"" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==10&&itm.taskstatus!="1"){
                     html+='<a  class="font-blue" href="#" style="color: blue;">'+itm.taskobjname+'</a>';
                 }
@@ -301,7 +302,7 @@
                 if(itm.tasktype<6)
                     html+='<p><strong>完成标准：</strong><span class="font-black">'+criteria+'</span></p>';
                 html+='<p><strong>任务描述：</strong><span class="width1">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
-                if(itm.taskstatus=="1")
+                if(itm.taskstatus=="1"&&(itm.tasktype==1||itm.tasktype==2))
                     html+='<p class="font-black"><span class="ico33"></span>任务尚未开始，您的作答将不计入任务的统计结果中，请在任务开始之后重新作答！</p>';
                 html+='<table border="0" cellspacing="0" cellpadding="0" class="black" id="tbl_'+itm.taskid+'">';
                 if(itm.tasktype==3){

@@ -295,7 +295,7 @@ function getTermCondition(tid,termname){
         data:{termid:termid},
         type:'post',
         dataType:'json',
-        error:function(){
+        error:function(){-
             alert('异常错误,系统未响应！');
         },
         success:function(rps){
@@ -417,6 +417,11 @@ function toSaveCoursePage(){
     }
     if(global_subjectid<1){
         alert("没有获取到学科参数！");
+        return;
+    }
+    var materialid=$("#material_id").val();
+    if(materialid.length<1||materialid=="0"){
+        getTchingMaterial(true);
         return;
     }
 
@@ -567,7 +572,11 @@ function addTeacherCourse(type){
     });
 }
 
-function getTchingMaterial(){
+/**
+ *
+ * @param isinit 是否是第一次添加
+ */
+function getTchingMaterial(isinit){
     if(global_gradeid<1){
         alert("没有获取到年级参数！");
         return;
@@ -577,6 +586,7 @@ function getTchingMaterial(){
         return;
     }
     $("#materia_button").hide();
+    $("#addReportBtn").attr("href","javascript:selectMaterial()");
     $.post('teachingmaterial?m=getTchingMaterialList',{gradeid:global_gradeid,subjectid:global_subjectid},
         function(rps){
             if(rps!=null
@@ -596,13 +606,17 @@ function getTchingMaterial(){
                 $("#teaching_materia").html(html);
                 showModel("teaching_materia_div");
                 $("#materia_button").show();
+                if(isinit){
+                    $("#addReportBtn").attr("href","javascript:selectMaterial(true)");
+                }
             }else{
                 alert("无法找到学科和年级关联的教材，请联系管理添加。");
             }
         },"json");
 }
 
-function selectMaterial(){
+function selectMaterial(isinit){
+    $("#addReportBtn").show();
     var material_id=$("input[name='materialid']:checked").val();
     if(material_id==null){
         alert("教材参数错误！");
@@ -633,13 +647,14 @@ function selectMaterial(){
         type:'POST',
         dataType:'json',
         error:function(){
-            alert('异常错误,系统未响应！');
+            //alert('异常错误,系统未响应！');
         },success:function(rps){
             if(rps.type=="success"){
                 closeModel("teaching_materia_div");
-//                pageGo("pList");
-//                if(pTsList!=null)
-//                    pageGo("pTsList");
+                if(isinit){
+                   $("#addReportBtn").hide();
+                    toSaveCoursePage();
+                }
             }else{
                 alert(rps.msg);
             }

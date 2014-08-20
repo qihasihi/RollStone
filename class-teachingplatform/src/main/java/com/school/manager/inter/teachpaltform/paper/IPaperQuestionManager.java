@@ -19,7 +19,7 @@ public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> {
     Integer paperQuesCount(Long paperid);
 
     Boolean updateQuesTeamScore(PaperQuestion paperQuestion);
-    public List<PaperQuestion> getQuestionByPaper(Long paperid,Integer classid,Integer classtype);
+    public List<PaperQuestion> getQuestionByPaper(Long paperid,Integer classid,Integer classtype,Long taskid);
 
     public List<PaperQuestion> getPaperTeamQuestionList(PaperQuestion p,PageResult pageResult);
 
@@ -55,7 +55,7 @@ public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> {
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid);
+    public List<Map<String,Object>> getClsPaperQuesZQLV(Long paperid,Long quesid,Integer classid,Long taskid);
 
     /**
      * 得到当前班级下，当前试题，试卷下的正确率
@@ -63,5 +63,5 @@ public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> {
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid);
+    public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid,Long taskid);
 }

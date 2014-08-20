@@ -399,8 +399,13 @@ function deleteTopic(id){
 								htm+='<td id="td_quote_'+itm.topicid+'"><a href="javascript:;" onclick="addOrDelQuoteTheme('+topicid+','+itm.topicid+',\'td_quote_'+itm.topicid+'\',2)" title="不可见"  class="ico47"></a></td>';
 						}					
 						htm+='</tr>';
-					}) 
-					$("#tbl_body_share_data").html(htm);	
+					})
+                    $("#tbl_body_share_data").html(htm);
+                    if(htm.Trim().length<1){
+                        $("#dv_other_topic").hide();
+                    }else
+                        $("#dv_other_topic").show();
+
 					//翻页信息
 						if (typeof (p2) != "undefined" && typeof (p2) == "object") {
 							p2.setPagetotal(rps.presult.pageTotal);

@@ -325,6 +325,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         List<SubjectUser> subuserList = this.subjectUserManager.getList(su, null);
 
         List<GradeInfo> gradeList = this.gradeManager.getTchGradeList(this.logined(request).getUserid(), year);
+        /*
         if(gradeList!=null&&gradeList.size()>0){
             for(int i = 0;i<subuserList.size();i++){
                 //当前学期、学科、年级下的授课班级
@@ -352,6 +353,44 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 }
             }
         }
+        */
+
+        if(gradeList!=null&&gradeList.size()>0){
+            //当前学期、学科、年级下的授课班级
+            for(int j=0;j<gradeList.size();j++){
+                ClassUser cu = new ClassUser();
+                cu.setClassgrade(gradeList.get(j).getGradevalue());
+                cu.setUserid(this.logined(request).getRef());
+                cu.setRelationtype("任课老师");
+                //cu.setSubjectid(subuserList.get(i).getSubjectid());
+                cu.setYear(year);
+                List<ClassUser>classList=this.classUserManager.getList(cu,null);
+                List<SubjectInfo>subjectInfoList=new ArrayList<SubjectInfo>();
+                if(classList!=null&&classList.size()>0){
+                    for(ClassUser classUser :classList){
+                        SubjectInfo s=new SubjectInfo();
+                        s.setSubjectid(classUser.getSubjectid());
+                        s.setSubjectname(classUser.getSubjectname());
+                        if(!subjectInfoList.contains(s))
+                            subjectInfoList.add(s);
+                    }
+                    if(subjectInfoList.size()>0){
+                        for(SubjectInfo subjectInfo:subjectInfoList){
+                            Map<String,Object> map = new HashMap<String, Object>();
+                            map.put("gradeid",gradeList.get(j).getGradeid());
+                            map.put("gradevalue",gradeList.get(j).getGradevalue());
+                            map.put("subjectid",subjectInfo.getSubjectid());
+                            map.put("subjectname",subjectInfo.getSubjectname());
+                            if(!gradeSubjectList.contains(map))
+                                gradeSubjectList.add(map);
+                        }
+                    }
+                }
+            }
+        }
+
+
+
         List ls = new ArrayList();
       //  ls.add(subuserList);
        // ls.add(gradeList);
@@ -1188,6 +1227,12 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(coursePaper,null);
                 if(coursePaperList!=null&&coursePaperList.size()>0){
                     for (TpCoursePaper tmpPaper : coursePaperList){
+                        //微视频试卷
+                        if(tmpPaper.getPapertype()==5){
+
+                        }
+
+
                         tmpPaper.setCourseid(nextCourseId);
                         sql=new StringBuilder();
                         objList=this.tpCoursePaperManager.getSaveSql(tmpPaper,sql);
@@ -2504,10 +2549,40 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        TpCourseResource tr=new TpCourseResource();
-        tr.setCourseid(Long.parseLong(courseid));
-        tr.setLocalstatus(1);
-        List<TpCourseResource> trList=this.tpCourseResourceManager.getList(tr,null);
+        TpCourseResource trsel=new TpCourseResource();
+        trsel.setCourseid(Long.parseLong(courseid));
+        trsel.setLocalstatus(1);
+        List<TpCourseResource> trList=this.tpCourseResourceManager.getList(trsel,null);
+
+
+
+
+        //页数定位
+        Integer pageno=1;
+        String tpresdetailid=request.getParameter("tpresdetailid");
+        if(tpresdetailid!=null&&tpresdetailid.trim().length()>0){
+            TpCourseResource tr=new TpCourseResource();
+            tr.setCourseid(Long.parseLong(courseid));
+            tr.setResstatus(1);
+            tr.setResourcetype(1);
+            PageResult pageResult=new PageResult();
+            pageResult.setPageNo(0);
+            pageResult.setPageSize(0);
+            pageResult.setOrderBy("  aa.diff_type desc,aa.ctime desc,aa.operate_time desc ");
+            List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
+            if(resourceList!=null&&resourceList.size()>0){
+                for(int i=0;i<resourceList.size();i++){
+                    if(tpresdetailid.equals(resourceList.get(i).getResid().toString())){
+                        pageno=i<10?1:(i+1)/10<1?1:i/10+1;
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        mp.put("pageno",pageno);
+
         mp.put("courseid", courseid);
         mp.put("termid", termid);
         mp.put("resList", trList);

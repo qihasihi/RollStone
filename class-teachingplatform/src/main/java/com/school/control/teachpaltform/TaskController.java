@@ -43,6 +43,7 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StopWatch;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -754,13 +755,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String subjectid=null,gradeid=null;
 
         //获取当前专题教材
-     /*   TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
         ttm.setCourseid(Long.parseLong(courseid));
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0){
             subjectid=materialList.get(0).getSubjectid().toString();
-            gradeid=materialList.get(0).getGradeid().toString();
-        }*/
+            //gradeid=materialList.get(0).getGradeid().toString();
+        }
 
 
 		
@@ -928,8 +929,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		} */
 		//小组
 		TpGroupInfo g=new TpGroupInfo();
-		g.setCuserid(this.logined(request).getUserid());
+		//g.setCuserid(this.logined(request).getUserid());
         g.setTermid(courseclassList.get(0).getTermid());
+        g.setSubjectid(Integer.parseInt(subjectid));
 		List<TpGroupInfo>groupList=this.tpGroupManager.getList(g, null);
 		mp.put("tasktypeList", tasktypeList);
         mp.put("courseclassList",courseclassList);
@@ -1055,6 +1057,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
 		}else if(tasktype.toString().equals("1")){//资源
             String resourcetype=request.getParameter("resourcetype");
+            resourcetype=resourcetype==null||resourcetype.length()<1?"1":resourcetype;
             if(resourcetype.equals("1")){
                 if(taskvalueid==null||taskvalueid.trim().length()<1){
                     je.setMsg("异常错误，系统未获取到资源标识!");
@@ -1445,12 +1448,26 @@ public class TaskController extends BaseController<TpTaskInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
+        TpTaskInfo sel=new TpTaskInfo();
+        sel.setCourseid(Long.parseLong(courseid));
+        //查询没被我删除的任务
+        sel.setSelecttype(1);
+        sel.setLoginuserid(this.logined(request).getUserid());
+        sel.setStatus(1);
+        //已发布的任务
+        List<TpTaskInfo>taskReleaseList=this.tpTaskManager.getTaskReleaseList(sel, null);
+        Integer orderIdx=1;
+        if(taskReleaseList!=null&&taskReleaseList.size()>0)
+            orderIdx+=taskReleaseList.size();
+
+
         StringBuilder sql=null;
         List<Object>objList=null;
         List<String>sqlListArray=new ArrayList<String>();
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         Long tasknextid;
         TpTaskInfo ta=new TpTaskInfo();
+        ta.setOrderidx(orderIdx);
 
         //课后作业 3
         if(tasktype.toString().equals("3")){
@@ -1561,9 +1578,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(Long.valueOf(1));
         }
         //获取任务
-        TpTaskInfo sel=new TpTaskInfo();
-        sel.setTaskid(Long.parseLong(taskid));
-        List<TpTaskInfo>taskList=this.tpTaskManager.getList(sel,null);
+        TpTaskInfo selT=new TpTaskInfo();
+        selT.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo>taskList=this.tpTaskManager.getList(selT,null);
         if(taskList==null||taskList.size()<1){
             je.setMsg("提示：当前任务已不存在或删除，请刷新页面后重试!");
             response.getWriter().print(je.toJSON());
@@ -3118,7 +3135,58 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return new ModelAndView("/teachpaltform/task/teacher/task-performance-zg");
         }
 	}
-	
+
+    /**
+     * 得到并生成图片
+     * @param classid
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(value="/img/{taskid}/{classid}/{classtype}/op",method = {RequestMethod.GET,RequestMethod.GET})
+    public void getOptTJImg(@PathVariable("taskid") Long taskid,
+                            @PathVariable("classid") Long classid,
+                            @PathVariable("classtype") Long classtype,
+                            HttpServletRequest request,
+                            HttpServletResponse response) throws Exception{
+        JsonEntity jsonEntity=new JsonEntity();
+        if(taskid==null||classid==null||classtype==null)return;
+        //得到相关统计值
+        //数量统计
+        List<Map<String,Object>> optionnumList = new ArrayList<Map<String, Object>>();
+        if(classtype==8||classtype==9){
+            optionnumList = this.taskPerformanceManager.getPerformanceOptionNum2(taskid,classid);
+        }else{
+            optionnumList = this.taskPerformanceManager.getPerformanceOptionNum(taskid, classid);
+        }
+
+        //动态拼成想要的选项表分布比例
+        DecimalFormat di = new DecimalFormat("#.00");
+        //以下是生成统计图
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        if(optionnumList==null||optionnumList.size()<1){
+            dataset.setValue("没有数据",0);
+        }else{
+            for(Map<String,Object> tmpMap:optionnumList){
+                if(tmpMap.containsKey("OPTION_TYPE")&&tmpMap.containsKey("NUM"))
+                    dataset.setValue(tmpMap.get("OPTION_TYPE").toString(),Integer.parseInt(tmpMap.get("NUM").toString()));
+            }
+        }
+        JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
+        FileOutputStream fos = null;
+        String imgRealPath=request.getRealPath("/")+"userUploadFile/optionPie/op"+taskid+classid+classtype+".png";
+        try{
+            fos = new FileOutputStream(imgRealPath);
+            ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
+
+        }finally{
+            fos.close();
+        }
+        //清理
+        System.gc();
+        //读取图片流
+        UtilTool.writeImage(response,imgRealPath);
+    } 
 	/**
 	 * 查询学生任务完成情况
 	 * @throws Exception
@@ -3218,9 +3286,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
         JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
         FileOutputStream fos = null;
-
+        Date d = new Date();
         try{
-            fos = new FileOutputStream(request.getRealPath("/")+"images/taskPie.png");
+            fos = new FileOutputStream(request.getRealPath("/")+"userUploadFile/optionPie/"+d.getTime()+"taskPie.png");
             ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
         }finally{
             fos.close();
@@ -3338,6 +3406,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         StuPaperQuesLogs logs=new StuPaperQuesLogs();
         logs.setPaperid(Long.parseLong(paperid));
         logs.setQuesid(Long.parseLong(questionid));
+        logs.setTaskid(Long.parseLong(taskid));
         List<StuPaperQuesLogs>logsList=this.stuPaperQuesLogsManager.getList(logs,null);
         mp.put("logList",logsList);
         if(type.equals("1")){

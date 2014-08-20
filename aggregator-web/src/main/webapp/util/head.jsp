@@ -60,9 +60,16 @@
                             if(tmparray.length>1)
                                 cls=tmparray[1];
                         }
+                        if(cls!=null&&cls.trim().equals("two")){
                             %>
-                            <li class="<%=cls%>"><a href="<%=ectmp.getEttcolumnurl()%>&isVip=<%=ectmp.getStatus()%>" target="_blank"><%=ectmp.getEttcolumnname()%></a></li>
-                        <%}
+                            <li class="<%=cls%>" style="background-position: -150px -50px;" ><a href="<%=ectmp.getEttcolumnurl()%>&isVip=<%=ectmp.getStatus()%>" target="_blank"><%=ectmp.getEttcolumnname()%></a></li>
+                        <%
+                           }else{
+                        %>
+                        <li class="<%=cls%>" style="background-position:0px -50px;"><a href="<%=ectmp.getEttcolumnurl()%>&isVip=<%=ectmp.getStatus()%>" target="_blank"><%=ectmp.getEttcolumnname()%></a></li>
+                     <%
+                           }
+                        }
                 }
             }
           }
@@ -81,7 +88,7 @@
  <p><span></span><img src="<%=basePath %>images/<%=logoSrc %>" width="253" height="64"/></p>
 </c:if>
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
-    <p><span></span></p>
+    <p style="width:210px;height:50px"><span></span></p>
 <%--<p><span></span><img src="<%=basePath+UtilTool.utilproperty.getProperty("LZX_LOGO_SRC") %>" width="253" height="64"/></p>--%>
 </c:if>
 </div>

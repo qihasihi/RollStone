@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by zhengzhou on 14-3-29.
@@ -43,12 +44,18 @@ public class TpTeacherTeachMaterialController  extends BaseController<TpTeacherT
             return;
         }
         entity.setUserid(this.logined(request).getUserid());
-        //执行添加
-        if(this.tpTeacherTeachMaterialManager.doSave(entity)){
+        List<TpTeacherTeachMaterial>tList=this.tpTeacherTeachMaterialManager.getList(entity,null);
+        if(tList==null||tList.size()<1){
+            //执行添加
+            if(this.tpTeacherTeachMaterialManager.doSave(entity)){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                jsonEntity.setType("success");
+            }else
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        }else {
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             jsonEntity.setType("success");
-        }else
-            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        }
         response.getWriter().print(jsonEntity.toJSON());
     }
 

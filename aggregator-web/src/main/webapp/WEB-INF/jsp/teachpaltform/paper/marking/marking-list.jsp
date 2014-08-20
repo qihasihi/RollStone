@@ -15,6 +15,7 @@
         var quesidStr = "${quesidStr}";
         var paperid = "${param.paperid}";
         var sign = ${ismark};
+        var paperScore="${paperScore}";
         $(function(){
             var currentclsid = ${classid};
             var currenttype = ${classtype};
@@ -23,6 +24,22 @@
                 $("#classSelect").find("option[value='"+currentclsid+"|"+currenttype+"']").attr("selected",true);
             }
            queryPaperques();
+
+            if($("#question li").filter(function(){return this.className!='over'}).length<1){
+                //验证是否没有作答
+                var isStuAnswer=true;
+                $("#question li b").each(function(idx,itm){
+                    var h=$(itm).html().Trim().split("/");
+                    if(h[0]==0||h[1]==0){
+                        isStuAnswer=false;return;
+                    }
+                })
+                if(isStuAnswer){
+                    getPercentScoreByType(2);
+                    $("#dv_tj_fsd").show();
+                }
+            }
+
         });
         function queryPaperques(){
             var classvalue =$("#classSelect").val();
@@ -34,39 +51,41 @@
                 for(var i = 0;i<quesids.length;i++){
                     var orderidx = i+1;
                     var id = quesids[i];
-                    var sign = false;
+                    var tmpsign = false;
                     var questionid;
                     if(quesids[i].split("|").length>1){
                         questionid = quesids[i].split("|")[0];
-                        sign = true;
+                        tmpsign = true;
                         id=quesids[i].split("|")[1];
                     }
-                    htm+='<li';
+
                     <c:forEach items="${questionList}" var="itm" varStatus="idx">
-                    if(id==${itm.questionid}){
+                    var curid="${itm.questionid}";
+                    if(id==curid){
+                        htm+='<li';
                         if(${itm.markingnum==itm.submitnum}){
                             htm+=' class="over"'
                         }
-                        htm+='><a href="paper?m=toMarkingDetail';
-                        if(sign){
-                            htm+='&questionid='+questionid;
-                        }
-                        htm+='&sign='+sign+'&tabidx='+i+'&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx+'&classid='+classid+'&classtype='+classtype+'">'+orderidx+'<b>${itm.markingnum}/${itm.submitnum}</b></a>';
+                        var u="javascript:alert('试卷中该问题还没有学生进行答题，无法批阅试卷!');";
+                        <c:if test="${!empty itm.submitnum&&itm.submitnum>0}">
+                        u='paper?m=toMarkingDetail';
+                        if(tmpsign)
+                            u+='&questionid='+questionid;
+                        u+='&sign='+sign+'&tabidx='+i+'&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx+'&classid='+classid+'&classtype='+classtype+'&taskid=${param.taskid}';
+                        </c:if>
+                        htm+='><a href="'+u+'">'+orderidx+'<b>${itm.markingnum}/${itm.submitnum}</b></a>';
                     }
                     </c:forEach>
                     htm+='</li>';
                 }
                 $("#question").html(htm);
-                if(sign){
-                    getPercentScoreByType(2);
-                }
             }
         }
         function getPercentScoreByType(type){
             $.ajax({
                 url:"paper?m=getpercentscore",
                 type:"post",
-                data:{type:type,paperid:paperid},
+                data:{type:type,paperid:paperid,classid:${classid}},
                 dataType:'json',
                 cache: false,
                 error:function(){
@@ -110,20 +129,36 @@
     </script>
 </head>
 <body>
-    <div class="subpage_head"><span class="ico55"></span><strong>${papername}</strong></div>
+    <div class="subpage_head"><span class="ico55"></span><strong>
+        <c:if test="${papertype==1}">标准A--</c:if>
+        <c:if test="${papertype==2}">标准B--</c:if>
+        <c:if test="${papertype==3}">成卷测试--</c:if>
+        ${papername}</strong></div>
     <div class="content1">
         <div class="jxxt_zhuanti_rw_piyue">
-            <h2><select name="select3" id="classSelect" onchange="changeClass()">
+            <h2><select name="select3" id="classSelect" onchange="changeClass()" style="display:none">
                 <c:forEach items="${classes}" var="itm">
-                    <option value="${itm.classid}|${itm.classtype}">${itm.classname}</option>
+                    <c:if test="${!empty classid&&classid==itm.classid}">
+                        <option value="${itm.classid}|${itm.classtype}" selected="true">${itm.classname}</option>
+                    </c:if>
+                    <c:if test="${empty classid||classid!=itm.classid}">
+                        <option value="${itm.classid}|${itm.classtype}">${itm.classname}</option>
+                    </c:if>
                 </c:forEach>
-            </select></h2>
+            </select>
+            <span id="sp_showCls"><script type="text/javascript">document.write($("#classSelect option[selected='true']").text());</script>
+              <a href="javascript:;" onclick="sp_showCls.style.display='none';$('#classSelect').show()" class="ico49a"></a>
+            </span>
+            </h2>
             <h3>注：客观题系统已自动完成批改</h3>
             <ul class="shiti" id="question">
 
             </ul>
-        <div class="jxxt_zhuanti_rw_tongji">
-            <p><strong>分数段分布统计：</strong><a href="javascript:getPercentScoreByType(2)" class="font-darkblue">按百分制统计</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:getPercentScoreByType(1)"  class="font-darkblue">按实际分数统计</a></p>
+        <div class="jxxt_zhuanti_rw_tongji" id="dv_tj_fsd" style="display:none">
+            <p><strong>分数段分布统计：</strong><a href="javascript:getPercentScoreByType(2)" class="font-darkblue">按百分制统计</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <c:if test="${empty paperScore||paperScore!=100}">
+                    <a href="javascript:getPercentScoreByType(1)"  class="font-darkblue">按实际分数统计</a>
+                </c:if></p>
             <div class="right"><img id="percentImg" src="images/paperScorePie.png" width="193" height="140"></div>
             <div class="left">
                 <table border="0" cellspacing="0" cellpadding="0" class="public_tab3">

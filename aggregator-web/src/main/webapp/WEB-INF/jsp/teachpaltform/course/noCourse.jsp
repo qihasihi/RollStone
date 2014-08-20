@@ -75,17 +75,6 @@
 <%@include file="/util/head.jsp" %>
 <%@include file="/util/nav-base.jsp" %>
 
-<div class="jxxt_xueqi">
-    <input type="hidden" id="termid" value="${currtTerm.ref}">
-    <input type="hidden" id="subjectid" value="">
-    <div class="menu"><span id="checkedTerm">${currtTerm.year } ${currtTerm.termname }</span><a class="ico13" href="javascript:void(0);" onclick="displayObj('termList');"></a></div>
-    <ul id="termList" style="display:none;">
-        <c:forEach var="tl" items="${termList }">
-            <li><a href="javascript:void(0);" onclick="changeTerm('${tl.ref }','${tl.year } ${tl.termname }');">${tl.year } ${tl.termname }</a></li>
-        </c:forEach>
-    </ul>
-</div>
-
 <div id="nav">
 
 </div>

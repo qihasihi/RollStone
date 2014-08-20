@@ -17,59 +17,75 @@
         var allquesid="${allquesidObj}";
         var allscore="${allscoreObj}";
         var isshowfen=true;
+        var isAllMark=true;
 
-        function userAnswer(t,t1,score,nexName){
+        function userAnswer(t,t1,score,nexName,ismak){
+            if(!ismak)
+                isAllMark=false;
             var qtObj=$("#hd_questiontype_"+t);
-            if(qtObj.length>0&&qtObj.val().length>0){
+            var pqtype=$("#hd_pqtype_"+t);
+            if(pqtype.length<1)return;
+            if(pqtype.val()==5){
+                var qorder=$("#sp_quesIdx"+t).html();
+                $("#dv_qs_"+t).parent().children("p:first").children("span[id*='pmyanswer']").append("<span>"+qorder+t1+"&nbsp;&nbsp;&nbsp;&nbsp;</span>");
                 $("#you_score"+t).html(score);
-                  var qtype=qtObj.val().Trim();
-                if(qtype==7) //单选组 按单选入库
-                    qtype=3;
-                else if(qtype==8)   //复选组，按复选入库
-                    qtype=4;
+            }else{
+                if(qtObj.length>0&&qtObj.val().length>0){
+                    $("#you_score"+t).html(score);
+                      var qtype=qtObj.val().Trim();
+                    if(qtype==7) //单选组 按单选入库
+                        qtype=3;
+                    else if(qtype==8)   //复选组，按复选入库
+                        qtype=4;
 
-                if(qtype==1){
-                    $("#you_score"+t).html("待批改");
-                    $("#dv_you_as"+t).html(t1);
-                    if(nexName!="undefined"&&nexName.length>0){
-                        $("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");
-                        $("#fujian"+t).parent().show();
-                    }
+                    if(qtype==1){
+                        $("#you_score"+t).html(score);
+                        if(ismak==1)
+                            $("#you_score"+t).html("待批改");
 
-                }else if(qtype==2){ //1:问题  2：填空 3：单选  4：多选
-                    $("#you_score"+t).html("待批改");
-                    var t2=t1.split("|");
-                    var t3=$("#dv_qs_"+t+" span[name='fillbank']");
-                    if(t2.length==t3.length){
-                        $.each(t3,function(a,b){
-                            $(this).html("&nbsp;&nbsp;"+t2[a]+"&nbsp;&nbsp;");
+                        $("#dv_you_as"+t).html(t1);
+                        if(nexName!="undefined"&&nexName.length>0){
+                            $("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");
+                            $("#fujian"+t).parent().show();
+                        }
+
+                    }else if(qtype==2){ //1:问题  2：填空 3：单选  4：多选
+                        $("#you_score"+t).html(score);
+                        if(ismak==1)
+                             $("#you_score"+t).html("待批改");
+                        var t2=t1.split("|");
+                        var t3=$("#dv_qs_"+t+" span[name='fillbank']");
+                        if(t2.length==t3.length){
+                            $.each(t3,function(a,b){
+                                $(this).html("&nbsp;&nbsp;"+t2[a]+"&nbsp;&nbsp;");
+                            });
+                        }
+
+
+                        if(nexName!="undefined"&&nexName.length>0){
+                            $("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");
+                            $("#fujian"+t).parent().show();
+                        }
+
+                    }else if(qtype==3){
+                        var obj=$("input[name='rdo_answer"+t+"']").filter(function(){return this.value.Trim()==t1});
+                        var answerObj={val:obj[0].value,id:obj[0].id,name:obj[0].name};
+                        obj.parent().html("<input type='radio' checked=true id='"+answerObj.id+"' disabled=true name='"+answerObj.name+"' value='"+answerObj.value+"'>");
+                    }else if(qtype==4){
+                        var splitChar="|";
+                        if(t1.indexOf("%7C")!=-1)
+                            splitChar="%7C";
+                        var tv2=t1.split(splitChar);
+
+                        $("input[name='ckx_answer"+t+"']").each(function(d,c){
+                            for(var l=0;l<tv2.length;l++){
+                                if(tv2[l]==c.value.split("|")[0]){
+                                    var answerObj={val:c.value,id:c.id,name:c.name};
+                                    $(c).parent().html("<input type='checkbox' checked=true id='"+answerObj.id+"' disabled=true name='"+answerObj.name+"' value='"+answerObj.value+"'>");
+                              }
+                            }
                         });
                     }
-
-
-                    if(nexName!="undefined"&&nexName.length>0){
-                        $("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");
-                        $("#fujian"+t).parent().show();
-                    }
-
-                }else if(qtype==3){
-                    var obj=$("input[name='rdo_answer"+t+"']").filter(function(){return this.value.Trim()==t1});
-                    var answerObj={val:obj[0].value,id:obj[0].id,name:obj[0].name};
-                    obj.parent().html("<input type='radio' checked=true id='"+answerObj.id+"' disabled=true name='"+answerObj.name+"' value='"+answerObj.value+"'>");
-                }else if(qtype==4){
-                    var splitChar="|";
-                    if(t1.indexOf("%7C")!=-1)
-                        splitChar="%7C";
-                    var tv2=t1.split(splitChar);
-
-                    $("input[name='ckx_answer"+t+"']").each(function(d,c){
-                        for(var l=0;l<tv2.length;l++){
-                            if(tv2[l]==c.value.split("|")[0]){
-                                var answerObj={val:c.value,id:c.id,name:c.name};
-                                $(c).parent().html("<input type='checkbox' checked=true id='"+answerObj.id+"' disabled=true name='"+answerObj.name+"' value='"+answerObj.value+"'>");
-                          }
-                        }
-                    });
                 }
             }
         }
@@ -109,7 +125,7 @@
         </p>
         </c:if>
         <script type="text/javascript">
-
+            var rightCodeHt='';
             <c:if test="${!empty quesList}">
              <c:forEach items="${quesList}" var="q" varStatus="qidx">
             var h='';
@@ -119,7 +135,7 @@
             if(qslength.length<1){
                 var pextension="${q.parentQues.extension}";
                 h+=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_pqs_${q.parentQues.questionid}">';
-                h+='<caption class="font-blue"><span class="f_right"><strong id="you_sum">0</strong>/<span id=p_s_score>';
+                h+='<caption class="font-blue"><span class="f_right"><strong id="you_sum">0</strong>/<input type="hidden" name="hd_extension" value="${q.parentQues.extension}"/><span id=p_s_score>';
                 if(papertype==3||papertype==1||papertype==2)
                     h+=${q.score}+"";
                 h+='</span>分</span><span id="sp_qidx${q.parentQues.questionid}"">${qidx.index+1}</span></caption>';
@@ -133,7 +149,7 @@
                     h+='英语听力</span>：<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div><br/>${q.parentQues.content}';
                 }else if(pextension==5){
                     h+='七选五</span>：${q.parentQues.content}';
-                    h+='<div style="display:none" id="p_option_${q.parentQues.questionid}">';
+                    h+='<div id="p_option_${q.parentQues.questionid}">';
                     //选项
                     <c:if test="${!empty q.parentQues.questionOption}">
                                 <c:forEach items="${q.parentQues.questionOption}" var="pqm">
@@ -161,11 +177,14 @@
             <c:if test="${empty q.parentQues}">
                     h1+='<caption class="font-blue"><span class="f_right"><strong id="you_score${q.questionid}">0</strong>/<span id="avg_score">0</span>分</span><span class="font-blue">${qidx.index+1}</span></caption>';
             </c:if>
-            <c:if test="${!empty q.parentQues}">
+            <c:if test="${!empty q.parentQues&&q.parentQues.extension!=5}">
                     h1+='<caption style="display:none"><span class="font-blue f_right"><strong id="you_score${q.questionid}">0</strong>/<span id="avg_score">0</span>分</span></caption>';
             </c:if>
             h1+=' <tr><td>';
             h1+='<input  type="hidden" value="${q.questiontype}" name="hd_questiontype" id="hd_questiontype_${q.questionid}"/>';
+
+            h1+='<input  type="hidden" value="${!empty q.parentQues?q.parentQues.extension:-1}" name="hd_pqtype" id="hd_pqtype_${q.questionid}"/>';
+
             <c:if test="${empty q.parentQues}">
             //试题类型 1：其它 2：填空 3：单选 4：多选 6:试题组 7：单选组试题 8：多选组试题
                 if(questype==1){
@@ -179,7 +198,13 @@
                 else if(questype==4)
                     h1+='<span class="bg">多选题</span>：';
             </c:if>
-            h1+='${qidx.index+1}.';
+            <c:if test="${!empty q.parentQues}">
+                <%--如果是七选五--%>
+                <c:if test="${q.parentQues.extension==5}">
+                    h1+='<span style="display:none"><span class="width font-blue" id="avg_score"></span><strong id="you_score${q.questionid}"></strong></span>';
+                </c:if>
+             h1+='<span id="sp_quesIdx${q.questionid}">${qidx.index+1}.</span>';
+            </c:if>
             <c:if test="${!empty q.content}">
               h1+='${q.content}';
             </c:if>
@@ -196,42 +221,36 @@
                     h1+='</td></tr>';
                 }
             </c:if>
-             h1+='<span id="quesOption_${q.questionid}">';
+
+
             <c:if test="${!empty q.parentQues&&q.parentQues.extension==5}">
+            var rightChar="";
                     var optionPObj=$("#p_option_${q.parentQues.questionid}>div");
                 if(optionPObj.length>0){
-                    h1+='<table border="0" cellpadding="0" cellspacing="0">';
-                    h1+='<col class="w30"/><col class="w910"/>';
                     $.each(optionPObj,function(x,m){
                         var opttype=$("#"+ m.id+" input[name='opt_optiontype']").val();
-                        var optid=$("#"+ m.id+" input[name='opt_quesid']").val();
-                         h1+='<tr><th>'
                         var ishas=false;
                         <c:if test="${!empty q.questionOption}">
                                 <c:forEach items="${q.questionOption}" var="im">
                         <c:if test="${!empty im.isright&&im.isright==1}">
                             var optype="${im.optiontype}";
                         if(opttype==optype){
-                            ishas=true;
+                            if(rightChar.length>0)
+                                rightChar+=",";
+                            rightChar+=optype;
+                            return;
                         }
                         </c:if>
                         </c:forEach>
                         </c:if>
-                        h+='<tr><th>' ;
-                        <c:if test="${q.questiontype==3||q.questiontype==7}">
-                                h1+='<input type="radio" id="rdo_answer${q.questionid}'+opttype+'"  disabled="true"  value="'+ opttype+'" name="rdo_answer${q.questionid}">';
-                        </c:if>
-                        <c:if test="${q.questiontype==4||q.questiontype==8}">
-                                h1+='<input type="checkbox" value="'+opttype+'|'+(ishas?1:0)+'"  disabled="true"  id="rdo_answer${q.questionid}'+opttype+'" name="rdo_answer${q.questionid}">';
-                        </c:if>
-                        h1+='</th>';
-                        h1+=' <td>'+$(m).html().Trim()+(ishas?'<span class="ico12"></span>':'')+'</td>';
-                        h1+='</tr>';
                     });
-                    h1+='</table>';
                 }
+            h1+=rightChar+'&nbsp;&nbsp;${q.analysis}';
+           // h1+='<span id="dv_right_as${q.questionid}">${q.analysis}</span>';
+            h1+='</td></tr>';
             </c:if>
             <c:if test="${empty q.parentQues||q.parentQues.extension!=5}">
+             h1+='<span id="quesOption_${q.questionid}">';
                     if(questype==3||questype==4||questype==7||questype==8){
                     <c:if test="${!empty q.questionOption}">
                                 h1+='<table border="0" cellpadding="0" cellspacing="0">';
@@ -261,19 +280,33 @@
             </c:if>
                 h1+='</span>'
                 h1+='</td></tr>';
-            <%--<c:if test="${empty q.parentQues||q.parentQues.extension!=5}">--%>
-            if(questype==3||questype==4||questype==7||questype==8){
-            h1+='<tr><td>';
-            h1+='<p><strong>答案解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>';
-            h1+='</td></tr>';
-            }
-            <%--</c:if>--%>
+            <c:if test="${empty q.parentQues||q.parentQues.extension!=5}">
+                if(questype==3||questype==4||questype==7||questype==8){
+                  h1+='<tr><td>';
+                h1+='<p><strong>答案解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>';
+                h1+='</td></tr>';
+                }
+            </c:if>
             h1+='</table>';
             <c:if test="${!empty q.parentQues}">
                     $("#td_child_${q.parentQues.questionid}").append(h1);
             </c:if>
             <c:if test="${empty q.parentQues}">
              $("#dv_question").append(h1);
+            </c:if>
+            <c:if test="${!empty q.parentQues&&q.parentQues.extension==5}">
+                $("#td_child_${q.parentQues.questionid} table").css("margin","0px auto 0px");
+                if($("#pmyanswer${q.parentQues.questionid}").length<1){
+                   var  ht='';
+                    <c:if test="${!empty stuAnswer}">
+                    ht+='<p><strong>我的答案：</strong><span id="pmyanswer${q.parentQues.questionid}"></span></p>';
+                    </c:if>
+                    <c:if test="${empty stuAnswer}">
+                    ht+='<p style="display:none"><strong>我的答案：</strong><span id="pmyanswer${q.parentQues.questionid}"></span></p>';
+                    </c:if>
+                    ht+='<p><strong>正确答案及答案解析：</strong></p>';
+                    $("#td_child_${q.parentQues.questionid} table:first").before(ht);
+                }
             </c:if>
             </c:forEach>
             </c:if>
@@ -291,7 +324,7 @@
             <c:if test="${!empty stuAnswer}">
                 <c:forEach items="${stuAnswer}" var="sa">
                 //得到quesid的questype
-                userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","${sa.annexNameFull}");
+                userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","${sa.annexNameFull}","${sa.ismarking}");
                 </c:forEach>
             </c:if>
             //计算每题的分数
@@ -320,7 +353,9 @@
             }
             //计算是否存在试题组等题
             $("table[id*='dv_pqs_']").each(function(idx,itm){
+                var ex=$("#"+this.id+" input[name='hd_extension']").val();
                 var teamScore=$("#"+this.id+" td[id*='td_child_']").children().length*avgScore;
+
                 if(papertype==3||papertype==1||papertype==2){
                     teamScore=0;
                     $("#"+itm.id+" #avg_score").each(function(x,m){
@@ -334,7 +369,7 @@
                 });
                 $("#"+this.id+" #you_sum").html(YSumScore);
             });
-            if(isshowfen){
+            if(isshowfen||isAllMark){
                 var sumScore=0;
                 $("strong[id*='you_score']").each(function(idx,itm){
                     sumScore+=parseFloat($(itm).html().Trim());
@@ -360,7 +395,6 @@
 
 
 </div>
-
 <%@include file="/util/foot.jsp"%>
 </body>
-</html>
+    </html>

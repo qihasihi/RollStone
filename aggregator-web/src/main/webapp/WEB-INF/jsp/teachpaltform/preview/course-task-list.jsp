@@ -109,7 +109,13 @@
              });
          }
 
-
+        function pLoad(url,courseid){
+            $("li[name='li_nav']").each(function(idx,itm){
+                $(itm).siblings().removeClass("crumb");
+            });
+            $("li[name='li_nav']").eq(1).addClass("crumb");
+             $(window.parent.document).contents().find("#dv_course_element").load(url);
+        }
 
 
          function getInvestReturnMethod(rps){
@@ -129,6 +135,18 @@
                         case 3:
                             criteria=itm.criteria==1?"提交":"";
                             type="试&nbsp;&nbsp;&nbsp;&nbsp;题&nbsp;&nbsp;&nbsp;&nbsp;";
+                            break;
+                        case 4:
+                            criteria=itm.criteria==1?"提交试卷":"";
+                            type="成卷测试&nbsp;&nbsp;&nbsp;&nbsp;";
+                            break;
+                        case 5:
+                            criteria=itm.criteria==1?"提交试卷":"";
+                            type="自主测试&nbsp;&nbsp;&nbsp;&nbsp";
+                            break;
+                        case 6:
+                            criteria="";
+                            type="微课程学习&nbsp;&nbsp;&nbsp;&nbsp;";
                             break;
                     }
 
@@ -170,9 +188,26 @@
                     taskObj=itm.taskobjname;
                     html+='<p class="title"><a class="ico49b"  id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a>任务'+(rps.presult.pageSize*(rps.presult.pageNo-1)+(idx+1))+'：'+type;
                     if(itm.tasktype==1){
-                        html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+taskObj+'</a>';
+                        if(itm.resourcetype==1){
+                            var url='teachercourse?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid;
+                            html+='<a href="javascript:pLoad(\''+url+'\','+courseid+')" class="font-blue">'+taskObj+'</a>';
+                        }else{
+                            if(itm.remotetype==1){
+                                html+='<a href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
+                            }else{
+                                html+='<a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
+                            }
+                        }
                     }else if(itm.tasktype==2){
                         html+='<a href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'" class="font-blue">'+taskObj+'</a>';
+                    }else if(itm.tasktype==4){
+                        html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
+                    }else if(itm.tasktype==6){
+                       // html+='<a href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
+                        var url='teachercourse?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid;
+                        html+='<a href="javascript:pLoad(\''+url+'\','+courseid+')" class="font-blue">'+taskObj+'</a>';
+                    }else if(itm.tasktype==10){
+                        html+='<a href="#" ></a>';
                     }
                     html+='</p>';
                     html+='<div id="div_task_'+itm.taskid+'" style="display:none;"  class="text">';

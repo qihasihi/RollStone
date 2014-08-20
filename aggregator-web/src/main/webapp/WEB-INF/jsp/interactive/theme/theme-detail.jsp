@@ -44,7 +44,7 @@
                         'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'removeformat',
                         'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist',
                         'lineheight',
-                        'horizontal','spechars', 'snapscreen',
+                        'horizontal','spechars',
                         'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify',
                         'link', 'unlink',
                         'insertvideo','insertimage', 'emotion', 'attachment',

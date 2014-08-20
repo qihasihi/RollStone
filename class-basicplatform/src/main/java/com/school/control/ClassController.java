@@ -358,9 +358,7 @@ public class ClassController extends BaseController<ClassInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
-        classinfo.setType(type);
         classinfo.setYear(year);
-        classinfo.setPattern(pattern);
         classinfo.setIslike(1);
         //已存在当前数据 无法添加
         List<ClassInfo>classList=this.classManager.getList(classinfo, null);
@@ -369,6 +367,8 @@ public class ClassController extends BaseController<ClassInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
+        classinfo.setPattern(pattern);
+        classinfo.setType(type);
         classinfo.setIsflag(1);
         if(classManager.doSave(classinfo)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
