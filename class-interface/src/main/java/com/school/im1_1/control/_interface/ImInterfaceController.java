@@ -64,51 +64,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.tpRecordManager=this.getManager(TpRecordManager.class);
     }
     /**
-     * 验证RequestParams相关参数
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    public Boolean ValidateRequestParam(HttpServletRequest request) throws Exception{
-        Enumeration eObj=request.getParameterNames();
-        boolean returnBo=true;
-        if(eObj!=null){
-            while(eObj.hasMoreElements()){
-                Object obj=eObj.nextElement();
-                if(obj==null||obj.toString().trim().length()<1)
-                    continue;
-                Object val=request.getParameter(obj.toString());
-                if(val==null||val.toString().trim().length()<1){
-                    returnBo=!returnBo;
-                    break;
-                }
-            }
-        }
-
-        return returnBo;
-    }
-    /**
-     * 验证RequestParams相关参数
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    public HashMap<String,String> getRequestParam(HttpServletRequest request) throws Exception{
-        Enumeration eObj=request.getParameterNames();
-        HashMap<String,String> returnMap=null;
-        if(eObj!=null){
-            returnMap=new HashMap<String, String>();
-            while(eObj.hasMoreElements()){
-                Object obj=eObj.nextElement();
-                if(obj==null||obj.toString().trim().length()<1)
-                    continue;
-                Object val=request.getParameter(obj.toString());
-                returnMap.put(obj.toString(),val.toString());
-            }
-        }
-        return returnMap;
-    }
-    /**
      * 学习目录接口
      * @param request
      * @param mp
@@ -122,7 +77,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-        if(!ValidateRequestParam(request)){
+        if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -141,6 +96,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return;
         }
+        int utype=ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -151,7 +107,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setUserid(userList.get(0).getUserid());
-        obj.setUsertype(Integer.parseInt(usertype));
+        obj.setUsertype(utype);
         List<Map<String,Object>> list = this.imInterfaceManager.getStudyModule(obj);
         if(list!=null&&list.size()>0){
             for(Map map1:list){
@@ -192,7 +148,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String usertype = request.getParameter("userType");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-        if(!ValidateRequestParam(request)){
+        if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -214,6 +170,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return;
         }
+        int utype=ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -224,7 +181,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         ImInterfaceInfo obj = new ImInterfaceInfo();
         obj.setSchoolid(Integer.parseInt(schoolid));
         obj.setClassid(Integer.parseInt(classid));
-        if(usertype.equals("2")){
+        if(utype==2){
             obj.setUserid(userList.get(0).getUserid());
         }
         List<Map<String,Object>> courseList = this.imInterfaceManager.getClassTaskCourse(obj);
@@ -232,7 +189,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(courseList!=null&&courseList.size()>0){
             for(int i = 0;i<courseList.size();i++){
                 List<Map<String,Object>> taskList;
-                if(usertype.equals("2")){
+                if(utype==2){
                     taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),null);
                 }else{
                     taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),userList.get(0).getUserid());
@@ -342,7 +299,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String year = request.getParameter("requestYear");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-        if(!ValidateRequestParam(request)){
+        if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -364,6 +321,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
+        int utype = ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -377,7 +335,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Map m = new HashMap();
         Map m2 = new HashMap();
         List<Map<String,Object>> courseList = this.imInterfaceManager.getStudentCalendar(userList.get(0).getUserid(),Integer.parseInt(schoolid),Integer.parseInt(classid),Integer.parseInt(year),Integer.parseInt(month));
-        if(!usertype.equals("2")){
+        if(utype!=2){
             long mTime = System.currentTimeMillis();
             int offset = Calendar.getInstance().getTimeZone().getRawOffset();
             Calendar c = Calendar.getInstance();
@@ -385,7 +343,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
             String currentMonth = currentDay.split("-")[1];
             if(Integer.parseInt(month)==Integer.parseInt(currentMonth)){
-                List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
+                List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), utype, Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
                 if(courseArray!=null&&courseArray.size()>0){
                     List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
                     for(int i = 0;i<courseArray.size();i++){
@@ -448,7 +406,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String year = request.getParameter("requestYear");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-        if(!ValidateRequestParam(request)){
+        if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -469,6 +427,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
+        int utype = ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -486,7 +445,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
         String currentMonth = currentDay.split("-")[1];
         if(Integer.parseInt(month)==Integer.parseInt(currentMonth)){
-            List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(schoolid), currentDay);
+            List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(), utype, Integer.parseInt(schoolid), currentDay);
             if(courseArray!=null&&courseArray.size()>0){
                 List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
                 for(int i = 0;i<courseArray.size();i++){
@@ -543,7 +502,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String currentDay = request.getParameter("requestDay");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-        if(!ValidateRequestParam(request)){
+        if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -563,6 +522,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
+        int utype = ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -570,7 +530,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
             return;
         }
-        List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype), Integer.parseInt(schoolid), currentDay);
+        List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(),utype, Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
         if(courseArray!=null&&courseArray.size()>0){
@@ -615,7 +575,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String classid = request.getParameter("classId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-        if(!ValidateRequestParam(request)){
+        if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -636,6 +596,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
+        int utype = ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -643,7 +604,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
             return;
         }
-        List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), Integer.parseInt(usertype),Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
+        List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), utype,Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
         Map m = new HashMap();
         Map m2 = new HashMap();
         if(courseArray!=null&&courseArray.size()>0){
@@ -689,7 +650,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-        if(!ValidateRequestParam(request)){
+        if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -827,7 +788,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-        if(!ValidateRequestParam(request)){
+        if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -850,6 +811,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
+        int utype = ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -916,7 +878,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
         List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
         Map returnUserMap = new HashMap();
-        if(usertype.equals("2")){
+        if(utype==2){
             taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
         }else{
             taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
@@ -996,7 +958,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-        if(!ValidateRequestParam(request)){
+        if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -1019,6 +981,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return new ModelAndView("");
         }
+        int utype = ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -1058,7 +1021,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
               //  System.out.println("查询试题结束："+System.currentTimeMillis());
                 List<Map<String,Object>> option = new ArrayList<Map<String, Object>>();
                 request.setAttribute("option",questionOptionList);
-                if(usertype.equals("2")){
+                if(utype==2){
                     List<Map<String,Object>> optionnumList = new ArrayList<Map<String, Object>>();
                     optionnumList = this.taskPerformanceManager.getPerformanceOptionNum(Long.parseLong(taskid),Long.parseLong(classid));
                     //动态拼成想要的选项表分布比例
@@ -1113,7 +1076,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
             }
             List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
-            if(!usertype.equals("2")){
+            if(utype!=2){
                 QuestionAnswer questionAnswer = new QuestionAnswer();
                 questionAnswer.setTaskid(Long.parseLong(taskid));
                 questionAnswer.setUserid(userList.get(0).getRef());
@@ -1168,7 +1131,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             request.setAttribute("taskType",taskList.get(0).getTasktype());
             request.setAttribute("courseid",taskList.get(0).getCourseid());
             request.setAttribute("taskid",taskList.get(0).getTaskid());
-            request.setAttribute("usertype",Integer.parseInt(usertype));
+            request.setAttribute("usertype",utype);
            // System.out.println(System.currentTimeMillis());
             return new ModelAndView("/imjsp-1.1/task-detail-question");
         }
@@ -1474,7 +1437,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String attachType = request.getParameter("attachType");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
-        if(!ValidateRequestParam(request)){
+        if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -1498,6 +1461,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return;
         }
+        int utype = ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
         List<UserInfo> userList = this.userManager.getList(ui,null);
@@ -1637,7 +1601,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     public void AddCourseRecord(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JSONObject returnJo=new JSONObject();
         returnJo.put("result",0);//默认失败
-        if(!ValidateRequestParam(request)){  //验证参数
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -1645,7 +1609,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(jo.toString());
             return;
         }
-        HashMap<String,String> paramMap=getRequestParam(request);
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
         //获取参数
         String jid=paramMap.get("jid");
         String schoolId=paramMap.get("schoolId");
@@ -1731,7 +1695,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     public void DelCourseRecord(HttpServletRequest request,HttpServletResponse response) throws  Exception{
         JSONObject returnJo=new JSONObject();
         returnJo.put("result",0);//默认失败
-        if(!ValidateRequestParam(request)){  //验证参数
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -1739,7 +1703,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(jo.toString());
             return;
         }
-        HashMap<String,String> paramMap=getRequestParam(request);
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
         //获取参数
         String jid=paramMap.get("jid");
         String schoolId=paramMap.get("schoolId");
@@ -1811,7 +1775,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     public void GetClassRecord(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JSONObject returnJo=new JSONObject();
         returnJo.put("result",0);//默认失败
-        if(!ValidateRequestParam(request)){  //验证参数
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
@@ -1819,7 +1783,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(jo.toString());
             return;
         }
-        HashMap<String,String> paramMap=getRequestParam(request);
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
         //获取参数
         String jid=paramMap.get("jid");
         String schoolId=paramMap.get("schoolId");
@@ -1892,4 +1856,72 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         response.getWriter().print(returnJo.toString());
     }
 
+}
+
+class ImUtilTool{
+    /**
+     * 验证RequestParams相关参数
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public static Boolean ValidateRequestParam(HttpServletRequest request) throws Exception{
+        Enumeration eObj=request.getParameterNames();
+        boolean returnBo=true;
+        if(eObj!=null){
+            while(eObj.hasMoreElements()){
+                Object obj=eObj.nextElement();
+                if(obj==null||obj.toString().trim().length()<1)
+                    continue;
+                Object val=request.getParameter(obj.toString());
+                if(val==null||val.toString().trim().length()<1){
+                    returnBo=!returnBo;
+                    break;
+                }
+            }
+        }
+
+        return returnBo;
+    }
+    /**
+     * 验证RequestParams相关参数
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public static HashMap<String,String> getRequestParam(HttpServletRequest request) throws Exception{
+        Enumeration eObj=request.getParameterNames();
+        HashMap<String,String> returnMap=null;
+        if(eObj!=null){
+            returnMap=new HashMap<String, String>();
+            while(eObj.hasMoreElements()){
+                Object obj=eObj.nextElement();
+                if(obj==null||obj.toString().trim().length()<1)
+                    continue;
+                Object val=request.getParameter(obj.toString());
+                returnMap.put(obj.toString(),val.toString());
+            }
+        }
+        return returnMap;
+    }
+
+    /**
+     * 转换usertype
+     * @param usertype
+     * return usertype
+     * */
+    public static Integer getUserType(String usertype){
+        if(usertype==null||usertype.length()<1){
+            return 0;
+        }
+        int type = 0;
+        if(usertype.equals("1")||usertype.equals("2")){
+            type=2;
+        }else if(usertype.equals("3")||usertype.equals("4")){
+            type=1;
+        }else if(usertype.equals("6")){
+            type=3;
+        }
+        return type;
+    }
 }

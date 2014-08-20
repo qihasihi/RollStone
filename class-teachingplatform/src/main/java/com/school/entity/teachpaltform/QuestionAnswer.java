@@ -21,6 +21,24 @@ public class QuestionAnswer  implements java.io.Serializable{
     private Long taskid;
     private Long courseid;
     private Long groupid;
+    private String replyattach;
+    private Integer replyattachtype;
+
+    public String getReplyattach() {
+        return replyattach;
+    }
+
+    public void setReplyattach(String replyattach) {
+        this.replyattach = replyattach;
+    }
+
+    public Integer getReplyattachtype() {
+        return replyattachtype;
+    }
+
+    public void setReplyattachtype(Integer replyattachtype) {
+        this.replyattachtype = replyattachtype;
+    }
 
     public Long getGroupid() {
         return groupid;

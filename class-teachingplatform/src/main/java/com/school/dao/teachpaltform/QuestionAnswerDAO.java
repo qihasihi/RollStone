@@ -191,6 +191,16 @@ public class QuestionAnswerDAO extends CommonDAO<QuestionAnswer> implements IQue
             objList.add(questionanswer.getReplyuserid());
         } else
             sqlbuilder.append("null,");
+        if (questionanswer.getReplyattach() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questionanswer.getReplyattach());
+        } else
+            sqlbuilder.append("null,");
+        if (questionanswer.getReplyattachtype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questionanswer.getReplyattachtype());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
