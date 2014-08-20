@@ -1,5 +1,6 @@
 package com.school.control;
 
+import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.entity.*;
 import com.school.manager.SchoolManager;
 import com.school.manager.inter.ISchoolManager;
@@ -43,9 +44,9 @@ public class TpUserController extends UserController {
     public ModelAndView toUserList(HttpServletRequest request,
                                    HttpServletResponse response, ModelMap mp) throws Exception {
         JsonEntity je=new JsonEntity();
-        String schoolid=request.getParameter("schoolid");
-        String schoolname=request.getParameter("schoolname");
-        String userid=request.getParameter("userid");
+        String schoolid=request.getParameter("schoolId");
+        String schoolname=request.getParameter("schoolName");
+        String userid=request.getParameter("jId");
         if(schoolid==null||schoolid.trim().length()<1||!UtilTool.isNumber(schoolid)){
             je.setMsg("Schoolid is empty!");
             response.getWriter().print(je.toJSON());
@@ -80,7 +81,7 @@ public class TpUserController extends UserController {
         UserInfo u=new UserInfo();
         u.setDcschoolid(Integer.parseInt(schoolid));
         u.setEttuserid(Integer.parseInt(userid));
-        List<UserInfo>userList=this.userManager.getList(u,null);
+        List<UserInfo>userList=this.userManager.getList(u, null);
         if(userList==null||userList.size()<1){
             //Ìí¼ÓÓÃ»§
             String userNextRef = UUID.randomUUID().toString();
@@ -180,12 +181,12 @@ public class TpUserController extends UserController {
                 List<UserInfo>ettUserList=this.userManager.getList(sel,null);
                 if(ettUserList!=null&&ettUserList.size()>0){
                     JSONObject obj = new JSONObject();
-                    obj.element("userid", ettUserList.get(0).getUserid());
-                    obj.element("jid", ettUserList.get(0).getEttuserid());
-                    obj.element("schoolid",ettUserList.get(0).getDcschoolid());
+                    obj.element("userId", ettUserList.get(0).getUserid());
+                    obj.element("jId", ettUserList.get(0).getEttuserid());
+                    obj.element("schoolId",ettUserList.get(0).getDcschoolid());
                     JSONArray array=new JSONArray();
                     array.add(obj);
-                    //com.etiantian.unite.utils.UrlSigUtil.encodeUrl()
+                    //UrlSigUtil.ma
                 }
 
             }else{
