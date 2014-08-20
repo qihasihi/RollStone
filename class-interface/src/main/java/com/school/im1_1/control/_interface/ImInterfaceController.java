@@ -303,7 +303,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 typename="视频";
                                 break;
                         }
-                        taskList.get(j).put("TASKNAME","任务 "+taskList.get(j).get("ORDERIDX")+" "+typename+" "+taskList.get(j).get("TASKNAME"));
+                        if(Integer.parseInt(taskList.get(j).get("TASKTYPE").toString())==3){
+                            taskList.get(j).put("TASKNAME","任务 "+taskList.get(j).get("ORDERIDX")+" "+typename);
+                        }else{
+                            taskList.get(j).put("TASKNAME","任务 "+taskList.get(j).get("ORDERIDX")+" "+typename+" "+taskList.get(j).get("TASKNAME"));
+                        }
                     }
                 }
                 courseList.get(i).put("taskList",taskList);
@@ -981,7 +985,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @throws Exception
      */
     @RequestMapping(params="m=toQuestionJsp",method={RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView toTeacherCourseList(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+    public ModelAndView toQuestionJsp(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
         //System.out.println(System.currentTimeMillis());
         String taskid = request.getParameter("taskId");
         String classid = request.getParameter("classId");
@@ -1164,6 +1168,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             request.setAttribute("taskType",taskList.get(0).getTasktype());
             request.setAttribute("courseid",taskList.get(0).getCourseid());
             request.setAttribute("taskid",taskList.get(0).getTaskid());
+            request.setAttribute("usertype",Integer.parseInt(usertype));
            // System.out.println(System.currentTimeMillis());
             return new ModelAndView("/imjsp-1.1/task-detail-question");
         }

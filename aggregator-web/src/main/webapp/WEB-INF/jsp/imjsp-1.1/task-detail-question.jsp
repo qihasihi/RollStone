@@ -20,7 +20,7 @@
             $("#title").html(content);
             if("${type}"=="填空题"){
                 content = content.replaceAll('<span name="fillbank"></span>','<input name="txt_fb_${quesid}" type="text" />');
-                if(usertype!=2){
+                if(usertype!=2&&${!empty answer}){
                     var currentanswer = '${currentanswer}';
                     var myanswer = '${myanswer}';
                     var answers = currentanswer.split("|");
@@ -28,7 +28,7 @@
                     var htm = '<b>正确答案：</b>';
                     for(var i = 0;i<answers.length;i++){
                         if(myanswers.length>0){
-                            content = content.replace('<input name="textfield4" type="text" />','<u class="huida">'+myanswers[i]+'</u>');
+                            content = content.replace('<input name="txt_fb_${quesid}" type="text" />','<u class="huida">'+myanswers[i]+'</u>');
                             htm+=' <p>'+answers[i]+'<span>（'+myanswers[i]+'）</span></p>';
                         }else{
                             htm+=' <p>'+answers[i]+'<span>（）</span></p>';
@@ -141,7 +141,7 @@
         <c:if test="${empty answer}">
             <ul class="test">
         </c:if>
-        <c:if test="${empty answer}">
+        <c:if test="${!empty answer}">
             <ul class="daan">
         </c:if>
             <c:forEach items="${option}" var="itm" varStatus="idx">
@@ -175,8 +175,8 @@
         <p class="jiexi"><c:if test="${!empty rightNum}"><span>${rightNum}%答对</span></c:if> 答案与解析</p>
         <div>${analysis}</div>
     </c:if>
-    <c:if test="${!empty optionNum}">
-        <p class="jiexi"><c:if test="${!empty rightNum}"><span>${rightNum}%答对</span></c:if> 答案与解析</p>
+    <c:if test="${usertype eq 2}">
+        <p class="jiexi"> 答案与解析</p>
         <div>${analysis}</div>
     </c:if>
     <c:if test="${!empty userRecord}">
