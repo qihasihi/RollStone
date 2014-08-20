@@ -186,7 +186,10 @@ public class UtilTool implements java.io.Serializable {
      */
     public static final Integer _ROLE_PREPARE_LEADER_ID=17;
 
-
+    /**
+     * ÍøĞ£½ÌÎñID
+     */
+    public static final Integer _ROLE_WXJW_ID=22;
 
 
 
