@@ -1480,11 +1480,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         TpTaskInfo tmpTask=taskList.get(0);
         String quesanswer = replyDetail;
         if(tmpTask.getTasktype()==1){
-//            if(quesanswer==null||quesanswer.trim().length()<1){
-//                response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务不存在，请查看后重试\"}");
-//                return;
-//            }
-
             QuestionAnswer qa=new QuestionAnswer();
             qa.setCourseid(tmpTask.getCourseid());
             qa.setQuesparentid(tmpTask.getTaskvalueid());
@@ -1494,6 +1489,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             qa.setRightanswer(1);
             qa.setTasktype(tmpTask.getTasktype());
             qa.setTaskid(tmpTask.getTaskid());
+            qa.setReplyattach(replyAttach);
+            qa.setReplyattachtype(Integer.parseInt(attachType));
             sql=new StringBuilder();
             objList=this.questionAnswerManager.getSaveSql(qa,sql);
             if(sql!=null&&objList!=null){
