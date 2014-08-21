@@ -17,6 +17,7 @@
             var schoolId=$("#schoolId").val();
             var jid=$("#jid").val();
             var classId=$("#classId").val();
+            var isvir = $("#isVirtual").val();
             var time=$("#txt_a_time").val();
             var taskId = $("#taskId").val();
             var classId = $("#classId").val();
@@ -24,7 +25,7 @@
             var replyDetail = $("#replyDetail").val();
             var replyAttach = $("#replyAttach").val();
             var attachType = $("#attachType").val();
-            var param={schoolId:schoolId,jid:jid,classId:classId,time:time,taskId:taskId,classId:classId,userType:userType,replyDetail:replyDetail,replyAttach:replyAttach,attachType:attachType};
+            var param={schoolId:schoolId,jid:jid,classId:classId,isVirtual:isvir,time:time,taskId:taskId,classId:classId,userType:userType,replyDetail:replyDetail,replyAttach:replyAttach,attachType:attachType};
 
             param.method=methodName;
 
@@ -50,6 +51,10 @@
             <tr>
                 <td>班级id</td>
                 <td><input type="text" name="classId" id="classId" value="4"/> </td>
+            </tr>
+            <tr>
+                <td>是否虚拟</td>
+                <td><input type="text" name="isVirtual" id="isVirtual" value="0"/> </td>
             </tr>
             <tr>
                 <td>用户id</td>

@@ -1426,6 +1426,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     public void doReplyTask(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String taskid = request.getParameter("taskId");
         String classid = request.getParameter("classId");
+        String isvir = request.getParameter("isVirtual");
         String userid = request.getParameter("jid");
         String usertype = request.getParameter("userType");
         String schoolid = request.getParameter("schoolId");
@@ -1445,6 +1446,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         HashMap<String,String> map = new HashMap();
         map.put("taskId",taskid);
         map.put("classId",classid);
+        map.put("isVirtual",isvir);
         map.put("jid",userid);
         map.put("userType",usertype);
         map.put("schoolId",schoolid);
@@ -1565,8 +1567,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(objListArray.size()>0&&sqlListArray.size()>0){
             boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
             if(flag){
-                response.getWriter().print("{\"result\":\"1\",\"msg\":\"回答完成\"}");
-
+                JSONObject jo = new JSONObject();
+                jo.put("result",1);
+                jo.put("msg","回答完成");
+                List<Map<String,Object>> taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
+                Map m = new HashMap();
+                m.put("replyList",taskUserRecord);
+                jo.put("data",m);
+                response.getWriter().print(jo.toString());
             }else{
                 response.getWriter().print("{\"result\":\"0\",\"msg\":\"回答失败\"}");
                 return;
