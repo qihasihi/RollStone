@@ -348,7 +348,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         Map o2 = new HashMap();
                         o2.put("courseId",o.get("COURSE_ID"));
                         o2.put("courseName",o.get("COURSE_NAME"));
-                        o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME"));
+                        o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
                         o2.put("schoolId",o.get("DC_SCHOOL_ID"));
                         courseArray2.add(o2);
                     }
@@ -450,7 +450,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     Map o2 = new HashMap();
                     o2.put("courseId",o.get("COURSE_ID"));
                     o2.put("courseName",o.get("COURSE_NAME"));
-                    o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME"));
+                    o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
                     o2.put("schoolId",o.get("DC_SCHOOL_ID"));
                     o2.put("classId",o.get("CLASS_ID"));
                     o2.put("classType",o.get("CLASS_TYPE"));
@@ -537,7 +537,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 Map o2 = new HashMap();
                 o2.put("courseId",o.get("COURSE_ID"));
                 o2.put("courseName",o.get("COURSE_NAME"));
-                o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME"));
+                o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
                 o2.put("schoolId",o.get("DC_SCHOOL_ID"));
                 o2.put("classId",o.get("CLASS_ID"));
                 o2.put("classType",o.get("CLASS_TYPE"));
@@ -611,7 +611,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 Map o2 = new HashMap();
                 o2.put("courseId",o.get("COURSE_ID"));
                 o2.put("courseName",o.get("COURSE_NAME"));
-                o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME"));
+                o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
                 o2.put("schoolId",o.get("DC_SCHOOL_ID"));
                 courseArray2.add(o2);
             }
@@ -869,7 +869,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     typename="视频";
                     break;
             }
-            returnMap.put("taskContent", "任务 " + taskList.get(0).getOrderidx() + " " + typename);
+            returnMap.put("taskContent", "任务 " + taskList.get(0).getOrderidx() + " " + typename+" "+rsList.get(0).getResname());
             returnMap.put("taskAnalysis",taskinfo.get(0).get("TASKANALYSIS"));
         }
         List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
@@ -1065,7 +1065,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         if(questionOptionList.get(i).getIsright()==1){
                             for(int j = 0;j<optionnumList.size();j++){
                                 if(questionOptionList.get(i).getOptiontype().equals(optionnumList.get(j).get("OPTION_TYPE"))){
-                                    request.setAttribute("rightNum",di.format((double)Integer.parseInt(optionnumList.get(i).get("NUM").toString())/totalNum*100));
+                                    request.setAttribute("rightNum",di.format((double)Integer.parseInt(optionnumList.get(j).get("NUM").toString())/totalNum*100));
+                                }else{
+                                    request.setAttribute("rightNum","0");
                                 }
                             }
                         }
@@ -1454,7 +1456,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("replyAttach",replyAttach);
         map.put("attachType",attachType);
         map.put("time",timestamp);
-        // String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
+        String sign = UrlSigUtil.makeSigSimple("TaskInfo",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("ReplyTask",map,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
@@ -1570,9 +1572,57 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 JSONObject jo = new JSONObject();
                 jo.put("result",1);
                 jo.put("msg","回答完成");
+                List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
+                Map returnUserMap = new HashMap();
                 List<Map<String,Object>> taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
+                if(taskUserRecord!=null&&taskUserRecord.size()>0){
+                    for(int i = 0;i<taskUserRecord.size();i++){
+                        int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
+                        int days = 0;
+                        int hours =0;
+                        int mins = 0;
+                        int seconds = 0;
+                        if(time>0){
+                            seconds = time%60;
+                            if(seconds>0){
+                                mins = time/60;
+                            }else{
+                                seconds = seconds*60;
+                            }
+                            if(mins>0){
+                                hours = mins/60;
+                            }
+                            if(hours>0){
+                                days= hours/24;
+                            }
+                        }
+                        if(days>0){
+                            String t = taskUserRecord.get(i).get("C_TIME").toString();
+                            t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
+                            returnUserMap.put("replyDate",t);
+                        }else{
+                            if(hours>0){
+                                returnUserMap.put("replyDate",hours+"小时");
+                            }else{
+                                if(mins>0){
+                                    returnUserMap.put("replyDate",mins+"分钟");
+                                }else{
+                                    if(seconds>0){
+                                        returnUserMap.put("replyDate",seconds+"秒");
+                                    }
+                                }
+                            }
+                        }
+                        returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
+                        returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
+                        returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
+                        returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                        returnUserMap.put("uPhoto","img");
+                        returnUserRecord.add(returnUserMap);
+                    }
+                }
                 Map m = new HashMap();
-                m.put("replyList",taskUserRecord);
+                m.put("replyList",returnUserRecord);
                 jo.put("data",m);
                 response.getWriter().print(jo.toString());
             }else{

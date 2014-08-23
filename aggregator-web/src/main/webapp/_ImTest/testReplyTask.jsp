@@ -20,12 +20,11 @@
             var isvir = $("#isVirtual").val();
             var time=$("#txt_a_time").val();
             var taskId = $("#taskId").val();
-            var classId = $("#classId").val();
             var userType = $("#userType").val();
             var replyDetail = $("#replyDetail").val();
             var replyAttach = $("#replyAttach").val();
             var attachType = $("#attachType").val();
-            var param={schoolId:schoolId,jid:jid,classId:classId,isVirtual:isvir,time:time,taskId:taskId,classId:classId,userType:userType,replyDetail:replyDetail,replyAttach:replyAttach,attachType:attachType};
+            var param={schoolId:schoolId,jid:jid,classId:classId,isVirtual:isvir,time:time,taskId:taskId,userType:userType,replyDetail:replyDetail,replyAttach:replyAttach,attachType:attachType};
 
             param.method=methodName;
 

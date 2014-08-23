@@ -16,10 +16,13 @@
         var userRef = "${userRef}";
         $(function(){
             var content='${content}';
-            var usertype = ${param.userType};
+            var usertype = ${usertype};
             $("#title").html(content);
             if("${type}"=="填空题"){
-                content = content.replaceAll('<span name="fillbank"></span>','<input name="txt_fb_${quesid}" type="text" />');
+                if(usertype!=2&&${empty answer}){
+                    content = content.replaceAll('<span name="fillbank"></span>','<input name="txt_fb_${quesid}" type="text" />');
+                    $("#title").html(content);
+                }
                 if(usertype!=2&&${!empty answer}){
                     var currentanswer = '${currentanswer}';
                     var myanswer = '${myanswer}';
@@ -28,7 +31,7 @@
                     var htm = '<b>正确答案：</b>';
                     for(var i = 0;i<answers.length;i++){
                         if(myanswers.length>0){
-                            content = content.replace('<input name="txt_fb_${quesid}" type="text" />','<u class="huida">'+myanswers[i]+'</u>');
+                            content = content.replace('<span name="fillbank"></span>','<u class="huida">'+myanswers[i]+'</u>');
                             htm+=' <p>'+answers[i]+'<span>（'+myanswers[i]+'）</span></p>';
                         }else{
                             htm+=' <p>'+answers[i]+'<span>（）</span></p>';
@@ -36,7 +39,8 @@
                     }
                     $("#title").html(content);
                     $("#zhengquedaan").html(htm);
-                }else{
+                }
+                if(usertype==2){
                     var currentanswer = '${currentanswer}';
                     var answers = currentanswer.split("|");
                     var htm = '<b>正确答案：</b>';
@@ -44,7 +48,10 @@
                        htm+=' <p>'+answers[i]+'</p>';
                     }
                     $("#zhengquedaan").html(htm);
+                    content = content.replaceAll('<span name="fillbank"></span>','<u class="huida">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>');
+                    $("#title").html(content);
                 }
+
             }
         });
         function submitTask(){
@@ -155,7 +162,7 @@
                     <span class="blue"><input type="hidden" id="h_${itm.ref}" value="${itm.ref}"/>${itm.optiontype}、</span>${itm.content}
                     <c:if test="${!empty answer}">
                         <c:forEach items="${answer}" var="im">
-                            <c:if test="${itm.optiontype eq im.answercontent and itm.isright==1}">
+                            <c:if test="${ itm.isright==1}">
                                 <b class="right"></b>
                             </c:if>
                             <c:if test="${itm.optiontype eq im.answercontent and itm.isright==0}">
