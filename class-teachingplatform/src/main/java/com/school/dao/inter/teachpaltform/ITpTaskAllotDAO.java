@@ -13,4 +13,11 @@ public interface ITpTaskAllotDAO extends ICommonDAO<TpTaskAllotInfo>{
     public List<Map<String,Object>> getNum(Long groupid,Long taskid);
 
     public List<Map<String,Object>> getClassId(final TpTaskAllotInfo tallot);
+
+    /**
+     * 得到有效的任务数量
+     * @param entity
+     * @return
+     */
+    public boolean getYXTkCount(TpTaskAllotInfo entity);
 }

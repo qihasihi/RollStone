@@ -96,5 +96,13 @@ public class  TpTaskAllotManager extends BaseManager<TpTaskAllotInfo> implements
     public List<Map<String,Object>> getClassId(final TpTaskAllotInfo tallot){
         return this.tptaskallotdao.getClassId(tallot);
     }
+    /**
+     * 得到有效的任务数量
+     * @param entity
+     * @return
+     */
+    public boolean getYXTkCount(TpTaskAllotInfo entity){
+        return this.tptaskallotdao.getYXTkCount(entity);
+    }
 }
 

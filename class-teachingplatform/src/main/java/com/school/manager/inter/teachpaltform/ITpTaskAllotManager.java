@@ -18,4 +18,10 @@ public interface ITpTaskAllotManager  extends IBaseManager<TpTaskAllotInfo> {
      * @return
      */
     public List<Map<String,Object>> getClassId(final TpTaskAllotInfo tallot);
+    /**
+     * 得到有效的任务数量
+     * @param entity
+     * @return
+     */
+    public boolean getYXTkCount(TpTaskAllotInfo entity);
 }

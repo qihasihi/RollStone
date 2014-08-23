@@ -54,6 +54,38 @@ public class TpTaskAllotDAO extends CommonDAO<TpTaskAllotInfo> implements ITpTas
 		}
 		return false;
 	}
+
+    /**
+     * 得到有效的任务数量
+     * @param entity
+     * @return
+     */
+    public boolean getYXTkCount(TpTaskAllotInfo entity){
+        StringBuilder sqlbuilder=new StringBuilder();
+        sqlbuilder.append("{call tp_task_allot_yx_by_tkid_stuid(");
+        List<Object> objList=new ArrayList<Object>();
+        if(entity==null){
+            sqlbuilder.append("?,?,");
+        }else{
+            if(entity.getTaskid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(entity.getTaskid());
+            }else
+                sqlbuilder.append("NULL,");
+            if(entity.getUserinfo().getUserid()!=null){
+                sqlbuilder.append("?");
+                objList.add(entity.getUserinfo().getUserid());
+            }else
+                sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+       List<Map<String,Object>> mapList=this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(mapList==null||!mapList.contains("TKCOUNT")||
+                mapList.get(0)==null||mapList.get(0).get("TKCOUNT")!=null
+                ||Integer.parseInt(mapList.get(0).get("TKCOUNT").toString())<1)
+            return false;
+        return true;
+    }
 	
 	public List<TpTaskAllotInfo> getList(TpTaskAllotInfo tptaskallotinfo, PageResult presult) {
 		StringBuilder sqlbuilder = new StringBuilder();

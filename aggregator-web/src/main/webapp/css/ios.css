@@ -22,6 +22,7 @@
    .hide{ display:none;}
    .f_right {float: right;}
    .f_left {float: left;}
+   .font_B { font-weight:bold;}
    
     .clear {
 	clear: both;
@@ -172,3 +173,95 @@
 }
 	.zxcs_test .wenda p.title {color:#55b2ef; padding-bottom:10px;}
 	.zxcs_test .wenda p.title span { float:right;color:#878787;}
+
+	.zxcs_test .yuyin { padding:5px 0 15px;}
+
+
+	.zsdx,.hzjl{
+	width:96%;
+	font-size:1.2em;
+	line-height:1.4em;
+	color:#191919;
+	margin:0 auto 10px;
+	padding:10px 0;
+}
+	.zsdx h1{
+	width:100%;
+	font-size:1em;
+	font-weight:bold;
+	line-height:1.4em;
+	color:#55b2ef;
+	padding-top:15px;
+	border-bottom:1px dashed #55b2ef;
+	margin-bottom:6px;
+}
+	.zsdx h2{
+	width:280px;
+	font-size:1em;
+	line-height:1.4em;
+	font-weight:normal;
+	color:#55b2ef;
+	padding-bottom:5px;
+	margin:0 auto;
+}
+
+	.zsdx h2 a{color:#55b2ef;margin:0 10px;}
+
+	.zsdx h3{
+	font-size:1em;
+	line-height:1.4em;
+	font-weight:normal;
+	color:#55b2ef;
+	padding:6px 0 10px;
+}
+	.zsdx div.timu{	font-weight:bold;;padding-bottom:15px;}
+
+	.zsdx div.over{
+	border:1px solid #dfdfdf;
+	background-color:#fff;
+	position:relative;
+	padding:10px 10px 10px 54px;
+	margin-top:-1px;
+}
+	.zsdx div.over b {
+	width:36px;
+	height:36px;
+	position: absolute;
+	top:8px;
+	left:8px;
+	display:block;
+	font: 0px/0px sans-serif;
+}
+	.zsdx div.over p.title {color:#55b2ef; padding-bottom:10px;}
+	.zsdx div.over p.title span { float:right;color:#878787;}
+	.zsdx div.over .img { border-radius:2px; padding:2px; border:1px solid #dfdfdf;}
+	
+	.hzjl h1{
+	width:100%;
+	font-size:1em;
+	font-weight:bold;
+	line-height:1.4em;
+	color:#55b2ef;
+	padding:5px 0 15px;
+}
+	.hzjl div.info{
+	border-top:1px dashed #55b2ef;
+	border-bottom:1px dashed #55b2ef;
+	position:relative;
+	padding:10px 10px 10px 54px;
+	margin-top:-1px;
+	color:#767676;
+}
+	.hzjl div.info b {
+	width:36px;
+	height:36px;
+	position: absolute;
+	top:8px;
+	left:8px;
+	display:block;
+	font: 0px/0px sans-serif;
+}
+	.hzjl div.info p.title {padding-bottom:10px;}
+	.hzjl div.info p.title span { float:right;}
+	.hzjl div.info .img { border-radius:2px; padding:2px; border:1px solid #dfdfdf;}
+	.hzjl div.black{color:#191919;padding-bottom:20px;}
