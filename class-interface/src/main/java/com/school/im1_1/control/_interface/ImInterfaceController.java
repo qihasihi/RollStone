@@ -1662,12 +1662,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         tpRecordInfo.setCourseId(Long.parseLong(courseId.trim()));
 
         tpRecordInfo.setDcSchoolId(Long.parseLong(schoolId.trim()));
-        //查询是否已经存在
-        List<TpRecordInfo> tpRecordInfoList=this.tpRecordManager.getList(tpRecordInfo,null);
-        if(tpRecordInfoList!=null&&tpRecordInfoList.size()>0){
-            returnJo.put("msg","添加失败!已经存在该信息!");
-            response.getWriter().println(returnJo.toString());return;
-        }
+                 //查询是否已经存在
+//        List<TpRecordInfo> tpRecordInfoList=this.tpRecordManager.getList(tpRecordInfo,null);
+//        if(tpRecordInfoList!=null&&tpRecordInfoList.size()>0){
+//            returnJo.put("msg","添加失败!已经存在该信息!");
+//            response.getWriter().println(returnJo.toString());return;
+//        }
         if(attach!=null)
             tpRecordInfo.setImgUrl(attach.trim());
         if(content!=null)
