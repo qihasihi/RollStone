@@ -1074,6 +1074,14 @@ function doUpdOrderIdx(taskid, orderidx) {
 }
 
 
+/**
+ * 回答任务
+ * @param tasktype
+ * @param taskid
+ * @param quesid
+ * @param groupid
+ * @param questype
+ */
 function doStuSubmitQues(tasktype, taskid, quesid, groupid, questype) {
     if (typeof(tasktype) == 'undefined' || typeof(taskid) == 'undefined' ||
         typeof(quesid) == 'undefined' || courseid.length < 1
@@ -1132,7 +1140,7 @@ function doStuSubmitQues(tasktype, taskid, quesid, groupid, questype) {
             });
         }
     } else if (tasktype == 1) {
-        var tmp=null;
+       /* var tmp=null;
         if(ueditorArray.length>0){
             $.each(ueditorArray,function(idx,itm){
                 if(itm==taskid){
@@ -1144,31 +1152,72 @@ function doStuSubmitQues(tasktype, taskid, quesid, groupid, questype) {
         if (obj.Trim().length < 1) {
             alert('请输入学习心得后提交!');
             return;
+        } */
+        var resContent=$("#txt_taskanswer_"+taskid);
+        if (resContent.val().Trim().length < 1) {
+            alert('请输入学习心得!');
+            resContent.focus();
+            return;
         }
-        param.quesanswer = obj;
+        param.quesanswer = resContent.val().Trim();
+
+
     }
 
     //alert(paramStr);
     if (!confirm('数据验证完毕!确认提交?'))
         return;
-    //开始向后台添加数据
-    $.ajax({
-        url: 'task?doStuSubmitTask',
-        type: "post",
-        data: paramStr + '&' + $.param(param),
-        dataType: 'json',
-        cache: false,
-        error: function () {
-            alert('系统未响应，请稍候重试!');
-        }, success: function (rmsg) {
-            if (rmsg.type == "error") {
-                alert(rmsg.msg);
-            } else {
-                alert(rmsg.msg);
-                pageGo('pList');
-            }
+
+    var isTishiAnnex=false;
+    //附件上传
+    var annexObj=$("#txt_f_"+taskid);
+    if(annexObj.length>0&&annexObj.val().Trim().length>0){
+        //先附件上传
+        if(!isTishiAnnex){
+            alert("您选择了附件上传,将会先提交附件再提交数据，请耐心等待上传完毕!");
+            isTishiAnnex=true;
         }
-    });
+        //   var lastname = annexObj.val().substring(annexObj.val().lastIndex("/"));
+
+
+        var url="task?doStuSubmitTask&hasannex=1";
+        $.ajaxFileUpload({
+            url: url+"&"+paramStr + '&' + $.param(param),
+            fileElementId: 'txt_f_'+taskid.toString()+'',
+            dataType: 'json',
+            secureuri: false,
+            type: 'POST',
+            success: function (rps, status) {
+                if(rps.type=="success"){
+                    alert(rps.msg);
+                    pageGo('pList');
+                }else
+                    alert(rps.msg);
+            },
+            error: function (data, status, e) {
+                alert(e);
+            }
+        });
+    }else{
+        //开始向后台添加数据
+        $.ajax({
+            url: 'task?doStuSubmitTask',
+            type: "post",
+            data: paramStr + '&' + $.param(param),
+            dataType: 'json',
+            cache: false,
+            error: function () {
+                alert('系统未响应，请稍候重试!');
+            }, success: function (rmsg) {
+                if (rmsg.type == "error") {
+                    alert(rmsg.msg);
+                } else {
+                    alert(rmsg.msg);
+                    pageGo('pList');
+                }
+            }
+        });
+    }
 }
 
 

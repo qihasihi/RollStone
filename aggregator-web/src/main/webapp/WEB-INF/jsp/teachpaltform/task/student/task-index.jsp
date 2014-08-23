@@ -22,7 +22,7 @@
             http_operate_handler : getInvestReturnMethod, //执行成功后返回方法
             return_type : 'json', //放回的值类型
             page_no : 1, //当前的页数
-            page_size : 5, //当前页面显示的数量
+            page_size : 10, //当前页面显示的数量
             rectotal : 0, //一共多少
             pagetotal : 1,
             operate_id : "initItemList"
@@ -36,7 +36,7 @@
         if (typeof  ref == 'undefined'||typeof  taskid == 'undefined')
             return;
 
-        var tmp=null;
+       /* var tmp=null;
         if(ueditorArray.length>0){
             $.each(ueditorArray,function(idx,itm){
                 if(itm==taskid){
@@ -44,33 +44,62 @@
                 }
             });
         }
-        var obj=tmp.getContent();
-        if (obj.Trim().length < 1) {
+        var obj=tmp.getContent(); */
+        var obj=$("#txt_taskanswer_"+taskid);
+        if (obj.val().Trim().length < 1) {
             alert('请输入学习心得后提交!');
             return;
         }
 
-
-        $.ajax({
-                    url: "task?doUpdStudyNotes",
-                    dataType: 'json',
-                    type: "post",
-                    cache: false,
-                    data: {
-                        ref: ref,
-                        content: obj
-                    },
-                    error: function () {
-                        alert('系统未响应!');
-                    },
-                    success: function (rps) {
-                        if (rps.type == "error") {
-                            alert(rps.msg);
-                        } else {
-                            pageGo('pList');
-                        }
+        var isTishiAnnex=false;
+        //附件上传
+        var annexObj=$("#txt_f_"+taskid);
+        if(annexObj.length>0&&annexObj.val().Trim().length>0){
+            //先附件上传
+            if(!isTishiAnnex){
+                alert("您选择了附件上传,将会先提交附件再提交数据，请耐心等待上传完毕!");
+                isTishiAnnex=true;
+            }
+            var param={ref: ref,content: obj.val().Trim()};
+            var url="task?doUpdStudyNotes&hasannex=1";
+            $.ajaxFileUpload({
+                url: url+'&' + $.param(param),
+                fileElementId: 'txt_f_'+taskid.toString()+'',
+                dataType: 'json',
+                secureuri: false,
+                type: 'POST',
+                success: function (rps, status) {
+                    if(rps.type=="success"){
+                        pageGo('pList');
+                    }else
+                        alert(rps.msg);
+                },
+                error: function (data, status, e) {
+                    alert(e);
+                }
+            });
+        }else{
+            $.ajax({
+                url: "task?doUpdStudyNotes",
+                dataType: 'json',
+                type: "post",
+                cache: false,
+                data: {
+                    ref: ref,
+                    content: obj.val().Trim()
+                },
+                error: function () {
+                    alert('系统未响应!');
+                },
+                success: function (rps) {
+                    if (rps.type == "error") {
+                        alert(rps.msg);
+                    } else {
+                        pageGo('pList');
                     }
-                });
+                }
+            });
+        }
     }
 
 
@@ -92,15 +121,22 @@
         queshtm+='</tr>';
         queshtm+='<tr>';
         queshtm+='<td>&nbsp;</td>';
+        queshtm+='<td>上传附件：&nbsp;&nbsp;<input  type="file" id="txt_f_'+taskid+'" name="txt_f_'+taskid+'" /></td>';
+        queshtm+='</tr>';
+        queshtm+='<tr>';
+        queshtm+='<td>&nbsp;</td>';
         queshtm+='<td><a class="an_public3" href="javascript:doUpdStuNote('+ref+','+taskid+')">修&nbsp;改</a></td>';
         queshtm+='</tr>';
+
 
         $("#tbl_"+taskid).append(queshtm);
         $(spObj).parent().remove();
         $(spObj).remove();
-        ueditorArray.push(taskid);
 
-        var id=taskid;
+
+      /*
+       ueditorArray.push(taskid);
+       var id=taskid;
         id= new UE.ui.Editor({
             //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
             toolbars: [
@@ -114,7 +150,7 @@
         textarea:'txt_taskanswer_'+taskid+''; //与textarea的name值保持一致
         id.setDataId(taskid);
         id.render('txt_taskanswer_'+taskid+'');
-        ueditorObjArray.push(id);
+        ueditorObjArray.push(id); */
 
     }
 
@@ -215,6 +251,8 @@
                     }else if(itm.tasktype==1){
                         answerhtm+='<p><strong>学习时间：</strong><span class="width">'+itm.taskPerformanceList[0].ctimeString+'</span></p>';
                         answerhtm+='<p><strong>学习心得：</strong><span class="width"  id="sp_note_'+itm.taskid+'"><font>'+(typeof(itm.questionAnswerList[0].answercontent)!='undefined'?replaceAll(replaceAll(itm.questionAnswerList[0].answercontent,"<p>",""),"</p>",""):"")+'</font>';
+                        if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0)
+                            answerhtm+='<span><br>心得附件：<a class="font-blue" target="_blank" href="uploadfile/'+itm.questionAnswerList[0].replyattach+'">'+itm.questionAnswerList[0].replyattach+'</a></span>';
                         if(itm.taskstatus!="1" && itm.taskstatus!="3"){
                             answerhtm+='<a class="ico11" title="编辑" href="javascript:genderStuNoteUpdText('+itm.questionAnswerList[0].ref+','+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+')"></a>';
                         }
@@ -243,7 +281,11 @@
                         queshtm+='</tr>';
                         queshtm+='<tr>';
                         queshtm+='<td>&nbsp;</td>';
-                        queshtm+='<td><a class="an_public3" href="javascript:doStuSubmitQues('+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+',\'\','+itm.questiontype+')">保&nbsp;存</a></td>';
+                        queshtm+='<td>上传附件：&nbsp;&nbsp;<input  type="file" id="txt_f_'+itm.taskid+'" name="txt_f_'+itm.taskid+'" /></td>';
+                        queshtm+='</tr>';
+                        queshtm+='<tr>';
+                        queshtm+='<td>&nbsp;</td>';
+                        queshtm+='<td ><a  class="an_public3" href="javascript:doStuSubmitQues('+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+',\'\','+itm.questiontype+')">保&nbsp;存</a></td>';
                         queshtm+='</tr>';
                         ueditorArray.push(itm.taskid);
                     }else if(itm.tasktype==2&&itm.taskPerformanceList[0]!=null){
@@ -274,7 +316,9 @@
                 html+='        <div class="jxxt_zhuanti_rwR">';
                 html+='        <div class="title">';
                 html+='        <p class="f_right"><span class="ico35" style="cursor:pointer" onclick="loadNoCompleteStu(\''+itm.taskid+'\',\''+itm.usertypeid+'\',\''+itm.taskstatus+'\')"></span><b><a style="color: gray;">'+itm.stucount+'/'+itm.totalcount+'</a></b></p>';
-                html+='        <p><a class="ico49b" id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务'+(rps.presult.pageSize*(rps.presult.pageNo-1)+(idx+1))+'：'+type+'</a>';
+                //var ordIdx=rps.presult.recTotal-(rps.presult.pageNo-1)*(rps.presult.pageSize)-idx;
+                var ordIdx=(rps.presult.pageNo-1)*(rps.presult.pageSize)+(idx+1);
+                html+='        <p><a class="ico49b" id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务'+ordIdx+'：'+type+'</a>';
                 if(itm.tasktype==1){
                     if(typeof itm.remotetype!='undefined'){
                         var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
@@ -372,7 +416,7 @@
         }
 
 
-        if(ueditorArray.length>0){
+       /* if(ueditorArray.length>0){
             for(var i=0;i<ueditorArray.length;i++){
                 var id=ueditorArray[i];
                 id= new UE.ui.Editor({
@@ -390,7 +434,7 @@
                 id.render('txt_taskanswer_'+ueditorArray[i]+'');
                 ueditorObjArray.push(id);
             }
-        }
+        } */
 
 
 

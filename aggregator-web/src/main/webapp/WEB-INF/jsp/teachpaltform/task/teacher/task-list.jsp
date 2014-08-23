@@ -21,7 +21,7 @@ $(function(){
         http_operate_handler : getInvestReturnMethod, //执行成功后返回方法
         return_type : 'json', //放回的值类型
         page_no : 1, //当前的页数
-        page_size : 5, //当前页面显示的数量
+        page_size : 10, //当前页面显示的数量
         rectotal : 0, //一共多少
         pagetotal : 1,
         operate_id : "initItemList"
@@ -151,6 +151,8 @@ function getInvestReturnMethod(rps){
                     qtype=-1;
                 else if(itm.tasktype==10)
                     qtype=-2;
+                else if (itm.tasktype==1)
+                    qtype=undefined;
                 html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b></a>';
             }else
                 html+='<span class="ico35"></span><b style="color:gray;">'+itm.stucount+'/'+itm.totalcount+'</b>';
@@ -180,7 +182,7 @@ function getInvestReturnMethod(rps){
             }else if(itm.tasktype==10){
                 html+='<a class="font-blue" href="#" >'+taskObj+'</a>';
             }
-            if(itm.tasktype==4&&itm.taskstatus=="3"){
+            if(itm.tasktype==4&&itm.isend>0){
                 html+='<a class="ico84" title="批阅" target="_blank" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
             }
             html+='</p>';
@@ -383,7 +385,7 @@ function getBankInvestReturnMethod(rps){
                     type="直播课";
                     break;
             }
-            if((typeof itm.cloudstatus!='undefined') && (itm.cloudstatus==3||itm.cloudstatus==4) ){
+            if((typeof itm.cloudstatus!='undefined') && (itm.cloudstatus==3||itm.cloudstatus==4||itm.cloudstatus==5) ){
                 status='参考';
             }else{
                 status='自建';
@@ -393,31 +395,34 @@ function getBankInvestReturnMethod(rps){
             html+='<td>'+type+questype+'</td>';
             html+='<td>'+status+'</td>';
             html+='<td><p>';
+            var objName='';
+            if(typeof itm.taskobjname!='undefined')
+                objName=replaceAll(itm.taskobjname.toLowerCase(),'<span name="fillbank"></span>',"_______");
             if(itm.tasktype==1){
                 if(typeof itm.remotetype!='undefined'){
                     var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
-                    html+='<a target="_blank" href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" >'+itm.resourcename;
+                    html+='<a target="_blank" href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" >'+itm.resourcename+'</a>';
                 }else{
                     if( itm.resourcetype==1||typeof itm.resourcetype=='undefined'){
-                        html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >';
+                        html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >'+objName+'</a>';
                     }
                 }
                 //html+='<a target="_blank" href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >';
             }else if(itm.tasktype==2){
-                html+='<a target="_blank" href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'">';
+                html+='<a target="_blank" href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'">'+objName+'</a>';
             }else if(itm.tasktype==3){
-                html+='<a target="_blank" href="question?m=todetail&id='+itm.taskvalueid+'">';
+                //html+='<a target="_blank" href="question?m=todetail&courseid='+itm.courseid+'&id='+itm.taskvalueid+'">';
+                html+=objName;
             }else if(itm.tasktype==4){
-                html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.taskvalueid+'">';
+                html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.taskvalueid+'">'+objName+'</a>';
             }else if(itm.tasktype==5){
-                html+='<a>';
+
             }else if(itm.tasktype==6){
-                html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >';
+                html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >'+objName+'</a>';
             }else if(itm.tasktype==10){
-                html+='<a href="#" >';
+                html+='<a href="#" >'+objName+'</a>';
             }
-            if(typeof itm.taskobjname!='undefined')
-                html+=replaceAll(itm.taskobjname.toLowerCase(),'<span name="fillbank"></span>',"_______")+'</a></p>';
+            html+='</p>';
             html+='<p id="dv_option_'+itm.taskid+'">';
             if(itm.questionOptionList!=null&&itm.questionOptionList.length>0){
                 $.each(itm.questionOptionList,function(idx,im){

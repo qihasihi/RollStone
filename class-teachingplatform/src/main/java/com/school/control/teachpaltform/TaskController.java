@@ -21,7 +21,6 @@ import com.school.manager.*;
 import com.school.manager.inter.*;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
-import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
@@ -29,7 +28,6 @@ import com.school.manager.inter.teachpaltform.paper.IStuPaperQuesLogsManager;
 import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
-import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.PaperManager;
@@ -46,6 +44,7 @@ import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.school.util.JsonEntity;
@@ -83,7 +82,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
     private IGradeManager gradeManager;
     private IResourceManager resourceManager;
-    private ITpStuScoreLogsManager tpStuScoreLogsManager;
     public TaskController(){
         this.gradeManager=this.getManager(GradeManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
@@ -112,7 +110,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
         this.paperManager=this.getManager(PaperManager.class);
         this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
-        this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
     }
     /**
 	 * 根据课题ID，加载任务列表
@@ -248,7 +245,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
              return;
          }
          PageResult p=this.getPageResultParameter(request);
-         p.setOrderBy("u.order_idx desc,u.c_time desc");
+         //p.setOrderBy("u.order_idx asc,u.c_time desc");
+         p.setOrderBy("u.order_idx ");
          TpTaskInfo t=new TpTaskInfo();
          t.setCourseid(Long.parseLong(courseid));
          //查询没被我删除的任务
@@ -434,7 +432,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("t.order_idx desc");
+        p.setOrderBy("t.order_idx  ");
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
         t.setUserid(this.logined(request).getUserid());
@@ -939,6 +937,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         mp.put("termid", termid);
         mp.put("gradeid", request.getSession().getAttribute("session_grade"));
         mp.put("subjectid",request.getSession().getAttribute("session_subject"));
+        mp.put("materialid",request.getSession().getAttribute("session_material"));
         TpCourseQuestion cq=new TpCourseQuestion();
         cq.setCourseid(Long.parseLong(courseid));
         Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);
@@ -1360,9 +1359,21 @@ public class TaskController extends BaseController<TpTaskInfo>{
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
+
+        //获取当前专题教材
+        String subjectid=null;
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(Long.parseLong(courseid));
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0){
+            subjectid=materialList.get(0).getSubjectid().toString();
+            //gradeid=materialList.get(0).getGradeid().toString();
+        }
+
         //小组
         TpGroupInfo g=new TpGroupInfo();
-        g.setCuserid(this.logined(request).getUserid());
+        //g.setCuserid(this.logined(request).getUserid());
+        g.setSubjectid(Integer.parseInt(subjectid));
         g.setTermid(courseclassList.get(0).getTermid());
         List<TpGroupInfo>groupList=this.tpGroupManager.getList(g, null);
 		request.setAttribute("tasktypeList", tasktypeList);
@@ -1391,6 +1402,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		request.setAttribute("taskgroupList", taskgroupList);
 		request.setAttribute("courseid", courseid);
 		request.setAttribute("taskid", taskid);
+        request.setAttribute("gradeid", request.getSession().getAttribute("session_grade"));
+        request.setAttribute("subjectid",request.getSession().getAttribute("session_subject"));
+        request.setAttribute("materialid",request.getSession().getAttribute("session_material"));
         TpCourseQuestion cq=new TpCourseQuestion();
         cq.setCourseid(Long.parseLong(courseid));
         Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);
@@ -1954,7 +1968,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		String courseid=request.getParameter("courseid");
 		String taskid=request.getParameter("taskid");
 		String tasktype=request.getParameter("tasktype");
+        String hasannex=request.getParameter("hasannex");
 		//String groupid=request.getParameter("groupid");
+
+
+
+
+
 		//资源、论题、课后作业ID
 		String quesid=request.getParameter("quesid");
 		String questype=request.getParameter("questype");
@@ -2006,6 +2026,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
 					response.getWriter().print(je.toJSON());
 					return;
 				}
+
+
+
 				//录入答题记录
 				QuestionAnswer qa=new QuestionAnswer();
 				qa.setTaskid(t.getTaskid());
@@ -2015,6 +2038,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 				qa.setQuesparentid(Long.parseLong(quesid));
 				qa.setUserid(this.logined(request).getRef());
 				qa.setRightanswer(1);
+
 				sql=new StringBuilder();
 				objList=this.questionAnswerManager.getSaveSql(qa, sql);  
 				if(objList!=null&&sql!=null){
@@ -2259,6 +2283,29 @@ public class TaskController extends BaseController<TpTaskInfo>{
 				response.getWriter().print(je.toJSON());
 				return;
 			}
+            quesanswer=new String(quesanswer.getBytes("iso-8859-1"),"UTF-8");
+
+            String annexName=null;
+            boolean isfileOk=true;
+            if(hasannex!=null&&hasannex.equals("1")){
+                MultipartFile[] muFile=this.getUpload(request);
+                if(muFile!=null&&muFile.length>0){//文件上传
+                    //this.setFname(annexName=this.getUploadFileName()[0]);
+                    this.setFname(annexName=new Date().getTime()+""
+                            +this.getUploadFileName()[0].substring(this.getUploadFileName()[0].lastIndexOf("."))
+                    );
+                    if(!fileupLoad(request)){
+                        isfileOk=!isfileOk;
+                    }
+                }else
+                    isfileOk=false;
+            }
+
+            if(!isfileOk){
+                je.setMsg("文件上传失败!请刷新页面后重试!");
+                response.getWriter().println(je.toJSON());return ;
+            }
+
 
             QuestionAnswer qa=new QuestionAnswer();
             qa.setCourseid(Long.parseLong(courseid));
@@ -2269,6 +2316,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             qa.setRightanswer(1);
             qa.setTasktype(tmpTask.getTasktype());
             qa.setTaskid(tmpTask.getTaskid());
+            if(annexName!=null&&annexName.trim().length()>0)
+                qa.setReplyattach(annexName);
             sql=new StringBuilder();
             objList=this.questionAnswerManager.getSaveSql(qa,sql);
             if(sql!=null&&objList!=null){
@@ -2304,42 +2353,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		if(objListArray.size()>0&&sqlListArray.size()>0){
 			boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
 			if(flag){
-
-                //得到班级ID
-                TpTaskAllotInfo tallot=new TpTaskAllotInfo();
-                tallot.setTaskid(taskList.get(0).getTaskid());
-                tallot.getUserinfo().setUserid(this.logined(request).getUserid());
-                List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
-                if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
-                        ||clsMapList.get(0).get("CLASS_ID")==null){
-                    je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                    response.getWriter().println(je.toJSON());return ;
-                }
-
-                //taskinfo:   4:成卷测试  5：自主测试   6:微视频
-                //规则转换:    6             7         8
-                Integer type=0;
-                switch(taskList.get(0).getTasktype()){
-                    case 3:     //试题
-                        type=1;break;
-                    case 1:     //资源学习
-                        type=2;break;
-                    case 2:
-                        type=4;
-                        break;
-                }
-                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-                /*奖励加分通过*/
-                if(this.tpStuScoreLogsManager.awardStuScore(Long.parseLong(courseid.trim())
-                        ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
-                        ,Long.parseLong(taskid.trim())
-                        ,Long.parseLong(this.logined(request).getUserid()+""),type)){
-                    je.setMsg("恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
-                }else
-                    System.out.println("awardScore error");
-
-
-
+				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
 				je.setType("success");
 			}else{
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR")); 
@@ -2463,42 +2477,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
 
         if(this.tpTaskManager.doExcetueArrayProc(sqlList,objListArray)){
-
-            //得到班级ID
-            TpTaskAllotInfo tallot=new TpTaskAllotInfo();
-            tallot.setTaskid(taskList.get(0).getTaskid());
-            tallot.getUserinfo().setUserid(this.logined(request).getUserid());
-            List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
-            if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
-                    ||clsMapList.get(0).get("CLASS_ID")==null){
-                je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                response.getWriter().println(je.toJSON());return ;
-            }
-
-            //taskinfo:   4:成卷测试  5：自主测试   6:微视频
-            //规则转换:    6             7         8
-            Integer type=0;
-            switch(taskList.get(0).getTasktype()){
-                case 3:     //试题
-                    type=1;break;
-                case 1:     //资源学习
-                    type=3;break;
-                case 2:
-                    type=4;
-                    break;
-            }
-            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-                /*奖励加分通过*/
-            if(this.tpStuScoreLogsManager.awardStuScore(Long.parseLong(courseid.trim())
-                    ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
-                    ,taskList.get(0).getTaskid()
-                    ,Long.parseLong(this.logined(request).getUserid()+""),type)){
-                je.setMsg("查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
-            }else
-                System.out.println("awardScore error");
-
-
-
             je.setType("success");
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
         }else{
@@ -2631,6 +2609,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         JsonEntity je = new JsonEntity();
         String ref=request.getParameter("ref");
         String content=request.getParameter("content");
+        String hasannex=request.getParameter("hasannex");
+
 
         if(ref==null||ref.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -2642,54 +2622,39 @@ public class TaskController extends BaseController<TpTaskInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
-        QuestionAnswer q=new QuestionAnswer();
-        q.setRef(Integer.parseInt(ref));
-        List<QuestionAnswer> qaList=this.questionAnswerManager.getList(q,null);
-        if(qaList==null||qaList.size()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-            response.getWriter().print(je.toJSON());
-            return;
+        content=new String(content.getBytes("iso-8859-1"),"UTF-8");
+
+        String annexName=null;
+        boolean isfileOk=true;
+        if(hasannex!=null&&hasannex.equals("1")){
+            MultipartFile[] muFile=this.getUpload(request);
+            if(muFile!=null&&muFile.length>0){//文件上传
+                //this.setFname(annexName=this.getUploadFileName()[0]);
+                this.setFname(annexName=new Date().getTime()+""
+                        +this.getUploadFileName()[0].substring(this.getUploadFileName()[0].lastIndexOf("."))
+                );
+                if(!fileupLoad(request)){
+                    isfileOk=!isfileOk;
+                }
+            }else
+                isfileOk=false;
         }
+
+        if(!isfileOk){
+            je.setMsg("文件上传失败!请刷新页面后重试!");
+            response.getWriter().println(je.toJSON());return ;
+        }
+
+
 
         QuestionAnswer qa=new QuestionAnswer();
         qa.setRef(Integer.parseInt(ref));
         qa.setAnswercontent(content);
+        if(annexName!=null&&annexName.trim().length()>0)
+            qa.setReplyattach(annexName);
         if(this.questionAnswerManager.doUpdate(qa)){
-            //得到班级ID
-//            TpTaskAllotInfo tallot=new TpTaskAllotInfo();
-//            tallot.setTaskid(qaList.get(0).getTaskid());
-//
-//            tallot.getUserinfo().setUserid(this.logined(request).getUserid());
-//            List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
-//            if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
-//                    ||clsMapList.get(0).get("CLASS_ID")==null){
-//                je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-//                response.getWriter().println(je.toJSON());return ;
-//            }
-//
-//            //taskinfo:   4:成卷测试  5：自主测试   6:微视频
-//            //规则转换:    6             7         8
-//            Integer type=0;
-//            switch(qaList.get(0).getTasktype()){
-//                case 3:     //试题
-//                    type=1;break;
-//                case 1:     //资源学习
-//                    type=3;break;
-//                case 2:
-//                    type=4;
-//                    break;
-//            }
-            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-//                /*奖励加分通过*/
-//            if(this.tpStuScoreLogsManager.awardStuScore(qaList.get(0).getCourseid()
-//                    ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
-//                    ,qaList.get(0).getTaskid()
-//                    ,Long.parseLong(this.logined(request).getUserid()+""),type)){
-//                je.setMsg("查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
-//            }else
-//                System.out.println("awardScore error");
-
             je.setType("success");
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
@@ -2803,48 +2768,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 				response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
 			}else{ 
 				if(this.taskPerformanceManager.doSave(tp)){
-
-                       /*奖励加分*/
-                    //得到班级ID
-                    TpTaskAllotInfo tallot=new TpTaskAllotInfo();
-                    tallot.setTaskid(Long.parseLong(taskid));
-
-                    tallot.getUserinfo().setUserid(this.logined(request).getUserid());
-                    List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
-                    if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
-                            ||clsMapList.get(0).get("CLASS_ID")==null){
-                        je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                        response.getWriter().println(je.toJSON());return ;
-                    }
-
-                    //taskinfo:   4:成卷测试  5：自主测试   6:微视频
-                    //规则转换:    6             7         8
-                    Integer type=0;
-                    switch(taskCriList.get(0).getTasktype()){
-                        case 3:     //试题
-                            type=1;break;
-                        case 1:     //资源学习
-                            type=2;break;
-                        case 2:
-                            type=4;
-                            break;
-                    }
-                        /*奖励加分通过*/
-                    if(this.tpStuScoreLogsManager.awardStuScore(taskCriList.get(0).getCourseid()
-                            , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
-                            , taskCriList.get(0).getTaskid()
-                            , Long.parseLong(this.logined(request).getUserid() + ""), type)){
-                        je.setMsg("查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
-                    }else
-                        System.out.println("awardScore err ");
-
-
-
-
-
-
-
-                    response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+					response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
 				}else{   
 					je.setMsg("异常错误!添加查看记录失败!请重试!");
 					response.getWriter().print(je.toJSON());
@@ -2917,41 +2841,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
 				response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
 			}else{
 				if(this.taskPerformanceManager.doSave(tp)){
-
-                    /*奖励加分*/
-                            //得到班级ID
-                    TpTaskAllotInfo tallot=new TpTaskAllotInfo();
-                    tallot.setTaskid(Long.parseLong(taskid));
-
-                    tallot.getUserinfo().setUserid(this.logined(request).getUserid());
-                    List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
-                    if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
-                            ||clsMapList.get(0).get("CLASS_ID")==null){
-                        je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                        response.getWriter().println(je.toJSON());return ;
-                    }
-
-                    //taskinfo:   4:成卷测试  5：自主测试   6:微视频
-                    //规则转换:    6             7         8
-                    Integer type=0;
-                    switch(taskCriList.get(0).getTasktype()){
-                        case 3:     //试题
-                            type=1;break;
-                        case 1:     //资源学习
-                            type=2;break;
-                        case 2:
-                            type=4;
-                            break;
-                    }
-                        /*奖励加分通过*/
-                    if(this.tpStuScoreLogsManager.awardStuScore(taskCriList.get(0).getCourseid()
-                            , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
-                            , taskCriList.get(0).getTaskid()
-                            , Long.parseLong(this.logined(request).getUserid() + ""), type)){
-                        je.setMsg("查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
-                    }else
-                        System.out.println("awardScore err ");
-                    
 					response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
 				}else{
 					je.setMsg("异常错误!添加查看记录失败!请重试!");

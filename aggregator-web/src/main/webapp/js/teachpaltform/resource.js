@@ -1779,7 +1779,10 @@ function loadRelatePaper(resid){
             if(rps.type=="error"){
                 alert(rps.msg);
             }else{
-                var h='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>关联试卷</a>';
+                var h='';
+                if(rps.objList.length>0){
+                    h='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>关联试卷</a>';
+                }
                 $("#relate_paper").html(h);
             }
         }
@@ -2023,6 +2026,7 @@ function doCollectResource(resdetailid) {
             } else {
                 alert(rps.msg);
                 $("#sp_collect").html('<a href="javascript:void(0);">已收藏</a>');
+                $("#sp_collect_count").html(parseInt($("#sp_collect_count").html().Trim())+1);
             }
         }
     });
@@ -2889,7 +2893,12 @@ function loadStudyNotes(usertype) {
                     if (rps.objList[0] != null && rps.objList[1] != null && rps.objList[1]=="on") {
                         $("#div_xheditor").hide();
                         if (usertype == 1) {
-                            htm += '<p>我的心得&nbsp;<a  class="ico11" title="编辑" href="javascript:genderStuNoteTextArea(' + rps.objList[0].ref + ')"></a><div id="dv_updnote" class="two">' + rps.objList[0].answercontent + '</div></p>';
+                            htm += '<p>我的心得&nbsp;<a  class="ico11" title="编辑" href="javascript:genderStuNoteTextArea(' + rps.objList[0].ref + ')"></a>';
+                            htm += '<div id="dv_updnote" class="two">' + rps.objList[0].answercontent;
+                            if(typeof rps.objList[0].replyattach!='undefined'&&rps.objList[0].replyattach.toString().length>0)
+                                htm += '<p id="p_stu_note">心得附件：<a class="font-blue" target="_blank" href="uploadfile/' + rps.objList[0].replyattach + '">' + rps.objList[0].replyattach + '</a></p>';
+                            htm += '</div>';
+                            htm += '</p>';
                         }
                     } else {
                         if (usertype == 1 && rps.objList[1] != null &&  rps.objList[1]=='on')
@@ -2921,9 +2930,16 @@ function genderStuNoteTextArea(ref) {
     }
     if ($("#txt_updnote").length > 0)return;
 
+    $("#p_stu_note").remove();
     var divObj = $("#dv_updnote");
     var htm = divObj.html();
-    divObj.html('<textarea id="txt_updnote">'+htm+'</textarea><p class="t_r"><a href="javascript:doUpdStuNote(' + ref + ')" class="an_small">确定</a><a  class="an_small" href="javascript:cancelUpdStuNote()">取消</a></p>');
+
+
+    var innerHtm='<textarea id="txt_updnote">'+htm+'</textarea>';
+    innerHtm+='<p>上传附件：&nbsp;<input type="file" id="txt_f_'+ref+'" name="txt_f_'+ref+'"/></p>';
+    innerHtm+= '<p class="t_r"><a href="javascript:doUpdStuNote(' + ref + ')" class="an_small">确定</a><a  class="an_small" href="javascript:cancelUpdStuNote()">取消</a></p>';
+    divObj.html(innerHtm);
+    /*
     note_editor = new UE.ui.Editor({
         //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
         toolbars: [
@@ -2936,7 +2952,7 @@ function genderStuNoteTextArea(ref) {
     textarea:'txt_updnote'; //与textarea的name值保持一致
     note_editor.setDataId(new Date().getTime());
     note_editor.render('txt_updnote');
-    //note_editor.setContent();
+    //note_editor.setContent(); */
 }
 
 function cancelUpdStuNote() {
@@ -2947,22 +2963,53 @@ function cancelUpdStuNote() {
 function doUpdStuNote(ref) {
     if (typeof  ref == 'undefined')
         return;
-    //var valObj = $("#txt_updnote");
+    var valObj = $("#txt_updnote");
+   if (valObj.val().Trim().length < 1) {
+     alert("请输入学习心得!");
+     return;
+   }
 
-    if (note_editor.getContent().Trim().length < 1) {
+    /*if (note_editor.getContent().Trim().length < 1) {
         alert("请输入学习心得!");
         return;
-    }
+    }*/
 
-    $
-        .ajax({
+    var isTishiAnnex=false;
+    //附件上传
+    var annexObj=$("#txt_f_"+ref);
+    if(annexObj.length>0&&annexObj.val().Trim().length>0){
+        //先附件上传
+        if(!isTishiAnnex){
+            alert("您选择了附件上传,将会先提交附件再提交数据，请耐心等待上传完毕!");
+            isTishiAnnex=true;
+        }
+        var param={ref: ref,content: valObj.val().Trim()};
+        var url="task?doUpdStudyNotes&hasannex=1";
+        $.ajaxFileUpload({
+            url: url+'&' + $.param(param),
+            fileElementId: 'txt_f_'+ref.toString()+'',
+            dataType: 'json',
+            secureuri: false,
+            type: 'POST',
+            success: function (rps, status) {
+                if(rps.type=="success"){
+                    loadStudyNotes(1);
+                }else
+                    alert(rps.msg);
+            },
+            error: function (data, status, e) {
+                alert(e);
+            }
+        });
+    }else{
+        $.ajax({
             url: "task?doUpdStudyNotes",
             dataType: 'json',
             type: "post",
             cache: false,
             data: {
                 ref: ref,
-                content: note_editor.getContent()
+                content: valObj.val().Trim()
             },
             error: function () {
                 alert('系统未响应!');
@@ -2976,6 +3023,7 @@ function doUpdStuNote(ref) {
                 }
             }
         });
+    }
 }
 
 

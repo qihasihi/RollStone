@@ -20,6 +20,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,7 +41,7 @@ public class TpUserController extends UserController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(params = "toJWIndex", method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(params = "m=toJWIndex", method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView toUserList(HttpServletRequest request,
                                    HttpServletResponse response, ModelMap mp) throws Exception {
         JsonEntity je=new JsonEntity();
@@ -68,11 +69,12 @@ public class TpUserController extends UserController {
         List<String>sqlListArray=new ArrayList<String>();
 
         //验证添加分校信息
-        String totalSchoolUrl="localhost:8080/totalSchool/franchisedSchool?jwValidateSchool";
+        String url="http://localhost:8080/totalSchool/";//UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION");
+        String totalSchoolUrl=url+"franchisedSchool?jwValidateSchool";
         String totalParams="schoolid="+schoolid+"&schoolname="+java.net.URLEncoder.encode(schoolname,"UTF-8");
         if(!sendValidateUserInfoTotalSchool(totalSchoolUrl,totalParams)){
             je.setMsg("Operate SchoolInfo Error...");
-            response.getWriter().print(je.toJSON());
+            response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
 
@@ -181,12 +183,31 @@ public class TpUserController extends UserController {
                 List<UserInfo>ettUserList=this.userManager.getList(sel,null);
                 if(ettUserList!=null&&ettUserList.size()>0){
                     JSONObject obj = new JSONObject();
+                    obj.element("jid", ettUserList.get(0).getEttuserid());
                     obj.element("userId", ettUserList.get(0).getUserid());
-                    obj.element("jId", ettUserList.get(0).getEttuserid());
                     obj.element("schoolId",ettUserList.get(0).getDcschoolid());
+                    obj.element("userType",1);
                     JSONArray array=new JSONArray();
                     array.add(obj);
-                    //UrlSigUtil.ma
+
+                    String timestamp=System.currentTimeMillis()+"";
+                    HashMap<String,String>map=new HashMap<String, String>();
+                    map.put("schoolId", ettUserList.get(0).getDcschoolid().toString());
+                    map.put("userType","1");
+                    map.put("timestamp",timestamp);
+                    String sign=UrlSigUtil.makeSigSimple("backbind.do",map);
+                    String ettUrl=UtilTool.utilproperty.get("BIND_ETT_USER_LOCATION").toString();
+                    String ettParams="schoolId="+schoolid+"&userType=1&timestamp="+timestamp+"&sign="+sign+"&userList="+array.toString();
+                    System.out.println(ettUrl + "?" + ettParams);
+                    if(!sendValidateUserInfoTotalSchool(ettUrl, ettParams)){
+                        je.setMsg("Bind EttUser Failed!");
+                        response.getWriter().print(je.getAlertMsgAndBack());
+                        return null;
+                    }
+                    /*
+                    {timestamp=1408415050502,
+                     userList=[{"jid":"1","userId":"123"},{"jid":"2","userId":"456"}], schoolid=51,userType=2, signature=eb674978da90539ed8e2c1a507d61944}
+                     */
                 }
 
             }else{
@@ -293,7 +314,8 @@ public class TpUserController extends UserController {
         JSONObject jb=JSONObject.fromObject(returnContent);
         String type=jb.containsKey("type")?jb.getString("type"):"";
         String msg=jb.containsKey("msg")?jb.getString("msg"):"";
-        if(type!=null&&type.trim().toLowerCase().equals("success")){
+        String result=jb.containsKey("result")?jb.getString("result"):"";
+        if((type!=null&&type.trim().toLowerCase().equals("success")) || result!=null&&result.equals("1")){
             System.out.println(msg);
             return true;
         }else{

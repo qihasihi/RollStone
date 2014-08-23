@@ -265,6 +265,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             Object gradeid=request.getSession().getAttribute("session_grade");
             if(gradeid!=null&&gradeid.toString().length()>0)
                 tct.setGradeid(Integer.parseInt(gradeid.toString()));
+            Object materialid=request.getSession().getAttribute("session_material");
+            if(materialid!=null&&materialid.toString().length()>0)
+                tct.setTeachingmaterialid(Integer.parseInt(materialid.toString()));
             List<TpCourseTeachingMaterial>tctList=tpCourseTeachingMaterialManager.getList(tct,null);
             if(tctList!=null&&tctList.size()>0){
                 request.setAttribute("subjectid",tctList.get(0).getSubjectid());
@@ -807,7 +810,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                             HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
-        tc.setDcschoolid(this.logined(request).getDcschoolid());
         if (tc.getCoursename() == null || tc.getCoursename().length() < 1) {
             je.setMsg("没有专题名称参数！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");
@@ -1110,6 +1112,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             tc.setTeachername(t.getTeachername());
             tc.setCourseid(nextCourseId);
             tc.setCuserid(user.getUserid());
+            tc.setCourselevel(tc.getCourselevel());
 
             sql = new StringBuilder();
             objList = this.tpCourseManager.getSaveSql(tc, sql);
@@ -1171,10 +1174,70 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                     for (TpTaskInfo tmpTask : taskInfoList){
                         tmpTask.setCourseid(nextCourseId); //新建专题
                         tmpTask.setCuserid(this.logined(request).getRef());
+                        tmpTask.setCloudstatus(5);//引用的任务
                         Long taskid=-1l;
                         taskid=this.tpTaskManager.getNextId(true);
-                        System.out.println("taskid:"+taskid);
                         tmpTask.setTaskid(taskid);
+                        //互动交流任务
+                        if(tmpTask.getTasktype().toString().equals("2")){
+                            //论题
+                            TpTopicInfo tt=new TpTopicInfo();
+                            tt.setCourseid(courseid);
+                            tt.setTopicid(tmpTask.getTaskvalueid());
+                            List<TpTopicInfo>topicInfoList=this.tpTopicManager.getList(tt,null);
+                            if(topicInfoList!=null&&topicInfoList.size()>0){
+                                TpTopicInfo tmpTopic=topicInfoList.get(0);
+                                    Long nextTopicid=this.tpTopicManager.getNextId(true);
+                                    //主题
+                                    TpTopicThemeInfo themeInfo=new TpTopicThemeInfo();
+                                    themeInfo.setCourseid(tmpTopic.getCourseid());
+                                    themeInfo.setTopicid(tmpTopic.getTopicid());
+                                   /* List<TpTopicThemeInfo>themeInfoList=this.tpTopicThemeManager.getList(themeInfo,null);
+                                    if(themeInfoList!=null&&themeInfoList.size()>0){
+                                        for(TpTopicThemeInfo tmpThemeInfo :themeInfoList){
+                                            tmpThemeInfo.setQuoteid(tmpThemeInfo.getThemeid());//记录引用的ID
+                                            tmpThemeInfo.setCuserid(this.logined(request).getUserid());
+                                            tmpThemeInfo.setThemeid(this.tpTopicThemeManager.getNextId(true));
+                                            tmpThemeInfo.setTopicid(nextTopicid);
+                                            tmpThemeInfo.setCourseid(nextCourseId);
+                                            tmpThemeInfo.setStatus(2L);//引用专题下  1：显示   2：不显示
+                                            sql=new StringBuilder();
+                                            objList=this.tpTopicThemeManager.getSaveSql(tmpThemeInfo,sql);
+                                            if(sql!=null&&objList!=null){
+                                                sqlListArray.add(sql.toString());
+                                                objListArray.add(objList);
+                                            }
+
+                                            if(tmpThemeInfo.getThemecontent()!=null){
+                                                //得到theme_content的更新语句
+                                                this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
+                                                        , tmpThemeInfo.getThemecontent(), tmpThemeInfo.getThemeid().toString(),sqlListArray,objListArray);
+                                            }
+                                            if(tmpThemeInfo.getCommentcontent()!=null){
+                                                //得到comment_content的更新语句
+                                                this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
+                                                        , tmpThemeInfo.getCommentcontent(), tmpThemeInfo.getThemeid().toString(),sqlListArray,objListArray);
+
+                                            }
+                                        }
+                                    }*/
+                                    //引用的TOPIC_ID
+                                    tmpTopic.setQuoteid(tmpTopic.getTopicid());
+                                    tmpTopic.setCourseid(nextCourseId);
+                                    tmpTopic.setCuserid(this.logined(request).getUserid());
+                                    tmpTopic.setTopicid(nextTopicid);
+                                    tmpTask.setTaskvalueid(nextTopicid);
+                                    sql=new StringBuilder();
+                                    objList=this.tpTopicManager.getSaveSql(tmpTopic,sql);
+                                    if(sql!=null&&objList!=null){
+                                        sqlListArray.add(sql.toString());
+                                        objListArray.add(objList);
+                                    }
+                            }
+                        }
+
+
+
                         sql=new StringBuilder();
                         objList=this.tpTaskManager.getSaveSql(tmpTask,sql);
                         if(sql!=null&&objList!=null){
@@ -1227,11 +1290,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(coursePaper,null);
                 if(coursePaperList!=null&&coursePaperList.size()>0){
                     for (TpCoursePaper tmpPaper : coursePaperList){
-                        //微视频试卷
-                        if(tmpPaper.getPapertype()==5){
-
-                        }
-
 
                         tmpPaper.setCourseid(nextCourseId);
                         sql=new StringBuilder();
@@ -1244,7 +1302,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 }
 
                 //论题
-                TpTopicInfo tt=new TpTopicInfo();
+              /*  TpTopicInfo tt=new TpTopicInfo();
                 tt.setCourseid(courseid);
                 List<TpTopicInfo>topicInfoList=this.tpTopicManager.getList(tt,null);
                 if(topicInfoList!=null&&topicInfoList.size()>0){
@@ -1269,7 +1327,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                     sqlListArray.add(sql.toString());
                                     objListArray.add(objList);
                                 }
-                                
+
                                 if(tmpThemeInfo.getThemecontent()!=null){
                                 	  //得到theme_content的更新语句
                                     this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
@@ -1279,11 +1337,11 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                 	  //得到comment_content的更新语句
                                     this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
                                             , tmpThemeInfo.getCommentcontent(), tmpThemeInfo.getThemeid().toString(),sqlListArray,objListArray);
-                            		
+
                                 }
                             }
                         }
-                        //引用的TOPIC_ID                        
+                        //引用的TOPIC_ID
                         tmpTopic.setQuoteid(tmpTopic.getTopicid());
                         tmpTopic.setCourseid(nextCourseId);
                         tmpTopic.setCuserid(this.logined(request).getUserid());
@@ -1295,7 +1353,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                             objListArray.add(objList);
                         }
                     }
-                }
+                } */
             }
         }
 
@@ -2106,6 +2164,40 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     }
 
     /**
+     * 获取教师教材
+     */
+    @RequestMapping(params = "m=getTchMaterial", method = RequestMethod.POST)
+    public void getTeacherMaterial(HttpServletRequest request,
+                                         HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String termid=request.getParameter("atermid");
+        if (gradeid == null || subjectid == null || termid==null) {
+            je.setMsg("参数错误，无法请求数据！");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        List<TpTeacherTeachMaterial> entityList=null;
+        //得到 该教师的当前教材
+        if(gradeid!=null&&gradeid.trim().length()>0&&subjectid!=null&&subjectid.trim().length()>0
+                &&termid!=null&&termid.length()>0){
+            TpTeacherTeachMaterial tentity=new TpTeacherTeachMaterial();
+            tentity.setUserid(this.logined(request).getUserid());
+            tentity.setGradeid(Integer.parseInt(gradeid));
+            tentity.setSubjectid(Integer.parseInt(subjectid));
+            tentity.setTermid(termid);
+            entityList=this.tpTeacherTeachMaterialManager.getList(tentity,null);
+            // if(entityList!=null&&entityList.size()>0)
+            //tcInfo.setMaterialidvalues(entityList.get(0).getMaterialid().toString());
+        }
+        je.setType("success");
+        je.getObjList().add(entityList==null||entityList.size()<1?null:entityList.get(0));
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
      * 获取教师课题ajax列表
      */
     @RequestMapping(params = "m=getTchCourListAjax", method = RequestMethod.POST)
@@ -2129,19 +2221,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         tcInfo.setUserid(user.getUserid());
 
         List l = new ArrayList();
-        List<TpTeacherTeachMaterial> entityList=null;
-        //得到 该教师的当前教材
-        if(gradeid!=null&&gradeid.trim().length()>0&&subjectid!=null&&subjectid.trim().length()>0
-                &&termid!=null&&termid.length()>0){
-            TpTeacherTeachMaterial tentity=new TpTeacherTeachMaterial();
-            tentity.setUserid(this.logined(request).getUserid());
-            tentity.setGradeid(Integer.parseInt(gradeid));
-            tentity.setSubjectid(Integer.parseInt(subjectid));
-            tentity.setTermid(termid);
-            entityList=this.tpTeacherTeachMaterialManager.getList(tentity,null);
-           // if(entityList!=null&&entityList.size()>0)
-                //tcInfo.setMaterialidvalues(entityList.get(0).getMaterialid().toString());
-        }
+
         TermInfo t=new TermInfo();
         t.setRef(termid);
         List<TermInfo>termInfoList=this.termManager.getList(t,null);
@@ -2194,8 +2274,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         l.add(courseList);
         l.add(classList);
         l.add(virtualClassInfoList);
-        if(entityList!=null&&entityList.size()>0)
-            l.add(entityList.get(0));
+
         presult.setList(l);
         je.setPresult(presult);
         response.getWriter().print(je.toJSON());
