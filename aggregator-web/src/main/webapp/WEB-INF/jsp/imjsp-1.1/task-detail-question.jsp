@@ -74,11 +74,11 @@
             if (quesType == 2) {
                 if (txt_fb_option.length < 1) {
                     alert('抱歉,未发现填空题回答输入框!');
-                    return;
+                    return false;
                 }
                 if (txt_fb_option.length > txt_fb_answer.length) {
                     alert('请完成填空录入后提交!');
-                    return;
+                    return false;
                 }
                 $.each(txt_fb_answer, function (idx, itm) {
                     if (paramStr.length > 0)
@@ -89,7 +89,7 @@
             } else if (quesType == 3 || quesType == 4) {
                 if (optionArray.length < 1) {
                     alert('请选择选项后提交!');
-                    return;
+                    return false;
                 }
                 $.each(optionArray, function (idx, itm) {
                     if (paramStr.length > 0)
@@ -113,6 +113,7 @@
                     }
                 }
             });
+            return false;
         }
 
         function changeOption(idx){
@@ -130,7 +131,7 @@
     </script>
 </head>
 <body>
-<div class="zxcs_test"><form id="questionForm" onsubmit="submitTask()"><input type="button" value="aaaa" onclick="submitTask()"></form>
+<div class="zxcs_test"><form id="questionForm" onsubmit="return submitTask()"><input type="button" value="aaaa" onclick="submitTask()"></form>
     <h1>${type}</h1>
     <div class="title" id="title"></div>
     <div class="zhengquedaan" id="zhengquedaan">

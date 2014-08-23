@@ -24,8 +24,11 @@
             var replyDetail = $("#replyDetail").val();
             var replyAttach = $("#replyAttach").val();
             var attachType = $("#attachType").val();
-            var param={schoolId:schoolId,jid:jid,classId:classId,isVirtual:isvir,time:time,taskId:taskId,userType:userType,replyDetail:replyDetail,replyAttach:replyAttach,attachType:attachType};
-
+            var param={schoolId:schoolId,jid:jid,classId:classId,isVirtual:isvir,time:time,taskId:taskId,userType:userType,replyDetail:replyDetail};
+            if(replyAttach.length>0){
+                param.replyAttach = replyAttach;
+                param.attachType = attachType;
+            }
             param.method=methodName;
 
             $.ajax({
