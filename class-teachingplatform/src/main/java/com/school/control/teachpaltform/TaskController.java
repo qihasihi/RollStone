@@ -82,6 +82,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
     private IGradeManager gradeManager;
     private IResourceManager resourceManager;
+    private ITpStuScoreLogsManager tpStuScoreLogsManager;
     public TaskController(){
         this.gradeManager=this.getManager(GradeManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
@@ -110,6 +111,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
         this.paperManager=this.getManager(PaperManager.class);
         this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
+        this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
     }
     /**
 	 * 根据课题ID，加载任务列表
@@ -2353,7 +2355,38 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		if(objListArray.size()>0&&sqlListArray.size()>0){
 			boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
 			if(flag){
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                //得到班级ID
+                TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                tallot.setTaskid(taskList.get(0).getTaskid());
+                tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+                List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                        ||clsMapList.get(0).get("CLASS_ID")==null){
+                    je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                    response.getWriter().println(je.toJSON());return ;
+                }
+
+                //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                //规则转换:    6             7         8
+                Integer type=0;
+                switch(taskList.get(0).getTasktype()){
+                    case 3:     //试题
+                        type=1;break;
+                    case 1:     //资源学习
+                        type=2;break;
+                    case 2:
+                        type=4;
+                        break;
+                }
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                /*奖励加分通过*/
+                if(this.tpStuScoreLogsManager.awardStuScore(Long.parseLong(courseid.trim())
+                        ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                        ,Long.parseLong(taskid.trim())
+                        ,Long.parseLong(this.logined(request).getUserid()+""),type)){
+                    je.setMsg("恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
+                }else
+                    System.out.println("awardScore error");
 				je.setType("success");
 			}else{
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR")); 
@@ -2841,6 +2874,40 @@ public class TaskController extends BaseController<TpTaskInfo>{
 				response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
 			}else{
 				if(this.taskPerformanceManager.doSave(tp)){
+                    /*奖励加分*/
+                    //得到班级ID
+                    TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                    tallot.setTaskid(Long.parseLong(taskid));
+
+                    tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+                    List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                    if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                            ||clsMapList.get(0).get("CLASS_ID")==null){
+                        je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                        response.getWriter().println(je.toJSON());return ;
+                    }
+
+                    //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                    //规则转换:    6             7         8
+                    Integer type=0;
+                    switch(taskCriList.get(0).getTasktype()){
+                        case 3:     //试题
+                            type=1;break;
+                        case 1:     //资源学习
+                            type=2;break;
+                        case 2:
+                            type=4;
+                            break;
+                    }
+                        /*奖励加分通过*/
+                    if(this.tpStuScoreLogsManager.awardStuScore(taskCriList.get(0).getCourseid()
+                            , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                            , taskCriList.get(0).getTaskid()
+                            , Long.parseLong(this.logined(request).getUserid() + ""), type)){
+                        je.setMsg("查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
+                    }else
+                        System.out.println("awardScore err ");
+
 					response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
 				}else{
 					je.setMsg("异常错误!添加查看记录失败!请重试!");
