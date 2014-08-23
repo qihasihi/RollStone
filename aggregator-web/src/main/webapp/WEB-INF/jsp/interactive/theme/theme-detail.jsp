@@ -162,12 +162,46 @@
       </div>
     </div>
     <div class="text" id="pizhu_${theme.themeid }_1_updatecontent" style="overflow-x:auto">
-       <c:if test="${!empty theme.commentbycontent}">
-                        ${theme.commentbycontent }
-                    </c:if>
-                    <c:if test="${empty theme.commentbycontent}">
-                        ${theme.themebycontent }
-                    </c:if>
+        <div id="pizhu_${theme.themeid }_1_updatecontent">
+           <c:if test="${!empty theme.commentbycontent}">
+                            ${theme.commentbycontent }
+                        </c:if>
+                        <c:if test="${empty theme.commentbycontent}">
+                            ${theme.themebycontent }
+                        </c:if>
+        </div>
+        <c:if test="${!empty theme.imattachArray&&theme.sourceid==1}">
+            <c:forEach items="${theme.imattachArray}" var="imItm" varStatus="viIdx">
+                <c:if test="${imattachtype==1}">
+                    <img src="${imItm}" title="${imItm}"/>
+                </c:if>
+                <c:if test="${imattachtype==2}">
+                    <span id="sp_mp3_${viIdx.index}"></span>
+                    <script type="text/javascript">
+                        jwplayerSetup={
+                            'id': 'player1',
+                            'width': 65,
+                            'height': 50,
+                            'file':  '${imItm}',
+                            //   'primary': 'flash',
+                            'controlbar':'bottom',
+                            'controlbar.idlehide':'false',
+                            'modes': [
+                                {type: 'flash', src: 'js/common/videoPlayer/new/jwplayer.flash.swf', //
+                                    config: {
+                                        provider: "http",
+                                        autostart:"false",
+                                        menu:"false"
+                                    }
+                                },
+                                {type: 'html5'}
+                            ]
+                        };
+                        jwplayer("sp_mp3_${viIdx.index}").setup(jwplayerSetup);
+                    </script>
+                </c:if>
+            </c:forEach>
+        </c:if>
     </div>
 </div>
  <p class="font-darkgray">

@@ -93,7 +93,7 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
         //得到列表
         tpthemeInfo.setLoginuserref(this.logined(request).getRef());
         List<TpTopicThemeInfo> tpTopicThemeList=this.tpTopicThemeManager.getList(tpthemeInfo,presult);
-      //  System.out.println(tpTopicThemeList.get(0).getThemecontent());
+
         presult.setList(tpTopicThemeList);
         jsonEntity.setPresult(presult);
         jsonEntity.setType("success");
@@ -119,7 +119,7 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return;
         }
-        System.out.println(topictheme.getThemecontent());
+
         //验证TpTopicInfo数据
         TpTopicInfo topicInfo=new TpTopicInfo();
         topicInfo.setTopicid(topictheme.getTopicid());
@@ -505,7 +505,7 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return;
         }
-        System.out.println(themeInfo.getThemecontent());
+
         //验证要修改的数据是否存在
         //查询数据
         PageResult presult=new PageResult();

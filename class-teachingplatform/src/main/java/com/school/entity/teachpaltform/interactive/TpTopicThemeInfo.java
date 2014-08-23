@@ -4,6 +4,8 @@ import com.school.util.UtilTool;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class TpTopicThemeInfo  implements Serializable {
@@ -32,6 +34,11 @@ public class TpTopicThemeInfo  implements Serializable {
     private Long topicid;
     private java.lang.String commentcontent;
     private Long status;	//引用专题下  1：显示  2：不显示
+
+
+    private String imattach;
+    private Integer imattachtype;
+    private Integer sourceid;
     
     
     
@@ -57,12 +64,46 @@ public class TpTopicThemeInfo  implements Serializable {
     private Object ispraise;	//是否已赞  0:未赞     1：已赞 
     private Long praisecount;
     private Object pinglunshu;
-    
-    
-    
-    
-    
-     public Long getPraisecount() {
+
+
+    /**
+     * 得到附件数组
+     * @return
+     */
+    public String[] getImattachArray(){
+        if(this.getImattach()!=null){
+            if(this.getImattach().indexOf(",")!=-1){
+               return this.getImattach().split(",");
+            }
+        }
+        return null;
+    }
+
+    public String getImattach() {
+        return imattach;
+    }
+
+    public void setImattach(String imattach) {
+        this.imattach = imattach;
+    }
+
+    public Integer getImattachtype() {
+        return imattachtype;
+    }
+
+    public void setImattachtype(Integer imattachtype) {
+        this.imattachtype = imattachtype;
+    }
+
+    public Integer getSourceid() {
+        return sourceid;
+    }
+
+    public void setSourceid(Integer sourceid) {
+        this.sourceid = sourceid;
+    }
+
+    public Long getPraisecount() {
 		return praisecount;
 	}
 

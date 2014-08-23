@@ -194,6 +194,21 @@ public class TpTopicThemeDAO extends CommonDAO<TpTopicThemeInfo> implements ITpT
             objList.add(tptopicthemeinfo.getSearchRoleType());
         } else
             sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getImattach() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getImattach());
+        } else
+            sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getImattachtype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getImattachtype());
+        } else
+            sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getSourceid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getSourceid());
+        } else
+            sqlbuilder.append("null,");
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objList.add(presult.getPageNo());
@@ -289,11 +304,26 @@ public class TpTopicThemeDAO extends CommonDAO<TpTopicThemeInfo> implements ITpT
 	            objList.add(tptopicthemeinfo.getQuoteid());
 	        } else
 	            sqlbuilder.append("null,");
-	        if (tptopicthemeinfo.getStatus() != null) {
-	            sqlbuilder.append("?,");
-	            objList.add(tptopicthemeinfo.getStatus());
-	        } else
-	            sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getStatus() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getStatus());
+        } else
+            sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getImattach() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getImattach());
+        } else
+            sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getImattachtype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getImattachtype());
+        } else
+            sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getSourceid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getSourceid());
+        } else
+            sqlbuilder.append("null,");
 
 		sqlbuilder.append("?)}");
 		return objList;
@@ -386,6 +416,21 @@ public class TpTopicThemeDAO extends CommonDAO<TpTopicThemeInfo> implements ITpT
             objList.add(tptopicthemeinfo.getStatus());
         } else
             sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getImattach() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getImattach());
+        } else
+            sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getImattachtype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getImattachtype());
+        } else
+            sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getSourceid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getSourceid());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -471,6 +516,21 @@ public class TpTopicThemeDAO extends CommonDAO<TpTopicThemeInfo> implements ITpT
             objList.add(tptopicthemeinfo.getLastfabiao());
         } else
             sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getImattach() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getImattach());
+        } else
+            sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getImattachtype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getImattachtype());
+        } else
+            sqlbuilder.append("null,");
+        if (tptopicthemeinfo.getSourceid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getSourceid());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList; 
 	}
@@ -550,6 +610,21 @@ public class TpTopicThemeDAO extends CommonDAO<TpTopicThemeInfo> implements ITpT
         if (entity.getTopicid() != null) {
             sqlbuilder.append("?,");
             objList.add(entity.getTopicid());
+        } else
+            sqlbuilder.append("null,");
+        if (entity.getImattach() != null) {
+            sqlbuilder.append("?,");
+            objList.add(entity.getImattach());
+        } else
+            sqlbuilder.append("null,");
+        if (entity.getImattachtype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(entity.getImattachtype());
+        } else
+            sqlbuilder.append("null,");
+        if (entity.getSourceid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(entity.getSourceid());
         } else
             sqlbuilder.append("null,");
         sqlbuilder.append("?)}");
