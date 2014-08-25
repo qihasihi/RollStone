@@ -7,7 +7,9 @@ import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
+import com.school.entity.teachpaltform.paper.MicVideoPaperInfo;
 import com.school.entity.teachpaltform.paper.PaperInfo;
+import com.school.entity.teachpaltform.paper.PaperQuestion;
 import com.school.im1_1.entity._interface.ImInterfaceInfo;
 import com.school.im1_1.manager._interface.ImInterfaceManager;
 import com.school.manager.UserManager;
@@ -16,12 +18,14 @@ import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
+import com.school.manager.inter.teachpaltform.paper.IMicVideoPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
+import com.school.manager.teachpaltform.paper.MicVideoPaperManager;
 import com.school.manager.teachpaltform.paper.PaperManager;
 import com.school.manager.teachpaltform.paper.PaperQuestionManager;
 import com.school.util.JsonEntity;
@@ -63,6 +67,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private IPaperManager paperManager;
     private ITpTopicManager tpTopicManager;
     private ITpTopicThemeManager tpTopicThemeManager;
+    private IMicVideoPaperManager micVideoPaperManager;
     public ImInterfaceController(){
         this.paperManager=this.getManager(PaperManager.class);
         this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
@@ -79,6 +84,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
         this.tpTopicManager=this.getManager(TpTopicManager.class);
         this.tpTopicThemeManager=this.getManager(TpTopicThemeManager.class);
+        this.micVideoPaperManager=this.getManager(MicVideoPaperManager.class);
     }
     /**
      * 学习目录接口
@@ -2164,6 +2170,214 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         mp.put("paperid",paperid);
         return new ModelAndView("/imjsp-1.1/test/papertest",mp);
     }
+
+
+
+    /**
+     * 获取任务试卷试题
+     * @param request
+     * @param response
+     * @throws Exception
+     * taskId	Int	任务id
+    classId	Int	班级id
+    groupId	int	可以为空
+    schoolId	Int	班级所属分析id
+    jid	Int	用户id
+    userType	Int	用户类型
+    time	int
+    sign	String
+
+     */
+    @RequestMapping(params="getTaskPaperQuestion",method={RequestMethod.GET,RequestMethod.POST})
+    public void getTaskPaperQuestion(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result",0);//默认失败
+      /*  if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        } */
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
+        //获取参数
+        String taskId=paramMap.get("taskId");
+        String classId=paramMap.get("classId");
+        String groupId=paramMap.get("groupId");
+        String schoolId=paramMap.get("schoolId");
+        String jid=paramMap.get("jid");
+        String userType=paramMap.get("userType");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        if(taskId==null||schoolId==null||time==null||sign==null||userType==null||jid==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //验证时间
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(time.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //去除sign
+        paramMap.remove("sign");
+        paramMap.remove("getTaskPaperQuestion");
+        //验证Md5
+        Boolean b = UrlSigUtil.verifySigSimple("getTaskPaperQuestion",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo u=new UserInfo();
+        u.setEttuserid(Integer.parseInt(jid));
+        u.setDcschoolid(Integer.parseInt(schoolId));
+        List<UserInfo>userList=this.userManager.getList(u,null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","当前云帐号未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo tmpUser=userList.get(0);
+
+        List<Map<String,Object>> returnMapList=new ArrayList<Map<String, Object>>();
+        TpTaskInfo taskInfo=new TpTaskInfo();
+        taskInfo.setTaskid(Long.parseLong(taskId));
+        //查询没被我删除的任务
+        taskInfo.setSelecttype(1);
+        taskInfo.setStatus(1);
+        //已发布的任务
+        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(taskInfo, null);
+        if(taskList==null||taskList.size()<1){
+            returnJo.put("msg","未获取到任务数据!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        Long paperid=null;
+        TpTaskInfo tmpTask=taskList.get(0);
+        if(!(tmpTask.getTasktype()>3&&tmpTask.getTasktype()<7)){
+            returnJo.put("msg","非试卷类任务!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+
+        if(tmpTask.getTasktype()==4){
+            paperid=tmpTask.getTaskvalueid();
+        }else if(tmpTask.getTasktype()==6){
+            MicVideoPaperInfo micPaper=new MicVideoPaperInfo();
+            micPaper.setMicvideoid(tmpTask.getTaskvalueid());
+            List<MicVideoPaperInfo>micVideoPaperInfoList=this.micVideoPaperManager.getList(micPaper,null);
+            if(micVideoPaperInfoList==null||micVideoPaperInfoList.size()<1){
+                returnJo.put("msg","未获取到微视频试卷数据!");
+                response.getWriter().print(returnJo.toString());
+                return;
+            }
+            paperid=micVideoPaperInfoList.get(0).getPaperid();
+        }else if(tmpTask.getTasktype()==5){
+            if(ImUtilTool.getUserType(userType)!=2){  //学生
+                //判断任务时间
+                //得到创建任务时生成的TaskValueId
+                Long tkvalueid=tmpTask.getTaskvalueid();
+                PaperInfo pentity=new PaperInfo();
+                pentity.setParentpaperid(tkvalueid);
+                pentity.setCuserid(tmpUser.getUserid());
+                List<PaperInfo> paperList=this.paperManager.getList(pentity,null);
+                if(paperList==null||paperList.size()<1){
+
+                    TpTaskInfo t=new TpTaskInfo();
+                    t.setUserid(tmpUser.getUserid());
+                    t.setTaskid(Long.parseLong(taskId));
+                    t.setCourseid(tmpTask.getCourseid());
+                    PageResult pr=new PageResult();
+                    pr.setPageSize(1);
+                    // 学生任务
+                    List<TpTaskInfo>taskStuList=this.tpTaskManager.getListbyStu(t, pr);
+                    if(taskStuList==null||taskStuList.size()<1||taskStuList.get(0).getBtime()==null||taskStuList.get(0).getEtime()==null){
+                        returnJo.put("msg", UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                        response.getWriter().println(returnJo.toString());return;
+                    }
+                    if(taskStuList.get(0).getTaskstatus().equals("3")){
+                        returnJo.put("msg", "任务已结束，你无法进入测试!");
+                        response.getWriter().println(returnJo.toString());return;
+                    }
+                    //生成试题
+                    if(!this.paperManager.doGenderZiZhuPaper(tmpTask.getTaskid(),tmpUser.getUserid())){
+                        returnJo.put("msg", "生成试卷失败!!");
+                        response.getWriter().println(returnJo.toString());return;
+                    }else{
+                        //再查一遍
+                        paperList=this.paperManager.getList(pentity,null);
+                    }
+                }
+                paperid=paperList.get(0).getPaperid();
+            }
+        }
+        //获取提干
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(paperid);
+        PageResult p=new PageResult();
+        p.setOrderBy("u.order_idx");
+        p.setPageNo(0);
+        p.setPageSize(0);
+        List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+
+        //获取试题组下题目
+        PaperQuestion child =new PaperQuestion();
+        child.setPaperid(pq.getPaperid());
+        List<PaperQuestion>childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
+
+
+        //整合试题组
+        List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+        List<PaperQuestion>questionTeam;
+        if(pqList!=null&&pqList.size()>0){
+            for(PaperQuestion paperQuestion:pqList){
+                questionTeam=new ArrayList<PaperQuestion>();
+                //试题组
+                if(childList!=null&&childList.size()>0){
+                    for (PaperQuestion childp :childList){
+                        if(paperQuestion.getRef().equals(childp.getRef())){
+                            questionTeam.add(childp);
+                        }
+                    }
+                    paperQuestion.setQuestionTeam(questionTeam);
+                }
+                tmpList.add(paperQuestion);
+
+
+
+
+                Map<String,Object> map=new HashMap<String,Object>();
+                map.put("quesId",paperQuestion.getQuestionid());
+                map.put("quesType",paperQuestion.getQuestiontype()==1?1:0); //1：其他 主观题
+                map.put("isQesTeam",paperQuestion.getQuestiontype()==6?1:0); //6：试题组
+                if(paperQuestion.getQuestionTeam()!=null&&paperQuestion.getQuestionTeam().size()>0){
+                    Map<String,Object> childMap=new HashMap<String,Object>();
+                    for(PaperQuestion qTeam:paperQuestion.getQuestionTeam()){
+                        childMap.put("teamQesId",qTeam.getQuestionid());
+                        childMap.put("teamQesType",qTeam.getQuestiontype()==1?1:0);
+                    }
+                    map.put("teamQesList",childMap);
+                }
+                returnMapList.add(map);
+            }
+        }
+
+
+        JSONObject jo=new JSONObject();
+        jo.put("testId",paperid);
+        jo.put("quesList",returnMapList);
+
+        returnJo.put("data",jo.toString());
+        returnJo.put("result",1);
+        response.getWriter().print(returnJo.toString());
+    }
+
 }
 
 /**
