@@ -3623,7 +3623,7 @@ public class UserController extends BaseController<UserInfo> {
 	 */
 	@RequestMapping(params="m=toIndex", method = RequestMethod.GET)
 	public ModelAndView toIndex(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception {
-        System.out.println("123456");
+       // System.out.println("123456");
 		//得到当前学期的授课班级
 		    //得到当前学期
 		TermInfo term=this.termManager.getAutoTerm();
@@ -3869,8 +3869,7 @@ public class UserController extends BaseController<UserInfo> {
 //        System.out.println(UtilTool.utilproperty.getProperty("ISFIRSTLOGIN")+"----isfrist");
 	    List<SubjectInfo> subList = this.subjectManager.getList(null, null);
 		request.setAttribute("subList", subList);
-		List<Map<String, Object>> termList = new ArrayList<Map<String,Object>>();
-		termList = this.termManager.getYearTerm();
+		List<Map<String, Object>> termList = this.termManager.getYearTerm();
 		request.setAttribute("termList", termList.get(0));
 	    return new ModelAndView("index");
 	}
