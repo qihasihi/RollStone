@@ -14,10 +14,14 @@ import com.school.manager.UserManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
+import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
+import com.school.manager.teachpaltform.interactive.TpTopicManager;
+import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.PaperManager;
 import com.school.manager.teachpaltform.paper.PaperQuestionManager;
 import com.school.util.JsonEntity;
@@ -57,6 +61,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private ITpRecordManager tpRecordManager;
     private IPaperQuestionManager paperQuestionManager;
     private IPaperManager paperManager;
+    private ITpTopicManager tpTopicManager;
+    private ITpTopicThemeManager tpTopicThemeManager;
     public ImInterfaceController(){
         this.paperManager=this.getManager(PaperManager.class);
         this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
@@ -71,6 +77,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.taskPerformanceManager = this.getManager(TaskPerformanceManager.class);
         this.tpRecordManager=this.getManager(TpRecordManager.class);
         this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
+        this.tpTopicManager=this.getManager(TpTopicManager.class);
+        this.tpTopicThemeManager=this.getManager(TpTopicThemeManager.class);
     }
     /**
      * 学习目录接口
