@@ -279,7 +279,7 @@
             </c:if>
         </select>
 
-        <input id="txt_course" name="txt_course" type="text" class="w240" />
+        <input id="txt_course" name="txt_course" type="text" class="w220" />
         <a onclick="pageGo('pCourseRes')" class="an_search" title="查询"></a>
     </p>
 

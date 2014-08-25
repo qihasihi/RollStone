@@ -22,8 +22,15 @@ public class ClassUser  implements java.io.Serializable{
     private String norelationtype;
     private Integer uid;
     private Object completenum; //任务完成率
+    private Object stucount;
 
+    public Object getStucount() {
+        return stucount;
+    }
 
+    public void setStucount(Object stucount) {
+        this.stucount = stucount;
+    }
 
     //历史学年
     private String historyyear;

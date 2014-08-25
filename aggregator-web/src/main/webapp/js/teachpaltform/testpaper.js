@@ -19,7 +19,7 @@ function loadQuesNumberTool(qsize){
                 var tmpArray=allarray[z].split("|");
                 if((freeId!=tmpArray[0]||z==allarray.length-1)&&isbegin){
                     isbegin=false;
-                    freeId=null;
+                    freeid=null;
                     obj[obj.length]={beginIdx:startIdx,endIdx:z-1};
                     if(z==allarray.length-1)
                      obj[obj.length-1].endIdx=z;
@@ -219,7 +219,7 @@ function loadNextQues(quesid,paperid,idx){
         url:'paperques?m=nextTestQues',
         dataType:'json',
         type:'post',
-        data:{quesid:quesid,paperid:paperid},
+        data:{quesid:quesid,paperid:paperid,courseid:courseid},
         error:function(){alert('异常错误，原因：未知!');},
         success:function(rps){
             //失败
@@ -368,7 +368,7 @@ function loadNextQues(quesid,paperid,idx){
                         if(quesObj.questiontype==3||quesObj.questiontype==7){
                             h+='<input type="radio" id="rdo_answer'+quesObj.questionid+opttype+'" onclick="next(1,'+quesObj.questionid+','+paperid+',\''+allquesidObj+'\','+ (ishas?1:0)+')" value="'+ opttype+'" name="rdo_answer'+quesObj.questionid+'">';
                             if(ishas)
-                                h+='<input type="hidden" value="'+ m.optiontype+'" name="hd_rightVal" id="hd_rightVal'+quesObj.questionid+'"/>';
+                                h+='<input type="hidden" value="'+opttype+'" name="hd_rightVal" id="hd_rightVal'+quesObj.questionid+'"/>';
                         }
                         if(quesObj.questiontype==4||quesObj.questiontype==8)
                             h+='<input type="checkbox" value="'+opttype+'|'+(ishas?1:0)+'" id="rdo_answer'+quesObj.questionid+opttype+'" name="rdo_answer'+quesObj.questionid+'">';
@@ -438,6 +438,32 @@ function loadNextQues(quesid,paperid,idx){
                     $(this).replaceWith('<input type="text" name="txt_tk" id="txt_tk_'+$(this).parent().parent().children("input[name='hd_quesid']").val()+'"/>');
                 });
 
+                //七选五   完型填空，则修改题号
+                if(parentQuesObj!=null&&$("div[id='p_option_"+parentQuesObj.questionid+"']").length>0&&(parentQuesObj.extension==5||parentQuesObj.extension==3)){
+                    var allQuesArray=allquesidObj.split(",");
+                    var qNoidx=0;
+                    var stzhasQues=false;
+                    if(allQuesArray.length>0){
+                        $.each(allQuesArray,function(z,mz){
+                            if(mz.indexOf("|")!=-1){
+                                var mzArray=mz.split("|");
+                                if(mzArray[0]==parentQuesObj.questionid&&!stzhasQues){
+                                    qNoidx++;
+                                }
+                                if(mzArray[1]==quesObj.questionid){
+                                    stzhasQues=!stzhasQues;
+                                    return;
+                                }
+                            }
+                        });
+                    }
+                    if(stzhasQues){
+                        $("#p_num_"+quesObj.questionid).html(qNoidx);
+                    }
+                }
+
+
+
 
 
                 //如果学生已经做题，则自动填充
@@ -488,16 +514,22 @@ function loadNextQues(quesid,paperid,idx){
 function showQuesOperator(idx,quesid){
     var allQuesArray=allquesidObj.split(",");
     var sFirst=false,sLast=false;
-    if((idx==0||typeof(idx)=="undefined")||idx!=allQuesArray.length-1)
+    if(((idx==0&&idx!=allQuesArray.length-1)||typeof(idx)=="undefined")||idx!=allQuesArray.length-1)
         sLast=true;
     if(typeof(idx)!="undefined"&&idx!=0)
         sFirst=true;
 
     //显示上一题，下一题
-    if(sFirst&&!sLast)
+    if(sFirst&&sLast){
         $("#a_free_ques_"+quesid).show();
-    if(sLast&!sFirst)
         $("#a_next_ques_"+quesid).show();
+    }else{
+        if(sFirst)
+        if(sFirst&&!sLast)
+            $("#a_free_ques_"+quesid).show();
+        if(sLast&!sFirst)
+            $("#a_next_ques_"+quesid).show();
+    }
 
 }
 
@@ -511,24 +543,26 @@ function subPaper(){
         alert('异常错误，参数异常!');return;
     }
     var confirmMsg='是否确定交卷？ 提示：提交之后，你将无法再次作答。 ';
+
+    var alaqLastQues="";
+    var allquesArray=allquesidObj.split(",");
+    var curQuesType=$("#hd_questiontype_"+currentQuesId).val();
+    if(curQuesType==1||curQuesType==2){
+        var aqLastQuesArr=allquesArray[allquesArray.length-1];
+        alaqLastQues=aqLastQuesArr;
+        if(aqLastQuesArr.indexOf('|')!=-1){
+            alaqLastQues=aqLastQuesArr.split("|")[1];
+        }
+        if(currentQuesId==alaqLastQues&&subQuesId.indexOf(","+currentQuesId+",")==-1){
+            subQuesId+=currentQuesId+",";
+            freeSubOnePaper(currentQuesId,0,currentQuesId);
+        }
+    }
+
+
     if(subQuesId.Trim()==","||subQuesId.Trim().length<1){
         confirmMsg="你尚未开始作答，确定交卷？\n\n提示：提交之后，你将无法再次作答。";
     }else{
-        var alaqLastQues="";
-        var allquesArray=allquesidObj.split(",");
-        var curQuesType=$("#hd_questiontype_"+currentQuesId).val();
-        if(curQuesType==1||curQuesType==2){
-            var aqLastQuesArr=allquesArray[allquesArray.length-1];
-            alaqLastQues=aqLastQuesArr;
-            if(aqLastQuesArr.indexOf('|')!=-1){
-                alaqLastQues=aqLastQuesArr.split("|")[1];
-            }
-            if(currentQuesId==alaqLastQues&&subQuesId.indexOf(","+currentQuesId+",")==-1){
-                  subQuesId+=currentQuesId+",";
-                  freeSubOnePaper(currentQuesId,0,currentQuesId);
-            }
-        }
-
         var subid=subQuesId;
         if(subid.indexOf(",")==0)
             subid=subid.substring(1);

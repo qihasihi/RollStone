@@ -148,10 +148,12 @@
 <div class="subpage_head"><span class="ico55"></span><strong>添加任务—选择试卷</strong></div>
 <div class="content1 font-black">
     <p class="p_b_10">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
-    <p><strong>标准试卷</strong></p>
-    <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
+    <c:if test="${!empty courselevel and courselevel ne 3}">
+        <p><strong>标准试卷</strong></p>
+        <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
 
-    </ul>
+        </ul>
+    </c:if>
     <p><strong>自建试卷</strong></p>
     <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
 

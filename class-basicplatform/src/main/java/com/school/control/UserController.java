@@ -5346,8 +5346,20 @@ public class UserController extends BaseController<UserInfo> {
                 List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
                 //已存在
                 if(userInfoList!=null&&userInfoList.size()>0){
-                    je.setMsg("username:"+username+" lzxuserid:"+lzxuserid+" already exists!");
-                    response.getWriter().print(je.toJSON());return;
+                    if(userInfoList.get(0).getStateid().toString().equals("1")){
+                        UserInfo upd=new UserInfo();
+                        upd.setUserid(userInfoList.get(0).getUserid());
+                        upd.setStateid(0);
+                        sql=new StringBuilder();
+                        objList=this.userManager.getUpdateSql(upd,sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }else{
+                        je.setMsg("username:"+username+" lzxuserid:"+lzxuserid+" already exists!");
+                        response.getWriter().print(je.toJSON());return;
+                    }
                 }else{
                     //添加用户
                     String userNextRef = UUID.randomUUID().toString();

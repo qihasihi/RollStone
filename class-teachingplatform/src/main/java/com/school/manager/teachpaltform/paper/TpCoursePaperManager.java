@@ -63,7 +63,15 @@ public class  TpCoursePaperManager extends BaseManager<TpCoursePaper> implements
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+    /**
+     * ²éÑ¯ÊÇ·ñ´æÔÚAB¾í
+     * @param tpCoursePaper
+     * @param presult
+     * @return
+     */
+    public List<TpCoursePaper> getABSynchroList(TpCoursePaper tpCoursePaper,PageResult presult){
+        return this.tpcoursepaperdao.getABSynchroList(tpCoursePaper,presult);
+    }
 	@Override
 	protected ICommonDAO<TpCoursePaper> getBaseDAO() {
 		// TODO Auto-generated method stub

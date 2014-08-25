@@ -68,14 +68,25 @@ public class SynchroEttColumns  extends TimerTask {
                         Object ettcolumnurl=jsObj.get("ettcolumnurl");
                         Object ettstyle=jsObj.get("ettcolumnstyle");
                         Object ettroletype=jsObj.get("ettcolumntype"); //1:教师  2：学生
+                        Object isShow=jsObj.get("isshow");
                         EttColumnInfo ettEntity=new EttColumnInfo();
                         ettEntity.setEttcolumnid(Integer.parseInt(ettcolumnid.toString()));
-                        ettEntity.setEttcolumnname(ettcolumnname.toString());
-                        ettEntity.setEttcolumnurl(ettcolumnurl.toString());
+                        if(ettcolumnname==null)
+                            ettcolumnname="";
+                         ettEntity.setEttcolumnname(ettcolumnname.toString());
+                        if(ettcolumnurl==null)
+                            ettcolumnurl="";
+                           ettEntity.setEttcolumnurl(ettcolumnurl.toString());
+
                         ettEntity.setStatus(Integer.parseInt(status.toString()));
                         if(ettstyle!=null)
                             ettEntity.setStyle(ettstyle.toString());
                         ettEntity.setRoletype(Integer.parseInt(ettroletype.toString()));
+
+                        if(isShow!=null)
+                            ettEntity.setIsShow(Integer.parseInt(isShow.toString().trim()));
+
+
                         sqlbuilder=new StringBuilder();
                         objList=columnManager.getEttColumnSynchro(ettEntity,sqlbuilder);
                         if(sqlbuilder.toString().length()>0){

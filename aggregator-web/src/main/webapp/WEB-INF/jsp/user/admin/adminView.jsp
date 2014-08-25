@@ -683,8 +683,10 @@
 													<span id="sp_role">
 													 <c:forEach items="${roleUser}" var="r">
 															<c:if test="${r.isadmin==0}">
-														${r.rolename } &nbsp;
-														<input type="hidden" name="hd_role" value="${r.roleid }" />
+                                                                <c:if test="${r.roleid!=2}">
+                                                                    ${r.rolename } &nbsp;
+                                                                </c:if>
+														    <input type="hidden" name="hd_role" value="${r.roleid }" />
 															</c:if>
 														</c:forEach> </span>
 														

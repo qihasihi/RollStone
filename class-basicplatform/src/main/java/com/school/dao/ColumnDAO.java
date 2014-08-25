@@ -319,14 +319,20 @@ public class ColumnDAO extends CommonDAO<ColumnInfo> implements IColumnDAO {
             sqlbuilder.append("?,");
         }else
             sqlbuilder.append("NULL,");
+
         if(entity.getStyle()!=null){
             returnObj.add(entity.getStyle());
         }else
             returnObj.add("");
-
         sqlbuilder.append("?,");
+
         if(entity.getRoletype()!=null){
             returnObj.add(entity.getRoletype());
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(entity.getIsShow()!=null){
+            returnObj.add(entity.getIsShow());
             sqlbuilder.append("?,");
         }else
             sqlbuilder.append("NULL,");

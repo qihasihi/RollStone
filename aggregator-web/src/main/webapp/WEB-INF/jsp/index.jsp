@@ -24,6 +24,7 @@
 		var imgheight = 0;
 		var imgareaselectObj;
 		$(function(){
+
           <c:if test="${empty initObj}">
                     showSetupWizard("dv_zhong");
           </c:if>
@@ -514,7 +515,7 @@
     			老师
     			<%} %>
     			&nbsp;&nbsp;您好</p>
-        <p><strong>您的角色：</strong><span>
+        <p><strong>您的角色：</strong><span id="sp_role">
         <c:if test="${!empty sessionScope.currentUserRoleList}">
   		<c:forEach items="${sessionScope.currentUserRoleList}" var="cuur">
   			${cuur.rolename }&nbsp;&nbsp;
@@ -955,6 +956,15 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(function(){
+        <%if(!isStudent){%>
+            <c:if test="${empty teachClass}">
+                $("#sp_role").html($("#sp_role").html().replace("任课老师&nbsp;&nbsp;",""))
+            </c:if>
+        <%}%>
+    });
+</script>
 <%@include file="/util/foot.jsp"%>
 </body>
 </html>

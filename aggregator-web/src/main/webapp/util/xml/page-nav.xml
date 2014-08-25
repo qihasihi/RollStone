@@ -26,11 +26,11 @@
 	<folder name='login' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 登陆跳转"></folder>
 	<folder name='notice' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 通知公告"></folder>
 	<folder name='pageright' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 页面权限"></folder>
-	<folder name='resource' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt;  &lt;a href='resource?m=toindex'&gt;资源系统&lt;/a&gt;"></folder>
-	<folder name='resource/base' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt;  &lt;a href='resource?m=toindex'&gt;资源系统&lt;/a&gt;"></folder>
-	<folder name='resource/subject' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='resource?m=toindex'&gt;资源系统&lt;/a&gt; &gt; 专题资源 "></folder>
-	<folder name='resource/check' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='resource?m=toindex'&gt;资源系统&lt;/a&gt; &gt; 审核权限"></folder>
-	<folder name='resource/extend' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;a href='resource?m=toindex'&gt;资源系统&lt;/a&gt; &gt; 扩展属性"></folder>		
+	<folder name='resource' displayName="&lt;span&gt;&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;/span&gt;  &lt;a href='resource?m=toindex'&gt;资源系统&lt;/a&gt;"></folder>
+	<folder name='resource/base' displayName="&lt;span&gt;&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;/span&gt;  &lt;a href='resource?m=toindex'&gt;资源系统&lt;/a&gt;"></folder>
+	<folder name='resource/subject' displayName="&lt;span&gt;&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;/span&gt; &lt;a href='resource?m=toindex'&gt;资源系统&lt;/a&gt; &gt; 专题资源 "></folder>
+	<folder name='resource/check' displayName="&lt;span&gt;&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;/span&gt; &lt;a href='resource?m=toindex'&gt;资源系统&lt;/a&gt; &gt; 审核权限"></folder>
+	<folder name='resource/extend' displayName="&lt;span&gt;&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; &lt;/span&gt; &lt;a href='resource?m=toindex'&gt;资源系统&lt;/a&gt; &gt; 扩展属性"></folder>
 	<folder name='role' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 权限"></folder>
 	<folder name='rolepage' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 角色管理"></folder>
 	<folder name='roleuser' displayName="&lt;a href='user?m=toIndex'&gt;首页&lt;/a&gt; &gt; 用户角色分配"></folder>

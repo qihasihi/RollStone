@@ -15,6 +15,15 @@ public class EttColumnInfo implements  Serializable{
     private Integer ref;
     private String style;
     private Integer roletype;
+    private Integer isShow;
+
+    public Integer getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(Integer isShow) {
+        this.isShow = isShow;
+    }
 
     public Integer getRoletype() {
         return roletype;

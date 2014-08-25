@@ -526,7 +526,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
                 }
 
             }else  //如果没有主授，辅授学科，则按照班级出发
-                mp.put("currentloginsubid", sbuList.get(0).getSubjectid());
+                mp.put("currentloginsubid", mapList.get(0).get("SUBJECT_ID"));
         }else{
             for(SubjectUser sb:sbuList){
                 if(sb!=null){

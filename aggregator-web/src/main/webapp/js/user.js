@@ -2090,9 +2090,10 @@ function save_role(uid){
 							rolestr+='&nbsp;';  
 						if(roleadmin.length>0)
 							roleadmin+='&nbsp;';
-						if(typeof(itm.isadmin)!='undefined'&&itm.isadmin==0)
-							rolestr+=itm.rolename+'<input type="hidden" name="hd_role" value="'+itm.roleid+'"/>'
-						else if(typeof(itm.isadmin)!='undefined'&&itm.isadmin==1){
+						if(typeof(itm.isadmin)!='undefined'&&itm.isadmin==0){
+                            var role=itm.roleid==2?"":itm.rolename;
+							rolestr+=role+'<input type="hidden" name="hd_role" value="'+itm.roleid+'"/>';
+                        }else if(typeof(itm.isadmin)!='undefined'&&itm.isadmin==1){
 							roleadmin+=itm.rolename+"&nbsp;";
 							hdstr+='<option value="'+itm.roleid+'">'+itm.rolename+'</option>';
 						}

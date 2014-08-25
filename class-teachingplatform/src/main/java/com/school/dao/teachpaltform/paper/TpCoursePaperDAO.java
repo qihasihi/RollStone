@@ -52,6 +52,55 @@ public class TpCoursePaperDAO extends CommonDAO<TpCoursePaper> implements ITpCou
 		}
 		return false;
 	}
+
+    /**
+     * ²éÑ¯ÊÇ·ñ´æÔÚAB¾í
+     * @param tpCoursePaper
+     * @param presult
+     * @return
+     */
+    public List<TpCoursePaper> getABSynchroList(TpCoursePaper tpCoursePaper,PageResult presult){
+        StringBuilder sqlbuilder = new StringBuilder();
+        List<Object> objList=new ArrayList<Object>();
+        sqlbuilder.append("{CALL tp_j_course_paper_absynchro(");
+        if(tpCoursePaper==null)
+            sqlbuilder.append("NULL,NULL,");
+        else{
+            if(tpCoursePaper.getCourseid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(tpCoursePaper.getCourseid());
+            }else
+                sqlbuilder.append("NULL,");
+            if(tpCoursePaper.getPapertype()!=null){
+                sqlbuilder.append("?,");
+                objList.add(tpCoursePaper.getPapertype());
+            }else
+                sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append(")}");
+
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<TpCoursePaper> tpcoursepaperList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpCoursePaper.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return tpcoursepaperList;
+    }
 	
 	public List<TpCoursePaper> getList(TpCoursePaper tpcoursepaper, PageResult presult) {
 		StringBuilder sqlbuilder = new StringBuilder();

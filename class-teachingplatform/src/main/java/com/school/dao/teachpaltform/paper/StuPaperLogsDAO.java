@@ -402,7 +402,7 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
         List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
         return list;
     }
-    public List<Map<String, Object>> getPaperPercentNum2(Long paperid, int bignum, int smallnum) {
+    public List<Map<String, Object>> getPaperPercentNum2(Long paperid, int bignum, int smallnum,Integer classid) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_paper_marking_percent_proc_logs2(");
         List<Object> objList=new ArrayList<Object>();
@@ -418,8 +418,10 @@ public class StuPaperLogsDAO extends CommonDAO<StuPaperLogs> implements IStuPape
         }else{
             sqlbuilder.append("NULL,");
         }
-        sqlbuilder.append("?");
+        sqlbuilder.append("?,");
         objList.add(smallnum);
+        sqlbuilder.append("?");
+        objList.add(classid);
         sqlbuilder.append(")}");
         List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
         return list;

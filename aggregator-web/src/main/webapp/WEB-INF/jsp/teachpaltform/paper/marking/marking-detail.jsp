@@ -401,13 +401,13 @@
                 <c:if test="${num.MARKINGNUM>0}">
                 <script type="text/javascript">var avgFloat="${num.AVGSCORE}";document.write(parseFloat(avgFloat).toFixed(2));</script></span>分
                 </c:if>
-
-                &nbsp;&nbsp;&nbsp;&nbsp;<strong>已批改：</strong><span class="font-blue">${num.MARKINGNUM}/${num.SUBMITNUM}</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="paper?m=toMarkingLogs&taskid=${param.taskid}&paperid=${param.paperid}&quesid=${quesid}&idx=${param.idx}&classid=${param.classid}" target="_blank" class="font-blue">查看统计</a></p>
+                <!--<span class="font-blue"></span>-->
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong>已批改：</strong>${num.MARKINGNUM}/${num.SUBMITNUM}&nbsp;&nbsp;&nbsp;&nbsp;<a href="paper?m=toMarkingLogs&taskid=${param.taskid}&paperid=${param.paperid}&quesid=${quesid}&idx=${param.idx}&classid=${param.classid}" target="_blank" class="font-blue">查看统计</a></p>
             <div id="score_div">
             <p><strong>学生：</strong>${detail.STU_NAME} </p>
             <p><strong>答案：</strong>${detail.ANSWER}</p>
             <c:if test="${!empty detail.ANNEXNAME}">
-                <p><strong>附件：</strong><a href="<%=basePath%>/uploadfile/${detail.ANNEXNAME}" target="_blank" class="font-blue">${detail.ANNEXNAME}</a></p>
+                <p><strong>附件：</strong><a href="<%=basePath%>/<%=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")%>/${detail.ANNEXNAME}" target="_blank" class="font-blue">${detail.ANNEXNAME}</a></p>
             </c:if>
 
             <p><strong>评分：</strong>请选择该学生的得分。</p>

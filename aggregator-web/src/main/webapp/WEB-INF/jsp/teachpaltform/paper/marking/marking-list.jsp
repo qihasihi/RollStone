@@ -95,16 +95,17 @@
                         alert(rmsg.msg);
                     }else{
                         if(type==1){
-                            if(rmsg.objList!=null&&rmsg.objList.length>0){
-                                $.each(rmsg.objList,function(idx,itm){
-                                    $("#percentScore").html(itm.htm);
-                                });
+                            if(rmsg.objList[0]!=null){
+                               // $.each(rmsg.objList[0],function(idx,itm){
+                                    $("#percentScore").html(rmsg.objList[0].htm);
+                              //  });
                             }
-                            var h='<img src="images/paperScorePie1.png" name="'+new Date().getTime()+'a" id="percentImg"/>';
+                            var h='<img src="'+rmsg.objList[1]+'" name="'+new Date().getTime()+'a" id="percentImg"/>';
                             $("#percentImg").parent().html(h);
                         }else{
-                            if(rmsg.objList!=null&&rmsg.objList.length>0){
-                                $.each(rmsg.objList,function(idx,itm){
+                            if(rmsg.objList[0]!=null){
+                                itm=rmsg.objList[0];
+                               // $.each(rmsg.objList[0],function(idx,itm){
                                     var htm = '';
                                     htm+='<tr><td>90~100</td><td>'+itm["90~100"]+'</td></tr>';
                                     htm+='<tr><td>80~90</td><td>'+itm["80~90"]+'</td></tr>';
@@ -112,9 +113,9 @@
                                     htm+='<tr><td>60~70</td><td>'+itm["60~70"]+'</td></tr>';
                                     htm+='<tr><td>0~60</td><td>'+itm["0~60"]+'</td></tr>';
                                     $("#percentScore").html(htm);
-                                });
+                               // });
                             }
-                            var h='<img src="images/paperScorePie2.png" name="'+new Date().getTime()+'a" id="percentImg"/>';
+                            var h='<img src="'+rmsg.objList[1]+'" name="'+new Date().getTime()+'a" id="percentImg"/>';
                             $("#percentImg").parent().html(h);
                         }
 

@@ -505,14 +505,14 @@ public class UpdateCourse extends TimerTask{
                                         coursePaper.setPapertype(2);
                                     coursePaper.setCourseid(ctmp.getCourseid());
                                     PageResult presult=new PageResult();
-                                    List<TpCoursePaper> cpList=coursePaperManager.getList(coursePaper, presult);
+                                    List<TpCoursePaper> cpList=coursePaperManager.getABSynchroList(coursePaper, presult);
                                     //得到ID
                                      Long paperid=coursePaperManager.getNextId(false);
                                     //如果不存在，则添加试卷信息
                                     if(cpList==null||cpList.size()<1){
                                         PaperInfo p=new PaperInfo();
                                         p.setPaperid(paperid);
-                                        p.setPapername(ctmp.getCourseid() + papertype + "卷");
+                                        p.setPapername(ctmp.getCoursename()+"标准测试"+papertype );
                                         p.setPapertype(coursePaper.getPapertype());
                                         p.setScore(100F);
                                         p.setCuserid(0);

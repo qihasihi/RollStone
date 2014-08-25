@@ -158,7 +158,7 @@
     List<EttColumnInfo> ettColumnInfos1 =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
     if(ettColumnInfos1!=null&&ettColumnInfos1.size()>0){
         for (EttColumnInfo ectmp1:ettColumnInfos1){
-            if(ectmp1!=null){
+            if(ectmp1!=null&&ectmp1.getIsShow()==0){
 //                if(ectmp1.getStatus()==0){
                     writeHtml.append("<li><a target='_blank' href='"+ectmp1.getEttcolumnurl()+"&isVip="+ectmp1.getStatus()+"'><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
 //                }else

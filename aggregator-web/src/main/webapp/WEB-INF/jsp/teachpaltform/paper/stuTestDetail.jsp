@@ -119,9 +119,9 @@
 </div>
 <div class="content2" id="dv_test">
     <div class="jxxt_zhuanti_shijuan_add font-black public_input"  id="dv_question">
-        <c:if test="${!empty paperObj&&(paperObj.papertype==3||paperObj.papertype==1||paperObj.papertype==2)}">
+        <c:if test="${!empty paperObj&&(paperObj.papertype==3||paperObj.papertype==1||paperObj.papertype==2||paperObj.papertype==4)}">
         <p class="title"><span class="f_right"><strong>得分：<span class="font-blue"><span id="sp_sumScore"></span></span></strong></span>
-            <strong>${paperObj.papername}&nbsp;</strong>
+             <strong> <c:if test="${paperObj.papertype!=4}">${paperObj.papername}</c:if>&nbsp;</strong>
         </p>
         </c:if>
         <script type="text/javascript">

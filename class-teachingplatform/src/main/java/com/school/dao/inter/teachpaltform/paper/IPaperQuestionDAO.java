@@ -29,7 +29,7 @@ public interface IPaperQuestionDAO extends ICommonDAO<PaperQuestion>{
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getPaperQuesAllScore(final Long paperid,final Long quesid);
+    public List<Map<String,Object>> getPaperQuesAllScore(final Long paperid,final Long quesid,final Long courseid);
 
     /**
      * 得到试卷下主观题的Count

@@ -99,8 +99,8 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
     }
 
     @Override
-    public List<Map<String, Object>> getPaperPercentNum2(Long paperid, int bignum, int smallnum) {
-        return this.stupaperlogsdao.getPaperPercentNum2(paperid,bignum,smallnum);
+    public List<Map<String, Object>> getPaperPercentNum2(Long paperid, int bignum, int smallnum,Integer classid) {
+        return this.stupaperlogsdao.getPaperPercentNum2(paperid,bignum,smallnum,classid);
     }
 
     @Override

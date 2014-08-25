@@ -157,9 +157,12 @@ public class SubjectController extends BaseController<SubjectInfo>{
         String checkcode=request.getParameter("checkcode");
         String md5key = lzxschoolid+lzxsubjectid+lzxsubjectname+timestamp;
         String key = MD5_NEW.getMD5ResultCode(md5key);
-        System.out.println("lzxsubjectname:"+lzxsubjectname+" checkcode:"+checkcode+"md5:"+key);
         if(!checkcode.trim().equals(key)){
             response.getWriter().print("[{\"status\":\"error\",\"message\":\"验证失败，非法登录\"}]");
+            return;
+        }
+        if(lzxsubjectname.equals("其他")){
+            response.getWriter().print("[{\"status\":\"error\",\"message\":\"无法添加无效的学科名称\"}]");
             return;
         }
         SubjectInfo si = new SubjectInfo();
@@ -179,6 +182,7 @@ public class SubjectController extends BaseController<SubjectInfo>{
         }else{
             si.setLzxsubjectid(Integer.parseInt(lzxsubjectid));
             si.setSubjectname(lzxsubjectname);
+            si.setSubjecttype(2);
             Boolean b = this.subjectManager.doSave(si);
             if(b){
                 sb.append("[{\"status\":\"success\"}]");
@@ -208,14 +212,19 @@ public class SubjectController extends BaseController<SubjectInfo>{
         List<SubjectInfo> subList = this.subjectManager.getList(si,null);
         StringBuilder sb=new StringBuilder();
         if(subList!=null&&subList.size()>0){
-            si=new SubjectInfo();
-            si.setSubjectname(lzxsubjectname);
-            si.setSubjectid(subList.get(0).getSubjectid());
-            Boolean b = this.subjectManager.doUpdate(si);
-            if(b){
-                sb.append("[{\"status\":\"success\"}]");
+            if(subList.get(0).getSubjectid()<12){
+                sb.append("[{\"status\":\"error\",\"message\":\"当前学科不允许修改\"}]");
+                return;
             }else{
-                sb.append("[{\"status\":\"error\",\"message\":\"修改失败，请稍后重试\"}]");
+                si=new SubjectInfo();
+                si.setSubjectname(lzxsubjectname);
+                si.setSubjectid(subList.get(0).getSubjectid());
+                Boolean b = this.subjectManager.doUpdate(si);
+                if(b){
+                    sb.append("[{\"status\":\"success\"}]");
+                }else{
+                    sb.append("[{\"status\":\"error\",\"message\":\"修改失败，请稍后重试\"}]");
+                }
             }
         }else{
             sb.append("[{\"status\":\"error\",\"message\":\"无此学科信息，请确认已添加后重试\"}]");
@@ -241,13 +250,18 @@ public class SubjectController extends BaseController<SubjectInfo>{
         List<SubjectInfo> subList = this.subjectManager.getList(si,null);
         StringBuilder sb = new StringBuilder();
         if(subList!=null&&subList.size()>0){
-            si=new SubjectInfo();
-            si.setSubjectid(subList.get(0).getSubjectid());
-            Boolean b = this.subjectManager.doDelete(si);
-            if(b){
-                sb.append("[{\"status\":\"success\"}]");
-            }else{
-                sb.append("[{\"status\":\"error\",\"message\":\"删除失败，请稍后重试\"}]");
+            if(subList.get(0).getSubjectid()<12){
+                response.getWriter().print("[{\"status\":\"error\",\"message\":\"当前学科不允许删除\"}]");
+                return;
+            }{
+                si=new SubjectInfo();
+                si.setSubjectid(subList.get(0).getSubjectid());
+                Boolean b = this.subjectManager.doDelete(si);
+                if(b){
+                    sb.append("[{\"status\":\"success\"}]");
+                }else{
+                    sb.append("[{\"status\":\"error\",\"message\":\"删除失败，请稍后重试\"}]");
+                }
             }
         }else{
             sb.append("[{\"status\":\"error\",\"message\":\"无此学科信息，已删除或者未添加成功\"}]");

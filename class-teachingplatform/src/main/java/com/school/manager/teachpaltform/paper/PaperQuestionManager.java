@@ -118,8 +118,8 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid){
-        return this.paperquestiondao.getPaperQuesAllScore(paperid,quesid);
+    public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid,Long courseid){
+        return this.paperquestiondao.getPaperQuesAllScore(paperid,quesid,courseid);
     }
 
     /**

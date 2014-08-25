@@ -5,8 +5,8 @@ import java.util.Date;
 @Entity
 public class SubjectUser implements java.io.Serializable {
 
-   
-   
+
+
     private Integer ref;
     private Date ctime;
     private UserInfo userinfo;
@@ -60,7 +60,7 @@ public class SubjectUser implements java.io.Serializable {
 	}
 	public SubjectInfo getSubjectinfo() {
 		if(subjectinfo==null)
-			subjectinfo= new SubjectInfo();
+        subjectinfo= new SubjectInfo();
 		return subjectinfo;
 	}
 	public void setSubjectinfo(SubjectInfo subjectinfo) {

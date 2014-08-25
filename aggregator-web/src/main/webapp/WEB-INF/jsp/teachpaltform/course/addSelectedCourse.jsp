@@ -137,6 +137,7 @@
             }
 
             function addTeacherCourse(){
+                $("#addP").html('<a class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:closeAddorUpdateWindow();" class="an_small">取&nbsp;消</a>');
                 var term=$("#termid");
                 var courseids=new Array();
                 var subjectid=$("#subjectid");
@@ -318,7 +319,7 @@
             </table>
             <form id="pListForm" name="pListForm"><p class="nextpage" id="pListaddress" align="center"></p></form>
         </div>
-        <p class="p_tb_10 t_c"><a href="javascript:addTeacherCourse();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <p class="p_tb_10 t_c" id="addP"><a href="javascript:addTeacherCourse();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="javascript:closeAddorUpdateWindow();" class="an_small">取&nbsp;消</a></div>
     <%@include file="/util/foot.jsp" %>
     </body>

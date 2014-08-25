@@ -13,6 +13,7 @@
         var courseid="${param.courseid}";
         var gradeid="${gradeid}";
         var subjectid="${subjectid}";
+        var materialid="${materialid}";
         var questype="${param.questype}";
         var objectiveQuesCount="${objectiveQuesCount}";
         $(function(){
@@ -100,6 +101,13 @@
             }
            // qryTopicByCls();
         }
+        function toUpdCoursePage(){
+            var url= "teachercourse?m=toSaveOrUpdate&courseid="+courseid+"&gradeid="+gradeid+"&subjectid="+subjectid;
+            if(materialid.length>0){
+                url+="&materialid="+materialid;
+            }
+            window.location.href=url;
+        }
     </script>
 
 
@@ -184,7 +192,7 @@
                 </c:if>
 
                 <c:if test="${empty courseclassList or courseclassList[0].classid==0}">
-                    请设置任务对象，点击提示链接，进入设置专题的页面进行操作。
+                    <a class="font-blue" href="javascript:toUpdCoursePage()">请设置任务对象!</a>
                 </c:if>
             </td>
         </tr>
@@ -194,7 +202,9 @@
             <td class="font-black">
                 <p><input id="time_rdo0" name="time_rdo" type="radio" value="0"/>
                     所有班级一致&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input id="time_rdo1"  name="time_rdo" value="1" type="radio"/>不一致</p>
+                    <c:if test="${fn:length(courseclassList)>1}">
+                        <input id="time_rdo1"  name="time_rdo" value="1" type="radio"/>不一致</p>
+                    </c:if>
                 <div id="all_ct" class="jxxt_zhuanti_add_time">
                     <p>
                         <span class="f_right">

@@ -79,6 +79,7 @@ function changeGrade(gradeid,subjectid,idx){
     $("#fGradeSub").html($("#t_grade_sub_"+idx).html());
    //$("#material_name").html("点击教材版本");
   // $("#material_id").val(0);
+    getTchMaterial();
     pageGo("pList");
     if(pTsList!=null)
        pageGo("pTsList");
@@ -106,6 +107,40 @@ function preeDoPageSub(pObj){
     pObj.setPostParams(param);
 }
 
+function getTchMaterial(){
+    var param={};
+    param.termid=termid;
+    param.gradeid=global_gradeid;
+    param.subjectid=global_subjectid;
+    param.atermid=termid;
+    $.ajax({
+        url:'teachercourse?m=getTchMaterial',
+        data:param,
+        type:'post',
+        dataType:'json',
+        error:function(){
+            alert('异常错误,系统未响应！');
+        },success:function(rps){
+            if(rps.type=="success"){
+                if(typeof(rps.objList[0])!="undefined"&&rps.objList[0]!=null){
+                    $("span[id='material_name']").html(rps.objList[0].materialname+"("+rps.objList[0].versionname+")");
+                    $("input[id='material_id']").val(rps.objList[0].materialid);
+                }else{
+                    $("input[id='material_id']").val("");
+                    $("span[id='material_name']").html("点击教材版本");
+                    materialid="";
+                }
+            }
+        }
+    });
+}
+
+function genderClick(courseid){
+    var m=$("#material_id").val();
+    var href="task?toTaskList&courseid="+courseid+"&subjectid="+global_subjectid+"&gradeid="+global_gradeid+"&material_id="+m+"";
+    window.open(href);
+}
+
 function getInvestReturnMethod(rps){
     var html="";
     var classhtml="";
@@ -124,7 +159,7 @@ function getInvestReturnMethod(rps){
             else
                 html+="<span class='ico17' title='共享'></span>";
 
-            html+="<a target='_blank' href='task?toTaskList&courseid="+itm.courseid+"&subjectid="+global_subjectid+"&gradeid="+global_gradeid+"&material_id="+$("#material_id").val()+"'>"+itm.coursename+"</p></td>";
+            html+='<a  href="javascript:void(0);" onclick="genderClick(\''+itm.courseid+'\')">'+itm.coursename+'</p></td>';
             html+="<td>";
             if(typeof(itm.classEntity)!='undefined'&&itm.classEntity.length>0){
                 if(itm.classEntity[0].CLASS_NAME!="0"){
@@ -186,14 +221,14 @@ function getInvestReturnMethod(rps){
             classhtml+="<li><a target='_blank' href='teachercourse?m=toClassStudentList&classid="+itm.virtualclassid+"&classtype=2&subjectid="+global_subjectid+"&gradeid="+global_gradeid+"' >"+itm.virtualclassname+"</a></li>";
         });
     }
-    if(typeof(rps.objList[3])!="undefined"&&rps.objList[3]!=null){
+   /* if(typeof(rps.objList[3])!="undefined"&&rps.objList[3]!=null){
         $("span[id='material_name']").html(rps.objList[3].materialname+"("+rps.objList[3].versionname+")");
         $("input[id='material_id']").val(rps.objList[3].materialid);
     }else{
         $("input[id='material_id']").val("");
         $("span[id='material_name']").html("点击教材版本");
         materialid="";
-    }
+    } */
     $("#courseTable").html(html);
     $("#claList").html(classhtml);
 }

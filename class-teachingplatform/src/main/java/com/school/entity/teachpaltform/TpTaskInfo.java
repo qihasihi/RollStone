@@ -33,6 +33,15 @@ public class TpTaskInfo implements Serializable {
     private Object classid;
     private String imtaskcontent;
     private String imtaskattach;
+    private Object isend;
+
+    public Object getIsend() {
+        return isend;
+    }
+
+    public void setIsend(Object isend) {
+        this.isend = isend;
+    }
 
     public String getImtaskcontent() {
         return imtaskcontent;

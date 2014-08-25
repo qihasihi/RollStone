@@ -10,4 +10,11 @@ import java.util.List;
 public interface ITpCoursePaperDAO extends ICommonDAO<TpCoursePaper>{
     List<TpCoursePaper> getRelateCoursePaPerList(TpCoursePaper tpcoursepaper, PageResult presult);
 
+    /**
+     * ²éÑ¯ÊÇ·ñ´æÔÚAB¾í
+     * @param tpCoursePaper
+     * @param presult
+     * @return
+     */
+    public List<TpCoursePaper> getABSynchroList(TpCoursePaper tpCoursePaper,PageResult presult);
 }

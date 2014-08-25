@@ -822,8 +822,11 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
         ttm.setCourseid(teacherCourseList.get(0).getCourseid());
         Object gradeid=request.getSession().getAttribute("session_grade");
+        Object materialid=request.getSession().getAttribute("session_material");
         if(gradeid!=null&&gradeid.toString().trim().length()>0)
             ttm.setGradeid(Integer.parseInt(gradeid.toString()));
+        if(materialid!=null&&materialid.toString().trim().length()>0)
+            ttm.setTeachingmaterialid(Integer.parseInt(materialid.toString()));
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0)
             mp.put("materialInfo",materialList.get(0));
@@ -878,7 +881,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         }
         //专题教材查询条件
         GradeInfo grade=new GradeInfo();
-        grade.setGradename("高");
+       // grade.setGradename("高");
         List<GradeInfo>gradeList=this.gradeManager.getList(grade,null);
         TpCourseInfo tcs= new TpCourseInfo();
         tcs=new TpCourseInfo();

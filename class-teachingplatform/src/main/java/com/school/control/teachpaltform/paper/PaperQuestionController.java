@@ -3703,8 +3703,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     public void testNextQues(HttpServletRequest request,HttpServletResponse response) throws Exception{
         String quesid=request.getParameter("quesid");
         String paperid=request.getParameter("paperid");
+        String courseid=request.getParameter("courseid");
         JsonEntity jsonEntity=new JsonEntity();
-        if(quesid==null||quesid.toString().trim().length()<1||paperid==null||paperid.toString().trim().length()<1){
+        if(quesid==null||quesid.toString().trim().length()<1||paperid==null||paperid.toString().trim().length()<1||courseid==null||courseid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
@@ -3804,7 +3805,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         }
         QuestionInfo tmpq=quesList.get(0);
         //加载分数
-        List<Map<String,Object>> scoreMapList=this.paperQuestionManager.getPaperQuesAllScore(Long.parseLong(paperid.trim()),Long.parseLong(quesid));
+        List<Map<String,Object>> scoreMapList=this.paperQuestionManager.getPaperQuesAllScore(Long.parseLong(paperid.trim()),Long.parseLong(quesid),Long.parseLong(courseid));
         if(scoreMapList==null||scoreMapList.size()<1||!scoreMapList.get(0).containsKey("SCORE")||scoreMapList.get(0).get("SCORE")==null){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.toJSON());return ;
@@ -3984,7 +3985,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
 
         //加载分数
-        List<Map<String,Object>> scoreMapList=this.paperQuestionManager.getPaperQuesAllScore(Long.parseLong(paperid.trim()),null);
+        List<Map<String,Object>> scoreMapList=this.paperQuestionManager.getPaperQuesAllScore(Long.parseLong(paperid.trim()),null,taskList.get(0).getCourseid());
         if(scoreMapList==null||scoreMapList.size()<1||!scoreMapList.get(0).containsKey("SCORE")||scoreMapList.get(0).get("SCORE")==null){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;

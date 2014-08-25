@@ -10,6 +10,9 @@
 		<script type="text/javascript" src="js/teachpaltform/tptask.js"></script>
 		<script type="text/javascript">
 		var courseid="${courseid}";
+        var gradeid="${gradeid}";
+        var subjectid="${subjectid}";
+        var materialid="${materialid}";
 		var taskid="${taskid}";
         var objectiveQuesCount="${objectiveQuesCount}";
 		$(function(){
@@ -164,7 +167,7 @@
                             <ul class="public_list3" id="p_group_${cc.classid }">
                             </ul>
                         </c:forEach>
-                        <p class="font-darkblue"><a href="group?m=toGroupManager&classid=${courseclassList[0].classid}&classtype=${courseclassList[0].classtype}"  target="_blank">&gt;&gt;&nbsp;小组管理</a></p></td>
+                        <p class="font-darkblue"><a href="group?m=toGroupManager&classid=${courseclassList[0].classid}&classtype=${courseclassList[0].classtype}&gradeid=${gradeid}&subjectid=${subjectid}"  target="_blank">&gt;&gt;&nbsp;小组管理</a></p>
                     </c:if>
             </tr>
 

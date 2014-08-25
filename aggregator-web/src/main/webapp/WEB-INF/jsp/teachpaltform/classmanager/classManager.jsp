@@ -96,11 +96,8 @@
                         <td colspan="2">
                             行政班
                         </td>
-                        <td>${itm.stuno }</td>
-                        <td>
+                        <td>${itm.stucount }</td>
 
-
-                        </td>
                     </tr>
                 </c:forEach>
             </c:if>

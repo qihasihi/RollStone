@@ -31,7 +31,11 @@
     List<EttColumnInfo> ettColumnInfos =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
   %>
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
+    <%if(modelType==2){%>
     <div class="jxxt_lzx_header">
+    <%}else{%>
+    <div id="header">
+    <%}%>
 </c:if>
 <c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
 <div id="header">
@@ -48,7 +52,7 @@
             if(ettColumnInfos!=null&&ettColumnInfos.size()>0){
                 String headcolumnico=UtilTool.utilproperty.getProperty("LZX_HEAD_COLUMN_ICO");
                 for (EttColumnInfo ectmp:ettColumnInfos){
-                    if(ectmp!=null){
+                    if(ectmp!=null&&ectmp.getIsShow()==0){
                         String cls="";
                         if(headcolumnico.indexOf(ectmp.getEttcolumnid().toString())!=-1){
                             String tmpa=headcolumnico.substring(headcolumnico.indexOf(ectmp.getEttcolumnid().toString()));
@@ -88,7 +92,11 @@
  <p><span></span><img src="<%=basePath %>images/<%=logoSrc %>" width="253" height="64"/></p>
 </c:if>
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
+    <%if(modelType==2){%>
     <p style="width:210px;height:50px"><span></span></p>
-<%--<p><span></span><img src="<%=basePath+UtilTool.utilproperty.getProperty("LZX_LOGO_SRC") %>" width="253" height="64"/></p>--%>
+    <%}%>
+    <%if(modelType==1){%>
+      <p><span></span><img src="images/logo_140820.jpg" width="253" height="64"/></p>
+    <%}%>
 </c:if>
 </div>

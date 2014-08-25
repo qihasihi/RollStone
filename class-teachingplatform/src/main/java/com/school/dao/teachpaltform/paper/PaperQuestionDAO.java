@@ -353,22 +353,24 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid){
+    public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid,Long courseid){
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL j_paper_ques_info_getAllScore(");
         List<Object> objList=new ArrayList<Object>();
-        if(paperid!=null){
+
             sqlbuilder.append("?,");
             objList.add(paperid);
+
+        if(quesid!=null){
+            sqlbuilder.append("?,");
+            objList.add(quesid);
         }else{
             sqlbuilder.append("NULL,");
         }
-        if(quesid!=null){
+
             sqlbuilder.append("?");
-            objList.add(quesid);
-        }else{
-            sqlbuilder.append("NULL");
-        }
+            objList.add(courseid);
+
         sqlbuilder.append(")}");
         return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
     }

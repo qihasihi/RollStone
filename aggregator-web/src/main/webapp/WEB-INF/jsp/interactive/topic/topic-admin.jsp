@@ -58,7 +58,14 @@
     <tr>
       <th>&nbsp;</th>
       <td>
-      <a href="javascript:;" onclick="operateTopic()" class="an_small">提&nbsp;交</a><a href="tptopic?m=index&courseid=${courseid}" class="an_small">取&nbsp;消</a></td>
+      <a href="javascript:;" onclick="operateTopic()" class="an_small">提&nbsp;交</a>
+          <c:if test="${!empty param.operate_type}">
+              <a href="javascript:window.close();" class="an_small">取&nbsp;消</a>
+          </c:if>
+          <c:if test="${empty param.operate_type}">
+              <a href="tptopic?m=index&courseid=${courseid}" class="an_small">取&nbsp;消</a>
+          </c:if>
+      </td>
     </tr>
   </table>
   <br>

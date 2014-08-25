@@ -39,7 +39,7 @@ public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> {
      * @param quesid
      * @return
      */
-    public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid);
+    public List<Map<String,Object>> getPaperQuesAllScore(Long paperid,Long quesid,Long courseid);
 
     /**
      * 得到一个试卷下主观题的数量
