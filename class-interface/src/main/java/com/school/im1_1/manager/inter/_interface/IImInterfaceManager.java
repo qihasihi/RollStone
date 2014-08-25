@@ -19,4 +19,5 @@ public interface IImInterfaceManager extends IBaseManager<ImInterfaceInfo> {
     public List<Map<String,Object>> getStudentCalendar(Integer userid,Integer schoolid,Integer classid,Integer year,Integer month);
     public List<Map<String,Object>> getTeacherCalendarDetail(Integer userid,Integer usertype,Integer schoolid,String time);
     public List<Map<String,Object>> getstudentCalendarDetail(Integer userid,Integer usertype,Integer classid,Integer schoolid,String time);
+    public List<Map<String,Object>> getTopicUserRecord(Long topicid,Integer classid,Integer isvir,Integer userid);
 }

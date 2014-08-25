@@ -14,10 +14,14 @@ import com.school.manager.UserManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
+import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
+import com.school.manager.teachpaltform.interactive.TpTopicManager;
+import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.PaperManager;
 import com.school.manager.teachpaltform.paper.PaperQuestionManager;
 import com.school.util.JsonEntity;
@@ -27,6 +31,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -57,6 +62,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private ITpRecordManager tpRecordManager;
     private IPaperQuestionManager paperQuestionManager;
     private IPaperManager paperManager;
+    private ITpTopicManager tpTopicManager;
+    private ITpTopicThemeManager tpTopicThemeManager;
     public ImInterfaceController(){
         this.paperManager=this.getManager(PaperManager.class);
         this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
@@ -71,6 +78,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.taskPerformanceManager = this.getManager(TaskPerformanceManager.class);
         this.tpRecordManager=this.getManager(TpRecordManager.class);
         this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
+        this.tpTopicManager = this.getManager(TpTopicManager.class);
+        this.tpTopicThemeManager = this.getManager(TpTopicThemeManager.class);
     }
     /**
      * 学习目录接口
@@ -1759,6 +1768,77 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             jo.put("msg","添加失败");
         }
         response.getWriter().print(jo.toString());
+    }
+
+    /**
+     * 进入论题详情页面jsp
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=toTopicJsp",method={RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView toTopicJsp(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+        JsonEntity je = new JsonEntity();
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return null;
+        }
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
+        String taskId = paramMap.get("taskId");
+        String userid = paramMap.get("jid");
+        String classid = paramMap.get("classId");
+        String classtype = paramMap.get("classtype");
+        String isVirtual = paramMap.get("isVirtual");
+        String usertype = paramMap.get("userType");
+        String schoolid =paramMap.get("schoolId");
+        String sig = request.getParameter("sign");
+        //String sign = UrlSigUtil.makeSigSimple("TaskInfo",paramMap,"*ETT#HONER#2014*");
+        //验证，首先去掉sign，在进行md5验证
+        paramMap.remove("sign");
+        Boolean b = UrlSigUtil.verifySigSimple("toTopicJsp",paramMap,sig);
+        if(!b){
+            je.setMsg("验证失败，非法登录");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        int utype = ImUtilTool.getUserType(usertype);
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            je.setMsg("当前用户未绑定");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //验证当前任务，并得到论题id
+        TpTaskInfo task = new TpTaskInfo();
+        task.setTaskid(Long.parseLong(taskId));
+        List<TpTaskInfo> taskList = this.tpTaskManager.getList(task,null);
+        if(taskList==null&&taskList.size()==0){
+            je.setMsg("当前任务不存在");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        Long topicId = taskList.get(0).getTaskvalueid();
+        TpTopicInfo ti = new TpTopicInfo();
+        ti.setTopicid(topicId);
+        ti.setSelectType(2);/*查询类型  1:status<>3   2:不连接被删除的 */
+        List<TpTopicInfo> tiList  = this.tpTopicManager.getList(ti,null);
+        if(tiList==null||tiList.size()==0){
+            je.setMsg("当前论题不存在");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //接下来查询论题下的主题
+        List<Map<String,Object>> themeList = this.imInterfaceManager.getTopicUserRecord(topicId,Integer.parseInt(classid),Integer.parseInt(isVirtual),userList.get(0).getUserid());
+        request.setAttribute("topic",tiList.get(0));
+        request.setAttribute("themeList",themeList);
+        return new ModelAndView("/imjsp-1.1/topic-detail");
     }
 
 
