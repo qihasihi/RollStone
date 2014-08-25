@@ -374,8 +374,20 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         Map o2 = new HashMap();
                         o2.put("courseId",o.get("COURSE_ID"));
                         o2.put("courseName",o.get("COURSE_NAME"));
-                        o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
+                        o2.put("courseDate",o.get("BEGIN_TIME").toString().substring(0,19)+"~"+(o.get("END_TIME")!=null?o.get("END_TIME").toString().substring(0,19):"——"));
                         o2.put("schoolId",o.get("DC_SCHOOL_ID"));
+                        Map o3 = new HashMap();
+                        o3.put("personTotalScore","350");
+                        o3.put("teamShow","本组小红旗总数排全班第一");
+                        o3.put("teamScore","130");
+                        o3.put("taskScore","150");
+                        o3.put("presenceScore","50");
+                        o3.put("smileScore","10");
+                        o3.put("illegalScore","10");
+                        o3.put("offlineScore","10");
+                        o3.put("comentScore","10");
+                        o3.put("onlineScore","10");
+                        o2.put("courseShow",o3);
                         courseArray2.add(o2);
                     }
                     m2.put("courseArray",courseArray2);
@@ -398,13 +410,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             m.put("result","0");
             m.put("msg","当前没有专题");
         }
-        m2.put("personTotalScore","350");
-        m2.put("teamShow","本组小红旗总数排全班第一");
-        m2.put("teamScore","130");
-        m2.put("taskScore","150");
-        m2.put("presenceScore","50");
-        m2.put("smileScore","10");
-        m2.put("illegalScore","10");
         m.put("result","1");
         m.put("msg","成功");
         m.put("data",m2);
@@ -637,21 +642,27 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 Map o2 = new HashMap();
                 o2.put("courseId",o.get("COURSE_ID"));
                 o2.put("courseName",o.get("COURSE_NAME"));
-                o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
+                o2.put("courseDate",o.get("BEGIN_TIME").toString().substring(0,19)+"~"+(o.get("END_TIME")!=null?o.get("END_TIME").toString().substring(0,19):"——"));
                 o2.put("schoolId",o.get("DC_SCHOOL_ID"));
+                Map o3 = new HashMap();
+                o3.put("personTotalScore", "350");
+                o3.put("teamShow","本组小红旗总数排全班第一");
+                o3.put("teamScore","130");
+                o3.put("taskScore","150");
+                o3.put("presenceScore","50");
+                o3.put("smileScore","10");
+                o3.put("illegalScore","10");
+                o3.put("offlineScore","10");
+                o3.put("comentScore","10");
+                o3.put("onlineScore","10");
+                o2.put("courseShow",o3);
                 courseArray2.add(o2);
             }
             m2.put("courseArray",courseArray2);
         }else{
             m2.put("courseArray",null);
         }
-        m2.put("personTotalScore", "350");
-        m2.put("teamShow","本组小红旗总数排全班第一");
-        m2.put("teamScore","130");
-        m2.put("taskScore","150");
-        m2.put("presenceScore","50");
-        m2.put("smileScore","10");
-        m2.put("illegalScore","10");
+
         m.put("result","1");
         m.put("msg","成功");
         m.put("data",m2);
@@ -949,6 +960,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
                 returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
                 returnUserMap.put("uPhoto","img");
+                returnUserMap.put("uName","小虎");
                 returnUserRecord.add(returnUserMap);
             }
         }
@@ -1631,6 +1643,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 }else{
                                     if(seconds>0){
                                         returnUserMap.put("replyDate",seconds+"秒");
+                                    }else{
+                                        returnUserMap.put("replyDate","1秒");
                                     }
                                 }
                             }
@@ -1640,6 +1654,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
                         returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
                         returnUserMap.put("uPhoto","img");
+                        returnUserMap.put("uName","小虎");
                         returnUserRecord.add(returnUserMap);
                     }
                 }
@@ -1658,7 +1673,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     }
 
     /**
-     * 回答任务接口
+     * 回答任务接口(互动交流类)
      * @param request
      * @return
      * @throws Exception
@@ -1676,7 +1691,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             return;
         }
         HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
-        String topicId = paramMap.get("topicId");
+        String taskId = paramMap.get("taskId");
         String userid = paramMap.get("jid");
         String usertype = paramMap.get("userType");
         String schoolid =paramMap.get("schoolId");
@@ -1687,7 +1702,15 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String sig = request.getParameter("sign");
         //String sign = UrlSigUtil.makeSigSimple("TaskInfo",paramMap,"*ETT#HONER#2014*");
         //验证，首先去掉sign，在进行md5验证
+        if(replyAttach==null||replyAttach.length()==0){
+            paramMap.remove("replyAttach");
+            paramMap.remove("attachType");
+        }
         paramMap.remove("sign");
+        if(replyAttach!=null&&replyAttach.length()==0){
+            paramMap.remove("replyAttach");
+            paramMap.remove("attachType");
+        }
         Boolean b = UrlSigUtil.verifySigSimple("StuPost",paramMap,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
@@ -1701,16 +1724,28 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
             return;
         }
+        //验证当前任务，并得到论题id
+        TpTaskInfo t = new TpTaskInfo();
+        t.setTaskid(Long.parseLong(taskId));
+        List<TpTaskInfo> tList = this.tpTaskManager.getList(t,null);
+        if(tList==null&&tList.size()==0){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务不存在，请联系管理员\"}");
+            return;
+        }
+        Long topicId = tList.get(0).getTaskvalueid();
         TpTopicInfo ti = new TpTopicInfo();
-        ti.setTopicid(Long.parseLong(topicId));
+        ti.setTopicid(topicId);
         ti.setSelectType(2);/*查询类型  1:status<>3   2:不连接被删除的 */
         List<TpTopicInfo> tiList  = this.tpTopicManager.getList(ti,null);
         if(tiList==null||tiList.size()==0){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前论题不存在，请查看后重试\"}");
             return;
         }
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
         //添加数据
-
         TpTopicThemeInfo topictheme = new TpTopicThemeInfo();
         Long themenextid=this.tpTopicThemeManager.getNextId(true);
         topictheme.setThemeid(themenextid);
@@ -1729,43 +1764,34 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         topictheme.setIstop(0);         //是否置顶
         topictheme.setCloudstatus(-1);  //上传云端 -1:未上传
         Boolean bool = false;
-        bool = this.tpTopicThemeManager.doSave(topictheme);
+        //bool = this.tpTopicThemeManager.doSave(topictheme);
+        objList = this.tpTopicThemeManager.getSaveSql(topictheme,sql);
+        //更新程序
+        if(topictheme.getThemecontent()!=null&&topictheme.getThemecontent().trim().length()>0){
+            //得到theme_content的更新语句
+            this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
+                    , topictheme.getThemecontent(), topictheme.getThemeid().toString(), sqlListArray, objListArray);
+        }
+        sqlListArray.add(sql.toString());
+        objListArray.add(objList);
         JSONObject jo = new JSONObject();
+        //添加到任务完成
+        TaskPerformanceInfo tp=new TaskPerformanceInfo();
+        tp.setTaskid(tList.get(0).getTaskid());
+        tp.setTasktype(tList.get(0).getTasktype());
+        tp.setCourseid(tList.get(0).getCourseid());
+        //tp.getTaskinfo().setGroupid(gsList.get(0).getGroupid());
+        tp.setCriteria(2);//发主题
+        tp.setUserid(userList.get(0).getRef());
+        tp.setIsright(1);
+        List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
+        if(tpList==null||tpList.size()<1){
+            objList = this.taskPerformanceManager.getSaveSql(tp,sql);
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+        bool = this.imInterfaceManager.doExcetueArrayProc(sqlListArray,objListArray);
         if(bool){
-            //获取该学生当前专题下任务
-            TpTaskInfo t=new TpTaskInfo();
-            t.setCourseid(tiList.get(0).getCourseid());
-            t.setUserid(this.logined(request).getUserid());
-            List<TpTaskInfo> taskStuList=this.tpTaskManager.getListbyStu(t,null);
-            if(taskStuList!=null&&taskStuList.size()>0){
-                //检测当前论题是否发布任务
-                TpTaskInfo task=new TpTaskInfo();
-                PageResult p=new PageResult();
-                p.setPageSize(1);
-                p.setPageNo(1);
-                task.setTaskvalueid(topictheme.getTopicid());
-                task.setCourseid(tiList.get(0).getCourseid());
-                List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(task, p);
-                if(taskList!=null&&taskList.size()>0&&taskList.get(0).getTaskstatus()!=null
-                        &&!taskList.get(0).getTaskstatus().equals("1")&&!taskList.get(0).getTaskstatus().equals("3")){
-                    for(TpTaskInfo tmpTask:taskStuList){
-                        if(tmpTask.getTaskid().equals(taskList.get(0).getTaskid())
-                                &&taskList.get(0).getCriteria()!=null&&taskList.get(0).getCriteria()==2){
-                            TaskPerformanceInfo tp=new TaskPerformanceInfo();
-                            tp.setTaskid(taskList.get(0).getTaskid());
-                            tp.setTasktype(taskList.get(0).getTasktype());
-                            tp.setCourseid(taskList.get(0).getCourseid());
-                            //tp.getTaskinfo().setGroupid(gsList.get(0).getGroupid());
-                            tp.setCriteria(2);//发主题
-                            tp.setUserid(this.logined(request).getRef());
-                            tp.setIsright(1);
-                            List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
-                            if(tpList==null||tpList.size()<1)
-                                this.taskPerformanceManager.doSave(tp);
-                        }
-                    }
-                }
-            }
             jo.put("result", "1");
             jo.put("msg","添加成功");
         }else{

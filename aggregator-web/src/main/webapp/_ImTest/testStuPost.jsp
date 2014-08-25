@@ -18,12 +18,12 @@
             var jid=$("#jid").val();
             var time=$("#txt_a_time").val();
             var userType = $("#userType").val();
-            var topicId = $("#topicId").val();
+            var taskId = $("#taskId").val();
             var themeTitle = $("#themeTitle").val();
             var themeContent = $("#themeContent").val();
             var replyAttach = $("#replyAttach").val();
             var attachType = $("#attachType").val();
-            var param={schoolId:schoolId,jid:jid,time:time,userType:userType,themeTitle:themeTitle,themeContent:themeContent,topicId:topicId};
+            var param={schoolId:schoolId,jid:jid,time:time,userType:userType,themeTitle:themeTitle,themeContent:themeContent,taskId:taskId};
             if(replyAttach.length>0){
                 param.replyAttach = replyAttach;
                 param.attachType = attachType;
@@ -46,8 +46,8 @@
 <form action="../imapi1_1?m=StuPost" method="post">
     <table>
         <tr>
-            <td>论题id</td>
-            <td><input type="text" name="topicId" id="topicId" value=""/></td>
+            <td>任务id</td>
+            <td><input type="text" name="taskId" id="taskId" value=""/></td>
         </tr>
         <tr>
             <td>用户id</td>
