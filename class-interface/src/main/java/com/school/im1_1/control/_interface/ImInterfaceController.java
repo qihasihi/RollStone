@@ -2192,14 +2192,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     public void getTaskPaperQuestion(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JSONObject returnJo=new JSONObject();
         returnJo.put("result",0);//默认失败
-      /*  if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
             jo.put("result","0");
             jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
             jo.put("data","");
             response.getWriter().print(jo.toString());
             return;
-        } */
+        }
         HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
         //获取参数
         String taskId=paramMap.get("taskId");
@@ -2396,8 +2396,9 @@ class ImUtilTool{
         if(eObj!=null){
             while(eObj.hasMoreElements()){
                 Object obj=eObj.nextElement();
-                if(obj==null||obj.toString().trim().length()<1)
+                if(obj==null||obj.toString().trim().length()<1||request.getQueryString().toString().equals(obj))
                     continue;
+
                 Object val=request.getParameter(obj.toString());
                 if(val==null||val.toString().trim().length()<1){
                     returnBo=!returnBo;
@@ -2421,7 +2422,7 @@ class ImUtilTool{
             returnMap=new HashMap<String, String>();
             while(eObj.hasMoreElements()){
                 Object obj=eObj.nextElement();
-                if(obj==null||obj.toString().trim().length()<1||obj.toString().trim().equals("m"))
+                if(obj==null||obj.toString().trim().length()<1||obj.toString().trim().equals("m")||obj.toString().equals(request.getQueryString()))
                     continue;
                 Object val=request.getParameter(obj.toString());
                 returnMap.put(obj.toString(),val.toString());
