@@ -3911,14 +3911,14 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             uid=Integer.parseInt(userid.trim());
 
         boolean isendTask=false;
-
+        List<TpTaskInfo> tkList=null;
         if(taskid!=null&&taskid.trim().length()>0){
             PageResult pr=new PageResult();
             pr.setPageSize(1);
 
             TpTaskInfo tk=new TpTaskInfo();
             tk.setTaskid(Long.parseLong(taskid));
-            List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,pr);
+            tkList=this.tpTaskManager.getList(tk,pr);
             if(tkList==null||tkList.size()<1){
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
@@ -3939,6 +3939,11 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             if(taskList.get(0).getTaskstatus().equals("3")){
                 isendTask=true;
             }
+        }
+
+        if(tkList==null||tkList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
 
 
