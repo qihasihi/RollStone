@@ -2152,14 +2152,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         //验证该任务是否在有效期内
         TpTaskAllotInfo tpallot=new TpTaskAllotInfo();
         tpallot.setTaskid(tk.getTaskid());
-        tpallot.setCourseid(tk.getCourseid());
+        tpallot.getUserinfo().setUserid(userid);
         if(!this.tpTaskAllotManager.getYXTkCount(tpallot)){
             jsonEntity.setMsg("当前任务未开始或不存在!");
             response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
         switch(tk.getTasktype().intValue()){
             case 4: //成卷测试
-                if(!tk.getUsertypeid().toString().trim().equals(paperid.trim())){
+                if(!tk.getTaskvalueid().toString().trim().equals(paperid.trim())){
                     jsonEntity.setMsg("任务与试卷不匹配!");
                     response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
                 }
@@ -2194,6 +2194,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         mp.put("allquesidObj",allquesidObj);
         mp.put("quesSize",allquesidObj.toString().split(",").length);
         mp.put("paperid",paperid);
+        mp.put("userid",userid);
         return new ModelAndView("/imjsp-1.1/test/papertest",mp);
     }
 

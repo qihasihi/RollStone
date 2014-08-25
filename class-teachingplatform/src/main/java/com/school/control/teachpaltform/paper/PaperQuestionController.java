@@ -3704,11 +3704,17 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         String quesid=request.getParameter("quesid");
         String paperid=request.getParameter("paperid");
         String courseid=request.getParameter("courseid");
+        String uid=request.getParameter("userid");
         JsonEntity jsonEntity=new JsonEntity();
         if(quesid==null||quesid.toString().trim().length()<1||paperid==null||paperid.toString().trim().length()<1||courseid==null||courseid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
+        Integer userid=null;
+        if(uid==null||uid.trim().length()<1)
+            userid=this.logined(request).getUserid();
+        else
+            userid=Integer.parseInt(uid);
         String q=quesid;
          boolean is75=false;
         if(q.indexOf("|")!=-1){
@@ -3811,7 +3817,17 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
         tmpq.setScore(Float.parseFloat(scoreMapList.get(0).get("SCORE").toString()));
-
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        //查询该学生 是否已经答过
+        StuPaperQuesLogs  splogs=new StuPaperQuesLogs();
+        splogs.setUserid(userid);
+        splogs.setPaperid(Long.parseLong(paperid.trim()));
+        splogs.setQuesid(Long.parseLong(quesid.trim()));
+        List<StuPaperQuesLogs> spqLogsList=this.stuPaperQuesLogsManager.getList(splogs,presult);
+        if(spqLogsList!=null&&spqLogsList.size()>0){
+            tmpq.setSpqLogs(spqLogsList.get(0));
+        }
         //试题
         jsonEntity.getObjList().add(tmpq);
         jsonEntity.setType("success");
@@ -3944,8 +3960,6 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
-
-
 
         //验证是否已经答题
         if(!isendTask&&(flag==null||!flag.trim().equals("1"))){
@@ -4216,6 +4230,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
        // request.setCharacterEncoding("GBK");
         String testQuesData=request.getParameter("testQuesData");
         String paperid=request.getParameter("paperid");
+        String uid=request.getParameter("userid");
         JsonEntity jsonEntity=new JsonEntity();
         if(testQuesData==null||testQuesData.length()<1||paperid==null||paperid.length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -4245,7 +4260,11 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         }
         //去换行符
         testQuesData=testQuesData.replace("\n","\\\\n");
-        Integer userid=this.logined(request).getUserid();
+        Integer userid=null;
+        if(uid!=null&&uid.toString().length()>0)
+            userid=Integer.parseInt(uid.trim());
+        else
+            this.logined(request).getUserid();
         JSONArray jsonArray=JSONArray.fromObject(testQuesData);
         List<String> sqlArrayList=new ArrayList<String>();
         List<List<Object>> objArrayList=new ArrayList<List<Object>>();

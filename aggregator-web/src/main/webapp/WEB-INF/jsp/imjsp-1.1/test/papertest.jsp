@@ -9,6 +9,7 @@
 <%@ include file="/util/common-jsp/common-im.jsp"%>
 <html>
 <head>
+    <script type="text/javascript" src="js/im1.1/testpaper.js"></script>
     <script type="text/javascript">
         var quesSize="${quesSize}";
         var courseid="${courseid}";
@@ -20,6 +21,7 @@
         var scoreArray=[];
         var papertype="${paperObj.papertype}";
         var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
+        var tqControler=null;
         $(function(){
             //分数
             for(i=0;i<quesSize;i++){
@@ -37,21 +39,24 @@
                 scoreArray=scoreArray.reverse();
             }
           //  loadQuesNumberTool(quesSize);
-          // nextNum(0);
+            tqControler=new TestPaperQues({
+                taskid:taskid,
+                courseid:courseid,
+                paperid:paperid,
+                quesidstr:allquesidObj,
+                scoreArray:scoreArray,
+                papertype:papertype,
+                userid:"${userid}"
+            });
         });
     </script>
 </head>
 <body>
+<!--试卷里的试题-->
 <div class="zxcs_test" id="dv_question">
-    <h1><span class="f_right">得分：10分</span>单选题（10分）</h1>
-    <div class="yuyin"><img src="images/pic02_140811.png" width="99" height="22"></div>
-    <div class="title">我是问题的题干噢~~~问题啊问题，问题啊问题，问题的题干~~~我是问题的题干噢~~~问题啊问题，问题啊问题，问题的题干~~~我是问题的题干噢~~~下列有关文学常识的表述，有误的一项是你猜我猜不猜（    ）</div>
-    <ul class="test">
-        <li class="crumb"><a href="1"><span class="blue">A、</span>近体诗是对唐代形成的律诗和绝句的通称。与古体诗相对而言，句数、字数和平仄、用韵等都有一定的格律。</a></li>
-        <li><a href="1"><span class="blue">B、</span>桐城派是清代散文流派，代表作家有方苞、归有光、刘大櫆、姚鼐等。</a></li>
-        <li><a href="1"><span class="blue">C、</span>从文是我国现代文学中有风格、有艺术个性的作家。他的作品题材广泛，文笔清丽，语言清新活泼。《边城》、《湘行散记》最具代表性。</a></li>
-        <li><a href="1"><span class="blue">D、</span>高尔基的《母亲》是世界文学史上第一部描写无产阶级革命斗争的著作，列宁称它是&ldquo;一部非常及时的书&rdquo;。</a></li>
-    </ul>
 </div>
+<a href="javascript:tqControler.freeSubQuesAnswer(-1)">上一题</a>
+<a href="javascript:tqControler.freeSubQuesAnswer(1)">下一题</a>
+<a href="javascript:tqControler.subPaper()">交卷</a>
 </body>
 </html>

@@ -80,8 +80,8 @@ public class TpTaskAllotDAO extends CommonDAO<TpTaskAllotInfo> implements ITpTas
         }
         sqlbuilder.append(")}");
        List<Map<String,Object>> mapList=this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
-        if(mapList==null||!mapList.contains("TKCOUNT")||
-                mapList.get(0)==null||mapList.get(0).get("TKCOUNT")!=null
+        if(mapList==null||!mapList.get(0).containsKey("TKCOUNT")||
+                mapList.get(0)==null||mapList.get(0).get("TKCOUNT")==null
                 ||Integer.parseInt(mapList.get(0).get("TKCOUNT").toString())<1)
             return false;
         return true;
