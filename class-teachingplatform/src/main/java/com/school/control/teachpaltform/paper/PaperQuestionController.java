@@ -3911,14 +3911,14 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             uid=Integer.parseInt(userid.trim());
 
         boolean isendTask=false;
-        List<TpTaskInfo> tkList=null;
+        List<TpTaskInfo> taskList=null;
         if(taskid!=null&&taskid.trim().length()>0){
             PageResult pr=new PageResult();
             pr.setPageSize(1);
 
             TpTaskInfo tk=new TpTaskInfo();
             tk.setTaskid(Long.parseLong(taskid));
-            tkList=this.tpTaskManager.getList(tk,pr);
+           List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,pr);
             if(tkList==null||tkList.size()<1){
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
@@ -3931,7 +3931,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
             pr.setPageSize(1);
             // 学生任务
-            List<TpTaskInfo>taskList=this.tpTaskManager.getListbyStu(t, pr);
+            taskList=this.tpTaskManager.getListbyStu(t, pr);
             if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
@@ -3940,11 +3940,11 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 isendTask=true;
             }
         }
-
-        if(tkList==null||tkList.size()<1){
+        if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+
 
 
         //验证是否已经答题
