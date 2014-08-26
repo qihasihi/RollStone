@@ -1067,6 +1067,10 @@ public class UserController extends BaseController<UserInfo> {
                         uitmp.setUserid(userinfo.getRef());
                         List<UserIdentityInfo> uidtttList=this.userIdentityManager.getList(uitmp,null);
 
+                        request.getSession().setAttribute("cut_uidentity", uidtttList);//存入Session中
+                        request.getSession().setAttribute("CURRENT_USER", userinfo);//存入Session中
+
+
                         if(UtilTool._IS_SIMPLE_RESOURCE!=2){
                             //栏目
                             IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
@@ -1078,9 +1082,7 @@ public class UserController extends BaseController<UserInfo> {
                             request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
                         }
 
-                        request.getSession().setAttribute("cut_uidentity", uidtttList);//存入Session中
-                        request.getSession().setAttribute("CURRENT_USER", userinfo);//存入Session中
-                    //    userinfo=userinfo;
+                        //    userinfo=userinfo;
                         je.setType("success");
                         je.setMsg("登陆成功并记录成功!");
                     } catch (Exception e) {

@@ -3683,6 +3683,20 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+        //得到该用户已经答过的题
+        StuPaperQuesLogs tspqLogs=new StuPaperQuesLogs();
+        tspqLogs.setUserid(uid);
+        tspqLogs.setPaperid(Long.parseLong(paperid));
+        List<StuPaperQuesLogs> stuQuesLogs=this.stuPaperQuesLogsManager.getList(tspqLogs,null);
+        StringBuilder answerQuesId=new StringBuilder(",");
+        if(stuQuesLogs!=null&&stuQuesLogs.size()>0){
+            for(StuPaperQuesLogs sp:stuQuesLogs){
+                if(sp.getQuesid()!=null){
+                    answerQuesId.append(sp.getQuesid()).append(",");
+                }
+            }
+        }
+        mp.put("answerQuesId",answerQuesId.toString());
         mp.put("allquesidObj",allquesidObj);
         mp.put("paperObj",paperList.get(0));
         mp.put("taskid",taskid);
@@ -4119,6 +4133,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         String paperid=request.getParameter("paperid");
         String courseid=request.getParameter("courseid");
         String taskid=request.getParameter("taskid");
+        String uid=request.getParameter("userid");
         JsonEntity jsonEntity=new JsonEntity();
         if(paperid==null||paperid.length()<1||courseid==null||courseid.trim().length()<1||taskid==null||taskid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -4135,13 +4150,17 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         tk=tkList.get(0);
 
 
-        Integer userid=this.logined(request).getUserid();
+        Integer userid=null;
+        if(uid==null||uid.trim().length()<1)
+            userid=this.logined(request).getUserid();
+        else
+            userid=Integer.parseInt(uid);
         Integer isinpaper=2;
         StuPaperLogs splog=new StuPaperLogs();
         splog.setUserid(userid);
         splog.setPaperid(Long.parseLong(paperid));
         splog.setIsinpaper(isinpaper);
-
+        splog.setTaskid(tk.getTaskid());
         PageResult presult=new PageResult();
         presult.setPageSize(1);
         List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,presult);
@@ -4231,8 +4250,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         String testQuesData=request.getParameter("testQuesData");
         String paperid=request.getParameter("paperid");
         String uid=request.getParameter("userid");
+        String taskid=request.getParameter("taskid");
         JsonEntity jsonEntity=new JsonEntity();
-        if(testQuesData==null||testQuesData.length()<1||paperid==null||paperid.length()<1){
+        if(testQuesData==null||testQuesData.length()<1||paperid==null||paperid.length()<1||taskid==null||taskid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
@@ -4283,6 +4303,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             stpq.setPaperid(Long.parseLong(paperid));
             stpq.setQuesid(questionid);
             stpq.setUserid(userid);
+            stpq.setTaskid(Long.parseLong(taskid));
             PageResult presult=new PageResult();
             presult.setPageSize(1);
             //查询是否存在

@@ -1,6 +1,6 @@
 /**
-* Created by zhengzhou on 14-8-25.
-*/
+ * Created by zhengzhou on 14-8-25.
+ */
 var subQuesId=",";
 var TestPaperQues;
 if (TestPaperQues == undefined) {
@@ -8,11 +8,10 @@ if (TestPaperQues == undefined) {
         this.initController(settings);
     }
 };
-
 TestPaperQues.prototype.initController=function(obj){
     this.currentQuesObj={idx:-1,quesid:0,parentQuesId:0};
     this.config=obj;
-
+    subQuesId=this.config.subQuesId;
     this.nextNum(1);
 };
 TestPaperQues.prototype.nextNum=function(type){
@@ -20,14 +19,14 @@ TestPaperQues.prototype.nextNum=function(type){
         alert('异常错误，参数异常!');return;
     }
     if(type==-2)
-    return;
+        return;
 
     if(typeof(this.config.quesidstr)!="undefined"&&this.config.quesidstr.Trim().length>0){
         var arrayObj=this.config.quesidstr.split(",");
         if(arrayObj.length>0){
             if(type==1){
                 this.currentQuesObj.idx=this.currentQuesObj.idx+1;
-                if(this.currentQuesObj.idx>=arrayObj.length-1){
+                if(this.currentQuesObj.idx>arrayObj.length-1){
                     this.currentQuesObj.idx=arrayObj.length-1;
                     if(confirm("最后一题了，是否交卷?")){
                         this.subPaper();
@@ -45,9 +44,11 @@ TestPaperQues.prototype.nextNum=function(type){
                 cuQuesid=cuQuesid.split("|")[1];
                 parentQuesId=cuQuesid.split("|")[0];
             }
-            this.currentQuesObj={idx:this.currentQuesObj.idx,quesid:cuQuesid,parentQuesId:parentQuesId};
+            if(cuQuesid!=0){
+                this.currentQuesObj={idx:this.currentQuesObj.idx,quesid:cuQuesid,parentQuesId:parentQuesId};
+                this.loadQues();
+            }
             //下一体
-            this.loadQues();
         }
     }
 };
@@ -56,7 +57,7 @@ TestPaperQues.prototype.nextNum=function(type){
  * 交卷
  */
 TestPaperQues.prototype.subPaper=function(){
-    var currentQuesId=this.currentQuesObj.parentQuesId;
+    var currentQuesId=this.currentQuesObj.quesid;
 
     //提交
     var pid=this.config.paperid;
@@ -68,15 +69,16 @@ TestPaperQues.prototype.subPaper=function(){
     var alaqLastQues="";
     var allquesArray=this.config.quesidstr.split(",");
     var curQuesType=$("#hd_questiontype_"+currentQuesId).val();
-        var aqLastQuesArr=allquesArray[allquesArray.length-1];
-        alaqLastQues=aqLastQuesArr;
-        if(aqLastQuesArr.indexOf('|')!=-1){
-            alaqLastQues=aqLastQuesArr.split("|")[1];
-        }
+    var aqLastQuesArr=allquesArray[allquesArray.length-1];
+    alaqLastQues=aqLastQuesArr;
+    if(aqLastQuesArr.indexOf('|')!=-1){
+        alaqLastQues=aqLastQuesArr.split("|")[1];
+    }
 //        if(currentQuesId==alaqLastQues&&subQuesId.indexOf(","+currentQuesId+",")==-1){
 //
 //        }
-    subQuesId+=currentQuesId+",";
+    if(subQuesId.indexOf(","+currentQuesId+",")==-1)
+        subQuesId+=currentQuesId+",";
     this.freeSubQuesAnswer(-2);
 
 
@@ -98,24 +100,21 @@ TestPaperQues.prototype.subPaper=function(){
     if(!confirm(confirmMsg))
         return;
 
-
+    var cf=this.config;
     var cid=courseid;
     $.ajax({
         url:"paperques?m=doInPaper",
         dataType:'json',
         type:'post',
-        data:{paperid:pid,courseid:cid,taskid:taskid},
+        data:{paperid:pid,courseid:this.config.courseid,taskid:this.config.taskid,userid:this.config.userid},
         cache: false,
         error:function(){
             alert('异常错误!系统未响应!');
         },success:function(rps){
             if(rps.type=="success"){
-                //alert(rps.msg);
-                // 进入详情页面
-                var lo="paperques?m=toTestPaper&paperid="+pid+"&courseid="+courseid+"&taskid="+taskid;
-                if(typeof(papertype)!="undefined"&&papertype==5){
-                    lo+="&isMidView=1";
-                }
+                alert(rps.msg);
+//                // 进入详情页面
+                var lo='imapi1_1?m=testDetail&userid='+cf.userid+'&taskid='+cf.taskid+'&paperid='+cf.paperid+'&courseid='+cf.courseid;
                 location.href=lo;
             }else
                 alert(rps.msg);
@@ -183,11 +182,13 @@ TestPaperQues.prototype.freeSubQuesAnswer=function(direcType){
             }
         }else
             issubmit=false;
-    }else if(questype==1){
-        answer=$("#txt_answer_"+quesid).val().Trim();
-        if(answer.length<1&&$("#txt_f2"+quesid).val().length<1)
-            issubmit=false;
-    }else if(questype==2){
+    }
+//    else if(questype==1){
+//        answer=$("#txt_answer_"+quesid).val().Trim();
+//        if(answer.length<1&&$("#txt_f2"+quesid).val().length<1)
+//            issubmit=false;
+//    }
+    else if(questype==2){
         var tkLen=$("#dv_qs_"+quesid+" input[name='txt_tk']");
         if(tkLen.length>0){
             $.each(tkLen,function(ix,im){
@@ -202,13 +203,13 @@ TestPaperQues.prototype.freeSubQuesAnswer=function(direcType){
     $("input[id='hs_val_stu_"+quesid+"']").val(score);
     $("input[id='hs_val_"+quesid+"']").val(answer);
 
-        if(issubmit){
-            //提交数据
-            this.subQues(direcType);
-        }else{
-            if(direcType!=-2)
-                this.nextNum(direcType);
-        }
+    if(issubmit){
+        //提交数据
+        this.subQues(direcType);
+    }else{
+        if(direcType!=-2)
+            this.nextNum(direcType);
+    }
 
 }
 /**
@@ -409,6 +410,8 @@ TestPaperQues.prototype.loadQues=function(){
 
                         });
                     }
+                    if(subQuesId.indexOf(","+quesObj.questionid+",")==-1)
+                        subQuesId=subQuesId+quesObj.questionid+","
                     //如果学生已经做题，则自动填充
                     if(typeof(quesObj.spqLogs)!="undefined"){
                         var qtype=quesObj.questiontype;
@@ -441,10 +444,242 @@ TestPaperQues.prototype.loadQues=function(){
                             }
                         }
                     }
+                }
+            }
+        }
+    };
+    //发送请求
+    $.ajax(ajxObj);
+};
 
+
+
+
+
+
+
+
+/**
+ * Created by zhengzhou on 14-8-25.
+ */
+var TestPaperDetail;
+if (TestPaperDetail == undefined) {
+    TestPaperDetail = function(settings) {
+        this.initController(settings);
+    }
+};
+TestPaperDetail.prototype.initController=function(obj){
+    this.currentQuesObj={idx:-1,quesid:0,parentQuesId:0};
+    this.config=obj;
+    subQuesId=this.config.subQuesId;
+    this.nextNum(1);
+};
+TestPaperDetail.prototype.nextNum=function(type){
+    if(typeof(this.config.quesidstr)=="undefined"||this.config.quesidstr.length<1){
+        alert('异常错误，参数异常!');return;
+    }
+    if(type==-2)
+        return;
+
+    if(typeof(this.config.quesidstr)!="undefined"&&this.config.quesidstr.Trim().length>0){
+        var arrayObj=this.config.quesidstr.split(",");
+        if(arrayObj.length>0){
+            if(type==1){
+                this.currentQuesObj.idx=this.currentQuesObj.idx+1;
+                if(this.currentQuesObj.idx>arrayObj.length-1){
+                    this.currentQuesObj.idx=arrayObj.length-1;
+                    alert("最后一题了!");
+                    return;
+                }
+            }else{
+                this.currentQuesObj.idx=this.currentQuesObj.idx-1;
+                if(this.currentQuesObj.idx<=0)
+                    this.currentQuesObj.idx=0;
+            }
+            var cuQuesid=arrayObj[this.currentQuesObj.idx];
+            var parentQuesId=0;
+            if(cuQuesid.indexOf("|")!=-1){
+                cuQuesid=cuQuesid.split("|")[1];
+                parentQuesId=cuQuesid.split("|")[0];
+            }
+            if(cuQuesid!=0){
+                this.currentQuesObj={idx:this.currentQuesObj.idx,quesid:cuQuesid,parentQuesId:parentQuesId};
+                this.loadQues();
+            }
+            //下一体
+        }
+    }
+};
+
+/**
+ * 加载答案
+ */
+TestPaperDetail.prototype.loadQues=function(){
+    $("#dv_question>div").hide();
+    if($("#dv_q_"+this.currentQuesObj.questionid).length>0)
+        $("#dv_q_"+this.currentQuesObj.questionid).show();
+
+    var config=this.config;
+    var cQuesObj=this.currentQuesObj;
+    var ajxObj={
+        url:'paperques?m=nextTestQues',
+        dataType:'json',
+        type:'post',
+        data:{userid:this.config.userid,
+            quesid:this.currentQuesObj.quesid,
+            paperid:this.config.paperid,
+            courseid:this.config.courseid},
+        error:function(){alert('异常错误，原因：未知!');},
+        success:function(rps){
+            //失败
+            if(rps.type=="error"){
+                alert(rps.msg);return;
+            }
+            var h='';
+            if(rps.type=="success"){
+                var quesObj=rps.objList[0];
+                var parentQuesObj=null;
+                //加载题干
+                if(rps.objList.length>1){ //如果是组试题，则 0:题干   1：题
+                    quesObj=rps.objList[1];//
+                    parentQuesObj=rps.objList[0];
+                }
+                var qtype=quesObj.questiontype;
+                var sc=config.scoreArray[cQuesObj.idx];
+                if(typeof(config.papertype)!="undefined"&&config.papertype==3)
+                    sc=quesObj.score;
+                var h='<div id="dv_q_'+quesObj.questionid+'">';
+                h+='<input type="hidden" value="'+quesObj.questionid+'" id="hd_quesid_'+quesObj.questionid+'" name="hd_quesid"/>';
+                h+='<input type="hidden" value="" name="hd_answer" id="hs_val_'+quesObj.questionid+'"/>';
+                h+='<input type="hidden" value="0" name="hd_stu_score" id="hs_val_stu_'+quesObj.questionid+'"/>';
+                h+='<input type="hidden" value="'+sc+'" name="hd_score" id="hs_score_'+quesObj.questionid+'"/>';
+                h+='<input  type="hidden" value="'+quesObj.questiontype+'" name="hd_questiontype" id="hd_questiontype_'+quesObj.questionid+'"/>';
+                h+='<input  type="hidden" value="2" name="hd_isright" id="hd_isright_'+quesObj.questionid+'"/>';
+
+                h+=' <h1><span class="f_right">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span>';
+                //h+='<span class="f_right">得分：0分</span>';
+                if(quesObj.questiontype==3||quesObj.questiontype==7)
+                    h+='单选题';
+                else if(quesObj.questiontype==4||quesObj.questiontype==8)
+                    h+='多选题';
+                else if(quesObj.questiontype==1)
+                    h+='问答题';
+                else if(quesObj.questiontype==2)
+                    h+='填空题';
+
+                h+='（<span id="sp_score">'+sc+'</span>分）</h1>';
+                if(parentQuesObj!=null){
+                    var ex=parentQuesObj.extension;
+                    h+='<div class="yuyin">'+parentQuesObj.content+'</div>';
 
                 }
+                if(typeof(quesObj.content)!="undefined")
+                    h+=' <div class="title">'+quesObj.content+'</div>';
+                if(quesObj.questiontype==3||quesObj.questiontype==4||quesObj.questiontype==7||quesObj.questiontype==8){
+                    h+='<ul  class="daan test" id="ul_answer'+quesObj.questionid+'">';
+                    $.each(quesObj.questionOption,function(x,m){
+                        h+='<li><span style="display:none">' ;
+                        if(quesObj.questiontype==3||quesObj.questiontype==7){
+                            h+='<input type="radio" name="rdo_answer'+quesObj.questionid+'" value="'+m.optiontype+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
+                        }else
+                            h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ m.isright+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
+                        h+='</span><label for="rdo_answer'+m.questionid+m.optiontype+'"><span class="blue">'+m.optiontype+'.</span>'+m.content;
+                        if(typeof(m.isright)!="undefined"&&m.isright==1){
+                            h+='<b class="right"></b>';
+                        }
+                        h+='</label></li>';
+                    });
+                    h+='</ul>';
+                }
+                h+='<p class="jiexi"><span>19%答对</span>答案与解析</p>';
+                h+='<div>'+quesObj.analysis+'</div>';
+                h+='</div>';
+                if($("#dv_q_"+quesObj.questionid).length>0)
+                    $("#dv_q_"+quesObj.questionid).show();
+                else{
+                    $("#dv_question").append(h);
 
+                    //空格出来
+                    if(quesObj.questiontype==2){
+                        $("span[name='fillbank']").each(function(idx,itm){
+                            $(this).replaceWith('<input type="text" name="txt_tk" id="txt_tk_'+quesObj.questionid+'"/>');
+                        });
+                    }
+//                    else if(quesObj.questiontype==3||quesObj.questiontype==4||quesObj.questiontype==7||quesObj.questiontype==8){
+//                        //如果是选择题则绑定选项事件
+//                        $("#ul_answer"+quesObj.questionid+" li").bind("click",function(){
+//                            var selObj=$(this).children().children("input[name*='rdo_answer']");
+//                            var selType=selObj.attr("type");
+//                            zm=this;
+//                            if(selType=='checkbox'){
+//                                if($(zm).attr("class").indexOf("crumb")>-1){
+//                                    $(zm).removeClass("crumb");
+//                                    selObj.attr("checked",false);
+//                                }else{
+//                                    $(zm).addClass("crumb");
+//                                    selObj.attr("checked",true);
+//                                }
+//                            }else{
+//                                $(zm).parent().children("li").each(function(z,zd){
+//                                    $(zd).removeClass("crumb");
+//                                });
+//                                $(zm).addClass("crumb");
+//                                selObj.attr("checked",true);
+//                            }
+//                        });
+//                    }
+                    //如果学生已经做题，则自动填充
+                    if(typeof(quesObj.spqLogs)!="undefined"){
+                        var qtype=quesObj.questiontype;
+                        if(qtype==1||qtype==2){
+                            $("#sp_df_"+quesObj.questionid).html("待批改");
+                            if(qtype==1){
+                                //问答
+                                $("#txt_answer_"+quesObj.questionid).val(quesObj.spqLogs.answer);
+                            }else{
+                                var anArray=quesObj.spqLogs.answer.split("|");
+                                $("#dv_q_"+quesObj.questionid+" input[name='txt_tk']").each(function(i,m){
+                                    if(anArray.length>=i+1)
+                                        $(m).val(anArray[i])
+                                    else
+                                        return;
+                                });
+                            }
+                            //附件
+                            if(typeof(quesObj.spqLogs.annexName)!="undefined")
+                                $("#txt_f2"+quesObj.questionid).val(quesObj.spqLogs.annexName);
+                        }else if(qtype==3||qtype==4||qtype==7||qtype==8){
+                            $("#sp_df_"+quesObj.questionid).html(parseFloat(quesObj.spqLogs.score).toFixed(2)+"分");
+                            if(qtype==3||qtype==7){
+                                if(typeof(quesObj.spqLogs.answer)!="undefined"){
+                                    $("#dv_q_"+quesObj.questionid+" input[value*='"+quesObj.spqLogs.answer+"']").attr("checked",true);
+                                    $("#dv_q_"+quesObj.questionid+" input[value*='"+quesObj.spqLogs.answer+"']").parent().parent().addClass("crumb");
+                                    var val=$("#dv_q_"+quesObj.questionid+" .right").parent().parent().children().children("input[type='radio']").val();
+                                    if(val.Trim()!=quesObj.spqLogs.answer){
+                                        $("#dv_q_"+quesObj.questionid+" input[value*='"+quesObj.spqLogs.answer+"']")
+                                            .parent().parent().children("label").append('<b class="wrong"></b>');
+                                    }
+                                }
+
+                            }else{
+                                var anArray=quesObj.spqLogs.answer.split("|");
+                                $.each(anArray,function(i,m){
+                                    $("#dv_q_"+quesObj.questionid+" input[value*='"+m+"']").attr("checked",true);
+                                    $("#dv_q_"+quesObj.questionid+" input[value*='"+m+"']").parent().parent().addClass("crumb");
+                                });
+
+                                //
+                                $("#dv_q_"+quesObj.questionid+" li").each(function(iz,zm){
+                                      if(zm.className.indexOf("crumb")){
+                                            if($(this).children().children(".right").length<1){
+                                                $(this).children("label").append('<b class="wrong"></b>');
+                                            }
+                                      }
+                                });
+                            }
+                        }
+                    }
+                }
             }
         }
     };

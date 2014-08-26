@@ -7,9 +7,7 @@ import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
-import com.school.entity.teachpaltform.paper.MicVideoPaperInfo;
-import com.school.entity.teachpaltform.paper.PaperInfo;
-import com.school.entity.teachpaltform.paper.PaperQuestion;
+import com.school.entity.teachpaltform.paper.*;
 import com.school.im1_1.entity._interface.ImInterfaceInfo;
 import com.school.im1_1.manager._interface.ImInterfaceManager;
 import com.school.manager.UserManager;
@@ -18,16 +16,12 @@ import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
-import com.school.manager.inter.teachpaltform.paper.IMicVideoPaperManager;
-import com.school.manager.inter.teachpaltform.paper.IPaperManager;
-import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
+import com.school.manager.inter.teachpaltform.paper.*;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
-import com.school.manager.teachpaltform.paper.MicVideoPaperManager;
-import com.school.manager.teachpaltform.paper.PaperManager;
-import com.school.manager.teachpaltform.paper.PaperQuestionManager;
+import com.school.manager.teachpaltform.paper.*;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -67,8 +61,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private IPaperManager paperManager;
     private ITpTopicManager tpTopicManager;
     private ITpTopicThemeManager tpTopicThemeManager;
+    private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
     private IMicVideoPaperManager micVideoPaperManager;
+    private IStuPaperLogsManager stuPaperLogsManager;
     public ImInterfaceController(){
+        this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
+        this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
         this.paperManager=this.getManager(PaperManager.class);
         this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
         this.tpCourseManager = this.getManager(TpCourseManager.class);
@@ -2173,6 +2171,123 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         response.getWriter().print(returnJo.toString());
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=testDetail",method={RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView imToPaperDetail(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        JsonEntity jsonEntity=new JsonEntity();
+        if(!ImUtilTool.ValidateRequestParam(request)){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());
+            return null;
+        }
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
+        String userid=paramMap.get("userid");
+        String taskid=paramMap.get("taskid");
+        String courseid=paramMap.get("courseid");
+        String paperid=paramMap.get("paperid");
+        if(userid==null||taskid==null||courseid==null||paperid==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());
+            return null;
+        }
+        //查询用户是否已经交卷
+        //验证paperid是否存在
+        PaperInfo paperInfo=new PaperInfo();
+        paperInfo.setPaperid(Long.parseLong(paperid.trim()));
+        List<PaperInfo> paperList=this.paperManager.getList(paperInfo,null);
+        if(paperList==null||paperList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        Integer uid=Integer.parseInt(userid.trim());
+
+        boolean isendTask=false;
+        List<TpTaskInfo> taskList=null;
+            PageResult pr=new PageResult();
+            pr.setPageSize(1);
+
+            TpTaskInfo tk=new TpTaskInfo();
+            tk.setTaskid(Long.parseLong(taskid));
+            List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,pr);
+            if(tkList==null||tkList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+
+            TpTaskInfo t=new TpTaskInfo();
+            t.setUserid(uid);
+            t.setTaskid(Long.parseLong(taskid));
+            t.setCourseid(tkList.get(0).getCourseid());
+            pr.setPageSize(1);
+            // 学生任务
+            taskList=this.tpTaskManager.getListbyStu(t, pr);
+            if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            if(taskList.get(0).getTaskstatus().equals("3")){
+                isendTask=true;
+            }
+
+        if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+
+        //验证是否已经答题
+
+            StuPaperLogs splog=new StuPaperLogs();
+            splog.setUserid(uid);
+            splog.setPaperid(Long.parseLong(paperid));
+            splog.setIsinpaper(2);
+            pr=new PageResult();
+            pr.setPageSize(1);
+            List<StuPaperLogs> spList=stuPaperLogsManager.getList(splog,pr);
+            if(spList==null||spList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+            }
+        //如果任务还没结束，则添加相关信息
+
+
+        //得到当前的所有问题
+        List<Map<String,Object>> listMapStr=this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
+        if(listMapStr==null||listMapStr.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+        }
+        Object allquesidObj=listMapStr.get(0).get("ALLQUESID");
+        if(allquesidObj==null||allquesidObj.toString().trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+        }
+
+
+        //加载分数
+        List<Map<String,Object>> scoreMapList=this.paperQuestionManager.getPaperQuesAllScore(Long.parseLong(paperid.trim()),null,taskList.get(0).getCourseid());
+        if(scoreMapList==null||scoreMapList.size()<1||!scoreMapList.get(0).containsKey("SCORE")||scoreMapList.get(0).get("SCORE")==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+        }
+        tk=taskList.get(0);
+        //得到年有题的分数
+        mp.put("allquesidObj",allquesidObj);
+        mp.put("paperObj",paperList.get(0));
+        mp.put("taskid",taskid);
+        mp.put("courseid",tk.getCourseid());
+        mp.put("allquesidObj",allquesidObj);
+        mp.put("quesSize",allquesidObj.toString().split(",").length);
+        mp.put("paperid",paperid);
+        mp.put("userid",userid);
+        return new ModelAndView("/imjsp-1.1/test/testdetail",mp);
+    }
 
     /**
      * IM手机进入试卷测试页面。
@@ -2266,6 +2381,23 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             jsonEntity.setMsg("试卷不匹配!");
             response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+
+        //验证该用户是否已经提交过答卷
+        StuPaperLogs splogs=new StuPaperLogs();
+        splogs.setUserid(userid);
+        splogs.setTaskid(tk.getTaskid());
+        splogs.setPaperid(p.getPaperid());
+        List<StuPaperLogs> splogsList=this.stuPaperLogsManager.getList(splogs,presult);
+        if(splogsList!=null&&splogsList.size()>0){
+            StringBuilder directBuilder=new StringBuilder("imapi1_1?m=testDetail&userid=")
+                    .append(userid).append("&taskid=").append(tk.getTaskid())
+                    .append("&paperid=").append(p.getPaperid()).append("&courseid=").append(tk.getCourseid());
+            response.sendRedirect(directBuilder.toString());
+            return null;
+        }
+
 
         //得到所有题的ID
         //得到当前的所有问题
@@ -2279,6 +2411,21 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
+        //得到该用户已经答过的题
+        StuPaperQuesLogs tspqLogs=new StuPaperQuesLogs();
+        tspqLogs.setUserid(userid);
+        tspqLogs.setPaperid(Long.parseLong(paperid));
+        List<StuPaperQuesLogs> stuQuesLogs=this.stuPaperQuesLogsManager.getList(tspqLogs,null);
+        StringBuilder answerQuesId=new StringBuilder(",");
+        if(stuQuesLogs!=null&&stuQuesLogs.size()>0){
+            for(StuPaperQuesLogs sp:stuQuesLogs){
+                if(sp.getQuesid()!=null){
+                    answerQuesId.append(sp.getQuesid()).append(",");
+                }
+            }
+        }
+        mp.put("answerQuesId",answerQuesId.toString());
+
         //得到年有题的分数
         mp.put("allquesidObj",allquesidObj);
         mp.put("paperObj",paperList.get(0));

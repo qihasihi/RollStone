@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: zhengzhou
-  Date: 14-8-23
-  Time: 下午5:57
+  Date: 14-8-26
+  Time: 下午2:45
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -10,11 +10,11 @@
 <html>
 <head>
     <script type="text/javascript" src="js/im1.1/testpaper.js"></script>
+    <title>试卷详情</title>
     <script type="text/javascript">
         var quesSize="${quesSize}";
         var courseid="${courseid}";
         var taskid="${taskid}";
-        var subQuesId="${!empty answerQuesId?answerQuesId:","}";
         var paperid="${paperid}";
         var allquesidObj="${allquesidObj}";
         var sumScore=${!empty paperObj.score?paperObj.score:100},avgScore=parseInt(sumScore/quesSize);
@@ -38,8 +38,8 @@
                 });
                 scoreArray=scoreArray.reverse();
             }
-          //  loadQuesNumberTool(quesSize);
-            tqControler=new TestPaperQues({
+            //  loadQuesNumberTool(quesSize);
+            tqControler=new TestPaperDetail({
                 taskid:taskid,
                 courseid:courseid,
                 paperid:paperid,
@@ -56,8 +56,7 @@
 <!--试卷里的试题-->
 <div class="zxcs_test" id="dv_question">
 </div>
-<a href="javascript:tqControler.freeSubQuesAnswer(-1)">上一题</a>
-<a href="javascript:tqControler.freeSubQuesAnswer(1)">下一题</a>
-<a href="javascript:tqControler.subPaper()">交卷</a>
+<a href="javascript:tqControler.nextNum(-1)">上一题</a>
+<a href="javascript:tqControler.nextNum(1)">下一题</a>
 </body>
 </html>
