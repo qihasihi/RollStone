@@ -41,14 +41,15 @@
         });
         //生成加密串
         function genderSign(methodName){
-            var taskId=$("#txt_taskId").val();
+            var requestMonth=$("#txt_requestMonth").val();
+            var requestYear=$("#txt_requestYear").val();
             var schoolId=$("#txt_schoolId").val();
             var jid=$("#txt_jid").val();
-            var classId=$("#txt_classId").val();
-            var groupId=$("#txt_groupId").val();
             var userType=$("#txt_userType").val();
+            var classId=$("#txt_classId").val();
+
             var time=$("#txt_time").val();
-            var param={taskId:taskId,groupId:groupId,time:time,classId:classId,schoolId:schoolId,jid:jid,userType:userType};
+            var param={classId:classId,requestMonth:requestMonth,requestYear:requestYear,time:time,schoolId:schoolId,jid:jid,userType:userType};
             param.method=methodName;
 
             $.ajax({
@@ -82,29 +83,25 @@
     <%--String sign=paramMap.get("sign");--%>
 
 
-        <form action="../imapi1_1?getTaskPaperQuestion"  target="ifm_result" method="post">
+        <form action="../imapi1_1?m=StuClassCalendar"  target="ifm_result" method="post">
             <table style="width:650px;">
                <!-- <tr>
                     <td colspan="3" align="center"><h3>getTaskPaperQuestion</h3></td>
                 </tr> -->
                 <tr>
-                    <td style="width:150px">taskId:</td>
-                    <td><input type="text" name="taskId" id="txt_taskId" value="-9362391765294"/></td>
+                    <td style="width:150px">requestMonth:</td>
+                    <td><input type="text" name="requestMonth" id="txt_requestMonth" value="08"/></td>
                     <td style="width:250px"></td>
                 </tr>
                 <tr>
-                    <td>classId:</td>
-                    <td><input type="text" name="classId" id="txt_classId" value="1"/></td>
+                    <td>requestYear:</td>
+                    <td><input type="text" name="requestYear" id="txt_requestYear" value="2014"/></td>
                     <td>&nbsp;</td>
                 </tr>
-                <tr>
-                    <td>groupId:</td>
-                    <td><input type="text" name="groupId" id="txt_groupId" value="1"/></td>
-                    <td>&nbsp;</td>
-                </tr>
+
                 <tr>
                     <td style="width:150px">JID:</td>
-                    <td><input type="text" name="jid" id="txt_jid" value="2470145"/></td>
+                    <td><input type="text" name="jid" id="txt_jid" value="2250913"/></td>
                     <td style="width:250px"></td>
                 </tr>
                 <tr>
@@ -114,8 +111,14 @@
                 </tr>
 
                 <tr>
+                    <td>classId:</td>
+                    <td><input type="text" name="classId" id="txt_classId" value="4"/></td>
+                    <td>&nbsp;</td>
+                </tr>
+
+                <tr>
                     <td>userType:</td>
-                    <td><input type="text" name="userType" id="txt_userType" value="2"/></td>
+                    <td><input type="text" name="userType" id="txt_userType" value="3"/></td>
                     <td>&nbsp;</td>
                 </tr>
 
@@ -128,7 +131,7 @@
                 <tr>
                     <td>sign:</td>
                     <td><input type="text" name="sign" id="txt_sign" value=""/></td>
-                    <td><input type="button" value="生成" onclick="genderSign('getTaskPaperQuestion')"/>
+                    <td><input type="button" value="生成" onclick="genderSign('StuClassCalendar')"/>
 
                     </td>
                 </tr>

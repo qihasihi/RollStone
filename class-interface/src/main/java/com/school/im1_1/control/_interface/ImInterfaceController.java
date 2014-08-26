@@ -93,7 +93,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=StudyModule",method= RequestMethod.GET)
+    @RequestMapping(params="m=StudyModule",method= RequestMethod.POST)
     public void getStudyModule(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         String userid = request.getParameter("jid");
         String usertype=request.getParameter("userType");
@@ -311,7 +311,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=StuClassCalendar",method= RequestMethod.GET)
+    @RequestMapping(params="m=StuClassCalendar",method= RequestMethod.POST)
     public void getStuClassCalendar(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String userid = request.getParameter("jid");
@@ -424,7 +424,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=TeaClassCalendar",method= RequestMethod.GET)
+    @RequestMapping(params="m=TeaClassCalendar",method= RequestMethod.POST)
     public void getTeaClassCalendar(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String userid = request.getParameter("jid");
@@ -521,7 +521,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=TeaClassCalendarDetail",method= RequestMethod.GET)
+    @RequestMapping(params="m=TeaClassCalendarDetail",method= RequestMethod.POST)
     public void getTeaClassCalendarByDay(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String userid = request.getParameter("jid");
@@ -593,7 +593,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=StuClassCalendarDetail",method= RequestMethod.GET)
+    @RequestMapping(params="m=StuClassCalendarDetail",method= RequestMethod.POST)
     public void getStuClassCalendarByDay(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String userid = request.getParameter("jid");
@@ -2491,7 +2491,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
         JSONObject jo=new JSONObject();
         jo.put("testId",paperid);
-        jo.put("quesList",returnMapList);
+        jo.put("quesList",returnMapList.size()<1?null:returnMapList);
 
         returnJo.put("data",jo.toString());
         returnJo.put("result",1);
