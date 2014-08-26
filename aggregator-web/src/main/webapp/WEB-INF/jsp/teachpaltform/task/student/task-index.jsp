@@ -254,7 +254,7 @@
                         if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0)
                             answerhtm+='<span><br>心得附件：<a class="font-blue" target="_blank" href="uploadfile/'+itm.questionAnswerList[0].replyattach+'">'+itm.questionAnswerList[0].replyattach+'</a></span>';
                         if(itm.taskstatus!="1" && itm.taskstatus!="3"){
-                            answerhtm+='<a class="ico11" title="编辑" href="javascript:genderStuNoteUpdText('+itm.questionAnswerList[0].ref+','+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+')"></a>';
+                            //answerhtm+='<a class="ico11" title="编辑" href="javascript:genderStuNoteUpdText('+itm.questionAnswerList[0].ref+','+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+')"></a>';
                         }
                         answerhtm+='</span></p>';
                     }

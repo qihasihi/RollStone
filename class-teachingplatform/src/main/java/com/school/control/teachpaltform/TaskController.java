@@ -21,6 +21,7 @@ import com.school.manager.*;
 import com.school.manager.inter.*;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
@@ -28,6 +29,7 @@ import com.school.manager.inter.teachpaltform.paper.IStuPaperQuesLogsManager;
 import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
+import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.PaperManager;
@@ -44,6 +46,7 @@ import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.school.util.JsonEntity;
@@ -55,7 +58,7 @@ import com.school.control.base.BaseController;
 @RequestMapping(value="/task")
 public class TaskController extends BaseController<TpTaskInfo>{
     private ITpTaskManager tpTaskManager;
-   private ITpTaskAllotManager tpTaskAllotManager;
+    private ITpTaskAllotManager tpTaskAllotManager;
     private IQuestionOptionManager questionOptionManager;
     private ITpCourseManager tpCourseManager;
     private IDictionaryManager dictionaryManager;
@@ -81,6 +84,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
     private IGradeManager gradeManager;
     private IResourceManager resourceManager;
+    private ITpStuScoreLogsManager tpStuScoreLogsManager;
     public TaskController(){
         this.gradeManager=this.getManager(GradeManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
@@ -109,27 +113,28 @@ public class TaskController extends BaseController<TpTaskInfo>{
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
         this.paperManager=this.getManager(PaperManager.class);
         this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
+        this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
     }
     /**
-	 * 根据课题ID，加载任务列表
-	 * @return
+     * 根据课题ID，加载任务列表
+     * @return
      */
-	@RequestMapping(params="toTaskList",method=RequestMethod.GET)
-	public ModelAndView toTaskList(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		//得到该课题的所有任务，任务完成情况。
-		JsonEntity je= new JsonEntity();
-		String courseid=request.getParameter("courseid");
+    @RequestMapping(params="toTaskList",method=RequestMethod.GET)
+    public ModelAndView toTaskList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        //得到该课题的所有任务，任务完成情况。
+        JsonEntity je= new JsonEntity();
+        String courseid=request.getParameter("courseid");
         String subjectid=request.getParameter("subjectid");
         String gradeid=request.getParameter("gradeid");
         String materialid=request.getParameter("material_id");
         String addresstype = request.getParameter("addresstype");
-		if(courseid==null||courseid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}
+            return null;
+        }
         System.out.println("==========================="+TpCourseInfo.class.getResource(""));
-		TpCourseInfo tc=new TpCourseInfo();
+        TpCourseInfo tc=new TpCourseInfo();
         if(addresstype!=null&&addresstype!=""){
             tc.setUserid(null);
             tc.setCourseid(null);
@@ -139,33 +144,33 @@ public class TaskController extends BaseController<TpTaskInfo>{
             tc.setCourseid(Long.parseLong(courseid));
             tc.setLocalstatus(1);//正常
         }
-		List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
-		if(teacherCourseList==null||teacherCourseList.size()<1){
-			je.setMsg("找不到指定课题!");
-			response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
         //获取当前专题教材
         TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
         ttm.setCourseid(Long.parseLong(courseid));
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0)
             subjectid=materialList.get(0).getSubjectid().toString();
-		//课题样式
-		request.setAttribute("coursename", teacherCourseList.get(0).getCoursename());
+        //课题样式
+        request.setAttribute("coursename", teacherCourseList.get(0).getCoursename());
         TpCourseInfo tcs= new TpCourseInfo();
-		tcs.setUserid(this.logined(request).getUserid());
-		tcs.setTermid(teacherCourseList.get(0).getTermid());
+        tcs.setUserid(this.logined(request).getUserid());
+        tcs.setTermid(teacherCourseList.get(0).getTermid());
         tcs.setLocalstatus(1);
         if(subjectid!=null)
             tcs.setSubjectid(Integer.parseInt(subjectid));
-		List<TpCourseInfo>courseList=this.tpCourseManager.getCourseList(tcs, null);
-		request.setAttribute("courseList", courseList);
+        List<TpCourseInfo>courseList=this.tpCourseManager.getCourseList(tcs, null);
+        request.setAttribute("courseList", courseList);
 
 
-		String termid=teacherCourseList.get(0).getTermid();
-		request.setAttribute("courseid", courseid);
-		request.setAttribute("termid", termid);
+        String termid=teacherCourseList.get(0).getTermid();
+        request.setAttribute("courseid", courseid);
+        request.setAttribute("termid", termid);
         request.setAttribute("subjectid", subjectid);
         if(gradeid!=null&&!gradeid.toString().equals("0"))
             request.getSession().setAttribute("session_grade",gradeid);
@@ -177,10 +182,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //任务库
         List<DictionaryInfo>courselevel=this.dictionaryManager.getDictionaryByType("COURSE_LEVEL");
         request.setAttribute("courselevel",courselevel);
-		//SESSION添加专题状态
-		request.getSession().setAttribute("coursestate", teacherCourseList.get(0).getLocalstatus());
-		return new ModelAndView("/teachpaltform/task/teacher/task-list");
-	}
+        //SESSION添加专题状态
+        request.getSession().setAttribute("coursestate", teacherCourseList.get(0).getLocalstatus());
+        return new ModelAndView("/teachpaltform/task/teacher/task-list");
+    }
 
     /**
      * 进入任务元素详情页面
@@ -223,10 +228,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 }
                 request.setAttribute("sign",b);
             }
-             request.setAttribute("gradeList", this.gradeManager.getList(null, null));
-             return new ModelAndView("/teachpaltform/task/teacher/resource-element-detail");
+            request.setAttribute("gradeList", this.gradeManager.getList(null, null));
+            return new ModelAndView("/teachpaltform/task/teacher/resource-element-detail");
         }else{
-             return new ModelAndView("/teachpaltform/task/teacher/element-detail");
+            return new ModelAndView("/teachpaltform/task/teacher/element-detail");
         }
     }
 
@@ -234,31 +239,32 @@ public class TaskController extends BaseController<TpTaskInfo>{
      * 获取教师任务列表
      * @throws Exception
      */
-     @RequestMapping(params="m=ajaxTaskList",method=RequestMethod.POST)
-     public void ajaxTaskList(HttpServletRequest request,HttpServletResponse response)throws Exception{
-         JsonEntity je = new JsonEntity();
-         String courseid=request.getParameter("courseid");
-         if(courseid==null||courseid.trim().length()<1){
-             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-             response.getWriter().print(je.toJSON());
-             return;
-         }
-         PageResult p=this.getPageResultParameter(request);
-         p.setOrderBy("u.order_idx desc,u.c_time desc");
-         TpTaskInfo t=new TpTaskInfo();
-         t.setCourseid(Long.parseLong(courseid));
-         //查询没被我删除的任务
-         t.setSelecttype(1);
-         t.setLoginuserid(this.logined(request).getUserid());
-         t.setStatus(1);
+    @RequestMapping(params="m=ajaxTaskList",method=RequestMethod.POST)
+    public void ajaxTaskList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        PageResult p=this.getPageResultParameter(request);
+        //p.setOrderBy("u.order_idx asc,u.c_time desc");
+        p.setOrderBy("u.order_idx ");
+        TpTaskInfo t=new TpTaskInfo();
+        t.setCourseid(Long.parseLong(courseid));
+        //查询没被我删除的任务
+        t.setSelecttype(1);
+        t.setLoginuserid(this.logined(request).getUserid());
+        t.setStatus(1);
 
-         //已发布的任务
-         List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t, p);
-         p.setList(taskList);
-         je.setPresult(p);
-         je.setType("success");
-         response.getWriter().print(je.toJSON());
-     }
+        //已发布的任务
+        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t, p);
+        p.setList(taskList);
+        je.setPresult(p);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
 
 
     /**
@@ -355,7 +361,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //0是调至最后获取最大索引
         if(descIdx==0)
             descIdx=taskList.get(0).getOrderidx()+1;
-            //descIdx=descIdx-1<0?1:descIdx-1;
+        //descIdx=descIdx-1<0?1:descIdx-1;
 
         if(taskList!=null&&taskList.size()>0){
             if(tmpTask.getOrderidx()>descIdx){  //从7往3调
@@ -430,7 +436,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("t.order_idx desc ");
+        p.setOrderBy("t.order_idx  ");
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
         t.setUserid(this.logined(request).getUserid());
@@ -554,7 +560,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             else{
                 t.setTasktype(Integer.parseInt(tasktype));
             }
-       }
+        }
         if(cloudtype!=null&&cloudtype.length()>0)
             t.setCloudtype(Integer.parseInt(cloudtype));
 
@@ -722,32 +728,32 @@ public class TaskController extends BaseController<TpTaskInfo>{
     }
 
 
-	/**
-	 * 添加任务
-	 * @return
-	 * @throws Exception
+    /**
+     * 添加任务
+     * @return
+     * @throws Exception
      */
-	@RequestMapping(params="toAddTask",method=RequestMethod.GET)
-	public ModelAndView toAddTask(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
-		JsonEntity je =new JsonEntity();
-		String courseid=request.getParameter("courseid");
-		String termid=request.getParameter("termid");
-		if(courseid==null||courseid.trim().length()<1){
-			je.setMsg("异常错误,系统未获取到课题标识!");
-			je.getAlertMsgAndBack();
-			return null;
-		}
-		//任务类型
-		List<DictionaryInfo>tasktypeList=this.dictionaryManager.getDictionaryByType("TP_TASK_TYPE");
-		//与该课题关联的班级
-		TpCourseClass c=new TpCourseClass();
-		c.setCourseid(Long.parseLong(courseid));
-		List<TpCourseClass>courseclassList=this.tpCourseClassManager.getList(c, null);
-		if(courseclassList==null||courseclassList.size()<1){
-			je.setMsg("异常错误，未获取到该课题的班级信息!请设置后操作任务!");
-			response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}
+    @RequestMapping(params="toAddTask",method=RequestMethod.GET)
+    public ModelAndView toAddTask(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je =new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String termid=request.getParameter("termid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg("异常错误,系统未获取到课题标识!");
+            je.getAlertMsgAndBack();
+            return null;
+        }
+        //任务类型
+        List<DictionaryInfo>tasktypeList=this.dictionaryManager.getDictionaryByType("TP_TASK_TYPE");
+        //与该课题关联的班级
+        TpCourseClass c=new TpCourseClass();
+        c.setCourseid(Long.parseLong(courseid));
+        List<TpCourseClass>courseclassList=this.tpCourseClassManager.getList(c, null);
+        if(courseclassList==null||courseclassList.size()<1){
+            je.setMsg("异常错误，未获取到该课题的班级信息!请设置后操作任务!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
         String subjectid=null,gradeid=null;
 
         //获取当前专题教材
@@ -760,8 +766,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
 
 
-		
-		//验证是否所有学生都已有小组
+
+        //验证是否所有学生都已有小组
 		/*for (TpCourseClass cc : courseclassList) {
 			if(cc.getClassid()!=null&&cc.getClasstype().intValue()==1){
 				//获取班级学生，增加默认小组
@@ -923,13 +929,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 }
             }
 		} */
-		//小组
-		TpGroupInfo g=new TpGroupInfo();
-		//g.setCuserid(this.logined(request).getUserid());
+        //小组
+        TpGroupInfo g=new TpGroupInfo();
+        //g.setCuserid(this.logined(request).getUserid());
         g.setTermid(courseclassList.get(0).getTermid());
         g.setSubjectid(Integer.parseInt(subjectid));
-		List<TpGroupInfo>groupList=this.tpGroupManager.getList(g, null);
-		mp.put("tasktypeList", tasktypeList);
+        List<TpGroupInfo>groupList=this.tpGroupManager.getList(g, null);
+        mp.put("tasktypeList", tasktypeList);
         mp.put("courseclassList",courseclassList);
         mp.put("groupList", groupList);
         mp.put("termid", termid);
@@ -940,73 +946,73 @@ public class TaskController extends BaseController<TpTaskInfo>{
         cq.setCourseid(Long.parseLong(courseid));
         Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);
         mp.put("objectiveQuesCount", objectiveQuesCount);   //专题下客观题数量
-		return new ModelAndView("/teachpaltform/task/teacher/task-add",mp);
-	}
-	
-	/**
-	 * 获取问题类型
-	 * @throws Exception  
+        return new ModelAndView("/teachpaltform/task/teacher/task-add",mp);
+    }
+
+    /**
+     * 获取问题类型
+     * @throws Exception
      */
-	@RequestMapping(params="toQryQuestionType",method=RequestMethod.POST)
-	public void toQryQuestionType(HttpServletResponse response)throws Exception{
-		JsonEntity je = new JsonEntity();
-		List<DictionaryInfo>questiontypeList=this.dictionaryManager.getDictionaryByType("TP_QUESTION_TYPE");
-		je.setObjList(questiontypeList);
-		je.setType("success");
-		response.getWriter().print(je.toJSON());  
-	}
-	
-	/**
-	 * 任务添加 
-	 * @throws Exception 
+    @RequestMapping(params="toQryQuestionType",method=RequestMethod.POST)
+    public void toQryQuestionType(HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        List<DictionaryInfo>questiontypeList=this.dictionaryManager.getDictionaryByType("TP_QUESTION_TYPE");
+        je.setObjList(questiontypeList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 任务添加
+     * @throws Exception
      */
-	@RequestMapping(params="doSubAddTask",method=RequestMethod.POST)	
-	public void doSubAddTask(HttpServletRequest request,HttpServletResponse response)throws Exception{ 
-		JsonEntity je=new JsonEntity();
-		String tasktype=request.getParameter("tasktype");
-		String taskname=request.getParameter("taskname");
-		String taskvalueid=request.getParameter("taskvalueid");
-		String taskremark=request.getParameter("taskremark");
+    @RequestMapping(params="doSubAddTask",method=RequestMethod.POST)
+    public void doSubAddTask(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String tasktype=request.getParameter("tasktype");
+        String taskname=request.getParameter("taskname");
+        String taskvalueid=request.getParameter("taskvalueid");
+        String taskremark=request.getParameter("taskremark");
         String quesnum=request.getParameter("quesnum");
         String clstype=request.getParameter("clstype");
-		if(tasktype==null||tasktype.trim().length()<1
-			//||StringUtils.isBlank(taskname
+        if(tasktype==null||tasktype.trim().length()<1
+            //||StringUtils.isBlank(taskname
                 ){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		String courseid=request.getParameter("courseid");
-		String questype=request.getParameter("questype");
-		String[]criteriaArray=request.getParameterValues("taskcri");
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String courseid=request.getParameter("courseid");
+        String questype=request.getParameter("questype");
+        String[]criteriaArray=request.getParameterValues("taskcri");
         //小组
-		String[]groupArray=request.getParameterValues("groupArray");
+        String[]groupArray=request.getParameterValues("groupArray");
         //班级
         String[]clsArray=request.getParameterValues("clsArray");
         String[]bClsArray=request.getParameterValues("btimeClsArray");
         String[]eClsArray=request.getParameterValues("etimeClsArray");
-		
 
-		if(StringUtils.isBlank(courseid)){
-			je.setMsg("异常错误,未获取到课题标识!");
-			response.getWriter().print(je.toJSON());
-			return;
-		}
+
+        if(StringUtils.isBlank(courseid)){
+            je.setMsg("异常错误,未获取到课题标识!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
         if((groupArray==null||groupArray.length<1)
                 &&(clsArray==null||clsArray.length<1)){
             je.setMsg("异常错误,未获取到任务对象!");
             response.getWriter().print(je.toJSON());
             return;
         }
-		if(!(StringUtils.isNotBlank(questype)&&questype.equals("5"))&&criteriaArray.length<1){
-			je.setMsg("异常错误,未获取到任务完成标准!");
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		StringBuilder sql=null;
-		List<Object>objList=null;
-		List<String>sqlListArray=new ArrayList<String>();
-		List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        if(!(StringUtils.isNotBlank(questype)&&questype.equals("5"))&&criteriaArray.length<1){
+            je.setMsg("异常错误,未获取到任务完成标准!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        StringBuilder sql=null;
+        List<Object>objList=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
         TpTaskInfo ta=new TpTaskInfo();
 
 
@@ -1021,8 +1027,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         TpCourseInfo tmpCourse=courseList.get(0);
 
 
-		//课后作业 3
-		if(tasktype.toString().equals("3")){
+        //课后作业 3
+        if(tasktype.toString().equals("3")){
             if(taskvalueid==null||taskvalueid.trim().length()<1){
                 je.setMsg("异常错误，系统未获取到试题标识!");
                 response.getWriter().print(je.toJSON());
@@ -1037,22 +1043,22 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 return;
             }
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
-		}else if(tasktype.toString().equals("2")){//论题
-			if(taskvalueid==null||taskvalueid.trim().length()<1){
-				je.setMsg("异常错误，系统未获取到论题标识!");
-				response.getWriter().print(je.toJSON());
-				return;
-			}
-			TpTopicInfo i=new TpTopicInfo();
-			i.setTopicid(Long.parseLong(taskvalueid));
-			List<TpTopicInfo>iList=this.tpTopicManager.getList(i, null);
-			if(iList==null||iList.size()<1){
-				je.setMsg("提示：当前论题已不存在或删除，请刷新页面后重试!");
-				response.getWriter().print(je.toJSON());
-				return;
-			}
+        }else if(tasktype.toString().equals("2")){//论题
+            if(taskvalueid==null||taskvalueid.trim().length()<1){
+                je.setMsg("异常错误，系统未获取到论题标识!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            TpTopicInfo i=new TpTopicInfo();
+            i.setTopicid(Long.parseLong(taskvalueid));
+            List<TpTopicInfo>iList=this.tpTopicManager.getList(i, null);
+            if(iList==null||iList.size()<1){
+                je.setMsg("提示：当前论题已不存在或删除，请刷新页面后重试!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
-		}else if(tasktype.toString().equals("1")){//资源
+        }else if(tasktype.toString().equals("1")){//资源
             String resourcetype=request.getParameter("resourcetype");
             resourcetype=resourcetype==null||resourcetype.length()<1?"1":resourcetype;
             if(resourcetype.equals("1")){
@@ -1100,7 +1106,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 ta.setRemotetype(Integer.parseInt(remotetype));
                 ta.setResourcename(resourcename);
             }
-		}else if(tasktype.toString().equals("4")){//成卷测试
+        }else if(tasktype.toString().equals("4")){//成卷测试
             if(taskvalueid==null||taskvalueid.trim().length()<1){
                 je.setMsg("异常错误，系统未获取到试卷标识!");
                 response.getWriter().print(je.toJSON());
@@ -1166,9 +1172,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(Long.valueOf(1));
             ta.setTaskname(taskname);
         }
-            /**
-             *查询出当前专题有效的任务个数，排序用
-             */
+        /**
+         *查询出当前专题有效的任务个数，排序用
+         */
 
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
@@ -1182,30 +1188,30 @@ public class TaskController extends BaseController<TpTaskInfo>{
         Integer orderIdx=1;
         if(taskList!=null&&taskList.size()>0)
             orderIdx+=taskList.size();
-		
-		//添加任务
-		Long tasknextid=this.tpTaskManager.getNextId(true);
-		ta.setTaskid(tasknextid);
-		//ta.setTaskname(taskname);
-		ta.setTasktype(Integer.parseInt(tasktype));
-		ta.setCourseid(Long.parseLong(courseid));
-		ta.setCuserid(this.logined(request).getRef());
+
+        //添加任务
+        Long tasknextid=this.tpTaskManager.getNextId(true);
+        ta.setTaskid(tasknextid);
+        //ta.setTaskname(taskname);
+        ta.setTasktype(Integer.parseInt(tasktype));
+        ta.setCourseid(Long.parseLong(courseid));
+        ta.setCuserid(this.logined(request).getRef());
         ta.setCriteria(Integer.parseInt(criteriaArray[0]));
         ta.setOrderidx(orderIdx);
-		if(taskremark!=null)
-			ta.setTaskremark(taskremark);
+        if(taskremark!=null)
+            ta.setTaskremark(taskremark);
         if(quesnum!=null&&quesnum.trim().length()>0)
             ta.setQuesnum(Integer.parseInt(quesnum));
         else
             ta.setQuesnum(10);
-		sql=new StringBuilder();
-		objList=this.tpTaskManager.getSaveSql(ta, sql);
-		if(objList!=null&&sql!=null&&sql.length()>0){
-			objListArray.add(objList);
-			sqlListArray.add(sql.toString());
-		}
+        sql=new StringBuilder();
+        objList=this.tpTaskManager.getSaveSql(ta, sql);
+        if(objList!=null&&sql!=null&&sql.length()>0){
+            objListArray.add(objList);
+            sqlListArray.add(sql.toString());
+        }
 
-		//添加任务对象 小组
+        //添加任务对象 小组
         if(groupArray!=null&&groupArray.length>0){
             for (int i=0;i<groupArray.length;i++) {
                 TpTaskAllotInfo tal=new TpTaskAllotInfo();
@@ -1291,14 +1297,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
 
 
-		
-		 
-		if(objListArray.size()>0&&sqlListArray.size()>0){
-			boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
-			if(flag){
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-				je.setType("success");
-				//添加任务消息提醒
+
+
+        if(objListArray.size()>0&&sqlListArray.size()>0){
+            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
+            if(flag){
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+                //添加任务消息提醒
               /*  List<UserInfo>taskUserList=this.userManager.getUserNotCompleteTask(ta,null);
                 if(taskUserList!=null&&taskUserList.size()>0){
                     for (UserInfo u:taskUserList){
@@ -1315,37 +1321,37 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     System.out.println("添加任务动态失败!原因：未获取到学生列表!");
                 }*/
 
-			}else{
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-			}  
-		}else{
-			je.setMsg("您的操作没有执行!");
-		}
-		response.getWriter().print(je.toJSON());
-	} 
-	
-	
-	/**
-	 * 进入任务修改页 
-	 * @return
-	 * @throws Exception
+            }else{
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        }else{
+            je.setMsg("您的操作没有执行!");
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 进入任务修改页
+     * @return
+     * @throws Exception
      */
-	@RequestMapping(params="doUpdTask",method=RequestMethod.GET)
-	public ModelAndView doUpdTask(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je =new JsonEntity();//
-		String courseid=request.getParameter("courseid");
-		String taskid=request.getParameter("taskid");
-		
-		if(courseid==null||courseid.trim().length()<1){
-			je.setMsg("异常错误,系统未获取到课题标识!");
-			je.getAlertMsgAndBack();
-			return null; 
-		} 
-		if(taskid==null||taskid.trim().length()<1){
-			je.setMsg("异常错误,系统未获取到任务标识!"); 
-			je.getAlertMsgAndBack();
-			return null;
-		}
+    @RequestMapping(params="doUpdTask",method=RequestMethod.GET)
+    public ModelAndView doUpdTask(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je =new JsonEntity();//
+        String courseid=request.getParameter("courseid");
+        String taskid=request.getParameter("taskid");
+
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg("异常错误,系统未获取到课题标识!");
+            je.getAlertMsgAndBack();
+            return null;
+        }
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg("异常错误,系统未获取到任务标识!");
+            je.getAlertMsgAndBack();
+            return null;
+        }
         //任务类型
         List<DictionaryInfo>tasktypeList=this.dictionaryManager.getDictionaryByType("TP_TASK_TYPE");
         //与该课题关联的班级
@@ -1374,32 +1380,32 @@ public class TaskController extends BaseController<TpTaskInfo>{
         g.setSubjectid(Integer.parseInt(subjectid));
         g.setTermid(courseclassList.get(0).getTermid());
         List<TpGroupInfo>groupList=this.tpGroupManager.getList(g, null);
-		request.setAttribute("tasktypeList", tasktypeList);
-		request.setAttribute("courseclassList", courseclassList);
-		request.setAttribute("groupList", groupList);
-		
-		//该任务已设置的相关信息
-		TpTaskInfo t=new TpTaskInfo();
-		t.setTaskid(Long.parseLong(taskid));
-		t.setCourseid(Long.parseLong(courseid));
-		List<TpTaskInfo>tpList=this.tpTaskManager.getList(t, null);
-		if(tpList==null||tpList.size()<1){
-			je.setMsg("抱歉该任务已不存在!");
-			je.getAlertMsgAndBack();
-			return null;
-		}
-		//任务
-		TpTaskInfo taskinfo=tpList.get(0);
-		//任务对象
-		TpTaskAllotInfo tg=new TpTaskAllotInfo();
-		tg.setTaskid(Long.parseLong(taskid));
-		List<TpTaskAllotInfo>taskgroupList=this.tpTaskAllotManager.getList(tg, null);
+        request.setAttribute("tasktypeList", tasktypeList);
+        request.setAttribute("courseclassList", courseclassList);
+        request.setAttribute("groupList", groupList);
+
+        //该任务已设置的相关信息
+        TpTaskInfo t=new TpTaskInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        t.setCourseid(Long.parseLong(courseid));
+        List<TpTaskInfo>tpList=this.tpTaskManager.getList(t, null);
+        if(tpList==null||tpList.size()<1){
+            je.setMsg("抱歉该任务已不存在!");
+            je.getAlertMsgAndBack();
+            return null;
+        }
+        //任务
+        TpTaskInfo taskinfo=tpList.get(0);
+        //任务对象
+        TpTaskAllotInfo tg=new TpTaskAllotInfo();
+        tg.setTaskid(Long.parseLong(taskid));
+        List<TpTaskAllotInfo>taskgroupList=this.tpTaskAllotManager.getList(tg, null);
 
 
-		request.setAttribute("taskInfo", taskinfo);
-		request.setAttribute("taskgroupList", taskgroupList);
-		request.setAttribute("courseid", courseid);
-		request.setAttribute("taskid", taskid);
+        request.setAttribute("taskInfo", taskinfo);
+        request.setAttribute("taskgroupList", taskgroupList);
+        request.setAttribute("courseid", courseid);
+        request.setAttribute("taskid", taskid);
         request.setAttribute("gradeid", request.getSession().getAttribute("session_grade"));
         request.setAttribute("subjectid",request.getSession().getAttribute("session_subject"));
         request.setAttribute("materialid",request.getSession().getAttribute("session_material"));
@@ -1407,16 +1413,16 @@ public class TaskController extends BaseController<TpTaskInfo>{
         cq.setCourseid(Long.parseLong(courseid));
         Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);
         request.setAttribute("objectiveQuesCount", objectiveQuesCount);   //专题下客观题数量
-		return new ModelAndView("/teachpaltform/task/teacher/task-update"); 
-	}
-	
-	
-	/**
-	 * 任务修改
-	 * @throws Exception 
+        return new ModelAndView("/teachpaltform/task/teacher/task-update");
+    }
+
+
+    /**
+     * 任务修改
+     * @throws Exception
      */
-	@RequestMapping(params="doSubUpdTask",method=RequestMethod.POST)
-	public void doSubUpdTask(HttpServletRequest request,HttpServletResponse response)throws Exception{
+    @RequestMapping(params="doSubUpdTask",method=RequestMethod.POST)
+    public void doSubUpdTask(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();
         String taskid=request.getParameter("taskid");
         String tasktype=request.getParameter("tasktype");
@@ -1426,8 +1432,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String quesnum=request.getParameter("quesnum");
         String clstype=request.getParameter("clstype");
         if(tasktype==null||tasktype.trim().length()<1
-            ||taskid==null||taskvalueid==null
-               // ||taskname==null||taskname.trim().length()<1
+                ||taskid==null||taskvalueid==null
+            // ||taskname==null||taskname.trim().length()<1
                 ){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
@@ -1758,32 +1764,32 @@ public class TaskController extends BaseController<TpTaskInfo>{
             je.setMsg("您的操作没有执行!");
         }
         response.getWriter().print(je.toJSON());
-	}
-	
-	/**
-	 * 跳转到学生任务首页
-	 * @return
-	 * @throws Exception
+    }
+
+    /**
+     * 跳转到学生任务首页
+     * @return
+     * @throws Exception
      */
-	@RequestMapping(params="toStuTaskIndex",method=RequestMethod.GET)
-	public ModelAndView toStuTaskIndex(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je = new JsonEntity();
+    @RequestMapping(params="toStuTaskIndex",method=RequestMethod.GET)
+    public ModelAndView toStuTaskIndex(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
 //		if(!this.validateRole(new BigDecimal(UtilTool._STUDENT_ROLE_ID))){
 //			je.setMsg("抱歉，当前页面只允许学生用户查看!");
 //			response.getWriter().print(je.getAlertMsgAndBack());
 //			return null;  
 //		}
-		String courseid=request.getParameter("courseid");
-		String termid=request.getParameter("termid");
-		//根据课题ID和学生ID查出任务
-		if(courseid==null||courseid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}
-		
-		TpTaskInfo t=new TpTaskInfo();
-		t.setCourseid(Long.parseLong(courseid));
+        String courseid=request.getParameter("courseid");
+        String termid=request.getParameter("termid");
+        //根据课题ID和学生ID查出任务
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+
+        TpTaskInfo t=new TpTaskInfo();
+        t.setCourseid(Long.parseLong(courseid));
         t.setUserid(this.logined(request).getUserid());
 //		List<TpTaskInfo> taskList=this.tpTaskManager.getListbyStu(t,null);
 //		if(taskList==null||taskList.size()<1){
@@ -1799,13 +1805,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0)
             subjectid=materialList.get(0).getSubjectid();
-		
-		//课题列表
-		TpCourseInfo tt=new TpCourseInfo();
-		tt.setCourseid(Long.parseLong(courseid));
+
+        //课题列表
+        TpCourseInfo tt=new TpCourseInfo();
+        tt.setCourseid(Long.parseLong(courseid));
         tt.setLocalstatus(1);   //1：正常 2：删除
         tt.setUserid(this.logined(request).getUserid());
-		List<TpCourseInfo>courseList=this.tpCourseManager.getStuCourseList(tt, null);
+        List<TpCourseInfo>courseList=this.tpCourseManager.getStuCourseList(tt, null);
         if(courseList==null||courseList.size()<1){
             je.setMsg("异常错误，没有发现当前专题!请刷新后重试!");
             response.getWriter().print(je.getAlertMsgAndBack());return null;
@@ -1949,52 +1955,58 @@ public class TaskController extends BaseController<TpTaskInfo>{
 				tp.setTpQuesAnswerCountList(comletecountList);
 			}
 		}*/
-		request.setAttribute("courseid", courseid);
-		request.setAttribute("termid", termid);
+        request.setAttribute("courseid", courseid);
+        request.setAttribute("termid", termid);
 
-		return new ModelAndView("/teachpaltform/task/student/task-index");
-	}
-	
+        return new ModelAndView("/teachpaltform/task/student/task-index");
+    }
 
-	/**  
-	 * 学生提交任务
-	 * @throws Exception
+
+    /**
+     * 学生提交任务
+     * @throws Exception
      */
-	@RequestMapping(params="doStuSubmitTask",method=RequestMethod.POST)
-	public void doStuSubmitTask(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je = new JsonEntity();
-		String courseid=request.getParameter("courseid");
-		String taskid=request.getParameter("taskid");
-		String tasktype=request.getParameter("tasktype");
-		//String groupid=request.getParameter("groupid");
-		//资源、论题、课后作业ID
-		String quesid=request.getParameter("quesid");
-		String questype=request.getParameter("questype");
-		if(courseid==null||courseid.trim().length()<1||
-				taskid==null||taskid.trim().length()<1||
-				tasktype==null||tasktype.trim().length()<1||
-				//groupid==null||groupid.trim().length()<1||
-				quesid==null||quesid.trim().length()<1){
-					je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-					response.getWriter().print(je.toJSON());
-					return; 
-		} 
+    @RequestMapping(params="doStuSubmitTask",method=RequestMethod.POST)
+    public void doStuSubmitTask(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String taskid=request.getParameter("taskid");
+        String tasktype=request.getParameter("tasktype");
+        String hasannex=request.getParameter("hasannex");
+        //String groupid=request.getParameter("groupid");
 
-		
-		List<Object>objList=null;
-		StringBuilder sql=null;
-		List<String>sqlListArray=new ArrayList<String>();
-		List<List<Object>>objListArray=new ArrayList<List<Object>>();
-		
-		//课后作业
-		String quesanswer=request.getParameter("quesanswer");
-		String[]fbanswerArray=request.getParameterValues("fbanswerArray");
-		String[]optionArray=request.getParameterValues("optionArray");
-		
-		TpTaskInfo t=new TpTaskInfo();
-		t.setTaskid(Long.parseLong(taskid));
-		t.setCourseid(Long.parseLong(courseid));
-		t.setTasktype(Integer.parseInt(tasktype));
+
+
+
+
+        //资源、论题、课后作业ID
+        String quesid=request.getParameter("quesid");
+        String questype=request.getParameter("questype");
+        if(courseid==null||courseid.trim().length()<1||
+                taskid==null||taskid.trim().length()<1||
+                tasktype==null||tasktype.trim().length()<1||
+                //groupid==null||groupid.trim().length()<1||
+                quesid==null||quesid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+
+        //课后作业
+        String quesanswer=request.getParameter("quesanswer");
+        String[]fbanswerArray=request.getParameterValues("fbanswerArray");
+        String[]optionArray=request.getParameterValues("optionArray");
+
+        TpTaskInfo t=new TpTaskInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        t.setCourseid(Long.parseLong(courseid));
+        t.setTasktype(Integer.parseInt(tasktype));
         //t.setGroupid(groupid);
         List<TpTaskInfo>taskList=this.tpTaskManager.getList(t,null);
         if(taskList==null||taskList.size()<1){
@@ -2002,122 +2014,126 @@ public class TaskController extends BaseController<TpTaskInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
-		TpTaskInfo tmpTask=taskList.get(0);
-		
-		if(Integer.parseInt(tasktype)==3){
-			if(questype==null||!UtilTool.isNumber(questype)){
-				je.setMsg("异常错误，系统未获取到问题类型!");
-				response.getWriter().print(je.toJSON());
-				return;
-			}
+        TpTaskInfo tmpTask=taskList.get(0);
 
-			
-			if(questype.equals("1")){//问答
-				if(quesanswer==null||quesanswer.trim().length()<1){
-					je.setMsg("异常错误，未获取到问答题答案!");
-					response.getWriter().print(je.toJSON());
-					return;
-				}
-				//录入答题记录
-				QuestionAnswer qa=new QuestionAnswer();
-				qa.setTaskid(t.getTaskid());
-                qa.setCourseid(t.getCourseid());
-                qa.setTasktype(t.getTasktype());
-				qa.setAnswercontent(quesanswer);
-				qa.setQuesparentid(Long.parseLong(quesid));
-				qa.setUserid(this.logined(request).getRef());
-				qa.setRightanswer(1);
-				sql=new StringBuilder();
-				objList=this.questionAnswerManager.getSaveSql(qa, sql);  
-				if(objList!=null&&sql!=null){
-					sqlListArray.add(sql.toString());  
-					objListArray.add(objList);
-				}
-				
-				//录入完成状态
-				TaskPerformanceInfo tp=new TaskPerformanceInfo();
-				tp.setTaskid(t.getTaskid());
-                tp.setTasktype(t.getTasktype());
-                tp.setCourseid(t.getCourseid());
-				tp.setCriteria(tmpTask.getCriteria());
-				tp.setUserid(this.logined(request).getRef());
-				tp.setIsright(1);
-				sql=new StringBuilder();
-				objList=this.taskPerformanceManager.getSaveSql(tp, sql);
-				if(objList!=null&&sql!=null){
-					sqlListArray.add(sql.toString());
-					objListArray.add(objList);
-				}
-			}else if(questype.equals("2")){//填空
-				if(fbanswerArray==null||fbanswerArray.length<1){
-					je.setMsg("异常错误，未获取到问答题答案!");
-					response.getWriter().print(je.toJSON());
-					return;
-				}
-				//得到该题教师设置的答案
-				QuestionInfo qb=new QuestionInfo();
-				qb.setQuestionid(tmpTask.getTaskvalueid());
-				List<QuestionInfo>qbList=this.questionManager.getList(qb, null);
-				if(qbList==null||qbList.size()<1){
-					je.setMsg("异常错误!当前试题已不存在!");
-					response.getWriter().print(je.toJSON());
-					return;
-				}
-				boolean fbflag=false;
-				String fbanswer=qbList.get(0).getCorrectanswer();
-				String[]answerArray=null;
-				if(fbanswer!=null&&fbanswer.length()>0){
-					answerArray=fbanswer.split("\\|");
-					if(answerArray.length<1){
-						je.setMsg("异常错误!未获取到填空题教师设置的答案!");
-						response.getWriter().print(je.toJSON());
-						return;
-					}else if(answerArray.length!=fbanswerArray.length){
-						je.setMsg("异常错误!填空题题目或答案有误!");
-						response.getWriter().print(je.toJSON());
-						return;
-					}
-					for (int i = 0; i < answerArray.length; i++) {
-						if(answerArray[i].equals(fbanswerArray[i])){
-							fbflag=true;
-						}else{
-							fbflag=false;
-						}
-					}
-				}else{
-					je.setMsg("异常错误!系统未获取到填空题答案!");
-					response.getWriter().print(je.toJSON());
-					return;
-				}
-				//录入答题记录
-				String fbstr="";
-				for (String s : fbanswerArray) {
-					if(fbstr.length()>0)
-						fbstr+="|";
-					fbstr+=s;
-				}
-				QuestionAnswer qa=new QuestionAnswer();
+        if(Integer.parseInt(tasktype)==3){
+            if(questype==null||!UtilTool.isNumber(questype)){
+                je.setMsg("异常错误，系统未获取到问题类型!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+
+
+            if(questype.equals("1")){//问答
+                if(quesanswer==null||quesanswer.trim().length()<1){
+                    je.setMsg("异常错误，未获取到问答题答案!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+
+
+
+                //录入答题记录
+                QuestionAnswer qa=new QuestionAnswer();
                 qa.setTaskid(t.getTaskid());
                 qa.setCourseid(t.getCourseid());
                 qa.setTasktype(t.getTasktype());
-				qa.setQuesparentid(Long.parseLong(quesid));
-				qa.setAnswercontent(fbstr);
-				qa.setUserid(this.logined(request).getRef());
-                qa.setRightanswer(fbflag==true?1:0);
-				sql=new StringBuilder();
-				objList=this.questionAnswerManager.getSaveSql(qa, sql);
-				if(objList!=null&&sql!=null){
-					sqlListArray.add(sql.toString());
-					objListArray.add(objList);
-				}
-				
-				//录入完成状态
-				TaskPerformanceInfo tp=new TaskPerformanceInfo();
+                qa.setAnswercontent(quesanswer);
+                qa.setQuesparentid(Long.parseLong(quesid));
+                qa.setUserid(this.logined(request).getRef());
+                qa.setRightanswer(1);
+
+                sql=new StringBuilder();
+                objList=this.questionAnswerManager.getSaveSql(qa, sql);
+                if(objList!=null&&sql!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+
+                //录入完成状态
+                TaskPerformanceInfo tp=new TaskPerformanceInfo();
                 tp.setTaskid(t.getTaskid());
                 tp.setTasktype(t.getTasktype());
                 tp.setCourseid(t.getCourseid());
-				tp.setUserid(this.logined(request).getRef());
-				sql=new StringBuilder();
+                tp.setCriteria(tmpTask.getCriteria());
+                tp.setUserid(this.logined(request).getRef());
+                tp.setIsright(1);
+                sql=new StringBuilder();
+                objList=this.taskPerformanceManager.getSaveSql(tp, sql);
+                if(objList!=null&&sql!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }else if(questype.equals("2")){//填空
+                if(fbanswerArray==null||fbanswerArray.length<1){
+                    je.setMsg("异常错误，未获取到问答题答案!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                //得到该题教师设置的答案
+                QuestionInfo qb=new QuestionInfo();
+                qb.setQuestionid(tmpTask.getTaskvalueid());
+                List<QuestionInfo>qbList=this.questionManager.getList(qb, null);
+                if(qbList==null||qbList.size()<1){
+                    je.setMsg("异常错误!当前试题已不存在!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                boolean fbflag=false;
+                String fbanswer=qbList.get(0).getCorrectanswer();
+                String[]answerArray=null;
+                if(fbanswer!=null&&fbanswer.length()>0){
+                    answerArray=fbanswer.split("\\|");
+                    if(answerArray.length<1){
+                        je.setMsg("异常错误!未获取到填空题教师设置的答案!");
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }else if(answerArray.length!=fbanswerArray.length){
+                        je.setMsg("异常错误!填空题题目或答案有误!");
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }
+                    for (int i = 0; i < answerArray.length; i++) {
+                        if(answerArray[i].equals(fbanswerArray[i])){
+                            fbflag=true;
+                        }else{
+                            fbflag=false;
+                        }
+                    }
+                }else{
+                    je.setMsg("异常错误!系统未获取到填空题答案!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                //录入答题记录
+                String fbstr="";
+                for (String s : fbanswerArray) {
+                    if(fbstr.length()>0)
+                        fbstr+="|";
+                    fbstr+=s;
+                }
+                QuestionAnswer qa=new QuestionAnswer();
+                qa.setTaskid(t.getTaskid());
+                qa.setCourseid(t.getCourseid());
+                qa.setTasktype(t.getTasktype());
+                qa.setQuesparentid(Long.parseLong(quesid));
+                qa.setAnswercontent(fbstr);
+                qa.setUserid(this.logined(request).getRef());
+                qa.setRightanswer(fbflag==true?1:0);
+                sql=new StringBuilder();
+                objList=this.questionAnswerManager.getSaveSql(qa, sql);
+                if(objList!=null&&sql!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+
+                //录入完成状态
+                TaskPerformanceInfo tp=new TaskPerformanceInfo();
+                tp.setTaskid(t.getTaskid());
+                tp.setTasktype(t.getTasktype());
+                tp.setCourseid(t.getCourseid());
+                tp.setUserid(this.logined(request).getRef());
+                sql=new StringBuilder();
                 tp.setCriteria(tmpTask.getCriteria());
                 tp.setIsright(fbflag==true?1:0);
                 objList=this.taskPerformanceManager.getSaveSql(tp, sql);
@@ -2125,64 +2141,64 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     sqlListArray.add(sql.toString());
                     objListArray.add(objList);
                 }
-			}else if(questype.equals("3")){//单选
-				if(optionArray==null||optionArray.length<1){
-					je.setMsg("异常错误，未获取到选择题答案!");
-					response.getWriter().print(je.toJSON());
-					return;
-				}
-				
-				//得到该题教师设置的答案
-				QuestionOption qo=new QuestionOption();
-				qo.setQuestionid(tmpTask.getTaskvalueid());
-				qo.setIsright(1);
-				List<QuestionOption>qbList=this.questionOptionManager.getList(qo, null);
-				if(qbList==null||qbList.size()<1){
-					je.setMsg("异常错误!未获取到教师设置的选择题答案!");
-					response.getWriter().print(je.toJSON());
-					return;
-				}
-				boolean selflag=false;
-				for (QuestionOption questionBank : qbList) {
-					if(questionBank!=null&&questionBank.getRef().toString().equals(optionArray[0])){
-						selflag=true;
-						break;
-					}
-					
-				}
-				//得到当前选项名称
+            }else if(questype.equals("3")){//单选
+                if(optionArray==null||optionArray.length<1){
+                    je.setMsg("异常错误，未获取到选择题答案!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+
+                //得到该题教师设置的答案
+                QuestionOption qo=new QuestionOption();
+                qo.setQuestionid(tmpTask.getTaskvalueid());
+                qo.setIsright(1);
+                List<QuestionOption>qbList=this.questionOptionManager.getList(qo, null);
+                if(qbList==null||qbList.size()<1){
+                    je.setMsg("异常错误!未获取到教师设置的选择题答案!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                boolean selflag=false;
+                for (QuestionOption questionBank : qbList) {
+                    if(questionBank!=null&&questionBank.getRef().toString().equals(optionArray[0])){
+                        selflag=true;
+                        break;
+                    }
+
+                }
+                //得到当前选项名称
                 QuestionOption qstu=new QuestionOption();
-				qstu.setRef(Integer.parseInt(optionArray[0]));
-				List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
-				if(qbstuList==null||qbstuList.size()<1){
-					je.setMsg("异常错误!当前选项已不存在!");
-					response.getWriter().print(je.toJSON());
-					return;
-				}
-				
-				QuestionAnswer qa=new QuestionAnswer();
+                qstu.setRef(Integer.parseInt(optionArray[0]));
+                List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
+                if(qbstuList==null||qbstuList.size()<1){
+                    je.setMsg("异常错误!当前选项已不存在!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+
+                QuestionAnswer qa=new QuestionAnswer();
                 qa.setTaskid(t.getTaskid());
                 qa.setCourseid(t.getCourseid());
                 qa.setTasktype(t.getTasktype());
-				qa.setUserid(this.logined(request).getRef());
-				qa.setQuesparentid(Long.parseLong(quesid));
-				qa.setQuesid(Long.parseLong(optionArray[0]));
-				qa.setAnswercontent(qbstuList.get(0).getOptiontype());//选择题答案
-				qa.setRightanswer(selflag==true?1:0);
-				sql=new StringBuilder();
-				objList=this.questionAnswerManager.getSaveSql(qa, sql);
-				if(objList!=null&&sql!=null){
-					sqlListArray.add(sql.toString());
-					objListArray.add(objList);
-				}
-				
-				//录入完成状态
-				TaskPerformanceInfo tp=new TaskPerformanceInfo();
+                qa.setUserid(this.logined(request).getRef());
+                qa.setQuesparentid(Long.parseLong(quesid));
+                qa.setQuesid(Long.parseLong(optionArray[0]));
+                qa.setAnswercontent(qbstuList.get(0).getOptiontype());//选择题答案
+                qa.setRightanswer(selflag==true?1:0);
+                sql=new StringBuilder();
+                objList=this.questionAnswerManager.getSaveSql(qa, sql);
+                if(objList!=null&&sql!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+
+                //录入完成状态
+                TaskPerformanceInfo tp=new TaskPerformanceInfo();
                 tp.setTaskid(t.getTaskid());
                 tp.setTasktype(t.getTasktype());
                 tp.setCourseid(t.getCourseid());
-				tp.setUserid(this.logined(request).getRef());
-				sql=new StringBuilder();
+                tp.setUserid(this.logined(request).getRef());
+                sql=new StringBuilder();
                 tp.setCriteria(tmpTask.getCriteria());
                 tp.setIsright(selflag==true?1:0);
                 objList=this.taskPerformanceManager.getSaveSql(tp, sql);
@@ -2190,72 +2206,72 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     sqlListArray.add(sql.toString());
                     objListArray.add(objList);
                 }
-				
-			}else if(questype.equals("4")){//多选
-				if(optionArray==null||optionArray.length<1){
-					je.setMsg("异常错误，未获取到复选题答案!");
-					response.getWriter().print(je.toJSON());
-					return;
-				}
-				
-				//得到该题教师设置的答案
+
+            }else if(questype.equals("4")){//多选
+                if(optionArray==null||optionArray.length<1){
+                    je.setMsg("异常错误，未获取到复选题答案!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+
+                //得到该题教师设置的答案
                 QuestionOption qb=new QuestionOption();
-				qb.setQuestionid(tmpTask.getTaskvalueid());
-				qb.setIsright(1);
-				List<QuestionOption>qbList=this.questionOptionManager.getList(qb, null);
-				if(qbList==null||qbList.size()<1){
-					je.setMsg("异常错误!未获取到教师设置的复选题答案!");
-					response.getWriter().print(je.toJSON());
-					return;
-				}
-				boolean selflag=false;
-				int flag=0;
-				for(String opnid : optionArray){
-					selflag=false;
-					for (QuestionOption questionBank : qbList) {
-						if(questionBank!=null&&
-								questionBank.getRef().toString().equals(opnid)){
-							selflag=true;
-							break;
-						}
-					}
-					if(!selflag)
-						++flag;
-					
-					//得到当前选项名称
-					QuestionOption qstu=new QuestionOption();
-					qstu.setRef(Integer.parseInt(opnid));
-					List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
-					if(qbstuList==null||qbstuList.size()<1){
-						je.setMsg("异常错误!当前选项已不存在!");
-						response.getWriter().print(je.toJSON());
-						return;
-					}
-					
-					QuestionAnswer qa=new QuestionAnswer();
+                qb.setQuestionid(tmpTask.getTaskvalueid());
+                qb.setIsright(1);
+                List<QuestionOption>qbList=this.questionOptionManager.getList(qb, null);
+                if(qbList==null||qbList.size()<1){
+                    je.setMsg("异常错误!未获取到教师设置的复选题答案!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                boolean selflag=false;
+                int flag=0;
+                for(String opnid : optionArray){
+                    selflag=false;
+                    for (QuestionOption questionBank : qbList) {
+                        if(questionBank!=null&&
+                                questionBank.getRef().toString().equals(opnid)){
+                            selflag=true;
+                            break;
+                        }
+                    }
+                    if(!selflag)
+                        ++flag;
+
+                    //得到当前选项名称
+                    QuestionOption qstu=new QuestionOption();
+                    qstu.setRef(Integer.parseInt(opnid));
+                    List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
+                    if(qbstuList==null||qbstuList.size()<1){
+                        je.setMsg("异常错误!当前选项已不存在!");
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }
+
+                    QuestionAnswer qa=new QuestionAnswer();
                     qa.setTaskid(t.getTaskid());
                     qa.setCourseid(t.getCourseid());
                     qa.setTasktype(t.getTasktype());
-					//qa.setGroupid(groupid);
-					qa.setUserid(this.logined(request).getRef());
-					qa.setQuesparentid(Long.parseLong(quesid));
-					qa.setQuesid(Long.parseLong(opnid));
-					qa.setAnswercontent(qbstuList.get(0).getOptiontype()); //选择题答案
+                    //qa.setGroupid(groupid);
+                    qa.setUserid(this.logined(request).getRef());
+                    qa.setQuesparentid(Long.parseLong(quesid));
+                    qa.setQuesid(Long.parseLong(opnid));
+                    qa.setAnswercontent(qbstuList.get(0).getOptiontype()); //选择题答案
                     qa.setRightanswer(selflag==true?1:0);
-					sql=new StringBuilder();
-					objList=this.questionAnswerManager.getSaveSql(qa, sql);
-					if(objList!=null&&sql!=null){
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}
-				
-				//录入完成状态
-				TaskPerformanceInfo tp=new TaskPerformanceInfo();
+                    sql=new StringBuilder();
+                    objList=this.questionAnswerManager.getSaveSql(qa, sql);
+                    if(objList!=null&&sql!=null){
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+
+                //录入完成状态
+                TaskPerformanceInfo tp=new TaskPerformanceInfo();
                 tp.setTaskid(t.getTaskid());
                 tp.setTasktype(t.getTasktype());
                 tp.setCourseid(t.getCourseid());
-				tp.setUserid(this.logined(request).getRef());
+                tp.setUserid(this.logined(request).getRef());
                 tp.setCriteria(tmpTask.getCriteria());
                 tp.setIsright(flag<1?1:0);
                 sql=new StringBuilder();
@@ -2264,13 +2280,36 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     sqlListArray.add(sql.toString());
                     objListArray.add(objList);
                 }
-			}
-		}else if(Integer.parseInt(tasktype)==1){
-			if(quesanswer==null||quesanswer.trim().length()<1){
-				je.setMsg("异常错误,未获取到资源学习心得!");
-				response.getWriter().print(je.toJSON());
-				return;
-			}
+            }
+        }else if(Integer.parseInt(tasktype)==1){
+            if(quesanswer==null||quesanswer.trim().length()<1){
+                je.setMsg("异常错误,未获取到资源学习心得!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            quesanswer=new String(quesanswer.getBytes("iso-8859-1"),"UTF-8");
+
+            String annexName=null;
+            boolean isfileOk=true;
+            if(hasannex!=null&&hasannex.equals("1")){
+                MultipartFile[] muFile=this.getUpload(request);
+                if(muFile!=null&&muFile.length>0){//文件上传
+                    //this.setFname(annexName=this.getUploadFileName()[0]);
+                    this.setFname(annexName=new Date().getTime()+""
+                            +this.getUploadFileName()[0].substring(this.getUploadFileName()[0].lastIndexOf("."))
+                    );
+                    if(!fileupLoad(request)){
+                        isfileOk=!isfileOk;
+                    }
+                }else
+                    isfileOk=false;
+            }
+
+            if(!isfileOk){
+                je.setMsg("文件上传失败!请刷新页面后重试!");
+                response.getWriter().println(je.toJSON());return ;
+            }
+
 
             QuestionAnswer qa=new QuestionAnswer();
             qa.setCourseid(Long.parseLong(courseid));
@@ -2281,6 +2320,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             qa.setRightanswer(1);
             qa.setTasktype(tmpTask.getTasktype());
             qa.setTaskid(tmpTask.getTaskid());
+            if(annexName!=null&&annexName.trim().length()>0)
+                qa.setReplyattach(annexName);
             sql=new StringBuilder();
             objList=this.questionAnswerManager.getSaveSql(qa,sql);
             if(sql!=null&&objList!=null){
@@ -2311,47 +2352,78 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 response.getWriter().print(je.toJSON());
                 return;
             }
-		}
-		
-		if(objListArray.size()>0&&sqlListArray.size()>0){
-			boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
-			if(flag){
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-				je.setType("success");
-			}else{
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR")); 
-			}
-		}else{
-			je.setMsg("您的操作没有执行!");
-		}
-		response.getWriter().print(je.toJSON());
-	}
-	
-	
-	/**  
-	 * 获取课题下的论题
-	 * @throws Exception
+        }
+
+        if(objListArray.size()>0&&sqlListArray.size()>0){
+            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
+            if(flag){
+                //得到班级ID
+                TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                tallot.setTaskid(taskList.get(0).getTaskid());
+                tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+                List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                        ||clsMapList.get(0).get("CLASS_ID")==null){
+                    je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                    response.getWriter().println(je.toJSON());return ;
+                }
+
+                //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                //规则转换:    6             7         8
+                Integer type=0;
+                switch(taskList.get(0).getTasktype()){
+                    case 3:     //试题
+                        type=1;break;
+                    case 1:     //资源学习
+                        type=2;break;
+                    case 2:
+                        type=4;
+                        break;
+                }
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                /*奖励加分通过*/
+                if(this.tpStuScoreLogsManager.awardStuScore(Long.parseLong(courseid.trim())
+                        ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                        ,Long.parseLong(taskid.trim())
+                        ,Long.parseLong(this.logined(request).getUserid()+""),type)){
+                    je.setMsg("恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
+                }else
+                    System.out.println("awardScore error");
+                je.setType("success");
+            }else{
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        }else{
+            je.setMsg("您的操作没有执行!");
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 获取课题下的论题
+     * @throws Exception
      */
-	@RequestMapping(params="toQryTopicList",method=RequestMethod.POST)
-	public void toQryTopicList(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je = new JsonEntity();
-		String courseid=request.getParameter("courseid");
-		String clsid=request.getParameter("clsid");
+    @RequestMapping(params="toQryTopicList",method=RequestMethod.POST)
+    public void toQryTopicList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String clsid=request.getParameter("clsid");
         String topicid=request.getParameter("topicid");
         String taskflag=request.getParameter("taskflag");
-		if(courseid==null||courseid.trim().length()<1){
-			je.setMsg("异常错误，系统未获取到课题标识!");
-			response.getWriter().print(je.toJSON());
-			return;
-		}
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg("异常错误，系统未获取到课题标识!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
 //		if(clsid==null||clsid.trim().length()<1){
 //			je.setMsg("异常错误，系统未获取到班级标识!");
 //			response.getWriter().print(je.toJSON());
 //			return;
 //		}
         PageResult p=this.getPageResultParameter(request);
-		TpTopicInfo t=new TpTopicInfo();
-		t.setCuserid(this.logined(request).getUserid());
+        TpTopicInfo t=new TpTopicInfo();
+        t.setCuserid(this.logined(request).getUserid());
         t.setCourseid(Long.parseLong(courseid));
         t.setStatus(1);
         if(topicid!=null&&topicid.trim().length()>0)
@@ -2359,12 +2431,12 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //查询未发布任务的论题
         if(taskflag!=null&&taskflag.trim().length()>0)
             t.setFlag(1);
-		List<TpTopicInfo>topList=this.tpTopicManager.getList(t,p);
+        List<TpTopicInfo>topList=this.tpTopicManager.getList(t,p);
         p.setList(topList);
-		je.setPresult(p);
-		je.setType("success");
-		response.getWriter().print(je.toJSON());
-	}
+        je.setPresult(p);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
 
 
     /**
@@ -2377,6 +2449,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String courseid=request.getParameter("courseid");
         String resourceid=request.getParameter("resid");
         String answercontent=request.getParameter("answercontent");
+        String hasannex=request.getParameter("hasannex");
 
         if(courseid==null||courseid.trim().length()<1||
                 resourceid==null||resourceid.trim().length()<1||
@@ -2423,6 +2496,33 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return;
         }
 
+
+        answercontent=new String(answercontent.getBytes("iso-8859-1"),"UTF-8");
+
+        String annexName=null;
+        boolean isfileOk=true;
+        if(hasannex!=null&&hasannex.equals("1")){
+            MultipartFile[] muFile=this.getUpload(request);
+            if(muFile!=null&&muFile.length>0){//文件上传
+                //this.setFname(annexName=this.getUploadFileName()[0]);
+                this.setFname(annexName=new Date().getTime()+""
+                        +this.getUploadFileName()[0].substring(this.getUploadFileName()[0].lastIndexOf("."))
+                );
+                if(!fileupLoad(request)){
+                    isfileOk=!isfileOk;
+                }
+            }else
+                isfileOk=false;
+        }
+
+        if(!isfileOk){
+            je.setMsg("文件上传失败!请刷新页面后重试!");
+            response.getWriter().println(je.toJSON());return ;
+        }
+
+
+
+
         QuestionAnswer qa=new QuestionAnswer();
         qa.setCourseid(Long.parseLong(courseid));
         qa.setQuesparentid(Long.parseLong(resourceid));
@@ -2432,6 +2532,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         qa.setRightanswer(1);
         qa.setTasktype(taskInfo.getTasktype());
         qa.setTaskid(taskInfo.getTaskid());
+        if(annexName!=null&&annexName.length()>0)
+            qa.setReplyattach(annexName);
         sql=new StringBuilder();
         objList=this.questionAnswerManager.getSaveSql(qa,sql);
         if(sql!=null&&objList!=null){
@@ -2485,37 +2587,37 @@ public class TaskController extends BaseController<TpTaskInfo>{
         response.getWriter().print(je.toJSON());
     }
 
-	/**
-	 * 加载学习心得
-	 * @throws Exception
+    /**
+     * 加载学习心得
+     * @throws Exception
      */
-	@RequestMapping(params="loadStudyNotes",method=RequestMethod.POST)
-	public void loadStudyNotes(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je = new JsonEntity();
-		String type=request.getParameter("usertype");
-		String courseid=request.getParameter("courseid");
-		String resourceid=request.getParameter("resourceid");
-		
-		if(courseid==null||courseid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		if(resourceid==null||resourceid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
+    @RequestMapping(params="loadStudyNotes",method=RequestMethod.POST)
+    public void loadStudyNotes(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String type=request.getParameter("usertype");
+        String courseid=request.getParameter("courseid");
+        String resourceid=request.getParameter("resourceid");
+
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(resourceid==null||resourceid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
 
 
-		QuestionAnswer qa=new QuestionAnswer();
-		qa.setCourseid(Long.parseLong(courseid));
-		qa.setQuesparentid(Long.parseLong(resourceid));
-		//查学生心得
-		if(type!=null&&type.equals("1"))
-			qa.setUserid(this.logined(request).getRef());
-		List<QuestionAnswer>qaList=this.questionAnswerManager.getList(qa, null);
-		je.getObjList().add(qaList!=null&&qaList.size()>0?qaList.get(0):null);
+        QuestionAnswer qa=new QuestionAnswer();
+        qa.setCourseid(Long.parseLong(courseid));
+        qa.setQuesparentid(Long.parseLong(resourceid));
+        //查学生心得
+        if(type!=null&&type.equals("1"))
+            qa.setUserid(this.logined(request).getRef());
+        List<QuestionAnswer>qaList=this.questionAnswerManager.getList(qa, null);
+        je.getObjList().add(qaList!=null&&qaList.size()>0?qaList.get(0):null);
 
         /*
         * 查询当前资源是否发任务
@@ -2557,9 +2659,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
 
 
-		je.setType("success");
-		response.getWriter().print(je.toJSON());
-	}
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
 
 
 
@@ -2572,6 +2674,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         JsonEntity je = new JsonEntity();
         String ref=request.getParameter("ref");
         String content=request.getParameter("content");
+        String hasannex=request.getParameter("hasannex");
+
 
         if(ref==null||ref.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -2583,10 +2687,36 @@ public class TaskController extends BaseController<TpTaskInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
+        content=new String(content.getBytes("iso-8859-1"),"UTF-8");
+
+        String annexName=null;
+        boolean isfileOk=true;
+        if(hasannex!=null&&hasannex.equals("1")){
+            MultipartFile[] muFile=this.getUpload(request);
+            if(muFile!=null&&muFile.length>0){//文件上传
+                //this.setFname(annexName=this.getUploadFileName()[0]);
+                this.setFname(annexName=new Date().getTime()+""
+                        +this.getUploadFileName()[0].substring(this.getUploadFileName()[0].lastIndexOf("."))
+                );
+                if(!fileupLoad(request)){
+                    isfileOk=!isfileOk;
+                }
+            }else
+                isfileOk=false;
+        }
+
+        if(!isfileOk){
+            je.setMsg("文件上传失败!请刷新页面后重试!");
+            response.getWriter().println(je.toJSON());return ;
+        }
+
+
 
         QuestionAnswer qa=new QuestionAnswer();
         qa.setRef(Integer.parseInt(ref));
         qa.setAnswercontent(content);
+        if(annexName!=null&&annexName.trim().length()>0)
+            qa.setReplyattach(annexName);
         if(this.questionAnswerManager.doUpdate(qa)){
             je.setType("success");
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
@@ -2596,222 +2726,256 @@ public class TaskController extends BaseController<TpTaskInfo>{
         response.getWriter().print(je.toJSON());
     }
 
-	
-	/**
-	 * 学生提建议
-	 * @throws Exception
+
+    /**
+     * 学生提建议
+     * @throws Exception
      */
-	@RequestMapping(params="doSubmitSuggest",method=RequestMethod.POST)
-	public void doSubmitSuggest(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je =new JsonEntity();
-		
-		String suggestcontent=request.getParameter("suggestcontent");
-		String courseid=request.getParameter("courseid");
-		String taskid=request.getParameter("taskid");
-		String isanonmous=request.getParameter("isanonmous");
-		if(courseid==null||courseid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
-		if(taskid==null||taskid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
-		if(suggestcontent==null||suggestcontent.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
-		if(isanonmous==null||isanonmous.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
-		TaskSuggestInfo ts=new TaskSuggestInfo();
-		ts.setTaskid(Long.parseLong(taskid));
-		ts.setCourseid(Long.parseLong(courseid));
-		ts.setIsanonymous(Integer.parseInt(isanonmous));
-		ts.setUserid(this.logined(request).getRef());
-		ts.setSuggestcontent(suggestcontent);
-		
-		if(this.taskSuggestManager.doSave(ts)){
-			je.setMsg("建议提交成功!");
-			je.setType("success");
-		}else{
-			je.setMsg("建议提交失败!");
-		}
-		response.getWriter().print(je.toJSON());
-	}
-	
-	
-	/**
-	 * 添加互动交流论题查看记录
-	 * @throws Exception
+    @RequestMapping(params="doSubmitSuggest",method=RequestMethod.POST)
+    public void doSubmitSuggest(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je =new JsonEntity();
+
+        String suggestcontent=request.getParameter("suggestcontent");
+        String courseid=request.getParameter("courseid");
+        String taskid=request.getParameter("taskid");
+        String isanonmous=request.getParameter("isanonmous");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(suggestcontent==null||suggestcontent.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(isanonmous==null||isanonmous.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        TaskSuggestInfo ts=new TaskSuggestInfo();
+        ts.setTaskid(Long.parseLong(taskid));
+        ts.setCourseid(Long.parseLong(courseid));
+        ts.setIsanonymous(Integer.parseInt(isanonmous));
+        ts.setUserid(this.logined(request).getRef());
+        ts.setSuggestcontent(suggestcontent);
+
+        if(this.taskSuggestManager.doSave(ts)){
+            je.setMsg("建议提交成功!");
+            je.setType("success");
+        }else{
+            je.setMsg("建议提交失败!");
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 添加互动交流论题查看记录
+     * @throws Exception
      */
-	@RequestMapping(params="doAddViewRecord",method=RequestMethod.POST)
-	public void doAddViewRecord(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je = new JsonEntity();
-		String themeid=request.getParameter("themeid");
-		String courseid=request.getParameter("courseid");
-		String tasktype=request.getParameter("tasktype");
-		String groupid=request.getParameter("groupid");
-		String taskid=request.getParameter("taskid");
-		
-		
-		if(themeid==null||themeid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
-		if(courseid==null||courseid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
-		if(tasktype==null||tasktype.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
+    @RequestMapping(params="doAddViewRecord",method=RequestMethod.POST)
+    public void doAddViewRecord(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String themeid=request.getParameter("themeid");
+        String courseid=request.getParameter("courseid");
+        String tasktype=request.getParameter("tasktype");
+        String groupid=request.getParameter("groupid");
+        String taskid=request.getParameter("taskid");
+
+
+        if(themeid==null||themeid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(tasktype==null||tasktype.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
 //		if(groupid==null||groupid.trim().length()<1){
 //			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
 //			response.getWriter().print(je.toJSON());return;
 //		}
-		if(taskid==null||taskid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
-		//检测是否有查看标准
-		TpTaskInfo t=new TpTaskInfo();
-		t.setTaskid(Long.parseLong(taskid));
-		t.setCriteria(1);
-		List<TpTaskInfo>taskCriList=this.tpTaskManager.getList(t, null);
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        //检测是否有查看标准
+        TpTaskInfo t=new TpTaskInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        t.setCriteria(1);
+        List<TpTaskInfo>taskCriList=this.tpTaskManager.getList(t, null);
 
         TpTaskInfo task=new TpTaskInfo();
-		task.setTaskid(Long.parseLong(taskid));
-		task.setCourseid(Long.parseLong(courseid));
-		task.setTasktype(Integer.parseInt(tasktype));
-		//task.setGroupid(groupid);
+        task.setTaskid(Long.parseLong(taskid));
+        task.setCourseid(Long.parseLong(courseid));
+        task.setTasktype(Integer.parseInt(tasktype));
+        //task.setGroupid(groupid);
 
-		//录入完成状态
-		TaskPerformanceInfo tp=new TaskPerformanceInfo();
+        //录入完成状态
+        TaskPerformanceInfo tp=new TaskPerformanceInfo();
         tp.setTaskid(task.getTaskid());
         tp.setTasktype(task.getTasktype());
         tp.setCourseid(task.getCourseid());
-		tp.setCriteria(1);//查看
-		tp.setUserid(this.logined(request).getRef());
-		tp.setIsright(1);
-		List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getList(tp,null);
-		if(taskCriList!=null&&taskCriList.size()>0&&taskCriList.get(0).getTaskstatus()!=null
+        tp.setCriteria(1);//查看
+        tp.setUserid(this.logined(request).getRef());
+        tp.setIsright(1);
+        List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getList(tp,null);
+        if(taskCriList!=null&&taskCriList.size()>0&&taskCriList.get(0).getTaskstatus()!=null
                 &&!taskCriList.get(0).getTaskstatus().equals("1")&&!taskCriList.get(0).getTaskstatus().equals("3")){
-			if(tList!=null&&tList.size()>0){ 
-				response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
-			}else{ 
-				if(this.taskPerformanceManager.doSave(tp)){
-					response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
-				}else{   
-					je.setMsg("异常错误!添加查看记录失败!请重试!");
-					response.getWriter().print(je.toJSON());
-				}
-			}
-		}else{
-			response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
-		}
-	}
-	
-	
-	/**
-	 * 添加资源学习查看记录
-	 * @throws Exception
+            if(tList!=null&&tList.size()>0){
+                response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+            }else{
+                if(this.taskPerformanceManager.doSave(tp)){
+                    response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+                }else{
+                    je.setMsg("异常错误!添加查看记录失败!请重试!");
+                    response.getWriter().print(je.toJSON());
+                }
+            }
+        }else{
+            response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+        }
+    }
+
+
+    /**
+     * 添加资源学习查看记录
+     * @throws Exception
      */
-	@RequestMapping(params="doAddResViewRecord",method=RequestMethod.POST)
-	public void doAddResViewRecord(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je = new JsonEntity();
-		String tpresdetailid=request.getParameter("tpresdetailid");
-		String courseid=request.getParameter("courseid");
-		String tasktype=request.getParameter("tasktype");
-		String groupid=request.getParameter("groupid");
-		String taskid=request.getParameter("taskid");
-		
-		
-		if(tpresdetailid==null||tpresdetailid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return; 
-		}
-		if(courseid==null||courseid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
-		if(tasktype==null||tasktype.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
+    @RequestMapping(params="doAddResViewRecord",method=RequestMethod.POST)
+    public void doAddResViewRecord(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String tpresdetailid=request.getParameter("tpresdetailid");
+        String courseid=request.getParameter("courseid");
+        String tasktype=request.getParameter("tasktype");
+        String groupid=request.getParameter("groupid");
+        String taskid=request.getParameter("taskid");
+
+
+        if(tpresdetailid==null||tpresdetailid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(tasktype==null||tasktype.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
 //		if(groupid==null||groupid.trim().length()<1){
 //			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
 //			response.getWriter().print(je.toJSON());return;
 //		}
-		if(taskid==null||taskid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());return;
-		}
-		//检测是否有查看标准
-		TpTaskInfo t=new TpTaskInfo();
-		t.setTaskid(Long.parseLong(taskid));
-		t.setCriteria(1);
-		List<TpTaskInfo>taskCriList=this.tpTaskManager.getList(t, null);
-		
-		TpTaskInfo task=new TpTaskInfo();
-		task.setTaskid(Long.parseLong(taskid));
-		task.setCourseid(Long.parseLong(courseid));
-		task.setTasktype(Integer.parseInt(tasktype));
-		//task.setGroupid(groupid);
-		
-		//录入完成状态
-		TaskPerformanceInfo tp=new TaskPerformanceInfo();
-		tp.setTaskid(task.getTaskid());
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        //检测是否有查看标准
+        TpTaskInfo t=new TpTaskInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        t.setCriteria(1);
+        List<TpTaskInfo>taskCriList=this.tpTaskManager.getList(t, null);
+
+        TpTaskInfo task=new TpTaskInfo();
+        task.setTaskid(Long.parseLong(taskid));
+        task.setCourseid(Long.parseLong(courseid));
+        task.setTasktype(Integer.parseInt(tasktype));
+        //task.setGroupid(groupid);
+
+        //录入完成状态
+        TaskPerformanceInfo tp=new TaskPerformanceInfo();
+        tp.setTaskid(task.getTaskid());
         tp.setCourseid(task.getCourseid());
         tp.setTasktype(task.getTasktype());
-		tp.setCriteria(1);
-		tp.setUserid(this.logined(request).getRef());
-		tp.setIsright(1);
-		List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getList(tp,null);
-		if(taskCriList!=null&&taskCriList.size()>0&&taskCriList.get(0).getTaskstatus()!=null
+        tp.setCriteria(1);
+        tp.setUserid(this.logined(request).getRef());
+        tp.setIsright(1);
+        List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getList(tp,null);
+        if(taskCriList!=null&&taskCriList.size()>0&&taskCriList.get(0).getTaskstatus()!=null
                 &&!taskCriList.get(0).getTaskstatus().equals("1")&&!taskCriList.get(0).getTaskstatus().equals("3")){
-			if(tList!=null&&tList.size()>0){
-				response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
-			}else{
-				if(this.taskPerformanceManager.doSave(tp)){
-					response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
-				}else{
-					je.setMsg("异常错误!添加查看记录失败!请重试!");
-					response.getWriter().print(je.toJSON());  
-				} 
-			}
-		}else{
-			response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
-		}
-	}
+            if(tList!=null&&tList.size()>0){
+                response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
+            }else{
+                if(this.taskPerformanceManager.doSave(tp)){
+                    /*奖励加分*/
+                    //得到班级ID
+                    TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                    tallot.setTaskid(Long.parseLong(taskid));
+
+                    tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+                    List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                    if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                            ||clsMapList.get(0).get("CLASS_ID")==null){
+                        je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                        response.getWriter().println(je.toJSON());return ;
+                    }
+
+                    //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                    //规则转换:    6             7         8
+                    Integer type=0;
+                    switch(taskCriList.get(0).getTasktype()){
+                        case 3:     //试题
+                            type=1;break;
+                        case 1:     //资源学习
+                            type=2;break;
+                        case 2:
+                            type=4;
+                            break;
+                    }
+                        /*奖励加分通过*/
+                    if(this.tpStuScoreLogsManager.awardStuScore(taskCriList.get(0).getCourseid()
+                            , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                            , taskCriList.get(0).getTaskid()
+                            , Long.parseLong(this.logined(request).getUserid() + ""), type)){
+                        je.setMsg("查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
+                    }else
+                        System.out.println("awardScore err ");
+
+                    response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
+                }else{
+                    je.setMsg("异常错误!添加查看记录失败!请重试!");
+                    response.getWriter().print(je.toJSON());
+                }
+            }
+        }else{
+            response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
+        }
+    }
 
 
     /**
      * 查询任务建议
      * @throws Exception
      */
-     @RequestMapping(params="m=ajaxTaskSuggest",method=RequestMethod.POST)
-     public void loadTaskSuggest(HttpServletRequest request,HttpServletResponse response)throws Exception{
-         JsonEntity je=new JsonEntity();
-         String courseid=request.getParameter("courseid");
-         String taskid=request.getParameter("taskid");
-         if(courseid==null||courseid.trim().length()<1||taskid==null||taskid.length()<1){
-             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-             response.getWriter().print(je.getAlertMsgAndBack());
-             return;
-         }
-         PageResult pageResult=this.getPageResultParameter(request);
-         TaskSuggestInfo suggestInfo=new TaskSuggestInfo();
-         suggestInfo.setCourseid(Long.parseLong(courseid));
-         suggestInfo.setTaskid(Long.parseLong(taskid));
-         List<TaskSuggestInfo>suggestList=this.taskSuggestManager.getList(suggestInfo,pageResult);
-         pageResult.setList(suggestList);
-         je.setPresult(pageResult);
-         je.setType("success");
-         response.getWriter().print(je.toJSON());
-     }
+    @RequestMapping(params="m=ajaxTaskSuggest",method=RequestMethod.POST)
+    public void loadTaskSuggest(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String taskid=request.getParameter("taskid");
+        if(courseid==null||courseid.trim().length()<1||taskid==null||taskid.length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return;
+        }
+        PageResult pageResult=this.getPageResultParameter(request);
+        TaskSuggestInfo suggestInfo=new TaskSuggestInfo();
+        suggestInfo.setCourseid(Long.parseLong(courseid));
+        suggestInfo.setTaskid(Long.parseLong(taskid));
+        List<TaskSuggestInfo>suggestList=this.taskSuggestManager.getList(suggestInfo,pageResult);
+        pageResult.setList(suggestList);
+        je.setPresult(pageResult);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
 
     /**
      * 进入任务建议页面
@@ -2821,7 +2985,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
      * @throws Exception
      */
     @RequestMapping(params="m=toTaskSuggestList",method=RequestMethod.GET)
-     public ModelAndView toTaskSuggest(HttpServletRequest request,HttpServletResponse response)throws Exception{
+    public ModelAndView toTaskSuggest(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();
         String courseid=request.getParameter("courseid");
         String taskid=request.getParameter("taskid");
@@ -2833,17 +2997,17 @@ public class TaskController extends BaseController<TpTaskInfo>{
         request.setAttribute("courseid",courseid);
         request.setAttribute("taskid",taskid);
         return new ModelAndView("/teachpaltform/task/teacher/task-suggest");
-     }
+    }
 
-	/**
-	 * 任务完成情况统计
-	 * @return
-	 * @throws Exception
-    */
-	@RequestMapping(params="toTaskPerformance",method=RequestMethod.GET)
-	public ModelAndView toTaskPerformanceInfo(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je=new JsonEntity();
-		String taskid=request.getParameter("taskid");
+    /**
+     * 任务完成情况统计
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="toTaskPerformance",method=RequestMethod.GET)
+    public ModelAndView toTaskPerformanceInfo(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String taskid=request.getParameter("taskid");
         String questype = request.getParameter("questype");
         if(taskid==null||taskid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -2871,7 +3035,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
         }
         //获取任务相关的班级
-		TpTaskAllotInfo ta = new TpTaskAllotInfo();
+        TpTaskAllotInfo ta = new TpTaskAllotInfo();
         ta.setTaskid(Long.parseLong(taskid));
         List<TpTaskAllotInfo> taList = this.tpTaskAllotManager.getList(ta,null);
 
@@ -2958,7 +3122,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }else{
             return new ModelAndView("/teachpaltform/task/teacher/task-performance-zg");
         }
-	}
+    }
 
     /**
      * 得到并生成图片
@@ -3010,30 +3174,30 @@ public class TaskController extends BaseController<TpTaskInfo>{
         System.gc();
         //读取图片流
         UtilTool.writeImage(response,imgRealPath);
-    } 
-	/**
-	 * 查询学生任务完成情况
-	 * @throws Exception
+    }
+    /**
+     * 查询学生任务完成情况
+     * @throws Exception
      */
-	@RequestMapping(params="xzloadStuPerformance",method=RequestMethod.POST)
-	public void xzloadStuPerformance(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je=new JsonEntity();
-		String classid=request.getParameter("classid");
-		String taskid=request.getParameter("taskid");
+    @RequestMapping(params="xzloadStuPerformance",method=RequestMethod.POST)
+    public void xzloadStuPerformance(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String classid=request.getParameter("classid");
+        String taskid=request.getParameter("taskid");
         String questype = request.getParameter("questype");
         String questionid=request.getParameter("questionid");
-		if(classid==null||classid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		if(taskid==null||taskid.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		TaskPerformanceInfo t=new TaskPerformanceInfo();
-		t.setTaskid(Long.parseLong(taskid));
+        if(classid==null||classid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TaskPerformanceInfo t=new TaskPerformanceInfo();
+        t.setTaskid(Long.parseLong(taskid));
         Long clsid=null;
         String type=request.getParameter("classtype");
         if(classid!=null&&classid.length()>0){
@@ -3043,7 +3207,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
 
         //任务记录
-		List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getPerformListByTaskid(t, clsid,Integer.parseInt(type));
+        List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getPerformListByTaskid(t, clsid,Integer.parseInt(type));
         //数量统计
         List<Map<String,Object>> optionnumList = new ArrayList<Map<String, Object>>();
         //数量统计
@@ -3062,7 +3226,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 TpGroupStudent ts = new TpGroupStudent();
                 for(int j = 0;j<tgsList.size();j++){
                     if(tiList.get(i).getGroupid()==tgsList.get(j).getGroupid()){
-                       tiList.get(i).setTpgroupstudent(tgsList);
+                        tiList.get(i).setTpgroupstudent(tgsList);
                     }
                 }
             }
@@ -3130,9 +3294,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
         je.getObjList().add(tList);
         je.getObjList().add(tiList);
         je.getObjList().add(notCompleteList);
-		je.setType("success");
-		response.getWriter().print(je.toJSON());
-	}
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
     /**
      * 查询学生任务完成情况
      * @throws Exception
@@ -3301,10 +3465,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return new ModelAndView("/teachpaltform/task/teacher/mic-paper-kg", mp);
         }
     }
-        /**
-         * 查询学生试卷任务完成情况
-         * @throws Exception
-         */
+    /**
+     * 查询学生试卷任务完成情况
+     * @throws Exception
+     */
     @RequestMapping(params="loadPaperPerformance",method=RequestMethod.POST)
     public void loadPaperPerformance(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();
@@ -3567,7 +3731,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String usertypeid=request.getParameter("usertypeid");
         if(uidArray==null||uidArray.trim().length()<1
                 ||taskid==null||taskid.trim().length()<1
-                //||usertypeid==null||usertypeid.trim().length()<1
+            //||usertypeid==null||usertypeid.trim().length()<1
                 ){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());

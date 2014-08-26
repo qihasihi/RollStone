@@ -2332,13 +2332,15 @@ function resizeimg(ImgD, iwidth, iheight) {
  */
 function generXheditor(resdetailid, isstuipt) {
     var htm = '<textarea id="xheditor"></textarea>';
-    if (isstuipt)
+    if (isstuipt){
+        htm +='<p class="p_t_10">上传附件：&nbsp;<input type="file"  class="w410" id="txt_f_'+resdetailid+'" name="txt_f_'+resdetailid+'"/></p>';
         htm += '<p class="t_r"><a href="javascript:void(0);" onclick="doSubStudyNote(\'' + resdetailid + '\')"  class="an_small">发&nbsp;表</a></p>';
+    }
     else
         htm += '<p class="t_r"><a href="javascript:void(0);" onclick="doSubResourceComment(\'' + resdetailid + '\')"  class="an_small">发&nbsp;表</a></p>';
     $("#div_xheditor").html(htm);
     if(isstuipt){
-        editor = new UE.ui.Editor({
+       /* editor = new UE.ui.Editor({
             //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
             toolbars: [
                 //['emotion','attachment','superscript','subscript','fullscreen','insertimage']
@@ -2351,7 +2353,7 @@ function generXheditor(resdetailid, isstuipt) {
         textarea:'xheditor'; //与textarea的name值保持一致
         //editor.render('editor');
         editor.setDataId(new Date().getTime());
-        editor.render('xheditor');
+        editor.render('xheditor'); */
     }
     /*  editor = new UE.ui.Editor({
      //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
@@ -2374,43 +2376,89 @@ function generXheditor(resdetailid, isstuipt) {
 function doSubStudyNote(resid) {
     if (typeof resid == 'undefined')
         return;
-    //var commentobj = $("#xheditor");
 
-    if (editor.getContent().Trim().length < 1) {
-        alert('请输入学习心得后提交!');
+    var valObj = $("#xheditor");
+    if (valObj.val().Trim().length < 1) {
+        alert("请输入学习心得!");
         return;
     }
-    var param = {
-        courseid: courseid,
-        answercontent: editor.getContent(),
-        resid: resid
-    };
-    if (typeof (taskid) != 'undefined' && taskid.length > 0)
-        param.taskid = taskid;
-    $.ajax({
-        url: 'task?m=doSubStudyNotes',
-        dataType: 'json',
-        type: "post",
-        cache: false,
-        data: param,
-        error: function () {
-            alert('异常错误!系统未响应!');
-        },
-        success: function (rps) {
-            if (rps.type == "error") {
-                alert(rps.msg);
-            } else {
-                alert(rps.msg);
-                $("#div_xheditor").hide();
-                loadStudyNotes(usertype);
-                try {
-                    $("#xheditor").setContent("");
-                } catch (e) {
-                }
 
-            }
+    /*if (note_editor.getContent().Trim().length < 1) {
+     alert("请输入学习心得!");
+     return;
+     }*/
+
+    var isTishiAnnex=false;
+    //附件上传
+    var annexObj=$("#txt_f_"+resid);
+    if(annexObj.length>0&&annexObj.val().Trim().length>0){
+        //先附件上传
+        if(!isTishiAnnex){
+            alert("您选择了附件上传,将会先提交附件再提交数据，请耐心等待上传完毕!");
+            isTishiAnnex=true;
         }
-    });
+        var param = {
+            courseid: courseid,
+            answercontent: valObj.val(),
+            resid: resid
+        };
+        if (typeof (taskid) != 'undefined' && taskid.length > 0)
+            param.taskid = taskid;
+        var url="task?m=doSubStudyNotes&hasannex=1";
+        $.ajaxFileUpload({
+            url: url+'&' + $.param(param),
+            fileElementId: 'txt_f_'+resid.toString()+'',
+            dataType: 'json',
+            secureuri: false,
+            type: 'POST',
+            success: function (rps, status) {
+                if(rps.type=="success"){
+                    alert(rps.msg);
+                    $("#div_xheditor").hide();
+                    loadStudyNotes(usertype);
+                    $("#xheditor").html('');
+                }else
+                    alert(rps.msg);
+
+            },
+            error: function (data, status, e) {
+                alert(e);
+            }
+        });
+    }else{
+        var param = {
+            courseid: courseid,
+            answercontent: editor.getContent(),
+            resid: resid
+        };
+        if (typeof (taskid) != 'undefined' && taskid.length > 0)
+            param.taskid = taskid;
+        $.ajax({
+            url: 'task?m=doSubStudyNotes',
+            dataType: 'json',
+            type: "post",
+            cache: false,
+            data: param,
+            error: function () {
+                alert('异常错误!系统未响应!');
+            },
+            success: function (rps) {
+                if (rps.type == "error") {
+                    alert(rps.msg);
+                } else {
+                    alert(rps.msg);
+                    $("#div_xheditor").hide();
+                    loadStudyNotes(usertype);
+                    try {
+                        $("#xheditor").html('');
+                    } catch (e) {
+                    }
+
+                }
+            }
+        });
+    }
+
 }
 
 
@@ -2893,7 +2941,7 @@ function loadStudyNotes(usertype) {
                     if (rps.objList[0] != null && rps.objList[1] != null && rps.objList[1]=="on") {
                         $("#div_xheditor").hide();
                         if (usertype == 1) {
-                            htm += '<p>我的心得&nbsp;<a  class="ico11" title="编辑" href="javascript:genderStuNoteTextArea(' + rps.objList[0].ref + ')"></a>';
+                            htm += '<p>我的心得&nbsp;';//<a  class="ico11" title="编辑" href="javascript:genderStuNoteTextArea(' + rps.objList[0].ref + ')"></a>';
                             htm += '<div id="dv_updnote" class="two">' + rps.objList[0].answercontent;
                             if(typeof rps.objList[0].replyattach!='undefined'&&rps.objList[0].replyattach.toString().length>0)
                                 htm += '<p id="p_stu_note">心得附件：<a class="font-blue" target="_blank" href="uploadfile/' + rps.objList[0].replyattach + '">' + rps.objList[0].replyattach + '</a></p>';
@@ -2936,7 +2984,7 @@ function genderStuNoteTextArea(ref) {
 
 
     var innerHtm='<textarea id="txt_updnote">'+htm+'</textarea>';
-    innerHtm+='<p>上传附件：&nbsp;<input type="file" id="txt_f_'+ref+'" name="txt_f_'+ref+'"/></p>';
+    innerHtm+='<p class="p_t_10">上传附件：&nbsp;<input type="file"  class="w410" id="txt_f_'+ref+'" name="txt_f_'+ref+'"/></p>';
     innerHtm+= '<p class="t_r"><a href="javascript:doUpdStuNote(' + ref + ')" class="an_small">确定</a><a  class="an_small" href="javascript:cancelUpdStuNote()">取消</a></p>';
     divObj.html(innerHtm);
     /*
