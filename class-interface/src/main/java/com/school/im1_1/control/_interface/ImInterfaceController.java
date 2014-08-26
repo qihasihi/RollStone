@@ -1514,33 +1514,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         TpTaskInfo tmpTask=taskList.get(0);
         String quesanswer = replyDetail;
         if(tmpTask.getTasktype()==1){
-            QuestionAnswer qa=new QuestionAnswer();
-            qa.setCourseid(tmpTask.getCourseid());
-            qa.setQuesparentid(tmpTask.getTaskvalueid());
-            qa.setQuesid(Long.parseLong("0"));
-            qa.setUserid(userList.get(0).getRef());
-            qa.setAnswercontent(quesanswer);
-            qa.setRightanswer(1);
-            qa.setTasktype(tmpTask.getTasktype());
-            qa.setTaskid(tmpTask.getTaskid());
-            if(replyAttach!=null&&replyAttach.length()>0){
-                qa.setReplyattach(replyAttach);
-                qa.setReplyattachtype(Integer.parseInt(attachType));
-            }
-            sql=new StringBuilder();
-            objList=this.questionAnswerManager.getSaveSql(qa,sql);
-            if(sql!=null&&objList!=null){
-                sqlListArray.add(sql.toString());
-                objListArray.add(objList);
-            }
-
-
-            if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){
+            if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==1){//查看标准的，添加完成
                 TaskPerformanceInfo tp=new TaskPerformanceInfo();
                 tp.setTaskid(taskList.get(0).getTaskid());
                 tp.setTasktype(taskList.get(0).getTasktype());
                 tp.setCourseid(taskList.get(0).getCourseid());
-                tp.setCriteria(2);//提交心得
+                tp.setCriteria(1);//提交心得
                 tp.setUserid(userList.get(0).getRef());
                 tp.setIsright(1);
                 List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
@@ -1552,9 +1531,49 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         objListArray.add(objList);
                     }
                 }
-            }else{
-                response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务没有提交心得要求\"}");
-                return;
+            }else{//提交心得标准的，添加回答数据和完成
+                QuestionAnswer qa=new QuestionAnswer();
+                qa.setCourseid(tmpTask.getCourseid());
+                qa.setQuesparentid(tmpTask.getTaskvalueid());
+                qa.setQuesid(Long.parseLong("0"));
+                qa.setUserid(userList.get(0).getRef());
+                qa.setAnswercontent(quesanswer);
+                qa.setRightanswer(1);
+                qa.setTasktype(tmpTask.getTasktype());
+                qa.setTaskid(tmpTask.getTaskid());
+                if(replyAttach!=null&&replyAttach.length()>0){
+                    qa.setReplyattach(replyAttach);
+                    qa.setReplyattachtype(Integer.parseInt(attachType));
+                }
+                sql=new StringBuilder();
+                objList=this.questionAnswerManager.getSaveSql(qa,sql);
+                if(sql!=null&&objList!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+
+
+                if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){
+                    TaskPerformanceInfo tp=new TaskPerformanceInfo();
+                    tp.setTaskid(taskList.get(0).getTaskid());
+                    tp.setTasktype(taskList.get(0).getTasktype());
+                    tp.setCourseid(taskList.get(0).getCourseid());
+                    tp.setCriteria(2);//提交心得
+                    tp.setUserid(userList.get(0).getRef());
+                    tp.setIsright(1);
+                    List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
+                    if(tpList==null||tpList.size()<1){
+                        sql=new StringBuilder();
+                        objList=this.taskPerformanceManager.getSaveSql(tp,sql);
+                        if(sql!=null&&objList!=null){
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                }else{
+                    response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务没有提交心得要求\"}");
+                    return;
+                }
             }
         }else{
             QuestionAnswer qa=new QuestionAnswer();
@@ -1606,61 +1625,63 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 JSONObject jo = new JSONObject();
                 jo.put("result",1);
                 jo.put("msg","回答完成");
-                List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
-                Map returnUserMap = new HashMap();
-                List<Map<String,Object>> taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
-                if(taskUserRecord!=null&&taskUserRecord.size()>0){
-                    for(int i = 0;i<taskUserRecord.size();i++){
-                        int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
-                        int days = 0;
-                        int hours =0;
-                        int mins = 0;
-                        int seconds = 0;
-                        if(time>0){
-                            seconds = time%60;
-                            if(seconds>0){
-                                mins = time/60;
-                            }else{
-                                seconds = seconds*60;
-                            }
-                            if(mins>0){
-                                hours = mins/60;
-                            }
-                            if(hours>0){
-                                days= hours/24;
-                            }
-                        }
-                        if(days>0){
-                            String t = taskUserRecord.get(i).get("C_TIME").toString();
-                            t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
-                            returnUserMap.put("replyDate",t);
-                        }else{
-                            if(hours>0){
-                                returnUserMap.put("replyDate",hours+"小时");
-                            }else{
-                                if(mins>0){
-                                    returnUserMap.put("replyDate",mins+"分钟");
+                if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){//提交标准的返回回答列表
+                    List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
+                    Map returnUserMap = new HashMap();
+                    List<Map<String,Object>> taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
+                    if(taskUserRecord!=null&&taskUserRecord.size()>0){
+                        for(int i = 0;i<taskUserRecord.size();i++){
+                            int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
+                            int days = 0;
+                            int hours =0;
+                            int mins = 0;
+                            int seconds = 0;
+                            if(time>0){
+                                seconds = time%60;
+                                if(seconds>0){
+                                    mins = time/60;
                                 }else{
-                                    if(seconds>0){
-                                        returnUserMap.put("replyDate",seconds+"秒");
+                                    seconds = seconds*60;
+                                }
+                                if(mins>0){
+                                    hours = mins/60;
+                                }
+                                if(hours>0){
+                                    days= hours/24;
+                                }
+                            }
+                            if(days>0){
+                                String t = taskUserRecord.get(i).get("C_TIME").toString();
+                                t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
+                                returnUserMap.put("replyDate",t);
+                            }else{
+                                if(hours>0){
+                                    returnUserMap.put("replyDate",hours+"小时");
+                                }else{
+                                    if(mins>0){
+                                        returnUserMap.put("replyDate",mins+"分钟");
                                     }else{
-                                        returnUserMap.put("replyDate","1秒");
+                                        if(seconds>0){
+                                            returnUserMap.put("replyDate",seconds+"秒");
+                                        }else{
+                                            returnUserMap.put("replyDate","1秒");
+                                        }
                                     }
                                 }
                             }
+                            returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
+                            returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
+                            returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
+                            returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                            returnUserMap.put("uPhoto","img");
+                            returnUserMap.put("uName","小虎");
+                            returnUserRecord.add(returnUserMap);
                         }
-                        returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
-                        returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
-                        returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
-                        returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
-                        returnUserMap.put("uPhoto","img");
-                        returnUserMap.put("uName","小虎");
-                        returnUserRecord.add(returnUserMap);
                     }
+                    Map m = new HashMap();
+                    m.put("replyList",returnUserRecord);
+                    jo.put("data",m);
                 }
-                Map m = new HashMap();
-                m.put("replyList",returnUserRecord);
-                jo.put("data",m);
                 response.getWriter().print(jo.toString());
             }else{
                 response.getWriter().print("{\"result\":\"0\",\"msg\":\"回答失败\"}");
@@ -1800,6 +1821,78 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
         response.getWriter().print(jo.toString());
     }
+
+    /**
+     * 进入论题详情页面jsp
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=toTopicJsp",method={RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView toTopicJsp(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+        JsonEntity je = new JsonEntity();
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return null;
+        }
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
+        String taskId = paramMap.get("taskId");
+        String userid = paramMap.get("jid");
+        String classid = paramMap.get("classId");
+        String classtype = paramMap.get("classtype");
+        String isVirtual = paramMap.get("isVirtual");
+        String usertype = paramMap.get("userType");
+        String schoolid =paramMap.get("schoolId");
+        String sig = request.getParameter("sign");
+        //String sign = UrlSigUtil.makeSigSimple("TaskInfo",paramMap,"*ETT#HONER#2014*");
+        //验证，首先去掉sign，在进行md5验证
+        paramMap.remove("sign");
+        Boolean b = UrlSigUtil.verifySigSimple("toTopicJsp",paramMap,sig);
+        if(!b){
+            je.setMsg("验证失败，非法登录");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        int utype = ImUtilTool.getUserType(usertype);
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            je.setMsg("当前用户未绑定");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //验证当前任务，并得到论题id
+        TpTaskInfo task = new TpTaskInfo();
+        task.setTaskid(Long.parseLong(taskId));
+        List<TpTaskInfo> taskList = this.tpTaskManager.getList(task,null);
+        if(taskList==null&&taskList.size()==0){
+            je.setMsg("当前任务不存在");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        Long topicId = taskList.get(0).getTaskvalueid();
+        TpTopicInfo ti = new TpTopicInfo();
+        ti.setTopicid(topicId);
+        ti.setSelectType(2);/*查询类型  1:status<>3   2:不连接被删除的 */
+        List<TpTopicInfo> tiList  = this.tpTopicManager.getList(ti,null);
+        if(tiList==null||tiList.size()==0){
+            je.setMsg("当前论题不存在");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //接下来查询论题下的主题
+        List<Map<String,Object>> themeList = this.imInterfaceManager.getTopicUserRecord(topicId,Integer.parseInt(classid),Integer.parseInt(isVirtual),userList.get(0).getUserid());
+        request.setAttribute("topic",tiList.get(0));
+        request.setAttribute("themeList",themeList);
+        return new ModelAndView("/imjsp-1.1/topic-detail");
+    }
+
 
 
     /**
