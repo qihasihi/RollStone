@@ -1573,6 +1573,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务不存在，请查看后重试\"}");
             return;
         }
+        TpTaskAllotInfo allot = new TpTaskAllotInfo();
+        allot.setTaskid(Long.parseLong(taskid));
+        allot.setUsertypeid(Long.parseLong(classid));
+        List<TpTaskAllotInfo> allotList = this.tpTaskAllotManager.getList(allot,null);
+        Long etime = allotList.get(0).getEtime().getTime();
+        Long currenttime = System.currentTimeMillis();
+        if(etime>currenttime){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已结束，请查看后重试\"}");
+            return;
+        }
         List<Object>objList=null;
         StringBuilder sql=null;
         List<String>sqlListArray=new ArrayList<String>();
@@ -1779,6 +1789,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 //        }
         HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
         String taskId = paramMap.get("taskId");
+        String classid = paramMap.get("classId");
         String userid = paramMap.get("jid");
         String usertype = paramMap.get("userType");
         String schoolid =paramMap.get("schoolId");
@@ -1817,6 +1828,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<TpTaskInfo> tList = this.tpTaskManager.getList(t,null);
         if(tList==null&&tList.size()==0){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务不存在，请联系管理员\"}");
+            return;
+        }
+        TpTaskAllotInfo allot = new TpTaskAllotInfo();
+        allot.setTaskid(Long.parseLong(taskId));
+        allot.setUsertypeid(Long.parseLong(classid));
+        List<TpTaskAllotInfo> allotList = this.tpTaskAllotManager.getList(allot,null);
+        Long etime = allotList.get(0).getEtime().getTime();
+        Long currenttime = System.currentTimeMillis();
+        if(etime>currenttime){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已结束，请查看后重试\"}");
             return;
         }
         Long topicId = tList.get(0).getTaskvalueid();
