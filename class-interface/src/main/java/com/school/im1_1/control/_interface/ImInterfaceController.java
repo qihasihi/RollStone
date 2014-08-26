@@ -91,7 +91,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=StudyModule",method= RequestMethod.POST)
+    @RequestMapping(params="m=StudyModule",method= {RequestMethod.GET,RequestMethod.POST})
     public void getStudyModule(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         String userid = request.getParameter("jid");
         String usertype=request.getParameter("userType");
@@ -158,7 +158,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=ClassTask",method= RequestMethod.GET)
+    @RequestMapping(params="m=ClassTask",method= {RequestMethod.GET,RequestMethod.POST})
     public void getClassTask(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String classid = request.getParameter("classId");
@@ -211,9 +211,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             for(int i = 0;i<courseList.size();i++){
                 List<Map<String,Object>> taskList;
                 if(utype==2){
-                    taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),null);
+                    taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),null,Integer.parseInt(classid));
                 }else{
-                    taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),userList.get(0).getUserid());
+                    taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),userList.get(0).getUserid(),Integer.parseInt(classid));
                 }
                 if(taskList!=null&&taskList.size()>0){
                     for(int j = 0;j<taskList.size();j++){
@@ -309,7 +309,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=StuClassCalendar",method= RequestMethod.POST)
+    @RequestMapping(params="m=StuClassCalendar",method= {RequestMethod.GET,RequestMethod.POST})
     public void getStuClassCalendar(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String userid = request.getParameter("jid");
@@ -374,6 +374,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         o2.put("courseName",o.get("COURSE_NAME"));
                         o2.put("courseDate",o.get("BEGIN_TIME").toString().substring(0,19)+"~"+(o.get("END_TIME")!=null?o.get("END_TIME").toString().substring(0,19):"——"));
                         o2.put("schoolId",o.get("DC_SCHOOL_ID"));
+                        o2.put("classId",o.get("CLASS_ID"));
+                        o2.put("classType",o.get("CLASS_TYPE"));
+                        o2.put("className",o.get("CLASSNAME"));
                         Map o3 = new HashMap();
                         o3.put("personTotalScore","350");
                         o3.put("teamShow","本组小红旗总数排全班第一");
@@ -422,7 +425,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=TeaClassCalendar",method= RequestMethod.POST)
+    @RequestMapping(params="m=TeaClassCalendar",method= {RequestMethod.GET,RequestMethod.POST})
     public void getTeaClassCalendar(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String userid = request.getParameter("jid");
@@ -519,7 +522,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=TeaClassCalendarDetail",method= RequestMethod.POST)
+    @RequestMapping(params="m=TeaClassCalendarDetail",method= {RequestMethod.GET,RequestMethod.POST})
     public void getTeaClassCalendarByDay(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String userid = request.getParameter("jid");
@@ -591,7 +594,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=StuClassCalendarDetail",method= RequestMethod.POST)
+    @RequestMapping(params="m=StuClassCalendarDetail",method= {RequestMethod.GET,RequestMethod.POST})
     public void getStuClassCalendarByDay(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String userid = request.getParameter("jid");
@@ -642,6 +645,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 o2.put("courseName",o.get("COURSE_NAME"));
                 o2.put("courseDate",o.get("BEGIN_TIME").toString().substring(0,19)+"~"+(o.get("END_TIME")!=null?o.get("END_TIME").toString().substring(0,19):"——"));
                 o2.put("schoolId",o.get("DC_SCHOOL_ID"));
+                o2.put("classId",o.get("CLASS_ID"));
+                o2.put("classType",o.get("CLASS_TYPE"));
+                o2.put("className",o.get("CLASSNAME"));
                 Map o3 = new HashMap();
                 o3.put("personTotalScore", "350");
                 o3.put("teamShow","本组小红旗总数排全班第一");
@@ -906,63 +912,115 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
             returnMap.put("taskContent", "任务 " + taskList.get(0).getOrderidx() + " " + typename+" "+rsList.get(0).getResname());
             returnMap.put("taskAnalysis",taskinfo.get(0).get("TASKANALYSIS"));
-        }
-        List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
-        List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
-        Map returnUserMap = new HashMap();
-        if(utype==2){
-            taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
         }else{
-            taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
+            returnMap.put("attachs", taskinfo.get(0).get("ATTACHS"));
+            //returnMap.put("attachType", taskinfo.get(0).get("ATTACHTYPE"));
+            returnMap.put("isOver",taskinfo.get(0).get("ISOVER"));
+            //拼接tasmname显示任务主体
+            String typename = "";
+            switch (taskList.get(0).getTasktype()){
+                case 1:
+                    typename="资源学习";
+                    break;
+                case 2:
+                    typename="互动交流";
+                    break;
+                case 3:
+                    typename="试题";
+                    break;
+                case 4:
+                    typename="成卷测试";
+                    break;
+                case 5:
+                    typename="自主测试";
+                    break;
+                case 6:
+                    typename="微课程学习";
+                    break;
+                case 7:
+                    typename="图片";
+                    break;
+                case 8:
+                    typename="文字";
+                    break;
+                case 9:
+                    typename="视频";
+                    break;
+            }
+            returnMap.put("taskContent",taskinfo.get(0).get("TASKCONTENT"));
+            returnMap.put("taskAnalysis",taskinfo.get(0).get("TASKANALYSIS"));
         }
-        if(taskUserRecord!=null&&taskUserRecord.size()>0){
-            for(int i = 0;i<taskUserRecord.size();i++){
-                int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
-                int days = 0;
-                int hours =0;
-                int mins = 0;
-                int seconds = 0;
-                if(time>0){
-                    seconds = time%60;
-                    if(seconds>0){
-                        mins = time/60;
-                    }else{
-                        seconds = seconds*60;
-                    }
-                    if(mins>0){
-                        hours = mins/60;
-                    }
-                    if(hours>0){
-                        days= hours/24;
-                    }
-                }
-                if(days>0){
-                    String t = taskUserRecord.get(i).get("C_TIME").toString();
-                    t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
-                    returnUserMap.put("replyDate",t);
-                }else{
-                    if(hours>0){
-                        returnUserMap.put("replyDate",hours+"小时");
-                    }else{
-                        if(mins>0){
-                            returnUserMap.put("replyDate",mins+"分钟");
+        //判断学生是否回答了任务
+        Boolean iscomplete =false;
+        if(utype!=2){
+            TaskPerformanceInfo tf = new TaskPerformanceInfo();
+            tf.setTaskid(Long.parseLong(taskid));
+            tf.setUserid(userList.get(0).getRef());
+            List<TaskPerformanceInfo> pList = this.taskPerformanceManager.getList(tf,null);
+            if(pList!=null&&pList.size()>0){
+                iscomplete=true;
+            }
+        }
+        if(iscomplete){
+            List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
+            List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
+            Map returnUserMap = new HashMap();
+            if(utype==2){
+                taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
+            }else{
+                taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
+            }
+            if(taskUserRecord!=null&&taskUserRecord.size()>0){
+                for(int i = 0;i<taskUserRecord.size();i++){
+                    int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
+                    int days = 0;
+                    int hours =0;
+                    int mins = 0;
+                    int seconds = 0;
+                    if(time>0){
+                        seconds = time%60;
+                        if(seconds>0){
+                            mins = time/60;
                         }else{
-                            if(seconds>0){
-                                returnUserMap.put("replyDate",seconds+"秒");
+                            seconds = seconds*60;
+                        }
+                        if(mins>0){
+                            hours = mins/60;
+                        }
+                        if(hours>0){
+                            days= hours/24;
+                        }
+                    }
+                    if(days>0){
+                        String t = taskUserRecord.get(i).get("C_TIME").toString();
+                        t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
+                        returnUserMap.put("replyDate",t);
+                    }else{
+                        if(hours>0){
+                            returnUserMap.put("replyDate",hours+"小时");
+                        }else{
+                            if(mins>0){
+                                returnUserMap.put("replyDate",mins+"分钟");
+                            }else{
+                                if(seconds>0){
+                                    returnUserMap.put("replyDate",seconds+"秒");
+                                }
                             }
                         }
                     }
+                    returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
+                    returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
+                    returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
+                    returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                    returnUserMap.put("uPhoto","img");
+                    returnUserMap.put("uName","小虎");
+                    returnUserRecord.add(returnUserMap);
                 }
-                returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
-                returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
-                returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
-                returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
-                returnUserMap.put("uPhoto","img");
-                returnUserMap.put("uName","小虎");
-                returnUserRecord.add(returnUserMap);
             }
+            returnMap.put("replyList",returnUserRecord);
+        }else{
+            returnMap.put("replyList",null);
         }
-        returnMap.put("replyList",returnUserRecord);
         returnInfo.add(returnMap);
         Map m = new HashMap();
         m.put("result","1");
@@ -1045,6 +1103,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 request.setAttribute("type","单选题");
             }else if(questionInfoList.get(0).getQuestiontype()==4){
                 request.setAttribute("type","多选题");
+            }else{
+                request.setAttribute("type","问答题");
             }
             if(questionInfoList.get(0).getQuestiontype()==3||questionInfoList.get(0).getQuestiontype()==4){
                 QuestionOption questionOption = new QuestionOption();
@@ -1168,7 +1228,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             request.setAttribute("taskid",taskList.get(0).getTaskid());
             request.setAttribute("usertype",utype);
            // System.out.println(System.currentTimeMillis());
-            return new ModelAndView("/imjsp-1.1/task-detail-question");
+            if(questionInfoList.get(0).getQuestiontype()==1){
+                return new ModelAndView("/imjsp-1.1/task-detail-question-wenda");
+            }else{
+                return new ModelAndView("/imjsp-1.1/task-detail-question");
+            }
         }
         return new ModelAndView("");
     }
@@ -1463,14 +1527,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      */
     @RequestMapping(params="m=ReplyTask",method={RequestMethod.GET,RequestMethod.POST})
     public void doReplyTask(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
-            JSONObject jo=new JSONObject();
-            jo.put("result","0");
-            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
-            jo.put("data","");
-            response.getWriter().print(jo.toString());
-            return;
-        }
+//        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+//            JSONObject jo=new JSONObject();
+//            jo.put("result","0");
+//            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+//            jo.put("data","");
+//            response.getWriter().print(jo.toString());
+//            return;
+//        }
         HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
         String taskid = paramMap.get("taskId");
         String classid =paramMap.get("classId");
@@ -1482,6 +1546,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String replyAttach = paramMap.get("replyAttach");
         String attachType = paramMap.get("attachType");
         String timestamp = paramMap.get("time");
+        if(replyAttach==null||replyAttach.length()==0){
+            paramMap.remove("replyAttach");
+            paramMap.remove("attachType");
+        }
         String sig = paramMap.get("sign");
         //  String sign = UrlSigUtil.makeSigSimple("TaskInfo",paramMap,"*ETT#HONER#2014*");
         paramMap.remove("sign");
@@ -1701,14 +1769,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     public void doReplyTopic(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JSONObject returnJo=new JSONObject();
         returnJo.put("result",0);//默认失败
-        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
-            JSONObject jo=new JSONObject();
-            jo.put("result","0");
-            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
-            jo.put("data","");
-            response.getWriter().print(jo.toString());
-            return;
-        }
+//        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+//            JSONObject jo=new JSONObject();
+//            jo.put("result","0");
+//            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+//            jo.put("data","");
+//            response.getWriter().print(jo.toString());
+//            return;
+//        }
         HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
         String taskId = paramMap.get("taskId");
         String userid = paramMap.get("jid");
@@ -1784,15 +1852,17 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         topictheme.setCloudstatus(-1);  //上传云端 -1:未上传
         Boolean bool = false;
         //bool = this.tpTopicThemeManager.doSave(topictheme);
+        sql = new StringBuilder();
+        objList = new ArrayList<Object>();
         objList = this.tpTopicThemeManager.getSaveSql(topictheme,sql);
+        sqlListArray.add(sql.toString());
+        objListArray.add(objList);
         //更新程序
         if(topictheme.getThemecontent()!=null&&topictheme.getThemecontent().trim().length()>0){
             //得到theme_content的更新语句
             this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
                     , topictheme.getThemecontent(), topictheme.getThemeid().toString(), sqlListArray, objListArray);
         }
-        sqlListArray.add(sql.toString());
-        objListArray.add(objList);
         JSONObject jo = new JSONObject();
         //添加到任务完成
         TaskPerformanceInfo tp=new TaskPerformanceInfo();
@@ -1805,6 +1875,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         tp.setIsright(1);
         List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
         if(tpList==null||tpList.size()<1){
+            sql = new StringBuilder();
+            objList = new ArrayList<Object>();
             objList = this.taskPerformanceManager.getSaveSql(tp,sql);
             sqlListArray.add(sql.toString());
             objListArray.add(objList);
@@ -2638,7 +2710,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
         JSONObject jo=new JSONObject();
         jo.put("testId",paperid);
-        jo.put("quesList",returnMapList.size()<1?null:returnMapList);
+        jo.put("quesList",returnMapList);
 
         returnJo.put("data",jo.toString());
         returnJo.put("result",1);

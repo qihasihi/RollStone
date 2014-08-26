@@ -87,7 +87,7 @@
                 </tr> -->
                 <tr>
                     <td style="width:150px">requestDay:</td>
-                    <td><input type="text" name="requestDay" id="txt_requestDay" value="08"/></td>
+                    <td><input type="text" name="requestDay" id="txt_requestDay" value="2014-08-15"/></td>
                     <td style="width:250px"></td>
                 </tr>
 
