@@ -367,12 +367,33 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), utype, Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
                 if(courseArray!=null&&courseArray.size()>0){
                     List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
+                    Date d = new Date();
                     for(int i = 0;i<courseArray.size();i++){
                         Map o = courseArray.get(i);
                         Map o2 = new HashMap();
                         o2.put("courseId",o.get("COURSE_ID"));
                         o2.put("courseName",o.get("COURSE_NAME"));
-                        o2.put("courseDate",o.get("BEGIN_TIME").toString().substring(0,19)+"~"+(o.get("END_TIME")!=null?o.get("END_TIME").toString().substring(0,19):"——"));
+                        if(o.get("BEGIN_TIME")!=null&&o.get("END_TIME")!=null){
+                            int thisDay = d.getDay();
+                            Date btime = UtilTool.StringConvertToDate(o.get("BEGIN_TIME").toString(),UtilTool.DateType.type1);
+                            int bDay = btime.getDay();
+                            Date etime = UtilTool.StringConvertToDate(o.get("END_TIME").toString(),UtilTool.DateType.type1);
+                            int eDay = etime.getDay();
+                            if(thisDay==bDay&&thisDay==eDay){
+                                if(o.get("BEGIN_TIME").toString().indexOf(":")>0&&o.get("END_TIME").toString().indexOf(":")>0){
+                                    String coureBtime = o.get("BEGIN_TIME").toString().substring((o.get("BEGIN_TIME").toString().indexOf(" ")+1),o.get("BEGIN_TIME").toString().lastIndexOf(":"));
+                                    String coureEtime = o.get("END_TIME").toString().substring((o.get("END_TIME").toString().indexOf(" ")+1),o.get("END_TIME").toString().lastIndexOf(":"));
+                                    o2.put("courseDate",coureBtime+"~"+coureEtime);
+                                }else{
+                                    o2.put("courseDate",null);
+                                }
+                            }else{
+                                o2.put("courseDate",null);
+                            }
+                        }else{
+                            o2.put("courseDate",null);
+                        }
+                        //o2.put("courseDate",o.get("BEGIN_TIME").toString().substring(0,19)+"~"+(o.get("END_TIME")!=null?o.get("END_TIME").toString().substring(0,19):"——"));
                         o2.put("schoolId",o.get("DC_SCHOOL_ID"));
                         o2.put("classId",o.get("CLASS_ID"));
                         o2.put("classType",o.get("CLASS_TYPE"));
@@ -477,12 +498,33 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             List<Map<String,Object>> courseArray = this.imInterfaceManager.getTeacherCalendarDetail(userList.get(0).getUserid(), utype, Integer.parseInt(schoolid), currentDay);
             if(courseArray!=null&&courseArray.size()>0){
                 List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
+                Date d = new Date();
                 for(int i = 0;i<courseArray.size();i++){
                     Map o = courseArray.get(i);
                     Map o2 = new HashMap();
                     o2.put("courseId",o.get("COURSE_ID"));
                     o2.put("courseName",o.get("COURSE_NAME"));
-                    o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
+                    if(o.get("BEGIN_TIME")!=null&&o.get("END_TIME")!=null){
+                        int thisDay = d.getDay();
+                        Date btime = UtilTool.StringConvertToDate(o.get("BEGIN_TIME").toString(),UtilTool.DateType.type1);
+                        int bDay = btime.getDay();
+                        Date etime = UtilTool.StringConvertToDate(o.get("END_TIME").toString(),UtilTool.DateType.type1);
+                        int eDay = etime.getDay();
+                        if(thisDay==bDay&&thisDay==eDay){
+                            if(o.get("BEGIN_TIME").toString().indexOf(":")>0&&o.get("END_TIME").toString().indexOf(":")>0){
+                                String coureBtime = o.get("BEGIN_TIME").toString().substring((o.get("BEGIN_TIME").toString().indexOf(" ")+1),o.get("BEGIN_TIME").toString().lastIndexOf(":"));
+                                String coureEtime = o.get("END_TIME").toString().substring((o.get("END_TIME").toString().indexOf(" ")+1),o.get("END_TIME").toString().lastIndexOf(":"));
+                                o2.put("courseDate",coureBtime+"~"+coureEtime);
+                            }else{
+                                o2.put("courseDate",null);
+                            }
+                        }else{
+                            o2.put("courseDate",null);
+                        }
+                    }else{
+                        o2.put("courseDate",null);
+                    }
+                    //o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
                     o2.put("schoolId",o.get("DC_SCHOOL_ID"));
                     o2.put("classId",o.get("CLASS_ID"));
                     o2.put("classType",o.get("CLASS_TYPE"));
@@ -564,12 +606,33 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Map m2 = new HashMap();
         if(courseArray!=null&&courseArray.size()>0){
             List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
+            Date d = new Date();
             for(int i = 0;i<courseArray.size();i++){
                 Map o = courseArray.get(i);
                 Map o2 = new HashMap();
                 o2.put("courseId",o.get("COURSE_ID"));
                 o2.put("courseName",o.get("COURSE_NAME"));
-                o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
+                if(o.get("BEGIN_TIME")!=null&&o.get("END_TIME")!=null){
+                    int thisDay = d.getDay();
+                    Date btime = UtilTool.StringConvertToDate(o.get("BEGIN_TIME").toString(),UtilTool.DateType.type1);
+                    int bDay = btime.getDay();
+                    Date etime = UtilTool.StringConvertToDate(o.get("END_TIME").toString(),UtilTool.DateType.type1);
+                    int eDay = etime.getDay();
+                    if(thisDay==bDay&&thisDay==eDay){
+                        if(o.get("BEGIN_TIME").toString().indexOf(":")>0&&o.get("END_TIME").toString().indexOf(":")>0){
+                            String coureBtime = o.get("BEGIN_TIME").toString().substring((o.get("BEGIN_TIME").toString().indexOf(" ")+1),o.get("BEGIN_TIME").toString().lastIndexOf(":"));
+                            String coureEtime = o.get("END_TIME").toString().substring((o.get("END_TIME").toString().indexOf(" ")+1),o.get("END_TIME").toString().lastIndexOf(":"));
+                            o2.put("courseDate",coureBtime+"~"+coureEtime);
+                        }else{
+                            o2.put("courseDate",null);
+                        }
+                    }else{
+                        o2.put("courseDate",null);
+                    }
+                }else{
+                    o2.put("courseDate",null);
+                }
+                //o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
                 o2.put("schoolId",o.get("DC_SCHOOL_ID"));
                 o2.put("classId",o.get("CLASS_ID"));
                 o2.put("classType",o.get("CLASS_TYPE"));
@@ -638,12 +701,33 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Map m2 = new HashMap();
         if(courseArray!=null&&courseArray.size()>0){
             List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
+            Date d = new Date();
             for(int i = 0;i<courseArray.size();i++){
                 Map o = courseArray.get(i);
                 Map o2 = new HashMap();
                 o2.put("courseId",o.get("COURSE_ID"));
                 o2.put("courseName",o.get("COURSE_NAME"));
-                o2.put("courseDate",o.get("BEGIN_TIME").toString().substring(0,19)+"~"+(o.get("END_TIME")!=null?o.get("END_TIME").toString().substring(0,19):"——"));
+                if(o.get("BEGIN_TIME")!=null&&o.get("END_TIME")!=null){
+                    int thisDay = d.getDay();
+                    Date btime = UtilTool.StringConvertToDate(o.get("BEGIN_TIME").toString(),UtilTool.DateType.type1);
+                    int bDay = btime.getDay();
+                    Date etime = UtilTool.StringConvertToDate(o.get("END_TIME").toString(),UtilTool.DateType.type1);
+                    int eDay = etime.getDay();
+                    if(thisDay==bDay&&thisDay==eDay){
+                        if(o.get("BEGIN_TIME").toString().indexOf(":")>0&&o.get("END_TIME").toString().indexOf(":")>0){
+                            String coureBtime = o.get("BEGIN_TIME").toString().substring((o.get("BEGIN_TIME").toString().indexOf(" ")+1),o.get("BEGIN_TIME").toString().lastIndexOf(":"));
+                            String coureEtime = o.get("END_TIME").toString().substring((o.get("END_TIME").toString().indexOf(" ")+1),o.get("END_TIME").toString().lastIndexOf(":"));
+                            o2.put("courseDate",coureBtime+"~"+coureEtime);
+                        }else{
+                            o2.put("courseDate",null);
+                        }
+                    }else{
+                        o2.put("courseDate",null);
+                    }
+                }else{
+                    o2.put("courseDate",null);
+                }
+                //o2.put("courseDate",o.get("BEGIN_TIME").toString().substring(0,19)+"~"+(o.get("END_TIME")!=null?o.get("END_TIME").toString().substring(0,19):"——"));
                 o2.put("schoolId",o.get("DC_SCHOOL_ID"));
                 o2.put("classId",o.get("CLASS_ID"));
                 o2.put("classType",o.get("CLASS_TYPE"));
@@ -1579,7 +1663,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<TpTaskAllotInfo> allotList = this.tpTaskAllotManager.getList(allot,null);
         Long etime = allotList.get(0).getEtime().getTime();
         Long currenttime = System.currentTimeMillis();
-        if(etime>currenttime){
+        if(etime<currenttime){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已结束，请查看后重试\"}");
             return;
         }
@@ -1836,7 +1920,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<TpTaskAllotInfo> allotList = this.tpTaskAllotManager.getList(allot,null);
         Long etime = allotList.get(0).getEtime().getTime();
         Long currenttime = System.currentTimeMillis();
-        if(etime>currenttime){
+        if(etime<currenttime){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已结束，请查看后重试\"}");
             return;
         }
