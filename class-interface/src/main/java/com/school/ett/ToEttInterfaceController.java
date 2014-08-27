@@ -36,7 +36,7 @@ public class ToEttInterfaceController extends BaseController<String> {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(params = "m=bindJID",method= {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(params="m=bindJID",method= {RequestMethod.POST,RequestMethod.GET})
     public void bindJid(HttpServletRequest request,HttpServletResponse response)throws Exception{
         String jId = request.getParameter("jId");
         String userId=request.getParameter("userId");
@@ -66,10 +66,10 @@ public class ToEttInterfaceController extends BaseController<String> {
         map.put("userId",userId);
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
-        String sign = UrlSigUtil.makeSigSimple("ETT-SCHOOL-MODEL", map, UtilTool.utilproperty.getProperty("TO_ETT_KEY").toString());
-        System.out.println("ettKey"+key+"   key:"+sign);
+//        String sign = UrlSigUtil.makeSigSimple("ETT-SCHOOL-MODEL", map, UtilTool.utilproperty.getProperty("TO_ETT_KEY").toString());
+//        System.out.println("ettKey"+key+"   key:"+sign);
         Boolean b = UrlSigUtil.verifySigSimple("ETT-SCHOOL-MODEL", map, key);
-        if(b){
+        if(!b){
             returnJO.put("msg","验证失败，非法登录");
             response.getWriter().println(returnJO.toString());
             return;

@@ -14,11 +14,13 @@ import com.school.manager.UserManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.*;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
+import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.*;
@@ -64,7 +66,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
     private IMicVideoPaperManager micVideoPaperManager;
     private IStuPaperLogsManager stuPaperLogsManager;
+    private ITpStuScoreLogsManager tpStuScoreLogsManager;
     public ImInterfaceController(){
+        this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
         this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
         this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
         this.paperManager=this.getManager(PaperManager.class);
@@ -2794,8 +2798,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 tmpList.add(paperQuestion);
 
 
-
-
                 Map<String,Object> map=new HashMap<String,Object>();
                 map.put("quesId",paperQuestion.getQuestionid());
                 map.put("quesType",paperQuestion.getQuestiontype()==1?1:0); //1：其他 主观题
@@ -2821,6 +2823,124 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         returnJo.put("result",1);
         response.getWriter().print(returnJo.toString());
     }
+
+    /**
+     * 任务获得积分保存接口
+     *  说明：任务获得积分、道具保存接口
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=saveUserScore",method = RequestMethod.POST)
+    public void doSaveUserScore(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result",0);//默认失败
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
+        //获取参数
+        String taskId=paramMap.get("taskId");
+        String jid=paramMap.get("jid");
+        String classId=paramMap.get("classId");
+        String schoolId=paramMap.get("schoolId");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        if(taskId==null||schoolId==null||time==null||sign==null||jid==null||classId==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //验证时间
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(time.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //去除sign
+        paramMap.remove("sign");
+        //验证Md5
+        Boolean b = UrlSigUtil.verifySigSimple("saveUserScore",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo u=new UserInfo();
+        u.setEttuserid(Integer.parseInt(jid));
+        u.setDcschoolid(Integer.parseInt(schoolId));
+        List<UserInfo>userList=this.userManager.getList(u,null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","当前云帐号未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo tmpUser=userList.get(0);
+        //验证任务 是否存在
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskId.trim()));
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<TpTaskInfo> tpTaskList=this.tpTaskManager.getList(tk,presult);
+        if(tpTaskList==null||tpTaskList.size()<1){
+            returnJo.put("msg","错误，当前任务不存在!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        tk=tpTaskList.get(0);
+        //验证任务是否在有效期内
+        //验证该任务是否在有效期内
+        TpTaskAllotInfo tpallot=new TpTaskAllotInfo();
+        tpallot.setTaskid(tk.getTaskid());
+        tpallot.getUserinfo().setUserid(tmpUser.getUserid());
+        if(!this.tpTaskAllotManager.getYXTkCount(tpallot)){
+            returnJo.put("msg", "当前任务未开始或不存在!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //操作积分，道具
+        //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+        //规则转换:    6             7         8
+        Integer type=0;
+        switch(tk.getTasktype()){
+            case 3:     //试题
+                type=1;break;
+            case 1:     //资源学习
+                type=3;break;
+            case 2:
+                type=4;break;
+            case 4:
+                type=6;
+                break;
+            case 6:
+                type=8;
+                break;
+            case 5:
+                type=7;
+                break;
+        }
+
+        //                /*奖励加分通过*/
+        if(this.tpStuScoreLogsManager.awardStuScore(tk.getCourseid()
+                ,Long.parseLong(classId.trim())
+                ,tk.getTaskid()
+                ,Long.parseLong(tmpUser.getUserid()+""),type)){
+            returnJo.put("msg", "恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
+        }else{
+            returnJo.put("result",1);
+            returnJo.put("msg", "异常错误，奖励加分失败，原因：未知");
+        }
+        response.getWriter().println(returnJo.toString());
+    }
+
 
 }
 
