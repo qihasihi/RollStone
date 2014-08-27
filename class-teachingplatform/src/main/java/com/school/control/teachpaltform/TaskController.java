@@ -2381,11 +2381,12 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         break;
                 }
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                String jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid().toString();
                 /*奖励加分通过*/
                 if(this.tpStuScoreLogsManager.awardStuScore(Long.parseLong(courseid.trim())
                         ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
                         ,Long.parseLong(taskid.trim())
-                        ,Long.parseLong(this.logined(request).getUserid()+""),type)){
+                        ,Long.parseLong(this.logined(request).getUserid()+""),jid,type)){
                     je.setMsg("恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
                 }else
                     System.out.println("awardScore error");
@@ -2931,11 +2932,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
                             type=4;
                             break;
                     }
+                    String jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid().toString();
+
                         /*奖励加分通过*/
                     if(this.tpStuScoreLogsManager.awardStuScore(taskCriList.get(0).getCourseid()
                             , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
                             , taskCriList.get(0).getTaskid()
-                            , Long.parseLong(this.logined(request).getUserid() + ""), type)){
+                            , Long.parseLong(this.logined(request).getUserid() + ""),jid, type)){
                         je.setMsg("查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
                     }else
                         System.out.println("awardScore err ");

@@ -239,12 +239,12 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
                                                 type=4;
                                                 break;
                                         }
-
+                                    String jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid().toString();
                             //                /*奖励加分通过*/
                                         if(this.tpStuScoreLogsManager.awardStuScore(taskList.get(0).getCourseid()
                                                 ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
                                                 ,taskList.get(0).getTaskid()
-                                                ,Long.parseLong(this.logined(request).getUserid()+""),type)){
+                                                ,Long.parseLong(this.logined(request).getUserid()+""),jid,type)){
                                             jsonEntity.setMsg("查看并提交论题:恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
                                         }else
                                             System.out.println("awardScore error");

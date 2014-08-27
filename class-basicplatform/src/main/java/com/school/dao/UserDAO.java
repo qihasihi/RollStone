@@ -31,10 +31,7 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
 		return false;
 	}
 
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
-			List<List<Object>> objArrayList) {
-		return this.executeArrayQuery_PROC(sqlArrayList, objArrayList); 
-	}
+
 
 	public Boolean doSave(UserInfo obj) {
 		if (obj == null)
@@ -95,6 +92,20 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
 		sqlbuilder.append("?)}");
 		return objList;
 	}
+
+    /**
+     * 用ETTUSER_ID将ETT_USER_ID更新为空字段
+     * @param ettUserid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getUpdateEttUserByEttUserIdSql(final Integer ettUserid,StringBuilder sqlbuilder){
+        if(ettUserid==null||sqlbuilder==null)return null;
+        sqlbuilder.append("{CALL user_info_proc_update_ettuserid_byettuserid(?,?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(ettUserid);
+        return objList;
+    }
 
 	public List<UserInfo> getList(UserInfo obj, PageResult presult) {
 		StringBuilder sqlbuilder = new StringBuilder(

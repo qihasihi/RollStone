@@ -1,10 +1,11 @@
 
 package  com.school.manager.teachpaltform.award;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.entity.ClassInfo;
+import com.school.entity.UserInfo;
 import com.school.entity.teachpaltform.award.TpStuScore;
 import com.school.manager.ClassManager;
 import com.school.manager.inter.IClassManager;
@@ -13,6 +14,7 @@ import com.school.util.SpringBeanUtil;
 import com.school.util.UtilTool;
 import jxl.Sheet;
 
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -69,7 +71,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
 	}
 
     //奖励加分
-    public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,Integer type){
+    public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,Integer type){
         if(courseid==null||classid==null||taskid==null||userid==null||type==null)
             return false;
         Boolean returnVal=false;
@@ -83,7 +85,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
         String awardSettings=getPropertiesAwardScore(type);
         String[] awardArray=awardSettings.split(",");
 
-        //连接四中，添加蓝宝石,在UtilTool中进行调用 返回true
+
         boolean isAddEttBlue=true;
 
        List<String> sqlArrayList=new ArrayList<String>();
@@ -147,6 +149,23 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
         if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
             if(this.doExcetueArrayProc(sqlArrayList,objArrayList)){
                 returnVal=true;
+                if(isAddEttBlue&&jid!=null&&jid.trim().length()>0){
+                    //连接四中，添加蓝宝石,在UtilTool中进行调用 返回true
+                    String u=UtilTool.utilproperty.getProperty("TO_ETT_ADD_SAPPHIRE").toString();
+                    HashMap<String,String> paramMap=new HashMap<String,String>();
+                    paramMap.put("eventId","83");
+                    paramMap.put("taskId",taskid.toString());
+                    paramMap.put("jid",jid.toString());
+                    paramMap.put("sapphireCount","1");
+                    paramMap.put("timestamp",new Date().getTime()+"");
+                    String val = UrlSigUtil.makeSigSimple("addSapphire.do",paramMap);
+                    paramMap.put("sign",val);
+                    JSONObject jo=UtilTool.sendPostUrl(u,paramMap,"UTF-8");
+                    if(jo==null||!jo.containsKey("type")||!jo.get("type").toString().trim().equals("success")){
+                        System.out.println(jo.get("msg"));
+                        returnVal=false;
+                    }
+                }
             }
         }
         return returnVal;

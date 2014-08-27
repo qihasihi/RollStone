@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,18 +69,31 @@ public class ToEttInterfaceController extends BaseController<String> {
         map.put("timeStamp",timestamp);
 //        String sign = UrlSigUtil.makeSigSimple("ETT-SCHOOL-MODEL", map, UtilTool.utilproperty.getProperty("TO_ETT_KEY").toString());
 //        System.out.println("ettKey"+key+"   key:"+sign);
-        Boolean b = UrlSigUtil.verifySigSimple("ETT-SCHOOL-MODEL", map, key);
+        Boolean b = UrlSigUtil.verifySigSimple("bindJID", map, key);
         if(!b){
             returnJO.put("msg","验证失败，非法登录");
             response.getWriter().println(returnJO.toString());
             return;
         }
-        //得到当前分校下的该用户
+       StringBuilder sqlbuilder=new StringBuilder();
+        List<String>sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+
+        //查询该JID是否已经绑定
         UserInfo userInfo=new UserInfo();
-        userInfo.setUserid(Integer.parseInt(userId));
-        userInfo.setDcschoolid(Integer.parseInt(schoolid));
+        userInfo.setEttuserid(Integer.parseInt(jId.trim()));
+        List<Object> objList=this.userManager.getUpdateEttUserByEttUserIdSql(Integer.parseInt(jId.trim()),sqlbuilder);
+        if(sqlbuilder!=null){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
         PageResult presult=new PageResult();
         presult.setPageSize(1);
+        //得到当前分校下的该用户
+        userInfo=new UserInfo();
+        userInfo.setUserid(Integer.parseInt(userId));
+        userInfo.setDcschoolid(Integer.parseInt(schoolid));
+
         List<UserInfo> userList=this.userManager.getList(userInfo,presult);
         if(userList==null||userList.size()<1){
             returnJO.put("msg","在该分校中没有发现该学生!分校:"+schoolid+" 学生:"+userId);
@@ -88,7 +102,14 @@ public class ToEttInterfaceController extends BaseController<String> {
         //进行修改
         userInfo.setRef(userList.get(0).getRef());
         userInfo.setEttuserid(Integer.parseInt(jId.trim()));
-        if(this.userManager.doUpdate(userInfo))
+        sqlbuilder=new StringBuilder();
+        objList=this.userManager.getUpdateSql(userInfo,sqlbuilder);
+        if(sqlbuilder!=null){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+
+        if(this.userManager.doExcetueArrayProc(sqlArrayList,objArrayList))
             returnJO.put("type","success");
         else
             returnJO.put("msg","绑定失败!原因：未知，可能执行存储失败!");

@@ -39,4 +39,12 @@ public interface IUserManager extends IBaseManager<UserInfo> {
      * @return
      */
     List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag);
+
+    /**
+     * 用ETTUSER_ID将ETT_USER_ID更新为空字段
+     * @param ettUserid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getUpdateEttUserByEttUserIdSql(final Integer ettUserid,StringBuilder sqlbuilder);
 }

@@ -6,7 +6,6 @@ import java.util.Map;
 import com.school.dao.base.ICommonDAO;
 import com.school.entity.RoleUser;
 import com.school.entity.UserInfo;
-import com.school.entity.teachpaltform.TpTaskInfo;
 import com.school.util.PageResult;
 
 public interface IUserDAO extends ICommonDAO<UserInfo> {
@@ -32,7 +31,13 @@ public interface IUserDAO extends ICommonDAO<UserInfo> {
 	public List<UserInfo> getUserForSelect(String roleid,String clsid,String cname,String grade,String username,PageResult presult);
 
 	public  Map<String,Object>  getTestUser(String year, String relation, PageResult presult);
-
+    /**
+     * 用ETTUSER_ID将ETT_USER_ID更新为空字段
+     * @param ettUserid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getUpdateEttUserByEttUserIdSql(final Integer ettUserid,StringBuilder sqlbuilder);
     /**
      * 获取未完成任务的学生名单
      * @param flag=1 查询未完成

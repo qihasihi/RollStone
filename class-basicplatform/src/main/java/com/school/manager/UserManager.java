@@ -27,9 +27,17 @@ public class UserManager extends BaseManager<UserInfo> implements IUserManager{
 	public void setUserdao(IUserDAO userdao) {
 		this.userdao = userdao;
 	}
-	
 
 
+    /**
+     * 用ETTUSER_ID将ETT_USER_ID更新为空字段
+     * @param ettUserid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getUpdateEttUserByEttUserIdSql(final Integer ettUserid,StringBuilder sqlbuilder){
+        return userdao.getUpdateEttUserByEttUserIdSql(ettUserid,sqlbuilder);
+    }
 	@Override
 	public Boolean doDelete(UserInfo obj) {
 		return userdao.doDelete(obj);
