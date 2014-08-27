@@ -2857,9 +2857,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 if(notCompleteList!=null&&notCompleteList.size()>0){
 
                     for (UserInfo user:notCompleteList){
-                        if(user.getEttuserid()==null)return;
+                        //if(user.getEttuserid()==null)return;
                         Map<String,Object> uMap=new HashMap<String, Object>();
-                        uMap.put("stuJid",user.getEttuserid());
+                        //uMap.put("stuJid",user.getEttuserid());
                         uMap.put("stuName",user.getRealname());
                         userMapList.add(uMap);
                     }
