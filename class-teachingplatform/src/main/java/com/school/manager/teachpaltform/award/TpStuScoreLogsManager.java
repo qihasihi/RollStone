@@ -104,18 +104,19 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
                 objArrayList.add(objList);
             }
         }else{//如果存在，则进行修改
-            entity=tsScoreList.get(0);
-            if(isAddEttBlue)
-                entity.setJewel(Integer.parseInt(awardArray[1]));
-            else
-                entity.setJewel(0);
-            entity.setScore(Integer.parseInt(awardArray[0]));
-            StringBuilder sqlbuilder=new StringBuilder();
-            List<Object> objList=this.tpStuScoreLogsDAO.getUpdateSql(entity, sqlbuilder);
-            if(sqlbuilder.toString().trim().length()>0){
-                sqlArrayList.add(sqlbuilder.toString());
-                objArrayList.add(objList);
-            }
+            return true;
+//            entity=tsScoreList.get(0);
+//            if(isAddEttBlue)
+//                entity.setJewel(Integer.parseInt(awardArray[1]));
+//            else
+//                entity.setJewel(0);
+//            entity.setScore(Integer.parseInt(awardArray[0]));
+//            StringBuilder sqlbuilder=new StringBuilder();
+//            List<Object> objList=this.tpStuScoreLogsDAO.getUpdateSql(entity, sqlbuilder);
+//            if(sqlbuilder.toString().trim().length()>0){
+//                sqlArrayList.add(sqlbuilder.toString());
+//                objArrayList.add(objList);
+//            }
         }
         //查询班级的dc_school_id
         ClassInfo cls=new ClassInfo();
