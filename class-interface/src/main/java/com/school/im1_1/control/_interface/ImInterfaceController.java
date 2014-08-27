@@ -2649,6 +2649,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             return;
         }
         HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
+        JSONObject jo=new JSONObject();
         //获取参数
         String taskId=paramMap.get("taskId");
         String classId=paramMap.get("classId");
@@ -2763,21 +2764,49 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     }
                 }
                 paperid=paperList.get(0).getPaperid();
+            }else{
+                //教师获取未完成学生名单
+                TpTaskInfo task=new TpTaskInfo();
+                task.setTaskid(Long.parseLong(taskId));
+                Integer cid=null;
+                if(classId!=null&&classId.trim().length()>0)
+                    cid=Integer.parseInt(classId);
+
+                List<Map<String,Object>> userMapList=new ArrayList<Map<String, Object>>();
+                List<UserInfo>notCompleteList=this.userManager.getUserNotCompleteTask(task.getTaskid(),null,cid,"1");
+                if(notCompleteList!=null&&notCompleteList.size()>0){
+
+                    for (UserInfo user:notCompleteList){
+                        if(user.getEttuserid()==null)return;
+                        Map<String,Object> uMap=new HashMap<String, Object>();
+                        uMap.put("stuJid",user.getEttuserid());
+                        uMap.put("stuName",user.getRealname());
+                        userMapList.add(uMap);
+                    }
+                }
+                jo.put("stuList",userMapList.size()>0?userMapList:null);
             }
         }
+        List<PaperQuestion>pqList=null;
+        List<PaperQuestion>childList=null;
         //获取提干
-        PaperQuestion pq=new PaperQuestion();
-        pq.setPaperid(paperid);
-        PageResult p=new PageResult();
-        p.setOrderBy("u.order_idx");
-        p.setPageNo(0);
-        p.setPageSize(0);
-        List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+        if(paperid!=null&&paperid.toString().length()>0){
+            PaperQuestion pq=new PaperQuestion();
+            pq.setPaperid(paperid);
+            PageResult p=new PageResult();
+            p.setOrderBy("u.order_idx");
+            p.setPageNo(0);
+            p.setPageSize(0);
+            pqList=this.paperQuestionManager.getList(pq,p);
 
-        //获取试题组下题目
-        PaperQuestion child =new PaperQuestion();
-        child.setPaperid(pq.getPaperid());
-        List<PaperQuestion>childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
+            //获取试题组下题目
+            PaperQuestion child =new PaperQuestion();
+            child.setPaperid(pq.getPaperid());
+            childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
+        }
+
+
+
 
 
         //整合试题组
@@ -2815,9 +2844,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
 
 
-        JSONObject jo=new JSONObject();
-        jo.put("testId",paperid);
-        jo.put("quesList",returnMapList);
+        jo.put("testId",paperid==null?0:paperid);
+        jo.put("quesList",returnMapList.size()>0?returnMapList:null);
 
         returnJo.put("data",jo.toString());
         returnJo.put("result",1);
