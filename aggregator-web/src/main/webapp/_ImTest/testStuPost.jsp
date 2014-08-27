@@ -16,6 +16,7 @@
 
             var schoolId=$("#schoolId").val();
             var jid=$("#jid").val();
+            var classid = $("#classId").val();
             var time=$("#txt_a_time").val();
             var userType = $("#userType").val();
             var taskId = $("#taskId").val();
@@ -23,7 +24,7 @@
             var themeContent = $("#themeContent").val();
             var replyAttach = $("#replyAttach").val();
             var attachType = $("#attachType").val();
-            var param={schoolId:schoolId,jid:jid,time:time,userType:userType,themeTitle:themeTitle,themeContent:themeContent,taskId:taskId};
+            var param={schoolId:schoolId,jid:jid,classId:classid,time:time,userType:userType,themeTitle:themeTitle,themeContent:themeContent,taskId:taskId};
             if(replyAttach.length>0){
                 param.replyAttach = replyAttach;
                 param.attachType = attachType;
@@ -48,6 +49,10 @@
         <tr>
             <td>任务id</td>
             <td><input type="text" name="taskId" id="taskId" value=""/></td>
+        </tr>
+        <tr>
+            <td>班级id</td>
+            <td><input type="text" name="classId" id="classId" value="4"/></td>
         </tr>
         <tr>
             <td>用户id</td>
