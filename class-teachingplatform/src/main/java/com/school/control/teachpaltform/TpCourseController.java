@@ -1114,6 +1114,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             tc.setCourseid(nextCourseId);
             tc.setCuserid(user.getUserid());
             tc.setCourselevel(tc.getCourselevel());
+            tc.setDcschoolid(this.logined(request).getDcschoolid());
 
             sql = new StringBuilder();
             objList = this.tpCourseManager.getSaveSql(tc, sql);
@@ -2106,6 +2107,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String searchType=request.getParameter("searchType");
         PageResult presult = this.getPageResultParameter(request);
         TpCourseInfo tcInfo = this.getParameter(request, TpCourseInfo.class);
+        tcInfo.setDcschoolid(this.logined(request).getDcschoolid());
 
         // 如果搜索类型为专题库搜索 searchType=1 ,则默认附加专题库搜索前置条件
         if(searchType!=null && searchType.trim().equals("1")){
