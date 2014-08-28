@@ -355,7 +355,7 @@ function myInfoAjaxList(rps){
 
 <div class="public_windows" id="dv_firstInto"  style="display:none;>
 <div class="public_windows">
-<h3><a href="1" target="_blank" title="关闭"></a>欢迎进入资源系统！</h3>
+<h3><a href="javascript:;" onclick="closeModel('dv_firstInto')" title="关闭"></a>欢迎进入资源系统！</h3>
 <p class="t_c p_tb_10">你可以上传、管理、共享自我资源，<br>也可查看、使用他人共享或网校配送的资源，快来试试吧！</p>
 <p class="t_c p_tb_10"><a  href="resource?m=toadd" onclick="closeModel('dv_firstInto');" target="_blank"  class="an_public1">上传资源</a>
     &nbsp;&nbsp;<a href="resource?m=toAllResPage" onclick="closeModel('dv_firstInto');" target="_blank" class="an_public1">查看资源</a></p>
