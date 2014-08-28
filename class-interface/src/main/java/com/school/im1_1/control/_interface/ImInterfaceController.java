@@ -1052,7 +1052,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(iscomplete){
             List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
             List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
-            Map returnUserMap = new HashMap();
+            Map returnUserMap = null;
             if(utype==2){
                 taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
             }else{
@@ -1060,6 +1060,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
             if(taskUserRecord!=null&&taskUserRecord.size()>0){
                 for(int i = 0;i<taskUserRecord.size();i++){
+                    returnUserMap = new HashMap();
                     int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
                     int days = 0;
                     int hours =0;
@@ -1683,7 +1684,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 tp.setTaskid(taskList.get(0).getTaskid());
                 tp.setTasktype(taskList.get(0).getTasktype());
                 tp.setCourseid(taskList.get(0).getCourseid());
-                tp.setCriteria(1);//提交心得
+                tp.setCriteria(1);//查看
                 tp.setUserid(userList.get(0).getRef());
                 tp.setIsright(1);
                 List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
@@ -1828,10 +1829,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 jo.put("msg","回答完成");
                 if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){//提交标准的返回回答列表
                     List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
-                    Map returnUserMap = new HashMap();
+                    Map returnUserMap =null;
                     List<Map<String,Object>> taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
                     if(taskUserRecord!=null&&taskUserRecord.size()>0){
                         for(int i = 0;i<taskUserRecord.size();i++){
+                            returnUserMap = new HashMap();
                             int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
                             int days = 0;
                             int hours =0;
@@ -2663,8 +2665,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="m=toZsdxJsp",method={RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView toZhiShiDaoXueJsp( HttpServletRequest request,HttpServletResponse response)throws Exception{
+    @RequestMapping(params="m=toRemoteResourceJsp",method={RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView toRemoteResourceJsp( HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
         if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
@@ -2678,15 +2680,15 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String taskId = paramMap.get("taskId");
         String userid = paramMap.get("jid");
         String classid = paramMap.get("classId");
-        String classtype = paramMap.get("classtype");
+        String classtype = paramMap.get("classType");
         String isvir = paramMap.get("isVirtual");
         String usertype = paramMap.get("userType");
         String schoolid =paramMap.get("schoolId");
         String sig = request.getParameter("sign");
-        //String sign = UrlSigUtil.makeSigSimple("TaskInfo",paramMap,"*ETT#HONER#2014*");
+        String sign = UrlSigUtil.makeSigSimple("toRemoteResourceJsp",paramMap,"*ETT#HONER#2014*");
         //验证，首先去掉sign，在进行md5验证
         paramMap.remove("sign");
-        Boolean b = UrlSigUtil.verifySigSimple("toZsdxJsp",paramMap,sig);
+        Boolean b = UrlSigUtil.verifySigSimple("toRemoteResourceJsp",paramMap,sig);
         if(!b){
             je.setMsg("验证失败，非法登录");
             response.getWriter().print(je.getAlertMsgAndBack());
@@ -2710,7 +2712,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        if(taskList.get(0).getResourcetype()==1||taskList.get(0).getRemotetype()==1){
+        if(taskList.get(0).getResourcetype()==1){
             je.setMsg("当前任务资源不符合要求");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
@@ -2718,12 +2720,55 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long resid = taskList.get(0).getTaskvalueid();
         List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
         List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
-        Map returnUserMap = new HashMap();
-        if(utype==2){
-            taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
-            request.setAttribute("resname",taskList.get(0).getResourcename());
-            request.setAttribute("userRecord",taskUserRecord);
-            return new ModelAndView("");
+        Map returnUserMap = null;
+        if(utype!=2){
+            //首先判断这个任务是否完成，跳转到不同的jsp
+            //判断任务完成标准
+            int criteria = taskList.get(0).getCriteria();
+            //定义判断完成的标示
+            Boolean isComplete = false;
+            if(criteria==1){
+                QuestionAnswer qa = new QuestionAnswer();
+                qa.setTaskid(taskList.get(0).getTaskid());
+                qa.setUserid(userList.get(0).getRef());
+                List<QuestionAnswer> qaList = this.questionAnswerManager.getList(qa,null);
+                if(qaList!=null&&qaList.size()>0){
+                    isComplete=true;
+                }
+            }else{
+                TaskPerformanceInfo tp =new TaskPerformanceInfo();
+                tp.setTaskid(taskList.get(0).getTaskid());
+                tp.setUserid(userList.get(0).getRef());
+                List<TaskPerformanceInfo> tpList = this.taskPerformanceManager.getList(tp,null);
+                if(tpList!=null&&tpList.size()>0){
+                    isComplete=true;
+                }
+            }
+            if(isComplete){
+                taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
+                request.setAttribute("resname",taskList.get(0).getResourcename());
+                request.setAttribute("userRecord",taskUserRecord);
+                return new ModelAndView("");
+            }else{
+                if(taskList.get(0).getRemotetype()==2){
+                    String url = "http://192.168.10.26:8008/study-im-service-1.0/getResourceZSDX.do";
+                    Long time = System.currentTimeMillis();
+                    HashMap<String,String> param = new HashMap<String, String>();
+                    param.put("resourceId",resid.toString());
+                    param.put("timestamp",time.toString());
+                    String signure =  UrlSigUtil.makeSigSimple("getResourceZSDX.do",param,"*ETT#HONER#2014*");
+                    JSONObject returnval = UtilTool.sendPostUrl(url,param,"GBK");
+                    String data=returnval.containsKey("data")?returnval.getString("data"):"";
+                    int result = returnval.containsKey("result")?returnval.getInt("result"):0;
+                    if(result==1){
+                        response.sendRedirect(data);
+                    }else{
+
+                    }
+                }else{
+
+                }
+            }
         }else{
             taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
             if(taskUserRecord!=null&&taskUserRecord.size()>0){
