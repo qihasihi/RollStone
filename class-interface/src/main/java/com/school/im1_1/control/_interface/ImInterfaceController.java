@@ -1739,6 +1739,43 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     return;
                 }
             }
+        }else if(tmpTask.getTasktype()==3){
+            QuestionAnswer qa=new QuestionAnswer();
+            qa.setCourseid(tmpTask.getCourseid());
+            qa.setQuesparentid(tmpTask.getTaskvalueid());
+            qa.setQuesid(Long.parseLong("0"));
+            qa.setUserid(userList.get(0).getRef());
+            qa.setAnswercontent(quesanswer);
+            qa.setRightanswer(1);
+            qa.setTasktype(tmpTask.getTasktype());
+            qa.setTaskid(tmpTask.getTaskid());
+            if(replyAttach!=null&&replyAttach.length()>0){
+                qa.setReplyattach(replyAttach);
+                qa.setReplyattachtype(Integer.parseInt(attachType));
+            }
+            sql=new StringBuilder();
+            objList=this.questionAnswerManager.getSaveSql(qa,sql);
+            if(sql!=null&&objList!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+            //添加完成情况
+            TaskPerformanceInfo tp=new TaskPerformanceInfo();
+            tp.setTaskid(taskList.get(0).getTaskid());
+            tp.setTasktype(taskList.get(0).getTasktype());
+            tp.setCourseid(taskList.get(0).getCourseid());
+            tp.setCriteria(1);//提交心得
+            tp.setUserid(userList.get(0).getRef());
+            tp.setIsright(1);
+            List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
+            if(tpList==null||tpList.size()<1){
+                sql=new StringBuilder();
+                objList=this.taskPerformanceManager.getSaveSql(tp,sql);
+                if(sql!=null&&objList!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }
         }else{
             QuestionAnswer qa=new QuestionAnswer();
             qa.setCourseid(tmpTask.getCourseid());
@@ -1787,7 +1824,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
             if(flag){
                 JSONObject jo = new JSONObject();
-                jo.put("result",1);
+                jo.put("result","1");
                 jo.put("msg","回答完成");
                 if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){//提交标准的返回回答列表
                     List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();

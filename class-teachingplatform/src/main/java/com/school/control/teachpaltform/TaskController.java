@@ -227,6 +227,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     }
                 }
                 request.setAttribute("sign",b);
+            }else{
+                request.setAttribute("sign",false);
             }
             request.setAttribute("gradeList", this.gradeManager.getList(null, null));
             return new ModelAndView("/teachpaltform/task/teacher/resource-element-detail");
