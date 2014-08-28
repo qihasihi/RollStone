@@ -1741,10 +1741,11 @@ public class UtilTool implements java.io.Serializable {
      * @param  requestEncoding 参数编码
      */
     public static JSONObject sendPostUrl(String urlstr,Map<String,String> paramMap,String requestEncoding){
-        HttpURLConnection httpConnection;
+        HttpURLConnection httpConnection=null;
         URL url;
         int code;
         try {
+            //组织参数
             StringBuffer params = new StringBuffer();
             if(paramMap!=null&&paramMap.size()>0){
                 for (Iterator iter = paramMap.entrySet().iterator(); iter
@@ -1762,66 +1763,75 @@ public class UtilTool implements java.io.Serializable {
                     params = params.deleteCharAt(params.length() - 1);
                 }
             }
-            url = new URL(urlstr);
 
-            httpConnection = (HttpURLConnection) url.openConnection();
+                url = new URL(urlstr);
 
-            httpConnection.setRequestMethod("POST");
-            if(params!=null&&params.toString().trim().length()>0)
-                httpConnection.setRequestProperty("Content-Length",
-                        String.valueOf(params.length()));
-            httpConnection.setRequestProperty("Content-Type",
-                    "application/x-www-form-urlencoded");
+                httpConnection = (HttpURLConnection) url.openConnection();
 
-            httpConnection.setDoOutput(true);
-            httpConnection.setDoInput(true);
+                httpConnection.setRequestMethod("POST");
+                if(params!=null)
+                    httpConnection.setRequestProperty("Content-Length",
+                            String.valueOf(params.toString().length()));
+                httpConnection.setRequestProperty("Content-Type",
+                        "application/x-www-form-urlencoded");
 
+                httpConnection.setDoOutput(true);
+                httpConnection.setDoInput(true);
+			/*
+			 * PrintWriter printWriter = new
+			 * PrintWriter(httpConnection.getOutputStream());
+			 * printWriter.print(parameters); printWriter.close();
+			 */
 
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-                    httpConnection.getOutputStream(), "8859_1");
-            if(params!=null)
-                outputStreamWriter.write(params.toString());
-            outputStreamWriter.flush();
-            outputStreamWriter.close();
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                        httpConnection.getOutputStream(), "8859_1");
+                if(params!=null)
+                    outputStreamWriter.write(params.toString());
+                outputStreamWriter.flush();
+                outputStreamWriter.close();
 
-            code = httpConnection.getResponseCode();
-        } catch (Exception e) {			// 异常提示
-            System.out.println("异常错误!TOTALSCHOOL未响应!");
-            return null;
-        }
-        StringBuffer stringBuffer = new StringBuffer();
-        if (code == HttpURLConnection.HTTP_OK) {
-            try {
-                String strCurrentLine;
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(httpConnection.getInputStream()));
-                while ((strCurrentLine = reader.readLine()) != null) {
-                    stringBuffer.append(strCurrentLine).append("\n");
-                }
-                reader.close();
-            } catch (IOException e) {
-                System.out.println("异常错误!");
-                e.printStackTrace();;
+                code = httpConnection.getResponseCode();
+            } catch (Exception e) {			// 异常提示
+                System.out.println("异常错误!TOTALSCHOOL未响应!");
+                if(httpConnection!=null)httpConnection.disconnect();
                 return null;
             }
-        }else if(code==404){
-            // 提示 返回
-            System.out.println("异常错误!404错误，请联系管理人员!");
-            return null;
-        }else if(code==500){
-            System.out.println("异常错误!500错误，请联系管理人员!");
-            return null;
-        }
-        String returnContent=null;
-        try {
-            returnContent=new String(stringBuffer.toString().getBytes("gbk"),"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        //转换成JSON
-        System.out.println(returnContent);
-        JSONObject jb=JSONObject.fromObject(returnContent);
+            StringBuffer stringBuffer = new StringBuffer();
+            if (code == HttpURLConnection.HTTP_OK) {
+                try {
+                    String strCurrentLine;
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(httpConnection.getInputStream()));
+                    while ((strCurrentLine = reader.readLine()) != null) {
+                        stringBuffer.append(strCurrentLine).append("\n");
+                    }
+                    reader.close();
+                    if(httpConnection!=null)httpConnection.disconnect();
+                } catch (IOException e) {
+                    System.out.println("异常错误!");
+                    if(httpConnection!=null)httpConnection.disconnect();
+                    return null;
+                }
+            }else if(code==404){
+                if(httpConnection!=null)httpConnection.disconnect();
+                // 提示 返回
+                System.out.println("异常错误!404错误，请联系管理人员!");
+                return null;
+            }else if(code==500){
+                if(httpConnection!=null)httpConnection.disconnect();
+                System.out.println("异常错误!500错误，请联系管理人员!");
+                return null;
+            }
+            String returnContent=null;
+            try {
+                returnContent=new String(stringBuffer.toString().getBytes("gbk"),"UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            //转换成JSON
+            System.out.println(returnContent);
+            JSONObject jb=JSONObject.fromObject(returnContent);
         return jb;
     }
 
