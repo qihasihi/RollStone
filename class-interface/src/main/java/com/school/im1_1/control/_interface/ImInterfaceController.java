@@ -3035,12 +3035,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 type=7;
                 break;
         }
-
         //                /*奖励加分通过*/
         if(this.tpStuScoreLogsManager.awardStuScore(tk.getCourseid()
                 ,Long.parseLong(classId.trim())
                 ,tk.getTaskid()
-                ,Long.parseLong(tmpUser.getUserid()+""),type)){
+                ,Long.parseLong(tmpUser.getUserid()+""),jid,type)){
             returnJo.put("msg", "恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
         }else{
             returnJo.put("result",1);
