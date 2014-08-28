@@ -1338,6 +1338,15 @@ public class UserController extends BaseController<UserInfo> {
 				UserInfo user=this.userManager.getUserInfo(u);
 				if(user!=null)
 					je.getObjList().add(user);
+
+                List<UserInfo> userInfoList=new ArrayList<UserInfo>();
+                userInfoList.add(user);
+                //调用用户接口
+                if(EttInterfaceUserUtil.updateUserBase(userInfoList)){
+                    System.out.println("用户信息同步至网校成功!更新");
+                }else{
+                    System.out.println("用户信息同步至网校失败!更新");
+                }
 			}else 
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
 		}
@@ -1989,6 +1998,17 @@ public class UserController extends BaseController<UserInfo> {
 		if(objListArray.size()>0&&sqllist.size()>0){
 			boolean flag=this.userManager.doExcetueArrayProc(sqllist, objListArray);
 			if(flag){
+                UserInfo utmp=new UserInfo();
+                utmp.setRef(ref);
+                UserInfo u=userManager.getUserInfo(utmp);
+                if(u!=null){
+                    if(updateToEttClassUser(ref,u.getDcschoolid())){
+                        System.out.println("更新classuser到网校成功！");
+                    }else{
+                        System.out.println("更新classuser到网校失败！");
+                    }
+                }
+
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
 				je.setType("success");
 				
@@ -3217,9 +3237,12 @@ public class UserController extends BaseController<UserInfo> {
 			boolean bo = this.userManager.doExcetueArrayProc(sqlListArray,
 					objListArray);
 			if (bo) {
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-				je.setType("success");
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
                 je.getObjList().add(userNextRef);
+                if(!addToEttUser(userNextRef)){
+                    System.out.println("同步网校失败！原因：未知");
+                }
 			} else {
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
 			}
@@ -3229,6 +3252,10 @@ public class UserController extends BaseController<UserInfo> {
 		}
 		response.getWriter().print(je.toJSON());
 	}
+
+
+
+
 
 	/**
 	 * 教务修改用户
@@ -6118,6 +6145,84 @@ public class UserController extends BaseController<UserInfo> {
         request.getSession().setAttribute("fromType","lzx");
         response.sendRedirect(targetUrl);
     }
+
+
+
+
+
+    /**
+     * 添加用户时，传入Ett
+     * @param userNextRef
+     * @return
+     */
+    private boolean addToEttUser(String userNextRef){
+        //向网校添加用户信息
+        UserInfo tmpUser=new UserInfo();
+        tmpUser.setRef(userNextRef);
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<UserInfo> tmpUList=this.userManager.getList(tmpUser,presult);
+        if(tmpUList!=null&&tmpUList.size()>0){
+            //调用用户接口
+            if(EttInterfaceUserUtil.addUserBase(tmpUList)){
+                System.out.println("用户信息同步至网校成功!");
+            }else{
+                System.out.println("用户信息同步至网校失败!");
+                return false;
+            }
+            if(updateToEttClassUser(userNextRef,tmpUList.get(0).getDcschoolid()))
+                System.out.println("classUser同步至网校成功!");
+            else
+                System.out.println("classUser同步至网校失败!");
+
+        }
+        return true;
+    }
+
+    /**
+     * 同步ettClassUser
+     * @param userNextRef
+     * @return
+     */
+    private boolean updateToEttClassUser(String userNextRef,Integer dcschoolId){
+        //向网校添加班级数据
+        ClassUser cu=new ClassUser();
+        cu.setUserid(userNextRef);
+        List<ClassUser> cuList=this.classUserManager.getList(cu,null);
+        if(cuList!=null&&cuList.size()>0){
+            for (ClassUser cuTmp:cuList){
+                cu=new ClassUser();
+                cu.setClassid(cuTmp.getClassid());
+                List<ClassUser> cuTmpList=this.classUserManager.getList(cu,null);
+                if(cuTmpList!=null&&cuTmpList.size()>0){
+                    // 必带 userId，userType,subjectId 的三个key
+                    List<Map<String,Object>> mapList=new ArrayList<Map<String, Object>>();
+                    for (ClassUser cuTmpe:cuTmpList){
+                        if(cuTmpe!=null){
+                            Map<String,Object> tmpMap=new HashMap<String, Object>();
+                            tmpMap.put("userId",cuTmpe.getUid());
+                            Integer userType=3;
+                            if(cuTmpe.getRelationtype()!=null){
+                                if(cuTmpe.getRelationtype().trim().equals("任课老师"))
+                                    userType=2;
+                                else if(cuTmpe.getRelationtype().trim().equals("班主任"))
+                                    userType=1;
+                            }
+                            tmpMap.put("userType",userType);
+                            tmpMap.put("subjectId",cuTmpe.getSubjectid()==null?-1:cuTmpe.getSubjectid());
+                            mapList.add(tmpMap);
+                        }
+                    }
+                    if(!EttInterfaceUserUtil.OperateClassUser(mapList, cuTmp.getClassid(),dcschoolId)){
+                        System.out.println("classUser同步至网校失败!");
+                        return false;
+                    } else
+                        System.out.println("classUser同步至网校成功!");
+                }
+            }
+        }
+        return true;
+    }
 }
 
 /**
@@ -6319,5 +6424,4 @@ class UserTool{
         outputBuilder.append("</html>");
         return outputBuilder.toString();
     }
-
 }

@@ -3226,10 +3226,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 ,Long.parseLong(classId.trim())
                 ,tk.getTaskid()
                 ,Long.parseLong(tmpUser.getUserid()+""),jid,type)){
-            returnJo.put("msg", "恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
-        }else{
+            returnJo.put("msg", "恭喜您,获得了1积分和1蓝宝石");
             returnJo.put("result",1);
-            returnJo.put("msg", "异常错误，奖励加分失败，原因：已经存在相关记录");
+        }else{
+            returnJo.put("msg", "异常错误，奖励加分失败，原因：该任务已经存在相关记录");
         }
         response.getWriter().println(returnJo.toString());
     }

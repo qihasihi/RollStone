@@ -71,6 +71,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
 	}
 
     //奖励加分
+
     public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,Integer type){
         if(courseid==null||classid==null||taskid==null||userid==null||type==null)
             return false;
@@ -106,7 +107,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
                 objArrayList.add(objList);
             }
         }else{//如果存在，则进行修改
-            return true;
+            return false;
 //            entity=tsScoreList.get(0);
 //            if(isAddEttBlue)
 //                entity.setJewel(Integer.parseInt(awardArray[1]));
@@ -161,10 +162,14 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
                     String val = UrlSigUtil.makeSigSimple("addSapphire.do",paramMap);
                     paramMap.put("sign",val);
                     JSONObject jo=UtilTool.sendPostUrl(u,paramMap,"UTF-8");
-                    if(jo==null||!jo.containsKey("type")||!jo.get("type").toString().trim().equals("success")){
-                        System.out.println(jo.get("msg"));
+                    if(jo==null||!jo.containsKey("result")||!jo.get("result").toString().trim().equals("1")){
+                        if(jo!=null)
+                            System.out.println(jo.get("msg"));
+                        else
+                            System.out.println("异常！");
                         returnVal=false;
                     }
+                    System.out.println(jo.get("type"));
                 }
             }
         }
