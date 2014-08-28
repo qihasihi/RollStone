@@ -390,4 +390,61 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
             return list;
         return null;
     }
+
+    @Override
+    public List<Map<String, Object>> getQryStatPerson(ImInterfaceInfo obj) {
+
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_query_stat_person(");
+        List<Object> objList=new ArrayList<Object>();
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getSubjectid());
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClassid());
+        }else{
+            sqlbuilder.append("null,");
+        }
+
+        sqlbuilder.append("?)}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> getQryStatPersonStu(ImInterfaceInfo obj) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_query_stat_person(");
+        List<Object> objList=new ArrayList<Object>();
+        if(obj.getUserid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getUserid());
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getSubjectid());
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClassid());
+        }else{
+            sqlbuilder.append("null,");
+        }
+
+        sqlbuilder.append("?)}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
 }

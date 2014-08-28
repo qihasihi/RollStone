@@ -120,4 +120,14 @@ public class ImInterfaceManager extends BaseManager<ImInterfaceInfo> implements 
     public List<Map<String, Object>> getTopicUserRecord(Long topicid, Integer classid, Integer isvir, Integer userid) {
         return this.imInterfaceDAO.getTopicUserRecord(topicid,classid,isvir,userid);
     }
+
+    @Override
+    public List<Map<String, Object>> getQryStatPerson(ImInterfaceInfo obj) {
+        return this.imInterfaceDAO.getQryStatPerson(obj);
+    }
+
+    @Override
+    public List<Map<String, Object>> getQryStatPersonStu(ImInterfaceInfo obj) {
+        return this.imInterfaceDAO.getQryStatPersonStu(obj);
+    }
 }

@@ -2932,6 +2932,110 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         response.getWriter().print(returnJo.toString());
     }
 
+
+    /**
+     * 班级统计接口
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="getClassStatics",method={RequestMethod.GET,RequestMethod.POST})
+    public void getClassStatics(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result",0);//默认失败
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
+        JSONObject jo=new JSONObject();
+        //获取参数
+        String classId=paramMap.get("classId");
+        String subjectId=paramMap.get("subjectId");
+        String schoolId=paramMap.get("schoolId");
+        String jid=paramMap.get("jid");
+        String userType=paramMap.get("userType");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        if(schoolId==null||time==null||sign==null||userType==null||jid==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //验证时间
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(time.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //去除sign
+        paramMap.remove("sign");
+        paramMap.remove("getClassStatics");
+        //验证Md5
+        Boolean b = UrlSigUtil.verifySigSimple("getClassStatics",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo u=new UserInfo();
+        u.setEttuserid(Integer.parseInt(jid));
+        u.setDcschoolid(Integer.parseInt(schoolId));
+        List<UserInfo>userList=this.userManager.getList(u,null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","当前云帐号未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        List<Map<String,Object>>tmpRankList=new ArrayList<Map<String, Object>>();
+        ImInterfaceInfo obj=new ImInterfaceInfo();
+        obj.setSubjectid(Integer.parseInt(subjectId));
+        obj.setClassid(Integer.parseInt(classId));
+        List<Map<String,Object>>teamRankList=this.imInterfaceManager.getQryStatPerson(obj);
+        if(teamRankList!=null&&teamRankList.size()>0){
+            for(Map<String,Object>map:teamRankList){
+                Map<String,Object>tmpMap=new HashMap<String, Object>();
+                tmpMap.put("jid",map.get("ETT_USER_ID"));
+                tmpMap.put("uName",map.get("REALNAME"));
+                tmpMap.put("uScore",map.get("COURSE_TOTAL_SCORE"));
+                tmpMap.put("uTeam",map.get("GROUP_NAME"));
+                tmpMap.put("uPosition",map.get("RANK"));
+                tmpRankList.add(tmpMap);
+            }
+        }
+
+        jo.put("teamRankList",tmpRankList==null||tmpRankList.size()<1?null:tmpRankList);
+
+        if(ImUtilTool.getUserType(userType)!=2){  //学生
+            obj.setUserid(userList.get(0).getUserid());
+            List<Map<String,Object>>teamRankStuList=this.imInterfaceManager.getQryStatPersonStu(obj);
+            if(teamRankStuList!=null&&teamRankStuList.size()>0){
+                jo.put("userScore",teamRankStuList.get(0).get("COURSE_TOTAL_SCORE"));
+                jo.put("doTaskNum",teamRankStuList.get(0).get("TASK_SCORE"));
+                jo.put("presenceNum",teamRankStuList.get(0).get("ATTENDANCE_NUM"));
+            }else{
+                jo.put("userScore",0);
+                jo.put("doTaskNum",0);
+                jo.put("presenceNum",0);
+            }
+        }
+
+
+        returnJo.put("data",jo.toString());
+        returnJo.put("result","1");
+        response.getWriter().print(returnJo.toString());
+    }
+
+
+
+
     /**
      * 任务获得积分保存接口
      *  说明：任务获得积分、道具保存接口

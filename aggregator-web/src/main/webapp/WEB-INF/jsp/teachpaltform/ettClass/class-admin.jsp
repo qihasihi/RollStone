@@ -10,7 +10,7 @@
     <script type="text/javascript" src="<%=basePath %>js/teachpaltform/tptask.js"></script>
     <script type="text/javascript">
         $(function(){
-            $("table tr:even").addClass("trbg1");
+
         });
     </script>
 
@@ -18,6 +18,9 @@
 </head>
 <body>
 <div class="subpage_head"><span class="ico55"></span><strong>班级管理</strong></div>
+<div>
+
+</div>
 <div class="content1">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
         <colgroup span="2" class="w110"></colgroup>
