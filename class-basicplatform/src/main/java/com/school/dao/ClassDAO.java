@@ -4,6 +4,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.school.util.UtilTool;
 import org.springframework.stereotype.Component;
 
 import com.school.dao.base.CommonDAO;
@@ -270,6 +271,21 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 			objList.add(obj.getIsflag());
 		}else
 			sqlbuilder.append("NULL,");
+        if(obj.getAllowjoin()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getAllowjoin());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getVerifytime()!=null){
+            sqlbuilder.append("?,");
+            objList.add(UtilTool.DateConvertToString(obj.getVerifytime(), UtilTool.DateType.type1));
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClsnum()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClsnum());
+        }else
+            sqlbuilder.append("NULL,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}

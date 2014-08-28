@@ -90,6 +90,7 @@
 	#nav ul li:hover a,#nav ul li:active a{color:#398fbd;border-bottom:5px solid #398fbd;height:34px;}
 	#nav ul li.crumb{background: url(images/bg12_131230.png) repeat-x; border:1px solid #226fa9;}
 	#nav ul li.crumb a{color: white;background: url(images/bg11_131230.png) no-repeat top center; border:1px solid #5ea5ca;height:35px;}
+
 	#nav div.arr{
 	width: 42px;
 	height: 41px;
@@ -112,12 +113,14 @@
 	#nav a span.next:hover{ background-position:-18px -22px;}
 	#nav a span.next:active{ background-position:-18px -44px;}
 
-	.content{
+	.content,.content3{
 	width: 1000px;
 	min-height:280px;
 	background: url(images/bg03_131230.png) repeat-y;
 	margin:0 auto;
 }
+	.content3{background: url(images/bg35_131230.png) repeat-y;}
+
 	.contentL{width: 170px;padding-top:22px;}
 	.contentL ul li{
 	width: 170px;
@@ -674,6 +677,11 @@
 	.subpage_contentL ul li:hover,.subpage_contentL ul li:active,.subpage_contentL ul li:hover a,.subpage_contentL ul li:active a{color:#53a6b7;}
 	.subpage_contentL ul li.crumb a{color:#fff;}
 	.subpage_contentL ul li.crumb{background-color:#34a4c6;}
+	
+	.content3 .subpage_contentL{width: 250px;}
+	.content3 .subpage_contentL ul{ height:430px;}
+	.content3 .subpage_contentL ul li{width: 240px; text-align:left; padding-left:10px;font-size:12px;}
+	.content3 .subpage_contentL .nextpage{ clear:none;}
 	
 	.subpage_lm{height:30px;border-bottom:1px solid #34a4c6; margin:0 10px 20px; padding:5px 6px 0 0;}
 	.subpage_lm ul li{

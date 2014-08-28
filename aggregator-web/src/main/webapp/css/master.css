@@ -85,12 +85,16 @@
 	.w310{width:310px;}
 	.w320{width:320px;}
 	.w350{width:350px;}
+	.w390{width:390px;}
 	.w400{width:400px;}
 	.w410{width:410px;}
+	.w420{width:420px;}
 	.w430{width:430px;}
 	.w440{width:440px;}
 	.w450{width:450px;}
+	.w470{width:470px;}
 	.w500{width:500px;}
+	.w550{width:550px;}
 	.w590{width:590px;}
 	.w600{width:600px;}
 	.w630{width:630px;}
@@ -126,7 +130,7 @@
 	table tr.trbg1{background: #f5fcfd;}
 	table td.v_c{vertical-align:middle;}
 	table.black td{color:#000;}
-
+	
     .public_tab1{border-collapse:collapse;line-height: 1.8em; margin:0 auto 15px;}
     .public_tab1 th,.public_tab1 td{padding-top:14px; vertical-align:top;}
 	.public_tab1 th{ font-size:14px; text-align:left;}
@@ -401,7 +405,7 @@
 	.ico04{background-position:0 -231px;}
 	.ico05{background-position:-18px -209px;}
 	.ico06{width:15px;background-position:0 -253px; margin:0;}
-	.ico_delete{width:15px; height:15px;background-position:-2px -87px; margin:0 2px;}
+	.ico_delete{width:15px; height:15px;background-position:-2px -86px; margin:0 2px;}
 
 	.ico07,.ico08,.ico09,.ico10{
 	width:16px;
@@ -443,7 +447,7 @@
 	.ico_star2{background-position:-154px 0;margin:0 1px;}
 	.ico_star3{background-position:-161px -18px;margin:0 1px;}
 
-	.ico26,.ico27,.ico28,.ico29,.ico30,.ico31,.ico32,.ico33,.ico34,.ico35,.ico36,.ico37,.ico_time{
+	.ico26,.ico27,.ico28,.ico29,.ico30,.ico31,.ico32,.ico33,.ico34,.ico35,.ico36,.ico37,.ico_time,.ico85a,.ico85b,.ico90{
 	width:16px;
 	height:17px;
 	background: url(images/ico03_131230.png) no-repeat -304px 0;
@@ -464,7 +468,7 @@
 	.ico37{background-position:-304px -17px;}
 	.ico_time{background-position:-253px 0;}
 
-	.ico38,.ico39,.ico40,.ico41,.ico42,.ico43,.ico44,.ico45,.ico46,.ico47,.ico48a,.ico48b,.ico49a,.ico49b,.ico49c{
+	.ico38,.ico39,.ico40,.ico41,.ico42,.ico43,.ico44,.ico45,.ico46,.ico47,.ico48a,.ico48b,.ico49a,.ico49b,.ico49c,.ico88,.ico89a,.ico89b{
 	width:17px;
 	height:17px;
 	background: url(images/ico04_131230.png) no-repeat -19px 0;
@@ -576,3 +580,26 @@
 	.ico82{background-position:-213px 0; width:42px; height:40px;}
 	.ico83{background-position:-118px -61px; width:14px; height:18px;}
 	.ico84{background-position:-373px 0; width:31px; height:18px; margin:0 10px;}
+	.ico85a{background-position:-383px 0; }
+	.ico85b{background-position:-383px -17px; }
+
+	.ico86,.ico87{
+	width:31px;
+	height:32px;
+	background: url(images/ico03_131230.png) no-repeat -321px 0;
+	display: inline-block;
+	vertical-align:middle;
+	margin:4px;
+	font-size:12px;
+	font-family:Microsoft YaHei;
+	color:#fff;
+	padding-top:3px;
+	text-align:center;
+}
+    .ico87{background-position:-352px 0; width:30px;}
+	.ico88{background-position:-989px 0;}
+	.ico89a{background-position:-955px 0; width:12px; height:12px; margin:0;}
+	.ico89b{background-position:-972px 0; width:12px; height:12px; margin:0;}
+	
+	.ico90{background: url(images/ico08_131230.gif) no-repeat;}
+

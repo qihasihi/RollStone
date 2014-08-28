@@ -2801,7 +2801,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     @RequestMapping(params="getTaskPaperQuestion",method={RequestMethod.GET,RequestMethod.POST})
     public void getTaskPaperQuestion(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JSONObject returnJo=new JSONObject();
-        returnJo.put("result",0);//默认失败
+        returnJo.put("result","0");//默认失败
         if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
             jo.put("result","0");
@@ -3010,7 +3010,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         jo.put("quesList",returnMapList.size()>0?returnMapList:null);
 
         returnJo.put("data",jo.toString());
-        returnJo.put("result",1);
+        returnJo.put("result","1");
         response.getWriter().print(returnJo.toString());
     }
 
@@ -3024,7 +3024,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     @RequestMapping(params="getClassStatics",method={RequestMethod.GET,RequestMethod.POST})
     public void getClassStatics(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JSONObject returnJo=new JSONObject();
-        returnJo.put("result",0);//默认失败
+        returnJo.put("result","0");//默认失败
         if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
             jo.put("result","0");

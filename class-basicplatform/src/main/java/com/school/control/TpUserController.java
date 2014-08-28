@@ -19,10 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/tpuser")
@@ -39,6 +36,7 @@ public class TpUserController extends UserController {
      * @param response
      * @param mp
      * @return
+     * @userType 1:教师 2:教务 3:学生
      * @throws Exception
      */
     @RequestMapping(params = "m=toJWIndex", method = {RequestMethod.GET,RequestMethod.POST})
@@ -176,7 +174,7 @@ public class TpUserController extends UserController {
 
         if(sqlListArray.size()>0&&sqlListArray.size()>0){
             if(this.userManager.doExcetueArrayProc(sqlListArray,objListArray)){
-                //返回绑定成功数据
+                //绑定教务帐号
                 UserInfo sel=new UserInfo();
                 sel.setEttuserid(Integer.parseInt(userid));
                 sel.setDcschoolid(Integer.parseInt(schoolid));
@@ -186,28 +184,24 @@ public class TpUserController extends UserController {
                     obj.element("jid", ettUserList.get(0).getEttuserid());
                     obj.element("userId", ettUserList.get(0).getUserid());
                     obj.element("schoolId",ettUserList.get(0).getDcschoolid());
-                    obj.element("userType",1);
+                    obj.element("userType",2);
                     JSONArray array=new JSONArray();
                     array.add(obj);
 
                     String timestamp=System.currentTimeMillis()+"";
                     HashMap<String,String>map=new HashMap<String, String>();
                     map.put("schoolId", ettUserList.get(0).getDcschoolid().toString());
-                    map.put("userType","1");
+                    map.put("userType","2");
                     map.put("timestamp",timestamp);
                     String sign=UrlSigUtil.makeSigSimple("backbind.do",map);
                     String ettUrl=UtilTool.utilproperty.get("BIND_ETT_USER_LOCATION").toString();
-                    String ettParams="schoolId="+schoolid+"&userType=1&timestamp="+timestamp+"&sign="+sign+"&userList="+array.toString();
+                    String ettParams="schoolId="+schoolid+"&userType=2&timestamp="+timestamp+"&sign="+sign+"&userList="+array.toString();
                     System.out.println(ettUrl + "?" + ettParams);
                     if(!sendValidateUserInfoTotalSchool(ettUrl, ettParams)){
-                        je.setMsg("Bind EttUser Failed!");
+                        je.setMsg("Bind Admin Failed!");
                         response.getWriter().print(je.getAlertMsgAndBack());
                         return null;
                     }
-                    /*
-                    {timestamp=1408415050502,
-                     userList=[{"jid":"1","userId":"123"},{"jid":"2","userId":"456"}], schoolid=51,userType=2, signature=eb674978da90539ed8e2c1a507d61944}
-                     */
                 }
 
             }else{
@@ -228,10 +222,26 @@ public class TpUserController extends UserController {
         List<SubjectInfo>subjectList=this.subjectManager.getList(null,null);
         //班级类型
         List<DictionaryInfo>classType=this.dictionaryManager.getDictionaryByType("WX_CLASS_TYPE");
-
+        //获取班主任
+        String timestamp=System.currentTimeMillis()+"";
+        HashMap<String,String>map=new HashMap<String, String>();
+        map.put("schoolId",schoolid);
+        map.put("userType","1");
+        map.put("timestamp",timestamp);
+        String sign=UrlSigUtil.makeSigSimple("user.do",map);
+        String ettUrl=UtilTool.utilproperty.get("GET_ETT_USER_LOCATION").toString();
+        String ettParams="schoolId="+schoolid+"&userType=1&timestamp="+timestamp+"&sign="+sign;
+        List<UserInfo>ettUserList=getETTUserList(ettUrl,ettParams);
+        if(ettUserList==null||ettUserList.size()<1){
+            je.setMsg("未获取到网校班主任信息!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
         mp.put("gradeList",gradeList);
         mp.put("subjectList",subjectList);
         mp.put("classType",classType);
+        mp.put("bzrList",ettUserList);
+        request.getSession().setAttribute("dcschoolid",userList.get(0).getDcschoolid());
         return new ModelAndView("/teachpaltform/ettClass/class-admin",mp);
     }
 
@@ -321,6 +331,128 @@ public class TpUserController extends UserController {
         }else{
             System.out.println(msg);return false;
         }
+    }
+
+    public  List<UserInfo> getETTUserList(String sendUrl,String params){
+        if(sendUrl==null)return null;
+
+        HttpURLConnection httpConnection;
+        URL url;
+        int code;
+        try {
+            url = new URL(sendUrl.toString());
+
+            httpConnection = (HttpURLConnection) url.openConnection();
+
+            httpConnection.setRequestMethod("POST");
+           /* if(params!=null)
+                httpConnection.setRequestProperty("Content-Length",
+                        String.valueOf(params.length()));*/
+            httpConnection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+
+            httpConnection.setDoOutput(true);
+            httpConnection.setDoInput(true);
+			/*
+			 * PrintWriter printWriter = new
+			 * PrintWriter(httpConnection.getOutputStream());
+			 * printWriter.print(parameters); printWriter.close();
+			 */
+
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                    httpConnection.getOutputStream(), "8859_1");
+            if(params!=null){
+                outputStreamWriter.write(params);
+                System.out.println("params:"+params);
+            }
+            /*if(jsondata!=null)
+                outputStreamWriter.write(java.net.URLEncoder.encode(jsondata,"UTF-8"));*/
+
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+            // objOutputStrm.flush();
+            //objOutputStrm.close();
+            code = httpConnection.getResponseCode();
+        } catch (Exception e) {			// 异常提示
+            System.out.println("异常错误!未响应!");
+            return null;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        if (code == HttpURLConnection.HTTP_OK) {
+            try {
+                String strCurrentLine;
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(httpConnection.getInputStream()));
+                while ((strCurrentLine = reader.readLine()) != null) {
+                    stringBuffer.append(strCurrentLine).append("\n");
+                }
+                reader.close();
+            } catch (IOException e) {
+                System.out.println("异常错误!");
+                return null;
+            }
+        }else if(code==HttpURLConnection.HTTP_NOT_FOUND){
+            // 提示 返回
+            System.out.println("异常错误!404错误，请联系管理人员!");
+            return null;
+        }else if(code==HttpURLConnection.HTTP_SERVER_ERROR){
+            System.out.println("异常错误!500错误，请联系管理人员!");
+            return null;
+        }
+        String returnContent=null;
+        try {
+            returnContent=java.net.URLDecoder.decode(stringBuffer.toString(),"UTF-8");  ///aa
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //转换成JSON
+        System.out.println(returnContent);
+        JSONObject jb=JSONObject.fromObject(returnContent);
+        String type=jb.containsKey("type")?jb.getString("type"):"";
+        String msg=jb.containsKey("msg")?jb.getString("msg"):"";
+        String result=jb.containsKey("result")?jb.getString("result"):"";
+        List<UserInfo>userList=null;
+        if((type!=null&&type.trim().toLowerCase().equals("success")) || result!=null&&result.equals("1")){
+            System.out.println(msg);
+            if(jb.containsKey("data")){
+                JSONObject userObj=JSONObject.fromObject(jb.getString("data"));
+                if(!userObj.containsKey("user"))return null;
+                JSONArray array;
+                try{
+                    array=JSONArray.fromObject(userObj.getString("user"));
+                }catch (Exception e){
+                    System.out.println(e.getMessage());
+                    return null;
+                }
+
+                if(array!=null&&array.size()>0){
+                    userList=new ArrayList<UserInfo>();
+                    Iterator iterator=array.iterator();
+                    while(iterator.hasNext()){
+                        JSONObject obj=(JSONObject)iterator.next();
+                        String jid=obj.containsKey("JID")?obj.getString("JID"):"";
+                        String userName =obj.containsKey("USERNAME")?obj.getString("USERNAME"):"";
+                        String realName =obj.containsKey("REALNAME")?obj.getString("REALNAME"):"";
+                        String sex =obj.containsKey("SEX")?obj.getString("SEX"):"";
+                        UserInfo u=new UserInfo();
+                        if(jid.length()>0)
+                            u.setEttuserid(Integer.parseInt(jid));
+                        if(userName.length()>0)
+                            u.setUsername(userName);
+                        if(realName.length()>0)
+                            u.setRealname(realName);
+                        if(sex.length()>0)
+                            u.setSex(sex);
+                        userList.add(u);
+                    }
+                }
+            }
+
+        }else{
+            System.out.println(msg);return null;
+        }
+        return userList;
     }
 }
 

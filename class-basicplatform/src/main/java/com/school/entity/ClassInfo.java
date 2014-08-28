@@ -22,6 +22,40 @@ public class ClassInfo implements java.io.Serializable {
     private SubjectInfo subjectinfo;    
     private Integer isflag; //是否启用：  1：启用   2：禁用
     private Integer lzxclassid;
+    private Integer allowjoin;  //学生是否允许加入 1：允许 2：不允许
+    private Integer clsnum; //班级限额
+    private Date verifytime;    //失效时间
+
+    public Integer getClsnum() {
+        return clsnum;
+    }
+
+    public void setClsnum(Integer clsnum) {
+        this.clsnum = clsnum;
+    }
+
+    public Date getVerifytime() {
+        return verifytime;
+    }
+
+    public void setVerifytime(Date verifytime) {
+        this.verifytime = verifytime;
+    }
+
+    public String getVerifyTimeString(){
+        if(verifytime==null)
+            return null;
+        return UtilTool.DateConvertToString(verifytime, DateType.type1);
+    }
+
+
+    public Integer getAllowjoin() {
+        return allowjoin;
+    }
+
+    public void setAllowjoin(Integer allowjoin) {
+        this.allowjoin = allowjoin;
+    }
 
     public Integer getDctype() {
         return dctype;
