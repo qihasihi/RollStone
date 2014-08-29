@@ -2707,12 +2707,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         TpTaskInfo task = new TpTaskInfo();
         task.setTaskid(Long.parseLong(taskId));
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(task,null);
-        if(taskList==null&&taskList.size()==0){
+        if(taskList==null||taskList.size()==0){
             je.setMsg("当前任务不存在");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        if(taskList.get(0).getResourcetype()==1){
+        if(taskList.get(0).getResourcetype()==null||taskList.get(0).getResourcetype()==1){
             je.setMsg("当前任务资源不符合要求");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
@@ -2799,7 +2799,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 request.setAttribute("replyList",returnUserRecord);
                 return new ModelAndView("/imjsp-1.1/remote-resource-detail");
             }else{
-                if(taskList.get(0).getRemotetype()==2){
+                if(taskList.get(0).getRemotetype()!=null&&taskList.get(0).getRemotetype()==2){
                     String url = "http://192.168.10.26:8008/study-im-service-1.0/getResourceZSDX.do";
                     Long time = System.currentTimeMillis();
                     HashMap<String,String> param = new HashMap<String, String>();
@@ -2813,7 +2813,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     if(result==1){
                         response.sendRedirect(data);
                     }else{
-
+                        return null;
                     }
                 }else{
 
