@@ -771,10 +771,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      */
     @RequestMapping(params="m=AddTask",method= {RequestMethod.POST,RequestMethod.GET})
     public void addTask(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
-        String dataStr = request.getParameter("data");
-        String userid = request.getParameter("jid");
-        String schoolid = request.getParameter("schoolId");
-        String timestamp = request.getParameter("time");
+        //接收map
+        HashMap<String,String> map = ImUtilTool.getRequestParam(request);
+        String dataStr = map.get("data");
+        String userid = map.get("jid");
+        String schoolid = map.get("schoolId");
+        String timestamp = map.get("time");
         String sig = request.getParameter("sign");
         if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
@@ -784,12 +786,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(jo.toString());
             return;
         }
-        HashMap<String,String> map = new HashMap();
-        map.put("data",dataStr);
-        map.put("jid",userid);
-        map.put("schoolId",schoolid);
-        map.put("timeStamp",timestamp);
-        String sign = UrlSigUtil.makeSigSimple("AddTask",map,"*ETT#HONER#2014*");
+        //String sign = UrlSigUtil.makeSigSimple("AddTask",map,"*ETT#HONER#2014*");
+        map.remove("data");
         Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
@@ -827,7 +825,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         t.setCourseid(Long.parseLong(courseid));
         //查询没被我删除的任务
         t.setSelecttype(1);
-        t.setLoginuserid(387);
+        t.setLoginuserid(userList.get(0).getUserid());
         t.setStatus(1);
 
         //已发布的任务
@@ -1777,33 +1775,30 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     objListArray.add(objList);
                 }
             }
+        }else if(tmpTask.getTasktype()==2){
+            TaskPerformanceInfo tp=new TaskPerformanceInfo();
+            tp.setTaskid(taskList.get(0).getTaskid());
+            tp.setTasktype(taskList.get(0).getTasktype());
+            tp.setCourseid(taskList.get(0).getCourseid());
+            tp.setCriteria(1);//查看
+            tp.setUserid(userList.get(0).getRef());
+            tp.setIsright(1);
+            List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
+            if(tpList==null||tpList.size()<1){
+                sql=new StringBuilder();
+                objList=this.taskPerformanceManager.getSaveSql(tp,sql);
+                if(sql!=null&&objList!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }
         }else{
-            QuestionAnswer qa=new QuestionAnswer();
-            qa.setCourseid(tmpTask.getCourseid());
-            qa.setQuesparentid(tmpTask.getTaskvalueid());
-            qa.setQuesid(Long.parseLong("0"));
-            qa.setUserid(userList.get(0).getRef());
-            qa.setAnswercontent(quesanswer);
-            qa.setRightanswer(1);
-            qa.setTasktype(tmpTask.getTasktype());
-            qa.setTaskid(tmpTask.getTaskid());
-            if(replyAttach!=null&&replyAttach.length()>0){
-                qa.setReplyattach(replyAttach);
-                qa.setReplyattachtype(Integer.parseInt(attachType));
-            }
-            sql=new StringBuilder();
-            objList=this.questionAnswerManager.getSaveSql(qa,sql);
-            if(sql!=null&&objList!=null){
-                sqlListArray.add(sql.toString());
-                objListArray.add(objList);
-            }
-
-            if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){
+            if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==1){//查看标准的，添加完成
                 TaskPerformanceInfo tp=new TaskPerformanceInfo();
                 tp.setTaskid(taskList.get(0).getTaskid());
                 tp.setTasktype(taskList.get(0).getTasktype());
                 tp.setCourseid(taskList.get(0).getCourseid());
-                tp.setCriteria(2);//提交心得
+                tp.setCriteria(1);//查看
                 tp.setUserid(userList.get(0).getRef());
                 tp.setIsright(1);
                 List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
@@ -1816,8 +1811,47 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     }
                 }
             }else{
-                response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务没有提交心得要求\"}");
-                return;
+                QuestionAnswer qa=new QuestionAnswer();
+                qa.setCourseid(tmpTask.getCourseid());
+                qa.setQuesparentid(tmpTask.getTaskvalueid());
+                qa.setQuesid(Long.parseLong("0"));
+                qa.setUserid(userList.get(0).getRef());
+                qa.setAnswercontent(quesanswer);
+                qa.setRightanswer(1);
+                qa.setTasktype(tmpTask.getTasktype());
+                qa.setTaskid(tmpTask.getTaskid());
+                if(replyAttach!=null&&replyAttach.length()>0){
+                    qa.setReplyattach(replyAttach);
+                    qa.setReplyattachtype(Integer.parseInt(attachType));
+                }
+                sql=new StringBuilder();
+                objList=this.questionAnswerManager.getSaveSql(qa,sql);
+                if(sql!=null&&objList!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+
+                if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){
+                    TaskPerformanceInfo tp=new TaskPerformanceInfo();
+                    tp.setTaskid(taskList.get(0).getTaskid());
+                    tp.setTasktype(taskList.get(0).getTasktype());
+                    tp.setCourseid(taskList.get(0).getCourseid());
+                    tp.setCriteria(2);//提交心得
+                    tp.setUserid(userList.get(0).getRef());
+                    tp.setIsright(1);
+                    List<TaskPerformanceInfo>tpList=this.taskPerformanceManager.getList(tp,null);
+                    if(tpList==null||tpList.size()<1){
+                        sql=new StringBuilder();
+                        objList=this.taskPerformanceManager.getSaveSql(tp,sql);
+                        if(sql!=null&&objList!=null){
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                }else{
+                    response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务没有提交心得要求\"}");
+                    return;
+                }
             }
         }
         //执行并返回结果
