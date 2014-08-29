@@ -1,19 +1,19 @@
 package com.school.control.teachpaltform;
 
 import com.school.control.base.BaseController;
-import com.school.entity.ClassUser;
-import com.school.entity.GradeInfo;
-import com.school.entity.TermInfo;
-import com.school.entity.UserInfo;
+import com.school.entity.*;
 import com.school.entity.teachpaltform.*;
+import com.school.manager.ClassManager;
 import com.school.manager.ClassUserManager;
 import com.school.manager.GradeManager;
 import com.school.manager.TermManager;
+import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.IClassUserManager;
 import com.school.manager.inter.IGradeManager;
 import com.school.manager.inter.ITermManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.teachpaltform.*;
+import com.school.util.EttInterfaceUserUtil;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
 import org.springframework.stereotype.Controller;
@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
     private ITpGroupStudentManager tpGroupStudentManager;
     private ITpTaskAllotManager tpTaskAllotManager;
     private IGradeManager gradeManager;
+    private IClassManager classManager;
     public GroupController(){
         this.termManager=this.getManager(TermManager.class);
         this.tpGroupManager=this.getManager(TpGroupManager.class);
@@ -48,6 +50,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
         this.tpGroupStudentManager=this.getManager(TpGroupStudentManager.class);
         this.tpTaskAllotManager=this.getManager(TpTaskAllotManager.class);
         this.gradeManager=this.getManager(GradeManager.class);
+        this.classManager=this.getManager(ClassManager.class);
     }
 
 	/**
@@ -252,15 +255,19 @@ public class GroupController extends BaseController<TpGroupInfo>{
 			response.getWriter().print(je.toJSON());
 			return;
 		}
-		
 		if(this.tpGroupManager.doSave(tg)){
 			je.setType("success");
+            if(!addGroupToEtt(tg.getGroupid()))
+                System.out.println("向ETT添加小组请求，失败!");
+            else
+                System.out.println("向ETT添加小组请求，成功!");
 		}else{
 			je.setMsg(UtilTool.msgproperty.getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
 		}
 		response.getWriter().print(je.toJSON());
 	}
-	
+
+
 	/**
 	 * ajax查询小组信息
 	 * @param request
@@ -323,6 +330,22 @@ public class GroupController extends BaseController<TpGroupInfo>{
 			if(bo){
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
 				je.setType("success");
+                TpGroupInfo tg=new TpGroupInfo();
+                tg.setGroupid(Long.parseLong(groupid.trim()));
+                List<TpGroupInfo> tgList=this.tpGroupManager.getList(tg,null);
+                if(tgList!=null&&tgList.size()>0){
+                    Integer clsId=tgList.get(0).getClassid();
+                    ClassInfo cls=new ClassInfo();
+                    cls.setClassid(clsId);
+                    List<ClassInfo> clsList=this.classManager.getList(cls,null);
+                    if(clsList!=null&&clsList.size()>0){
+                        Integer dcschoolid=clsList.get(0).getDcschoolid();
+                        if(!updateEttGroupUser(clsId,Long.parseLong(groupid.trim()),dcschoolid)){
+                            System.out.println("向ETT更新小组成员请求，失败!");
+                        }else
+                            System.out.println("向ETT更新小组成员请求，成功!");
+                    }
+                }
 			}else{
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
 			}
@@ -349,10 +372,32 @@ public class GroupController extends BaseController<TpGroupInfo>{
 
         TpGroupStudent gs=new TpGroupStudent();
         gs.setRef(Integer.parseInt(ref));
-
+        List<TpGroupStudent> tgsList=this.tpGroupStudentManager.getList(gs,null);
+        if(tgsList==null||tgsList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
 		if(this.tpGroupStudentManager.doDelete(gs)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");
+            //向ETT发送同步数据请求
+            TpGroupInfo tg=new TpGroupInfo();
+            tg.setGroupid(tgsList.get(0).getGroupid());
+            List<TpGroupInfo> tgList=this.tpGroupManager.getList(tg,null);
+            if(tgList!=null&&tgList.size()>0){
+                Integer clsId=tgList.get(0).getClassid();
+                ClassInfo cls=new ClassInfo();
+                cls.setClassid(clsId);
+                List<ClassInfo> clsList=this.classManager.getList(cls,null);
+                if(clsList!=null&&clsList.size()>0){
+                    Integer dcschoolid=clsList.get(0).getDcschoolid();
+                    if(!updateEttGroupUser(clsId,tgsList.get(0).getGroupid(),dcschoolid)){
+                        System.out.println("向ETT更新小组成员请求，失败!");
+                    }else
+                        System.out.println("向ETT更新小组成员请求，成功!");
+                }
+            }
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
@@ -405,13 +450,18 @@ public class GroupController extends BaseController<TpGroupInfo>{
 		
 		TpGroupInfo g=new TpGroupInfo();
 		g.setGroupid(Long.parseLong(groupid));
+        List<TpGroupInfo> tgList=this.tpGroupManager.getList(g,null);
+        if(tgList==null||tgList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
 		sql=new StringBuilder();
 		objList=this.tpGroupManager.getDeleteSql(g, sql);
 		if(sql!=null&&objList!=null){
 			sqlListArray.add(sql.toString());
 			objListArray.add(objList);
 		}
-		
 		TpGroupStudent gs=new TpGroupStudent();
 		gs.setGroupid(g.getGroupid());
 		sql=new StringBuilder();
@@ -425,6 +475,23 @@ public class GroupController extends BaseController<TpGroupInfo>{
 			if(bo){
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
 				je.setType("success");
+                //得到学校ID
+                Integer clsid=tgList.get(0).getClassid();
+                ClassInfo c=new ClassInfo();
+                c.setClassid(clsid);
+                List<ClassInfo> clsList=this.classManager.getList(c,null);
+                if(clsList!=null&&clsList.size()>0){
+                    Integer dcschoolid=clsList.get(0).getDcschoolid();
+                    if(!updateEttGroupUser(clsid,gs.getGroupid(),dcschoolid)){
+                        System.out.println("发送ETT删除小组人员命令失败!");
+                    }else
+                        System.out.println("发送ETT删除小组人员命令成功!");
+
+                    if(!EttInterfaceUserUtil.delGroupBase(tgList.get(0),dcschoolid)){
+                        System.out.println("发送ETT删除小组命令失败!");
+                    }else
+                        System.out.println("发送ETT删除小组命令成功!");
+                }
 			}else{
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
 			}
@@ -433,6 +500,35 @@ public class GroupController extends BaseController<TpGroupInfo>{
 		}
 		response.getWriter().print(je.toJSON());
 	}
+
+    /**
+     * 更新Ett小组与人员信息
+     * @param clsid 班级ID
+     * @param groupid 班级内小组ID
+     * @param dcschoolid 分校ID
+     * @return
+     */
+    private boolean updateEttGroupUser(Integer clsid,Long groupid,Integer dcschoolid){
+        if(groupid==null||clsid==null||dcschoolid==null)return false;
+        List<Map<String,Object>> objMapList=null;
+        TpGroupStudent ts=new TpGroupStudent();
+        ts.setGroupid(groupid);
+        List<TpGroupStudent> tgsList=this.tpGroupStudentManager.getList(ts,null);
+        if(tgsList!=null&&tgsList.size()>0){
+            objMapList=new ArrayList<Map<String, Object>>();
+            for(TpGroupStudent tgs:tgsList){
+                if(tgs!=null){
+                    //必带 userId，userType 的key
+                    Map<String,Object> tmpMap=new HashMap<String, Object>();
+                    tmpMap.put("userId",tgs.getUserid());
+                    tmpMap.put("userType",3);   //3:学生
+                    objMapList.add(tmpMap);
+                }
+            }
+        }
+        return EttInterfaceUserUtil.OperateGroupUser(objMapList,clsid,groupid,dcschoolid);
+    }
+
 	
 	/**
 	 * 学生调组
@@ -557,5 +653,28 @@ public class GroupController extends BaseController<TpGroupInfo>{
         je.setObjList(groupList);
 		response.getWriter().print(je.toJSON());
 	}
+
+
+
+    /**
+     * 向ETT发送请求，添加组
+     * @param groupid
+     * @return
+     */
+    private boolean addGroupToEtt(Long groupid){
+        if(groupid==null)return false;
+        TpGroupInfo tg=new TpGroupInfo();
+        tg.setGroupid(groupid);
+        List<TpGroupInfo> tpGroupList=this.tpGroupManager.getList(tg,null);
+        if(tpGroupList!=null&&tpGroupList.size()>0){
+            ClassInfo cls=new ClassInfo();
+            cls.setClassid(tpGroupList.get(0).getClassid());
+            List<ClassInfo> clsList=this.classManager.getList(cls,null);
+            if(clsList==null||clsList.size()<1)return false;
+            return EttInterfaceUserUtil.addGroupBase(tpGroupList.get(0),clsList.get(0).getDcschoolid());
+        }
+        return false;
+    }
+
 
 }

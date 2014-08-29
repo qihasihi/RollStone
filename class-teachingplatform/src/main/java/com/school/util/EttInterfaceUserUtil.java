@@ -84,9 +84,9 @@ public class EttInterfaceUserUtil {
      * @param optype  操作类型：   add   update     delete
      * @return
      */
-    private static boolean OperateGroupBase(final TpGroupInfo entity,final String schoolid,final String optype){
+    private static boolean OperateGroupBase(final TpGroupInfo entity,final Integer schoolid,final String optype){
         String addToEtt_URL=UtilTool.utilproperty.getProperty("TO_ETT_GROUP_INTERFACE").toString();
-        if(entity==null||schoolid==null||schoolid.trim().length()<1||optype==null)return false;
+        if(entity==null||schoolid==null||optype==null)return false;
         HashMap<String,String> paramMap=new HashMap<String,String>();
         paramMap.put("time",new Date().getTime()+"");
 
@@ -116,7 +116,7 @@ public class EttInterfaceUserUtil {
      * @param schoolid
      * @return
      */
-    public static boolean addGroupBase(final TpGroupInfo entity,final String schoolid){
+    public static boolean addGroupBase(final TpGroupInfo entity,final Integer schoolid){
         return OperateGroupBase(entity,schoolid,"add");
     }
 
@@ -126,7 +126,7 @@ public class EttInterfaceUserUtil {
      * @param schoolid
      * @return
      */
-    public static boolean delGroupBase(final TpGroupInfo entity,final String schoolid){
+    public static boolean delGroupBase(final TpGroupInfo entity,final Integer schoolid){
         return OperateGroupBase(entity,schoolid,"delete");
     }
 
@@ -136,7 +136,7 @@ public class EttInterfaceUserUtil {
      * @param schoolid
      * @return
      */
-    public static boolean updateGroupBase(final TpGroupInfo entity,final String schoolid){
+    public static boolean updateGroupBase(final TpGroupInfo entity,final Integer schoolid){
         return OperateGroupBase(entity,schoolid,"update");
     }
 
@@ -266,9 +266,9 @@ public class EttInterfaceUserUtil {
      * @param schoolid
      * @return
      */
-    public static boolean OperateGroupUser(List<Map<String,Object>> cuMapList,Integer groupId,Integer schoolid){
+    public static boolean OperateGroupUser(List<Map<String,Object>> cuMapList,Integer classid,Long groupId,Integer schoolid){
         String addToEtt_URL=UtilTool.utilproperty.getProperty("TO_ETT_GROUPUSER_INTERFACE").toString();
-        if(groupId==null||schoolid==null)return false;
+        if(groupId==null||schoolid==null||classid==null)return false;
 
         HashMap<String,String> paramMap=new HashMap<String,String>();
         paramMap.put("time",new Date().getTime()+"");
@@ -276,6 +276,7 @@ public class EttInterfaceUserUtil {
         //得到data JSONObject
         Map<String,Object> tmpMap=new HashMap<String, Object>();
         tmpMap.put("groupId",groupId);
+        tmpMap.put("classId",classid);
         tmpMap.put("schoolId",schoolid);
         if(cuMapList!=null&&cuMapList.size()>0)
             tmpMap.put("userList",JSONArray.fromObject(cuMapList).toString());
@@ -284,7 +285,7 @@ public class EttInterfaceUserUtil {
 //        JSONObject jb=JSONObject.fromObject(paramMap);
         String val = UrlSigUtil.makeSigSimple("jionGroupUserInterFace.do", paramMap);
         paramMap.put("sign",val);
-        JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"GBK");
+        JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"UTF-8");
         if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1")){
             return true;
         }

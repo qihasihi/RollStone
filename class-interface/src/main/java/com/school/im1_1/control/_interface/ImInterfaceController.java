@@ -67,6 +67,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private IMicVideoPaperManager micVideoPaperManager;
     private IStuPaperLogsManager stuPaperLogsManager;
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
+    private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
     public ImInterfaceController(){
         this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
         this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
@@ -87,6 +88,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.tpTopicManager=this.getManager(TpTopicManager.class);
         this.tpTopicThemeManager=this.getManager(TpTopicThemeManager.class);
         this.micVideoPaperManager=this.getManager(MicVideoPaperManager.class);
+        this.stuViewMicVideoLogManager=this.getManager(StuViewMicVideoLogManager.class);
     }
     /**
      * 学习目录接口
@@ -2624,6 +2626,35 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 if(!tk.getTaskvalueid().toString().trim().equals(paperid.trim())){
                     jsonEntity.setMsg("任务与试卷不匹配!");
                     response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+                }
+                break;
+            case 6:
+                //添加视频浏览记录
+                StuViewMicVideoLog svmvlog=new StuViewMicVideoLog();
+                svmvlog.setMicvideoid(tk.getTaskvalueid());
+                svmvlog.setUserid(userid);
+                PageResult presult=new PageResult();
+                presult.setPageSize(1);
+                //验证是否已经查看过。
+                List<StuViewMicVideoLog> stuViewMList=this.stuViewMicVideoLogManager.getList(svmvlog,presult);
+                if(stuViewMList==null||stuViewMList.size()<1){
+                    //添加完成相关记录(微视频)
+                    TaskPerformanceInfo tpf=new TaskPerformanceInfo();
+                    tpf.setCourseid(tk.getCourseid());
+                    tpf.setTaskid(tk.getTaskid());
+                    tpf.setUserid(userList.get(0).getRef());
+                    tpf.setIsright(1);
+                    tpf.setTasktype(tk.getTasktype());
+                    tpf.setCriteria(1);//如果是微视频
+                    if(!this.taskPerformanceManager.doSave(tpf)){
+                        jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+                        response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+                    }
+                    //如果没有，则添加
+                    if(!this.stuViewMicVideoLogManager.doSave(svmvlog)){
+                        jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+                        response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+                    }
                 }
                 break;
         }
