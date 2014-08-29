@@ -1905,7 +1905,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     @RequestMapping(params="m=StuPost",method={RequestMethod.GET,RequestMethod.POST})
     public void doReplyTopic(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JSONObject returnJo=new JSONObject();
-        returnJo.put("result",0);//默认失败
+        returnJo.put("result","0");//默认失败
 //        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
 //            JSONObject jo=new JSONObject();
 //            jo.put("result","0");
