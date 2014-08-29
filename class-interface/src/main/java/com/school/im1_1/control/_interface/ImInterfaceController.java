@@ -2130,7 +2130,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     @RequestMapping(params="m=AddCourseRecord",method={RequestMethod.GET,RequestMethod.POST})
     public void AddCourseRecord(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JSONObject returnJo=new JSONObject();
-        returnJo.put("result",0);//默认失败
+        returnJo.put("result","0");//默认失败
         if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
             jo.put("result","0");
@@ -2202,7 +2202,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             tpRecordInfo.setContent(content.trim());
         //添加
         if(this.tpRecordManager.doSave(tpRecordInfo)){
-            returnJo.put("result",1);//成功
+            returnJo.put("result","1");//成功
             returnJo.put("msg","添加课堂纪实成功!");
         }else
             returnJo.put("msg",UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -2225,7 +2225,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     @RequestMapping(params="m=DeleteRecord",method={RequestMethod.GET,RequestMethod.POST})
     public void DelCourseRecord(HttpServletRequest request,HttpServletResponse response) throws  Exception{
         JSONObject returnJo=new JSONObject();
-        returnJo.put("result",0);//默认失败
+        returnJo.put("result","0");//默认失败
         if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
             jo.put("result","0");
@@ -2284,7 +2284,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().println(returnJo.toString());return;
         }
         if(this.tpRecordManager.doDelete(tpRecordInfo)){
-            returnJo.put("result",1);//成功
+            returnJo.put("result","1");//成功
             returnJo.put("msg","删除课堂纪实成功!");
         }else
             returnJo.put("msg",UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -2307,7 +2307,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     @RequestMapping(params="m=GetClassRecord",method={RequestMethod.GET,RequestMethod.POST})
     public void GetClassRecord(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JSONObject returnJo=new JSONObject();
-        returnJo.put("result",0);//默认失败
+        returnJo.put("result","0");//默认失败
         if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
             jo.put("result","0");
@@ -2372,7 +2372,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
             returnJo.put("msg","没有数据!");
             returnJo.put("data",jo.toString());
-            returnJo.put("result",1);
+            returnJo.put("result","1");
             response.getWriter().println(returnJo.toString());return;
         }
         for (TpRecordInfo tEntity:recordList){
@@ -2387,7 +2387,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
         jo.put("recordList",returnMapList);
         returnJo.put("data",jo.toString());
-        returnJo.put("result",1);
+        returnJo.put("result","1");
         response.getWriter().print(returnJo.toString());
     }
 
@@ -3178,7 +3178,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     @RequestMapping(params="m=saveUserScore",method = RequestMethod.POST)
     public void doSaveUserScore(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JSONObject returnJo=new JSONObject();
-        returnJo.put("result",0);//默认失败
+        returnJo.put("result","0");//默认失败
         if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
             JSONObject jo=new JSONObject();
             jo.put("result","0");
@@ -3277,7 +3277,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 ,tk.getTaskid()
                 ,Long.parseLong(tmpUser.getUserid()+""),jid,type)){
             returnJo.put("msg", "恭喜您,获得了1积分和1蓝宝石");
-            returnJo.put("result",1);
+            returnJo.put("result","1");
         }else{
             returnJo.put("msg", "异常错误，奖励加分失败，原因：该任务已经存在相关记录");
         }
