@@ -15,13 +15,17 @@ import java.util.Map;
  */
 public class Test {
     public static void main(String[] args)throws Exception{
-        String url="http://school.etiantian.com/lezhixingt1/user?m=foreighLogin";
-        Long t=new Date().getTime();
-        String lzxschoolid="001",login_code="lzx_loginToEtt201406",lzx_userid="0122f4c5f18341838478575be29aff24",flag_id="2";
-        String key=MD5_NEW.getMD5ResultCode(t.toString()+lzxschoolid+lzx_userid+flag_id+login_code+t);
-        String param="login_time="+t+"&lzx_school_id="+lzxschoolid+"&login_key="+key+"&lzx_userid="+lzx_userid+"&flag_id="+flag_id+"&login_code="+login_code;
+       String url="http://localhost:8080/sz_school/tpuser?m=toJWIndex";
+        String param="schoolId=1&jId=2&schoolName="+java.net.URLEncoder.encode("北京分校","UTF-8");
         System.out.println(url+"&"+param);
         System.out.println(sendPostURL(url,param));
+
+
+
+        //验证添加分校信息
+    /*    String totalSchoolUrl="http://localhost:8080/totalSchool/franchisedSchool?jwValidateSchool";
+        String totalParams="schoolid=52&schoolname="+java.net.URLEncoder.encode("策士","UTF-8");
+        sendPostURL(totalSchoolUrl,totalParams); */
 
 
 //        String url="http://school.etiantian.com/lezhixingt1/cls?m=lzxUpdate";

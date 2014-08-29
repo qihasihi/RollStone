@@ -978,7 +978,7 @@ public class UserController extends BaseController<UserInfo> {
      * @return
      * @throws Exception
      */
-    private JsonEntity loginBase(UserInfo userinfo,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    protected JsonEntity loginBase(UserInfo userinfo,HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity je=new JsonEntity();
         je.setMsg("异常错误，原因：参数异常!");
         if(userinfo==null)return je;

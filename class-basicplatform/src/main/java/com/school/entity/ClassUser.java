@@ -24,6 +24,7 @@ public class ClassUser  implements java.io.Serializable{
     private Object completenum; //任务完成率
     private Object stucount;
 
+
     public Object getStucount() {
         return stucount;
     }
@@ -58,7 +59,17 @@ public class ClassUser  implements java.io.Serializable{
         return this.getUserinfo().getHeadimage();
     }
 
-	public String getAfteryear() {
+    public Integer getEttuserid(){
+        return this.getUserinfo().getEttuserid();
+    }
+
+    public void setEttuserid(Integer ettuserid){
+        this.getUserinfo().setEttuserid(ettuserid);
+    }
+
+
+
+    public String getAfteryear() {
 		return afteryear;
 	}
 	public void setAfteryear(String afteryear) {

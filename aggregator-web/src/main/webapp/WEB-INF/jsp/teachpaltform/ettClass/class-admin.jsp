@@ -8,8 +8,9 @@
     </style>
     <script type="text/javascript" src="<%=basePath %>js/ett/ettcls.js"></script>
     <script type="text/javascript">
+        var schoolid="${dcschoolid}";
         $(function(){
-
+            loadCls(1);
         });
     </script>
 
@@ -19,25 +20,25 @@
 <div class="subpage_head"><span class="ico28"></span><strong>班级管理</strong></div>
 <div class="content3">
     <div class="jxxt_banji_jiaowuT public_input">
-        <select>
+        <select id="sel_year" onchange="loadCls(1)">
+            <option value="">--请选择学年--</option>
+            <c:if test="${!empty classYearList}">
+                <c:forEach items="${classYearList}" var="c">
+                    <option value="${c.classyearvalue}">${c.classyearname}</option>
+                </c:forEach>
+            </c:if>
+        </select>
+
+        <select id="sel_grade" onchange="loadCls(1)">
             <option value="">--请选择年级--</option>
-            <c:if test="${!empty gradeList}">
+            <c:if test="${!empty gradeList}" >
                 <c:forEach items="${gradeList}" var="c">
                     <option value="${c.gradevalue}">${c.gradename}</option>
                 </c:forEach>
             </c:if>
         </select>
 
-        <select>
-            <option value="">--请选择学科--</option>
-            <c:if test="${!empty subjectList}">
-                <c:forEach items="${subjectList}" var="c">
-                    <option value="${c.subjectid}">${c.subjectname}</option>
-                </c:forEach>
-            </c:if>
-        </select>
-
-        <select>
+        <select id="sel_type" onchange="loadCls(1)">
             <option value="">--请选择班级类型--</option>
             <c:if test="${!empty classType}">
                 <c:forEach items="${classType}" var="c">
@@ -48,37 +49,26 @@
         <a href="javascript:void(0);" onclick="showModel('dv_add');" class="an_small">添加班级</a>
     </div>
 
-    <div class="jxxt_banji_jiaowuR font-black">
+    <div class="jxxt_banji_jiaowuR font-black" id="dv_detail">
         <div class="jxxt_banji_info">
             <div class="pic"><img src="" width="135" height="135"></div>
-            <p class="t_r"><a href="1" class="ico11" title="编辑"></a><a href="1" class="ico04" title="删除"></a></p>
-            <p><strong>2014年网下指导教师培训初一普通班</strong></p>
-            <p><b>班主任：欧阳小诗</b>班级类型：网校班</p>
+            <p class="t_r" id="p_edit"></p>
+            <p><strong id="s_clsname">2014年网下指导教师培训初一普通班</strong></p>
+            <p id="s_bzr"><b i>班主任：欧阳小诗</b>班级类型：网校班</p>
         </div>
 
         <div class="jxxt_banji_list">
-            <p>任课教师（5）&nbsp;&nbsp;&nbsp;&nbsp;<a href="1" target="_blank" class="font-darkblue"><span class="ico26"></span>添加课程</a></p>
-            <ul>
-                <li><img src="../images/pic01_140226.jpg" width="80" height="80">王小红<b>语文</b></li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">李春天<b>英语</b></li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">谢明亮<b>物理</b></li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">白高兴<b>化学</b></li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">王小红<b>历史</b></li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">李春天<b>地理</b></li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">谢明亮<b>生物</b></li>
+            <p>任课教师（<span id="tea_count">0</span>）&nbsp;&nbsp;&nbsp;&nbsp;<a id="a_addTeacher" href="javascript:;"  class="font-darkblue"><span class="ico26"></span>添加课程</a></p>
+            <ul id="ul_tea">
+                <!--<li><img src="../images/pic01_140226.jpg" width="80" height="80">王小红<b>语文</b><p class="ico"><a class="ico34" title="移出"></a></p></li>-->
             </ul>
 
-            <p class="p_t_5">本班学员（5）&nbsp;&nbsp;&nbsp;&nbsp;<a href="1" target="_blank" class="font-darkblue"><span class="ico26"></span>学员管理</a></p>
-            <ul>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">王小红</li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">李春天
-                    <p class="ico"><a class="ico34" title="移出"></a></p></li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">谢明亮</li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">白高兴</li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">王小红</li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">李春天</li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">谢明亮</li>
-                <li><img src="../images/pic05_140226.jpg" width="80" height="80">白高兴</li>
+            <p class="p_t_5">本班学员（<span id="stu_count">0</span>）&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" id="a_addStudent" class="font-darkblue"><span class="ico26"></span>学员管理</a></p>
+            <ul id="ul_stu">
+
+              <!--  <li><img src="../images/pic05_140226.jpg" width="80" height="80">李春天
+                    <p class="ico"><a class="ico34" title="移出"></a></p></li> -->
+
             </ul>
         </div>
 
@@ -94,6 +84,73 @@
 </div>
 <%@include file="/util/foot.jsp" %>
 </body>
+
+
+<div class="public_windows" id="dv_add_teacher" style="display: none;">
+    <h3><a href="javascript:closeModel('dv_add_teacher')" title="关闭"></a>添加课程</h3>
+    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
+        <col class="w50"/>
+        <col class="w170"/>
+        <col class="w50"/>
+        <col class="w170"/>
+        <tr>
+            <th>班级：</th>
+            <td colspan="3" id="add_teacher_clsname">2014年网下指导教师培训初一普通班</td>
+        </tr>
+        <tr>
+            <th>学科：</th>
+            <td>
+                <select id="add_subject" class="w120">
+                <option value="">选择学科</option>
+                <c:if test="${!empty subjectList}">
+                    <c:forEach items="${subjectList}" var="c">
+                        <option value="${c.subjectid}">${c.subjectname}</option>
+                    </c:forEach>
+                </c:if>
+                </select>
+            </td>
+            <th>教师：</th>
+            <td><select id="teacherList"  class="w120"></select></td>
+        </tr>
+        <tr>
+            <th>&nbsp;</th>
+            <td colspan="3"><a href="javascript:;" id="a_sub_teacher"  class="an_public1">提&nbsp;交</a></td>
+        </tr>
+    </table>
+</div>
+
+
+<div class="public_windows public_input" id="dv_add_student" style="display: none;">
+    <h3><a href="javascript:closeModel('dv_add_student')"  title="关闭"></a>学员管理</h3>
+    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;姓名：<input name="textfield5" type="text" class="w140"/><a href="1" class="ico57" title="查询"></a></p>
+    <div class="jxxt_float_bjgl">
+        <p class="font-black"><a href="1" target="_blank" class="font-darkblue">全选</a>末添加成员：</p>
+        <ul>
+            <li><span class="ico85a"></span>王小小</li>
+            <li><span class="ico85a"></span>李磊磊</li>
+            <li><span class="ico85a"></span>周明明</li>
+            <li><span class="ico85a"></span>厂小宝全</li>
+            <li><span class="ico85a"></span>王小小</li>
+            <li><span class="ico85a"></span>李磊磊</li>
+            <li><span class="ico85a"></span>周明明</li>
+            <li><span class="ico85a"></span>厂小宝全</li>
+            <li><span class="ico85a"></span>王小小</li>
+            <li><span class="ico85a"></span>李磊磊</li>
+            <li><span class="ico85a"></span>周明明</li>
+            <li><span class="ico85a"></span>厂小宝全</li>
+        </ul>
+    </div>
+    <div class="jxxt_float_bjgl">
+        <p class="font-black"><a href="1" target="_blank" class="font-darkblue">清空</a>已添加成员：</p>
+        <ul>
+            <li><span class="ico85b"></span>王小小</li>
+            <li><span class="ico85b"></span>李磊磊</li>
+            <li><span class="ico85b"></span>周明明</li>
+            <li><span class="ico85b"></span>厂小宝全</li>
+        </ul>
+    </div>
+    <p class="t_c"><a href="javascript:;" id="a_sub_student" class="an_public1">确&nbsp;定</a>&nbsp;&nbsp;<a href="javascript:closeModel('dv_add_student')"  class="an_public1">取&nbsp;消</a></p>
+</div>
 
 
 
@@ -130,6 +187,17 @@
             </select></td>
         </tr>
         <tr>
+            <th><span class="ico06"></span>学&nbsp;&nbsp;&nbsp;&nbsp;年：</th>
+            <td>
+                <select id="year" class="w100">
+                    <option value="">选择学年 </option>
+                    <c:if test="${!empty classYearList}">
+                        <c:forEach items="${classYearList}" var="c">
+                            <option value="${c.classyearvalue}">${c.classyearname}</option>
+                        </c:forEach>
+                    </c:if>
+                </select>
+            </td>
             <th><span class="ico06"></span>年&nbsp;&nbsp;&nbsp;&nbsp;级：</th>
             <td>
                 <select id="grade" class="w100">
@@ -141,14 +209,15 @@
                     </c:if>
                 </select>
             </td>
-            <th>&nbsp;&nbsp;班级限额：</th>
-            <td><input  id="num" type="text" class="w90" /></td>
+
         </tr>
         <tr>
             <th>&nbsp;&nbsp;失效日期：</th>
-            <td colspan="3">
-                <input placeholder="班级失效时间" class="w320"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="verify_time"  name="verify_time" type="text" />
+            <td colspan="">
+                <input placeholder="班级失效时间" class="w120"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="verify_time"  name="verify_time" type="text" />
             </td>
+            <th>&nbsp;&nbsp;班级限额：</th>
+            <td><input  id="num" type="text" class="w100" /></td>
         </tr>
         <tr>
             <th>允许学生加入：</th>
@@ -194,6 +263,17 @@
             </select></td>
         </tr>
         <tr>
+            <th><span class="ico06"></span>学&nbsp;&nbsp;&nbsp;&nbsp;年：</th>
+            <td>
+                <select id="year" class="w100">
+                    <option value="">选择学年 </option>
+                    <c:if test="${!empty classYearList}">
+                        <c:forEach items="${classYearList}" var="c">
+                            <option value="${c.classyearvalue}">${c.classyearname}</option>
+                        </c:forEach>
+                    </c:if>
+                </select>
+            </td>
             <th><span class="ico06"></span>年&nbsp;&nbsp;&nbsp;&nbsp;级：</th>
             <td>
                 <select id="grade" class="w100">
@@ -204,14 +284,15 @@
                     </c:if>
                 </select>
             </td>
-            <th>&nbsp;&nbsp;班级限额：</th>
-            <td><input  id="num" type="text" class="w90" /></td>
+
         </tr>
         <tr>
             <th>&nbsp;&nbsp;失效日期：</th>
-            <td colspan="3">
-                <input placeholder="班级失效时间" class="w320"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="verify_time"  name="verify_time" type="text" />
+            <td colspan="">
+                <input placeholder="班级失效时间" class="w120"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="verify_time"  name="verify_time" type="text" />
             </td>
+            <th>&nbsp;&nbsp;班级限额：</th>
+            <td><input  id="num" type="text" class="w100" /></td>
         </tr>
         <tr>
             <th>允许学生加入：</th>
