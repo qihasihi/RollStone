@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.school.manager.*;
 import com.school.manager.inter.*;
-import com.school.util.MD5_NEW;
+import com.school.util.*;
 import jcore.jsonrpc.common.JSONArray;
 import jcore.jsonrpc.common.JSONObject;
 import net.sf.json.JSON;
@@ -26,9 +26,6 @@ import com.school.entity.GradeInfo;
 import com.school.entity.SubjectInfo;
 import com.school.entity.TermInfo;
 import com.school.entity.UserInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
 
 @Controller
 @RequestMapping(value="/cls")
@@ -373,11 +370,23 @@ public class ClassController extends BaseController<ClassInfo>{
         if(classManager.doSave(classinfo)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");
+            ClassInfo entity=this.getParameter(request, ClassInfo.class);
+            entity.setYear(year);
+            entity.setIslike(1);
+            classList =this.classManager.getList(entity,null);
+            if(classList!=null&&classList.size()>0){
+                  if(!EttInterfaceUserUtil.addClassBase(classList.get(0))){
+                      System.out.println("同步添加班级失败!");
+                  }else
+                      System.out.println("同步添加班级成功!");
+            }
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
         response.getWriter().print(je.toJSON());
     }
+
+
 
     /**
      * 修改
@@ -423,6 +432,17 @@ public class ClassController extends BaseController<ClassInfo>{
         if(classManager.doUpdate(clsEntity)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");
+            //修改
+            ClassInfo entity=new ClassInfo();
+            entity.setClassid(classinfo.getClassid());
+            clsList=this.classManager.getList(clsInfo, null);
+            if(clsList!=null&&clsList.size()>0){
+                if(!EttInterfaceUserUtil.updateClassBase(clsList.get(0))){
+                    System.out.println("修改班级，同步数据失败!");
+                }else{
+                    System.out.println("修改班级，同步数据成功!");
+                }
+            }
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
@@ -459,6 +479,17 @@ public class ClassController extends BaseController<ClassInfo>{
         if(classManager.doDelete(classinfo)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");
+            //同步删除班级以及人员至ETT 先删除该班级下的人员
+
+            if(delEttClassUser(classinfo.getClassid(), clsList.get(0).getDcschoolid(), true)){
+                System.out.println("班级人员删除同步至网校信息成功!");
+                if(!EttInterfaceUserUtil.delClassBase(clsList.get(0))){
+                    System.out.println("班级删除同步至网校信息失败!");
+                }else
+                    System.out.println("班级删除同步至网校信息成功!");
+            }else
+                System.out.println("班级人员删除同步至网校信息失败!");
+
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
@@ -586,6 +617,10 @@ public class ClassController extends BaseController<ClassInfo>{
             response.getWriter().print(jeEntity.toJSON());return;
         }
         clsEntity=clsList.get(0);
+
+        //存储相关联的班级信息（用处：向ETT发送人员信息）
+        List<Integer> allowClssList=new ArrayList<Integer>();
+        allowClssList.add(clsEntity.getClassid());
         //开始添加数据
         String[] uidArray=uid.split(",");
         StringBuilder sqlbuilder=null;
@@ -615,6 +650,11 @@ public class ClassController extends BaseController<ClassInfo>{
             cutmp.setYear(clsEntity.getYear());
             List<ClassUser> cutmpList=this.classUserManager.getList(cutmp, null);
             if(cutmpList!=null&&cutmpList.size()>0){
+                for(ClassUser tmpCu:cutmpList){
+                    if(tmpCu.getClassid()!=null&&!allowClssList.contains(tmpCu.getClass())){
+                        allowClssList.add(tmpCu.getClassid());
+                    }
+                }
                 sqlbuilder=new StringBuilder();
                 List<Object> objList=this.classUserManager.getDeleteSql(cutmp, sqlbuilder);
                 if(sqlbuilder!=null&&objList!=null&&sqlbuilder.toString().trim().length()>0){
@@ -652,6 +692,18 @@ public class ClassController extends BaseController<ClassInfo>{
             if(this.classUserManager.doExcetueArrayProc(sqlArrayList, objArrayList)){
                 jeEntity.setType("success");
                 jeEntity.setMsg("操作成功!");
+                //向ETT发送变动请求
+                if(allowClssList!=null&&allowClssList.size()>0){
+                    for(Integer clsidInte:allowClssList){
+                        if(clsidInte!=null){
+                            //更新人员
+                            if(!updateEttClassUser(clsidInte)){
+                                System.out.println(clsidInte+"向ett更新人员失败!");
+                            }else
+                                System.out.println(clsidInte+"向ett更新人员成功!");
+                        }
+                    }
+                }
             }else
                 jeEntity.setMsg("操作失败，原因：未知!");
         }else{
@@ -702,10 +754,15 @@ public class ClassController extends BaseController<ClassInfo>{
         if(this.classManager.doClassLevelUp(year)){
             jeEntity.setMsg("自动升级成功!请刷新页面!");
             jeEntity.setType("success");
+            //自动升级调用ETT接口，升级
+            levelUpSendToEtt(year);
         }else
             jeEntity.setMsg("升级失败!原因：未知!");
         response.getWriter().print(jeEntity.toJSON());
     }
+
+
+
 
     @RequestMapping(params ="m=lzxUpdate",method=RequestMethod.POST)
     public void lzxUpdate(HttpServletRequest request,HttpServletResponse response) throws Exception{
@@ -941,6 +998,137 @@ public class ClassController extends BaseController<ClassInfo>{
             response.getWriter().println("{\"type\":\"success\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");
         }
     }
+
+    /**
+     * 自动升级发送请求到ETT
+     * @param year
+     * @return
+     */
+    private boolean levelUpSendToEtt(String year){
+        //得到当前年份的所有班级
+        if(year==null||year.trim().length()<1)return false;
+        ClassInfo clsEntity=new ClassInfo();
+        clsEntity.setYear(year);
+        List<ClassInfo> clsList=this.classManager.getList(clsEntity,null);
+        if(clsList==null||clsList.size()<1)return false;
+        for(ClassInfo cls:clsList){
+            if(cls!=null){
+                //发送ETT班级信息
+                if(!EttInterfaceUserUtil.addClassBase(cls)){
+                    System.out.println("自动升级，"+cls.getClassid()+" "+cls.getDcschoolid()+"传入ETT失败!");
+                }else
+                    System.out.println("自动升级，"+cls.getClassid()+" "+cls.getDcschoolid()+"传入ETT成功!");
+
+                //发送ETT学生成员数据
+
+                if(!updateEttClassUser(cls.getClassid())){
+                    System.out.println("自动升级，"+cls.getClassid()+" 班级人员传入ETT失败!");
+                }else
+                    System.out.println("自动升级，"+cls.getClassid()+" 班级人员传入ETT成功!");
+
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * 删除班级下的学生，班主任，学生等信息
+     * @param classid   删除的班级id
+     * @param isDelTea 是否删除老师信息
+     * @return
+     */
+    private boolean delEttClassUser(Integer classid,Integer dcschool,Boolean isDelTea){
+        if(classid==null)return false;
+        //得到班级信息
+//        ClassInfo clsEntity=new ClassInfo();
+//        clsEntity.setClassid(classid);
+//        List<ClassInfo> clsList=this.classManager.getList(clsEntity,null);
+//        if(clsList==null||clsList.size()<1){
+//            return false;
+//        }
+
+        List<Map<String,Object>> mapList=null;
+        if(isDelTea!=null&&!isDelTea){
+            mapList=new ArrayList<Map<String, Object>>();
+            //查任课老师
+            ClassUser cu=new ClassUser();
+            cu.setClassid(classid);
+            cu.setRelationtype("任课老师");
+            List<ClassUser> cuTeaList=this.classUserManager.getList(cu,null);
+            if(cuTeaList!=null&&cuTeaList.size()>0){
+                for(ClassUser tmp:cuTeaList){
+                    // 必带 userId，userType,subjectId 的三个key
+                    Map<String,Object> reMap=new HashMap<String, Object>();
+                    reMap.put("userId",tmp.getUid());
+                    reMap.put("subjectId",cu.getSubjectid()==null?-1:cu.getSubjectid());
+                    reMap.put("userType",2);
+                    mapList.add(reMap);
+                }
+            }
+            //查班主任
+            cu.setRelationtype("班主任");
+            List<ClassUser> cuBanList=this.classUserManager.getList(cu,null);
+            if(cuBanList!=null&&cuBanList.size()>0){
+                for(ClassUser tmp:cuBanList){
+                    // 必带 userId，userType,subjectId 的三个key
+                    Map<String,Object> reMap=new HashMap<String, Object>();
+                    reMap.put("userId",tmp.getUid());
+                    reMap.put("subjectId",cu.getSubjectid()==null?-1:cu.getSubjectid());
+                    reMap.put("userType",1);
+                    mapList.add(reMap);
+                }
+            }
+        }
+        return EttInterfaceUserUtil.OperateClassUser(mapList,classid,dcschool);
+    }
+
+    /**
+     * 更新班级信息
+     * @param clsid 班级ID
+     * @return
+     */
+    private boolean updateEttClassUser(Integer clsid){
+        if(clsid!=null){
+            //查询班级信息
+            ClassInfo cls=new ClassInfo();
+            List<ClassInfo> clsList=this.classManager.getList(cls,null);
+            if(clsList==null||clsList.size()<1)return false;
+            Integer dcschoolid =clsList.get(0).getDcschoolid();
+            //得到该班级的人员信息
+            ClassUser cu=new ClassUser();
+            cu.setClassid(clsid);
+            List<ClassUser> cuTmpList=this.classUserManager.getList(cu,null);
+            if(cuTmpList!=null&&cuTmpList.size()>0){
+                // 必带 userId，userType,subjectId 的三个key
+                List<Map<String,Object>> mapList=new ArrayList<Map<String, Object>>();
+                for (ClassUser cuTmpe:cuTmpList){
+                    if(cuTmpe!=null){
+                        Map<String,Object> tmpMap=new HashMap<String, Object>();
+                        tmpMap.put("userId",cuTmpe.getUid());
+                        Integer userType=3;
+                        if(cuTmpe.getRelationtype()!=null){
+                            if(cuTmpe.getRelationtype().trim().equals("任课老师"))
+                                userType=2;
+                            else if(cuTmpe.getRelationtype().trim().equals("班主任"))
+                                userType=1;
+                        }
+                        tmpMap.put("userType",userType);
+                        tmpMap.put("subjectId",cuTmpe.getSubjectid()==null?-1:cuTmpe.getSubjectid());
+                        mapList.add(tmpMap);
+                    }
+                }
+                if(!EttInterfaceUserUtil.OperateClassUser(mapList,clsid,dcschoolid)){
+                    System.out.println("classUser同步至网校失败!");
+                    return false;
+                } else
+                    System.out.println("classUser同步至网校成功!");
+            }
+        }else
+            return false;
+        return true;
+    }
+
 }
 
 

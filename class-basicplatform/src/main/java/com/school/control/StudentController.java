@@ -1,16 +1,14 @@
 package com.school.control;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.school.manager.*;
 import com.school.manager.inter.*;
+import com.school.util.EttInterfaceUserUtil;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -117,6 +115,8 @@ public class StudentController extends BaseController<StudentInfo> {
 			return "{\"type\":\"error\",\"msg\":\"文件上传失败!\"}";
 		List<Object>objList=null;
 		String clsid=request.getParameter("classid");
+        List<String> unionUserIdList=new ArrayList<String>();
+        List<Integer> clsIdList=new ArrayList<Integer>();
 		try{
 			//Excel存在值
 			objList=this.operaterexcelmanager.includeExcel(filename, new StudentManager());
@@ -142,20 +142,24 @@ public class StudentController extends BaseController<StudentInfo> {
 						msg= "{\"type\":\"error\",\"msg\":\"当前班级不存在,请先设置班级再导入成员!\"}";
 						return msg;
 					}
+
 					if(clsid!=null&&clsid.toString().trim().length()>0&&!clsid.trim().equals("undefined")){
 						if(!clsid.trim().equals(clsList.get(0).getClassid().toString())){
 							msg="{\"type\":\"error\",\"msg\":\"异常错误，当前导入只能导入该班学生!\"}";
 							return msg;
 						}
 					}
-					
+
 					//删除该班级下的所有学生
 					if(freeClsid==null||(freeClsid!=null&&clsList.get(0).getClassid().intValue()!=freeClsid.intValue())){
 						ClassUser cutmp=new ClassUser();
 						cutmp.setClassid(clsList.get(0).getClassid());
 						cutmp.setRelationtype("学生");
-
 						objparaList=this.classUserManager.getDeleteSql(cutmp, sqlbuilder);
+                        //记录classid，向ett发送人员信息
+                        if(clsIdList!=null&&!clsIdList.contains(clsList.get(0).getClassid())){
+                            clsIdList.add(clsList.get(0).getClassid());
+                        }
 						objListArray.add(objparaList);
 						sqlListArray.add(sqlbuilder.toString());
 						freeClsid=clsList.get(0).getClassid();
@@ -188,7 +192,12 @@ public class StudentController extends BaseController<StudentInfo> {
 							cu.setRef(cuNextID);
 							sqlbuilder=new StringBuilder();
 							objparaList=this.classUserManager.getSaveSql(cu, sqlbuilder);
-							
+                        //记录classid，向ett发送人员信息
+                        if(clsIdList!=null&&!clsIdList.contains(clsList.get(0).getClassid())){
+                            clsIdList.add(clsList.get(0).getClassid());
+                        }
+
+
 							objListArray.add(objparaList);
 							sqlListArray.add(sqlbuilder.toString());							
 							//添加操作记录
@@ -209,7 +218,11 @@ public class StudentController extends BaseController<StudentInfo> {
                         u.setDcschoolid(this.logined(request).getDcschoolid());
 						sqlbuilder=new StringBuilder();
 						objparaList=this.userManager.getSaveSql(u, sqlbuilder);
-						
+                        if(unionUserIdList!=null&&!unionUserIdList.contains(userNextID)){
+                            unionUserIdList.add(userNextID);
+                        }
+
+
 						objListArray.add(objparaList);
 						sqlListArray.add(sqlbuilder.toString());
 						
@@ -256,7 +269,12 @@ public class StudentController extends BaseController<StudentInfo> {
 						objparaList=this.classUserManager.getSaveSql(cu, sqlbuilder);
 						objListArray.add(objparaList);
 						sqlListArray.add(sqlbuilder.toString());
-					
+
+                        if(clsIdList!=null&&!clsIdList.contains(clsList.get(0).getClassid())){
+                            clsIdList.add(clsList.get(0).getClassid());
+                        }
+
+
 						//添加操作记录
 						sqlbuilder=new StringBuilder();
 						objparaList=this.classUserManager.getAddOperateLog(this.logined(request).getRef()
@@ -309,9 +327,34 @@ public class StudentController extends BaseController<StudentInfo> {
 					msg= "{\"type\":\"error\",\"msg\":\"您上传的文件中不存在数据或该数据已存在于班级中!请仔细核对!\"}";    
 				}else{
 					boolean flag=this.studentManager.doExcetueArrayProc(sqlListArray, objListArray);
-					if(flag)
+					if(flag){
 						msg="{\"type\":\"success\",\"msg\":\"操作成功!\"}";
-					else
+
+
+                        //向ETT传入用户数据(添加)
+                        if(unionUserIdList!=null&&unionUserIdList.size()>0){
+                            for (String tmpRef:unionUserIdList){
+                                if(tmpRef!=null){
+                                    if(!addUserToEtt(tmpRef)){
+                                        System.out.println(tmpRef+"同步用户数据到ETT失败!");
+                                    }else
+                                        System.out.println(tmpRef+"同步用户数据到ETT成功!");
+                                }
+                            }
+                        }
+                        //向ETT传入班级用户数据
+                        if(clsIdList!=null&&clsIdList.size()>0){
+                            for (Integer tmpCls:clsIdList){
+                                if(tmpCls!=null){
+                                    if(!updateClassUserToEtt(tmpCls)){
+                                        System.out.println(tmpCls+"同步班级数据到ETT失败!");
+                                    }else
+                                        System.out.println(tmpCls+"同步班级数据到ETT成功!");
+                                }
+                            }
+                        }
+
+                    }else
 						msg="{\"type\":\"error\",\"msg\":\"导入班级成员失败!请重试!\"}"; 
 				}
 			}
@@ -322,6 +365,74 @@ public class StudentController extends BaseController<StudentInfo> {
 		}
 		return msg; 
 	}
+    /**
+     * 添加班级用户至ett
+     * @param clsid
+     * @return
+     */
+    private boolean updateClassUserToEtt(Integer clsid){
+        if(clsid==null)return false;
+        ClassInfo cls=new ClassInfo();
+        cls.setClassid(clsid);
+        List<ClassInfo> clsList=this.classManager.getList(cls,null);
+        if(clsList==null||clsList.size()<1)return false;
+        Integer dcschoolId=clsList.get(0).getDcschoolid();
+       ClassUser cu=new ClassUser();
+        cu.setClassid(clsid);
+        List<ClassUser> cuTmpList=this.classUserManager.getList(cu,null);
+        if(cuTmpList!=null&&cuTmpList.size()>0){
+            // 必带 userId，userType,subjectId 的三个key
+            List<Map<String,Object>> mapList=new ArrayList<Map<String, Object>>();
+            for (ClassUser cuTmpe:cuTmpList){
+                if(cuTmpe!=null){
+                    Map<String,Object> tmpMap=new HashMap<String, Object>();
+                    tmpMap.put("userId",cuTmpe.getUid());
+                    Integer userType=3;
+                    if(cuTmpe.getRelationtype()!=null){
+                        if(cuTmpe.getRelationtype().trim().equals("任课老师"))
+                            userType=2;
+                        else if(cuTmpe.getRelationtype().trim().equals("班主任"))
+                            userType=1;
+                    }
+                    tmpMap.put("userType",userType);
+                    tmpMap.put("subjectId",cuTmpe.getSubjectid()==null?-1:cuTmpe.getSubjectid());
+                    mapList.add(tmpMap);
+                }
+            }
+            if(!EttInterfaceUserUtil.OperateClassUser(mapList, clsid, dcschoolId)){
+                System.out.println("classUser同步至网校失败!");
+                return false;
+            } else
+                System.out.println("classUser同步至网校成功!");
+        }
+        return true;
+    }
+    /**
+     * 添加用户至ett
+     * @param ref
+     * @return
+     */
+    private boolean addUserToEtt(String ref){
+        if(ref==null||ref.toString().trim().length()<1)return false;
+        UserInfo u=new UserInfo();
+        u.setRef(ref);
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<UserInfo> tmpUList=this.userManager.getList(u,presult);
+        if(tmpUList!=null&&tmpUList.size()>0){
+            //调用用户接口
+            if(EttInterfaceUserUtil.addUserBase(tmpUList)){
+                System.out.println("用户信息同步至网校成功!");
+            }else{
+                System.out.println("用户信息同步至网校失败!");
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
 	/**
 	 * 根据班级信息得到学生数据
 	 * @param request

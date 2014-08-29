@@ -1824,7 +1824,7 @@ public class UtilTool implements java.io.Serializable {
             }
             String returnContent=null;
             try {
-                returnContent=new String(stringBuffer.toString().getBytes("gbk"),"UTF-8");
+                returnContent=new String(stringBuffer.toString().getBytes("gbk"),requestEncoding);
             } catch (UnsupportedEncodingException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

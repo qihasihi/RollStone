@@ -42,7 +42,7 @@ public class EttInterfaceUserUtil {
         paramMap.put("data",jsonArray.toString());
         String val = UrlSigUtil.makeSigSimple("userInterFace.do", paramMap);
         paramMap.put("sign",val);
-        JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"GBK");
+        JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"UTF-8");
         if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1")){
             return true;
         }
@@ -102,7 +102,7 @@ public class EttInterfaceUserUtil {
         paramMap.put("data",jsonObject.toString());
         String val = UrlSigUtil.makeSigSimple("groupInterFace.do", paramMap);
         paramMap.put("sign",val);
-        JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"GBK");
+        JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"UTF-8");
         if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1"))
             return true;
         if(jo!=null)
@@ -162,8 +162,26 @@ public class EttInterfaceUserUtil {
 //        Integer classType=1;
 //        if(entity.getPattern()!=null&&entity.getPattern().trim().equals("分层班"))
 //            classType=2;
+        String classGrade=entity.getClassgrade();
+        if(classGrade!=null){
+            if(classGrade.equals("高三"))
+                classGrade="高中三年级";
+            else if(classGrade.equals("高二"))
+                classGrade="高中二年级";
+            else if(classGrade.equals("高一"))
+                classGrade="高中一年级";
+            else if(classGrade.equals("初三"))
+                classGrade="初中三年级";
+            else if(classGrade.equals("初二"))
+                classGrade="初中二年级";
+            else if(classGrade.equals("初一"))
+                classGrade="初中一年级";
+            else if(classGrade.equals("初一"))
+                classGrade="初中一年级";
+        }
+
         tmpMap.put("classType",entity.getDctype());
-        tmpMap.put("gradeName",entity.getClassgrade());
+        tmpMap.put("gradeName",classGrade);
         tmpMap.put("academicYear",entity.getYear());
         tmpMap.put("subjectId",entity.getSubjectid()==null?-1:entity.getSubjectid());
 
@@ -171,7 +189,7 @@ public class EttInterfaceUserUtil {
         paramMap.put("data",jsonObject.toString());
         String val = UrlSigUtil.makeSigSimple("classInterFace.do", paramMap);
         paramMap.put("sign",val);
-        JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"GBK");
+        JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"UTF-8");
         if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1"))
             return true;
         if(jo!=null)
@@ -214,7 +232,7 @@ public class EttInterfaceUserUtil {
      */
     public static boolean OperateClassUser(List<Map<String,Object>> cuMapList,Integer classid,Integer schoolid){
         String addToEtt_URL=UtilTool.utilproperty.getProperty("TO_ETT_JOINCLASSUSER_INTERFACE").toString();
-        if(cuMapList==null||cuMapList.size()<1||classid==null||schoolid==null)return false;
+        if(classid==null||schoolid==null)return false;
 
         HashMap<String,String> paramMap=new HashMap<String,String>();
         paramMap.put("time",new Date().getTime()+"");
@@ -223,13 +241,14 @@ public class EttInterfaceUserUtil {
         Map<String,Object> tmpMap=new HashMap<String, Object>();
         tmpMap.put("classId",classid);
         tmpMap.put("schoolId",schoolid);
-        tmpMap.put("userList",JSONArray.fromObject(cuMapList).toString());
+        if(cuMapList!=null&&cuMapList.size()>0)
+            tmpMap.put("userList",JSONArray.fromObject(cuMapList).toString());
         //存入
         paramMap.put("data",JSONObject.fromObject(tmpMap).toString());
 //        JSONObject jb=JSONObject.fromObject(paramMap);
         String val = UrlSigUtil.makeSigSimple("jionClassUserInterFace.do", paramMap);
         paramMap.put("sign",val);
-        JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"GBK");
+        JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"UTF-8");
         if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1")){
             return true;
         }
@@ -249,7 +268,7 @@ public class EttInterfaceUserUtil {
      */
     public static boolean OperateGroupUser(List<Map<String,Object>> cuMapList,Integer groupId,Integer schoolid){
         String addToEtt_URL=UtilTool.utilproperty.getProperty("TO_ETT_GROUPUSER_INTERFACE").toString();
-        if(cuMapList==null||cuMapList.size()<1||groupId==null||schoolid==null)return false;
+        if(groupId==null||schoolid==null)return false;
 
         HashMap<String,String> paramMap=new HashMap<String,String>();
         paramMap.put("time",new Date().getTime()+"");
@@ -258,7 +277,8 @@ public class EttInterfaceUserUtil {
         Map<String,Object> tmpMap=new HashMap<String, Object>();
         tmpMap.put("groupId",groupId);
         tmpMap.put("schoolId",schoolid);
-        tmpMap.put("userList",JSONArray.fromObject(cuMapList).toString());
+        if(cuMapList!=null&&cuMapList.size()>0)
+            tmpMap.put("userList",JSONArray.fromObject(cuMapList).toString());
         //存入
         paramMap.put("data",JSONObject.fromObject(tmpMap).toString());
 //        JSONObject jb=JSONObject.fromObject(paramMap);
