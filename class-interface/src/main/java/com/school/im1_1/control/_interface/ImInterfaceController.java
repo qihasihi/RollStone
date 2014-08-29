@@ -2748,7 +2748,56 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
                 request.setAttribute("resname",taskList.get(0).getResourcename());
                 request.setAttribute("userRecord",taskUserRecord);
-                return new ModelAndView("");
+                if(taskUserRecord!=null&&taskUserRecord.size()>0){
+                    for(int i = 0;i<taskUserRecord.size();i++){
+                        returnUserMap = new HashMap();
+                        int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
+                        int days = 0;
+                        int hours =0;
+                        int mins = 0;
+                        int seconds = 0;
+                        if(time>0){
+                            seconds = time%60;
+                            if(seconds>0){
+                                mins = time/60;
+                            }else{
+                                seconds = seconds*60;
+                            }
+                            if(mins>0){
+                                hours = mins/60;
+                            }
+                            if(hours>0){
+                                days= hours/24;
+                            }
+                        }
+                        if(days>0){
+                            String t = taskUserRecord.get(i).get("C_TIME").toString();
+                            t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
+                            returnUserMap.put("replyDate",t);
+                        }else{
+                            if(hours>0){
+                                returnUserMap.put("replyDate",hours+"小时");
+                            }else{
+                                if(mins>0){
+                                    returnUserMap.put("replyDate",mins+"分钟");
+                                }else{
+                                    if(seconds>0){
+                                        returnUserMap.put("replyDate",seconds+"秒");
+                                    }
+                                }
+                            }
+                        }
+                        returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
+                        returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
+                        returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
+                        returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                        returnUserMap.put("uPhoto","img");
+                        returnUserMap.put("uName","小虎");
+                        returnUserRecord.add(returnUserMap);
+                    }
+                }
+                request.setAttribute("replyList",returnUserRecord);
+                return new ModelAndView("/imjsp-1.1/remote-resource-detail");
             }else{
                 if(taskList.get(0).getRemotetype()==2){
                     String url = "http://192.168.10.26:8008/study-im-service-1.0/getResourceZSDX.do";
@@ -2757,6 +2806,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     param.put("resourceId",resid.toString());
                     param.put("timestamp",time.toString());
                     String signure =  UrlSigUtil.makeSigSimple("getResourceZSDX.do",param,"*ETT#HONER#2014*");
+                    param.put("sign",signure);
                     JSONObject returnval = UtilTool.sendPostUrl(url,param,"GBK");
                     String data=returnval.containsKey("data")?returnval.getString("data"):"";
                     int result = returnval.containsKey("result")?returnval.getInt("result"):0;
