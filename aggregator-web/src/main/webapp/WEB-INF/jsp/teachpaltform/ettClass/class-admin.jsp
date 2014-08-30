@@ -122,31 +122,17 @@
 
 <div class="public_windows public_input" id="dv_add_student" style="display: none;">
     <h3><a href="javascript:closeModel('dv_add_student')"  title="关闭"></a>学员管理</h3>
-    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;姓名：<input name="textfield5" type="text" class="w140"/><a href="1" class="ico57" title="查询"></a></p>
+    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;姓名：<input name="textfield5" id="txt_stuName" type="text" class="w140"/><a href="javascript:;" id="a_stuName" class="ico57" title="查询"></a></p>
     <div class="jxxt_float_bjgl">
-        <p class="font-black"><a href="1" target="_blank" class="font-darkblue">全选</a>末添加成员：</p>
-        <ul>
-            <li><span class="ico85a"></span>王小小</li>
-            <li><span class="ico85a"></span>李磊磊</li>
-            <li><span class="ico85a"></span>周明明</li>
-            <li><span class="ico85a"></span>厂小宝全</li>
-            <li><span class="ico85a"></span>王小小</li>
-            <li><span class="ico85a"></span>李磊磊</li>
-            <li><span class="ico85a"></span>周明明</li>
-            <li><span class="ico85a"></span>厂小宝全</li>
-            <li><span class="ico85a"></span>王小小</li>
-            <li><span class="ico85a"></span>李磊磊</li>
-            <li><span class="ico85a"></span>周明明</li>
-            <li><span class="ico85a"></span>厂小宝全</li>
+        <p class="font-black"><a href="javascript:;" onclick="setAllStudent()" class="font-darkblue">全选</a>末添加成员：</p>
+        <ul id="ul_wx_stu">
+            <!--<li><span class="ico85a"></span>王小小</li>-->
         </ul>
     </div>
     <div class="jxxt_float_bjgl">
-        <p class="font-black"><a href="1" target="_blank" class="font-darkblue">清空</a>已添加成员：</p>
-        <ul>
-            <li><span class="ico85b"></span>王小小</li>
-            <li><span class="ico85b"></span>李磊磊</li>
-            <li><span class="ico85b"></span>周明明</li>
-            <li><span class="ico85b"></span>厂小宝全</li>
+        <p class="font-black"><a href="javascript:;" onclick="reSetStudent()"  class="font-darkblue">清空</a>已添加成员：</p>
+        <ul id="ul_cls_stu">
+            <!--<li><span class="ico85b"></span>王小小</li>-->
         </ul>
     </div>
     <p class="t_c"><a href="javascript:;" id="a_sub_student" class="an_public1">确&nbsp;定</a>&nbsp;&nbsp;<a href="javascript:closeModel('dv_add_student')"  class="an_public1">取&nbsp;消</a></p>
@@ -231,7 +217,7 @@
 </div>
 
 <div class="public_windows" id="dv_edit" style="display: none;">
-    <h3><a href="javascript:closeModel('dv_edit')"  title="关闭"></a>新建班级</h3>
+    <h3><a href="javascript:closeModel('dv_edit')"  title="关闭"></a>修改班级</h3>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
         <col class="w110"/>
         <col class="w130"/>
@@ -300,7 +286,7 @@
         </tr>
         <tr>
             <th>&nbsp;</th>
-            <td colspan="3" id="td_edit"><a href="javascript:sub_cls();"  class="an_public1">确&nbsp;认</a></td>
+            <td colspan="3" ><a id="a_sub_upd" href="javascript:;"  class="an_public1">确&nbsp;认</a></td>
         </tr>
     </table>
 </div>

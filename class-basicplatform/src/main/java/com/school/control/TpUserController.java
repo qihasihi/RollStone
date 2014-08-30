@@ -226,10 +226,9 @@ public class TpUserController extends UserController {
         map.put("schoolId",schoolid);
         map.put("userType","1");
         map.put("timestamp",timestamp);
-        String sign=UrlSigUtil.makeSigSimple("user.do",map);
-        String ettUrl=UtilTool.utilproperty.get("GET_ETT_USER_LOCATION").toString();
+        String sign=UrlSigUtil.makeSigSimple("user.do", map);
         String ettParams="schoolId="+schoolid+"&userType=1&timestamp="+timestamp+"&sign="+sign;
-        List<UserInfo>ettUserList=getETTUserList(ettUrl,ettParams);
+        List<UserInfo>ettUserList=getETTUserList(ettParams);
         if(ettUserList==null||ettUserList.size()<1){
             je.setMsg("未获取到网校班主任信息!");
             response.getWriter().print(je.getAlertMsgAndBack());
@@ -435,10 +434,240 @@ public class TpUserController extends UserController {
         response.getWriter().print(je.toJSON());
      }
 
+    /**
+     * 删除班级
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=doDelCls", method =RequestMethod.POST)
+    public void doDelCls(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JsonEntity je=new JsonEntity();
+        if(!TpUserUtilTool.ValidateRequestParam(request)){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String clsid=request.getParameter("clsid");
+        ClassInfo classInfo=new ClassInfo();
+        classInfo.setClassid(Integer.parseInt(clsid));
+        List<ClassInfo>classInfoList=this.classManager.getList(classInfo,null);
+        if(classInfoList==null||classInfoList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERROR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(this.classManager.doDelete(classInfo)){
+            je.setType("success");
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().print(je.toJSON());
+    }
+
     @RequestMapping(params = "m=doUpdCls", method = {RequestMethod.POST})
         public void doUpdCls(HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        if(!TpUserUtilTool.ValidateRequestParam(request)){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String clsid=request.getParameter("clsid");
+        String dcschoolid=request.getParameter("dcschoolid");
+        String clsname=request.getParameter("clsname");
+        String type=request.getParameter("type");
+        String jid=request.getParameter("jid");
+        String gradeid=request.getParameter("gradeid");
+        String year=request.getParameter("year");
+        String verifyTime=request.getParameter("verifyTime");
+        String allowJoin=request.getParameter("allowJoin");
+        String num=request.getParameter("num");
+        String realname=request.getParameter("realname");
 
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<UserInfo>userList=null;
+        String userNextRef = UUID.randomUUID().toString();
+
+
+        ClassInfo classInfo=new ClassInfo();
+        classInfo.setClassid(Integer.parseInt(clsid));
+        List<ClassInfo>classInfoList=this.classManager.getList(classInfo,null);
+        if(classInfoList==null||classInfoList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERROR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        ClassInfo c=new ClassInfo();
+        c.setClassid(Integer.parseInt(clsid));
+        c.setClassname(clsname);
+        c.setDctype(Integer.parseInt(type));
+        c.setDcschoolid(Integer.parseInt(dcschoolid));
+        c.setClassgrade(gradeid);
+        c.setYear(year);
+        if(verifyTime!=null&&verifyTime.length()>0)
+            c.setVerifytime(UtilTool.StringConvertToDate(verifyTime));
+        if(allowJoin!=null&&allowJoin.length()>0)
+            c.setAllowjoin(Integer.parseInt(allowJoin));
+        if(num!=null&&num.length()>0)
+            c.setClsnum(Integer.parseInt(num));
+        sql=new StringBuilder();
+        objList=this.classManager.getUpdateSql(c,sql);
+        if (objList != null && sql != null) {
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+
+        c=classInfoList.get(0);
+        //添加班主任帐号
+
+        UserInfo u=new UserInfo();
+        u.setDcschoolid(Integer.parseInt(dcschoolid));
+        u.setEttuserid(Integer.parseInt(jid));
+        userList=this.userManager.getList(u, null);
+        if(userList==null||userList.size()<1){
+            //添加用户
+            u.setRef(userNextRef);
+            u.setPassword(dcschoolid+jid);
+            u.setUsername("班主任"+dcschoolid+jid);
+            u.setStateid(0);
+            u.setDcschoolid(Integer.parseInt(dcschoolid));
+            sql = new StringBuilder();
+            objList = this.userManager.getSaveSql(u, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //添加用户与身份关联信息
+            String identityNextRef = UUID.randomUUID().toString();
+            UserIdentityInfo ui = new UserIdentityInfo();
+            ui.setRef(identityNextRef);
+            ui.getUserinfo().setRef(userNextRef);
+            ui.setIdentityname("教职工");
+            sql = new StringBuilder();
+            objList = this.userIdentityManager.getSaveSql(ui, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+
+            TeacherInfo t = new TeacherInfo();
+            t.setUserid(userNextRef);
+            t.setTeachername(realname);
+            t.setTeachersex("男");
+
+            sql = new StringBuilder();
+            objList = this.teacherManager.getSaveSql(t, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //添加班主任角色
+            RoleUser jwru = new RoleUser();
+            jwru.setRef(UUID.randomUUID().toString());
+            jwru.getUserinfo().setRef(userNextRef);
+            jwru.getRoleinfo().setRoleid(UtilTool._ROLE_CLASSADVISE_ID);
+
+            sql = new StringBuilder();
+            objList = this.roleUserManager.getSaveSql(jwru, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //添加默认教师角色
+            String ruNextRef = UUID.randomUUID().toString();
+            RoleUser ru = new RoleUser();
+            ru.setRef(ruNextRef);
+            ru.getUserinfo().setRef(userNextRef);
+            ru.getRoleinfo().setRoleid(UtilTool._ROLE_TEACHER_ID);
+
+            sql = new StringBuilder();
+            objList = this.roleUserManager.getSaveSql(ru, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //添加教师角色默认权限
+            RoleColumnRightInfo rc=new RoleColumnRightInfo();
+            rc.setRoleid(UtilTool._ROLE_TEACHER_ID);
+            List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
+
+            if(rcList!=null&&rcList.size()>0){
+                for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
+                    UserColumnRightInfo ucr=new UserColumnRightInfo();
+                    ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                    ucr.setUserid(userNextRef);
+                    ucr.setRef(this.userColumnRightManager.getNextId());
+                    ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                    sql=new StringBuilder();
+                    objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                    if(objList!=null&&sql!=null){
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
+        }else
+            userNextRef=userList.get(0).getRef();
+
+        //删除班级关联数据
+        ClassUser delete=new ClassUser();
+        delete.setClassid(c.getClassid());
+        delete.setRelationtype("班主任");
+        sql=new StringBuilder();
+        objList=this.classUserManager.getDeleteSql(delete, sql);
+        if(objList!=null&&sql!=null){
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+
+
+        //添加班级关联数据
+        ClassUser cu=new ClassUser();
+        cu.setClassid(c.getClassid());
+        cu.setRelationtype("班主任");
+        cu.setRef(this.classUserManager.getNextId());
+        cu.setUserid(userNextRef);
+        cu.setSportsex(0);
+        sql=new StringBuilder();
+        objList=this.classUserManager.getSaveSql(cu,sql);
+        if(objList!=null&&sql!=null){
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+
+        if(objListArray.size()>0&&sqlListArray.size()>0){
+            if(this.classManager.doExcetueArrayProc(sqlListArray,objListArray)){
+                je.setType("success");
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                //回绑网校
+                UserInfo usel=new UserInfo();
+                usel.setRef(userNextRef);
+                userList=this.userManager.getList(usel,null);
+                if(userList==null||userList.size()<1){
+                    je.setMsg("获取绑定用户失败!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                if(!BindEttUser(userList.get(0).getUserid().toString(),dcschoolid,"1")){
+                    je.setMsg("绑定用户失败!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+            }else
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        }
+        response.getWriter().print(je.toJSON());
     }
 
 
@@ -589,10 +818,9 @@ public class TpUserController extends UserController {
         map.put("schoolId",this.logined(request).getDcschoolid().toString());
         map.put("userType","1");
         map.put("timestamp",timestamp);
-        String sign=UrlSigUtil.makeSigSimple("user.do",map);
-        String ettUrl=UtilTool.utilproperty.get("GET_ETT_USER_LOCATION").toString();
+        String sign=UrlSigUtil.makeSigSimple("user.do", map);
         String ettParams="schoolId="+this.logined(request).getDcschoolid().toString()+"&userType=1&timestamp="+timestamp+"&sign="+sign;
-        List<UserInfo>ettTeacherList=getETTUserList(ettUrl,ettParams);
+        List<UserInfo>ettTeacherList=getETTUserList(ettParams);
 
         //根据JID过滤已存在的教师
         if(teaList!=null&&teaList.size()>0){
@@ -600,7 +828,7 @@ public class TpUserController extends UserController {
                 for(UserInfo child:ettTeacherList){
                     boolean isExist=false;
                     for(ClassUser parent:teaList){
-                        if(parent.getEttuserid()!=null&&parent.getEttuserid()==child.getEttuserid()){
+                        if(parent.getEttuserid()!=null&&parent.getEttuserid().toString().equals(child.getEttuserid().toString())){
                             isExist=true;
                         }
                     }
@@ -790,6 +1018,210 @@ public class TpUserController extends UserController {
 
 
 
+    /**
+     * 设置班级学生
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "doAddClsStudent", method = {RequestMethod.POST})
+    public void doAddClsStudent(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        if(!TpUserUtilTool.ValidateRequestParam(request)){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String clsid=request.getParameter("clsid");
+        String jidStr=request.getParameter("jidStr");
+        String nameStr=request.getParameter("nameStr");
+        String flag=request.getParameter("flag");
+        //验证班级
+        ClassInfo c=new ClassInfo();
+        c.setClassid(Integer.parseInt(clsid));
+        List<ClassInfo>clsList=this.classManager.getList(c,null);
+        if(clsList==null||clsList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+
+        //学生UserId列表
+        List<String>userRefList=new ArrayList<String>();
+        String schoolid=this.logined(request).getDcschoolid().toString();
+
+        //清空班级学生
+        if(flag!=null&&flag.equals("1")){
+            ClassUser cdelete=new ClassUser();
+            cdelete.setClassid(clsList.get(0).getClassid());
+            cdelete.setRelationtype("学生");
+            sql=new StringBuilder();
+            objList=this.classUserManager.getDeleteSql(cdelete,null);
+            if(objList!=null&&sql!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+
+        if(jidStr!=null&&nameStr!=null&&jidStr.length()>0&&nameStr.length()>0){
+            String[]jidArray=jidStr.split(",");
+            String[]nameArray=nameStr.split(",");
+
+            if(jidArray.length>0&&nameArray.length>0){
+                //检测当前学生是否已经创建帐号
+                for(int i=0;i<jidArray.length;i++){
+                    String jid=jidArray[i].toString();
+                    String realname=nameArray[i].toString();
+
+                    String userNextRef = UUID.randomUUID().toString();
+
+                    UserInfo u=new UserInfo();
+                    u.setEttuserid(Integer.parseInt(jid));
+                    u.setDcschoolid(this.logined(request).getDcschoolid());
+                    List<UserInfo>userList=this.userManager.getList(u,null);
+                    if(userList==null||userList.size()<1){
+                        //添加用户
+                        u.setRef(userNextRef);
+                        u.setPassword(schoolid+jid);
+                        u.setUsername("学生"+schoolid+jid);
+                        u.setStateid(0);
+                        u.setDcschoolid(Integer.parseInt(schoolid));
+                        sql = new StringBuilder();
+                        objList = this.userManager.getSaveSql(u, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+
+                        //添加用户与身份关联信息
+                        String identityNextRef = UUID.randomUUID().toString();
+                        UserIdentityInfo ui = new UserIdentityInfo();
+                        ui.setRef(identityNextRef);
+                        ui.getUserinfo().setRef(userNextRef);
+                        ui.setIdentityname("学生");
+                        sql = new StringBuilder();
+                        objList = this.userIdentityManager.getSaveSql(ui, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+
+
+                        StudentInfo s = new StudentInfo();
+                        s.setUserref(userNextRef);
+                        s.setStuname(realname);
+                        s.setStusex("男");
+
+                        sql = new StringBuilder();
+                        objList = this.studentManager.getSaveSql(s, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+
+                        //添加默认学生角色
+                        String ruNextRef = UUID.randomUUID().toString();
+                        RoleUser ru = new RoleUser();
+                        ru.setRef(ruNextRef);
+                        ru.getUserinfo().setRef(userNextRef);
+                        ru.getRoleinfo().setRoleid(UtilTool._ROLE_STU_ID);
+
+                        sql = new StringBuilder();
+                        objList = this.roleUserManager.getSaveSql(ru, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+
+                        //添加学生角色默认权限
+                        RoleColumnRightInfo rc=new RoleColumnRightInfo();
+                        rc.setRoleid(UtilTool._ROLE_STU_ID);
+                        List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
+
+                        if(rcList!=null&&rcList.size()>0){
+                            for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
+                                UserColumnRightInfo ucr=new UserColumnRightInfo();
+                                ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                                ucr.setUserid(userNextRef);
+                                ucr.setRef(this.userColumnRightManager.getNextId());
+                                ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                                sql=new StringBuilder();
+                                objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                                if(objList!=null&&sql!=null){
+                                    sqlListArray.add(sql.toString());
+                                    objListArray.add(objList);
+                                }
+                            }
+                        }
+                    }else
+                        userNextRef=userList.get(0).getRef();
+
+                    ClassUser sel=new ClassUser();
+                    sel.setClassid(Integer.parseInt(clsid));
+                    sel.setUserid(userNextRef);
+                    sel.setRelationtype("学生");
+                    List<ClassUser>stuList=this.classUserManager.getList(sel,null);
+                    if(stuList==null||stuList.size()<1){
+                        ClassUser save=new ClassUser();
+                        save.setClassid(Integer.parseInt(clsid));
+                        save.setUserid(userNextRef);
+                        save.setRelationtype("学生");
+                        save.setRef(this.classUserManager.getNextId());
+                        sql=new StringBuilder();
+                        objList=this.classUserManager.getSaveSql(save,sql);
+                        if(objList!=null&&sql!=null){
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                    userRefList.add(userNextRef);
+                }
+            }
+        }
+
+
+
+
+        if(this.classUserManager.doExcetueArrayProc(sqlListArray,objListArray)){
+            je.setType("success");
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+
+            //回绑网校JID
+            List<UserInfo>bindUserList=new ArrayList<UserInfo>();
+            if(userRefList.size()>0){
+                for (String userid:userRefList){
+                    UserInfo usel=new UserInfo();
+                    usel.setRef(userid);
+                    List<UserInfo>uList=this.userManager.getList(usel,null);
+                    if(uList!=null&&uList.size()>0&&
+                            (uList.get(0).getEttuserid()==null||uList.get(0).getEttuserid().toString().length()<1))
+                        bindUserList.add(uList.get(0));
+                }
+
+                if(bindUserList.size()<1){
+                    je.setMsg("获取绑定用户失败!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+
+                if(!BindEttUser(bindUserList,schoolid,"1")){
+                    je.setMsg("绑定用户失败!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+            }
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
 
     /**
      * 获取网校学生
@@ -806,6 +1238,7 @@ public class TpUserController extends UserController {
             return;
         }
         String clsid=request.getParameter("clsid");
+        String stuName=request.getParameter("stuName");
         ClassInfo c=new ClassInfo();
         c.setClassid(Integer.parseInt(clsid));
         List<ClassInfo>clsList=this.classManager.getList(c,null);
@@ -814,27 +1247,54 @@ public class TpUserController extends UserController {
             response.getWriter().print(je.toJSON());
             return;
         }
+        GradeInfo gradeInfo=new GradeInfo();
+        gradeInfo.setGradevalue(clsList.get(0).getClassgrade());
+        List<GradeInfo>gradeInfoList=this.gradeManager.getList(gradeInfo,null);
+        if(clsList==null||clsList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("获取班级年级异常!"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
 
-
-
-        ClassUser bzr=new ClassUser();
-        bzr.setRelationtype("班主任");
-        bzr.setClassid(c.getClassid());
-        List<ClassUser>bzrList=this.classUserManager.getList(bzr,null);
-
-        ClassUser tea=new ClassUser();
-        tea.setRelationtype("任课老师");
-        tea.setClassid(c.getClassid());
-        List<ClassUser>teaList=this.classUserManager.getList(tea,null);
+        Integer gradeid=gradeInfoList.get(0).getGradeid();
 
         ClassUser stu=new ClassUser();
         stu.setRelationtype("学生");
         stu.setClassid(c.getClassid());
         List<ClassUser>stuList=this.classUserManager.getList(stu,null);
 
-        je.getObjList().add(clsList.get(0));
-        je.getObjList().add(bzrList.get(0));
-        je.getObjList().add(teaList);
+
+        List<UserInfo>tmpUserList=new ArrayList<UserInfo>();
+        //获取分校学生
+        String timestamp=System.currentTimeMillis()+"";
+        HashMap<String,String>map=new HashMap<String, String>();
+        map.put("schoolId", this.logined(request).getDcschoolid().toString());
+        map.put("userType","3");
+        map.put("timestamp",timestamp);
+        String sign=UrlSigUtil.makeSigSimple("user.do",map);
+        String ettParams="schoolId="+this.logined(request).getDcschoolid().toString()+"&userType=3&grade="+gradeid+"&timestamp="+timestamp+"&sign="+sign;
+        if(stuName!=null&&stuName.trim().length()>0)
+            ettParams+="&stuName="+java.net.URLEncoder.encode(stuName,"UTF-8");
+        List<UserInfo>ettStudentList=getETTUserList(ettParams);
+
+        //根据JID过滤已存在当前班级中的学生
+        if(stuList!=null&&stuList.size()>0){
+            if(ettStudentList!=null&&ettStudentList.size()>0){
+                for(UserInfo child:ettStudentList){
+                    boolean isExist=false;
+                    for(ClassUser parent:stuList){
+                        if(parent.getEttuserid()!=null&&parent.getEttuserid().toString().equals(child.getEttuserid().toString())){
+                            isExist=true;
+                        }
+                    }
+                    if(!isExist)
+                        tmpUserList.add(child);
+                }
+            }
+        }else
+            tmpUserList=ettStudentList;
+
+        je.getObjList().add(tmpUserList);
         je.getObjList().add(stuList);
         je.setType("success");
         response.getWriter().print(je.toJSON());
@@ -927,14 +1387,15 @@ public class TpUserController extends UserController {
         }
     }
 
-    public  List<UserInfo> getETTUserList(String sendUrl,String params){
-        if(sendUrl==null)return null;
+    public  List<UserInfo> getETTUserList(String params){
+        String ettUrl=UtilTool.utilproperty.get("GET_ETT_USER_LOCATION").toString();
+        if(ettUrl==null)return null;
 
         HttpURLConnection httpConnection;
         URL url;
         int code;
         try {
-            url = new URL(sendUrl.toString());
+            url = new URL(ettUrl.toString());
 
             httpConnection = (HttpURLConnection) url.openConnection();
 
@@ -1083,6 +1544,38 @@ public class TpUserController extends UserController {
             return sendValidateUserInfoTotalSchool(ettUrl, ettParams);
         }
         return false;
+    }
+
+
+    /**
+     * userType 1:教师 2:教务 3:学生
+     * @param userList
+     * @param schoolid
+     * @param userType
+     * @return
+     */
+    public boolean BindEttUser(List<UserInfo>userList,String schoolid,String userType){
+        if(userList==null||userList.size()<1)return false;
+
+        JSONArray array=new JSONArray();
+        for(UserInfo u:userList){
+            JSONObject obj = new JSONObject();
+            obj.element("jid", u.getEttuserid());
+            obj.element("userId", u.getUserid());
+            obj.element("schoolId", u.getDcschoolid());
+            obj.element("userType",userType);
+            array.add(obj);
+        }
+        String timestamp=System.currentTimeMillis()+"";
+        HashMap<String,String>map=new HashMap<String, String>();
+        map.put("schoolId", schoolid);
+        map.put("userType",userType);
+        map.put("timestamp",timestamp);
+        String sign=UrlSigUtil.makeSigSimple("backbind.do",map);
+        String ettUrl=UtilTool.utilproperty.get("BIND_ETT_USER_LOCATION").toString();
+        String ettParams="schoolId="+schoolid+"&userType="+userType+"&timestamp="+timestamp+"&sign="+sign+"&userList="+array.toString();
+        System.out.println(ettUrl + "?" + ettParams);
+        return sendValidateUserInfoTotalSchool(ettUrl, ettParams);
     }
 }
 

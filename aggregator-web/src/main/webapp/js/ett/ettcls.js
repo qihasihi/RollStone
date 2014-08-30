@@ -140,6 +140,54 @@ function delClassUser(ref){
 
 
 /**
+ * 添加班级学生
+ * @param clsid
+ */
+function doAddClsStudent(clsid){
+    if(typeof clsid=='undefined')
+        return;
+
+    var msg='数据验证完毕!确认操作?',param={clsid:clsid},jidArray=new Array(),nameArray=new Array();
+    var liArray=$("#ul_cls_stu li");
+    if(liArray.length<1){
+        param.flag=1;
+        msg='确认删除当前班级所有学生!?';
+    }
+    $.each(liArray,function(idx,itm){
+        var jid=$(itm).data().bind.split("|")[0];
+        var name=$(itm).data().bind.split("|")[1];
+        jidArray.push(jid);
+        nameArray.push(name);
+    });
+    if(jidArray.length>0&&nameArray.length>0){
+        param.jidStr=jidArray.join(",");
+        param.nameStr=nameArray.join(",");
+    }
+
+
+    if(!confirm(msg))return;
+    $.ajax({
+        url: 'tpuser?doAddClsStudent',
+        type: 'post',
+        data: param,
+        dataType: 'json',
+        cache: false,
+        error: function () {
+            alert('网络异常!')
+        },
+        success: function (rps) {
+            if (rps.type == "error") {
+                alert(rps.msg);
+            } else {
+                closeModel('dv_add_student');
+                loadCls(1);
+            }
+        }
+    });
+}
+
+
+/**
  * 获取网校教师
  */
 function loadWXTeacher(clsid){
@@ -185,6 +233,7 @@ function loadWXStudent(clsid){
     if(typeof clsid=='undefined')
         return;
     showModel('dv_add_student');
+    $("#txt_stuName").val('');
 
     var param={clsid:clsid};
     $.ajax({
@@ -197,13 +246,140 @@ function loadWXStudent(clsid){
             alert('网络异常!')
         },
         success: function (rps) {
+            var wx='',sx='';
             if (rps.type == "error") {
                 alert(rps.msg);
             } else {
+                if(rps.objList[0]!=null&&rps.objList[0].length>0){
+                    $.each(rps.objList[0],function(idx,itm){
+                        wx+='<li id="'+itm.ettuserid+'" data-bind="'+itm.ettuserid+'|'+itm.realname+'"><span class="ico85a"></span>'+itm.realname+'</li>';
+                    });
 
+                }
+
+                if(rps.objList[1]!=null&&rps.objList[1].length>0){
+                    $.each(rps.objList[1],function(idx,itm){
+                        sx+='<li id="'+itm.ettuserid+'" data-bind="'+itm.ettuserid+'|'+itm.realname+'"><span class="ico85b"></span>'+itm.realname+'</li>';
+                    });
+                }
             }
+            $("#ul_wx_stu").html(wx);
+            $("#ul_cls_stu").html(sx);
+
+
+            $("#dv_add_student li").dblclick(function(){
+                var id=$(this).attr('id');
+                var parentId=$(this).parent('ul').attr('id');
+                var descId=parentId=='ul_wx_stu'?'ul_cls_stu':'ul_wx_stu';
+                var clssName=parentId=='ul_wx_stu'?'ico85b':'ico85a';
+                var descObj=$('#'+descObj+' li[id="'+id+'"]');
+
+                if(descObj.length<1){
+                    $(this).children('span').attr("class",clssName);
+                    $(this).appendTo( $("#"+descId));
+                }else
+                    alert('当前学生已存在!');
+
+            });
         }
     });
+}
+
+
+
+
+
+/**
+ * 获取网校学生
+ */
+function loadWXStudentByName(clsid){
+    if(typeof clsid=='undefined')
+        return;
+    var param={clsid:clsid};
+    var stuName=$("#txt_stuName");
+    if(stuName.val().Trim().length>0)
+        param.stuName=stuName.val();
+
+    $.ajax({
+        url: 'tpuser?loadWXStudent',
+        type: 'post',
+        data: param,
+        dataType: 'json',
+        cache: false,
+        error: function () {
+            alert('网络异常!')
+        },
+        success: function (rps) {
+            var wx='';
+            if (rps.type == "error") {
+                alert(rps.msg);
+            } else {
+                if(rps.objList[0]!=null&&rps.objList[0].length>0){
+                    $.each(rps.objList[0],function(idx,itm){
+                        wx+='<li id="'+itm.ettuserid+'" data-bind="'+itm.ettuserid+'|'+itm.realname+'"><span class="ico85a"></span>'+itm.realname+'</li>';
+                    });
+
+                }
+
+            }
+            $("#ul_wx_stu").html(wx);
+
+
+            $("#dv_add_student li").dblclick(function(){
+                var id=$(this).attr('id');
+                var parentId=$(this).parent('ul').attr('id');
+                var descId=parentId=='ul_wx_stu'?'ul_cls_stu':'ul_wx_stu';
+                var clssName=parentId=='ul_wx_stu'?'ico85b':'ico85a';
+                var descObj=$('#'+descObj+' li[id="'+id+'"]');
+
+                if(descObj.length<1){
+                    $(this).children('span').attr("class",clssName);
+                    $(this).appendTo( $("#"+descId));
+                }else
+                    alert('当前学生已存在!');
+
+            });
+        }
+    });
+}
+
+
+
+function setAllStudent(){
+    var wxArray=$("#ul_wx_stu li");
+    if(wxArray.length>0){
+        $.each(wxArray,function(ix,im){
+            var id=$(im).attr('id');
+            var parentId=$(im).parent('ul').attr('id');
+            var descId=parentId=='ul_wx_stu'?'ul_cls_stu':'ul_wx_stu';
+            var clssName=parentId=='ul_wx_stu'?'ico85b':'ico85a';
+            var descObj=$('#'+descObj+' li[id="'+id+'"]');
+
+            if(descObj.length<1){
+                $(im).children('span').attr("class",clssName);
+                $(im).appendTo( $("#"+descId));
+            }
+        });
+    }
+}
+
+function reSetStudent(){
+    var sxArray=$("#ul_cls_stu li");
+
+    if(sxArray.length>0){
+        $.each(sxArray,function(ix,im){
+            var id=$(im).attr('id');
+            var parentId=$(im).parent('ul').attr('id');
+            var descId=parentId=='ul_cls_stu'?'ul_wx_stu':'ul_cls_stu';
+            var clssName=parentId=='ul_wx_stu'?'ico85a':'ico85b';
+            var descObj=$('#'+descObj+' li[id="'+id+'"]');
+
+            if(descObj.length<1){
+                $(im).children('span').attr("class",clssName);
+                $(im).appendTo( $("#"+descId));
+            }
+        });
+    }
 }
 
 
@@ -242,7 +418,7 @@ function loadClsDetial(clsid){
                  */
                 if(rps.objList[0]!=null&&rps.objList[1]!=null){
                     var clsname=rps.objList[0].year+'年'+rps.objList[0].classname+rps.objList[0].classgrade+'普通班';
-                    $("#p_edit").html('<a href="javascript:showModel(\'dv_edit\')" class="ico11" title="编辑"></a><a href="javascript:void(0)" onclick="doDelCls(\''+rps.objList[0].classid+'\')" class="ico04" title="删除"></a>');
+                    $("#p_edit").html('<a href="javascript:;" id="a_to_upd" class="ico11" title="编辑"></a><a href="javascript:void(0)" onclick="doDelCls(\''+rps.objList[0].classid+'\')" class="ico04" title="删除"></a>');
                     $("#s_clsname").html(clsname);
                     $("#add_teacher_clsname").html(clsname);
                     $("#s_bzr").html('<b >班主任：'+rps.objList[1].realname+'</b>班级类型：'+(rps.objList[0].dctype==2?"网校班级":"爱学课堂")+'');
@@ -250,6 +426,9 @@ function loadClsDetial(clsid){
                     //添加学生教师 增加Click
                     $("#a_addTeacher").attr("href","javascript:loadWXTeacher("+rps.objList[0].classid+")");
                     $("#a_addStudent").attr("href","javascript:loadWXStudent("+rps.objList[0].classid+")");
+                    $("#a_stuName").attr("href","javascript:loadWXStudentByName("+rps.objList[0].classid+")");
+                    $("#a_sub_student").attr("href","javascript:doAddClsStudent("+rps.objList[0].classid+")");
+                    $("#a_to_upd").attr("href","javascript:toUpdClass("+rps.objList[0].classid+")");
                 }
 
                 if(rps.objList[2]!=null){
@@ -277,6 +456,63 @@ function loadClsDetial(clsid){
         }
     });
 }
+
+
+
+/**
+ * 获取班级详情
+ * 修改
+ * @param clsid
+ */
+function toUpdClass(clsid){
+    if(typeof clsid=='undefined')
+        return;
+    showModel('dv_edit');
+
+    $.ajax({
+        url: 'tpuser?m=ajaxClsDetail',
+        type: 'post',
+        data: {clsid:clsid},
+        dataType: 'json',
+        cache: false,
+        error: function () {
+            alert('网络异常!')
+        },
+        success: function (rps) {
+            if (rps.type == "error") {
+                alert(rps.msg);
+            } else {
+                /**
+                 *   je.getObjList().add(clsList);
+                 je.getObjList().add(bzrList);
+                 je.getObjList().add(teaList);
+                 je.getObjList().add(stuList);
+                 */
+                if(rps.objList[0]!=null&&rps.objList[1]!=null){
+                    var clsname=rps.objList[0].year+'年'+rps.objList[0].classname+rps.objList[0].classgrade+'普通班';
+
+                    $("#dv_edit input[id='cls_name']").val(rps.objList[0].classname);
+                    $("#dv_edit select[id='type']").val(rps.objList[0].dctype);
+                    $("#dv_edit select[id='year']").val(rps.objList[0].year);
+                    $("#dv_edit select[id='grade']").val(rps.objList[0].classgrade);
+                    $("#dv_edit select[id='bzr']").val(rps.objList[1].ettuserid);
+                    if(typeof rps.objList[0].clsnum !='undefined' )
+                        $("#dv_edit input[id='num']").val(rps.objList[0].clsnum);
+                    if(typeof rps.objList[0].verifyTimeString !='undefined' )
+                        $("#dv_edit input[id='verify_time']").val(rps.objList[0].verifyTimeString);
+                    if(typeof rps.objList[0].allowjoin !='undefined' )
+                        $("#dv_edit input[name='rdo'][value='"+rps.objList[0].allowjoin+"']").attr("checked",true);
+
+                    //添加确认Click
+                    $("#a_sub_upd").attr("href","javascript:sub_cls("+rps.objList[0].classid+")");
+
+                }
+            }
+        }
+    });
+}
+
+
 /**
  * 操作ett班级
  */
@@ -337,6 +573,37 @@ function sub_cls(clsid){
             alert(rps.msg);
             if(rps.type=='success'){
                 closeModel(dvObj);
+                loadCls(1);
+            }
+        }
+    });
+}
+
+
+
+
+/**
+ * 删除班级
+ * @param clsid
+ */
+function doDelCls(clsid){
+    if(typeof clsid=='undefined')
+        return;
+    if(!confirm('确认删除班级?\n\n提示：删除后无法恢复!'))return;
+    $.ajax({
+        url: 'tpuser?m=doDelCls',
+        type: 'post',
+        data: {clsid:clsid},
+        dataType: 'json',
+        cache: false,
+        error: function () {
+            alert('网络异常!')
+        },
+        success: function (rps) {
+            if (rps.type == "error") {
+                alert(rps.msg);
+            } else {
+                loadCls(1);
             }
         }
     });
