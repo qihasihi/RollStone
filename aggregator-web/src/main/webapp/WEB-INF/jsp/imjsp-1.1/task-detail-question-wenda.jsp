@@ -15,6 +15,19 @@
 <div class="zxcs_test">
     <h1>${type}</h1>
     <div class="title">${content}</div>
+    <c:if test="${usertype eq 2}">
+        <p class="jiexi"> 答案与解析</p>
+        <div>${analysis}</div>
+    </c:if>
+    <c:if test="${!empty answer and !empty userRecord and quesType!=3 and quesType!=4}">
+        <c:forEach items="${userRecord}" var="itm">
+            <div class="wenda">
+                <b><img src="images/pic01_140811.png" width="36" height="36"></b>
+                <p class="title"><span>${itm.REPLYDATE}前</span>${itm.USERNAME}</p>
+                <p>${itm.REPLYDETAIL}</p>
+            </div>
+        </c:forEach>
+    </c:if>
 </div>
 </body>
 </html>

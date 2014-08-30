@@ -1281,7 +1281,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 List<QuestionAnswer> questionAnswerList=this.questionAnswerManager.getList(questionAnswer,null);
                 request.setAttribute("answer",questionAnswerList);
                 request.setAttribute("myanswer",questionAnswerList.size()>0?questionAnswerList.get(0).getAnswercontent():null);
-            }else{
+            //用户回答列表
                 taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
                 if(taskUserRecord!=null&&taskUserRecord.size()>0){
                     for(int i = 0;i<taskUserRecord.size();i++){
