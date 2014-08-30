@@ -28,7 +28,7 @@
                 success:function(rps){
                     $("#txt_a_sign").val(rps.Trim());
                 }
-            })
+            });
         }
     </script>
 </head>
@@ -47,9 +47,8 @@
             <td>data</td>
             <td>
                 <textarea  name="data" id="data" rows="10" cols="50">
-                    {"courseId":-2040956248279,"taskType":7,"taskTitle":"测试手机端添加任务","taskContent":"这是一个添加任务的内
-                    容主体","taskAnalysis":"这是答案解析","taskAttach":"fujian.txt","attachType":"1","classes":
-                    [{"taskUserTeamId":4,"taskUserType":0,"startTime":"2014-08-29 00:00:00","endTime":"2014-10-30 00:00:00"}]}
+                    {"courseId":-2040956248279,"taskType":7,"taskTitle":"测试手机端添加任务","taskContent":"这是一个添加任务的内容主体","taskAnalysis":"这是答案解析","taskAttach":"fujian.txt","attachType":1,"classes":
+                    [{"taskUserTeamId":4,"taskUserType":0,"startTime":"2014-08-29 00:00:00","endTime":"2014-10-30 00:00:00"},{},{}]}
                 </textarea>
             </td>
         </tr>

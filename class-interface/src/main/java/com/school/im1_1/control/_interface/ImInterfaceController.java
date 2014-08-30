@@ -765,7 +765,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     }
 
     /**
-     * 班级课表接口
+     * 添加任务接口
      * @param request
      * @param mp
      * @return
@@ -788,8 +788,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(jo.toString());
             return;
         }
-        //String sign = UrlSigUtil.makeSigSimple("AddTask",map,"*ETT#HONER#2014*");
         map.remove("data");
+        map.remove("sign");
+        String sign = UrlSigUtil.makeSigSimple("AddTask",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
@@ -804,7 +805,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
         JSONObject jb=JSONObject.fromObject(dataStr);
         //拆分json字符串，得到各个参数
-        int courseid=jb.containsKey("courseId")?jb.getInt("courseId"):0;
+        Long courseid=jb.containsKey("courseId")?jb.getLong("courseId"):0;
         int tasktype = jb.containsKey("taskType")?jb.getInt("taskType"):0;
         String tasktitle = jb.containsKey("taskTitle")?jb.getString("taskTitle"):"";
         String taskcontent = jb.containsKey("taskContent")?jb.getString("taskContent"):"";
@@ -814,10 +815,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Object classesObj = jb.containsKey("classes")?jb.get("classes"):"";
         //验证专题是否存在
         TpCourseInfo courseInfo=new TpCourseInfo();
-        courseInfo.setCourseid(Long.parseLong(courseid+""));
+        courseInfo.setCourseid(courseid);
         List<TpCourseInfo>courseList=this.tpCourseManager.getList(courseInfo,null);
         if(courseList==null||courseList.size()<1){
-            response.getWriter().print("");
+            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"专题不存在，请检查重试\\\"}\"");
             return;
         }
         /**
@@ -825,7 +826,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
          */
 
         TpTaskInfo t=new TpTaskInfo();
-        t.setCourseid(Long.parseLong(courseid+""));
+        t.setCourseid(courseid);
         //查询没被我删除的任务
         t.setSelecttype(1);
         t.setLoginuserid(userList.get(0).getUserid());
@@ -857,7 +858,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
         tpTaskInfo.setImtaskcontent(taskcontent);
         tpTaskInfo.setTasktype(tasktype);
-        tpTaskInfo.setCourseid(Long.parseLong(courseid+""));
+        tpTaskInfo.setCourseid(courseid);
+        tpTaskInfo.setCuserid(userList.get(0).getRef());
         sql = new StringBuilder();
         objList = new ArrayList<Object>();
         objList=this.tpTaskManager.getSaveSql(tpTaskInfo,sql);
@@ -866,25 +868,33 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         //组织任务发给班级的数据
         if(classesObj!=null){
             JSONArray jr = JSONArray.fromObject(classesObj);
-            for(int i = 0;i<jr.size();i++){
-                JSONObject jsonObject = JSONObject.fromObject(jr.get(i));
-                //拆分json字符串，得到各个参数
-                int classid=jsonObject.containsKey("taskUserTeamId")?jsonObject.getInt("taskUserTeamId"):0;
-                int classtype=jsonObject.containsKey("taskUserType")?jsonObject.getInt("taskUserType"):0;
-                String starttime=jsonObject.containsKey("startTime")?jsonObject.getString("startTime"):"";
-                String endtime=jsonObject.containsKey("endTime")?jsonObject.getString("endTime"):"";
-                TpTaskAllotInfo tpTaskAllotInfo = new TpTaskAllotInfo();
-                tpTaskAllotInfo.setCourseid(Long.parseLong(courseid+""));
-                tpTaskAllotInfo.setTaskid(tasknextid);
-                tpTaskAllotInfo.setUsertype(classtype);
-                tpTaskAllotInfo.setUsertypeid(Long.parseLong(classid+""));
-                tpTaskAllotInfo.setBtime(UtilTool.StringConvertToDate(starttime));
-                tpTaskAllotInfo.setEtime(UtilTool.StringConvertToDate(endtime));
-                sql = new StringBuilder();
-                objList = new ArrayList<Object>();
-                objList = this.tpTaskAllotManager.getSaveSql(tpTaskAllotInfo,sql);
-                sqlListArray.add(sql.toString());
-                objListArray.add(objList);
+            if(jr!=null&&jr.size()>0){
+                for(int i = 0;i<jr.size();i++){
+                    JSONObject jsonObject = JSONObject.fromObject(jr.get(i));
+                    //拆分json字符串，得到各个参数
+                    if(jsonObject!=null&&jsonObject.size()>0){
+                        Long classid=jsonObject.containsKey("taskUserTeamId")?jsonObject.getLong("taskUserTeamId"):0;
+                        int classtype=jsonObject.containsKey("taskUserType")?jsonObject.getInt("taskUserType"):0;
+                        String starttime=jsonObject.containsKey("startTime")?jsonObject.getString("startTime"):"";
+                        String endtime=jsonObject.containsKey("endTime")?jsonObject.getString("endTime"):"";
+                        TpTaskAllotInfo tpTaskAllotInfo = new TpTaskAllotInfo();
+                        tpTaskAllotInfo.setCourseid(courseid);
+                        tpTaskAllotInfo.setTaskid(tasknextid);
+                        tpTaskAllotInfo.setUsertype(classtype);
+                        tpTaskAllotInfo.setUsertypeid(Long.parseLong(classid+""));
+                        tpTaskAllotInfo.setBtime(UtilTool.StringConvertToDate(starttime));
+                        tpTaskAllotInfo.setEtime(UtilTool.StringConvertToDate(endtime));
+                        tpTaskAllotInfo.setCuserid(userList.get(0).getRef());
+                        sql = new StringBuilder();
+                        objList = new ArrayList<Object>();
+                        objList = this.tpTaskAllotManager.getSaveSql(tpTaskAllotInfo,sql);
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }else{
+                response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"未获取到任务对象，请重试\\\"}\"");
+                return;
             }
         }
         Map m = new HashMap();
