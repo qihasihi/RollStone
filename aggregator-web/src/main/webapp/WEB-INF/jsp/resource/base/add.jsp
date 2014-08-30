@@ -82,12 +82,14 @@
                     <input type="file" name="uploadfile" id="uploadfile" class="w410" />
                       <span id="sp_rs_log">
                       </span>
-                    <p class="font-gray">提示：附件仅限一个，2G以内。</p>
+                    <p class="font-gray">
+                    <pre>提示： 1. 附件限一个， <2G。
+       2. 视频限MP4格式，建议使用格式工厂等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒。</pre></p>
                 </div>
                 <div class="zyxt_add" id="dv_super_file" style="display:none">
                     <!-- <p><a href="1" class="an_public3">上&nbsp;传</a></p>-->
                     <div  id="dv_load_core_spfile"></div>
-                    <p><span class="font-gray">提示： 附件仅限一个，<2G。</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="uploadfile/tmp/etiantian-upload.exe" target="_blank" class="font-darkblue">下载插件</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <p><span class="font-gray">提示： 1. 附件限一个， <2G。 2. 视频限MP4格式，建议使用格式工厂等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒。</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="uploadfile/tmp/etiantian-upload.exe" target="_blank" class="font-darkblue">下载插件</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="template/IEUpload Solution.docx" target="_blank" class="font-darkblue">使用说明</a></p>
                 </div></td>
         </tr>
@@ -106,7 +108,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ico_ppt1"></span>ppt/pptx、pot、pps</p>
     <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;图片<span class="ico_jpg1"></span>bmp  jpg  png  gif  tiff  pcx  tga</p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;音频<span class="ico_mp31"></span>mp3 midi wma realaudi asf wav</p>
-    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;视频<span class="ico_mp41"></span>wmv  rmvb  mpeg  mp4  avi  flv</p>
+    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;视频<span class="ico_mp41"></span>mp4</p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;动画<span class="ico_swf1"></span>swf</p>
 </div>
 </body>
