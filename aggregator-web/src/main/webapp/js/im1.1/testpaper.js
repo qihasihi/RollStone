@@ -713,6 +713,7 @@ TestPaperDetail.prototype.loadQues=function(){
                         }
                         //去除对勾
                         $("#dv_q_"+quesObj.questionid+" .right").remove();
+                        $("#dv_q_"+quesObj.questionid+" .wrong").remove();
                     }
                 }
             }
