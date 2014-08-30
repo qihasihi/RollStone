@@ -995,18 +995,23 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         //添加ResourceFile
         if(filename.indexOf("*")!=-1){
             String suffix=filename.split("\\*")[0].substring(filename.split("\\*")[0].lastIndexOf("."));
+            if(suffix!=null&&UtilTool.matchingText(UtilTool._VIEW_SUFFIX_TYPE_REGULAR,suffix.toLowerCase()))
+                suffix=".mp4";
             resbase.setFilesuffixname(suffix);
             resbase.setFilesize(Long.parseLong(filename.split("\\*")[1]));
         }else{
             String suffix=filename.substring(filename.lastIndexOf("."));
+            if(suffix!=null&&UtilTool.matchingText(UtilTool._VIEW_SUFFIX_TYPE_REGULAR,suffix.toLowerCase()))
+                suffix=".mp4";
             String fileurl=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/"+UtilTool.getResourceUrl(resid,suffix);
             File tmp=new File(fileurl);
-            System.out.println("fileurl:" + fileurl + "   " + tmp.exists() + " " + request.getSession().getServletContext().getRealPath("/"));
+         //   System.out.println("fileurl:" + fileurl + "   " + tmp.exists() + " " + request.getSession().getServletContext().getRealPath("/"));
             if(!tmp.exists()){  //
                 je.setMsg("文件不存在!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
+
             resbase.setFilesuffixname(suffix);
             resbase.setFilesize(tmp.length());
         }
@@ -2992,6 +2997,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             }else{
                 if(trList!=null&&trList.size()>0){
                     StringBuilder sb = new StringBuilder();
+                    //首先得到本专题
+                    TpCourseInfo tc = new TpCourseInfo();
+                    tc.setCourseid(Long.parseLong(courseid));
+                    List<TpCourseInfo> tcList = this.tpCourseManager.getList(tc,null);
+                    if(tcList.get(0).getQuoteid()!=null)
+                        sb.append("{course_id:\""+tcList.get(0).getQuoteid()+"\"}");
                     for(int i = 0;i<trList.size();i++){
                         sb.append("{course_id:\""+trList.get(i).getRelatedcourseid()+"\"}");
                     }
@@ -3044,6 +3055,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             }else{
                 if(trList!=null&&trList.size()>0){
                     StringBuilder sb = new StringBuilder();
+                    //首先得到本专题
+                    TpCourseInfo tc = new TpCourseInfo();
+                    tc.setCourseid(Long.parseLong(courseid));
+                    List<TpCourseInfo> tcList = this.tpCourseManager.getList(tc,null);
+                    if(tcList.get(0).getQuoteid()!=null)
+                        sb.append("{course_id:\""+tcList.get(0).getQuoteid()+"\"}");
                     for(int i = 0;i<trList.size();i++){
                         sb.append("{course_id:\""+trList.get(i).getRelatedcourseid()+"\"}");
                     }
@@ -3115,6 +3132,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         }else{
             if(trList!=null&&trList.size()>0){
                 StringBuilder sb = new StringBuilder();
+                //首先得到本专题
+                TpCourseInfo tc = new TpCourseInfo();
+                tc.setCourseid(Long.parseLong(courseid));
+                List<TpCourseInfo> tcList = this.tpCourseManager.getList(tc,null);
+                if(tcList.get(0).getQuoteid()!=null)
+                    sb.append("{course_id:\""+tcList.get(0).getQuoteid()+"\"}");
                 for(int i = 0;i<trList.size();i++){
                     sb.append("{course_id:\""+trList.get(i).getRelatedcourseid()+"\"}");
                 }
@@ -3185,6 +3208,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         }else{
             if(trList!=null&&trList.size()>0){
                 StringBuilder sb = new StringBuilder();
+                //首先得到本专题
+                TpCourseInfo tc = new TpCourseInfo();
+                tc.setCourseid(Long.parseLong(courseid));
+                List<TpCourseInfo> tcList = this.tpCourseManager.getList(tc,null);
+                if(tcList.get(0).getQuoteid()!=null)
+                    sb.append("{course_id:\""+tcList.get(0).getQuoteid()+"\"}");
                 for(int i = 0;i<trList.size();i++){
                     sb.append("{course_id:\""+trList.get(i).getRelatedcourseid()+"\"}");
                 }

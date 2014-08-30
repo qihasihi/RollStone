@@ -71,8 +71,10 @@
             <td><p class="font-black">
                 <input type="radio" id="rdo_xwj" name="rdo_upfile_pannel" value="radio" checked onclick="dv_super_file.style.display='NONE';p_res_file.style.display='block';file_uptype.value=1;"/>
                 <label for="rdo_xwj">普通附件</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="rdo_upfile_pannel"  id="rdo_dwj" onclick="p_res_file.style.display='NONE';dv_super_file.style.display='block';file_uptype.value=2;UploadInit_NOLoadClick(url,false);" value="radio" />
-                <label for="rdo_dwj">超大附件</label>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" onmousemove="var dvstyle=dv_allow_filetype.style;dvstyle.left=(mousePostion.x+5)+'px';dvstyle.top=(mousePostion.y+5)+'px';dvstyle.display='block'"
+
+                <%--<input type="radio" name="rdo_upfile_pannel"  id="rdo_dwj" onclick="p_res_file.style.display='NONE';dv_super_file.style.display='block';file_uptype.value=2;UploadInit_NOLoadClick(url,false);" value="radio" />--%>
+                <%--<label for="rdo_dwj">超大附件</label>&nbsp;&nbsp;&nbsp;&nbsp;--%>
+                <a href="javascript:;" onmousemove="var dvstyle=dv_allow_filetype.style;dvstyle.left=(mousePostion.x+5)+'px';dvstyle.top=(mousePostion.y+5)+'px';dvstyle.display='block'"
                                                                             onmouseout="dv_allow_filetype.style.display='none';" class="font-darkblue">支持的文件类型</a></p>
                 <input type="hidden" value="" name="res_complate_file" id="res_complate_file"/>
                 <input type="hidden" name="file_uptype" id="file_uptype" value="1"/>
@@ -80,12 +82,12 @@
                     <input type="file" name="uploadfile" id="uploadfile" class="w410" />
                       <span id="sp_rs_log">
                       </span>
-                    <p class="font-gray">提示：附件仅限一个，100M以内。</p>
+                    <p class="font-gray">提示：附件仅限一个，2G以内。</p>
                 </div>
                 <div class="zyxt_add" id="dv_super_file" style="display:none">
                     <!-- <p><a href="1" class="an_public3">上&nbsp;传</a></p>-->
                     <div  id="dv_load_core_spfile"></div>
-                    <p><span class="font-gray">提示： 附件仅限一个，>100M  <3G。</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="uploadfile/tmp/etiantian-upload.exe" target="_blank" class="font-darkblue">下载插件</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <p><span class="font-gray">提示： 附件仅限一个，<2G。</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="uploadfile/tmp/etiantian-upload.exe" target="_blank" class="font-darkblue">下载插件</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="template/IEUpload Solution.docx" target="_blank" class="font-darkblue">使用说明</a></p>
                 </div></td>
         </tr>

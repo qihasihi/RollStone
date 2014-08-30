@@ -39,7 +39,11 @@ function showTaskElement(type) {
         url = 'tpres?m=queryMicViewList&tasktype=' + type + '&courseid=' + courseid;
     }
 
-    var param = "dialogHeight=800px;dialogWidth=900px;center:yes;status:no;scroll:no;help:no";
+    var paramObj={width:1000,height:700}
+
+    var left =findDimensions().width/2-parseFloat($("#tr_ques_obj").css("width"))-100;
+    var top =100;//findDimensions().height/2-parseFloat($("#p_operate").css("height"))/2-120;
+    var param = 'dialogWidth:'+paramObj.width+'px;dialogHeight:'+paramObj.height+'px;dialogLeft:'+left+'px;dialogTop:'+top+'px;status:no;location:no';
     var returnValue = window.showModalDialog(url, "", param);
     if (returnValue == undefined) {
         returnValue = window.returnValue;

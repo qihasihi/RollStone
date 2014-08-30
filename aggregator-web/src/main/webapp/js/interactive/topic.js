@@ -1083,9 +1083,9 @@ function updateTopicStatus(id,val){
 				//修改原图标
 				if(val!=3){
 					if(val==1){
-						$("#a_status_"+id).attr({"className":"ico54","alt":"开放论题"});
+						$("#a_status_"+id).attr({"className":"ico54","alt":"关闭论题","title":"关闭论题"});
 					}else if(val==2){
-						$("#a_status_"+id).attr({"className":"ico53","alt":"关闭论题"});
+						$("#a_status_"+id).attr({"className":"ico53","alt":"开放论题","title":"开放论题"});
 					}
 					$("#a_status_"+id).removeAttr("onclick");
 					$("#a_status_"+id).unbind("click");

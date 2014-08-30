@@ -131,7 +131,7 @@ function doCreateRes(){
         }
     $("#a_dosub").hide();
     $("#sp_rs_log").html("正在上传……");
-    var lastName=rsval.substring(rsval.lastIndexOf("."))
+    var lastName=rsval.substring(rsval.lastIndexOf("."));
     url+="&lastname="+lastName;
     var resfile="uploadfile";
     $.ajaxFileUpload({

@@ -1068,6 +1068,10 @@ public class ResourceController extends BaseController<ResourceInfo> {
         resInfo.setFilename(null);
 
         String suffix=filename.substring(filename.lastIndexOf("."));
+        if(suffix!=null&&suffix.trim().length()>0){
+            if(UtilTool._VIEW_SUFFIX_TYPE_REGULAR.indexOf(suffix)!=-1)
+                suffix=".mp4";
+        }
         String uptype=request.getParameter("uptype"); //1:
         if(Integer.parseInt(uptype)==1||resInfo.getFilesize()==null){//Ð¡ÎÄ¼þ
             String fileurl=UtilTool.getResourceLocation(resInfo.getResid(),2)+"/"+UtilTool.getResourceUrl(resInfo.getResid().toString() ,suffix);

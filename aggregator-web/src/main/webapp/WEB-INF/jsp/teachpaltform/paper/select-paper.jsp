@@ -61,12 +61,20 @@
 
         function getInvestReturnMethod(rps){
             var html='',shtml='';
+            var paramObj={width:1000,height:700}
+
+            var left =findDimensions().width/2-parseFloat($("#ul_native").css("width"))/2;
+            var top =100;//findDimensions().height/2-parseFloat($("#p_operate").css("height"))/2-120;
+            var param = 'dialogWidth:'+paramObj.width+'px;dialogHeight:'+paramObj.height+'px;dialogLeft:'+left+'px;dialogTop:'+top+'px;status:no;location:no';
+
+
             if(rps.objList!=null&&rps.objList.length>0){
                 $.each(rps.objList,function(idx,itm){
                     switch (tasktype){
                         case '4':{
                             if(itm.paperid>0){
-                                html+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                                var url='paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid;
+                                html+='<li><a href="javascript:window.showModalDialog(\''+url+'\',\'\',\''+param+'\');">';
                                 html+='<p class="one">'+itm.papername+'</p>';
                                 html+='<p class="two">';
                                 if(itm.objectivenum>0&&itm.subjectivenum>0)
@@ -84,7 +92,9 @@
                                 html+='</p>';
                                 html+='</li>';
                             }else{
-                                shtml+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                                var url='paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid;
+                                shtml+='<li><a href="javascript:window.showModalDialog(\''+url+'\', \'\',  \''+param+'\');">';
+                                //shtml+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
                                 shtml+='<p class="one">'+itm.papername+'</p>';
                                 shtml+='<p class="two">';
                                 if(itm.objectivenum>0&&itm.subjectivenum>0)

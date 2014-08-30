@@ -101,6 +101,20 @@
 </script>
 
 
+<div class="public_windows public_input" id="dv_tishi" style="display: none;">
+    <h3><a href="1" target="_blank" title="关闭"></a>添加资源</h3>
+    <p class="font-black p_t_10 t_c"><strong id="s_tishi"></strong>&nbsp;&nbsp;</p>
+    <p class="t_c p_t_20"><a href="javascript:doUploadResource(${param.usertype})" class="an_public1">确&nbsp;认</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:closeModel('dv_tishi');isTishi=false;"  class="an_public1">取&nbsp;消</a></p>
+</div>
+
+<div class="public_windows public_input" id="dv_loading" style="display: none;">
+    <h3><!--<a href="1" target="_blank" title="关闭"></a>-->添加资源</h3>
+    <div  class="h210 t_c">
+        <p class="font-black p_t_20"><strong>正在为您努力上传<strong>资源</strong></strong></p>
+        <p class="ico91"></p>
+    </div>
+</div>
+
 
 
 <div id="dv_upload"  >
@@ -150,9 +164,9 @@
             <th>&nbsp;&nbsp;附件上传：</th>
             <td><p class="font-black">
                 <input name="rdo_uplaod" type="radio" value="1" checked  onclick="p_res_file.style.display='block';dv_super_file.style.display='NONE';" />
-                普通附件&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="rdo_uplaod"  value="2"  onclick="p_res_file.style.display='NONE';dv_super_file.style.display='block';UploadInit_CourseResource(url,false);" />
-                超大附件&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;"
+                普通附件
+                <!--<input type="radio" name="rdo_uplaod"  value="2"  onclick="p_res_file.style.display='NONE';dv_super_file.style.display='block';UploadInit_CourseResource(url,false);" />
+                超大附件-->&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;"
                                                onmousemove="var dvstyle=dv_allow_filetype.style;dvstyle.left=(mousePostion.x+5)+'px';dvstyle.top=(mousePostion.y+5)+'px';dvstyle.display='block'"
                                                onmouseout="dv_allow_filetype.style.display='none';" class="font-darkblue">支持的文件类型</a>
                 <!-- <a class="font-darkblue" href="http://202.99.47.77/fileoperate/uploadfile/tmp/upload-chajian2013-07-29.exe">下载插件</a>
@@ -160,7 +174,7 @@
             </p>
                 <div class="jxxt_zhuanti_zy_add" id="p_res_file">
                     <input type="file" name="uploadfile" id="uploadfile" class="w410" /><!--<a href="1" class="an_public3">上&nbsp;传</a>-->
-                    <p class="font-gray">提示：附件仅限一个，100M以内。视频资源<20M可实时转换播放，>20M需等待，第二天可播放。</p>
+                    <p class="font-gray">1. 附件限一个，<2G。 <br>2. 视频限MP4格式，建议使用格式工厂等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒 </p>
                 </div>
                 <div class="jxxt_zhuanti_zy_add" id="dv_super_file" style="display: none">
                     <div id="uploadcontrol_div" >
@@ -382,7 +396,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ico_ppt1"></span>ppt/pptx、pot、pps</p>
     <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;图片<span class="ico_jpg1"></span>bmp  jpg  png  gif  tiff  pcx  tga</p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;音频<span class="ico_mp31"></span>mp3 midi wma realaudi asf wav</p>
-    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;视频<span class="ico_mp41"></span>wmv  rmvb  mpeg  mp4  avi  flv</p>
+    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;视频<span class="ico_mp41"></span>mp4<!--wmv  rmvb  mpeg  mp4  avi  flv--></p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;动画<span class="ico_swf1"></span>swf</p>
 </div>
 

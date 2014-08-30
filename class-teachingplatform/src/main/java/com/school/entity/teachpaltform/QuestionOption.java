@@ -63,6 +63,11 @@ public class QuestionOption implements Serializable{
                 content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
                 content=content.replace("'", "£§");
             }
+
+            if(content.indexOf("<p>")==0)
+                content=content.replaceFirst("<p>","");
+            if(content.lastIndexOf("</p>")!=-1)
+                content=content.substring(0,content.lastIndexOf("</p>"));
         }
 
         return content;

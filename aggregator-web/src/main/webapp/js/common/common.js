@@ -55,46 +55,46 @@ function videoConvertProgress(resid,fname,md5fname,idxstate,path,baseIpPort,imgp
         if(typeof(fname)!='undefined'&&fname.Trim().length>0&&fname.indexOf(".")!=-1)
             lastname=fname.substring(fname.lastIndexOf("."));
         //var urlpath="http://localhost:1990/fileoperate/getvideostate.jsp?res_id="+resid+"&filename="+encodeURI(fname);
-        $.getJSON(urlpath,{res_id:resid,file_name_md5:md5fname+lastname,path:path},function(data){
-            if(data!=null&&data!=""){
-                if(data.type=="success"){
-                    var progress=data.progress;
-                    if(parseFloat(progress)>=95){
-                        if(typeof(tarray[idxstate])!="undefined"&&tarray[idxstate]!=null)
-                            clearTimeout(tarray[idxstate]);
-                        progress="完成";
-                        //$("#img_video").unbind("click");
-                        //$("#img_video").bind("click",function(){
-                        $("#progress_"+idxstate).html("转换进度:"+progress);
-                        var tmp="uploadfile/";
-                        if(resid>0)
-                            tmp="clouduploadfile/";
-                        loadSWFPlayer(baseIpPort+tmp+path+"/"+fname+".mp4",'div_show'+idxstate,imgpath,resid,width,height,isshowBar,playEndMethod);
-                        return;
-                        //});
-
-                    }else{
-                        progress+="%";
-                        $("#img_video").unbind("click");
-                        $("#img_video").bind("click",function(){
-                            alert('该视频文件正在进行转换!无法进行预览!\n当前进度:'+progress+"\n\n提示：2分钟更新一次!");
-                        });
-                    }
-                    $("#progress_"+idxstate).html("转换进度:"+progress);
-                    tarray[idxstate]=setTimeout("videoConvertProgress('"+resid+"','"+fname+"','"+md5fname+"',"+idxstate+",'"+path+"','"+baseIpPort+"','"+imgpath+"')",1000*60*2);
-                    return;
-                }
-            }
-            $("#progress_"+idxstate).html("转换进度:排列中!");
-            $("#img_video").attr({"src":"images/video_gszh.jpg","width":"650px","height":"550px"});
-            tarray[idxstate]=setTimeout("videoConvertProgress('"+resid+"','"+fname+"','"+md5fname+"',"+idxstate+",'"+path+"','"+baseIpPort+"','"+imgpath+"')",1000*60*2);
-            $("#img_video").unbind("click");
-            $("#img_video").bind("click",function(){
-                alert('该视频文件正在排列准备进行转换!无法进行预览!\n\n提示：2分钟更新一次!');
-            });
-            //tarray[idxstate]=setTimeout("videoConvertProgress('"+resid+"','"+fname+"','"+md5fname+"',"+idxstate+",'"+path+"','"+baseIpPort+"','"+imgpath+"')",1000*60*2);
-
-        });
+//        $.getJSON(urlpath,{res_id:resid,file_name_md5:md5fname+lastname,path:path},function(data){
+//            if(data!=null&&data!=""){
+//                if(data.type=="success"){
+//                    var progress=data.progress;
+//                    if(parseFloat(progress)>=95){
+//                        if(typeof(tarray[idxstate])!="undefined"&&tarray[idxstate]!=null)
+//                            clearTimeout(tarray[idxstate]);
+//                        progress="完成";
+//                        //$("#img_video").unbind("click");
+//                        //$("#img_video").bind("click",function(){
+//                        $("#progress_"+idxstate).html("转换进度:"+progress);
+        var tmp="uploadfile/";
+        if(resid>0)
+            tmp="clouduploadfile/";
+        loadSWFPlayer(baseIpPort+tmp+path+"/"+fname,'div_show'+idxstate,imgpath,resid,width,height,isshowBar,playEndMethod);
+        return;
+//                        //});
+//
+//                    }else{
+//                        progress+="%";
+//                        $("#img_video").unbind("click");
+//                        $("#img_video").bind("click",function(){
+//                            alert('该视频文件正在进行转换!无法进行预览!\n当前进度:'+progress+"\n\n提示：2分钟更新一次!");
+//                        });
+//                    }
+//                    $("#progress_"+idxstate).html("转换进度:"+progress);
+//                    tarray[idxstate]=setTimeout("videoConvertProgress('"+resid+"','"+fname+"','"+md5fname+"',"+idxstate+",'"+path+"','"+baseIpPort+"','"+imgpath+"')",1000*60*2);
+//                    return;
+//                }
+//            }
+//            $("#progress_"+idxstate).html("转换进度:排列中!");
+//            $("#img_video").attr({"src":"images/video_gszh.jpg","width":"650px","height":"550px"});
+//            tarray[idxstate]=setTimeout("videoConvertProgress('"+resid+"','"+fname+"','"+md5fname+"',"+idxstate+",'"+path+"','"+baseIpPort+"','"+imgpath+"')",1000*60*2);
+//            $("#img_video").unbind("click");
+//            $("#img_video").bind("click",function(){
+//                alert('该视频文件正在排列准备进行转换!无法进行预览!\n\n提示：2分钟更新一次!');
+//            });
+//            //tarray[idxstate]=setTimeout("videoConvertProgress('"+resid+"','"+fname+"','"+md5fname+"',"+idxstate+",'"+path+"','"+baseIpPort+"','"+imgpath+"')",1000*60*2);
+//
+//        });
     }
 }
 var jwplayerSetup={};
@@ -119,7 +119,7 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
         'height': height,
         //'playlistfile': "/ett20/studyrvice_class/free/toxml.jsp?resourceID=<%=resourceID%>&frame=1",
         'file':  filepath,
-     //   'primary': 'flash',
+        'primary': 'flash',
         'controlbar':'bottom',
         'controlbar.idlehide':'false',
         'modes': [
@@ -129,8 +129,8 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
                     autostart:"false",
                     menu:"false"
                 }
-            },
-            {type: 'html5'}
+            }
+            ,{type: 'html5'}
         ]
 //        ,events:{
 //            onReady:function(){
@@ -308,7 +308,7 @@ function playSound(type,mp3Url,width,height,address,autoplay){
         if(typeof(autoplay)=="undefined"||autoplay==true)
             autoplay='yes';
         else
-             autoplay='no';
+            autoplay='no';
         // 播放器。
         var mp3Play = '<object  id="b_sound" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" ' + 'codebase="js/common/videoPlayer/new/swflash.cab#version=7,0,19,0"' + ' width="'+width+'" height="'+height+'">';
         mp3Play += '<param name="movie" '
@@ -337,11 +337,11 @@ function playSound(type,mp3Url,width,height,address,autoplay){
         // name="b_sound" hidden="true"/>';
         $("#"+address).append(mp3Play);
         // 修改提示文件
-       /* $("#play_operate_" + idx).html(
-            '<a href="javascript:;" onclick="operateSound(' + idx + ',\''
-                + md5id + '\',\'' + filereadlyname
-                + '\',\'stop\',\''+tmppathipport+'\')">停止</a>');
-                */
+        /* $("#play_operate_" + idx).html(
+         '<a href="javascript:;" onclick="operateSound(' + idx + ',\''
+         + md5id + '\',\'' + filereadlyname
+         + '\',\'stop\',\''+tmppathipport+'\')">停止</a>');
+         */
     }else{
         $("#"+address).empty();
     }
@@ -832,13 +832,13 @@ function clearSpecialCharacter(){
 // $("input[type='text']").bind("keypress",function(){
 // var len=this.value.length;
 // for(var i=0;i<len;i++){
-// this.value=this.value.replace(/[!\?\%\|\=\+\<\>\{\}\'\、\‘\’\；\＇\￥\"\＼\/\\!\#\$\%\^\&\*\(\)\|]+$/,"");
+// this.value=this.value.replace(/[!\?\%\|\=\+\<\>\{\}\'\、\‘\’\；\＇\�\"\＼\/\\!\#\$\%\^\&\*\(\)\|]+$/,"");
 // }
 // });
 // $("input[type='text']").bind("change",function(){
 // var len=this.value.length;
 // for(var i=0;i<len;i++){
-// this.value=this.value.replace(/[!\?\%\|\=\+\<\>\{\}\'\、\‘\’\；\＇\￥\"\＼\/\\!\#\$\%\^\&\*\(\)\|]+$/,"");
+// this.value=this.value.replace(/[!\?\%\|\=\+\<\>\{\}\'\、\‘\’\；\＇\�\"\＼\/\\!\#\$\%\^\&\*\(\)\|]+$/,"");
 // }
 // });
 //    $("input[type='text']").bind("blur",function(){
@@ -1010,13 +1010,16 @@ function findDimensions() //函数：获取尺寸
 var wcontentflag=false,wcontentX=null,wcontentY=null,offsetHeight=null,offsetWidth=null,isaddoffset=false;
 
 
-function showModel(showId,isdrop){
+function showModel(showId,isdrop,height){
 // $("body").css("overflow","hidden");
+    var h=0;
+    if(typeof height!='undefined')
+        h=height;
     $("#fade").css("height",findDimensions().height+parseFloat(getScrollTop()));
     $("#fade").css("width",findDimensions().width);
     try{
         $("#"+showId).css("z-index",1005);
-        $("#"+showId).css("top",(20+parseInt(getScrollTop())));
+        $("#"+showId).css("top",(20+parseInt(getScrollTop()))+h);
         $("#"+showId).css("left",(findDimensions().width/2-parseFloat($("#"+showId).css("width"))/2));
         $("#"+showId).css("position","absolute");
         // $(".white_content").css("top",15);
@@ -1588,11 +1591,11 @@ jQuery.extend(
                     break;
                 case 'string':
                     return '"' + object.replace(/(\/\/|\/\/")/g,"//$1").replace(/n|\/r|\/t/g,  function(){
-                    var a = arguments[0];
-                    return (a == '/n') ? '//n':
-                        (a == '/r') ? '//r':
-                            (a == '/t') ? '//t': ""
-                }) + '"';
+                        var a = arguments[0];
+                        return (a == '/n') ? '//n':
+                            (a == '/r') ? '//r':
+                                (a == '/t') ? '//t': ""
+                    }) + '"';
                     break;
                 case 'object':
                     if (object === null) return 'null';

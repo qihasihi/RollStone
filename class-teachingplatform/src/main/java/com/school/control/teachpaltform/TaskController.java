@@ -25,6 +25,7 @@ import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
+import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
 import com.school.manager.inter.teachpaltform.paper.IStuPaperQuesLogsManager;
 import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
 import com.school.manager.resource.ResourceManager;
@@ -33,6 +34,7 @@ import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.PaperManager;
+import com.school.manager.teachpaltform.paper.PaperQuestionManager;
 import com.school.manager.teachpaltform.paper.StuPaperQuesLogsManager;
 import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
 import org.apache.commons.lang.StringUtils;
@@ -85,6 +87,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private IGradeManager gradeManager;
     private IResourceManager resourceManager;
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
+    private IPaperQuestionManager paperQuestionManager;
     public TaskController(){
         this.gradeManager=this.getManager(GradeManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
@@ -113,6 +116,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
         this.paperManager=this.getManager(PaperManager.class);
         this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
+        this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
         this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
     }
     /**
@@ -241,24 +245,23 @@ public class TaskController extends BaseController<TpTaskInfo>{
      * 获取教师任务列表
      * @throws Exception
      */
-    @RequestMapping(params="m=ajaxTaskList",method=RequestMethod.POST)
-    public void ajaxTaskList(HttpServletRequest request,HttpServletResponse response)throws Exception{
-        JsonEntity je = new JsonEntity();
-        String courseid=request.getParameter("courseid");
-        if(courseid==null||courseid.trim().length()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-        PageResult p=this.getPageResultParameter(request);
-        //p.setOrderBy("u.order_idx asc,u.c_time desc");
-        p.setOrderBy("u.order_idx ");
-        TpTaskInfo t=new TpTaskInfo();
-        t.setCourseid(Long.parseLong(courseid));
-        //查询没被我删除的任务
-        t.setSelecttype(1);
-        t.setLoginuserid(this.logined(request).getUserid());
-        t.setStatus(1);
+     @RequestMapping(params="m=ajaxTaskList",method=RequestMethod.POST)
+     public void ajaxTaskList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+         JsonEntity je = new JsonEntity();
+         String courseid=request.getParameter("courseid");
+         if(courseid==null||courseid.trim().length()<1){
+             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+             response.getWriter().print(je.toJSON());
+             return;
+         }
+         PageResult p=this.getPageResultParameter(request);
+         p.setOrderBy("u.order_idx desc,u.c_time desc");
+         TpTaskInfo t=new TpTaskInfo();
+         t.setCourseid(Long.parseLong(courseid));
+         //查询没被我删除的任务
+         t.setSelecttype(1);
+         t.setLoginuserid(this.logined(request).getUserid());
+         t.setStatus(1);
 
         //已发布的任务
         List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t, p);
@@ -438,7 +441,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("t.order_idx  ");
+        p.setOrderBy("t.order_idx desc ");
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
         t.setUserid(this.logined(request).getUserid());
@@ -931,9 +934,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 }
             }
 		} */
-        //小组
-        TpGroupInfo g=new TpGroupInfo();
-        //g.setCuserid(this.logined(request).getUserid());
+		//小组
+		TpGroupInfo g=new TpGroupInfo();
+		//g.setCuserid(this.logined(request).getUserid());
         g.setTermid(courseclassList.get(0).getTermid());
         g.setSubjectid(Integer.parseInt(subjectid));
         List<TpGroupInfo>groupList=this.tpGroupManager.getList(g, null);
@@ -1382,9 +1385,26 @@ public class TaskController extends BaseController<TpTaskInfo>{
         g.setSubjectid(Integer.parseInt(subjectid));
         g.setTermid(courseclassList.get(0).getTermid());
         List<TpGroupInfo>groupList=this.tpGroupManager.getList(g, null);
-        request.setAttribute("tasktypeList", tasktypeList);
-        request.setAttribute("courseclassList", courseclassList);
-        request.setAttribute("groupList", groupList);
+		request.setAttribute("tasktypeList", tasktypeList);
+		request.setAttribute("courseclassList", courseclassList);
+		request.setAttribute("groupList", groupList);
+		
+		//该任务已设置的相关信息
+		TpTaskInfo t=new TpTaskInfo();
+		t.setTaskid(Long.parseLong(taskid));
+		t.setCourseid(Long.parseLong(courseid));
+		List<TpTaskInfo>tpList=this.tpTaskManager.getList(t, null);
+		if(tpList==null||tpList.size()<1){
+			je.setMsg("抱歉该任务已不存在!");
+			je.getAlertMsgAndBack();
+			return null;
+		}
+		//任务
+		TpTaskInfo taskinfo=tpList.get(0);
+		//任务对象
+		TpTaskAllotInfo tg=new TpTaskAllotInfo();
+		tg.setTaskid(Long.parseLong(taskid));
+		List<TpTaskAllotInfo>taskgroupList=this.tpTaskAllotManager.getList(tg, null);
 
         //该任务已设置的相关信息
         TpTaskInfo t=new TpTaskInfo();
@@ -3396,6 +3416,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
+        List<Map<String,Object>>allquesidList=paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
+        if(allquesidList==null||allquesidList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+
         StuPaperQuesLogs logs=new StuPaperQuesLogs();
         logs.setPaperid(Long.parseLong(paperid));
         logs.setQuesid(Long.parseLong(questionid));

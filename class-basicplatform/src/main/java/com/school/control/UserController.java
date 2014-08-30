@@ -35,34 +35,33 @@ import com.school.util.sendfile.SendFile;
 @Controller
 @RequestMapping(value = "/user")
 public class UserController extends BaseController<UserInfo> {
-    protected IUserManager userManager;
-    protected IClassYearManager classYearManager;
-    protected IIdentityManager identityManager;
-    protected IDictionaryManager dictionaryManager;
-    protected IRoleManager roleManager;
-    protected ISubjectManager subjectManager;
-    protected IGradeManager gradeManager;
-    protected IClassManager classManager;
-    protected ISubjectUserManager subjectUserManager;
-    protected IDeptUserManager deptUserManager;
-    protected ITeacherManager teacherManager;
-    protected IStudentManager studentManager;
-    protected IClassUserManager classUserManager;
-    protected IJobUserManager jobUserManager;
-    protected IRoleUserManager roleUserManager;
-    protected IParentManager parentManager;
-    protected IUserColumnRightManager userColumnRightManager;
-    protected IRoleColumnRightManager roleColumnRightManager;
-    protected IDeptManager deptManager;
-    protected ITermManager termManager;
-    protected IUserIdentityManager userIdentityManager;
-    protected INoticeManager noticeManager;
-    protected IActivityManager activityManager;
-    protected IMyInfoUserManager myInfoUserManager;
-    protected IInitWizardManager initWizardManager;
-
+    private IUserManager userManager;
+    private IClassYearManager classYearManager;
+    private IIdentityManager identityManager;
+    private IDictionaryManager dictionaryManager;
+    private IRoleManager roleManager;
+    private ISubjectManager subjectManager;
+    private IGradeManager gradeManager;
+    private IClassManager classManager;
+    private ISubjectUserManager subjectUserManager;
+    private IDeptUserManager deptUserManager;
+    private ITeacherManager teacherManager;
+    private IStudentManager studentManager;
+    private IClassUserManager classUserManager;
+    private IJobUserManager jobUserManager;
+    private IRoleUserManager roleUserManager;
+    private IParentManager parentManager;
+    private IUserColumnRightManager userColumnRightManager;
+    private IRoleColumnRightManager roleColumnRightManager;
+    private IDeptManager deptManager;
+    private ITermManager termManager;
+    private IUserIdentityManager userIdentityManager;
+    private INoticeManager noticeManager;
+    private IActivityManager activityManager;
+    private IMyInfoUserManager myInfoUserManager;
+    private IInitWizardManager initWizardManager;
     public UserController(){
-        this.userManager=this.getManager(UserManager.class);
+        userManager=this.getManager(UserManager.class);
         this.classYearManager=this.getManager(ClassYearManager.class);
         this.identityManager=this.getManager(IdentityManager.class);
         this.dictionaryManager=this.getManager(DictionaryManager.class);
@@ -978,7 +977,7 @@ public class UserController extends BaseController<UserInfo> {
      * @return
      * @throws Exception
      */
-    protected JsonEntity loginBase(UserInfo userinfo,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    private JsonEntity loginBase(UserInfo userinfo,HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity je=new JsonEntity();
         je.setMsg("异常错误，原因：参数异常!");
         if(userinfo==null)return je;
@@ -1067,10 +1066,6 @@ public class UserController extends BaseController<UserInfo> {
                         uitmp.setUserid(userinfo.getRef());
                         List<UserIdentityInfo> uidtttList=this.userIdentityManager.getList(uitmp,null);
 
-                        request.getSession().setAttribute("cut_uidentity", uidtttList);//存入Session中
-                        request.getSession().setAttribute("CURRENT_USER", userinfo);//存入Session中
-
-
                         if(UtilTool._IS_SIMPLE_RESOURCE!=2){
                             //栏目
                             IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
@@ -1082,7 +1077,9 @@ public class UserController extends BaseController<UserInfo> {
                             request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
                         }
 
-                        //    userinfo=userinfo;
+                        request.getSession().setAttribute("cut_uidentity", uidtttList);//存入Session中
+                        request.getSession().setAttribute("CURRENT_USER", userinfo);//存入Session中
+                    //    userinfo=userinfo;
                         je.setType("success");
                         je.setMsg("登陆成功并记录成功!");
                     } catch (Exception e) {
@@ -1338,15 +1335,6 @@ public class UserController extends BaseController<UserInfo> {
 				UserInfo user=this.userManager.getUserInfo(u);
 				if(user!=null)
 					je.getObjList().add(user);
-
-                List<UserInfo> userInfoList=new ArrayList<UserInfo>();
-                userInfoList.add(user);
-                //调用用户接口
-                if(EttInterfaceUserUtil.updateUserBase(userInfoList)){
-                    System.out.println("用户信息同步至网校成功!更新");
-                }else{
-                    System.out.println("用户信息同步至网校失败!更新");
-                }
 			}else 
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
 		}
@@ -1998,17 +1986,6 @@ public class UserController extends BaseController<UserInfo> {
 		if(objListArray.size()>0&&sqllist.size()>0){
 			boolean flag=this.userManager.doExcetueArrayProc(sqllist, objListArray);
 			if(flag){
-                UserInfo utmp=new UserInfo();
-                utmp.setRef(ref);
-                UserInfo u=userManager.getUserInfo(utmp);
-                if(u!=null){
-                    if(updateToEttClassUser(ref,u.getDcschoolid())){
-                        System.out.println("更新classuser到网校成功！");
-                    }else{
-                        System.out.println("更新classuser到网校失败！");
-                    }
-                }
-
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
 				je.setType("success");
 				
@@ -2790,13 +2767,6 @@ public class UserController extends BaseController<UserInfo> {
 		// 班主任
 		String clsbzrstr = request.getParameter("clsbzrstr");
 
-        String strDcSchoolID= request.getParameter("dcschoolid");
-        int dcSchoolID=0;
-        if(strDcSchoolID!=null&&strDcSchoolID.length()>0)
-        {
-            dcSchoolID=Integer.parseInt( strDcSchoolID);
-        }
-
 		UserInfo user = this.getParameter(request, UserInfo.class);
 		if (user.getUsername() == null
 				|| user.getUsername().trim().length() < 1
@@ -2830,8 +2800,6 @@ public class UserController extends BaseController<UserInfo> {
 		if (user.getBirthdate() != null)
 			u.setBirthdate(user.getBirthdate());
 
-
-        u.setDcschoolid(dcSchoolID);
 		sql = new StringBuilder();
 		objList = this.userManager.getSaveSql(u, sql);
 		if (objList != null && sql != null) {
@@ -3237,12 +3205,9 @@ public class UserController extends BaseController<UserInfo> {
 			boolean bo = this.userManager.doExcetueArrayProc(sqlListArray,
 					objListArray);
 			if (bo) {
-                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-                je.setType("success");
+				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+				je.setType("success");
                 je.getObjList().add(userNextRef);
-                if(!addToEttUser(userNextRef)){
-                    System.out.println("同步网校失败！原因：未知");
-                }
 			} else {
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
 			}
@@ -3252,10 +3217,6 @@ public class UserController extends BaseController<UserInfo> {
 		}
 		response.getWriter().print(je.toJSON());
 	}
-
-
-
-
 
 	/**
 	 * 教务修改用户
@@ -3652,7 +3613,7 @@ public class UserController extends BaseController<UserInfo> {
 	 */
 	@RequestMapping(params="m=toIndex", method = RequestMethod.GET)
 	public ModelAndView toIndex(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception {
-       // System.out.println("123456");
+        System.out.println("123456");
 		//得到当前学期的授课班级
 		    //得到当前学期
 		TermInfo term=this.termManager.getAutoTerm();
@@ -3683,7 +3644,6 @@ public class UserController extends BaseController<UserInfo> {
 		NoticeInfo notic=new NoticeInfo();
 		notic.setCuserid(this.logined(request).getRef());		
 		notic.setNoticetype(UtilTool._NOTICE_TYPE[0]);  //通知公告
-        notic.setDcschoolid(this.logined(request).getDcschoolid());
 		PageResult presult=new PageResult();
 		presult.setPageNo(1);
 		presult.setPageSize(5);
@@ -3898,7 +3858,8 @@ public class UserController extends BaseController<UserInfo> {
 //        System.out.println(UtilTool.utilproperty.getProperty("ISFIRSTLOGIN")+"----isfrist");
 	    List<SubjectInfo> subList = this.subjectManager.getList(null, null);
 		request.setAttribute("subList", subList);
-		List<Map<String, Object>> termList = this.termManager.getYearTerm();
+		List<Map<String, Object>> termList = new ArrayList<Map<String,Object>>();
+		termList = this.termManager.getYearTerm();
 		request.setAttribute("termList", termList.get(0));
 	    return new ModelAndView("index");
 	}
@@ -4256,6 +4217,7 @@ public class UserController extends BaseController<UserInfo> {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+
 
         // 获得用户信息
         UserInfo u = this.logined(request);
@@ -4720,6 +4682,7 @@ public class UserController extends BaseController<UserInfo> {
 //            response.sendRedirect("user?m=mfToEttUrl");return;
 //        }
 
+
         // 获得用户信息
         UserInfo u = request.getAttribute("tmpUser")==null?this.logined(request):(UserInfo)request.getAttribute("tmpUser");
         // ////////////////////////////变量存储
@@ -4774,12 +4737,11 @@ public class UserController extends BaseController<UserInfo> {
         // 判断是否为教师
         // usertype
         //boolean isteacher = this.getRolemanager().isTeacher(u.getUserId());
-        boolean  isteacher=this.validateRole(request, UtilTool._ROLE_TEACHER_ID);
+        boolean isteacher=this.validateRole(request, UtilTool._ROLE_TEACHER_ID);
 //        if(isteacher&&Integer.parseInt(isVip)==0){
 //            response.sendRedirect(UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_FREE_URL").toString()); //教师进入ett入口
 //            return;
 //        }
-
 
 
         if (isteacher||!isstuflag) {
@@ -5143,9 +5105,6 @@ public class UserController extends BaseController<UserInfo> {
                 paramMap.put("subjectid",subjectidStr);
             }
 
-
-
-
            // http_1.append("&s=" + md5Str); // i
 
 
@@ -5157,6 +5116,7 @@ public class UserController extends BaseController<UserInfo> {
             requestUrl=UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_URL").toString(); //教师进入ett入口
         }else if(isstuflag){
             //组织学生参数
+
             //就否免费   0:免 费   1:收费   只有学生才有该参数
             String isVipJson="";
             List<EttColumnInfo> ettColumnInfos1 =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
@@ -5178,6 +5138,7 @@ public class UserController extends BaseController<UserInfo> {
             }else{
                 isVipJson=null;
             }
+
             paramMap.put("uid",uid);
             if(mid!=null)
                 paramMap.put("mid",mid);
@@ -5201,11 +5162,9 @@ public class UserController extends BaseController<UserInfo> {
                 if (gradeidBuilder.toString().trim().length() > 0)
                     paramMap.put("gradeid", gradeidBuilder.toString());
             }
-
             //学校名称
             paramMap.put("s",UserTool.zuzhiStudentSParameter(uid.toString(), gradeidList, realname, usertype.toString(), sex+"", email, schoolid,isVipJson, time.toString(), key));
-
-            requestUrl=UtilTool.utilproperty.getProperty("STU_TO_ETT_REQUEST_URL").toString(); //学生进入ett入口
+                requestUrl=UtilTool.utilproperty.getProperty("STU_TO_ETT_REQUEST_URL").toString(); //学生进入ett入口
         }
         paramMap.put("srcId",50006);//UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID").toString());
         paramMap.put("schoolid",schoolid);
@@ -6145,84 +6104,6 @@ public class UserController extends BaseController<UserInfo> {
         request.getSession().setAttribute("fromType","lzx");
         response.sendRedirect(targetUrl);
     }
-
-
-
-
-
-    /**
-     * 添加用户时，传入Ett
-     * @param userNextRef
-     * @return
-     */
-    private boolean addToEttUser(String userNextRef){
-        //向网校添加用户信息
-        UserInfo tmpUser=new UserInfo();
-        tmpUser.setRef(userNextRef);
-        PageResult presult=new PageResult();
-        presult.setPageSize(1);
-        List<UserInfo> tmpUList=this.userManager.getList(tmpUser,presult);
-        if(tmpUList!=null&&tmpUList.size()>0){
-            //调用用户接口
-            if(EttInterfaceUserUtil.addUserBase(tmpUList)){
-                System.out.println("用户信息同步至网校成功!");
-            }else{
-                System.out.println("用户信息同步至网校失败!");
-                return false;
-            }
-            if(updateToEttClassUser(userNextRef,tmpUList.get(0).getDcschoolid()))
-                System.out.println("classUser同步至网校成功!");
-            else
-                System.out.println("classUser同步至网校失败!");
-
-        }
-        return true;
-    }
-
-    /**
-     * 同步ettClassUser
-     * @param userNextRef
-     * @return
-     */
-    private boolean updateToEttClassUser(String userNextRef,Integer dcschoolId){
-        //向网校添加班级数据
-        ClassUser cu=new ClassUser();
-        cu.setUserid(userNextRef);
-        List<ClassUser> cuList=this.classUserManager.getList(cu,null);
-        if(cuList!=null&&cuList.size()>0){
-            for (ClassUser cuTmp:cuList){
-                cu=new ClassUser();
-                cu.setClassid(cuTmp.getClassid());
-                List<ClassUser> cuTmpList=this.classUserManager.getList(cu,null);
-                if(cuTmpList!=null&&cuTmpList.size()>0){
-                    // 必带 userId，userType,subjectId 的三个key
-                    List<Map<String,Object>> mapList=new ArrayList<Map<String, Object>>();
-                    for (ClassUser cuTmpe:cuTmpList){
-                        if(cuTmpe!=null){
-                            Map<String,Object> tmpMap=new HashMap<String, Object>();
-                            tmpMap.put("userId",cuTmpe.getUid());
-                            Integer userType=3;
-                            if(cuTmpe.getRelationtype()!=null){
-                                if(cuTmpe.getRelationtype().trim().equals("任课老师"))
-                                    userType=2;
-                                else if(cuTmpe.getRelationtype().trim().equals("班主任"))
-                                    userType=1;
-                            }
-                            tmpMap.put("userType",userType);
-                            tmpMap.put("subjectId",cuTmpe.getSubjectid()==null?-1:cuTmpe.getSubjectid());
-                            mapList.add(tmpMap);
-                        }
-                    }
-                    if(!EttInterfaceUserUtil.OperateClassUser(mapList, cuTmp.getClassid(),dcschoolId)){
-                        System.out.println("classUser同步至网校失败!");
-                        return false;
-                    } else
-                        System.out.println("classUser同步至网校成功!");
-                }
-            }
-        }
-        return true;
-    }
 }
 
 /**
@@ -6313,8 +6194,8 @@ class UserTool{
      * @param key   组织码(一般为固定码)
      * @return  s
      */
-       public static String zuzhiStudentSParameter(String uid,List<Integer> gradeidList,String realname,String usertype,String sex,String email,String schoolid,String isvip,String time,String key) throws Exception{
-     // 加密
+    public static String zuzhiStudentSParameter(String uid,List<Integer> gradeidList,String realname,String usertype,String sex,String email,String schoolid,String isvip,String time,String key) throws Exception{
+        // 加密
         StringBuilder md5Builder = new StringBuilder(time.toString());
         if (gradeidList != null && gradeidList.size() > 0) {
             StringBuilder gradeidBuilder = new StringBuilder();
@@ -6341,9 +6222,8 @@ class UserTool{
         md5Builder.append(schoolid);
         md5Builder.append(time);
         if(isvip!=null&&isvip.length()>0)
-            md5Builder.append(isvip);
-
-           md5Builder.append(key);
+             md5Builder.append(isvip);
+        md5Builder.append(key);
 
         return MD5_NEW.getMD5Result(md5Builder.toString());
     }
@@ -6424,4 +6304,5 @@ class UserTool{
         outputBuilder.append("</html>");
         return outputBuilder.toString();
     }
+
 }

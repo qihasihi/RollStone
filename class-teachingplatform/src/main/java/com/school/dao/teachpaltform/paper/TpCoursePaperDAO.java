@@ -77,7 +77,7 @@ public class TpCoursePaperDAO extends CommonDAO<TpCoursePaper> implements ITpCou
             }else
                 sqlbuilder.append("NULL,");
         }
-        sqlbuilder.append(")}");
+//        sqlbuilder.append(")}");
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
             sqlbuilder.append("?,?,");

@@ -153,6 +153,10 @@
 <div class="content2">
     <div class="jxxt_zhuanti_rw_add p_t_20">
         <ul class="gqkt font-black">
+            <c:if test="${empty resList}">
+                <li><img src="images/pic06_140722.png" width="215" height="160"></li>
+            </c:if>
+
             <c:if test="${!empty resList}">
                 <c:forEach    items="${resList}" var="r" varStatus="idx" >
                     <c:if test="${idx.index>12}">

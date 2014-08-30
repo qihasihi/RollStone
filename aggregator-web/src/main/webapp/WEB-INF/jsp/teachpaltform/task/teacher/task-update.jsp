@@ -24,7 +24,9 @@
 				initTaskCriteria("${taskInfo.tasktype}");
 			</c:if>
 
-
+            <c:if test="${empty hasVideo}">
+                $("#task_type option[value=6]").remove();
+            </c:if>
 
             var taskstatus;
             <c:if test="${!empty taskgroupList}">

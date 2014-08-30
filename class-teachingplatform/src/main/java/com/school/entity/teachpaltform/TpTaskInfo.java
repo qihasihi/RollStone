@@ -34,6 +34,24 @@ public class TpTaskInfo implements Serializable {
     private String imtaskcontent;
     private String imtaskattach;
     private Object isend;
+    private String imtaskanalysis;
+    private Integer imtaskattachtype;
+
+    public Integer getImtaskattachtype() {
+        return imtaskattachtype;
+    }
+
+    public void setImtaskattachtype(Integer imtaskattachtype) {
+        this.imtaskattachtype = imtaskattachtype;
+    }
+
+    public String getImtaskanalysis() {
+        return imtaskanalysis;
+    }
+
+    public void setImtaskanalysis(String imtaskanalysis) {
+        this.imtaskanalysis = imtaskanalysis;
+    }
 
     public Object getIsend() {
         return isend;

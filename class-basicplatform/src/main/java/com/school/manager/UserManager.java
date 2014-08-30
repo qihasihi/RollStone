@@ -18,7 +18,6 @@ import com.school.manager.inter.IOperateExcelManager;
 import com.school.manager.inter.IUserManager;
 import com.school.util.PageResult;
 @Service
-
 public class UserManager extends BaseManager<UserInfo> implements IUserManager{
 	@Autowired
 	@Qualifier("userDAO")

@@ -146,7 +146,7 @@
                     htm+='<tr>';
                     htm+='<td><a href="javascript:subData('+itm.resid+')" class="ico51" title="发任务"></a>';
                     htm+='<span class="'+itm.suffixtype+'"></span></td>';
-                    htm+='<td><p><a href="javascript:void(0);" >'+itm.resname+'</a></p>';
+                    htm+='<td><p>'+itm.resname+'</p>';
                     htm+='<p>'+introduce+'</p>';
                     htm+='<p class="jxxt_zhuanti_zy_add_text">'+username+'&nbsp;&nbsp;&nbsp;'+type+'&nbsp;&nbsp;&nbsp;'+itm.restypename+'</p></td>';
                     htm+='</tr>';

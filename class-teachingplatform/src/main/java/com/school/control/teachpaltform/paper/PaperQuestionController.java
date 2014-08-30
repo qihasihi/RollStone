@@ -218,6 +218,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
         PageResult p=new PageResult();
         p.setOrderBy("u.order_idx desc");
+        p.setPageSize(0);
+        p.setPageNo(0);
         PaperQuestion paperQuestion=new PaperQuestion();
         paperQuestion.setPaperid(Long.parseLong(paperid));
         List<PaperQuestion>paperQuestionList=this.paperQuestionManager.getList(paperQuestion,p);

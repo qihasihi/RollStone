@@ -300,10 +300,24 @@ public class PaperController extends BaseController<PaperInfo>{
             }
         }*/
 
+
+        //得到当前的所有问题
+        List<Map<String,Object>> listMapStr=this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
+        if(listMapStr==null||listMapStr.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(je.getAlertMsgAndBack());return null;
+        }
+        Object allquesidObj=listMapStr.get(0).get("ALLQUESID");
+        if(allquesidObj==null||allquesidObj.toString().trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(je.getAlertMsgAndBack());return null;
+        }
+
         request.setAttribute("pqList", tmpList);
         request.setAttribute("paper", tpCoursePaperList.get(0));
         request.setAttribute("courseid", courseid);
         request.setAttribute("coursename",teacherCourseList.get(0).getCoursename());
+        request.setAttribute("ALLQUESID", allquesidObj);
         return new ModelAndView("/teachpaltform/paper/preview-paper");
     }
 

@@ -70,10 +70,5 @@ public class  MicVideoPaperManager extends BaseManager<MicVideoPaperInfo> implem
 		return micvideopaperdao;
 	}
 
-	@Override
-	public String getNextId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
 

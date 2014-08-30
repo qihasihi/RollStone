@@ -12,6 +12,9 @@ var courseid="${courseid}";
 var paperid="${paper.paperid}";
 var pList,pBankList;
 var total;
+var allquesid="${ALLQUESID}";
+var paperSumScore="${paper.score}" || 0;
+var papertype=${paper.papertype};
 var quesOrderIdx=1;childOrderIdx=1;
 $(function(){
     pList = new PageControl( {
@@ -37,6 +40,36 @@ $(function(){
             $(itm).siblings().removeClass("crumb").end().addClass("crumb");
         })
     })
+
+
+
+    if(papertype==1||papertype==2){
+        var allqueslength=allquesid.split(",").length;
+        var avgScore=parseInt(paperSumScore/allqueslength);
+        $("span[name='avg_score']").html(avgScore);
+        if(paperSumScore%allqueslength>0){
+            //// 使用数组翻转函数
+            var yuScore=paperSumScore%allqueslength;
+            var s=jQuery.makeArray($("span[name='avg_score']")).reverse();
+            $.each(s,function(idx,itm){
+                if(yuScore<1)return;
+                $(itm).html(parseFloat($(itm).html())+1);
+                yuScore-=1;
+            });
+        }
+        var quesArray=$("table").filter(function(){return this.id.indexOf('dv_ques_')!=-1});
+        $.each(quesArray,function(ix,im){
+            var score=$("#sum_"+$(im).data().bind+"").html();
+            var childArray=$(im).find("span[name='avg_score'][id^='score_']");
+            if(childArray.length>0){
+                score=0;
+                $.each(childArray,function(i,m){
+                    score+=parseFloat($(m).html());
+                })
+            }
+            $("#sum_"+$(im).data().bind+"").html(score);
+        });
+    }
 });
 
 
@@ -117,7 +150,7 @@ function preeDoPageSub(pObj){
                 <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}">
                     <col class="w30"/>
                     <col class="w910"/>
-                    <caption><span class="f_right"> ${pq.score}分</span>
+                    <caption><span class="f_right" name="avg_score" id="sum_${pq.questionid}"> ${pq.score}</span>
                     </span>
                         <span  class="font-blue" id="sp_sortIdx">
                         <c:if test="${!empty pq.questionTeam}">
@@ -186,8 +219,8 @@ function preeDoPageSub(pObj){
                         <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
                             <tr>
                                 <td>&nbsp;</td>
-                                <td><p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}" id="score_${c.questionid}">
-                                        ${c.score}</span>分</span>
+                                <td><p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}" name="avg_score" id="score_${c.questionid}">
+                                        ${c.score}</span></span>
                                     <span data-bind="${c.questionid}" >
                                           <script type="text/javascript">
                                               var qteamSize="${fn:length(pq.questionTeam)}";
@@ -267,8 +300,8 @@ function preeDoPageSub(pObj){
                             <td>&nbsp;</td>
                             <td><p><strong>正确答案及答案解析：</strong></p>
                                 <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
-                                    <p><span class="width font-blue"><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}">${c.score}</span>
-                                        分</span><span data-bind="${c.questionid}"  class="font-blue">
+                                    <p><span class="width font-blue"><span class="font-blue" name="avg_score"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}">${c.score}</span>
+                                        </span><span data-bind="${c.questionid}"  class="font-blue">
                                           <script type="text/javascript">
                                               var qteamSize="${fn:length(pq.questionTeam)}";
                                               var qoIdx=quesOrderIdx;

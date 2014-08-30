@@ -203,7 +203,10 @@
                         if (rps.presult.recTotal > 0 && rps.presult.pageTotal > 1) {
                             var prev = (pageno - 1) > 0 ? (pageno - 1) : 1;
                             var next = (pageno + 1) >= rps.presult.pageTotal ? rps.presult.pageTotal : (pageno + 1);
-                            var page_split = '<span><a href="javascript:load_resource(' + type + ',1)"><b class="first"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + next + ')"><b class="after"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + rps.presult.pageTotal + ')"><b class="last"></b></a></span>';
+                          //  var page_split = '<span><a href="javascript:load_resource(' + type + ',1)"><b class="first"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + next + ')"><b class="after"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + rps.presult.pageTotal + ')"><b class="last"></b></a></span>';
+                            var page_split = '<span><a href="javascript:load_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span>&nbsp;';
+                            page_split+=pageno+'/'+rps.presult.pageTotal;
+                            page_split+='&nbsp;<span><a href="javascript:load_resource(' + type + ',' + next + ')"><b class="after"></b></a></span>';
                             $("#p_xnrj_page").html(page_split);
                         }
                         $("#sp_res_count").html(rps.presult.recTotal);

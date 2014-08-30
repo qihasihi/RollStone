@@ -116,6 +116,11 @@ public class QuestionInfo implements java.io.Serializable {
                 correctanswer=correctanswer.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
+
+            if(correctanswer.indexOf("<p>")==0)
+                correctanswer=correctanswer.replaceFirst("<p>","");
+            if(correctanswer.lastIndexOf("</p>")!=-1)
+                correctanswer=correctanswer.substring(0,correctanswer.lastIndexOf("</p>"));
         }
         return correctanswer;
     }
@@ -157,6 +162,10 @@ public class QuestionInfo implements java.io.Serializable {
                 content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
                 content=content.replace("'", "＇");
             }
+            if(content.indexOf("<p>")==0)
+                content=content.replaceFirst("<p>","");
+            if(content.lastIndexOf("</p>")!=-1)
+                content=content.substring(0,content.lastIndexOf("</p>"));
         }
         return content;
     }
@@ -287,7 +296,12 @@ public class QuestionInfo implements java.io.Serializable {
                 //content=content.replace(" ", "&nbsp;");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
-        }
+            if(analysis.indexOf("<p>")==0)
+                analysis=analysis.replaceFirst("<p>","");
+            if(analysis.lastIndexOf("</p>")!=-1)
+                analysis=analysis.substring(0,analysis.lastIndexOf("</p>"));
+        }else
+            analysis="无";
         return analysis;
     }
     public java.lang.String getSaveAnalysis(){

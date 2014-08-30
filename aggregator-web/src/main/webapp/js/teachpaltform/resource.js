@@ -566,6 +566,7 @@ function uploadResource() {
 }
 
 
+var isTishi=false;
 /**
  * 上传资源 usertype 1 学生2教师
  *
@@ -579,7 +580,7 @@ function doUploadResource(usertype) {
     var uploadfile = $("#uploadfile");
     var resid = nextid;
     var allowTypes='.xls,.xlsx,.doc,.docx,.ppt,.pptx,.xml,.pdf,.txt,.vsd,.rtf',msg='数据验证完毕!确认提交?';
-
+    var isConvert=false;
     if (typeof resid == 'undefined') {
         alert('异常错误!系统未获取到资源标识!');
         return;
@@ -645,11 +646,27 @@ function doUploadResource(usertype) {
         }
         if(returnVal){
             msg+='\n\n提示：当前文件需要转换请等待!';
+            isConvert=true;
         }
+
+      /*   if(!isTishi){
+            $("#s_tishi").html('');
+            if(isConvert)
+                $("#s_tishi").html("提示：当前文件需要转换请等待!");
+            showModel('dv_tishi');
+            isTishi=true;
+            return;
+        } */
+
 
         if (!confirm(msg)) {
             return;
+        }else{
+            if(isConvert){
+                showModel('dv_loading','',200);
+            }
         }
+
         /*提交按钮不可用*/
         $("#a_submit").remove();
         $.ajax({
@@ -665,6 +682,7 @@ function doUploadResource(usertype) {
                 if (rps.type == "error") {
                     alert(rps.msg);
                 } else {
+                    closeModel('dv_loading');
                     alert(rps.msg);
                     if (operate_type.length) {
                         if (window.opener != undefined) {
@@ -728,11 +746,29 @@ function doUploadResource(usertype) {
                     }
                     if(returnVal){
                         msg+='\n\n提示：当前文件需要转换请等待!';
+                        isConvert=true;
                     }
 
                     if (!confirm(msg)) {
                         return;
+                    }else{
+                        if(isConvert){
+                            showModel('dv_loading','',200);
+                        }
                     }
+
+
+
+                  /*  if(!isTishi){
+                        $("#s_tishi").html('');
+                        if(isConvert)
+                            $("#s_tishi").html("提示：当前文件需要转换请等待!");
+                        showModel('dv_tishi');
+                        isTishi=true;
+                        return;
+                    } */
+
+
                     /*提交按钮不可用*/
                     $("#a_submit").remove();
                     $.ajax({
@@ -748,7 +784,9 @@ function doUploadResource(usertype) {
                             if (rps.type == "error") {
                                 alert(rps.msg);
                             } else {
+                                closeModel('dv_loading');
                                 alert(rps.msg);
+
                                 if (operate_type.length) {
                                     if (window.opener != undefined) {
                                         //for chrome
@@ -962,7 +1000,10 @@ function load_resource(type, pageno, isinit) {
                 if (rps.presult.recTotal > 0 && rps.presult.pageTotal > 1) {
                     var prev = (parseInt(pageno) - 1) > 0 ? (parseInt(pageno) - 1) : 1;
                     var next = (parseInt(pageno) + 1) >= rps.presult.pageTotal ? rps.presult.pageTotal : (parseInt(pageno) + 1);
-                    var page_split = '<span><a href="javascript:load_resource(' + type + ',1)"><b class="first"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + next + ')"><b class="after"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + rps.presult.pageTotal + ')"><b class="last"></b></a></span>';
+                   // var page_split = '<span><a href="javascript:load_resource(' + type + ',1)"><b class="first"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + next + ')"><b class="after"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + rps.presult.pageTotal + ')"><b class="last"></b></a></span>';
+                    var page_split = '<span><a href="javascript:load_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span>&nbsp;';
+                    page_split+=pageno+'/'+rps.presult.pageTotal;
+                    page_split+='&nbsp;<span><a href="javascript:load_resource(' + type + ',' + next + ')"><b class="after"></b></a></span>';
                     $("#p_xnrj_page").html(page_split);
                 }
             }
@@ -1079,7 +1120,10 @@ function load_stu_resource(type, pageno, isinit) {
                 if (rps.presult.recTotal > 0 && rps.presult.pageTotal > 1) {
                     var prev = (parseInt(pageno) - 1) > 0 ? (parseInt(pageno) - 1) : 1;
                     var next = (parseInt(pageno) + 1) >= rps.presult.pageTotal ? rps.presult.pageTotal : (parseInt(pageno) + 1);
-                    var page_split = '<span><a href="javascript:load_stu_resource(' + type + ',1)"><b class="first"></b></a></span><span><a href="javascript:load_stu_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span><span><a href="javascript:load_stu_resource(' + type + ',' + next + ')"><b class="after"></b></a></span><span><a href="javascript:load_stu_resource(' + type + ',' + rps.presult.pageTotal + ')"><b class="last"></b></a></span>';
+                    //var page_split = '<span><a href="javascript:load_stu_resource(' + type + ',1)"><b class="first"></b></a></span><span><a href="javascript:load_stu_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span><span><a href="javascript:load_stu_resource(' + type + ',' + next + ')"><b class="after"></b></a></span><span><a href="javascript:load_stu_resource(' + type + ',' + rps.presult.pageTotal + ')"><b class="last"></b></a></span>';
+                    var page_split = '<span><a href="javascript:load_stu_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span>&nbsp;';
+                    page_split+=pageno+'/'+rps.presult.pageTotal;
+                    page_split+='&nbsp;<span><a href="javascript:load_stu_resource(' + type + ',' + next + ')"><b class="after"></b></a></span>';
                     $("#p_xnrj_page").html(page_split);
                 }
             }
@@ -1197,6 +1241,11 @@ function doDelResource(resid) {
             } else {
                 alert(rps.msg);
                 $('#li_' + resid + '').remove();
+                var aObj = $('a').filter(function () {
+                    return this.id.indexOf('a_for_') != -1
+                });
+                if (aObj.length > 0)
+                    $(aObj).get(0).click();
             }
         }
     });
@@ -1383,18 +1432,15 @@ function swfobjPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname, 
  *            播放器的位置
  * @return
  */
+//var player;
 function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname, filetype, imagepath,resid) {
+
     // 清空
     // 由于SWFplayer生成的时候，是替换DIV层。如果想重新生成一个,需重新生成DIV并且删除SWFPlayer
-    if (typeof ($("object[name='player1']")) != "undefined")
+    /*if (typeof ($("object[name='player1']")) != "undefined")
         $("object[name='player1']").parent()
             .append('<div id="div_show" style="width:560px;height:500px;"></div>');
-    $("object[name='player1']").remove();
-
-    if (typeof ($("object[name='div_show']")) != "undefined")
-        $("object[name='div_show']").parent()
-            .append('<div id="div_show" style="width:560px;height:500px;"></div>');
-    $("object[name='div_show']").remove();
+    $("object[name='player1']").remove(); */
 
     var lastnameobj = ".mp4";
     if (lastname != null && lastname.length > 0)
@@ -1411,11 +1457,16 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
         filepath = fileSystemIpPort   + resmd5id + "/" + filemd5name+lastname;
     // 配置参数
 
+
+    if (typeof(imagepath) != "undefined" && imagepath.Trim().length > 0)
+        jwplayerSetup.image = imagepath;
+
     var jwplayerSetup = {
-        'id': 'player1',
+        'id': 'player'+new Date().getTime(),
         'width': '560',
         'height': '500',
-        'file': filepath,
+        'playlist': 'util/rss.jsp?filepath='+filepath+"&imgurl="+imagepath,
+            //[{file:filepath}],
         'primary': 'flash',
         'controlbar': 'over',
         'controlbar.idlehide': 'true',
@@ -1430,7 +1481,7 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
             {type: 'html5'}
         ], events: {
             onReady: function () {
-                jwplayer().play();
+               jwplayer().play();
             }
         }
     };
@@ -1456,9 +1507,25 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
 
 
     // 加载
-    if (typeof(imagepath) != "undefined" && imagepath.Trim().length > 0)
-        jwplayerSetup.image = imagepath;
-    jwplayer(playeraddressid).setup(jwplayerSetup);
+
+
+
+
+
+  /*  if(typeof jwplayer(playeraddressid)!='undefined'&&$("object[id='div_show']").length>0){
+        //  $("object[id='div_show']").parent().after('<div id="div_show" style="width:560px;height:500px;"></div>');
+        //jwplayer(playeraddressid).destroyPlayer();
+        //  jwplayer(playeraddressid).remove();
+        jwplayer(playeraddressid).load( [{
+            sources: [{
+                file: filepath
+            }]
+        }]);
+    }else */
+        jwplayer(playeraddressid).setup(jwplayerSetup);
+
+
+
     if (isshow)
         showModel("swfplayer", false);
 }
@@ -1678,10 +1745,17 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
             '<div id="div_show" style="width:560px;height:500px;"></div>');
     $("object[name='player1']").remove();
 
-    if (typeof ($("object[name='div_show']")) != "undefined")
+
+
+   /* if (typeof ($("object[name='div_show']")) != "undefined")
         $("object[name='div_show']").parent()
             .append('<div id="div_show" style="width:560px;height:500px;"></div>');
     $("object[name='div_show']").remove();
+
+    if (typeof ($("div[id='div_show_wrapper']")) != "undefined")
+        $("div[id='div_show_wrapper']").after('<div id="div_show" style="width:560px;height:500px;"></div>');
+    $("div[id='div_show_wrapper']").remove(); */
+
     //删除音频
     if (typeof($("object[id='b_sound']")))
         $("object[name='player1']").after(
@@ -1692,6 +1766,9 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
         $("object[id='FlexPaperViewer']").after(
             '<div id="div_show" style="width:560px;height:500px;"></div>');
     $("object[id='FlexPaperViewer']").remove();
+
+
+    $("#p_tishi").html('');
     var lastname = "";
     if (typeof(fname) != 'undefined' && fname.Trim().length > 0 && fname.indexOf(".") != -1)
         lastname = fname.substring(fname.lastIndexOf(".")).toLowerCase();
@@ -1699,9 +1776,10 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     if (type == 1) {
         htm = "<img src='" + preimg + "' width='560' height='370'  title='" + fname + "' id='img_res'  />";
     } else if (type == 2) {
-        htm += "<div style='color:gray;font-size:10px' id='progress_1'>";
-        htm += "</div>";
+       // htm += "<div style='color:gray;font-size:10px' id='progress_1'>";
+        //htm += "</div>";
         videoConvertProgress(resid, fname, md5name, 1, md5id, fileSystemIpPort);
+        $("#p_tishi").html('提示：视频限MP4格式，建议使用格式工厂等软件转换，视频编码为：AVC（H264）,比特率为：300-500KB/秒');
     } else if (type == 4) {
         loadSwfReview(swfpath, divid, 560, 500);
     } else if (type == 3) {
@@ -1890,6 +1968,8 @@ function videoConvertProgress(resid, fname, md5fname, idxstate, path, baseIpPort
         var lastname = "";
         if (typeof(fname) != 'undefined' && fname.Trim().length > 0 && fname.indexOf(".") != -1)
             lastname = fname.substring(fname.lastIndexOf(".")).toLowerCase();
+        loadSWFPlayer(path, md5fname, 'div_show', false, lastname,'mp4','',resid);
+        return;
         //var urlpath="http://localhost:1990/fileoperate/getvideostate.jsp?res_id="+resid+"&filename="+encodeURI(fname);
         $.getJSON(urlpath, {res_id: resid, file_name_md5: md5fname + lastname, path: path}, function (data) {
             if (data != null && data != "") {
@@ -3297,10 +3377,10 @@ function getMoreResources(){
                                     return false;
                                 }
                             });
-                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+itm.HD_NAME+'</p></a>' +
+                            htm+='<li><a class="kapian" target="_blank" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+itm.HD_NAME+'</p></a>' +
                                 '<p class="pic">'+h+'</p></li>';
                         }else{
-                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+itm.HD_NAME+'</p></a>' +
+                            htm+='<li><a class="kapian" target="_blank" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+itm.HD_NAME+'</p></a>' +
                                 '<p class="pic"><a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a></p></li>';
                         }
 
@@ -3353,9 +3433,9 @@ function getMoreZhishi(){
                                     return false;
                                 }
                             });
-                            htm+='<li><a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a>'+h+'</li>';
+                            htm+='<li><a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a>'+h+'</li>';
                         }else{
-                            htm+='<li><a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a></li>';
+                            htm+='<li><a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a></li>';
                         }
 
                     });
@@ -3414,10 +3494,10 @@ function getRemoteResources(type){
                                     return false;
                                 }
                             });
-                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+hname+'</p></a>' +
+                            htm+='<li><a class="kapian" target="_blank" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+hname+'</p></a>' +
                                 '<p class="pic">'+h+'</p></li>';
                         }else{
-                            htm+='<li><a class="kapian" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+hname+'</p></a>' +
+                            htm+='<li><a class="kapian" target="_blank" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+hname+'</p></a>' +
                                 '<p class="pic"><a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a></p></li>';
                         }
                     });
@@ -3445,9 +3525,9 @@ function getRemoteResources(type){
                                     return false;
                                 }
                             });
-                            htm+='<li><a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a>'+h+'</li>';
+                            htm+='<li><a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a>'+h+'</li>';
                         }else{
-                            htm+='<li><a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a></li>';
+                            htm+='<li><a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a></li>';
                         }
                     });
                     $("#zhishi").html(htm);

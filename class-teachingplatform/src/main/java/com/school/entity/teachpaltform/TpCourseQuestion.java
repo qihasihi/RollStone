@@ -243,7 +243,7 @@ public class TpCourseQuestion implements Serializable{
     }
     public java.lang.String getContent(){
         String content=this.getQuestioninfo().getContent();
-        if(content!=null&&content.trim().length()>0){
+       /* if(content!=null&&content.trim().length()>0){
             String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(content.indexOf("_QUESTIONPIC+")!=-1)
                 content=content.replace("_QUESTIONPIC+",t);
@@ -254,7 +254,7 @@ public class TpCourseQuestion implements Serializable{
                 //content=content.replace(" ", "&nbsp;");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
-        }
+        }*/
         return content;
     }
     public void setContent(java.lang.String content){

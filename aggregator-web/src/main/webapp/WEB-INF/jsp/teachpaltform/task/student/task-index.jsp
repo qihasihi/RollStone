@@ -416,7 +416,7 @@
         }
 
 
-       /* if(ueditorArray.length>0){
+       if(ueditorArray.length>0){
             for(var i=0;i<ueditorArray.length;i++){
                 var id=ueditorArray[i];
                 id= new UE.ui.Editor({
@@ -434,7 +434,7 @@
                 id.render('txt_taskanswer_'+ueditorArray[i]+'');
                 ueditorObjArray.push(id);
             }
-        } */
+        }
 
 
 

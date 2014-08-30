@@ -25,6 +25,10 @@
 
             $("#time_rdo0").attr("checked",true);
 
+            <c:if test="${empty hasVideo}">
+                $("#task_type option[value=6]").remove();
+            </c:if>
+
 
             $("input[name='time_rdo']").bind("click",function(){
                 if($(this).val()==1){

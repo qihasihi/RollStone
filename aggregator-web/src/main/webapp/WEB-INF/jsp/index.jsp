@@ -957,13 +957,12 @@ function closeEditUser(){
     </div>
 </div>
 <script type="text/javascript">
-    $(function(){
         <%if(!isStudent){%>
         <c:if test="${empty teachClass}">
                 $("#sp_role").html($("#sp_role").html().replace("任课老师&nbsp;&nbsp;",""));
          </c:if>
         <%}%>
-    });
+
 </script>
 <%@include file="/util/foot.jsp"%>
 </body>

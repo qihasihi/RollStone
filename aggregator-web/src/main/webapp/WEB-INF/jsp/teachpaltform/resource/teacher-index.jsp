@@ -61,6 +61,7 @@
 
                 </div>
                 <div class="left" id="div_show"></div>
+                <div><p id="p_tishi"></p></div>
                 <div class="jxxt_zhuanti_zy_pl public_input">
                     <ul id="ul_comment">
                         <li id="li_studynote"><a href="javascript:loadStudyNotes(2);">学习心得</a></li>

@@ -804,16 +804,17 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
         JSONObject jb=JSONObject.fromObject(dataStr);
         //拆分json字符串，得到各个参数
-        String courseid=jb.containsKey("courseid")?jb.getString("courseid"):"";
-        String tasktype = jb.containsKey("tasktype")?jb.getString("tasktype"):"";
-        String tasktitle = jb.containsKey("tasktitle")?jb.getString("tasktitle"):"";
-        String taskcontent = jb.containsKey("taskcontent")?jb.getString("taskcontent"):"";
-        String taskanalysis = jb.containsKey("taskanalysis")?jb.getString("taskanalysis"):"";
-        String taskattach = jb.containsKey("taskattach")?jb.getString("taskattach"):"";
+        int courseid=jb.containsKey("courseId")?jb.getInt("courseId"):0;
+        int tasktype = jb.containsKey("taskType")?jb.getInt("taskType"):0;
+        String tasktitle = jb.containsKey("taskTitle")?jb.getString("taskTitle"):"";
+        String taskcontent = jb.containsKey("taskContent")?jb.getString("taskContent"):"";
+        String taskanalysis = jb.containsKey("taskAnalysis")?jb.getString("taskAnalysis"):"";
+        String taskattach = jb.containsKey("taskAttach")?jb.getString("taskAttach"):"";
+        int attachtype = jb.containsKey("attachType")?jb.getInt("attachType"):0;
         Object classesObj = jb.containsKey("classes")?jb.get("classes"):"";
         //验证专题是否存在
         TpCourseInfo courseInfo=new TpCourseInfo();
-        courseInfo.setCourseid(Long.parseLong(courseid));
+        courseInfo.setCourseid(Long.parseLong(courseid+""));
         List<TpCourseInfo>courseList=this.tpCourseManager.getList(courseInfo,null);
         if(courseList==null||courseList.size()<1){
             response.getWriter().print("");
@@ -824,7 +825,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
          */
 
         TpTaskInfo t=new TpTaskInfo();
-        t.setCourseid(Long.parseLong(courseid));
+        t.setCourseid(Long.parseLong(courseid+""));
         //查询没被我删除的任务
         t.setSelecttype(1);
         t.setLoginuserid(userList.get(0).getUserid());
@@ -849,11 +850,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         tpTaskInfo.setOrderidx(orderIdx);
         tpTaskInfo.setTaskid(tasknextid);
         tpTaskInfo.setTaskname(tasktitle);
-        tpTaskInfo.setTaskremark(taskanalysis);
-        tpTaskInfo.setImtaskattach(taskattach);
+        tpTaskInfo.setImtaskanalysis(taskanalysis);
+        if(taskattach!=null&&taskattach.length()>0){
+            tpTaskInfo.setImtaskattach(taskattach);
+            tpTaskInfo.setImtaskattachtype(attachtype);
+        }
         tpTaskInfo.setImtaskcontent(taskcontent);
-        tpTaskInfo.setTasktype(Integer.parseInt(tasktype));
-        tpTaskInfo.setCourseid(Long.parseLong(courseid));
+        tpTaskInfo.setTasktype(tasktype);
+        tpTaskInfo.setCourseid(Long.parseLong(courseid+""));
         sql = new StringBuilder();
         objList = new ArrayList<Object>();
         objList=this.tpTaskManager.getSaveSql(tpTaskInfo,sql);
@@ -865,15 +869,15 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             for(int i = 0;i<jr.size();i++){
                 JSONObject jsonObject = JSONObject.fromObject(jr.get(i));
                 //拆分json字符串，得到各个参数
-                String classid=jsonObject.containsKey("toclassid")?jsonObject.getString("toclassid"):"";
-                String classtype=jsonObject.containsKey("classtype")?jsonObject.getString("classtype"):"";
-                String starttime=jsonObject.containsKey("starttime")?jsonObject.getString("starttime"):"";
-                String endtime=jsonObject.containsKey("endtime")?jsonObject.getString("endtime"):"";
+                int classid=jsonObject.containsKey("taskUserTeamId")?jsonObject.getInt("taskUserTeamId"):0;
+                int classtype=jsonObject.containsKey("taskUserType")?jsonObject.getInt("taskUserType"):0;
+                String starttime=jsonObject.containsKey("startTime")?jsonObject.getString("startTime"):"";
+                String endtime=jsonObject.containsKey("endTime")?jsonObject.getString("endTime"):"";
                 TpTaskAllotInfo tpTaskAllotInfo = new TpTaskAllotInfo();
-                tpTaskAllotInfo.setCourseid(Long.parseLong(courseid));
+                tpTaskAllotInfo.setCourseid(Long.parseLong(courseid+""));
                 tpTaskAllotInfo.setTaskid(tasknextid);
-                tpTaskAllotInfo.setUsertype(Integer.parseInt(classtype));
-                tpTaskAllotInfo.setUsertypeid(Long.parseLong(classid));
+                tpTaskAllotInfo.setUsertype(classtype);
+                tpTaskAllotInfo.setUsertypeid(Long.parseLong(classid+""));
                 tpTaskAllotInfo.setBtime(UtilTool.StringConvertToDate(starttime));
                 tpTaskAllotInfo.setEtime(UtilTool.StringConvertToDate(endtime));
                 sql = new StringBuilder();

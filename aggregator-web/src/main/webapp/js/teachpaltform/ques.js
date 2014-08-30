@@ -389,7 +389,7 @@ function doAddQuestion(){
     var quesanswer=$("#ques_answer").html();
     var correctanswer=$("#correct_answer").html();
     param.questype=questype;
-    if(quesname.Trim().length<1){
+    if(quesname.Trim().length<1||quesname.Trim()=='点击编辑题干……'){
         alert('提示：题干不能为空!');
         $("#ques_name").focus();
         return;
