@@ -40,7 +40,8 @@
             var taskId=$("#txt_taskId").val();
             var time=$("#txt_time").val();
             var paperId=$("#txt_paperId").val();
-            var param={schoolId:schoolId,jid:jid,classId:classId,time:time,paperId:paperId};
+            var userType=$("#txt_userType").val();
+            var param={schoolId:schoolId,jid:jid,classId:classId,time:time,paperId:paperId,userType:userType};
                  param.taskId=taskId;
             param.method=methodName;
 
@@ -76,28 +77,33 @@
                 </tr>
                 <tr>
                     <td style="width:150px">JID:</td>
-                    <td><input type="text" name="jid" id="txt_jid" value="211"/></td>
-                    <td style="width:250px"></td>
+                    <td><input type="text" name="jid" id="txt_jid" value="-12542"/></td>
+                    <td style="width:350px"></td>
                 </tr>
                 <tr>
                     <td>schoolId:</td>
-                    <td><input type="text" name="schoolId" id="txt_schoolId" value="50002"/></td>
+                    <td><input type="text" name="schoolId" id="txt_schoolId" value="50000"/></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>classId:</td>
-                    <td><input type="text" name="classId" id="txt_classId" value="19"/></td>
+                    <td><input type="text" name="classId" id="txt_classId" value="18"/></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>taskId:</td>
-                    <td><input type="text" name="taskId" id="txt_taskId" value="-498319879833"/></td>
+                    <td><input type="text" name="taskId" id="txt_taskId" value="-3878335575180"/></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>paperId:</td>
-                    <td><input type="text" name="paperId" id="txt_paperId" value="-492263329920"/></td>
+                    <td><input type="text" name="paperId" id="txt_paperId" value="544536001443"/></td>
                     <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>userType:</td>
+                    <td><input type="text" name="userType" id="txt_userType" value="1"/></td>
+                    <td>提示：1，2：为老师&nbsp;&nbsp;3，4：为学生&nbsp;&nbsp; 6：为家长</td>
                 </tr>
                 <tr>
                     <td>time:</td>

@@ -15,6 +15,7 @@
         var quesSize="${quesSize}";
         var courseid="${courseid}";
         var taskid="${taskid}";
+        var classid="${classid}";
         var paperid="${paperid}";
         var allquesidObj="${allquesidObj}";
         var sumScore=${!empty paperObj.score?paperObj.score:100},avgScore=parseInt(sumScore/quesSize);
@@ -47,8 +48,18 @@
                 scoreArray:scoreArray,
                 papertype:papertype,
                 subQuesId:subQuesId,
+                classid:classid,
+                userType:"${userType}",
                 userid:"${userid}"
             });
+
+            //重写相关FORM submit事件,不让其真正提交
+            document.getElementById("fm_free").submit=function(){
+                nextNum(-1,tqControler);
+            }
+            document.getElementById("fm_next").submit=function(){
+                nextNum(1,tqControler);
+            }
         });
     </script>
 </head>
@@ -56,7 +67,11 @@
 <!--试卷里的试题-->
 <div class="zxcs_test" id="dv_question">
 </div>
-<a href="javascript:tqControler.nextNum(-1)">上一题</a>
-<a href="javascript:tqControler.nextNum(1)">下一题</a>
+<a href="javascript:;" onclick="fm_free.submit();">上一题</a>
+<a  href="javascript:;" onclick="fm_next.submit();">下一题</a>
+<form action="#"  id="fm_free" method="post">
+</form>
+<form  action="#"  id="fm_next" method="post">
+</form>
 </body>
 </html>

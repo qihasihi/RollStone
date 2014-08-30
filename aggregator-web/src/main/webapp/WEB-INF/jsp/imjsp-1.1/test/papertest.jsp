@@ -13,6 +13,7 @@
     <script type="text/javascript">
         var quesSize="${quesSize}";
         var courseid="${courseid}";
+        var clsid="${classid}";
         var taskid="${taskid}";
         var subQuesId="${!empty answerQuesId?answerQuesId:","}";
         var paperid="${paperid}";
@@ -20,6 +21,7 @@
         var sumScore=${!empty paperObj.score?paperObj.score:100},avgScore=parseInt(sumScore/quesSize);
         var scoreArray=[];
         var papertype="${paperObj.papertype}";
+        var userType="${userType}";
         var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         var tqControler=null;
         $(function(){
@@ -47,8 +49,20 @@
                 scoreArray:scoreArray,
                 papertype:papertype,
                 subQuesId:subQuesId,
+                classid:clsid,
+                userType:userType,
                 userid:"${userid}"
             });
+
+            document.getElementById("fm_free").submit=function(){
+                nextNum(-1,tqControler,1);
+            }
+            document.getElementById("fm_next").submit=function(){
+                nextNum(1,tqControler,1);
+            }
+            document.getElementById("fm_subPaper").submit=function(){
+                subPaper(tqControler);
+            }
         });
     </script>
 </head>
@@ -56,8 +70,14 @@
 <!--试卷里的试题-->
 <div class="zxcs_test" id="dv_question">
 </div>
-<a href="javascript:tqControler.freeSubQuesAnswer(-1)">上一题</a>
-<a href="javascript:tqControler.freeSubQuesAnswer(1)">下一题</a>
-<a href="javascript:tqControler.subPaper()">交卷</a>
+<a href="javascript:;" onclick="fm_free.submit();">上一题</a>
+<a  href="javascript:;" onclick="fm_next.submit();">下一题</a>
+<a href="javascript:;" onclick="fm_subPaper.submit()">交卷</a>
+<form action="#" id="fm_free" method="post">
+</form>
+<form  action="#"  id="fm_next" method="post">
+</form>
+<form action="#"  id="fm_subPaper" method="post">
+</form>
 </body>
 </html>

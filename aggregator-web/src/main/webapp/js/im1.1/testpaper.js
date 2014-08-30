@@ -2,6 +2,8 @@
  * Created by zhengzhou on 14-8-25.
  */
 var subQuesId=",";
+
+/*************************************答题作答*************************/
 var TestPaperQues;
 if (TestPaperQues == undefined) {
     TestPaperQues = function(settings) {
@@ -115,6 +117,7 @@ TestPaperQues.prototype.subPaper=function(){
                 alert(rps.msg);
 //                // 进入详情页面
                 var lo='imapi1_1?m=testDetail&userid='+cf.userid+'&taskid='+cf.taskid+'&paperid='+cf.paperid+'&courseid='+cf.courseid;
+                    lo+='&classid='+cf.classid+'&userType='+cf.userType;
                 location.href=lo;
             }else
                 alert(rps.msg);
@@ -312,7 +315,8 @@ TestPaperQues.prototype.loadQues=function(){
         data:{userid:this.config.userid,
             quesid:this.currentQuesObj.quesid,
             paperid:this.config.paperid,
-            courseid:this.config.courseid},
+            courseid:this.config.courseid
+        },
         error:function(){alert('异常错误，原因：未知!');},
         success:function(rps){
             //失败
@@ -454,6 +458,7 @@ TestPaperQues.prototype.loadQues=function(){
 
 
 
+/**************************查看不作答***************************************************/
 
 
 
@@ -528,7 +533,10 @@ TestPaperDetail.prototype.loadQues=function(){
         data:{userid:this.config.userid,
             quesid:this.currentQuesObj.quesid,
             paperid:this.config.paperid,
-            courseid:this.config.courseid},
+            courseid:this.config.courseid,
+            classid:this.config.classid,
+            userType:this.config.userType,
+            taskid:this.config.taskid},
         error:function(){alert('异常错误，原因：未知!');},
         success:function(rps){
             //失败
@@ -591,7 +599,13 @@ TestPaperDetail.prototype.loadQues=function(){
                     });
                     h+='</ul>';
                 }
-                h+='<p class="jiexi"><span>19%答对</span>答案与解析</p>';
+                h+='<p class="jiexi">';
+                if(config.userType!=2){
+                    var zqlv=quesObj.rightLv;
+                    if(typeof(zqlv)!="undefined"&&zqlv!=null)
+                        h+='<span>'+quesObj.rightLv+'%答对</span>';
+                }
+                h+='答案与解析</p>';
                 h+='<div>'+quesObj.analysis+'</div>';
                 h+='</div>';
                 if($("#dv_q_"+quesObj.questionid).length>0)
@@ -679,6 +693,27 @@ TestPaperDetail.prototype.loadQues=function(){
                             }
                         }
                     }
+                    //如果是选择题，则有每题正确率
+                    if(config.userType==2&&typeof(quesObj.optTJMapList)!="undefined"&&quesObj.optTJMapList.length>0){
+                        switch(quesObj.questiontype){
+                            case 3:
+                            case 7:
+                            case 4:
+                            case 8:
+                                $.each(quesObj.optTJMapList,function(zIx,zIm){
+                                    var val=$("#dv_q_"+quesObj.questionid+" .right").parent().parent().children().children("input[name='rdo_answer"+quesObj.questionid+"']").val();
+                                    if(val.Trim()==zIm.OPTION_TYPE){
+                                        $("#dv_q_"+quesObj.questionid+" input[value*='"+zIm.OPTION_TYPE+"']")
+                                            .parent().parent().append('<p class="green">'+zIm.BILI+'%正确 </p>');
+                                    }else
+                                        $("#dv_q_"+quesObj.questionid+" input[value*='"+zIm.OPTION_TYPE+"']")
+                                            .parent().parent().append('<p class="red">'+zIm.BILI+'%错误 </p>');
+                                });
+                                break;
+                        }
+                        //去除对勾
+                        $("#dv_q_"+quesObj.questionid+" .right").remove();
+                    }
                 }
             }
         }
@@ -687,3 +722,30 @@ TestPaperDetail.prototype.loadQues=function(){
     $.ajax(ajxObj);
 };
 
+/****************************公用方法*******************************/
+/**
+ * 下一题，上一题
+ * @param type  -1:上一题   1:下一题
+ * @param obj   控件对象
+ * @param isAnswer   是否答题
+ * @returns {boolean}
+ */
+function nextNum(type,obj,isAnswer){
+    if(typeof(type)!="undefined"&&typeof(obj)=="object"){
+        if(typeof(isAnswer)!="undefined"&&isAnswer==1)
+            obj.freeSubQuesAnswer(type);
+        else
+            obj.nextNum(type);
+    }
+    return(false);
+}
+/**
+ * 提交试卷
+ * @param obj 控件对象
+ * @returns {boolean}
+ */
+function subPaper(obj){
+    if(typeof(obj)=="object")
+        obj.subPaper();
+    return(false);
+}

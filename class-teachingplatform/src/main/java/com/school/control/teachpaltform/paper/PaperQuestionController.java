@@ -3720,6 +3720,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         String quesid=request.getParameter("quesid");
         String paperid=request.getParameter("paperid");
         String courseid=request.getParameter("courseid");
+        String classid=request.getParameter("classid");
+        String taskid=request.getParameter("taskid");
         String uid=request.getParameter("userid");
         JsonEntity jsonEntity=new JsonEntity();
         if(quesid==null||quesid.toString().trim().length()<1||paperid==null||paperid.toString().trim().length()<1||courseid==null||courseid.trim().length()<1){
@@ -3769,6 +3771,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
+
+
+
 
         //得到是否存在于当前试卷中
         //得到当前的所有问题
@@ -3825,7 +3830,41 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg("错误。当前试题不存在于试卷中。请核对!");
             response.getWriter().println(jsonEntity.toJSON());return;
         }
+
+
         QuestionInfo tmpq=quesList.get(0);
+        if(tmpq.getQuestiontype()==3||tmpq.getQuestiontype()==7||tmpq.getQuestiontype()==4||tmpq.getQuestiontype()==8){
+            //得到该题的正确率
+            if(classid!=null&&classid.trim().length()>0&&taskid!=null&&classid.trim().length()>0){
+                //如果是选择题，则出正确率，选项等分数
+                List<Map<String,Object>> zqlMapList=this.paperQuestionManager.getClsPaperQuesZQLV(
+                        Long.parseLong(paperid),
+                        Long.parseLong(quesid),
+                        Integer.parseInt(classid.trim()),
+                        Long.parseLong(taskid.trim()));
+                if(zqlMapList==null||zqlMapList.size()<1||zqlMapList.get(0)==null||!zqlMapList.get(0).containsKey("ZQL")){
+                    jsonEntity.setMsg("异常错误，请刷新页面重试");
+                    response.getWriter().println(jsonEntity.toJSON());
+                    return;
+                }
+              //正确率
+                if(zqlMapList.get(0).get("ZQL")!=null){
+                    tmpq.setRightLv(Float.parseFloat(zqlMapList.get(0).get("ZQL").toString()));
+                }
+              //每个选项的正确率
+              List<Map<String,Object>> optTJMapList=this.paperQuestionManager.getClsPaperQuesOptTJ(
+                        Long.parseLong(paperid),
+                        Long.parseLong(quesid),
+                        Integer.parseInt(classid.trim()),
+                        Long.parseLong(taskid.trim()));
+               if(optTJMapList==null||optTJMapList.size()<1||optTJMapList.get(0)==null){
+                   jsonEntity.setMsg("异常错误，请刷新页面重试");
+                    response.getWriter().println(jsonEntity.toJSON());
+                    return;
+                }
+                tmpq.setOptTJMapList(optTJMapList);
+            }
+        }
         //加载分数
         List<Map<String,Object>> scoreMapList=this.paperQuestionManager.getPaperQuesAllScore(Long.parseLong(paperid.trim()),Long.parseLong(quesid),Long.parseLong(courseid));
         if(scoreMapList==null||scoreMapList.size()<1||!scoreMapList.get(0).containsKey("SCORE")||scoreMapList.get(0).get("SCORE")==null){

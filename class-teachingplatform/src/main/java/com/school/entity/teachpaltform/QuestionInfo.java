@@ -7,8 +7,16 @@ import java.io.Serializable;
 import java.util.*;
 
 public class QuestionInfo implements java.io.Serializable {
+    /**
+     * 该题的正确率
+     */
+    private float rightLv;
+    /**
+     * 每个选项的正确率
+     */
+    private List<Map<String, Object>> optTJMapList;
 
-	public void QuestionInfo (){}
+    public void QuestionInfo (){}
    
     private java.lang.String city;
     private Long questionid;
@@ -335,4 +343,19 @@ public class QuestionInfo implements java.io.Serializable {
     }
 
 
+    public void setRightLv(float rightLv) {
+        this.rightLv = rightLv;
+    }
+
+    public float getRightLv() {
+        return rightLv;
+    }
+
+    public void setOptTJMapList(List<Map<String, Object>> optTJMapList) {
+        this.optTJMapList = optTJMapList;
+    }
+
+    public List<Map<String, Object>> getOptTJMapList() {
+        return optTJMapList;
+    }
 }
