@@ -1388,29 +1388,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
 		request.setAttribute("tasktypeList", tasktypeList);
 		request.setAttribute("courseclassList", courseclassList);
 		request.setAttribute("groupList", groupList);
-		
-		//该任务已设置的相关信息
-		TpTaskInfo t=new TpTaskInfo();
-		t.setTaskid(Long.parseLong(taskid));
-		t.setCourseid(Long.parseLong(courseid));
-		List<TpTaskInfo>tpList=this.tpTaskManager.getList(t, null);
-		if(tpList==null||tpList.size()<1){
-			je.setMsg("抱歉该任务已不存在!");
-			je.getAlertMsgAndBack();
-			return null;
-		}
-		//任务
-		TpTaskInfo taskinfo=tpList.get(0);
-		//任务对象
-		TpTaskAllotInfo tg=new TpTaskAllotInfo();
-		tg.setTaskid(Long.parseLong(taskid));
-		List<TpTaskAllotInfo>taskgroupList=this.tpTaskAllotManager.getList(tg, null);
+
 
         //该任务已设置的相关信息
         TpTaskInfo t=new TpTaskInfo();
         t.setTaskid(Long.parseLong(taskid));
         t.setCourseid(Long.parseLong(courseid));
-        List<TpTaskInfo>tpList=this.tpTaskManager.getList(t, null);
+        List<TpTaskInfo> tpList=this.tpTaskManager.getList(t, null);
         if(tpList==null||tpList.size()<1){
             je.setMsg("抱歉该任务已不存在!");
             je.getAlertMsgAndBack();

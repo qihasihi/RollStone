@@ -35,33 +35,34 @@ import com.school.util.sendfile.SendFile;
 @Controller
 @RequestMapping(value = "/user")
 public class UserController extends BaseController<UserInfo> {
-    private IUserManager userManager;
-    private IClassYearManager classYearManager;
-    private IIdentityManager identityManager;
-    private IDictionaryManager dictionaryManager;
-    private IRoleManager roleManager;
-    private ISubjectManager subjectManager;
-    private IGradeManager gradeManager;
-    private IClassManager classManager;
-    private ISubjectUserManager subjectUserManager;
-    private IDeptUserManager deptUserManager;
-    private ITeacherManager teacherManager;
-    private IStudentManager studentManager;
-    private IClassUserManager classUserManager;
-    private IJobUserManager jobUserManager;
-    private IRoleUserManager roleUserManager;
-    private IParentManager parentManager;
-    private IUserColumnRightManager userColumnRightManager;
-    private IRoleColumnRightManager roleColumnRightManager;
-    private IDeptManager deptManager;
-    private ITermManager termManager;
-    private IUserIdentityManager userIdentityManager;
-    private INoticeManager noticeManager;
-    private IActivityManager activityManager;
-    private IMyInfoUserManager myInfoUserManager;
-    private IInitWizardManager initWizardManager;
+    protected IUserManager userManager;
+    protected IClassYearManager classYearManager;
+    protected IIdentityManager identityManager;
+    protected IDictionaryManager dictionaryManager;
+    protected IRoleManager roleManager;
+    protected ISubjectManager subjectManager;
+    protected IGradeManager gradeManager;
+    protected IClassManager classManager;
+    protected ISubjectUserManager subjectUserManager;
+    protected IDeptUserManager deptUserManager;
+    protected ITeacherManager teacherManager;
+    protected IStudentManager studentManager;
+    protected IClassUserManager classUserManager;
+    protected IJobUserManager jobUserManager;
+    protected IRoleUserManager roleUserManager;
+    protected IParentManager parentManager;
+    protected IUserColumnRightManager userColumnRightManager;
+    protected IRoleColumnRightManager roleColumnRightManager;
+    protected IDeptManager deptManager;
+    protected ITermManager termManager;
+    protected IUserIdentityManager userIdentityManager;
+    protected INoticeManager noticeManager;
+    protected IActivityManager activityManager;
+    protected IMyInfoUserManager myInfoUserManager;
+    protected IInitWizardManager initWizardManager;
+
     public UserController(){
-        userManager=this.getManager(UserManager.class);
+        this.userManager=this.getManager(UserManager.class);
         this.classYearManager=this.getManager(ClassYearManager.class);
         this.identityManager=this.getManager(IdentityManager.class);
         this.dictionaryManager=this.getManager(DictionaryManager.class);
@@ -250,233 +251,233 @@ public class UserController extends BaseController<UserInfo> {
 //        new ShareTpOperate(request.getSession().getServletContext()).run();
 //    }
 
-	@RequestMapping(params = "m=list", method = {RequestMethod.GET,RequestMethod.POST})
-	public ModelAndView toUserList(HttpServletRequest request,
-			HttpServletResponse response, ModelAndView mp) throws Exception {
-		JsonEntity je = new JsonEntity();
-		PageResult presult = new PageResult();
-		presult.setPageNo(0);
-		presult.setPageSize(0);
-		presult.setOrderBy("c_time desc");
-		List<ClassYearInfo> yearList = this.classYearManager.getList(null,
-				presult);
-		if (yearList == null || yearList.size() < 1) {
-			je.setMsg(UtilTool.msgproperty.getProperty("CLASS_YEAR_NOT_EXISTS"));
-			response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}
-		
-		//获取身份
-		List<DictionaryInfo>identityList=this.dictionaryManager.getDictionaryByType("IDENTITY_TYPE");
-		RoleInfo r = new RoleInfo();
-		r.setFlag(0);
-		List<RoleInfo> roleList = this.roleManager.getList(r, null);
-		r.setFlag(1);
-		List<RoleInfo> jobList = this.roleManager.getList(r, null);
-		DeptInfo d = new DeptInfo();
-		d.setParentdeptid(0);
-		//List<DeptInfo> deptList = this.deptManager.getList(null, null);
+    @RequestMapping(params = "m=list", method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView toUserList(HttpServletRequest request,
+                                   HttpServletResponse response, ModelAndView mp) throws Exception {
+        JsonEntity je = new JsonEntity();
+        PageResult presult = new PageResult();
+        presult.setPageNo(0);
+        presult.setPageSize(0);
+        presult.setOrderBy("c_time desc");
+        List<ClassYearInfo> yearList = this.classYearManager.getList(null,
+                presult);
+        if (yearList == null || yearList.size() < 1) {
+            je.setMsg(UtilTool.msgproperty.getProperty("CLASS_YEAR_NOT_EXISTS"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
 
-		request.setAttribute("CURRENT_YEAR", yearList.get(0)
-				.getClassyearvalue());
-		request.setAttribute("roleList", roleList);
-		request.setAttribute("jobList", jobList);
-		//request.setAttribute("deptList", deptList);
-		request.setAttribute("identityList", identityList);
-		
-		if(request.getParameter("identityname")!=null){
-			request.setAttribute("identityname", request.getParameter("identityname"));
-			request.setAttribute("rolestr", request.getParameter("rolestr"));
-			request.setAttribute("username", request.getParameter("username"));
-		}  
-		  
-		return new ModelAndView("/user/list");
-	}
+        //获取身份
+        List<DictionaryInfo>identityList=this.dictionaryManager.getDictionaryByType("IDENTITY_TYPE");
+        RoleInfo r = new RoleInfo();
+        r.setFlag(0);
+        List<RoleInfo> roleList = this.roleManager.getList(r, null);
+        r.setFlag(1);
+        List<RoleInfo> jobList = this.roleManager.getList(r, null);
+        DeptInfo d = new DeptInfo();
+        d.setParentdeptid(0);
+        //List<DeptInfo> deptList = this.deptManager.getList(null, null);
+
+        request.setAttribute("CURRENT_YEAR", yearList.get(0)
+                .getClassyearvalue());
+        request.setAttribute("roleList", roleList);
+        request.setAttribute("jobList", jobList);
+        //request.setAttribute("deptList", deptList);
+        request.setAttribute("identityList", identityList);
+
+        if(request.getParameter("identityname")!=null){
+            request.setAttribute("identityname", request.getParameter("identityname"));
+            request.setAttribute("rolestr", request.getParameter("rolestr"));
+            request.setAttribute("username", request.getParameter("username"));
+        }
+
+        return new ModelAndView("/user/list");
+    }
 
     @RequestMapping(params = "m=testupload", method = {RequestMethod. GET,RequestMethod.POST})
     public ModelAndView testupload(HttpServletRequest request,
-                                 HttpServletResponse response, ModelMap mp) throws Exception {
+                                   HttpServletResponse response, ModelMap mp) throws Exception {
         return new ModelAndView("/test-upload",mp);
     }
-	
-	@RequestMapping(params = "m=loadrole", method = {RequestMethod.GET,RequestMethod.POST})
-	public ModelAndView loadRole(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		String iname=request.getParameter("identityname");
-		IdentityInfo i=new IdentityInfo();
-		i.setIdentityname(iname);
-		List<IdentityInfo>identityList=this.identityManager.getList(i, null);
-		mp.put("identityList", identityList);
-		return new ModelAndView("/user/admin/role",mp);
-	}
-	/**
-	 * 教务添加用户
-	 * 
-	 * @param request
-	 * @param response
-	 * @param mp
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=toAdd", method = RequestMethod.GET)
-	public ModelAndView toAddUser(HttpServletRequest request,
-			HttpServletResponse response, ModelAndView mp) throws Exception {
-		PageResult clspage=new PageResult();
-		clspage.setPageNo(0);
-		clspage.setPageSize(0);
-		clspage.setOrderBy("YEAR,CASE class_grade	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END,CLASS_NAME "); 
-		List<ClassInfo> classList = this.classManager.getList(null, clspage);
-		RoleInfo job = new RoleInfo();
-		job.setFlag(0); 
-		List<RoleInfo> roleList = this.roleManager.getList(job, null);
-		List<SubjectInfo> subjectList = this.subjectManager.getList(null, null);
-		job.setFlag(1);
-		List<RoleInfo> jobList = this.roleManager.getList(job, null);
-		List<ClassYearInfo>clsyearList=this.classYearManager.getCurrentYearList("more");
-		
-		clspage.setOrderBy("CASE grade_value	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END");
-		List<GradeInfo>gradeList=this.gradeManager.getList(null,clspage);
-		
-		request.setAttribute("clsList", classList);
-		request.setAttribute("clsyearList", clsyearList);
-		request.setAttribute("gradeList", gradeList); 
-		request.setAttribute("rolelist", roleList);
-		request.setAttribute("subjectlist", subjectList);
-		request.setAttribute("jobList", jobList);
-		return new ModelAndView("/user/add/add");
-	}  
 
-	/** 
-	 * 用户管理 跳入用户修改页
-	 * 
-	 * @param request
-	 * @param response
-	 * @param mp
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=tomodify", method = RequestMethod.GET)
-	public ModelAndView toModifyUser(HttpServletRequest request,
-			HttpServletResponse response, ModelAndView mp) throws Exception {
-		JsonEntity je = new JsonEntity();
-		String userid = request.getParameter("ref");
-		if (userid == null || userid.trim().length() < 1) {
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}
-		UserInfo u = new UserInfo();
-		u.setRef(userid);
-		List<UserInfo> userList = this.userManager.getList(u, null);
-		if (userList == null || userList.size() < 1) {
-			je.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
-			response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}
-		TeacherInfo t = new TeacherInfo();
-		t.getUserinfo().setRef(userid);
-		List<TeacherInfo> teacherList = this.teacherManager.getList(t, null);
-		if (teacherList != null && teacherList.size() > 0)
-			request.setAttribute("teacherinfo", teacherList.get(0));
+    @RequestMapping(params = "m=loadrole", method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView loadRole(HttpServletRequest request,
+                                 HttpServletResponse response, ModelMap mp) throws Exception {
+        String iname=request.getParameter("identityname");
+        IdentityInfo i=new IdentityInfo();
+        i.setIdentityname(iname);
+        List<IdentityInfo>identityList=this.identityManager.getList(i, null);
+        mp.put("identityList", identityList);
+        return new ModelAndView("/user/admin/role",mp);
+    }
+    /**
+     * 教务添加用户
+     *
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toAdd", method = RequestMethod.GET)
+    public ModelAndView toAddUser(HttpServletRequest request,
+                                  HttpServletResponse response, ModelAndView mp) throws Exception {
+        PageResult clspage=new PageResult();
+        clspage.setPageNo(0);
+        clspage.setPageSize(0);
+        clspage.setOrderBy("YEAR,CASE class_grade	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END,CLASS_NAME ");
+        List<ClassInfo> classList = this.classManager.getList(null, clspage);
+        RoleInfo job = new RoleInfo();
+        job.setFlag(0);
+        List<RoleInfo> roleList = this.roleManager.getList(job, null);
+        List<SubjectInfo> subjectList = this.subjectManager.getList(null, null);
+        job.setFlag(1);
+        List<RoleInfo> jobList = this.roleManager.getList(job, null);
+        List<ClassYearInfo>clsyearList=this.classYearManager.getCurrentYearList("more");
 
-		StudentInfo s = new StudentInfo();
-		s.getUserinfo().setRef(userid);
-		List<StudentInfo> studentList = this.studentManager.getList(s, null);
-		if (studentList != null && studentList.size() > 0)
-			request.setAttribute("studentinfo", studentList.get(0));
+        clspage.setOrderBy("CASE grade_value	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END");
+        List<GradeInfo>gradeList=this.gradeManager.getList(null,clspage);
 
-		// 用户角色
-		RoleUser ru = new RoleUser();
-		ru.getUserinfo().setRef(userid);
-		List<RoleUser> ruList = this.roleUserManager.getList(ru, null);
-		// 用户职务
-		JobUser ju = new JobUser();
-		ju.getUserinfo().setRef(userid);
-		List<JobUser> juList = this.jobUserManager.getList(ju, null);
-		// 教师学科
-		SubjectUser su = new SubjectUser();
-		su.getUserinfo().setRef(userid);
-		List<SubjectUser> suList = this.subjectUserManager.getList(su, null);
-		//部门职务
-		DeptUser du=new DeptUser();
-		du.getUserinfo().setRef(userid);
-		List<DeptUser>deptUserList=this.deptUserManager.getList(du, null);
+        request.setAttribute("clsList", classList);
+        request.setAttribute("clsyearList", clsyearList);
+        request.setAttribute("gradeList", gradeList);
+        request.setAttribute("rolelist", roleList);
+        request.setAttribute("subjectlist", subjectList);
+        request.setAttribute("jobList", jobList);
+        return new ModelAndView("/user/add/add");
+    }
 
-		// 用户与班级关系
-		ClassUser cu = new ClassUser();  
-		cu.getUserinfo().setRef(userid);
-		cu.setRelationtype("班主任");
-		List<ClassUser> bzrcuList = this.classUserManager.getList(cu, null);
-		cu.setRelationtype("任课老师");
-		List<ClassUser> teacuList = this.classUserManager.getList(cu, null);
-		cu.setRelationtype("学生");
-		List<ClassUser> stucuList = this.classUserManager.getList(cu, null);
-		
-		PageResult clspage=new PageResult();
-		clspage.setPageNo(0);
-		clspage.setPageSize(0);
-		clspage.setOrderBy("YEAR,CASE class_grade	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END,CLASS_NAME "); 
-		List<ClassInfo> classList = this.classManager.getList(null, clspage);
-		RoleInfo r = new RoleInfo(); 
-		r.setFlag(0); 
-		List<RoleInfo> roleList = this.roleManager.getList(r, null);
-		r.setFlag(1);
-		List<RoleInfo> jobList = this.roleManager.getList(r, null);
-		List<SubjectInfo> subjectList = this.subjectManager.getList(null, null);
+    /**
+     * 用户管理 跳入用户修改页
+     *
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=tomodify", method = RequestMethod.GET)
+    public ModelAndView toModifyUser(HttpServletRequest request,
+                                     HttpServletResponse response, ModelAndView mp) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String userid = request.getParameter("ref");
+        if (userid == null || userid.trim().length() < 1) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        UserInfo u = new UserInfo();
+        u.setRef(userid);
+        List<UserInfo> userList = this.userManager.getList(u, null);
+        if (userList == null || userList.size() < 1) {
+            je.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        TeacherInfo t = new TeacherInfo();
+        t.getUserinfo().setRef(userid);
+        List<TeacherInfo> teacherList = this.teacherManager.getList(t, null);
+        if (teacherList != null && teacherList.size() > 0)
+            request.setAttribute("teacherinfo", teacherList.get(0));
 
-		request.setAttribute("userinfo", userList.get(0));
-		request.setAttribute("userinfo", userList.get(0));
-		request.setAttribute("roleUserList", ruList); 
-		request.setAttribute("jobUserList", juList);
-		request.setAttribute("subjectUserList", suList);
-		request.setAttribute("bzrcuList", bzrcuList);
-		request.setAttribute("teacuList", teacuList);
-		request.setAttribute("stucuList", stucuList);
-  
-		request.setAttribute("clslist", classList);
-		request.setAttribute("rolelist", roleList);
-		request.setAttribute("subjectlist", subjectList);
-		request.setAttribute("jobList", jobList);
-		request.setAttribute("deptUserList", deptUserList);
-		return new ModelAndView("/user/update/update");
-	}
+        StudentInfo s = new StudentInfo();
+        s.getUserinfo().setRef(userid);
+        List<StudentInfo> studentList = this.studentManager.getList(s, null);
+        if (studentList != null && studentList.size() > 0)
+            request.setAttribute("studentinfo", studentList.get(0));
 
-	@RequestMapping(params = "m=ajaxlist", method = RequestMethod.POST)
-	public void GetAjaxUserList(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		JsonEntity je = new JsonEntity();
-		PageResult presult = this.getPageResultParameter(request);
-		UserInfo userinfo = this.getParameter(request, UserInfo.class);
-		List<UserInfo> userList = userManager.getList(userinfo, presult);
-		je.setObjList(userList);
-		je.setType("success");
-		response.getWriter().print(je.toJSON());
-	}
+        // 用户角色
+        RoleUser ru = new RoleUser();
+        ru.getUserinfo().setRef(userid);
+        List<RoleUser> ruList = this.roleUserManager.getList(ru, null);
+        // 用户职务
+        JobUser ju = new JobUser();
+        ju.getUserinfo().setRef(userid);
+        List<JobUser> juList = this.jobUserManager.getList(ju, null);
+        // 教师学科
+        SubjectUser su = new SubjectUser();
+        su.getUserinfo().setRef(userid);
+        List<SubjectUser> suList = this.subjectUserManager.getList(su, null);
+        //部门职务
+        DeptUser du=new DeptUser();
+        du.getUserinfo().setRef(userid);
+        List<DeptUser>deptUserList=this.deptUserManager.getList(du, null);
 
-	/**
-	 * 验证用户名
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=ajaxuser", method = RequestMethod.POST)
-	public void validateUserName(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		JsonEntity je = new JsonEntity();
-		PageResult presult = this.getPageResultParameter(request);
-		UserInfo userinfo = this.getParameter(request, UserInfo.class);
-		List<UserInfo> userList = userManager.getList(userinfo, presult);
-		je.setObjList(userList);
-		je.setType("success");
-		response.getWriter().print(je.toJSON());
-	}
+        // 用户与班级关系
+        ClassUser cu = new ClassUser();
+        cu.getUserinfo().setRef(userid);
+        cu.setRelationtype("班主任");
+        List<ClassUser> bzrcuList = this.classUserManager.getList(cu, null);
+        cu.setRelationtype("任课老师");
+        List<ClassUser> teacuList = this.classUserManager.getList(cu, null);
+        cu.setRelationtype("学生");
+        List<ClassUser> stucuList = this.classUserManager.getList(cu, null);
+
+        PageResult clspage=new PageResult();
+        clspage.setPageNo(0);
+        clspage.setPageSize(0);
+        clspage.setOrderBy("YEAR,CASE class_grade	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END,CLASS_NAME ");
+        List<ClassInfo> classList = this.classManager.getList(null, clspage);
+        RoleInfo r = new RoleInfo();
+        r.setFlag(0);
+        List<RoleInfo> roleList = this.roleManager.getList(r, null);
+        r.setFlag(1);
+        List<RoleInfo> jobList = this.roleManager.getList(r, null);
+        List<SubjectInfo> subjectList = this.subjectManager.getList(null, null);
+
+        request.setAttribute("userinfo", userList.get(0));
+        request.setAttribute("userinfo", userList.get(0));
+        request.setAttribute("roleUserList", ruList);
+        request.setAttribute("jobUserList", juList);
+        request.setAttribute("subjectUserList", suList);
+        request.setAttribute("bzrcuList", bzrcuList);
+        request.setAttribute("teacuList", teacuList);
+        request.setAttribute("stucuList", stucuList);
+
+        request.setAttribute("clslist", classList);
+        request.setAttribute("rolelist", roleList);
+        request.setAttribute("subjectlist", subjectList);
+        request.setAttribute("jobList", jobList);
+        request.setAttribute("deptUserList", deptUserList);
+        return new ModelAndView("/user/update/update");
+    }
+
+    @RequestMapping(params = "m=ajaxlist", method = RequestMethod.POST)
+    public void GetAjaxUserList(HttpServletRequest request,
+                                HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        PageResult presult = this.getPageResultParameter(request);
+        UserInfo userinfo = this.getParameter(request, UserInfo.class);
+        List<UserInfo> userList = userManager.getList(userinfo, presult);
+        je.setObjList(userList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 验证用户名
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=ajaxuser", method = RequestMethod.POST)
+    public void validateUserName(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        PageResult presult = this.getPageResultParameter(request);
+        UserInfo userinfo = this.getParameter(request, UserInfo.class);
+        List<UserInfo> userList = userManager.getList(userinfo, presult);
+        je.setObjList(userList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
 
 
 
     @RequestMapping(params = "m=updateUserInfo", method = RequestMethod.POST)
     public void updateUserInfo(HttpServletRequest request,
-                                 HttpServletResponse response) throws Exception {
+                               HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         PageResult presult = this.getPageResultParameter(request);
         UserInfo userinfo = this.getParameter(request, UserInfo.class);
@@ -670,273 +671,273 @@ public class UserController extends BaseController<UserInfo> {
 
 
 
-	@RequestMapping(params = "m=userregister", method = RequestMethod.POST)
-	public void userRegister(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		JsonEntity je = new JsonEntity();
-		UserInfo userinfo = this.getParameter(request, UserInfo.class);
-		if (userinfo == null || userinfo.getUsername() == null
-				|| userinfo.getPassword() == null
-				|| userinfo.getMailaddress() == null
-				|| userinfo.getGender() == null
-				|| userinfo.getRealname() == null) {
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		String roleid = request.getParameter("role");
-		if (roleid == null || !UtilTool.isNumber(roleid)) {
-			je.setMsg(UtilTool.msgproperty.getProperty("ROLE_ROLEID_EMPTY"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		// 验证用户名是否可用
-		if (userManager.checkUsername(userinfo.getUsername()) > 0) {
-			je.setMsg(UtilTool.msgproperty.getProperty("USER_USERNAME_EXISTS"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		List<String> sqlListArray = new ArrayList<String>();
-		List<List<Object>> objListArray = new ArrayList<List<Object>>();
-		StringBuilder sql = null;
-		List<Object> objList = null;
-		String sex = "1".equals(userinfo.getGender()) ? "男" : "女";
-		// 添加user_info
-		String userref = UUID.randomUUID().toString();
-		userinfo.setRef(userref);
-		sql = new StringBuilder();
-		objList = userManager.getSaveSql(userinfo, sql);
-		if (sql.length() > 0 && objList != null) {
-			sqlListArray.add(sql.toString());
-			objListArray.add(objList);
-		}
-		// 根据身份添加（教师、学生、家长）
-		sql = new StringBuilder();
-		if (roleid.equals(UtilTool._ROLE_STU_ID.toString())) {
-			StudentInfo stu = new StudentInfo();
-			stu.setStuname(userinfo.getRealname());
-			stu.setStusex(sex);
-			stu.getUserinfo().setRef(userref);
-			stu.setRef(UUID.randomUUID().toString());
-			objList = this.studentManager.getSaveSql(stu, sql);
+    @RequestMapping(params = "m=userregister", method = RequestMethod.POST)
+    public void userRegister(HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        UserInfo userinfo = this.getParameter(request, UserInfo.class);
+        if (userinfo == null || userinfo.getUsername() == null
+                || userinfo.getPassword() == null
+                || userinfo.getMailaddress() == null
+                || userinfo.getGender() == null
+                || userinfo.getRealname() == null) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String roleid = request.getParameter("role");
+        if (roleid == null || !UtilTool.isNumber(roleid)) {
+            je.setMsg(UtilTool.msgproperty.getProperty("ROLE_ROLEID_EMPTY"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        // 验证用户名是否可用
+        if (userManager.checkUsername(userinfo.getUsername()) > 0) {
+            je.setMsg(UtilTool.msgproperty.getProperty("USER_USERNAME_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<String> sqlListArray = new ArrayList<String>();
+        List<List<Object>> objListArray = new ArrayList<List<Object>>();
+        StringBuilder sql = null;
+        List<Object> objList = null;
+        String sex = "1".equals(userinfo.getGender()) ? "男" : "女";
+        // 添加user_info
+        String userref = UUID.randomUUID().toString();
+        userinfo.setRef(userref);
+        sql = new StringBuilder();
+        objList = userManager.getSaveSql(userinfo, sql);
+        if (sql.length() > 0 && objList != null) {
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+        // 根据身份添加（教师、学生、家长）
+        sql = new StringBuilder();
+        if (roleid.equals(UtilTool._ROLE_STU_ID.toString())) {
+            StudentInfo stu = new StudentInfo();
+            stu.setStuname(userinfo.getRealname());
+            stu.setStusex(sex);
+            stu.getUserinfo().setRef(userref);
+            stu.setRef(UUID.randomUUID().toString());
+            objList = this.studentManager.getSaveSql(stu, sql);
 
-		} else if (roleid.equals(UtilTool._ROLE_TEACHER_ID.toString())) {
-			TeacherInfo t = new TeacherInfo();
-			t.setTeachername(userinfo.getRealname());
-			t.setUserid(userref);
-			t.setTeachersex(sex);
-			objList = this.teacherManager.getSaveSql(t, sql);
+        } else if (roleid.equals(UtilTool._ROLE_TEACHER_ID.toString())) {
+            TeacherInfo t = new TeacherInfo();
+            t.setTeachername(userinfo.getRealname());
+            t.setUserid(userref);
+            t.setTeachersex(sex);
+            objList = this.teacherManager.getSaveSql(t, sql);
 
-		} else if (roleid.equals(UtilTool._ROLE_STU_PARENT_ID.toString())) {
-			ParentInfo p = new ParentInfo();
-			p.setParentname(userinfo.getRealname());
-			p.setUserid(userref);
-			p.setRef(UUID.randomUUID().toString());
-			p.setParentsex(sex);
-			objList = this.parentManager.getSaveSql(p, sql);
-		}
-		if (sql.length() > 0 && objList != null) {
-			sqlListArray.add(sql.toString());
-			objListArray.add(objList);
-		}
-		// 增加用户与角色关联
+        } else if (roleid.equals(UtilTool._ROLE_STU_PARENT_ID.toString())) {
+            ParentInfo p = new ParentInfo();
+            p.setParentname(userinfo.getRealname());
+            p.setUserid(userref);
+            p.setRef(UUID.randomUUID().toString());
+            p.setParentsex(sex);
+            objList = this.parentManager.getSaveSql(p, sql);
+        }
+        if (sql.length() > 0 && objList != null) {
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+        // 增加用户与角色关联
 
-		RoleUser roleuser = new RoleUser();
-		roleuser.getUserinfo().setRef(userref);
-		roleuser.setRoleidstr(roleid);
-		roleuser.getRoleinfo().setRoleid(Integer.parseInt(roleid));
-		List<RoleUser> ruList = this.roleUserManager.getList(roleuser, null);
-		// 存在角色信息 则删除
-		if (ruList != null && ruList.size() > 0) {
-			sql = new StringBuilder();
-			objList = this.roleUserManager.getDeleteSql(roleuser, sql);
-			if (sql.length() > 0 && objList != null) {
-				sqlListArray.add(sql.toString());
-				objListArray.add(objList);
-			}
-		}
-		sql = new StringBuilder();
-		objList = this.roleUserManager.getSaveSql(roleuser, sql);
-		if (sql.length() > 0 && objList != null) {
-			sqlListArray.add(sql.toString());
-			objListArray.add(objList);
-		}
+        RoleUser roleuser = new RoleUser();
+        roleuser.getUserinfo().setRef(userref);
+        roleuser.setRoleidstr(roleid);
+        roleuser.getRoleinfo().setRoleid(Integer.parseInt(roleid));
+        List<RoleUser> ruList = this.roleUserManager.getList(roleuser, null);
+        // 存在角色信息 则删除
+        if (ruList != null && ruList.size() > 0) {
+            sql = new StringBuilder();
+            objList = this.roleUserManager.getDeleteSql(roleuser, sql);
+            if (sql.length() > 0 && objList != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+        sql = new StringBuilder();
+        objList = this.roleUserManager.getSaveSql(roleuser, sql);
+        if (sql.length() > 0 && objList != null) {
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
 
-		if (sqlListArray.size() > 0 && objListArray.size() > 0) {
-			boolean flag = this.userManager.doExcetueArrayProc(sqlListArray,
-					objListArray);
-			if (flag) {
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-				je.setType("success");
-			} else {
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-			}
-		} else {
-			je.setMsg(UtilTool.msgproperty
-					.getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
-		}
-		response.getWriter().print(je.toJSON());
-	}
+        if (sqlListArray.size() > 0 && objListArray.size() > 0) {
+            boolean flag = this.userManager.doExcetueArrayProc(sqlListArray,
+                    objListArray);
+            if (flag) {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+            } else {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        } else {
+            je.setMsg(UtilTool.msgproperty
+                    .getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
+        }
+        response.getWriter().print(je.toJSON());
+    }
 
-	@RequestMapping(params = "m=checkusername", method = RequestMethod.POST)
-	public void checkUsername(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		JsonEntity je = new JsonEntity();
-		String username = request.getParameter("username");
-		if (userManager.checkUsername(username) == 0) {
-			je.setType("success");
-		} else {
-			je.setMsg(UtilTool.msgproperty.getProperty("USER_USERNAME_EXISTS"));
-			je.setType("error");
-		}
-		response.getWriter().print(je.toJSON());
-	}
-	
-	
+    @RequestMapping(params = "m=checkusername", method = RequestMethod.POST)
+    public void checkUsername(HttpServletRequest request,
+                              HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String username = request.getParameter("username");
+        if (userManager.checkUsername(username) == 0) {
+            je.setType("success");
+        } else {
+            je.setMsg(UtilTool.msgproperty.getProperty("USER_USERNAME_EXISTS"));
+            je.setType("error");
+        }
+        response.getWriter().print(je.toJSON());
+    }
 
-	// 此方法由于检查用户是否在本地记录了账号和密码
-	/**
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=logincheck", method = RequestMethod.GET)
-	public void loginCheck(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		JsonEntity je = new JsonEntity();
-		String userData = "";
-		Cookie[] cookie = request.getCookies();
-		boolean auto = false;
-		Map<String ,String> um = null;
-		if (cookie != null) {
-			for (int i = 0; i < cookie.length; i++) {
-				String username = "";
-				if (cookie[i].getName().equals("SZ_SCHOOL_USER_REC")) {
-					username = cookie[i].getValue();
-					if (username.split("_").length > 1){
-						username=username.split("_")[0];
-						auto = true;
-					}
-					UserInfo userinfo = new UserInfo();
-					userinfo.setRef(username);
-					userinfo = userManager.getUserInfo(userinfo);
-					if (userinfo != null) {
-						userData += userinfo.getUsername() + "|"
-								+ MD5.getJDKMD5(userinfo.getPassword());
-						um = new HashMap<String, String>();
-						um.put("u_n",userinfo.getUsername());
-						
-					    Date date = new Date();  
-						String p_safetime=(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(date);
-						String hour=p_safetime.substring(p_safetime.indexOf(" ")+1,p_safetime.indexOf(":"));
-						um.put("login_hour",hour);
-						um.put("u_p", MD5.getJDKMD5(userinfo.getPassword()
+
+
+    // 此方法由于检查用户是否在本地记录了账号和密码
+    /**
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=logincheck", method = RequestMethod.GET)
+    public void loginCheck(HttpServletRequest request,
+                           HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String userData = "";
+        Cookie[] cookie = request.getCookies();
+        boolean auto = false;
+        Map<String ,String> um = null;
+        if (cookie != null) {
+            for (int i = 0; i < cookie.length; i++) {
+                String username = "";
+                if (cookie[i].getName().equals("SZ_SCHOOL_USER_REC")) {
+                    username = cookie[i].getValue();
+                    if (username.split("_").length > 1){
+                        username=username.split("_")[0];
+                        auto = true;
+                    }
+                    UserInfo userinfo = new UserInfo();
+                    userinfo.setRef(username);
+                    userinfo = userManager.getUserInfo(userinfo);
+                    if (userinfo != null) {
+                        userData += userinfo.getUsername() + "|"
+                                + MD5.getJDKMD5(userinfo.getPassword());
+                        um = new HashMap<String, String>();
+                        um.put("u_n",userinfo.getUsername());
+
+                        Date date = new Date();
+                        String p_safetime=(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(date);
+                        String hour=p_safetime.substring(p_safetime.indexOf(" ")+1,p_safetime.indexOf(":"));
+                        um.put("login_hour",hour);
+                        um.put("u_p", MD5.getJDKMD5(userinfo.getPassword()
                                 + p_safetime.substring(0, p_safetime.indexOf(":"))));
-						um.put("u_a","no_auto");
-						if(auto)
-							um.put("u_a","auto");
-					}
-					break;
-				}
-			}
-			if (um != null) {
-				List l = new ArrayList();
-				l.add(um);
-				je.setObjList(l);
-				je.setType("success");
-			} else {
-				je.setType("error");
-			}
-		} else {
-			je.setType("error");
-		}
-		response.getWriter().print(je.toJSON());
-	}
+                        um.put("u_a","no_auto");
+                        if(auto)
+                            um.put("u_a","auto");
+                    }
+                    break;
+                }
+            }
+            if (um != null) {
+                List l = new ArrayList();
+                l.add(um);
+                je.setObjList(l);
+                je.setType("success");
+            } else {
+                je.setType("error");
+            }
+        } else {
+            je.setType("error");
+        }
+        response.getWriter().print(je.toJSON());
+    }
 
-	@RequestMapping(params = "m=getpassword", method = RequestMethod.GET)
-	public void getPassword(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		JsonEntity je = new JsonEntity();
-		UserInfo userinfo = this.getParameter(request, UserInfo.class);
-		if (userinfo != null && userinfo.getUsername() != null) {
-			userinfo = userManager.getUserInfo(userinfo);
-			if (userinfo != null && userinfo.getPassword() != null) {
-				request.getSession().setAttribute("userpassword",
-						userinfo.getPassword());
-				je.setMsg("201212181540");
-				je.setType("success");
-			}
-		} else {
-			je.setType("error");
-		}
+    @RequestMapping(params = "m=getpassword", method = RequestMethod.GET)
+    public void getPassword(HttpServletRequest request,
+                            HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        UserInfo userinfo = this.getParameter(request, UserInfo.class);
+        if (userinfo != null && userinfo.getUsername() != null) {
+            userinfo = userManager.getUserInfo(userinfo);
+            if (userinfo != null && userinfo.getPassword() != null) {
+                request.getSession().setAttribute("userpassword",
+                        userinfo.getPassword());
+                je.setMsg("201212181540");
+                je.setType("success");
+            }
+        } else {
+            je.setType("error");
+        }
 
-		response.getWriter().print(je.toJSON());
-	}
-	/**
-	 * etiantian进入
-	 * @param request
-	 * @param response
-	 */
-	@RequestMapping(params="m=etttologin",method=RequestMethod.GET)
-	public ModelAndView ettToPage(HttpServletRequest request,HttpServletRequest response){
-		return new ModelAndView("/outsidepage/ettyanshirole");
-	}
-	
-	/**
-	 * etiantian进入
-	 * @param request
-	 * @param response
-	 */
-	@RequestMapping(params="m=ettlogin",method=RequestMethod.GET)
-	public void ettToLogin(HttpServletRequest request,HttpServletResponse response) throws Exception{
-		String roletypeStr=request.getParameter("roletype");
-		String callback=request.getParameter("jsoncallback");
-		JsonEntity jeEntity=new JsonEntity();
-		if(roletypeStr==null||roletypeStr.trim().length()<1){
-			jeEntity.setMsg("异常错误，没有发现必要角色类型相关参数! code: roletype is empty!");
-			response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return;
-		}	
-		
+        response.getWriter().print(je.toJSON());
+    }
+    /**
+     * etiantian进入
+     * @param request
+     * @param response
+     */
+    @RequestMapping(params="m=etttologin",method=RequestMethod.GET)
+    public ModelAndView ettToPage(HttpServletRequest request,HttpServletRequest response){
+        return new ModelAndView("/outsidepage/ettyanshirole");
+    }
+
+    /**
+     * etiantian进入
+     * @param request
+     * @param response
+     */
+    @RequestMapping(params="m=ettlogin",method=RequestMethod.GET)
+    public void ettToLogin(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String roletypeStr=request.getParameter("roletype");
+        String callback=request.getParameter("jsoncallback");
+        JsonEntity jeEntity=new JsonEntity();
+        if(roletypeStr==null||roletypeStr.trim().length()<1){
+            jeEntity.setMsg("异常错误，没有发现必要角色类型相关参数! code: roletype is empty!");
+            response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return;
+        }
+
 //		String password=UtilTool.utilproperty.getProperty("ETT_COME_PASS");
 //		if(password==null||password.trim().length()<1){
 //			jeEntity.setMsg("异常错误，项目配置失败! code: ETT_COME_PASS property is empty!");
 //			response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return;
 //		}
-		String userName=null,password=null;
-		
-		String ettComeUName=UtilTool.utilproperty.getProperty("ETT_COME_USER");
-		if(ettComeUName!=null&&ettComeUName.trim().length()>0){			
-			String[] ettUName_ARR=ettComeUName.split(",");
-			if(ettUName_ARR!=null&&ettUName_ARR.length>0){
-				for (String uname : ettUName_ARR) {
-					if(uname!=null&&uname.trim().length()>0){
-						if(uname.indexOf(roletypeStr)==-1)continue;
-						String[] utmp=uname.trim().split("\\|");
-						String roletytmp=utmp[1];
-						String usernametmp=utmp[2];
-						String passtmp=utmp[3];
-						if(roletytmp.trim().equals(roletypeStr.trim())){
-							userName=usernametmp.trim();
-							password=passtmp.trim();
-							break;
-						}
-					}
-				}				
-			}			
-		}
-		/**
-		 * 四中帐号
-		 */
-		if(userName==null||userName.trim().length()<1){
-			jeEntity.setMsg("异常错误，用户名配置失败! code: ETT_COME_USER property is empty!");
-			response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return;
-		}
-		request.setAttribute("username", userName);
-		request.setAttribute("password", password);
-		request.setAttribute("isajax", 1);
-		request.setAttribute("jsoncallback",callback);
-		this.doLogin(request, response);  //进入登陆
-	}
+        String userName=null,password=null;
+
+        String ettComeUName=UtilTool.utilproperty.getProperty("ETT_COME_USER");
+        if(ettComeUName!=null&&ettComeUName.trim().length()>0){
+            String[] ettUName_ARR=ettComeUName.split(",");
+            if(ettUName_ARR!=null&&ettUName_ARR.length>0){
+                for (String uname : ettUName_ARR) {
+                    if(uname!=null&&uname.trim().length()>0){
+                        if(uname.indexOf(roletypeStr)==-1)continue;
+                        String[] utmp=uname.trim().split("\\|");
+                        String roletytmp=utmp[1];
+                        String usernametmp=utmp[2];
+                        String passtmp=utmp[3];
+                        if(roletytmp.trim().equals(roletypeStr.trim())){
+                            userName=usernametmp.trim();
+                            password=passtmp.trim();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        /**
+         * 四中帐号
+         */
+        if(userName==null||userName.trim().length()<1){
+            jeEntity.setMsg("异常错误，用户名配置失败! code: ETT_COME_USER property is empty!");
+            response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return;
+        }
+        request.setAttribute("username", userName);
+        request.setAttribute("password", password);
+        request.setAttribute("isajax", 1);
+        request.setAttribute("jsoncallback",callback);
+        this.doLogin(request, response);  //进入登陆
+    }
 
     /**
      * 精简版资源系统登陆
@@ -977,7 +978,7 @@ public class UserController extends BaseController<UserInfo> {
      * @return
      * @throws Exception
      */
-    private JsonEntity loginBase(UserInfo userinfo,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    protected JsonEntity loginBase(UserInfo userinfo,HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity je=new JsonEntity();
         je.setMsg("异常错误，原因：参数异常!");
         if(userinfo==null)return je;
@@ -1066,6 +1067,10 @@ public class UserController extends BaseController<UserInfo> {
                         uitmp.setUserid(userinfo.getRef());
                         List<UserIdentityInfo> uidtttList=this.userIdentityManager.getList(uitmp,null);
 
+                        request.getSession().setAttribute("cut_uidentity", uidtttList);//存入Session中
+                        request.getSession().setAttribute("CURRENT_USER", userinfo);//存入Session中
+
+
                         if(UtilTool._IS_SIMPLE_RESOURCE!=2){
                             //栏目
                             IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
@@ -1077,9 +1082,7 @@ public class UserController extends BaseController<UserInfo> {
                             request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
                         }
 
-                        request.getSession().setAttribute("cut_uidentity", uidtttList);//存入Session中
-                        request.getSession().setAttribute("CURRENT_USER", userinfo);//存入Session中
-                    //    userinfo=userinfo;
+                        //    userinfo=userinfo;
                         je.setType("success");
                         je.setMsg("登陆成功并记录成功!");
                     } catch (Exception e) {
@@ -1094,22 +1097,22 @@ public class UserController extends BaseController<UserInfo> {
         return je;
     }
 
-	@RequestMapping(params = "m=dologin", method = RequestMethod.POST)
-	public void doLogin(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		JsonEntity je = new JsonEntity();
-		UserInfo userinfo = this.getParameter(request, UserInfo.class);
-		if(request.getAttribute("username")!=null)
-			userinfo.setUsername(request.getAttribute("username").toString());
-		if(request.getAttribute("password")!=null)
-			userinfo.setPassword(request.getAttribute("password").toString());
-		String rem=request.getParameter("remember");
+    @RequestMapping(params = "m=dologin", method = RequestMethod.POST)
+    public void doLogin(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        JsonEntity je = new JsonEntity();
+        UserInfo userinfo = this.getParameter(request, UserInfo.class);
+        if(request.getAttribute("username")!=null)
+            userinfo.setUsername(request.getAttribute("username").toString());
+        if(request.getAttribute("password")!=null)
+            userinfo.setPassword(request.getAttribute("password").toString());
+        String rem=request.getParameter("remember");
 
-		boolean remember =false;
-		if(rem!=null&& rem.equals("1"))remember=true;
-		String autolo=request.getParameter("autoLogin");
-		boolean autoLogin = false;
-		if(autolo!=null&&autolo.equals("1"))autoLogin=true;
+        boolean remember =false;
+        if(rem!=null&& rem.equals("1"))remember=true;
+        String autolo=request.getParameter("autoLogin");
+        boolean autoLogin = false;
+        if(autolo!=null&&autolo.equals("1"))autoLogin=true;
         je=loginBase(userinfo,request,response);
         if(je.getType().trim().equals("success")){
 //            if(UtilTool._IS_SIMPLE_RESOURCE!=2){
@@ -1124,16 +1127,16 @@ public class UserController extends BaseController<UserInfo> {
 //            }
             request.getSession().setAttribute("fromType","szschool");  //szschool
 //                    System.out.println("loginUser:"+(UserInfo) request.getSession().getAttribute("CURRENT_USER"));
-					if (remember) {
-						Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef());
-						ck.setMaxAge(7 * 24 * 60 * 60);
-						response.addCookie(ck);
-					}
-					if (autoLogin) {
-						
-						Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef()+"_AUTO");
-						ck.setMaxAge(7 * 24 * 60 * 60);
-						response.addCookie(ck);
+            if (remember) {
+                Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef());
+                ck.setMaxAge(7 * 24 * 60 * 60);
+                response.addCookie(ck);
+            }
+            if (autoLogin) {
+
+                Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef()+"_AUTO");
+                ck.setMaxAge(7 * 24 * 60 * 60);
+                response.addCookie(ck);
 						/*Cookie[] cookie = request.getCookies();
 						int i = 0;
 						if (cookie != null) {
@@ -1153,277 +1156,286 @@ public class UserController extends BaseController<UserInfo> {
 								"szs_username|auto");
 						ck.setMaxAge(7 * 24 * 60 * 60);
 						response.addCookie(ck);*/
-					}
-					if (!remember && !autoLogin) {
-						Cookie[] cookie = request.getCookies();
-						int i = 0;
-						if (cookie != null) {
-							for (; i < cookie.length; i++) {
-								//if (cookie[i].getName().equals(userinfo.getUsername())) {								
-								if (cookie[i].getName().equals("SZ_SCHOOL_USER_REC")) {
-									cookie[i].setMaxAge(0);
-									response.addCookie(cookie[i]);
-									break;
-								}
-							}
-						}					
-					}
-					je.setType("success");
-				} else {
-					//je.setMsg(UtilTool.msgproperty
-					//		.getProperty("USER_LOGIN_PASSWORD_ERROR"));
-					//je.setType("error");
-				}
+            }
+            if (!remember && !autoLogin) {
+                Cookie[] cookie = request.getCookies();
+                int i = 0;
+                if (cookie != null) {
+                    for (; i < cookie.length; i++) {
+                        //if (cookie[i].getName().equals(userinfo.getUsername())) {								
+                        if (cookie[i].getName().equals("SZ_SCHOOL_USER_REC")) {
+                            cookie[i].setMaxAge(0);
+                            response.addCookie(cookie[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+            je.setType("success");
+        } else {
+            //je.setMsg(UtilTool.msgproperty
+            //		.getProperty("USER_LOGIN_PASSWORD_ERROR"));
+            //je.setType("error");
+        }
 
 
-		Object isajax=request.getAttribute("isajax");
-		if(isajax==null||isajax.toString().trim().length()<1||!UtilTool.isNumber(isajax.toString().trim())||Integer.parseInt(isajax.toString().trim())!=1)
-			response.getWriter().write(je.toJSON());
-		else{
+        Object isajax=request.getAttribute("isajax");
+        if(isajax==null||isajax.toString().trim().length()<1||!UtilTool.isNumber(isajax.toString().trim())||Integer.parseInt(isajax.toString().trim())!=1)
+            response.getWriter().write(je.toJSON());
+        else{
 
-			if(je.getType().equals("success")){
+            if(je.getType().equals("success")){
                 if(UtilTool._IS_SIMPLE_RESOURCE!=2)
-				    response.sendRedirect("user?m=toIndex");
+                    response.sendRedirect("user?m=toIndex");
                 else
                     response.sendRedirect("simpleRes?m=toindex");
             }else
-				response.getWriter().print(je.getAlertMsgAndCloseWin());
-		}
-	}
+                response.getWriter().print(je.getAlertMsgAndCloseWin());
+        }
+    }
 
-	// 当在拦截器中发现自动登录，将调用此方法将 用户信息 写入session
-	@RequestMapping(params = "m=autologin", method = RequestMethod.GET)
-	public void autoLogin(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		String forwardPath = "/"+UtilTool.utilproperty.getProperty("PROC_NAME");
-		UserInfo userinfo = new UserInfo();
-		userinfo.setUsername(request.getAttribute("username").toString());
-		if (userManager.checkUsername(userinfo.getUsername()) != 0) {
-			UserInfo user = userManager.doLogin(userinfo);
-			if (user != null) {
-				request.getSession().setAttribute("CURRENT_USER", user);
-				forwardPath = request.getAttribute("path").toString();
-			}
-		}
-		response.sendRedirect(forwardPath);
-	}
+    // 当在拦截器中发现自动登录，将调用此方法将 用户信息 写入session
+    @RequestMapping(params = "m=autologin", method = RequestMethod.GET)
+    public void autoLogin(HttpServletRequest request,
+                          HttpServletResponse response) throws Exception {
+        String forwardPath = "/"+UtilTool.utilproperty.getProperty("PROC_NAME");
+        UserInfo userinfo = new UserInfo();
+        userinfo.setUsername(request.getAttribute("username").toString());
+        if (userManager.checkUsername(userinfo.getUsername()) != 0) {
+            UserInfo user = userManager.doLogin(userinfo);
+            if (user != null) {
+                request.getSession().setAttribute("CURRENT_USER", user);
+                forwardPath = request.getAttribute("path").toString();
+            }
+        }
+        response.sendRedirect(forwardPath);
+    }
 
-	@RequestMapping(params = "m=userquit", method = RequestMethod.GET)
-	public void userQuit(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		request.getSession().removeAttribute("CURRENT_USER");		
-		request.getSession().setMaxInactiveInterval(0);
-		request.setAttribute("state","user_quit");
+    @RequestMapping(params = "m=userquit", method = RequestMethod.GET)
+    public void userQuit(HttpServletRequest request,
+                         HttpServletResponse response) throws Exception {
+        request.getSession().removeAttribute("CURRENT_USER");
+        request.getSession().setMaxInactiveInterval(0);
+        request.setAttribute("state","user_quit");
         if(request.getSession().getAttribute("fromType")!=null)
             request.getSession().removeAttribute("fromType");
-		request.getRequestDispatcher("/login.jsp").forward(request, response);
-	}
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
+    }
 
-	@RequestMapping(params = "m=userview", method = RequestMethod.GET)
-	public ModelAndView userView(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		UserInfo user = (UserInfo) request.getSession().getAttribute(
-				"CURRENT_USER");
-		if (user == null)
-			return new ModelAndView("/user/userView", mp);
-		mp.put("user", user);
-		RoleUser ru = new RoleUser();
-		ru.getUserinfo().setRef(user.getRef());
-		List<RoleUser> ruList = roleUserManager.getList(ru, null);
-		mp.put("roleUser", ruList);
-		return new ModelAndView("/user/userView", mp);
-	}
-	
-	
-	@RequestMapping(params = "m=offuser", method = RequestMethod.POST)
-	public void unUseUser(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		JsonEntity je=new JsonEntity();
-		String ref=request.getParameter("ref");
-		String state=request.getParameter("stateid");
-		if(ref==null||ref.trim().length()<1||
-			state==null||state.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		UserInfo u=new UserInfo();
-		u.setRef(ref);
-		u.setStateid(Integer.parseInt(state));
-		if(this.userManager.doUpdate(u)){
-			je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-			je.setType("success");
-		}else
-			je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-		response.getWriter().print(je.toJSON());
-	}
-	
-	/**
-	 * 个人基础信息编辑
-	 * @param request
-	 * @param response
-	 * @param mp
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=edit_base", method = RequestMethod.POST)
-	public void edit_base(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		JsonEntity je=new JsonEntity();
-		String ref=request.getParameter("ref");
-		String password=request.getParameter("password");
-		String realname=request.getParameter("realname");
-		String sex=request.getParameter("sex");
-		String isTea=request.getParameter("isTea");
-		String isStu=request.getParameter("isStu");
-		
-		if(ref==null||ref.trim().length()<1
-				||password==null||password.trim().length()<1
-				||realname==null||realname.trim().length()<1
-				||sex==null||sex.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			return;
-		}
-		List<String>sqllist=new ArrayList<String>();
-		List<List<Object>>objListArray=new ArrayList<List<Object>>();
-		List<Object>objList=null;
-		StringBuilder sql=null;
-		
-		//基本信息
-		UserInfo u=new UserInfo();
-		u.setPassword(password); 
-		u.setRef(ref);
-		sql=new StringBuilder();
-		objList=this.userManager.getUpdateSql(u, sql);
-		if(objList!=null&&objList.size()>0){
-			objListArray.add(objList);
-			sqllist.add(sql.toString());
-		}
-		
-		
-		if(isTea!=null&&isTea.equals("true")){
-			TeacherInfo t=new TeacherInfo();
-			t.setTeachername(realname);
-			t.setTeachersex(sex);
-			t.setUserid(ref);
-			
-			sql=new StringBuilder();
-			objList=this.teacherManager.getUpdateSql(t, sql);
-			if(objList!=null&&objList.size()>0){
-				objListArray.add(objList);
-				sqllist.add(sql.toString());
-			}
-		}else if(isStu!=null&&isStu.equals("true")){
-			StudentInfo s=new StudentInfo();
-			s.setStuname(realname);
-			s.setStusex(sex);
-			s.setUserref(ref);
-			sql=new StringBuilder();
-			objList=this.studentManager.getUpdateSql(s, sql);
-			if(objList!=null&&objList.size()>0){
-				objListArray.add(objList);
-				sqllist.add(sql.toString());
-			}
-		}
-		
-		if(objListArray.size()>0&&sqllist.size()>0){
-			boolean flag=this.userManager.doExcetueArrayProc(sqllist, objListArray);
-			if(flag){
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-				je.setType("success");
-				u=new UserInfo();
-				u.setRef(ref);
-				UserInfo user=this.userManager.getUserInfo(u);
-				if(user!=null)
-					je.getObjList().add(user);
-			}else 
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-		}
-		response.getWriter().print(je.toJSON());		
-	}
-	
-	/**
-	 * 用户角色信息编辑
-	 * @param request
-	 * @param response
-	 * @param mp  
-	 * @throws Exception
-	 */
+    @RequestMapping(params = "m=userview", method = RequestMethod.GET)
+    public ModelAndView userView(HttpServletRequest request,
+                                 HttpServletResponse response, ModelMap mp) throws Exception {
+        UserInfo user = (UserInfo) request.getSession().getAttribute(
+                "CURRENT_USER");
+        if (user == null)
+            return new ModelAndView("/user/userView", mp);
+        mp.put("user", user);
+        RoleUser ru = new RoleUser();
+        ru.getUserinfo().setRef(user.getRef());
+        List<RoleUser> ruList = roleUserManager.getList(ru, null);
+        mp.put("roleUser", ruList);
+        return new ModelAndView("/user/userView", mp);
+    }
 
-	@RequestMapping(params = "m=edit_role", method = RequestMethod.POST)
-	public void edit_role(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		JsonEntity je=new JsonEntity();
-		String ref=request.getParameter("ref");
-		String isTea=request.getParameter("isTea");
-		String isStu=request.getParameter("isStu");
-		String clsstr=request.getParameter("clsstr");
-		String rolestr=request.getParameter("rolestr");
-		String adminstr=request.getParameter("adminstr");
-		String gradeid=request.getParameter("gradeid");
-		String tchid=request.getParameter("tchid");
-		String deptid=request.getParameter("deptid");
-		String prepareid=request.getParameter("prepareid");
+
+    @RequestMapping(params = "m=offuser", method = RequestMethod.POST)
+    public void unUseUser(HttpServletRequest request,
+                          HttpServletResponse response, ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String ref=request.getParameter("ref");
+        String state=request.getParameter("stateid");
+        if(ref==null||ref.trim().length()<1||
+                state==null||state.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        UserInfo u=new UserInfo();
+        u.setRef(ref);
+        u.setStateid(Integer.parseInt(state));
+        if(this.userManager.doUpdate(u)){
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            je.setType("success");
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 个人基础信息编辑
+     * @param request
+     * @param response
+     * @param mp
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=edit_base", method = RequestMethod.POST)
+    public void edit_base(HttpServletRequest request,
+                          HttpServletResponse response, ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String ref=request.getParameter("ref");
+        String password=request.getParameter("password");
+        String realname=request.getParameter("realname");
+        String sex=request.getParameter("sex");
+        String isTea=request.getParameter("isTea");
+        String isStu=request.getParameter("isStu");
+
+        if(ref==null||ref.trim().length()<1
+                ||password==null||password.trim().length()<1
+                ||realname==null||realname.trim().length()<1
+                ||sex==null||sex.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            return;
+        }
+        List<String>sqllist=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<Object>objList=null;
+        StringBuilder sql=null;
+
+        //基本信息
+        UserInfo u=new UserInfo();
+        u.setPassword(password);
+        u.setRef(ref);
+        sql=new StringBuilder();
+        objList=this.userManager.getUpdateSql(u, sql);
+        if(objList!=null&&objList.size()>0){
+            objListArray.add(objList);
+            sqllist.add(sql.toString());
+        }
+
+
+        if(isTea!=null&&isTea.equals("true")){
+            TeacherInfo t=new TeacherInfo();
+            t.setTeachername(realname);
+            t.setTeachersex(sex);
+            t.setUserid(ref);
+
+            sql=new StringBuilder();
+            objList=this.teacherManager.getUpdateSql(t, sql);
+            if(objList!=null&&objList.size()>0){
+                objListArray.add(objList);
+                sqllist.add(sql.toString());
+            }
+        }else if(isStu!=null&&isStu.equals("true")){
+            StudentInfo s=new StudentInfo();
+            s.setStuname(realname);
+            s.setStusex(sex);
+            s.setUserref(ref);
+            sql=new StringBuilder();
+            objList=this.studentManager.getUpdateSql(s, sql);
+            if(objList!=null&&objList.size()>0){
+                objListArray.add(objList);
+                sqllist.add(sql.toString());
+            }
+        }
+
+        if(objListArray.size()>0&&sqllist.size()>0){
+            boolean flag=this.userManager.doExcetueArrayProc(sqllist, objListArray);
+            if(flag){
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+                u=new UserInfo();
+                u.setRef(ref);
+                UserInfo user=this.userManager.getUserInfo(u);
+                if(user!=null)
+                    je.getObjList().add(user);
+
+                List<UserInfo> userInfoList=new ArrayList<UserInfo>();
+                userInfoList.add(user);
+                //调用用户接口
+                if(EttInterfaceUserUtil.updateUserBase(userInfoList)){
+                    System.out.println("用户信息同步至网校成功!更新");
+                }else{
+                    System.out.println("用户信息同步至网校失败!更新");
+                }
+            }else
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 用户角色信息编辑
+     * @param request
+     * @param response
+     * @param mp
+     * @throws Exception
+     */
+
+    @RequestMapping(params = "m=edit_role", method = RequestMethod.POST)
+    public void edit_role(HttpServletRequest request,
+                          HttpServletResponse response, ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String ref=request.getParameter("ref");
+        String isTea=request.getParameter("isTea");
+        String isStu=request.getParameter("isStu");
+        String clsstr=request.getParameter("clsstr");
+        String rolestr=request.getParameter("rolestr");
+        String adminstr=request.getParameter("adminstr");
+        String gradeid=request.getParameter("gradeid");
+        String tchid=request.getParameter("tchid");
+        String deptid=request.getParameter("deptid");
+        String prepareid=request.getParameter("prepareid");
         String deptfzrid=request.getParameter("deptfzrid");
-		
-		if(ref==null||ref.trim().length()<1
-				||isTea==null||isTea.trim().length()<1
-				||isStu==null||isStu.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			return;
-		}
-		List<String>sqllist=new ArrayList<String>();
-		List<List<Object>>objListArray=new ArrayList<List<Object>>();
-		List<Object>objList=null;
-		StringBuilder sql=null;
-		//获取当前学年
-		List<ClassYearInfo>clsyearList=this.classYearManager.getCurrentYearList(null);
-		if(clsyearList==null||clsyearList.size()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("YEAR_EMPTY"));
-			return;
-		}
-		
-		//删除角色
-		RoleUser rdelete=new RoleUser();
-		rdelete.getUserinfo().setRef(ref);
-		sql=new StringBuilder();
-		objList=this.roleUserManager.getDeleteSql(rdelete, sql);
-		if(objList!=null&&objList.size()>0){
-			objListArray.add(objList);
-			sqllist.add(sql.toString());
-		}
-		
-		//删除用户权限
-		UserColumnRightInfo urdelete=new UserColumnRightInfo();
-		urdelete.setUserid(ref);
-		sql=new StringBuilder();
-		objList=this.userColumnRightManager.getDeleteSql(urdelete, sql);
-		if(objList!=null&&sql!=null){
-			objListArray.add(objList);
-			sqllist.add(sql.toString());
-		}
-		
-		if(isTea!=null&&isTea.equals("true")){
-			//删除管理班级
-			ClassUser cdelete=new ClassUser();
-			cdelete.setRelationtype("班主任");
-			cdelete.setYear(clsyearList.get(0).getClassyearvalue());
-			cdelete.setUserid(ref);
-			sql=new StringBuilder();
-			objList=this.classUserManager.getDeleteSql(cdelete, sql);
-			if(objList!=null&&objList.size()>0){
-				objListArray.add(objList);
-				sqllist.add(sql.toString());
-			} 
-			
-			//删除部门职务
-			DeptUser dudelete=new DeptUser();
-			dudelete.setUserref(ref);
-			sql=new StringBuilder();
-			objList=this.deptUserManager.getDeleteSql(dudelete, sql);
-			if(objList!=null&&objList.size()>0){
-				objListArray.add(objList);
-				sqllist.add(sql.toString());
-			}
+
+        if(ref==null||ref.trim().length()<1
+                ||isTea==null||isTea.trim().length()<1
+                ||isStu==null||isStu.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            return;
+        }
+        List<String>sqllist=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        //获取当前学年
+        List<ClassYearInfo>clsyearList=this.classYearManager.getCurrentYearList(null);
+        if(clsyearList==null||clsyearList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("YEAR_EMPTY"));
+            return;
+        }
+
+        //删除角色
+        RoleUser rdelete=new RoleUser();
+        rdelete.getUserinfo().setRef(ref);
+        sql=new StringBuilder();
+        objList=this.roleUserManager.getDeleteSql(rdelete, sql);
+        if(objList!=null&&objList.size()>0){
+            objListArray.add(objList);
+            sqllist.add(sql.toString());
+        }
+
+        //删除用户权限
+        UserColumnRightInfo urdelete=new UserColumnRightInfo();
+        urdelete.setUserid(ref);
+        sql=new StringBuilder();
+        objList=this.userColumnRightManager.getDeleteSql(urdelete, sql);
+        if(objList!=null&&sql!=null){
+            objListArray.add(objList);
+            sqllist.add(sql.toString());
+        }
+
+        if(isTea!=null&&isTea.equals("true")){
+            //删除管理班级
+            ClassUser cdelete=new ClassUser();
+            cdelete.setRelationtype("班主任");
+            cdelete.setYear(clsyearList.get(0).getClassyearvalue());
+            cdelete.setUserid(ref);
+            sql=new StringBuilder();
+            objList=this.classUserManager.getDeleteSql(cdelete, sql);
+            if(objList!=null&&objList.size()>0){
+                objListArray.add(objList);
+                sqllist.add(sql.toString());
+            }
+
+            //删除部门职务
+            DeptUser dudelete=new DeptUser();
+            dudelete.setUserref(ref);
+            sql=new StringBuilder();
+            objList=this.deptUserManager.getDeleteSql(dudelete, sql);
+            if(objList!=null&&objList.size()>0){
+                objListArray.add(objList);
+                sqllist.add(sql.toString());
+            }
 			
 			/*
 			//删除部门主任
@@ -1458,153 +1470,153 @@ public class UserController extends BaseController<UserInfo> {
 				objListArray.add(objList);
 				sqllist.add(sql.toString());
 			}*/
-			
-			
-			//添加默认角色
-			RoleUser tea=new RoleUser();
-			tea.getUserinfo().setRef(ref);
-			tea.setRoleid(UtilTool._ROLE_TEACHER_ID);
-			tea.setRef(this.roleUserManager.getNextId());
-			sql=new StringBuilder();
-			objList=this.roleUserManager.getSaveSql(tea, sql);
-			if(objList!=null&&objList.size()>0){
-				objListArray.add(objList);
-				sqllist.add(sql.toString());
-			}
-			
-			//添加默认角色权限
-			RoleColumnRightInfo rc=new RoleColumnRightInfo();
-			rc.setRoleid(UtilTool._ROLE_TEACHER_ID);
-			List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
-			if(rcList!=null&&rcList.size()>0){
-				for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
-					UserColumnRightInfo ucr=new UserColumnRightInfo();
-					ucr.setColumnid(roleColumnRightInfo.getColumnid());
-					ucr.setUserid(ref);
-					ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
-					ucr.setRef(this.userColumnRightManager.getNextId());
-					sql=new StringBuilder();
-					objList=this.userColumnRightManager.getSaveSql(ucr, sql);
-					if(objList!=null&&sql!=null){
-						sqllist.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}  
-			}
-			
-			if(rolestr!=null&&rolestr.length()>0){
-				//角色
-				String[]roleArray=rolestr.split(",");
-				for (String roleid : roleArray) {
-					RoleUser radd=new RoleUser();
-					radd.getUserinfo().setRef(ref);
-					radd.setRoleid(Integer.parseInt(roleid));
-					radd.setRef(this.roleUserManager.getNextId());
-					
-					sql=new StringBuilder();
-					objList=this.roleUserManager.getSaveSql(radd, sql);
-					if(objList!=null&&objList.size()>0){
-						objListArray.add(objList);
-						sqllist.add(sql.toString());
-					}
-					
-					//添加角色权限
-					RoleColumnRightInfo rcr=new RoleColumnRightInfo();
-					rcr.setRoleid(Integer.parseInt(roleid));
-					List<RoleColumnRightInfo>rcrList=this.roleColumnRightManager.getList(rcr, null);
-					if(rcrList!=null&&rcrList.size()>0){
-						for (RoleColumnRightInfo roleColumnRightInfo : rcrList) {
-							UserColumnRightInfo ucr=new UserColumnRightInfo();
-							ucr.setColumnid(roleColumnRightInfo.getColumnid());
-							ucr.setUserid(ref);
-							ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
-							ucr.setRef(this.userColumnRightManager.getNextId());
-							sql=new StringBuilder();
-							objList=this.userColumnRightManager.getSaveSql(ucr, sql);
-							if(objList!=null&&sql!=null){
-								sqllist.add(sql.toString());
-								objListArray.add(objList);
-							}
-						}  
-					}
-					
-					
-					//班主任管理班级
-					if(roleid.equals(UtilTool._ROLE_CLASSADVISE_ID.toString())){
-						if(clsstr!=null&&clsstr.length()>0){
-							String[]clsArray=clsstr.split(",");
-							for (String clsid : clsArray) {
-								ClassUser clsu=new ClassUser();
-								clsu.setRef(this.classUserManager.getNextId());
-								clsu.setClassid(Integer.parseInt(clsid));
-								clsu.setRelationtype("班主任");
-								clsu.getUserinfo().setRef(ref);
-								
-								sql=new StringBuilder();
-								objList=this.classUserManager.getSaveSql(clsu, sql);
-								if(objList!=null&&objList.size()>0){
-									objListArray.add(objList);
-									sqllist.add(sql.toString());
-								}
-							}
-						}
-					}else if(roleid.equals(UtilTool._ROLE_DEPT_LEADER_ID.toString())||roleid.equals(UtilTool._ROLE_DEPT_FU_LEADER_ID.toString())){
-						if(deptid!=null&&deptid.trim().length()>0){
-							DeptUser deptleader=new DeptUser();
-							deptleader.setDeptid(Integer.parseInt(deptid));
-							deptleader.setUserref(ref);
-							deptleader.setRoleid(Integer.parseInt(roleid));
-							deptleader.setRef(this.deptUserManager.getNextId());
-							sql=new StringBuilder();
-							objList=this.deptUserManager.getSaveSql(deptleader, sql);
-							if(objList!=null&&objList.size()>0){
-								objListArray.add(objList);
-								sqllist.add(sql.toString());
-							} 
-						}
-					}else if(roleid.equals(UtilTool._ROLE_GRADE_LEADER_ID.toString())||roleid.equals(UtilTool._ROLE_GRADE_FU_LEADER_ID.toString())){
-						if(gradeid!=null&&gradeid.trim().length()>0){
-							DeptUser gradeleader=new DeptUser();
-							gradeleader.setDeptid(Integer.parseInt(gradeid));
-							gradeleader.setUserref(ref);
-							gradeleader.setRoleid(Integer.parseInt(roleid));
-							gradeleader.setRef(this.deptUserManager.getNextId());
-							sql=new StringBuilder();
-							objList=this.deptUserManager.getSaveSql(gradeleader, sql);
-							if(objList!=null&&objList.size()>0){
-								objListArray.add(objList);
-								sqllist.add(sql.toString()); 
-							}
-						} 
-					}else if(roleid.equals(UtilTool._ROLE_TEACH_LEADER_ID.toString())||roleid.equals(UtilTool._ROLE_TEACH_FU_LEADER_ID.toString())){
-						if(tchid!=null&&tchid.trim().length()>0){
-							DeptUser tchleader=new DeptUser();
-							tchleader.setDeptid(Integer.parseInt(tchid));
-							tchleader.setUserref(ref);  
-							tchleader.setRoleid(Integer.parseInt(roleid));
-							tchleader.setRef(this.deptUserManager.getNextId());
-							sql=new StringBuilder();
-							objList=this.deptUserManager.getSaveSql(tchleader, sql);
-							if(objList!=null&&objList.size()>0){
-								objListArray.add(objList);
-								sqllist.add(sql.toString());
-							}
-						}
-					}else if(roleid.equals(UtilTool._ROLE_PREPARE_LEADER_ID.toString())){
-						if(prepareid!=null&&prepareid.trim().length()>0){
-							DeptUser tchleader=new DeptUser();
-							tchleader.setDeptid(Integer.parseInt(prepareid));
-							tchleader.setUserref(ref);  
-							tchleader.setRoleid(Integer.parseInt(roleid));
-							tchleader.setRef(this.deptUserManager.getNextId());
-							sql=new StringBuilder();
-							objList=this.deptUserManager.getSaveSql(tchleader, sql);
-							if(objList!=null&&objList.size()>0){
-								objListArray.add(objList);
-								sqllist.add(sql.toString());
-							}
-						}
-					}else if(roleid.equals(UtilTool._ROLE_FREE_DEPT_LEADER_ID.toString())){
+
+
+            //添加默认角色
+            RoleUser tea=new RoleUser();
+            tea.getUserinfo().setRef(ref);
+            tea.setRoleid(UtilTool._ROLE_TEACHER_ID);
+            tea.setRef(this.roleUserManager.getNextId());
+            sql=new StringBuilder();
+            objList=this.roleUserManager.getSaveSql(tea, sql);
+            if(objList!=null&&objList.size()>0){
+                objListArray.add(objList);
+                sqllist.add(sql.toString());
+            }
+
+            //添加默认角色权限
+            RoleColumnRightInfo rc=new RoleColumnRightInfo();
+            rc.setRoleid(UtilTool._ROLE_TEACHER_ID);
+            List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
+            if(rcList!=null&&rcList.size()>0){
+                for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
+                    UserColumnRightInfo ucr=new UserColumnRightInfo();
+                    ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                    ucr.setUserid(ref);
+                    ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                    ucr.setRef(this.userColumnRightManager.getNextId());
+                    sql=new StringBuilder();
+                    objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                    if(objList!=null&&sql!=null){
+                        sqllist.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
+
+            if(rolestr!=null&&rolestr.length()>0){
+                //角色
+                String[]roleArray=rolestr.split(",");
+                for (String roleid : roleArray) {
+                    RoleUser radd=new RoleUser();
+                    radd.getUserinfo().setRef(ref);
+                    radd.setRoleid(Integer.parseInt(roleid));
+                    radd.setRef(this.roleUserManager.getNextId());
+
+                    sql=new StringBuilder();
+                    objList=this.roleUserManager.getSaveSql(radd, sql);
+                    if(objList!=null&&objList.size()>0){
+                        objListArray.add(objList);
+                        sqllist.add(sql.toString());
+                    }
+
+                    //添加角色权限
+                    RoleColumnRightInfo rcr=new RoleColumnRightInfo();
+                    rcr.setRoleid(Integer.parseInt(roleid));
+                    List<RoleColumnRightInfo>rcrList=this.roleColumnRightManager.getList(rcr, null);
+                    if(rcrList!=null&&rcrList.size()>0){
+                        for (RoleColumnRightInfo roleColumnRightInfo : rcrList) {
+                            UserColumnRightInfo ucr=new UserColumnRightInfo();
+                            ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                            ucr.setUserid(ref);
+                            ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                            ucr.setRef(this.userColumnRightManager.getNextId());
+                            sql=new StringBuilder();
+                            objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                            if(objList!=null&&sql!=null){
+                                sqllist.add(sql.toString());
+                                objListArray.add(objList);
+                            }
+                        }
+                    }
+
+
+                    //班主任管理班级
+                    if(roleid.equals(UtilTool._ROLE_CLASSADVISE_ID.toString())){
+                        if(clsstr!=null&&clsstr.length()>0){
+                            String[]clsArray=clsstr.split(",");
+                            for (String clsid : clsArray) {
+                                ClassUser clsu=new ClassUser();
+                                clsu.setRef(this.classUserManager.getNextId());
+                                clsu.setClassid(Integer.parseInt(clsid));
+                                clsu.setRelationtype("班主任");
+                                clsu.getUserinfo().setRef(ref);
+
+                                sql=new StringBuilder();
+                                objList=this.classUserManager.getSaveSql(clsu, sql);
+                                if(objList!=null&&objList.size()>0){
+                                    objListArray.add(objList);
+                                    sqllist.add(sql.toString());
+                                }
+                            }
+                        }
+                    }else if(roleid.equals(UtilTool._ROLE_DEPT_LEADER_ID.toString())||roleid.equals(UtilTool._ROLE_DEPT_FU_LEADER_ID.toString())){
+                        if(deptid!=null&&deptid.trim().length()>0){
+                            DeptUser deptleader=new DeptUser();
+                            deptleader.setDeptid(Integer.parseInt(deptid));
+                            deptleader.setUserref(ref);
+                            deptleader.setRoleid(Integer.parseInt(roleid));
+                            deptleader.setRef(this.deptUserManager.getNextId());
+                            sql=new StringBuilder();
+                            objList=this.deptUserManager.getSaveSql(deptleader, sql);
+                            if(objList!=null&&objList.size()>0){
+                                objListArray.add(objList);
+                                sqllist.add(sql.toString());
+                            }
+                        }
+                    }else if(roleid.equals(UtilTool._ROLE_GRADE_LEADER_ID.toString())||roleid.equals(UtilTool._ROLE_GRADE_FU_LEADER_ID.toString())){
+                        if(gradeid!=null&&gradeid.trim().length()>0){
+                            DeptUser gradeleader=new DeptUser();
+                            gradeleader.setDeptid(Integer.parseInt(gradeid));
+                            gradeleader.setUserref(ref);
+                            gradeleader.setRoleid(Integer.parseInt(roleid));
+                            gradeleader.setRef(this.deptUserManager.getNextId());
+                            sql=new StringBuilder();
+                            objList=this.deptUserManager.getSaveSql(gradeleader, sql);
+                            if(objList!=null&&objList.size()>0){
+                                objListArray.add(objList);
+                                sqllist.add(sql.toString());
+                            }
+                        }
+                    }else if(roleid.equals(UtilTool._ROLE_TEACH_LEADER_ID.toString())||roleid.equals(UtilTool._ROLE_TEACH_FU_LEADER_ID.toString())){
+                        if(tchid!=null&&tchid.trim().length()>0){
+                            DeptUser tchleader=new DeptUser();
+                            tchleader.setDeptid(Integer.parseInt(tchid));
+                            tchleader.setUserref(ref);
+                            tchleader.setRoleid(Integer.parseInt(roleid));
+                            tchleader.setRef(this.deptUserManager.getNextId());
+                            sql=new StringBuilder();
+                            objList=this.deptUserManager.getSaveSql(tchleader, sql);
+                            if(objList!=null&&objList.size()>0){
+                                objListArray.add(objList);
+                                sqllist.add(sql.toString());
+                            }
+                        }
+                    }else if(roleid.equals(UtilTool._ROLE_PREPARE_LEADER_ID.toString())){
+                        if(prepareid!=null&&prepareid.trim().length()>0){
+                            DeptUser tchleader=new DeptUser();
+                            tchleader.setDeptid(Integer.parseInt(prepareid));
+                            tchleader.setUserref(ref);
+                            tchleader.setRoleid(Integer.parseInt(roleid));
+                            tchleader.setRef(this.deptUserManager.getNextId());
+                            sql=new StringBuilder();
+                            objList=this.deptUserManager.getSaveSql(tchleader, sql);
+                            if(objList!=null&&objList.size()>0){
+                                objListArray.add(objList);
+                                sqllist.add(sql.toString());
+                            }
+                        }
+                    }else if(roleid.equals(UtilTool._ROLE_FREE_DEPT_LEADER_ID.toString())){
                         if(deptfzrid!=null&&deptfzrid.trim().length()>0){
                             DeptUser tchleader=new DeptUser();
                             tchleader.setDeptid(Integer.parseInt(deptfzrid));
@@ -1619,878 +1631,889 @@ public class UserController extends BaseController<UserInfo> {
                             }
                         }
                     }
-				}
-			}
-			
-			//添加管理员角色
-			if(adminstr!=null&&adminstr.trim().length()>0){
-				String[]adminArray=adminstr.split(",");
-				for (String adminid : adminArray) {
-					RoleUser radd=new RoleUser();
-					radd.getUserinfo().setRef(ref);
-					radd.setRoleid(Integer.parseInt(adminid));
-					sql=new StringBuilder();
-					objList=this.roleUserManager.getSaveSql(radd, sql);
-					if(objList!=null&&objList.size()>0){
-						objListArray.add(objList);
-						sqllist.add(sql.toString());
-					}
-					
-					
-					//添加管理员角色权限
-					RoleColumnRightInfo rcr=new RoleColumnRightInfo();
-					rcr.setRoleid(Integer.parseInt(adminid));
-					List<RoleColumnRightInfo>rcrList=this.roleColumnRightManager.getList(rcr, null);
-					if(rcrList!=null&&rcrList.size()>0){
-						for (RoleColumnRightInfo roleColumnRightInfo : rcrList) {
-							UserColumnRightInfo ucr=new UserColumnRightInfo();
-							ucr.setColumnid(roleColumnRightInfo.getColumnid());
-							ucr.setUserid(ref);
-							ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
-							ucr.setRef(this.userColumnRightManager.getNextId());
-							sql=new StringBuilder();
-							objList=this.userColumnRightManager.getSaveSql(ucr, sql);
-							if(objList!=null&&sql!=null){
-								sqllist.add(sql.toString());
-								objListArray.add(objList);
-							}
-						}  
-					}
-				}
-			}
-		}else if(isStu!=null&&isStu.equals("true")){
-			//添加默认角色
-			RoleUser stu=new RoleUser();
-			stu.getUserinfo().setRef(ref);
-			stu.setRoleid(UtilTool._ROLE_STU_ID);
-			sql=new StringBuilder();
-			objList=this.roleUserManager.getSaveSql(stu, sql);
-			if(objList!=null&&objList.size()>0){
-				objListArray.add(objList);
-				sqllist.add(sql.toString());
-			}
-			
-			//添加默认角色权限
-			RoleColumnRightInfo rcr=new RoleColumnRightInfo();
-			rcr.setRoleid(UtilTool._ROLE_STU_ID);
-			List<RoleColumnRightInfo>rcrList=this.roleColumnRightManager.getList(rcr, null);
-			if(rcrList!=null&&rcrList.size()>0){
-				for (RoleColumnRightInfo roleColumnRightInfo : rcrList) {
-					UserColumnRightInfo ucr=new UserColumnRightInfo();
-					ucr.setColumnid(roleColumnRightInfo.getColumnid());
-					ucr.setUserid(ref);
-					ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
-					ucr.setRef(this.userColumnRightManager.getNextId());
-					sql=new StringBuilder();
-					objList=this.userColumnRightManager.getSaveSql(ucr, sql);
-					if(objList!=null&&sql!=null){
-						sqllist.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}  
-			}
-			
-			
-			if(rolestr!=null&&rolestr.length()>0){
-				//角色
-				String[]roleArray=rolestr.split(",");
-				for (String roleid : roleArray) {
-					RoleUser radd=new RoleUser();
-					radd.getUserinfo().setRef(ref);
-					radd.setRoleid(Integer.parseInt(roleid));
-					sql=new StringBuilder();
-					objList=this.roleUserManager.getSaveSql(radd, sql);
-					if(objList!=null&&objList.size()>0){
-						objListArray.add(objList);
-						sqllist.add(sql.toString());
-					}
-					
-					
-					//添加默认角色权限
-					RoleColumnRightInfo rcrstu=new RoleColumnRightInfo();
-					rcrstu.setRoleid(Integer.parseInt(roleid));
-					List<RoleColumnRightInfo>rcrstuList=this.roleColumnRightManager.getList(rcrstu, null);
-					if(rcrstuList!=null&&rcrstuList.size()>0){
-						for (RoleColumnRightInfo roleColumnRightInfo : rcrstuList) {
-							UserColumnRightInfo ucr=new UserColumnRightInfo();
-							ucr.setColumnid(roleColumnRightInfo.getColumnid());
-							ucr.setUserid(ref);
-							ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
-							ucr.setRef(this.userColumnRightManager.getNextId());
-							sql=new StringBuilder();
-							objList=this.userColumnRightManager.getSaveSql(ucr, sql);
-							if(objList!=null&&sql!=null){
-								sqllist.add(sql.toString());
-								objListArray.add(objList);
-							}
-						}  
-					}
-				}
-			}
-			
-		}
-		
-		if(objListArray.size()>0&&sqllist.size()>0){
-			boolean flag=this.userManager.doExcetueArrayProc(sqllist, objListArray);
-			if(flag){
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-				je.setType("success");
-				
-				//重置edit_role信息
-				RoleUser ru=new RoleUser();
-				ru.getUserinfo().setRef(ref);
-				List<RoleUser> ruList=this.roleUserManager.getList(ru, null);
-				je.getObjList().add(ruList);
-				
-				if(isTea!=null&&isTea.equals("true")){
-					ClassUser teacu=new ClassUser();
-					teacu.setYear(clsyearList.get(0).getClassyearvalue());
-					teacu.setRelationtype("班主任");
-					teacu.setUserid(ref);
-					List<ClassUser>teaClsList=this.classUserManager.getList(teacu, null);
-					je.getObjList().add(teaClsList);
-					
-					
-					List<DeptUser>duList=null;
-					DeptUser du=new DeptUser();
-					du.setUserref(ref);
-					du.setRoleflag(1);
-					du.setTypeid(1);
-					duList=this.deptUserManager.getList(du, null);
-					je.getObjList().add(duList);
-					
-					du.setTypeid(2);
-					duList=this.deptUserManager.getList(du, null);
-					je.getObjList().add(duList);
-					
-					du.setTypeid(3);
-					duList=this.deptUserManager.getList(du, null);
-					je.getObjList().add(duList);
-					
-					du.setTypeid(5);
-					duList=this.deptUserManager.getList(du, null);
-					je.getObjList().add(duList);
+                }
+            }
+
+            //添加管理员角色
+            if(adminstr!=null&&adminstr.trim().length()>0){
+                String[]adminArray=adminstr.split(",");
+                for (String adminid : adminArray) {
+                    RoleUser radd=new RoleUser();
+                    radd.getUserinfo().setRef(ref);
+                    radd.setRoleid(Integer.parseInt(adminid));
+                    sql=new StringBuilder();
+                    objList=this.roleUserManager.getSaveSql(radd, sql);
+                    if(objList!=null&&objList.size()>0){
+                        objListArray.add(objList);
+                        sqllist.add(sql.toString());
+                    }
+
+
+                    //添加管理员角色权限
+                    RoleColumnRightInfo rcr=new RoleColumnRightInfo();
+                    rcr.setRoleid(Integer.parseInt(adminid));
+                    List<RoleColumnRightInfo>rcrList=this.roleColumnRightManager.getList(rcr, null);
+                    if(rcrList!=null&&rcrList.size()>0){
+                        for (RoleColumnRightInfo roleColumnRightInfo : rcrList) {
+                            UserColumnRightInfo ucr=new UserColumnRightInfo();
+                            ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                            ucr.setUserid(ref);
+                            ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                            ucr.setRef(this.userColumnRightManager.getNextId());
+                            sql=new StringBuilder();
+                            objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                            if(objList!=null&&sql!=null){
+                                sqllist.add(sql.toString());
+                                objListArray.add(objList);
+                            }
+                        }
+                    }
+                }
+            }
+        }else if(isStu!=null&&isStu.equals("true")){
+            //添加默认角色
+            RoleUser stu=new RoleUser();
+            stu.getUserinfo().setRef(ref);
+            stu.setRoleid(UtilTool._ROLE_STU_ID);
+            sql=new StringBuilder();
+            objList=this.roleUserManager.getSaveSql(stu, sql);
+            if(objList!=null&&objList.size()>0){
+                objListArray.add(objList);
+                sqllist.add(sql.toString());
+            }
+
+            //添加默认角色权限
+            RoleColumnRightInfo rcr=new RoleColumnRightInfo();
+            rcr.setRoleid(UtilTool._ROLE_STU_ID);
+            List<RoleColumnRightInfo>rcrList=this.roleColumnRightManager.getList(rcr, null);
+            if(rcrList!=null&&rcrList.size()>0){
+                for (RoleColumnRightInfo roleColumnRightInfo : rcrList) {
+                    UserColumnRightInfo ucr=new UserColumnRightInfo();
+                    ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                    ucr.setUserid(ref);
+                    ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                    ucr.setRef(this.userColumnRightManager.getNextId());
+                    sql=new StringBuilder();
+                    objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                    if(objList!=null&&sql!=null){
+                        sqllist.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
+
+
+            if(rolestr!=null&&rolestr.length()>0){
+                //角色
+                String[]roleArray=rolestr.split(",");
+                for (String roleid : roleArray) {
+                    RoleUser radd=new RoleUser();
+                    radd.getUserinfo().setRef(ref);
+                    radd.setRoleid(Integer.parseInt(roleid));
+                    sql=new StringBuilder();
+                    objList=this.roleUserManager.getSaveSql(radd, sql);
+                    if(objList!=null&&objList.size()>0){
+                        objListArray.add(objList);
+                        sqllist.add(sql.toString());
+                    }
+
+
+                    //添加默认角色权限
+                    RoleColumnRightInfo rcrstu=new RoleColumnRightInfo();
+                    rcrstu.setRoleid(Integer.parseInt(roleid));
+                    List<RoleColumnRightInfo>rcrstuList=this.roleColumnRightManager.getList(rcrstu, null);
+                    if(rcrstuList!=null&&rcrstuList.size()>0){
+                        for (RoleColumnRightInfo roleColumnRightInfo : rcrstuList) {
+                            UserColumnRightInfo ucr=new UserColumnRightInfo();
+                            ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                            ucr.setUserid(ref);
+                            ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                            ucr.setRef(this.userColumnRightManager.getNextId());
+                            sql=new StringBuilder();
+                            objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                            if(objList!=null&&sql!=null){
+                                sqllist.add(sql.toString());
+                                objListArray.add(objList);
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        if(objListArray.size()>0&&sqllist.size()>0){
+            boolean flag=this.userManager.doExcetueArrayProc(sqllist, objListArray);
+            if(flag){
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+
+                //重置edit_role信息
+                RoleUser ru=new RoleUser();
+                ru.getUserinfo().setRef(ref);
+                List<RoleUser> ruList=this.roleUserManager.getList(ru, null);
+                je.getObjList().add(ruList);
+
+                if(isTea!=null&&isTea.equals("true")){
+                    ClassUser teacu=new ClassUser();
+                    teacu.setYear(clsyearList.get(0).getClassyearvalue());
+                    teacu.setRelationtype("班主任");
+                    teacu.setUserid(ref);
+                    List<ClassUser>teaClsList=this.classUserManager.getList(teacu, null);
+                    je.getObjList().add(teaClsList);
+
+
+                    List<DeptUser>duList=null;
+                    DeptUser du=new DeptUser();
+                    du.setUserref(ref);
+                    du.setRoleflag(1);
+                    du.setTypeid(1);
+                    duList=this.deptUserManager.getList(du, null);
+                    je.getObjList().add(duList);
+
+                    du.setTypeid(2);
+                    duList=this.deptUserManager.getList(du, null);
+                    je.getObjList().add(duList);
+
+                    du.setTypeid(3);
+                    duList=this.deptUserManager.getList(du, null);
+                    je.getObjList().add(duList);
+
+                    du.setTypeid(5);
+                    duList=this.deptUserManager.getList(du, null);
+                    je.getObjList().add(duList);
 
                     du.setTypeid(4);
                     duList=this.deptUserManager.getList(du, null);
                     je.getObjList().add(duList);
-				}else if(isStu!=null&&isStu.equals("true")){
-				
-				
-				}
+                }else if(isStu!=null&&isStu.equals("true")){
 
-			}else 
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-		}
-		response.getWriter().print(je.toJSON());		
-	}
-	
-	
-	/**
-	 * 教职工、学生信息编辑
-	 * @param request
-	 * @param response
-	 * @param mp  
-	 * @throws Exception
-	 */
 
-	@RequestMapping(params = "m=edit_info", method = RequestMethod.POST)
-	public void edit_info(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		JsonEntity je=new JsonEntity();
-		String ref=request.getParameter("ref");
-		String isTea=request.getParameter("isTea");
-		String isStu=request.getParameter("isStu");
-		String clsstr=request.getParameter("clsstr");
-		
-		String linkman=request.getParameter("linkman");
-		String linkphone=request.getParameter("linkphone");
-		String stuaddress=request.getParameter("stuaddress");
-		
-		String mail=request.getParameter("mail");
-		String phone=request.getParameter("phone");
-		String address=request.getParameter("address");
-		String majorstr=request.getParameter("majorstr");
-		String subjectstr=request.getParameter("subjectstr");
-		
-		
-		if(ref==null||ref.trim().length()<1
-				||isTea==null||isTea.trim().length()<1
-				||isStu==null||isStu.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                }
+
+            }else
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 教职工、学生信息编辑
+     * @param request
+     * @param response
+     * @param mp
+     * @throws Exception
+     */
+
+    @RequestMapping(params = "m=edit_info", method = RequestMethod.POST)
+    public void edit_info(HttpServletRequest request,
+                          HttpServletResponse response, ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String ref=request.getParameter("ref");
+        String isTea=request.getParameter("isTea");
+        String isStu=request.getParameter("isStu");
+        String clsstr=request.getParameter("clsstr");
+
+        String linkman=request.getParameter("linkman");
+        String linkphone=request.getParameter("linkphone");
+        String stuaddress=request.getParameter("stuaddress");
+
+        String mail=request.getParameter("mail");
+        String phone=request.getParameter("phone");
+        String address=request.getParameter("address");
+        String majorstr=request.getParameter("majorstr");
+        String subjectstr=request.getParameter("subjectstr");
+
+
+        if(ref==null||ref.trim().length()<1
+                ||isTea==null||isTea.trim().length()<1
+                ||isStu==null||isStu.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
-			return;
-		}
-		List<String>sqllist=new ArrayList<String>();
-		List<List<Object>>objListArray=new ArrayList<List<Object>>();
-		List<Object>objList=null;
-		StringBuilder sql=null;
-		//获取当前学年
-		List<ClassYearInfo>clsyearList=this.classYearManager.getCurrentYearList(null);
-		if(clsyearList==null||clsyearList.size()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("YEAR_EMPTY"));
+            return;
+        }
+        List<String>sqllist=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        //获取当前学年
+        List<ClassYearInfo>clsyearList=this.classYearManager.getCurrentYearList(null);
+        if(clsyearList==null||clsyearList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("YEAR_EMPTY"));
             response.getWriter().print(je.toJSON());
-			return;
-		}
-		
-		if(isTea!=null&&isTea.equals("true")){
-			TeacherInfo t=new TeacherInfo();
-			t.setUserid(ref);
-			if(mail!=null&&mail.trim().length()>0)
-				t.setTeacherpost(mail);
-			if(phone!=null&&phone.trim().length()>0)
-				t.setTeacherphone(phone);
-			if(address!=null&&address.trim().length()>0)
-				t.setTeacheraddress(address);
-			sql=new StringBuilder();
-			objList=this.teacherManager.getUpdateSql(t, sql);
-			if(objList!=null&&objList.size()>0){
-				objListArray.add(objList);
-				sqllist.add(sql.toString());
-			}
-			//主授学科
-			if(majorstr!=null&&majorstr.length()>0){
-				SubjectUser sdelete = new SubjectUser();
-				sdelete.getUserinfo().setRef(ref);
-				sql = new StringBuilder();  
-				objList = this.subjectUserManager.getDeleteSql(sdelete,
-						sql);
-				if (objList != null && sql != null) {
-					sqllist.add(sql.toString());
-					objListArray.add(objList);
-				}
-				
-				SubjectUser su = new SubjectUser();
-				su.getSubjectinfo().setSubjectid(Integer.parseInt(majorstr));
-				su.getUserinfo().setRef(ref);
-				su.setIsmajor(1);
-				sql = new StringBuilder();
-				objList = this.subjectUserManager.getSaveSql(su, sql);
-				if (objList != null && sql != null) {
-					sqllist.add(sql.toString());
-					objListArray.add(objList);
-				}
-			}
-			//辅授学科
-			if (subjectstr != null && subjectstr.trim().length() > 0) {
-				String[] subjectArray = subjectstr.split(",");
-				if (subjectArray.length > 0) {
-					for (int i = 0; i < subjectArray.length; i++) {
-						SubjectUser su = new SubjectUser();
-						su.getSubjectinfo().setSubjectid(
-								Integer.parseInt(subjectArray[i]));
-						su.getUserinfo().setRef(ref);
-						su.setIsmajor(0);
+            return;
+        }
 
-						sql = new StringBuilder();
-						objList = this.subjectUserManager.getSaveSql(su, sql);
-						if (objList != null && sql != null) {
-							sqllist.add(sql.toString());
-							objListArray.add(objList);
-						}
-					}  
-				}
-			}
-			
-			//班级
-			if(clsstr!=null&&clsstr.length()>0){
-				//删除当前学年及以后的班级
-				ClassUser cudelete=new ClassUser();
-				cudelete.setAfteryear(clsyearList.get(0).getClassyearvalue());
-				cudelete.getUserinfo().setRef(ref);
-				cudelete.setRelationtype("任课老师");
-				sql=new StringBuilder();
-				objList=this.classUserManager.getDeleteSql(cudelete, sql);
-				if (objList != null && sql != null) {
-					sqllist.add(sql.toString());
-					objListArray.add(objList);
-				}
-				
-				//添加任课班级
-				String[]clsArray=clsstr.split(",");
-				for (int i = 0; i < clsArray.length; i++) {
-					String[] csidArray = clsArray[i].toString().split("\\|");
-					
-					ClassUser cuadd=new ClassUser();
-					cuadd.setRef(this.classUserManager.getNextId());
-					cuadd.getUserinfo().setRef(ref);
-					cuadd.setRelationtype("任课老师");
-					cuadd.setSubjectid(Integer.parseInt(csidArray[1]));
-					cuadd.setClassid(Integer.parseInt(csidArray[0]));
-					
-					sql=new StringBuilder();
-					objList=this.classUserManager.getSaveSql(cuadd, sql);
-					if (objList != null && sql != null) {
-						sqllist.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}
-			
-			}
-			
-			
-		}else if(isStu!=null&&isStu.equals("true")){
-			StudentInfo s=new StudentInfo();
-			s.setUserref(ref);
-			if(linkman!=null&&linkman.trim().length()>0)
-				s.setLinkman(linkman);
-			if(linkphone!=null&&linkphone.trim().length()>0)
-				s.setLinkmanphone(linkphone);
-			if(stuaddress!=null&&stuaddress.trim().length()>0)
-				s.setStuaddress(stuaddress);
-			
-			sql=new StringBuilder();
-			objList=this.studentManager.getUpdateSql(s, sql);
-			if(objList!=null&&objList.size()>0){
-				objListArray.add(objList);
-				sqllist.add(sql.toString());
-			}
-			
-			
-			//班级
-			if(clsstr!=null&&clsstr.length()>0){
-				//删除当前学年及以后的班级
-				ClassUser cudelete=new ClassUser();
-				cudelete.setAfteryear(clsyearList.get(0).getClassyearvalue());
-				cudelete.getUserinfo().setRef(ref);
-				cudelete.setRelationtype("学生");
-				sql=new StringBuilder();
-				objList=this.classUserManager.getDeleteSql(cudelete, sql);
-				if (objList != null && sql != null) {
-					sqllist.add(sql.toString());
-					objListArray.add(objList);
-				}
-				
-				//添加班级
-				String[]clsArray=clsstr.split(",");
-				for (int i = 0; i < clsArray.length; i++) {
-					ClassUser cuadd=new ClassUser();
-					cuadd.setRef(this.classUserManager.getNextId());
-					cuadd.getUserinfo().setRef(ref);
-					cuadd.setRelationtype("学生");
-					cuadd.setClassid(Integer.parseInt(clsArray[i]));
-					
-					sql=new StringBuilder();
-					objList=this.classUserManager.getSaveSql(cuadd, sql);
-					if (objList != null && sql != null) {
-						sqllist.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}
-			
-			}
-			
-			
-		}
-		
-		if(objListArray.size()>0&&sqllist.size()>0){
-			boolean flag=this.userManager.doExcetueArrayProc(sqllist, objListArray);
-			if(flag){
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-				je.setType("success");
-				
-				if(isTea!=null&&isTea.equals("true")){
-					TeacherInfo t=new TeacherInfo();
-					t.setUserid(ref);
-					List<TeacherInfo>teaList=this.teacherManager.getList(t, null);
-					
-					ClassUser teacu=new ClassUser();
-					teacu.setYear(clsyearList.get(0).getClassyearvalue());
-					teacu.setRelationtype("任课老师");
-					teacu.setUserid(ref);
-					List<ClassUser>teaClsList=this.classUserManager.getList(teacu, null);
-					
-					teacu.setHistoryyear(clsyearList.get(0).getClassyearvalue());
+        if(isTea!=null&&isTea.equals("true")){
+            TeacherInfo t=new TeacherInfo();
+            t.setUserid(ref);
+            if(mail!=null&&mail.trim().length()>0)
+                t.setTeacherpost(mail);
+            if(phone!=null&&phone.trim().length()>0)
+                t.setTeacherphone(phone);
+            if(address!=null&&address.trim().length()>0)
+                t.setTeacheraddress(address);
+            sql=new StringBuilder();
+            objList=this.teacherManager.getUpdateSql(t, sql);
+            if(objList!=null&&objList.size()>0){
+                objListArray.add(objList);
+                sqllist.add(sql.toString());
+            }
+            //主授学科
+            if(majorstr!=null&&majorstr.length()>0){
+                SubjectUser sdelete = new SubjectUser();
+                sdelete.getUserinfo().setRef(ref);
+                sql = new StringBuilder();
+                objList = this.subjectUserManager.getDeleteSql(sdelete,
+                        sql);
+                if (objList != null && sql != null) {
+                    sqllist.add(sql.toString());
+                    objListArray.add(objList);
+                }
+
+                SubjectUser su = new SubjectUser();
+                su.getSubjectinfo().setSubjectid(Integer.parseInt(majorstr));
+                su.getUserinfo().setRef(ref);
+                su.setIsmajor(1);
+                sql = new StringBuilder();
+                objList = this.subjectUserManager.getSaveSql(su, sql);
+                if (objList != null && sql != null) {
+                    sqllist.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }
+            //辅授学科
+            if (subjectstr != null && subjectstr.trim().length() > 0) {
+                String[] subjectArray = subjectstr.split(",");
+                if (subjectArray.length > 0) {
+                    for (int i = 0; i < subjectArray.length; i++) {
+                        SubjectUser su = new SubjectUser();
+                        su.getSubjectinfo().setSubjectid(
+                                Integer.parseInt(subjectArray[i]));
+                        su.getUserinfo().setRef(ref);
+                        su.setIsmajor(0);
+
+                        sql = new StringBuilder();
+                        objList = this.subjectUserManager.getSaveSql(su, sql);
+                        if (objList != null && sql != null) {
+                            sqllist.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                }
+            }
+
+            //班级
+            if(clsstr!=null&&clsstr.length()>0){
+                //删除当前学年及以后的班级
+                ClassUser cudelete=new ClassUser();
+                cudelete.setAfteryear(clsyearList.get(0).getClassyearvalue());
+                cudelete.getUserinfo().setRef(ref);
+                cudelete.setRelationtype("任课老师");
+                sql=new StringBuilder();
+                objList=this.classUserManager.getDeleteSql(cudelete, sql);
+                if (objList != null && sql != null) {
+                    sqllist.add(sql.toString());
+                    objListArray.add(objList);
+                }
+
+                //添加任课班级
+                String[]clsArray=clsstr.split(",");
+                for (int i = 0; i < clsArray.length; i++) {
+                    String[] csidArray = clsArray[i].toString().split("\\|");
+
+                    ClassUser cuadd=new ClassUser();
+                    cuadd.setRef(this.classUserManager.getNextId());
+                    cuadd.getUserinfo().setRef(ref);
+                    cuadd.setRelationtype("任课老师");
+                    cuadd.setSubjectid(Integer.parseInt(csidArray[1]));
+                    cuadd.setClassid(Integer.parseInt(csidArray[0]));
+
+                    sql=new StringBuilder();
+                    objList=this.classUserManager.getSaveSql(cuadd, sql);
+                    if (objList != null && sql != null) {
+                        sqllist.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+
+            }
+
+
+        }else if(isStu!=null&&isStu.equals("true")){
+            StudentInfo s=new StudentInfo();
+            s.setUserref(ref);
+            if(linkman!=null&&linkman.trim().length()>0)
+                s.setLinkman(linkman);
+            if(linkphone!=null&&linkphone.trim().length()>0)
+                s.setLinkmanphone(linkphone);
+            if(stuaddress!=null&&stuaddress.trim().length()>0)
+                s.setStuaddress(stuaddress);
+
+            sql=new StringBuilder();
+            objList=this.studentManager.getUpdateSql(s, sql);
+            if(objList!=null&&objList.size()>0){
+                objListArray.add(objList);
+                sqllist.add(sql.toString());
+            }
+
+
+            //班级
+            if(clsstr!=null&&clsstr.length()>0){
+                //删除当前学年及以后的班级
+                ClassUser cudelete=new ClassUser();
+                cudelete.setAfteryear(clsyearList.get(0).getClassyearvalue());
+                cudelete.getUserinfo().setRef(ref);
+                cudelete.setRelationtype("学生");
+                sql=new StringBuilder();
+                objList=this.classUserManager.getDeleteSql(cudelete, sql);
+                if (objList != null && sql != null) {
+                    sqllist.add(sql.toString());
+                    objListArray.add(objList);
+                }
+
+                //添加班级
+                String[]clsArray=clsstr.split(",");
+                for (int i = 0; i < clsArray.length; i++) {
+                    ClassUser cuadd=new ClassUser();
+                    cuadd.setRef(this.classUserManager.getNextId());
+                    cuadd.getUserinfo().setRef(ref);
+                    cuadd.setRelationtype("学生");
+                    cuadd.setClassid(Integer.parseInt(clsArray[i]));
+
+                    sql=new StringBuilder();
+                    objList=this.classUserManager.getSaveSql(cuadd, sql);
+                    if (objList != null && sql != null) {
+                        sqllist.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+
+            }
+
+
+        }
+
+        if(objListArray.size()>0&&sqllist.size()>0){
+            boolean flag=this.userManager.doExcetueArrayProc(sqllist, objListArray);
+            if(flag){
+                UserInfo utmp=new UserInfo();
+                utmp.setRef(ref);
+                UserInfo u=userManager.getUserInfo(utmp);
+                if(u!=null){
+                    if(updateToEttClassUser(ref,u.getDcschoolid())){
+                        System.out.println("更新classuser到网校成功！");
+                    }else{
+                        System.out.println("更新classuser到网校失败！");
+                    }
+                }
+
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+
+                if(isTea!=null&&isTea.equals("true")){
+                    TeacherInfo t=new TeacherInfo();
+                    t.setUserid(ref);
+                    List<TeacherInfo>teaList=this.teacherManager.getList(t, null);
+
+                    ClassUser teacu=new ClassUser();
+                    teacu.setYear(clsyearList.get(0).getClassyearvalue());
+                    teacu.setRelationtype("任课老师");
+                    teacu.setUserid(ref);
+                    List<ClassUser>teaClsList=this.classUserManager.getList(teacu, null);
+
+                    teacu.setHistoryyear(clsyearList.get(0).getClassyearvalue());
                     teacu.setYear(null);
-					List<ClassUser>teaHistoryClsList=this.classUserManager.getList(teacu, null);
-					  
-					SubjectUser su=new SubjectUser();
-					su.setUserid(ref);
-					List<SubjectUser>subjectUserList=this.subjectUserManager.getList(su, null);
-					
-					//重置edit_info信息
-					je.getObjList().add(teaList.get(0));
-					je.getObjList().add(teaClsList);
-					je.getObjList().add(teaHistoryClsList);
-					je.getObjList().add(subjectUserList);
-				}else if(isStu!=null&&isStu.equals("true")){
-					StudentInfo s=new StudentInfo();
-					s.setUserref(ref);
-					List<StudentInfo>stuList=this.studentManager.getList(s, null);
-					
-					ClassUser stucu=new ClassUser();
-					stucu.setRelationtype("学生");
-					stucu.setYear(clsyearList.get(0).getClassyearvalue());
-					stucu.setUserid(ref);
-					List<ClassUser>stuClsList=this.classUserManager.getList(stucu, null);
-					
-					stucu.setHistoryyear(clsyearList.get(0).getClassyearvalue());
-                    stucu.setYear(null);
-					List<ClassUser>stuHistoryClsList=this.classUserManager.getList(stucu, null);
-					
-					//重置edit_info信息
-					je.getObjList().add(stuList.get(0));
-					je.getObjList().add(stuClsList);
-					je.getObjList().add(stuHistoryClsList);
-				}
-				
-				
+                    List<ClassUser>teaHistoryClsList=this.classUserManager.getList(teacu, null);
 
-			}else 
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-		}
-		response.getWriter().print(je.toJSON());		
-	}
-	
-	
-	
-	@RequestMapping(params = "m=adminview", method = {RequestMethod.GET,RequestMethod.POST})
-	public ModelAndView adminView(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		JsonEntity je=new JsonEntity();
-		String ref=request.getParameter("ref");
-		if(ref==null||ref.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}  
-		String identityname=request.getParameter("identityname");
-		request.setAttribute("identityname", identityname);
-		request.setAttribute("rolestr", request.getParameter("rolestr"));
-		request.setAttribute("username", request.getParameter("username"));
-			   
-		UserInfo u=new UserInfo();
-		u.setRef(ref);
-		List<UserInfo>userList=userManager.getList(u, null);
-		UserInfo user=null;
-		if(userList!=null&&userList.size()>0)
-			user=userList.get(0);
-		if (user == null)
-			return new ModelAndView("/user/userView", mp);
-		mp.put("user", user);
-		RoleUser ru = new RoleUser();
-		ru.getUserinfo().setRef(user.getRef());
-		List<RoleUser> ruList = roleUserManager.getList(ru, null);
-		if (ruList != null && ruList.size() > 0) {
-			mp.put("roleUser", ruList);
-			mp.put("role", ruList.get(0).getRoleid());
-			request.getSession().setAttribute("USER_ROLE", ruList.get(0));
-		}     
-		mp.put("ref", ref);
-		//当前及以后学年
-		List<ClassYearInfo>clsyearList=this.classYearManager.getCurrentYearList("more");
-		//当前学年
-		List<ClassYearInfo>classyearList=this.classYearManager.getCurrentYearList(null);
-		if(classyearList==null||classyearList.size()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("YEAR_EMPTY"));
-			response.getWriter().print(je.getAlertMsgAndBack());
-			return null;
-		}
-		//身份角色
-		IdentityInfo i=new IdentityInfo();
-		i.setIdentityname(user.getIdentityname());
-		List<IdentityInfo>identityList=this.identityManager.getList(i, null);
-		
-		StudentInfo stuInfo =new StudentInfo();
-		stuInfo.setUserref(ref);
-		List<StudentInfo>stuList=this.studentManager.getList(stuInfo, null);
-		if(stuList!=null&&stuList.size()>0)
-			mp.put("stuinfo", stuList.get(0));
-		//学生班级
-		ClassUser stucu=new ClassUser();
-		stucu.setRelationtype("学生");
-		stucu.setYear(classyearList.get(0).getClassyearvalue());
-		stucu.setUserid(ref);
-		List<ClassUser>stuClsList=this.classUserManager.getList(stucu, null);
-		
-		stucu.setHistoryyear(classyearList.get(0).getClassyearvalue());
+                    SubjectUser su=new SubjectUser();
+                    su.setUserid(ref);
+                    List<SubjectUser>subjectUserList=this.subjectUserManager.getList(su, null);
+
+                    //重置edit_info信息
+                    je.getObjList().add(teaList.get(0));
+                    je.getObjList().add(teaClsList);
+                    je.getObjList().add(teaHistoryClsList);
+                    je.getObjList().add(subjectUserList);
+                }else if(isStu!=null&&isStu.equals("true")){
+                    StudentInfo s=new StudentInfo();
+                    s.setUserref(ref);
+                    List<StudentInfo>stuList=this.studentManager.getList(s, null);
+
+                    ClassUser stucu=new ClassUser();
+                    stucu.setRelationtype("学生");
+                    stucu.setYear(clsyearList.get(0).getClassyearvalue());
+                    stucu.setUserid(ref);
+                    List<ClassUser>stuClsList=this.classUserManager.getList(stucu, null);
+
+                    stucu.setHistoryyear(clsyearList.get(0).getClassyearvalue());
+                    stucu.setYear(null);
+                    List<ClassUser>stuHistoryClsList=this.classUserManager.getList(stucu, null);
+
+                    //重置edit_info信息
+                    je.getObjList().add(stuList.get(0));
+                    je.getObjList().add(stuClsList);
+                    je.getObjList().add(stuHistoryClsList);
+                }
+
+
+
+            }else
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+    @RequestMapping(params = "m=adminview", method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView adminView(HttpServletRequest request,
+                                  HttpServletResponse response, ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String ref=request.getParameter("ref");
+        if(ref==null||ref.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        String identityname=request.getParameter("identityname");
+        request.setAttribute("identityname", identityname);
+        request.setAttribute("rolestr", request.getParameter("rolestr"));
+        request.setAttribute("username", request.getParameter("username"));
+
+        UserInfo u=new UserInfo();
+        u.setRef(ref);
+        List<UserInfo>userList=userManager.getList(u, null);
+        UserInfo user=null;
+        if(userList!=null&&userList.size()>0)
+            user=userList.get(0);
+        if (user == null)
+            return new ModelAndView("/user/userView", mp);
+        mp.put("user", user);
+        RoleUser ru = new RoleUser();
+        ru.getUserinfo().setRef(user.getRef());
+        List<RoleUser> ruList = roleUserManager.getList(ru, null);
+        if (ruList != null && ruList.size() > 0) {
+            mp.put("roleUser", ruList);
+            mp.put("role", ruList.get(0).getRoleid());
+            request.getSession().setAttribute("USER_ROLE", ruList.get(0));
+        }
+        mp.put("ref", ref);
+        //当前及以后学年
+        List<ClassYearInfo>clsyearList=this.classYearManager.getCurrentYearList("more");
+        //当前学年
+        List<ClassYearInfo>classyearList=this.classYearManager.getCurrentYearList(null);
+        if(classyearList==null||classyearList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("YEAR_EMPTY"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //身份角色
+        IdentityInfo i=new IdentityInfo();
+        i.setIdentityname(user.getIdentityname());
+        List<IdentityInfo>identityList=this.identityManager.getList(i, null);
+
+        StudentInfo stuInfo =new StudentInfo();
+        stuInfo.setUserref(ref);
+        List<StudentInfo>stuList=this.studentManager.getList(stuInfo, null);
+        if(stuList!=null&&stuList.size()>0)
+            mp.put("stuinfo", stuList.get(0));
+        //学生班级
+        ClassUser stucu=new ClassUser();
+        stucu.setRelationtype("学生");
+        stucu.setYear(classyearList.get(0).getClassyearvalue());
+        stucu.setUserid(ref);
+        List<ClassUser>stuClsList=this.classUserManager.getList(stucu, null);
+
+        stucu.setHistoryyear(classyearList.get(0).getClassyearvalue());
         stucu.setYear(null);
-		List<ClassUser>stuHistoryClsList=this.classUserManager.getList(stucu, null);
-		
-		//教师班级
-		TeacherInfo teaInfo =new TeacherInfo();
-		teaInfo.setUserid(ref);
-		List<TeacherInfo>teaList=this.teacherManager.getList(teaInfo, null);
-		if(teaList!=null&&teaList.size()>0)
-			mp.put("teainfo", teaList.get(0));
-		ClassUser teacu=new ClassUser();
-		teacu.setYear(classyearList.get(0).getClassyearvalue());
-		teacu.setRelationtype("任课老师");
-		teacu.setUserid(ref);
-		List<ClassUser>teaClsList=this.classUserManager.getList(teacu, null);
-		 
-		teacu.setHistoryyear(classyearList.get(0).getClassyearvalue());
+        List<ClassUser>stuHistoryClsList=this.classUserManager.getList(stucu, null);
+
+        //教师班级
+        TeacherInfo teaInfo =new TeacherInfo();
+        teaInfo.setUserid(ref);
+        List<TeacherInfo>teaList=this.teacherManager.getList(teaInfo, null);
+        if(teaList!=null&&teaList.size()>0)
+            mp.put("teainfo", teaList.get(0));
+        ClassUser teacu=new ClassUser();
+        teacu.setYear(classyearList.get(0).getClassyearvalue());
+        teacu.setRelationtype("任课老师");
+        teacu.setUserid(ref);
+        List<ClassUser>teaClsList=this.classUserManager.getList(teacu, null);
+
+        teacu.setHistoryyear(classyearList.get(0).getClassyearvalue());
         teacu.setYear(null);
-		List<ClassUser>teaHistoryClsList=this.classUserManager.getList(teacu, null);
-		
-		//年级
-		PageResult gradepage=new PageResult();
-		gradepage.setPageNo(0);
-		gradepage.setPageSize(0);
-		gradepage.setOrderBy("CASE grade_value	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END");
-		List<GradeInfo>gradeList=this.gradeManager.getList(null,gradepage);
-		
-		//学科
-		List<SubjectInfo> subjectList = this.subjectManager.getList(null, null);
-		SubjectUser su=new SubjectUser();
-		su.setUserid(ref);
-		List<SubjectUser>subjectUserList=this.subjectUserManager.getList(su, null);
-		
-		//班主任
-		ClassUser clsbzr=new ClassUser();
-		clsbzr.setYear(classyearList.get(0).getClassyearvalue());
-		clsbzr.setRelationtype("班主任");
-		clsbzr.setUserid(ref);
-		List<ClassUser>clsBzrList=this.classUserManager.getList(clsbzr, null);
-		//部门 主任
-		DeptUser du=new DeptUser();
-		du.setUserref(ref);
-		du.setTypeid(1);
-		du.setRoleflag(1);
-		List<DeptUser>duList=this.deptUserManager.getList(du, null);
-		//教研组长
-		du.setTypeid(2);
-		List<DeptUser>tchList=this.deptUserManager.getList(du, null);
-		//年级组长
-		du.setTypeid(3);
-		List<DeptUser>gradeLeaderList=this.deptUserManager.getList(du, null);
+        List<ClassUser>teaHistoryClsList=this.classUserManager.getList(teacu, null);
+
+        //年级
+        PageResult gradepage=new PageResult();
+        gradepage.setPageNo(0);
+        gradepage.setPageSize(0);
+        gradepage.setOrderBy("CASE grade_value	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END");
+        List<GradeInfo>gradeList=this.gradeManager.getList(null,gradepage);
+
+        //学科
+        List<SubjectInfo> subjectList = this.subjectManager.getList(null, null);
+        SubjectUser su=new SubjectUser();
+        su.setUserid(ref);
+        List<SubjectUser>subjectUserList=this.subjectUserManager.getList(su, null);
+
+        //班主任
+        ClassUser clsbzr=new ClassUser();
+        clsbzr.setYear(classyearList.get(0).getClassyearvalue());
+        clsbzr.setRelationtype("班主任");
+        clsbzr.setUserid(ref);
+        List<ClassUser>clsBzrList=this.classUserManager.getList(clsbzr, null);
+        //部门 主任
+        DeptUser du=new DeptUser();
+        du.setUserref(ref);
+        du.setTypeid(1);
+        du.setRoleflag(1);
+        List<DeptUser>duList=this.deptUserManager.getList(du, null);
+        //教研组长
+        du.setTypeid(2);
+        List<DeptUser>tchList=this.deptUserManager.getList(du, null);
+        //年级组长
+        du.setTypeid(3);
+        List<DeptUser>gradeLeaderList=this.deptUserManager.getList(du, null);
         //部门负责人
         du.setTypeid(4);
         List<DeptUser>deptfuzerenList=this.deptUserManager.getList(du, null);
-		//备课组长
-		du.setTypeid(5);
-		List<DeptUser>prepareLeaderList=this.deptUserManager.getList(du, null);
-		
-		
-		
-		//部门 主任
-		DeptInfo d=new DeptInfo();
-		d.setTypeid(1);
-		List<DeptInfo>dList=this.deptManager.getList(d, null);
-		//教研组长
-		d.setTypeid(2);
-		List<DeptInfo>tList=this.deptManager.getList(d, null);
-		//年级组长  
-		d.setTypeid(3);
-		List<DeptInfo>gList=this.deptManager.getList(d, null);
+        //备课组长
+        du.setTypeid(5);
+        List<DeptUser>prepareLeaderList=this.deptUserManager.getList(du, null);
+
+
+
+        //部门 主任
+        DeptInfo d=new DeptInfo();
+        d.setTypeid(1);
+        List<DeptInfo>dList=this.deptManager.getList(d, null);
+        //教研组长
+        d.setTypeid(2);
+        List<DeptInfo>tList=this.deptManager.getList(d, null);
+        //年级组长  
+        d.setTypeid(3);
+        List<DeptInfo>gList=this.deptManager.getList(d, null);
         //自定义部门
         d.setTypeid(4);
         List<DeptInfo>dFreeList=this.deptManager.getList(d, null);
-		//备课组长
-		d.setTypeid(5);
-		List<DeptInfo>pList=this.deptManager.getList(d, null);
-		
-		
-		mp.put("stuClsList", stuClsList);
-		mp.put("stuHistoryClsList", stuHistoryClsList);
-		mp.put("teaClsList", teaClsList);
-		mp.put("teaHistoryClsList", teaHistoryClsList);
-		mp.put("gradeList", gradeList);
-		mp.put("subjectUserList", subjectUserList);
-		mp.put("subjectlist", subjectList);  
-		mp.put("clsyearList", clsyearList); 
-		mp.put("roleList", identityList);
-		mp.put("duList", duList);
-		mp.put("tchList", tchList);
-		mp.put("gradeLeaderList", gradeLeaderList);
+        //备课组长
+        d.setTypeid(5);
+        List<DeptInfo>pList=this.deptManager.getList(d, null);
+
+
+        mp.put("stuClsList", stuClsList);
+        mp.put("stuHistoryClsList", stuHistoryClsList);
+        mp.put("teaClsList", teaClsList);
+        mp.put("teaHistoryClsList", teaHistoryClsList);
+        mp.put("gradeList", gradeList);
+        mp.put("subjectUserList", subjectUserList);
+        mp.put("subjectlist", subjectList);
+        mp.put("clsyearList", clsyearList);
+        mp.put("roleList", identityList);
+        mp.put("duList", duList);
+        mp.put("tchList", tchList);
+        mp.put("gradeLeaderList", gradeLeaderList);
         mp.put("deptfuzerenList", deptfuzerenList);
-		mp.put("prepareLeaderList", prepareLeaderList);
-		mp.put("bzrList", clsBzrList);
-		mp.put("dList", dList);
-		mp.put("tList", tList);
-		mp.put("gList", gList);
-		mp.put("pList", pList);
+        mp.put("prepareLeaderList", prepareLeaderList);
+        mp.put("bzrList", clsBzrList);
+        mp.put("dList", dList);
+        mp.put("tList", tList);
+        mp.put("gList", gList);
+        mp.put("pList", pList);
         mp.put("dFreeList", dFreeList);
-		
-		
-		return new ModelAndView("/user/admin/adminView", mp);
-	}    
 
-	@RequestMapping(params = "m=studentinfoview", method = RequestMethod.GET)
-	public ModelAndView studentInfoView(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		UserInfo user = (UserInfo) request.getSession().getAttribute(
-				"CURRENT_USER");
-		StudentInfo stu = new StudentInfo();
-		String ref= request.getParameter("ref");
-		if(ref!=null&&ref.length()>0)
-			stu.getUserinfo().setRef(ref);
-		else
-			stu.getUserinfo().setRef(user.getRef());
-		List<StudentInfo> stuList = studentManager.getList(stu, null);
 
-		if (stuList != null && stuList.size() > 0)
-			mp.put("student", stuList.get(0));
-		
-		TermInfo term = this.termManager.getMaxIdTerm();
-		ClassUser cu = new ClassUser();
-		cu.getUserinfo().setRef(user.getRef());
-		cu.setYear(term.getYear());
-		List<ClassUser> claList = classUserManager.getList(cu, null);
-		mp.put("classes", claList);
-		
-		return new ModelAndView("/user/studentInfoView", mp);
-	}
+        return new ModelAndView("/user/admin/adminView", mp);
+    }
 
-	@RequestMapping(params = "m=teacherinfoview", method = RequestMethod.GET)
-	public ModelAndView teacherInfoView(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		UserInfo user = this.logined(request);
-		String ref=request.getParameter("ref");
-		TeacherInfo tch = new TeacherInfo();
-		if(ref!=null&&ref.trim().length()>0)
-			tch.getUserinfo().setRef(ref);
-		else	
-			tch.getUserinfo().setRef(user.getRef());
-		List<TeacherInfo> tchList = teacherManager.getList(tch, null);
+    @RequestMapping(params = "m=studentinfoview", method = RequestMethod.GET)
+    public ModelAndView studentInfoView(HttpServletRequest request,
+                                        HttpServletResponse response, ModelMap mp) throws Exception {
+        UserInfo user = (UserInfo) request.getSession().getAttribute(
+                "CURRENT_USER");
+        StudentInfo stu = new StudentInfo();
+        String ref= request.getParameter("ref");
+        if(ref!=null&&ref.length()>0)
+            stu.getUserinfo().setRef(ref);
+        else
+            stu.getUserinfo().setRef(user.getRef());
+        List<StudentInfo> stuList = studentManager.getList(stu, null);
 
-		if (tchList != null && tchList.size() > 0)
-			mp.put("teacher", tchList.get(0));
+        if (stuList != null && stuList.size() > 0)
+            mp.put("student", stuList.get(0));
 
-		SubjectUser s = new SubjectUser();
-		s.setUserid(user.getRef());
-		List<SubjectUser> sublist = this.subjectUserManager.getList(s, null);
-		mp.put("sublist", sublist);
+        TermInfo term = this.termManager.getMaxIdTerm();
+        ClassUser cu = new ClassUser();
+        cu.getUserinfo().setRef(user.getRef());
+        cu.setYear(term.getYear());
+        List<ClassUser> claList = classUserManager.getList(cu, null);
+        mp.put("classes", claList);
 
-		String year = this.classYearManager.getCurrentYearList(null).get(0).getClassyearvalue();
-		ClassUser cu = new ClassUser();
-		cu.getClassinfo().setYear(year);
-		cu.getUserinfo().setRef(user.getRef());
-		List<ClassUser> claList = classUserManager.getList(cu, null);
-		mp.put("class", claList);
-		
-		return new ModelAndView("/user/teacherInfoView", mp);
-	}
+        return new ModelAndView("/user/studentInfoView", mp);
+    }
 
-	@RequestMapping(params = "m=parentinfoview", method = RequestMethod.GET)
-	public ModelAndView parentInfoView(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		UserInfo user = (UserInfo) request.getSession().getAttribute(
-				"CURRENT_USER");
-		ParentInfo pat = new ParentInfo();
-		pat.getUserinfo().setUserid(user.getUserid());
-		List<ParentInfo> patList = parentManager.getList(pat, null);
-		if (patList != null && patList.size() > 0) {
-			mp.put("pat", patList.get(0));
-			UserInfo stu = new UserInfo();
-			stu.setUsername(patList.get(0).getCusername());
-			stu = userManager.getUserInfo(stu);
-			mp.put("stu", stu);
+    @RequestMapping(params = "m=teacherinfoview", method = RequestMethod.GET)
+    public ModelAndView teacherInfoView(HttpServletRequest request,
+                                        HttpServletResponse response, ModelMap mp) throws Exception {
+        UserInfo user = this.logined(request);
+        String ref=request.getParameter("ref");
+        TeacherInfo tch = new TeacherInfo();
+        if(ref!=null&&ref.trim().length()>0)
+            tch.getUserinfo().setRef(ref);
+        else
+            tch.getUserinfo().setRef(user.getRef());
+        List<TeacherInfo> tchList = teacherManager.getList(tch, null);
 
-			ClassUser cu = new ClassUser();
-			cu.getUserinfo().setRef(stu.getRef());
-			List<ClassUser> claList = classUserManager.getList(cu, null);
-			mp.put("claList", claList);
-		}
-		return new ModelAndView("/user/parentInfoView", mp);
-	}
+        if (tchList != null && tchList.size() > 0)
+            mp.put("teacher", tchList.get(0));
 
-	@RequestMapping(params = "m=selfinfoview", method = RequestMethod.GET)
-	public ModelAndView userInfoView(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		UserInfo user = this.logined(request);
-		String ref=request.getParameter("ref");
-		if(ref!=null&&ref.length()>0){
-			UserInfo u=new UserInfo();
-			u.setRef(ref);
-			user=userManager.getUserInfo(u);
-		}  
-		System.out.println(user.getUsername());
-		
-		mp.put("user", userManager.getUserInfo(user));
-		
-		RoleUser r =new RoleUser(); 
-		r.getUserinfo().setRef(user.getRef());
-		List<RoleUser> rl = new ArrayList<RoleUser>();
-		List<RoleUser> jl = new ArrayList<RoleUser>();
-		List<RoleUser> ruList = this.roleUserManager.getList(r, null);
-		
-		for(RoleUser ru : ruList){
-			if(ru.getRoleinfo().getFlag()==0)
-				rl.add(ru);
-			else
-				jl.add(ru);
-		}
-		mp.put("roList",rl);
-		System.out.println(rl.size());
-		mp.put("juList", jl!=null&&jl.size()==0?null:jl);
-		System.out.println(jl.size());
-		return new ModelAndView("/user/selfInfoView", mp);
-	}
+        SubjectUser s = new SubjectUser();
+        s.setUserid(user.getRef());
+        List<SubjectUser> sublist = this.subjectUserManager.getList(s, null);
+        mp.put("sublist", sublist);
 
-	@RequestMapping(params = "m=edituserinfo", method = RequestMethod.GET)
-	public ModelAndView editUserInfo(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		UserInfo user = this.logined(request);
-		mp.put("user", userManager.getUserInfo(user));
-		return new ModelAndView("/user/editUserInfo", mp);
-	}
+        String year = this.classYearManager.getCurrentYearList(null).get(0).getClassyearvalue();
+        ClassUser cu = new ClassUser();
+        cu.getClassinfo().setYear(year);
+        cu.getUserinfo().setRef(user.getRef());
+        List<ClassUser> claList = classUserManager.getList(cu, null);
+        mp.put("class", claList);
 
-	@RequestMapping(params = "m=updateuserinfo", method = RequestMethod.POST)
-	public void updateUserInfo(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
+        return new ModelAndView("/user/teacherInfoView", mp);
+    }
 
-		String roleType = request.getParameter("role");
-		JsonEntity je = new JsonEntity();
-		UserInfo u = this.logined(request);
-		UserInfo userinfo = this.getParameter(request, UserInfo.class);
-		if (u == null) {
-			je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		if (userinfo != null) {
-			userinfo.setUserid(u.getUserid());
-			if (userManager.doUpdate(userinfo)) {
-				userinfo = userManager.getUserInfo(userinfo);
-				UserInfo cuInfo=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
-				userinfo.setCjJRoleUsers(cuInfo.getCjJRoleUsers());
-				userinfo.setClassUsers(cuInfo.getClassUsers());
-				userinfo.setFunctionRightList(cuInfo.getFunctionRightList());
-				userinfo.setPathRightList(cuInfo.getPathRightList());
-				request.getSession().setAttribute("CURRENT_USER", userinfo);
-				
-				je.setType("success");
-			} else {
-				je.setType("error");
-			}
-		} else
-			je.setType("success");
+    @RequestMapping(params = "m=parentinfoview", method = RequestMethod.GET)
+    public ModelAndView parentInfoView(HttpServletRequest request,
+                                       HttpServletResponse response, ModelMap mp) throws Exception {
+        UserInfo user = (UserInfo) request.getSession().getAttribute(
+                "CURRENT_USER");
+        ParentInfo pat = new ParentInfo();
+        pat.getUserinfo().setUserid(user.getUserid());
+        List<ParentInfo> patList = parentManager.getList(pat, null);
+        if (patList != null && patList.size() > 0) {
+            mp.put("pat", patList.get(0));
+            UserInfo stu = new UserInfo();
+            stu.setUsername(patList.get(0).getCusername());
+            stu = userManager.getUserInfo(stu);
+            mp.put("stu", stu);
 
-		/*******************
-		 * 注册之后用户不能修改自己的角色属性
-		 * 
-		 * if (!roleType.equals("0")) { List<String> sqlListArray = new
-		 * ArrayList<String>(); List<List<Object>> objListArray = new
-		 * ArrayList<List<Object>>(); // 根据身份添加（教师、学生、家长） StringBuilder sql =
-		 * new StringBuilder(); List<Object> objList = null; if
-		 * (roleType.equals(UtilTool._ROLE_STU_ID.toString())) { StudentInfo stu
-		 * = new StudentInfo(); stu.setStuname(userinfo.getRealname());
-		 * stu.setStusex(userinfo.getSex());
-		 * stu.getUserinfo().setRef(userinfo.getRef());
-		 * stu.setRef(UUID.randomUUID().toString()); objList =
-		 * this.studentManager.getSaveSql(stu, sql);
-		 * 
-		 * } else if (roleType.equals(UtilTool._ROLE_TEACHER_ID.toString())) {
-		 * TeacherInfo t = new TeacherInfo();
-		 * t.setTeachername(userinfo.getRealname());
-		 * t.setUserid(userinfo.getRef()); t.setTeachersex(userinfo.getSex());
-		 * objList = this.teacherManager.getSaveSql(t, sql);
-		 * 
-		 * } else if (roleType.equals(UtilTool._ROLE_STU_PARENT_ID.toString()))
-		 * { ParentInfo p = new ParentInfo();
-		 * p.setParentname(userinfo.getRealname());
-		 * p.setUserid(userinfo.getRef());
-		 * p.setRef(UUID.randomUUID().toString());
-		 * p.setParentsex(userinfo.getSex()); objList =
-		 * this.parentManager.getSaveSql(p, sql); } if (sql.length() > 0 &&
-		 * objList != null) { sqlListArray.add(sql.toString());
-		 * objListArray.add(objList); } // 增加用户与角色关联
-		 * 
-		 * RoleUser roleuser = new RoleUser();
-		 * roleuser.getUserinfo().setRef(userinfo.getRef());
-		 * roleuser.setRoleidstr(roleType);
-		 * roleuser.getRoleinfo().setRoleid(Integer.parseInt(roleType));
-		 * List<RoleUser> ruList = this.roleUserManager .getList(roleuser,
-		 * null); // 存在角色信息 则删除 if (ruList != null && ruList.size() > 0) { sql =
-		 * new StringBuilder(); objList =
-		 * this.roleUserManager.getDeleteSql(roleuser, sql); if (sql.length() >
-		 * 0 && objList != null) { sqlListArray.add(sql.toString());
-		 * objListArray.add(objList); } } sql = new StringBuilder(); objList =
-		 * this.roleUserManager.getSaveSql(roleuser, sql); if (sql.length() > 0
-		 * && objList != null) { sqlListArray.add(sql.toString());
-		 * objListArray.add(objList); }
-		 * 
-		 * if (sqlListArray.size() > 0 && objListArray.size() > 0) { boolean
-		 * flag = this.userManager.doExcetueArrayProc( sqlListArray,
-		 * objListArray); if (flag) { je.setMsg(UtilTool.msgproperty
-		 * .getProperty("OPERATE_SUCCESS")); je.setType("success"); } else {
-		 * je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR")); } }
-		 * else { je.setMsg(UtilTool.msgproperty
-		 * .getProperty("ARRAYEXECUTE_NOT_EXECUTESQL")); } }
-		 */
-		response.getWriter().print(je.toJSON());
-	}
+            ClassUser cu = new ClassUser();
+            cu.getUserinfo().setRef(stu.getRef());
+            List<ClassUser> claList = classUserManager.getList(cu, null);
+            mp.put("claList", claList);
+        }
+        return new ModelAndView("/user/parentInfoView", mp);
+    }
 
-	@RequestMapping(params = "m=changepassword", method = RequestMethod.POST)
-	public void changePassword(HttpServletRequest request,
-			HttpServletResponse response, ModelMap mp) throws Exception {
-		JsonEntity je = new JsonEntity();
-		UserInfo u = this.logined(request);
-		if (u == null) {
-			je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		UserInfo userinfo = this.getParameter(request, UserInfo.class);
-		if (userinfo != null) {
-			userinfo.setUserid(u.getUserid());
-			String newPassword = request.getParameter("new_password");
-			if (userManager.doLogin(userinfo) != null) {
-				userinfo.setPassword(newPassword);
-				if (userManager.doUpdate(userinfo)) {
-					userinfo = userManager.getUserInfo(userinfo);
-					je.setType("success");
-				} else {
-					je.setMsg("系统出错，无法修改！");
-					je.setType("error");
-				}
-			} else {
-				je.setMsg(UtilTool.msgproperty
-						.getProperty("USER_LOGIN_PASSWORD_ERROR"));
-				je.setType("error");
-			}
-		} else {
-			je.setMsg(UtilTool.msgproperty
-					.getProperty("USER_LOGIN_PASSWORD_ERROR"));
-			je.setType("error");
-		}
+    @RequestMapping(params = "m=selfinfoview", method = RequestMethod.GET)
+    public ModelAndView userInfoView(HttpServletRequest request,
+                                     HttpServletResponse response, ModelMap mp) throws Exception {
+        UserInfo user = this.logined(request);
+        String ref=request.getParameter("ref");
+        if(ref!=null&&ref.length()>0){
+            UserInfo u=new UserInfo();
+            u.setRef(ref);
+            user=userManager.getUserInfo(u);
+        }
+        System.out.println(user.getUsername());
 
-		response.getWriter().print(je.toJSON());
-	}
+        mp.put("user", userManager.getUserInfo(user));
 
-	@RequestMapping(params = "m=saveheadsrcfile", method = RequestMethod.POST)
-	public void saveHeadSrcFile(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		JsonEntity je = new JsonEntity();
-		String msg = "";
-		String returnVal = "";
-		if (this.getUpload(request) == null) {// file==null||file.isEmpty()){
-			msg = "未发现您要裁剪的图片，请重试!";
-			returnVal = "{error:'" + msg + "'}";
-			response.getWriter().print(returnVal);
-			return;
-		}
-		List<String> filenameString = getFileArrayName(1);
+        RoleUser r =new RoleUser();
+        r.getUserinfo().setRef(user.getRef());
+        List<RoleUser> rl = new ArrayList<RoleUser>();
+        List<RoleUser> jl = new ArrayList<RoleUser>();
+        List<RoleUser> ruList = this.roleUserManager.getList(r, null);
+
+        for(RoleUser ru : ruList){
+            if(ru.getRoleinfo().getFlag()==0)
+                rl.add(ru);
+            else
+                jl.add(ru);
+        }
+        mp.put("roList",rl);
+        System.out.println(rl.size());
+        mp.put("juList", jl!=null&&jl.size()==0?null:jl);
+        System.out.println(jl.size());
+        return new ModelAndView("/user/selfInfoView", mp);
+    }
+
+    @RequestMapping(params = "m=edituserinfo", method = RequestMethod.GET)
+    public ModelAndView editUserInfo(HttpServletRequest request,
+                                     HttpServletResponse response, ModelMap mp) throws Exception {
+        UserInfo user = this.logined(request);
+        mp.put("user", userManager.getUserInfo(user));
+        return new ModelAndView("/user/editUserInfo", mp);
+    }
+
+    @RequestMapping(params = "m=updateuserinfo", method = RequestMethod.POST)
+    public void updateUserInfo(HttpServletRequest request,
+                               HttpServletResponse response, ModelMap mp) throws Exception {
+
+        String roleType = request.getParameter("role");
+        JsonEntity je = new JsonEntity();
+        UserInfo u = this.logined(request);
+        UserInfo userinfo = this.getParameter(request, UserInfo.class);
+        if (u == null) {
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if (userinfo != null) {
+            userinfo.setUserid(u.getUserid());
+            if (userManager.doUpdate(userinfo)) {
+                userinfo = userManager.getUserInfo(userinfo);
+                UserInfo cuInfo=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
+                userinfo.setCjJRoleUsers(cuInfo.getCjJRoleUsers());
+                userinfo.setClassUsers(cuInfo.getClassUsers());
+                userinfo.setFunctionRightList(cuInfo.getFunctionRightList());
+                userinfo.setPathRightList(cuInfo.getPathRightList());
+                request.getSession().setAttribute("CURRENT_USER", userinfo);
+
+                je.setType("success");
+            } else {
+                je.setType("error");
+            }
+        } else
+            je.setType("success");
+
+        /*******************
+         * 注册之后用户不能修改自己的角色属性
+         *
+         * if (!roleType.equals("0")) { List<String> sqlListArray = new
+         * ArrayList<String>(); List<List<Object>> objListArray = new
+         * ArrayList<List<Object>>(); // 根据身份添加（教师、学生、家长） StringBuilder sql =
+         * new StringBuilder(); List<Object> objList = null; if
+         * (roleType.equals(UtilTool._ROLE_STU_ID.toString())) { StudentInfo stu
+         * = new StudentInfo(); stu.setStuname(userinfo.getRealname());
+         * stu.setStusex(userinfo.getSex());
+         * stu.getUserinfo().setRef(userinfo.getRef());
+         * stu.setRef(UUID.randomUUID().toString()); objList =
+         * this.studentManager.getSaveSql(stu, sql);
+         *
+         * } else if (roleType.equals(UtilTool._ROLE_TEACHER_ID.toString())) {
+         * TeacherInfo t = new TeacherInfo();
+         * t.setTeachername(userinfo.getRealname());
+         * t.setUserid(userinfo.getRef()); t.setTeachersex(userinfo.getSex());
+         * objList = this.teacherManager.getSaveSql(t, sql);
+         *
+         * } else if (roleType.equals(UtilTool._ROLE_STU_PARENT_ID.toString()))
+         * { ParentInfo p = new ParentInfo();
+         * p.setParentname(userinfo.getRealname());
+         * p.setUserid(userinfo.getRef());
+         * p.setRef(UUID.randomUUID().toString());
+         * p.setParentsex(userinfo.getSex()); objList =
+         * this.parentManager.getSaveSql(p, sql); } if (sql.length() > 0 &&
+         * objList != null) { sqlListArray.add(sql.toString());
+         * objListArray.add(objList); } // 增加用户与角色关联
+         *
+         * RoleUser roleuser = new RoleUser();
+         * roleuser.getUserinfo().setRef(userinfo.getRef());
+         * roleuser.setRoleidstr(roleType);
+         * roleuser.getRoleinfo().setRoleid(Integer.parseInt(roleType));
+         * List<RoleUser> ruList = this.roleUserManager .getList(roleuser,
+         * null); // 存在角色信息 则删除 if (ruList != null && ruList.size() > 0) { sql =
+         * new StringBuilder(); objList =
+         * this.roleUserManager.getDeleteSql(roleuser, sql); if (sql.length() >
+         * 0 && objList != null) { sqlListArray.add(sql.toString());
+         * objListArray.add(objList); } } sql = new StringBuilder(); objList =
+         * this.roleUserManager.getSaveSql(roleuser, sql); if (sql.length() > 0
+         * && objList != null) { sqlListArray.add(sql.toString());
+         * objListArray.add(objList); }
+         *
+         * if (sqlListArray.size() > 0 && objListArray.size() > 0) { boolean
+         * flag = this.userManager.doExcetueArrayProc( sqlListArray,
+         * objListArray); if (flag) { je.setMsg(UtilTool.msgproperty
+         * .getProperty("OPERATE_SUCCESS")); je.setType("success"); } else {
+         * je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR")); } }
+         * else { je.setMsg(UtilTool.msgproperty
+         * .getProperty("ARRAYEXECUTE_NOT_EXECUTESQL")); } }
+         */
+        response.getWriter().print(je.toJSON());
+    }
+
+    @RequestMapping(params = "m=changepassword", method = RequestMethod.POST)
+    public void changePassword(HttpServletRequest request,
+                               HttpServletResponse response, ModelMap mp) throws Exception {
+        JsonEntity je = new JsonEntity();
+        UserInfo u = this.logined(request);
+        if (u == null) {
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        UserInfo userinfo = this.getParameter(request, UserInfo.class);
+        if (userinfo != null) {
+            userinfo.setUserid(u.getUserid());
+            String newPassword = request.getParameter("new_password");
+            if (userManager.doLogin(userinfo) != null) {
+                userinfo.setPassword(newPassword);
+                if (userManager.doUpdate(userinfo)) {
+                    userinfo = userManager.getUserInfo(userinfo);
+                    je.setType("success");
+                } else {
+                    je.setMsg("系统出错，无法修改！");
+                    je.setType("error");
+                }
+            } else {
+                je.setMsg(UtilTool.msgproperty
+                        .getProperty("USER_LOGIN_PASSWORD_ERROR"));
+                je.setType("error");
+            }
+        } else {
+            je.setMsg(UtilTool.msgproperty
+                    .getProperty("USER_LOGIN_PASSWORD_ERROR"));
+            je.setType("error");
+        }
+
+        response.getWriter().print(je.toJSON());
+    }
+
+    @RequestMapping(params = "m=saveheadsrcfile", method = RequestMethod.POST)
+    public void saveHeadSrcFile(HttpServletRequest request,
+                                HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String msg = "";
+        String returnVal = "";
+        if (this.getUpload(request) == null) {// file==null||file.isEmpty()){
+            msg = "未发现您要裁剪的图片，请重试!";
+            returnVal = "{error:'" + msg + "'}";
+            response.getWriter().print(returnVal);
+            return;
+        }
+        List<String> filenameString = getFileArrayName(1);
         this.setFname(null);
-		if (!this.fileupLoad(request)) {
-			msg = "上传失败，请重试!";
-			returnVal = "{error:'" + msg + "'}";
-			response.getWriter().print(returnVal);
-			return;
-		}
-		String filename = request.getRealPath("/") + "userUploadFile/"
-				+ filenameString.get(0);
-		String returnname = filename;
-		File f = new File(filename);
-		if (!f.exists()) {
-			msg = "未发现您要裁剪的图片，请重试!";
-			returnVal = "{error:'" + msg + "'}";
-			response.getWriter().print(returnVal);
-			return;
-		}
-		Map<String, Long> propertyMap = UtilTool.getImageProperty(f);
-		// 得到系统默认大小
-		Long default_w = Long.parseLong("300");// UtilTool.utilprop.prop.get("修改头像设置默认宽度").toString());
-		Long default_h = Long.parseLong("300");// UtilTool.utilprop.prop.getProperty("修改头像设置默认高度").toString());
-		Long w = propertyMap.get("w");
-		Long h = propertyMap.get("h");
+        if (!this.fileupLoad(request)) {
+            msg = "上传失败，请重试!";
+            returnVal = "{error:'" + msg + "'}";
+            response.getWriter().print(returnVal);
+            return;
+        }
+        String filename = request.getRealPath("/") + "userUploadFile/"
+                + filenameString.get(0);
+        String returnname = filename;
+        File f = new File(filename);
+        if (!f.exists()) {
+            msg = "未发现您要裁剪的图片，请重试!";
+            returnVal = "{error:'" + msg + "'}";
+            response.getWriter().print(returnVal);
+            return;
+        }
+        Map<String, Long> propertyMap = UtilTool.getImageProperty(f);
+        // 得到系统默认大小
+        Long default_w = Long.parseLong("300");// UtilTool.utilprop.prop.get("修改头像设置默认宽度").toString());
+        Long default_h = Long.parseLong("300");// UtilTool.utilprop.prop.getProperty("修改头像设置默认高度").toString());
+        Long w = propertyMap.get("w");
+        Long h = propertyMap.get("h");
         float cos;
 
-		if (propertyMap.get("w") > default_w
-				|| propertyMap.get("h") > default_h) {
-			// 该图片进行缩放
-			// 得到默认比便
+        if (propertyMap.get("w") > default_w
+                || propertyMap.get("h") > default_h) {
+            // 该图片进行缩放
+            // 得到默认比便
             if(w>h){
                 if(w>default_w){
                     cos=default_w*1.0f/w*1.0f;
@@ -2505,7 +2528,7 @@ public class UserController extends BaseController<UserInfo> {
                     w=Math.round(w*1.0*cos);
                 }
             }
-			// 得到比例
+            // 得到比例
            /* if(propertyMap.get("w") > default_w&&propertyMap.get("h") < default_h){
                 w = Math.round((h * default_w * 1.0 / h));
             }
@@ -2517,9 +2540,9 @@ public class UserController extends BaseController<UserInfo> {
                 w = Math.round((h * default_w * 1.0 / h));
                 h = Math.round((w * default_h * 1.0 / w));
             }*/
-			// 开始缩放
+            // 开始缩放
 
-		}
+        }
         returnname = new Date().getTime() + "zz"
                 + returnname.substring(returnname.lastIndexOf("."));
         UtilTool.Redraw(f, request.getRealPath("/") + "userUploadFile/"
@@ -2540,54 +2563,54 @@ public class UserController extends BaseController<UserInfo> {
 //		}
 //		returnname = returnname.substring(returnname.lastIndexOf("/") + 1);
 //		user.setHeadimage("userUploadFile//" + returnname);
-		if (true) {
-			msg = "userUploadFile/" + returnname + "|" + w + "|" + h + "|"
-					+ propertyMap.get("s");
-			returnVal = "{success:'" + msg + "'}";
+        if (true) {
+            msg = "userUploadFile/" + returnname + "|" + w + "|" + h + "|"
+                    + propertyMap.get("s");
+            returnVal = "{success:'" + msg + "'}";
 
-			response.getWriter().print(returnVal);
-		} else {
-			msg = "图片上传出错!";
-			returnVal = "{error:'" + msg + "'}";
-			response.getWriter().print(returnVal);
-		}
-	}
+            response.getWriter().print(returnVal);
+        } else {
+            msg = "图片上传出错!";
+            returnVal = "{error:'" + msg + "'}";
+            response.getWriter().print(returnVal);
+        }
+    }
 
-	@RequestMapping(params = "m=docuthead", method = RequestMethod.POST)
-	public void doCutHead(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		UserInfo user = new UserInfo();
-		UserInfo userinfo = (UserInfo) request.getSession().getAttribute(
-				"CURRENT_USER");
-		user.setUserid(userinfo.getUserid());
-		user.setUsername(userinfo.getUsername());
-		user.setHeadimage(userManager.getUserInfo(user).getHeadimage());
-		String src = request.getParameter("src");
-		String x1 = request.getParameter("x1");
-		String y1 = request.getParameter("y1");
-		String x2 = request.getParameter("x2");
-		String y2 = request.getParameter("y2");
+    @RequestMapping(params = "m=docuthead", method = RequestMethod.POST)
+    public void doCutHead(HttpServletRequest request,
+                          HttpServletResponse response) throws Exception {
+        UserInfo user = new UserInfo();
+        UserInfo userinfo = (UserInfo) request.getSession().getAttribute(
+                "CURRENT_USER");
+        user.setUserid(userinfo.getUserid());
+        user.setUsername(userinfo.getUsername());
+        user.setHeadimage(userManager.getUserInfo(user).getHeadimage());
+        String src = request.getParameter("src");
+        String x1 = request.getParameter("x1");
+        String y1 = request.getParameter("y1");
+        String x2 = request.getParameter("x2");
+        String y2 = request.getParameter("y2");
         int w = 300;
         int h = 300;
 
-		JsonEntity je = new JsonEntity();
-		if (src == null || src.trim().length() < 1 ) {
-			je.setMsg("异常错误，原因：参数不齐!");
-			response.getWriter().print(je.toJSON());
-			return;
-		}
+        JsonEntity je = new JsonEntity();
+        if (src == null || src.trim().length() < 1 ) {
+            je.setMsg("异常错误，原因：参数不齐!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
 
-		String src1 = request.getRealPath("/") + src;
-		File f = new File(src1);
-		if (!f.exists()) {
-			je.setMsg("异常错误，该图片已经不存在!");
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		String lastname = src.substring(src.lastIndexOf("."));
-		String firstname = src.substring(0, src.lastIndexOf("."));
-		String newname = firstname + "-header" + lastname;
-		String newnamerealpath = request.getRealPath("/") + newname;
+        String src1 = request.getRealPath("/") + src;
+        File f = new File(src1);
+        if (!f.exists()) {
+            je.setMsg("异常错误，该图片已经不存在!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String lastname = src.substring(src.lastIndexOf("."));
+        String firstname = src.substring(0, src.lastIndexOf("."));
+        String newname = firstname + "-header" + lastname;
+        String newnamerealpath = request.getRealPath("/") + newname;
         if(x1 == null
                 || x1.trim().length() < 1 || !UtilTool.isDouble(x1)
                 || y1 == null || y1.trim().length() < 1
@@ -2626,536 +2649,545 @@ public class UserController extends BaseController<UserInfo> {
                     Integer.parseInt(y1));
         }
 
-		if (user.getHeadimage() != null && user.getHeadimage().trim() != "") {
-			File temf = new File(request.getRealPath("/") + user.getHeadimage());
-			if (temf.exists())
-				temf.delete();
-		}
-		user.setHeadimage(newname);
-		if (userManager.doUpdate(user)) {
-			Integer tempid=user.getUserid();
-			user = new UserInfo();
-			user.setUserid(tempid);
-			user = this.userManager.getUserInfo(user);
-			UserInfo cuInfo=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
-			userinfo.setCjJRoleUsers(cuInfo.getCjJRoleUsers());
-			userinfo.setClassUsers(cuInfo.getClassUsers());
-			userinfo.setFunctionRightList(cuInfo.getFunctionRightList());
-			userinfo.setPathRightList(cuInfo.getPathRightList());
+        if (user.getHeadimage() != null && user.getHeadimage().trim() != "") {
+            File temf = new File(request.getRealPath("/") + user.getHeadimage());
+            if (temf.exists())
+                temf.delete();
+        }
+        user.setHeadimage(newname);
+        if (userManager.doUpdate(user)) {
+            Integer tempid=user.getUserid();
+            user = new UserInfo();
+            user.setUserid(tempid);
+            user = this.userManager.getUserInfo(user);
+            UserInfo cuInfo=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
+            userinfo.setCjJRoleUsers(cuInfo.getCjJRoleUsers());
+            userinfo.setClassUsers(cuInfo.getClassUsers());
+            userinfo.setFunctionRightList(cuInfo.getFunctionRightList());
+            userinfo.setPathRightList(cuInfo.getPathRightList());
             userinfo.setHeadimage(newname);
-			request.getSession().setAttribute("CURRENT_USER", userinfo);
-			je.getObjList().add(newname);
-			je.setType("success");
-		} else {
-			je.getObjList().add(newname);
-			je.setType("error");
-		}
-		response.getWriter().print(je.toJSON());
-	}
+            request.getSession().setAttribute("CURRENT_USER", userinfo);
+            je.getObjList().add(newname);
+            je.setType("success");
+        } else {
+            je.getObjList().add(newname);
+            je.setType("error");
+        }
+        response.getWriter().print(je.toJSON());
+    }
 
-	public boolean fileupLoad(HttpServletRequest request) throws Exception {
-		try {
-			this.setFname(this.getFileNameList().get(0));
-			String filename = this.getFname();
-			File imageFile = new File(request.getRealPath("/")
-					+ "userUploadFile/" + filename);
-			if (myFile == null)
-				myFile = this.getUpload(request)[0];
-			copy(myFile.getInputStream(), imageFile);
-			myFile = null;
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return false;
-		}
-		return true;
-	}
+    public boolean fileupLoad(HttpServletRequest request) throws Exception {
+        try {
+            this.setFname(this.getFileNameList().get(0));
+            String filename = this.getFname();
+            File imageFile = new File(request.getRealPath("/")
+                    + "userUploadFile/" + filename);
+            if (myFile == null)
+                myFile = this.getUpload(request)[0];
+            copy(myFile.getInputStream(), imageFile);
+            myFile = null;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
 
-	/**
-	 * 批量设置用户状态
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=dosetUserState", method = RequestMethod.POST)
-	public void doSetUserState(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		JsonEntity je = new JsonEntity();
-		UserInfo user = this.getParameter(request, UserInfo.class);
-		String useridstr = request.getParameter("useridstr");
-		if (user.getStateid() == null
-				|| !UtilTool.isNumber(user.getStateid().toString())
-				|| useridstr == null || useridstr.trim().length() < 1) {
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		List<String> sqlListArray = new ArrayList<String>();
-		List<List<Object>> objListArray = new ArrayList<List<Object>>();
-		List<Object> objList = null;
-		StringBuilder sql = null;
-		String[] useridArray = useridstr.split(",");
-		if (useridArray.length > 0) {
-			for (String userid : useridArray) {
-				if (userid != null) {
-					UserInfo u = new UserInfo();
-					u.setUserid(Integer.parseInt(userid));
-					u.setStateid(user.getStateid());
-					sql = new StringBuilder();
-					objList = this.userManager.getUpdateSql(u, sql);
-					if (sql.length() > 0 && objList != null) {
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}
-			}
-		}
+    /**
+     * 批量设置用户状态
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=dosetUserState", method = RequestMethod.POST)
+    public void doSetUserState(HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        UserInfo user = this.getParameter(request, UserInfo.class);
+        String useridstr = request.getParameter("useridstr");
+        if (user.getStateid() == null
+                || !UtilTool.isNumber(user.getStateid().toString())
+                || useridstr == null || useridstr.trim().length() < 1) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<String> sqlListArray = new ArrayList<String>();
+        List<List<Object>> objListArray = new ArrayList<List<Object>>();
+        List<Object> objList = null;
+        StringBuilder sql = null;
+        String[] useridArray = useridstr.split(",");
+        if (useridArray.length > 0) {
+            for (String userid : useridArray) {
+                if (userid != null) {
+                    UserInfo u = new UserInfo();
+                    u.setUserid(Integer.parseInt(userid));
+                    u.setStateid(user.getStateid());
+                    sql = new StringBuilder();
+                    objList = this.userManager.getUpdateSql(u, sql);
+                    if (sql.length() > 0 && objList != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
+        }
 
-		if (sqlListArray.size() > 0 && objListArray.size() > 0) {
-			boolean flag = this.userManager.doExcetueArrayProc(sqlListArray,
-					objListArray);
-			if (flag) {
-				je.setType("success");
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-			} else {
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-			}
-		} else {
-			je.setMsg(UtilTool.msgproperty
-					.getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
-		}
-		response.getWriter().print(je.toJSON());
-	}
- 
-	/**
-	 * 教务添加用户
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=doadd", method = RequestMethod.POST)
-	public void doAddUser(HttpServletRequest request,  
-			HttpServletResponse response) throws Exception {
-		JsonEntity je = new JsonEntity();
-		// 公用
-		String identityname=request.getParameter("identityname");
-		boolean isstu = false;
-		String issstu = request.getParameter("isstu");
-		String roles = request.getParameter("roles");
-		String clsstr = request.getParameter("clsstr");
-		if (issstu != null && issstu.equals("true"))
-			isstu = true;
-		// 学生
-		String stusex = request.getParameter("sex");
-		String address = request.getParameter("address");
-		String linkman = request.getParameter("linkman");
-		String linkmanphone = request.getParameter("linkmanphone");
+        if (sqlListArray.size() > 0 && objListArray.size() > 0) {
+            boolean flag = this.userManager.doExcetueArrayProc(sqlListArray,
+                    objListArray);
+            if (flag) {
+                je.setType("success");
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            } else {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        } else {
+            je.setMsg(UtilTool.msgproperty
+                    .getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
+        }
+        response.getWriter().print(je.toJSON());
+    }
 
-		// 教师
-		String teachersex = request.getParameter("sex");
-		String subject = request.getParameter("subject");
-		String teacherphone = request.getParameter("teacherphone");
-		String teacherpost = request.getParameter("teacherpost");
-		String teacheraddress = request.getParameter("teacheraddress");
-		String subjectmajor = request.getParameter("subjectmajor");
-		String gradeid=request.getParameter("gradeid");
-		String deptid=request.getParameter("deptid");
-		String teachleaderid=request.getParameter("teachleaderid");
-		String prepareid=request.getParameter("prepareid");
+    /**
+     * 教务添加用户
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=doadd", method = RequestMethod.POST)
+    public void doAddUser(HttpServletRequest request,
+                          HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        // 公用
+        String identityname=request.getParameter("identityname");
+        boolean isstu = false;
+        String issstu = request.getParameter("isstu");
+        String roles = request.getParameter("roles");
+        String clsstr = request.getParameter("clsstr");
+        if (issstu != null && issstu.equals("true"))
+            isstu = true;
+        // 学生
+        String stusex = request.getParameter("sex");
+        String address = request.getParameter("address");
+        String linkman = request.getParameter("linkman");
+        String linkmanphone = request.getParameter("linkmanphone");
+
+        // 教师
+        String teachersex = request.getParameter("sex");
+        String subject = request.getParameter("subject");
+        String teacherphone = request.getParameter("teacherphone");
+        String teacherpost = request.getParameter("teacherpost");
+        String teacheraddress = request.getParameter("teacheraddress");
+        String subjectmajor = request.getParameter("subjectmajor");
+        String gradeid=request.getParameter("gradeid");
+        String deptid=request.getParameter("deptid");
+        String teachleaderid=request.getParameter("teachleaderid");
+        String prepareid=request.getParameter("prepareid");
         String deptfzrid=request.getParameter("deptfzrid");
-		// 班主任
-		String clsbzrstr = request.getParameter("clsbzrstr");
+        // 班主任
+        String clsbzrstr = request.getParameter("clsbzrstr");
 
-		UserInfo user = this.getParameter(request, UserInfo.class);
-		if (user.getUsername() == null
-				|| user.getUsername().trim().length() < 1
-				|| user.getPassword() == null
-				|| user.getPassword().trim().length() < 1
-				|| user.getStateid() == null
-				||identityname==null||identityname.trim().length()<1
-				) {
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		List<String> sqlListArray = new ArrayList<String>();
-		List<List<Object>> objListArray = new ArrayList<List<Object>>();
-		List<Object> objList = null;
-		StringBuilder sql = null;
+        String strDcSchoolID= request.getParameter("dcschoolid");
+        int dcSchoolID=0;
+        if(strDcSchoolID!=null&&strDcSchoolID.length()>0)
+        {
+            dcSchoolID=Integer.parseInt( strDcSchoolID);
+        }
 
-		// 添加用户信息
-		UserInfo u = new UserInfo();
-		String userNextRef = UUID.randomUUID().toString();
-		u.setRef(userNextRef);
-		u.setUsername(user.getUsername());
-		u.setPassword(user.getPassword());
-		u.setStateid(user.getStateid());
-		if (user.getPassquestion() != null)
-			u.setPassquestion(user.getPassquestion());
-		if (user.getQuestionanswer() != null)
-			u.setQuestionanswer(user.getQuestionanswer());
-		if (user.getMailaddress() != null)
-			u.setMailaddress(user.getMailaddress());
-		if (user.getBirthdate() != null)
-			u.setBirthdate(user.getBirthdate());
+        UserInfo user = this.getParameter(request, UserInfo.class);
+        if (user.getUsername() == null
+                || user.getUsername().trim().length() < 1
+                || user.getPassword() == null
+                || user.getPassword().trim().length() < 1
+                || user.getStateid() == null
+                ||identityname==null||identityname.trim().length()<1
+                ) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<String> sqlListArray = new ArrayList<String>();
+        List<List<Object>> objListArray = new ArrayList<List<Object>>();
+        List<Object> objList = null;
+        StringBuilder sql = null;
 
-		sql = new StringBuilder();
-		objList = this.userManager.getSaveSql(u, sql);
-		if (objList != null && sql != null) {
-			sqlListArray.add(sql.toString());
-			objListArray.add(objList);
-		}
-		
-		//添加用户与身份关联信息
-		String identityNextRef = UUID.randomUUID().toString();
-		UserIdentityInfo ui = new UserIdentityInfo();
-		ui.setRef(identityNextRef);
-		ui.getUserinfo().setRef(userNextRef);
-		ui.setIdentityname(identityname);
+        // 添加用户信息
+        UserInfo u = new UserInfo();
+        String userNextRef = UUID.randomUUID().toString();
+        u.setRef(userNextRef);
+        u.setUsername(user.getUsername());
+        u.setPassword(user.getPassword());
+        u.setStateid(user.getStateid());
+        if (user.getPassquestion() != null)
+            u.setPassquestion(user.getPassquestion());
+        if (user.getQuestionanswer() != null)
+            u.setQuestionanswer(user.getQuestionanswer());
+        if (user.getMailaddress() != null)
+            u.setMailaddress(user.getMailaddress());
+        if (user.getBirthdate() != null)
+            u.setBirthdate(user.getBirthdate());
 
-		sql = new StringBuilder();
-		objList = this.userIdentityManager.getSaveSql(ui, sql);
-		if (objList != null && sql != null) {
-			sqlListArray.add(sql.toString());
-			objListArray.add(objList);
-		}
-		
-		// 学生
-		if (isstu) {
-			if (user.getStuname() == null
-					|| user.getStuname().trim().length() < 1
-					|| user.getStuno() == null
-					|| user.getStuno().trim().length() < 1 || stusex == null
-					|| clsstr==null
-			) {
-				je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-				response.getWriter().print(je.toJSON());
-				return;
-			}
-			// 添加学生
-			StudentInfo s = new StudentInfo();
-			s.getUserinfo().setRef(userNextRef);
-			s.setStuname(user.getStuname().trim());
-			s.setStusex(stusex);
-			s.setStuno(user.getStuno());
-			if (linkman != null && linkman.trim().length() > 0)
-				s.setLinkman(linkman);
-			if (linkmanphone != null && linkmanphone.trim().length() > 0)
-				s.setLinkmanphone(linkmanphone);
-			if (address != null && address.trim().length() > 0)
-				s.setStuaddress(address);
-			sql = new StringBuilder();
-			objList = this.studentManager.getSaveSql(s, sql);
-			if (objList != null && sql != null) {
-				sqlListArray.add(sql.toString());
-				objListArray.add(objList);
-			}
-			
-			//添加默认学生角色
-			String ruNextRef = UUID.randomUUID().toString();
-			RoleUser ru = new RoleUser();
-			ru.setRef(ruNextRef);
-			ru.getUserinfo().setRef(userNextRef);
-			ru.getRoleinfo().setRoleid(UtilTool._ROLE_STU_ID);
 
-			sql = new StringBuilder();
-			objList = this.roleUserManager.getSaveSql(ru, sql);
-			if (objList != null && sql != null) {
-				sqlListArray.add(sql.toString());
-				objListArray.add(objList);
-			}
-			
-			//添加学生角色默认权限
-			RoleColumnRightInfo rc=new RoleColumnRightInfo();
-			rc.setRoleid(UtilTool._ROLE_STU_ID);
-			List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
-			if(rcList!=null&&rcList.size()>0){
-				for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
-					UserColumnRightInfo ucr=new UserColumnRightInfo();
-					ucr.setColumnid(roleColumnRightInfo.getColumnid());
-					ucr.setUserid(userNextRef);
-					ucr.setRef(this.userColumnRightManager.getNextId());
-					ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
-					sql=new StringBuilder();
-					objList=this.userColumnRightManager.getSaveSql(ucr, sql);
-					if(objList!=null&&sql!=null){
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}  
-			}
-			
-		} else {
-			if (user.getRealname() == null
-					|| user.getRealname().trim().length() < 1
-					|| teachersex == null
-			) {
-				je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-				response.getWriter().print(je.toJSON());
-				return;
-			}
-			TeacherInfo t = new TeacherInfo();
-			t.setUserid(userNextRef);
-			t.setTeachername(user.getRealname());
-			t.setTeachersex(teachersex);
-			if (teacherphone != null)
-				t.setTeacherphone(teacherphone);
-			if (teacherpost != null)
-				t.setTeacherpost(teacherpost);
-			if (teacheraddress != null)
-				t.setTeacheraddress(teacheraddress);
-			if (user.getBirthdate() != null)
-				t.setTeacherbirth(user.getBirthdate());
+        u.setDcschoolid(dcSchoolID);
+        sql = new StringBuilder();
+        objList = this.userManager.getSaveSql(u, sql);
+        if (objList != null && sql != null) {
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
 
-			sql = new StringBuilder();
-			objList = this.teacherManager.getSaveSql(t, sql);
-			if (objList != null && sql != null) {
-				sqlListArray.add(sql.toString());
-				objListArray.add(objList);
-			}
-			
-			//添加默认教师角色
-			String ruNextRef = UUID.randomUUID().toString();
-			RoleUser ru = new RoleUser();
-			ru.setRef(ruNextRef);
-			ru.getUserinfo().setRef(userNextRef);
-			ru.getRoleinfo().setRoleid(UtilTool._ROLE_TEACHER_ID);
+        //添加用户与身份关联信息
+        String identityNextRef = UUID.randomUUID().toString();
+        UserIdentityInfo ui = new UserIdentityInfo();
+        ui.setRef(identityNextRef);
+        ui.getUserinfo().setRef(userNextRef);
+        ui.setIdentityname(identityname);
 
-			sql = new StringBuilder();
-			objList = this.roleUserManager.getSaveSql(ru, sql);
-			if (objList != null && sql != null) {
-				sqlListArray.add(sql.toString());
-				objListArray.add(objList);
-			}
-			
-			//添加教师角色默认权限
-			RoleColumnRightInfo rc=new RoleColumnRightInfo();
-			rc.setRoleid(UtilTool._ROLE_TEACHER_ID);
-			List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
+        sql = new StringBuilder();
+        objList = this.userIdentityManager.getSaveSql(ui, sql);
+        if (objList != null && sql != null) {
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+
+        // 学生
+        if (isstu) {
+            if (user.getStuname() == null
+                    || user.getStuname().trim().length() < 1
+                    || user.getStuno() == null
+                    || user.getStuno().trim().length() < 1 || stusex == null
+                    || clsstr==null
+                    ) {
+                je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            // 添加学生
+            StudentInfo s = new StudentInfo();
+            s.getUserinfo().setRef(userNextRef);
+            s.setStuname(user.getStuname().trim());
+            s.setStusex(stusex);
+            s.setStuno(user.getStuno());
+            if (linkman != null && linkman.trim().length() > 0)
+                s.setLinkman(linkman);
+            if (linkmanphone != null && linkmanphone.trim().length() > 0)
+                s.setLinkmanphone(linkmanphone);
+            if (address != null && address.trim().length() > 0)
+                s.setStuaddress(address);
+            sql = new StringBuilder();
+            objList = this.studentManager.getSaveSql(s, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //添加默认学生角色
+            String ruNextRef = UUID.randomUUID().toString();
+            RoleUser ru = new RoleUser();
+            ru.setRef(ruNextRef);
+            ru.getUserinfo().setRef(userNextRef);
+            ru.getRoleinfo().setRoleid(UtilTool._ROLE_STU_ID);
+
+            sql = new StringBuilder();
+            objList = this.roleUserManager.getSaveSql(ru, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //添加学生角色默认权限
+            RoleColumnRightInfo rc=new RoleColumnRightInfo();
+            rc.setRoleid(UtilTool._ROLE_STU_ID);
+            List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
+            if(rcList!=null&&rcList.size()>0){
+                for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
+                    UserColumnRightInfo ucr=new UserColumnRightInfo();
+                    ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                    ucr.setUserid(userNextRef);
+                    ucr.setRef(this.userColumnRightManager.getNextId());
+                    ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                    sql=new StringBuilder();
+                    objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                    if(objList!=null&&sql!=null){
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
+
+        } else {
+            if (user.getRealname() == null
+                    || user.getRealname().trim().length() < 1
+                    || teachersex == null
+                    ) {
+                je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            TeacherInfo t = new TeacherInfo();
+            t.setUserid(userNextRef);
+            t.setTeachername(user.getRealname());
+            t.setTeachersex(teachersex);
+            if (teacherphone != null)
+                t.setTeacherphone(teacherphone);
+            if (teacherpost != null)
+                t.setTeacherpost(teacherpost);
+            if (teacheraddress != null)
+                t.setTeacheraddress(teacheraddress);
+            if (user.getBirthdate() != null)
+                t.setTeacherbirth(user.getBirthdate());
+
+            sql = new StringBuilder();
+            objList = this.teacherManager.getSaveSql(t, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //添加默认教师角色
+            String ruNextRef = UUID.randomUUID().toString();
+            RoleUser ru = new RoleUser();
+            ru.setRef(ruNextRef);
+            ru.getUserinfo().setRef(userNextRef);
+            ru.getRoleinfo().setRoleid(UtilTool._ROLE_TEACHER_ID);
+
+            sql = new StringBuilder();
+            objList = this.roleUserManager.getSaveSql(ru, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+            //添加教师角色默认权限
+            RoleColumnRightInfo rc=new RoleColumnRightInfo();
+            rc.setRoleid(UtilTool._ROLE_TEACHER_ID);
+            List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
 
             if(rcList!=null&&rcList.size()>0)
             {
 
             }
-			if(rcList!=null&&rcList.size()>0){
-				for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
-					UserColumnRightInfo ucr=new UserColumnRightInfo();
-					ucr.setColumnid(roleColumnRightInfo.getColumnid());
-					ucr.setUserid(userNextRef);
-					ucr.setRef(this.userColumnRightManager.getNextId());
-					ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
-					sql=new StringBuilder();
-					objList=this.userColumnRightManager.getSaveSql(ucr, sql);
-					if(objList!=null&&sql!=null){
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}  
-			}
+            if(rcList!=null&&rcList.size()>0){
+                for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
+                    UserColumnRightInfo ucr=new UserColumnRightInfo();
+                    ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                    ucr.setUserid(userNextRef);
+                    ucr.setRef(this.userColumnRightManager.getNextId());
+                    ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                    sql=new StringBuilder();
+                    objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                    if(objList!=null&&sql!=null){
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
 
-			// 教师科目
-			if (subject != null && subject.trim().length() > 0) {
-				String[] subjectArray = subject.split(",");
-				if (subjectArray.length > 0) {
-					for (int i = 0; i < subjectArray.length; i++) {
-						SubjectUser su = new SubjectUser();
-						su.getSubjectinfo().setSubjectid(
-								Integer.parseInt(subjectArray[i]));
-						su.getUserinfo().setRef(userNextRef);
-						su.setIsmajor(0);
+            // 教师科目
+            if (subject != null && subject.trim().length() > 0) {
+                String[] subjectArray = subject.split(",");
+                if (subjectArray.length > 0) {
+                    for (int i = 0; i < subjectArray.length; i++) {
+                        SubjectUser su = new SubjectUser();
+                        su.getSubjectinfo().setSubjectid(
+                                Integer.parseInt(subjectArray[i]));
+                        su.getUserinfo().setRef(userNextRef);
+                        su.setIsmajor(0);
 
-						sql = new StringBuilder();
-						objList = this.subjectUserManager.getSaveSql(su, sql);
-						if (objList != null && sql != null) {
-							sqlListArray.add(sql.toString());
-							objListArray.add(objList);
-						}
-					}  
-				}
-			}
+                        sql = new StringBuilder();
+                        objList = this.subjectUserManager.getSaveSql(su, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                }
+            }
 
-			// 主授科目
-			if (subjectmajor != null && subjectmajor.trim().length() > 0) {
-				String[] majorArray = subjectmajor.split(",");
-				if (majorArray.length > 0) {
-					for (int i = 0; i < majorArray.length; i++) {
-						SubjectUser sdelete = new SubjectUser();
-						sdelete.getSubjectinfo().setSubjectid(
-								Integer.parseInt(majorArray[i]));
-						sdelete.getUserinfo().setRef(userNextRef);
-						sql = new StringBuilder();
-						objList = this.subjectUserManager.getDeleteSql(sdelete,
-								sql);
-						if (objList != null && sql != null) {
-							sqlListArray.add(sql.toString());
-							objListArray.add(objList);
-						}
- 
-						SubjectUser su = new SubjectUser();
-						su.getSubjectinfo().setSubjectid(
-								Integer.parseInt(majorArray[i]));
-						su.getUserinfo().setRef(userNextRef);
-						su.setIsmajor(1);
+            // 主授科目
+            if (subjectmajor != null && subjectmajor.trim().length() > 0) {
+                String[] majorArray = subjectmajor.split(",");
+                if (majorArray.length > 0) {
+                    for (int i = 0; i < majorArray.length; i++) {
+                        SubjectUser sdelete = new SubjectUser();
+                        sdelete.getSubjectinfo().setSubjectid(
+                                Integer.parseInt(majorArray[i]));
+                        sdelete.getUserinfo().setRef(userNextRef);
+                        sql = new StringBuilder();
+                        objList = this.subjectUserManager.getDeleteSql(sdelete,
+                                sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
 
-						sql = new StringBuilder();
-						objList = this.subjectUserManager.getSaveSql(su, sql);
-						if (objList != null && sql != null) {
-							sqlListArray.add(sql.toString());
-							objListArray.add(objList);
-						}
-					}
-				}
-			}
-		}
+                        SubjectUser su = new SubjectUser();
+                        su.getSubjectinfo().setSubjectid(
+                                Integer.parseInt(majorArray[i]));
+                        su.getUserinfo().setRef(userNextRef);
+                        su.setIsmajor(1);
 
-		// 添加班级关系
-		if(clsstr!=null&&clsstr.length()>0){
-			String[] classArray = clsstr.split(",");
-			if (classArray.length > 0) {
-				for (String classid : classArray) {
-					String cuNextRef = UUID.randomUUID().toString();
-					ClassUser cu = new ClassUser();
-					cu.getUserinfo().setRef(userNextRef);
-					cu.setRef(cuNextRef);
-					if (isstu) {
-						cu.setRelationtype("学生");
-						cu.getClassinfo().setClassid(Integer.parseInt(classid));
-					} else { 
-						cu.setRelationtype("任课老师");
-						String[] csidArray = classid.split("\\|");
-						cu.getClassinfo()
-								.setClassid(Integer.parseInt(csidArray[0]));
-						cu.setSubjectid(Integer.parseInt(csidArray[1]));
-					}
+                        sql = new StringBuilder();
+                        objList = this.subjectUserManager.getSaveSql(su, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                }
+            }
+        }
 
-					sql = new StringBuilder();
-					objList = this.classUserManager.getSaveSql(cu, sql);
-					if (objList != null && sql != null) {
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}
-			}
-		}
-		
+        // 添加班级关系
+        if(clsstr!=null&&clsstr.length()>0){
+            String[] classArray = clsstr.split(",");
+            if (classArray.length > 0) {
+                for (String classid : classArray) {
+                    String cuNextRef = UUID.randomUUID().toString();
+                    ClassUser cu = new ClassUser();
+                    cu.getUserinfo().setRef(userNextRef);
+                    cu.setRef(cuNextRef);
+                    if (isstu) {
+                        cu.setRelationtype("学生");
+                        cu.getClassinfo().setClassid(Integer.parseInt(classid));
+                    } else {
+                        cu.setRelationtype("任课老师");
+                        String[] csidArray = classid.split("\\|");
+                        cu.getClassinfo()
+                                .setClassid(Integer.parseInt(csidArray[0]));
+                        cu.setSubjectid(Integer.parseInt(csidArray[1]));
+                    }
 
-		// 添加角色关系
-		if(roles!=null&&roles.length()>0){
-			String[] roleArray = roles.split(",");
-			if (roleArray.length > 0) {
-				for (String roleid : roleArray) {
-					String ruNextRef = UUID.randomUUID().toString();
-					RoleUser ru = new RoleUser();
-					ru.setRef(ruNextRef);
-					ru.getUserinfo().setRef(userNextRef);
-					ru.getRoleinfo().setRoleid(Integer.parseInt(roleid));
+                    sql = new StringBuilder();
+                    objList = this.classUserManager.getSaveSql(cu, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
+        }
 
-					sql = new StringBuilder();
-					objList = this.roleUserManager.getSaveSql(ru, sql);
-					if (objList != null && sql != null) {
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
-					
-					//添加用户角色权限
-					RoleColumnRightInfo rc=new RoleColumnRightInfo();
-					rc.setRoleid(Integer.parseInt(roleid));
-					List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
-					if(rcList!=null&&rcList.size()>0){
-						for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
-							UserColumnRightInfo ucr=new UserColumnRightInfo();
-							ucr.setColumnid(roleColumnRightInfo.getColumnid());
-							ucr.setUserid(userNextRef);
-							ucr.setRef(this.userColumnRightManager.getNextId());
-							ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
-							sql=new StringBuilder();
-							objList=this.userColumnRightManager.getSaveSql(ucr, sql);
-							if(objList!=null&&sql!=null){
-								sqlListArray.add(sql.toString());
-								objListArray.add(objList);
-							}
-						}  
-					}
-					
-					/************************/
-					Integer rid=Integer.parseInt(roleid);
-					/**
-					 * 年级组长
-					 */
-					if((rid==UtilTool._ROLE_GRADE_LEADER_ID||rid==UtilTool._ROLE_GRADE_FU_LEADER_ID)
-							&&gradeid!=null&&gradeid.trim().length()>0){
-						DeptUser du = new DeptUser();
-						du.setRef(UUID.randomUUID().toString());
-						du.getUserinfo().setRef(userNextRef);
-						du.setDeptid(Integer.parseInt(gradeid));
-						du.setRoleid(rid); 
 
-						sql = new StringBuilder();
-						objList = this.deptUserManager.getSaveSql(du, sql);
-						if (objList != null && sql != null) {
-							sqlListArray.add(sql.toString());
-							objListArray.add(objList);
-						}
-					}
-					/**
-					 * 部门主任
-					 */
-					
-					if((rid==UtilTool._ROLE_DEPT_LEADER_ID||rid==UtilTool._ROLE_DEPT_FU_LEADER_ID)
-							&&deptid!=null&&deptid.trim().length()>0){
-						DeptUser du = new DeptUser();
-						du.setRef(UUID.randomUUID().toString());
-						du.getUserinfo().setRef(userNextRef);
-						du.setDeptid(Integer.parseInt(deptid));
-						du.setRoleid(rid);
+        // 添加角色关系
+        if(roles!=null&&roles.length()>0){
+            String[] roleArray = roles.split(",");
+            if (roleArray.length > 0) {
+                for (String roleid : roleArray) {
+                    String ruNextRef = UUID.randomUUID().toString();
+                    RoleUser ru = new RoleUser();
+                    ru.setRef(ruNextRef);
+                    ru.getUserinfo().setRef(userNextRef);
+                    ru.getRoleinfo().setRoleid(Integer.parseInt(roleid));
 
-						sql = new StringBuilder();
-						objList = this.deptUserManager.getSaveSql(du, sql);
-						if (objList != null && sql != null) {
-							sqlListArray.add(sql.toString());
-							objListArray.add(objList);
-						}
-					}
-					
-					/**
-					 * 教研组长
-					 */
-					
-					if((rid==UtilTool._ROLE_TEACH_LEADER_ID||rid==UtilTool._ROLE_TEACH_FU_LEADER_ID)
-							&&teachleaderid!=null&&teachleaderid.trim().length()>0){
-						DeptUser du = new DeptUser();
-						du.setRef(UUID.randomUUID().toString());
-						du.getUserinfo().setRef(userNextRef);
-						du.setDeptid(Integer.parseInt(teachleaderid));
-						du.setRoleid(rid);
+                    sql = new StringBuilder();
+                    objList = this.roleUserManager.getSaveSql(ru, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
 
-						sql = new StringBuilder();
-						objList = this.deptUserManager.getSaveSql(du, sql);
-						if (objList != null && sql != null) {
-							sqlListArray.add(sql.toString());
-							objListArray.add(objList);
-						}
-					}
-					
-					/**
-					 * 备课组长
-					 */
-					if(rid==UtilTool._ROLE_PREPARE_LEADER_ID
-							&&prepareid!=null&&prepareid.trim().length()>0){
-						DeptUser du = new DeptUser();
-						du.setRef(UUID.randomUUID().toString());
-						du.getUserinfo().setRef(userNextRef);
-						du.setDeptid(Integer.parseInt(prepareid));
-						du.setRoleid(rid);
- 
-						sql = new StringBuilder();
-						objList = this.deptUserManager.getSaveSql(du, sql);
-						if (objList != null && sql != null) {
-							sqlListArray.add(sql.toString());
-							objListArray.add(objList);
-						}
-					}
+                    //添加用户角色权限
+                    RoleColumnRightInfo rc=new RoleColumnRightInfo();
+                    rc.setRoleid(Integer.parseInt(roleid));
+                    List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
+                    if(rcList!=null&&rcList.size()>0){
+                        for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
+                            UserColumnRightInfo ucr=new UserColumnRightInfo();
+                            ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                            ucr.setUserid(userNextRef);
+                            ucr.setRef(this.userColumnRightManager.getNextId());
+                            ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                            sql=new StringBuilder();
+                            objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                            if(objList!=null&&sql!=null){
+                                sqlListArray.add(sql.toString());
+                                objListArray.add(objList);
+                            }
+                        }
+                    }
+
+                    /************************/
+                    Integer rid=Integer.parseInt(roleid);
+                    /**
+                     * 年级组长
+                     */
+                    if((rid==UtilTool._ROLE_GRADE_LEADER_ID||rid==UtilTool._ROLE_GRADE_FU_LEADER_ID)
+                            &&gradeid!=null&&gradeid.trim().length()>0){
+                        DeptUser du = new DeptUser();
+                        du.setRef(UUID.randomUUID().toString());
+                        du.getUserinfo().setRef(userNextRef);
+                        du.setDeptid(Integer.parseInt(gradeid));
+                        du.setRoleid(rid);
+
+                        sql = new StringBuilder();
+                        objList = this.deptUserManager.getSaveSql(du, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                    /**
+                     * 部门主任
+                     */
+
+                    if((rid==UtilTool._ROLE_DEPT_LEADER_ID||rid==UtilTool._ROLE_DEPT_FU_LEADER_ID)
+                            &&deptid!=null&&deptid.trim().length()>0){
+                        DeptUser du = new DeptUser();
+                        du.setRef(UUID.randomUUID().toString());
+                        du.getUserinfo().setRef(userNextRef);
+                        du.setDeptid(Integer.parseInt(deptid));
+                        du.setRoleid(rid);
+
+                        sql = new StringBuilder();
+                        objList = this.deptUserManager.getSaveSql(du, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+
+                    /**
+                     * 教研组长
+                     */
+
+                    if((rid==UtilTool._ROLE_TEACH_LEADER_ID||rid==UtilTool._ROLE_TEACH_FU_LEADER_ID)
+                            &&teachleaderid!=null&&teachleaderid.trim().length()>0){
+                        DeptUser du = new DeptUser();
+                        du.setRef(UUID.randomUUID().toString());
+                        du.getUserinfo().setRef(userNextRef);
+                        du.setDeptid(Integer.parseInt(teachleaderid));
+                        du.setRoleid(rid);
+
+                        sql = new StringBuilder();
+                        objList = this.deptUserManager.getSaveSql(du, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+
+                    /**
+                     * 备课组长
+                     */
+                    if(rid==UtilTool._ROLE_PREPARE_LEADER_ID
+                            &&prepareid!=null&&prepareid.trim().length()>0){
+                        DeptUser du = new DeptUser();
+                        du.setRef(UUID.randomUUID().toString());
+                        du.getUserinfo().setRef(userNextRef);
+                        du.setDeptid(Integer.parseInt(prepareid));
+                        du.setRoleid(rid);
+
+                        sql = new StringBuilder();
+                        objList = this.deptUserManager.getSaveSql(du, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
 
                     /**
                      * 部门负责人
@@ -3175,676 +3207,684 @@ public class UserController extends BaseController<UserInfo> {
                             objListArray.add(objList);
                         }
                     }
-				}
-			}
-		}
-		
+                }
+            }
+        }
 
-		if (!isstu && clsbzrstr != null && clsbzrstr.trim().length() > 0) {
-			String[] clsbzrArray = clsbzrstr.split(",");  
-			if (clsbzrArray.length > 0) {
-				for (String clsid : clsbzrArray) {
-					String cuNextRef = UUID.randomUUID().toString();
-					ClassUser cu = new ClassUser();
-					cu.getUserinfo().setRef(userNextRef);
-					cu.getClassinfo().setClassid(Integer.parseInt(clsid));
-					cu.setRef(cuNextRef);
-					cu.setRelationtype("班主任");
 
-					sql = new StringBuilder();
-					objList = this.classUserManager.getSaveSql(cu, sql);
-					if (objList != null && sql != null) {
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}
-			}
-		}
+        if (!isstu && clsbzrstr != null && clsbzrstr.trim().length() > 0) {
+            String[] clsbzrArray = clsbzrstr.split(",");
+            if (clsbzrArray.length > 0) {
+                for (String clsid : clsbzrArray) {
+                    String cuNextRef = UUID.randomUUID().toString();
+                    ClassUser cu = new ClassUser();
+                    cu.getUserinfo().setRef(userNextRef);
+                    cu.getClassinfo().setClassid(Integer.parseInt(clsid));
+                    cu.setRef(cuNextRef);
+                    cu.setRelationtype("班主任");
 
-		if (sqlListArray.size() > 0 && objListArray.size() > 0) {
-			boolean bo = this.userManager.doExcetueArrayProc(sqlListArray,
-					objListArray);
-			if (bo) {
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-				je.setType("success");
+                    sql = new StringBuilder();
+                    objList = this.classUserManager.getSaveSql(cu, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
+        }
+
+        if (sqlListArray.size() > 0 && objListArray.size() > 0) {
+            boolean bo = this.userManager.doExcetueArrayProc(sqlListArray,
+                    objListArray);
+            if (bo) {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
                 je.getObjList().add(userNextRef);
-			} else {
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-			}
-		} else {
-			je.setMsg(UtilTool.msgproperty
-					.getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
-		}
-		response.getWriter().print(je.toJSON());
-	}
+                if(!addToEttUser(userNextRef)){
+                    System.out.println("同步网校失败！原因：未知");
+                }
+            } else {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        } else {
+            je.setMsg(UtilTool.msgproperty
+                    .getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
+        }
+        response.getWriter().print(je.toJSON());
+    }
 
-	/**
-	 * 教务修改用户
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(params = "m=domodify", method = RequestMethod.POST)
-	public void doUpdateUser(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		JsonEntity je = new JsonEntity();
-		String userNextRef = request.getParameter("ref");
-		if (userNextRef == null || userNextRef.trim().length() < 1) {
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		UserInfo us = new UserInfo();
-		us.setRef(userNextRef);
-		List<UserInfo> uList = this.userManager.getList(us, null);
-		if (uList == null || uList.size() < 1) {
-			je.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		// 公用
-		boolean isstu = false;
-		String issstu = request.getParameter("isstu");
-		String roles = request.getParameter("roles");
-		String jobs = request.getParameter("jobs");
-		String clsstr = request.getParameter("clsstr");
-		if (issstu != null && issstu.equals("true"))
-			isstu = true;
-		// 学生
-		String stusex = request.getParameter("stusex");
-		String address = request.getParameter("address");
-		String linkman = request.getParameter("linkman");
-		String linkmanphone = request.getParameter("linkmanphone");
 
-		// 教师
-		String teachersex = request.getParameter("teachersex");
-		String subject = request.getParameter("subject");
-		String teachercardid = request.getParameter("teachercardid");
-		String teacherphone = request.getParameter("teacherphone");
-		String teacherpost = request.getParameter("teacherpost");
-		String teacheraddress = request.getParameter("teacheraddress");
-		String subjectmajor = request.getParameter("subjectmajor");
-		// 班主任
-		String clsbzrstr = request.getParameter("clsbzrstr");
 
-		UserInfo user = this.getParameter(request, UserInfo.class);
-		if (user.getUsername() == null
-				|| user.getUsername().trim().length() < 1
-				|| user.getPassword() == null
-				|| user.getPassword().trim().length() < 1
-				// ||user.getPassquestion()==null||user.getPassquestion().trim().length()<1
-				// ||user.getQuestionanswer()==null||user.getQuestionanswer().trim().length()<1
-				|| user.getStateid() == null
-				// ||user.getMailaddress()==null
-				// ||user.getBirthdate()==null
-				//|| clsstr == null || clsstr.trim().length() < 1
-				|| roles == null || roles.trim().length() < 1) {
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
-			return;
-		}
-		List<String> sqlListArray = new ArrayList<String>();
-		List<List<Object>> objListArray = new ArrayList<List<Object>>();
-		List<Object> objList = null;
-		StringBuilder sql = null;
 
-		// 修改用户信息
-		UserInfo u = new UserInfo();
-		u.setRef(userNextRef);
-		u.setUsername(user.getUsername());
-		u.setPassword(user.getPassword());
-		u.setStateid(user.getStateid());
-		if (user.getPassquestion() != null)
-			u.setPassquestion(user.getPassquestion());
-		if (user.getQuestionanswer() != null)
-			u.setQuestionanswer(user.getQuestionanswer());
-		if (user.getMailaddress() != null)
-			u.setMailaddress(user.getMailaddress());
-		if (user.getBirthdate() != null)
-			u.setBirthdate(user.getBirthdate());
 
-		sql = new StringBuilder();
-		objList = this.userManager.getUpdateSql(u, sql);
-		if (objList != null && sql != null) {
-			sqlListArray.add(sql.toString());
-			objListArray.add(objList);
-		}
+    /**
+     * 教务修改用户
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=domodify", method = RequestMethod.POST)
+    public void doUpdateUser(HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String userNextRef = request.getParameter("ref");
+        if (userNextRef == null || userNextRef.trim().length() < 1) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        UserInfo us = new UserInfo();
+        us.setRef(userNextRef);
+        List<UserInfo> uList = this.userManager.getList(us, null);
+        if (uList == null || uList.size() < 1) {
+            je.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        // 公用
+        boolean isstu = false;
+        String issstu = request.getParameter("isstu");
+        String roles = request.getParameter("roles");
+        String jobs = request.getParameter("jobs");
+        String clsstr = request.getParameter("clsstr");
+        if (issstu != null && issstu.equals("true"))
+            isstu = true;
+        // 学生
+        String stusex = request.getParameter("stusex");
+        String address = request.getParameter("address");
+        String linkman = request.getParameter("linkman");
+        String linkmanphone = request.getParameter("linkmanphone");
 
-		// 学生
-		if (isstu) {
-			if (user.getStuname() == null
-					|| user.getStuname().trim().length() < 1
-					|| user.getStuno() == null
-					|| user.getStuno().trim().length() < 1 || stusex == null
-					|| clsstr == null || clsstr.trim().length() < 1
-			// ||linkman==null||linkman.trim().length()<1
-			// ||linkmanphone==null||linkmanphone.trim().length()<1
-			) {
-				je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-				response.getWriter().print(je.toJSON());
-				return;
-			}
-			// 修改学生
-			StudentInfo s = new StudentInfo();
-			s.getUserinfo().setRef(userNextRef);
-			// 验证数据
-			List<StudentInfo> stuList = this.studentManager.getList(s, null);
-			if (stuList == null || stuList.size() < 1) {
-				je.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
-				response.getWriter().print(je.toJSON());
-				return;
-			}
-			s.setStuname(user.getStuname().trim());
-			s.setStusex(stusex);
-			s.setStuno(user.getStuno());
-			if (linkman != null)
-				s.setLinkman(linkman);
-			if (linkmanphone != null)
-				s.setLinkmanphone(linkmanphone);
-			if (address != null && address.trim().length() > 0)
-				s.setStuaddress(address);
-			sql = new StringBuilder();
-			objList = this.studentManager.getUpdateSql(s, sql);
-			if (objList != null && sql != null) {
-				sqlListArray.add(sql.toString());
-				objListArray.add(objList);
-			}
-		} else {
-			if (user.getRealname() == null
-					|| user.getRealname().trim().length() < 1
-					|| teachersex == null
-			// ||teachercardid==null
-			// ||teacherphone==null
-			// ||teacherpost==null
-			// ||subject==null
-			) {
-				je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-				response.getWriter().print(je.toJSON());
-				return;
-			}
-			// 教师
-			TeacherInfo t = new TeacherInfo();
-			t.setUserid(userNextRef);
-			List<TeacherInfo> teaList = this.teacherManager.getList(t, null);
-			if (teaList == null || teaList.size() < 1) {
-				je.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
-				response.getWriter().print(je.toJSON());
-				return;
-			}
-			t.setTeachername(user.getRealname());
-			t.setTeachersex(teachersex);
-			if (teachercardid != null)
-				t.setTeachercardid(teachercardid);
-			if (teacherphone != null)
-				t.setTeacherphone(teacherphone);
-			if (teacherpost != null)
-				t.setTeacherpost(teacherpost);
-			if (teacheraddress != null)
-				t.setTeacheraddress(teacheraddress);
-			if (user.getBirthdate() != null)
-				t.setTeacherbirth(user.getBirthdate());
+        // 教师
+        String teachersex = request.getParameter("teachersex");
+        String subject = request.getParameter("subject");
+        String teachercardid = request.getParameter("teachercardid");
+        String teacherphone = request.getParameter("teacherphone");
+        String teacherpost = request.getParameter("teacherpost");
+        String teacheraddress = request.getParameter("teacheraddress");
+        String subjectmajor = request.getParameter("subjectmajor");
+        // 班主任
+        String clsbzrstr = request.getParameter("clsbzrstr");
 
-			sql = new StringBuilder();
-			objList = this.teacherManager.getUpdateSql(t, sql);
-			if (objList != null && sql != null) {
-				sqlListArray.add(sql.toString());
-				objListArray.add(objList);
-			}
+        UserInfo user = this.getParameter(request, UserInfo.class);
+        if (user.getUsername() == null
+                || user.getUsername().trim().length() < 1
+                || user.getPassword() == null
+                || user.getPassword().trim().length() < 1
+                // ||user.getPassquestion()==null||user.getPassquestion().trim().length()<1
+                // ||user.getQuestionanswer()==null||user.getQuestionanswer().trim().length()<1
+                || user.getStateid() == null
+                // ||user.getMailaddress()==null
+                // ||user.getBirthdate()==null
+                //|| clsstr == null || clsstr.trim().length() < 1
+                || roles == null || roles.trim().length() < 1) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<String> sqlListArray = new ArrayList<String>();
+        List<List<Object>> objListArray = new ArrayList<List<Object>>();
+        List<Object> objList = null;
+        StringBuilder sql = null;
 
-			// 教师科目
-			if (subject != null && subject.trim().length() > 0) {
-				String[] subjectArray = subject.split(",");
+        // 修改用户信息
+        UserInfo u = new UserInfo();
+        u.setRef(userNextRef);
+        u.setUsername(user.getUsername());
+        u.setPassword(user.getPassword());
+        u.setStateid(user.getStateid());
+        if (user.getPassquestion() != null)
+            u.setPassquestion(user.getPassquestion());
+        if (user.getQuestionanswer() != null)
+            u.setQuestionanswer(user.getQuestionanswer());
+        if (user.getMailaddress() != null)
+            u.setMailaddress(user.getMailaddress());
+        if (user.getBirthdate() != null)
+            u.setBirthdate(user.getBirthdate());
 
-				if (subjectArray.length > 0) {
-					SubjectUser sudelete = new SubjectUser();
-					sudelete.getUserinfo().setRef(userNextRef);
-					sql = new StringBuilder();
-					objList = this.subjectUserManager.getDeleteSql(sudelete,
-							sql);
-					if (objList != null && sql != null) {
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
+        sql = new StringBuilder();
+        objList = this.userManager.getUpdateSql(u, sql);
+        if (objList != null && sql != null) {
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
 
-					for (int i = 0; i < subjectArray.length; i++) {
-						SubjectUser su = new SubjectUser();
-						su.getSubjectinfo().setSubjectid(
-								Integer.parseInt(subjectArray[i]));
-						su.getUserinfo().setRef(userNextRef);
-						su.setIsmajor(0);
-						sql = new StringBuilder();
-						objList = this.subjectUserManager.getSaveSql(su, sql);
-						if (objList != null && sql != null) {
-							sqlListArray.add(sql.toString());
-							objListArray.add(objList);
-						}
-					}
-				}
-			}
+        // 学生
+        if (isstu) {
+            if (user.getStuname() == null
+                    || user.getStuname().trim().length() < 1
+                    || user.getStuno() == null
+                    || user.getStuno().trim().length() < 1 || stusex == null
+                    || clsstr == null || clsstr.trim().length() < 1
+                // ||linkman==null||linkman.trim().length()<1
+                // ||linkmanphone==null||linkmanphone.trim().length()<1
+                    ) {
+                je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            // 修改学生
+            StudentInfo s = new StudentInfo();
+            s.getUserinfo().setRef(userNextRef);
+            // 验证数据
+            List<StudentInfo> stuList = this.studentManager.getList(s, null);
+            if (stuList == null || stuList.size() < 1) {
+                je.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            s.setStuname(user.getStuname().trim());
+            s.setStusex(stusex);
+            s.setStuno(user.getStuno());
+            if (linkman != null)
+                s.setLinkman(linkman);
+            if (linkmanphone != null)
+                s.setLinkmanphone(linkmanphone);
+            if (address != null && address.trim().length() > 0)
+                s.setStuaddress(address);
+            sql = new StringBuilder();
+            objList = this.studentManager.getUpdateSql(s, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        } else {
+            if (user.getRealname() == null
+                    || user.getRealname().trim().length() < 1
+                    || teachersex == null
+                // ||teachercardid==null
+                // ||teacherphone==null
+                // ||teacherpost==null
+                // ||subject==null
+                    ) {
+                je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            // 教师
+            TeacherInfo t = new TeacherInfo();
+            t.setUserid(userNextRef);
+            List<TeacherInfo> teaList = this.teacherManager.getList(t, null);
+            if (teaList == null || teaList.size() < 1) {
+                je.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            t.setTeachername(user.getRealname());
+            t.setTeachersex(teachersex);
+            if (teachercardid != null)
+                t.setTeachercardid(teachercardid);
+            if (teacherphone != null)
+                t.setTeacherphone(teacherphone);
+            if (teacherpost != null)
+                t.setTeacherpost(teacherpost);
+            if (teacheraddress != null)
+                t.setTeacheraddress(teacheraddress);
+            if (user.getBirthdate() != null)
+                t.setTeacherbirth(user.getBirthdate());
 
-			// 主授科目
-			if (subjectmajor != null && subjectmajor.trim().length() > 0) {
-				String[] majorArray = subjectmajor.split(",");
-				if (majorArray.length > 0) {
-					for (int i = 0; i < majorArray.length; i++) {
-						SubjectUser sudelete = new SubjectUser();
-						sudelete.getUserinfo().setRef(userNextRef);
-						sudelete.setSubjectid(Integer.parseInt(majorArray[i]));
-						sql = new StringBuilder();
-						objList = this.subjectUserManager.getDeleteSql(
-								sudelete, sql);
-						if (objList != null && sql != null) {
-							sqlListArray.add(sql.toString());
-							objListArray.add(objList);
-						}
+            sql = new StringBuilder();
+            objList = this.teacherManager.getUpdateSql(t, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
 
-						SubjectUser su = new SubjectUser();
-						su.getSubjectinfo().setSubjectid(
-								Integer.parseInt(majorArray[i]));
-						su.getUserinfo().setRef(userNextRef);
-						su.setIsmajor(1);
-						sql = new StringBuilder();
-						objList = this.subjectUserManager.getSaveSql(su, sql);
-						if (objList != null && sql != null) {
-							sqlListArray.add(sql.toString());
-							objListArray.add(objList);
-						}
-					}
-				}
-			}
+            // 教师科目
+            if (subject != null && subject.trim().length() > 0) {
+                String[] subjectArray = subject.split(",");
 
-		}
+                if (subjectArray.length > 0) {
+                    SubjectUser sudelete = new SubjectUser();
+                    sudelete.getUserinfo().setRef(userNextRef);
+                    sql = new StringBuilder();
+                    objList = this.subjectUserManager.getDeleteSql(sudelete,
+                            sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
 
-		// 添加班级关系
-		if(clsstr!=null&&clsstr.length()>0){
-			String[] classArray = clsstr.split(",");
-			if (classArray.length > 0) {
-				ClassUser cudelete = new ClassUser();
-				cudelete.getUserinfo().setRef(userNextRef);
-				if (isstu)
-					cudelete.setRelationtype("学生");
-				else
-					cudelete.setRelationtype("任课老师");
-				sql = new StringBuilder();
-				objList = this.classUserManager.getDeleteSql(cudelete, sql);
-				if (objList != null && sql != null) {
-					sqlListArray.add(sql.toString());
-					objListArray.add(objList);
-				}
+                    for (int i = 0; i < subjectArray.length; i++) {
+                        SubjectUser su = new SubjectUser();
+                        su.getSubjectinfo().setSubjectid(
+                                Integer.parseInt(subjectArray[i]));
+                        su.getUserinfo().setRef(userNextRef);
+                        su.setIsmajor(0);
+                        sql = new StringBuilder();
+                        objList = this.subjectUserManager.getSaveSql(su, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                }
+            }
 
-				for (String classid : classArray) {
-					String cuNextRef = UUID.randomUUID().toString();
-					ClassUser cu = new ClassUser();
-					cu.getUserinfo().setRef(userNextRef);
-					cu.setRef(cuNextRef);
-					if (isstu) {
-						cu.setRelationtype("学生");
-						cu.getClassinfo().setClassid(Integer.parseInt(classid));
-					} else {
-						cu.setRelationtype("任课老师");
-						String[] csidArray = classid.split("\\|");
-						cu.getClassinfo()
-								.setClassid(Integer.parseInt(csidArray[0]));
-						cu.setSubjectid(Integer.parseInt(csidArray[1]));
-					}
+            // 主授科目
+            if (subjectmajor != null && subjectmajor.trim().length() > 0) {
+                String[] majorArray = subjectmajor.split(",");
+                if (majorArray.length > 0) {
+                    for (int i = 0; i < majorArray.length; i++) {
+                        SubjectUser sudelete = new SubjectUser();
+                        sudelete.getUserinfo().setRef(userNextRef);
+                        sudelete.setSubjectid(Integer.parseInt(majorArray[i]));
+                        sql = new StringBuilder();
+                        objList = this.subjectUserManager.getDeleteSql(
+                                sudelete, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
 
-					
-					sql = new StringBuilder();
-					objList = this.classUserManager.getSaveSql(cu, sql);
-					if (objList != null && sql != null) {
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}
-			}
-		}
-		
+                        SubjectUser su = new SubjectUser();
+                        su.getSubjectinfo().setSubjectid(
+                                Integer.parseInt(majorArray[i]));
+                        su.getUserinfo().setRef(userNextRef);
+                        su.setIsmajor(1);
+                        sql = new StringBuilder();
+                        objList = this.subjectUserManager.getSaveSql(su, sql);
+                        if (objList != null && sql != null) {
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                }
+            }
 
-		// 添加角色关系
-		String[] roleArray = roles.split(",");
-		if (roleArray.length > 0) {
-			RoleUser rudelete = new RoleUser();
-			rudelete.getUserinfo().setRef(userNextRef);
-			sql = new StringBuilder();
-			objList = this.roleUserManager.getDeleteSql(rudelete, sql);
-			if (objList != null && sql != null) {
-				sqlListArray.add(sql.toString());
-				objListArray.add(objList);
-			}
+        }
 
-			for (String roleid : roleArray) {
-				String ruNextRef = UUID.randomUUID().toString();
-				RoleUser ru = new RoleUser();
-				ru.setRef(ruNextRef);
-				ru.getUserinfo().setRef(userNextRef);
-				ru.getRoleinfo().setRoleid(Integer.parseInt(roleid));
+        // 添加班级关系
+        if(clsstr!=null&&clsstr.length()>0){
+            String[] classArray = clsstr.split(",");
+            if (classArray.length > 0) {
+                ClassUser cudelete = new ClassUser();
+                cudelete.getUserinfo().setRef(userNextRef);
+                if (isstu)
+                    cudelete.setRelationtype("学生");
+                else
+                    cudelete.setRelationtype("任课老师");
+                sql = new StringBuilder();
+                objList = this.classUserManager.getDeleteSql(cudelete, sql);
+                if (objList != null && sql != null) {
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
 
-				sql = new StringBuilder();
-				objList = this.roleUserManager.getSaveSql(ru, sql);
-				if (objList != null && sql != null) {
-					sqlListArray.add(sql.toString());
-					objListArray.add(objList);
-				}
-			}
-		}
+                for (String classid : classArray) {
+                    String cuNextRef = UUID.randomUUID().toString();
+                    ClassUser cu = new ClassUser();
+                    cu.getUserinfo().setRef(userNextRef);
+                    cu.setRef(cuNextRef);
+                    if (isstu) {
+                        cu.setRelationtype("学生");
+                        cu.getClassinfo().setClassid(Integer.parseInt(classid));
+                    } else {
+                        cu.setRelationtype("任课老师");
+                        String[] csidArray = classid.split("\\|");
+                        cu.getClassinfo()
+                                .setClassid(Integer.parseInt(csidArray[0]));
+                        cu.setSubjectid(Integer.parseInt(csidArray[1]));
+                    }
 
-		// 添加职务关系
-		if (jobs != null && jobs.trim().length() > 0) {
-			String[] jobArray = jobs.split(",");
-			if (jobArray.length > 0) {
-				JobUser judelete = new JobUser();
-				judelete.getUserinfo().setRef(userNextRef);
-				sql = new StringBuilder();
-				objList = this.jobUserManager.getDeleteSql(judelete, sql);
-				if (objList != null && sql != null) {
-					sqlListArray.add(sql.toString());
-					objListArray.add(objList);
-				}
 
-				for (String jobid : jobArray) {
-					JobUser ju = new JobUser();
-					ju.setJobid(Integer.parseInt(jobid));
-					ju.getUserinfo().setRef(userNextRef);
-					sql = new StringBuilder();
-					objList = this.jobUserManager.getSaveSql(ju, sql);
-					if (objList != null && sql != null) {
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}
-			}
-		}
+                    sql = new StringBuilder();
+                    objList = this.classUserManager.getSaveSql(cu, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
+        }
 
-		if (!isstu && clsbzrstr != null && clsbzrstr.trim().length() > 0) {
-			String[] clsbzrArray = clsbzrstr.split(",");
-			if (clsbzrArray.length > 0) {
-				ClassUser cudelete = new ClassUser();
-				cudelete.getUserinfo().setRef(userNextRef);
-				cudelete.setRelationtype("班主任");
-				sql = new StringBuilder();
-				objList = this.classUserManager.getDeleteSql(cudelete, sql);
-				if (objList != null && sql != null) {
-					sqlListArray.add(sql.toString());
-					objListArray.add(objList);
-				}
 
-				for (String clsid : clsbzrArray) {
-					String cuNextRef = UUID.randomUUID().toString();
-					ClassUser cu = new ClassUser();
-					cu.getUserinfo().setRef(userNextRef);
-					cu.getClassinfo().setClassid(Integer.parseInt(clsid));
-					cu.setRef(cuNextRef);
-					cu.setRelationtype("班主任");
+        // 添加角色关系
+        String[] roleArray = roles.split(",");
+        if (roleArray.length > 0) {
+            RoleUser rudelete = new RoleUser();
+            rudelete.getUserinfo().setRef(userNextRef);
+            sql = new StringBuilder();
+            objList = this.roleUserManager.getDeleteSql(rudelete, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
 
-					sql = new StringBuilder();
-					objList = this.classUserManager.getSaveSql(cu, sql);
-					if (objList != null && sql != null) {
-						sqlListArray.add(sql.toString());
-						objListArray.add(objList);
-					}
-				}
-			}
-		}
+            for (String roleid : roleArray) {
+                String ruNextRef = UUID.randomUUID().toString();
+                RoleUser ru = new RoleUser();
+                ru.setRef(ruNextRef);
+                ru.getUserinfo().setRef(userNextRef);
+                ru.getRoleinfo().setRoleid(Integer.parseInt(roleid));
 
-		if (sqlListArray.size() > 0 && objListArray.size() > 0) {
-			boolean bo = this.userManager.doExcetueArrayProc(sqlListArray,
-					objListArray);
-			if (bo) {
-				//如果是学生,删除错误的学生小组关联数据
+                sql = new StringBuilder();
+                objList = this.roleUserManager.getSaveSql(ru, sql);
+                if (objList != null && sql != null) {
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }
+        }
 
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-				je.setType("success");
-			} else {
-				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-			}
-		} else {
-			je.setMsg(UtilTool.msgproperty
-					.getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
-		}
-		response.getWriter().print(je.toJSON());
-	}
-	/**
-	 * 进入首页
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(params="m=toIndex", method = RequestMethod.GET)
-	public ModelAndView toIndex(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception {
-        System.out.println("123456");
-		//得到当前学期的授课班级
-		    //得到当前学期
-		TermInfo term=this.termManager.getAutoTerm();
-		JsonEntity jeEntity=new JsonEntity();
-		if(term==null){
+        // 添加职务关系
+        if (jobs != null && jobs.trim().length() > 0) {
+            String[] jobArray = jobs.split(",");
+            if (jobArray.length > 0) {
+                JobUser judelete = new JobUser();
+                judelete.getUserinfo().setRef(userNextRef);
+                sql = new StringBuilder();
+                objList = this.jobUserManager.getDeleteSql(judelete, sql);
+                if (objList != null && sql != null) {
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+
+                for (String jobid : jobArray) {
+                    JobUser ju = new JobUser();
+                    ju.setJobid(Integer.parseInt(jobid));
+                    ju.getUserinfo().setRef(userNextRef);
+                    sql = new StringBuilder();
+                    objList = this.jobUserManager.getSaveSql(ju, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
+        }
+
+        if (!isstu && clsbzrstr != null && clsbzrstr.trim().length() > 0) {
+            String[] clsbzrArray = clsbzrstr.split(",");
+            if (clsbzrArray.length > 0) {
+                ClassUser cudelete = new ClassUser();
+                cudelete.getUserinfo().setRef(userNextRef);
+                cudelete.setRelationtype("班主任");
+                sql = new StringBuilder();
+                objList = this.classUserManager.getDeleteSql(cudelete, sql);
+                if (objList != null && sql != null) {
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+
+                for (String clsid : clsbzrArray) {
+                    String cuNextRef = UUID.randomUUID().toString();
+                    ClassUser cu = new ClassUser();
+                    cu.getUserinfo().setRef(userNextRef);
+                    cu.getClassinfo().setClassid(Integer.parseInt(clsid));
+                    cu.setRef(cuNextRef);
+                    cu.setRelationtype("班主任");
+
+                    sql = new StringBuilder();
+                    objList = this.classUserManager.getSaveSql(cu, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                }
+            }
+        }
+
+        if (sqlListArray.size() > 0 && objListArray.size() > 0) {
+            boolean bo = this.userManager.doExcetueArrayProc(sqlListArray,
+                    objListArray);
+            if (bo) {
+                //如果是学生,删除错误的学生小组关联数据
+
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+            } else {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        } else {
+            je.setMsg(UtilTool.msgproperty
+                    .getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
+        }
+        response.getWriter().print(je.toJSON());
+    }
+    /**
+     * 进入首页
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=toIndex", method = RequestMethod.GET)
+    public ModelAndView toIndex(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception {
+        // System.out.println("123456");
+        //得到当前学期的授课班级
+        //得到当前学期
+        TermInfo term=this.termManager.getAutoTerm();
+        JsonEntity jeEntity=new JsonEntity();
+        if(term==null){
             if(!this.termManager.InitTerm()){
                 jeEntity.setMsg("异常错误，网站设置错误，请联系管理人员设置学期!");
                 response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return null;
             }
             term=this.termManager.getAutoTerm();
-		}
-		//得到教授班级
-		String year=term.getYear();
-		ClassUser cu=new ClassUser();
-		cu.setYear(year);
-		if(this.validateRole(request, UtilTool._ROLE_TEACHER_ID))
-			cu.setRelationtype("任课老师");
-		else if(this.validateRole(request, UtilTool._ROLE_STU_ID))
-			cu.setRelationtype("学生");
-		else if(this.validateRole(request, UtilTool._ROLE_CLASSADVISE_ID))
-			cu.setRelationtype("班主任");
-		cu.setUserid(this.logined(request).getRef());
+        }
+        //得到教授班级
+        String year=term.getYear();
+        ClassUser cu=new ClassUser();
+        cu.setYear(year);
+        if(this.validateRole(request, UtilTool._ROLE_TEACHER_ID))
+            cu.setRelationtype("任课老师");
+        else if(this.validateRole(request, UtilTool._ROLE_STU_ID))
+            cu.setRelationtype("学生");
+        else if(this.validateRole(request, UtilTool._ROLE_CLASSADVISE_ID))
+            cu.setRelationtype("班主任");
+        cu.setUserid(this.logined(request).getRef());
         cu.getClassinfo().setIsflag(1);
-		List<ClassUser> cuList=this.classUserManager.getList(cu, null);
-		if(cuList!=null&&cuList.size()>0)
-			mp.put("teachClass", cuList);
-		//得到通知公告,网上公示
-		NoticeInfo notic=new NoticeInfo();
-		notic.setCuserid(this.logined(request).getRef());		
-		notic.setNoticetype(UtilTool._NOTICE_TYPE[0]);  //通知公告
-		PageResult presult=new PageResult();
-		presult.setPageNo(1);
-		presult.setPageSize(5);
-		presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
-		List<NoticeInfo> noticeList=this.noticeManager.getUserList(notic, presult);
-		mp.put("notices", noticeList);
-		
-		notic.setNoticetype(UtilTool._NOTICE_TYPE[1]); //网上公示
-		List<NoticeInfo> wsgsList=this.noticeManager.getUserList(notic, presult);
-		mp.put("internetNotices", wsgsList);
-		
-		presult=new PageResult();
-		presult.setPageNo(1);
-		presult.setPageSize(5);
-		presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
-		notic.setNoticetype(UtilTool._NOTICE_TYPE[2]); //校内参考
-		List<NoticeInfo> xnckNotice=this.noticeManager.getUserList(notic, presult);
-		mp.put("xnckNotices", xnckNotice);
-		//得到最近的关于我的活动信息
-		ActivityInfo activity=new ActivityInfo();
-		activity.setUserid(this.logined(request).getRef());
-		presult=new PageResult();
-		presult.setPageNo(1);
-		presult.setPageSize(5);
-		presult.setOrderBy("ac.C_TIME DESC");//,ac.M_TIME DESC
-		List<ActivityInfo> activityList=this.activityManager.getList(activity, presult);
-		mp.put("activityList", activityList);
-		//得到部门类别
-		mp.put("deptType", UtilTool._GetDeptType());
-		//得到消息
-		/** 
-		 * 	/** 
-	  关于p_msg_id的相关
-	  1:公告(ggtd)
-	  2:申请(sqtd)
-	  3:审核(shtd)
-	  4:报名(bmtd)
-	  5:录取(lqtd)
-	  6:发帖(fttd)
-	  7:任命(rmtd)
-	  8:任务(rwtd)
-	  9:成绩(cjtd)
-	  10:活动(hdtd)
-	  11:用户修改(yhxgtd)
-	  12:调班(tbtd)
-	  13:校风提醒(xftd)	  
-	  14:通知
-	*/
-		PageResult prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		MyInfoUserInfo mu=new MyInfoUserInfo();
-		//公告消息
-		mu.setUserref(this.logined(request).getRef());
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.NOTICE.getValue()); //公告
-		List<MyInfoUserInfo> msgNoticeList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("msgNoticeList", msgNoticeList);
-		Date d=new Date();
-		d.setDate(new Date().getDate()-2);
-		String btime=UtilTool.DateConvertToString(d, DateType.type1);
-		
-		String etime=UtilTool.DateConvertToString(new Date(), DateType.type1);
-		//System.out.println(etime);
-		mp.put("msgNoticeCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-	
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//申请消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.SHENQING.getValue()); 
-		List<MyInfoUserInfo> shenqingMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("shenqingMSGList", shenqingMSGList);
-		mp.put("shenqingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//审核消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.SHENHE.getValue()); 
-		List<MyInfoUserInfo> shenheMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("shenheMSGList", shenheMSGList);
-		mp.put("shenheMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//报名消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.BAOMING.getValue()); 
-		List<MyInfoUserInfo> baomingMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("baomingMSGList", baomingMSGList);
-		mp.put("baomingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//录取消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.LUQU.getValue()); 
-		List<MyInfoUserInfo> luquMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("luquMSGList", luquMSGList);
-		mp.put("luquMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		
-		
-		//帖消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.FATIE.getValue()); 
-		List<MyInfoUserInfo> fatieMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("fatieMSGList", fatieMSGList);
-		mp.put("fatieMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//任命消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.RENMING.getValue()); 
-		List<MyInfoUserInfo> renmingMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("renmingMSGList", renmingMSGList);
-		mp.put("renmingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//任务消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.RENWU.getValue()); 
-		List<MyInfoUserInfo> renwuMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("renwuMSGList", renwuMSGList);
-		mp.put("renwuMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));		
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//成绩消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.CHENGJI.getValue()); 
-		List<MyInfoUserInfo> chengjiMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("chengjiMSGList", chengjiMSGList);
-		mp.put("chengjiMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//活动消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.HUODONG.getValue()); 
-		List<MyInfoUserInfo> huodongMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("huodongMSGList", huodongMSGList);
-		mp.put("huodongMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//用户修改
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.YONGHUXIUGAI.getValue()); 
-		List<MyInfoUserInfo> userUpdateMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("userUpdateMSGList", userUpdateMSGList);
-		mp.put("userUpdateMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//调班
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.TIAOBAN.getValue()); 
-		List<MyInfoUserInfo> tiaobanMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("tiaobanMSGList", tiaobanMSGList);
-		mp.put("tiaobanMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//校风提醒
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.XFTX.getValue()); 
-		List<MyInfoUserInfo> xftxMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("xftxMSGList", xftxMSGList);
-		mp.put("xftxMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//通知
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.TONGZHI.getValue()); 
-		List<MyInfoUserInfo> tzMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		mp.put("tzMSGList", tzMSGList);
-		mp.put("tzMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+        List<ClassUser> cuList=this.classUserManager.getList(cu, null);
+        if(cuList!=null&&cuList.size()>0)
+            mp.put("teachClass", cuList);
+        //得到通知公告,网上公示
+        NoticeInfo notic=new NoticeInfo();
+        notic.setCuserid(this.logined(request).getRef());
+        notic.setNoticetype(UtilTool._NOTICE_TYPE[0]);  //通知公告
+        notic.setDcschoolid(this.logined(request).getDcschoolid());
+        PageResult presult=new PageResult();
+        presult.setPageNo(1);
+        presult.setPageSize(5);
+        presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
+        List<NoticeInfo> noticeList=this.noticeManager.getUserList(notic, presult);
+        mp.put("notices", noticeList);
+
+        notic.setNoticetype(UtilTool._NOTICE_TYPE[1]); //网上公示
+        List<NoticeInfo> wsgsList=this.noticeManager.getUserList(notic, presult);
+        mp.put("internetNotices", wsgsList);
+
+        presult=new PageResult();
+        presult.setPageNo(1);
+        presult.setPageSize(5);
+        presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
+        notic.setNoticetype(UtilTool._NOTICE_TYPE[2]); //校内参考
+        List<NoticeInfo> xnckNotice=this.noticeManager.getUserList(notic, presult);
+        mp.put("xnckNotices", xnckNotice);
+        //得到最近的关于我的活动信息
+        ActivityInfo activity=new ActivityInfo();
+        activity.setUserid(this.logined(request).getRef());
+        presult=new PageResult();
+        presult.setPageNo(1);
+        presult.setPageSize(5);
+        presult.setOrderBy("ac.C_TIME DESC");//,ac.M_TIME DESC
+        List<ActivityInfo> activityList=this.activityManager.getList(activity, presult);
+        mp.put("activityList", activityList);
+        //得到部门类别
+        mp.put("deptType", UtilTool._GetDeptType());
+        //得到消息
+        /**
+         * 	/** 
+         关于p_msg_id的相关
+         1:公告(ggtd)
+         2:申请(sqtd)
+         3:审核(shtd)
+         4:报名(bmtd)
+         5:录取(lqtd)
+         6:发帖(fttd)
+         7:任命(rmtd)
+         8:任务(rwtd)
+         9:成绩(cjtd)
+         10:活动(hdtd)
+         11:用户修改(yhxgtd)
+         12:调班(tbtd)
+         13:校风提醒(xftd)	  
+         14:通知
+         */
+        PageResult prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        MyInfoUserInfo mu=new MyInfoUserInfo();
+        //公告消息
+        mu.setUserref(this.logined(request).getRef());
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.NOTICE.getValue()); //公告
+        List<MyInfoUserInfo> msgNoticeList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("msgNoticeList", msgNoticeList);
+        Date d=new Date();
+        d.setDate(new Date().getDate()-2);
+        String btime=UtilTool.DateConvertToString(d, DateType.type1);
+
+        String etime=UtilTool.DateConvertToString(new Date(), DateType.type1);
+        //System.out.println(etime);
+        mp.put("msgNoticeCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //申请消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.SHENQING.getValue());
+        List<MyInfoUserInfo> shenqingMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("shenqingMSGList", shenqingMSGList);
+        mp.put("shenqingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //审核消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.SHENHE.getValue());
+        List<MyInfoUserInfo> shenheMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("shenheMSGList", shenheMSGList);
+        mp.put("shenheMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //报名消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.BAOMING.getValue());
+        List<MyInfoUserInfo> baomingMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("baomingMSGList", baomingMSGList);
+        mp.put("baomingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //录取消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.LUQU.getValue());
+        List<MyInfoUserInfo> luquMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("luquMSGList", luquMSGList);
+        mp.put("luquMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+
+
+        //帖消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.FATIE.getValue());
+        List<MyInfoUserInfo> fatieMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("fatieMSGList", fatieMSGList);
+        mp.put("fatieMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //任命消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.RENMING.getValue());
+        List<MyInfoUserInfo> renmingMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("renmingMSGList", renmingMSGList);
+        mp.put("renmingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //任务消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.RENWU.getValue());
+        List<MyInfoUserInfo> renwuMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("renwuMSGList", renwuMSGList);
+        mp.put("renwuMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //成绩消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.CHENGJI.getValue());
+        List<MyInfoUserInfo> chengjiMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("chengjiMSGList", chengjiMSGList);
+        mp.put("chengjiMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //活动消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.HUODONG.getValue());
+        List<MyInfoUserInfo> huodongMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("huodongMSGList", huodongMSGList);
+        mp.put("huodongMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //用户修改
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.YONGHUXIUGAI.getValue());
+        List<MyInfoUserInfo> userUpdateMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("userUpdateMSGList", userUpdateMSGList);
+        mp.put("userUpdateMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //调班
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.TIAOBAN.getValue());
+        List<MyInfoUserInfo> tiaobanMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("tiaobanMSGList", tiaobanMSGList);
+        mp.put("tiaobanMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //校风提醒
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.XFTX.getValue());
+        List<MyInfoUserInfo> xftxMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("xftxMSGList", xftxMSGList);
+        mp.put("xftxMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //通知
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.TONGZHI.getValue());
+        List<MyInfoUserInfo> tzMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        mp.put("tzMSGList", tzMSGList);
+        mp.put("tzMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
         //初始化向导状态
         List<InitWizardInfo> initList = this.initWizardManager.getList(null,null);
         if(initList.size()>0){
-             request.setAttribute("initObj",initList.get(0));
+            request.setAttribute("initObj",initList.get(0));
         }else{
             request.setAttribute("initObj",null);
         }
@@ -3856,316 +3896,315 @@ public class UserController extends BaseController<UserInfo> {
             request.setAttribute("ismodify",userList.get(0).getIsmodify());
 //	    request.setAttribute("isfirst", UtilTool.utilproperty.getProperty("ISFIRSTLOGIN"));
 //        System.out.println(UtilTool.utilproperty.getProperty("ISFIRSTLOGIN")+"----isfrist");
-	    List<SubjectInfo> subList = this.subjectManager.getList(null, null);
-		request.setAttribute("subList", subList);
-		List<Map<String, Object>> termList = new ArrayList<Map<String,Object>>();
-		termList = this.termManager.getYearTerm();
-		request.setAttribute("termList", termList.get(0));
-	    return new ModelAndView("index");
-	}
+        List<SubjectInfo> subList = this.subjectManager.getList(null, null);
+        request.setAttribute("subList", subList);
+        List<Map<String, Object>> termList = this.termManager.getYearTerm();
+        request.setAttribute("termList", termList.get(0));
+        return new ModelAndView("index");
+    }
 
 
-	@RequestMapping(params="m=testPageIndex",method=RequestMethod.GET)
-	public void testPageIndex(HttpServletRequest request,HttpServletResponse response)throws Exception{
+    @RequestMapping(params="m=testPageIndex",method=RequestMethod.GET)
+    public void testPageIndex(HttpServletRequest request,HttpServletResponse response)throws Exception{
 //		System.out.println("1");
 //		request.setAttribute("username", "20151132");
 //		request.setAttribute("password", "111111");
-		//在100人中，随机获取用户。
-		ClassUser cutmp=new ClassUser();
-		cutmp.setRelationtype("学生");
-		cutmp.getClassinfo().setYear("2013~2014");
-		PageResult presult=new PageResult();
-		presult.setPageNo(new Random().nextInt(101));
-		presult.setPageSize(1);
-		Map<String,Object> objMap=userManager.getTestUser("2013~2014","学生", presult);
-		request.setAttribute("username",objMap.get("USER_NAME"));
-		request.setAttribute("password", objMap.get("PASSWORD"));		
-		
-		  
-		//登陆验证
-		this.doLogin(request, response);
-		//首页
-		//得到当前学期的授课班级
-	    //得到当前学期
-		TermInfo term=this.termManager.getAutoTerm();
-		JsonEntity jeEntity=new JsonEntity();
-		if(term==null){
-			jeEntity.setMsg("异常错误，网站设置错误，请联系管理人员设置学期!");
-			response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return;
-		}
-		//得到教授班级
-		String year=term.getYear();
-		ClassUser cu=new ClassUser();
-		cu.setYear(year);
-		if(this.validateRole(request, UtilTool._ROLE_TEACHER_ID))
-			cu.setRelationtype("任课老师");
-		else if(this.validateRole(request, UtilTool._ROLE_STU_ID))
-			cu.setRelationtype("学生");
-		else if(this.validateRole(request, UtilTool._ROLE_CLASSADVISE_ID))
-			cu.setRelationtype("班主任");
-		cu.setUserid(this.logined(request).getRef());
-		List<ClassUser> cuList=this.classUserManager.getList(cu, null);
-	//	if(cuList!=null&&cuList.size()>0)
-	//		mp.put("teachClass", cuList);
-		//得到通知公告,网上公示
-		NoticeInfo notic=new NoticeInfo();
-		notic.setCuserid(this.logined(request).getRef());		
-		notic.setNoticetype(UtilTool._NOTICE_TYPE[0]);  //通知公告
-		presult=new PageResult();
-		presult.setPageNo(1);
-		presult.setPageSize(5);
-		presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
-		List<NoticeInfo> noticeList=this.noticeManager.getUserList(notic, presult);
-	//	mp.put("notices", noticeList);
-		
-		notic.setNoticetype(UtilTool._NOTICE_TYPE[1]); //网上公示
-		List<NoticeInfo> wsgsList=this.noticeManager.getUserList(notic, presult);
-		//mp.put("internetNotices", wsgsList);
-		
-		presult=new PageResult();
-		presult.setPageNo(1);
-		presult.setPageSize(5);
-		presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
-		notic.setNoticetype(UtilTool._NOTICE_TYPE[2]); //校内参考
-		List<NoticeInfo> xnckNotice=this.noticeManager.getUserList(notic, presult);
-		//mp.put("xnckNotices", xnckNotice);
-		//得到最近的关于我的活动信息
-		ActivityInfo activity=new ActivityInfo();
-		activity.setUserid(this.logined(request).getRef());
-		presult=new PageResult();
-		presult.setPageNo(1);
-		presult.setPageSize(5);
-		presult.setOrderBy("ac.C_TIME DESC");//,ac.M_TIME DESC
-		List<ActivityInfo> activityList=this.activityManager.getList(activity, presult);
-		//mp.put("activityList", activityList);
-		//得到部门类别
-		 UtilTool._GetDeptType();
-		//得到消息
-		/** 
-		 * 	/** 
-	  关于p_msg_id的相关
-	  1:公告(ggtd)
-	  2:申请(sqtd)
-	  3:审核(shtd)
-	  4:报名(bmtd)
-	  5:录取(lqtd)
-	  6:发帖(fttd)
-	  7:任命(rmtd)
-	  8:任务(rwtd)
-	  9:成绩(cjtd)
-	  10:活动(hdtd)
-	  11:用户修改(yhxgtd)
-	  12:调班(tbtd)
-	  13:校风提醒(xftd)	  
-	  14:通知
-	*/
-		PageResult prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		MyInfoUserInfo mu=new MyInfoUserInfo();
-		//公告消息
-		mu.setUserref(this.logined(request).getRef());
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.NOTICE.getValue()); //公告
-		List<MyInfoUserInfo> msgNoticeList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("msgNoticeList", msgNoticeList);
-		Date d=new Date();
-		d.setDate(new Date().getDate()-2);
-		String btime=UtilTool.DateConvertToString(d, DateType.type1);
-		
-		String etime=UtilTool.DateConvertToString(new Date(), DateType.type1);
-		//System.out.println(etime);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-	//	mp.put("msgNoticeCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-	
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//申请消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.SHENQING.getValue()); 
-		List<MyInfoUserInfo> shenqingMSGList=this.myInfoUserManager.getList(mu,prmsg);
-	//	mp.put("shenqingMSGList", shenqingMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("shenqingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//审核消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.SHENHE.getValue()); 
-		List<MyInfoUserInfo> shenheMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("shenheMSGList", shenheMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("shenheMSGCount", );
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//报名消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.BAOMING.getValue()); 
-		List<MyInfoUserInfo> baomingMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("baomingMSGList", baomingMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("baomingMSGCount", );
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//录取消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.LUQU.getValue()); 
-		List<MyInfoUserInfo> luquMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("luquMSGList", luquMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("luquMSGCount", );
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		
-		
-		//帖消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.FATIE.getValue()); 
-		List<MyInfoUserInfo> fatieMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("fatieMSGList", fatieMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("fatieMSGCount", );
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//任命消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.RENMING.getValue()); 
-		List<MyInfoUserInfo> renmingMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("renmingMSGList", renmingMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("renmingMSGCount", );
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//任务消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.RENWU.getValue()); 
-		List<MyInfoUserInfo> renwuMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("renwuMSGList", renwuMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("renwuMSGCount", );		
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//成绩消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.CHENGJI.getValue()); 
-		List<MyInfoUserInfo> chengjiMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("chengjiMSGList", chengjiMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("chengjiMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//活动消息
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.HUODONG.getValue()); 
-		List<MyInfoUserInfo> huodongMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("huodongMSGList", huodongMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("huodongMSGCount", );
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//用户修改
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.YONGHUXIUGAI.getValue()); 
-		List<MyInfoUserInfo> userUpdateMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("userUpdateMSGList", userUpdateMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("userUpdateMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//调班
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.TIAOBAN.getValue()); 
-		List<MyInfoUserInfo> tiaobanMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("tiaobanMSGList", tiaobanMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("tiaobanMSGCount", );
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//校风提醒
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.XFTX.getValue()); 
-		List<MyInfoUserInfo> xftxMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("xftxMSGList", xftxMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("xftxMSGCount", );
-		
-		prmsg=new PageResult();
-		prmsg.setPageNo(1);
-		prmsg.setPageSize(5);
-		prmsg.setOrderBy("mu.C_TIME DESC");
-		//通知
-		mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.TONGZHI.getValue()); 
-		List<MyInfoUserInfo> tzMSGList=this.myInfoUserManager.getList(mu,prmsg);
-		//mp.put("tzMSGList", tzMSGList);
-		this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
-		//mp.put("tzMSGCount", );
-		
-		//加载各个部门
-		PageResult presult1=new PageResult();
-		List<Map<String,Object>> deptTypeMap=UtilTool._GetDeptType();
-		for (Map<String, Object> map : deptTypeMap) {
-			//加载DeptUser
-			String depttypeid=map.get("deptid").toString();
-			if(depttypeid==null||depttypeid.trim().length()<1||!UtilTool.isNumber(depttypeid)){
-				jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-				response.getWriter().print(jeEntity.toJSON());return;
-			}
-			DeptUser dpTmp=new DeptUser();
-			dpTmp.getDeptinfo().setTypeid(Integer.parseInt(depttypeid.trim()));
-	//		dpTmp.setUserref(this.logined(request).getRef());	
-			dpTmp.setOtheruserref(this.logined(request).getRef());
-			List<DeptUser> dpList=this.deptUserManager.getList(dpTmp, presult1);
-		
-		}
-		
-		//得到当前用户有权限的栏目
-		//List<ColumnInfo> columnList=columnManager.getUserColumnList(usr.getRef());
-		
-		response.getWriter().print("所有首页数据load over!");
-		
-	}
-	@RequestMapping(params="m=fwj",method=RequestMethod.GET)
-	public void fwj(HttpServletRequest request,HttpServletResponse response) throws Exception{
-		JsonEntity jeEntity=new JsonEntity();
-		
-		//发送文件		
-		List<String>	sendFilepath = new ArrayList<String>();
-		sendFilepath.add("C:/Users/qihaishi.ETIANTIAN/Desktop/1123一五六数学课堂（王秋嬛）.mp4");
-		sendFilepath.add("E:/工具/LOL_V3.0.8.5_FULL.exe");
-			SendFile s = new SendFile(); 
-			if (s.sendFileOperate(sendFilepath)){
-				System.out.println("success");
-				jeEntity.setType("success");
-				jeEntity.setMsg("发送文件成功!");
-			}else{
-				System.out.println("error");
-				jeEntity.setMsg("发送文件失败!");
-			}
-			response.getWriter().print(jeEntity.toJSON());
-	}
+        //在100人中，随机获取用户。
+        ClassUser cutmp=new ClassUser();
+        cutmp.setRelationtype("学生");
+        cutmp.getClassinfo().setYear("2013~2014");
+        PageResult presult=new PageResult();
+        presult.setPageNo(new Random().nextInt(101));
+        presult.setPageSize(1);
+        Map<String,Object> objMap=userManager.getTestUser("2013~2014","学生", presult);
+        request.setAttribute("username",objMap.get("USER_NAME"));
+        request.setAttribute("password", objMap.get("PASSWORD"));
+
+
+        //登陆验证
+        this.doLogin(request, response);
+        //首页
+        //得到当前学期的授课班级
+        //得到当前学期
+        TermInfo term=this.termManager.getAutoTerm();
+        JsonEntity jeEntity=new JsonEntity();
+        if(term==null){
+            jeEntity.setMsg("异常错误，网站设置错误，请联系管理人员设置学期!");
+            response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return;
+        }
+        //得到教授班级
+        String year=term.getYear();
+        ClassUser cu=new ClassUser();
+        cu.setYear(year);
+        if(this.validateRole(request, UtilTool._ROLE_TEACHER_ID))
+            cu.setRelationtype("任课老师");
+        else if(this.validateRole(request, UtilTool._ROLE_STU_ID))
+            cu.setRelationtype("学生");
+        else if(this.validateRole(request, UtilTool._ROLE_CLASSADVISE_ID))
+            cu.setRelationtype("班主任");
+        cu.setUserid(this.logined(request).getRef());
+        List<ClassUser> cuList=this.classUserManager.getList(cu, null);
+        //	if(cuList!=null&&cuList.size()>0)
+        //		mp.put("teachClass", cuList);
+        //得到通知公告,网上公示
+        NoticeInfo notic=new NoticeInfo();
+        notic.setCuserid(this.logined(request).getRef());
+        notic.setNoticetype(UtilTool._NOTICE_TYPE[0]);  //通知公告
+        presult=new PageResult();
+        presult.setPageNo(1);
+        presult.setPageSize(5);
+        presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
+        List<NoticeInfo> noticeList=this.noticeManager.getUserList(notic, presult);
+        //	mp.put("notices", noticeList);
+
+        notic.setNoticetype(UtilTool._NOTICE_TYPE[1]); //网上公示
+        List<NoticeInfo> wsgsList=this.noticeManager.getUserList(notic, presult);
+        //mp.put("internetNotices", wsgsList);
+
+        presult=new PageResult();
+        presult.setPageNo(1);
+        presult.setPageSize(5);
+        presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
+        notic.setNoticetype(UtilTool._NOTICE_TYPE[2]); //校内参考
+        List<NoticeInfo> xnckNotice=this.noticeManager.getUserList(notic, presult);
+        //mp.put("xnckNotices", xnckNotice);
+        //得到最近的关于我的活动信息
+        ActivityInfo activity=new ActivityInfo();
+        activity.setUserid(this.logined(request).getRef());
+        presult=new PageResult();
+        presult.setPageNo(1);
+        presult.setPageSize(5);
+        presult.setOrderBy("ac.C_TIME DESC");//,ac.M_TIME DESC
+        List<ActivityInfo> activityList=this.activityManager.getList(activity, presult);
+        //mp.put("activityList", activityList);
+        //得到部门类别
+        UtilTool._GetDeptType();
+        //得到消息
+        /**
+         * 	/** 
+         关于p_msg_id的相关
+         1:公告(ggtd)
+         2:申请(sqtd)
+         3:审核(shtd)
+         4:报名(bmtd)
+         5:录取(lqtd)
+         6:发帖(fttd)
+         7:任命(rmtd)
+         8:任务(rwtd)
+         9:成绩(cjtd)
+         10:活动(hdtd)
+         11:用户修改(yhxgtd)
+         12:调班(tbtd)
+         13:校风提醒(xftd)	  
+         14:通知
+         */
+        PageResult prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        MyInfoUserInfo mu=new MyInfoUserInfo();
+        //公告消息
+        mu.setUserref(this.logined(request).getRef());
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.NOTICE.getValue()); //公告
+        List<MyInfoUserInfo> msgNoticeList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("msgNoticeList", msgNoticeList);
+        Date d=new Date();
+        d.setDate(new Date().getDate()-2);
+        String btime=UtilTool.DateConvertToString(d, DateType.type1);
+
+        String etime=UtilTool.DateConvertToString(new Date(), DateType.type1);
+        //System.out.println(etime);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //	mp.put("msgNoticeCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //申请消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.SHENQING.getValue());
+        List<MyInfoUserInfo> shenqingMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //	mp.put("shenqingMSGList", shenqingMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("shenqingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //审核消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.SHENHE.getValue());
+        List<MyInfoUserInfo> shenheMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("shenheMSGList", shenheMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("shenheMSGCount", );
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //报名消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.BAOMING.getValue());
+        List<MyInfoUserInfo> baomingMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("baomingMSGList", baomingMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("baomingMSGCount", );
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //录取消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.LUQU.getValue());
+        List<MyInfoUserInfo> luquMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("luquMSGList", luquMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("luquMSGCount", );
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+
+
+        //帖消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.FATIE.getValue());
+        List<MyInfoUserInfo> fatieMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("fatieMSGList", fatieMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("fatieMSGCount", );
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //任命消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.RENMING.getValue());
+        List<MyInfoUserInfo> renmingMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("renmingMSGList", renmingMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("renmingMSGCount", );
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //任务消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.RENWU.getValue());
+        List<MyInfoUserInfo> renwuMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("renwuMSGList", renwuMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("renwuMSGCount", );		
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //成绩消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.CHENGJI.getValue());
+        List<MyInfoUserInfo> chengjiMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("chengjiMSGList", chengjiMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("chengjiMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //活动消息
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.HUODONG.getValue());
+        List<MyInfoUserInfo> huodongMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("huodongMSGList", huodongMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("huodongMSGCount", );
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //用户修改
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.YONGHUXIUGAI.getValue());
+        List<MyInfoUserInfo> userUpdateMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("userUpdateMSGList", userUpdateMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("userUpdateMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //调班
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.TIAOBAN.getValue());
+        List<MyInfoUserInfo> tiaobanMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("tiaobanMSGList", tiaobanMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("tiaobanMSGCount", );
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //校风提醒
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.XFTX.getValue());
+        List<MyInfoUserInfo> xftxMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("xftxMSGList", xftxMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("xftxMSGCount", );
+
+        prmsg=new PageResult();
+        prmsg.setPageNo(1);
+        prmsg.setPageSize(5);
+        prmsg.setOrderBy("mu.C_TIME DESC");
+        //通知
+        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.TONGZHI.getValue());
+        List<MyInfoUserInfo> tzMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //mp.put("tzMSGList", tzMSGList);
+        this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime);
+        //mp.put("tzMSGCount", );
+
+        //加载各个部门
+        PageResult presult1=new PageResult();
+        List<Map<String,Object>> deptTypeMap=UtilTool._GetDeptType();
+        for (Map<String, Object> map : deptTypeMap) {
+            //加载DeptUser
+            String depttypeid=map.get("deptid").toString();
+            if(depttypeid==null||depttypeid.trim().length()<1||!UtilTool.isNumber(depttypeid)){
+                jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(jeEntity.toJSON());return;
+            }
+            DeptUser dpTmp=new DeptUser();
+            dpTmp.getDeptinfo().setTypeid(Integer.parseInt(depttypeid.trim()));
+            //		dpTmp.setUserref(this.logined(request).getRef());	
+            dpTmp.setOtheruserref(this.logined(request).getRef());
+            List<DeptUser> dpList=this.deptUserManager.getList(dpTmp, presult1);
+
+        }
+
+        //得到当前用户有权限的栏目
+        //List<ColumnInfo> columnList=columnManager.getUserColumnList(usr.getRef());
+
+        response.getWriter().print("所有首页数据load over!");
+
+    }
+    @RequestMapping(params="m=fwj",method=RequestMethod.GET)
+    public void fwj(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JsonEntity jeEntity=new JsonEntity();
+
+        //发送文件		
+        List<String>	sendFilepath = new ArrayList<String>();
+        sendFilepath.add("C:/Users/qihaishi.ETIANTIAN/Desktop/1123一五六数学课堂（王秋嬛）.mp4");
+        sendFilepath.add("E:/工具/LOL_V3.0.8.5_FULL.exe");
+        SendFile s = new SendFile();
+        if (s.sendFileOperate(sendFilepath)){
+            System.out.println("success");
+            jeEntity.setType("success");
+            jeEntity.setMsg("发送文件成功!");
+        }else{
+            System.out.println("error");
+            jeEntity.setMsg("发送文件失败!");
+        }
+        response.getWriter().print(jeEntity.toJSON());
+    }
 
     /**
      * 乐知行进入Ett
@@ -4183,7 +4222,7 @@ public class UserController extends BaseController<UserInfo> {
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return;
         }
-          //查询
+        //查询
         UserInfo userInfo=new UserInfo();
         userInfo.setLzxuserid(lzxUserid);
         List<UserInfo> uList=this.userManager.getList(userInfo,null);
@@ -4217,7 +4256,6 @@ public class UserController extends BaseController<UserInfo> {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-
 
         // 获得用户信息
         UserInfo u = this.logined(request);
@@ -4627,8 +4665,8 @@ public class UserController extends BaseController<UserInfo> {
         http_1.append("&s=" + md5Str); // i
         http_1.append("&srcId="+50006);
         // 执行链接(为了安全性)
-      //  String responseHTML=UserTool.getOutputHTML(http_1.toString(),null);
-        String responseHTML=UserTool.sendPostURL(http_1.toString(),null); 
+        //  String responseHTML=UserTool.getOutputHTML(http_1.toString(),null);
+        String responseHTML=UserTool.sendPostURL(http_1.toString(),null);
 
         if (responseHTML == null) {
             // 提示 返回
@@ -4681,7 +4719,6 @@ public class UserController extends BaseController<UserInfo> {
 //        if(isEttNoRegSchool()&&mid==null&&modelName==null){ //如果是免费版本，则进入该系统
 //            response.sendRedirect("user?m=mfToEttUrl");return;
 //        }
-
 
         // 获得用户信息
         UserInfo u = request.getAttribute("tmpUser")==null?this.logined(request):(UserInfo)request.getAttribute("tmpUser");
@@ -4737,11 +4774,12 @@ public class UserController extends BaseController<UserInfo> {
         // 判断是否为教师
         // usertype
         //boolean isteacher = this.getRolemanager().isTeacher(u.getUserId());
-        boolean isteacher=this.validateRole(request, UtilTool._ROLE_TEACHER_ID);
+        boolean  isteacher=this.validateRole(request, UtilTool._ROLE_TEACHER_ID);
 //        if(isteacher&&Integer.parseInt(isVip)==0){
 //            response.sendRedirect(UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_FREE_URL").toString()); //教师进入ett入口
 //            return;
 //        }
+
 
 
         if (isteacher||!isstuflag) {
@@ -4783,75 +4821,75 @@ public class UserController extends BaseController<UserInfo> {
                     gradeidList.add(0);
                     subjectid.add(Long.valueOf(0));
                 }else{
-                Object[] courseArray = teaList.get(0).getSubjects().split(
-                        ",");
-                if (courseArray != null && courseArray.length > 0 && !ishasflag) {
-                    // 存储学科临时参数
-                    for (Object obj : courseArray) {
-                        if (obj != null && obj.toString().trim().length() > 0) {
-                            if (obj.toString().trim().indexOf("语文") != -1) {
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(1));
-                                ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("数学") != -1) {
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(2));
-                                ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("英语") != -1
-                                    || obj.toString().trim().indexOf("外语") != -1) {
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(3));
-                                ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("物理") != -1) {
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(4));
-                                ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("化学") != -1) {
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(5));
-                                ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("历史") != -1) {
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(6));
-                                ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("生物") != -1) {
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(7));
-                                ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("地理") != -1) {
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(8));
-                                ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("政治") != -1) {
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(9));
-                                ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("自然科学") != -1) {
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(10));
-                                ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("学生处") != -1
+                    Object[] courseArray = teaList.get(0).getSubjects().split(
+                            ",");
+                    if (courseArray != null && courseArray.length > 0 && !ishasflag) {
+                        // 存储学科临时参数
+                        for (Object obj : courseArray) {
+                            if (obj != null && obj.toString().trim().length() > 0) {
+                                if (obj.toString().trim().indexOf("语文") != -1) {
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(1));
+                                    ishasflag = true;
+                                } else if (obj.toString().trim().indexOf("数学") != -1) {
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(2));
+                                    ishasflag = true;
+                                } else if (obj.toString().trim().indexOf("英语") != -1
+                                        || obj.toString().trim().indexOf("外语") != -1) {
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(3));
+                                    ishasflag = true;
+                                } else if (obj.toString().trim().indexOf("物理") != -1) {
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(4));
+                                    ishasflag = true;
+                                } else if (obj.toString().trim().indexOf("化学") != -1) {
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(5));
+                                    ishasflag = true;
+                                } else if (obj.toString().trim().indexOf("历史") != -1) {
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(6));
+                                    ishasflag = true;
+                                } else if (obj.toString().trim().indexOf("生物") != -1) {
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(7));
+                                    ishasflag = true;
+                                } else if (obj.toString().trim().indexOf("地理") != -1) {
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(8));
+                                    ishasflag = true;
+                                } else if (obj.toString().trim().indexOf("政治") != -1) {
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(9));
+                                    ishasflag = true;
+                                } else if (obj.toString().trim().indexOf("自然科学") != -1) {
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(10));
+                                    ishasflag = true;
+                                } else if (obj.toString().trim().indexOf("学生处") != -1
 
-                                    || obj.toString().trim().indexOf("电教组") != -1
-                                    || obj.toString().trim().indexOf("校办") != -1
-                                    || obj.toString().trim().indexOf("教学处") != -1
-                                    || obj.toString().trim().indexOf("总务处") != -1
-                                    || obj.toString().trim().indexOf("网络") != -1) {
-                                if (!gradeidList.contains(0)) {
-                                    gradeidList.add(0);
+                                        || obj.toString().trim().indexOf("电教组") != -1
+                                        || obj.toString().trim().indexOf("校办") != -1
+                                        || obj.toString().trim().indexOf("教学处") != -1
+                                        || obj.toString().trim().indexOf("总务处") != -1
+                                        || obj.toString().trim().indexOf("网络") != -1) {
+                                    if (!gradeidList.contains(0)) {
+                                        gradeidList.add(0);
+                                    }
+                                    if(subjectid.size()<1)
+                                        subjectid.add(Long.valueOf(0));
+                                    ishasflag = true;
+                                    ishasgrade = true;
                                 }
-                                if(subjectid.size()<1)
-                                    subjectid.add(Long.valueOf(0));
-                                ishasflag = true;
-                                ishasgrade = true;
                             }
                         }
+                        // 不显示学科信息
+                        if (!ishasflag) {
+                            subjectid.add(Long.valueOf(-1));
+                        }
                     }
-                    // 不显示学科信息
-                    if (!ishasflag) {
-                        subjectid.add(Long.valueOf(-1));
-                    }
-                }
                 }
             }
         } else {
@@ -5070,7 +5108,7 @@ public class UserController extends BaseController<UserInfo> {
 
             //得到Servertime
             String serverTtime=null;
-             List<DictionaryInfo> dicList= this.dictionaryManager.getDictionaryByType("SERVER_TIME_END");
+            List<DictionaryInfo> dicList= this.dictionaryManager.getDictionaryByType("SERVER_TIME_END");
             if(dicList!=null&&dicList.size()>0){
                 serverTtime =dicList.get(0).getDictionaryvalue();
             }
@@ -5105,7 +5143,10 @@ public class UserController extends BaseController<UserInfo> {
                 paramMap.put("subjectid",subjectidStr);
             }
 
-           // http_1.append("&s=" + md5Str); // i
+
+
+
+            // http_1.append("&s=" + md5Str); // i
 
 
             paramMap.put("serverendtime",servertime);
@@ -5116,7 +5157,6 @@ public class UserController extends BaseController<UserInfo> {
             requestUrl=UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_URL").toString(); //教师进入ett入口
         }else if(isstuflag){
             //组织学生参数
-
             //就否免费   0:免 费   1:收费   只有学生才有该参数
             String isVipJson="";
             List<EttColumnInfo> ettColumnInfos1 =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
@@ -5138,7 +5178,6 @@ public class UserController extends BaseController<UserInfo> {
             }else{
                 isVipJson=null;
             }
-
             paramMap.put("uid",uid);
             if(mid!=null)
                 paramMap.put("mid",mid);
@@ -5162,9 +5201,11 @@ public class UserController extends BaseController<UserInfo> {
                 if (gradeidBuilder.toString().trim().length() > 0)
                     paramMap.put("gradeid", gradeidBuilder.toString());
             }
+
             //学校名称
             paramMap.put("s",UserTool.zuzhiStudentSParameter(uid.toString(), gradeidList, realname, usertype.toString(), sex+"", email, schoolid,isVipJson, time.toString(), key));
-                requestUrl=UtilTool.utilproperty.getProperty("STU_TO_ETT_REQUEST_URL").toString(); //学生进入ett入口
+
+            requestUrl=UtilTool.utilproperty.getProperty("STU_TO_ETT_REQUEST_URL").toString(); //学生进入ett入口
         }
         paramMap.put("srcId",50006);//UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID").toString());
         paramMap.put("schoolid",schoolid);
@@ -5178,11 +5219,11 @@ public class UserController extends BaseController<UserInfo> {
 //            Set<String> keySetArray=paramMap.keySet();
 //            for (String pkey:keySetArray){
 //                System.out.print(pkey+":"+paramMap.get(pkey)+"\t");  //参数输出看看
-                //组织页面并输出
+        //组织页面并输出
 //            }
 //        }
         String responseHTML=UserTool.getOutputHTML(requestUrl, paramMap);
-     //   System.out.println(responseHTML);
+        //   System.out.println(responseHTML);
         response.getWriter().print(responseHTML);
 
         // response.getWriter().
@@ -6104,6 +6145,84 @@ public class UserController extends BaseController<UserInfo> {
         request.getSession().setAttribute("fromType","lzx");
         response.sendRedirect(targetUrl);
     }
+
+
+
+
+
+    /**
+     * 添加用户时，传入Ett
+     * @param userNextRef
+     * @return
+     */
+    private boolean addToEttUser(String userNextRef){
+        //向网校添加用户信息
+        UserInfo tmpUser=new UserInfo();
+        tmpUser.setRef(userNextRef);
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<UserInfo> tmpUList=this.userManager.getList(tmpUser,presult);
+        if(tmpUList!=null&&tmpUList.size()>0){
+            //调用用户接口
+            if(EttInterfaceUserUtil.addUserBase(tmpUList)){
+                System.out.println("用户信息同步至网校成功!");
+            }else{
+                System.out.println("用户信息同步至网校失败!");
+                return false;
+            }
+            if(updateToEttClassUser(userNextRef,tmpUList.get(0).getDcschoolid()))
+                System.out.println("classUser同步至网校成功!");
+            else
+                System.out.println("classUser同步至网校失败!");
+
+        }
+        return true;
+    }
+
+    /**
+     * 同步ettClassUser
+     * @param userNextRef
+     * @return
+     */
+    private boolean updateToEttClassUser(String userNextRef,Integer dcschoolId){
+        //向网校添加班级数据
+        ClassUser cu=new ClassUser();
+        cu.setUserid(userNextRef);
+        List<ClassUser> cuList=this.classUserManager.getList(cu,null);
+        if(cuList!=null&&cuList.size()>0){
+            for (ClassUser cuTmp:cuList){
+                cu=new ClassUser();
+                cu.setClassid(cuTmp.getClassid());
+                List<ClassUser> cuTmpList=this.classUserManager.getList(cu,null);
+                if(cuTmpList!=null&&cuTmpList.size()>0){
+                    // 必带 userId，userType,subjectId 的三个key
+                    List<Map<String,Object>> mapList=new ArrayList<Map<String, Object>>();
+                    for (ClassUser cuTmpe:cuTmpList){
+                        if(cuTmpe!=null){
+                            Map<String,Object> tmpMap=new HashMap<String, Object>();
+                            tmpMap.put("userId",cuTmpe.getUid());
+                            Integer userType=3;
+                            if(cuTmpe.getRelationtype()!=null){
+                                if(cuTmpe.getRelationtype().trim().equals("任课老师"))
+                                    userType=2;
+                                else if(cuTmpe.getRelationtype().trim().equals("班主任"))
+                                    userType=1;
+                            }
+                            tmpMap.put("userType",userType);
+                            tmpMap.put("subjectId",cuTmpe.getSubjectid()==null?-1:cuTmpe.getSubjectid());
+                            mapList.add(tmpMap);
+                        }
+                    }
+                    if(!EttInterfaceUserUtil.OperateClassUser(mapList, cuTmp.getClassid(),dcschoolId)){
+                        System.out.println("classUser同步至网校失败!");
+                        return false;
+                    } else
+                        System.out.println("classUser同步至网校成功!");
+                }
+            }
+        }
+        return true;
+    }
 }
 
 /**
@@ -6175,7 +6294,7 @@ class UserTool{
             System.out.println("异常错误!500错误，请联系管理人员!");
             return null;
         }
-       String returnVal= new String(stringBuffer.toString().getBytes("gbk"),"UTF-8");//new String(stringBuffer.toString().getBytes("GBK"),"UTF-8");
+        String returnVal= new String(stringBuffer.toString().getBytes("gbk"),"UTF-8");//new String(stringBuffer.toString().getBytes("GBK"),"UTF-8");
         return returnVal;
 
     }
@@ -6214,7 +6333,7 @@ class UserTool{
         md5Builder.append(sex);
         if(email==null)
             email="";
-            md5Builder.append(email);
+        md5Builder.append(email);
         // 为了应用性，可以测试以及兼容性，不带此参数
         // if(usertype==3){
         // md5Builder.append(isLearnGuide);
@@ -6222,7 +6341,8 @@ class UserTool{
         md5Builder.append(schoolid);
         md5Builder.append(time);
         if(isvip!=null&&isvip.length()>0)
-             md5Builder.append(isvip);
+            md5Builder.append(isvip);
+
         md5Builder.append(key);
 
         return MD5_NEW.getMD5Result(md5Builder.toString());
@@ -6262,7 +6382,7 @@ class UserTool{
         md5Builder.append(sex);
         if(email==null)
             email="";
-         md5Builder.append(email);
+        md5Builder.append(email);
 
         md5Builder.append(schoolid);
         md5Builder.append(servertime.toString());
@@ -6304,5 +6424,4 @@ class UserTool{
         outputBuilder.append("</html>");
         return outputBuilder.toString();
     }
-
 }
