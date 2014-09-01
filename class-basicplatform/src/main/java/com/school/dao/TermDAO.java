@@ -61,7 +61,7 @@ public class TermDAO extends CommonDAO<TermInfo> implements ITermDAO {
 		sqlbuilder.append("{CALL term_info_proc_split(");
 		List<Object> objList=new ArrayList<Object>();
 		if(terminfo==null){
-			sqlbuilder.append("NULL,NULL,NULL,NULL,");
+			sqlbuilder.append("NULL,NULL,NULL,NULL,NULL,");
 		}else{
 			if (terminfo.getRef() != null) {
 				sqlbuilder.append("?,");
