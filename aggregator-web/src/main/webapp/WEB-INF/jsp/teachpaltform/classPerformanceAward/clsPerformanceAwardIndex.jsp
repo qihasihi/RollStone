@@ -10,11 +10,109 @@
 <%@include file="/util/common-jsp/common-jxpt.jsp" %>
 <html>
 <head>
+    <script type="text/javascript">
+
+        $(function(){
+            //处理个人积分
+            <c:if test="${!empty stuMap}">
+                <c:if test="${!empty clsDcType&&clsDcType==3}">
+                    var wxdf=0;
+                    $("td[data-bind='gr_wxdf']").each(function(idx,itm){
+                        var h=$(itm).html();
+                        if(h!="--"&& h.Trim().length>0){
+                            wxdf+=parseInt(h.Trim());
+                        }
+                    });
+                    $("#sp_wxdf").html(wxdf+"分");
+                </c:if>
+            var wsdf=0;
+            $("td[data-bind='gr_wsdf']").each(function(idx,itm){
+                var h=$(itm).html();
+                if(h!="--"&& h.Trim().length>0){
+                    wsdf+=parseInt(h.Trim());
+                }
+            });
+            $("#sp_wsdf").html(wsdf+"分");
+
+            var xzdf=0;
+            $("td[data-bind='gr_xzdf']").each(function(idx,itm){
+                var h=$(itm).html();
+                if(h!="--"&& h.Trim().length>0){
+                    xzdf+=parseInt(h.Trim());
+                }else{
+                    xzdf="--";
+                    return;
+                }
+            });
+            $("#sp_xzdf").html((xzdf=='--'?xzdf:(xzdf+"分")));
+            </c:if>
+        })
+
+    </script>
 </head>
 <body>
-<div class="subpage_head"><span class="ico19"></span><strong>课堂表现</strong></div>
+<div class="subpage_head"><span class="ico19"></span><strong>课堂积分</strong></div>
 <div class="content1">
-    <p class="t_c font-black"><strong>专题名称：${coursename}</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>
+<%--<p class="t_c font-black"><strong>课堂总得分：${coursename}</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>--%>
+<c:if test="${!empty stuMap}">
+<p class="t_c font-black"><strong>课堂总得分：${!empty tuMap.COURSE_TOTAL_SCORE?tuMap.COURSE_TOTAL_SCORE:"--"}</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>
+<table border="0" cellpadding="0" cellspacing="0" class="public_tab2 public_input">
+    <col class="w310"/>
+    <col class="w320"/>
+    <col class="w310"/>
+    <tr>
+        <th>类别</th>
+        <th>项目</th>
+        <th>得分</th>
+    </tr>
+    <c:if test="${!empty clsDcType&&clsDcType==3}">
+        <tr>
+            <td rowspan="3" class="v_c">网下表现得分<br><span class="font-red" id="sp_wxdf">10分</span></td>
+            <td><p>出勤次数</p></td>
+            <td data-bind="gr_wxdf">${stuMap.ATTENDANCENUM}</td>
+        </tr>
+        <tr class="trbg1">
+            <td><p>笑脸个数</p></td>
+            <td data-bind="gr_wxdf">${stuMap.SMILINGNUM}</td>
+        </tr>
+        <tr class="trbg1">
+            <td><p>违反纪律次数</p></td>
+            <td data-bind="gr_wxdf">${stuMap.VIOLATIONDISNUM}</td>
+        </tr>
+    </c:if>
+    <tr>
+        <td rowspan="2" class="v_c">网上得分<br><span class="font-red"  id="sp_wsdf">100分</span></td>
+        <td><p>完成任务数量</p></td>
+        <td data-bind="gr_wsdf">${!empty stuMap.TASK_SCORE?stuMap.TASK_SCORE:0}</td>
+    </tr>
+    <tr class="trbg1">
+        <td><p>完成专题评价</p></td>
+        <td  data-bind="gr_wsdf">${!empty stuMap.COMMENT_SCORE?stuMap.COMMENT_SCORE:0}</td>
+    </tr>
+    <tr>
+        <td rowspan="5" class="v_c">小组得分<br><span class="font-red" id="sp_xzdf">10分</span></td>
+        <td><p>本组小红旗总数排全班第一</p></td>
+        <td  data-bind="gr_xzdf">${!empty tuMap.GSCORE3?stuMap.GSCORE3:'--'}</td>
+    </tr>
+    <tr>
+        <td><p>组内成员全部出勤且无迟到早退</p></td>
+        <td data-bind="gr_xzdf">${!empty tuMap.GSCORE1?tuMap.GSCORE1:'--'}</td>
+    </tr>
+    <tr class="trbg1">
+        <td><p>本组笑脸总数排全班第一</p></td>
+        <td data-bind="gr_xzdf">${!empty tuMap.GSCORE2?tuMap.GSCORE2:'--'}</td>
+    </tr>
+    <tr>
+        <td><p>本组违反纪律次数排全班第一</p></td>
+        <td data-bind="gr_xzdf">${!empty tuMap.GSCORE4?tuMap.GSCORE4:'--'}</td>
+    </tr>
+    <tr class="trbg1">
+        <td><p>本组完成网上任务平均数排全班第一</p></td>
+        <td data-bind="gr_xzdf">${!empty tuMap.GSCORE5?tuMap.GSCORE5:'--'}</td>
+    </tr>
+</table>
+</c:if>
+
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2 public_input">
         <c:if test="${!empty clsDcType&&clsDcType==3}">
             <colgroup class="w350"></colgroup>
@@ -42,7 +140,7 @@
         </tbody>
 
     </table>
-    <p align="right"><a href="javascript:;" id="a_sub" onclick="doSub()">提交</a></p>
+    <p class="t_r p_b_10" id="p_btnSub"><a href="javascript:;" onclick="doSub()" class="an_small">提交</a></p>
     <script type="text/javascript">
         var courseid=${courseid};
         var classid=${classid};
@@ -55,7 +153,6 @@
               alert('参数异常，请重试!');
                 this.close();
             </c:if>
-
             <c:if test="${!empty dataListMap}">
             var h='';
                     <c:forEach items="${dataListMap}" var="dlm" varStatus="dlmidx">
@@ -67,6 +164,22 @@
                     <c:if test="${!empty clsDcType&&clsDcType==3}">
                             <c:if test="${!empty dlm.GROUP_ID}">
                                 h+='<br><span class="ico78"></span> <a href="javascript:;" onclick="updateGroupAward(${dlm.GROUP_ID},${dlm.GROUPSUBMIT_FLAG})" id="a_award_${dlm.GROUP_ID}"><span id="sp_grp_award${dlm.GROUP_ID}">${dlm.AWARD_NUMBER}</span></a>个';
+                                h+='<br/>';
+                                <c:if test="${!empty dlm.GSCORE1&&dlm.GSCORE1!=0}"><%//分数+1：组内成员全部出勤且无迟到早退%>
+                                h+='<span class="ico86">出勤</span>';
+                                </c:if>
+                                <c:if test="${!empty dlm.GSCORE1&&dlm.GSCORE2!=0}"><%//分数+3：本组笑脸总数排全班第一%>
+                                h+='<span class="ico86">笑脸</span>';
+                                </c:if>
+                                <c:if test="${!empty dlm.GSCORE1&&dlm.GSCORE3!=0}"><%//分数+3：本组小红旗总数排全班第一%>
+                                h+='<span class="ico86">红旗</span>';
+                                </c:if>
+                                <c:if test="${!empty dlm.GSCORE1&&dlm.GSCORE4!=0}"><%//分数-1：本组违反纪律次数排全班第一%>
+                                 h+='<span class="ico87">违纪</span>';
+                                </c:if>
+                                <c:if test="${!empty dlm.GSCORE1&&dlm.GSCORE5!=0}"><%//分数+3：本组完成网上任务完成率（小组任务完成率）排全班第一%>
+                                h+='<span class="ico86">任务</span>';
+                                </c:if>
                             </c:if>
                     </c:if>
                     h+='</td><td>${dlm.STU_NO}</td>';
@@ -124,12 +237,13 @@
              */
             $("td[name='td_data']").bind("click",tdDataClick);
             if($("td[name='td_data']").length<1){
-                $("#a_sub").remove();
+                $("#p_btnSub").remove();
             }
 
             var trJqObj=$("tr[id*='tr_']");
             if(trJqObj.length==1&&trJqObj.children("td:first").html().Trim().indexOf("未分组")!=-1){
                 $("table colgroup:first").remove();
+                $("table colgroup:first").attr("class","w350");
                 $("table tr:first th:first").remove();
                 trJqObj.each(function(idx,itm){
                    $(itm).children("td:first").remove();

@@ -85,8 +85,9 @@ public class TpStuScoreManager extends BaseManager<TpStuScore> implements ITpStu
      * @param classtype
      * @return
      */
-    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid,final String groupidStr){
-        return tpStuScoreDAO.getPageDataList(courseid,classid,classtype,subjectid,groupidStr);
+    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype
+            ,final Integer subjectid,final String groupidStr,final Integer uid){
+        return tpStuScoreDAO.getPageDataList(courseid,classid,classtype,subjectid,groupidStr,uid);
     }
     /**
      * 教师组长提交时，初始化相关数据

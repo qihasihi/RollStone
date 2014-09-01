@@ -19,7 +19,9 @@ public interface ITpStuScoreManager extends IBaseManager<TpStuScore>{
      * @param classtype
      * @return
      */
-    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,final Integer classtype,final Integer subjectid,final String groupidStr);
+    public List<Map<String,Object>> getPageDataList(final Long courseid,final Long classid,
+                                                    final Integer classtype,final Integer subjectid,
+                                                    final String groupidStr,final Integer uid);
 
     /**
      * 教师组长提交时，初始化相关数据

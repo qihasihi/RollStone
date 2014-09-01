@@ -80,6 +80,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         //参数验证。
         if(courseid==null||courseid.trim().length()<1
                 ||subjectid==null||subjectid.trim().length()<1
+                ||typeid==null||typeid.trim().length()<1
                 ){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
@@ -112,10 +113,11 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
                 response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
             }
+            //查询该学生的小组情况
             TpGroupStudent gs=new TpGroupStudent();
             gs.setUserid(this.logined(request).getUserid());
             gs.getTpgroupinfo().setSubjectid(Integer.parseInt(subjectid));
-            gs.setIsleader(1);
+          //  gs.setIsleader(1);
             List<TpGroupStudent> tgList=this.tpGroupStudentManager.getList(gs,null);
 
             if(tgList!=null&&tgList.size()>0&&tgList.get(0)!=null){
@@ -140,28 +142,58 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
                 groupid="";
             }
         }
-
-        mp.put("classid",clsid);
-        mp.put("classtype",typeid);
-        mp.put("leanderGrpid",groupid);
-        mp.put("courseid",courseid);
-        mp.put("subjectid",subjectid);
-
-
         if(groupid.trim().length()<=1)
             groupid=null;
         else{
             groupid=groupid.substring(1,groupid.lastIndexOf(","));
         }
         //根据参数得到值 。
-        List<Map<String,Object>> dataListMap=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim()),Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid),groupid);
+        List<Map<String,Object>> dataListMap=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim())
+                ,Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid),groupid,null);
         mp.put("dataListMap",dataListMap);
 
+        groupid=",";
+        //如果是学生，则查询该学员的分数
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+            List<Map<String,Object>> maplist=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim())
+                    ,Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid),null,this.logined(request).getUserid());
+            if(maplist!=null&&maplist.get(0)!=null)
+                mp.put("stuMap",maplist.get(0));
+            //参数验证。
+            if(termid==null){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            //查询该学生的小组情况(是否是小组组长)
+            TpGroupStudent gs=new TpGroupStudent();
+            gs.setUserid(this.logined(request).getUserid());
+            gs.getTpgroupinfo().setSubjectid(Integer.parseInt(subjectid));
+            gs.setIsleader(1);
+            List<TpGroupStudent> tgList=this.tpGroupStudentManager.getList(gs,null);
 
-
-
+            if(tgList!=null&&tgList.size()>0&&tgList.get(0)!=null){
+                for(TpGroupStudent tgs:tgList){
+                    groupid+=tgs.getGroupid()+",";
+                }
+            }
+        }
+        if(groupid.trim().length()<=1)
+            groupid=null;
+        else{
+            groupid=groupid.substring(1,groupid.lastIndexOf(","));
+        }
+        mp.put("leanderGrpid",groupid);
+        mp.put("classid",clsid);
+        mp.put("classtype",typeid);
+        mp.put("courseid",courseid);
+        mp.put("subjectid",subjectid);
         return new ModelAndView("/teachpaltform/classPerformanceAward/clsPerformanceAwardIndex",mp);
     }
+
+
+//    public ModelAndView toStuIndex(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+//
+//    }
 
     /**
      * 添加或者修改记录

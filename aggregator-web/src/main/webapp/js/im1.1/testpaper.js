@@ -2,6 +2,22 @@
  * Created by zhengzhou on 14-8-25.
  */
 var subQuesId=",";
+var allowRight=false;
+$(function(){
+    beginJs1();
+});
+//计时
+var tmpTime= 0,allowClickTime=1;
+function beginJs1(){
+    tmpTime++;
+    if(tmpTime>=allowClickTime){
+        tmpTime=0;
+        allowRight=true;
+    }else
+        allowRight=false;
+
+    setTimeout("beginJs1()",300);
+}
 
 /*************************************答题作答*************************/
 var TestPaperQues;
@@ -43,8 +59,9 @@ TestPaperQues.prototype.nextNum=function(type){
             var cuQuesid=arrayObj[this.currentQuesObj.idx];
             var parentQuesId=0;
             if(cuQuesid.indexOf("|")!=-1){
-                cuQuesid=cuQuesid.split("|")[1];
-                parentQuesId=cuQuesid.split("|")[0];
+                var tmpQuesArray=cuQuesid.split("|");
+                cuQuesid=tmpQuesArray[1];
+                parentQuesId=tmpQuesArray[0];
             }
             if(cuQuesid!=0){
                 this.currentQuesObj={idx:this.currentQuesObj.idx,quesid:cuQuesid,parentQuesId:parentQuesId};
@@ -302,21 +319,37 @@ TestPaperQues.prototype.subQues=function(direcType){
  * 加载答案
  */
 TestPaperQues.prototype.loadQues=function(){
-    $("#dv_question>div").hide();
-    if($("#dv_q_"+this.currentQuesObj.questionid).length>0)
+    $("div[id*='dv_q_']").hide();
+    if(this.currentQuesObj.parentQuesId!=0){
+        var pid=this.currentQuesObj.parentQuesId;
+        $("div[id*='dv_pq_']").each(function(x,m){
+            if(m.id!=('dv_pq_'+pid)){
+                $(this).hide();
+            }else
+                $(this).show();
+        });
+    }
+    if($("#dv_q_"+this.currentQuesObj.questionid).length>0){
         $("#dv_q_"+this.currentQuesObj.questionid).show();
+    }
 
     var config=this.config;
     var cQuesObj=this.currentQuesObj;
+
+    var p={userid:this.config.userid,
+        quesid:this.currentQuesObj.quesid,
+        paperid:this.config.paperid,
+        courseid:this.config.courseid
+    };
+    if(this.currentQuesObj.parentQuesId!=0){
+        p.quesid=this.currentQuesObj.parentQuesId+"|"+p.quesid;
+    }
+
     var ajxObj={
         url:'paperques?m=nextTestQues',
         dataType:'json',
         type:'post',
-        data:{userid:this.config.userid,
-            quesid:this.currentQuesObj.quesid,
-            paperid:this.config.paperid,
-            courseid:this.config.courseid
-        },
+        data:p,
         error:function(){alert('异常错误，原因：未知!');},
         success:function(rps){
             //失败
@@ -337,54 +370,101 @@ TestPaperQues.prototype.loadQues=function(){
                 if(typeof(config.papertype)!="undefined"&&config.papertype==3)
                     sc=quesObj.score;
                 var h='<div id="dv_q_'+quesObj.questionid+'">';
+                if(parentQuesObj!=null){
+                    h='<div id="dv_pq_'+parentQuesObj.questionid+'">';
+                }
+                var hqx='<div id="dv_qx_'+parentQuesObj.questionid+'"><div id="dv_df'+quesObj.questionid+'"><h1><span class="f_right">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
+                //h+='<span class="f_right">得分：0分</span>';
+                var qtypeInfo='未知';
+                if(quesObj.questiontype==3||quesObj.questiontype==7)
+                    qtypeInfo='单选题';
+                else if(quesObj.questiontype==4||quesObj.questiontype==8)
+                    qtypeInfo='多选题';
+                else if(quesObj.questiontype==1||quesObj.questiontype==9)
+                    qtypeInfo='问答题';
+                else if(quesObj.questiontype==2)
+                    qtypeInfo='填空题';
+                hqx+=qtypeInfo
+                var ex=-1;
+                hqx+='</span>（<span id="sp_score">'+sc+'</span>分）</h1></div></div>';
+                $("div[id*='dv_df']").hide();
+                if($("#dv_df"+quesObj.questionid).length>0){
+                    $("#dv_df"+quesObj.questionid).show();
+                }else{
+                    $("#dv_qx_"+parentQuesObj.questionid).append(hqx);
+                    h+=hqx;
+                }
+                if(parentQuesObj!=null){
+                    ex=parentQuesObj.extension;
+                    h+='<div class="yuyin">'+parentQuesObj.content;
+                    if(ex==4){  //英语听力
+                        h+='<span id="p_mp3_'+parentQuesObj.questionid+'"></span>';
+                    }
+                    h+='</div>';
+
+
+                }
+                if(parentQuesObj!=null){
+                    h+='<div id="dv_child_'+parentQuesObj.questionid+'"></div></div>';
+                    if($('#dv_pq_'+parentQuesObj.questionid).length<1)
+                        $("#dv_question").append(h);
+//                    else
+//                        $("#dv_pq_"+parentQuesObj.questionid).show();
+                    //添加题型及分数
+
+
+                    h='<div id="dv_q_'+quesObj.questionid+'">';
+                }
+
+
+                if(typeof(quesObj.content)!="undefined")
+                    h+=' <div class="title">'+quesObj.content+'</div>';
                 h+='<input type="hidden" value="'+quesObj.questionid+'" id="hd_quesid_'+quesObj.questionid+'" name="hd_quesid"/>';
                 h+='<input type="hidden" value="" name="hd_answer" id="hs_val_'+quesObj.questionid+'"/>';
                 h+='<input type="hidden" value="0" name="hd_stu_score" id="hs_val_stu_'+quesObj.questionid+'"/>';
                 h+='<input type="hidden" value="'+sc+'" name="hd_score" id="hs_score_'+quesObj.questionid+'"/>';
                 h+='<input  type="hidden" value="'+quesObj.questiontype+'" name="hd_questiontype" id="hd_questiontype_'+quesObj.questionid+'"/>';
                 h+='<input  type="hidden" value="2" name="hd_isright" id="hd_isright_'+quesObj.questionid+'"/>';
-
-                h+=' <h1>';
-                //h+='<span class="f_right">得分：0分</span>';
-                if(quesObj.questiontype==3||quesObj.questiontype==7)
-                    h+='单选题';
-                else if(quesObj.questiontype==4||quesObj.questiontype==8)
-                    h+='多选题';
-                else if(quesObj.questiontype==1)
-                    h+='问答题';
-                else if(quesObj.questiontype==2)
-                    h+='填空题';
-
-                h+='（<span id="sp_score">'+sc+'</span>分）</h1>';
-                if(parentQuesObj!=null){
-                    var ex=parentQuesObj.extension;
-                    h+='<div class="yuyin">'+parentQuesObj.content+'</div>';
-
-                }
-                if(typeof(quesObj.content)!="undefined")
-                    h+=' <div class="title">'+quesObj.content+'</div>';
                 if(quesObj.questiontype==3||quesObj.questiontype==4||quesObj.questiontype==7||quesObj.questiontype==8){
-                    h+='<ul class="test" id="ul_answer'+quesObj.questionid+'">';
-                    $.each(quesObj.questionOption,function(x,m){
+                    h+='<ul  class="daan test" id="ul_answer'+quesObj.questionid+'">';
+                    var qo=quesObj.questionOption;
+                    if(ex==5&&parentQuesObj!=null)
+                        qo=parentQuesObj.questionOption;
+                    $.each(qo,function(x,m){
                         h+='<li><span style="display:none">' ;
+                        var isrightTmp= m.isright;
+                        if(ex==5&&parentQuesObj!=null){
+                            $.each(quesObj.questionOption,function(zx,zm){
+                                if(zm.optiontype== m.optiontype){
+                                    isrightTmp=zm.isright;
+                                    return;
+                                }
+                            });
+                        }
                         if(quesObj.questiontype==3||quesObj.questiontype==7){
                             h+='<input type="radio" name="rdo_answer'+quesObj.questionid+'" value="'+m.optiontype+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
-                            if(typeof(m.isright)!="undefined"&&m.isright==1){
+                            if(typeof(isrightTmp)!="undefined"&&isrightTmp==1){
                                 h+='<input type="hidden" value="'+ m.optiontype+'"  name="hd_rightVal"  id="hd_rightVal'+quesObj.questionid+'"/>';
                             }
                         }else
-                            h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ m.isright+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
-                        h+='</span><label for="rdo_answer'+m.questionid+m.optiontype+'"><a href="javascript:;"><span class="blue">'+m.optiontype+'.</span>'+m.content+'</a></label></li>';
+                            h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ isrightTmp+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
+                        h+='</span><label for="rdo_answer'+m.questionid+m.optiontype+'"><span class="blue">'+m.optiontype+'.</span>'+m.content;
+//                        if(typeof(isrightTmp)!="undefined"&&isrightTmp==1){
+//                            h+='<b class="right"></b>';
+//                        }
+                        h+='</label></li>';
                     });
                     h+='</ul>';
                 }
-                h+='</div>';
+
 
                 if($("#dv_q_"+quesObj.questionid).length>0)
                     $("#dv_q_"+quesObj.questionid).show();
                 else{
-                    $("#dv_question").append(h);
-
+                    if(parentQuesObj!=null){
+                        $("#dv_child_"+parentQuesObj.questionid).append(h);
+                    }else
+                        $("#dv_question").append(h);
                     //空格出来
                     if(quesObj.questiontype==2){
                         $("span[name='fillbank']").each(function(idx,itm){
@@ -396,6 +476,8 @@ TestPaperQues.prototype.loadQues=function(){
                             var selObj=$(this).children().children("input[name*='rdo_answer']");
                             var selType=selObj.attr("type");
                             zm=this;
+                            if(!allowRight)return;
+
                             if(selType=='checkbox'){
                                 if($(zm).attr("class").indexOf("crumb")>-1){
                                     $(zm).removeClass("crumb");
@@ -411,7 +493,7 @@ TestPaperQues.prototype.loadQues=function(){
                                 $(zm).addClass("crumb");
                                 selObj.attr("checked",true);
                             }
-
+                            allowRight=false;
                         });
                     }
                     if(subQuesId.indexOf(","+quesObj.questionid+",")==-1)
@@ -419,8 +501,8 @@ TestPaperQues.prototype.loadQues=function(){
                     //如果学生已经做题，则自动填充
                     if(typeof(quesObj.spqLogs)!="undefined"){
                         var qtype=quesObj.questiontype;
-                        if(qtype==1||qtype==2){
-                            if(qtype==1){
+                        if(qtype==1||qtype==2||qtype==9){
+                            if(qtype==1||qtype==9){
                                 //问答
                                 $("#txt_answer_"+quesObj.questionid).val(quesObj.spqLogs.answer);
                             }else{
@@ -504,8 +586,9 @@ TestPaperDetail.prototype.nextNum=function(type){
             var cuQuesid=arrayObj[this.currentQuesObj.idx];
             var parentQuesId=0;
             if(cuQuesid.indexOf("|")!=-1){
-                cuQuesid=cuQuesid.split("|")[1];
-                parentQuesId=cuQuesid.split("|")[0];
+                var tmpQuesArray=cuQuesid.split("|");
+                cuQuesid=tmpQuesArray[1];
+                parentQuesId=tmpQuesArray[0];
             }
             if(cuQuesid!=0){
                 this.currentQuesObj={idx:this.currentQuesObj.idx,quesid:cuQuesid,parentQuesId:parentQuesId};
@@ -520,23 +603,37 @@ TestPaperDetail.prototype.nextNum=function(type){
  * 加载答案
  */
 TestPaperDetail.prototype.loadQues=function(){
-    $("#dv_question>div").hide();
-    if($("#dv_q_"+this.currentQuesObj.questionid).length>0)
+    $("div[id*='dv_q_']").hide();
+    if(this.currentQuesObj.parentQuesId!=0){
+        var pid=this.currentQuesObj.parentQuesId;
+        $("div[id*='dv_pq_']").each(function(x,m){
+            if(m.id!=('dv_pq_'+pid)){
+                $(this).hide();
+            }
+        });
+    }
+    if($("#dv_q_"+this.currentQuesObj.questionid).length>0){
         $("#dv_q_"+this.currentQuesObj.questionid).show();
+    }
 
     var config=this.config;
     var cQuesObj=this.currentQuesObj;
+    var p={userid:this.config.userid,
+        quesid:this.currentQuesObj.quesid,
+        paperid:this.config.paperid,
+        courseid:this.config.courseid,
+        classid:this.config.classid,
+        userType:this.config.userType,
+        taskid:this.config.taskid};
+    if(this.currentQuesObj.parentQuesId!=0){
+        p.quesid=this.currentQuesObj.parentQuesId+"|"+p.quesid;
+    }
+
     var ajxObj={
         url:'paperques?m=nextTestQues',
         dataType:'json',
         type:'post',
-        data:{userid:this.config.userid,
-            quesid:this.currentQuesObj.quesid,
-            paperid:this.config.paperid,
-            courseid:this.config.courseid,
-            classid:this.config.classid,
-            userType:this.config.userType,
-            taskid:this.config.taskid},
+        data:p,
         error:function(){alert('异常错误，原因：未知!');},
         success:function(rps){
             //失败
@@ -557,48 +654,90 @@ TestPaperDetail.prototype.loadQues=function(){
                 if(typeof(config.papertype)!="undefined"&&config.papertype==3)
                     sc=quesObj.score;
                 var h='<div id="dv_q_'+quesObj.questionid+'">';
+                if(parentQuesObj!=null){
+                    h='<div id="dv_pq_'+parentQuesObj.questionid+'">';
+                }
+                var hqx='<div id="dv_qx_'+parentQuesObj.questionid+'"><div id="dv_df'+quesObj.questionid+'"><h1><span class="f_right">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
+                //h+='<span class="f_right">得分：0分</span>';
+                var qtypeInfo='未知';
+                if(quesObj.questiontype==3||quesObj.questiontype==7)
+                    qtypeInfo='单选题';
+                else if(quesObj.questiontype==4||quesObj.questiontype==8)
+                    qtypeInfo='多选题';
+                else if(quesObj.questiontype==1||quesObj.questiontype==9)
+                    qtypeInfo='问答题';
+                else if(quesObj.questiontype==2)
+                    qtypeInfo='填空题';
+                hqx+=qtypeInfo
+                var ex=-1;
+                hqx+='</span>（<span id="sp_score">'+sc+'</span>分）</h1></div></div>';
+                $("div[id*='dv_df']").hide();
+                if($("#dv_df"+quesObj.questionid).length>0){
+                    $("#dv_df"+quesObj.questionid).show();
+                }else{
+                    $("#dv_qx_"+parentQuesObj.questionid).append(hqx);
+                    h+=hqx;
+                }
+                if(parentQuesObj!=null){
+                    ex=parentQuesObj.extension;
+                    h+='<div class="yuyin">'+parentQuesObj.content;
+                    if(ex==4){  //英语听力
+                        h+='<span id="p_mp3_'+parentQuesObj.questionid+'"></span>';
+                    }
+                    h+='</div>';
+
+
+                }
+                if(parentQuesObj!=null){
+                    h+='<div id="dv_child_'+parentQuesObj.questionid+'"></div></div>';
+                    if($('#dv_pq_'+parentQuesObj.questionid).length<1)
+                        $("#dv_question").append(h);
+//                    else
+//                        $("#dv_pq_"+parentQuesObj.questionid).show();
+                    //添加题型及分数
+
+
+                    h='<div id="dv_q_'+quesObj.questionid+'">';
+                }
+
+
+                if(typeof(quesObj.content)!="undefined")
+                    h+=' <div class="title">'+quesObj.content+'</div>';
                 h+='<input type="hidden" value="'+quesObj.questionid+'" id="hd_quesid_'+quesObj.questionid+'" name="hd_quesid"/>';
                 h+='<input type="hidden" value="" name="hd_answer" id="hs_val_'+quesObj.questionid+'"/>';
                 h+='<input type="hidden" value="0" name="hd_stu_score" id="hs_val_stu_'+quesObj.questionid+'"/>';
                 h+='<input type="hidden" value="'+sc+'" name="hd_score" id="hs_score_'+quesObj.questionid+'"/>';
                 h+='<input  type="hidden" value="'+quesObj.questiontype+'" name="hd_questiontype" id="hd_questiontype_'+quesObj.questionid+'"/>';
                 h+='<input  type="hidden" value="2" name="hd_isright" id="hd_isright_'+quesObj.questionid+'"/>';
+                    if(quesObj.questiontype==3||quesObj.questiontype==4||quesObj.questiontype==7||quesObj.questiontype==8){
+                        h+='<ul  class="daan test" id="ul_answer'+quesObj.questionid+'">';
+                        var qo=quesObj.questionOption;
+                        if(ex==5&&parentQuesObj!=null)
+                            qo=parentQuesObj.questionOption;
+                        $.each(qo,function(x,m){
+                            h+='<li><span style="display:none">' ;
+                            var isrightTmp= m.isright;
+                            if(ex==5&&parentQuesObj!=null){
+                                $.each(quesObj.questionOption,function(zx,zm){
+                                    if(zm.optiontype== m.optiontype){
+                                        isrightTmp=zm.isright;
+                                        return;
+                                    }
+                                });
+                            }
+                            if(quesObj.questiontype==3||quesObj.questiontype==7){
+                                h+='<input type="radio" name="rdo_answer'+quesObj.questionid+'" value="'+m.optiontype+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
+                            }else
+                                h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ isrightTmp+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
+                            h+='</span><label for="rdo_answer'+m.questionid+m.optiontype+'"><span class="blue">'+m.optiontype+'.</span>'+m.content;
+                            if(typeof(isrightTmp)!="undefined"&&isrightTmp==1){
+                                h+='<b class="right"></b>';
+                            }
+                            h+='</label></li>';
+                        });
+                        h+='</ul>';
+                    }
 
-                h+=' <h1><span class="f_right">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span>';
-                //h+='<span class="f_right">得分：0分</span>';
-                if(quesObj.questiontype==3||quesObj.questiontype==7)
-                    h+='单选题';
-                else if(quesObj.questiontype==4||quesObj.questiontype==8)
-                    h+='多选题';
-                else if(quesObj.questiontype==1)
-                    h+='问答题';
-                else if(quesObj.questiontype==2)
-                    h+='填空题';
-
-                h+='（<span id="sp_score">'+sc+'</span>分）</h1>';
-                if(parentQuesObj!=null){
-                    var ex=parentQuesObj.extension;
-                    h+='<div class="yuyin">'+parentQuesObj.content+'</div>';
-
-                }
-                if(typeof(quesObj.content)!="undefined")
-                    h+=' <div class="title">'+quesObj.content+'</div>';
-                if(quesObj.questiontype==3||quesObj.questiontype==4||quesObj.questiontype==7||quesObj.questiontype==8){
-                    h+='<ul  class="daan test" id="ul_answer'+quesObj.questionid+'">';
-                    $.each(quesObj.questionOption,function(x,m){
-                        h+='<li><span style="display:none">' ;
-                        if(quesObj.questiontype==3||quesObj.questiontype==7){
-                            h+='<input type="radio" name="rdo_answer'+quesObj.questionid+'" value="'+m.optiontype+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
-                        }else
-                            h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ m.isright+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
-                        h+='</span><label for="rdo_answer'+m.questionid+m.optiontype+'"><span class="blue">'+m.optiontype+'.</span>'+m.content;
-                        if(typeof(m.isright)!="undefined"&&m.isright==1){
-                            h+='<b class="right"></b>';
-                        }
-                        h+='</label></li>';
-                    });
-                    h+='</ul>';
-                }
                 h+='<p class="jiexi">';
                 if(config.userType!=2){
                     var zqlv=quesObj.rightLv;
@@ -611,8 +750,14 @@ TestPaperDetail.prototype.loadQues=function(){
                 if($("#dv_q_"+quesObj.questionid).length>0)
                     $("#dv_q_"+quesObj.questionid).show();
                 else{
-                    $("#dv_question").append(h);
-
+                    if(parentQuesObj!=null){
+                        $("#dv_child_"+parentQuesObj.questionid).append(h);
+                    }else
+                        $("#dv_question").append(h);
+                    //英语听力加载控件
+                    if(parentQuesObj!=null&&ex==4){
+                        $("#dv_child_"+parentQuesObj.questionid).append(h);
+                    }
                     //空格出来
                     if(quesObj.questiontype==2){
                         $("span[name='fillbank']").each(function(idx,itm){
@@ -645,7 +790,7 @@ TestPaperDetail.prototype.loadQues=function(){
                     //如果学生已经做题，则自动填充
                     if(typeof(quesObj.spqLogs)!="undefined"){
                         var qtype=quesObj.questiontype;
-                        if(qtype==1||qtype==2){
+                        if(qtype==1||qtype==2||qtype==9){
                             $("#sp_df_"+quesObj.questionid).html("待批改");
                             if(qtype==1){
                                 //问答
