@@ -3151,12 +3151,15 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 map.put("quesType",paperQuestion.getQuestiontype()==1?1:0); //1：其他 主观题
                 map.put("isQesTeam",paperQuestion.getQuestiontype()==6?1:0); //6：试题组
                 if(paperQuestion.getQuestionTeam()!=null&&paperQuestion.getQuestionTeam().size()>0){
-                    Map<String,Object> childMap=new HashMap<String,Object>();
+                    List<Map<String,Object>> childMapList=new ArrayList<Map<String, Object>>();
                     for(PaperQuestion qTeam:paperQuestion.getQuestionTeam()){
+                        Map<String,Object> childMap=new HashMap<String,Object>();
                         childMap.put("teamQesId",qTeam.getQuestionid());
                         childMap.put("teamQesType",qTeam.getQuestiontype()==1?1:0);
+                        if(!childMapList.contains(childMap))
+                            childMapList.add(childMap);
                     }
-                    map.put("teamQesList",childMap);
+                    map.put("teamQesList",childMapList);
                 }
                 returnMapList.add(map);
             }
