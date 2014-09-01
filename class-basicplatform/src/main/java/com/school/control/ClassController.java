@@ -69,26 +69,26 @@ public class ClassController extends BaseController<ClassInfo>{
         int allowAutoLevel=0;
         //验证该是否在条件内执行
         //得到下一个学年
-        TermInfo tm=new TermInfo();
-        tm.setDYYear(currentTm.getYear());
+       // TermInfo tm=new TermInfo();
+      //  tm.setDYYear(currentTm.getYear());
         PageResult presult=new PageResult();
-        presult.setOrderBy(" u.YEAR ASC ");
-        presult.setPageSize(1);
+      //  presult.setOrderBy(" u.YEAR ASC ");
+     //   presult.setPageSize(1);
 
-        List<TermInfo> tmList=this.termManager.getList(tm, presult);
-        if(tmList!=null&&tmList.size()>0){
-            String nextyear=tmList.get(0).getYear();
+     //   List<TermInfo> tmList=this.termManager.getList(tm, presult);
+     //   if(tmList!=null&&tmList.size()>0){
+          //  String nextyear=tmList.get(0).getYear();
             //得到当前nextyear下所有的行政班
             presult=new PageResult();
             presult.setPageSize(1);
             ClassInfo clsentity=new ClassInfo();
-            clsentity.setYear(nextyear);
+            clsentity.setYear(currentTm.getYear());
             clsentity.setPattern("行政班");
             List<ClassInfo> nextClsList=this.classManager.getList(clsentity, presult);
             if(nextClsList==null||nextClsList.size()<1){
                 allowAutoLevel=1;
             }
-        }
+     //   }
         request.setAttribute("allowAutoLevel", allowAutoLevel);
         return new ModelAndView("/class/list");
     }
