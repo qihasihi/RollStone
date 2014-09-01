@@ -67,28 +67,35 @@ public class ClassController extends BaseController<ClassInfo>{
 
         //得到allowAutoLevel
         int allowAutoLevel=0;
+
+
         //验证该是否在条件内执行
         //得到下一个学年
-       // TermInfo tm=new TermInfo();
-      //  tm.setDYYear(currentTm.getYear());
+        TermInfo tm=new TermInfo();
+        Long t=UtilTool.StringConvertToDate(Calendar.getInstance().get(Calendar.YEAR) + "-09-01", UtilTool.DateType.smollDATE).getTime();
+        if(new Date().getTime()<t){
+            tm.setDYYear(currentTm.getYear());
+        }else
+            tm.setYear(currentTm.getYear());
         PageResult presult=new PageResult();
-      //  presult.setOrderBy(" u.YEAR ASC ");
-     //   presult.setPageSize(1);
+        presult.setOrderBy(" u.YEAR ASC ");
+        presult.setPageSize(1);
 
-     //   List<TermInfo> tmList=this.termManager.getList(tm, presult);
-     //   if(tmList!=null&&tmList.size()>0){
-          //  String nextyear=tmList.get(0).getYear();
+        List<TermInfo> tmList=this.termManager.getList(tm, presult);
+        if(tmList!=null&&tmList.size()>0){
+            String nextyear=currentTm.getYear();
             //得到当前nextyear下所有的行政班
             presult=new PageResult();
             presult.setPageSize(1);
             ClassInfo clsentity=new ClassInfo();
-            clsentity.setYear(currentTm.getYear());
+            clsentity.setYear(nextyear);
             clsentity.setPattern("行政班");
+            clsentity.setDcschoolid(this.logined(request).getDcschoolid());
             List<ClassInfo> nextClsList=this.classManager.getList(clsentity, presult);
             if(nextClsList==null||nextClsList.size()<1){
                 allowAutoLevel=1;
             }
-     //   }
+        }
         request.setAttribute("allowAutoLevel", allowAutoLevel);
         return new ModelAndView("/class/list");
     }
@@ -720,30 +727,40 @@ public class ClassController extends BaseController<ClassInfo>{
     @RequestMapping(params="m=levelup",method=RequestMethod.POST)
     public void doClsLevelUp(HttpServletRequest request,HttpServletResponse response) throws Exception{
         String year=request.getParameter("year");
+        String schoolid=request.getParameter("schoolid");
 
         JsonEntity jeEntity=new JsonEntity();
         if(year==null||year.trim().length()<1){
             jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jeEntity.toJSON());return;
         }
+        Integer dcschoolid=this.logined(request).getDcschoolid();
+        if(schoolid!=null&&schoolid.trim().length()>0){
+            dcschoolid=Integer.parseInt(schoolid);
+        }
         //验证该是否在条件内执行
         //得到下一个学年
         TermInfo tm=new TermInfo();
-        tm.setDYYear(year);
+        tm.setYear(year);
         PageResult presult=new PageResult();
         presult.setOrderBy(" u.YEAR ASC ");
         presult.setPageSize(1);
         List<TermInfo> tmList=this.termManager.getList(tm, presult);
         if(tmList==null||tmList.size()<1){
-            jeEntity.setMsg("异常错误，发有发现下一个年份!请确认是跨年!");
+            jeEntity.setMsg("异常错误，没有发现当前年份!");
             response.getWriter().print(jeEntity.toJSON());return;
         }
+        //如果当前时间小于9--1号。
+        Long ndateTime=UtilTool.StringConvertToDate(Calendar.getInstance().get(Calendar.YEAR) + "-09-01", UtilTool.DateType.smollDATE).getTime();
         String nextyear=tmList.get(0).getYear();
+
+
         //得到当前nextyear下所有的行政班
         presult=new PageResult();
         presult.setPageSize(1);
         ClassInfo clsentity=new ClassInfo();
         clsentity.setYear(nextyear);
+        clsentity.setDcschoolid(dcschoolid);
         clsentity.setPattern("行政班");
         List<ClassInfo> nextClsList=this.classManager.getList(clsentity, presult);
         if(nextClsList!=null&&nextClsList.size()>0){
@@ -751,7 +768,32 @@ public class ClassController extends BaseController<ClassInfo>{
             response.getWriter().print(jeEntity.toJSON());return;
         }
 
-        if(this.classManager.doClassLevelUp(year)){
+
+        //则说明是上一学期,则得到当前学年
+        if(new Date().getTime()<ndateTime){
+            tm=new TermInfo();
+            tm.setDYYear(nextyear);
+            tmList=this.termManager.getList(tm, presult);
+            if(tmList==null||tmList.size()<1){
+                jeEntity.setMsg("异常错误，没有发现下一个年份!请确认是跨年!");
+                response.getWriter().print(jeEntity.toJSON());return;
+            }
+
+
+        }else{  //如果超过9-1号，则说明要得到上一学年
+            tm=new TermInfo();
+            tm.setxYYear(nextyear);
+            presult.setOrderBy(" u.YEAR DESC ");
+
+            tmList=this.termManager.getList(tm, presult);
+            if(tmList==null||tmList.size()<1){
+                jeEntity.setMsg("异常错误，没有发现下一个年份!请确认是跨年!");
+                response.getWriter().print(jeEntity.toJSON());return;
+            }
+            nextyear=tmList.get(0).getYear();
+        }
+
+        if(this.classManager.doClassLevelUp(nextyear,dcschoolid)){
             jeEntity.setMsg("自动升级成功!请刷新页面!");
             jeEntity.setType("success");
             //自动升级调用ETT接口，升级

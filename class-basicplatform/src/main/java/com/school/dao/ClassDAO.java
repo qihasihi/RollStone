@@ -353,12 +353,13 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 	 * @param year
 	 * @return
 	 */
-	public Boolean doClassLevelUp(String year) {
+	public Boolean doClassLevelUp(String year,Integer dcschoolid) {
 		if (year == null)
 			return false;		
-		StringBuilder sqlbuilder=new StringBuilder("{CALL class_auto_level_up(?,?)}");
+		StringBuilder sqlbuilder=new StringBuilder("{CALL class_auto_level_up(?,?,?)}");
 		List<Object> objList=new ArrayList<Object>();
-		objList.add(year);
+        objList.add(year);
+        objList.add(dcschoolid);
 		Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),objList.toArray());
 		if (afficeObj != null && afficeObj.toString().trim().length() > 0
 				&& Integer.parseInt(afficeObj.toString()) > 0) {

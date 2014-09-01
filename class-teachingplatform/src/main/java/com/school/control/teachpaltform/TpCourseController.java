@@ -577,10 +577,19 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String classtype = request.getParameter("classtype");
         String subjectid=request.getParameter("subjectid");
         String gradeid = request.getParameter("gradeid");
+        String termid=request.getParameter("termid");
         UserInfo u=this.logined(request);
         TermInfo ti = this.termManager.getMaxIdTerm(false);
+        if(termid!=null&&termid.trim().length()>0){
+            TermInfo tm=new TermInfo();
+            tm.setRef(termid);
+            List<TermInfo> tmList=this.termManager.getList(tm,null);
+            if(tmList!=null&&tmList.size()>0){
+                ti=tmList.get(0);
+            }
+        }
         if (ti == null || classid==null || classtype==null||subjectid==null) {
-            jeEntity.setMsg(UtilTool.msgproperty.getProperty("学期参数错误,请联系教务。"));// 异常错误，参数不齐，无法正常访问!
+            jeEntity.setMsg("学期参数错误,请联系教务。");// 异常错误，参数不齐，无法正常访问!
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
             return null;
         }

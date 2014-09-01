@@ -79,12 +79,17 @@ public class TermDAO extends CommonDAO<TermInfo> implements ITermDAO {
 				objList.add(terminfo.getYear());
 			} else
 				sqlbuilder.append("null,");
-			
-			if (terminfo.getDYYear() != null) {
-				sqlbuilder.append("?,");
-				objList.add(terminfo.getDYYear());
-			} else
-				sqlbuilder.append("null,");
+
+            if (terminfo.getDYYear() != null) {
+                sqlbuilder.append("?,");
+                objList.add(terminfo.getDYYear());
+            } else
+                sqlbuilder.append("null,");
+            if (terminfo.getxYYear() != null) {
+                sqlbuilder.append("?,");
+                objList.add(terminfo.getxYYear());
+            } else
+                sqlbuilder.append("null,");
 			
 		}
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){

@@ -2057,8 +2057,6 @@ public class UserController extends BaseController<UserInfo> {
                     je.getObjList().add(stuHistoryClsList);
                 }
 
-
-
             }else
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }

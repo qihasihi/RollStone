@@ -21,7 +21,7 @@ public interface  IClassDAO extends ICommonDAO<ClassInfo>{
 	 * @param year
 	 * @return
 	 */
-	public Boolean doClassLevelUp(String year);
+	public Boolean doClassLevelUp(String year,Integer dcschoolid);
 
     /**
      * 得到更新或添加的SQL

@@ -88,8 +88,8 @@ public class  ClassManager extends BaseManager<ClassInfo> implements IClassManag
 	 * @param year
 	 * @return
 	 */
-	public Boolean doClassLevelUp(String year){
-		return this.classdao.doClassLevelUp(year);
+	public Boolean doClassLevelUp(String year,Integer dcschoolid){
+		return this.classdao.doClassLevelUp(year,dcschoolid);
 	}
     /**
      * 得到更新或添加的SQL

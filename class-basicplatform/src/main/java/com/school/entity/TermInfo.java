@@ -100,4 +100,14 @@ public class TermInfo implements java.io.Serializable {
 	public void setDYYear(String dyyear){
 		this.dYYear=dyyear;
 	}
+
+    private String xYYear;
+
+    public String getxYYear() {
+        return xYYear;
+    }
+
+    public void setxYYear(String xYYear) {
+        this.xYYear = xYYear;
+    }
 }
