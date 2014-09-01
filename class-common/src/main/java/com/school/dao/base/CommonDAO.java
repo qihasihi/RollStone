@@ -1377,7 +1377,22 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
 		
 		sqlbuilder.append("?)}");
 		return objList;
-	} 
+	}
+
+
+    private static String getFixLenthString(int strLength) {
+
+        Random rm = new Random();
+
+        // 获得随机数
+        double pross = (1 + rm.nextDouble()) * Math.pow(10, strLength);
+
+        // 将获得的获得随机数转化为字符串
+        String fixLenthString = String.valueOf(pross);
+
+        // 返回固定的长度的随机数
+        return fixLenthString.substring(1, strLength + 1);
+    }
 
 
     /**
@@ -1386,8 +1401,8 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
      * @return
      */
     public Long getNextId(boolean bo){
-        String id=((Long)System.currentTimeMillis()).toString()+""+new Random().nextInt(9999);
-        id=id.substring(4);
+        String id=((Long)System.currentTimeMillis()).toString()+""+getFixLenthString(6);
+        id=id.substring(6);
         Long nextid=Long.parseLong(id);
         if(bo)
             nextid=Long.parseLong("-"+nextid);
