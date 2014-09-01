@@ -338,7 +338,7 @@ function loadNextQues(quesid,paperid,idx){
 
                 if(typeof(quesObj.content)!="undefined")
                     h+='<p><span id="p_num_'+quesObj.questionid+'"></span>.'+quesObj.content+'</p>';
-                if(quesObj.questiontype==1){//问答题
+                if(quesObj.questiontype==1||quesObj.questiontype==9){//问答题
                     h+='<div class="p_t_20"><textarea name="txt_answer" id="txt_answer_'+quesObj.questionid+'"  placeholder="输入你的答案"></textarea></div>';
                 }
                 if(quesObj.questiontype==1||quesObj.questiontype==2){
