@@ -13,7 +13,7 @@ import com.school.manager.inter.IGradeManager;
 import com.school.manager.inter.ITermManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.teachpaltform.*;
-import com.school.util.EttInterfaceUserUtil;
+import com.school.utils.EttInterfaceUserUtil;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
 import org.springframework.stereotype.Controller;
