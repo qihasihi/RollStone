@@ -1073,51 +1073,54 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
             }
             if(taskUserRecord!=null&&taskUserRecord.size()>0){
+                StringBuilder jids = new StringBuilder();
+                jids.append("[");
                 for(int i = 0;i<taskUserRecord.size();i++){
                     returnUserMap = new HashMap();
-                    int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
-                    int days = 0;
-                    int hours =0;
-                    int mins = 0;
-                    int seconds = 0;
-                    if(time>0){
-                        seconds = time%60;
-                        if(seconds>0){
-                            mins = time/60;
-                        }else{
-                            seconds = seconds*60;
-                        }
-                        if(mins>0){
-                            hours = mins/60;
-                        }
-                        if(hours>0){
-                            days= hours/24;
-                        }
-                    }
-                    if(days>0){
-                        String t = taskUserRecord.get(i).get("C_TIME").toString();
-                        t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
-                        returnUserMap.put("replyDate",t);
-                    }else{
-                        if(hours>0){
-                            returnUserMap.put("replyDate",hours+"小时");
-                        }else{
-                            if(mins>0){
-                                returnUserMap.put("replyDate",mins+"分钟");
-                            }else{
-                                if(seconds>0){
-                                    returnUserMap.put("replyDate",seconds+"秒");
-                                }
-                            }
-                        }
-                    }
+                    String replyDate = UtilTool.convertTimeForTask(Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString()),taskUserRecord.get(i).get("C_TIME").toString());
+                    returnUserMap.put("replyDate",replyDate);
                     returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
                     returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
                     returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
                     returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
-                    returnUserMap.put("uPhoto","img");
-                    returnUserMap.put("uName","小虎");
+                    if(taskUserRecord.get(i).get("JID")!=null){
+                        jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
+                    }else{
+                        returnUserMap.put("uPhoto","http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
+                        returnUserMap.put("uName",taskUserRecord.get(i).get("realname"));
+                    }
+                   // returnUserMap.put("uPhoto","img");
+                   // returnUserMap.put("uName","小虎");
                     returnUserRecord.add(returnUserMap);
+                }
+                String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
+                //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                HashMap<String,String> signMap = new HashMap();
+                signMap.put("userList",jidstr);
+                signMap.put("schoolId",schoolid);
+                signMap.put("srcJid",userid);
+                signMap.put("userType","3");
+                signMap.put("timestamp",""+System.currentTimeMillis());
+                String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+                signMap.put("sign",signture);
+                JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                if(type==1){
+                    Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                    JSONArray jr = JSONArray.fromObject(obj);
+                    if(jr!=null&&jr.size()>0){
+                        for(int i = 0;i<jr.size();i++){
+                            JSONObject jo = jr.getJSONObject(i);
+                            for(int j = 0;j<returnUserRecord.size();j++){
+                                returnUserMap = new HashMap();
+                                if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                    returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
+                                    returnUserRecord.get(j).put("uName", jo.getString("realName"));
+                                }
+                            }
+                        }
+                    }
                 }
             }
             returnMap.put("replyList",returnUserRecord);
@@ -1284,39 +1287,41 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             //用户回答列表
                 taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
                 if(taskUserRecord!=null&&taskUserRecord.size()>0){
+                    StringBuilder jids = new StringBuilder();
+                    jids.append("[");
                     for(int i = 0;i<taskUserRecord.size();i++){
-                        int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
-                        int days = 0;
-                        int hours =0;
-                        int mins = 0;
-                        int seconds = 0;
-                        if(time>0){
-                            seconds = time%60;
-                            if(seconds>0){
-                                mins = time/60;
-                            }else{
-                                seconds = seconds*60;
-                            }
-                            if(mins>0){
-                                hours = mins/60;
-                            }
-                            if(hours>0){
-                                days= hours/24;
-                            }
-                        }
-                        if(days>0){
-                            String t = taskUserRecord.get(i).get("C_TIME").toString();
-                            t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
-                            taskUserRecord.get(i).put("REPLYDATE",t);
+                        String replyDate = UtilTool.convertTimeForTask(Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString()),taskUserRecord.get(i).get("C_TIME").toString());
+                        taskUserRecord.get(i).put("REPLYDATE",replyDate);
+                        if(taskUserRecord.get(i).get("JID")!=null){
+                            jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
                         }else{
-                            if(hours>0){
-                                taskUserRecord.get(i).put("REPLYDATE",hours+"小时");
-                            }else{
-                                if(mins>0){
-                                    taskUserRecord.get(i).put("REPLYDATE",mins+"分钟");
-                                }else{
-                                    if(seconds>0){
-                                        taskUserRecord.get(i).put("REPLYDATE",seconds+"秒");
+                            taskUserRecord.get(i).put("uPhoto", "http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
+                            taskUserRecord.get(i).put("uName", taskUserRecord.get(i).get("realname"));
+                        }
+                    }
+                    String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                    String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
+                    //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                    HashMap<String,String> signMap = new HashMap();
+                    signMap.put("userList",jidstr);
+                    signMap.put("schoolId",schoolid);
+                    signMap.put("srcJid",userid);
+                    signMap.put("userType","3");
+                    signMap.put("timestamp",""+System.currentTimeMillis());
+                    String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+                    signMap.put("sign",signture);
+                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                    if(type==1){
+                        Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                        JSONArray jr = JSONArray.fromObject(obj);
+                        if(jr!=null&&jr.size()>0){
+                            for(int i = 0;i<jr.size();i++){
+                                JSONObject jo = jr.getJSONObject(i);
+                                for(int j = 0;j<taskUserRecord.size();j++){
+                                    if(jo.getInt("jid")==Integer.parseInt(taskUserRecord.get(j).get("jid").toString())){
+                                        taskUserRecord.get(j).put("uPhoto",jo.getString("headUrl"));
+                                        taskUserRecord.get(j).put("uName",jo.getString("realName"));
                                     }
                                 }
                             }
@@ -1882,53 +1887,54 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     Map returnUserMap =null;
                     List<Map<String,Object>> taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
                     if(taskUserRecord!=null&&taskUserRecord.size()>0){
+                        StringBuilder jids = new StringBuilder();
+                        jids.append("[");
                         for(int i = 0;i<taskUserRecord.size();i++){
                             returnUserMap = new HashMap();
-                            int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
-                            int days = 0;
-                            int hours =0;
-                            int mins = 0;
-                            int seconds = 0;
-                            if(time>0){
-                                seconds = time%60;
-                                if(seconds>0){
-                                    mins = time/60;
-                                }else{
-                                    seconds = seconds*60;
-                                }
-                                if(mins>0){
-                                    hours = mins/60;
-                                }
-                                if(hours>0){
-                                    days= hours/24;
-                                }
-                            }
-                            if(days>0){
-                                String t = taskUserRecord.get(i).get("C_TIME").toString();
-                                t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
-                                returnUserMap.put("replyDate",t);
-                            }else{
-                                if(hours>0){
-                                    returnUserMap.put("replyDate",hours+"小时");
-                                }else{
-                                    if(mins>0){
-                                        returnUserMap.put("replyDate",mins+"分钟");
-                                    }else{
-                                        if(seconds>0){
-                                            returnUserMap.put("replyDate",seconds+"秒");
-                                        }else{
-                                            returnUserMap.put("replyDate","1秒");
-                                        }
-                                    }
-                                }
-                            }
+                            String replyDate = UtilTool.convertTimeForTask(Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString()),taskUserRecord.get(i).get("C_TIME").toString());
+                            returnUserMap.put("replyDate",replyDate);
                             returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
                             returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
                             returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
                             returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
-                            returnUserMap.put("uPhoto","img");
-                            returnUserMap.put("uName","小虎");
+                            if(taskUserRecord.get(i).get("JID")!=null){
+                                jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
+                            }else{
+                                returnUserMap.put("uPhoto","http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
+                                returnUserMap.put("uName",taskUserRecord.get(i).get("realname"));
+                            }
+                            // returnUserMap.put("uPhoto","img");
+                            // returnUserMap.put("uName","小虎");
                             returnUserRecord.add(returnUserMap);
+                        }
+                        String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                        String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
+                        //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                        HashMap<String,String> signMap = new HashMap();
+                        signMap.put("userList",jidstr);
+                        signMap.put("schoolId",schoolid);
+                        signMap.put("srcJid",userid);
+                        signMap.put("userType","3");
+                        signMap.put("timestamp",""+System.currentTimeMillis());
+                        String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+                        signMap.put("sign",signture);
+                        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                        if(type==1){
+                            Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                            JSONArray jr = JSONArray.fromObject(obj);
+                            if(jr!=null&&jr.size()>0){
+                                for(int i = 0;i<jr.size();i++){
+                                    JSONObject jObject = jr.getJSONObject(i);
+                                    for(int j = 0;j<returnUserRecord.size();j++){
+                                        returnUserMap = new HashMap();
+                                        if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                            returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
+                                            returnUserRecord.get(j).put("uName", jObject.getString("realName"));
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     Map m = new HashMap();
@@ -2856,51 +2862,54 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 request.setAttribute("resname",taskList.get(0).getResourcename());
                 request.setAttribute("userRecord",taskUserRecord);
                 if(taskUserRecord!=null&&taskUserRecord.size()>0){
+                    StringBuilder jids = new StringBuilder();
+                    jids.append("[");
                     for(int i = 0;i<taskUserRecord.size();i++){
                         returnUserMap = new HashMap();
-                        int time =Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString());
-                        int days = 0;
-                        int hours =0;
-                        int mins = 0;
-                        int seconds = 0;
-                        if(time>0){
-                            seconds = time%60;
-                            if(seconds>0){
-                                mins = time/60;
-                            }else{
-                                seconds = seconds*60;
-                            }
-                            if(mins>0){
-                                hours = mins/60;
-                            }
-                            if(hours>0){
-                                days= hours/24;
-                            }
-                        }
-                        if(days>0){
-                            String t = taskUserRecord.get(i).get("C_TIME").toString();
-                            t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
-                            returnUserMap.put("replyDate",t);
-                        }else{
-                            if(hours>0){
-                                returnUserMap.put("replyDate",hours+"小时");
-                            }else{
-                                if(mins>0){
-                                    returnUserMap.put("replyDate",mins+"分钟");
-                                }else{
-                                    if(seconds>0){
-                                        returnUserMap.put("replyDate",seconds+"秒");
-                                    }
-                                }
-                            }
-                        }
+                        String replyDate = UtilTool.convertTimeForTask(Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString()),taskUserRecord.get(i).get("C_TIME").toString());
+                        returnUserMap.put("replyDate",replyDate);
                         returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
                         returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
                         returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
                         returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
-                        returnUserMap.put("uPhoto","img");
-                        returnUserMap.put("uName","小虎");
+                        if(taskUserRecord.get(i).get("JID")!=null){
+                            jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
+                        }else{
+                            returnUserMap.put("uPhoto","http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
+                            returnUserMap.put("uName",taskUserRecord.get(i).get("realname"));
+                        }
+                        // returnUserMap.put("uPhoto","img");
+                        // returnUserMap.put("uName","小虎");
                         returnUserRecord.add(returnUserMap);
+                    }
+                    String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                    String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
+                    //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                    HashMap<String,String> signMap = new HashMap();
+                    signMap.put("userList",jidstr);
+                    signMap.put("schoolId",schoolid);
+                    signMap.put("srcJid",userid);
+                    signMap.put("userType","3");
+                    signMap.put("timestamp",""+System.currentTimeMillis());
+                    String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+                    signMap.put("sign",signture);
+                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                    if(type==1){
+                        Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                        JSONArray jr = JSONArray.fromObject(obj);
+                        if(jr!=null&&jr.size()>0){
+                            for(int i = 0;i<jr.size();i++){
+                                JSONObject jo = jr.getJSONObject(i);
+                                for(int j = 0;j<returnUserRecord.size();j++){
+                                    returnUserMap = new HashMap();
+                                    if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                        returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
+                                        returnUserRecord.get(j).put("uName", jo.getString("realName"));
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 request.setAttribute("replyList",returnUserRecord);

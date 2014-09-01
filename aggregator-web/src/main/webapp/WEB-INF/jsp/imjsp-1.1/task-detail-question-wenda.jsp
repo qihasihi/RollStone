@@ -22,8 +22,8 @@
     <c:if test="${!empty answer and !empty userRecord and quesType!=3 and quesType!=4}">
         <c:forEach items="${userRecord}" var="itm">
             <div class="wenda">
-                <b><img src="images/pic01_140811.png" width="36" height="36"></b>
-                <p class="title"><span>${itm.REPLYDATE}前</span>${itm.USERNAME}</p>
+                <b><img src="${itm.uPhoto}" width="36" height="36"></b>
+                <p class="title"><span>${itm.REPLYDATE}前</span>${itm.uName}</p>
                 <p>${itm.REPLYDETAIL}</p>
             </div>
         </c:forEach>

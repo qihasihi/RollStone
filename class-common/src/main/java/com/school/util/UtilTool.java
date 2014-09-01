@@ -1835,6 +1835,48 @@ public class UtilTool implements java.io.Serializable {
             return jb;
     }
 
-
-
+    /**
+     * 获取当前距某个时间点还有多长时间，返回某天、多少小时前、多少分钟前等
+     * @time 两个时间相减后的秒数
+     */
+    public static String convertTimeForTask(int times,String ctime){
+        String returnVal = "";
+        int time =times;
+        int days = 0;
+        int hours =0;
+        int mins = 0;
+        int seconds = 0;
+        if(time>0){
+            seconds = time%60;
+            if(seconds>0){
+                mins = time/60;
+            }else{
+                seconds = seconds*60;
+            }
+            if(mins>0){
+                hours = mins/60;
+            }
+            if(hours>0){
+                days= hours/24;
+            }
+        }
+        if(days>0){
+            String t = ctime;
+            t = t.split("-")[1]+"月"+t.split("-")[2].split(" ")[0]+"日";
+            returnVal=t;
+        }else{
+            if(hours>0){
+                returnVal=hours+"小时";
+            }else{
+                if(mins>0){
+                    returnVal =mins+"分钟";
+                }else{
+                    if(seconds>0){
+                        returnVal = seconds+"秒";
+                    }
+                }
+            }
+        }
+        return returnVal;
+    }
 }
