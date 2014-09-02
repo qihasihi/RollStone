@@ -151,7 +151,8 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         List<Map<String,Object>> dataListMap=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim())
                 ,Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid),groupid,null);
         mp.put("dataListMap",dataListMap);
-
+        if(groupid!=null&&groupid.trim().length()>0)
+            mp.put("stuGroupId",groupid);
         groupid=",";
         //如果是学生，则查询该学员的分数
         if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
