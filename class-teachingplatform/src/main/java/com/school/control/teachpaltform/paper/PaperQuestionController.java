@@ -4377,12 +4377,12 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         }
         if(sqlArrayList!=null&&sqlArrayList.size()>0&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
             if(this.stuPaperQuesLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
-                jsonEntity.setMsg("交卷成功!");
+                jsonEntity.setMsg("答题成功!");
                 jsonEntity.setType("success");
             }else
-                jsonEntity.setMsg("交卷失败!原因：未知!");
+                jsonEntity.setMsg("答题失败!原因：未知!");
         }else{
-            jsonEntity.setMsg("交卷失败!原因：暂未发现您要提交的数据!");
+            jsonEntity.setMsg("答题失败!原因：暂未发现您要提交的数据!");
         }
         response.getWriter().println(jsonEntity.toJSON());
     }
