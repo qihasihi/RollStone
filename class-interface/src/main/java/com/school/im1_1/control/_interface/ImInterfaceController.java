@@ -3141,6 +3141,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             return;
         }
 
+
+
+
+
         if(tmpTask.getTasktype()==4){
             paperid=tmpTask.getTaskvalueid();
         }else if(tmpTask.getTasktype()==6){
@@ -3235,6 +3239,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
 
 
+
+
+
+
+
         //整合试题组
         List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
         List<PaperQuestion>questionTeam;
@@ -3256,10 +3265,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 Map<String,Object> map=new HashMap<String,Object>();
                 map.put("quesId",paperQuestion.getQuestionid());
                 map.put("quesType",paperQuestion.getQuestiontype()==1?1:0); //1：其他 主观题
-                map.put("isQesTeam",paperQuestion.getQuestiontype()==6?1:0); //6：试题组
+                returnMapList.add(map);
+               // map.put("isQesTeam",paperQuestion.getQuestiontype()==6?1:0); //6：试题组
                 if(paperQuestion.getQuestionTeam()!=null&&paperQuestion.getQuestionTeam().size()>0){
                     List<Map<String,Object>> childMapList=new ArrayList<Map<String, Object>>();
+                   /*
                     for(PaperQuestion qTeam:paperQuestion.getQuestionTeam()){
+
                         Map<String,Object> childMap=new HashMap<String,Object>();
                         childMap.put("teamQesId",qTeam.getQuestionid());
                         childMap.put("teamQesType",qTeam.getQuestiontype()==1?1:0);
@@ -3267,10 +3279,70 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             childMapList.add(childMap);
                     }
                     map.put("teamQesList",childMapList);
+                    */
+                    for(PaperQuestion qTeam:paperQuestion.getQuestionTeam()){
+                        Map<String,Object> childMap=new HashMap<String,Object>();
+                        childMap.put("quesId",qTeam.getQuestionid());
+                        childMap.put("quesType",qTeam.getQuestiontype()==1?1:0);
+                        returnMapList.add(childMap);
+                    }
                 }
-                returnMapList.add(map);
             }
         }
+
+
+        //如果是学生,查询是否完成试卷、总分、排名
+        if(ImUtilTool.getUserType(userType)!=2){  //学生
+            TaskPerformanceInfo complete=new TaskPerformanceInfo();
+            complete.setTaskid(Long.parseLong(taskId));
+            complete.setUserid(tmpUser.getRef());
+            if(tmpTask.getTasktype()==4){
+                complete.setCriteria(1);
+            }else if(tmpTask.getTasktype()==6){
+                complete.setCriteria(2);
+            }else if(tmpTask.getTasktype()==5){
+                complete.setCriteria(1);
+            }
+            List<TaskPerformanceInfo>completeList=this.taskPerformanceManager.getList(complete,null);
+            jo.put("isDone",completeList!=null&&completeList.size()>0?1:0);
+
+
+
+            TpTaskInfo t=new TpTaskInfo();
+            t.setUserid(tmpUser.getUserid());
+            t.setTaskid(Long.parseLong(taskId));
+            t.setCourseid(tmpTask.getCourseid());
+            PageResult pr=new PageResult();
+            pr.setPageSize(1);
+
+            // 学生任务
+            List<TpTaskInfo>taskStuList=this.tpTaskManager.getListbyStu(t, pr);
+            if(taskStuList==null||taskStuList.size()<1||taskStuList.get(0).getBtime()==null||taskStuList.get(0).getEtime()==null){
+                returnJo.put("msg", UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(returnJo.toString());return;
+            }
+            if(taskStuList.get(0).getTaskstatus().equals("3")){
+                //已结束的任务获取总分、排名
+                TaskPerformanceInfo taskPerformanceInfo=new TaskPerformanceInfo();
+                taskPerformanceInfo.setTaskid(Long.parseLong(taskId));
+                Long clsid=null;
+                if(classId!=null&&classId.length()>0&&!classId.equals("null")){
+                    clsid=Long.parseLong(classId);
+                }else{
+                    clsid=Long.parseLong("0");
+                }
+                //任务记录排名
+                List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getPerformListByTaskid(taskPerformanceInfo,clsid,1);
+                TaskPerformanceInfo scoreRankInfo=null;
+                if(tList!=null&&tList.size()>0){
+                    scoreRankInfo=tList.get(0);
+                    jo.put("order",scoreRankInfo.getRank());
+                    jo.put("totalScore",scoreRankInfo.getScore());
+                }
+            }
+        }
+
+
 
 
         jo.put("testId",paperid==null?0:paperid);
