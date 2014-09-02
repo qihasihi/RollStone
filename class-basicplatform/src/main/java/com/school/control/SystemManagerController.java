@@ -16,9 +16,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.school.entity.SchoolLogoInfo;
 import com.school.entity.TermInfo;
+import com.school.manager.SchoolLogoManager;
 import com.school.manager.SubjectManager;
 import com.school.manager.TermManager;
+import com.school.manager.inter.ISchoolLogoManager;
 import com.school.manager.inter.ISubjectManager;
 import com.school.manager.inter.ITermManager;
 import org.springframework.stereotype.Controller;
@@ -38,12 +41,14 @@ import com.school.util.WriteProperties;
 public class SystemManagerController extends BaseController<TermInfo>{
 	private ISubjectManager subjectManager;
     private ITermManager termManager;
+    private ISchoolLogoManager schoolLogoManager;
     public SystemManagerController(){
         this.subjectManager=this.getManager(SubjectManager.class);
         this.termManager=this.getManager(TermManager.class);
+        this.schoolLogoManager = this.getManager(SchoolLogoManager.class);
     }
 	@RequestMapping(params="m=logoconfig",method=RequestMethod.GET)
-	public ModelAndView toClassList(HttpServletRequest request,ModelAndView mp )throws Exception{
+	public ModelAndView toLogoConfig(HttpServletRequest request,ModelAndView mp )throws Exception{
 		return new ModelAndView("/systemmanager/logoconfig");  
 	}
 	
@@ -225,15 +230,27 @@ public class SystemManagerController extends BaseController<TermInfo>{
 			File oldfile = new File(newnamerealpath);
 			if (oldfile.exists()) { 				//文件存在时                
 				InputStream inStream = new FileInputStream(newnamerealpath); 				//读入原文件                
-				FileOutputStream fs = new FileOutputStream(request.getRealPath("/")+"images/logo"+lastname);                
+				FileOutputStream fs = new FileOutputStream(request.getRealPath("/")+"images/logo"+this.logined(request).getDcschoolid()+lastname);
 				byte[] buffer = new byte[1444];                
 				int length;                
 				while ( (byteread = inStream.read(buffer)) != -1) {                    
 					bytesum += byteread; //字节数 文件大小                  
 					fs.write(buffer, 0, byteread);                
-					}                
-				inStream.close();            
-				}        
+				}
+				inStream.close();
+                //插入数据库
+                SchoolLogoInfo schoolLogoInfo = new SchoolLogoInfo();
+                schoolLogoInfo.setSchoolid(this.logined(request).getDcschoolid());
+                schoolLogoInfo.setLogosrc("images/logo"+this.logined(request).getDcschoolid()+lastname);
+                //首先删除旧的logo
+                this.schoolLogoManager.doDelete(schoolLogoInfo);
+                this.schoolLogoManager.doSave(schoolLogoInfo);
+                //刷新session
+                List<SchoolLogoInfo> logoList = this.schoolLogoManager.getList(schoolLogoInfo,null);
+                if(logoList!=null){
+                    request.getSession().setAttribute("logoObj",logoList.get(0));
+                }
+			}
 		}        
 		catch (Exception e) {            
 			System.out.println("复制单个文件操作出错");            

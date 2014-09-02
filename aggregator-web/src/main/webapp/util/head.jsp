@@ -8,6 +8,7 @@
 <%@page import="com.school.dao.SmsReceiverDAO"%>
 <%@ page import="com.school.entity.EttColumnInfo" %>
 <%@ page import="com.school.util.MD5_NEW" %>
+<%@ page import="com.school.entity.SchoolLogoInfo" %>
 <%
      //如果是乐知行过来，则不显示头尾
  Object fromType=session.getAttribute("fromType");
@@ -25,10 +26,13 @@
 	ApplicationContext acc = WebApplicationContextUtils.getWebApplicationContext(application);
 	SmsReceiverManager  smsReceiverManagerac=(SmsReceiverManager) acc.getBean("smsReceiverManager");
 	List receiveSMSList = smsReceiverManagerac.getList(smsreceiver, null);
-     String logoSrc=UtilTool.utilproperty.getProperty("LOGO_SRC");
+     //String logoSrc=UtilTool.utilproperty.getProperty("LOGO_SRC");
 
 
     List<EttColumnInfo> ettColumnInfos =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
+    //logo
+    SchoolLogoInfo logoObj = (SchoolLogoInfo)request.getSession().getAttribute("logoObj");
+    String logosrc = logoObj.getLogosrc();
   %>
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
     <%if(modelType==2){%>
@@ -89,7 +93,7 @@
 
   </ul>
 <c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
- <p><span></span><img src="<%=basePath %>images/<%=logoSrc %>" width="253" height="64"/></p>
+ <p><span></span><img src="<%=basePath %><%=logosrc %>" width="253" height="64"/></p>
 </c:if>
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
     <%if(modelType==2){%>
