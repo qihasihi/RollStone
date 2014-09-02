@@ -2566,6 +2566,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String taskid=paramMap.get("taskid");
         String courseid=paramMap.get("courseid");
         String paperid=paramMap.get("paperid");
+        String quesid=paramMap.get("quesId");
         String classid=paramMap.get("classid");
         String userType=paramMap.get("userType");
         if(userid==null||taskid==null||courseid==null||paperid==null){
@@ -2622,14 +2623,18 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             StuPaperLogs splog=new StuPaperLogs();
             splog.setUserid(uid);
             splog.setPaperid(Long.parseLong(paperid));
+            splog.setTaskid(Long.parseLong(taskid.trim()));
             splog.setIsinpaper(2);
             pr=new PageResult();
             pr.setPageSize(1);
             List<StuPaperLogs> spList=stuPaperLogsManager.getList(splog,pr);
             if(spList==null||spList.size()<1){
-                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
-            }
+                if(Integer.parseInt(userType)!=3){
+                    jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                    response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+                }
+            }else
+                userType="1"; //如果存在记录，则直接显示
         }
         //如果任务还没结束，则添加相关信息
 
@@ -2645,7 +2650,34 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
 
+        //验证当前题是否在allquesidObj中
+        if(quesid!=null&&quesid.trim().length()>0){
+            boolean isHasQues=false;
+            String[] quesObjArray=allquesidObj.toString().split(",");
+            if(quesObjArray.length>0){
+                for (String qid:quesObjArray){
+                    if(qid!=null&&qid.trim().length()>0){
+                        String tmpid=qid;
+                        if(tmpid.trim().indexOf("|")!=-1){
+                            String[] tArray=tmpid.trim().split("\\|");
+                            if(tArray.length>1){
+                                tmpid=tArray[1];
+                            }
+                        }
+                        if(tmpid.trim().equals(quesid.trim())){
+                            isHasQues=!isHasQues;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(!isHasQues){
+                jsonEntity.setMsg("该试卷中不存在该题!题标识："+quesid);
+                response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+            }
+            mp.put("quesid",quesid);
 
+        }
         //加载分数
 //        List<Map<String,Object>> scoreMapList=this.paperQuestionManager.getPaperQuesAllScore(Long.parseLong(paperid.trim()),null,taskList.get(0).getCourseid());
 //        if(scoreMapList==null||scoreMapList.size()<1||!scoreMapList.get(0).containsKey("SCORE")||scoreMapList.get(0).get("SCORE")==null){
@@ -2677,11 +2709,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     @RequestMapping(params="m=toTestPaper",method={RequestMethod.GET,RequestMethod.POST})
     public ModelAndView imToTestPaper(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
         JsonEntity jsonEntity=new JsonEntity();
-        if(!ImUtilTool.ValidateRequestParam(request)){
-            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-            response.getWriter().println(jsonEntity.getAlertMsgAndBack());
-            return null;
-        }
+//        if(!ImUtilTool.ValidateRequestParam(request)){
+//            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+//            response.getWriter().println(jsonEntity.getAlertMsgAndBack());
+//            return null;
+//        }
         HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
         String jid=paramMap.get("jid");
         String taskid=paramMap.get("taskId");
@@ -2689,6 +2721,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String clsid=paramMap.get("classId");
         String paperid=paramMap.get("paperId");
         String userType=paramMap.get("userType");
+        String quesid=paramMap.get("quesId");
         String sign=paramMap.get("sign");
         String time=paramMap.get("time");
         paramMap.remove("sign");
@@ -2748,20 +2781,19 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
 
         Integer uType=ImUtilTool.getUserType(userType);
-        if(uType==2){ //如果是老师，直接进入详情页面
+        if(uType==2||uType==3){ //如果是老师，直接进入详情页面
+
+            //如果是跳题，则直接跳
             StringBuilder directBuilder=new StringBuilder("imapi1_1?m=testDetail&userid=")
                     .append(userid).append("&taskid=").append(tk.getTaskid())
                     .append("&paperid=").append(paperid).append("&courseid=").append(tk.getCourseid())
                     .append("&classid=").append(clsid).append("&userType=").append(uType);
+            if(quesid!=null&&quesid.trim().length()>0){
+                directBuilder.append("&quesId=").append(quesid);
+            }
             response.sendRedirect(directBuilder.toString());
             return null;
-        }else if(uType==3){
-            if(splogsList==null||splogsList.size()<1){
-                jsonEntity.setMsg("家长您好!您的孩子暂未做答该试卷,请确认做答后进入查看。");
-                response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
-            }
         }
-
 
 
         //验证该任务是否在有效期内
@@ -2822,6 +2854,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     .append(userid).append("&taskid=").append(tk.getTaskid())
                     .append("&paperid=").append(p.getPaperid()).append("&courseid=").append(tk.getCourseid())
                     .append("&classid=").append(clsid).append("&userType=").append((uType==3?1:uType));//如果是家长，通过相关验证，则走孩子的流程。
+            if(quesid!=null&&quesid.trim().length()>0){
+                directBuilder.append("&quesId=").append(quesid);
+            }
             response.sendRedirect(directBuilder.toString());
             return null;
         }
@@ -2839,6 +2874,35 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
+        //验证当前题是否在allquesidObj中
+        if(quesid!=null&&quesid.trim().length()>0){
+            boolean isHasQues=false;
+            String[] quesObjArray=allquesidObj.toString().split(",");
+            if(quesObjArray.length>0){
+                for (String qid:quesObjArray){
+                    if(qid!=null&&qid.trim().length()>0){
+                        String tmpid=qid;
+                        if(tmpid.trim().indexOf("|")!=-1){
+                               String[] tArray=tmpid.trim().split("\\|");
+                            if(tArray.length>1){
+                                tmpid=tArray[1];
+                            }
+                        }
+                        if(tmpid.trim().equals(quesid.trim())){
+                            isHasQues=!isHasQues;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(!isHasQues){
+                jsonEntity.setMsg("该试卷中不存在该题!题标识："+quesid);
+                response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+            }
+        }
+
+
+
         //得到该用户已经答过的题
         StuPaperQuesLogs tspqLogs=new StuPaperQuesLogs();
         tspqLogs.setUserid(userid);
@@ -2852,11 +2916,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
             }
         }
-        mp.put("answerQuesId",answerQuesId.toString());
 
+
+        mp.put("answerQuesId",answerQuesId.toString());
+        if(quesid!=null)
+            mp.put("quesid",quesid);
         //得到所有题的分数
 //        mp.put("allquesidObj",allquesidObj);
-//
         mp.put("userType",uType);
         mp.put("classid",clsid);
         mp.put("paperObj",paperList.get(0));

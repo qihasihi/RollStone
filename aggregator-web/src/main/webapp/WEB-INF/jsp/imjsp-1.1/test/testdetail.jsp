@@ -52,7 +52,12 @@
                 userType:"${userType}",
                 userid:"${userid}"
             });
-
+            <c:if test="${!empty quesid}">
+                 tqControler.nextQues(${quesid});
+            </c:if>
+            <c:if test="${empty quesid}">
+                   tqControler.nextNum(1);
+            </c:if>
             //重写相关FORM submit事件,不让其真正提交
             document.getElementById("fm_free").submit=function(){
                 nextNum(-1,tqControler);

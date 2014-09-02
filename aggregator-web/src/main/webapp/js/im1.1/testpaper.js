@@ -30,7 +30,7 @@ TestPaperQues.prototype.initController=function(obj){
     this.currentQuesObj={idx:-1,quesid:0,parentQuesId:0};
     this.config=obj;
     subQuesId=this.config.subQuesId;
-    this.nextNum(1);
+   // this.nextNum(1);
 };
 TestPaperQues.prototype.nextNum=function(type){
     if(typeof(this.config.quesidstr)=="undefined"||this.config.quesidstr.length<1){
@@ -53,8 +53,9 @@ TestPaperQues.prototype.nextNum=function(type){
                 }
             }else{
                 this.currentQuesObj.idx=this.currentQuesObj.idx-1;
-                if(this.currentQuesObj.idx<=0)
+                if(this.currentQuesObj.idx<=0){
                     this.currentQuesObj.idx=0;
+                }
             }
             var cuQuesid=arrayObj[this.currentQuesObj.idx];
             var parentQuesId=0;
@@ -71,6 +72,37 @@ TestPaperQues.prototype.nextNum=function(type){
         }
     }
 };
+
+/**
+ * 下一题
+ * @param quesid
+ */
+TestPaperQues.prototype.nextQues=function(quesid){
+    if(typeof(this.config.quesidstr)!="undefined"&&this.config.quesidstr.Trim().length>0){
+        var arrayObj=this.config.quesidstr.split(",");
+        if(arrayObj.length>0){
+            var tmpObj=undefined;
+            $.each(arrayObj,function(x,m){
+                var tmpQue=m;
+                var parentQuesId=0;
+                if(m.indexOf('|')!=-1){
+                    tmpQue=m.split("|")[1];
+                    parentQuesId=m.split("|")[0];
+                }
+                if(tmpQue==quesid){
+                    tmpObj={idx:x,quesid:tmpQue,parentQuesId:parentQuesId};
+                }
+            });
+            if(typeof(tmpObj)!="undefined"){
+                //下一体
+                this.currentQuesObj=tmpObj;
+                this.loadQues();
+            }
+        }
+    }
+}
+
+
 
 /**
  * 交卷
@@ -157,6 +189,8 @@ TestPaperQues.prototype.freeSubQuesAnswer=function(direcType){
         questype=3;
     else if(questype==8)   //复选组，按复选入库
         questype=4;
+    else if(questype==9)//问答组，按问题入库
+        questype=1;
     if(questype==3||questype==4){
         var ckLen=$("input[name='rdo_answer"+quesid+"']:checked");
         if(ckLen.length>0){
@@ -328,10 +362,14 @@ TestPaperQues.prototype.loadQues=function(){
             }else
                 $(this).show();
         });
+        if($("#dv_pq_"+this.currentQuesObj.parentQuesId).length>0){
+            $("#dv_pq_"+this.currentQuesObj.parentQuesId).show();
+        }
     }
     if($("#dv_q_"+this.currentQuesObj.questionid).length>0){
         $("#dv_q_"+this.currentQuesObj.questionid).show();
     }
+
 
     var config=this.config;
     var cQuesObj=this.currentQuesObj;
@@ -559,7 +597,7 @@ TestPaperDetail.prototype.initController=function(obj){
     this.currentQuesObj={idx:-1,quesid:0,parentQuesId:0};
     this.config=obj;
     subQuesId=this.config.subQuesId;
-    this.nextNum(1);
+   // this.nextNum(1);
 };
 TestPaperDetail.prototype.nextNum=function(type){
     if(typeof(this.config.quesidstr)=="undefined"||this.config.quesidstr.length<1){
@@ -600,6 +638,35 @@ TestPaperDetail.prototype.nextNum=function(type){
 };
 
 /**
+ * 下一题
+ * @param quesid
+ */
+TestPaperDetail.prototype.nextQues=function(quesid){
+    if(typeof(this.config.quesidstr)!="undefined"&&this.config.quesidstr.Trim().length>0){
+        var arrayObj=this.config.quesidstr.split(",");
+        if(arrayObj.length>0){
+            var tmpObj=undefined;
+            $.each(arrayObj,function(x,m){
+                var tmpQue=m;
+                var parentQuesId=0;
+                if(m.indexOf('|')!=-1){
+                    tmpQue=m.split("|")[1];
+                    parentQuesId=m.split("|")[0];
+                }
+                if(tmpQue==quesid){
+                    tmpObj={idx:x,quesid:tmpQue,parentQuesId:parentQuesId};
+                }
+            });
+            if(typeof(tmpObj)!="undefined"){
+                //下一体
+                this.currentQuesObj=tmpObj;
+                this.loadQues();
+            }
+        }
+    }
+}
+
+/**
  * 加载答案
  */
 TestPaperDetail.prototype.loadQues=function(){
@@ -611,6 +678,9 @@ TestPaperDetail.prototype.loadQues=function(){
                 $(this).hide();
             }
         });
+        if($("#dv_pq_"+this.currentQuesObj.parentQuesId).length>0){
+            $("#dv_pq_"+this.currentQuesObj.parentQuesId).show();
+        }
     }
     if($("#dv_q_"+this.currentQuesObj.questionid).length>0){
         $("#dv_q_"+this.currentQuesObj.questionid).show();
@@ -730,23 +800,24 @@ TestPaperDetail.prototype.loadQues=function(){
                             }else
                                 h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ isrightTmp+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
                             h+='</span><label for="rdo_answer'+m.questionid+m.optiontype+'"><span class="blue">'+m.optiontype+'.</span>'+m.content;
-                            if(typeof(isrightTmp)!="undefined"&&isrightTmp==1){
+                            if(typeof(isrightTmp)!="undefined"&&isrightTmp==1&&config.userType!=3){
                                 h+='<b class="right"></b>';
                             }
                             h+='</label></li>';
                         });
                         h+='</ul>';
                     }
-
-                h+='<p class="jiexi">';
-                if(config.userType!=2){
-                    var zqlv=quesObj.rightLv;
-                    if(typeof(zqlv)!="undefined"&&zqlv!=null)
-                        h+='<span>'+quesObj.rightLv+'%答对</span>';
-                }
-                h+='答案与解析</p>';
-                h+='<div>'+quesObj.analysis+'</div>';
-                h+='</div>';
+            if(config.userType!=3){
+                    h+='<p class="jiexi">';
+                    if(config.userType!=2){
+                        var zqlv=quesObj.rightLv;
+                        if(typeof(zqlv)!="undefined"&&zqlv!=null)
+                            h+='<span>'+quesObj.rightLv+'%答对</span>';
+                    }
+                    h+='答案与解析</p>';
+                    h+='<div>'+quesObj.analysis+'</div>';
+                    h+='</div>';
+            }
                 if($("#dv_q_"+quesObj.questionid).length>0)
                     $("#dv_q_"+quesObj.questionid).show();
                 else{

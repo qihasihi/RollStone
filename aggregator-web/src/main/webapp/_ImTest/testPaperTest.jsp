@@ -41,7 +41,8 @@
             var time=$("#txt_time").val();
             var paperId=$("#txt_paperId").val();
             var userType=$("#txt_userType").val();
-            var param={schoolId:schoolId,jid:jid,classId:classId,time:time,paperId:paperId,userType:userType};
+            var quesId=$("#txt_quesId").val();
+            var param={schoolId:schoolId,jid:jid,classId:classId,time:time,paperId:paperId,userType:userType,quesId:quesId};
                  param.taskId=taskId;
             param.method=methodName;
 
@@ -98,6 +99,11 @@
                 <tr>
                     <td>paperId:</td>
                     <td><input type="text" name="paperId" id="txt_paperId" value="544536001443"/></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>quesId:</td>
+                    <td><input type="text" name="quesId" id="txt_quesId" value=""/></td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
