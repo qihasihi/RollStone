@@ -15,12 +15,14 @@ import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.*;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
+import com.school.manager.teachpaltform.award.TpStuScoreManager;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.*;
@@ -68,6 +70,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private IStuPaperLogsManager stuPaperLogsManager;
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
     private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
+    private ITpStuScoreManager tpStuScoreManager;
+    private ITpCourseClassManager tpCourseClassManager;
     public ImInterfaceController(){
         this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
         this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
@@ -89,6 +93,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.tpTopicThemeManager=this.getManager(TpTopicThemeManager.class);
         this.micVideoPaperManager=this.getManager(MicVideoPaperManager.class);
         this.stuViewMicVideoLogManager=this.getManager(StuViewMicVideoLogManager.class);
+        this.tpStuScoreManager = this.getManager(TpStuScoreManager.class);
+        this.tpCourseClassManager = this.getManager(TpCourseClassManager.class);
     }
     /**
      * 学习目录接口
@@ -362,7 +368,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Map m = new HashMap();
         Map m2 = new HashMap();
         List<Map<String,Object>> courseList = this.imInterfaceManager.getStudentCalendar(userList.get(0).getUserid(),Integer.parseInt(schoolid),Integer.parseInt(classid),Integer.parseInt(year),Integer.parseInt(month));
-        if(utype!=2){
+         if(utype!=2){
             long mTime = System.currentTimeMillis();
             int offset = Calendar.getInstance().getTimeZone().getRawOffset();
             Calendar c = Calendar.getInstance();
@@ -404,17 +410,63 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         o2.put("classId",o.get("CLASS_ID"));
                         o2.put("classType",o.get("CLASS_TYPE"));
                         o2.put("className",o.get("CLASSNAME"));
+                        //查询课堂表现
                         Map o3 = new HashMap();
-                        o3.put("personTotalScore","350");
-                        o3.put("teamShow","本组小红旗总数排全班第一");
-                        o3.put("teamScore","130");
-                        o3.put("taskScore","150");
-                        o3.put("presenceScore","50");
-                        o3.put("smileScore","10");
-                        o3.put("illegalScore","10");
-                        o3.put("offlineScore","10");
-                        o3.put("comentScore","10");
-                        o3.put("onlineScore","10");
+                        //首先查出课程的相关信息
+                        TpCourseClass tc = new TpCourseClass();
+                        tc.setCourseid(Long.parseLong(o.get("COURSE_ID").toString()));
+                        tc.setClassid(Integer.parseInt(o.get("CLASS_ID").toString()));
+                        List<TpCourseClass> tpCourseClassList = this.tpCourseClassManager.getList(tc,null);
+                        if(tpCourseClassList!=null&&tpCourseClassList.size()>0){
+                            List<Map<String,Object>> scoreList = tpStuScoreManager.getPageDataList(tpCourseClassList.get(0).getCourseid(),Long.parseLong(tpCourseClassList.get(0).getClassid().toString()),1,tpCourseClassList.get(0).getSubjectid(),null,userList.get(0).getUserid());
+                            if(scoreList!=null&&scoreList.size()>0){
+                                o3.put("personTotalScore",scoreList.get(0).get("COURSE_TOTAL_SCORE")!=null?Integer.parseInt(scoreList.get(0).get("COURSE_TOTAL_SCORE").toString()):0);
+                                //计算小组得分和表现
+                                int teamScore = 0;
+                                String teamShow = "";
+                                if(Integer.parseInt(scoreList.get(0).get("GSCORE1").toString())>0){
+                                    teamScore+=Integer.parseInt(scoreList.get(0).get("GSCORE1").toString());
+                                    teamShow+="组内成员全部出勤且无迟到早退";
+                                }
+                                if(Integer.parseInt(scoreList.get(0).get("GSCORE2").toString())>0){
+                                    teamScore+=Integer.parseInt(scoreList.get(0).get("GSCORE2").toString());
+                                    teamShow+="/r/n本组笑脸总数排全班第一";
+                                }
+                                if(Integer.parseInt(scoreList.get(0).get("GSCORE3").toString())>0){
+                                    teamScore+=Integer.parseInt(scoreList.get(0).get("GSCORE3").toString());
+                                    teamShow+="/r/n本组小红旗总数排全班第一";
+                                }
+                                if(Integer.parseInt(scoreList.get(0).get("GSCORE4").toString())>0){
+                                    teamScore+=Integer.parseInt(scoreList.get(0).get("GSCORE4").toString());
+                                    teamShow+="/r/n本组违反纪律次数排全班第一";
+                                }
+                                if(Integer.parseInt(scoreList.get(0).get("GSCORE5").toString())>0){
+                                    teamScore+=Integer.parseInt(scoreList.get(0).get("GSCORE5").toString());
+                                    teamShow+="/r/n本组完成网上任务完成率（小组任务完成率）排全班第一";
+                                }
+                                o3.put("teamShow",teamShow);
+                                o3.put("teamScore",teamScore);
+
+                                o3.put("taskScore",scoreList.get(0).get("TASK_SCORE")!=null?Integer.parseInt(scoreList.get(0).get("TASK_SCORE").toString()):0);
+                                o3.put("presenceScore",scoreList.get(0).get("ATTENDANCENUM")!=null?Integer.parseInt(scoreList.get(0).get("ATTENDANCENUM").toString()):0);
+                                o3.put("smileScore",scoreList.get(0).get("SMILINGNUM")!=null?Integer.parseInt(scoreList.get(0).get("SMILINGNUM").toString()):0);
+                                o3.put("illegalScore",scoreList.get(0).get("VIODATIONDISNUM")!=null?Integer.parseInt(scoreList.get(0).get("VIODATIONDISNUM").toString()):0);
+                                //网下得分
+                                int offline = 0;
+                                if(Integer.parseInt(scoreList.get(0).get("ATTENDANCENUM").toString())!=0){
+                                    offline+=Integer.parseInt(scoreList.get(0).get("ATTENDANCENUM").toString());
+                                }
+                                if(Integer.parseInt(scoreList.get(0).get("SMILINGNUM").toString())!=0){
+                                    offline+=Integer.parseInt(scoreList.get(0).get("SMILINGNUM").toString());
+                                }
+                                if(Integer.parseInt(scoreList.get(0).get("VIOLATIONDISNUM").toString())!=0){
+                                    offline+=Integer.parseInt(scoreList.get(0).get("VIOLATIONDISNUM").toString());
+                                }
+                                o3.put("offlineScore",offline);
+                                o3.put("comentScore",scoreList.get(0).get("COMMENT_SCORE")!=null?Integer.parseInt(scoreList.get(0).get("COMMENT_SCORE").toString()):0);
+                                o3.put("onlineScore",scoreList.get(0).get("WSSCORE")!=null?Integer.parseInt(scoreList.get(0).get("WSSCORE").toString()):0);
+                            }
+                        }
                         o2.put("courseShow",o3);
                         courseArray2.add(o2);
                     }
@@ -738,17 +790,63 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 o2.put("classId",o.get("CLASS_ID"));
                 o2.put("classType",o.get("CLASS_TYPE"));
                 o2.put("className",o.get("CLASSNAME"));
+                //查询课堂表现
                 Map o3 = new HashMap();
-                o3.put("personTotalScore", "350");
-                o3.put("teamShow","本组小红旗总数排全班第一");
-                o3.put("teamScore","130");
-                o3.put("taskScore","150");
-                o3.put("presenceScore","50");
-                o3.put("smileScore","10");
-                o3.put("illegalScore","10");
-                o3.put("offlineScore","10");
-                o3.put("comentScore","10");
-                o3.put("onlineScore","10");
+                //首先查出课程的相关信息
+                TpCourseClass tc = new TpCourseClass();
+                tc.setCourseid(Long.parseLong(o.get("COURSE_ID").toString()));
+                tc.setClassid(Integer.parseInt(o.get("CLASS_ID").toString()));
+                List<TpCourseClass> tpCourseClassList = this.tpCourseClassManager.getList(tc,null);
+                if(tpCourseClassList!=null&&tpCourseClassList.size()>0){
+                    List<Map<String,Object>> scoreList = tpStuScoreManager.getPageDataList(tpCourseClassList.get(0).getCourseid(),Long.parseLong(tpCourseClassList.get(0).getClassid().toString()),1,tpCourseClassList.get(0).getSubjectid(),null,userList.get(0).getUserid());
+                    if(scoreList!=null&&scoreList.size()>0){
+                        o3.put("personTotalScore",scoreList.get(0).get("COURSE_TOTAL_SCORE")!=null?Integer.parseInt(scoreList.get(0).get("COURSE_TOTAL_SCORE").toString()):0);
+                        //计算小组得分和表现
+                        int teamScore = 0;
+                        String teamShow = "";
+                        if(Integer.parseInt(scoreList.get(0).get("GSCORE1").toString())>0){
+                            teamScore+=Integer.parseInt(scoreList.get(0).get("GSCORE1").toString());
+                            teamShow+="组内成员全部出勤且无迟到早退";
+                        }
+                        if(Integer.parseInt(scoreList.get(0).get("GSCORE2").toString())>0){
+                            teamScore+=Integer.parseInt(scoreList.get(0).get("GSCORE2").toString());
+                            teamShow+="/r/n本组笑脸总数排全班第一";
+                        }
+                        if(Integer.parseInt(scoreList.get(0).get("GSCORE3").toString())>0){
+                            teamScore+=Integer.parseInt(scoreList.get(0).get("GSCORE3").toString());
+                            teamShow+="/r/n本组小红旗总数排全班第一";
+                        }
+                        if(Integer.parseInt(scoreList.get(0).get("GSCORE4").toString())>0){
+                            teamScore+=Integer.parseInt(scoreList.get(0).get("GSCORE4").toString());
+                            teamShow+="/r/n本组违反纪律次数排全班第一";
+                        }
+                        if(Integer.parseInt(scoreList.get(0).get("GSCORE5").toString())>0){
+                            teamScore+=Integer.parseInt(scoreList.get(0).get("GSCORE5").toString());
+                            teamShow+="/r/n本组完成网上任务完成率（小组任务完成率）排全班第一";
+                        }
+                        o3.put("teamShow",teamShow);
+                        o3.put("teamScore",teamScore);
+
+                        o3.put("taskScore",scoreList.get(0).get("TASK_SCORE")!=null?Integer.parseInt(scoreList.get(0).get("TASK_SCORE").toString()):0);
+                        o3.put("presenceScore",scoreList.get(0).get("ATTENDANCENUM")!=null?Integer.parseInt(scoreList.get(0).get("ATTENDANCENUM").toString()):0);
+                        o3.put("smileScore",scoreList.get(0).get("SMILINGNUM")!=null?Integer.parseInt(scoreList.get(0).get("SMILINGNUM").toString()):0);
+                        o3.put("illegalScore",scoreList.get(0).get("VIODATIONDISNUM")!=null?Integer.parseInt(scoreList.get(0).get("VIODATIONDISNUM").toString()):0);
+                        //网下得分
+                        int offline = 0;
+                        if(Integer.parseInt(scoreList.get(0).get("ATTENDANCENUM").toString())!=0){
+                            offline+=Integer.parseInt(scoreList.get(0).get("ATTENDANCENUM").toString());
+                        }
+                        if(Integer.parseInt(scoreList.get(0).get("SMILINGNUM").toString())!=0){
+                            offline+=Integer.parseInt(scoreList.get(0).get("SMILINGNUM").toString());
+                        }
+                        if(Integer.parseInt(scoreList.get(0).get("VIOLATIONDISNUM").toString())!=0){
+                            offline+=Integer.parseInt(scoreList.get(0).get("VIOLATIONDISNUM").toString());
+                        }
+                        o3.put("offlineScore",offline);
+                        o3.put("comentScore",scoreList.get(0).get("COMMENT_SCORE")!=null?Integer.parseInt(scoreList.get(0).get("COMMENT_SCORE").toString()):0);
+                        o3.put("onlineScore",scoreList.get(0).get("WSSCORE")!=null?Integer.parseInt(scoreList.get(0).get("WSSCORE").toString()):0);
+                    }
+                }
                 o2.put("courseShow",o3);
                 courseArray2.add(o2);
             }
@@ -2964,7 +3062,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     sign	String
 
      */
-    @RequestMapping(params="getTaskPaperQuestion",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(params="m=getTaskPaperQuestion",method={RequestMethod.GET,RequestMethod.POST})
     public void getTaskPaperQuestion(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JSONObject returnJo=new JSONObject();
         returnJo.put("result","0");//默认失败
@@ -3190,7 +3288,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      * @param response
      * @throws Exception
      */
-    @RequestMapping(params="getClassStatics",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(params="m=getClassStatics",method={RequestMethod.GET,RequestMethod.POST})
     public void getClassStatics(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JSONObject returnJo=new JSONObject();
         returnJo.put("result","0");//默认失败

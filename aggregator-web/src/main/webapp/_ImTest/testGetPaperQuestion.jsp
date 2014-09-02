@@ -82,7 +82,7 @@
     <%--String sign=paramMap.get("sign");--%>
 
 
-        <form action="../imapi1_1?getTaskPaperQuestion"  target="ifm_result" method="post">
+        <form action="../imapi1_1?m=getTaskPaperQuestion"  target="ifm_result" method="post">
             <table style="width:650px;">
                <!-- <tr>
                     <td colspan="3" align="center"><h3>getTaskPaperQuestion</h3></td>
