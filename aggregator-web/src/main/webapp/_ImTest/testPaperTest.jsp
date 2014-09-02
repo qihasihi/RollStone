@@ -76,7 +76,7 @@
                     <td colspan="3" align="center"><h3>toTestPaper</h3></td>
                 </tr>
                 <tr>
-                    <td style="width:150px">JID:</td>
+                    <td style="width:150px">jid:</td>
                     <td><input type="text" name="jid" id="txt_jid" value="-12542"/></td>
                     <td style="width:350px"></td>
                 </tr>
