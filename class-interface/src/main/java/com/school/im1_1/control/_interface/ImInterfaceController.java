@@ -1417,7 +1417,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             for(int i = 0;i<jr.size();i++){
                                 JSONObject jo = jr.getJSONObject(i);
                                 for(int j = 0;j<taskUserRecord.size();j++){
-                                    if(jo.getInt("jid")==Integer.parseInt(taskUserRecord.get(j).get("jid").toString())){
+                                    if(jo.getInt("jid")==Integer.parseInt(taskUserRecord.get(j).get("JID").toString())){
                                         taskUserRecord.get(j).put("uPhoto",jo.getString("headUrl"));
                                         taskUserRecord.get(j).put("uName",jo.getString("realName"));
                                     }
