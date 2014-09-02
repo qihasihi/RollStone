@@ -33,19 +33,20 @@
                 }
             });
             $("#sp_wsdf").html(wsdf+"分");
-
-            var xzdf=0;
-            $("td[data-bind='gr_xzdf']").each(function(idx,itm){
-                var h=$(itm).html();
-                if(h!="--"&& h.Trim().length>0){
-                    xzdf+=parseInt(h.Trim());
-                }else{
-                    xzdf="--";
-                    return;
-                }
-            });
-            $("#sp_xzdf").html((xzdf=='--'?xzdf:(xzdf+"分")));
-            </c:if>
+                 <c:if test="${!empty stuGroupId}">
+                    var xzdf=0;
+                    $("td[data-bind='gr_xzdf']").each(function(idx,itm){
+                        var h=$(itm).html();
+                        if(h!="--"&& h.Trim().length>0){
+                            xzdf+=parseInt(h.Trim());
+                        }else{
+                            xzdf="--";
+                            return;
+                        }
+                    });
+                    $("#sp_xzdf").html((xzdf=='--'?xzdf:(xzdf+"分")));
+                    </c:if>
+          </c:if>
         })
 
     </script>
@@ -89,27 +90,30 @@
         <td><p>完成专题评价</p></td>
         <td  data-bind="gr_wsdf">${!empty stuMap.COMMENT_SCORE?stuMap.COMMENT_SCORE:0}</td>
     </tr>
-    <tr>
-        <td rowspan="5" class="v_c">小组得分<br><span class="font-red" id="sp_xzdf">10分</span></td>
-        <td><p>本组小红旗总数排全班第一</p></td>
-        <td  data-bind="gr_xzdf">${!empty tuMap.GSCORE3?stuMap.GSCORE3:'--'}</td>
-    </tr>
-    <tr>
-        <td><p>组内成员全部出勤且无迟到早退</p></td>
-        <td data-bind="gr_xzdf">${!empty tuMap.GSCORE1?tuMap.GSCORE1:'--'}</td>
-    </tr>
-    <tr class="trbg1">
-        <td><p>本组笑脸总数排全班第一</p></td>
-        <td data-bind="gr_xzdf">${!empty tuMap.GSCORE2?tuMap.GSCORE2:'--'}</td>
-    </tr>
-    <tr>
-        <td><p>本组违反纪律次数排全班第一</p></td>
-        <td data-bind="gr_xzdf">${!empty tuMap.GSCORE4?tuMap.GSCORE4:'--'}</td>
-    </tr>
-    <tr class="trbg1">
-        <td><p>本组完成网上任务平均数排全班第一</p></td>
-        <td data-bind="gr_xzdf">${!empty tuMap.GSCORE5?tuMap.GSCORE5:'--'}</td>
-    </tr>
+    <%--如果没有小组，则没有小组得分--%>
+    <c:if test="${!empty stuGroupId}">
+        <tr>
+            <td rowspan="5" class="v_c">小组得分<br><span class="font-red" id="sp_xzdf">10分</span></td>
+            <td><p>本组小红旗总数排全班第一</p></td>
+            <td  data-bind="gr_xzdf">${!empty tuMap.GSCORE3?stuMap.GSCORE3:'--'}</td>
+        </tr>
+        <tr>
+            <td><p>组内成员全部出勤且无迟到早退</p></td>
+            <td data-bind="gr_xzdf">${!empty tuMap.GSCORE1?tuMap.GSCORE1:'--'}</td>
+        </tr>
+        <tr class="trbg1">
+            <td><p>本组笑脸总数排全班第一</p></td>
+            <td data-bind="gr_xzdf">${!empty tuMap.GSCORE2?tuMap.GSCORE2:'--'}</td>
+        </tr>
+        <tr>
+            <td><p>本组违反纪律次数排全班第一</p></td>
+            <td data-bind="gr_xzdf">${!empty tuMap.GSCORE4?tuMap.GSCORE4:'--'}</td>
+        </tr>
+        <tr class="trbg1">
+            <td><p>本组完成网上任务平均数排全班第一</p></td>
+            <td data-bind="gr_xzdf">${!empty tuMap.GSCORE5?tuMap.GSCORE5:'--'}</td>
+        </tr>
+    </c:if>
 </table>
 </c:if>
 
@@ -242,9 +246,9 @@
 
             var trJqObj=$("tr[id*='tr_']");
             if(trJqObj.length==1&&trJqObj.children("td:first").html().Trim().indexOf("未分组")!=-1){
-                $("table colgroup:first").remove();
-                $("table colgroup:first").attr("class","w350");
-                $("table tr:first th:first").remove();
+                $("table:last colgroup:first").remove();
+                $("table:last colgroup:first").attr("class","w350");
+                $("table:last tr:first th:first").remove();
                 trJqObj.each(function(idx,itm){
                    $(itm).children("td:first").remove();
                 });
