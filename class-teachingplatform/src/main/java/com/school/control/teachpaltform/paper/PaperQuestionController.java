@@ -3555,6 +3555,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             StuViewMicVideoLog svm=new StuViewMicVideoLog();
             svm.setUserid(this.logined(request).getUserid());
             svm.setMicvideoid(resList.get(0).getResid());
+            svm.setTaskid(Long.parseLong(taskid));
             List<StuViewMicVideoLog> stuViewMicList=this.stuViewMicVideoLogManager.getList(svm,presult);
             if(stuViewMicList!=null&&stuViewMicList.size()>0){
                 mp.put("isViewVideo",1);
@@ -4429,6 +4430,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         StuViewMicVideoLog svmvlog=new StuViewMicVideoLog();
         svmvlog.setMicvideoid(Long.parseLong(resid.trim()));
         svmvlog.setUserid(this.logined(request).getUserid());
+        svmvlog.setTaskid(Long.parseLong(taskid.trim()));
         PageResult presult=new PageResult();
         presult.setPageSize(1);
         //验证是否已经查看过。
