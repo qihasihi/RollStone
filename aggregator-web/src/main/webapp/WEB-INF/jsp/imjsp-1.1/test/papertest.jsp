@@ -53,7 +53,12 @@
                 userType:userType,
                 userid:"${userid}"
             });
-
+            <c:if test="${!empty quesid}">
+                tqControler.nextQues(${quesid});
+            </c:if>
+            <c:if test="${empty quesid}">
+                   tqControler.nextNum(1);
+            </c:if>
             document.getElementById("fm_free").submit=function(){
                 nextNum(-1,tqControler,1);
             }
@@ -62,6 +67,10 @@
             }
             document.getElementById("fm_subPaper").submit=function(){
                 subPaper(tqControler);
+            }
+            document.getElementById("fm_subQues").submit=function(){
+                tqControler.freeSubQuesAnswer(-2);
+                return false;
             }
         });
     </script>
@@ -73,11 +82,17 @@
 <a href="javascript:;" onclick="fm_free.submit();">上一题</a>
 <a  href="javascript:;" onclick="fm_next.submit();">下一题</a>
 <a href="javascript:;" onclick="fm_subPaper.submit()">交卷</a>
+<!--上一题的FRM-->
 <form action="#" id="fm_free" method="post">
 </form>
+<!--下一题的FRM-->
 <form  action="#"  id="fm_next" method="post">
 </form>
+<!--提交试卷的FRM-->
 <form action="#"  id="fm_subPaper" method="post">
+</form>
+<!--提交试题的FRM-->
+<form action="#"  id="fm_subQues" method="post">
 </form>
 </body>
 </html>
