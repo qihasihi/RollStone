@@ -716,11 +716,14 @@ TestPaperDetail.prototype.nextQues=function(quesid){
  */
 TestPaperDetail.prototype.loadQues=function(){
     $("div[id*='dv_q_']").hide();
+
+
+    var showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
+    var id='';
+    if(showPqObj.length>0)
+        id=showPqObj.attr("id");
     if(this.currentQuesObj.parentQuesId!=0){
-        var showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
-        var id='';
-        if(showPqObj.length>0)
-            id=showPqObj.attr("id");
+
 
 
         var pid=this.currentQuesObj.parentQuesId;
@@ -730,20 +733,6 @@ TestPaperDetail.prototype.loadQues=function(){
             else
                 $(this).show();
         });
-        showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
-        if(showPqObj.length>0&&id.Trim().length>0){
-            if(id!=showPqObj.attr("id").Trim()){
-                //英语听力加载控件
-                var mp3Len=$("audio[id*='mp3_']");
-                if(mp3Len.length>0){
-                    $.each(mp3Len,function(){
-                        this.pause();
-                        this.currentTime=0.0;
-                    });
-                }
-            }
-        }
-
 
      /*   var pid=this.currentQuesObj.parentQuesId;
         $("div[id*='dv_pq_']").each(function(x,m){
@@ -755,6 +744,21 @@ TestPaperDetail.prototype.loadQues=function(){
             $("#dv_pq_"+this.currentQuesObj.parentQuesId).show();
         }*/
     }
+
+    showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
+    if(showPqObj.length<1||(showPqObj.length>0&&id.Trim().length>0&&id!=showPqObj.attr("id").Trim())){
+            //英语听力加载控件
+            var mp3Len=$("audio[id*='mp3_']");
+            if(mp3Len.length>0){
+                $.each(mp3Len,function(){
+                    this.pause();
+                    this.currentTime=0.0;
+                });
+            }
+
+    }
+
+
     if($("#dv_q_"+this.currentQuesObj.questionid).length>0){
         $("#dv_q_"+this.currentQuesObj.questionid).show();
     }
@@ -841,22 +845,19 @@ TestPaperDetail.prototype.loadQues=function(){
                     if($('#dv_pq_'+parentQuesObj.questionid).length<1){
                         $("#dv_question").append(h);
                         //英语听力加载控件
-                        var mp3Len=$("audio[id*='mp3_']");
-                        if(mp3Len.length>0){
-                            $.each(mp3Len,function(){
-                                this.pause();
-                                this.currentTime=0.0;
-                            });
-                        }
-                        //英语听力加载控件
                         if(parentQuesObj!=null&&ex==4){
                             var mp3url=_QUES_IMG_URL+"/"+parentQuesObj.questionid+"/001.mp3";
-                            var mp3H='<audio controls="controls" id="mp3_'+parentQuesObj.questionid+'">';
+                            var mp3H='<a href="javascript:;" id="mp3_a_'+parentQuesObj.questionid+'"><img src="images/pic05_140722.png" alt="听力"/></a>' ;
+                            mp3H+='<span  style="display:none"><audio controls="controls" id="mp3_'+parentQuesObj.questionid+'">';
                             mp3H+='<source src="/i/song.ogg" type="audio/ogg">';
                             mp3H+='<source src="'+mp3url+'" type="audio/mpeg">';
                             mp3H+='您的浏览器不支持 audio 标签。';
-                            mp3H+='</audio>';
+                            mp3H+='</audio></span>';
                             $('#p_mp3_'+parentQuesObj.questionid).html(mp3H);
+                            $("#mp3_a_"+parentQuesObj.questionid).bind("click",function(){
+                                var mp3Obj=document.getElementById('mp3_'+parentQuesObj.questionid);
+                                mp3Obj.play();
+                            });
                         }
                     }
 
