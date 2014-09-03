@@ -99,6 +99,11 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
             objList.add(stupaperqueslogs.getIsmarking());
         } else
             sqlbuilder.append("null,");
+        if (stupaperqueslogs.getClassid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getClassid());
+        } else
+            sqlbuilder.append("null,");
 
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");

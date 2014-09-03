@@ -21,6 +21,8 @@ public class StuPaperQuesLogs implements  Serializable {
     private Integer ismarking;
     private String annexName;
 
+    private Integer classid;
+
 
     private String stuname;
     private String stuno;
@@ -35,6 +37,13 @@ public class StuPaperQuesLogs implements  Serializable {
         this.taskid = taskid;
     }
 
+    public Integer getClassid() {
+        return classid;
+    }
+
+    public void setClassid(Integer classid) {
+        this.classid = classid;
+    }
 
     public String getStuname() {
         return stuname;

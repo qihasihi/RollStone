@@ -65,6 +65,10 @@
             document.getElementById("fm_next").submit=function(){
                 nextNum(1,tqControler);
             }
+            document.getElementById("fm_subQues").submit=function(){
+                alert('作答成功!');
+                return false;
+            }
         });
     </script>
 </head>
@@ -77,6 +81,9 @@
 <form action="#"  id="fm_free" method="post">
 </form>
 <form  action="#"  id="fm_next" method="post">
+</form>
+<!--提交试卷的FRM-->
+<form action="#"  id="fm_subPaper" method="post">
 </form>
 </body>
 </html>

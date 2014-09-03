@@ -40,6 +40,7 @@ public class QuestionInfo implements java.io.Serializable {
     private Integer extension;
     private String questionidStr;
     private QuestionInfo parentQues;
+    private List<StuPaperQuesLogs> stuPaperQuesLogsList;
 
 
     private Float score;
@@ -63,6 +64,14 @@ public class QuestionInfo implements java.io.Serializable {
 
 //    private List<QuestionInfo> childQues=null;
 
+
+    public List<StuPaperQuesLogs> getStuPaperQuesLogsList() {
+        return stuPaperQuesLogsList;
+    }
+
+    public void setStuPaperQuesLogsList(List<StuPaperQuesLogs> stuPaperQuesLogsList) {
+        this.stuPaperQuesLogsList = stuPaperQuesLogsList;
+    }
 
     public Float getScore() {
         return score;

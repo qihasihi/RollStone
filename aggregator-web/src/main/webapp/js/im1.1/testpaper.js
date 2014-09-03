@@ -261,6 +261,7 @@ TestPaperQues.prototype.freeSubQuesAnswer=function(direcType){
         //提交数据
         this.subQues(direcType);
     }else{
+        alert('作答成功!');
         if(direcType!=-2)
             this.nextNum(direcType);
     }
@@ -356,18 +357,38 @@ TestPaperQues.prototype.subQues=function(direcType){
  */
 TestPaperQues.prototype.loadQues=function(){
     $("div[id*='dv_q_']").hide();
+    var showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
+    var id='';
+    if(showPqObj.length>0)
+        id=showPqObj.attr("id");
     if(this.currentQuesObj.parentQuesId!=0){
+
         var pid=this.currentQuesObj.parentQuesId;
         $("div[id*='dv_pq_']").each(function(x,m){
-            if(m.id!=('dv_pq_'+pid)){
+            if(m.id!=('dv_pq_'+pid))
                 $(this).hide();
-            }else
+            else
                 $(this).show();
         });
+
         if($("#dv_pq_"+this.currentQuesObj.parentQuesId).length>0){
             $("#dv_pq_"+this.currentQuesObj.parentQuesId).show();
         }
     }
+
+    showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
+     if(showPqObj.length<1||(showPqObj.length>0&&id.Trim().length>0&&id!=showPqObj.attr("id").Trim())){
+            //英语听力加载控件
+            var mp3Len=$("audio[id*='mp3_']");
+            if(mp3Len.length>0){
+                $.each(mp3Len,function(){
+                    this.pause();
+                    this.currentTime=0.0;
+                });
+            }
+    }
+
+
     if($("#dv_q_"+this.currentQuesObj.questionid).length>0){
         $("#dv_q_"+this.currentQuesObj.questionid).show();
     }
@@ -410,10 +431,13 @@ TestPaperQues.prototype.loadQues=function(){
                 if(typeof(config.papertype)!="undefined"&&config.papertype==3)
                     sc=quesObj.score;
                 var h='<div id="dv_q_'+quesObj.questionid+'">';
+
+                var hqx='<div>';
                 if(parentQuesObj!=null){
                     h='<div id="dv_pq_'+parentQuesObj.questionid+'">';
-                }
-                var hqx='<div id="dv_qx_'+parentQuesObj.questionid+'"><div id="dv_df'+quesObj.questionid+'"><h1><span class="f_right">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
+                    hqx='<div id="dv_qx_'+parentQuesObj.questionid+'">';
+                }else
+               hqx+='<div id="dv_df_'+quesObj.questionid+'"><h1><span class="f_right" style="display:none">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
                 //h+='<span class="f_right">得分：0分</span>';
                 var qtypeInfo='未知';
                 if(quesObj.questiontype==3||quesObj.questiontype==7)
@@ -431,14 +455,16 @@ TestPaperQues.prototype.loadQues=function(){
                 if($("#dv_df"+quesObj.questionid).length>0){
                     $("#dv_df"+quesObj.questionid).show();
                 }else{
-                    $("#dv_qx_"+parentQuesObj.questionid).append(hqx);
-                    h+=hqx;
+                    if(parentQuesObj!=null)
+                        $("#dv_qx_"+parentQuesObj.questionid).append(hqx);
+                    else
+                        h+=hqx;
                 }
                 if(parentQuesObj!=null){
                     ex=parentQuesObj.extension;
                     h+='<div class="yuyin">'+parentQuesObj.content;
                     if(ex==4){  //英语听力
-                        h+='<span id="p_mp3_'+parentQuesObj.questionid+'"></span>';
+                        h+='<p><span id="p_mp3_'+parentQuesObj.questionid+'"></span></p>';
                     }
                     h+='</div>';
 
@@ -446,8 +472,24 @@ TestPaperQues.prototype.loadQues=function(){
                 }
                 if(parentQuesObj!=null){
                     h+='<div id="dv_child_'+parentQuesObj.questionid+'"></div></div>';
-                    if($('#dv_pq_'+parentQuesObj.questionid).length<1)
+                    if($('#dv_pq_'+parentQuesObj.questionid).length<1){
                         $("#dv_question").append(h);
+                        if(parentQuesObj!=null&&ex==4){
+
+                            var mp3url=_QUES_IMG_URL+"/"+parentQuesObj.questionid+"/001.mp3";
+                            var mp3H='<a href="javascript:;" id="mp3_a_'+parentQuesObj.questionid+'"><img src="images/pic05_140722.png" alt="听力"/></a>' ;
+                            mp3H+='<span  style="display:none"><audio controls="controls" id="mp3_'+parentQuesObj.questionid+'">';
+                            mp3H+='<source src="/i/song.ogg" type="audio/ogg">';
+                            mp3H+='<source src="'+mp3url+'" type="audio/mpeg">';
+                            mp3H+='您的浏览器不支持 audio 标签。';
+                            mp3H+='</audio></span>';
+                            $('#p_mp3_'+parentQuesObj.questionid).html(mp3H);
+                            $("#mp3_a_"+parentQuesObj.questionid).bind("click",function(){
+                                var mp3Obj=document.getElementById('mp3_'+parentQuesObj.questionid);
+                                mp3Obj.play();
+                            });
+                        }
+                    }
 //                    else
 //                        $("#dv_pq_"+parentQuesObj.questionid).show();
                     //添加题型及分数
@@ -494,15 +536,18 @@ TestPaperQues.prototype.loadQues=function(){
                     });
                     h+='</ul>';
                 }
-
+                    h+='</div>';
 
                 if($("#dv_q_"+quesObj.questionid).length>0)
                     $("#dv_q_"+quesObj.questionid).show();
                 else{
                     if(parentQuesObj!=null){
                         $("#dv_child_"+parentQuesObj.questionid).append(h);
-                    }else
+                    }else{
                         $("#dv_question").append(h);
+
+                    }
+
                     //空格出来
                     if(quesObj.questiontype==2){
                         $("span[name='fillbank']").each(function(idx,itm){
@@ -672,7 +717,35 @@ TestPaperDetail.prototype.nextQues=function(quesid){
 TestPaperDetail.prototype.loadQues=function(){
     $("div[id*='dv_q_']").hide();
     if(this.currentQuesObj.parentQuesId!=0){
+        var showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
+        var id='';
+        if(showPqObj.length>0)
+            id=showPqObj.attr("id");
+
+
         var pid=this.currentQuesObj.parentQuesId;
+        $("div[id*='dv_pq_']").each(function(x,m){
+            if(m.id!=('dv_pq_'+pid))
+                $(this).hide();
+            else
+                $(this).show();
+        });
+        showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
+        if(showPqObj.length>0&&id.Trim().length>0){
+            if(id!=showPqObj.attr("id").Trim()){
+                //英语听力加载控件
+                var mp3Len=$("audio[id*='mp3_']");
+                if(mp3Len.length>0){
+                    $.each(mp3Len,function(){
+                        this.pause();
+                        this.currentTime=0.0;
+                    });
+                }
+            }
+        }
+
+
+     /*   var pid=this.currentQuesObj.parentQuesId;
         $("div[id*='dv_pq_']").each(function(x,m){
             if(m.id!=('dv_pq_'+pid)){
                 $(this).hide();
@@ -680,7 +753,7 @@ TestPaperDetail.prototype.loadQues=function(){
         });
         if($("#dv_pq_"+this.currentQuesObj.parentQuesId).length>0){
             $("#dv_pq_"+this.currentQuesObj.parentQuesId).show();
-        }
+        }*/
     }
     if($("#dv_q_"+this.currentQuesObj.questionid).length>0){
         $("#dv_q_"+this.currentQuesObj.questionid).show();
@@ -698,6 +771,7 @@ TestPaperDetail.prototype.loadQues=function(){
     if(this.currentQuesObj.parentQuesId!=0){
         p.quesid=this.currentQuesObj.parentQuesId+"|"+p.quesid;
     }
+    p.allStuAnswer=1;
 
     var ajxObj={
         url:'paperques?m=nextTestQues',
@@ -724,10 +798,12 @@ TestPaperDetail.prototype.loadQues=function(){
                 if(typeof(config.papertype)!="undefined"&&config.papertype==3)
                     sc=quesObj.score;
                 var h='<div id="dv_q_'+quesObj.questionid+'">';
+                var hqx='<div>';
                 if(parentQuesObj!=null){
                     h='<div id="dv_pq_'+parentQuesObj.questionid+'">';
+                    hqx='<div id="dv_qx_'+parentQuesObj.questionid+'">';
                 }
-                var hqx='<div id="dv_qx_'+parentQuesObj.questionid+'"><div id="dv_df'+quesObj.questionid+'"><h1><span class="f_right">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
+                hqx+='<div id="dv_df'+quesObj.questionid+'"><h1><span class="f_right">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
                 //h+='<span class="f_right">得分：0分</span>';
                 var qtypeInfo='未知';
                 if(quesObj.questiontype==3||quesObj.questiontype==7)
@@ -744,15 +820,17 @@ TestPaperDetail.prototype.loadQues=function(){
                 $("div[id*='dv_df']").hide();
                 if($("#dv_df"+quesObj.questionid).length>0){
                     $("#dv_df"+quesObj.questionid).show();
-                }else{
-                    $("#dv_qx_"+parentQuesObj.questionid).append(hqx);
-                    h+=hqx;
+                }else {
+                    if(parentQuesObj!=null)
+                        $("#dv_qx_"+parentQuesObj.questionid).append(hqx);
+                    else
+                        h+=hqx;
                 }
                 if(parentQuesObj!=null){
                     ex=parentQuesObj.extension;
                     h+='<div class="yuyin">'+parentQuesObj.content;
                     if(ex==4){  //英语听力
-                        h+='<span id="p_mp3_'+parentQuesObj.questionid+'"></span>';
+                        h+='<p><span id="p_mp3_'+parentQuesObj.questionid+'"></span></p>';
                     }
                     h+='</div>';
 
@@ -760,14 +838,48 @@ TestPaperDetail.prototype.loadQues=function(){
                 }
                 if(parentQuesObj!=null){
                     h+='<div id="dv_child_'+parentQuesObj.questionid+'"></div></div>';
-                    if($('#dv_pq_'+parentQuesObj.questionid).length<1)
+                    if($('#dv_pq_'+parentQuesObj.questionid).length<1){
                         $("#dv_question").append(h);
+                        //英语听力加载控件
+                        var mp3Len=$("audio[id*='mp3_']");
+                        if(mp3Len.length>0){
+                            $.each(mp3Len,function(){
+                                this.pause();
+                                this.currentTime=0.0;
+                            });
+                        }
+                        //英语听力加载控件
+                        if(parentQuesObj!=null&&ex==4){
+                            var mp3url=_QUES_IMG_URL+"/"+parentQuesObj.questionid+"/001.mp3";
+                            var mp3H='<audio controls="controls" id="mp3_'+parentQuesObj.questionid+'">';
+                            mp3H+='<source src="/i/song.ogg" type="audio/ogg">';
+                            mp3H+='<source src="'+mp3url+'" type="audio/mpeg">';
+                            mp3H+='您的浏览器不支持 audio 标签。';
+                            mp3H+='</audio>';
+                            $('#p_mp3_'+parentQuesObj.questionid).html(mp3H);
+                        }
+                    }
+
 //                    else
 //                        $("#dv_pq_"+parentQuesObj.questionid).show();
+
+
+
+
+
                     //添加题型及分数
 
 
                     h='<div id="dv_q_'+quesObj.questionid+'">';
+                }else{
+                    //英语听力加载控件
+                    var mp3Len=$("audio[id*='mp3_']");
+                    if(mp3Len.length>0){
+                        $.each(mp3Len,function(){
+                            this.pause();
+                            this.currentTime=0.0;
+                        });
+                    }
                 }
 
 
@@ -816,21 +928,34 @@ TestPaperDetail.prototype.loadQues=function(){
                         }
                         h+='答案与解析</p>';
                         h+='<div>'+quesObj.analysis+'</div>';
-                        h+='</div>';
+
                 }
+                h+='<div id="dv_wd'+quesObj.questionid+'"></div>';
+                h+='</div>';
+
+
                 if($("#dv_q_"+quesObj.questionid).length>0)
                     $("#dv_q_"+quesObj.questionid).show();
                 else{
                     if(parentQuesObj!=null){
                         $("#dv_child_"+parentQuesObj.questionid).append(h);
-                    }else
+                    }else{
                         $("#dv_question").append(h);
-                    //英语听力加载控件
-                    if(parentQuesObj!=null&&ex==4){
 
-
-
-
+                    }
+                    //如果是主观题，则显示所有答案
+                    if(quesObj.questiontype==1||quesObj.questiontype==9){
+                        if(typeof(quesObj.stuPaperQuesLogsList)!="undefined"&&quesObj.stuPaperQuesLogsList.length>0){
+                            var ch='';
+                            $.each(quesObj.stuPaperQuesLogsList,function(zx,zm){
+                                ch+='<div class="wenda" id="dv_ch_wd_'+zm.stuno+'">';
+                                ch+'<b><img src="images/pic01_140811.png" width="36" height="36"></b>';
+                                ch+='<p class="title"><span>57分钟前</span>'+zm.stuname+'</p>';
+                                ch+='<p>'+zm.answer+'</p>';
+                                ch+='</div>';
+                            })
+                            $("#dv_wd"+quesObj.questionid).html(ch);
+                        }
                     }
                     //空格出来
                     if(quesObj.questiontype==2){
@@ -935,6 +1060,10 @@ TestPaperDetail.prototype.loadQues=function(){
                         $("#dv_q_"+quesObj.questionid+" .wrong").remove();
                     }
                 }
+
+
+
+
             }
         }
     };

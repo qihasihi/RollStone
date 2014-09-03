@@ -3724,6 +3724,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         String classid=request.getParameter("classid");
         String taskid=request.getParameter("taskid");
         String uid=request.getParameter("userid");
+        String allStuAnswer=request.getParameter("allStuAnswer");
         JsonEntity jsonEntity=new JsonEntity();
         if(quesid==null||quesid.toString().trim().length()<1||paperid==null||paperid.toString().trim().length()<1||courseid==null||courseid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -3834,7 +3835,21 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
 
         QuestionInfo tmpq=quesList.get(0);
-        if(tmpq.getQuestiontype()==3||tmpq.getQuestiontype()==7||tmpq.getQuestiontype()==4||tmpq.getQuestiontype()==8){
+        if(tmpq.getQuestiontype()==1||tmpq.getQuestiontype()==9){
+            //得到该班所有学生的回答
+            if(classid!=null&&classid.trim().length()>0&&taskid!=null&&classid.trim().length()>0){
+                //如果查询得分
+               if(allStuAnswer!=null&&allStuAnswer.trim().length()>0&&allStuAnswer.trim().equals("1")){
+                   StuPaperQuesLogs spq=new StuPaperQuesLogs();
+                   spq.setTaskid(Long.parseLong(taskid.trim()));
+                   spq.setPaperid(Long.parseLong(paperid.trim()));
+                   spq.setQuesid(Long.parseLong(quesid.trim()));
+                   spq.setClassid(Integer.parseInt(classid));
+                   List<StuPaperQuesLogs> spqList=this.stuPaperQuesLogsManager.getList(spq,null);
+                   tmpq.setStuPaperQuesLogsList(spqList);
+               }
+            }
+        }else if(tmpq.getQuestiontype()==3||tmpq.getQuestiontype()==7||tmpq.getQuestiontype()==4||tmpq.getQuestiontype()==8){
             //得到该题的正确率
             if(classid!=null&&classid.trim().length()>0&&taskid!=null&&classid.trim().length()>0){
                 //如果是选择题，则出正确率，选项等分数
