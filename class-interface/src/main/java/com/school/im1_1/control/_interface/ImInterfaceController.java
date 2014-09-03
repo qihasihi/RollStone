@@ -3194,7 +3194,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     param.put("timestamp",time.toString());
                     String signure =  UrlSigUtil.makeSigSimple("getResourceZSDX.do",param,"*ETT#HONER#2014*");
                     param.put("sign",signure);
-                    JSONObject returnval = UtilTool.sendPostUrl(url,param,"GBK");
+                    JSONObject returnval = UtilTool.sendPostUrl(url,param,"utf-8");
                     String data=returnval.containsKey("data")?returnval.getString("data"):"";
                     int result = returnval.containsKey("result")?returnval.getInt("result"):0;
                     if(result==1){
@@ -3210,7 +3210,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     param.put("timestamp",time.toString());
                     String signure =  UrlSigUtil.makeSigSimple("playVideoUrl.do",param,"*ETT#HONER#2014*");
                     param.put("sign",signure);
-                    JSONObject returnval = UtilTool.sendPostUrl(url,param,"GBK");
+                    JSONObject returnval = UtilTool.sendPostUrl(url,param,"utf-8");
                     String data=returnval.containsKey("data")?returnval.getString("data"):"";
                     int result = returnval.containsKey("result")?returnval.getInt("result"):0;
                     if(result==1){
