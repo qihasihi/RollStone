@@ -37,4 +37,12 @@ public interface ITpStuScoreManager extends IBaseManager<TpStuScore>{
      * @return
      */
     public List<Object> getAddOrUpdateColScore(final TpStuScore obj,StringBuilder sqlbuilder);
+
+    /**
+     * 积分统计
+     * @param subjectid
+     * @param classid
+     * @return
+     */
+    public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid);
 }
