@@ -160,6 +160,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         m.put("msg","³É¹¦");
         m.put("data",m2);
         JSONObject object = JSONObject.fromObject(m);
+        response.setContentType("text/json");
         response.getWriter().print(object.toString());
     }
 

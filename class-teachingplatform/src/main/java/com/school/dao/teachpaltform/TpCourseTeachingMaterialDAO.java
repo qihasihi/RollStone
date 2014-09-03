@@ -71,11 +71,6 @@ public class TpCourseTeachingMaterialDAO extends CommonDAO<TpCourseTeachingMater
 			objList.add(tpcourseteachingmaterial.getTeachingmaterialid());
 		} else
 			sqlbuilder.append("null,");
-        if (tpcourseteachingmaterial.getGradeid() != null) {
-            sqlbuilder.append("?,");
-            objList.add(tpcourseteachingmaterial.getGradeid());
-        } else
-            sqlbuilder.append("null,");
         if (tpcourseteachingmaterial.getSubjectid() != null) {
             sqlbuilder.append("?,");
             objList.add(tpcourseteachingmaterial.getSubjectid());

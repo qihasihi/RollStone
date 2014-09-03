@@ -29,11 +29,6 @@
                 $("input[name='classtime']").attr("disabled",true);
                 $("input[name='ts_classtime']").attr("disabled",true);
                 $("input[name='v_classtime']").attr("disabled",true);
-
-                $("input[name='all_classEndTime']").attr("disabled",true);
-                $("input[name='classEndTime']").attr("disabled",true);
-                $("input[name='ts_classEndTime']").attr("disabled",true);
-                $("input[name='v_classEndTime']").attr("disabled",true);
             </c:if>
 
              <c:if test="${!empty tc && !empty tc.courselevel && tc.courselevel ne 3}">
@@ -147,7 +142,7 @@
                     </div>
                 </td>
             </tr>
-
+    <!--
             <tr>
                 <th>&nbsp;&nbsp;结束时间：</th>
                 <td>
@@ -159,32 +154,29 @@
                         </div>
                         <div id="list_ct_end" style="display:none">
                             <c:forEach var="cl" items="${ cuList}">
-                                <p id="p_end_${cl.classid}"  style="display:none"><span>${cl.classname}:</span>&nbsp;
+                                <p id="p_${cl.classid}"  style="display:none"><span>${cl.classname}:</span>&nbsp;
                                     <input class="public_input w220" placeholder="设置结束时间" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="${cl.classid}_classEndTime"  name="classEndTime" type="text" /></p>
                             </c:forEach>
                             <c:forEach var="ts" items="${ tsList}">
                                 <c:if test="${ts.CLASS_TYPE==1}">
-                                    <p id="p_ts_end_${ts.CLASS_ID}" style="display:none"><span>${ts.CLASSNAME}:</span>&nbsp;
+                                    <p id="p_ts_${ts.CLASS_ID}" style="display:none"><span>${ts.CLASSNAME}:</span>&nbsp;
                                         <input class="public_input w220" placeholder="设置结束时间" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="${ts.CLASS_ID}_ts_classEndTime"  name="ts_classEndTime" type="text" /></p>
                                 </c:if>
                             </c:forEach>
                             <c:forEach var="tvc" items="${ tvcList}">
-                                <p id="p_v_end_${tvc.virtualclassid}"  style="display:none"><span>${tvc.virtualclassname}:</span>&nbsp;
+                                <p id="p_v_${tvc.virtualclassid}"  style="display:none"><span>${tvc.virtualclassname}:</span>&nbsp;
                                     <input class="public_input w220" placeholder="设置结束时间" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="${tvc.virtualclassid}_v_classEndtime"  name="v_classEndTime" type="text" /></p>
                             </c:forEach>
                             <c:forEach var="ts" items="${ tsList}">
                                 <c:if test="${ts.CLASS_TYPE==2}">
-                                    <p id="p_v_end_${ts.CLASS_ID}"><span>${ts.CLASSNAME}:</span>&nbsp;
+                                    <p id="p_v_${ts.CLASS_ID}"><span>${ts.CLASSNAME}:</span>&nbsp;
                                         <input class="public_input w220" placeholder="设置结束时间" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="${ts.CLASS_ID}_v_classEndTime"  name="v_classEndTime" type="text" /></p>
                                 </c:if>
                             </c:forEach>
                         </div>
                     </div>
                 </td>
-            </tr>
-
-
-
+            </tr>-->
             <tr>
                 <th><span class="ico06"></span>分享等级：</th>
                 <td>
@@ -258,38 +250,27 @@
 
 
             $("#all_ct").hide();
-            $("#all_ct_end").hide();
             $("#list_ct").show();
-            $("#list_ct_end").show();
             $("#list_ct").children().hide();
-            $("#list_ct_end").children().hide();
 
             <c:forEach var="cid" items="${ tc.classIdArray}" varStatus="status">
             <c:if test="${tc.classTypeArray[status.index]==1}">
             $("input[name='classes'][value='${cid}']").attr("checked",true);
             $("#p_${cid}").show();
-            $("#p_end_${cid}").show();
             $("#${cid}_classtime").val("${tc.classTimeArray[status.index]}");
-            $("#${cid}_classEndTime").val("${tc.classEndTimeArray[status.index]}");
             </c:if>
             <c:if test="${tc.classTypeArray[status.index]==2}">
             $("input[name='vclasses'][value='${cid}']").attr("checked",true);
             $("#p_v_${cid}").show();
-            $("#p_v_end_${cid}").show();
             $("#${cid}_v_classtime").val("${tc.classTimeArray[status.index]}");
-            $("#${cid}_v_classEndTime").val("${tc.classEndTimeArray[status.index]}");
             </c:if>
             </c:forEach>
 
             <c:if test="${tc.classtimetype}">
             $("#classtimeType").attr("checked",true);
-            $("#classEndTimeType0").attr("checked",true);
             $("#list_ct").hide();
-            $("#list_ct_end").hide();
             $("#all_ct").show();
-            $("#all_ct_end").show();
             $("#all_classtime").val("${tc.classTimeArray[0]}");
-            $("#all_classEndTime").val("${tc.classEndTimeArray[0]}");
             </c:if>
 
             $("#introduction").html("${tc.introduction}");
@@ -307,8 +288,5 @@
     <script type="text/javascript">
         $("#classtimeType").attr("checked",true);
         $("#all_ct").show();
-
-        $("#classEndTimeType0").attr("checked",true);
-        $("#all_ct_end").show();
     </script>
 </c:if>

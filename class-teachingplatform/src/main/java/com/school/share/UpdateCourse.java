@@ -656,10 +656,10 @@ public class UpdateCourse extends TimerTask{
                                          sqlArrayList.add(sqlbuilder.toString());
                                      }
                                      //得到附件
-                                     topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(resList.get(0).getResid().toString());
+                                     topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(rsEntity.getResid().toString());
                                      System.out.println("微视频资源文件"+topath);
                                      //下载微视频文件
-                                     if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,resList.get(0).getResid().toString(),key,-1,topath,resList.get(0).getFilename(),null)){
+                                     if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,rsEntity.getResid().toString(),key,-1,topath,rsEntity.getFilename(),null)){
                                          //文件失败
                                          System.out.println("资源文件下载失败!");
                                      }
@@ -784,7 +784,6 @@ public class UpdateCourse extends TimerTask{
                                              }
                                          }
 
-
                                          ///////////////////////////////////微视频问题选项///////////////////////////
                                          //先删除,再添加
                                          sqlbuilder=new StringBuilder();
@@ -824,6 +823,7 @@ public class UpdateCourse extends TimerTask{
                                              objArrayList=new ArrayList<List<Object>>();
                                          }
                                      }
+
                                  }
                                  //每条记录执行执行添加
                                  if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
@@ -1385,10 +1385,10 @@ class UpdateCourseUtil{
                                     &&!quesMap.get("Grade").toString().trim().toUpperCase().equals("NULL")){
                                 ques.setGrade(quesMap.get("Grade").toString());
                             }
-                            //Extension==PaperType
-                            if(quesMap.containsKey("Papertype")&&quesMap.get("Papertype")!=null
-                                    &&!quesMap.get("Papertype").toString().trim().toUpperCase().equals("NULL")){
-                                ques.setExtension(Integer.parseInt(quesMap.get("Papertype").toString()));
+
+                            if(quesMap.containsKey("PaperType")&&quesMap.get("PaperType")!=null
+                                    &&!quesMap.get("PaperType").toString().trim().toUpperCase().equals("NULL")){
+                                ques.setPapertypeid(Integer.parseInt(quesMap.get("PaperType").toString()));
                             }
                             if(quesMap.containsKey("ExamType")&&quesMap.get("ExamType")!=null
                                     &&!quesMap.get("ExamType").toString().trim().toUpperCase().equals("NULL")){
@@ -1524,7 +1524,7 @@ class UpdateCourseUtil{
                             }
                             if(quesMap.containsKey("PaperType")&&quesMap.get("PaperType")!=null
                                     &&!quesMap.get("PaperType").toString().trim().toUpperCase().equals("NULL")){
-                                ques.setExtension(Integer.parseInt(quesMap.get("PaperType").toString()));
+                                ques.setPapertypeid(Integer.parseInt(quesMap.get("PaperType").toString()));
                             }
                             if(quesMap.containsKey("ExamType")&&quesMap.get("ExamType")!=null
                                     &&!quesMap.get("ExamType").toString().trim().toUpperCase().equals("NULL")){
@@ -2014,9 +2014,8 @@ class UpdateCourseUtil{
                         if(schQuestionid==null||(quesOptMap.get("QuestionId")!=null&&quesOptMap.get("QuestionId").toString().trim().equals(schQuestionid.toString()))){
                             QuestionOption quesAnswer=new QuestionOption();
 
-                            if(quesOptMap.containsKey("QuestionId")&&quesOptMap.get("QuestionId")!=null
-                                    &&!quesOptMap.get("QuestionId").toString().trim().toUpperCase().equals("NULL")){
-                                quesAnswer.setQuestionid(Long.parseLong(quesOptMap.get("QuestionId").toString()));//云端的ID
+                            if(courseMap.containsKey("QuestionId")&&courseMap.get("CourseId")!=null&&!quesOptMap.get("CourseId").toString().trim().toUpperCase().equals("NULL")){
+                                quesAnswer.setQuestionid(Long.parseLong(courseMap.get("CourseId").toString()));//云端的ID
                             }
 
                             if(quesOptMap.containsKey("Body")&&quesOptMap.get("Body")!=null

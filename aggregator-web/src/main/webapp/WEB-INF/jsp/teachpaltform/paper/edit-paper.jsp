@@ -237,8 +237,8 @@ function genderInput(obj,score){
     $("input[id='score_input']").bind("blur",function(){
         var spanObj=$(this).parent();
         var score=this.value
-     //   if(score<1)
-     //       return;
+        if(score<1)
+            return;
         spanObj.html(score);
         var quesid=$(spanObj).data().bind.split("|")[0];
         var ref=$(spanObj).data().bind.split("|")[1];
@@ -256,8 +256,8 @@ function genderInput(obj,score){
 
 function scoreChange(obj,score){
     //恢复事件
-    //if(score<1)
-    //    return;
+    if(score<1)
+        return;
     $(obj).parent().bind("click",function(){
         genderInput(this,score);
     });

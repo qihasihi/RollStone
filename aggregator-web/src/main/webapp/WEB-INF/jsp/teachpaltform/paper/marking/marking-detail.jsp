@@ -20,6 +20,7 @@
         var extenname;
         var sign=${sign};
         var isHaveParent = ${sign};
+
         switch (parseInt(extension)){
             case 0:
                 extenname="客观";
@@ -151,7 +152,7 @@
 //                        if(j==0){
 //                            lihtm+=' class="crumb"';
 //                        }
-                        lihtm+=' ><a href="javascript:submitScore(${detail.REF},'+(j+i*10)+')">'+(j+i*10)+'</a></li>';
+                        lihtm+=' ><a href="1">'+(j+i*10)+'</a></li>';
                         if(parseFloat((j+i*10))>=parseFloat(totalnum-0.5)){
                             break;
                         }
@@ -164,6 +165,7 @@
                         if(parseFloat((k+i*10))>=parseFloat(totalnum))
                             break;
                         lihtm2+='<li style="padding-left:1px"><a href="javascript:submitScore(${detail.REF},'+(k+i*10)+')">'+(k+i*10)+'</a></li>';
+
                     }
                     ulhtm2+=lihtm2+'</ul>';
                     divhtm+=ulhtm+ulhtm2+'</div>';
@@ -200,6 +202,7 @@
 
 
         function submitScore(ref,score){
+
             $.ajax({
                 url:"paper?m=doMarking",
                 type:"post",
@@ -219,6 +222,7 @@
                     window.location.href=htm;
                 }
             });
+
         }
         function tabQuestion(type){
             /**

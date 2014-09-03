@@ -41,8 +41,7 @@
             quesType=idx;
         }
 
-            /*test111 1*/
-            /*123123*/
+
         function showCourseList(){
             var ulobj=$("#ul_courselist");
             if(ulobj.css("display")=="none")

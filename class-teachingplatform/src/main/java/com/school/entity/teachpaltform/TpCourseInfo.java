@@ -53,15 +53,6 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Object classesid;
     private Object classtype;
     private Object classtimes;
-    private Object classendtimes;
-
-    public Object getClassendtimes() {
-        return classendtimes;
-    }
-
-    public void setClassendtimes(Object classendtimes) {
-        this.classendtimes = classendtimes;
-    }
 
     private boolean beginClass=true;
     private boolean classtimetype=true;
@@ -555,12 +546,6 @@ public class TpCourseInfo  implements java.io.Serializable{
             return null;
         return getClasstimes().toString().split(",");
     }
-    public String[] getClassEndTimeArray(){
-        if(getClassendtimes()==null)
-            return null;
-        return getClassendtimes().toString().split(",");
-    }
-
 
     public String getVersionvalues() {
         return versionvalues;

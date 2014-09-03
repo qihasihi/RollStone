@@ -151,7 +151,7 @@ function preeDoPageSub(pObj){
 <div class="subpage_head"><span class="ico55"></span><strong>添加试卷—导入试卷</strong></div>
 <div class="content1 font-black">
     <p class="public_input f_right">
-        <input id="txt_search" name="textfield2" type="text" class="w240" placeholder="试卷名称/专题名称" />
+        <input id="txt_search" name="textfield2" type="text" class="w240" placeholder="资源名称/专题名称" />
         <a  href="javascript:pageGo('pList');" class="an_search" title="查询"></a></p>
     <p class="p_b_10">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
     <p><strong>标准试卷</strong></p>

@@ -53,6 +53,7 @@ public class TpCoursePaper {
         this.coursepapername = coursepapername;
     }
 
+
     public Integer getSeldatetype() {
         return seldatetype;
     }
