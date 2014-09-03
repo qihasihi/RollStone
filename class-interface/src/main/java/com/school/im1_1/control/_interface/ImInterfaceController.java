@@ -3330,8 +3330,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
                 Map<String,Object> map=new HashMap<String,Object>();
                 map.put("quesId",paperQuestion.getQuestionid());
-                map.put("quesType",paperQuestion.getQuestiontype()==1?1:0); //1：其他 主观题
-                returnMapList.add(map);
+                map.put("quesType",paperQuestion.getQuestiontype()==1||paperQuestion.getQuestiontype()==9?1:0); //1：其他 主观题
+
+                //去掉试题组
+                if(paperQuestion.getQuestiontype()!=6)
+                    returnMapList.add(map);
                // map.put("isQesTeam",paperQuestion.getQuestiontype()==6?1:0); //6：试题组
                 if(paperQuestion.getQuestionTeam()!=null&&paperQuestion.getQuestionTeam().size()>0){
                     List<Map<String,Object>> childMapList=new ArrayList<Map<String, Object>>();
@@ -3349,7 +3352,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     for(PaperQuestion qTeam:paperQuestion.getQuestionTeam()){
                         Map<String,Object> childMap=new HashMap<String,Object>();
                         childMap.put("quesId",qTeam.getQuestionid());
-                        childMap.put("quesType",qTeam.getQuestiontype()==1?1:0);
+                        childMap.put("quesType",qTeam.getQuestiontype()==1||qTeam.getQuestiontype()==9?1:0);
                         returnMapList.add(childMap);
                     }
                 }
