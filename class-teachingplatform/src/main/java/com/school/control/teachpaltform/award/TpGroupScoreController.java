@@ -421,4 +421,35 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
 
     }
 
+    /**
+     * 进入积分统计页面
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     */
+    @RequestMapping(params="m=toAwardStaticesScore")
+    public ModelAndView toAwardStatices(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        String subjectid=request.getParameter("subjectid");
+        String classid=request.getParameter("classid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(subjectid==null||subjectid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(jsonEntity.toJSON());return null;
+        }
+        //验证classid
+        ClassInfo cls=new ClassInfo();
+        cls.setClassid(Integer.parseInt(classid.trim()));
+        List<ClassInfo> clsList=this.classManage.getList(cls,null);
+        if(clsList==null||clsList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
+            response.getWriter().print(jsonEntity.toJSON());return null;
+        }
+        List<Map<String,Object>> listMap=this.tpStuScoreManager.getScoreStatices(Integer.parseInt(subjectid),Integer.parseInt(classid));
+        mp.put("dataList",listMap);
+        mp.put("currentLoginUID",this.logined(request).getUserid());
+        mp.put("clsObj",clsList.get(0));
+        return new ModelAndView("/teachpaltform/classPerformanceAward/awardStatices",mp);
+    }
+
 }

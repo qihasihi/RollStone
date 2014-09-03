@@ -32,7 +32,10 @@
     List<EttColumnInfo> ettColumnInfos =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
     //logo
     SchoolLogoInfo logoObj = (SchoolLogoInfo)request.getSession().getAttribute("logoObj");
-    String logosrc = logoObj.getLogosrc();
+    String logosrc = null;
+    if(logoObj!=null){
+        logosrc=logoObj.getLogosrc();
+    }
   %>
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
     <%if(modelType==2){%>

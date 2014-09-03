@@ -416,7 +416,19 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
         return objlist;
     }
 
-
+    /**
+     * 积分统计
+     * @param subjectid
+     * @param classid
+     * @return
+     */
+    public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid){
+        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_group_score_statices_score(?,?)}");
+        List<Object> objlist=new ArrayList<Object>();
+        objlist.add(subjectid);
+        objlist.add(classid);
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objlist);
+    }
 
     /**
      * 教师组长提交时，初始化相关数据

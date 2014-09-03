@@ -318,6 +318,7 @@ TestPaperQues.prototype.subQues=function(direcType){
             type: 'POST',
             success: function (rps, status) {
                 if(rps.type=="success"){
+                    alert(rps.msg);
                     if(subQuesId.indexOf(","+quesid+",")<0)
                         subQuesId+=quesid+","
                     controlObj.nextNum(direcType);

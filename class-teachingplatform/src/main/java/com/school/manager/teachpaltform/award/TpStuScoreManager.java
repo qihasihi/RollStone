@@ -97,6 +97,15 @@ public class TpStuScoreManager extends BaseManager<TpStuScore> implements ITpStu
     public boolean stuScoreLastInit(final TpStuScore obj,final String groupidArr){
         return tpStuScoreDAO.stuScoreLastInit(obj,groupidArr);
     }
+    /**
+     * 积分统计
+     * @param subjectid
+     * @param classid
+     * @return
+     */
+    public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid){
+        return tpStuScoreDAO.getScoreStatices(subjectid,classid);
+    }
 
     @Override
     public TpStuScore getOfExcel(Sheet rs, int cols, int d, String type) {
