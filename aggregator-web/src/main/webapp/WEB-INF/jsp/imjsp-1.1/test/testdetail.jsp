@@ -76,14 +76,14 @@
 <!--试卷里的试题-->
 <div class="zxcs_test" id="dv_question">
 </div>
-<a href="javascript:;" onclick="fm_free.submit();">上一题</a>
-<a  href="javascript:;" onclick="fm_next.submit();">下一题</a>
+<a href="javascript:;" onclick="fm_subQues.submit();fm_free.submit();">上一题</a>
+<a  href="javascript:;" onclick="fm_subQues.submit();fm_next.submit();">下一题</a>
 <form action="#"  id="fm_free" method="post">
 </form>
 <form  action="#"  id="fm_next" method="post">
 </form>
-<!--提交试卷的FRM-->
-<form action="#"  id="fm_subPaper" method="post">
+<!--提交试题的FRM-->
+<form action="#"  id="fm_subQues" method="post">
 </form>
 </body>
 </html>
