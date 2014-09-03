@@ -215,7 +215,7 @@
                     <c:if test="${!empty isViewVideo&&isViewVideo!=0||taskstatus=='3'}">
                     isShowBar=true;
                     </c:if>
-                    loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}.mp4",'div_show0'
+                    loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
                             ,resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
                             ,${resObj.resid},769,432,isShowBar,jwplayEnd);
                 </script>
