@@ -934,6 +934,15 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 }
             }
 		} */
+        //Î¢ÊÓÆµ
+        TpCourseResource tr=new TpCourseResource();
+        tr.setCourseid(Long.parseLong(courseid));
+        tr.setDifftype(1);
+        List<TpCourseResource>micList=this.tpCourseResourceManager.getList(tr,null);
+        if(micList!=null&&micList.size()>0)
+            mp.put("hasVideo",1);
+
+
 		//Ð¡×é
 		TpGroupInfo g=new TpGroupInfo();
 		//g.setCuserid(this.logined(request).getUserid());

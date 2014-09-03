@@ -1592,9 +1592,7 @@ jQuery.extend(
                 case 'string':
                     return '"' + object.replace(/(\/\/|\/\/")/g,"//$1").replace(/n|\/r|\/t/g,  function(){
                         var a = arguments[0];
-                        return (a == '/n') ? '//n':
-                            (a == '/r') ? '//r':
-                                (a == '/t') ? '//t': ""
+                        return (((a=='/n'?'//n':a)=='/r'?'//r':a)=='/t'?'//t':a);
                     }) + '"';
                     break;
                 case 'object':

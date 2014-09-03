@@ -65,7 +65,7 @@
                 <script type="text/javascript">
                     //是否显示进度条的判断
                     var isShowBar=true;
-                    loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}.mp4",'div_show0'
+                    loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
                             ,resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
                             ,${resObj.resid},769,432,isShowBar);
                 </script>

@@ -451,8 +451,6 @@ TestPaperQues.prototype.loadQues=function(){
 //                    else
 //                        $("#dv_pq_"+parentQuesObj.questionid).show();
                     //添加题型及分数
-
-
                     h='<div id="dv_q_'+quesObj.questionid+'">';
                 }
 
@@ -809,17 +807,17 @@ TestPaperDetail.prototype.loadQues=function(){
                         });
                         h+='</ul>';
                     }
-            if(config.userType!=3){
-                    h+='<p class="jiexi">';
-                    if(config.userType!=2){
-                        var zqlv=quesObj.rightLv;
-                        if(typeof(zqlv)!="undefined"&&zqlv!=null)
-                            h+='<span>'+quesObj.rightLv+'%答对</span>';
-                    }
-                    h+='答案与解析</p>';
-                    h+='<div>'+quesObj.analysis+'</div>';
-                    h+='</div>';
-            }
+                if(config.userType!=3){
+                        h+='<p class="jiexi">';
+                        if(config.userType!=2){
+                            var zqlv=quesObj.rightLv;
+                            if(typeof(zqlv)!="undefined"&&zqlv!=null)
+                                h+='<span>'+quesObj.rightLv+'%答对</span>';
+                        }
+                        h+='答案与解析</p>';
+                        h+='<div>'+quesObj.analysis+'</div>';
+                        h+='</div>';
+                }
                 if($("#dv_q_"+quesObj.questionid).length>0)
                     $("#dv_q_"+quesObj.questionid).show();
                 else{
@@ -829,7 +827,10 @@ TestPaperDetail.prototype.loadQues=function(){
                         $("#dv_question").append(h);
                     //英语听力加载控件
                     if(parentQuesObj!=null&&ex==4){
-                        $("#dv_child_"+parentQuesObj.questionid).append(h);
+
+
+
+
                     }
                     //空格出来
                     if(quesObj.questiontype==2){

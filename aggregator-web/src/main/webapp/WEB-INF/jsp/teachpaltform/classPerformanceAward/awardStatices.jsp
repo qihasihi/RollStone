@@ -10,21 +10,30 @@
 <html>
 <head>
     <meta http-equiv=Content-Type content="text/html; charset=utf-8"/>
+    <script type="text/javascript">
+        $(function(){
+            //总积分
+            $("#sp_zjf").html($("#tr_${currentLoginUID} input[name='hd_zjf']").val());
+            //任务数
+            $("#sp_rws").html($("#tr_${currentLoginUID} input[name='hd_rws']").val());
+            //出勤数
+            $("#sp_cqs").html($("#tr_${currentLoginUID} input[name='hd_cqs']").val());
+        })
+    </script>
 </head>
 
 <body>
 <div class="subpage_head"><span class="ico19"></span><strong>课程积分</strong></div>
 <div class="content1">
-    <p class="t_r">总积分：<span class="font-red">600</span>&nbsp;&nbsp;&nbsp;任务数：<span class="font-red">20</span>&nbsp;&nbsp;&nbsp;出勤数：<span class="font-red">10</span></p>
+    <p class="t_r">总积分：<span class="font-red" id="sp_zjf">--</span>&nbsp;&nbsp;&nbsp;任务数：<span class="font-red" id="sp_rws">--</span>&nbsp;&nbsp;&nbsp;出勤数：<span class="font-red" id="sp_cqs">--</span></p>
    <c:if test="${clsObj.dctype==3}">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
-        <colgroup span="2" class="w130"></colgroup>
+        <colgroup span="2" class="w150"></colgroup>
         <colgroup class="w140"></colgroup>
         <colgroup span="2" class="w130"></colgroup>
         <colgroup class="w150"></colgroup>
         <tr>
             <th>姓名</th>
-
             <th>网上得分</th>
             <th>网下表现得分</th>
             <th>小组得分</th>
@@ -39,7 +48,15 @@
                        <td>${!empty d.WXDF?d.WXDF:'--'}</td>
                        <td>${!empty d.GROUP_SCORE?d.GROUP_SCORE:'--'}</td>
                        <td>${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'--'}</td>
-                       <td>${d.RNUM}</td>
+                       <td>${d.RNUM}
+                           <input type="hidden" value="${!empty d.WSDF?d.WSDF:'--'}" name="hd_wsdf"/>
+                           <input type="hidden" value="${!empty d.WXDF?d.WXDF:'--'}" name="hd_wxdf"/>
+                           <input type="hidden" value="${!empty d.GROUP_SCORE?d.GROUP_SCORE:'--'}" name="hd_xzdf"/>
+                           <input type="hidden" value="${!empty d.TASK_SCORE?d.TASK_SCORE:'--'}" name="hd_rwdf"/>
+                           <input type="hidden" value="${!empty d.CQS?d.CQS:'--'}" name="hd_cqs"/>
+                           <input type="hidden" value="${!empty d.RWS?d.RWS:'--'}" name="hd_rws"/>
+                           <input type="hidden" value="${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'--'}" name="hd_zjf"/>
+                       </td>
                    </tr>
                </c:forEach>
         </c:if>
@@ -47,8 +64,8 @@
    </c:if>
 <c:if test="${empty clsObj.dctype||clsObj.dctype!=3}">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
-        <colgroup span="4" class="w160"></colgroup>
-        <colgroup class="w190"></colgroup>
+        <colgroup span="4" class="w200"></colgroup>
+        <colgroup class="w310"></colgroup>
         <tr>
             <th>姓名</th>
             <th>网上得分</th>
@@ -64,7 +81,15 @@
                     <%--<td>${!empty d.WXDF?d.WXDF:'--'}</td>--%>
                     <td>${!empty d.GROUP_SCORE?d.GROUP_SCORE:'--'}</td>
                     <td>${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'--'}</td>
-                    <td>${d.RNUM}</td>
+                    <td>${d.RNUM}
+                        <input type="hidden" value="${!empty d.WSDF?d.WSDF:'--'}" name="hd_wsdf"/>
+                        <input type="hidden" value="${!empty d.WXDF?d.WXDF:'--'}" name="hd_wxdf"/>
+                        <input type="hidden" value="${!empty d.GROUP_SCORE?d.GROUP_SCORE:'--'}" name="hd_xzdf"/>
+                        <input type="hidden" value="${!empty d.TASK_SCORE?d.TASK_SCORE:'--'}" name="hd_rwdf"/>
+                        <input type="hidden" value="${!empty d.CQS?d.CQS:'--'}" name="hd_cqs"/>
+                        <input type="hidden" value="${!empty d.RWS?d.RWS:'--'}" name="hd_rws"/>
+                        <input type="hidden" value="${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'--'}" name="hd_zjf"/>
+                    </td>
                 </tr>
             </c:forEach>
         </c:if>
