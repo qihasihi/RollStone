@@ -24,10 +24,16 @@
             var replyDetail = $("#replyDetail").val();
             var replyAttach = $("#replyAttach").val();
             var attachType = $("#attachType").val();
+            var paperId = $("#paperId").val();
+            var quesId = $("#quesId").val();
             var param={schoolId:schoolId,jid:jid,classId:classId,isVirtual:isvir,time:time,taskId:taskId,userType:userType,replyDetail:replyDetail};
             if(replyAttach.length>0){
                 param.replyAttach = replyAttach;
                 param.attachType = attachType;
+            }
+            if(paperId.length>0){
+                param.paperId = paperId;
+                param.quesId = quesId;
             }
             param.method=methodName;
 
@@ -81,6 +87,14 @@
             <tr>
                 <td>附件类型</td>
                 <td><input type="text" name="attachType" id="attachType" value="2"/> </td>
+            </tr>
+            <tr>
+                <td>试卷id</td>
+                <td><input type="text" name="paperId" id="paperId" value=""/> </td>
+            </tr>
+            <tr>
+                <td>试题id</td>
+                <td><input type="text" name="quesId" id="quesId" value=""/> </td>
             </tr>
             <tr>
                 <td>时间戳</td>

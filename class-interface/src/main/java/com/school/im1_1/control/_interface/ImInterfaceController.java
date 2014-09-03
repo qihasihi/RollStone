@@ -1112,6 +1112,58 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
             returnMap.put("taskContent", "任务 " + taskList.get(0).getOrderidx() + " " + typename+" "+rsList.get(0).getResname());
             returnMap.put("taskAnalysis",taskinfo.get(0).get("TASKANALYSIS"));
+        }else if(taskList.get(0).getTasktype()==6){
+            ResourceInfo rs = new ResourceInfo();
+            rs.setResid(taskList.get(0).getTaskvalueid());
+            List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
+            String attchStr = UtilTool.getResourceLocation(rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+            Map att = new HashMap();
+            att.put("attach",attchStr);
+            List attList = new ArrayList();
+            attList.add(att);
+            returnMap.put("attachs", attList);
+            returnMap.put("attachType", rsList.get(0).getFilesuffixname());
+            returnMap.put("isOver",taskinfo.get(0).get("ISOVER"));
+            //拼接tasmname显示任务主体
+            String typename = "";
+            switch (taskList.get(0).getTasktype()){
+                case 1:
+                    typename="资源学习";
+                    break;
+                case 2:
+                    typename="互动交流";
+                    break;
+                case 3:
+                    typename="试题";
+                    break;
+                case 4:
+                    typename="成卷测试";
+                    break;
+                case 5:
+                    typename="自主测试";
+                    break;
+                case 6:
+                    typename="微课程学习";
+                    break;
+                case 7:
+                    typename="图片";
+                    break;
+                case 8:
+                    typename="文字";
+                    break;
+                case 9:
+                    typename="视频";
+                    break;
+            }
+            returnMap.put("taskContent", "任务 " + taskList.get(0).getOrderidx() + " " + typename+" "+rsList.get(0).getResname());
+            returnMap.put("taskAnalysis",taskinfo.get(0).get("TASKANALYSIS"));
+            //查询当前任务的微课程是否完整看过
+            List<Map<String,Object>> list = this.imInterfaceManager.getTaskWatch(userList.get(0).getUserid(),taskList.get(0).getTaskvalueid());
+            if(list!=null&&list.size()>0){
+                returnMap.put("isWatched",1);
+            }else{
+                returnMap.put("isWatched",0);
+            }
         }else{
             returnMap.put("attachs", taskinfo.get(0).get("ATTACHS"));
             //returnMap.put("attachType", taskinfo.get(0).get("ATTACHTYPE"));
@@ -1752,9 +1804,15 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String replyAttach = paramMap.get("replyAttach");
         String attachType = paramMap.get("attachType");
         String timestamp = paramMap.get("time");
+        String paperid = paramMap.get("paperId");
+        String quesid = paramMap.get("quesId");
         if(replyAttach==null||replyAttach.length()==0){
             paramMap.remove("replyAttach");
             paramMap.remove("attachType");
+        }
+        if(paperid==null||paperid.length()==0){
+            paramMap.remove("paperId");
+            paramMap.remove("quesId");
         }
         String sig = paramMap.get("sign");
         //  String sign = UrlSigUtil.makeSigSimple("TaskInfo",paramMap,"*ETT#HONER#2014*");
@@ -1911,6 +1969,51 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     objListArray.add(objList);
                 }
             }
+        }else if(tmpTask.getTasktype()==4||tmpTask.getTasktype()==5||tmpTask.getTasktype()==6){
+            //首先判断试题类型
+            QuestionInfo qi = new QuestionInfo();
+            qi.setQuestionid(Long.parseLong(quesid));
+            List<QuestionInfo> qiList = this.questionManager.getList(qi,null);
+            if(qiList==null||qiList.size()==0){
+                response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前试题不存在，请刷新重试\"}");
+                return;
+            }
+            Integer questype = qiList.get(0).getQuestiontype();
+            if(questype!=1&&questype!=9){
+                response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前试题类型不符合，请选择别的提交方法\"}");
+                return;
+            }
+            StuPaperQuesLogs stpq=new StuPaperQuesLogs();
+            stpq.setPaperid(Long.parseLong(paperid));
+            stpq.setQuesid(Long.parseLong(quesid));
+            stpq.setUserid(userList.get(0).getUserid());
+            stpq.setTaskid(Long.parseLong(taskid));
+            PageResult presult=new PageResult();
+            presult.setPageSize(1);
+            //查询是否存在
+            List<StuPaperQuesLogs> spqlogList=this.stuPaperQuesLogsManager.getList(stpq,presult);
+            stpq.setAnswer(replyDetail);
+            stpq.setScore(Float.parseFloat("0"));
+            if(replyAttach!=null&&replyAttach.length()>0)
+                stpq.setAnnexName(replyAttach);
+            stpq.setIsright(1);
+            stpq.setIsmarking(0);
+            //如果存在，则修改
+            if(spqlogList!=null&&spqlogList.size()>0){
+                sql=new StringBuilder();
+                objList=stuPaperQuesLogsManager.getUpdateSql(stpq,sql);
+                if(sql.toString().length()>0){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }else{
+                sql=new StringBuilder();
+                objList=stuPaperQuesLogsManager.getSaveSql(stpq,sql);
+                if(sql.toString().length()>0){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }
         }else{
             if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==1){//查看标准的，添加完成
                 TaskPerformanceInfo tp=new TaskPerformanceInfo();
@@ -1980,64 +2083,68 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 JSONObject jo = new JSONObject();
                 jo.put("result","1");
                 jo.put("msg","回答完成");
-                if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){//提交标准的返回回答列表
-                    List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
-                    Map returnUserMap =null;
-                    List<Map<String,Object>> taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
-                    if(taskUserRecord!=null&&taskUserRecord.size()>0){
-                        StringBuilder jids = new StringBuilder();
-                        jids.append("[");
-                        for(int i = 0;i<taskUserRecord.size();i++){
-                            returnUserMap = new HashMap();
-                            String replyDate = UtilTool.convertTimeForTask(Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString()),taskUserRecord.get(i).get("C_TIME").toString());
-                            returnUserMap.put("replyDate",replyDate);
-                            returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
-                            returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
-                            returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
-                            returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
-                            if(taskUserRecord.get(i).get("JID")!=null){
-                                jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
-                            }else{
-                                returnUserMap.put("uPhoto","http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
-                                returnUserMap.put("uName",taskUserRecord.get(i).get("realname"));
+                if(tmpTask.getTasktype()==4||tmpTask.getTasktype()==5||tmpTask.getTasktype()==6){
+
+                }else{
+                    if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){//提交标准的返回回答列表
+                        List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
+                        Map returnUserMap =null;
+                        List<Map<String,Object>> taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
+                        if(taskUserRecord!=null&&taskUserRecord.size()>0){
+                            StringBuilder jids = new StringBuilder();
+                            jids.append("[");
+                            for(int i = 0;i<taskUserRecord.size();i++){
+                                returnUserMap = new HashMap();
+                                String replyDate = UtilTool.convertTimeForTask(Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString()),taskUserRecord.get(i).get("C_TIME").toString());
+                                returnUserMap.put("replyDate",replyDate);
+                                returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
+                                returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
+                                returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
+                                returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                                if(taskUserRecord.get(i).get("JID")!=null){
+                                    jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
+                                }else{
+                                    returnUserMap.put("uPhoto","http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
+                                    returnUserMap.put("uName",taskUserRecord.get(i).get("realname"));
+                                }
+                                // returnUserMap.put("uPhoto","img");
+                                // returnUserMap.put("uName","小虎");
+                                returnUserRecord.add(returnUserMap);
                             }
-                            // returnUserMap.put("uPhoto","img");
-                            // returnUserMap.put("uName","小虎");
-                            returnUserRecord.add(returnUserMap);
-                        }
-                        String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                        String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
-                        //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-                        HashMap<String,String> signMap = new HashMap();
-                        signMap.put("userList",jidstr);
-                        signMap.put("schoolId",schoolid);
-                        signMap.put("srcJid",userid);
-                        signMap.put("userType","3");
-                        signMap.put("timestamp",""+System.currentTimeMillis());
-                        String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-                        signMap.put("sign",signture);
-                        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                        if(type==1){
-                            Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                            JSONArray jr = JSONArray.fromObject(obj);
-                            if(jr!=null&&jr.size()>0){
-                                for(int i = 0;i<jr.size();i++){
-                                    JSONObject jObject = jr.getJSONObject(i);
-                                    for(int j = 0;j<returnUserRecord.size();j++){
-                                        returnUserMap = new HashMap();
-                                        if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
-                                            returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
-                                            returnUserRecord.get(j).put("uName", jObject.getString("realName"));
+                            String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                            String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
+                            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                            HashMap<String,String> signMap = new HashMap();
+                            signMap.put("userList",jidstr);
+                            signMap.put("schoolId",schoolid);
+                            signMap.put("srcJid",userid);
+                            signMap.put("userType","3");
+                            signMap.put("timestamp",""+System.currentTimeMillis());
+                            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+                            signMap.put("sign",signture);
+                            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                            if(type==1){
+                                Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                                JSONArray jr = JSONArray.fromObject(obj);
+                                if(jr!=null&&jr.size()>0){
+                                    for(int i = 0;i<jr.size();i++){
+                                        JSONObject jObject = jr.getJSONObject(i);
+                                        for(int j = 0;j<returnUserRecord.size();j++){
+                                            returnUserMap = new HashMap();
+                                            if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                                returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
+                                                returnUserRecord.get(j).put("uName", jObject.getString("realName"));
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                        Map m = new HashMap();
+                        m.put("replyList",returnUserRecord);
+                        jo.put("data",m);
                     }
-                    Map m = new HashMap();
-                    m.put("replyList",returnUserRecord);
-                    jo.put("data",m);
                 }
                 response.getWriter().print(jo.toString());
             }else{
@@ -3079,7 +3186,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 request.setAttribute("replyList",returnUserRecord);
                 return new ModelAndView("/imjsp-1.1/remote-resource-detail");
             }else{
-                if(taskList.get(0).getRemotetype()!=null&&taskList.get(0).getRemotetype()==2){
+                if(taskList.get(0).getRemotetype()!=null&&taskList.get(0).getRemotetype()==2){// 知识导学
                     String url = "http://192.168.10.26:8008/study-im-service-1.0/getResourceZSDX.do";
                     Long time = System.currentTimeMillis();
                     HashMap<String,String> param = new HashMap<String, String>();
@@ -3095,8 +3202,22 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     }else{
                         return null;
                     }
-                }else{
-
+                }else{//高清课堂
+                    String url = "http://192.168.10.26:8008/study-im-service-1.0/playVideoUrl.do";
+                    Long time = System.currentTimeMillis();
+                    HashMap<String,String> param = new HashMap<String, String>();
+                    param.put("resourceId",resid.toString());
+                    param.put("timestamp",time.toString());
+                    String signure =  UrlSigUtil.makeSigSimple("playVideoUrl.do",param,"*ETT#HONER#2014*");
+                    param.put("sign",signure);
+                    JSONObject returnval = UtilTool.sendPostUrl(url,param,"GBK");
+                    String data=returnval.containsKey("data")?returnval.getString("data"):"";
+                    int result = returnval.containsKey("result")?returnval.getInt("result"):0;
+                    if(result==1){
+                        response.sendRedirect(data);
+                    }else{
+                        return null;
+                    }
                 }
             }
         }else{
@@ -3640,6 +3761,89 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             returnJo.put("msg", "异常错误，奖励加分失败，原因：该任务已经存在相关记录");
         }
         response.getWriter().println(returnJo.toString());
+    }
+
+    /**
+     * 回答任务接口
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=AddVideoWatched",method={RequestMethod.GET,RequestMethod.POST})
+    public void addVideoWatched(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result","0");//默认失败
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
+        //获取参数
+        String taskId=paramMap.get("taskId");
+        String jid=paramMap.get("jid");
+        String schoolId=paramMap.get("schoolId");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        if(taskId==null||schoolId==null||time==null||sign==null||jid==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //验证时间
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(time.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //去除sign
+        paramMap.remove("sign");
+        //验证Md5
+        Boolean b = UrlSigUtil.verifySigSimple("AddVideoWatched",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo u=new UserInfo();
+        u.setEttuserid(Integer.parseInt(jid));
+        u.setDcschoolid(Integer.parseInt(schoolId));
+        List<UserInfo>userList=this.userManager.getList(u,null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","当前云帐号未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo tmpUser=userList.get(0);
+        //验证任务 是否存在
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskId.trim()));
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<TpTaskInfo> tpTaskList=this.tpTaskManager.getList(tk,presult);
+        if(tpTaskList==null||tpTaskList.size()<1){
+            returnJo.put("msg","错误，当前任务不存在!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //插入观看完整记录
+        StuViewMicVideoLog obj = new StuViewMicVideoLog();
+        obj.setUserid(userList.get(0).getUserid());
+        obj.setMicvideoid(tpTaskList.get(0).getTaskvalueid());
+        Boolean bl = this.stuViewMicVideoLogManager.doSave(obj);
+        if(bl){
+            returnJo.put("result","1");
+            returnJo.put("msg","");
+        }else{
+            returnJo.put("msg","观看失败，请重新观看");
+        }
+        response.getWriter().print(returnJo.toString());
     }
 
 

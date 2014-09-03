@@ -23,4 +23,5 @@ public interface IImInterfaceManager extends IBaseManager<ImInterfaceInfo> {
 
     public List<Map<String ,Object>> getQryStatPerson(ImInterfaceInfo obj);
     public List<Map<String ,Object>> getQryStatPersonStu(ImInterfaceInfo obj);
+    public List<Map<String,Object>> getTaskWatch(Integer userid,Long videoid);
 }

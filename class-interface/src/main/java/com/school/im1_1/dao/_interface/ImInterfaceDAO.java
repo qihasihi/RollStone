@@ -447,4 +447,28 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
             return list;
         return null;
     }
+
+    @Override
+    public List<Map<String, Object>> getTaskWatch(Integer userid, Long videoid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_taskinfo_proc_getWatch(");
+        List<Object> objList=new ArrayList<Object>();
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(videoid!=null){
+            sqlbuilder.append("?");
+            objList.add(videoid);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
 }

@@ -416,25 +416,25 @@
         }
 
 
-       if(ueditorArray.length>0){
-            for(var i=0;i<ueditorArray.length;i++){
-                var id=ueditorArray[i];
-                id= new UE.ui.Editor({
-                    //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
-                    toolbars: [
-                        //['emotion','attachment','superscript','subscript','fullscreen','insertimage']
-                        ['emotion','attachment','fullscreen']
-                    ],
-                     initialFrameWidth: "600px",
-                     initialFrameHeight: "90px",
-                    autoHeightEnabled: false
-                });
-                textarea:'txt_taskanswer_'+ueditorArray[i]+''; //与textarea的name值保持一致
-                id.setDataId(ueditorArray[i]);
-                id.render('txt_taskanswer_'+ueditorArray[i]+'');
-                ueditorObjArray.push(id);
-            }
-        }
+//       if(ueditorArray.length>0){
+//            for(var i=0;i<ueditorArray.length;i++){
+//                var id=ueditorArray[i];
+//                id= new UE.ui.Editor({
+//                    //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+//                    toolbars: [
+//                        //['emotion','attachment','superscript','subscript','fullscreen','insertimage']
+//                        ['emotion','attachment','fullscreen']
+//                    ],
+//                     initialFrameWidth: "600px",
+//                     initialFrameHeight: "90px",
+//                    autoHeightEnabled: false
+//                });
+//                textarea:'txt_taskanswer_'+ueditorArray[i]+''; //与textarea的name值保持一致
+//                id.setDataId(ueditorArray[i]);
+//                id.render('txt_taskanswer_'+ueditorArray[i]+'');
+//                ueditorObjArray.push(id);
+//            }
+//        }
 
 
 

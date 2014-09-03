@@ -130,4 +130,9 @@ public class ImInterfaceManager extends BaseManager<ImInterfaceInfo> implements 
     public List<Map<String, Object>> getQryStatPersonStu(ImInterfaceInfo obj) {
         return this.imInterfaceDAO.getQryStatPersonStu(obj);
     }
+
+    @Override
+    public List<Map<String, Object>> getTaskWatch(Integer userid, Long videoid) {
+        return this.imInterfaceDAO.getTaskWatch(userid,videoid);
+    }
 }
