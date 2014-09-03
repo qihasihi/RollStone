@@ -60,10 +60,10 @@
                    tqControler.nextNum(1);
             </c:if>
             document.getElementById("fm_free").submit=function(){
-                nextNum(-1,tqControler,1);
+                nextNum(-1,tqControler,2);
             }
             document.getElementById("fm_next").submit=function(){
-                nextNum(1,tqControler,1);
+                nextNum(1,tqControler,2);
             }
             document.getElementById("fm_subPaper").submit=function(){
                 subPaper(tqControler);
@@ -79,9 +79,11 @@
 <!--试卷里的试题-->
 <div class="zxcs_test" id="dv_question">
 </div>
-<%--<a href="javascript:;" onclick="fm_free.submit();">上一题</a>--%>
-<%--<a  href="javascript:;" onclick="fm_next.submit();">下一题</a>--%>
-<%--<a href="javascript:;" onclick="fm_subPaper.submit()">交卷</a>--%>
+<!--先提交当前问题，再进入上一题-->
+<a href="javascript:;" onclick="fm_subQues.submit();fm_free.submit();">上一题</a>
+<!--先提交当前问题，再进入下一题-->
+<a  href="javascript:;" onclick="fm_subQues.submit();fm_next.submit();">下一题</a>
+<a href="javascript:;" onclick="fm_subPaper.submit()">交卷</a>
 <!--上一题的FRM-->
 <form action="#" id="fm_free" method="post">
 </form>
@@ -94,5 +96,6 @@
 <!--提交试题的FRM-->
 <form action="#"  id="fm_subQues" method="post">
 </form>
+
 </body>
 </html>

@@ -318,10 +318,10 @@ TestPaperQues.prototype.subQues=function(direcType){
             type: 'POST',
             success: function (rps, status) {
                 if(rps.type=="success"){
-                    alert(rps.msg);
                     if(subQuesId.indexOf(","+quesid+",")<0)
                         subQuesId+=quesid+","
                     controlObj.nextNum(direcType);
+                    alert(rps.msg);
                 }else
                     alert(rps.msg);
             },
@@ -343,6 +343,7 @@ TestPaperQues.prototype.subQues=function(direcType){
                     if(subQuesId.indexOf(","+quesid+",")<0)
                         subQuesId+=quesid+",";
                     controlObj.nextNum(direcType);
+                    alert(rps.msg);
                 }else
                     alert(rps.msg);
             }
@@ -950,9 +951,9 @@ TestPaperDetail.prototype.loadQues=function(){
  */
 function nextNum(type,obj,isAnswer){
     if(typeof(type)!="undefined"&&typeof(obj)=="object"){
-        if(typeof(isAnswer)!="undefined"&&isAnswer==1)
+        if(typeof(isAnswer)!="undefined"&&isAnswer==1){
             obj.freeSubQuesAnswer(type);
-        else
+        }else
             obj.nextNum(type);
     }
     return(false);
