@@ -52,8 +52,6 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.1" level="project" />
     <orderEntry type="module" module-name="aggregator-class" />
     <orderEntry type="module" module-name="class-teachingplatform" />
-    <orderEntry type="module" module-name="class-resource" />
-    <orderEntry type="module" module-name="class-basicplatform" />
   </component>
 </module>
 

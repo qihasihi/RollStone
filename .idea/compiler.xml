@@ -26,6 +26,7 @@
         <module name="aggregator-web" />
         <module name="class-basicplatform" />
         <module name="class-common" />
+        <module name="class-interface" />
         <module name="class-personalspace" />
         <module name="class-resource" />
         <module name="class-teachingplatform" />

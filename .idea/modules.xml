@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/aggregator-web/aggregator-web.iml" filepath="$PROJECT_DIR$/aggregator-web/aggregator-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/class-basicplatform/class-basicplatform.iml" filepath="$PROJECT_DIR$/class-basicplatform/class-basicplatform.iml" />
       <module fileurl="file://$PROJECT_DIR$/class-common/class-common.iml" filepath="$PROJECT_DIR$/class-common/class-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/class-interface/class-interface.iml" filepath="$PROJECT_DIR$/class-interface/class-interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/class-personalspace/class-personalspace.iml" filepath="$PROJECT_DIR$/class-personalspace/class-personalspace.iml" />
       <module fileurl="file://$PROJECT_DIR$/class-resource/class-resource.iml" filepath="$PROJECT_DIR$/class-resource/class-resource.iml" />
       <module fileurl="file://$PROJECT_DIR$/class-teachingplatform/class-teachingplatform.iml" filepath="$PROJECT_DIR$/class-teachingplatform/class-teachingplatform.iml" />
