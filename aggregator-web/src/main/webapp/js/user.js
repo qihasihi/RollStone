@@ -1367,7 +1367,8 @@ function getClsByYear(dobj){
 		dataType:'json',
 		data:{
 			year:year,
-			classgrade:grade
+			classgrade:grade,
+            flag:1
 		},
 		error:function(){
 			alert('程序异常无响应!');

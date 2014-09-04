@@ -22,7 +22,7 @@
 			
 	String fileSystemIpPort=UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD");//"http://202.99.47.77:80/";//request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort()+"/";;
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
-			 boolean isTeacher=false,isStudent=false;
+			 boolean isTeacher=false,isStudent=false,isBzr=false;
  List<RoleUser> cruList=null;
 // System.out.println(request.getRequestURI().trim().replaceAll("/",""));
 // System.out.println(request.getServletPath().replaceAll("/",""));
@@ -49,9 +49,12 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 		for(RoleUser ru : cruList){
 			if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID)){
 				isTeacher=true;
+
 			}else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_STU_ID)){
 				isStudent=true;
 			}
+            if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID))
+                isBzr=true;
 		} 
 	}   
 	session.setAttribute("currentUserRoleList",cruList);		

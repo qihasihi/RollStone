@@ -52,4 +52,12 @@ public interface  IClassUserDAO extends ICommonDAO<ClassUser>{
      * @return
      */
     public List<Map<String,Object>>  getClassUserTeacherBy(String userref,String relationType,String year,Integer gradeid);
+
+    /**
+     * 是否是任课班主任
+     * @param userid
+     * @param classid
+     * @return
+     */
+    public Integer isTeachingBanZhuRen(String userid,Integer classid);
 }

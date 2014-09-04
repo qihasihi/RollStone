@@ -15,12 +15,12 @@
     String pageType=null;
   	if(request.getAttribute("pageType")!=null)
   		pageType=(String)request.getAttribute("pageType");
-  	 
+
     SmsReceiver smsreceiver = new SmsReceiver();
 	UserInfo sms_user=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
 	if(null!=sms_user)
 		smsreceiver.setReceiverid(sms_user.getUserid());
-	else 
+	else
 		smsreceiver.setReceiverid(0);
 	smsreceiver.setStatus(0);
 	ApplicationContext acc = WebApplicationContextUtils.getWebApplicationContext(application);
@@ -32,6 +32,7 @@
     List<EttColumnInfo> ettColumnInfos =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
     //logo
     SchoolLogoInfo logoObj = (SchoolLogoInfo)request.getSession().getAttribute("logoObj");
+
     String logosrc = null;
     if(logoObj!=null){
         logosrc=logoObj.getLogosrc();

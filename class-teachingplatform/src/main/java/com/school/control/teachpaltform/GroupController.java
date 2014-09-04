@@ -3,18 +3,13 @@ package com.school.control.teachpaltform;
 import com.school.control.base.BaseController;
 import com.school.entity.*;
 import com.school.entity.teachpaltform.*;
-import com.school.manager.ClassManager;
-import com.school.manager.ClassUserManager;
-import com.school.manager.GradeManager;
-import com.school.manager.TermManager;
-import com.school.manager.inter.IClassManager;
-import com.school.manager.inter.IClassUserManager;
-import com.school.manager.inter.IGradeManager;
-import com.school.manager.inter.ITermManager;
+import com.school.manager.*;
+import com.school.manager.inter.*;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.teachpaltform.*;
 import com.school.utils.EttInterfaceUserUtil;
 import com.school.util.JsonEntity;
+import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,10 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping(value="/group")
@@ -41,6 +33,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
     private ITpTaskAllotManager tpTaskAllotManager;
     private IGradeManager gradeManager;
     private IClassManager classManager;
+    private ISubjectManager subjectManager;
     public GroupController(){
         this.termManager=this.getManager(TermManager.class);
         this.tpGroupManager=this.getManager(TpGroupManager.class);
@@ -51,6 +44,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
         this.tpTaskAllotManager=this.getManager(TpTaskAllotManager.class);
         this.gradeManager=this.getManager(GradeManager.class);
         this.classManager=this.getManager(ClassManager.class);
+        this.subjectManager=this.getManager(SubjectManager.class);
     }
 
 	/**
@@ -63,52 +57,216 @@ public class GroupController extends BaseController<TpGroupInfo>{
 	@RequestMapping(params="m=toGroupManager",method=RequestMethod.GET)
 	public ModelAndView toGroupManager(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity jeEntity = new JsonEntity();
-        String classid = request.getParameter("classid");
-        String classtype = request.getParameter("classtype");
+        String termid=request.getParameter("termid");
         String subjectid=request.getParameter("subjectid");
         String gradeid = request.getParameter("gradeid");
-        UserInfo u=this.logined(request);
-        TermInfo ti = this.termManager.getMaxIdTerm(false);
-        if (ti == null || classid==null || classtype==null) {
-            jeEntity.setMsg(UtilTool.msgproperty.getProperty("学期参数错误,请联系教务。"));// 异常错误，参数不齐，无法正常访问!
-            response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
+        String classid=request.getParameter("classid");
+
+        TermInfo termInfo=null;
+        if(termid!=null){
+            TermInfo t=new TermInfo();
+            t.setRef(termid);
+            List<TermInfo>termList=this.termManager.getList(t,null);
+            if(termList==null||termList.size()<1){
+                jeEntity.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+                response.getWriter().print(jeEntity.getAlertMsgAndBack());
+                return null;
+            }
+            termInfo=termList.get(0);
+        }else
+            termInfo=this.termManager.getMaxIdTerm(false);
+
+        if(termInfo==null){
+            jeEntity.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+            response.getWriter().print(jeEntity.getAlertMsgAndBack());
             return null;
         }
-        //查询年级数据
-        GradeInfo gi = new GradeInfo();
-        gi.setGradeid(Integer.parseInt(gradeid));
-        List<GradeInfo> giList = this.gradeManager.getList(gi,null);
-        ClassUser c = new ClassUser();
-        //当前学期、学科、年级下的授课班级
-        c.setClassgrade(giList.get(0).getGradevalue());
-        c.setUserid(this.logined(request).getRef());
-        c.setRelationtype("任课老师");
-        c.setSubjectid(Integer.parseInt(subjectid));
-        c.setYear(ti.getYear());
-        List<ClassUser>clsList=this.classUserManager.getList(c,null);
-       // List<ClassUser> clsList = this.classUserManager.getListByTchYear(u.getRef(), ti.getYear());
-        TpVirtualClassInfo tvc= new TpVirtualClassInfo();
-        tvc.setCuserid(u.getUserid());
-        tvc.setStatus(1);
-        List<TpVirtualClassInfo> tvcList=this.tpVirtualClassManager.getList(tvc, null);
-
-        TrusteeShipClass trusteeShipClass=new TrusteeShipClass();
-        trusteeShipClass.setTrustclassid(Integer.parseInt(classid));
-        trusteeShipClass.setIsaccept(1);//接受
-        trusteeShipClass.setTrustteacherid(this.logined(request).getUserid());
-        List<TrusteeShipClass>trusteeShipClassList=this.trusteeShipClassManager.getList(trusteeShipClass,null);
-
-        mp.put("classid",classid);
-        mp.put("classtype",classtype);
-        mp.put("classes", clsList);
-        mp.put("vclasses", tvcList);
-        //当前班级已托管
-        if(trusteeShipClassList!=null&&trusteeShipClassList.size()>0){
-            mp.put("isTrust",1);
+        List<ClassUser>tmpList=new ArrayList<ClassUser>();
+        List<ClassUser>clsList=null;
+        String gradeValue=null;
+        if(gradeid!=null&&gradeid.trim().length()>0){
+            GradeInfo gradeInfo=new GradeInfo();
+            gradeInfo.setGradeid(Integer.parseInt(gradeid));
+            List<GradeInfo>gList=this.gradeManager.getList(gradeInfo,null);
+            if(gList!=null&&gList.size()>0)
+                gradeValue=gList.get(0).getGradevalue();
         }
 
-		return new ModelAndView("/teachpaltform/class/groupManager",mp);
+        if(classid!=null&&classid.trim().length()>0){
+            ClassUser sel=new ClassUser();
+            sel.setClassid(Integer.parseInt(classid));
+            sel.setNorelationtype("学生");
+            if(subjectid!=null&&subjectid.trim().length()>0)
+                sel.setSubjectid(Integer.parseInt(subjectid));
+            if(gradeValue!=null)
+                sel.setClassgrade(gradeValue);
+            sel.setYear(termInfo.getYear());
+            clsList=this.classUserManager.getList(sel,null);
+            if(clsList!=null&&clsList.size()>0)
+                tmpList.add(clsList.get(0));
+        }
+
+        ClassUser c = new ClassUser();
+        //当前学期、学科、年级下的授课班级
+        if(subjectid!=null&&subjectid.trim().length()>0)
+            c.setSubjectid(Integer.parseInt(subjectid));
+        if(gradeValue!=null)
+            c.setClassgrade(gradeValue);
+        c.setUserid(this.logined(request).getRef());
+        c.setNorelationtype("学生");
+        c.setYear(termInfo.getYear());
+        clsList=this.classUserManager.getList(c,null);
+        if(clsList!=null&&clsList.size()>0){
+            for(ClassUser classUser:clsList){
+                boolean ishas=false;
+                for(ClassUser tmp:tmpList){
+                    if(tmp.getClassid().toString().equals(classUser.getClassid().toString()))
+                        ishas=true;
+                }
+                if(!ishas)
+                    tmpList.add(classUser);
+            }
+        }
+        mp.put("classes", tmpList);
+
+        if(tmpList.size()<1){
+            jeEntity.setMsg("您当前没有分配班级!");
+            response.getWriter().print(jeEntity.getAlertMsgAndBack());
+            return null;
+        }
+
+
+        //身份
+        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), tmpList.get(0).getClassid());
+        mp.put("userType",userType);
+
+
+
+        PageResult pr = new PageResult();
+        pr.setOrderBy("SEMESTER_BEGIN_DATE");
+        List<TermInfo> termList = this.termManager.getList(null, pr);
+        mp.put("termList", termList);
+        mp.put("currtTerm", this.termManager.getMaxIdTerm(false));
+        mp.put("selTerm",termInfo);
+
+        //获取首页年级学科
+        List<GradeInfo> gradeList = this.gradeManager.getTchGradeList(this.logined(request).getUserid(), termInfo.getYear());
+        List<Map<String,Object>> gradeSubjectList = new ArrayList<Map<String, Object>>();
+
+        if(gradeList!=null&&gradeList.size()>0){
+            //当前学期、学科、年级下的授课班级
+            for(int j=0;j<gradeList.size();j++){
+                ClassUser cu = new ClassUser();
+                cu.setClassgrade(gradeList.get(j).getGradevalue());
+                cu.setUserid(this.logined(request).getRef());
+                cu.setRelationtype("任课老师");
+                //cu.setSubjectid(subuserList.get(i).getSubjectid());
+                cu.setYear(termInfo.getYear());
+                List<ClassUser>classList=this.classUserManager.getList(cu,null);
+                List<SubjectInfo>subjectInfoList=new ArrayList<SubjectInfo>();
+                if(classList!=null&&classList.size()>0){
+                    for(ClassUser classUser :classList){
+                        SubjectInfo s=new SubjectInfo();
+                        s.setSubjectid(classUser.getSubjectid());
+                        s.setSubjectname(classUser.getSubjectname());
+                        if(!subjectInfoList.contains(s))
+                            subjectInfoList.add(s);
+                    }
+                    if(subjectInfoList.size()>0){
+                        for(SubjectInfo subjectInfo:subjectInfoList){
+                            Map<String,Object> map = new HashMap<String, Object>();
+                            map.put("gradeid",gradeList.get(j).getGradeid());
+                            map.put("gradevalue",gradeList.get(j).getGradevalue());
+                            map.put("subjectid",subjectInfo.getSubjectid());
+                            map.put("subjectname",subjectInfo.getSubjectname());
+                            if(!gradeSubjectList.contains(map))
+                                gradeSubjectList.add(map);
+                        }
+                    }
+                }
+            }
+        }
+        mp.put("gradeSubjectList",gradeSubjectList);
+
+        Map<String,Object>objectMap=null;
+        if(gradeSubjectList.size()>0)
+            objectMap=gradeSubjectList.get(0);
+        if(subjectid!=null&&subjectid.trim().length()>0&&gradeid!=null&&gradeid.trim().length()>0){
+            SubjectInfo s=new SubjectInfo();
+            s.setSubjectid(Integer.parseInt(subjectid));
+            List<SubjectInfo>subList=this.subjectManager.getList(s,null);
+
+            GradeInfo gradeInfo=new GradeInfo();
+            gradeInfo.setGradeid(Integer.parseInt(gradeid));
+            List<GradeInfo>gList=this.gradeManager.getList(gradeInfo,null);
+
+            if(subList!=null&&gList!=null){
+                Map<String,Object>subGradeMap=new HashMap<String, Object>();
+                subGradeMap.put("subjectid",subList.get(0).getSubjectid());
+                subGradeMap.put("gradeid",gList.get(0).getGradeid());
+                subGradeMap.put("subjectname",subList.get(0).getSubjectname());
+                subGradeMap.put("gradevalue",gList.get(0).getGradevalue());
+                objectMap=subGradeMap;
+            }
+        }
+        mp.put("subGradeInfo",objectMap);
+
+
+        return new ModelAndView("/teachpaltform/class/groupManager",mp);
 	}
+
+
+    /**
+     * 验证当前教师身份
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="checkRelationType",method=RequestMethod.POST)
+    public void checkRelationType(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        je.setType("success");
+
+        String classid=request.getParameter("classid");
+        if(classid==null||classid.length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        Integer teacher=0,bzr=0;
+        ClassUser cu=new ClassUser();
+        cu.setRelationtype("任课老师");
+        cu.setClassid(Integer.parseInt(classid));
+        cu.setUserid(this.logined(request).getRef());
+        List<ClassUser>cuList=this.classUserManager.getList(cu,null);
+        if(cuList!=null&&cuList.size()>0)
+            teacher=1;
+        cu.setRelationtype("班主任");
+        List<ClassUser>bzrList=this.classUserManager.getList(cu,null);
+        if(bzrList!=null&&bzrList.size()>0)
+            bzr=2;
+        je.getObjList().add(teacher+bzr);
+        response.getWriter().print(je.toJSON());
+    }
+
+    @RequestMapping(params="m=getClsStudent",method=RequestMethod.POST)
+    public void getClsStudent(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        je.setType("success");
+
+        String classid=request.getParameter("classid");
+        if(classid==null||classid.length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        ClassUser cu=new ClassUser();
+        cu.setClassid(Integer.parseInt(classid));
+        cu.setRelationtype("学生");
+        List<ClassUser>stuList=this.classUserManager.getList(cu,null);
+        je.setObjList(stuList);
+        response.getWriter().print(je.toJSON());
+    }
 	
 	/** 
 	 * 获取不在小组中的学生列表
@@ -134,7 +292,8 @@ public class GroupController extends BaseController<TpGroupInfo>{
                         this.logined(request).getUserid(),
                         Integer.parseInt(subjectid),
                         this.termManager.getMaxIdTerm(false).getRef());
-		je.setObjList(stuList);  
+		je.getObjList().add(stuList);
+        je.getObjList().add(this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), Integer.parseInt(classid)));
 		je.setType("success"); 
 		response.getWriter().print(je.toJSON());
 	} 
@@ -149,21 +308,41 @@ public class GroupController extends BaseController<TpGroupInfo>{
 	public void getClassGroups(HttpServletRequest request,HttpServletResponse response)throws Exception{
 		JsonEntity je =new JsonEntity();
         TpGroupInfo tg = this.getParameter(request, TpGroupInfo.class);
-		TermInfo term=this.termManager.getMaxIdTerm(false);
-		if(term==null)
-			term = this.termManager.getMaxIdTerm(true);
-		if(tg==null
+        String termid=request.getParameter("termid");
+
+        TermInfo termInfo=null;
+        if(termid!=null){
+            TermInfo t=new TermInfo();
+            t.setRef(termid);
+            List<TermInfo>termList=this.termManager.getList(t,null);
+            if(termList==null||termList.size()<1){
+                je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+                response.getWriter().print(je.getAlertMsgAndBack());
+                return;
+            }
+            termInfo=termList.get(0);
+        }else
+            termInfo=this.termManager.getMaxIdTerm(false);
+
+        if(termInfo==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return;
+        }
+
+
+        if(tg==null
                 ||tg.getSubjectid()==null
                 ||tg.getClassid()==null
                 ||tg.getClasstype()==null
-			    ||term.getRef()==null
-                    ||term.getRef().trim().length()<1){
+			    ||termInfo.getRef()==null
+                    ||termInfo.getRef().trim().length()<1){
             je.setType("error");
 			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
 			response.getWriter().print(je.toJSON());
 			return;
 		}
-		tg.setTermid(term.getRef());
+		tg.setTermid(termInfo.getRef());
 		List<TpGroupInfo>groupList=this.tpGroupManager.getGroupBySubject(tg);
         //查询小组任务完成率
         int completenum=0;
@@ -206,11 +385,16 @@ public class GroupController extends BaseController<TpGroupInfo>{
 			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
 			response.getWriter().print(je.toJSON());
 			return;
-		} 
+		}
+        PageResult pageResult=new PageResult();
+        pageResult.setPageSize(0);
+        pageResult.setPageNo(0);
+        pageResult.setOrderBy(" s.stu_name,s.stu_no ");
+
 		TpGroupStudent gs=new TpGroupStudent();
 		gs.setGroupid(Long.parseLong(groupid));
         gs.setStateid(0);
-		List<TpGroupStudent>groupstudentList=this.tpGroupStudentManager.getList(gs,null);
+		List<TpGroupStudent>groupstudentList=this.tpGroupStudentManager.getList(gs,pageResult);
 		je.setObjList(groupstudentList);
 		je.setType("success"); 
 		response.getWriter().append(je.toJSON());

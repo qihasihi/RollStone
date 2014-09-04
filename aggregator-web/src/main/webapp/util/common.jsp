@@ -87,7 +87,7 @@ Integer modelType=0;
 			
 	String fileSystemIpPort=UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD");//"http://202.99.47.77:80/";//request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort()+"/";;
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
-			 boolean isTeacher=false,isStudent=false,isteaidentity=false,isstuidentity=false;
+			 boolean isTeacher=false,isStudent=false,isBzr=false,isteaidentity=false,isstuidentity=false;
  List<RoleUser> cruList=null;
 if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 		||!request.getServletPath().replaceAll("/","").equals(proc_name+"login.jsp")
@@ -116,9 +116,12 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 		for(RoleUser ru : cruList){
 			if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID)){
 				isTeacher=true;
+
 			}else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_STU_ID)){
 				isStudent=true;
 			}
+            if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_CLASSADVISE_ID))
+                isBzr=true;
 		}
 
 
@@ -241,7 +244,8 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 	var $TEACH_ID=<%=teach_role_id%>;
  
 	var isStudent=<%=isStudent%>;
-	var isTeacher=<%=isTeacher%>;    
+	var isTeacher=<%=isTeacher%>;
+    var isBzr=<%=isBzr%>;
 	var fileSystemIpPort='<%=fileSystemIpPort%>'; 
 </script>  
 <title><%=webTitle%></title>

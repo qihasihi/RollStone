@@ -88,6 +88,11 @@ public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCo
         return tpcoursedao.getTchCourseList(tpcourseinfo,presult);
     }
 
+    @Override
+    public List<TpCourseInfo> getCalanderCourseList(TpCourseInfo tpcourseinfo, PageResult presult) {
+        return tpcoursedao.getCalanderCourseList(tpcourseinfo,presult);
+    }
+
     public List<TpCourseInfo> getStuCourseList(TpCourseInfo tpcourseinfo, PageResult presult) {
         return tpcoursedao.getStuCourseList(tpcourseinfo,presult);
     }
@@ -131,6 +136,11 @@ public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCo
     }
     public boolean doUpdateShareCourse(){
         return tpcoursedao.doUpdateShareCourse();
+    }
+
+    @Override
+    public List<Map<String, Object>> getCourseCalendar(Integer usertype, Integer userid, Integer dcschoolid, String year, String month) {
+        return tpcoursedao.getCourseCalendar(usertype,userid,dcschoolid,year,month);
     }
 }
 

@@ -71,12 +71,28 @@ function deleteCourse(courseid){
     });
 }
 
-function changeGrade(gradeid,subjectid,idx){
+function changeGrade(gradeid,subjectid,idx,name){
+    displayObj('gradeSubjectList',false);
     global_gradeid=gradeid;
     global_subjectid=subjectid;
-    $("#li_"+gradeid+"_"+subjectid+"_"+idx).siblings().attr("class","");
-    $("#li_"+gradeid+"_"+subjectid+"_"+idx).attr("class","crumb");
-    $("#fGradeSub").html($("#t_grade_sub_"+idx).html());
+
+
+
+    $("#sp_subgrade").html(name);
+    $("#a_clsid").attr("href",'group?m=toGroupManager&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'');
+    $("#a_course").attr("href",'teachercourse?toTeacherCourseList&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'');
+    $("#a_calendar").attr("href",'teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'');
+
+
+    if((typeof target=='undefined'||target.length<1)&&  (typeof isLession!='undefined'&&isLession)){
+        location.href='teachercourse?toTeacherCourseList&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid;
+        return false;
+    }
+
+
+   // $("#li_"+gradeid+"_"+subjectid+"_"+idx).siblings().attr("class","");
+  //  $("#li_"+gradeid+"_"+subjectid+"_"+idx).attr("class","crumb");
+  //  $("#fGradeSub").html($("#t_grade_sub_"+idx).html());
    //$("#material_name").html("点击教材版本");
   // $("#material_id").val(0);
     getTchMaterial();
@@ -174,6 +190,7 @@ function getInvestReturnMethod(rps){
                 html+="<p><span class='f_right'>----</span>----</p>";
             }
             html+="</td>";
+            html+="<td></td>";
             html+="<td><a href='teachercourse?m=toClassCommentList&courseid="+itm.courseid+"&type=1' target='_blank'>"+itm.avgscore+"（"+itm.commentnum+"人）</a></td>";
             html+="<td>";
             if(termid==currtterm){
@@ -208,7 +225,7 @@ function getInvestReturnMethod(rps){
         }
         pList.Refresh();
     }else{
-        html+="<tr><td colspan='4'>沒有数据！</td></tr>";
+        html+="<tr><td colspan='5'>沒有数据！</td></tr>";
 
     }
     if(rps.presult.list[1]!=null&&rps.presult.list[1].length>0){
@@ -230,7 +247,7 @@ function getInvestReturnMethod(rps){
         materialid="";
     } */
     $("#courseTable").html(html);
-    $("#claList").html(classhtml);
+    //$("#claList").html(classhtml);
 }
 
 
@@ -319,21 +336,103 @@ function getTsInvestReturnMethod(rps){
     $("#tsCourseTable").html(html);
 }
 
-function getTermCondition(tid,termname){
+
+
+function getTermCondition(tid,termname,iscalendar){
     displayObj('termList',false);
+    displayObj('gradeSubjectList',false);
     $("#checkedTerm").html(termname);
     termid=tid;
-    global_gradeid=0;
-    global_subjectid=0;
+    global_gradeid='';
+    global_subjectid='';
     $.ajax({
         url:'teachercourse?m=tchTermCondition',
         data:{termid:termid},
         type:'post',
         dataType:'json',
-        error:function(){-
+        error:function(){
+           // alert('异常错误,系统未响应！');
+        },
+        success:function(rps){
+
+            //没有授课信息的班主任
+            if(isBzr&&typeof isLession!='undefined'&&!isLession){
+                location.href='teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'';
+                return false;
+            }
+            if(rps.objList[0]==null || rps.objList[0].length==0){
+                $("#ul_grade").html("");
+                $("#courseTable").html("<tr><td colspan='5'>沒有数据！</td></tr>");
+                $("#tsCourseTable").html("<tr><td colspan='5'>沒有数据！</td></tr>");
+                $("#claList").html("");
+                $("a[name='a_hide']").hide();
+                $("#sp_subgrade").html('');
+                $("#a_clsid").attr("href","javascript:;");
+                $("#a_course").attr("href","javascript:;");
+                if(isLession<2)
+                    $("#a_calendar").attr("href","javascript:;");
+                alert("您还没有被分配学科，请联系管理员!");
+                return ;
+            }
+            //当前学期
+            if(rps.objList[1]!=null && typeof rps.objList[1]!='undefined'){
+                $("#hd_term_flag").val(rps.objList[1].flag);
+                if(currtterm!=rps.objList[1].ref)
+                    $("a[name='a_hide']").hide();
+            }
+            var html="";
+            $.each(rps.objList[0],function(idx,gitm){
+                html+='<li id="li_'+gitm.gradeid+'_'+gitm.subjectid+'">';
+                html+='<a href="javascript:changeGrade('+gitm.gradeid+','+gitm.subjectid+','+idx+',\''+gitm.gradevalue+gitm.subjectname+'\')">';
+                //html+='<span id="t_grade_sub_"+idx+"'>"+gitm.gradevalue+gitm.subjectname+"</span></a>";
+                html+=gitm.gradevalue+gitm.subjectname;
+                html+='</a>';
+            });
+             $("#gradeSubjectList").html(html);
+            //  changeTab('back');
+            //  changeTab('front');
+            if(typeof currentSubjectid!="undefined"&&currentSubjectid!=null&&currentSubjectid.length>0){
+                var liid="li_"+currentGradeid+"_"+currentSubjectid;
+                if($("#"+liid+" a").length>0)
+                    $("#"+liid+" a").get(0).click();
+                else{
+                    if($("#gradeSubjectList li a").length>0)
+                        $("#gradeSubjectList li a").get(0).click();
+                }
+            }else{
+                if($("#gradeSubjectList li a").length>0)
+                    $("#gradeSubjectList li a").get(0).click();
+            }
+        }
+    });
+}
+
+
+
+
+function getTermCondition111(tid,termname,iscalendar){
+    displayObj('termList',false);
+    $("#checkedTerm").html(termname);
+    termid=tid;
+    global_gradeid='';
+    global_subjectid='';
+    $.ajax({
+        url:'teachercourse?m=tchTermCondition',
+        data:{termid:termid},
+        type:'post',
+        dataType:'json',
+        error:function(){
             alert('异常错误,系统未响应！');
         },
         success:function(rps){
+
+            //没有授课信息的班主任
+            if(isBzr&&typeof isLession!='undefined'&&!isLession){
+                location.href='teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'';
+                return;
+            }
+
+
             $("#teachClasses").html("");
             if(rps==null){
                 alert("获取数据出错...");
@@ -372,15 +471,15 @@ function getTermCondition(tid,termname){
                 html+="<a href="+"javascript:changeGrade("+gitm.gradeid+","+gitm.subjectid+","+idx+");"+">";
                 html+="<span id='t_grade_sub_"+idx+"'>"+gitm.gradevalue+gitm.subjectname+"</span></a>";
             });
-            $("#ul_grade").html(html);
-            changeTab('back');
-            changeTab('front');
-            if(currentSubjectid!="undefind"&&currentSubjectid!=null&&currentSubjectid.length>0){
-                var liid="li_"+currentGradeid+"_"+currentSubjectid+"_";
+           // $("#ul_grade").html(html);
+          //  changeTab('back');
+          //  changeTab('front');
+            if(typeof currentSubjectid!="undefined"&&currentSubjectid!=null&&currentSubjectid.length>0){
+                var liid="li_"+currentGradeid+"_"+currentSubjectid;
                 var obj=$("li").filter(function(){return this.id.indexOf(liid)!=-1});
-                eval(obj.children("a").attr("href").replace("javascript:",""));
+                $(obj.children("a").click());
             }else{
-               $("#t_grade_sub_0").click();
+                $("#gradeSubjectList li").eq(0).children("a").click();
             }
         }
     });

@@ -32,44 +32,22 @@ public class TpCourseClass {
 
     private String classgrade;
 
-    private TpCourseInfo tpcourseinfo;
+    private Long quoteid;
+    private Integer cuserid;
+    private Integer courselevel;
 
-    public TpCourseInfo getTpcourseinfo() {
-        if(this.tpcourseinfo==null)
-            this.tpcourseinfo=new TpCourseInfo();
-        return this.tpcourseinfo;
-    }
 
-    public void setTpcourseinfo(TpCourseInfo tpcourseinfo) {
-        this.tpcourseinfo = tpcourseinfo;
-    }
-
-    public void setQuoteid(Long quoteid){
-        this.getTpcourseinfo().setQuoteid(quoteid);
-    }
-
-    public Long getQuoteid(){
-        return this.getTpcourseinfo().getQuoteid();
-    }
-
-    public void setCuserid(Integer cuserid){
-        this.getTpcourseinfo().setCuserid(cuserid);
-    }
-
-    public Integer getCuserid(){
-        return this.getTpcourseinfo().getCuserid();
-    }
 
     public String getSubjectname() {
         return subjectname;
     }
 
-    public void setCourselevel(Integer courselevel){
-        this.getTpcourseinfo().setCourselevel(courselevel);
+    public Long getQuoteid() {
+        return quoteid;
     }
 
-    public Integer getCourselevel(){
-        return this.getTpcourseinfo().getCourselevel();
+    public void setQuoteid(Long quoteid) {
+        this.quoteid = quoteid;
     }
 
     public void setSubjectname(String subjectname) {

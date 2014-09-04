@@ -29,4 +29,6 @@ public interface IClassManager  extends IBaseManager<ClassInfo> {
      * @return
      */
     public List<Object> getSaveOrUpdateSql(ClassInfo obj, StringBuilder sqlbuilder);
+
+
 } 

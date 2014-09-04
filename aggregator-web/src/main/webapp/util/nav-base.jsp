@@ -56,7 +56,7 @@ $(function(){
     			current_user.getRealname():current_user.getUsername()%></strong>&nbsp;您好！&nbsp;&nbsp;当前位置：<%=pageName %></p>
     <c:if test="${!empty termList}">
     <div class="jxxt_xueqi">
-        <div class="menu"><span id="checkedTerm">${currtTerm.year } ${currtTerm.termname }</span><a class="ico13" href="javascript:void(0);" onclick="displayObj('termList');"></a></div>
+        <div class="menu"><span id="checkedTerm">${selTerm.year } ${selTerm.termname }</span><a class="ico13" href="javascript:void(0);" onclick="displayObj('termList');"></a></div>
         <ul id="termList" style="display:none;">
             <c:forEach var="tl" items="${termList }">
                 <%if(isStudent){%>
@@ -66,8 +66,21 @@ $(function(){
                 <%}%>
             </c:forEach>
         </ul>
-    </div>
+
+        <%if(isTeacher){%>
+            <c:if test="${!empty gradeSubjectList}">
+                <div class="njxk"><span id="sp_subgrade">${subGradeInfo.gradevalue}${subGradeInfo.subjectname}</span><a name="a_hide" class="ico13" href="javascript:void(0);" onclick="displayObj('gradeSubjectList');"></a>
+                    <ul id="gradeSubjectList" style="display: none;" class="hide">
+                    <c:forEach items="${gradeSubjectList}" var="c" varStatus="idx">
+                        <li id="li_${c.gradeid}_${c.subjectid}"><a href="javascript:;" onclick="changeGrade('${c.gradeid}','${c.subjectid}','${idx.index}','${c.gradevalue}${c.subjectname}')">${c.gradevalue}${c.subjectname}</a></li>
+                    </c:forEach>
+                    </ul>
+                </div>
+            </c:if>
+
+        <%}%>
     </c:if>
+   </div>
 </div>
 
 	

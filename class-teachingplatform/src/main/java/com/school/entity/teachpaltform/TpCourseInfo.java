@@ -1,5 +1,6 @@
 package  com.school.entity.teachpaltform;
 
+import com.school.util.PageUtil.PageUtilTool;
 import com.school.util.UtilTool;
 
 import javax.persistence.Entity;
@@ -9,6 +10,24 @@ import java.util.*;
 @Entity
 public class TpCourseInfo  implements java.io.Serializable{
 
+    private Object datemsg;
+
+    public Object getDatemsg() {
+        return datemsg;
+    }
+    private String seldate;
+
+    public String getSeldate() {
+        return seldate;
+    }
+
+    public void setSeldate(String seldate) {
+        this.seldate = seldate;
+    }
+
+    public void setDatemsg(Object datemsg) {
+        this.datemsg = datemsg;
+    }
 
     public Integer getDcschoolid() {
         return dcschoolid;
@@ -19,6 +38,16 @@ public class TpCourseInfo  implements java.io.Serializable{
     }
 
     private Integer dcschoolid;
+    private Integer usertype;
+
+    public Integer getUsertype() {
+        return usertype;
+    }
+
+    public void setUsertype(Integer usertype) {
+        this.usertype = usertype;
+    }
+
     public void TpCourseInfo (){}
 
     private java.lang.String schoolname;
@@ -84,6 +113,61 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Integer filterquote;    //去除被引用的专题
     private Integer uncompletenum;
     private Integer questiontype;
+    private String classname;
+    private String classgrade;
+    private Integer classid;
+    private Integer isself;
+
+    public Integer getIsself() {
+        return isself;
+    }
+
+    public void setIsself(Integer isself) {
+        this.isself = isself;
+    }
+
+    public Integer getClassid() {
+        return classid;
+    }
+
+    public void setClassid(Integer classid) {
+        this.classid = classid;
+    }
+
+    private Date begintime;
+    private Date endtime;
+
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
+    }
+
+    public Date getBegintime() {
+        return begintime;
+    }
+
+    public void setBegintime(Date begintime) {
+        this.begintime = begintime;
+    }
+
+    public String getClassgrade() {
+        return classgrade;
+    }
+
+    public void setClassgrade(String classgrade) {
+        this.classgrade = classgrade;
+    }
+
+    public String getClassname() {
+        return classname;
+    }
+
+    public void setClassname(String classname) {
+        this.classname = classname;
+    }
 
     public Integer getQuestiontype() {
         return questiontype;
@@ -494,6 +578,8 @@ public class TpCourseInfo  implements java.io.Serializable{
         this.coursename = coursename;
     }
 
+
+
     public Object getClasses() {
         return classes;
     }
@@ -546,6 +632,7 @@ public class TpCourseInfo  implements java.io.Serializable{
             return null;
         return getClasstimes().toString().split(",");
     }
+
 
     public String getVersionvalues() {
         return versionvalues;

@@ -51,6 +51,14 @@ function loadCls(pageno){
                 if (aObj.length > 0)
                     $(aObj).get(0).click();
 
+
+                $("#ul_class li").each(function(idx,itm){
+                    $(itm).click(function(){
+                        $(this).siblings().removeClass('crumb');
+                        $(this).addClass('crumb');
+                    })
+                });
+
                 //分页
                 $("#dv_page").html('');
                 if (rps.presult.recTotal > 0 && rps.presult.pageTotal > 1) {

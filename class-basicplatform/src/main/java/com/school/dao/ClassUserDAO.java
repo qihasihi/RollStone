@@ -470,4 +470,26 @@ public class ClassUserDAO extends CommonDAO<ClassUser> implements IClassUserDAO 
         sqlbuilder.append(")}");
         return this.executeResultListMap_PROC(sqlbuilder.toString(), objList);
     }
+
+    @Override
+    public Integer isTeachingBanZhuRen(String userid, Integer classid) {
+        if (userid == null)
+            return 0;
+        StringBuilder sqlbuilder = new StringBuilder("{call isTeacherAndBanZhuRen(?,");
+        List<Object>objList=new ArrayList<Object>();
+        objList.add(userid);
+        if(classid!=null){
+            objList.add(classid);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0
+                && Integer.parseInt(afficeObj.toString()) > 0) {
+            return Integer.parseInt(afficeObj.toString());
+        }
+        return 0;
+    }
 }

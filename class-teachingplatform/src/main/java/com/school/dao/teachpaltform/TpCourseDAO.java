@@ -197,6 +197,48 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
         return tpcourseinfoList;
     }
 
+    @Override
+    public List<Map<String, Object>> getCourseCalendar(Integer usertype,Integer userid, Integer dcschoolid, String year, String month) {
+        if(usertype==null||dcschoolid==null||year==null||month==null)
+            return null;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL getCourseCalendar(");
+        List<Object> objList=new ArrayList<Object>();
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(usertype!=null){
+            sqlbuilder.append("?,");
+            objList.add(usertype);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(dcschoolid!=null){
+            sqlbuilder.append("?,");
+            objList.add(dcschoolid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(year!=null){
+            sqlbuilder.append("?,");
+            objList.add(year);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(month!=null){
+            sqlbuilder.append("?,");
+            objList.add(month);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Map<String,Object>> courselist=this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        return courselist;
+    }
+
     public List<TpCourseInfo> getList(TpCourseInfo tpcourseinfo, PageResult presult) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_course_info_proc_split(");
@@ -399,6 +441,84 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
             objList.add(tpcourseinfo.getCourseclassref());
         } else
             sqlbuilder.append("null,");
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<TpCourseInfo> tpcourseinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpCourseInfo.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return tpcourseinfoList;
+    }
+
+    @Override
+    public List<TpCourseInfo> getCalanderCourseList(TpCourseInfo tpcourseinfo, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_course_proc_tch_calander_split(");
+        List<Object> objList=new ArrayList<Object>();
+        if (tpcourseinfo.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+
+        if (tpcourseinfo.getCourselevel() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getCourselevel());
+        } else
+            sqlbuilder.append("null,");
+
+        if (tpcourseinfo.getTermid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getTermid());
+        } else
+            sqlbuilder.append("null,");
+
+        if (tpcourseinfo.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getUserid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseinfo.getUsertype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getUsertype());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseinfo.getDcschoolid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getDcschoolid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseinfo.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseinfo.getGradeid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getGradeid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseinfo.getSeldate() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getSeldate());
+        } else
+            sqlbuilder.append("null,");
+
+
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
             sqlbuilder.append("?,?,");
             objList.add(presult.getPageNo());

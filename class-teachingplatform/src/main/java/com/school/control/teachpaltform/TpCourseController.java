@@ -34,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -107,46 +108,295 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
     @RequestMapping(params="toTeacherCourseList",method=RequestMethod.GET)
     public ModelAndView toTeacherCourseList(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
         String materialid=request.getParameter("materialid");
+        String termid=request.getParameter("termid");
+        String subjectid=request.getParameter("subjectid");
+        String gradeid=request.getParameter("gradeid");
+
         if(materialid!=null&&materialid.length()>0){
             TeachingMaterialInfo tm = new TeachingMaterialInfo();
             tm.setMaterialid(Integer.parseInt(materialid));
             List<TeachingMaterialInfo> tmList = this.teachingMaterialManager.getList(tm, null);
             mp.put("materialinfo",tmList.get(0));
         }
+        TermInfo termInfo=null;
+        if(termid!=null){
+            TermInfo t=new TermInfo();
+            t.setRef(termid);
+            List<TermInfo>termList=this.termManager.getList(t,null);
+            if(termList==null||termList.size()<1){
+                je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+                response.getWriter().print(je.getAlertMsgAndBack());
+                return null;
+            }
+            termInfo=termList.get(0);
+        }else
+            termInfo=this.termManager.getMaxIdTerm(false);
+
+        if(termInfo==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+
         PageResult pr = new PageResult();
         pr.setOrderBy("SEMESTER_BEGIN_DATE");
         List<TermInfo> termList = this.termManager.getList(null, pr);
         mp.put("termList", termList);
         mp.put("currtTerm", this.termManager.getMaxIdTerm(false));
-        int tscSize = 0;
-        //被托管条数
-        TrusteeShipClass tsc = new TrusteeShipClass();
-        tsc.setReceiveteacherid(this.logined(request).getUserid());
-        tsc.setIsaccept(0);
-        List<TrusteeShipClass> tscList = this.trusteeShipClassManager.getList(tsc, null);
-        if (tscList != null && tscList.size() > 0)
-            tscSize += tscList.size();
-        //判断是否存在托管
-        int isTrust = 0;
-        tsc = new TrusteeShipClass();
-        tsc.setTrustteacherid(this.logined(request).getUserid());
-        tsc.setIsaccept(1);
-        tscList = this.trusteeShipClassManager.getList(tsc, null);
-        if (tscList != null && tscList.size() > 0)
-            isTrust = 1;
-        mp.put("isTrust", isTrust);
-        //托管被拒绝条数
-        tsc = new TrusteeShipClass();
-        tsc.setTrustteacherid(this.logined(request).getUserid());
-        tsc.setIsaccept(2);
-        tscList = this.trusteeShipClassManager.getList(tsc, null);
-        if (tscList != null && tscList.size() > 0)
-            tscSize += tscList.size();
-        mp.put("tscSize", tscSize);
+        mp.put("selTerm",termInfo);
+
+        //获取首页年级学科
+        List<GradeInfo> gradeList = this.gradeManager.getTchGradeList(this.logined(request).getUserid(), termInfo.getYear());
+        List<Map<String,Object>> gradeSubjectList = new ArrayList<Map<String, Object>>();
+
+        if(gradeList!=null&&gradeList.size()>0){
+            //当前学期、学科、年级下的授课班级
+            for(int j=0;j<gradeList.size();j++){
+                ClassUser cu = new ClassUser();
+                cu.setClassgrade(gradeList.get(j).getGradevalue());
+                cu.setUserid(this.logined(request).getRef());
+                cu.setRelationtype("任课老师");
+                //cu.setSubjectid(subuserList.get(i).getSubjectid());
+                cu.setYear(termInfo.getYear());
+                List<ClassUser>classList=this.classUserManager.getList(cu,null);
+                List<SubjectInfo>subjectInfoList=new ArrayList<SubjectInfo>();
+                if(classList!=null&&classList.size()>0){
+                    for(ClassUser classUser :classList){
+                        SubjectInfo s=new SubjectInfo();
+                        s.setSubjectid(classUser.getSubjectid());
+                        s.setSubjectname(classUser.getSubjectname());
+                        if(!subjectInfoList.contains(s))
+                            subjectInfoList.add(s);
+                    }
+                    if(subjectInfoList.size()>0){
+                        for(SubjectInfo subjectInfo:subjectInfoList){
+                            Map<String,Object> map = new HashMap<String, Object>();
+                            map.put("gradeid",gradeList.get(j).getGradeid());
+                            map.put("gradevalue",gradeList.get(j).getGradevalue());
+                            map.put("subjectid",subjectInfo.getSubjectid());
+                            map.put("subjectname",subjectInfo.getSubjectname());
+                            if(!gradeSubjectList.contains(map))
+                                gradeSubjectList.add(map);
+                        }
+                    }
+                }
+            }
+        }
+        mp.put("gradeSubjectList",gradeSubjectList);
+
+     /*   if(gradeSubjectList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到授课信息!"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        } */
+        if(gradeSubjectList.size()>0){
+            Map<String,Object>objectMap=gradeSubjectList.get(0);
+            if(subjectid!=null&&gradeid!=null){
+                SubjectInfo s=new SubjectInfo();
+                s.setSubjectid(Integer.parseInt(subjectid));
+                List<SubjectInfo>subList=this.subjectManager.getList(s,null);
+
+                GradeInfo gradeInfo=new GradeInfo();
+                gradeInfo.setGradeid(Integer.parseInt(gradeid));
+                List<GradeInfo>gList=this.gradeManager.getList(gradeInfo,null);
+
+                if(subList!=null&&gList!=null){
+                    Map<String,Object>subGradeMap=new HashMap<String, Object>();
+                    subGradeMap.put("subjectid",subList.get(0).getSubjectid());
+                    subGradeMap.put("gradeid",gList.get(0).getGradeid());
+                    subGradeMap.put("subjectname",subList.get(0).getSubjectname());
+                    subGradeMap.put("gradevalue",gList.get(0).getGradevalue());
+                    objectMap=subGradeMap;
+                }
+            }
+            mp.put("subGradeInfo",objectMap);
+        }
+
+        mp.put("userType",this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null));
         mp.put("userid", this.logined(request).getUserid());
         return new ModelAndView("/teachpaltform/course/teacherCourseList", mp);
     }
+
+
+    /**
+     * 教师日历页面
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="toTeacherCalendarPage",method=RequestMethod.GET)
+    public ModelAndView toTeacherCalendarPage(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String termid=request.getParameter("termid");
+        String subjectid=request.getParameter("subjectid");
+        String gradeid=request.getParameter("gradeid");
+
+
+        TermInfo termInfo=null;
+        if(termid!=null){
+            TermInfo t=new TermInfo();
+            t.setRef(termid);
+            List<TermInfo>termList=this.termManager.getList(t,null);
+            if(termList==null||termList.size()<1){
+                je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+                response.getWriter().print(je.getAlertMsgAndBack());
+                return null;
+            }
+            termInfo=termList.get(0);
+        }else
+            termInfo=this.termManager.getMaxIdTerm(false);
+
+        if(termInfo==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+
+        PageResult pr = new PageResult();
+        pr.setOrderBy("SEMESTER_BEGIN_DATE");
+        List<TermInfo> termList = this.termManager.getList(null, pr);
+        mp.put("termList", termList);
+        mp.put("currtTerm", this.termManager.getMaxIdTerm(false));
+        mp.put("selTerm",termInfo);
+
+        //获取首页年级学科
+        List<GradeInfo> gradeList = this.gradeManager.getTchGradeList(this.logined(request).getUserid(), termInfo.getYear());
+        List<Map<String,Object>> gradeSubjectList = new ArrayList<Map<String, Object>>();
+
+        if(gradeList!=null&&gradeList.size()>0){
+            //当前学期、学科、年级下的授课班级
+            for(int j=0;j<gradeList.size();j++){
+                ClassUser cu = new ClassUser();
+                cu.setClassgrade(gradeList.get(j).getGradevalue());
+                cu.setUserid(this.logined(request).getRef());
+                cu.setRelationtype("任课老师");
+                //cu.setSubjectid(subuserList.get(i).getSubjectid());
+                cu.setYear(termInfo.getYear());
+                List<ClassUser>classList=this.classUserManager.getList(cu,null);
+                List<SubjectInfo>subjectInfoList=new ArrayList<SubjectInfo>();
+                if(classList!=null&&classList.size()>0){
+                    for(ClassUser classUser :classList){
+                        SubjectInfo s=new SubjectInfo();
+                        s.setSubjectid(classUser.getSubjectid());
+                        s.setSubjectname(classUser.getSubjectname());
+                        if(!subjectInfoList.contains(s))
+                            subjectInfoList.add(s);
+                    }
+                    if(subjectInfoList.size()>0){
+                        for(SubjectInfo subjectInfo:subjectInfoList){
+                            Map<String,Object> map = new HashMap<String, Object>();
+                            map.put("gradeid",gradeList.get(j).getGradeid());
+                            map.put("gradevalue",gradeList.get(j).getGradevalue());
+                            map.put("subjectid",subjectInfo.getSubjectid());
+                            map.put("subjectname",subjectInfo.getSubjectname());
+                            if(!gradeSubjectList.contains(map))
+                                gradeSubjectList.add(map);
+                        }
+                    }
+                }
+            }
+        }
+        mp.put("gradeSubjectList",gradeSubjectList);
+
+/*        if(gradeSubjectList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到授课信息!"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        } */
+
+        if(gradeSubjectList.size()>0){
+            Map<String,Object>objectMap=gradeSubjectList.get(0);
+            if(subjectid!=null&&gradeid!=null){
+                SubjectInfo s=new SubjectInfo();
+                s.setSubjectid(Integer.parseInt(subjectid));
+                List<SubjectInfo>subList=this.subjectManager.getList(s,null);
+
+                GradeInfo gradeInfo=new GradeInfo();
+                gradeInfo.setGradeid(Integer.parseInt(gradeid));
+                List<GradeInfo>gList=this.gradeManager.getList(gradeInfo,null);
+
+                if(subList!=null&&gList!=null){
+                    Map<String,Object>subGradeMap=new HashMap<String, Object>();
+                    subGradeMap.put("subjectid",subList.get(0).getSubjectid());
+                    subGradeMap.put("gradeid",gList.get(0).getGradeid());
+                    subGradeMap.put("subjectname",subList.get(0).getSubjectname());
+                    subGradeMap.put("gradevalue",gList.get(0).getGradevalue());
+                    objectMap=subGradeMap;
+                }
+            }
+
+            GradeInfo g=new GradeInfo();
+            g.setGradeid(Integer.parseInt(objectMap.get("gradeid").toString()));
+            List<GradeInfo>gradeInfoList=this.gradeManager.getList(g,null);
+            if(gradeInfoList==null||gradeInfoList.size()<1){
+                je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到年级信息!"));
+                response.getWriter().print(je.getAlertMsgAndBack());
+                return null;
+            }
+
+            ClassUser c = new ClassUser();
+            //当前学期、学科、年级下的授课班级
+            c.setClassgrade(gradeInfoList.get(0).getGradevalue());
+            c.setUserid(this.logined(request).getRef());
+            c.setRelationtype("任课老师");
+            c.setSubjectid(Integer.parseInt(objectMap.get("subjectid").toString()));
+            c.setYear(termInfo.getYear());
+            List<ClassUser>clsList=this.classUserManager.getList(c,null);
+            if(clsList!=null&&clsList.size()>0)
+                mp.put("isLession",1);
+            mp.put("subGradeInfo",objectMap);
+        }
+
+        return new ModelAndView("/teachpaltform/course/teacherCalendar", mp);
+    }
+
+
+    /**
+     * 标记课程日历
+     * @param request
+     * @param response
+     * @param mp
+     * @throws Exception
+     */
+    @RequestMapping(params="markCourseCalendar",method=RequestMethod.POST)
+    public void markCourseCalendar(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String year=request.getParameter("year");
+        String month=request.getParameter("month");
+
+        if(year==null||month==null||year.trim().length()<1||month.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        Integer usertype=null;
+        if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID))
+           usertype=3;
+        else if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID))
+            usertype=2;
+        else if(this.validateRole(request,UtilTool._ROLE_STU_ID))
+            usertype=1;
+
+        if(usertype==null){
+            je.setMsg("异常错误!用户类型错误!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        List<Map<String,Object>>courseCalendarList=this.tpCourseManager.getCourseCalendar(usertype,this.logined(request).getUserid(),
+                this.logined(request).getDcschoolid(),year,month);
+
+        je.setType("success");
+        je.setObjList(courseCalendarList);
+        response.getWriter().print(je.toJSON());
+    }
+
+
 
     /**
      * 进入专题详情页面
@@ -490,9 +740,10 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         return new ModelAndView("/teachpaltform/course/studentClassList",mp);
     }
 
+    /*
+
     /**
      * 进入班級课题主页
-     */
     @RequestMapping(params = "m=toClassCourseList", method = RequestMethod.GET)
     public ModelAndView toClassCourseList(HttpServletRequest request, HttpServletResponse response, ModelMap mp) throws Exception {
         UserInfo user = this.logined(request);
@@ -502,10 +753,20 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String classtype = request.getParameter("classtype");
         String subjectid=request.getParameter("subjectid");
         String gradeid = request.getParameter("gradeid");
+        String termid=request.getParameter("termid");
         UserInfo u=this.logined(request);
-        TermInfo ti = this.termManager.getMaxIdTerm(false);
-        if (ti == null || classid==null || classtype==null) {
-            jeEntity.setMsg(UtilTool.msgproperty.getProperty("学期参数错误,请联系教务。"));// 异常错误，参数不齐，无法正常访问!
+
+        if (termid == null || classid==null || classtype==null) {
+            jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));// 异常错误，参数不齐，无法正常访问!
+            response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
+            return null;
+        }
+
+        TermInfo termInfo=new TermInfo();
+        termInfo.setRef(termid);
+        List<TermInfo>termList=this.termManager.getList(termInfo,null);
+        if (termList==null||termList.size()<1) {
+            jeEntity.setMsg("系统学期错误!");// 异常错误，参数不齐，无法正常访问!
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
             return null;
         }
@@ -519,7 +780,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         c.setUserid(this.logined(request).getRef());
         c.setRelationtype("任课老师");
         c.setSubjectid(Integer.parseInt(subjectid));
-        c.setYear(ti.getYear());
+        c.setYear(termList.get(0).getYear());
         List<ClassUser>clsList=this.classUserManager.getList(c,null);
         //List<ClassUser> clsList = this.classUserManager.getListByTchYear(user.getRef(), ti.getYear());
         TpVirtualClassInfo tvc= new TpVirtualClassInfo();
@@ -529,7 +790,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
         TpCourseClass tcc = new TpCourseClass();
         tcc.setUserid(user.getUserid());
-        tcc.setTermid(ti.getRef());
+        tcc.setTermid(termid);
         tcc.setClassid(Integer.parseInt(classid));
         List<TpCourseClass> courseList = this.tpCourseClassManager.getList(tcc, null);
 
@@ -539,6 +800,53 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("classes", clsList);
         mp.put("vclasses", tvcList);
         return new ModelAndView("/teachpaltform/class/classCourseList",mp);
+    }
+
+    */
+
+    /**
+     * 进入班級课题主页
+     */
+    @RequestMapping(params = "m=toClassCourseList", method = RequestMethod.POST)
+    public void toClassCourseList(HttpServletRequest request, HttpServletResponse response, ModelMap mp) throws Exception {
+        UserInfo user = this.logined(request);
+
+        JsonEntity jeEntity = new JsonEntity();
+        String classid = request.getParameter("classid");
+        String classtype = request.getParameter("classtype");
+        String subjectid=request.getParameter("subjectid");
+        String gradeid = request.getParameter("gradeid");
+        String termid=request.getParameter("termid");
+        UserInfo u=this.logined(request);
+
+        if (termid == null || classid==null || classtype==null) {
+            jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));// 异常错误，参数不齐，无法正常访问!
+            response.getWriter().print(jeEntity.toJSON());
+            return;
+        }
+
+        TermInfo termInfo=new TermInfo();
+        termInfo.setRef(termid);
+        List<TermInfo>termList=this.termManager.getList(termInfo,null);
+        if (termList==null||termList.size()<1) {
+            jeEntity.setMsg("系统学期错误!");// 异常错误，参数不齐，无法正常访问!
+            response.getWriter().print(jeEntity.toJSON());
+            return;
+        }
+        TpCourseClass tcc = new TpCourseClass();
+        tcc.setUserid(user.getUserid());
+        tcc.setTermid(termid);
+        tcc.setClassid(Integer.parseInt(classid));
+        if(subjectid!=null&&subjectid.trim().length()>0&&!subjectid.equals("0"))
+            tcc.setSubjectid(Integer.parseInt(subjectid));
+        if(gradeid!=null&&gradeid.trim().length()>0&&!gradeid.equals("0"))
+            tcc.setGradeid(Integer.parseInt(gradeid));
+        List<TpCourseClass> courseList = this.tpCourseClassManager.getList(tcc, null);
+
+
+       jeEntity.setObjList(courseList);
+       jeEntity.setType("success");
+       response.getWriter().print(jeEntity.toJSON());
     }
 
     /**
@@ -2289,6 +2597,72 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
         presult.setList(l);
         je.setPresult(presult);
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 获取日历课题ajax列表
+     */
+    @RequestMapping(params = "getCourseCalanedListAjax", method = RequestMethod.POST)
+    public void getCourseCalanedListAjax(HttpServletRequest request,
+                                         HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String termid=request.getParameter("atermid");
+        String year=request.getParameter("year");
+        String month=request.getParameter("month");
+        String day=request.getParameter("day");
+
+        if (year == null || month==null || day==null || termid == null) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        UserInfo user = this.logined(request);
+
+        TpCourseInfo tcInfo = this.getParameter(request,
+                TpCourseInfo.class);
+        tcInfo.setUserid(user.getUserid());
+
+        Calendar calendar=Calendar.getInstance();
+
+        calendar.set(Integer.parseInt(year),Integer.parseInt(month)-1,Integer.parseInt(day));
+
+        tcInfo.setSeldate(UtilTool.DateConvertToString(calendar.getTime(), UtilTool.DateType.smollDATE));
+
+        Integer usertype=null;
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID))
+            usertype=1;
+        else if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID))
+            usertype=3;
+        else if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID))
+            usertype=2;
+
+        if(usertype==null){
+            je.setMsg("异常错误!角色错误!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        tcInfo.setUsertype(usertype);
+        TermInfo t=new TermInfo();
+        t.setRef(termid);
+        List<TermInfo>termInfoList=this.termManager.getList(t,null);
+        if(termInfoList==null||termInfoList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        tcInfo.setTermid(termid);
+        tcInfo.setDcschoolid(this.logined(request).getDcschoolid());
+        List<TpCourseInfo> courseList = this.tpCourseManager.getCalanderCourseList(
+                tcInfo, null);
+
+        je.setObjList(courseList);
+        je.setType("success");
         response.getWriter().print(je.toJSON());
     }
 

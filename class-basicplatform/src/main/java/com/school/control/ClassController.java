@@ -233,19 +233,26 @@ public class ClassController extends BaseController<ClassInfo>{
      */
     @RequestMapping(params="m=ajaxlist",method=RequestMethod.POST)
     public void AjaxGetList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
         ClassInfo classinfo = this.getParameter(request, ClassInfo.class);
         String type=request.getParameter("dtype");
+        String flag=request.getParameter("flag");
         if(type!=null&&type.trim().length()>0){
             classinfo.setType(type);
         }
         PageResult pageresult = this.getPageResultParameter(request);
         pageresult.setOrderBy(" u.c_time desc ");//排序，启用，在前，禁用在后
+        if(flag!=null&&flag.length()>0)
+            pageresult=null;
         classinfo.setDcschoolid(this.logined(request).getDcschoolid());
         List<ClassInfo> classList =classManager.getList(classinfo, pageresult);
-        pageresult.setList(classList);
-        JsonEntity je = new JsonEntity();
+        if(pageresult!=null){
+            pageresult.setList(classList);
+            je.setPresult(pageresult);
+        }else
+            je.setObjList(classList);
         je.setType("success");
-        je.setPresult(pageresult);
+
         response.getWriter().print(je.toJSON());
     }
     /**

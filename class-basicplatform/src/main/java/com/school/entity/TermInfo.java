@@ -92,6 +92,12 @@ public class TermInfo implements java.io.Serializable {
 			return "";
 		return UtilTool.DateConvertToString(semesterenddate, DateType.smollDATE);
 	}
+
+    public String getByear(){
+        if(semesterenddate==null)
+            return "";
+        return UtilTool.DateConvertToString(semesterbegindate, DateType.yearAndMonth);
+    }
 	private String dYYear;
 	public String getDYYear() {
 		// TODO Auto-generated method stub

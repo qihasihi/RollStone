@@ -178,6 +178,7 @@ public class TpUserController extends UserController {
                 if(!BindEttUser(userid,schoolid,"2")){
                     je.setMsg("Bind EttUser Error!");
                     response.getWriter().print(je.toJSON());
+                    return null;
                 };
 
             }else{
@@ -241,6 +242,66 @@ public class TpUserController extends UserController {
         mp.put("classYearList",classYearInfoList);
         request.getSession().setAttribute("dcschoolid",userList.get(0).getDcschoolid());
         return new ModelAndView("/teachpaltform/ettClass/class-admin",mp);
+    }
+
+
+    /**
+     * 分校教师、学生进入教学平台
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toCourseIndex", method = {RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView toCourseIndex(HttpServletRequest request,
+                                   HttpServletResponse response, ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String schoolid=request.getParameter("schoolId");
+        String jid=request.getParameter("jId");
+        if(schoolid==null||schoolid.trim().length()<1||!UtilTool.isNumber(schoolid)){
+            je.setMsg("Schoolid is empty!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        if(jid==null||jid.trim().length()<1||!UtilTool.isNumber(jid)){
+            je.setMsg("jid is empty!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+
+        UserInfo u=new UserInfo();
+        u.setDcschoolid(Integer.parseInt(schoolid));
+        u.setEttuserid(Integer.parseInt(jid));
+        List<UserInfo>userList=this.userManager.getList(u, null);
+        if(userList==null||userList.size()<1){
+            je.setMsg("当前云帐号未绑定!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        je=this.loginBase(userList.get(0),request,response);
+        if(!je.getType().trim().equals("success")){
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //增加分校ID
+        this.logined(request).setDcschoolid(Integer.parseInt(schoolid));
+
+
+        String url=null;
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+            url="teachercourse?m=toStudentCourseList";
+        }else if (this.validateRole(request,UtilTool._ROLE_TEACHER_ID)){
+            url="teachercourse?toTeacherCourseList";
+            Integer isLessionBzn=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null);
+            if(isLessionBzn!=null&&isLessionBzn==3)
+                url="teachercourse?toTeacherCourseList";
+            else if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID))
+                url="group?m=toGroupManager";
+        }
+
+        response.sendRedirect(url);
+        return null;
     }
 
 
@@ -970,7 +1031,10 @@ public class TpUserController extends UserController {
         ClassUser tea=new ClassUser();
         tea.setUserid(userNextRef);
         tea.setClassid(c.getClassid());
-        tea.setSubjectid(Integer.parseInt(subjectid));
+        if(subjectid!=null&&subjectid.trim().length()>0){
+            tea.setSubjectid(Integer.parseInt(subjectid));
+            tea.setRelationtype("任课老师");
+        }
         List<ClassUser>teaList=this.classUserManager.getList(tea,null);
         if(teaList!=null&&teaList.size()>0){
             je.setMsg("当前教师已存在!\n\n班级："+teaList.get(0).getClassname()+"，学科："+teaList.get(0).getSubjectname()+"");
@@ -1046,6 +1110,8 @@ public class TpUserController extends UserController {
             return;
         }
 
+        ClassInfo classInfo = clsList.get(0);
+
         List<Object>objList=null;
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
@@ -1073,6 +1139,21 @@ public class TpUserController extends UserController {
             String[]nameArray=nameStr.split(",");
 
             if(jidArray.length>0&&nameArray.length>0){
+
+                if(classInfo.getAllowjoin()==null||!classInfo.getAllowjoin().toString().equals("1")){
+                    je.setMsg("当前班级不允许学生加入!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+
+                if(classInfo.getClsnum()!=null&&classInfo.getClsnum()<jidArray.length){
+                    je.setMsg("学生人数超出限额!\n\n班级限额："+classInfo.getClsnum()+"人!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+
+
+
                 //检测当前学生是否已经创建帐号
                 for(int i=0;i<jidArray.length;i++){
                     String jid=jidArray[i].toString();
@@ -1116,6 +1197,7 @@ public class TpUserController extends UserController {
                         s.setUserref(userNextRef);
                         s.setStuname(realname);
                         s.setStusex("男");
+                        //s.setStuno();
 
                         sql = new StringBuilder();
                         objList = this.studentManager.getSaveSql(s, sql);
@@ -1462,7 +1544,7 @@ public class TpUserController extends UserController {
             e.printStackTrace();
         }
         //转换成JSON
-        System.out.println(returnContent);
+       // System.out.println(returnContent);
         JSONObject jb=JSONObject.fromObject(returnContent);
         String type=jb.containsKey("type")?jb.getString("type"):"";
         String msg=jb.containsKey("msg")?jb.getString("msg"):"";

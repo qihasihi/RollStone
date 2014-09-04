@@ -1,6 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
+
+
 <html>
 	<head>
 		<title>${sessionScope.CURRENT_TITLE}</title>
@@ -8,168 +11,355 @@
 		<meta http-equiv="cache-control" content="no-cache">
 		<meta http-equiv="expires" content="0">
 	<script type="text/javascript" src="js/teachpaltform/group.js"></script>
+        <script type="text/javascript" src="js/teachpaltform/tchcourselist.js"></script>
 <script type="text/javascript">
     var currtenTab=1; //当前学科导航栏页数
     var tabSize=6; //学科导航栏每页显示数量
     var isTrust="${isTrust}";
-    var subjectid="${param.subjectid}";
-    var gradeid="${param.gradeid}";
+    var subjectid="${subGradeInfo.subjectid}";
+    var gradeid="${subGradeInfo.gradeid}";
     var subjectname='';
     var gradename='';
-    switch(parseInt(subjectid)){
-        case 1:
-            subjectname='语文';
-            break;
-        case 2:
-            subjectname='数学';
-            break;
-        case 3:
-            subjectname='英语';
-            break;
-        case 4:
-            subjectname='物理';
-            break;
-        case 5:
-            subjectname='化学';
-            break;
-        case 6:
-            subjectname='历史';
-            break;
-        case 7:
-            subjectname='生物';
-            break;
-        case 8:
-            subjectname='地理';
-            break;
-        case 9:
-            subjectname='政治';
-            break;
-    }
 
-    switch(parseInt(gradeid)){
-        case 1:
-            gradename='高三';
-            break;
-        case 2:
-            gradename='高二';
-            break;
-        case 3:
-            gradename='高一';
-            break;
-        case 41:
-            gradename='初三';
-            break;
-        case 5:
-            gradename='初二';
-            break;
-        case 6:
-            gradename='初一';
-            break;
-    }
-    var grade_name=gradename+subjectname;
+    var isLession="${userType}";
+    var termid="${selTerm.ref}";
+    var currtterm="${currtTerm.ref}";
+    var teacherid="${teacherid}";
+    var global_gradeid=0;
+    var global_subjectid=0;
+
+
     $(function(){
-        getNoGroupStudentsByClassId();
-        getClassGroups();
-//        $("#stu_name").bind("input propertychange",function(){
-//            filterResult();
-//        });
+        <c:if test="${! empty classes}">
+            $("#classId").val('${classes[0].classid}');
+            $("#classType").val(1);
+            $("#dcType").val('${classes[0].dctype}');
 
-        // 导航栏调整为正确显示
-        changeTab('back');
-        changeTab('front');
 
-        <%--//已托管--%>
-        <%--<c:if test="${!empty isTrust}">--%>
-             <%--$("a[name='a_hide']").remove();--%>
-        <%--</c:if>--%>
-        $("#grade_subject").html(grade_name);
+        if(isLession==2){
+            $("#a_addGroup").hide();
+            $("#dv_addGroup").hide();
+            $("#group_list").hide();
+            $("#a_course").parent().hide();
+        }else{
+            $("#a_addGroup").show();
+            $("#dv_addGroup").show();
+            $("#group_list").show();
+            $("#a_course").parent().show();
+        }
+
+        if($("#dcType").val()>1&&isLession>1){
+            $("#a_addStudent").show();
+            if(isLession==2){
+                $("#dv_stu").show();
+                getStuList('${classes[0].classid}');
+            }
+        }else{
+            $("#a_addStudent").hide();
+            $("#dv_stu").hide();
+        }
+
+
+        if(isLession!=2){
+            getNoGroupStudentsByClassId('${classes[0].classid}',1);
+            getClassGroups('${classes[0].classid}',1);
+        }
+        </c:if>
+
+        if(isLession==2){
+            $("#sp_subgrade").remove();
+            $("#a_course").parent().hide();
+        }
+
+        $("a[name='h2a']").parent().each(function(idx,itm){
+            if(idx==0){
+                $(itm).click(function(){
+                    $("#dv_lession").hide();
+                    $("#dv_manage_stu").show();
+                    $(itm).siblings().removeClass('crumb').end().addClass('crumb');
+                })
+
+            }else if(idx==1){
+                $(itm).click(function(){
+                    $("#dv_lession").show();
+                    $("#dv_manage_stu").hide();
+                    $(itm).siblings().removeClass('crumb').end().addClass('crumb');
+                    getClassCourseList();
+                })
+
+            }
+
+        });
+
+        $("#a_course").attr("href",'teachercourse?toTeacherCourseList&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
+        $("#a_calendar").attr("href",'teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
+
+
     });
 
-    function changeTab(direct){
-        tabTotal=$("#ul_class").children().length; //标签总数
-        var i=0,j=0;
-        if(direct=="front"){
-            if(currtenTab==1){
-                $("#ul_class").children(":gt("+(tabTotal-1)+")").hide();
-                return;
-            }else{
-                currtenTab-=1;
-                i=(currtenTab-1)*tabSize;
-                j=currtenTab*tabSize-1;
-                $("#ul_class").children().show();
-                $("#ul_class").children(":lt("+i+")").hide();
-                $("#ul_class").children(":gt("+j+")").hide();
-                return;
-            }
+
+
+
+    function setClsId(clsid,clstype,dctype,relationtype,clsname){
+        $("#clsname").html(clsname);
+        displayObj('ul_banji',false);
+        $("#classId").val(clsid);
+        $("#classType").val(clstype);
+        $("#dcType").val(dctype);
+
+
+
+        if(isLession==2){ //班主任
+            $("#a_addGroup").hide();
+            $("#dv_addGroup").hide();
+            $("#group_list").hide();
+            $("#a_course").parent().hide();
+        }else{
+            $("#a_addGroup").show();
+            $("#dv_addGroup").show();
+            $("#group_list").show();
+            $("#a_course").parent().show();
         }
-        if(direct=="back"){
-            if((currtenTab*tabSize)>=tabTotal){
-                $("#ul_class").children(":gt("+(tabSize*currtenTab-1)+")").hide();
-                return;
-            }else{
-                currtenTab+=1;
-                i=(currtenTab-1)*tabSize;
-                j=currtenTab*tabSize-1;
-                $("#ul_class").children().show();
-                $("#ul_class").children(":lt("+i+")").hide();
-                $("#ul_class").children(":gt("+j+")").hide();
-                return;
+
+        var clsid=$("#classId").val();
+        if(dctype>1&&isLession>1){
+            $("#a_addStudent").show();
+            if(isLession==2){
+                $("#dv_stu").show();
+                getStuList(clsid);
             }
+        }else{
+            $("#a_addStudent").hide();
+            $("#dv_stu").hide();
         }
     }
-    function abc(clsid,clstype){
-        location.href="group?m=toGroupManager&classid="+clsid+"&classtype="+clstype+"&pageidx="+currtenTab+"&subjectid="+subjectid+"&gradeid="+gradeid;
+
+
+    function checkRelationType(clsid){
+        if(typeof clsid=='undefined')
+            return;
+
+        $.ajax({
+            url:'group?checkRelationType',
+            data:{classid:clsid},
+            type:'post',
+            dataType:'json',
+            error:function(){
+                alert('异常错误,系统未响应！');
+            },success:function(rps){
+                if(rps.type=="success"){
+                    if(rps.objList[0]!=null)
+                        isLession=rps.objList[0];
+
+                    if(isLession==2){
+                        $("#a_addGroup").hide();
+                        $("#dv_addGroup").hide();
+                        $("#group_list").hide();
+                    }else{
+                        $("#a_addGroup").show();
+                        $("#dv_addGroup").show();
+                        $("#group_list").show();
+                    }
+
+                    if($("#dcType").val()>1&&isLession>1){
+                        $("#a_addStudent").show();
+                        if(isLession==2){
+                            $("#dv_stu").show();
+                            getStuList(clsid);
+                        }
+                    }else{
+                        $("#a_addStudent").hide();
+                        $("#dv_stu").hide();
+                    }
+                }
+            }
+        });
+
     }
 </script>
 </head>
     <body>
-    <div class="subpage_head"><span class="ico19"></span><strong>班级主页--<span id="grade_subject"></span></strong></div>
-    <div class="subpage_nav">
-        <div class="arr"><a href="javascript:changeTab('front');"><span class="up"></span></a><a href="javascript:changeTab('back');"><span class="next"></span></a></div>
-        <ul id="ul_class">
-            <c:forEach var="cl" items="${classes }">
-                <li class="${(classtype==1&&cl.classid==classid)?'crumb':''}"><a href="javascript:;" onclick="abc(${cl.classid},1)">${cl.classgrade}${cl.classname}</a></li>
-            </c:forEach>
+    <%@include file="/util/head.jsp" %>
+    <%@include file="/util/nav-base.jsp" %>
 
-            <c:forEach var="vcl" items="${vclasses }">
-                <li class="${(classtype==2&&vcl.virtualclassid==classid)?'crumb':''}"><a href="javascript:;" onclick="abc(${vcl.virtualclassid},2)">${vcl.virtualclassname}</a></li>
-            </c:forEach>
+
+    <div id="nav">
+        <ul>
+             <li><a href="javascript:;" id="a_course">教学组织</a></li>
+            <li class="crumb"><a href="javascript:;" id="a_clsid" >班级管理</a></li>
+            <li><a href="javascript:;"  id="a_calendar">课程日历</a></li>
         </ul>
     </div>
 
-
-    <div class="content">
-        <div class="contentR">
-            <input type="hidden" id="classId" value="${classid}"/>
-            <input type="hidden" id="classType" value="${classtype}"/>
+    <div class="content2">
+        <div  class="jxxt_banji_layoutR" id="dv_manage_stu">
+            <h1>学员管理</h1>
             <div class="jxxt_banji_xzgl">
-                <p class="font-darkblue"><a name="a_hide" href="javascript:showModel('addGroupDiv',false);"><span class="ico26"></span>新建小组</a></p>
-                <div class="jxxt_banji_xzgl_text" id="nogroup">
-                    <p class="font-black">未分配成员：</p>
-                    <ul id="noGroupStudents">
-                    </ul>
-                    <p class="p_t_10"><a name="a_hide" href="javascript:showModel('selectStudent_Div');" class="an_public3">分配到组</a></p>
-                </div>
-                <table id="group_list" border="0" cellpadding="0" cellspacing="0" class="public_tab2">
+                <p class="font-darkblue">
+                    <a id="a_addGroup" name="a_hide" href="javascript:showModel('addGroupDiv',false);"><span class="ico26"></span>新建小组</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a id="a_addStudent" href="javascript:loadWXStudent()"><span class="ico26"></span>学员管理</a>
+                </p>
 
+                    <div class="jxxt_banji_xzgl_text" id="dv_addGroup">
+                        <p class="font-black">未分配成员：</p>
+                        <ul id="noGroupStudents">
+                            <li>李小</li>
+                            <li>王大天使<a href="1" class="ico_delete" title="删除"></a></li>
+                            <li>周好人</li>
+                            <li>李小</li>
+                            <li>王大</li>
+                            <li>周好人人</li>
+                            <li>李小</li>
+                            <li>王大</li>
+                            <li>周好人</li>
+                            <li>李小</li>
+                            <li>王大</li>
+                            <li>白仙仙人</li>
+                        </ul>
+                        <p class="p_t_10"><a name="a_hide" href="javascript:showModel('selectStudent_Div');"  class="an_public3">分配到组</a></p>
+                    </div>
+                    <table id="group_list" border="0" cellpadding="0" cellspacing="0" class="public_tab2 hover">
+                    <col class="w300"/>
+                    <col class="w100"/>
+                    <col class="w130"/>
+                    <col class="w100"/>
+                    <col class="w120"/>
+                    <tr>
+                        <th>组名</th>
+                        <th>学号</th>
+                        <th>组员姓名</th>
+                        <th>任务完成率</th>
+                        <th>加入小组时间</th>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" class="v_c">好好学习天天向上组好好学习天天向上组好好学习天天向上组好好学习天天向上组好好学习天天向上组好好学习天天向上组好好学习天天向上组好好学习天天向上组<a href="1" class="ico04" title="删除"></a><br>90%</td>
+                        <td>123456789<br></td>
+                        <td><span class="w60">王天资</span><a href="1" class="ico34" title="移出小组"></a><a href="1" class="ico22" title="调组"></a></td>
+                        <td>27.5%</td>
+                        <td>2014-05-22 14:02</td>
+                    </tr>
+                    <tr class="trbg1">
+                        <td>123456789<br></td>
+                        <td><span class="w60">李鹏</span><a href="1" class="ico34" title="移出小组"></a><a href="1" class="ico23" title="调组"></a></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" class="v_c">第五组<a href="1" class="ico04" title="删除"></a><br>90%</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr class="trbg1">
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="v_c">第五组<a href="1" class="ico04" title="删除"></a></td>
+                        <td colspan="4">没有小组成员！</td>
+                    </tr>
                 </table>
+
+
+                    <div class="jxxt_banji_xzgl_text" id="dv_stu" style="display: none;">
+                        <p class="font-black">班级成员：</p>
+                        <ul id="stuList">
+
+                        </ul>
+                    </div>
             </div>
         </div>
 
-        <div class="subpage_contentL">
-            <ul>
-                <li><a href="teachercourse?m=toClassStudentList&classid=${classid}&classtype=${classtype}&subjectid=${param.subjectid}&gradeid=${param.gradeid}">班级成员</a></li>
-                <li class="crumb"><a href="group?m=toGroupManager&classid=${classid}&classtype=${classtype}&subjectid=${param.subjectid}&gradeid=${param.gradeid}">小组管理</a></li>
-                <li><a href="teachercourse?m=toClassCourseList&classid=${classid}&classtype=${classtype}&subjectid=${param.subjectid}&gradeid=${param.gradeid}">课程表</a></li>
+        <div style="display: none;" class="jxxt_banji_layoutR" id="dv_lession">
+            <h1 >课程表</h1>
+            <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
+                <col class="w550"/>
+                <col class="w200"/>
+                <tr>
+                    <th>专题名称</th>
+                    <th>开始时间</th>
+                </tr>
+                <tbody id="clsCourseList">
+
+                </tbody>
+                <!--
+                <tr>
+                    <td><p class="ico"><b class="ico16" title="自建"></b><a href="1">我读小说我读小说我读小说我读小说我读小说</a></p></td>
+                    <td>2013-11-03 12:30</td>
+                </tr>
+                <tr class="trbg1">
+                    <td><p class="ico"><b class="ico17" title="共享"></b><a href="1">我读小说我读小说我读小说我读小说我读小说是我喜欢的好好学习吧长了会怎么样呢，试试吧。好吧。吧长了会怎么样呢，试试吧。好吧。</a></p></td>
+                    <td>2013-11-03 12:30</td>
+                </tr>
+                <tr>
+                    <td><p class="ico"><b class="ico18" title="标准" ></b><a href="1">我读小说我读小说我读小说我读小说我读小说</a></p></td>
+                    <td>2013-11-03 12:30</td>
+                </tr>
+                -->
+            </table>
+        </div>
+
+
+        <div class="jxxt_banji_layoutL public_input">
+            <c:if test="${!empty classes}">
+            <h1><span id="clsname">${classes[0].classgrade}${classes[0].classname}</span><a href="javascript:displayObj('ul_banji');" class="ico49a"></a></h1>
+                <ul class="banji" style="display: none;" id="ul_banji">
+                    <c:forEach items="${classes}" var="c">
+                        <li><a href="javascript:setClsId('${c.classid}',1,'${c.dctype}','${c.relationtype}','${c.classgrade}${c.classname}');getNoGroupStudentsByClassId('${c.classid}',1);getClassGroups('${c.classid}',1);getClassCourseList();">${c.classgrade}${c.classname}</a></li>
+                    </c:forEach>
+                </ul>
+            </c:if>
+
+            <input type="hidden" id="classId"/> <input type="hidden" id="classType"/><input type="hidden" id="dcType"/>
+
+            <h2 class="crumb"><a name="h2a" href="javascript:;">学员管理</a></h2>
+            <h2><a name="h2a" href="javascript:;" >课程表</a></h2>
+            <h2 >课程积分</h2>
+            <ul class="jifen">
+                <li><a href="1"><span>语文</span></a></li>
+                <li><a href="1"><span>数学</span></a></li>
+                <li><a href="1"><span>英语</span></a></li>
+                <li><a href="1"><span>物理</span></a></li>
+                <li><a href="1"><span>化学</span></a></li>
+                <li><a href="1"><span>通用技术</span></a></li>
             </ul>
         </div>
         <div class="clear"></div>
     </div>
+
+
+
+
     <span id="no_gs_bk" style="display:none">
     </span>
     <%@include file="/util/foot.jsp" %>
     </body>
 </html>
+
+
+<div class="public_windows public_input" id="dv_add_student" style="display: none;">
+    <h3><a href="javascript:closeModel('dv_add_student')"  title="关闭"></a>学员管理</h3>
+    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;姓名：<input name="textfield5" id="txt_stuName" type="text" class="w140"/><a href="javascript:;" id="a_stuName" class="ico57" title="查询"></a></p>
+    <div class="jxxt_float_bjgl">
+        <p class="font-black"><a href="javascript:;" onclick="setAllStudent()" class="font-darkblue">全选</a>末添加成员：</p>
+        <ul id="ul_wx_stu">
+            <!--<li><span class="ico85a"></span>王小小</li>-->
+        </ul>
+    </div>
+    <div class="jxxt_float_bjgl">
+        <p class="font-black"><a href="javascript:;" onclick="reSetStudent()"  class="font-darkblue">清空</a>已添加成员：</p>
+        <ul id="ul_cls_stu">
+            <!--<li><span class="ico85b"></span>王小小</li>-->
+        </ul>
+    </div>
+    <p class="t_c"><a href="javascript:doAddClsStudent();" id="a_sub_student"  class="an_public1">确&nbsp;定</a>&nbsp;&nbsp;<a href="javascript:closeModel('dv_add_student')"  class="an_public1">取&nbsp;消</a></p>
+</div>
+
+
+
 
 <div id="updateGroupName" style="margin: 5px;background-color: white" class="white_content"  >
     <input id="uGroupID" type="hidden" value="" />

@@ -24,6 +24,12 @@ public class ClassUser  implements java.io.Serializable{
     private Object completenum; //任务完成率
     private Object stucount;
 
+    public Integer getDctype(){
+        return this.getClassinfo().getDctype();
+    }
+    public void setDctype(Integer dctype){
+        this.getClassinfo().setDctype(dctype);
+    }
 
     public Object getStucount() {
         return stucount;

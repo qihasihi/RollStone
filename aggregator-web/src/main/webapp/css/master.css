@@ -137,7 +137,7 @@ table.black td{color:#000;}
 .public_tab1 p.text_info {text-align:right;color:#8d8c8c;padding:3px 0 5px;}
 .public_tab1 p.text_info b {width:40px; display:inline-block; font-weight:normal; vertical-align:middle; text-align:left;}
 .public_tab1 p.text_info span { margin:0 5px 5px;}
-
+	
 .public_tab2 {
     border-collapse:collapse;
     line-height: 1.8em;
@@ -400,6 +400,12 @@ a.an_search:active{background-position:-70px 0;}
     vertical-align:middle;
     margin:0 5px;
 }
+    .ico12{background-position:0 -187px;}
+	.ico03{background-position:0 -209px;}
+	.ico04{background-position:0 -231px;}
+	.ico05{background-position:-18px -209px;}
+	.ico06{width:15px;background-position:0 -253px; margin:0;}
+	.ico_delete{width:15px; height:15px;background-position:-2px -86px; margin:0 2px;}
 .ico12{background-position:0 -187px;}
 .ico03{background-position:0 -209px;}
 .ico04{background-position:0 -231px;}
@@ -447,13 +453,13 @@ a.an_search:active{background-position:-70px 0;}
 .ico_star2{background-position:-154px 0;margin:0 1px;}
 .ico_star3{background-position:-161px -18px;margin:0 1px;}
 
-.ico26,.ico27,.ico28,.ico29,.ico30,.ico31,.ico32,.ico33,.ico34,.ico35,.ico36,.ico37,.ico_time,.ico85a,.ico85b,.ico90{
-    width:16px;
-    height:17px;
-    background: url(images/ico03_131230.png) no-repeat -304px 0;
-    display: inline-block;
-    vertical-align:middle;
-    margin:0 5px;
+	.ico26,.ico27,.ico28,.ico29,.ico30,.ico31,.ico32,.ico33,.ico34,.ico35,.ico36,.ico37,.ico_time,.ico85a,.ico85b,.ico90{
+	width:16px;
+	height:17px;
+	background: url(images/ico03_131230.png) no-repeat -304px 0;
+	display: inline-block;
+	vertical-align:middle;
+	margin:0 5px;
 }
 .ico27{background-position:-219px 0;}
 .ico28{width:19px;background-position:-179px -17px;}
@@ -602,4 +608,3 @@ a.an_search:active{background-position:-70px 0;}
 .ico89b{background-position:-972px 0; width:12px; height:12px; margin:0;}
 
 .ico90{background: url(images/ico08_131230.gif) no-repeat;}
-

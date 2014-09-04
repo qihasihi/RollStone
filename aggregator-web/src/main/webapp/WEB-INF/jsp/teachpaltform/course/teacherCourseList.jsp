@@ -8,13 +8,16 @@
         var tabSize=6; //学科导航栏每页显示数量
         var termid="${currtTerm.ref}";
         var currtterm="${currtTerm.ref}";
+        var selterm="${selTerm.ref}";
         var teacherid="${teacherid}";
-        var global_gradeid=0;
-        var global_subjectid=0;
+        var global_gradeid="${subGradeInfo.gradeid}";
+        var global_subjectid="${subGradeInfo.subjectid}";
+        var target="course";
+        var isLession="${userType}";
 
         var userid=${userid};
         var materialid="${param.materialid}";
-        var currentSubjectid = "${param.currentSubjectid}";
+        var currentSubjectid = "${param.subjectid}";
         var currentGradeid="${param.gradeid}";
         $(function(){
             if(materialid.length>0){
@@ -62,7 +65,7 @@
 //                operate_id : "initItemList"
 //            });
             </c:if>
-            getTermCondition('${currtTerm.ref}','${currtTerm.year } ${currtTerm.termname}');
+            getTermCondition('${selTerm.ref}','${selTerm.year } ${selTerm.termname}');
 
 
             // 导航栏调整为正确显示
@@ -134,8 +137,13 @@
 <input type="hidden" id="hd_term_flag"/>
 
 <div id="nav">
-    <div class="arr"><a href="javascript:changeTab2('front');"><span class="up"></span></a><a href="javascript:changeTab2('back');"><span class="next"></span></a></div>
+   <!-- <div class="arr"><a href="javascript:changeTab2('front');"><span class="up"></span></a><a href="javascript:changeTab2('back');"><span class="next"></span></a></div>
     <ul id="ul_grade">
+    </ul>-->
+    <ul>
+        <li  class="crumb"><a id="a_course" href="javascript:;">教学组织</a></li>
+        <li><a href="javascript:;" id="a_clsid" >班级管理</a></li>
+        <li><a id="a_calendar" href="javascript:;">课程日历</a></li>
     </ul>
 </div>
 
@@ -150,25 +158,29 @@
             </c:if>
             <a name="a_hide" href="javascript:getTchingMaterial();"><span id="material_name">点击教材版本</span></a>
             <a name="a_hide" href="teachercourse?m=toTeacherCourseRecycle" class="ico15" title="回收站"></a></p>
-        <p><span class="ico14"></span><strong>我的课表</strong>
+        <p><span class="ico14"></span><strong>课程表</strong>
             <a name="a_hide" href="javascript:toSaveCoursePage();" class="font-darkblue"><span class="ico26"></span>添加专题</a>
             <a name="a_hide" href="javascript:showYYCourse();" class="font-darkblue"><span class="ico27"></span>沿用专题</a>
-            <a name="a_hide" onclick="window.open('virtualclass?m=toClassManager&gradeid='+global_gradeid+'&subjectid='+global_subjectid+'')"  href="javascript:void(0)"  class="font-darkblue"><span class="ico28"></span>班级管理</a></p>
+            <!--<a name="a_hide" onclick="window.open('virtualclass?m=toClassManager&gradeid='+global_gradeid+'&subjectid='+global_subjectid+'')"  href="javascript:void(0)"  class="font-darkblue"><span class="ico28"></span>班级管理</a>-->
+        </p>
     </div>
 
     <div class="jxxt_tab_layout">
         <input type="hidden" id="material_id" value="0" />
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
             <col class="w350"/>
-            <col class="w350"/>
+            <col class="w270"/>
+            <col class="w90"/>
             <col class="w120"/>
             <col class="w120"/>
             <tr>
                 <th>专题名称</th>
                 <th>班级&mdash;开始时间</th>
+                <th>课堂积分</th>
                 <th>专题评价</th>
                 <th>操作</th>
             </tr>
+            <tr>
             <tbody id="courseTable">
             </tbody>
         </table>

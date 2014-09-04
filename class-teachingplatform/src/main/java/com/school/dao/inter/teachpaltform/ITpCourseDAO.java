@@ -10,6 +10,7 @@ import java.util.Map;
 
 public interface ITpCourseDAO extends ICommonDAO<TpCourseInfo>{
     public List<TpCourseInfo> getTchCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
+    public List<TpCourseInfo> getCalanderCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
     public List<TpCourseInfo> getStuCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
     public List<TpCourseInfo> getTsList(TpCourseInfo tpcourseinfo, PageResult presult);
     List<TpCourseInfo> getCouresResourceList(TpCourseInfo tpcourseinfo, PageResult presult);
@@ -45,6 +46,10 @@ public interface ITpCourseDAO extends ICommonDAO<TpCourseInfo>{
      * @return
      */
     public List<TpCourseInfo> getShareList(TpCourseInfo tpcourseinfo,PageResult presult);
+
+    List<Map<String,Object>>getCourseCalendar(Integer usertype,Integer userid,Integer dcschoolid,String year,String month);
+
+
 
     boolean doUpdateShareCourse();
 }

@@ -10,6 +10,7 @@ import java.util.Map;
 
 public interface ITpCourseManager  extends IBaseManager<TpCourseInfo> {
     public List<TpCourseInfo> getTchCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
+    public List<TpCourseInfo> getCalanderCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
     public List<TpCourseInfo> getStuCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
     public List<TpCourseInfo> getTsList(TpCourseInfo tpcourseinfo, PageResult presult);
     List<TpCourseInfo> getCouresResourceList(TpCourseInfo tpcourseinfo, PageResult presult);
@@ -47,4 +48,8 @@ public interface ITpCourseManager  extends IBaseManager<TpCourseInfo> {
     public List<TpCourseInfo> getShareList(TpCourseInfo tpcourseinfo,PageResult presult);
 
     public boolean doUpdateShareCourse();
+
+    List<Map<String,Object>>getCourseCalendar(Integer usertype,Integer userid,Integer dcschoolid,String year,String month);
+
+
 }

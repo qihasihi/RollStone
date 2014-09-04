@@ -1083,13 +1083,13 @@ public class UserController extends BaseController<UserInfo> {
                             request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
                         }
                         //查询分校的logo放入session
-                        if(userinfo.getDcschoolid()!=null){
+                     /*   if(userinfo.getDcschoolid()!=null){
                             ISchoolLogoManager schoolLogoManager = (SchoolLogoManager)this.getManager(SchoolLogoManager.class);
                             SchoolLogoInfo sl = new SchoolLogoInfo();
                             sl.setSchoolid(userinfo.getDcschoolid());
                             List<SchoolLogoInfo> logoList = schoolLogoManager.getList(sl,null);
                             request.getSession().setAttribute("logoObj",logoList.get(0));
-                        }
+                        } */
 
                         //    userinfo=userinfo;
                         je.setType("success");

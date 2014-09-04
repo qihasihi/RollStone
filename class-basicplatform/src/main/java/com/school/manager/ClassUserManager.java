@@ -115,5 +115,10 @@ public class  ClassUserManager extends BaseManager<ClassUser> implements IClassU
     public List<Map<String,Object>>  getClassUserTeacherBy(String userref,String relationType,String year,Integer gradeid){
         return this.classuserdao.getClassUserTeacherBy(userref,relationType,year,gradeid);
     }
+
+    @Override
+    public Integer isTeachingBanZhuRen(String userid, Integer classid) {
+        return this.classuserdao.isTeachingBanZhuRen(userid,classid);
+    }
 }
 
