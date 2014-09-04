@@ -1,3 +1,5 @@
+
+
 /**
  * Created by zhengzhou on 14-8-25.
  */
@@ -7,7 +9,7 @@ $(function(){
     beginJs1();
 });
 //计时
-var tmpTime= 0,allowClickTime=1;
+var tmpTime= 0,allowTmpNext=0,allowClickTime= 1,allowNext=true;
 function beginJs1(){
     tmpTime++;
     if(tmpTime>=allowClickTime){
@@ -15,7 +17,13 @@ function beginJs1(){
         allowRight=true;
     }else
         allowRight=false;
-
+    if(!allowNext){
+        allowTmpNext++;
+        if(allowTmpNext%3==0){
+            allowNext=true;
+            tmpTime=0;
+        }
+    }
     setTimeout("beginJs1()",300);
 }
 
@@ -177,6 +185,7 @@ TestPaperQues.prototype.subPaper=function(){
  * 提交答案前
  */
 TestPaperQues.prototype.freeSubQuesAnswer=function(direcType){
+
     var quesid=this.currentQuesObj.quesid;
     var questype=$("#dv_question div input[id='hd_questiontype_"+quesid+"']").val();
     var scoreObj=$("#dv_question div input[id='hs_score_"+quesid+"']");
@@ -243,15 +252,16 @@ TestPaperQues.prototype.freeSubQuesAnswer=function(direcType){
 //            issubmit=false;
 //    }
     else if(questype==2){
-        var tkLen=$("#dv_qs_"+quesid+" input[name='txt_tk']");
-        if(tkLen.length>0){
-            $.each(tkLen,function(ix,im){
-                answer+=im.value.Trim()+"|";
-            });
-            answer=answer.substring(0,answer.length-1);
-        }
 
-        if(answer.replace(/\|/g,"").Trim().length<1&&$("#txt_f2"+quesid).val().length<1)
+//        var tkLen=$("#dv_qs_"+quesid+" input[name='txt_tk']");
+//        if(tkLen.length>0){
+//            $.each(tkLen,function(ix,im){
+//                answer+=im.value.Trim()+"|";
+//            });
+//            answer=answer.substring(0,answer.length-1);
+//        }
+//
+//        if(answer.replace(/\|/g,"").Trim().length<1&&$("#txt_f2"+quesid).val().length<1)
             issubmit=false;
     }
     $("input[id='hs_val_stu_"+quesid+"']").val(score);
@@ -356,6 +366,7 @@ TestPaperQues.prototype.subQues=function(direcType){
  * 加载答案
  */
 TestPaperQues.prototype.loadQues=function(){
+    allowNext=false;
     $("div[id*='dv_q_']").hide();
     var showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
     var id='';
@@ -382,8 +393,10 @@ TestPaperQues.prototype.loadQues=function(){
             var mp3Len=$("audio[id*='mp3_']");
             if(mp3Len.length>0){
                 $.each(mp3Len,function(){
-                    this.pause();
-                    this.currentTime=0.0;
+                    if(this.readyState!=0){
+                        this.pause();
+                        this.currentTime=0.0;
+                    }
                 });
             }
     }
@@ -479,11 +492,16 @@ TestPaperQues.prototype.loadQues=function(){
 
                             var mp3url=_QUES_IMG_URL+"/"+parentQuesObj.questionid+"/001.mp3";
                             var mp3H='<a href="javascript:;" id="mp3_a_'+parentQuesObj.questionid+'"><img src="images/pic05_140722.png" alt="听力"/></a>' ;
-                            mp3H+='<span  style="display:none"><audio controls="controls" id="mp3_'+parentQuesObj.questionid+'">';
-                            mp3H+='<source src="/i/song.ogg" type="audio/ogg">';
+                            mp3H+='<span  style="display:none">' ;
+                            mp3H+='<audio controls="controls" id="mp3_'+parentQuesObj.questionid+'">';
+                            mp3H+='<source src="'+mp3url+'" type="audio/ogg">';
                             mp3H+='<source src="'+mp3url+'" type="audio/mpeg">';
                             mp3H+='您的浏览器不支持 audio 标签。';
-                            mp3H+='</audio></span>';
+                            mp3H+='</audio>';
+                                mp3H+='</span>';
+
+                          //  loadSWFPlayer(mp3url,"p_mp3_"+parentQuesObj.questionid,"","",width,height,false);
+
                             $('#p_mp3_'+parentQuesObj.questionid).html(mp3H);
                             $("#mp3_a_"+parentQuesObj.questionid).bind("click",function(){
                                 var mp3Obj=document.getElementById('mp3_'+parentQuesObj.questionid);
@@ -717,7 +735,7 @@ TestPaperDetail.prototype.nextQues=function(quesid){
  */
 TestPaperDetail.prototype.loadQues=function(){
     $("div[id*='dv_q_']").hide();
-
+    allowNext=false;
 
     var showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
     var id='';
@@ -752,8 +770,10 @@ TestPaperDetail.prototype.loadQues=function(){
             var mp3Len=$("audio[id*='mp3_']");
             if(mp3Len.length>0){
                 $.each(mp3Len,function(){
-                    this.pause();
-                    this.currentTime=0.0;
+                    if(this.readyState!=0){
+                        this.pause();
+                        this.currentTime=0.0;
+                    }
                 });
             }
 
@@ -850,7 +870,7 @@ TestPaperDetail.prototype.loadQues=function(){
                             var mp3url=_QUES_IMG_URL+"/"+parentQuesObj.questionid+"/001.mp3";
                             var mp3H='<a href="javascript:;" id="mp3_a_'+parentQuesObj.questionid+'"><img src="images/pic05_140722.png" alt="听力"/></a>' ;
                             mp3H+='<span  style="display:none"><audio controls="controls" id="mp3_'+parentQuesObj.questionid+'">';
-                            mp3H+='<source src="/i/song.ogg" type="audio/ogg">';
+                            mp3H+='<source src="'+mp3url+'" type="audio/ogg">';
                             mp3H+='<source src="'+mp3url+'" type="audio/mpeg">';
                             mp3H+='您的浏览器不支持 audio 标签。';
                             mp3H+='</audio></span>';
@@ -951,9 +971,25 @@ TestPaperDetail.prototype.loadQues=function(){
                             var ch='';
                             $.each(quesObj.stuPaperQuesLogsList,function(zx,zm){
                                 ch+='<div class="wenda" id="dv_ch_wd_'+zm.stuno+'">';
-                                ch+'<b><img src="'+zm.ettHeadImgSrc+'" width="36" height="36"></b>';
-                                ch+='<p class="title"><span>57分钟前</span>'+zm.ettname+'</p>';
+                                ch+='<b><img src="'+zm.ettHeadImgSrc+'" width="36" height="36"></b>';
+                                ch+='<p class="title"><span>57分钟前</span>'+zm.ettName+'</p>';
                                 ch+='<p>'+zm.answer+'</p>';
+                                //附件
+                                if(typeof(zm.attachType)!="undefined"&&zm.annexName!="undefined"){
+                                    var anXNameObj=zm.annexName.split(",");
+                                    $.each(anXNameObj,function(zqx,zq){
+                                        ch+='<p>';
+                                        if(zm.attachType==1){       //IM端提交的附件类型，1：图片 2：语音 attach_type
+                                            ch+='<img src="imapi1_1?m=makeImImg&w=160&h=90&p='+zq+'"/>';
+                                        }else if(zm.attachType==2){
+//                                            ch+='<img src="m=makeImImg&w=160&h=90&p='+zq+'"/>';
+                                        }
+                                        ch+='</p>';
+                                    });
+
+                                }else if(typeof(zm.annexName!="undefined")){
+
+                                }
                                 ch+='</div>';
                             })
                             $("#dv_wd"+quesObj.questionid).html(ch);
@@ -1083,6 +1119,7 @@ TestPaperDetail.prototype.loadQues=function(){
  */
 function nextNum(type,obj,isAnswer){
     if(typeof(type)!="undefined"&&typeof(obj)=="object"){
+
         if(typeof(isAnswer)!="undefined"&&isAnswer==1){
             obj.freeSubQuesAnswer(type);
         }else

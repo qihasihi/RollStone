@@ -69,6 +69,10 @@
                 subPaper(tqControler);
             }
             document.getElementById("fm_subQues").submit=function(){
+                if(!allowNext){
+                    alert('请勿过度频繁点击!');
+                    return(false);
+                }
                 tqControler.freeSubQuesAnswer(-2);
                 return false;
             }

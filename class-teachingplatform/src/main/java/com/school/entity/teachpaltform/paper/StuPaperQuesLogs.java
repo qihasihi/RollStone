@@ -23,6 +23,7 @@ public class StuPaperQuesLogs implements  Serializable {
     private String annexName;
 
     private Integer classid;
+    private Integer attachType;
 
 
     private String stuname;
@@ -32,6 +33,14 @@ public class StuPaperQuesLogs implements  Serializable {
 
     private String ettHeadImgSrc;
     private String ettName;
+
+    public Integer getAttachType() {
+        return attachType;
+    }
+
+    public void setAttachType(Integer attachType) {
+        this.attachType = attachType;
+    }
 
     public String getEttHeadImgSrc() {
         return ettHeadImgSrc;

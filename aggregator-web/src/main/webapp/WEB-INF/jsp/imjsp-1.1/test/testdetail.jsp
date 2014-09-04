@@ -66,6 +66,10 @@
                 nextNum(1,tqControler);
             }
             document.getElementById("fm_subQues").submit=function(){
+                if(!allowNext){
+                    alert('请勿过度频繁点击!');
+                    return(false);
+                }
                 alert('作答成功!');
                 return false;
             }
@@ -76,8 +80,8 @@
 <!--试卷里的试题-->
 <div class="zxcs_test" id="dv_question">
 </div>
-<a href="javascript:;" onclick="fm_subQues.submit();fm_free.submit();">上一题</a>
-<a  href="javascript:;" onclick="fm_subQues.submit();fm_next.submit();">下一题</a>
+<%--<a href="javascript:;" onclick="fm_subQues.submit();fm_free.submit();">上一题</a>--%>
+<%--<a  href="javascript:;" onclick="fm_subQues.submit();fm_next.submit();">下一题</a>--%>
 <form action="#"  id="fm_free" method="post">
 </form>
 <form  action="#"  id="fm_next" method="post">
