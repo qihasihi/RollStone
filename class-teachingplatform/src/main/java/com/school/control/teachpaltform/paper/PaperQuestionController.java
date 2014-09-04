@@ -3,6 +3,7 @@ package com.school.control.teachpaltform.paper;
 import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
 import com.school.entity.DictionaryInfo;
+import com.school.entity.UserInfo;
 import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
@@ -18,11 +19,13 @@ import com.school.manager.inter.ISmsManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.*;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.*;
+import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.manager.teachpaltform.paper.*;
@@ -84,7 +87,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
     private IQuesTeamRelaManager quesTeamRelaManager;
     private IPaperQuesTeamScoreManager paperQuesTeamScoreManager;
+    private ITpStuScoreLogsManager tpStuScoreLogsManager;
     public PaperQuestionController(){
+        this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.tpTaskManager=this.getManager(TpTaskManager.class);
         this.tpTaskAllotManager=this.getManager(TpTaskAllotManager.class);
@@ -3661,7 +3666,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
         List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,pr);
         if(spList!=null&&spList.size()>0||(flag!=null&&flag.trim().equals("1"))){ //已经交卷，不能再进入
-            String url="paperques?m=toTestDetail&paperid="+paperid;
+            String url="paperques?m=toTestDetail&paperid="+paperid+"&taskid="+taskid;
             if(flag!=null)url+="&flag="+flag;
             if(userid!=null)url+="&userid="+userid;
             response.sendRedirect(url);return null;
@@ -3895,6 +3900,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         splogs.setUserid(userid);
         splogs.setPaperid(Long.parseLong(paperid.trim()));
         splogs.setQuesid(Long.parseLong(quesid.trim()));
+        splogs.setTaskid(Long.parseLong(taskid));
         List<StuPaperQuesLogs> spqLogsList=this.stuPaperQuesLogsManager.getList(splogs,presult);
         if(spqLogsList!=null&&spqLogsList.size()>0){
             tmpq.setSpqLogs(spqLogsList.get(0));
@@ -4208,10 +4214,25 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
 
         Integer userid=null;
-        if(uid==null||uid.trim().length()<1)
+        Integer schoolid=null;
+        String jid=null;
+        if(uid==null||uid.trim().length()<1){
             userid=this.logined(request).getUserid();
-        else
+            schoolid=this.logined(request).getDcschoolid();
+            jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid().toString();
+        }else{
             userid=Integer.parseInt(uid);
+            //验证用户
+            UserInfo u=new UserInfo();
+
+            List<UserInfo> uList=this.userManager.getList(u,null);
+            if(uList==null||uList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.toJSON());return ;
+            }
+            schoolid=uList.get(0).getDcschoolid();
+            jid=uList.get(0).getEttuserid()==null?null:uList.get(0).getEttuserid().toString();
+        }
         Integer isinpaper=2;
         StuPaperLogs splog=new StuPaperLogs();
         splog.setUserid(userid);
@@ -4287,6 +4308,53 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             if(this.stuPaperLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
                 jsonEntity.setType("success");
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                //添加奖励
+         /*奖励加分*/
+                //得到班级ID
+                TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                tallot.setTaskid(Long.parseLong(taskid));
+
+                tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+                List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                        ||clsMapList.get(0).get("CLASS_ID")==null){
+                    jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                    response.getWriter().println(jsonEntity.toJSON());return ;
+                }
+
+                //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                //规则转换:    6             7         8
+                Integer type=0;
+                switch(tk.getTasktype()){
+                    case 3:     //试题
+                        type=1;break;
+                    case 1:     //资源学习
+                        type=2;break;
+                    case 2:
+                        type=4;
+                        break;
+                    case 4:
+                        type=6;
+                        break;
+                    case 5:
+                        type=7;
+                        break;
+                    case 6:
+                        type=8;
+                        break;
+                }
+
+
+                String msg=null;
+                        /*奖励加分通过*/
+                if(this.tpStuScoreLogsManager.awardStuScore(tk.getCourseid()
+                        , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                        , tk.getTaskid()
+                        , Long.parseLong(this.logined(request).getUserid() + ""),jid, type,schoolid)){
+                    msg="恭喜您,获得了1积分和1蓝宝石!";
+                    request.getSession().setAttribute("msg",msg);
+                }else
+                    System.out.println("awardScore err ");
             }else
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }else
@@ -4341,7 +4409,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         if(uid!=null&&uid.toString().length()>0)
             userid=Integer.parseInt(uid.trim());
         else
-            this.logined(request).getUserid();
+            userid=this.logined(request).getUserid();
         JSONArray jsonArray=JSONArray.fromObject(testQuesData);
         List<String> sqlArrayList=new ArrayList<String>();
         List<List<Object>> objArrayList=new ArrayList<List<Object>>();

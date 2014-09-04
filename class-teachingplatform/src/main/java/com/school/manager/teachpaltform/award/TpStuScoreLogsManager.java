@@ -6,10 +6,13 @@ import java.util.*;
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.entity.ClassInfo;
 import com.school.entity.UserInfo;
+import com.school.entity.teachpaltform.TpCourseTeachingMaterial;
 import com.school.entity.teachpaltform.award.TpStuScore;
 import com.school.manager.ClassManager;
 import com.school.manager.inter.IClassManager;
+import com.school.manager.inter.teachpaltform.ITpCourseTeachingMaterialManager;
 import com.school.manager.inter.teachpaltform.award.ITpStuScoreManager;
+import com.school.manager.teachpaltform.TpCourseTeachingMaterialManager;
 import com.school.util.SpringBeanUtil;
 import com.school.util.UtilTool;
 import jxl.Sheet;
@@ -72,8 +75,8 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
 
     //奖励加分
 
-    public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,Integer type){
-        if(courseid==null||classid==null||taskid==null||userid==null||type==null)
+    public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,Integer type,Integer dcschool){
+        if(courseid==null||classid==null||taskid==null||userid==null||type==null||dcschool==null)
             return false;
         Boolean returnVal=false;
         TpStuScoreLogs entity=new TpStuScoreLogs();
@@ -81,6 +84,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
         entity.setClassid(classid);
         entity.setTaskid(taskid);
         entity.setUserid(userid);
+        entity.setDcschoolid(dcschool);
         List<TpStuScoreLogs> tsScoreList=this.getList(entity,null);
         //如果不存在，则需要添加，否则直接返回true
         String awardSettings=getPropertiesAwardScore(type);
@@ -122,17 +126,19 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
 //            }
         }
         //查询班级的dc_school_id
-        ClassInfo cls=new ClassInfo();
-        cls.setClassid(entity.getClassid().intValue());
-        IClassManager classManager=SpringBeanUtil.getBean(ClassManager.class);
-        List<ClassInfo> clsList=classManager.getList(cls,null);
-        if(clsList==null||clsList.size()<1){
-          return returnVal;
-        }
+//        ClassInfo cls=new ClassInfo();
+//        cls.setClassid(entity.getClassid().intValue());
+//        cls.setDcschoolid(dcschool);
+//        IClassManager classManager=SpringBeanUtil.getBean(ClassManager.class);
+//        List<ClassInfo> clsList=classManager.getList(cls,null);
+//        if(clsList==null||clsList.size()<1){
+//          return returnVal;
+//        }
 
-        //修改或添加StuScore
+
+        //添加课程积分。
         TpStuScore tss=new TpStuScore();
-        tss.setDcschoolid(clsList.get(0).getDcschoolid().longValue());
+        tss.setDcschoolid(Long.parseLong(dcschool+""));
         tss.setClassid(entity.getClassid());
         tss.setClasstype(1);
         tss.setCourseid(entity.getCourseid());
@@ -147,6 +153,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
             sqlArrayList.add(sqlbuilder.toString());
             objArrayList.add(objList);
         }
+
         if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
             if(this.doExcetueArrayProc(sqlArrayList,objArrayList)){
                 returnVal=true;

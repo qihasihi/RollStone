@@ -9,5 +9,5 @@ public interface ITpStuScoreLogsManager  extends IBaseManager<TpStuScoreLogs> {
     /**
      *  ½±Àø¼Ó·Ö
      */
-    public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,final Integer type);
+    public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,final Integer type,final Integer dcshoolid);
 } 

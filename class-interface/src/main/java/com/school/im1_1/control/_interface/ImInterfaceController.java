@@ -3755,7 +3755,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(this.tpStuScoreLogsManager.awardStuScore(tk.getCourseid()
                 ,Long.parseLong(classId.trim())
                 ,tk.getTaskid()
-                ,Long.parseLong(tmpUser.getUserid()+""),jid,type)){
+                ,Long.parseLong(tmpUser.getUserid()+""),jid,type,tmpUser.getDcschoolid())){
             returnJo.put("msg", "恭喜您,获得了1积分和1蓝宝石");
             returnJo.put("result","1");
         }else{

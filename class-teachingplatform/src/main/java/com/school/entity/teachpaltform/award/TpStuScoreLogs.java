@@ -16,6 +16,15 @@ public class TpStuScoreLogs implements  Serializable{
     private java.lang.Long classid;
     private java.lang.Long userid;
     private java.lang.Integer score;
+    private Integer dcschoolid;
+
+    public Integer getDcschoolid() {
+        return dcschoolid;
+    }
+
+    public void setDcschoolid(Integer dcschoolid) {
+        this.dcschoolid = dcschoolid;
+    }
 
     public java.lang.Long getTaskid(){
       return taskid;

@@ -83,6 +83,11 @@ public class TpStuScoreLogsDAO extends CommonDAO<TpStuScoreLogs> implements ITpS
             objList.add(tpstuscorelogs.getCourseid());
         } else
             sqlbuilder.append("null,");
+        if (tpstuscorelogs.getDcschoolid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpstuscorelogs.getDcschoolid());
+        } else
+            sqlbuilder.append("null,");
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objList.add(presult.getPageNo());
@@ -147,6 +152,11 @@ public class TpStuScoreLogsDAO extends CommonDAO<TpStuScoreLogs> implements ITpS
             objList.add(tpstuscorelogs.getCourseid());
         } else
             sqlbuilder.append("null,");
+        if (tpstuscorelogs.getDcschoolid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpstuscorelogs.getDcschoolid());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -180,6 +190,11 @@ public class TpStuScoreLogsDAO extends CommonDAO<TpStuScoreLogs> implements ITpS
         if (tpstuscorelogs.getCourseid() != null) {
             sqlbuilder.append("?,");
             objList.add(tpstuscorelogs.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpstuscorelogs.getDcschoolid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpstuscorelogs.getDcschoolid());
         } else
             sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
@@ -225,6 +240,11 @@ public class TpStuScoreLogsDAO extends CommonDAO<TpStuScoreLogs> implements ITpS
         if (tpstuscorelogs.getCourseid() != null) {
             sqlbuilder.append("?,");
             objList.add(tpstuscorelogs.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpstuscorelogs.getDcschoolid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpstuscorelogs.getDcschoolid());
         } else
             sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");

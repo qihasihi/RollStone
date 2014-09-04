@@ -219,7 +219,7 @@ function loadNextQues(quesid,paperid,idx){
         url:'paperques?m=nextTestQues',
         dataType:'json',
         type:'post',
-        data:{quesid:quesid,paperid:paperid,courseid:courseid},
+        data:{quesid:quesid,paperid:paperid,courseid:courseid,taskid:taskid},
         error:function(){alert('异常错误，原因：未知!');},
         success:function(rps){
             //失败

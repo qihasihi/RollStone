@@ -2406,7 +2406,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 if(this.tpStuScoreLogsManager.awardStuScore(Long.parseLong(courseid.trim())
                         ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
                         ,Long.parseLong(taskid.trim())
-                        ,Long.parseLong(this.logined(request).getUserid()+""),jid,type)){
+                        ,Long.parseLong(this.logined(request).getUserid()+""),jid,type,this.logined(request).getDcschoolid())){
                     je.setMsg("恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
                 }else
                     System.out.println("awardScore error");
@@ -2518,7 +2518,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
 
 
-        answercontent=new String(answercontent.getBytes("iso-8859-1"),"UTF-8");
+
 
         String annexName=null;
         boolean isfileOk=true;
@@ -2534,6 +2534,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 }
             }else
                 isfileOk=false;
+            answercontent=new String(answercontent.getBytes("iso-8859-1"),"UTF-8");
         }
 
         if(!isfileOk){
@@ -2565,6 +2566,44 @@ public class TaskController extends BaseController<TpTaskInfo>{
         if(this.tpTaskManager.doExcetueArrayProc(sqlList,objListArray)){
             je.setType("success");
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+
+
+            //得到班级ID
+            TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+            tallot.setTaskid(taskList.get(0).getTaskid());
+            tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+            List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+            if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                    ||clsMapList.get(0).get("CLASS_ID")==null){
+                je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(je.toJSON());return ;
+            }
+
+            //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+            //规则转换:    6             7         8
+            Integer type=0;
+            switch(taskList.get(0).getTasktype()){
+                case 3:     //试题
+                    type=1;break;
+                case 1:     //资源学习
+                    type=2;break;
+                case 2:
+                    type=4;
+                    break;
+            }
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+            String jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid().toString();
+                /*奖励加分通过*/
+            if(this.tpStuScoreLogsManager.awardStuScore(Long.parseLong(courseid.trim())
+                    ,Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                    ,taskList.get(0).getTaskid()
+                    ,Long.parseLong(this.logined(request).getUserid()+""),jid,type,this.logined(request).getDcschoolid())){
+                je.setMsg("恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
+            }else
+                System.out.println("awardScore error");
+
+
+
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
@@ -2854,6 +2893,46 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
             }else{
                 if(this.taskPerformanceManager.doSave(tp)){
+                       /*奖励加分*/
+                    //得到班级ID
+                    TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                    tallot.setTaskid(Long.parseLong(taskid));
+
+                    tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+                    List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                    if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                            ||clsMapList.get(0).get("CLASS_ID")==null){
+                        je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                        response.getWriter().println(je.toJSON());return ;
+                    }
+
+                    //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                    //规则转换:    6             7         8
+                    Integer type=0;
+                    switch(taskCriList.get(0).getTasktype()){
+                        case 3:     //试题
+                            type=1;break;
+                        case 1:     //资源学习
+                            type=2;break;
+                        case 2:
+                            type=4;
+                            break;
+                    }
+                    String jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid().toString();
+
+
+                    String msg=null;
+                        /*奖励加分通过*/
+                    if(this.tpStuScoreLogsManager.awardStuScore(taskCriList.get(0).getCourseid()
+                            , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                            , taskCriList.get(0).getTaskid()
+                            , Long.parseLong(this.logined(request).getUserid() + ""),jid, type,this.logined(request).getDcschoolid())){
+                        msg="查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)";
+                        request.getSession().setAttribute("msg",msg);
+                    }else
+                        System.out.println("awardScore err ");
+
+
                     response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
                 }else{
                     je.setMsg("异常错误!添加查看记录失败!请重试!");
@@ -2954,15 +3033,17 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     }
                     String jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid().toString();
 
+
+                    String msg=null;
                         /*奖励加分通过*/
                     if(this.tpStuScoreLogsManager.awardStuScore(taskCriList.get(0).getCourseid()
                             , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
                             , taskCriList.get(0).getTaskid()
-                            , Long.parseLong(this.logined(request).getUserid() + ""),jid, type)){
-                        je.setMsg("查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)");
+                            , Long.parseLong(this.logined(request).getUserid() + ""),jid, type,this.logined(request).getDcschoolid())){
+                        msg="查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)";
+                        request.getSession().setAttribute("msg",msg);
                     }else
                         System.out.println("awardScore err ");
-
                     response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
                 }else{
                     je.setMsg("异常错误!添加查看记录失败!请重试!");

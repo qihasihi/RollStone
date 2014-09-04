@@ -2508,7 +2508,7 @@ function doSubStudyNote(resid) {
     }else{
         var param = {
             courseid: courseid,
-            answercontent: editor.getContent(),
+            answercontent: valObj.val(),
             resid: resid
         };
         if (typeof (taskid) != 'undefined' && taskid.length > 0)
