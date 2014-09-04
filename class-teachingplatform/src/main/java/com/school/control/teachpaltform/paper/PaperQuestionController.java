@@ -4308,53 +4308,56 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             if(this.stuPaperLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
                 jsonEntity.setType("success");
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-                //添加奖励
-         /*奖励加分*/
-                //得到班级ID
-                TpTaskAllotInfo tallot=new TpTaskAllotInfo();
-                tallot.setTaskid(Long.parseLong(taskid));
+                //当UID==null的时候，说明是手机端过来。奖励加分由手机端触发。
+                if(uid==null||uid.trim().length()<1){
+                        //添加奖励
+                 /*奖励加分*/
+                        //得到班级ID
+                        TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                        tallot.setTaskid(Long.parseLong(taskid));
 
-                tallot.getUserinfo().setUserid(this.logined(request).getUserid());
-                List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
-                if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
-                        ||clsMapList.get(0).get("CLASS_ID")==null){
-                    jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                    response.getWriter().println(jsonEntity.toJSON());return ;
+                        tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+                        List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                        if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                                ||clsMapList.get(0).get("CLASS_ID")==null){
+                            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                            response.getWriter().println(jsonEntity.toJSON());return ;
+                        }
+
+                        //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                        //规则转换:    6             7         8
+                        Integer type=0;
+                        switch(tk.getTasktype()){
+                            case 3:     //试题
+                                type=1;break;
+                            case 1:     //资源学习
+                                type=2;break;
+                            case 2:
+                                type=4;
+                                break;
+                            case 4:
+                                type=6;
+                                break;
+                            case 5:
+                                type=7;
+                                break;
+                            case 6:
+                                type=8;
+                                break;
+                        }
+
+
+                        String msg=null;
+                                /*奖励加分通过*/
+                        if(this.tpStuScoreLogsManager.awardStuScore(tk.getCourseid()
+                                , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                                , tk.getTaskid()
+                                , Long.parseLong(this.logined(request).getUserid() + ""),jid, type,schoolid)){
+                            msg="恭喜您,获得了1积分和1蓝宝石!";
+                            request.getSession().setAttribute("msg",msg);
+                        }else
+                            System.out.println("awardScore err ");
                 }
-
-                //taskinfo:   4:成卷测试  5：自主测试   6:微视频
-                //规则转换:    6             7         8
-                Integer type=0;
-                switch(tk.getTasktype()){
-                    case 3:     //试题
-                        type=1;break;
-                    case 1:     //资源学习
-                        type=2;break;
-                    case 2:
-                        type=4;
-                        break;
-                    case 4:
-                        type=6;
-                        break;
-                    case 5:
-                        type=7;
-                        break;
-                    case 6:
-                        type=8;
-                        break;
-                }
-
-
-                String msg=null;
-                        /*奖励加分通过*/
-                if(this.tpStuScoreLogsManager.awardStuScore(tk.getCourseid()
-                        , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
-                        , tk.getTaskid()
-                        , Long.parseLong(this.logined(request).getUserid() + ""),jid, type,schoolid)){
-                    msg="恭喜您,获得了1积分和1蓝宝石!";
-                    request.getSession().setAttribute("msg",msg);
-                }else
-                    System.out.println("awardScore err ");
             }else
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }else
