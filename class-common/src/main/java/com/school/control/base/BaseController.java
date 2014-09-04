@@ -27,6 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 
@@ -566,13 +567,37 @@ public class BaseController<T extends java.io.Serializable> {
         String fname=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH").toString()+"/tmp/imgCache/"+srcFile.getParentFile().getName()+"/";
         File parF=new File(fname);
         if(!parF.exists())
-            parF.mkdirs();
-        fname+="001"+(w+h)/100+"."+fileSuffix;
+              parF.mkdirs();
+        fname+=srcFile.getName()+((w+h)/100)+"."+fileSuffix;
 //        String fname=srcFile.getPath().substring(0,
 //                (srcFile.getPath().lastIndexOf(".")))
 //                + srcFile.getName().substring(0,srcFile.getName().lastIndexOf(".")) + "_"+(w+h)/100+"." + fileSuffix;
         File    destFile    = new File(fname);
         if(!destFile.exists()){
+            //说明是远程文件,
+            if(_file.getPath().indexOf("http:")==0){
+                File tmpWirteFile=new File(destFile.getParent()+"/"+_file.getName());
+                if(!tmpWirteFile.exists()){
+                    //实例化url
+                    URL url = new URL(_file.getPath().replaceAll("\\\\","//"));
+                    //载入图片到输入流
+                    java.io.BufferedInputStream bis = new BufferedInputStream(url.openStream());
+                    //实例化存储字节数组
+                    byte[] bytes = new byte[1024];
+
+
+                    //设置写入路径以及图片名称
+                    OutputStream bos = new FileOutputStream(tmpWirteFile);
+                    int len;
+                    while ((len = bis.read(bytes)) > 0) {
+                        bos.write(bytes, 0, len);
+                    }
+                    bis.close();
+                    bos.flush();
+                    bos.close();
+                }
+                _file=tmpWirteFile;
+            }
             Image srcImage  = javax.imageio.ImageIO.read(_file);
             //得到图片的原始大小， 以便按比例压缩。
             int  imageWidth = srcImage.getWidth(null);

@@ -1884,7 +1884,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 qa.setTaskid(tmpTask.getTaskid());
                 if(replyAttach!=null&&replyAttach.length()>0){
                     qa.setReplyattach(replyAttach);
-                    qa.setReplyattachtype(Integer.parseInt(attachType));
+                    if(attachType!=null)
+                        qa.setReplyattachtype(Integer.parseInt(attachType));
                 }
                 sql=new StringBuilder();
                 objList=this.questionAnswerManager.getSaveSql(qa,sql);
@@ -1995,8 +1996,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             List<StuPaperQuesLogs> spqlogList=this.stuPaperQuesLogsManager.getList(stpq,presult);
             stpq.setAnswer(replyDetail);
             stpq.setScore(Float.parseFloat("0"));
-            if(replyAttach!=null&&replyAttach.length()>0)
+            if(replyAttach!=null&&replyAttach.length()>0){
                 stpq.setAnnexName(replyAttach);
+                if(attachType!=null)
+                    stpq.setAttachType(Integer.parseInt(attachType.trim()));
+            }
             stpq.setIsright(1);
             stpq.setIsmarking(0);
             //如果存在，则修改
@@ -2705,26 +2709,28 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
             }
-
-            TpTaskInfo t=new TpTaskInfo();
-            t.setUserid(uid);
-            t.setTaskid(Long.parseLong(taskid));
-            t.setCourseid(tkList.get(0).getCourseid());
-            pr.setPageSize(1);
-            // 学生任务
-            taskList=this.tpTaskManager.getListbyStu(t, pr);
-            if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
-                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            if(userType!=null&&Integer.parseInt(userType)!=2){
+                TpTaskInfo t=new TpTaskInfo();
+                t.setUserid(uid);
+                t.setTaskid(Long.parseLong(taskid));
+                t.setCourseid(tkList.get(0).getCourseid());
+                pr.setPageSize(1);
+                // 学生任务
+                taskList=this.tpTaskManager.getListbyStu(t, pr);
+                if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
+                    jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                    response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+                }
+                if(taskList.get(0).getTaskstatus().equals("3")){
+                    isendTask=true;
+                }
+                if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
+                    jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                    response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+                }
             }
-            if(taskList.get(0).getTaskstatus().equals("3")){
-                isendTask=true;
-            }
 
-        if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
-            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
-        }
+
 
         //验证是否已经答题
         if(userType!=null&&Integer.parseInt(userType)!=2){  //如果是老师进入，则不验证是否提交
@@ -2792,7 +2798,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 //            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
 //            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
 //        }
-        tk=taskList.get(0);
+        tk=tkList.get(0);
         //得到年有题的分数
         mp.put("userType",userType);
         mp.put("classid",classid);
@@ -3044,7 +3050,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     }
 
     /**
-     * IM手机进入试卷测试页面。
+     *
      * @param request
      * @param response
      * @return
@@ -3853,6 +3859,29 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             returnJo.put("msg","观看失败，请重新观看");
         }
         response.getWriter().print(returnJo.toString());
+    }
+
+
+    /**
+     * 下载 切图 输出
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=makeImImg")
+    public void dwnCutImg(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        String w=request.getParameter("w"); //切后的宽
+        String h=request.getParameter("h"); //切后的
+        String path=request.getParameter("p"); //要下载的路径
+
+        if(w==null||w.trim().length()<1||h==null||h.trim().length()<1||path==null||path.trim().length()<1){
+//            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+//            response.getWriter().println(returnJo.toString());
+            return;
+        }
+        //生成新图
+        writeImage(response, ImgResize(path, Integer.parseInt(w), Integer.parseInt(h)));
+
     }
 
 
