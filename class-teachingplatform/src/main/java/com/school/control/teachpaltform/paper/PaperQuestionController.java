@@ -1,5 +1,6 @@
 package com.school.control.teachpaltform.paper;
 
+import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
 import com.school.entity.DictionaryInfo;
@@ -33,6 +34,7 @@ import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -3736,10 +3738,21 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
         Integer userid=null;
-        if(uid==null||uid.trim().length()<1)
+        Integer dcschoolid=null;
+        if(uid==null||uid.trim().length()<1){
             userid=this.logined(request).getUserid();
-        else
+            dcschoolid=this.logined(request).getDcschoolid();
+        } else{
             userid=Integer.parseInt(uid);
+            UserInfo userInfo=new UserInfo();
+            userInfo.setUserid(userid);
+            List<UserInfo> userList=this.userManager.getList(userInfo,null);
+            if(userList==null||userList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().println(jsonEntity.toJSON());return ;
+            }
+            dcschoolid=userList.get(0).getDcschoolid();
+        }
         String q=quesid;
          boolean is75=false;
         if(q.indexOf("|")!=-1){
@@ -3841,7 +3854,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
         QuestionInfo tmpq=quesList.get(0);
         if(tmpq.getQuestiontype()==1||tmpq.getQuestiontype()==9){
-            //得到该班所有学生的回答
+            //得到该班所有学生的回答(如果传入该值，表示是IM手机页发送请求。加入远程头像)
             if(classid!=null&&classid.trim().length()>0&&taskid!=null&&classid.trim().length()>0){
                 //如果查询得分
                if(allStuAnswer!=null&&allStuAnswer.trim().length()>0&&allStuAnswer.trim().equals("1")){
@@ -3852,6 +3865,49 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                    spq.setClassid(Integer.parseInt(classid));
                    List<StuPaperQuesLogs> spqList=this.stuPaperQuesLogsManager.getList(spq,null);
                    tmpq.setStuPaperQuesLogsList(spqList);
+                   if(spqList!=null&&spqList.size()>0){
+                       StringBuilder jids = new StringBuilder();
+                       jids.append("[");
+                       for (StuPaperQuesLogs spqLogs:spqList){
+                           if(spqLogs.getEttuserid()!=null){
+                               jids.append("{\"jid\":"+spqLogs.getEttuserid()+"},");
+                           }else{
+                               spqLogs.setEttHeadImgSrc("http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
+                               spqLogs.setEttName(spqLogs.getStuname());
+                           }
+                        }
+                       if(jids.toString().trim().length()>1){
+                           jids=new StringBuilder(jids.toString().substring(0,jids.toString().lastIndexOf(","))).append("]");
+                       }
+                       //String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                       String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+                       //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                       HashMap<String,String> signMap = new HashMap();
+                       signMap.put("userList",jids.toString());
+                       signMap.put("schoolId",dcschoolid.toString());
+                       signMap.put("srcJid",userid.toString());
+                       signMap.put("userType","3");
+                       signMap.put("timestamp",""+System.currentTimeMillis());
+                       String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do", signMap, "*ETT#HONER#2014*");
+                       signMap.put("sign",signture);
+                       JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                       int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                       if(type==1){
+                           Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                           JSONArray jr = JSONArray.fromObject(obj);
+                           if(jr!=null&&jr.size()>0){
+                               for(Object o:jr){
+                                   JSONObject jo = (JSONObject)o;
+                                   for (StuPaperQuesLogs spqLogs:spqList){
+                                       if(spqLogs.getEttuserid()!=null&&jo.getInt("jid")==spqLogs.getEttuserid()){
+                                           spqLogs.setEttHeadImgSrc(jo.getString("headUrl"));
+                                           spqLogs.setEttHeadImgSrc(jo.getString("realName"));
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                   }
                }
             }
         }else if(tmpq.getQuestiontype()==3||tmpq.getQuestiontype()==7||tmpq.getQuestiontype()==4||tmpq.getQuestiontype()==8){

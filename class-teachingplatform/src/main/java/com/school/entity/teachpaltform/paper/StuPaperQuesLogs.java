@@ -17,6 +17,7 @@ public class StuPaperQuesLogs implements  Serializable {
     private Date ctime;
     private java.lang.Long quesid;
     private java.lang.Integer userid;
+    private Integer ettuserid;
     private Float score;
     private Integer ismarking;
     private String annexName;
@@ -28,6 +29,33 @@ public class StuPaperQuesLogs implements  Serializable {
     private String stuno;
 
     private Long taskid;
+
+    private String ettHeadImgSrc;
+    private String ettName;
+
+    public String getEttHeadImgSrc() {
+        return ettHeadImgSrc;
+    }
+
+    public void setEttHeadImgSrc(String ettHeadImgSrc) {
+        this.ettHeadImgSrc = ettHeadImgSrc;
+    }
+
+    public String getEttName() {
+        return ettName;
+    }
+
+    public void setEttName(String ettName) {
+        this.ettName = ettName;
+    }
+
+    public Integer getEttuserid() {
+        return ettuserid;
+    }
+
+    public void setEttuserid(Integer ettuserid) {
+        this.ettuserid = ettuserid;
+    }
 
     public Long getTaskid() {
         return taskid;

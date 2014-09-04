@@ -1245,7 +1245,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     returnUserRecord.add(returnUserMap);
                 }
                 String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
+                String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
                 //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
                 HashMap<String,String> signMap = new HashMap();
                 signMap.put("userList",jidstr);
@@ -3854,6 +3854,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
         response.getWriter().print(returnJo.toString());
     }
+
+
+
+
+
+
+
 
 
 }

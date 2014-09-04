@@ -5,7 +5,7 @@
 <%
     response.setHeader("Cache-Control", "Public");
     response.setHeader("Pragma", "no-cache");
-    response.setDateHeader("Expires", 0);
+    response.setDateHeader("Expires",  -10);
     String proc_name= UtilTool.utilproperty.getProperty("PROC_NAME");
     String basePath = request.getScheme() + "://"
             + UtilTool.utilproperty.getProperty("IP_ADDRESS")

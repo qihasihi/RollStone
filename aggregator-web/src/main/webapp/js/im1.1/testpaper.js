@@ -400,7 +400,8 @@ TestPaperQues.prototype.loadQues=function(){
     var p={userid:this.config.userid,
         quesid:this.currentQuesObj.quesid,
         paperid:this.config.paperid,
-        courseid:this.config.courseid
+        courseid:this.config.courseid,
+        taskid:this.config.taskid
     };
     if(this.currentQuesObj.parentQuesId!=0){
         p.quesid=this.currentQuesObj.parentQuesId+"|"+p.quesid;
@@ -950,8 +951,8 @@ TestPaperDetail.prototype.loadQues=function(){
                             var ch='';
                             $.each(quesObj.stuPaperQuesLogsList,function(zx,zm){
                                 ch+='<div class="wenda" id="dv_ch_wd_'+zm.stuno+'">';
-                                ch+'<b><img src="images/pic01_140811.png" width="36" height="36"></b>';
-                                ch+='<p class="title"><span>57分钟前</span>'+zm.stuname+'</p>';
+                                ch+'<b><img src="'+zm.ettHeadImgSrc+'" width="36" height="36"></b>';
+                                ch+='<p class="title"><span>57分钟前</span>'+zm.ettname+'</p>';
                                 ch+='<p>'+zm.answer+'</p>';
                                 ch+='</div>';
                             })
