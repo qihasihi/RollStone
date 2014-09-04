@@ -3901,7 +3901,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                                    for (StuPaperQuesLogs spqLogs:spqList){
                                        if(spqLogs.getEttuserid()!=null&&jo.getInt("jid")==spqLogs.getEttuserid()){
                                            spqLogs.setEttHeadImgSrc(jo.getString("headUrl"));
-                                           spqLogs.setEttHeadImgSrc(jo.getString("realName"));
+                                           spqLogs.setEttName(jo.getString("realName"));
                                        }
                                    }
                                }
@@ -4287,7 +4287,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 response.getWriter().println(jsonEntity.toJSON());return ;
             }
             schoolid=uList.get(0).getDcschoolid();
-            jid=uList.get(0).getEttuserid()==null?null:uList.get(0).getEttuserid().toString();
+            jid=uid;
         }
         Integer isinpaper=2;
         StuPaperLogs splog=new StuPaperLogs();
