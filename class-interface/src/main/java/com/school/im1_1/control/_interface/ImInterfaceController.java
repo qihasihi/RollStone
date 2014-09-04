@@ -3837,10 +3837,18 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         StuViewMicVideoLog obj = new StuViewMicVideoLog();
         obj.setUserid(userList.get(0).getUserid());
         obj.setMicvideoid(tpTaskList.get(0).getTaskvalueid());
+        //已经插入的，算成功
+        List<StuViewMicVideoLog> objList = this.stuViewMicVideoLogManager.getList(obj,null);
+        if(objList!=null&&objList.size()>0){
+            returnJo.put("result","1");
+            returnJo.put("msg","当前视频已观看");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
         Boolean bl = this.stuViewMicVideoLogManager.doSave(obj);
         if(bl){
             returnJo.put("result","1");
-            returnJo.put("msg","");
+            returnJo.put("msg","当前视频已观看");
         }else{
             returnJo.put("msg","观看失败，请重新观看");
         }

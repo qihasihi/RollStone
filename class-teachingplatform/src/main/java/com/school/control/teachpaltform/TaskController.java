@@ -9,6 +9,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.entity.*;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
@@ -17,6 +18,7 @@ import com.school.entity.teachpaltform.paper.PaperInfo;
 import com.school.entity.teachpaltform.paper.StuPaperLogs;
 import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
+import com.school.im1_1.manager.inter._interface.IImInterfaceManager;
 import com.school.manager.*;
 import com.school.manager.inter.*;
 import com.school.manager.inter.resource.IResourceManager;
@@ -37,6 +39,8 @@ import com.school.manager.teachpaltform.paper.PaperManager;
 import com.school.manager.teachpaltform.paper.PaperQuestionManager;
 import com.school.manager.teachpaltform.paper.StuPaperQuesLogsManager;
 import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -88,6 +92,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private IResourceManager resourceManager;
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
     private IPaperQuestionManager paperQuestionManager;
+    private IImInterfaceManager imInterfaceManager;
     public TaskController(){
         this.gradeManager=this.getManager(GradeManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
@@ -3850,5 +3855,143 @@ public class TaskController extends BaseController<TpTaskInfo>{
         je.setObjList(groupStudentList);
         je.setType("success");
         response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 进入im端任务统计详情页面
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=toImTaskInfo",method={RequestMethod.POST,RequestMethod.GET})
+    public ModelAndView toImTaskInfo(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String taskid = request.getParameter("taskid");
+        String classid = request.getParameter("classid");
+        String type = request.getParameter("type");//1：教师 2：学生 用来判断班级是否显示
+        //
+        if(taskid==null||classid==null||type==null){
+            je.setMsg("缺少参数");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //首先查询任务详情
+        TpTaskInfo taskInfo = new TpTaskInfo();
+        taskInfo.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo> taskInfoList = this.tpTaskManager.getList(taskInfo,null);
+        if(taskInfoList==null||taskInfoList.size()==0){
+            je.setMsg("当前任务不存在，请刷新页面重试");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        request.setAttribute("taskinfo",taskInfoList.get(0));
+        //接下来查询任务的回答列表
+        List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
+        Map returnUserMap = null;
+        if(type.equals("1")){
+            taskUserRecord = this.imInterfaceManager.getTaskUserRecord(Long.parseLong(taskid),Integer.parseInt(classid),Integer.parseInt("0"),null);
+        }else{
+            taskUserRecord = this.imInterfaceManager.getTaskUserRecord(Long.parseLong(taskid),Integer.parseInt(classid),Integer.parseInt("0"),this.logined(request).getUserid());
+        }
+        if(taskUserRecord!=null&&taskUserRecord.size()>0){
+            StringBuilder jids = new StringBuilder();
+            jids.append("[");
+            for(int i = 0;i<taskUserRecord.size();i++){
+                returnUserMap = new HashMap();
+                String replyDate = UtilTool.convertTimeForTask(Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString()),taskUserRecord.get(i).get("C_TIME").toString());
+                returnUserMap.put("replyDate",replyDate);
+                returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
+                returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
+                returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
+                returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                if(taskUserRecord.get(i).get("JID")!=null){
+                    jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
+                }else{
+                    returnUserMap.put("uPhoto","http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
+                    returnUserMap.put("uName",taskUserRecord.get(i).get("realname"));
+                }
+                returnUserRecord.add(returnUserMap);
+            }
+            String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+            String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
+            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+            HashMap<String,String> signMap = new HashMap();
+            signMap.put("userList",jidstr);
+            signMap.put("schoolId",this.logined(request).getDcschoolid()+"");
+            signMap.put("srcJid",this.logined(request).getEttuserid()+"");
+            signMap.put("userType","3");
+            signMap.put("timestamp",""+System.currentTimeMillis());
+            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do", signMap, "*ETT#HONER#2014*");
+            signMap.put("sign",signture);
+            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+            int t = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+            if(t==1){
+                Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                JSONArray jr = JSONArray.fromObject(obj);
+                if(jr!=null&&jr.size()>0){
+                    for(int i = 0;i<jr.size();i++){
+                        JSONObject jo = jr.getJSONObject(i);
+                        for(int j = 0;j<returnUserRecord.size();j++){
+                            returnUserMap = new HashMap();
+                            if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
+                                returnUserRecord.get(j).put("uName", jo.getString("realName"));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        request.setAttribute("replyList",returnUserRecord);
+        if(type.equals("1")){
+            //获取任务相关的班级
+            TpTaskAllotInfo ta = new TpTaskAllotInfo();
+            ta.setTaskid(Long.parseLong(taskid));
+            List<TpTaskAllotInfo> taList = this.tpTaskAllotManager.getList(ta,null);
+
+            List<Map> classList = new ArrayList<Map>();
+            for(TpTaskAllotInfo o:taList){
+                if(o.getUsertype()==0){
+                    ClassInfo ci = new ClassInfo();
+                    ci.setClassid(Integer.parseInt(o.getUsertypeid().toString()));
+                    List<ClassInfo> ciList = this.classManager.getList(ci,null);
+                    Map map = new HashMap();
+                    map.put("classid",ciList.get(0).getClassid());
+                    map.put("classname",ciList.get(0).getClassname());
+                    map.put("classtype",1);
+                    classList.add(map);
+                }else if(o.getUsertype()==2){//小组，要获取小组属于的班级
+                    TpGroupInfo tg = new TpGroupInfo();
+                    tg.setGroupid(o.getUsertypeid());
+                    List<TpGroupInfo> tgList = this.tpGroupManager.getList(tg,null);
+                    Integer clsid=tgList.get(0).getClassid();
+                    if(tgList.get(0).getClasstype()==1){
+                        ClassInfo ci = new ClassInfo();
+                        ci.setClassid(clsid);
+                        List<ClassInfo> objList = this.classManager.getList(ci,null);
+                        Map map = new HashMap();
+                        map.put("classid",objList.get(0).getClassid());
+                        map.put("classname",objList.get(0).getClassname());
+                        map.put("classtype",2);
+                        if(classList.size()>0){
+                            Boolean b = false;
+                            for(Map m:classList){
+                                if(Integer.parseInt(m.get("classid").toString())==Integer.parseInt(map.get("classid").toString())){
+                                    b=true;
+                                }
+                            }
+                            if(b==false)
+                                classList.add(map);
+                        }else{
+                            classList.add(map);
+                        }
+                    }
+                }
+            }
+            request.setAttribute("classlist",classList);
+        }
+        request.setAttribute("type",type);
+        return new ModelAndView("/teachpaltform/task/student/im-task-detail");
     }
 }
