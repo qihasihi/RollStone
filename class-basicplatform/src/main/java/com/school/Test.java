@@ -6,19 +6,53 @@ import net.sf.json.*;
 import java.io.*;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhengzhou on 14-6-17.
  */
 public class Test {
+
+    private static String getFixLenthString(int strLength) {
+
+        Random rm = new Random();
+
+        // 获得随机数
+        double pross = (1 + rm.nextDouble()) * Math.pow(10, strLength);
+
+        // 将获得的获得随机数转化为字符串
+        String fixLenthString = String.valueOf(pross);
+
+        // 返回固定的长度的随机数
+        return fixLenthString.substring(1, strLength + 1);
+    }
+
+
     public static void main(String[] args)throws Exception{
-       String url="http://localhost:8080/sz_school/tpuser?m=toJWIndex";
+      /* String url="http://localhost:8080/sz_school/tpuser?m=toJWIndex";
         String param="schoolId=1&jId=2&schoolName="+java.net.URLEncoder.encode("北京分校","UTF-8");
         System.out.println(url+"&"+param);
-        System.out.println(sendPostURL(url,param));
+        System.out.println(sendPostURL(url,param)); */
+
+
+
+
+
+
+            int i=0;
+            Set set=new HashSet();
+            while (i<10000){
+                i++;
+
+                String id=((Long)System.currentTimeMillis()).toString()+""+getFixLenthString(6);;
+                System.out.println(id);
+                id=id.substring(6);
+
+                Long nextid=Long.parseLong(id);
+                set.add(nextid);
+            }
+            System.out.println(set.size());
+
 
 
 
