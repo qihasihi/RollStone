@@ -3397,18 +3397,21 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     cid=Integer.parseInt(classId);
 
                 List<Map<String,Object>> userMapList=new ArrayList<Map<String, Object>>();
+                List<Object> jidMapList=new ArrayList<Object>();
                 List<UserInfo>notCompleteList=this.userManager.getUserNotCompleteTask(task.getTaskid(),null,cid,"1");
                 if(notCompleteList!=null&&notCompleteList.size()>0){
 
                     for (UserInfo user:notCompleteList){
-                        //if(user.getEttuserid()==null)return;
                         Map<String,Object> uMap=new HashMap<String, Object>();
-                        //uMap.put("stuJid",user.getEttuserid());
                         uMap.put("stuName",user.getRealname());
                         userMapList.add(uMap);
+                        if(user.getEttuserid()!=null){
+                            jidMapList.add(user.getEttuserid());
+                        }
                     }
                 }
                 jo.put("stuList",userMapList.size()>0?userMapList:null);
+                jo.put("jidList",jidMapList.size()>0?jidMapList:null);
             }
         }
         List<PaperQuestion>pqList=null;
@@ -3617,13 +3620,17 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         obj.setSubjectid(Integer.parseInt(subjectId));
         obj.setClassid(Integer.parseInt(classId));
         List<Map<String,Object>>teamRankList=this.imInterfaceManager.getQryStatPerson(obj);
-        String jids="";
+        StringBuilder jids = new StringBuilder();
         if(teamRankList!=null&&teamRankList.size()>0){
+            jids.append("[");
             for(Map<String,Object>map:teamRankList){
                 Map<String,Object>tmpMap=new HashMap<String, Object>();
                 tmpMap.put("jid",map.get("ETT_USER_ID"));
-                if(map.get("ETT_USER_ID")!=null&&map.get("ETT_USER_ID").toString().length()>0)
-                    jids+=map.get("ETT_USER_ID")+",";
+                if(map.get("ETT_USER_ID")!=null&&map.get("ETT_USER_ID").toString().length()>0){
+                    jids.append("{\"jid\":"+Integer.parseInt(map.get("ETT_USER_ID").toString())+"},");
+                }else{
+                    tmpMap.put("uPhoto","http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
+                }
                 tmpMap.put("uName",map.get("REALNAME"));
                 tmpMap.put("uScore",map.get("COURSE_TOTAL_SCORE"));
                 tmpMap.put("uTeam",map.get("GROUP_NAME"));
@@ -3655,8 +3662,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         for(int j = 0;j<tmpRankList.size();j++){
                             if(tmpRankList.get(j).get("ETT_USER_ID")!=null&&tmpRankList.get(j).get("ETT_USER_ID").toString().length()>0&&
                                     jsono.getInt("jid")==Integer.parseInt(tmpRankList.get(j).get("ETT_USER_ID").toString())){
-                                tmpRankList.get(j).put("uPhoto", jo.getString("headUrl"));
-                                tmpRankList.get(j).put("uName", jo.getString("realName"));
+                                tmpRankList.get(j).put("uPhoto", jsono.getString("headUrl"));
+                                tmpRankList.get(j).put("uName", jsono.getString("realName"));
                             }
                         }
                     }
