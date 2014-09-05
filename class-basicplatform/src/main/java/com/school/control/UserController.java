@@ -6230,7 +6230,102 @@ public class UserController extends BaseController<UserInfo> {
         }
         return true;
     }
+
+    /**
+     * 乐知行用户添加接口
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+
+    @RequestMapping(params = "m=addSchoolAdmin", method = RequestMethod.POST)
+    public void addSchoolAdmin(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String schoolid=request.getParameter("schoolid");
+        String adminname=request.getParameter("adminname");
+        String pwd=request.getParameter("pwd");
+
+        if(schoolid==null||schoolid.trim().length()<1){
+            je.setMsg("Schoolid is empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+
+        UserInfo userInfo=new UserInfo();
+        userInfo.setUsername(adminname);
+        userInfo.setDcschoolid(Integer.parseInt(schoolid));
+        List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
+        //已存在
+        if(userInfoList!=null&&userInfoList.size()>0){
+            if(userInfoList.get(0).getStateid().toString().equals("1")){
+                UserInfo upd=new UserInfo();
+                upd.setUserid(userInfoList.get(0).getUserid());
+                upd.setStateid(0);
+                sql=new StringBuilder();
+                objList=this.userManager.getUpdateSql(upd,sql);
+                if (objList != null && sql != null) {
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }else{
+                je.setMsg("username:"+adminname+" already exists!");
+                response.getWriter().print(je.toJSON());return;
+            }
+        }else{
+            //添加用户
+            String userNextRef = UUID.randomUUID().toString();
+            userInfo.setRef(userNextRef);
+            userInfo.setPassword(pwd);
+            userInfo.setStateid(0);
+            userInfo.setSchoolid(schoolid);
+            userInfo.setUsername(adminname);
+            sql = new StringBuilder();
+            objList = this.userManager.getSaveSql(userInfo, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+            //添加用户与角色关系
+            RoleUser ru = new RoleUser();
+            ru.setUserid(userNextRef);
+            ru.setRoleid(4);
+            ru.setRef(UUID.randomUUID().toString());
+            sql = new StringBuilder();
+            objList = this.roleUserManager.getSaveSql(ru,sql);
+            if(objList!=null&&sql!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+            //添加用户与身份关联信息
+            String identityNextRef = UUID.randomUUID().toString();
+            UserIdentityInfo ui = new UserIdentityInfo();
+            ui.setRef(identityNextRef);
+            ui.getUserinfo().setRef(userNextRef);
+            ui.setIdentityname("教职工");
+            sql = new StringBuilder();
+            objList = this.userIdentityManager.getSaveSql(ui, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+        }
+        if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
+            boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
+            if(flag)
+                je.setType("success");
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
+        response.getWriter().print(je.toJSON());
+    }
+
 }
+
 
 /**
  * 用户Control的工具类
