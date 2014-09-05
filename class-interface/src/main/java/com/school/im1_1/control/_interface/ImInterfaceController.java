@@ -3617,10 +3617,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         obj.setSubjectid(Integer.parseInt(subjectId));
         obj.setClassid(Integer.parseInt(classId));
         List<Map<String,Object>>teamRankList=this.imInterfaceManager.getQryStatPerson(obj);
+        String jids="";
         if(teamRankList!=null&&teamRankList.size()>0){
             for(Map<String,Object>map:teamRankList){
                 Map<String,Object>tmpMap=new HashMap<String, Object>();
                 tmpMap.put("jid",map.get("ETT_USER_ID"));
+                if(map.get("ETT_USER_ID")!=null&&map.get("ETT_USER_ID").toString().length()>0)
+                    jids+=map.get("ETT_USER_ID")+",";
                 tmpMap.put("uName",map.get("REALNAME"));
                 tmpMap.put("uScore",map.get("COURSE_TOTAL_SCORE"));
                 tmpMap.put("uTeam",map.get("GROUP_NAME"));
@@ -3628,6 +3631,42 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 tmpRankList.add(tmpMap);
             }
         }
+
+        if(jids.length()>0){
+            String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+            HashMap<String,String> signMap = new HashMap();
+            signMap.put("userList",jidstr);
+            signMap.put("schoolId",schoolId);
+            signMap.put("srcJid",jid);
+            signMap.put("userType","3");
+            signMap.put("timestamp",""+System.currentTimeMillis());
+            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+            signMap.put("sign",signture);
+            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+            if(type==1){
+                Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                JSONArray jr = JSONArray.fromObject(jsonObj);
+                if(jr!=null&&jr.size()>0){
+                    for(int i = 0;i<jr.size();i++){
+                        JSONObject jsono = jr.getJSONObject(i);
+                        for(int j = 0;j<tmpRankList.size();j++){
+                            if(tmpRankList.get(j).get("ETT_USER_ID")!=null&&tmpRankList.get(j).get("ETT_USER_ID").toString().length()>0&&
+                                    jsono.getInt("jid")==Integer.parseInt(tmpRankList.get(j).get("ETT_USER_ID").toString())){
+                                tmpRankList.get(j).put("uPhoto", jo.getString("headUrl"));
+                                tmpRankList.get(j).put("uName", jo.getString("realName"));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
 
         jo.put("teamRankList",tmpRankList==null||tmpRankList.size()<1?null:tmpRankList);
 
