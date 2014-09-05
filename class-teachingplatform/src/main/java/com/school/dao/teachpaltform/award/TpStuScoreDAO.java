@@ -101,10 +101,54 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
             objlist.add(obj.getClasstype());
         }else
             sqlbuilder.append("NULL,");
+        if(obj.getTaskscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getTaskscore());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getCommentscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getCommentscore());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getGroupscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getGroupscore());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getCoursetotalscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getCoursetotalscore());
+        }else
+            sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
         return objlist;
     }
 
+    /**
+     * 更新统计小组分数
+     * @param taskid
+     * @param classid
+     * @param userid
+     * @param courseid
+     * @param dcschoolid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getUpdateStaticesGroupScore(final Long taskid,final Integer classid
+                ,final Integer userid,final Long courseid,final Integer dcschoolid,StringBuilder sqlbuilder){
+        if(taskid==null||classid==null||userid==null||courseid==null||dcschoolid==null||sqlbuilder==null){
+            return null;
+        }
+        sqlbuilder.append("{CALL cal_tp_stu_statices_group_score(?,?,?,?,?,?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(taskid);
+        objList.add(classid);
+        objList.add(userid);
+        objList.add(courseid);
+        objList.add(dcschoolid);
+        return objList;
+    }
     @Override
     public List<Object> getUpdateSql(final TpStuScore obj, StringBuilder sqlbuilder) {
         if(obj==null||sqlbuilder==null)
@@ -314,11 +358,7 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
             objlist.add(obj.getCourseid());
         }else
             sqlbuilder.append("NULL,");
-        if(obj.getSubjectid()!=null){
-            sqlbuilder.append("?,");
-            objlist.add(obj.getSubjectid());
-        }else
-            sqlbuilder.append("NULL,");
+
         if(obj.getDcschoolid()!=null){
             sqlbuilder.append("?,");
             objlist.add(obj.getDcschoolid());
@@ -348,6 +388,16 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
         if(obj.getCommentscore()!=null){
             sqlbuilder.append("?,");
             objlist.add(obj.getCommentscore());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getGroupscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getGroupscore());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getCoursetotalscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getCoursetotalscore());
         }else
             sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
@@ -410,6 +460,16 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
         if(obj.getCommentscore()!=null){
             sqlbuilder.append("?,");
             objlist.add(obj.getCommentscore());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getGroupscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getGroupscore());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getCoursetotalscore()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getCoursetotalscore());
         }else
             sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");

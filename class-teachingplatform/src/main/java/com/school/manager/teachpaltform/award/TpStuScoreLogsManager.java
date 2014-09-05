@@ -73,19 +73,40 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
 		return this.tpStuScoreLogsDAO.doExcetueArrayProc(sqlArrayList,objArrayList);
 	}
 
-    //奖励加分
+    //任务奖励加分
 
-    public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,Integer type,Integer dcschool){
-        if(courseid==null||classid==null||taskid==null||userid==null||type==null||dcschool==null)
+    public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,Integer type,Integer dcschool ){
+        return awardStuScore(courseid, classid, taskid, userid, jid, type, dcschool,1);
+    }
+
+    /**
+     *奖励加分
+     * @param courseid
+     * @param classid
+     * @param taskid
+     * @param userid
+     * @param jid
+     * @param type
+     * @param dcschool
+     * @param awardType    奖励加分类型  1:任务得分  2：评论加分
+     * @return
+     */
+    public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,Integer type,Integer dcschool,Integer awardType){
+        if(courseid==null||classid==null||userid==null||type==null||dcschool==null)
             return false;
         Boolean returnVal=false;
+        List<TpStuScoreLogs> tsScoreList=null;
         TpStuScoreLogs entity=new TpStuScoreLogs();
         entity.setCourseid(courseid);
         entity.setClassid(classid);
-        entity.setTaskid(taskid);
+        if(taskid==null||taskid.toString().length()<1)
+            entity.setTaskid(-1L);  //在tpstuscorelogs表中，taskid  -1表示是评价加分记录
+        else
+            entity.setTaskid(taskid);
         entity.setUserid(userid);
         entity.setDcschoolid(dcschool);
-        List<TpStuScoreLogs> tsScoreList=this.getList(entity,null);
+        tsScoreList=this.getList(entity,null);
+
         //如果不存在，则需要添加，否则直接返回true
         String awardSettings=getPropertiesAwardScore(type);
         String[] awardArray=awardSettings.split(",");
@@ -93,14 +114,19 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
 
         boolean isAddEttBlue=true;
 
-       List<String> sqlArrayList=new ArrayList<String>();
-       List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
 
 
         if(tsScoreList==null||tsScoreList.size()<1){
-            if(isAddEttBlue)
-                entity.setJewel(Integer.parseInt(awardArray[1]));
-            else
+            if(isAddEttBlue){
+                if(awardArray.length>1){
+                    entity.setJewel(Integer.parseInt(awardArray[1]));
+                }else{
+                    isAddEttBlue=false;
+                    entity.setJewel(0);
+                }
+            }else
                 entity.setJewel(0);
             entity.setScore(Integer.parseInt(awardArray[0]));
             //添加
@@ -126,15 +152,24 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
 //            }
         }
         //查询班级的dc_school_id
-//        ClassInfo cls=new ClassInfo();
-//        cls.setClassid(entity.getClassid().intValue());
-//        cls.setDcschoolid(dcschool);
-//        IClassManager classManager=SpringBeanUtil.getBean(ClassManager.class);
-//        List<ClassInfo> clsList=classManager.getList(cls,null);
-//        if(clsList==null||clsList.size()<1){
-//          return returnVal;
-//        }
-
+        ClassInfo cls=new ClassInfo();
+        cls.setClassid(entity.getClassid().intValue());
+        cls.setDcschoolid(dcschool);
+        IClassManager classManager=SpringBeanUtil.getBean(ClassManager.class);
+        List<ClassInfo> clsList=classManager.getList(cls,null);
+        if(clsList==null||clsList.size()<1){
+            return returnVal;
+        }
+        ITpStuScoreManager stuScoreManager=SpringBeanUtil.getBean(TpStuScoreManager.class);
+        //如果不是爱学课堂，则进入，进行
+        if(clsList.get(0).getDctype()!=null&&clsList.get(0).getDctype()!=3){
+            StringBuilder sqlbuilder=new StringBuilder();
+            List<Object> objList=stuScoreManager.getUpdateStaticesGroupScore(taskid,classid.intValue(),userid.intValue(),courseid,dcschool,sqlbuilder);
+            if(sqlbuilder.toString().trim().length()>0){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+        }
 
         //添加课程积分。
         TpStuScore tss=new TpStuScore();
@@ -142,22 +177,30 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
         tss.setClassid(entity.getClassid());
         tss.setClasstype(1);
         tss.setCourseid(entity.getCourseid());
-        tss.setTaskscore(Integer.parseInt(UtilTool.stuScoreAwardUtilProperty.getProperty("TASK_SCORE").toString()));
+        if(awardType==1){
+            tss.setTaskscore(Integer.parseInt(UtilTool.stuScoreAwardUtilProperty.getProperty("TASK_SCORE").toString()));
+        }else if(awardType==2){
+            tss.setCommentscore(Integer.parseInt(awardArray[0]));
+        }
+        // 如果不是爱学课堂 总分则加一
+        if(clsList.get(0).getDctype()!=null&&clsList.get(0).getDctype()!=3)
+            tss.setCoursetotalscore(1L);
         tss.setUserid(entity.getUserid());
 //        tss.setGroupid(groupid);   //在数据库里自动查询
 //        tss.setSubjectid(subjectid);
         StringBuilder sqlbuilder=new StringBuilder();
-        ITpStuScoreManager stuScoreManager=SpringBeanUtil.getBean(TpStuScoreManager.class);
         List<Object> objList= stuScoreManager.getAddOrUpdateColScore(tss,sqlbuilder);
         if(sqlbuilder.toString().trim().length()>0){
             sqlArrayList.add(sqlbuilder.toString());
             objArrayList.add(objList);
         }
 
+
+
         if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
             if(this.doExcetueArrayProc(sqlArrayList,objArrayList)){
                 returnVal=true;
-                if(isAddEttBlue&&jid!=null&&jid.trim().length()>0){
+                if(awardType==1&&isAddEttBlue&&jid!=null&&jid.trim().length()>0){
                     //连接四中，添加蓝宝石,在UtilTool中进行调用 返回true
                     String u=UtilTool.utilproperty.getProperty("TO_ETT_ADD_SAPPHIRE").toString();
                     HashMap<String,String> paramMap=new HashMap<String,String>();
@@ -214,6 +257,9 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
                 break;
             case 9:// #9. 直播课：在学生进入进入直播视频系统时给出提示。
                 awardSettings=UtilTool.stuScoreAwardUtilProperty.getProperty("LIVE_COURSE_SUCCESS_SCORE");
+                break;
+            case 10:// #9. 直播课：在学生进入进入直播视频系统时给出提示。
+                awardSettings=UtilTool.stuScoreAwardUtilProperty.getProperty("COMMENT_COURSE_SUCCESS_SCORE");
                 break;
         }
        return awardSettings;

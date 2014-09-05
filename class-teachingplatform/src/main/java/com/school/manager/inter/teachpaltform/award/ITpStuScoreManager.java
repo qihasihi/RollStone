@@ -45,4 +45,16 @@ public interface ITpStuScoreManager extends IBaseManager<TpStuScore>{
      * @return
      */
     public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid);
+    /**
+     * 更新统计小组分数
+     * @param taskid
+     * @param classid
+     * @param userid
+     * @param courseid
+     * @param dcschoolid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getUpdateStaticesGroupScore(final Long taskid,final Integer classid
+            ,final Integer userid,final Long courseid,final Integer dcschoolid,StringBuilder sqlbuilder);
 }

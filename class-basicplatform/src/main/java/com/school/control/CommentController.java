@@ -20,9 +20,11 @@ import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.ITpCourseClassManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.teachpaltform.TpCourseClassManager;
 import com.school.manager.teachpaltform.TpCourseManager;
+import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -49,7 +51,9 @@ public class CommentController extends BaseController<CommentInfo> {
     private IUserManager userManager;
     private ITpCourseClassManager tpCourseClassManager;
     private IDictionaryManager dictionaryManager;
+    private ITpStuScoreLogsManager tpStuScoreLogsManager;
     public CommentController(){
+        tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
         this.commentManager=this.getManager(CommentManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
         this.tpCourseManager=this.getManager(TpCourseManager.class);
@@ -200,11 +204,11 @@ public class CommentController extends BaseController<CommentInfo> {
         List<List<Object>> objListArray = new ArrayList<List<Object>>();
         List<Object> objList = null;
         StringBuilder sql = null;
-
+        String classid=request.getParameter("classid");
 		CommentInfo commentinfo = this.getParameter(request, CommentInfo.class);
 		if (commentinfo == null || commentinfo.getCommenttype() == null
 				|| commentinfo.getCommentobjectid() == null
-				|| commentinfo.getScore() == null) {
+				|| commentinfo.getScore() == null||classid==null||classid.trim().length()<1) {
 			commentinfo.setCommentuserid(user.getUserid());
 			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
 			response.getWriter().print(je.toJSON());
@@ -237,6 +241,14 @@ public class CommentController extends BaseController<CommentInfo> {
                 this.tpCourseManager.doCommentAndScore(tc);
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                 je.setType("success");
+                //添加奖励加分
+                Integer jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid();
+                if(this.tpStuScoreLogsManager.awardStuScore(tc.getCourseid(),Long.parseLong(classid.trim()),null
+                        ,Long.parseLong(this.logined(request).getUserid()+""),jid+"",10,this.logined(request).getDcschoolid(),2)){
+                    je.setMsg("恭喜您,获得了1积分和1蓝宝石!");
+                }else{
+                    System.out.println("comment course"+tc.getCourseid()+" error!award");
+                }
             } else {
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }

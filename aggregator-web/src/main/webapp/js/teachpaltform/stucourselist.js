@@ -23,7 +23,7 @@ function getInvestReturnMethod(rps){
                 if(itm.iscomment>0)
                     html+="<td><span class='font-darkgray'>已评价</span></td>";
                 else
-                    html+="<td><a href='commoncomment?m=toCourseComment&cid="+itm.courseid+"' target='_blank' class='font-blue'>评价</a></td>";
+                    html+="<td><a href='commoncomment?m=toCourseComment&cid="+itm.courseid+"&clsid="+itm.classEntity[0].CLASS_ID+"' target='_blank' class='font-blue'>评价</a></td>";
                 html+="</tr>";
             });
         }else{

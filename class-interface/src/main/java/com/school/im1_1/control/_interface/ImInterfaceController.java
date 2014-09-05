@@ -3918,6 +3918,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 //            response.getWriter().println(returnJo.toString());
             return;
         }
+        response.setContentType("image/jpeg; charset=UTF-8");
         //Éú³ÉÐÂÍ¼
         writeImage(response, ImgResize(path, Integer.parseInt(w), Integer.parseInt(h)));
 

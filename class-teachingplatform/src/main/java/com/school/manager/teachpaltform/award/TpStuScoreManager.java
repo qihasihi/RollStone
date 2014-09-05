@@ -106,7 +106,20 @@ public class TpStuScoreManager extends BaseManager<TpStuScore> implements ITpStu
     public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid){
         return tpStuScoreDAO.getScoreStatices(subjectid,classid);
     }
-
+    /**
+     * 更新统计小组分数
+     * @param taskid
+     * @param classid
+     * @param userid
+     * @param courseid
+     * @param dcschoolid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getUpdateStaticesGroupScore(final Long taskid,final Integer classid
+            ,final Integer userid,final Long courseid,final Integer dcschoolid,StringBuilder sqlbuilder){
+        return tpStuScoreDAO.getUpdateStaticesGroupScore(taskid, classid, userid, courseid, dcschoolid, sqlbuilder);
+    }
     @Override
     public TpStuScore getOfExcel(Sheet rs, int cols, int d, String type) {
         return null;

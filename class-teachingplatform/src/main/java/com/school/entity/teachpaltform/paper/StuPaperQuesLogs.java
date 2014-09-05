@@ -159,6 +159,18 @@ public class StuPaperQuesLogs implements  Serializable {
     public void setCtime(Date ctime){
       this.ctime = ctime;
     }
+    public String getCtimeString(){
+        String returnVal="";
+        if(this.getCtime()!=null)
+            returnVal=UtilTool.DateConvertToString(this.getCtime(), UtilTool.DateType.type1);
+        return returnVal;
+    }
+    public Long getCtimeLong(){
+        Long returnVal=null;
+        if(this.getCtime()!=null)
+            returnVal=this.getCtime().getTime();
+        return returnVal;
+    }
     public java.lang.Long getQuesid(){
       return quesid;
     }

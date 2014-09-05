@@ -973,7 +973,21 @@ TestPaperDetail.prototype.loadQues=function(){
                             $.each(quesObj.stuPaperQuesLogsList,function(zx,zm){
                                 ch+='<div class="wenda" id="dv_ch_wd_'+zm.stuno+'">';
                                 ch+='<b><img src="'+zm.ettHeadImgSrc+'" width="36" height="36"></b>';
-                                ch+='<p class="title"><span>57分钟前</span>'+zm.ettName+'</p>';
+                                var dLong=(new Date().getTime()-zm.ctimeLong);
+                                    dLong=parseInt(dLong/60000);//分钟
+                                var sHtml="刚刚";
+                                if(dLong>1&&dLong<60)
+                                    sHtml=dLong+"分钟前";
+                                else if(dLong>=60){
+                                    dLong=parseInt(dLong/60);
+                                    if(dLong<24)
+                                      sHtml=dLong+"小时前";
+                                    else{
+                                        dLong=parseInt(dLong/24);
+                                        sHtml=dLong+"天前";
+                                    }
+                                }
+                                ch+='<p class="title"><span>'+sHtml+'</span>'+zm.ettName+'</p>';
                                 ch+='<p>'+zm.answer+'</p>';
                                 //附件
                                 if(typeof(zm.attachType)!="undefined"&&zm.annexName!="undefined"){

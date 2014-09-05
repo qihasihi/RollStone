@@ -18,9 +18,11 @@
 		<link rel="stylesheet" type="text/css" href="css/comment_star.css"/>
     <script type="text/javascript" src="js/comment/commentScorePlug.js"></script>
 <script type="text/javascript">
+    var classid="${param.clsid}";
 function addcomment(){
 	var commenttype=$("#commenttype").val();
 	var commentobjectid=$("#commentobjectid").val();
+
 	var score=comment_star.value;
 	if(commentobjectid==0||commenttype==0){
 		alert("缺失参数，无法评论！");
@@ -35,6 +37,7 @@ function addcomment(){
 //		return;
 //	}
 	var dat={
+            classid:classid,
 			commenttype:commenttype,
 			commentobjectid:commentobjectid,
 			score:score,
@@ -48,8 +51,9 @@ function addcomment(){
 			alert('异常错误,系统未响应！');
 		},success:function(rps){
 			if(rps.type=="success"){
-				alert("评论成功!");
-				window.close();
+                $("#a_submit_comment").remove();
+				alert(rps.msg);
+			//	window.close();
 			}else{
 				alert("提交失败!");
 			}		
@@ -87,7 +91,7 @@ function addcomment(){
         </tr>
         <tr>
             <th>&nbsp;</th>
-            <td><a href="javascript:addcomment();" class="an_small">提&nbsp;交</a><a href="javascript:window.close();" class="an_small">取&nbsp;消</a></td>
+            <td><a id="a_submit_comment" href="javascript:addcomment();" class="an_small">提&nbsp;交</a><a href="javascript:window.close();" class="an_small">取&nbsp;消</a></td>
         </tr>
     </table>
 </div>
