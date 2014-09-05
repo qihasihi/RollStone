@@ -367,6 +367,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity je=new JsonEntity();
         String year=request.getParameter("year");
         String month=request.getParameter("month");
+        String subjectid=request.getParameter("subjectid");
+        String gradeid=request.getParameter("gradeid");
 
         if(year==null||month==null||year.trim().length()<1||month.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -389,7 +391,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         }
 
         List<Map<String,Object>>courseCalendarList=this.tpCourseManager.getCourseCalendar(usertype,this.logined(request).getUserid(),
-                this.logined(request).getDcschoolid(),year,month);
+                this.logined(request).getDcschoolid(),year,month,gradeid,subjectid);
 
         je.setType("success");
         je.setObjList(courseCalendarList);

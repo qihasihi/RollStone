@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
@@ -27,6 +26,9 @@
     var teacherid="${teacherid}";
     var global_gradeid=0;
     var global_subjectid=0;
+
+    var currentSubjectid=subjectid;
+    var currentGradeid=gradeid;
 
 
     $(function(){
@@ -219,49 +221,8 @@
                         <p class="p_t_10"><a name="a_hide" href="javascript:showModel('selectStudent_Div');"  class="an_public3">分配到组</a></p>
                     </div>
                     <table id="group_list" border="0" cellpadding="0" cellspacing="0" class="public_tab2 hover">
-                    <col class="w300"/>
-                    <col class="w100"/>
-                    <col class="w130"/>
-                    <col class="w100"/>
-                    <col class="w120"/>
-                    <tr>
-                        <th>组名</th>
-                        <th>学号</th>
-                        <th>组员姓名</th>
-                        <th>任务完成率</th>
-                        <th>加入小组时间</th>
-                    </tr>
-                    <tr>
-                        <td rowspan="2" class="v_c">好好学习天天向上组好好学习天天向上组好好学习天天向上组好好学习天天向上组好好学习天天向上组好好学习天天向上组好好学习天天向上组好好学习天天向上组<a href="1" class="ico04" title="删除"></a><br>90%</td>
-                        <td>123456789<br></td>
-                        <td><span class="w60">王天资</span><a href="1" class="ico34" title="移出小组"></a><a href="1" class="ico22" title="调组"></a></td>
-                        <td>27.5%</td>
-                        <td>2014-05-22 14:02</td>
-                    </tr>
-                    <tr class="trbg1">
-                        <td>123456789<br></td>
-                        <td><span class="w60">李鹏</span><a href="1" class="ico34" title="移出小组"></a><a href="1" class="ico23" title="调组"></a></td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="2" class="v_c">第五组<a href="1" class="ico04" title="删除"></a><br>90%</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr class="trbg1">
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td class="v_c">第五组<a href="1" class="ico04" title="删除"></a></td>
-                        <td colspan="4">没有小组成员！</td>
-                    </tr>
-                </table>
+
+                    </table>
 
 
                     <div class="jxxt_banji_xzgl_text" id="dv_stu" style="display: none;">

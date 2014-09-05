@@ -84,7 +84,7 @@ function getNoGroupStudentsByClassId(classId,classType){
         return;
 	$("#noGroupStudents").html("");
 	var url="group?m=getNoGroupStudents";
-	$.post(url,{classId:classId,classType:classType},
+	$.post(url,{classId:classId,classType:classType,subjectid:subjectid},
 			function(responseText){
 		if(responseText==null||responseText.objList==null){
 			//没有数		
@@ -100,6 +100,8 @@ function getNoGroupStudentsByClassId(classId,classType){
                 var h='<li>'+itm.STU_NAME;
                 if(typeof responseText.objList[1]!='undefined'&&responseText.objList[1]==3&&dcType>1)
                     h+='<a class="ico_delete" style="display: none;" title="删除"  href="javascript:delClassUser(\''+itm.REF+'\')"></a>';
+                h+='<a style="display: none;" name="view_pass" class="ico92" title="查看密码" href="javascript:;"></a>';
+                h+='<span style="display: none;" class="password" name="pass">'+itm.PASSWORD+'</span>';
                 h+='</li>';
                 $("#noGroupStudents").append(h);
                 $("#no_gs").append("<option value='"+itm.USER_ID+"' >"+itm.STU_NAME+"</option>");
@@ -119,13 +121,25 @@ function getNoGroupStudentsByClassId(classId,classType){
 
 
         //如果是网校班主任，删除学生
-       if(typeof responseText.objList[1]!='undefined'&&responseText.objList[1]==3&&dcType>1){
+       if(typeof responseText.objList[1]!='undefined'){
            $("#noGroupStudents li").hover(function(){
                $(this).children("a").show();
            },function(){
-               $(this).children("a").hide();
+               $(this).children().hide();
            });
        }
+
+        $("a[name='view_pass']").each(function(idx,itm){
+           $(itm).click(function(){
+               var pass=$(this).next('span');
+               if($(pass).css("display")=='none'){
+                   $(pass).css("display","");
+               }else{
+                   $(pass).css("display","none");
+               }
+
+           })
+        });
 
 
 
@@ -148,13 +162,15 @@ function getClassGroups(classId,classType){
                 if(responseText.type=="success"){
                     var forGroupHtml="";
                     var changeGroupHtml="";
-                    var groupHtml='<colgroup><col class="w300"/><col class="w90"/><col class="w130"/><col class="w90"/><col class="w120"/></colgroup><tr><th>组名</th><th>学号</th><th>组员姓名</th><th>任务完成率</th><th>加入小组时间</th></tr>';
+                   // var groupHtml='<colgroup><col class="w280"><col class="w100"><col class="w150"><col class="w100"><col class="w120"></colgroup>';
+                   // groupHtml+='<tr><th>组名</th><th>学号</th><th>组员姓名</th><th>任务完成率</th><th>加入小组时间</th></tr>';
+                    var groupHtml='<colgroup><col class="w280"/><col class="w110"/><col class="w150"/><col class="w100"/><col class="w120"/></colgroup><tr><th>组名</th><th>学号</th><th>组员姓名</th><th>任务完成率</th><th>加入小组时间</th></tr>';
                     if(responseText!=null&&responseText.objList!=null&&responseText.objList.length>0){
                         $.each(responseText.objList,function(idx,itm){
                             groupHtml+="<tbody id='group_"+itm.groupid+"'>";
                             groupHtml+="<tr>";
                             groupHtml+="<td class='v_c'>"+itm.groupname;
-                            groupHtml+="<a href='javascript:delGroup("+itm.groupid+");' class='ico04' title='删除'>";
+                            groupHtml+="<a href='javascript:delGroup("+itm.groupid+");' class='ico04' title='删除'></a>";
                             groupHtml+="</td>";
                             groupHtml+="<td>&nbsp;</td>";
                             groupHtml+="<td>&nbsp;</td>";
@@ -167,7 +183,7 @@ function getClassGroups(classId,classType){
                             getGroupStudents(itm.groupid,itm.groupname,itm.completenum,itm.totalnum);
                         });
                     }else{
-                        $("#group_list").html(groupHtml+"<tr><td colspan='5'>您还没有创建小组！</td></tr>");
+                        groupHtml+="<tr><td colspan='5'>您还没有创建小组！</td></tr>";
                     }
                     $("#group_list").html(groupHtml);
                     $("#forGroupList").html(forGroupHtml);
@@ -269,23 +285,37 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
 			gtHtml+="<tr>";
             if(idx==0){
                 gtHtml+="<td rowspan="+responseText.objList.length+" class='v_c'>"+groupName;
-                gtHtml+="<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'>";
+                gtHtml+="<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'></a>";
                 gtHtml+=percentHtml;
                 gtHtml+="</td>";
             }
             var stuno=typeof itm.stuno=='undefined'?'':itm.stuno;
 			gtHtml+="<td>"+stuno+"</td>";
-			gtHtml+="<td><span class='w60'>"+itm.stuname+"</span>";
-            gtHtml+="<a href='javascript:delGroupStudent("+itm.ref+");' class='ico34' title='移出小组'></a>";
+			gtHtml+="<td><span class='w60'>"+itm.stuname+"<b style='display: none;'>"+itm.password+"</b></span>";
+            gtHtml+='<a name="a_view" class="ico92" title="查看密码" href="javascript:void(0);"></a>';
+            gtHtml+='<a href="javascript:delGroupStudent(\''+itm.ref+'\');" class="ico34" title="移出小组"></a>';
             if(itm.isleader==2)
-                gtHtml+="<a href='javascript:showGroupsPanel("+itm.ref+");' class='ico22' title='调组'></a></td>";
+                gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\');" class="ico22" title="调组"></a></td>';
             else if(itm.isleader==1)
-                gtHtml+="<a href='javascript:showGroupsPanel("+itm.ref+");' class='ico23' title='调组'></a></td>";
+                gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\');" class="ico23" title="调组"></a></td>';
             gtHtml+='<td>'+itm.completenum+'%</td>';
             gtHtml+='<td>'+itm.ctimestring+'</td>';
-			gtHtml+="</tr>";
+			gtHtml+='</tr>';
 		});
 		$("#group_"+groupId).html(gtHtml);
+
+
+        var array= $.makeArray($("#group_"+groupId+" a[name='a_view']"));
+        $.each(array,function(idx,itm){
+            $(itm).click(function(){
+                var pass=$(this).siblings('span').children('b');
+                if($(pass).css("display")=='none'){
+                    $(pass).css("display","");
+                }else{
+                    $(pass).css("display","none");
+                }
+            });
+        });
 	},"json");
 }
 

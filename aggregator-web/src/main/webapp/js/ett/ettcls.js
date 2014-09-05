@@ -429,6 +429,7 @@ function loadClsDetial(clsid){
                     $("#p_edit").html('<a href="javascript:;" id="a_to_upd" class="ico11" title="编辑"></a><a href="javascript:void(0)" onclick="doDelCls(\''+rps.objList[0].classid+'\')" class="ico04" title="删除"></a>');
                     $("#s_clsname").html(clsname);
                     $("#add_teacher_clsname").html(clsname);
+                    $("#bzr_img").attr("src",rps.objList[1].headimage);
                     $("#s_bzr").html('<b >班主任：'+rps.objList[1].realname+'</b>班级类型：'+(rps.objList[0].dctype==2?"网校班级":"爱学课堂")+'');
 
                     //添加学生教师 增加Click
@@ -443,7 +444,7 @@ function loadClsDetial(clsid){
                     $("#tea_count").html(rps.objList[2].length);
                     $.each(rps.objList[2],function(idx,itm){
                         var h='<li id="li_'+itm.ref+'">';
-                        h+='<img src="" width="80" height="80">'+itm.realname+'<b>'+itm.subjectname+'</b>';
+                        h+='<img src="'+itm.headimage+'" width="80" height="80">'+itm.realname+'<b>'+itm.subjectname+'</b>';
                         h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\')" title="移出"></a></p>';
                         h+='</li>';
                         $("#ul_tea").append(h);
@@ -454,7 +455,7 @@ function loadClsDetial(clsid){
                     $("#stu_count").html(rps.objList[3].length);
                     $.each(rps.objList[3],function(idx,itm){
                         var h='<li>';
-                        h+='<img src="" width="80" height="80">'+itm.realname;
+                        h+='<img src="'+itm.headimage+'" width="80" height="80">'+itm.realname;
                         h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\')" title="移出"></a></p>';
                         h+='</li>';
                         $("#ul_stu").append(h);

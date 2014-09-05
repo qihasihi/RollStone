@@ -49,7 +49,7 @@ public interface ITpCourseManager  extends IBaseManager<TpCourseInfo> {
 
     public boolean doUpdateShareCourse();
 
-    List<Map<String,Object>>getCourseCalendar(Integer usertype,Integer userid,Integer dcschoolid,String year,String month);
+    List<Map<String,Object>>getCourseCalendar(Integer usertype,Integer userid,Integer dcschoolid,String year,String month,String gradeid,String subjectid);
 
 
 }

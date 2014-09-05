@@ -51,7 +51,7 @@
 
     <div class="jxxt_banji_jiaowuR font-black" id="dv_detail">
         <div class="jxxt_banji_info">
-            <div class="pic"><img src="" width="135" height="135"></div>
+            <div class="pic"><img id="bzr_img" src="" width="135" height="135"></div>
             <p class="t_r" id="p_edit"></p>
             <p><strong id="s_clsname">2014年网下指导教师培训初一普通班</strong></p>
             <p id="s_bzr"><b i>班主任：欧阳小诗</b>班级类型：网校班</p>

@@ -148,7 +148,7 @@ function markCalendar(selYear,selMonth){
 
     $.ajax({
         url:'teachercourse?markCourseCalendar',
-        data:{year:selYear,month:selMonth},
+        data:{year:selYear,month:selMonth,subjectid:subjectid,gradeid:gradeid},
         type:'post',
         dataType:'json',
         error:function(){

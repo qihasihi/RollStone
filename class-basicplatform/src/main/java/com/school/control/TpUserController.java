@@ -793,16 +793,63 @@ public class TpUserController extends UserController {
         bzr.setRelationtype("班主任");
         bzr.setClassid(c.getClassid());
         List<ClassUser>bzrList=this.classUserManager.getList(bzr,null);
+        for(ClassUser bzrUser:bzrList){
+            bzrUser.setHeadimage("http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
+        }
 
         ClassUser tea=new ClassUser();
         tea.setRelationtype("任课老师");
         tea.setClassid(c.getClassid());
         List<ClassUser>teaList=this.classUserManager.getList(tea,null);
+        for(ClassUser teaUser:teaList){
+            teaUser.setHeadimage("http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
+        }
 
         ClassUser stu=new ClassUser();
         stu.setRelationtype("学生");
         stu.setClassid(c.getClassid());
         List<ClassUser>stuList=this.classUserManager.getList(stu,null);
+        if(stuList!=null&&stuList.size()>0){
+            StringBuilder jids = new StringBuilder();
+            jids.append("[");
+            for(ClassUser tmpUser:stuList){
+                jids.append("{\"jid\":"+tmpUser.getEttuserid()+"},");
+            }
+
+
+
+            if(jids.length()>0){
+                String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+                //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                HashMap<String,String> signMap = new HashMap();
+                signMap.put("userList",jidstr);
+                signMap.put("schoolId",this.logined(request).getDcschoolid().toString());
+                signMap.put("srcJid",this.logined(request).getEttuserid().toString());
+                signMap.put("userType","3");
+                signMap.put("timestamp",""+System.currentTimeMillis());
+                String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+                signMap.put("sign",signture);
+                JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                if(type==1){
+                    Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                    JSONArray jr = JSONArray.fromObject(jsonObj);
+                    if(jr!=null&&jr.size()>0){
+                        for(int i = 0;i<jr.size();i++){
+                            JSONObject jsono = jr.getJSONObject(i);
+                            for(int j = 0;j<stuList.size();j++){
+                                if(stuList.get(j).getEttuserid()!=null&&stuList.get(j).getEttuserid().toString().length()>0&&
+                                        jsono.getInt("jid")==Integer.parseInt(stuList.get(j).getEttuserid().toString())){
+                                    stuList.get(j).setHeadimage(jsono.getString("headUrl"));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
 
         je.getObjList().add(clsList.get(0));
         je.getObjList().add(bzrList.get(0));
