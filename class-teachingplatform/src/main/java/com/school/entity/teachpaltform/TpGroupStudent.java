@@ -18,7 +18,15 @@ public class TpGroupStudent {
     private String stuno;
     private Object completenum;
     private Integer stateid;
+    private String password;
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getGroupname(){
         return this.getGroupinfo().getGroupname();

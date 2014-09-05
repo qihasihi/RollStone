@@ -2102,7 +2102,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity je = new JsonEntity();
         TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
         if (tc.getCourseid() == null) {
-            je.setMsg("专题编号错误！！");// 异常错误，参数不齐，无法正常访问!
+            je.setMsg("专题编号错误！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");
             response.getWriter().print(je.toJSON());
             return;

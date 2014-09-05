@@ -6,7 +6,7 @@
     <script type="text/javascript">
         var currtenTab=1; //当前学科导航栏页数
         var tabSize=6; //学科导航栏每页显示数量
-        var termid="${currtTerm.ref}";
+        var termid="${selTerm.ref}";
         var currtterm="${currtTerm.ref}";
         var selterm="${selTerm.ref}";
         var teacherid="${teacherid}";

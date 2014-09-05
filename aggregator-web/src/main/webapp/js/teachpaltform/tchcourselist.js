@@ -356,7 +356,7 @@ function getTermCondition(tid,termname,iscalendar){
         success:function(rps){
 
             //没有授课信息的班主任
-            if(isBzr&&typeof isLession!='undefined'&&!isLession){
+            if(isBzr&&typeof isLession!='undefined'&&isLession==2){
                 location.href='teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'';
                 return false;
             }
@@ -367,6 +367,7 @@ function getTermCondition(tid,termname,iscalendar){
                 $("#claList").html("");
                 $("a[name='a_hide']").hide();
                 $("#sp_subgrade").html('');
+                $("#sp_subgrade").next().hide();
                 $("#a_clsid").attr("href","javascript:;");
                 $("#a_course").attr("href","javascript:;");
                 if(isLession<2)
@@ -384,13 +385,11 @@ function getTermCondition(tid,termname,iscalendar){
             $.each(rps.objList[0],function(idx,gitm){
                 html+='<li id="li_'+gitm.gradeid+'_'+gitm.subjectid+'">';
                 html+='<a href="javascript:changeGrade('+gitm.gradeid+','+gitm.subjectid+','+idx+',\''+gitm.gradevalue+gitm.subjectname+'\')">';
-                //html+='<span id="t_grade_sub_"+idx+"'>"+gitm.gradevalue+gitm.subjectname+"</span></a>";
                 html+=gitm.gradevalue+gitm.subjectname;
                 html+='</a>';
             });
              $("#gradeSubjectList").html(html);
-            //  changeTab('back');
-            //  changeTab('front');
+            $("#sp_subgrade").next().show();
             if(typeof currentSubjectid!="undefined"&&currentSubjectid!=null&&currentSubjectid.length>0){
                 var liid="li_"+currentGradeid+"_"+currentSubjectid;
                 if($("#"+liid+" a").length>0)
