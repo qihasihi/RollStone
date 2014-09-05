@@ -2,6 +2,7 @@ package com.school.control.teachpaltform.award;
 
 import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
+import com.school.entity.teachpaltform.TpCourseClass;
 import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.entity.teachpaltform.TpGroupStudent;
 import com.school.entity.teachpaltform.TpVirtualClassInfo;
@@ -80,14 +81,28 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         //参数验证。
         if(courseid==null||courseid.trim().length()<1
                 ||subjectid==null||subjectid.trim().length()<1
-                ||typeid==null||typeid.trim().length()<1
+//                ||typeid==null||typeid.trim().length()<1
                 ){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
         Integer clsDcType=2;//默认是网校班级
+
+        //如果不存在，则默认第一列
+        TpCourseClass tcc=new TpCourseClass();
+        tcc.setCourseid(Long.parseLong(courseid.trim()));
+        List<TpCourseClass> tccList=this.tpCourseClassManager.getList(tcc,null);
+        if(tccList==null||tccList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        mp.put("tccClsList",tccList);
+        if(clsid==null||clsid.trim().length()<1){
+            clsid=tccList.get(0).getClassid().toString();
+        }
+
         //班级类型(实体班级)，验证班级
-        if(Integer.parseInt(typeid)==1){
+        if(clsid!=null&&clsid.trim().length()>0){
             ClassInfo clsEntity=new ClassInfo();
             clsEntity.setClassid(Integer.parseInt(clsid.trim()));
             List<ClassInfo> clsList=this.classManage.getList(clsEntity,null);
@@ -208,7 +223,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         JsonEntity jsonEntity=new JsonEntity();
         TpStuScore entity=this.getParameter(request,TpStuScore.class);
         String clstype=request.getParameter("clstype");
-        if(entity.getUserid()==null||entity.getCourseid()==null||entity.getGroupid()==null||entity.getSubjectid()==null||entity.getClassid()==null||clstype==null){
+        if(entity.getUserid()==null||entity.getCourseid()==null||entity.getSubjectid()==null||entity.getClassid()==null||clstype==null){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return;
         }

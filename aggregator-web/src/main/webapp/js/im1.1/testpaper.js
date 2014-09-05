@@ -128,17 +128,17 @@ TestPaperQues.prototype.subPaper=function(){
     var alaqLastQues="";
     var allquesArray=this.config.quesidstr.split(",");
     var curQuesType=$("#hd_questiontype_"+currentQuesId).val();
-    var aqLastQuesArr=allquesArray[allquesArray.length-1];
-    alaqLastQues=aqLastQuesArr;
-    if(aqLastQuesArr.indexOf('|')!=-1){
-        alaqLastQues=aqLastQuesArr.split("|")[1];
-    }
-//        if(currentQuesId==alaqLastQues&&subQuesId.indexOf(","+currentQuesId+",")==-1){
-//
-//        }
-    if(subQuesId.indexOf(","+currentQuesId+",")==-1)
-        subQuesId+=currentQuesId+",";
-    this.freeSubQuesAnswer(-2);
+//    var aqLastQuesArr=allquesArray[allquesArray.length-1];
+//    alaqLastQues=aqLastQuesArr;
+//    if(aqLastQuesArr.indexOf('|')!=-1){
+//        alaqLastQues=aqLastQuesArr.split("|")[1];
+//    }
+////        if(currentQuesId==alaqLastQues&&subQuesId.indexOf(","+currentQuesId+",")==-1){
+////
+////        }
+//    if(subQuesId.indexOf(","+currentQuesId+",")==-1)
+//        subQuesId+=currentQuesId+",";
+//    this.freeSubQuesAnswer(-2);
 
 
 

@@ -13,6 +13,12 @@
     <script type="text/javascript">
 
         $(function(){
+            //班级自动选中
+            <c:if test="${!empty tccClsList}">
+                if($("#sel_clsid option").length<=1)
+                    $("#sel_clsid").hide();
+                $("#sel_clsid option[value='${classid}']").attr("selected",true);
+            </c:if>
             //处理个人积分
             <c:if test="${!empty stuMap}">
                 <c:if test="${!empty clsDcType&&clsDcType==3}">
@@ -52,9 +58,22 @@
     </script>
 </head>
 <body>
-<div class="subpage_head"><span class="ico19"></span><strong>课堂积分</strong></div>
+<div class="subpage_head"><span class="ico19"></span><strong>课堂积分</strong>
+        <c:if test="${!empty tccClsList}">
+            <strong style="float:right">
+                    <select id="sel_clsid" onchange="clsChanged()">
+                           <c:forEach items="${tccClsList}" var="tcc">
+                               <option value="${tcc.classid}">${tcc.classname}</option>
+                           </c:forEach>
+                    </select>
+                &nbsp;
+            </strong>
+        </c:if>
+
+</div>
 <div class="content1">
 <%--<p class="t_c font-black"><strong>课堂总得分：${coursename}</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>--%>
+<input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/>
 <c:if test="${!empty stuMap}">
 <p class="t_c font-black"><strong>课堂总得分：${!empty tuMap.COURSE_TOTAL_SCORE?tuMap.COURSE_TOTAL_SCORE:"--"}</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>
 <table border="0" cellpadding="0" cellspacing="0" class="public_tab2 public_input">
@@ -250,7 +269,7 @@
                 $("table:last colgroup:first").attr("class","w350");
                 $("table:last tr:first th:first").remove();
                 trJqObj.each(function(idx,itm){
-                   $(itm).children("td:first").remove();
+                   $(itm).children("td:first").hide();
                 });
             }
         })
@@ -404,6 +423,14 @@
             });
 
         }
+
+    function clsChanged(){
+        var tclsid=$("#sel_clsid").val();
+        if(tclsid.Trim().length>0){
+            var url="clsperformance?m=toIndex&courseid=${params.courseid}&classtype=${params.classtype}&subjectid=${params.subjectid}&termid=${params.termid}&classid=${classid}";
+            location.href=url;
+        }
+    }
 
     </script>
 </div>
