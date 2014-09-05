@@ -2,7 +2,13 @@
 <%@include file="../common.jsp"%>
 <%
     //教学平台
-    modelType=2;%>
+    modelType=2;
+    Integer ettJid=null;
+    if(u!=null){
+        ettJid=u.getEttuserid();
+    }
+
+%>
 <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jxxt.css"/>
 <script type="text/javascript" src="js/common/videoPlayer/new/jwplayer.js"></script>
  <script type="text/javascript" src="<%=basePath %>js/videoPlayer/swfobject.js"></script>
@@ -19,9 +25,14 @@
     window.alert = function (e) {
         if (e != null &&e.indexOf("获得了")>-1&&(e.indexOf("蓝宝石")>-1|| e.indexOf("积分")))
         {
+
             //和谐了
             if(e.indexOf("蓝宝石")!=-1){
-                showModel('dv_award_zs','fade');
+                <%if(ettJid!=null){%>
+                 showModel('dv_award_zs','fade');
+                <%}else{%>
+                    showModel('dv_award_jf','fade');
+                <%}%>
                 $("#fade").hide();
             }else if(e.indexOf("积分")!=-1){
                 showModel('dv_award_jf','fade');
@@ -53,7 +64,7 @@
             awardTime=0;return;
         }
         awardTime++;
-        setTimeout("hideAwardDiv()",3000);
+        setTimeout("hideAwardDiv()",2000);
     }
 
 </script>

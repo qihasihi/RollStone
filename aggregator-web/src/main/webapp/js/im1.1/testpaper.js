@@ -125,9 +125,9 @@ TestPaperQues.prototype.subPaper=function(){
     }
     var confirmMsg='是否确定交卷？ 提示：提交之后，你将无法再次作答。 ';
 
-    var alaqLastQues="";
-    var allquesArray=this.config.quesidstr.split(",");
-    var curQuesType=$("#hd_questiontype_"+currentQuesId).val();
+//    var alaqLastQues="";
+//    var allquesArray=this.config.quesidstr.split(",");
+//    var curQuesType=$("#hd_questiontype_"+currentQuesId).val();
 //    var aqLastQuesArr=allquesArray[allquesArray.length-1];
 //    alaqLastQues=aqLastQuesArr;
 //    if(aqLastQuesArr.indexOf('|')!=-1){
@@ -144,18 +144,19 @@ TestPaperQues.prototype.subPaper=function(){
 
     if(subQuesId.Trim()==","||subQuesId.Trim().length<1){
         confirmMsg="你尚未开始作答，确定交卷？\n\n提示：提交之后，你将无法再次作答。";
-    }else{
-        var subid=subQuesId;
-        if(subid.indexOf(",")==0)
-            subid=subid.substring(1);
-        if(subid.lastIndexOf(",")==subid.length-1)
-            subid=subid.substring(0,subid.length-1);
-        var subQuesArray=subid.split(",");
-        if(allquesArray.length>0){
-            if(subQuesArray.length!=allquesArray.length)
-                confirmMsg="你尚有试题没有作答，确定交卷？\n\n提示：提交之后，你将无法再次作答。";
-        }
     }
+//    else{
+//        var subid=subQuesId;
+//        if(subid.indexOf(",")==0)
+//            subid=subid.substring(1);
+//        if(subid.lastIndexOf(",")==subid.length-1)
+//            subid=subid.substring(0,subid.length-1);
+//        var subQuesArray=subid.split(",");
+//        if(allquesArray.length>0){
+//            if(subQuesArray.length!=allquesArray.length)
+//                confirmMsg="你尚有试题没有作答，确定交卷？\n\n提示：提交之后，你将无法再次作答。";
+//        }
+//    }
     if(!confirm(confirmMsg))
         return;
 
@@ -168,7 +169,7 @@ TestPaperQues.prototype.subPaper=function(){
         data:{paperid:pid,courseid:this.config.courseid,taskid:this.config.taskid,userid:this.config.userid},
         cache: false,
         error:function(){
-            alert('异常错误!系统未响应!');
+            alert('异常错误!系统未响应!11111');
         },success:function(rps){
             if(rps.type=="success"){
                 alert(rps.msg);

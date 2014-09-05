@@ -2928,7 +2928,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                             , taskCriList.get(0).getTaskid()
                             , Long.parseLong(this.logined(request).getUserid() + ""),jid, type,this.logined(request).getDcschoolid())){
                         msg="查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)";
-                        request.getSession().setAttribute("msg",msg);
+//                        request.getSession().setAttribute("msg",msg);
                     }else
                         System.out.println("awardScore err ");
 
@@ -3041,7 +3041,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                             , taskCriList.get(0).getTaskid()
                             , Long.parseLong(this.logined(request).getUserid() + ""),jid, type,this.logined(request).getDcschoolid())){
                         msg="查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)";
-                        request.getSession().setAttribute("msg",msg);
+                    //    request.getSession().setAttribute("msg",msg);
                     }else
                         System.out.println("awardScore err ");
                     response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);

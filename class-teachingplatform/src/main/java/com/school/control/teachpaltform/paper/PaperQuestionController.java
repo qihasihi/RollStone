@@ -4271,11 +4271,12 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
         Integer userid=null;
         Integer schoolid=null;
-        String jid=null;
+        String jid=null,userref=null;
         if(uid==null||uid.trim().length()<1){
             userid=this.logined(request).getUserid();
             schoolid=this.logined(request).getDcschoolid();
             jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid().toString();
+            userref=this.logined(request).getRef();
         }else{
             userid=Integer.parseInt(uid);
             //验证用户
@@ -4288,6 +4289,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             }
             schoolid=uList.get(0).getDcschoolid();
             jid=uid;
+            userref=uList.get(0).getRef();
         }
         Integer isinpaper=2;
         StuPaperLogs splog=new StuPaperLogs();
@@ -4308,7 +4310,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         TaskPerformanceInfo tpf=new TaskPerformanceInfo();
         tpf.setCourseid(Long.parseLong(courseid.trim()));
         tpf.setTaskid(tk.getTaskid());
-        tpf.setUserid(this.logined(request).getRef());
+        tpf.setUserid(userref);
 
         List<TaskPerformanceInfo> tpfList=this.taskPerformanceManager.getList(tpf,null);
         //查询是否存在数据，如果存在，则更新
@@ -4333,9 +4335,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 sqlArrayList.add(sqlbuilder.toString());
             }
         }
-
         //得到判断题得分记录得到总分，进行记录
-        List<Map<String,Object>> stuScoreSumList=this.stuPaperLogsManager.getStuPaperSumScore(this.logined(request).getUserid(),splog.getPaperid());
+        List<Map<String,Object>> stuScoreSumList=this.stuPaperLogsManager.getStuPaperSumScore(userid,splog.getPaperid());
         if(stuScoreSumList!=null&&stuScoreSumList.get(0)!=null&&stuScoreSumList.get(0).containsKey("V_SCORE"));
          splog.setScore(Float.parseFloat(stuScoreSumList.get(0).get("V_SCORE").toString()));
 
@@ -4355,9 +4356,6 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             objArrayList.add(objList);
             sqlArrayList.add(sqlbuilder.toString());
         }
-
-
-
 
 
         if(sqlArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
