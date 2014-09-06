@@ -1,7 +1,5 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/util/common-jsp/common-im.jsp"%>
-
 <html>
 <head>
 
@@ -21,20 +19,8 @@
     <div>
 </div>
 <script>
-
-    // alert($(document).height()+" go "+$(document).width());
-    var h=$(document).height();
+ var h=$(document).height();
     var w=$(document).width();
-    var phone=0;//是否为手机
-
-        if(h>w)
-        {// for phone
-            var temph=w;
-            w=h;
-            h=temph;
-            phone=1;
-        }
-
 </script>
 
 
@@ -45,7 +31,6 @@
 <script type="text/javascript">
 
     function resizeimg(ImgD, iwidth, iheight,imPicSrc) {
-    //   alert(iwidth+" www "+iheight);
         var image = new Image();
         ImgD.src=imPicSrc;
         image.src = ImgD.src ;
@@ -79,43 +64,30 @@
 
         }
 
-         //for phone
-         var positionY =0;
-         if (phone==1)  positionY =(w-40-ImgD.height)/2-20;
-         else  positionY =(h-ImgD.height)/2;
 
-         if(positionY<0) positionY =0;
+         var positionY =0;
+             positionY =(h-ImgD.height)/2;
+        if(positionY<0) positionY =0;
 
          var positionX = 0;
-         if (phone==1)  positionX =(h-40-ImgD.width)/2+20;
-         else  positionX =(w-ImgD.width)/2;
+         positionX =(w-ImgD.width)/2;
          if(positionX<0) positionX =0;
 
        // alert("w "+w+"         h "+h+"              img_w " +ImgD.width+"           img_h  "+ImgD.height+"             left "+positionX+"            top "+positionY);
          var myOffset = new Object();
-
-
          myOffset.left = positionX;
          myOffset.top = positionY;
          $("#img").offset(myOffset);
-
             $('#img').show();
     },300);
  }
 
-
-
-    $(document).ready(function () {
-
-
-
-
+ $(document).ready(function () {
         $("#go").click(function () {
             /*属性*/
             $("#go2").css({"display": "", "position": "absolute",   "top": "0px",
                 "left": "0px", "right": "0px", "bottom": "0px", "background": "black", "visibility": "visible", "filter": "Alpha(opacity=100)"
             });
-
 
              /*高为屏幕的高*/
             $("#go2").css({
@@ -130,10 +102,7 @@
             myOffset.top = 0;
             $("#img").offset(myOffset);
             $("#img").hide();
-            if(phone==1)  resizeimg($("#img").get(0),h-40,w-40,"http://192.168.8.238/sz_school/images/test2.jpg");
-            else resizeimg($("#img").get(0),w-40,h-40,"http://192.168.8.238/sz_school/images/test2.jpg");
-
-
+                resizeimg($("#img").get(0),w-40,h-40,"http://192.168.8.238/sz_school/images/test1.jpg");
         });
     });
 </script>
