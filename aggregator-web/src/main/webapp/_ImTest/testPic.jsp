@@ -25,16 +25,16 @@
     // alert($(document).height()+" go "+$(document).width());
     var h=$(document).height();
     var w=$(document).width();
-    var phone=1;//是否为手机
-    if(phone==1)
-    {
+    var phone=0;//是否为手机
+
         if(h>w)
         {// for phone
             var temph=w;
             w=h;
             h=temph;
+            phone=1;
         }
-    }
+
 </script>
 
 
@@ -130,8 +130,8 @@
             myOffset.top = 0;
             $("#img").offset(myOffset);
             $("#img").hide();
-            if(phone==1)  resizeimg($("#img").get(0),h-40,w-40,"http://192.168.8.238/sz_school/images/test.jpg");
-            else resizeimg($("#img").get(0),w-40,h-40,"http://192.168.8.238/sz_school/images/test.jpg");
+            if(phone==1)  resizeimg($("#img").get(0),h-40,w-40,"http://192.168.8.238/sz_school/images/test2.jpg");
+            else resizeimg($("#img").get(0),w-40,h-40,"http://192.168.8.238/sz_school/images/test2.jpg");
 
 
         });
