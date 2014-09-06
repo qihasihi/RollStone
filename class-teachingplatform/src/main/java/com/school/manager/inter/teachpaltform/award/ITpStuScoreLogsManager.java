@@ -4,6 +4,9 @@ package  com.school.manager.inter.teachpaltform.award;
 import com.school.entity.teachpaltform.award.TpStuScoreLogs;
 import com.school.manager.base.IBaseManager;
 
+import java.util.List;
+import java.util.Map;
+
 public interface ITpStuScoreLogsManager  extends IBaseManager<TpStuScoreLogs> {
 
     /**
@@ -23,4 +26,14 @@ public interface ITpStuScoreLogsManager  extends IBaseManager<TpStuScoreLogs> {
      * @return
      */
     public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,Integer type,Integer dcschool,Integer awardType);
+
+    /**
+     * 老师，班主任查看学生积分统计页面
+     * @param termid
+     * @param classid
+     * @param subjectid
+     * @param orderby
+     * @return
+     */
+    public List<Map<String,Object>> getStuScoreTeachStatices(final String termid,final Integer classid,Integer subjectid,Integer orderby);
 } 

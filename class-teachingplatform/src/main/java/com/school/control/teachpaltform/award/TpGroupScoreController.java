@@ -2,6 +2,7 @@ package com.school.control.teachpaltform.award;
 
 import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
+import com.school.entity.SubjectInfo;
 import com.school.entity.teachpaltform.TpCourseClass;
 import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.entity.teachpaltform.TpGroupStudent;
@@ -9,17 +10,21 @@ import com.school.entity.teachpaltform.TpVirtualClassInfo;
 import com.school.entity.teachpaltform.award.TpGroupScore;
 import com.school.entity.teachpaltform.award.TpStuScore;
 import com.school.manager.ClassManager;
+import com.school.manager.SubjectManager;
 import com.school.manager.inter.IClassManager;
+import com.school.manager.inter.ISubjectManager;
 import com.school.manager.inter.teachpaltform.ITpCourseClassManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
 import com.school.manager.inter.teachpaltform.ITpGroupStudentManager;
 import com.school.manager.inter.teachpaltform.ITpVirtualClassManager;
 import com.school.manager.inter.teachpaltform.award.ITpGroupScoreManager;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.award.ITpStuScoreManager;
 import com.school.manager.teachpaltform.TpCourseClassManager;
 import com.school.manager.teachpaltform.TpCourseManager;
 import com.school.manager.teachpaltform.TpGroupStudentManager;
 import com.school.manager.teachpaltform.TpVirtualClassManager;
+import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.manager.teachpaltform.award.TpStuScoreManager;
 import com.school.manager.teachpaltform.award.TpGroupScoreManager;
 import com.school.util.JsonEntity;
@@ -50,11 +55,14 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
     private ITpCourseManager courseManager;
     private ITpGroupScoreManager tpGroupScoreManager;
     private ITpStuScoreManager tpStuScoreManager;
+    private ITpStuScoreLogsManager tpStuScoreLogsManager;
     private ITpCourseClassManager tpCourseClassManager;
     private ITpGroupStudentManager tpGroupStudentManager;
     private IClassManager classManage;
     private ITpVirtualClassManager virtualClassManager;
+    private ISubjectManager subjectManager;
     public TpGroupScoreController(){
+        this.subjectManager=this.getManager(SubjectManager.class);
         this.tpGroupScoreManager=this.getManager(TpGroupScoreManager.class);
         this.courseManager=this.getManager(TpCourseManager.class);
         this.tpStuScoreManager=this.getManager(TpStuScoreManager.class);
@@ -62,6 +70,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         this.tpGroupStudentManager=this.getManager(TpGroupStudentManager.class);
         this.classManage=this.getManager(ClassManager.class);
         this.virtualClassManager=this.getManager(TpVirtualClassManager.class);
+        tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
     }
     /**
      * 进入课堂表现页面的首页(分角色)
@@ -465,6 +474,59 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         mp.put("currentLoginUID",this.logined(request).getUserid());
         mp.put("clsObj",clsList.get(0));
         return new ModelAndView("/teachpaltform/classPerformanceAward/awardStatices",mp);
+    }
+
+    /**
+     * 进入教师课堂积分功能
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=toTeaCourseScore")
+    public ModelAndView toTeaCourseScore(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        String classid=request.getParameter("classid");
+        String termid=request.getParameter("termid");
+        String subjectid=request.getParameter("subjectid");
+        String sort=request.getParameter("sort");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(classid==null||classid.trim().length()<1||termid==null||termid.trim().length()<1||subjectid==null||subjectid.trim().length()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().print(jsonEntity.toJSON());return null;
+        }
+        //验证班级
+        ClassInfo cls=new ClassInfo();
+        cls.setClassid(Integer.parseInt(classid));
+        List<ClassInfo> clsList=this.classManage.getList(cls,null);
+        if(clsList==null||clsList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
+            response.getWriter().print(jsonEntity.toJSON());return null;
+        }
+
+        //验证学科
+        SubjectInfo sb=new SubjectInfo();
+        sb.setSubjectid(Integer.parseInt(subjectid));
+        List<SubjectInfo> subList=this.subjectManager.getList(sb,null);
+        if(subList==null||subList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
+            response.getWriter().print(jsonEntity.toJSON());return null;
+        }
+        Integer stype=1;
+        if(sort!=null&&sort.trim().length()>0){
+            stype=Integer.parseInt(sort);
+        }
+        //得到统计信息
+        List<Map<String,Object>> mapList=this.tpStuScoreLogsManager.getStuScoreTeachStatices(termid,Integer.parseInt(classid),Integer.parseInt(subjectid),stype);
+        //学科
+        mp.put("subObj",subList.get(0));
+        //班级
+        mp.put("clsObj",clsList.get(0));
+        //页面统计数据
+        mp.put("dataMapList",mapList);
+        //排序
+        mp.put("sort",stype);
+        return new ModelAndView("/teachpaltform/classPerformanceAward/forCourseScore",mp);
     }
 
 }

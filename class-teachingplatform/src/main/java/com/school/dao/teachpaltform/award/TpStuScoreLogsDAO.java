@@ -3,6 +3,7 @@ package com.school.dao.teachpaltform.award;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -52,7 +53,27 @@ public class TpStuScoreLogsDAO extends CommonDAO<TpStuScoreLogs> implements ITpS
 		}
 		return false;
 	}
-	
+
+    /**
+     * 老师，班主任查看学生积分统计页面
+     * @param termid
+     * @param classid
+     * @param subjectid
+     * @param orderby
+     * @return
+     */
+    public List<Map<String,Object>> getStuScoreTeachStatices(final String termid,final Integer classid,Integer subjectid,Integer orderby){
+        StringBuilder sqlbuilder=new StringBuilder("{call tp_stu_score_teach_statices(?,?,?,?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(termid);
+        objList.add(classid);
+        objList.add(subjectid);
+        if(orderby==null)
+            orderby=1;
+        objList.add(orderby);
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
+
 	public List<TpStuScoreLogs> getList(TpStuScoreLogs tpstuscorelogs, PageResult presult) {
 		StringBuilder sqlbuilder = new StringBuilder();
 		sqlbuilder.append("{CALL tp_stu_score_logs_proc_split(");

@@ -178,6 +178,14 @@
         });
 
     }
+
+    function loadCourseScore(subjectid,classid,termid,sort){
+        $(".content2 .jxxt_banji_layoutR").hide();
+        $("#dv_coursescore").show();
+        if(typeof(sort)=="undefined")
+            sort=1;
+        $("#dv_coursescore").load("clsperformance?m=toTeaCourseScore&subjectid="+subjectid+"&classid="+classid+"&termid="+termid+"&sort="+sort+" #dv_coursescore_child");
+    }
 </script>
 </head>
     <body>
@@ -192,8 +200,10 @@
             <li><a href="javascript:;"  id="a_calendar">课程日历</a></li>
         </ul>
     </div>
-
     <div class="content2">
+        <!--积分-->
+        <div  class="jxxt_banji_layoutR" id="dv_coursescore" style="display:none">
+        </div>
         <div  class="jxxt_banji_layoutR" id="dv_manage_stu">
             <h1>学员管理</h1>
             <div class="jxxt_banji_xzgl">
@@ -280,12 +290,11 @@
             <h2><a name="h2a" href="javascript:;" >课程表</a></h2>
             <h2 >课程积分</h2>
             <ul class="jifen">
-                <li><a href="1"><span>语文</span></a></li>
-                <li><a href="1"><span>数学</span></a></li>
-                <li><a href="1"><span>英语</span></a></li>
-                <li><a href="1"><span>物理</span></a></li>
-                <li><a href="1"><span>化学</span></a></li>
-                <li><a href="1"><span>通用技术</span></a></li>
+                <li><a href="javascript:;" onclick="loadCourseScore(1,classId.value,termid,1)"><span>语文</span></a></li>
+                <li><a href="javascript:;" onclick="loadCourseScore(2,classId.value,termid,1)"><span>数学</span></a></li>
+                <li><a href="javascript:;" onclick="loadCourseScore(3,classId.value,termid,1)"><span>英语</span></a></li>
+                <li><a href="javascript:;" onclick="loadCourseScore(4,classId.value,termid,1)"><span>物理</span></a></li>
+                <li><a href="javascript:;" onclick="loadCourseScore(5,classId.value,termid,1)"><span>化学</span></a></li>
             </ul>
         </div>
         <div class="clear"></div>

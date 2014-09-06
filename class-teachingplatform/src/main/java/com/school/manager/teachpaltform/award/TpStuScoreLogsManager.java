@@ -265,6 +265,17 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
        return awardSettings;
     }
 
+    /**
+     * 老师，班主任查看学生积分统计页面
+     * @param termid
+     * @param classid
+     * @param subjectid
+     * @param orderby
+     * @return
+     */
+    public List<Map<String,Object>> getStuScoreTeachStatices(final String termid,final Integer classid,Integer subjectid,Integer orderby){
+        return this.tpStuScoreLogsDAO.getStuScoreTeachStatices(termid, classid, subjectid, orderby);
+    }
 
 
 
