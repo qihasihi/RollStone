@@ -126,6 +126,7 @@ function getNoGroupStudentsByClassId(classId,classType){
                $(this).children("a").show();
            },function(){
                $(this).children().hide();
+               $(".password").hide();
            });
        }
 
@@ -431,7 +432,10 @@ function getStuList(clsid){
             var h='';
             if(rps.objList.length>0){
                 $.each(rps.objList,function(idx,itm){
-                    h+='<li>'+itm.realname+'<a style="display: none;" href="javascript:delClassUser(\''+itm.ref+'\')" class="ico_delete" title="删除"></a></li>';
+                    h+='<li>'+itm.realname+'<a style="display: none;" href="javascript:delClassUser(\''+itm.ref+'\')" class="ico_delete" title="删除"></a>';
+                    h+='<a style="display: none;" name="a_view" class="ico92" title="查看密码" href="javascript:;"></a>';
+                    h+='<span style="display: none;"  class="password">'+itm.password+'</span>'
+                    h+='</li>';
                 });
             }
             $("#stuList").html(h);
@@ -443,8 +447,20 @@ function getStuList(clsid){
                 },
                 function(){
                     $(this).children("a").hide();
+                    $(".password").hide();
                 }
             );
+
+            $("#stuList a[name='a_view']").each(function(idx,itm){
+                $(itm).click(function(){
+                   var span=$(this).next();
+                   if($(span).css("display")=='none'){
+                       $(span).css("display","");
+                   }else{
+                       $(span).css("display","none");
+                   }
+                });
+            });
         }
     });
 }
@@ -630,6 +646,12 @@ function delClassUser(ref){
                 alert(rps.msg);
             } else {
                 //$("#li_"+ref).remove();
+                var clsid=$("#classId").val();
+                if(isLession==2){
+                    getStuList(clsid);
+                }else if(isLession==3){
+                    getNoGroupStudentsByClassId(clsid,1);
+                }
             }
         }
     });

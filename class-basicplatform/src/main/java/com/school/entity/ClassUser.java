@@ -18,7 +18,16 @@ public class ClassUser  implements java.io.Serializable{
     private String relationtype;
     private Integer sportsex;
     private SubjectInfo subjectinfo;
-    
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     private String norelationtype;
     private Integer uid;
     private Object completenum; //任务完成率

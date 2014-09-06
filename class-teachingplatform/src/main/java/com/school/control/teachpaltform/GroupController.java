@@ -281,9 +281,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
         String classtype=request.getParameter("classType");
         String subjectid = request.getParameter("subjectid");
 		if(classid==null||classid.trim().length()<1
-                || classtype==null||classtype.trim().length()<1){
-			je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-			response.getWriter().print(je.toJSON());
+                || classtype==null||classtype.trim().length()<1||subjectid==null||subjectid.trim().length()<1){
 			return;
 		}
 		List<Map<String,Object>>stuList=this.tpGroupStudentManager
