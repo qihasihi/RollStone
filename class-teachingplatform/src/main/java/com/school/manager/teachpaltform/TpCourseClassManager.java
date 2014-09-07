@@ -68,6 +68,16 @@ public class  TpCourseClassManager extends BaseManager<TpCourseClass> implements
     public List<Map<String,Object>> getTpClassCourse(Long courseid,Integer userid,String termid){
         return this.tpcourseclassdao.getTpClassCourse(courseid,userid,termid);
     }
+    /**
+     * 得到记录，根据班级ID,TERMID
+     * 查询列  DISTINCT sub.subject_name,sub.lzx_subject_id,sub.subject_type
+     * @param clsid
+     * @param termid
+     * @return
+     */
+    public List<TpCourseClass> getTpCourseClassByClsTermId(final Integer clsid,final String termid){
+        return this.tpcourseclassdao.getTpCourseClassByClsTermId(clsid,termid);
+    }
 
 	@Override
 	protected ICommonDAO<TpCourseClass> getBaseDAO() {

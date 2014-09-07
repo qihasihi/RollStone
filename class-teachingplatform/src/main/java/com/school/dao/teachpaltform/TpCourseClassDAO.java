@@ -185,6 +185,27 @@ public class TpCourseClassDAO extends CommonDAO<TpCourseClass> implements ITpCou
         return tpcourseclassList;
     }
 
+    /**
+     * 得到记录，根据班级ID,TERMID
+     * 查询列  DISTINCT sub.subject_name,sub.lzx_subject_id,sub.subject_type
+     * @param clsid
+     * @param termid
+     * @return
+     */
+    public List<TpCourseClass> getTpCourseClassByClsTermId(final Integer clsid,final String termid){
+            if(clsid==null||termid==null)return null;
+        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_j_course_class_getsub_byclstermid(?,?)}");
+
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(clsid);
+        objList.add(termid);
+
+        List<Integer> types=new ArrayList<Integer>();
+        List<TpCourseClass> tpcourseclassList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpCourseClass.class, null);
+
+        return tpcourseclassList;
+    }
+
 	public List<Object> getSaveSql(TpCourseClass tpcourseclass, StringBuilder sqlbuilder) {
 		if(tpcourseclass==null || sqlbuilder==null)
 			return null;

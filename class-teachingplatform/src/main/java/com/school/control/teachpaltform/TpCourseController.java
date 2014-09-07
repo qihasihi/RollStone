@@ -3102,4 +3102,49 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         }else
             response.sendRedirect("teachercourse?toTeacherCourseList"); //进入教师首页
     }
+
+    /**
+     * 根据ClassId，CourseId得到学科
+     *  逻辑说明：验证当前角色是班主任，则查询全部学科，如果是老师，则查询当前的班级学科。 如果都存在，以班主任优先。
+     * @param request
+     * @throws Exception
+     */
+    @RequestMapping(params="m=getCourseSubByClsId",method=RequestMethod.POST)
+    public void getCourseSubjectByClsId(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        String clsid=request.getParameter("classid");
+        String termid=request.getParameter("termid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(clsid==null||clsid.trim().length()<1||termid==null||termid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.toJSON());return;
+        }
+        //如果是班主任，则查询全部学科
+        if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID)){
+            SubjectInfo sub=new SubjectInfo();
+            List<SubjectInfo> subList=this.subjectManager.getList(sub,null);
+            if(subList==null||subList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+                response.getWriter().print(jsonEntity.toJSON());
+                return;
+            }
+            jsonEntity.setObjList(subList);
+        }else if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID)){  // 如果是任课教师，则查询当前学科
+            TpCourseClass tcc=new TpCourseClass();
+            tcc.setClassid(Integer.parseInt(clsid.trim()));
+            tcc.setTermid(termid);
+            List<TpCourseClass> tccList=this.tpCourseClassManager.getTpCourseClassByClsTermId(Integer.parseInt(clsid.trim()),termid.trim());
+            if(tccList==null||tccList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+                response.getWriter().print(jsonEntity.toJSON());
+                return;
+            }
+            jsonEntity.setObjList(tccList);
+        }else{
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NO_SERVICE_RIGHT"));
+            response.getWriter().print(jsonEntity.toJSON());
+            return;
+        }
+        jsonEntity.setType("success");
+        response.getWriter().println(jsonEntity.toJSON());
+    }
 }

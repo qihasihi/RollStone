@@ -48,7 +48,7 @@ Integer modelType=0;
             window.location.reload();
             return
         }
-        var timmer=window.setTimeout('toClose()',10*1000);
+        var timmer=window.setTimeout('toClose()',5*1000);
     </script>
 </head>
 <body> 
