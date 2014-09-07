@@ -49,7 +49,16 @@ public interface ITpCourseDAO extends ICommonDAO<TpCourseInfo>{
 
     List<Map<String,Object>>getCourseCalendar(Integer usertype,Integer userid,Integer dcschoolid,String year,String month,String gradeid,String subjectid);
 
-
+    /**
+     * 得到专题积分是否录取完毕
+     * @param clsid
+     * @param subjectid
+     * @param carrayid
+     * @param garrayid
+     * @param roletype  NULL OR 1:老师  2：学生
+     * @return
+     */
+    public List<Map<String,Object>> getCourseScoreIsOver(final Integer clsid,final Integer subjectid,final String carrayid,String garrayid, Integer roletype);
 
     boolean doUpdateShareCourse();
 }

@@ -15,6 +15,16 @@ public interface ITpCourseClassManager  extends IBaseManager<TpCourseClass> {
      * @param clsid
      * @param termid
      * @return
+     * @author zhengzhou
      */
     public List<TpCourseClass> getTpCourseClassByClsTermId(final Integer clsid,final String termid);
+    /**
+     * 得到班级记录，根据userid,TERMID,subjectid
+     * 查询列  DISTINCT cls.class_grade,cls.year,cls.class_name
+     * @param subjectid
+     * @param termid
+     * @return
+     * @author zhengzhou
+     */
+    public List<TpCourseClass> getTpClsEntityByUserSubTermId(final Integer subjectid,final Integer userid,final String termid);
 } 

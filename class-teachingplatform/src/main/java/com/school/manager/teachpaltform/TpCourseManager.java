@@ -124,7 +124,19 @@ public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCo
     public List<Map<String,Object>> getRelatedCourseList(Integer materialid, Integer userid,String coursename) {
         return tpcoursedao.getRelatedCourseList(materialid,userid,coursename);
     }
-
+    /**
+     * 得到专题积分是否录取完毕
+     * @param clsid
+     * @param subjectid
+     * @param carrayid
+     * @param garrayid
+     * @param roletype  NULL OR 1:老师  2：学生
+     * @return
+     * @author zhengzhou
+     */
+    public List<Map<String,Object>> getCourseScoreIsOver(final Integer clsid,final Integer subjectid,final String carrayid,String garrayid, Integer roletype){
+        return tpcoursedao.getCourseScoreIsOver(clsid, subjectid, carrayid, garrayid, roletype);
+    }
     /**
      * 得到云端共享的集合
      * @param tpcourseinfo

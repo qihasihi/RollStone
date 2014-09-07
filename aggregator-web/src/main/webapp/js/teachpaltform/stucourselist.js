@@ -3,9 +3,20 @@ function preeDoPageSub(pObj){
     var param={};
     param.termid=$("#termid").val();
     param.subjectid=$("#subjectid").val();
+    if(_clsid.Trim().length>0){
+        param.classid=_clsid;
+    }
     pObj.setPostParams(param);
 }
-
+/**
+ *    l.add(stucourseList);  //学生专题数据
+ l.add(tmpClassUser);    //学生班级数据
+ l.add(null);    //学生虚拟班级数据
+ l.add(groupList);  //学生小组数据
+ l.add(subjectList); //学生学科数据
+ l.add(tClsList);   //学生班级数据
+ * @param rps
+ */
 function getInvestReturnMethod(rps){
     var html='';
     var chtml='';
@@ -17,24 +28,46 @@ function getInvestReturnMethod(rps){
                 html+="<td>"+itm.classEntity[0].CLASS_TIME.substring(0,16)+"</td>";
                 html+="<td><p><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"'>"+itm.coursename+"</a></p></td>";
                 html+="<td>"+itm.teachername+"</td>";
-                html+="<td><p><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"'>"+itm.uncompletenum+"</a></p></td>";
-                html+='<td><a target="_blank" href="clsperformance?m=toIndex&courseid='+itm.courseid+'&subjectid='+$("#subjectid").val()
-                        +'&termid='+$("#termid").val()+'&classid='+itm.classEntity[0].CLASS_ID+'&classtype='+itm.classEntity[0].CLASS_TYPE+'">课堂表现</a></td>';
+                var uncompleateClass="font-red";
+                if(itm.uncompletenum<1){
+                    uncompleateClass="";
+                }
+                html+="<td><p><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"'  class='"+uncompleateClass+"'>"+itm.uncompletenum+"</a></p></td>";
+                var stotalscore=itm.coursetotalscore;
+                if(stotalscore==-1){
+                    stotalscore="--";
+                }
+                html+='<td>'
+                html+='<a target="_blank" href="clsperformance?m=toIndex&courseid='+itm.courseid+'&subjectid='+$("#subjectid").val()
+                    +'&termid='+$("#termid").val()+'&classid='
+                    +itm.classEntity[0].CLASS_ID+'&classtype='+itm.classEntity[0].CLASS_TYPE+'">'+ stotalscore;
+                if(itm.courseScoreIsOver==1){
+                  html+='<span class="ico33"></span>';
+                }
+                html+='</a></td>';
                 if(itm.iscomment>0)
                     html+="<td><span class='font-darkgray'>已评价</span></td>";
                 else
-                    html+="<td><a href='commoncomment?m=toCourseComment&cid="+itm.courseid+"&clsid="+itm.classEntity[0].CLASS_ID+"' target='_blank' class='font-blue'>评价</a></td>";
+                    html+="<td><a href='commoncomment?m=toCourseComment&cid="+itm.courseid+"&clsid="+itm.classEntity[0].CLASS_ID+"' target='_blank' class='font-blue'>评&nbsp;&nbsp;价</a></td>";
                 html+="</tr>";
             });
         }else{
             html+="<tr><td colspan='6'>暂无数据</td></tr>";
         }
         var subjectid=$("#subjectid").val();
+        var currentClsHtml="";
         if(rps.presult.list[1]!=null&&rps.presult.list[1].length>0){
             $.each(rps.presult.list[1],function(idx,itm){
-                chtml+="<li><a target='_blank' href='teachercourse?m=toStudeClassList&classid="+itm.classid+"&classtype=1&subjectid="+subjectid+"'>"+itm.classgrade+itm.classname+"</a></li>";
+                if(idx==0&&_clsid.Trim().length<1)
+                        _clsid=itm.classid+"";
+                if(_clsid==itm.classid)
+                    currentClsHtml=""+itm.classgrade+itm.classname;
+                chtml+='<li><a onclick="_clsid='+itm.classid+'+\'\';pageGo(\'pList\');autoShowObjById(\'stuClasses\');" href="javascript:;">'+itm.classgrade+itm.classname+'</a></li>';
             });
         }
+//        if(currentClsHtml.Trim().length>0){
+            $("#current_banji").html(currentClsHtml+"&nbsp;");
+//        }
 
         if(rps.presult.list[2]!=null&&rps.presult.list[2].length>0){
             $.each(rps.presult.list[2],function(idx,itm){
@@ -60,6 +93,12 @@ function getInvestReturnMethod(rps){
     }
     $("#courseTable").html(html);
     $("#stuClasses").html(chtml);
+    if($("#stuClasses li").length<1){
+        $("#current_banji").parent().children().hide();
+        $("#current_banji").show();
+    }else{
+        $("#current_banji").parent().children().show();
+    }
     if(rps.presult.list[4]!=null&&rps.presult.list[4].length>0){
         var shtml='';
         $.each(rps.presult.list[4],function(idx,itm){
@@ -74,21 +113,29 @@ function getInvestReturnMethod(rps){
     $("#my_group").html("");
     if(rps.presult.list.length>2&&rps.presult.list[3]!=null&&rps.presult.list[3].length>0)
         getMyGroup();
+    var pageCount=0;
     if(rps.presult.list.length>0){
         pList.setPagetotal(rps.presult.pageTotal);
         pList.setRectotal(rps.presult.recTotal);
         pList.setPageSize(rps.presult.pageSize);
         pList.setPageNo(rps.presult.pageNo);
+        pageCount=rps.presult.pageTotal;
     }else{
         pList.setPagetotal(0);
         pList.setRectotal(0);
         pList.setPageNo(1);
     }
     pList.Refresh();
+    if(pageCount>1){
+        $("#pListaddress").show();
+    }else{
+        $("#pListaddress").hide();
+    }
+
 }
 
 function getMyGroup(){
-    var values=$("#p_stuClasses").val();
+
     var subjectid=$("#subjectid").val();
     if(subjectid==null||subjectid.toString().Trim().length<1){
         alert('系统未获取到学科标识!');
@@ -100,7 +147,7 @@ function getMyGroup(){
         url:'group?m=getMyGroup',
         data:{
             //groupid:groupid
-            classid:values,
+            classid:_clsid,
             subjectid:subjectid
         },
         type:'post',
@@ -111,20 +158,17 @@ function getMyGroup(){
         success:function(rps){
             if(rps.objList!=null&&rps.objList.length>0){
                 var html="";
-                $.each(rps.objList,function(idx,itm){
-                    html+='<ul>';
+
+                    $("#term_name").html(rps.objList[0].groupname);
                     //html+='<li>'+itm.teachername+'教师'+itm.groupname+'</li>';
-                    html+='<li>'+itm.groupname+'</li>';
-                    if(itm.tpgroupstudent!=null&&itm.tpgroupstudent.length>0){
-                        $.each(itm.tpgroupstudent,function(ix,im){
+                    if(rps.objList[0].tpgroupstudent!=null&&rps.objList[0].tpgroupstudent.length>0){
+                        $.each(rps.objList[0].tpgroupstudent,function(ix,im){
                             html+="<li>"+im.stuname+"</li>";
                         })
                     }
-                    html+='</ul>';
-                });
                 $("#my_group").html(html);
             }else{
-                $("#my_group").html("<ul><li>没有小组信息</li></ul>");
+                $("#my_group").html("<li>没有小组信息</li>");
             }
         }
     });
@@ -228,4 +272,12 @@ function changeTab(direct){
             return;
         }
     }
+}
+/*根据ID显示*/
+function autoShowObjById(id){
+    var display=$("#"+id).css("display");
+    if(display=="none"){
+        $("#"+id).show();
+    }else
+        $("#"+id).hide();
 }

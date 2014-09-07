@@ -191,9 +191,10 @@ public class TpCourseClassDAO extends CommonDAO<TpCourseClass> implements ITpCou
      * @param clsid
      * @param termid
      * @return
+     *  @author zhengzhou
      */
     public List<TpCourseClass> getTpCourseClassByClsTermId(final Integer clsid,final String termid){
-            if(clsid==null||termid==null)return null;
+        if(clsid==null||termid==null)return null;
         StringBuilder sqlbuilder=new StringBuilder("{CALL tp_j_course_class_getsub_byclstermid(?,?)}");
 
         List<Object> objList=new ArrayList<Object>();
@@ -203,6 +204,27 @@ public class TpCourseClassDAO extends CommonDAO<TpCourseClass> implements ITpCou
         List<Integer> types=new ArrayList<Integer>();
         List<TpCourseClass> tpcourseclassList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpCourseClass.class, null);
 
+        return tpcourseclassList;
+    }
+    /**
+     * 得到班级记录，根据userid,TERMID,subjectid
+     * 查询列  DISTINCT cls.class_grade,cls.year,cls.class_name
+     * @param subjectid
+     * @param termid
+     * @return
+     *  @author zhengzhou
+     */
+    public List<TpCourseClass> getTpClsEntityByUserSubTermId(final Integer subjectid,final Integer userid,final String termid){
+        if(subjectid==null||termid==null||userid==null)return null;
+        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_j_course_class_getcls_bysubtermuserid(?,?,?)}");
+
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(subjectid);
+        objList.add(userid);
+        objList.add(termid);
+
+        List<Integer> types=new ArrayList<Integer>();
+        List<TpCourseClass> tpcourseclassList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpCourseClass.class, null);
         return tpcourseclassList;
     }
 

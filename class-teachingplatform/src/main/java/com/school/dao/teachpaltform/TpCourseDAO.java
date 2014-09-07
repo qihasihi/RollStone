@@ -633,6 +633,11 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
             objList.add(tpcourseinfo.getSelectType());
         } else
             sqlbuilder.append("null,");
+        if (tpcourseinfo.getClassid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getClassid());
+        } else
+            sqlbuilder.append("null,");
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
             sqlbuilder.append("?,?,");
             objList.add(presult.getPageNo());
@@ -1217,6 +1222,34 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
             return true;
         }
         return false;
+    }
+
+    /**
+     * 得到专题积分是否录取完毕
+     * @param clsid
+     * @param subjectid
+     * @param carrayid
+     * @param garrayid
+     * @param roletype  NULL OR 1:老师  2：学生
+     * @return
+     */
+    public List<Map<String,Object>> getCourseScoreIsOver(final Integer clsid,final Integer subjectid,final String carrayid,String garrayid, Integer roletype){
+        if(clsid==null||subjectid==null||carrayid==null||carrayid.trim().length()<1){
+            return null;
+        }
+        if(roletype==null)
+            roletype=1;
+        if(garrayid==null||garrayid.trim().length()<1)
+            garrayid="0";
+        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_course_idx_grouper_coursescore_isover(?,?,?,?,?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(clsid);
+        objList.add(subjectid);
+        objList.add(carrayid);
+        objList.add(garrayid);
+        objList.add(roletype);
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+
     }
 
 }

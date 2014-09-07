@@ -74,11 +74,23 @@ public class  TpCourseClassManager extends BaseManager<TpCourseClass> implements
      * @param clsid
      * @param termid
      * @return
+     * @author zhengzhou
      */
     public List<TpCourseClass> getTpCourseClassByClsTermId(final Integer clsid,final String termid){
         return this.tpcourseclassdao.getTpCourseClassByClsTermId(clsid,termid);
     }
 
+    /**
+     * 得到班级记录，根据userid,TERMID,subjectid
+     * 查询列  DISTINCT cls.class_grade,cls.year,cls.class_name
+     * @param subjectid
+     * @param termid
+     * @return
+     * @author zhengzhou
+     */
+    public List<TpCourseClass> getTpClsEntityByUserSubTermId(final Integer subjectid,final Integer userid,final String termid){
+        return this.tpcourseclassdao.getTpClsEntityByUserSubTermId(subjectid, userid, termid);
+    }
 	@Override
 	protected ICommonDAO<TpCourseClass> getBaseDAO() {
 		// TODO Auto-generated method stub

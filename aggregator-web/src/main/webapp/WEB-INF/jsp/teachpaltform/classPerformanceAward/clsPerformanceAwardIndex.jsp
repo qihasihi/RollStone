@@ -212,7 +212,7 @@
                     <c:if test="${!empty clsDcType&&clsDcType==3}">
 
                             var subFlag1=${dlm.SUBMIT_FLAG};
-                            if((groupidstr.length<1||(groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1&&ctumid!=${dlm.USER_ID}))&&subFlag1==0){
+                            if((isTeacher||(groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1&&ctumid!=${dlm.USER_ID}))&&subFlag1==0){
                                     h+='<td name="td_data">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
                                     h+='<td name="td_data">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
                                     h+='<td name="td_data">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
@@ -235,7 +235,7 @@
                         h+='<td  style="color:gray">${dl1m.WSSCORE}</td>';
                         <c:if test="${!empty clsDcType&&clsDcType==3}">
                             var subFlag=${dl1m.SUBMIT_FLAG};
-                             if((groupidstr.length<1||(groupidstr.indexOf(",${dl1m.GROUP_ID},")!=-1&&ctumid!=${dl1m.USER_ID}))&&subFlag==0){
+                             if((isTeacher||(groupidstr.indexOf(",${dl1m.GROUP_ID},")!=-1&&ctumid!=${dl1m.USER_ID}))&&subFlag==0){
                                 h+='<td name="td_data">${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
                                 h+='<td name="td_data">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
                                 h+='<td name="td_data">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
@@ -271,6 +271,10 @@
                 trJqObj.each(function(idx,itm){
                    $(itm).children("td:first").hide();
                 });
+            }
+
+            if($("#d_body tr").length<1){
+                $("#d_body").parent().remove();
             }
         })
         /**

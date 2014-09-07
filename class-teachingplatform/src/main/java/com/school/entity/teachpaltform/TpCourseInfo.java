@@ -11,6 +11,7 @@ import java.util.*;
 public class TpCourseInfo  implements java.io.Serializable{
 
     private Object datemsg;
+    private Integer courseScoreIsOver=1;
 
     public Object getDatemsg() {
         return datemsg;
@@ -40,6 +41,10 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Integer dcschoolid;
     private Integer usertype;
 
+    private Integer coursetotalscore;
+
+
+
     public Integer getUsertype() {
         return usertype;
     }
@@ -49,6 +54,14 @@ public class TpCourseInfo  implements java.io.Serializable{
     }
 
     public void TpCourseInfo (){}
+
+    public Integer getCoursetotalscore() {
+        return coursetotalscore;
+    }
+
+    public void setCoursetotalscore(Integer coursetotalscore) {
+        this.coursetotalscore = coursetotalscore;
+    }
 
     private java.lang.String schoolname;
     private java.util.Date ctime;
@@ -716,5 +729,14 @@ public class TpCourseInfo  implements java.io.Serializable{
         if(this.courselevel==3&&this.sharetype==1)
             type=3;
         return type;
+    }
+
+
+    public void setCourseScoreIsOver(Integer courseScoreIsOver) {
+        this.courseScoreIsOver = courseScoreIsOver;
+    }
+
+    public Integer getCourseScoreIsOver() {
+        return courseScoreIsOver;
     }
 }

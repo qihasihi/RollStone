@@ -660,13 +660,25 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
      */
     @RequestMapping(params = "m=toStudentCourseList", method = RequestMethod.GET)
     public ModelAndView toStudentCourseList(HttpServletRequest request, ModelMap mp) throws Exception {
+        String termid=request.getParameter("termid");
+
         PageResult pr = new PageResult();
         UserInfo u = this.logined(request);
         pr.setOrderBy("SEMESTER_BEGIN_DATE");
         List<TermInfo> termList = this.termManager.getList(null, pr);
         mp.put("termList", termList);
-        TermInfo currtTerm = this.termManager.getMaxIdTerm(false);
-        mp.put("currtTerm", currtTerm);
+        TermInfo currtTerm = null;
+        if(termid!=null&&termid.trim().length()>0){
+            TermInfo tm=new TermInfo();
+            tm.setRef(termid);
+            List<TermInfo> tmList=this.termManager.getList(tm,null);
+            if(tmList!=null&&tmList.size()>0){
+                currtTerm=tmList.get(0);
+            }
+        }
+        if(currtTerm==null)
+            currtTerm=this.termManager.getMaxIdTerm(false);
+        mp.put("selTerm", currtTerm);
         List<SubjectInfo> subjectList = this.subjectManager.getHavaCourseSubject(currtTerm.getRef(),u.getRef(),u.getUserid());
         mp.put("subjectList", subjectList);
         if(subjectList!=null&&subjectList.size()>0){
@@ -960,15 +972,51 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity je = new JsonEntity();
         String subjectid=request.getParameter("subjectid");
         String termid=request.getParameter("termid");
+        String classid=request.getParameter("classid");
         if(subjectid==null||subjectid.trim().length()<1||termid==null||termid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
         }
+        TermInfo term=new TermInfo();
+        term.setRef(termid);
+        List<TermInfo>termInfoList=this.termManager.getList(term,null);
+        if(termInfoList==null||termInfoList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        term=termInfoList.get(0);
+        //没有发现该学生本学期的班级
+//        List<TpCourseClass> tClsList=this.tpCourseClassManager.getTpClsEntityByUserSubTermId(Integer.parseInt(subjectid.trim()),this.logined(request).getUserid(),termid);
+//        if(tClsList==null||tClsList.size()<1){
+//             je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+//            response.getWriter().print(je.toJSON());
+//            return;
+//        }
+
+        ClassUser cu=new ClassUser();
+        cu.setUserid(this.logined(request).getRef());
+        cu.setRelationtype("学生");
+        cu.setYear(term.getYear());
+        List<ClassUser> classList=this.classUserManager.getList(cu,null);
+        if(classList==null&&classList.size()<1){
+            je.setMsg("抱歉，您当前学期不在班级中，请联系相关教师进行处理!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+
+        //如果没有传入classid参数，则第一位获取
+        if(classid==null||classid.trim().length()<1){
+            classid=classList.get(0).getClassid().toString();
+        }
+        //查询得到班级
         PageResult presult = this.getPageResultParameter(request);
         // 分页查询
         TpCourseInfo tcInfo = this.getParameter(request, TpCourseInfo.class);
         tcInfo.setUserid(this.logined(request).getUserid());
+        tcInfo.setClassid(Integer.parseInt(classid.trim()));
         tcInfo.setSelectType(1);
         List<TpCourseInfo> stucourseList = this.tpCourseManager.getStuCourseList(tcInfo, presult);
         String courseids="";
@@ -978,6 +1026,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 if(i<stucourseList.size()-1)
                     courseids+=",";
             }
+            //计算任务数量
             List<Map<String,Object>> performanceListNum=this.taskPerformanceManager.getStuSelfPerformanceNum(this.logined(request).getUserid(),courseids,1,termid,Integer.parseInt(subjectid));
             for(int i=0;i<stucourseList.size();i++){
                 if(performanceListNum!=null&&performanceListNum.size()>0){
@@ -993,42 +1042,86 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                     stucourseList.get(i).setUncompletenum(0);
                 }
             }
+            //计算是否小组组长
+
+            //查找当前班级，学科的登陆人是否是小组组长
+            TpGroupStudent gs=new TpGroupStudent();
+            gs.setIsleader(1);
+            gs.setUserid(this.logined(request).getUserid());
+            gs.getTpgroupinfo().setSubjectid(Integer.parseInt(subjectid));
+            gs.setClassid(Integer.parseInt(classid));
+            List<TpGroupStudent> gsList=this.tpGroupStudentManager.getList(gs,null);
+            //得到小组Id,组织数据进行查询
+            StringBuilder groupIdStr=new StringBuilder(",");
+            if(gsList!=null&&gsList.size()>0){
+                for (TpGroupStudent gsTmp:gsList){
+                    if(gsTmp!=null&&gsTmp.getGroupid()!=null){
+                        if(groupIdStr.toString().indexOf("," + gsTmp.getGroupid().toString() + ",")==-1){
+                            if(groupIdStr.toString().trim().length()>1)
+                                groupIdStr.append(",");
+                            groupIdStr.append(gsTmp.getGroupid().toString());
+                        }
+                    }
+                }
+            }
+
+            if(groupIdStr.toString().trim().length()>1)
+                groupIdStr=new StringBuilder(groupIdStr.toString().substring(1));
+            else
+                groupIdStr=null;
+            if(groupIdStr!=null&&groupIdStr.toString().trim().length()>0){
+                if(courseids!=null&&courseids.trim().length()<1)
+                    courseids=null;
+                List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(Integer.parseInt(classid),Integer.parseInt(subjectid),courseids,groupIdStr.toString(),2);
+                for(TpCourseInfo tctmp:stucourseList){
+                if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
+                      for(Map<String,Object> csOMap:courseScoreIsOverList){
+                        if(csOMap!=null&&csOMap.containsKey("STUSCORECOUNT")&&csOMap.containsKey("GROUPCOUNT")
+                                &&csOMap.containsKey("COURSE_ID")){
+                            String tcid=csOMap.get("COURSE_ID")!=null?csOMap.get("COURSE_ID").toString():null;
+                            String gCount=csOMap.get("GROUPCOUNT")!=null?csOMap.get("GROUPCOUNT").toString():null;
+                            String stuScoreCount=csOMap.get("STUSCORECOUNT")!=null?csOMap.get("STUSCORECOUNT").toString():null;
+                            if(tcid==null||tcid.trim().length()<1
+                                    ||gCount==null||stuScoreCount==null
+                                    )continue;
+                                if(tctmp!=null&&tctmp.getCourseid().toString().equals(tcid)&&(Integer.parseInt(stuScoreCount)==0||Integer.parseInt(gCount)==Integer.parseInt(stuScoreCount))){
+                                        tctmp.setCourseScoreIsOver(0);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }else{
+                for(TpCourseInfo tctmp:stucourseList){
+                    tctmp.setCourseScoreIsOver(0);
+                }
+            }
         }
         Set<Map<String, Object>> classset = new HashSet<Map<String, Object>>();
 
 
-        TpVirtualClassStudent ts=new TpVirtualClassStudent();
-        ts.setUserid(this.logined(request).getUserid());
-        List<TpVirtualClassStudent>tpVirtualClassStudentList=this.tpVirtualClassStudentManager.getList(ts,null);
+//        TpVirtualClassStudent ts=new TpVirtualClassStudent();
+//        ts.setUserid(this.logined(request).getUserid());
+//        List<TpVirtualClassStudent>tpVirtualClassStudentList=this.tpVirtualClassStudentManager.getList(ts,null);
 
-        TermInfo t=new TermInfo();
-        t.setRef(termid);
-        List<TermInfo>termInfoList=this.termManager.getList(t,null);
-        if(termInfoList==null||termInfoList.size()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-        ClassUser cu=new ClassUser();
-        cu.setUserid(this.logined(request).getRef());
-        cu.setRelationtype("学生");
-        cu.setYear(termInfoList.get(0).getYear());
-        List<ClassUser>classList=this.classUserManager.getList(cu,null);
+
+
         List<ClassUser>tmpClassUser=new ArrayList<ClassUser>();
-        if(classList!=null&&classList.size()>0){
-            for (ClassUser classUser:classList){
+//        if(classList!=null&&classList.size()>0){
+//            for (ClassUser classUser:classList){
                 ClassUser tmpcu=new ClassUser();
-                tmpcu.setYear(classUser.getYear());
+                tmpcu.setYear(term.getYear());
                 tmpcu.setRelationtype("任课老师");
                 tmpcu.setSubjectid(Integer.parseInt(subjectid));
-                tmpcu.setClassid(classUser.getClassid());
+                tmpcu.setClassid(Integer.parseInt(classid));
                 List<ClassUser>classUserList=this.classUserManager.getList(tmpcu,null);
                 if(classUserList!=null&&classUserList.size()>0)
                     tmpClassUser.add(classUserList.get(0));
-            }
-        }
+//            }
+//        }
         List l = new ArrayList();
-        l.add(stucourseList);
+
 
 
 
@@ -1061,38 +1154,55 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         }*/
         //普通班级小组
         if(tmpClassUser.size()>0){
-            for (ClassUser clsu:tmpClassUser){
+//            for (ClassUser clsu:tmpClassUser){
                 List<TpGroupInfo> gl = this.tpGroupManager.getMyGroupList(
-                        clsu.getClassid(),
+                        Integer.parseInt(classid),
                         1,
                         termid,
                         null,
-                        this.logined(request).getUserid(),clsu.getSubjectid());
+                        this.logined(request).getUserid(),Integer.parseInt(subjectid));
                  groupList.addAll(gl);
-            }
+//            }
 
         }
         //虚拟班级小组
-        if(tpVirtualClassStudentList!=null&&tpVirtualClassStudentList.size()>0){
-            for (TpVirtualClassStudent clsu:tpVirtualClassStudentList){
-                List<TpGroupInfo> gl = this.tpGroupManager.getMyGroupList(
-                        clsu.getVirtualclassid(),
-                        2,
-                        termid,
-                        null,
-                        this.logined(request).getUserid(),null);
-                groupList.addAll(gl);
-            }
+//        if(tpVirtualClassStudentList!=null&&tpVirtualClassStudentList.size()>0){
+//            for (TpVirtualClassStudent clsu:tpVirtualClassStudentList){
+//                List<TpGroupInfo> gl = this.tpGroupManager.getMyGroupList(
+//                        clsu.getVirtualclassid(),
+//                        2,
+//                        termid,
+//                        null,
+//                        this.logined(request).getUserid(),null);
+//                groupList.addAll(gl);
+//            }
+//
+//        }
 
+        List<ClassInfo> clsList=new ArrayList<ClassInfo>();
+        for (ClassUser tcu:classList){
+            if(tcu!=null&&tcu.getClassid()!=null&&tcu.getClassname()!=null&&tcu.getClassgrade()!=null){
+                ClassInfo cls=new ClassInfo();
+                cls.setClassid(tcu.getClassid());
+                cls.setClassname(tcu.getClassname());
+                cls.setClassgrade(tcu.getClassgrade());
+                boolean ishas=false;
+                if(!clsList.contains(cls)){
+                    clsList.add(cls);
+                }
+            }
         }
 
+        l.add(stucourseList);  //学生专题数据
+      //  l.add(tmpClassUser);    //学生班级数据
+        l.add(clsList);      //班级
+        l.add(null);    //学生虚拟班级数据
 
-        l.add(tmpClassUser);
-        l.add(tpVirtualClassStudentList);
-        l.add(groupList);
+        l.add(groupList);  //学生小组数据
         UserInfo u = this.logined(request);
         List<SubjectInfo> subjectList = this.subjectManager.getHavaCourseSubject(termid,u.getRef(),u.getUserid());
-        l.add(subjectList);
+        l.add(subjectList); //学生学科数据
+
         je.setObjList(l);
         response.getWriter().print(je.toJSON());
     }

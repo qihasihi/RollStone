@@ -172,8 +172,16 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
             groupid=groupid.substring(1,groupid.lastIndexOf(","));
         }
         //根据参数得到值 。
-        List<Map<String,Object>> dataListMap=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim())
-                ,Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid),groupid,null);
+        List<Map<String,Object>> dataListMap=null;
+        if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID)){
+          dataListMap=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim())
+                    ,Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid),null,null);
+        }else if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+            if(groupid!=null&&groupid.trim().length()>0){
+                dataListMap=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim())
+                        ,Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid),groupid,null);
+            }
+        }
         mp.put("dataListMap",dataListMap);
         if(groupid!=null&&groupid.trim().length()>0)
             mp.put("stuGroupId",groupid);
@@ -204,9 +212,6 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         }
         if(groupid.trim().length()<=1)
             groupid=null;
-        else{
-            groupid=groupid.substring(1,groupid.lastIndexOf(","));
-        }
         mp.put("leanderGrpid",groupid);
         mp.put("classid",clsid);
         mp.put("classtype",typeid);
@@ -387,6 +392,8 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
                     //groupidArray
                     if(groupidArray!=null)
                         groupidArray+=",";
+                    else
+                        groupidArray="";
                     groupidArray+=key.toString();
                     //组织得到Sql语句
                     TpGroupScore gs=new TpGroupScore();
