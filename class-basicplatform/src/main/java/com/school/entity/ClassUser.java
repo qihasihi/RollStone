@@ -20,6 +20,9 @@ public class ClassUser  implements java.io.Serializable{
     private SubjectInfo subjectinfo;
     private String password;
 
+    public void setGradeid(Integer gid){
+        this.getClassinfo().setGradeid(gid);
+    }
     public String getPassword() {
         return password;
     }

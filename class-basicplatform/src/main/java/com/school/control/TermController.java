@@ -329,4 +329,20 @@ public class TermController extends BaseController<TermInfo> {
         response.getWriter().print(sb.toString());
     }
 
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=termList",method = RequestMethod.POST)
+    public void getTermList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        TermInfo tm=this.getParameter(request,TermInfo.class);
+        List<TermInfo> tmList=this.termManager.getList(tm,null);
+        JsonEntity je=new JsonEntity("success","");
+        je.setObjList(tmList);
+        response.getWriter().println(je.toJSON());
+    }
+
 }

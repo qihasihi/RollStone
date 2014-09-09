@@ -12,6 +12,7 @@ public class TpCourseInfo  implements java.io.Serializable{
 
     private Object datemsg;
     private Integer courseScoreIsOver=1;
+    private String courseScoreIsOverStr="";
 
     public Object getDatemsg() {
         return datemsg;
@@ -41,9 +42,15 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Integer dcschoolid;
     private Integer usertype;
 
-    private Integer coursetotalscore;
+    private Integer coursetotalscore;;
 
+    public String getCourseScoreIsOverStr() {
+        return courseScoreIsOverStr;
+    }
 
+    public void setCourseScoreIsOverStr(String courseScoreIsOverStr) {
+        this.courseScoreIsOverStr = courseScoreIsOverStr;
+    }
 
     public Integer getUsertype() {
         return usertype;

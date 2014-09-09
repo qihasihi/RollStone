@@ -25,6 +25,15 @@ public class ClassInfo implements java.io.Serializable {
     private Integer allowjoin;  //学生是否允许加入 1：允许 2：不允许
     private Integer clsnum; //班级限额
     private Date verifytime;    //失效时间
+    private Integer gradeid;
+
+    public Integer getGradeid() {
+        return gradeid;
+    }
+
+    public void setGradeid(Integer gradeid) {
+        this.gradeid = gradeid;
+    }
 
     public Integer getClsnum() {
         return clsnum;

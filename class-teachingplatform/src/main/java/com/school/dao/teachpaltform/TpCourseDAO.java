@@ -198,7 +198,7 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
     }
 
     @Override
-    public List<Map<String, Object>> getCourseCalendar(Integer usertype,Integer userid, Integer dcschoolid, String year, String month,String gradeid,String subjectid) {
+    public List<Map<String, Object>> getCourseCalendar(Integer usertype,Integer userid, Integer dcschoolid, String year, String month,String gradeid,String subjectid,Integer classid) {
         if(usertype==null||dcschoolid==null||year==null||month==null)
             return null;
         StringBuilder sqlbuilder = new StringBuilder();
@@ -243,6 +243,12 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
         if(subjectid!=null&&subjectid.trim().length()>0){
             sqlbuilder.append("?,");
             objList.add(subjectid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?,");
+            objList.add(classid);
         }else{
             sqlbuilder.append("NULL,");
         }
@@ -527,6 +533,11 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
         if (tpcourseinfo.getSeldate() != null) {
             sqlbuilder.append("?,");
             objList.add(tpcourseinfo.getSeldate());
+        } else
+            sqlbuilder.append("null,");
+        if (tpcourseinfo.getClassid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getClassid());
         } else
             sqlbuilder.append("null,");
 

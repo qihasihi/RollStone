@@ -60,9 +60,11 @@ function getInvestReturnMethod(rps){
             $.each(rps.presult.list[1],function(idx,itm){
                 if(idx==0&&_clsid.Trim().length<1)
                         _clsid=itm.classid+"";
-                if(_clsid==itm.classid)
+                if(_clsid==itm.classid){
                     currentClsHtml=""+itm.classgrade+itm.classname;
-                chtml+='<li><a onclick="_clsid='+itm.classid+'+\'\';pageGo(\'pList\');autoShowObjById(\'stuClasses\');" href="javascript:;">'+itm.classgrade+itm.classname+'</a></li>';
+                    grade=itm.classgrade;
+                }
+                chtml+='<li><a onclick="grade=\''+itm.classgrade+'\';;refechRl=true;_clsid='+itm.classid+'+\'\';pageGo(\'pList\');autoShowObjById(\'stuClasses\');" href="javascript:;">'+itm.classgrade+itm.classname+'</a></li>';
             });
         }
 //        if(currentClsHtml.Trim().length>0){
@@ -218,6 +220,7 @@ function getTermSubject(){
 
 function searchBySubject(subjectid){
     $("#subjectid").val(subjectid);
+    subjectid=subjectid;
     $("#sub_"+subjectid).siblings().attr("class","");
     $("#sub_"+subjectid).attr("class","crumb");
     var uri="task?m=tostuSelfPerformance&termid="+$("#termid").val()+"&subjectid="+$("#subjectid").val();
@@ -281,3 +284,52 @@ function autoShowObjById(id){
     }else
         $("#"+id).hide();
 }
+var refechRl=true;
+/**
+ * 日历
+ * @param id
+ */
+function showRiLi(id){
+    var display=$("#"+id).css("display");
+    if(display=='none'){
+        $("#"+id).show();
+        //刷新日历
+        if(refechRl){
+            refechRl=false;
+            //加载日历,得到学期，得到年，月
+            loadTermData();
+        }
+    }else
+        $("#"+id).hide();
+}
+
+
+//根据年月生成日历
+function loadTermData(){
+    var tmid=$("#termid").val();
+    if(tmid.Trim().length<1){
+        alert('错误：参数不齐!');return;
+    }
+    var p={termid:tmid};
+    $.ajax({
+        url:'term?m=termList',
+        data:p,
+        type:'post',
+        dataType:'json',
+        error:function(){
+            alert('异常错误,系统未响应！');
+        },
+        success:function(rps){
+            if(rps.type=="error"){
+                alert(rps.msg);return;
+            }
+            var btimeStr=rps.objList[0].btimeString;
+            if(typeof(btimeStr)!="undefined"){
+                $("#year").html(btimeStr.split("-")[0]);
+                $("#month").html(btimeStr.split("-")[1]);
+                showCalendar(btimeStr.split("-")[0],btimeStr.split("-")[1]);
+            }
+        }
+    });
+}
+

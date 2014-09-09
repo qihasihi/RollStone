@@ -190,7 +190,11 @@ function getInvestReturnMethod(rps){
                 html+="<p><span class='f_right'>----</span>----</p>";
             }
             html+="</td>";
-            html+='<td><a  target="_blank" href="clsperformance?m=toIndex&courseid='+itm.courseid+'&classtype=1&subjectid='+global_subjectid+'&termid='+termid+'" class="font-blue">查看<span class="ico33"></span></a></td>';
+            html+='<td><a  target="_blank" href="clsperformance?m=toIndex&courseid='+itm.courseid+'&classtype=1&subjectid='+global_subjectid+'&termid='+termid+'" class="font-blue">查看' ;
+            if(typeof(itm.courseScoreIsOverStr)!="undefined"&&itm.courseScoreIsOverStr.indexOf("1")!=-1){
+                html+='<span class="ico33"></span>';
+            }
+            html+='</a></td>';
             html+="<td><a href='teachercourse?m=toClassCommentList&courseid="+itm.courseid+"&type=1' target='_blank'>"+itm.avgscore+"（"+itm.commentnum+"人）</a></td>";
             html+="<td>";
             if(termid==currtterm){
@@ -225,7 +229,7 @@ function getInvestReturnMethod(rps){
         }
         pList.Refresh();
     }else{
-        html+="<tr><td colspan='5'>沒有数据！</td></tr>";
+        html+="<tr><td colspan='5'>没有数据！</td></tr>";
 
     }
     if(rps.presult.list[1]!=null&&rps.presult.list[1].length>0){

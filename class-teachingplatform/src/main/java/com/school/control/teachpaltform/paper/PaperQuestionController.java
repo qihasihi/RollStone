@@ -4301,7 +4301,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         presult.setPageSize(1);
         List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,presult);
         if(spList!=null&&spList.size()>0){
-            jsonEntity.setMsg("异常错误，您已经提交过该试卷。无法进行修改!");
+            jsonEntity.setMsg("您已经提交过该试卷。无法进行修改!");
             response.getWriter().print(jsonEntity.toJSON());return;
         }
 //

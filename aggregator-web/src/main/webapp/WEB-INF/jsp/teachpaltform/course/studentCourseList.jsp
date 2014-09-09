@@ -7,10 +7,39 @@
 		<meta http-equiv="cache-control" content="no-cache">
 		<meta http-equiv="expires" content="0">
         <script type="text/javascript" src="js/teachpaltform/stucourselist.js"></script>
+        <script type="text/javascript" src="js/teachpaltform/course_calendar.js"></script>
 <script type="text/javascript">
     var currtenTab=1; //当前学科导航栏页数
     var tabSize=10; //学科导航栏每页显示数量
     var _clsid="";
+    var grade="";
+    var gradeid="";
+
+    function prev(){
+        var year=$("#year").html().Trim();
+        var month=$("#month").html().Trim();
+        month=parseInt(month)-1;
+        if(month<1){
+            year=parseInt(year)-1;
+            month=12;
+        }
+
+        showCalendar(year,month);
+    }
+
+    function next(){
+        var year=$("#year").html().Trim();
+        var month=$("#month").html().Trim();
+        month=parseInt(month)+1;
+        if(month>12){
+            year=parseInt(year)+1;
+            month=1;
+        }
+        showCalendar(year,month);
+    }
+
+
+
     $(function(){
 
         $("#p_stuClasses").change(function(){
@@ -86,68 +115,23 @@
                 </c:forEach>
             </ul>
 
-            <div class="ico"><a href="tpres?toStuCollectList" target="_blank" ><span class="ico60"></span>资源管理</a>&nbsp;&nbsp;&nbsp;<a href="1" target="_blank"><span class="ico88"></span>课程日历</a></div>
-            <div class="jxxt_student_rili" style="display:none">
+            <div class="ico"><a href="tpres?toStuCollectList" target="_blank" ><span class="ico60"></span>资源管理</a>&nbsp;&nbsp;&nbsp;<a href="javascript:;" onclick="showRiLi('dv_rili')"><span class="ico88"></span>课程日历</a></div>
+            <div class="jxxt_student_rili" style="display:none" id="dv_rili">
                 <div class="jxxt_rili">
-                    <h1><a href="1" class="left"></a>2014年8月<a href="1" class="right"></a></h1>
+                    <h1><a href="javascript:;" onclick="prev()" class="left"></a>
+                    <span id="year">
+                    </span>
+                        年
+                    <span id="month">
+                    </span>
+                        月<a  href="javascript:;" onclick="next()" class="right"></a></h1>
                     <table border="0" cellspacing="0" cellpadding="0">
-                        <tr>
-                            <td><a href="1">1</a></td>
-                            <td><a href="1">2</a></td>
-                            <td><a href="1">3</a></td>
-                            <td><a href="1">4</a></td>
-                            <td><a href="1">5</a></td>
-                            <td><a href="1">6</a></td>
-                            <td><a href="1">7</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="1">8</a></td>
-                            <td class="border"><a href="1">9<span class="ico89b"></span></a></td>
-                            <td class="crumb"><a href="1">10<span class="ico89a"></span></a></td>
-                            <td><a href="1">11<span class="ico89a"></span></a></td>
-                            <td><a href="1">12</a></td>
-                            <td><a href="1">13</a></td>
-                            <td><a href="1">14</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="1">15</a></td>
-                            <td><a href="1">16</a></td>
-                            <td><a href="1">17</a></td>
-                            <td><a href="1">18</a></td>
-                            <td><a href="1">19</a></td>
-                            <td><a href="1">20</a></td>
-                            <td><a href="1">21</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="1">22</a></td>
-                            <td><a href="1">23</a></td>
-                            <td><a href="1">24</a></td>
-                            <td><a href="1">25</a></td>
-                            <td><a href="1">26</a></td>
-                            <td><a href="1">27</a></td>
-                            <td><a href="1">28</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="1">29</a></td>
-                            <td><a href="1">30</a></td>
-                            <td><a href="1">31</a></td>
-                            <td><a href="1"></a></td>
-                            <td><a href="1"></a></td>
-                            <td><a href="1"></a></td>
-                            <td><a href="1"></a></td>
-                        </tr>
+                        <tbody id="calendar"></tbody>
                     </table>
                 </div>
                 <h2>我的课表</h2>
-                <div class="kebiao">
-                    <p><span class="font-black">高二（1）班</span>&nbsp;&nbsp;<a href="1" target="_blank">三角函数的基础最长20个汉字</a><a class="ico33"></a><br>
-                        10：15&mdash;&mdash;11：50</p>
-                    <p><span class="font-black">高二提高班</span>&nbsp;&nbsp;<a href="1" target="_blank">三角函数的基础应用</a><a class="ico33"></a><br>
-                        10：15&mdash;&mdash;11：50</p>
-                    <p><span class="font-black">好好学习天天向上班</span>&nbsp;&nbsp;<a href="1" target="_blank">三角基础应用角函基好...</a><a class="ico33"></a><br>
-                        10：15&mdash;&mdash;11：50</p>
-                    <p><span class="font-black">高二（1）班</span>&nbsp;&nbsp;<a href="1" target="_blank">三角函数的基础应用</a><a class="ico33"></a><br>
-                        10：15&mdash;&mdash;11：50</p>
+                <div class="kebiao" id="ul_kebiao">
+
                 </div>
             </div>
         </div>
@@ -163,12 +147,8 @@
     <div class="jxxt_studentL">
         <p class="font-darkblue f_right"><a href="" target="_blank" id="task_performance"><span class="ico37"></span>任务完成统计</a>&nbsp;&nbsp;<a href="javascript:;" onclick="location.href='clsperformance?m=toAwardStaticesScore&subjectid='+subjectid.value+'&classid='+_clsid;" target="_blank" ><span class="ico66"></span>课程积分</a></p>
         <div class="banji" id="dv_banji">
-            <p class="font-black"><span id="current_banji">高一天天向上好好学班</span><a href="javascript:;" onclick="autoShowObjById('stuClasses')" class="ico49a"></a></p>
+            <p class="font-black"><span id="current_banji"></span><a href="javascript:;" onclick="autoShowObjById('stuClasses')" class="ico49a"></a></p>
             <ul class="banji hide" id="stuClasses">
-                <li><a href="1">高一语文学习班高一语文学习班</a></li>
-                <li><a href="1">高一英语</a></li>
-                <li><a href="1">高二数学</a></li>
-                <li><a href="1">高一通用技术</a></li>
             </ul></div>
 
         <%--<table border="0" cellspacing="0" cellpadding="0" class="public_tab1">--%>

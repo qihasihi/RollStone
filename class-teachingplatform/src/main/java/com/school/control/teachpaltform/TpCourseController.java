@@ -369,6 +369,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String month=request.getParameter("month");
         String subjectid=request.getParameter("subjectid");
         String gradeid=request.getParameter("gradeid");
+        String clsid=request.getParameter("classid");
 
         if(year==null||month==null||year.trim().length()<1||month.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -390,8 +391,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             return;
         }
 
-        List<Map<String,Object>>courseCalendarList=this.tpCourseManager.getCourseCalendar(usertype,this.logined(request).getUserid(),
-                this.logined(request).getDcschoolid(),year,month,gradeid,subjectid);
+        List<Map<String,Object>>courseCalendarList=this.tpCourseManager.getCourseCalendar(usertype, this.logined(request).getUserid(),
+                this.logined(request).getDcschoolid(), year, month, gradeid, subjectid, (clsid == null ? null : Integer.parseInt(clsid)));
 
         je.setType("success");
         je.setObjList(courseCalendarList);
@@ -1186,6 +1187,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 cls.setClassid(tcu.getClassid());
                 cls.setClassname(tcu.getClassname());
                 cls.setClassgrade(tcu.getClassgrade());
+                cls.setGradeid(tcu.getClassinfo().getGradeid());
                 boolean ishas=false;
                 if(!clsList.contains(cls)){
                     clsList.add(cls);
@@ -2667,6 +2669,57 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         PageResult presult = this.getPageResultParameter(request);
         List<TpCourseInfo> courseList = this.tpCourseManager.getTchCourseList(
                 tcInfo, presult);
+        if(courseList!=null&&courseList.size()>0){
+            for(TpCourseInfo tctmp:courseList){
+                if(tctmp!=null){
+                    if(tctmp.getClassesid()!=null&&tctmp.getClassesid().toString().trim().length()>0){
+                        String[] clsidArray=tctmp.getClassesid().toString().split(",");
+                        if(clsidArray.length<1)
+                            continue;
+                        for (String clsid:clsidArray){
+                            if(clsid!=null&&clsid.trim().length()>0){
+                                List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(Integer.parseInt(clsid.trim()),tctmp.getSubjectid(),tctmp.getCourseid()+"",null,1);
+                                if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
+                                    for(Map<String,Object> csOMap:courseScoreIsOverList){
+                                        if(csOMap!=null&&csOMap.containsKey("STUSCORECOUNT")&&csOMap.containsKey("GROUPCOUNT")
+                                                &&csOMap.containsKey("COURSE_ID")){
+                                            String tcid=csOMap.get("COURSE_ID")!=null?csOMap.get("COURSE_ID").toString():null;
+                                            String gCount=csOMap.get("GROUPCOUNT")!=null?csOMap.get("GROUPCOUNT").toString():null;
+                                            String stuScoreCount=csOMap.get("STUSCORECOUNT")!=null?csOMap.get("STUSCORECOUNT").toString():null;
+                                            if(tcid==null||tcid.trim().length()<1
+                                                    ||gCount==null||stuScoreCount==null
+                                                    )continue;
+                                            if(tctmp!=null&&tctmp.getCourseid().toString().equals(tcid)&&(Integer.parseInt(stuScoreCount)==0||Integer.parseInt(gCount)==Integer.parseInt(stuScoreCount))){
+                                                if(tctmp.getCourseScoreIsOverStr()==null||tctmp.getCourseScoreIsOverStr().trim().length()<1)
+                                                     tctmp.setCourseScoreIsOverStr("0");
+                                                else{
+                                                    tctmp.setCourseScoreIsOverStr(tctmp.getCourseScoreIsOverStr()+",0");
+                                                }
+                                                break;
+                                            }else{
+                                                if(tctmp.getCourseScoreIsOverStr()==null||tctmp.getCourseScoreIsOverStr().trim().length()<1)
+                                                    tctmp.setCourseScoreIsOverStr("1");
+                                                else{
+                                                    tctmp.setCourseScoreIsOverStr(tctmp.getCourseScoreIsOverStr()+",1");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    if(tctmp.getCourseScoreIsOverStr()==null||tctmp.getCourseScoreIsOverStr().trim().length()<1)
+                                        tctmp.setCourseScoreIsOverStr("1");
+                                    else{
+                                        tctmp.setCourseScoreIsOverStr(tctmp.getCourseScoreIsOverStr()+",1");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+
         ClassUser cu=new ClassUser();
         cu.setSubjectid(Integer.parseInt(subjectid));
         GradeInfo g=new GradeInfo();
@@ -2746,9 +2799,11 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         tcInfo.setSeldate(UtilTool.DateConvertToString(calendar.getTime(), UtilTool.DateType.smollDATE));
 
         Integer usertype=null;
-        if(this.validateRole(request,UtilTool._ROLE_STU_ID))
+        subjectid=tcInfo.getSubjectid()+"";
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
             usertype=1;
-        else if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID))
+            tcInfo.setSubjectid(null);
+        }else if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID))
             usertype=3;
         else if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID))
             usertype=2;
@@ -2758,6 +2813,10 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
+
+
+
+
         tcInfo.setUsertype(usertype);
         TermInfo t=new TermInfo();
         t.setRef(termid);
@@ -2772,6 +2831,99 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         tcInfo.setDcschoolid(this.logined(request).getDcschoolid());
         List<TpCourseInfo> courseList = this.tpCourseManager.getCalanderCourseList(
                 tcInfo, null);
+        String courseids="";
+        //如果是学生或者老师，则查询积分录入情况
+        if(usertype==1||usertype==2){
+            if(courseList!=null&&courseList.size()>0){
+                //组织courseid
+                for (TpCourseInfo tc:courseList){
+                    if(tc!=null&&tc.getCourseid()!=null){
+                        if(courseids.trim().length()>0)
+                            courseids+=",";
+                        courseids+=tc.getCourseid();
+                    }
+                }
+                //计算是否小组组长
+                Integer pro_type=1;
+                if(usertype==1){
+                       for(TpCourseInfo tctmp:courseList){
+
+                           //查找当前班级，学科的登陆人是否是小组组长
+                           TpGroupStudent gs=new TpGroupStudent();
+                           gs.setIsleader(1);
+                           gs.setUserid(this.logined(request).getUserid());
+                           gs.getTpgroupinfo().setSubjectid(tctmp.getSubjectid());
+                           gs.setClassid(tctmp.getClassid());
+                           List<TpGroupStudent> gsList=this.tpGroupStudentManager.getList(gs,null);
+                           //得到小组Id,组织数据进行查询
+                           StringBuilder groupIdStr=new StringBuilder(",");
+                           if(gsList!=null&&gsList.size()>0){
+                               for (TpGroupStudent gsTmp:gsList){
+                                   if(gsTmp!=null&&gsTmp.getGroupid()!=null){
+                                       if(groupIdStr.toString().indexOf("," + gsTmp.getGroupid().toString() + ",")==-1){
+                                           if(groupIdStr.toString().trim().length()>1)
+                                               groupIdStr.append(",");
+                                           groupIdStr.append(gsTmp.getGroupid().toString());
+                                       }
+                                   }
+                               }
+                           }
+
+                           if(groupIdStr.toString().trim().length()>1)
+                               groupIdStr=new StringBuilder(groupIdStr.toString().substring(1));
+                           else
+                               groupIdStr=null;
+                           //说明是该班的小组组长
+                           if(groupIdStr!=null&&groupIdStr.toString().trim().length()>0){
+
+                           List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(tctmp.getClassid(),tctmp.getSubjectid(),courseids,groupIdStr.toString(),2);
+                           if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
+                                for(Map<String,Object> csOMap:courseScoreIsOverList){
+                                    if(csOMap!=null&&csOMap.containsKey("STUSCORECOUNT")&&csOMap.containsKey("GROUPCOUNT")
+                                            &&csOMap.containsKey("COURSE_ID")){
+                                        String tcid=csOMap.get("COURSE_ID")!=null?csOMap.get("COURSE_ID").toString():null;
+                                        String gCount=csOMap.get("GROUPCOUNT")!=null?csOMap.get("GROUPCOUNT").toString():null;
+                                        String stuScoreCount=csOMap.get("STUSCORECOUNT")!=null?csOMap.get("STUSCORECOUNT").toString():null;
+                                        if(tcid==null||tcid.trim().length()<1
+                                                ||gCount==null||stuScoreCount==null
+                                                )continue;
+                                        if(tctmp!=null&&tctmp.getCourseid().toString().equals(tcid)&&(Integer.parseInt(stuScoreCount)==0||Integer.parseInt(gCount)==Integer.parseInt(stuScoreCount))){
+                                            tctmp.setCourseScoreIsOver(0);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }else
+                               tctmp.setCourseScoreIsOver(0);
+                    }
+                }else{
+                    for(TpCourseInfo tctmp:courseList){
+                        if(tctmp!=null){
+                            List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(tctmp.getClassid(),tctmp.getSubjectid(),tctmp.getCourseid()+"",null,1);
+                            if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
+                                for(Map<String,Object> csOMap:courseScoreIsOverList){
+                                    if(csOMap!=null&&csOMap.containsKey("STUSCORECOUNT")&&csOMap.containsKey("GROUPCOUNT")
+                                            &&csOMap.containsKey("COURSE_ID")){
+                                        String tcid=csOMap.get("COURSE_ID")!=null?csOMap.get("COURSE_ID").toString():null;
+                                        String gCount=csOMap.get("GROUPCOUNT")!=null?csOMap.get("GROUPCOUNT").toString():null;
+                                        String stuScoreCount=csOMap.get("STUSCORECOUNT")!=null?csOMap.get("STUSCORECOUNT").toString():null;
+                                        if(tcid==null||tcid.trim().length()<1
+                                                ||gCount==null||stuScoreCount==null
+                                                )continue;
+                                        if(tctmp!=null&&tctmp.getCourseid().toString().equals(tcid)&&(Integer.parseInt(stuScoreCount)==0||Integer.parseInt(gCount)==Integer.parseInt(stuScoreCount))){
+                                            tctmp.setCourseScoreIsOver(0);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }else
+                                tctmp.setCourseScoreIsOver(0);
+                        }
+                    }
+                }
+          }
+        }
 
         je.setObjList(courseList);
         je.setType("success");

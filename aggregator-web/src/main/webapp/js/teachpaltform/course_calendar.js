@@ -95,22 +95,36 @@ function showCalendar(year, month){
     getTchCourseList(year,month,today);
 }
 
-
+/**
+ * 查询日历下的列表 （学生，教师，班主任通用）
+ * @param year
+ * @param month
+ * @param day
+ */
 function getTchCourseList(year,month,day){
     if(typeof year=='undefined'||  month=='undefined'||  day=='undefined')
         return;
     var param={};
-    if(isLession==1&&!isBzr){
+    if(typeof(isLession)!="undefined"&&isLession==1&&!isBzr&&typeof(_clsid)=="undefined"){
         param.gradeid=gradeid;
         param.subjectid=subjectid;
     }
+
+    if(typeof(_clsid)!="undefined"&&!isNaN(_clsid)){
+      //  param.gradeid=gradeid;
+        param.classid=_clsid;
+        if(typeof(subjectid)=="object")
+            param.subjectid=subjectid.value;
+        else
+             param.subjectid=subjectid;
+    }
     param.atermid=termid;
+    if(typeof(termid)=="object"){
+        param.atermid=termid.value;
+    }
     param.year=year;
     param.month=month;
     param.day=day;
-
-
-
 
     $.ajax({
         url:'teachercourse?getCourseCalanedListAjax',
@@ -121,23 +135,45 @@ function getTchCourseList(year,month,day){
             alert('异常错误,系统未响应！');
         },
         success:function(rps){
-            var h='<li>我的课表</li>';
+            var h='';
+            var lessLen=$("#ul_lession").length;
+            if(lessLen>0)
+                h+='<li>我的课表</li>'
             if(rps.objList.length>0){
                 $.each(rps.objList,function(idx,itm){
-                    h+='<li>';
-                    h+='<a  href="group?m=toGroupManager&termid='+itm.termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'&classid='+itm.classid+'">'+itm.classgrade+itm.classname+'</a>&nbsp;&nbsp;';
-                    if(itm.isself>0)
-                        h+='<a href="javascript:genderClick('+itm.courseid+')">'+itm.coursename+'</a>';
-                    else
-                        h+=itm.coursename;
-                    h+='<br>';
-                    h+=itm.datemsg;
-                    h+='</li>';
+                    if(lessLen<1&&typeof(_clsid)!="undefined"){
+                        h+='<p><span class="font-black">'+itm.classgrade+itm.classname+'</span>&nbsp;&nbsp;';
+                        h+='<a href="task?toStuTaskIndex&courseid='+itm.courseid+'" target="_blank">'+itm.coursename+'</a>';
+                        if(itm.courseScoreIsOver==1){
+                                h+='<a href="clsperformance?m=toIndex&courseid='+itm.courseid+'&subjectid='+itm.subjectid+'&termid='+param.atermid+'&classid='+itm.classid+'&classtype=1" target="_blank" class="ico33"></a>';
+                         }
+                        h+='<br>'+itm.datemsg+'</p>';
+                    }else{
+                        h+='<li>';
+                        h+='<a  href="group?m=toGroupManager&termid='+itm.termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'&classid='+itm.classid+'">'+itm.classgrade+itm.classname+'</a>&nbsp;&nbsp;';
+                        if(itm.isself>0)
+                            h+='<a href="javascript:genderClick('+itm.courseid+')">'+itm.coursename+'</a>';
+                        else
+                            h+=itm.coursename;
+                        if(typeof(itm.courseScoreIsOver)!="undefined"&&itm.courseScoreIsOver==1)
+                                h+='<a href="clsperformance?m=toIndex&courseid='+itm.courseid+'&subjectid='+itm.subjectid+'&termid='+param.atermid+'&classid='+itm.classid+'&classtype=1" target="_blank" class="ico33"></a>';
+
+                        h+='<br>';
+                        h+=itm.datemsg;
+                        h+='</li>';
+                    }
+
                 })
             }else{
-                h+='<li>暂无数据!</li>';
+                if(lessLen<1&&typeof(_clsid)!="undefined")
+                    h+='<p>暂无数据!</p>';
+                else
+                    h+='<li>暂无数据!</li>';
             }
-            $("#ul_lession").html(h);
+            if(lessLen<1&&typeof(_clsid)!="undefined")
+                $("#ul_kebiao").html(h);
+            else
+                $("#ul_lession").html(h);
         }
     });
 }
@@ -145,10 +181,19 @@ function getTchCourseList(year,month,day){
 function markCalendar(selYear,selMonth){
     if(!selYear||!selMonth)
         return;
-
+    var p={year:selYear,month:selMonth};
+    if(typeof(subjectid)!="undefined"&&typeof(subjectid)!="object"){
+        p.subjectid=subjectid;
+    }
+    if(typeof(gradeid)!="undefined"){
+        p.gradeid=gradeid;
+    }
+    if(typeof(_clsid)!="undefined"&&!isNaN(_clsid)){
+        p.classid=_clsid;
+    }
     $.ajax({
         url:'teachercourse?markCourseCalendar',
-        data:{year:selYear,month:selMonth,subjectid:subjectid,gradeid:gradeid},
+        data:p,
         type:'post',
         dataType:'json',
         error:function(){
