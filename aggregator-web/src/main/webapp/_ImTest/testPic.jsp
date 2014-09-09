@@ -9,6 +9,7 @@
 <body>
 
 <a id="go"><img src="http://192.168.8.238/sz_school/images/pic13_140704.jpg" width="200" height="100"/></a>
+<a id="got"><img src="http://192.168.8.238/sz_school/images/star05_130423.png" width="200" height="100"/></a>
 <div id="go2" style="display: none;">
 
     <div id="go3">
@@ -102,22 +103,59 @@
                 width:"100%"
 
             });
-            var myOffset = new Object();
-            myOffset.left = 0;
-            myOffset.top = 0;
-            $("#img").offset(myOffset);
-            $("#img").hide();
+
 
             if(isIE())
             {
-                resizeimg($("#img").get(0),w-80,h-80,"http://192.168.8.238/sz_school/images/test.jpg");
                 var myOffset = new Object();
                 myOffset.left = 0;
                 myOffset.top = 0;
                 $("#img").offset(myOffset);
-               $("#img").hide();
+                $("#img").hide();
+                resizeimg($("#img").get(0),w-80,h-80,"http://192.168.8.238/sz_school/images/test.jpg");
+
             }
+                var myOffset = new Object();
+                myOffset.left = 0;
+                myOffset.top = 0;
+                $("#img").offset(myOffset);
+                $("#img").hide();
                 resizeimg($("#img").get(0),w-80,h-80,"http://192.168.8.238/sz_school/images/test.jpg");
         });
+
+
+     $("#got").click(function () {
+         /*属性*/
+         $("#go2").css({"display": "", "position": "absolute",   "top": "0px",
+             "left": "0px", "right": "0px", "bottom": "0px", "background": "black", "visibility": "visible", "filter": "Alpha(opacity=100)"
+         });
+
+         /*高为屏幕的高*/
+         $("#go2").css({
+             height: function () {
+                 return $(document).height();
+             },
+             width:"100%"
+
+         });
+
+
+         if(isIE())
+         {
+             var myOffset = new Object();
+             myOffset.left = 0;
+             myOffset.top = 0;
+             $("#img").offset(myOffset);
+             $("#img").hide();
+             resizeimg($("#img").get(0),w-80,h-80,"http://192.168.8.238/sz_school/images/test1.jpg");
+
+         }
+         var myOffset = new Object();
+         myOffset.left = 0;
+         myOffset.top = 0;
+         $("#img").offset(myOffset);
+         $("#img").hide();
+         resizeimg($("#img").get(0),w-80,h-80,"http://192.168.8.238/sz_school/images/test1.jpg");
+     });
     });
 </script>
