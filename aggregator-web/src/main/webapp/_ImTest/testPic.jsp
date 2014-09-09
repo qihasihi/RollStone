@@ -14,7 +14,7 @@
     <div id="go3">
         <a style="float: right" href="javascript:;" onclick="$(this).parent().parent().hide();">
 
-    <img src="http://192.168.8.238/sz_school/images/close.png" width="40" height="40"/></a>
+    <img src="http://192.168.8.238/sz_school/images/close.png" width="80" height="80"/></a>
      <img id="img"  src=""  />
     <div>
 </div>
@@ -102,7 +102,7 @@
             myOffset.top = 0;
             $("#img").offset(myOffset);
             $("#img").hide();
-                resizeimg($("#img").get(0),w-40,h-40,"http://192.168.8.238/sz_school/images/test1.jpg");
+                resizeimg($("#img").get(0),w-80,h-80,"http://192.168.8.238/sz_school/images/test.jpg");
         });
     });
 </script>
