@@ -203,15 +203,15 @@
                         break;
                     case 7:
                         criteria="";
-                        type="语&nbsp;&nbsp;&nbsp;&nbsp;音";
+                        type="移动端任务&nbsp;&nbsp;&nbsp;";
                         break;
                     case 8:
                         criteria="";
-                        type="图&nbsp;&nbsp;&nbsp;&nbsp;片";
+                        type="移动端任务&nbsp;&nbsp;&nbsp;";
                         break;
                     case 9:
                         criteria="";
-                        type="文&nbsp;&nbsp;&nbsp;&nbsp;字";
+                        type="移动端任务&nbsp;&nbsp;&nbsp;";
                         break;
                     case 10:
                         criteria="";
@@ -334,7 +334,16 @@
                     html+='<a  class="font-blue" target="_blank" href="paper?m=genderZiZhuPaper&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==6&&itm.taskstatus!="1"){
                     html+='<a  class="font-blue target="_blank"" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
+
+                  }else if(itm.tasktype==7){
+                    html+='<a class="font-blue" href="task?m=stuQuesAnserList&taskid='+itm.taskid+'" target="_blank">'+itm.taskobjname+'</a>';
+                }else if(itm.tasktype==8){
+                    html+='<a class="font-blue" href="task?m=stuQuesAnserList&taskid='+itm.taskid+'" target="_blank">'+itm.taskobjname+'</a>';
+                }else if(itm.tasktype==9){
+                    html+='<a class="font-blue" href="task?m=stuQuesAnserList&taskid='+itm.taskid+'" target="_blank">'+itm.taskobjname+'</a>';
+
                 }else if(itm.tasktype==10&&itm.taskstatus!="1"&&itm.taskstatus!="3"){
+
                     html+='<a  class="font-blue" href="#" style="color: blue;">'+itm.taskobjname+'</a>';
                     html+='<a class="lm_ico08" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"></a>';
                 }
@@ -343,10 +352,12 @@
                 html+='</p>';
                 html+='</div>';
                 html+='<div class="text" id="div_task_'+itm.taskid+'" style="display:none;">';
-                html+='<p class="f_right"><a href="javascript:void(0);" onclick="showModel(\'div_suggest_'+itm.taskid+'\')" class="font-darkblue">提建议</a></p>';
+                if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9)  //IM端任务，不要提建议
+                     html+='<p class="f_right"><a href="javascript:void(0);" onclick="showModel(\'div_suggest_'+itm.taskid+'\')" class="font-darkblue">提建议</a></p>';
                 if(itm.tasktype<6)
                     html+='<p><strong>完成标准：</strong><span class="font-black">'+criteria+'</span></p>';
-                html+='<p><strong>任务描述：</strong><span class="width1">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
+                if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9)  //IM端任务，不要任务描述
+                        html+='<p><strong>任务描述：</strong><span class="width1">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
                 if(itm.taskstatus=="1"&&(itm.tasktype==1||itm.tasktype==2))
                     html+='<p class="font-black"><span class="ico33"></span>任务尚未开始，您的作答将不计入任务的统计结果中，请在任务开始之后重新作答！</p>';
                 html+='<table border="0" cellspacing="0" cellpadding="0" class="black" id="tbl_'+itm.taskid+'">';

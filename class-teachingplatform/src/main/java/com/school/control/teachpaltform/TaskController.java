@@ -4231,4 +4231,153 @@ public class TaskController extends BaseController<TpTaskInfo>{
         request.setAttribute("type",type);
         return new ModelAndView("/teachpaltform/task/student/im-task-detail");
     }
+    @RequestMapping(params="m=stuQuesAnserList")
+    public ModelAndView stuToQuesAnswerList(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        String taskid=request.getParameter("taskid");
+        JsonEntity jsonEntity=new JsonEntity();
+        //验证参数
+        if(taskid==null||taskid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        //查找当前班级
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid.trim()));
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
+        if(tkList==null||tkList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        tk=tkList.get(0);
+        Integer questype=Integer.parseInt(tk.getTasktype().toString());
+        if(questype!=7&&questype!=8&&questype!=9){
+            jsonEntity.setMsg("错误，该任务不是移动端任务！只有移动端任务才能进入!");
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        //查询班级
+        List<Map<String,Object>> objMapList=this.tpTaskAllotManager.getTaskAllotBLClassId(Long.parseLong(taskid.trim()),this.logined(request).getUserid());
+        String classid=null;
+        if(objMapList!=null&&objMapList.get(0)!=null&&objMapList.get(0).containsKey("CLASS_ID")){
+            classid=objMapList.get(0).get("CLASS_ID").toString();
+        }
+        if(classid==null||classid.trim().length()<1){
+            jsonEntity.setMsg("错误，班级获取失败!!");
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        mp.put("classid",classid);
+        return new ModelAndView("/teachpaltform/task/im_stu_task",mp);
+    }
+
+    @RequestMapping(params="m=teaQuesAnserList")
+    public ModelAndView teaToQuesAnswerList(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        String taskid=request.getParameter("taskid");
+        JsonEntity jsonEntity=new JsonEntity();
+        //验证参数
+        if(taskid==null||taskid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        //查找当前班级
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid.trim()));
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
+        if(tkList==null||tkList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        tk=tkList.get(0);
+        Integer questype=Integer.parseInt(tk.getTasktype().toString());
+        if(questype!=7&&questype!=8&&questype!=9){
+            jsonEntity.setMsg("错误，该任务不是移动端任务！只有移动端任务才能进入!");
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        //查询班级
+        List<ClassInfo> clsList=new ArrayList<ClassInfo>();
+        //查询当前任务发送的对象
+        TpTaskAllotInfo tpTaskAllotInfo = new TpTaskAllotInfo();
+        tpTaskAllotInfo.setTaskid(Long.parseLong(taskid));
+        List<TpTaskAllotInfo> tpTaskAllotInfoList = this.tpTaskAllotManager.getList(tpTaskAllotInfo,null);
+        for(TpTaskAllotInfo obj:tpTaskAllotInfoList){
+            if(obj.getUsertype()==0){
+                    ClassInfo cls=new ClassInfo();
+                    cls.setClassid(obj.getUsertypeid().intValue());
+                    List<ClassInfo> clstmpList=this.classManager.getList(cls,null);
+                    if(clstmpList!=null&&clstmpList.size()>0)
+                            clsList.add(clstmpList.get(0));
+
+            }else if(obj.getUsertype()==2){
+                //首先查询当前传入的班级下的小组
+                TpGroupInfo tpGroupInfo = new TpGroupInfo();
+                tpGroupInfo.setGroupid(obj.getUsertypeid());
+                List<TpGroupInfo> tpGroupInfoList=this.tpGroupManager.getList(tpGroupInfo,null);
+                if(tpGroupInfoList!=null&&tpGroupInfoList.size()>0){
+                    ClassInfo cls=new ClassInfo();
+                    cls.setClassid(tpGroupInfoList.get(0).getClassid());
+                    List<ClassInfo> clstmpList=this.classManager.getList(cls,null);
+                    if(clstmpList!=null&&clstmpList.size()>0&&!clstmpList.contains(clstmpList.get(0)))
+                        clsList.add(clstmpList.get(0));
+                }
+            }
+        }
+        mp.put("clsList",clsList);
+        return new ModelAndView("/teachpaltform/task/im_tea_task",mp);
+    }
+
+    /**
+     * IM端任务，进入学生回答列表
+     * @return
+     */
+    @RequestMapping(params = "m=toAnswerList")
+    public ModelAndView toQuesAserList(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        String clsid=request.getParameter("classid");
+        String taskid=request.getParameter("taskid");
+        JsonEntity jsonEntity=new JsonEntity();
+        //验证参数
+        if(taskid==null||taskid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        if(clsid==null){
+            TpTaskAllotInfo tpallot=new TpTaskAllotInfo();
+            tpallot.setTaskid(Long.parseLong(taskid));
+            List<TpTaskAllotInfo> tpallotList=this.tpTaskAllotManager.getList(tpallot,null);
+            if(tpallotList==null||tpallotList.size()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+            tpallot=tpallotList.get(0);
+            if(tpallot.getUsertype()==0){
+                clsid=tpallot.getUsertypeid()+"";
+            }else if(tpallot.getUsertype()==2){
+                TpGroupInfo tg=new TpGroupInfo();
+                tg.setGroupid(tpallot.getUsertypeid());
+                List<TpGroupInfo> tgList=this.tpGroupManager.getList(tg,null);
+                if(tgList==null||tgList.size()>0){
+                    jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                    response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+                }
+                clsid=tgList.get(0).getClassid()+"";
+            }
+        }
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid.trim()));
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
+        if(tkList==null||tkList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        tk=tkList.get(0);
+        Integer questype=Integer.parseInt(tk.getTasktype().toString());
+        if(questype!=7&&questype!=8&&questype!=9){
+            jsonEntity.setMsg("错误，该任务不是移动端任务！只有移动端任务才能进入!");
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        QuestionAnswer qa=new QuestionAnswer();
+        qa.setClassid(Integer.parseInt(clsid));
+        qa.setTaskid(Long.parseLong(taskid.trim()));
+        List<QuestionAnswer> qaList=this.questionAnswerManager.getList(qa,null);
+        mp.put("qaList",qaList);
+        mp.put("tk",tk);
+        return new ModelAndView("/teachpaltform/task/im_task_detail",mp);
+    }
 }

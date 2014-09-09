@@ -146,6 +146,22 @@ public class TpTaskInfo implements Serializable {
         this.orderidx = orderidx;
     }
 
+    public List<String> getImtaskattachList(){
+        List<String> returnList=new ArrayList<String>();
+        if(this.imtaskattach!=null&&this.imtaskattach.trim().length()>0){
+           String imattach=this.imtaskattach.replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
+            String[] attachUrlArr=imattach.split(",");
+            if(attachUrlArr!=null&&attachUrlArr.length>0){
+                for (String url:attachUrlArr){
+                    if(url!=null&&url.trim().length()>0){
+                        returnList.add(url);
+                    }
+                }
+            }
+        }
+        return returnList;
+    }
+
     private Object totalcount;  //任务总人数
     private Object stucount;    //已做人数
 
@@ -367,6 +383,8 @@ public class TpTaskInfo implements Serializable {
     private Object btime;
     private Object etime;
 
+
+
     public Object getBtime() {
         return btime;
     }
@@ -419,6 +437,9 @@ public class TpTaskInfo implements Serializable {
             case 4:tasktype="成卷测试";break;
             case 5:tasktype="自主测试";break;
             case 6:tasktype="微课程学习";break;
+            case 7:tasktype="移动端任务";break;
+            case 8:tasktype="移动端任务";break;
+            case 9:tasktype="移动端任务";break;
         }
         return  tasktype;
     }

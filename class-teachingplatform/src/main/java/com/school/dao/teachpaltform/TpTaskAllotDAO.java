@@ -188,24 +188,40 @@ public class TpTaskAllotDAO extends CommonDAO<TpTaskAllotInfo> implements ITpTas
 		return objList;
 	}
 
-	public List<Object> getDeleteSql(TpTaskAllotInfo tptaskallotinfo, StringBuilder sqlbuilder) {
-		if(tptaskallotinfo==null || sqlbuilder==null)
-			return null;
-		sqlbuilder.append("{CALL tp_task_allot_info_proc_delete(");
-		List<Object>objList = new ArrayList<Object>();
-			if (tptaskallotinfo.getTaskid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskallotinfo.getTaskid());
-			} else
-				sqlbuilder.append("null,");
-			if (tptaskallotinfo.getCourseid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskallotinfo.getCourseid());
-			} else
-				sqlbuilder.append("null,");
-		sqlbuilder.append("?)}");
-		return objList;
-	}
+    public List<Object> getDeleteSql(TpTaskAllotInfo tptaskallotinfo, StringBuilder sqlbuilder) {
+        if(tptaskallotinfo==null || sqlbuilder==null)
+            return null;
+        sqlbuilder.append("{CALL tp_task_allot_info_proc_delete(");
+        List<Object>objList = new ArrayList<Object>();
+        if (tptaskallotinfo.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskallotinfo.getTaskid());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskallotinfo.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskallotinfo.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        sqlbuilder.append("?)}");
+        return objList;
+    }
+
+    /**
+     * 根据任务和人，查班级
+     * @param taskid
+     * @param userid
+     * @return
+     */
+    public List<Map<String,Object>> getTaskAllotBLClassId(final Long taskid,final Integer userid) {
+        if(taskid==null || userid==null)
+            return null;
+        String sql="{CALL tp_task_allot_gl_classid(?,?)}";
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(taskid);
+        objList.add(userid);
+        return this.executeResultListMap_PROC(sql,objList);
+    }
 
 	public List<Object> getUpdateSql(TpTaskAllotInfo tptaskallotinfo, StringBuilder sqlbuilder) {
 		if(tptaskallotinfo==null||sqlbuilder==null)

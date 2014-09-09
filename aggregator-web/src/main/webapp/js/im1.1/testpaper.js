@@ -998,11 +998,17 @@ TestPaperDetail.prototype.loadQues=function(){
                                             ch+='<img src="imapi1_1?m=makeImImg&w=160&h=90&p='+zq+'"/>';
                                         }else if(zm.attachType==2){
 //                                            ch+='<img src="m=makeImImg&w=160&h=90&p='+zq+'"/>';
+//                                            var mp3H='<a href="javascript:;" id="mp3_a_'+parentQuesObj.questionid+'"><img src="images/pic05_140722.png" alt="听力"/></a>' ;
+//                                            mp3H+='<span  style="display:none">' ;
+                                            ch+='<audio controls="controls">'; //id="mp3_'+quesObj.questionid+'"
+                                            ch+='<source src="'+mp3url+'" type="audio/ogg">';
+                                            ch+='<source src="'+mp3url+'" type="audio/mpeg">';
+                                            ch+='您的浏览器不支持 audio 标签。';
+                                            ch+='</audio>';
+//                                            mp3H+='</span>';
                                         }
                                         ch+='</p>';
                                     });
-
-                                }else if(typeof(zm.annexName!="undefined")){
 
                                 }
                                 ch+='</div>';

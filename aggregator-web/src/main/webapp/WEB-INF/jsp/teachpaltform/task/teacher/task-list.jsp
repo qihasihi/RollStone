@@ -121,15 +121,15 @@ function getInvestReturnMethod(rps){
                     break;
                 case 7:
                     criteria="";
-                    type="语&nbsp;&nbsp;&nbsp;&nbsp;音&nbsp;&nbsp;&nbsp;&nbsp;";
+                    type="移动端任务&nbsp;&nbsp;&nbsp;";
                     break;
                 case 8:
                     criteria="";
-                    type="图&nbsp;&nbsp;&nbsp;&nbsp;片&nbsp;&nbsp;&nbsp;&nbsp;";
+                    type="移动端任务&nbsp;&nbsp;&nbsp;";
                     break;
                 case 9:
                     criteria="";
-                    type="文&nbsp;&nbsp;&nbsp;&nbsp;字&nbsp;&nbsp;&nbsp;&nbsp;";
+                    type="移动端任务&nbsp;&nbsp;&nbsp;";
                     break;
                 case 10:
                     criteria="";
@@ -179,7 +179,15 @@ function getInvestReturnMethod(rps){
                // html+='<a href="#" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==6){
                 html+='<a class="font-blue" href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >'+taskObj+'</a>';
+
+            }else if(itm.tasktype==7){
+                html+='<a class="font-blue" href="task?m=teaQuesAnserList&task='+itm.taskid+'" target="_blank">'+taskObj+'</a>';
+            }else if(itm.tasktype==8){
+                html+='<a class="font-blue" href="task?m=teaQuesAnserList&task='+itm.taskid+'" target="_blank">'+taskObj+'</a>';
+            }else if(itm.tasktype==9){
+                html+='<a class="font-blue" href="task?m=teaQuesAnserList&task='+itm.taskid+'"target="_blank" >'+taskObj+'</a>';
             }else if(itm.tasktype==10&&itm.taskstatus!="3"&&itm.taskstatus!="1"){
+
                 html+='<a class="font-blue" href="#" >'+taskObj+'</a>';
                 html+='<a class="lm_ico08" title="直播课" href="'+itm.liveaddress+'"></a>';
             }
@@ -189,11 +197,13 @@ function getInvestReturnMethod(rps){
             html+='</p>';
             html+='</div>';
             html+='<div id="div_task_'+itm.taskid+'" style="display:none;"  class="text">';
+            if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9)
             html+='<p class="f_right"><a href="task?m=toTaskSuggestList&courseid='+courseid+'&taskid='+itm.taskid+'" target="_blank" class="font-darkblue">学生建议</a></p>';
             html+='<p class="time" id="p_obj_'+itm.taskid+'"></p>';//<strong>任务对象：</strong>
             if(itm.tasktype<6)
                 html+='<p><strong>完成标准：</strong> '+criteria+'</p>';
-            html+='<p><strong>任务描述：</strong><span  style="color:#000000;">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';//class="width"
+            if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9)
+                html+='<p><strong>任务描述：</strong><span  style="color:#000000;">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';//class="width"
             html+='<table border="0" cellspacing="0" cellpadding="0" class="black">';
             html+='<col class="w50"/>'
             html+='<col class="w750"/>';

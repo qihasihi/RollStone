@@ -1,6 +1,8 @@
 package com.school.entity.teachpaltform;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.school.entity.UserInfo;
 import com.school.util.UtilTool;
@@ -23,6 +25,15 @@ public class QuestionAnswer  implements java.io.Serializable{
     private Long groupid;
     private String replyattach;
     private Integer replyattachtype;
+    private Integer classid;
+
+    public Integer getClassid() {
+        return classid;
+    }
+
+    public void setClassid(Integer classid) {
+        this.classid = classid;
+    }
 
     public String getReplyattach() {
         return replyattach;
@@ -216,7 +227,21 @@ public class QuestionAnswer  implements java.io.Serializable{
 	public void setUserinfo(UserInfo userinfo) {
 		this.userinfo = userinfo;
 	}
-
+    public List<String> getImtaskattachList(){
+        List<String> returnList=new ArrayList<String>();
+        if(this.replyattach!=null&&this.replyattach.trim().length()>0){
+            String imattach=this.replyattach.replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
+            String[] attachUrlArr=imattach.split(",");
+            if(attachUrlArr!=null&&attachUrlArr.length>0){
+                for (String url:attachUrlArr){
+                    if(url!=null&&url.trim().length()>0){
+                        returnList.add(url);
+                    }
+                }
+            }
+        }
+        return returnList;
+    }
 
 	
 	public String getCtimeString(){

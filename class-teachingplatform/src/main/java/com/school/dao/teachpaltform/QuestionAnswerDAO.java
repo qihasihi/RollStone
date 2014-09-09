@@ -97,11 +97,16 @@ public class QuestionAnswerDAO extends CommonDAO<QuestionAnswer> implements IQue
 			objList.add(questionanswer.getTasktype());
 		} else
 			sqlbuilder.append("null,");
-		if (questionanswer.getRightanswer() != null) {
-			sqlbuilder.append("?,");
-			objList.add(questionanswer.getRightanswer());
-		} else
-			sqlbuilder.append("null,");
+        if (questionanswer.getRightanswer() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questionanswer.getRightanswer());
+        } else
+            sqlbuilder.append("null,");
+        if (questionanswer.getClassid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(questionanswer.getClassid());
+        } else
+            sqlbuilder.append("null,");
 		
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");

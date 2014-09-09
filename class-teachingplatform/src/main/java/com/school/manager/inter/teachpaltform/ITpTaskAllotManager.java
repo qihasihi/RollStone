@@ -24,4 +24,11 @@ public interface ITpTaskAllotManager  extends IBaseManager<TpTaskAllotInfo> {
      * @return
      */
     public boolean getYXTkCount(TpTaskAllotInfo entity);
+    /**
+     * 根据任务和人，查班级
+     * @param taskid
+     * @param userid
+     * @return
+     */
+    public List<Map<String,Object>> getTaskAllotBLClassId(final Long taskid,final Integer userid);
 }
