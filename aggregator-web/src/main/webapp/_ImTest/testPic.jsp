@@ -29,7 +29,12 @@
 
 
 <script type="text/javascript">
-
+    function isIE() { //ie?
+        if (!!window.ActiveXObject || "ActiveXObject" in window)
+            return true;
+        else
+            return false;
+    }
     function resizeimg(ImgD, iwidth, iheight,imPicSrc) {
         var image = new Image();
         ImgD.src=imPicSrc;
@@ -79,7 +84,7 @@
          myOffset.top = positionY;
          $("#img").offset(myOffset);
             $('#img').show();
-    },300);
+    },100);
  }
 
  $(document).ready(function () {
@@ -102,6 +107,12 @@
             myOffset.top = 0;
             $("#img").offset(myOffset);
             $("#img").hide();
+
+            if(isIE())
+            {
+                resizeimg($("#img").get(0),w-80,h-80,"http://192.168.8.238/sz_school/images/test.jpg");
+               $("#img").hide();
+            }
                 resizeimg($("#img").get(0),w-80,h-80,"http://192.168.8.238/sz_school/images/test.jpg");
         });
     });
