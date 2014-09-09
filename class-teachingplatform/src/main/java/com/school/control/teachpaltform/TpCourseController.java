@@ -1,5 +1,6 @@
 package com.school.control.teachpaltform;
 
+import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
 import com.school.entity.*;
 
@@ -25,6 +26,7 @@ import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1026,6 +1028,50 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 courseids+=stucourseList.get(i).getCourseid();
                 if(i<stucourseList.size()-1)
                     courseids+=",";
+
+
+                //直播课连接
+                if(stucourseList.get(i).getIslive()!=null&&Integer.parseInt(stucourseList.get(i).getIslive().toString())>0){
+                    PageResult p=this.getPageResultParameter(request);
+                    p.setOrderBy("t.order_idx desc ");
+                    p.setPageSize(0);
+                    p.setPageNo(0);
+                    TpTaskInfo t=new TpTaskInfo();
+                    t.setCourseid(stucourseList.get(i).getCourseid());
+                    t.setUserid(this.logined(request).getUserid());
+                    // 学生任务
+                    List<TpTaskInfo>taskList=this.tpTaskManager.getListbyStu(t, p);
+                    if(taskList!=null&&taskList.size()>0){
+                        for(TpTaskInfo tmpTask:taskList){
+                            if(tmpTask.getTaskstatus()!="3"&&tmpTask.getTaskstatus()!="1"){
+                                String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
+                                HashMap<String,String> signMap = new HashMap();
+                                signMap.put("courseName",tmpTask.getCoursename());
+                                signMap.put("courseId",tmpTask.getTaskid().toString().replace("-",""));
+                                signMap.put("userId",this.logined(request).getUserid().toString());
+                                signMap.put("userName",this.logined(request).getUsername());
+                                signMap.put("rec","3");
+                                signMap.put("srcId","90");
+                                signMap.put("timestamp",System.currentTimeMillis()+"");
+                                String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
+                                signMap.put("sign",signture);
+                                JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                                int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                                if(type==1){
+                                    String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
+                                    if(liveurl!=null&&liveurl.trim().length()>0){
+                                        stucourseList.get(i).setLiveaddress(java.net.URLDecoder.decode(liveurl, "UTF-8"));
+                                        stucourseList.get(i).setTaskid(tmpTask.getTaskid());
+                                    }
+
+                                }
+                                break;
+                            }
+                        }
+                    }
+                } 
+                
+
             }
             //计算任务数量
             List<Map<String,Object>> performanceListNum=this.taskPerformanceManager.getStuSelfPerformanceNum(this.logined(request).getUserid(),courseids,1,termid,Integer.parseInt(subjectid));
@@ -2711,6 +2757,39 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                     else{
                                         tctmp.setCourseScoreIsOverStr(tctmp.getCourseScoreIsOverStr()+",1");
                                     }
+                                }
+                            }
+                        }
+                    }
+
+                    //直播课连接
+                    if(tctmp.getIslive()!=null&&Integer.parseInt(tctmp.getIslive().toString())>0){
+                        TpTaskInfo liveTask=new TpTaskInfo();
+                        liveTask.setCourseid(tctmp.getCourseid());
+                        liveTask.setTasktype(10);
+                        List<TpTaskInfo>liveTaskList=this.tpTaskManager.getTaskReleaseList(liveTask,null);
+                        if(liveTaskList!=null&&liveTaskList.size()>0){
+                            for(TpTaskInfo tmpTask:liveTaskList){
+                                if(tmpTask.getTaskstatus()!="3"&&tmpTask.getTaskstatus()!="1"){
+                                    String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
+                                    HashMap<String,String> signMap = new HashMap();
+                                    signMap.put("courseName",tctmp.getCoursename());
+                                    signMap.put("courseId",tmpTask.getTaskid().toString().replace("-",""));
+                                    signMap.put("userId",this.logined(request).getUserid().toString());
+                                    signMap.put("userName",this.logined(request).getUsername());
+                                    signMap.put("rec","2");
+                                    signMap.put("srcId","90");
+                                    signMap.put("timestamp",System.currentTimeMillis()+"");
+                                    String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
+                                    signMap.put("sign",signture);
+                                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                                    if(type==1){
+                                        String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
+                                        if(liveurl!=null&&liveurl.trim().length()>0)
+                                            tctmp.setLiveaddress(java.net.URLDecoder.decode(liveurl,"UTF-8"));
+                                    }
+                                    break;
                                 }
                             }
                         }

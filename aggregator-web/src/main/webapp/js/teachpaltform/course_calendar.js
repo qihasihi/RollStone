@@ -88,7 +88,7 @@ function showCalendar(year, month){
     var today=new Date().getDate();
     today=today<10?"0"+today:today;
     tmonth=tmonth<10?"0"+tmonth:tmonth;
-    if(tyear==year&&tmonth==month)
+    if(tyear==year&&parseInt(tmonth)==parseInt(month))
         $("#date_"+today).addClass('crumb');
     else
         today=1;

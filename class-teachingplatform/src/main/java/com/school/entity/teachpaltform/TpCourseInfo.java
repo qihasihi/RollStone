@@ -9,6 +9,34 @@ import java.util.*;
 
 @Entity
 public class TpCourseInfo  implements java.io.Serializable{
+    private Object islive;
+    private Long taskid;
+
+    public Long getTaskid() {
+        return taskid;
+    }
+
+    public void setTaskid(Long taskid) {
+        this.taskid = taskid;
+    }
+
+    public Object getIslive() {
+        return islive;
+    }
+
+    public void setIslive(Object islive) {
+        this.islive = islive;
+    }
+
+    private String liveaddress;
+
+    public String getLiveaddress() {
+        return liveaddress;
+    }
+
+    public void setLiveaddress(String liveaddress) {
+        this.liveaddress = liveaddress;
+    }
 
     private Object datemsg;
     private Integer courseScoreIsOver=1;
@@ -69,6 +97,9 @@ public class TpCourseInfo  implements java.io.Serializable{
     public void setCoursetotalscore(Integer coursetotalscore) {
         this.coursetotalscore = coursetotalscore;
     }
+
+
+
 
     private java.lang.String schoolname;
     private java.util.Date ctime;

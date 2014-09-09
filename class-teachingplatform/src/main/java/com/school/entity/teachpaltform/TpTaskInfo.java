@@ -13,7 +13,8 @@ import java.util.List;
 public class TpTaskInfo implements Serializable {
 
     public void TpTaskInfo (){}
-
+    private String liveaddress;
+    private String coursename;
     private java.lang.String taskname;
     private Long taskvalueid;
     private Date ctime;
@@ -36,6 +37,24 @@ public class TpTaskInfo implements Serializable {
     private Object isend;
     private String imtaskanalysis;
     private Integer imtaskattachtype;
+
+
+    public String getLiveaddress() {
+        return liveaddress;
+    }
+
+    public void setLiveaddress(String liveaddress) {
+        this.liveaddress = liveaddress;
+    }
+
+    public String getCoursename() {
+        return coursename;
+    }
+
+    public void setCoursename(String coursename) {
+        this.coursename = coursename;
+    }
+
 
     public Integer getImtaskattachtype() {
         return imtaskattachtype;

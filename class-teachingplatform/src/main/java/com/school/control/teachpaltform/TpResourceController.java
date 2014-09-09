@@ -1202,6 +1202,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         tt.setCourseid(Long.parseLong(courseid));
         tt.setUserid(this.logined(request).getUserid());
         //tt.setSubjectid(subjectid);
+        tt.setLocalstatus(1);
         List<TpCourseInfo>courseList=this.tpCourseManager.getStuCourseList(tt, null);
         if(courseList!=null&&courseList.size()>0)
             request.setAttribute("coursename", courseList.get(0).getCoursename());

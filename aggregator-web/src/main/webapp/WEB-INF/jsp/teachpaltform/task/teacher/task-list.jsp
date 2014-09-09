@@ -179,8 +179,9 @@ function getInvestReturnMethod(rps){
                // html+='<a href="#" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==6){
                 html+='<a class="font-blue" href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >'+taskObj+'</a>';
-            }else if(itm.tasktype==10){
+            }else if(itm.tasktype==10&&itm.taskstatus!="3"&&itm.taskstatus!="1"){
                 html+='<a class="font-blue" href="#" >'+taskObj+'</a>';
+                html+='<a class="lm_ico08" title="直播课" href="'+itm.liveaddress+'"></a>';
             }
             if(itm.tasktype==4&&itm.isend>0){
                 html+='<a class="ico84" title="批阅" target="_blank" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';

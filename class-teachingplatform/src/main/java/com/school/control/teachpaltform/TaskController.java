@@ -270,6 +270,31 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
         //已发布的任务
         List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t, p);
+         if(taskList!=null&&taskList.size()>0){
+             for(TpTaskInfo task:taskList){
+                 if(task.getTasktype().toString().equals("10")&&(task.getTaskstatus()!="3" && task.getTaskstatus()!="1")){
+                     String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
+                     String lessionid=task.getTaskid().toString().replace("-","");
+                     HashMap<String,String> signMap = new HashMap();
+                     signMap.put("courseName",task.getCoursename().toString());
+                     signMap.put("courseId",lessionid);
+                     signMap.put("userId",this.logined(request).getUserid().toString());
+                     signMap.put("userName",this.logined(request).getUsername());
+                     signMap.put("rec","2");
+                     signMap.put("srcId","90");
+                     signMap.put("timestamp",System.currentTimeMillis()+"");
+                     String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
+                     signMap.put("sign",signture);
+                     JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                     int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                     if(type==1){
+                         String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
+                         if(liveurl!=null&&liveurl.trim().length()>0)
+                             task.setLiveaddress(java.net.URLDecoder.decode(liveurl,"UTF-8"));
+                     }
+                 }
+             }
+         }
         p.setList(taskList);
         je.setPresult(p);
         je.setType("success");
@@ -489,6 +514,28 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     tt.setCourseid(task.getCourseid());
                     List<TpTopicThemeInfo>tpTopicThemeInfoList=this.tpTopicThemeManager.getList(tt,null);
                     task.setTpTopicThemeInfoList(tpTopicThemeInfoList);
+                }else if(task.getTasktype()==10){
+                    if(task.getTaskstatus()!="3" && task.getTaskstatus()!="1"){
+                        String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
+                        String lessionid=task.getTaskid().toString().replace("-","");
+                        HashMap<String,String> signMap = new HashMap();
+                        signMap.put("courseName",task.getCoursename().toString());
+                        signMap.put("courseId",lessionid);
+                        signMap.put("userId",this.logined(request).getUserid().toString());
+                        signMap.put("userName",this.logined(request).getUsername());
+                        signMap.put("rec","3");
+                        signMap.put("srcId","90");
+                        signMap.put("timestamp",System.currentTimeMillis()+"");
+                        String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
+                        signMap.put("sign",signture);
+                        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                        if(type==1){
+                            String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
+                            if(liveurl!=null&&liveurl.trim().length()>0)
+                                task.setLiveaddress(java.net.URLDecoder.decode(liveurl,"UTF-8"));
+                        }
+                    }
                 }
                 //获取答题记录和心得
                 QuestionAnswer qa=new QuestionAnswer();
@@ -2943,6 +2990,115 @@ public class TaskController extends BaseController<TpTaskInfo>{
             response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
         }
     }
+
+
+    /**
+     * 添加直播课记录
+     * @throws Exception
+     */
+    @RequestMapping(params="doAddLiveLessionRecord",method=RequestMethod.POST)
+    public void doAddLiveLessionRecord(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String tasktype=request.getParameter("tasktype");
+        String taskid=request.getParameter("taskid");
+        String liveaddress=request.getParameter("liveaddress");
+
+        if(liveaddress==null||liveaddress.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(tasktype==null||tasktype.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        //检测是否有查看标准
+        TpTaskInfo t=new TpTaskInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        t.setCriteria(1);
+        List<TpTaskInfo>taskCriList=this.tpTaskManager.getList(t, null);
+
+        TpTaskInfo task=new TpTaskInfo();
+        task.setTaskid(Long.parseLong(taskid));
+        task.setCourseid(Long.parseLong(courseid));
+        task.setTasktype(Integer.parseInt(tasktype));
+        //task.setGroupid(groupid);
+
+        //录入完成状态
+        TaskPerformanceInfo tp=new TaskPerformanceInfo();
+        tp.setTaskid(task.getTaskid());
+        tp.setTasktype(task.getTasktype());
+        tp.setCourseid(task.getCourseid());
+        tp.setCriteria(1);//查看
+        tp.setUserid(this.logined(request).getRef());
+        tp.setIsright(1);
+        List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getList(tp,null);
+        if(taskCriList!=null&&taskCriList.size()>0&&taskCriList.get(0).getTaskstatus()!=null
+                &&!taskCriList.get(0).getTaskstatus().equals("1")&&!taskCriList.get(0).getTaskstatus().equals("3")){
+            if(tList!=null&&tList.size()>0){
+                response.sendRedirect(liveaddress);
+            }else{
+                if(this.taskPerformanceManager.doSave(tp)){
+                       /*奖励加分*/
+                    //得到班级ID
+                    /*
+                    TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                    tallot.setTaskid(Long.parseLong(taskid));
+
+                    tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+                    List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                    if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                            ||clsMapList.get(0).get("CLASS_ID")==null){
+                        je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                        response.getWriter().println(je.toJSON());return ;
+                    }
+
+                    //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                    //规则转换:    6             7         8
+                    Integer type=0;
+                    switch(taskCriList.get(0).getTasktype()){
+                        case 3:     //试题
+                            type=1;break;
+                        case 1:     //资源学习
+                            type=2;break;
+                        case 2:
+                            type=4;
+                            break;
+                    }
+                    String jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid().toString();
+
+
+                    String msg=null;
+                    if(this.tpStuScoreLogsManager.awardStuScore(taskCriList.get(0).getCourseid()
+                            , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                            , taskCriList.get(0).getTaskid()
+                            , Long.parseLong(this.logined(request).getUserid() + ""),jid, type,this.logined(request).getDcschoolid())){
+                        msg="查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)";
+//                        request.getSession().setAttribute("msg",msg);
+                    }else
+                        System.out.println("awardScore err ");
+                    */
+
+                    response.sendRedirect(liveaddress);
+                }else{
+                    je.setMsg("异常错误!添加查看记录失败!请重试!");
+                    response.getWriter().print(je.toJSON());
+                }
+            }
+        }else{
+            response.sendRedirect(liveaddress);
+        }
+    }
+
+
 
 
     /**

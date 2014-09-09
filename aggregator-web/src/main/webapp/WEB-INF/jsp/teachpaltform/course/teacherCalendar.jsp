@@ -110,7 +110,13 @@
                     </span>
                     年
                     <span id="month">
-                        ${fn:split(selTerm.byear,'-')[1]}
+                        <c:if test="${currtTerm.ref eq selTerm.ref}">
+                            <%=new Date().getMonth()+1%>
+                        </c:if>
+
+                        <c:if test="${currtTerm.ref ne selTerm.ref}">
+                            ${fn:split(selTerm.byear,'-')[1]}
+                        </c:if>
                     </span>
                     月
                     <a href="javascript:;" onclick="next()" class="right"></a></h1>

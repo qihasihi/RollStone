@@ -334,8 +334,9 @@
                     html+='<a  class="font-blue" target="_blank" href="paper?m=genderZiZhuPaper&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==6&&itm.taskstatus!="1"){
                     html+='<a  class="font-blue target="_blank"" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
-                }else if(itm.tasktype==10&&itm.taskstatus!="1"){
+                }else if(itm.tasktype==10&&itm.taskstatus!="1"&&itm.taskstatus!="3"){
                     html+='<a  class="font-blue" href="#" style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a class="lm_ico08" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"></a>';
                 }
                 if(typeof itm.iscomplete!='undefined'&&itm.iscomplete>0)
                     html+='&nbsp;&nbsp;&nbsp;<img src="css/images/an06_131126.png" width="49" height="21" align="absmiddle">';

@@ -2946,6 +2946,8 @@ public class UserController extends BaseController<UserInfo> {
                 t.setTeacheraddress(teacheraddress);
             if (user.getBirthdate() != null)
                 t.setTeacherbirth(user.getBirthdate());
+            if (user.getMailaddress() != null)
+                t.setTeacherpost(user.getMailaddress());
 
             sql = new StringBuilder();
             objList = this.teacherManager.getSaveSql(t, sql);

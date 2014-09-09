@@ -26,7 +26,12 @@ function getInvestReturnMethod(rps){
             $.each(rps.presult.list[0],function(idx,itm){
                 html+="<tr "+(idx%2==1?"class='trbg2'":"")+">";
                 html+="<td>"+itm.classEntity[0].CLASS_TIME.substring(0,16)+"</td>";
-                html+="<td><p><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"'>"+itm.coursename+"</a></p></td>";
+                html+="<td><p><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"'>"+itm.coursename+"</a>";
+                if(itm.islive>0){
+                    //html+='<a target="_blank" href="'+itm.liveaddress+'"><b class="lm_ico08" title="直播课"></b></a>';
+                    html+='<a class="lm_ico08"  onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:\'10\',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},true,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"></a>';
+                }
+                html+="</p></td>";
                 html+="<td>"+itm.teachername+"</td>";
                 var uncompleateClass="font-red";
                 if(itm.uncompletenum<1){
