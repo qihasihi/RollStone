@@ -272,7 +272,7 @@ TestPaperQues.prototype.freeSubQuesAnswer=function(direcType){
         //提交数据
         this.subQues(direcType);
     }else{
-        alert('作答成功!');
+        alert('未作答!');
         if(direcType!=-2)
             this.nextNum(direcType);
     }
@@ -426,7 +426,7 @@ TestPaperQues.prototype.loadQues=function(){
         dataType:'json',
         type:'post',
         data:p,
-        error:function(){alert('异常错误，原因：未知!');},
+        error:function(){alert('异常错误!系统未响应!');},
         success:function(rps){
             //失败
             if(rps.type=="error"){
@@ -804,7 +804,7 @@ TestPaperDetail.prototype.loadQues=function(){
         dataType:'json',
         type:'post',
         data:p,
-        error:function(){alert('异常错误，原因：未知!');},
+        error:function(){alert('异常错误!系统未响应!');},
         success:function(rps){
             //失败
             if(rps.type=="error"){

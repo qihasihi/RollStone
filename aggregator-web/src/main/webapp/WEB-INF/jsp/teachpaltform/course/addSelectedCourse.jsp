@@ -280,7 +280,7 @@
                     <!--<option value="0">全部</option>-->
                     <c:forEach var="tm" items="${tmList}">
                         <option value="${tm.materialid}">${tm.materialname}
-                            <c:if test="${!empty tm.versionname}">
+                            <c:if test="${!empty tm.versionname&&tm.versionname!='其它'}">
                                 (${tm.versionname})
                             </c:if>
                         </option>

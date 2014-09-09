@@ -153,7 +153,13 @@ public class ShareTeachingMaterial extends TimerTask {
             }
         }
         if(istrue){
-            System.out.println("更新教材信息成功!");
+           //更新成功后，执行生成其它
+            if(teachingMaterialManager.genderOtherTeacherTeachMaterial()){
+                System.out.println("更新教材信息成功!");
+            }else{
+                System.out.println("更新教材信息失败，原因：生成其它教材失败!");
+            }
+
         }else{
             System.out.println("更新教材信息失败!记录日志");
         }

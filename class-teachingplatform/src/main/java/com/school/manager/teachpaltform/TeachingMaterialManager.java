@@ -83,6 +83,14 @@ public class  TeachingMaterialManager extends BaseManager<TeachingMaterialInfo> 
 		return null;
 	}
 
+    /**
+     * 执行生成教材，版本存储过程。
+     * @return
+     */
+    public Boolean genderOtherTeacherTeachMaterial(){
+        return this.teachingmaterialdao.genderOtherTeacherTeachMaterial();
+    }
+
 	@Override
 	protected ICommonDAO<TeachingMaterialInfo> getBaseDAO() {
 		// TODO Auto-generated method stub

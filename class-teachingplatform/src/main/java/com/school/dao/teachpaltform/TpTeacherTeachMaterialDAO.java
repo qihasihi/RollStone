@@ -56,6 +56,8 @@ public class TpTeacherTeachMaterialDAO extends CommonDAO<TpTeacherTeachMaterial>
         return false;
     }
 
+
+
     @Override
     public List<TpTeacherTeachMaterial> getList(TpTeacherTeachMaterial obj, PageResult presult) {
         StringBuilder sqlbuilder = new StringBuilder();

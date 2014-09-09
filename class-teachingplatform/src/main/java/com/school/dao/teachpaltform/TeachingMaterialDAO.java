@@ -223,6 +223,15 @@ public class TeachingMaterialDAO extends CommonDAO<TeachingMaterialInfo> impleme
 		sqlbuilder.append("?)}");
 		return objList;
 	}
+    /**
+     * 执行生成教材，版本存储过程。
+     * @return
+     */
+    public Boolean genderOtherTeacherTeachMaterial(){
+        StringBuilder sqlbuilder=new StringBuilder("{CALL cal_teach_versionmaterial_gender_other(?)}");
+        List<Object> objList=new ArrayList<Object>();
+        return this.executeQuery_PROC(sqlbuilder.toString(),objList.toArray());
+    }
 
 	public List<Object> getUpdateSql(TeachingMaterialInfo entity, StringBuilder sqlbuilder) {
 		if(entity==null||sqlbuilder==null)

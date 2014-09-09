@@ -732,13 +732,16 @@ function getTchingMaterial(isinit){
                 var html ="";
                 var material_id = $("#material_id").val();
                 $.each(rps.objList,function(idx,itm) {
-                    html+="<li style=\"width:450px;\"><input id='rdo_matid_"+itm.materialid+"' name='materialid' value='"+itm.materialid+"' type='radio' title='"+itm.materialname+"("+itm.versionname+")";
+                    var materialName=itm.materialname+"("+itm.versionname+")";
+                    if(itm.materialname=='其它')
+                        materialName='其它';
+                    html+="<li style=\"width:450px;\"><input id='rdo_matid_"+itm.materialid+"' name='materialid' value='"+itm.materialid+"' type='radio' title='"+materialName;
                     if(material_id!="undefind"&&material_id.length>0){
                         if(material_id==itm.materialid){
                             html+="' checked='checked";
                         }
                     }
-                    html+="' /><label for=\"rdo_matid_"+itm.materialid+"\">"+itm.materialname+"("+itm.versionname+")</label></li>";
+                    html+="' /><label for=\"rdo_matid_"+itm.materialid+"\">"+materialName+"</label></li>";
                 });
                 $("#teaching_materia").html(html);
                 showModel("teaching_materia_div");

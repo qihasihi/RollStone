@@ -115,7 +115,7 @@ function addTeacherCourse(){
         $("#addButton").attr("href","javascript:getTchingMaterial();");
         return;
     }
-    if(materiaids.length<1&&$("#material_id").val==0){
+    if(materiaids.length<1&&$("#material_id").val()==0){
         alert('请选择教材!');
         $("#addButton").attr("href","javascript:getTchingMaterial();");
         return;
@@ -209,6 +209,9 @@ function addTeacherCourse(){
         materialidvalues=$("#materialid").val();
     }
     var material_id=$("input[name='materialid']:checked").val();
+    if(typeof(material_id)=="undefined"){
+        material_id=$("#material_id").val();
+    }
 //    var selectCourseid='';
 //    $("#selectedCourse li").each(function(){
 //        selectCourseid+=$(this).attr("id")+'|';
@@ -459,8 +462,11 @@ function getTchingMaterial(){
                     && rps.objList.length>0){
                     var html ="";
                     $.each(rps.objList,function(idx,itm) {
+                        var materialName=itm.materialname+"("+itm.versionname+")";
+                        if(itm.materialname=='其它')
+                         materialName='其它';
                         html+="<li  style=\"width:450px;\"><input  id='rdo_matid_"+itm.materialid+"' name='materialid' value='"+itm.materialid+"' type='radio' >" +
-                            "<label for=\"rdo_matid_"+itm.materialid+"\">"+itm.materialname+"("+itm.versionname+")</span></td>";
+                            "<label for=\"rdo_matid_"+itm.materialid+"\">"+materialName+")</span></td>";
                     });
                     $("#teaching_materia").html(html);
                     showModel("teaching_materia_div");

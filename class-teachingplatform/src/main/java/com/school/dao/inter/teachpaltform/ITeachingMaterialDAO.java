@@ -4,6 +4,7 @@ package com.school.dao.inter.teachpaltform;
 import com.school.dao.base.ICommonDAO;
 import com.school.entity.teachpaltform.TeachingMaterialInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,4 +23,9 @@ public interface ITeachingMaterialDAO extends ICommonDAO<TeachingMaterialInfo>{
      * @return
      */
     public List<Map<String,Object>> getTeachingMaterialGradeSubByResId(String residstr);
+    /**
+     * 执行生成教材，版本存储过程。
+     * @return
+     */
+    public Boolean genderOtherTeacherTeachMaterial();
 }

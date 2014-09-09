@@ -70,4 +70,5 @@ public class TpTeacherTeachMaterialManager extends BaseManager<TpTeacherTeachMat
     public List<TpTeacherTeachMaterial> getList(TpTeacherTeachMaterial obj, PageResult presult) {
         return tpTeacherTeachMaterialDAO.getList(obj,presult);
     }
+
 }
