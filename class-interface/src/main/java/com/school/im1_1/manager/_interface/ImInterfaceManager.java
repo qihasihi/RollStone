@@ -135,4 +135,9 @@ public class ImInterfaceManager extends BaseManager<ImInterfaceInfo> implements 
     public List<Map<String, Object>> getTaskWatch(Integer userid, Long videoid) {
         return this.imInterfaceDAO.getTaskWatch(userid,videoid);
     }
+
+    @Override
+    public List<Map<String, Object>> getUnCompleteStu(Long taskid, Integer flag, Integer classid,Integer userid) {
+        return this.imInterfaceDAO.getUnCompleteStu(taskid,flag,classid,userid);
+    }
 }

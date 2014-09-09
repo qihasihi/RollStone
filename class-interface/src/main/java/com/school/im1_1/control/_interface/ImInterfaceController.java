@@ -72,7 +72,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
     private ITpStuScoreManager tpStuScoreManager;
     private ITpCourseClassManager tpCourseClassManager;
+    private ITpGroupManager tpGroupManager;
     public ImInterfaceController(){
+        this.tpGroupManager=this.getManager(TpGroupManager.class);
         this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
         this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
         this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
@@ -1399,6 +1401,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             }
                         }else{
                             m.put("OPTION_TYPE",o.getOptiontype());
+                            m.put("CONTENT",o.getContent());
                             m.put("NUM",0);
                         }
                         option.add(m);
@@ -2146,8 +2149,53 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 }
                             }
                         }
+                        //获取未完成任务的人员
+                        List<Map<String,Object>> unCompleteList = new ArrayList<Map<String, Object>>();
+                        Map unComplete = null;
+                        List<Map<String,Object>> stuList = this.imInterfaceManager.getUnCompleteStu(Long.parseLong(taskid),1,Integer.parseInt(classid),userList.get(0).getUserid());
+                        if(stuList!=null&&stuList.size()>0){
+                            StringBuilder jids = new StringBuilder();
+                            jids.append("[");
+                            for(int i = 0;i<stuList.size();i++){
+                                unComplete = new HashMap();
+                                if(stuList.get(i).get("ETT_USER_ID")!=null){
+                                    unComplete.put("jid",Integer.parseInt(stuList.get(i).get("ETT_USER_ID").toString()));
+                                    jids.append("{\"jid\":"+Integer.parseInt(stuList.get(i).get("ETT_USER_ID").toString())+"},");
+                                    unCompleteList.add(unComplete);
+                                }
+                            }
+                            String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+                            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                            HashMap<String,String> signMap = new HashMap();
+                            signMap.put("userList",jidstr);
+                            signMap.put("schoolId",schoolid);
+                            signMap.put("srcJid",userid);
+                            signMap.put("userType","3");
+                            signMap.put("timestamp",""+System.currentTimeMillis());
+                            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+                            signMap.put("sign",signture);
+                            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                            if(type==1){
+                                Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                                JSONArray jr = JSONArray.fromObject(obj);
+                                if(jr!=null&&jr.size()>0){
+                                    for(int i = 0;i<jr.size();i++){
+                                        JSONObject jobj = jr.getJSONObject(i);
+                                        for(int j = 0;j<unCompleteList.size();j++){
+                                            unComplete = new HashMap();
+                                            if(jobj.getInt("jid")==Integer.parseInt(unCompleteList.get(j).get("jid").toString())){
+                                                unCompleteList.get(j).put("uName", jobj.getString("realName"));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         Map m = new HashMap();
                         m.put("replyList",returnUserRecord);
+                        m.put("stuList",unCompleteList);
                         jo.put("data",m);
                     }
                 }
@@ -3931,8 +3979,294 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
     }
 
+    /**
+     * @decription 获取未完成任务学生名单
+     * @author yuechunyang
+     * */
+    @RequestMapping(params="m=getUnCompeteStu",method={RequestMethod.GET,RequestMethod.POST})
+    public void getUnCompleteStu(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result","0");//默认失败
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
+        //获取参数
+        String taskId=paramMap.get("taskId");
+        String jid=paramMap.get("jid");
+        String schoolId=paramMap.get("schoolId");
+        String classid = paramMap.get("classId");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        if(taskId==null||schoolId==null||time==null||sign==null||jid==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //验证时间
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(time.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //去除sign
+        paramMap.remove("sign");
+        //验证Md5
+        Boolean b = UrlSigUtil.verifySigSimple("getUnCompeteStu",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo u=new UserInfo();
+        u.setEttuserid(Integer.parseInt(jid));
+        u.setDcschoolid(Integer.parseInt(schoolId));
+        List<UserInfo>userList=this.userManager.getList(u,null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","当前云帐号未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo tmpUser=userList.get(0);
+        //验证任务 是否存在
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskId.trim()));
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<TpTaskInfo> tpTaskList=this.tpTaskManager.getList(tk,presult);
+        if(tpTaskList==null||tpTaskList.size()<1){
+            returnJo.put("msg","错误，当前任务不存在!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        List<Map<String,Object>> stuList = this.imInterfaceManager.getUnCompleteStu(Long.parseLong(taskId),1,Integer.parseInt(classid),null);
+        if(stuList!=null&&stuList.size()>0){
+            List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
+            Map returnUserMap = null;
+            StringBuilder jids = new StringBuilder();
+            jids.append("[");
+            for(int i = 0;i<stuList.size();i++){
+                returnUserMap = new HashMap();
+                if(stuList.get(i).get("ETT_USER_ID")!=null){
+                    returnUserMap.put("jid",Integer.parseInt(stuList.get(i).get("ETT_USER_ID").toString()));
+                    jids.append("{\"jid\":"+Integer.parseInt(stuList.get(i).get("ETT_USER_ID").toString())+"},");
+                    returnUserRecord.add(returnUserMap);
+                }
+            }
+            String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+            HashMap<String,String> signMap = new HashMap();
+            signMap.put("userList",jidstr);
+            signMap.put("schoolId",schoolId);
+            signMap.put("srcJid",jid);
+            signMap.put("userType","3");
+            signMap.put("timestamp",""+System.currentTimeMillis());
+            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+            signMap.put("sign",signture);
+            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+            if(type==1){
+                Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                JSONArray jr = JSONArray.fromObject(obj);
+                if(jr!=null&&jr.size()>0){
+                    for(int i = 0;i<jr.size();i++){
+                        JSONObject jo = jr.getJSONObject(i);
+                        for(int j = 0;j<returnUserRecord.size();j++){
+                            returnUserMap = new HashMap();
+                            if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                returnUserRecord.get(j).put("uName", jo.getString("realName"));
+                            }
+                        }
+                    }
+                }
+            }
+            Map m = new HashMap();
+            m.put("stuList",returnUserRecord);
+            returnJo.put("data",m);
+            returnJo.put("result","1");
+        }else{
+            returnJo.put("data",null);
+        }
+        response.getWriter().print(returnJo.toString());
+    }
 
+    /**
+     * @decription 获取未完成任务学生名单
+     * @author yuechunyang
+     * */
+    @RequestMapping(params="m=deleteTask",method={RequestMethod.GET,RequestMethod.POST})
+    public void deleteTask(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result","0");//默认失败
+        if(!ImUtilTool.ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> paramMap=ImUtilTool.getRequestParam(request);
+        //获取参数
+        String taskId=paramMap.get("taskId");
+        String jid=paramMap.get("jid");
+        String schoolId=paramMap.get("schoolId");
+        String classid = paramMap.get("classId");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        if(taskId==null||schoolId==null||time==null||sign==null||jid==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //验证时间
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(time.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //去除sign
+        paramMap.remove("sign");
+        //验证Md5
+        Boolean b = UrlSigUtil.verifySigSimple("deleteTask",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo u=new UserInfo();
+        u.setEttuserid(Integer.parseInt(jid));
+        u.setDcschoolid(Integer.parseInt(schoolId));
+        List<UserInfo>userList=this.userManager.getList(u,null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","当前云帐号未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo tmpUser=userList.get(0);
+        //验证任务 是否存在
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskId.trim()));
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<TpTaskInfo> tpTaskList=this.tpTaskManager.getList(tk,presult);
+        if(tpTaskList==null||tpTaskList.size()<1){
+            returnJo.put("msg","错误，当前任务不存在!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        if(!tpTaskList.get(0).getCuserid().equals(userList.get(0).getRef())){
+            returnJo.put("msg","当前用户无删除此任务权限");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //组织批量执行sql的集合
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        //查询当前任务发送的对象
+        TpTaskAllotInfo tpTaskAllotInfo = new TpTaskAllotInfo();
+        tpTaskAllotInfo.setCuserid(userList.get(0).getRef());
+        tpTaskAllotInfo.setTaskid(Long.parseLong(taskId));
+        List<TpTaskAllotInfo> tpTaskAllotInfoList = this.tpTaskAllotManager.getList(tpTaskAllotInfo,null);
+        for(TpTaskAllotInfo obj:tpTaskAllotInfoList){
+            if(obj.getUsertype()==0){
+                if(obj.getUsertypeid()==Long.parseLong(classid)){
+                    if(obj.getBtime().getTime()>System.currentTimeMillis()){
+                        sql = new StringBuilder();
+                        objList = new ArrayList<Object>();
+                        objList = this.tpTaskAllotManager.getDeleteSql(obj,sql);
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }else{
+                        returnJo.put("msg","当前任务已开始，无法删除");
+                        response.getWriter().print(returnJo.toString());
+                        return;
+                    }
+                }
+            }else if(obj.getUsertype()==2){
+                //首先查询当前传入的班级下的小组
+                TpGroupInfo tpGroupInfo = new TpGroupInfo();
+                tpGroupInfo.setClassid(Integer.parseInt(classid));
+                List<TpGroupInfo> tpGroupInfoList=this.tpGroupManager.getList(tpGroupInfo,null);
+                for(TpGroupInfo group:tpGroupInfoList){
+                    if(obj.getUsertypeid()==group.getGroupid()){
+                        if(obj.getBtime().getTime()>System.currentTimeMillis()){
+                            sql = new StringBuilder();
+                            objList = new ArrayList<Object>();
+                            objList = this.tpTaskAllotManager.getDeleteSql(obj,sql);
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }else{
+                            returnJo.put("msg","当前任务已开始，无法删除");
+                            response.getWriter().print(returnJo.toString());
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        //如果发送对象全部删除了，同时删除任务
+        if(sqlListArray.size()==tpTaskAllotInfoList.size()){
+            sql = new StringBuilder();
+            objList = new ArrayList<Object>();
+            objList = this.tpTaskManager.getDeleteSql(tpTaskList.get(0),sql);
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
 
+            //更新任务序号
+            TpTaskInfo tmpTask=tpTaskList.get(0);
+
+            TpTaskInfo sel=new TpTaskInfo();
+            sel.setCourseid(tmpTask.getCourseid());
+            //查询没被我删除的任务
+            sel.setSelecttype(1);
+            sel.setLoginuserid(this.logined(request).getUserid());
+            sel.setStatus(1);
+
+            //1 2 3 4 5
+            //已发布的任务
+            List<TpTaskInfo>taskReleaseList=this.tpTaskManager.getTaskReleaseList(sel, null);
+            Integer orderIdx=tmpTask.getOrderidx();
+            if(taskReleaseList!=null&&taskReleaseList.size()>0){
+                for(TpTaskInfo task:taskReleaseList){
+                    if(task.getOrderidx()!=null){
+                        if(task.getOrderidx()>orderIdx){
+                            TpTaskInfo upd=new TpTaskInfo();
+                            upd.setTaskid(task.getTaskid());
+                            upd.setOrderidx(task.getOrderidx()-1);
+                            sql=new StringBuilder();
+                            objList=this.tpTaskManager.getUpdateSql(upd,sql);
+                            if(sql!=null&&sql.toString().trim().length()>0){
+                                objListArray.add(objList);
+                                sqlListArray.add(sql.toString());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //执行批量删除
+        Boolean bool = this.imInterfaceManager.doExcetueArrayProc(sqlListArray,objListArray);
+        if(bool){
+            returnJo.put("result","1");
+            returnJo.put("msg","删除成功");
+        }
+        response.getWriter().print(returnJo.toString());
+    }
 
 
 
