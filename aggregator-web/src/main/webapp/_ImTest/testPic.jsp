@@ -111,6 +111,10 @@
             if(isIE())
             {
                 resizeimg($("#img").get(0),w-80,h-80,"http://192.168.8.238/sz_school/images/test.jpg");
+                var myOffset = new Object();
+                myOffset.left = 0;
+                myOffset.top = 0;
+                $("#img").offset(myOffset);
                $("#img").hide();
             }
                 resizeimg($("#img").get(0),w-80,h-80,"http://192.168.8.238/sz_school/images/test.jpg");
