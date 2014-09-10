@@ -343,8 +343,7 @@
                     html+='<a class="font-blue" href="task?m=stuQuesAnserList&taskid='+itm.taskid+'" target="_blank">'+itm.taskobjname+'</a>';
 
                 }else if(itm.tasktype==10&&itm.taskstatus!="1"&&itm.taskstatus!="3"){
-
-                    html+='<a  class="font-blue" href="#" style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a  class="font-blue" href="javascript:;" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"   style="color: blue;">'+itm.taskobjname+'</a>';
                     html+='<a class="lm_ico08" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"></a>';
                 }
                 if(typeof itm.iscomplete!='undefined'&&itm.iscomplete>0)

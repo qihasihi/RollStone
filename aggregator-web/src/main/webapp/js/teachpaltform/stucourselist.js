@@ -29,7 +29,7 @@ function getInvestReturnMethod(rps){
                 html+="<td><p><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"'>"+itm.coursename+"</a>";
                 if(itm.islive>0){
                     //html+='<a target="_blank" href="'+itm.liveaddress+'"><b class="lm_ico08" title="直播课"></b></a>';
-                    html+='<a class="lm_ico08"  onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:\'10\',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},true,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"></a>';
+                    html+='<a class="lm_ico08 f_right"   onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:\'10\',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},true,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"></a>';
                 }
                 html+="</p></td>";
                 html+="<td>"+itm.teachername+"</td>";

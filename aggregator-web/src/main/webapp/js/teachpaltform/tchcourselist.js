@@ -177,7 +177,7 @@ function getInvestReturnMethod(rps){
 
             html+='<a  href="javascript:void(0);" onclick="genderClick(\''+itm.courseid+'\')">'+itm.coursename+'</a>';
             if(itm.islive>0)
-                html+='<a target="_blank" href="'+itm.liveaddress+'"><b class="lm_ico08" title="直播课"></b></a>';
+                html+='<a  target="_blank" href="'+itm.liveaddress+'"><b class="lm_ico08" title="直播课"></b></a>'; //<b class="lm_ico08" title="直播课"></b>
             html+='</p></td>';
             html+="<td>";
             if(typeof(itm.classEntity)!='undefined'&&itm.classEntity.length>0){
