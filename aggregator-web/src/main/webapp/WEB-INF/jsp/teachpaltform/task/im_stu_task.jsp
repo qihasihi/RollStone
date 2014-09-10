@@ -16,7 +16,7 @@
            $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid=${classid}",function(){
                //图片添加事件
                if($("#content li img").length>0)
-                   ImageShow({
+                   EttImageShow({
                        image:$("#content li img"),
                        fadeId:'dv_imageShow1-1',
                        sw:90,

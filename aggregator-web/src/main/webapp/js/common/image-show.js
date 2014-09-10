@@ -10,7 +10,7 @@
                     });
  * 注意:img 下必须带data-src 的属性
  */
-function ImageShow(settings){
+function EttImageShow(settings){
 
     ImageShow_init();
     /**
@@ -42,7 +42,11 @@ function ImageShow(settings){
             $(itm).css("cursor","pointer");
             //如果小图加载失败，则进行切割加载
             $(itm).bind("error",function(){
-                $(this).attr("src","imapi1_1?m=makeImImg&w="+sets.sw+"&h="+sets.sh+"&p="+bindData);
+                if(bindData.lastIndexOf("/")!=-1){
+                    if(bindData.substring(bindData.lastIndexOf("/")).indexOf(".")!=-1){
+                        $(this).attr("src","imapi1_1?m=makeImImg&w="+sets.sw+"&h="+sets.sh+"&p="+bindData);
+                    }
+                }
             });
             //添加点击事件
             $(itm).click(function(){

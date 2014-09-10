@@ -26,26 +26,28 @@
         var ht=0;
         function loadContent(clsid){
             if(ht>0){
-                alert('请勿重复刷新!');return;
+                alert('请勿重复刷新!');return false;
             }
             if(ht==0){
                 //加载另一个页面
                 $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid="+ clsid,function(){
                     //图片添加事件
                     if($("#content li img").length>0)
-                    ImageShow({
-                        image:$("#content li img"),
-                        fadeId:'dv_imageShow1-1',
-                        sw:90,
-                        sh:70
-                    });
+                        EttImageShow({
+                            image:$("#content li img"),
+                            fadeId:'dv_imageShow1-1',
+                            sw:90,
+                            sh:70
+                        });
                 });
                 ht=1;
                 //1.5秒后，自动刷新=0
                 setTimeout(function(){
                     ht=0;
                 },1500);
+
             }
+            return true;
         }
     </script>
 </head>
@@ -55,7 +57,7 @@
     <p class="font-black">
         <c:if test="${!empty clsList}">
             <c:forEach items="${clsList}" var="cls">
-                <input type="radio" name="rdo_cls" onclick="loadContent(this.value)" id="rdo_cls_${cls.classid}" value="${cls.classid}">
+                <input type="radio" name="rdo_cls" onchange="return loadContent(this.value);" id="rdo_cls_${cls.classid}" value="${cls.classid}">
                 <label for="rdo_cls_${cls.classid}">${cls.classgrade}${cls.classname}</label>
             </c:forEach>
         </c:if>
