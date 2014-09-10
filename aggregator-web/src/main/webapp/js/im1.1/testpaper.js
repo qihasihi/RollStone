@@ -995,7 +995,7 @@ TestPaperDetail.prototype.loadQues=function(){
                                     $.each(anXNameObj,function(zqx,zq){
                                         ch+='<p>';
                                         if(zm.attachType==1){       //IM端提交的附件类型，1：图片 2：语音 attach_type
-                                            ch+='<img src="imapi1_1?m=makeImImg&w=160&h=90&p='+zq+'"/>';
+                                            ch+='<img src="imapi1_1?m=makeImImg&w=160&h=90&p='+zq+'" data-src="'+zq+'"/>';
                                         }else if(zm.attachType==2){
 //                                            ch+='<img src="m=makeImImg&w=160&h=90&p='+zq+'"/>';
 //                                            var mp3H='<a href="javascript:;" id="mp3_a_'+parentQuesObj.questionid+'"><img src="images/pic05_140722.png" alt="听力"/></a>' ;
@@ -1014,6 +1014,14 @@ TestPaperDetail.prototype.loadQues=function(){
                                 ch+='</div>';
                             })
                             $("#dv_wd"+quesObj.questionid).html(ch);
+                            var imgObj=$("#dv_wd"+quesObj.questionid+" img").filter(function(){return (typeof(this.data-src)!="undefined"&&this.data-src!=null&&this.data-src.length>0);});
+                            if(imgObj.length>0)
+                                EttImageShow({
+                                    image:imgObj,
+                                    fadeId:'dv_imageShow1-1',
+                                    sw:90,
+                                    sh:70
+                                });
                         }
                     }
                     //空格出来

@@ -9,6 +9,7 @@
 <%@ include file="/util/common-jsp/common-im.jsp"%>
 <html>
 <head>
+    <script type="text/javascript" src="js/common/image-show.js"></script>
     <script type="text/javascript" src="js/im1.1/testpaper.js"></script>
     <script type="text/javascript">
         var quesSize="${quesSize}";
