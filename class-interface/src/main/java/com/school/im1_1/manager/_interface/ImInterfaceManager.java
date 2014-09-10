@@ -145,4 +145,9 @@ public class ImInterfaceManager extends BaseManager<ImInterfaceInfo> implements 
     public List<Map<String, Object>> getStuScoreSubjectList(Integer classid) {
         return this.imInterfaceDAO.getStuScoreSubjectList(classid);
     }
+
+    @Override
+    public List<Map<String, Object>> getTaskRemind(Long taskid, Integer userid, Integer classid) {
+        return this.imInterfaceDAO.getTaskRemind(taskid,userid,classid);
+    }
 }

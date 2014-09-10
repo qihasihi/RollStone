@@ -4268,16 +4268,288 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
             }
         }
-        //执行批量删除
-        Boolean bool = this.imInterfaceManager.doExcetueArrayProc(sqlListArray,objListArray);
-        if(bool){
-            returnJo.put("result","1");
-            returnJo.put("msg","删除成功");
+        if(sqlListArray.size()>0){
+            //执行批量删除
+            Boolean bool = this.imInterfaceManager.doExcetueArrayProc(sqlListArray,objListArray);
+            if(bool){
+                returnJo.put("result","1");
+                returnJo.put("msg","删除成功");
+            }
+        }else{
+            returnJo.put("msg","对不起，您没有权限删除当前任务");
         }
+
         response.getWriter().print(returnJo.toString());
     }
 
+    /**
+     * 任务提醒接口
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=taskRemind",method= {RequestMethod.GET,RequestMethod.POST})
+    public void taskRemind(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        JSONObject returnJo = new JSONObject();
+        returnJo.put("result","0");
+        HashMap<String,String> map = ImUtilTool.getRequestParam(request);
+        String taskid = map.get("taskId");
+        String classid = map.get("classId");
+        String schoolid = map.get("schoolId");
+        String classtype = map.get("classType");
+        String isvirtual = map.get("isVirtual");
+        String userid = map.get("jid");
+        String usertype = map.get("userType");
+        String timestamp = map.get("time");
+        String sig = map.get("sign");
+        if(!ImUtilTool.ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        //String sign = UrlSigUtil.makeSigSimple("taskRemind",map,"*ETT#HONER#2014*");
+        map.remove("sign");
+        Boolean b = UrlSigUtil.verifySigSimple("taskRemind", map, sig);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        int utype=ImUtilTool.getUserType(usertype);
+        if(utype==2){
+            returnJo.put("msg","当前用户没有此项权限，非法登录");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
 
+        //验证任务 是否存在
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid));
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<TpTaskInfo> tpTaskList=this.tpTaskManager.getList(tk,presult);
+        if(tpTaskList==null||tpTaskList.size()<1){
+            returnJo.put("msg","错误，当前任务不存在!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        List<Map<String,Object>> taskList = this.imInterfaceManager.getTaskRemind(tpTaskList.get(0).getTaskid(), userList.get(0).getUserid(), Integer.parseInt(classid));
+        List returnList = new ArrayList();
+        Map returnMap = new HashMap();
+        if(taskList!=null&&taskList.size()>0){
+            Map taskMap = taskList.get(0);
+            int time =Integer.parseInt(taskMap.get("LEFTTIME").toString());
+            int days = 0;
+            int hours =0;
+            int mins = 0;
+            int seconds = 0;
+            if(time>0){
+                seconds = time%60;
+                if(seconds>0){
+                    mins = time/60;
+                }else{
+                    seconds = seconds*60;
+                }
+                if(mins>0){
+                    hours = mins/60;
+                }
+                if(hours>0){
+                    days= hours/24;
+                }
+            }
+            if(days>0){
+               returnMap.put("leftTime", days + "天");
+            }else{
+                if(hours>0){
+                    returnMap.put("leftTime", hours + "小时");
+                }else{
+                    if(mins>0){
+                        returnMap.put("leftTime", mins + "分钟");
+                    }else{
+                        if(seconds>0){
+                            returnMap.put("leftTime", seconds + "秒");
+                        }
+                    }
+                }
+            }
+            //处理任务显示
+            String typename = "";
+            int questype = Integer.parseInt(taskMap.get("TASKTYPE").toString());
+            switch (questype){
+                case 1:
+                    typename="资源学习";
+                    break;
+                case 2:
+                    typename="互动交流";
+                    break;
+                case 3:
+                    typename="试题";
+                    break;
+                case 4:
+                    typename="成卷测试";
+                    break;
+                case 5:
+                    typename="自主测试";
+                    break;
+                case 6:
+                    typename="微课程学习";
+                    break;
+                case 7:
+                    typename="图片";
+                    break;
+                case 8:
+                    typename="文字";
+                    break;
+                case 9:
+                    typename="视频";
+                    break;
+            }
+            if(Integer.parseInt(taskMap.get("TASKTYPE").toString())==3){
+                returnMap.put("taskName", "任务 " + taskMap.get("ORDERIDX") + " " + typename);
+            }else{
+                returnMap.put("taskName", "任务 " + taskMap.get("ORDERIDX") + " " + typename + " " + taskMap.get("TASKNAME"));
+            }
+            //处理其余输出参数为标准命名
+            returnMap.put("taskId",Long.parseLong(taskMap.get("TASKID").toString()));
+            returnMap.put("taskType",Integer.parseInt(taskMap.get("TASKTYPE").toString()));
+            returnMap.put("remoteType",Integer.parseInt(taskMap.get("REMOTETYPE").toString()));
+            returnMap.put("quesType",Integer.parseInt(taskMap.get("QUESTYPE").toString()));
+
+
+            returnMap.put("finishStandard",Integer.parseInt(taskMap.get("FINISHSTANDARD").toString()));
+            returnMap.put("doNum",Integer.parseInt(taskMap.get("DONUM").toString()));
+            returnMap.put("isOver",Integer.parseInt(taskMap.get("ISOVER").toString()));
+            returnMap.put("isDone",Integer.parseInt(taskMap.get("ISDONE").toString()));
+            if(questype>6){
+                returnMap.put("taskContent",taskMap.get("TASKCONTENT").toString());
+                returnMap.put("attachs",taskMap.get("ATTACHS").toString());
+                returnMap.put("attachType",taskMap.get("ATTACHTYPE").toString());
+                returnMap.put("taskAnalysis",taskMap.get("TASKANALYSIS").toString());
+            }else{
+                returnMap.put("taskContent","");
+                returnMap.put("attachs","");
+                returnMap.put("attachType","");
+                returnMap.put("taskAnalysis","");
+            }
+            //如果是微课程
+            if(questype==6){
+                //查询当前任务的微课程是否完整看过
+                List<Map<String,Object>> watchlist = this.imInterfaceManager.getTaskWatch(userList.get(0).getUserid(),tpTaskList.get(0).getTaskvalueid());
+                if(watchlist!=null&&watchlist.size()>0){
+                    returnMap.put("isWatched",1);
+                }else{
+                    returnMap.put("isWatched",0);
+                }
+            }else{
+                returnMap.put("isWatched",0);
+            }
+            //如果是试卷
+            if(questype==4||questype==5||questype==6){
+                Long paperid=null;
+                TpTaskInfo tmpTask=tpTaskList.get(0);
+                if(!(tmpTask.getTasktype()>3&&tmpTask.getTasktype()<7)){
+                    returnJo.put("msg","非试卷类任务!");
+                    response.getWriter().print(returnJo.toString());
+                    return;
+                }
+                if(tmpTask.getTasktype()==4){
+                    paperid=tmpTask.getTaskvalueid();
+                }else if(tmpTask.getTasktype()==6){
+                    MicVideoPaperInfo micPaper=new MicVideoPaperInfo();
+                    micPaper.setMicvideoid(tmpTask.getTaskvalueid());
+                    List<MicVideoPaperInfo>micVideoPaperInfoList=this.micVideoPaperManager.getList(micPaper,null);
+                    if(micVideoPaperInfoList==null||micVideoPaperInfoList.size()<1){
+                        returnJo.put("msg","未获取到微视频试卷数据!");
+                        response.getWriter().print(returnJo.toString());
+                        return;
+                    }
+                    paperid=micVideoPaperInfoList.get(0).getPaperid();
+                }else if(tmpTask.getTasktype()==5){
+                    if(ImUtilTool.getUserType(usertype)!=2){  //学生
+                        //判断任务时间
+                        //得到创建任务时生成的TaskValueId
+                        Long tkvalueid=tmpTask.getTaskvalueid();
+                        PaperInfo pentity=new PaperInfo();
+                        pentity.setParentpaperid(tkvalueid);
+                        pentity.setCuserid(userList.get(0).getUserid());
+                        List<PaperInfo> paperList=this.paperManager.getList(pentity, null);
+                        paperid=paperList.get(0).getPaperid();
+                    }
+                }
+                List<PaperQuestion>pqList=null;
+                List<PaperQuestion>childList=null;
+                //获取提干
+                if(paperid!=null&&paperid.toString().length()>0){
+                    PaperQuestion pq=new PaperQuestion();
+                    pq.setPaperid(paperid);
+                    PageResult p=new PageResult();
+                    p.setOrderBy("u.order_idx");
+                    p.setPageNo(0);
+                    p.setPageSize(0);
+                    pqList=this.paperQuestionManager.getList(pq,p);
+
+                    //获取试题组下题目
+                    PaperQuestion child =new PaperQuestion();
+                    child.setPaperid(pq.getPaperid());
+                    childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
+                }
+                //整合试题组
+                List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+                List<PaperQuestion>questionTeam;
+                List<Map<String,Object>> quesList = new ArrayList<Map<String, Object>>();
+                Map quesMap= null;
+                if(pqList!=null&&pqList.size()>0){
+                    for(PaperQuestion paperQuestion:pqList){
+                        quesMap = new HashMap();
+                        questionTeam=new ArrayList<PaperQuestion>();
+                        //试题组
+                        if(childList!=null&&childList.size()>0){
+                            for (PaperQuestion childp :childList){
+                                if(paperQuestion.getRef().equals(childp.getRef())){
+                                    questionTeam.add(childp);
+                                }
+                            }
+                            paperQuestion.setQuestionTeam(questionTeam);
+                        }
+                        tmpList.add(paperQuestion);
+                        quesMap.put("quesId",paperQuestion.getQuestionid());
+                        quesMap.put("quesType",paperQuestion.getQuestiontype()==1||paperQuestion.getQuestiontype()==9?1:0); //1：其他 主观题
+                        //试题组小题
+                        if(paperQuestion.getQuestionTeam()!=null&&paperQuestion.getQuestionTeam().size()>0){
+                            for(PaperQuestion qTeam:paperQuestion.getQuestionTeam()){
+                                quesMap.put("quesId",qTeam.getQuestionid());
+                                quesMap.put("quesType",qTeam.getQuestiontype()==1||qTeam.getQuestiontype()==9?1:0);
+                            }
+                        }
+                        quesList.add(quesMap);
+                    }
+                }
+                returnMap.put("quesList",quesList);
+            }else{
+                returnMap.put("quesList",null);
+            }
+        }else{
+            returnJo.put("msg","查询失败");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        returnJo.put("result","1");
+        returnJo.put("msg","查询完成");
+        returnJo.put("data",returnMap);
+        response.getWriter().print(returnJo.toString());
+    }
 
 
 
