@@ -4212,7 +4212,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 tpGroupInfo.setClassid(Integer.parseInt(classid));
                 List<TpGroupInfo> tpGroupInfoList=this.tpGroupManager.getList(tpGroupInfo,null);
                 for(TpGroupInfo group:tpGroupInfoList){
-                    if(obj.getUsertypeid()==group.getGroupid()){
+                    if(obj.getUsertypeid().equals(group.getGroupid())){
                         if(obj.getBtime().getTime()>System.currentTimeMillis()){
                             sql = new StringBuilder();
                             objList = new ArrayList<Object>();
@@ -4226,6 +4226,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         }
                     }
                 }
+
             }
         }
         //如果发送对象全部删除了，同时删除任务
