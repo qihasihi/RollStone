@@ -6321,6 +6321,7 @@ public class UserController extends BaseController<UserInfo> {
     @RequestMapping(params = "m=addSchoolAdmin", method = RequestMethod.POST)
     public void addSchoolAdmin(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
+        JSONObject jo = new JSONObject();
         String schoolid=request.getParameter("schoolid");
         String adminname=request.getParameter("adminname");
         String pwd=request.getParameter("pwd");
@@ -6397,11 +6398,12 @@ public class UserController extends BaseController<UserInfo> {
         }
         if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
             boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
-            if(flag)
-                je.setType("success");
+            if(flag){
+                jo.put("result",1);
+            }
         }else
-            je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
-        response.getWriter().print(je.toJSON());
+           jo.put("result",0);
+        response.getWriter().print(jo.toString());
     }
 
 }

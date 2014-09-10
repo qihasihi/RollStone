@@ -2,6 +2,7 @@ package com.school.im1_1.control._interface;
 
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
+import com.school.entity.ClassInfo;
 import com.school.entity.UserInfo;
 import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
@@ -10,7 +11,9 @@ import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.entity.teachpaltform.paper.*;
 import com.school.im1_1.entity._interface.ImInterfaceInfo;
 import com.school.im1_1.manager._interface.ImInterfaceManager;
+import com.school.manager.ClassManager;
 import com.school.manager.UserManager;
+import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
@@ -73,7 +76,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private ITpStuScoreManager tpStuScoreManager;
     private ITpCourseClassManager tpCourseClassManager;
     private ITpGroupManager tpGroupManager;
+    private IClassManager classManager;
     public ImInterfaceController(){
+        this.classManager = this.getManager(ClassManager.class);
         this.tpGroupManager=this.getManager(TpGroupManager.class);
         this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
         this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
@@ -875,11 +880,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     @RequestMapping(params="m=AddTask",method= {RequestMethod.POST,RequestMethod.GET})
     public void addTask(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         //接收map
-        HashMap<String,String> map = ImUtilTool.getRequestParam(request);
-        String dataStr = map.get("data");
-        String userid = map.get("jid");
-        String schoolid = map.get("schoolId");
-        String timestamp = map.get("time");
+        HashMap<String,String> paramMap = ImUtilTool.getRequestParam(request);
+        String dataStr = paramMap.get("data");
+        String userid = paramMap.get("jid");
+        String schoolid = paramMap.get("schoolId");
+        String timestamp = paramMap.get("time");
         String sig = request.getParameter("sign");
         if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
@@ -889,10 +894,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(jo.toString());
             return;
         }
-        map.remove("data");
-        map.remove("sign");
-        String sign = UrlSigUtil.makeSigSimple("AddTask",map,"*ETT#HONER#2014*");
-        Boolean b = UrlSigUtil.verifySigSimple("AddTask",map,sig);
+        paramMap.remove("data");
+        paramMap.remove("sign");
+        //String sign = UrlSigUtil.makeSigSimple("AddTask",paramMap,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("AddTask",paramMap,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
@@ -1003,6 +1008,67 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(bl){
             m.put("result","1");
             m.put("message","添加成功");
+            //查询发送对象
+            //获取任务相关的班级
+            TpTaskAllotInfo ta = new TpTaskAllotInfo();
+            ta.setTaskid(tasknextid);
+            List<TpTaskAllotInfo> taList = this.tpTaskAllotManager.getList(ta,null);
+
+            List<Map> classList = new ArrayList<Map>();
+            for(TpTaskAllotInfo o:taList){
+                if(o.getUsertype()==0){
+                    ClassInfo ci = new ClassInfo();
+                    ci.setClassid(Integer.parseInt(o.getUsertypeid().toString()));
+                    List<ClassInfo> ciList = this.classManager.getList(ci,null);
+                    Map map = new HashMap();
+                    map.put("classid",ciList.get(0).getClassid());
+                    map.put("classname",ciList.get(0).getClassname());
+                    map.put("classtype",1);
+                    classList.add(map);
+                }else if(o.getUsertype()==2){//小组，要获取小组属于的班级
+                    TpGroupInfo tg = new TpGroupInfo();
+                    tg.setGroupid(o.getUsertypeid());
+                    List<TpGroupInfo> tgList = this.tpGroupManager.getList(tg,null);
+                    Integer clsid=tgList.get(0).getClassid();
+                    if(tgList.get(0).getClasstype()==1){
+                        ClassInfo ci = new ClassInfo();
+                        ci.setClassid(clsid);
+                        List<ClassInfo> cls = this.classManager.getList(ci,null);
+                        Map map = new HashMap();
+                        map.put("classid",cls.get(0).getClassid());
+                        if(classList.size()>0){
+                            Boolean bea = false;
+                            for(Map obje:classList){
+                                if(Integer.parseInt(obje.get("classid").toString())==Integer.parseInt(map.get("classid").toString())){
+                                    bea=true;
+                                }
+                            }
+                            if(bea==false)
+                                classList.add(map);
+                        }else{
+                            classList.add(map);
+                        }
+                    }
+                }
+            }
+            //获取未完成任务的人员
+            List<Map<String,Object>> unCompleteList = new ArrayList<Map<String, Object>>();
+            Map unComplete = null;
+            for(int i = 0;i<classList.size();i++){
+                unComplete = new HashMap();
+                List<Map<String,Object>> stuList = this.imInterfaceManager.getUnCompleteStu(tasknextid,1,Integer.parseInt(classList.get(i).get("classid").toString()),null);
+                if(stuList!=null&&stuList.size()>0){
+                    for(int j=0;j<stuList.size();j++){
+                        if(stuList.get(i).get("ETT_USER_ID")!=null){
+                            unComplete.put("jid",Integer.parseInt(stuList.get(j).get("ETT_USER_ID").toString()));
+                        }
+                    }
+                    unCompleteList.add(unComplete);
+                }
+            }
+            Map stulist = new HashMap();
+            stulist.put("stuList",unCompleteList);
+            m.put("data",stulist);
         }else{
             m.put("result","0");
             m.put("message","添加失败");
@@ -4440,8 +4506,21 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 returnMap.put("taskAnalysis",taskMap.get("TASKANALYSIS").toString());
             }else{
                 returnMap.put("taskContent","");
-                returnMap.put("attachs","");
-                returnMap.put("attachType","");
+                if(questype==1){
+                    ResourceInfo rs = new ResourceInfo();
+                    rs.setResid(tpTaskList.get(0).getTaskvalueid());
+                    List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
+                    String attchStr = UtilTool.getResourceLocation(rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+                    Map att = new HashMap();
+                    att.put("attach",attchStr);
+                    List attList = new ArrayList();
+                    attList.add(att);
+                    returnMap.put("attachs", attList);
+                    returnMap.put("attachType", rsList.get(0).getFilesuffixname());
+                }else{
+                    returnMap.put("attachs", "");
+                    returnMap.put("attachType","");
+                }
                 returnMap.put("taskAnalysis","");
             }
             //如果是微课程
@@ -4537,8 +4616,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         quesList.add(quesMap);
                     }
                 }
+                returnMap.put("testId",paperid);
                 returnMap.put("quesList",quesList);
             }else{
+                returnMap.put("testId",0);
                 returnMap.put("quesList",null);
             }
         }else{
