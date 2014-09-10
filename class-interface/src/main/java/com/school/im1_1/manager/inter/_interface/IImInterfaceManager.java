@@ -26,4 +26,6 @@ public interface IImInterfaceManager extends IBaseManager<ImInterfaceInfo> {
     public List<Map<String,Object>> getTaskWatch(Integer userid,Long videoid);
     //未完成任务人员
     public List<Map<String,Object>> getUnCompleteStu(Long taskid,Integer flag,Integer classid,Integer userid);
+    //班级统计 学科列表
+    public List<Map<String,Object>>getStuScoreSubjectList(Integer classid);
 }

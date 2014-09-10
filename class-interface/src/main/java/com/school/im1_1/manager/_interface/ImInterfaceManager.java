@@ -140,4 +140,9 @@ public class ImInterfaceManager extends BaseManager<ImInterfaceInfo> implements 
     public List<Map<String, Object>> getUnCompleteStu(Long taskid, Integer flag, Integer classid,Integer userid) {
         return this.imInterfaceDAO.getUnCompleteStu(taskid,flag,classid,userid);
     }
+
+    @Override
+    public List<Map<String, Object>> getStuScoreSubjectList(Integer classid) {
+        return this.imInterfaceDAO.getStuScoreSubjectList(classid);
+    }
 }

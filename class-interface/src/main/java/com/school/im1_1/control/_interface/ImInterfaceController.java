@@ -3664,6 +3664,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             return;
         }
         List<Map<String,Object>>tmpRankList=new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>>subjectList=new ArrayList<Map<String, Object>>();
         ImInterfaceInfo obj=new ImInterfaceInfo();
         obj.setSubjectid(Integer.parseInt(subjectId));
         obj.setClassid(Integer.parseInt(classId));
@@ -3719,11 +3720,19 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
         }
 
-
-
-
-
+        //学科列表
+        List<Map<String,Object>>subList=this.imInterfaceManager.getStuScoreSubjectList(Integer.parseInt(classId));
+        if(subList!=null&&subList.size()>0){
+            for(Map<String,Object>m:subList){
+                Map<String,Object>tmpMap=new HashMap<String, Object>();
+                tmpMap.put("subjectName",m.get("SUBJECT_NAME").toString());
+                tmpMap.put("subjectId",m.get("SUBJECT_ID").toString());
+                if(!subjectList.contains(tmpMap))
+                    subjectList.add(tmpMap);
+            }
+        }
         jo.put("teamRankList",tmpRankList==null||tmpRankList.size()<1?null:tmpRankList);
+        jo.put("subjectList",subjectList==null||subjectList.size()<1?null:subjectList);
 
         if(ImUtilTool.getUserType(userType)!=2){  //学生
             obj.setUserid(userList.get(0).getUserid());

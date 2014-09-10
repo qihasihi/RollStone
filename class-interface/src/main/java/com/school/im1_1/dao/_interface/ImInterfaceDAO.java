@@ -507,4 +507,18 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
             return list;
         return null;
     }
+
+    @Override
+    public List<Map<String, Object>> getStuScoreSubjectList(Integer classid) {
+        if(classid==null||classid.toString().length()<1)
+            return null;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL getStuScoreSubjectListProc(?,?)}");
+        List<Object> objList=new ArrayList<Object>();
+       objList.add(classid);
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
 }
