@@ -169,7 +169,7 @@ TestPaperQues.prototype.subPaper=function(){
         data:{paperid:pid,courseid:this.config.courseid,taskid:this.config.taskid,userid:this.config.userid},
         cache: false,
         error:function(){
-            alert('异常错误!系统未响应!11111');
+            alert('当前网络不稳定，请重试11111');
         },success:function(rps){
             if(rps.type=="success"){
                 alert(rps.msg);
@@ -349,7 +349,7 @@ TestPaperQues.prototype.subQues=function(direcType){
             data:{taskid:taskid,paperid:pid,userid:this.config.userid,testQuesData:$.toJSON(data)},
             cache: false,
             error:function(){
-                alert('异常错误!系统未响应!');
+                alert('当前网络不稳定，请重试');
             },success:function(rps){
                 if(rps.type=="success"){
                     if(subQuesId.indexOf(","+quesid+",")<0)
@@ -426,7 +426,7 @@ TestPaperQues.prototype.loadQues=function(){
         dataType:'json',
         type:'post',
         data:p,
-        error:function(){alert('异常错误!系统未响应!');},
+        error:function(){alert('当前网络不稳定，请重试');},
         success:function(rps){
             //失败
             if(rps.type=="error"){
@@ -804,7 +804,7 @@ TestPaperDetail.prototype.loadQues=function(){
         dataType:'json',
         type:'post',
         data:p,
-        error:function(){alert('异常错误!系统未响应!');},
+        error:function(){alert('当前网络不稳定，请重试');},
         success:function(rps){
             //失败
             if(rps.type=="error"){

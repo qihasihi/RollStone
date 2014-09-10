@@ -4520,9 +4520,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 jsonEntity.setMsg("答题成功!");
                 jsonEntity.setType("success");
             }else
-                jsonEntity.setMsg("答题失败!原因：未知!");
+                jsonEntity.setMsg("提交失败!");
         }else{
-            jsonEntity.setMsg("答题失败!原因：暂未发现您要提交的数据!");
+            jsonEntity.setMsg("提交失败，请重试!");
         }
         response.getWriter().println(jsonEntity.toJSON());
     }
