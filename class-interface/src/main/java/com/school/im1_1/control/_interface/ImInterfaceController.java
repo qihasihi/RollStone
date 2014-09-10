@@ -4074,6 +4074,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         //获取参数
         String taskId=paramMap.get("taskId");
         String jid=paramMap.get("jid");
+        String usertype = paramMap.get("userType");
         String schoolId=paramMap.get("schoolId");
         String classid = paramMap.get("classId");
         String time=paramMap.get("time");
@@ -4122,7 +4123,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(returnJo.toString());
             return;
         }
-        List<Map<String,Object>> stuList = this.imInterfaceManager.getUnCompleteStu(Long.parseLong(taskId),1,Integer.parseInt(classid),null);
+        int utype = ImUtilTool.getUserType(usertype);
+        List<Map<String,Object>> stuList = null;
+        if(utype==2){
+             stuList = this.imInterfaceManager.getUnCompleteStu(Long.parseLong(taskId),1,Integer.parseInt(classid),null);
+        }else{
+            stuList = this.imInterfaceManager.getUnCompleteStu(Long.parseLong(taskId),1,Integer.parseInt(classid),userList.get(0).getUserid());
+        }
         if(stuList!=null&&stuList.size()>0){
             List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
             Map returnUserMap = null;

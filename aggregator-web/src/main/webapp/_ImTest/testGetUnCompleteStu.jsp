@@ -17,10 +17,11 @@
             var schoolId=$("#schoolId").val();
             var jid=$("#jid").val();
             var classid=$("#classId").val();
+            var usertype=$("#userType").val();
             var time=$("#txt_a_time").val();
             var taskId = $("#taskId").val();
 
-            var param={schoolId:schoolId,jid:jid,classId:classid,time:time,taskId:taskId};
+            var param={schoolId:schoolId,jid:jid,classId:classid,time:time,taskId:taskId,userType:usertype};
 
             param.method=methodName;
 
@@ -47,6 +48,10 @@
         <tr>
             <td>用户id</td>
             <td><input type="text" name="jid" id="jid" value="2392238"/> </td>
+        </tr>
+        <tr>
+            <td>用户类型</td>
+            <td><input type="text" name="userType" id="userType" value="3"/> </td>
         </tr>
         <tr>
             <td>班级id</td>
