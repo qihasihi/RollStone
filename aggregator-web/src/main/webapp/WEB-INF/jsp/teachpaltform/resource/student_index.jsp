@@ -123,7 +123,9 @@
             <td class="font-black">
                 <c:if test="${!empty resType}">
                     <c:forEach items="${resType}" var="d">
+                        <c:if test="${d.dictionaryvalue!=6}">
                         <input type="radio" name="upd_res_type"  value="${d.dictionaryvalue}" />${d.dictionaryname}&nbsp;&nbsp;
+                        </c:if>
                     </c:forEach>
                 </c:if>
             </td>

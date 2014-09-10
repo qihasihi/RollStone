@@ -44,8 +44,11 @@
         <td><ul class="public_list1 font-black">
             <c:if test="${!empty resTypeDicList}">
                 <c:forEach items="${resTypeDicList}" var="restype">
-                    <input type="radio" value="${restype.dictionaryvalue}"  name="rdo_restype" id="rdo_restype_${restype.dictionaryvalue}"/>
-                    <label for="rdo_restype_${restype.dictionaryvalue}">${restype.dictionaryname}</label>
+                    <!--去掉微视频-->
+                    <c:if test="${restype.dictionaryvalue!=6}">
+                        <input type="radio" value="${restype.dictionaryvalue}"  name="rdo_restype" id="rdo_restype_${restype.dictionaryvalue}"/>
+                        <label for="rdo_restype_${restype.dictionaryvalue}">${restype.dictionaryname}</label>
+                    </c:if>
                 </c:forEach>
             </c:if>
         </ul></td>

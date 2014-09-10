@@ -152,7 +152,10 @@
             <td class="font-black">
                 <c:if test="${!empty resType}">
                 <c:forEach items="${resType}" var="d">
+                    <!--去掉微视频-->
+                    <c:if test="${d.dictionaryvalue!=6}">
                 <input type="radio" name="res_type"  value="${d.dictionaryvalue}" />${d.dictionaryname}&nbsp;&nbsp;&nbsp;&nbsp;
+                    </c:if>
                 </c:forEach>
                 </c:if>
         </tr>
