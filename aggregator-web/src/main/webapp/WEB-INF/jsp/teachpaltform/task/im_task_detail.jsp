@@ -27,7 +27,7 @@
             <c:if test="${!empty tk.imtaskattachList}">
                 <c:forEach items="${tk.imtaskattachList}" var="attach">
                     <c:if test="${tk.imtaskattachtype==1}">
-                        <li><a href="1"><img src="imapi1_1?m=makeImImg&w=90&h=70&p=${attach}"></a></li>
+                        <li><img src="imapi1_1?m=makeImImg&w=90&h=70&p=${attach}" data-src="${attach}"></li>
                     </c:if>
                     <c:if test="${tk.imtaskattachtype==2}">
                         <p>
@@ -68,7 +68,7 @@
 
                    <c:forEach items="${qa.imtaskattachList}" var="at">
                     <c:if test="${qa.replyattachtype==1}">
-                        <li><a href="1"><img src="imapi1_1?m=makeImImg&w=90&h=70&p=${at}"></a></li>
+                        <li><img src="imapi1_1?m=makeImImg&w=90&h=70&p=${at}" data-src="${attach}"></li>
                     </c:if>
                     <c:if test="${qa.replyattachtype==2}">
                         <p>

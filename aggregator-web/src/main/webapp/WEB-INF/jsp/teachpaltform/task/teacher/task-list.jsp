@@ -181,11 +181,11 @@ function getInvestReturnMethod(rps){
                 html+='<a class="font-blue" href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >'+taskObj+'</a>';
 
             }else if(itm.tasktype==7){
-                html+='<a class="font-blue" href="task?m=teaQuesAnserList&task='+itm.taskid+'" target="_blank">'+taskObj+'</a>';
+                html+='<a class="font-blue" href="task?m=teaQuesAnserList&taskid='+itm.taskid+'" target="_blank">'+taskObj+'</a>';
             }else if(itm.tasktype==8){
-                html+='<a class="font-blue" href="task?m=teaQuesAnserList&task='+itm.taskid+'" target="_blank">'+taskObj+'</a>';
+                html+='<a class="font-blue" href="task?m=teaQuesAnserList&taskid='+itm.taskid+'" target="_blank">'+taskObj+'</a>';
             }else if(itm.tasktype==9){
-                html+='<a class="font-blue" href="task?m=teaQuesAnserList&task='+itm.taskid+'"target="_blank" >'+taskObj+'</a>';
+                html+='<a class="font-blue" href="task?m=teaQuesAnserList&taskid='+itm.taskid+'"target="_blank" >'+taskObj+'</a>';
             }else if(itm.tasktype==10&&itm.taskstatus!="3"&&itm.taskstatus!="1"){
 
                 html+='<a class="font-blue" target="_blank" href="'+itm.liveaddress+'" >'+taskObj+'</a>';

@@ -9,9 +9,20 @@
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 <html>
 <head>
+    <script type="text/javascript" src="js/common/image-show.js"></script>
     <script type="text/javascript">
         $(function(){
-           $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid=${classid}");
+            //加载另一个页面
+           $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid=${classid}",function(){
+               //图片添加事件
+               if($("#content li img").length>0)
+                   ImageShow({
+                       image:$("#content li img"),
+                       fadeId:'dv_imageShow1-1',
+                       sw:90,
+                       sh:70
+                   });
+           });
         });
         function headError(obj){
             obj.src='images/defaultheadsrc_big.jpg';

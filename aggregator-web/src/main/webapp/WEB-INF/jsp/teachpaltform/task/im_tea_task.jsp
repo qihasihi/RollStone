@@ -9,9 +9,16 @@
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 <html>
 <head>
+    <script type="text/javascript" src="js/common/image-show.js"></script>
     <script type="text/javascript">
         $(function(){
-
+            <c:if test="${!empty classid}">
+                $("input[name='rdo_cls'][value='${classid}']").attr("checked",true)
+            </c:if>
+            <c:if test="${empty classid}">
+                $("input[name='rdo_cls']:first").attr("checked",true)
+            </c:if>
+            loadContent($("input[name='rdo_cls']:checked").val());
         });
         function headError(obj){
             obj.src='images/defaultheadsrc_big.jpg';
@@ -22,7 +29,17 @@
                 alert('请勿重复刷新!');return;
             }
             if(ht==0){
-                $("#content").load("tptask?m=toAnswerList&taskid=${param.taskid}&classid=${classid}");
+                //加载另一个页面
+                $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid="+ clsid,function(){
+                    //图片添加事件
+                    if($("#content li img").length>0)
+                    ImageShow({
+                        image:$("#content li img"),
+                        fadeId:'dv_imageShow1-1',
+                        sw:90,
+                        sh:70
+                    });
+                });
                 ht=1;
                 //1.5秒后，自动刷新=0
                 setTimeout(function(){
@@ -38,8 +55,8 @@
     <p class="font-black">
         <c:if test="${!empty clsList}">
             <c:forEach items="${clsList}" var="cls">
-                <input type="radio" name="rdo_cls" id="rdo_cls_${cls.classid}" value="${cls.classid}">
-                <label for="rdo_cls_${cls.classid}">小学</label>
+                <input type="radio" name="rdo_cls" onclick="loadContent(this.value)" id="rdo_cls_${cls.classid}" value="${cls.classid}">
+                <label for="rdo_cls_${cls.classid}">${cls.classgrade}${cls.classname}</label>
             </c:forEach>
         </c:if>
     </p>

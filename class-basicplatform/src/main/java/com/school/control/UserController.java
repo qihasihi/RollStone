@@ -1772,6 +1772,10 @@ public class UserController extends BaseController<UserInfo> {
                     je.getObjList().add(teaClsList);
 
 
+
+
+
+
                     List<DeptUser>duList=null;
                     DeptUser du=new DeptUser();
                     du.setUserref(ref);
@@ -1853,7 +1857,7 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
-
+        List<Integer> operateCls=new ArrayList<Integer>();
         if(isTea!=null&&isTea.equals("true")){
             TeacherInfo t=new TeacherInfo();
             t.setUserid(ref);
@@ -1920,6 +1924,16 @@ public class UserController extends BaseController<UserInfo> {
                 cudelete.setAfteryear(clsyearList.get(0).getClassyearvalue());
                 cudelete.getUserinfo().setRef(ref);
                 cudelete.setRelationtype("任课老师");
+                List<ClassUser> cuList=this.classUserManager.getList(cudelete,null);
+                if(cuList!=null&&cuList.size()>0){
+                    for (ClassUser tmpCu:cuList){
+                        if(tmpCu!=null&&tmpCu.getClassid()!=null){
+                            if(!operateCls.contains(tmpCu.getClassid()))
+                                operateCls.add(tmpCu.getClassid());
+                        }
+                    }
+                }
+
                 sql=new StringBuilder();
                 objList=this.classUserManager.getDeleteSql(cudelete, sql);
                 if (objList != null && sql != null) {
@@ -1938,6 +1952,10 @@ public class UserController extends BaseController<UserInfo> {
                     cuadd.setRelationtype("任课老师");
                     cuadd.setSubjectid(Integer.parseInt(csidArray[1]));
                     cuadd.setClassid(Integer.parseInt(csidArray[0]));
+
+                    if(!operateCls.contains(Integer.parseInt(csidArray[0])))
+                        operateCls.add(Integer.parseInt(csidArray[0]));
+
 
                     sql=new StringBuilder();
                     objList=this.classUserManager.getSaveSql(cuadd, sql);
@@ -1975,7 +1993,22 @@ public class UserController extends BaseController<UserInfo> {
                 cudelete.setAfteryear(clsyearList.get(0).getClassyearvalue());
                 cudelete.getUserinfo().setRef(ref);
                 cudelete.setRelationtype("学生");
+
+
+                List<ClassUser> cuList=this.classUserManager.getList(cudelete,null);
+                if(cuList!=null&&cuList.size()>0){
+                    for (ClassUser tmpCu:cuList){
+                        if(tmpCu!=null&&tmpCu.getClassid()!=null){
+                            if(!operateCls.contains(tmpCu.getClassid()))
+                                operateCls.add(tmpCu.getClassid());
+                        }
+                    }
+                }
+
                 sql=new StringBuilder();
+
+
+
                 objList=this.classUserManager.getDeleteSql(cudelete, sql);
                 if (objList != null && sql != null) {
                     sqllist.add(sql.toString());
@@ -1990,6 +2023,9 @@ public class UserController extends BaseController<UserInfo> {
                     cuadd.getUserinfo().setRef(ref);
                     cuadd.setRelationtype("学生");
                     cuadd.setClassid(Integer.parseInt(clsArray[i]));
+
+                    if(!operateCls.contains(Integer.parseInt(clsArray[i])))
+                        operateCls.add(Integer.parseInt(clsArray[i]));
 
                     sql=new StringBuilder();
                     objList=this.classUserManager.getSaveSql(cuadd, sql);
@@ -2011,7 +2047,7 @@ public class UserController extends BaseController<UserInfo> {
                 utmp.setRef(ref);
                 UserInfo u=userManager.getUserInfo(utmp);
                 if(u!=null){
-                    if(updateToEttClassUser(ref,u.getDcschoolid())){
+                    if(updateToEttClassUser(operateCls,u.getDcschoolid())){
                         System.out.println("更新classuser到网校成功！");
                     }else{
                         System.out.println("更新classuser到网校失败！");
@@ -6187,7 +6223,49 @@ public class UserController extends BaseController<UserInfo> {
         }
         return true;
     }
+    /**
+     * 同步ettClassUser
+     * @param List<String>
+     * @param dcschoolId
+     * @return
+     */
+    private boolean updateToEttClassUser(List<Integer> xgClsId,Integer dcschoolId){
+        if(xgClsId==null||xgClsId.size()<1)return false;
+        //向网校添加班级数据
+        for (Integer clsStr:xgClsId){
+            if(clsStr==null)continue;
+            ClassUser cu=new ClassUser();
+            cu.setClassid(clsStr);
+            List<ClassUser> cuTmpList=this.classUserManager.getList(cu,null);
+            if(cuTmpList!=null&&cuTmpList.size()>0){
+                // 必带 userId，userType,subjectId 的三个key
+                List<Map<String,Object>> mapList=new ArrayList<Map<String, Object>>();
+                for (ClassUser cuTmpe:cuTmpList){
+                    if(cuTmpe!=null){
+                        Map<String,Object> tmpMap=new HashMap<String, Object>();
+                        tmpMap.put("userId",cuTmpe.getUid());
+                        Integer userType=3;
+                        if(cuTmpe.getRelationtype()!=null){
+                            if(cuTmpe.getRelationtype().trim().equals("任课老师"))
+                                userType=2;
+                            else if(cuTmpe.getRelationtype().trim().equals("班主任"))
+                                userType=1;
+                        }
+                        tmpMap.put("userType",userType);
+                        tmpMap.put("subjectId",cuTmpe.getSubjectid()==null?-1:cuTmpe.getSubjectid());
+                        mapList.add(tmpMap);
+                    }
+                }
+                if(!EttInterfaceUserUtil.OperateClassUser(mapList, cu.getClassid(),dcschoolId)){
+                    System.out.println("classUser同步至网校失败!");
+                    return false;
+                } else
+                    System.out.println("classUser同步至网校成功!");
+            }
+        }
 
+        return true;
+    }
     /**
      * 同步ettClassUser
      * @param userNextRef
