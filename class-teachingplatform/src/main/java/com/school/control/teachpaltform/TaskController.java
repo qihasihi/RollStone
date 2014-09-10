@@ -18,6 +18,7 @@ import com.school.entity.teachpaltform.paper.PaperInfo;
 import com.school.entity.teachpaltform.paper.StuPaperLogs;
 import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
+import com.school.im1_1.manager._interface.ImInterfaceManager;
 import com.school.im1_1.manager.inter._interface.IImInterfaceManager;
 import com.school.manager.*;
 import com.school.manager.inter.*;
@@ -93,6 +94,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
     private IPaperQuestionManager paperQuestionManager;
     private IImInterfaceManager imInterfaceManager;
+    private ITermManager termManager;
     public TaskController(){
         this.gradeManager=this.getManager(GradeManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
@@ -123,6 +125,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
         this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
         this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
+        this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
+        this.termManager=this.getManager(TermManager.class);
     }
     /**
      * 根据课题ID，加载任务列表
@@ -175,6 +179,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
             tcs.setSubjectid(Integer.parseInt(subjectid));
         List<TpCourseInfo>courseList=this.tpCourseManager.getCourseList(tcs, null);
         request.setAttribute("courseList", courseList);
+
+        //当前学期
+        request.setAttribute("currentTerm",this.termManager.getMaxIdTerm(false));
+
 
 
         String termid=teacherCourseList.get(0).getTermid();

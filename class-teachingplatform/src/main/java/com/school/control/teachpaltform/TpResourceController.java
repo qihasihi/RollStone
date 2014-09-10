@@ -156,7 +156,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     public void ajaxCourseResList(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je =new JsonEntity();
         PageResult pageResult=this.getPageResultParameter(request);
-        pageResult.setOrderBy(" aa.diff_type desc, aa.ctime desc,aa.operate_time desc ");
+        //pageResult.setOrderBy(" aa.diff_type desc, aa.ctime desc,aa.operate_time desc ");
+        pageResult.setOrderBy(" aa.diff_type desc,aa.res_id, aa.ctime desc,aa.operate_time desc ");
         TpCourseResource tr=this.getParameter(request,TpCourseResource.class);
         String courseid=request.getParameter("courseid");
         String currentcourseid=request.getParameter("currentcourseid");
@@ -166,7 +167,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tr.setCourseid(null);
         if(currentcourseid!=null&&currentcourseid.trim().length()>0){
             tr.setCurrentcourseid(Long.parseLong(currentcourseid));
-            pageResult.setOrderBy(" aa.diff_type desc,aa.ctime desc,aa.operate_time desc,aa.res_flag ");
+            //pageResult.setOrderBy(" aa.diff_type desc,aa.ctime desc,aa.operate_time desc,aa.res_flag ");
+            pageResult.setOrderBy(" aa.diff_type desc,aa.res_id, aa.ctime desc,aa.operate_time desc,aa.res_flag ");
         }
 
 
@@ -711,7 +713,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         }
         TpCourseInfo tc=new TpCourseInfo();
         tc.setCourseid(Long.parseLong(courseid));
-        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getCourseList(tc, null);
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
         if(teacherCourseList==null||teacherCourseList.size()<1){
             je.setMsg("找不到指定课题!");
             response.getWriter().print(je.getAlertMsgAndBack());

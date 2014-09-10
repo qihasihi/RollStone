@@ -150,7 +150,11 @@ function preeDoPageSub(pObj){
                 <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}">
                     <col class="w30"/>
                     <col class="w910"/>
-                    <caption><span class="f_right" name="avg_score" id="sum_${pq.questionid}"> ${pq.score}</span>
+                    <caption>
+                        <c:if test="${empty param.mic}">
+                            <span class="f_right" name="avg_score" id="sum_${pq.questionid}"> ${pq.score}</span>
+                        </c:if>
+
                     </span>
                         <span  class="font-blue" id="sp_sortIdx">
                         <c:if test="${!empty pq.questionTeam}">

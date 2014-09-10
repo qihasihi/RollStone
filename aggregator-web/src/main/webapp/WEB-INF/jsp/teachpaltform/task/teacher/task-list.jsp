@@ -11,6 +11,11 @@ var courseid="${courseid}";
 var pList,pBankList;
 var total;
 $(function(){
+
+    <c:if test="${currentTerm.ref ne termid}">
+        $("#btn_add").hide();
+    </c:if>
+
     pList = new PageControl( {
         post_url : 'task?m=ajaxTaskList',
         page_id : 'page1',
@@ -538,7 +543,7 @@ function showCourseList(){
     </div>
 
     <div id="dv_task">
-        <p class="jxxt_zhuanti_add font-darkblue"><a href="task?toAddTask&courseid=${param.courseid }&gradeid=${param.gradeid}&subjectid=${param.subjectid}&termid=${param.termid}" ><span class="ico26"></span>添加任务</a></p>
+        <p class="jxxt_zhuanti_add font-darkblue" id="btn_add"><a href="task?toAddTask&courseid=${param.courseid }&gradeid=${param.gradeid}&subjectid=${param.subjectid}&termid=${param.termid}" ><span class="ico26"></span>添加任务</a></p>
         <div class="jxxt_zhuanti" id="initItemList">
 
         </div>

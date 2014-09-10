@@ -84,7 +84,7 @@
                         if(typeof itm.questionTeam!='undefined'&&itm.questionTeam.length>0&&itm.extension!='5'){
                             $.each(itm.questionTeam,function(ix,m){
                                 htm+='<tr>';
-                                htm+='<td>&nbsp;</td>';
+                               // htm+='<td>&nbsp;</td>';
                                 htm+='<td>'+(ix+1)+'.'+m.content;
                                 if(typeof m.questionOptionList!='undefined'&&m.questionOptionList.length>0){
                                     htm+='<table border="0" cellpadding="0" cellspacing="0" >';
