@@ -2157,13 +2157,14 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 JSONObject jo = new JSONObject();
                 jo.put("result","1");
                 jo.put("msg","回答完成");
+                Map m = new HashMap();
                 if(tmpTask.getTasktype()==4||tmpTask.getTasktype()==5||tmpTask.getTasktype()==6){
 
                 }else{
                     if(tmpTask.getCriteria()!=null&&tmpTask.getCriteria()==2){//提交标准的返回回答列表
                         List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
                         Map returnUserMap =null;
-                        List<Map<String,Object>> taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),userList.get(0).getUserid());
+                        List<Map<String,Object>> taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(), Integer.parseInt(classid), Integer.parseInt(isvir), userList.get(0).getUserid());
                         if(taskUserRecord!=null&&taskUserRecord.size()>0){
                             StringBuilder jids = new StringBuilder();
                             jids.append("[");
@@ -2215,55 +2216,55 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 }
                             }
                         }
-                        //获取未完成任务的人员
-                        List<Map<String,Object>> unCompleteList = new ArrayList<Map<String, Object>>();
-                        Map unComplete = null;
-                        List<Map<String,Object>> stuList = this.imInterfaceManager.getUnCompleteStu(Long.parseLong(taskid),1,Integer.parseInt(classid),userList.get(0).getUserid());
-                        if(stuList!=null&&stuList.size()>0){
-                            StringBuilder jids = new StringBuilder();
-                            jids.append("[");
-                            for(int i = 0;i<stuList.size();i++){
-                                unComplete = new HashMap();
-                                if(stuList.get(i).get("ETT_USER_ID")!=null){
-                                    unComplete.put("jid",Integer.parseInt(stuList.get(i).get("ETT_USER_ID").toString()));
-                                    jids.append("{\"jid\":"+Integer.parseInt(stuList.get(i).get("ETT_USER_ID").toString())+"},");
-                                    unCompleteList.add(unComplete);
-                                }
+                        m.put("replyList",returnUserRecord);
+                    }
+
+                    //获取未完成任务的人员
+                    List<Map<String,Object>> unCompleteList = new ArrayList<Map<String, Object>>();
+                    Map unComplete = null;
+                    List<Map<String,Object>> stuList = this.imInterfaceManager.getUnCompleteStu(Long.parseLong(taskid),1,Integer.parseInt(classid),userList.get(0).getUserid());
+                    if(stuList!=null&&stuList.size()>0){
+                        StringBuilder jids = new StringBuilder();
+                        jids.append("[");
+                        for(int i = 0;i<stuList.size();i++){
+                            unComplete = new HashMap();
+                            if(stuList.get(i).get("ETT_USER_ID")!=null){
+                                unComplete.put("jid",Integer.parseInt(stuList.get(i).get("ETT_USER_ID").toString()));
+                                jids.append("{\"jid\":"+Integer.parseInt(stuList.get(i).get("ETT_USER_ID").toString())+"},");
+                                unCompleteList.add(unComplete);
                             }
-                            String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
-                            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-                            HashMap<String,String> signMap = new HashMap();
-                            signMap.put("userList",jidstr);
-                            signMap.put("schoolId",schoolid);
-                            signMap.put("srcJid",userid);
-                            signMap.put("userType","3");
-                            signMap.put("timestamp",""+System.currentTimeMillis());
-                            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-                            signMap.put("sign",signture);
-                            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                            if(type==1){
-                                Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                                JSONArray jr = JSONArray.fromObject(obj);
-                                if(jr!=null&&jr.size()>0){
-                                    for(int i = 0;i<jr.size();i++){
-                                        JSONObject jobj = jr.getJSONObject(i);
-                                        for(int j = 0;j<unCompleteList.size();j++){
-                                            unComplete = new HashMap();
-                                            if(jobj.getInt("jid")==Integer.parseInt(unCompleteList.get(j).get("jid").toString())){
-                                                unCompleteList.get(j).put("uName", jobj.getString("realName"));
-                                            }
+                        }
+                        String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                        String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+                        //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                        HashMap<String,String> signMap = new HashMap();
+                        signMap.put("userList",jidstr);
+                        signMap.put("schoolId",schoolid);
+                        signMap.put("srcJid",userid);
+                        signMap.put("userType","3");
+                        signMap.put("timestamp",""+System.currentTimeMillis());
+                        String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+                        signMap.put("sign",signture);
+                        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                        if(type==1){
+                            Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                            JSONArray jr = JSONArray.fromObject(obj);
+                            if(jr!=null&&jr.size()>0){
+                                for(int i = 0;i<jr.size();i++){
+                                    JSONObject jobj = jr.getJSONObject(i);
+                                    for(int j = 0;j<unCompleteList.size();j++){
+                                        unComplete = new HashMap();
+                                        if(jobj.getInt("jid")==Integer.parseInt(unCompleteList.get(j).get("jid").toString())){
+                                            unCompleteList.get(j).put("uName", jobj.getString("realName"));
                                         }
                                     }
                                 }
                             }
                         }
-                        Map m = new HashMap();
-                        m.put("replyList",returnUserRecord);
-                        m.put("stuList",unCompleteList);
-                        jo.put("data",m);
                     }
+                    m.put("stuList",unCompleteList);
+                    jo.put("data",m);
                 }
                 response.getWriter().print(jo.toString());
             }else{
