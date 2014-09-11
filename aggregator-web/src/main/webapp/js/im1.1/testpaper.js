@@ -176,7 +176,7 @@ TestPaperQues.prototype.subPaper=function(){
                     lo+='&classid='+cf.classid+'&userType='+cf.userType;
                 location.href=lo;
             }else
-                alert("0||"+rps.msg);
+                alert(rps.msg);
         }
     })
 }

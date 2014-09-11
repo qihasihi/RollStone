@@ -4255,7 +4255,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         String uid=request.getParameter("userid");
         JsonEntity jsonEntity=new JsonEntity();
         if(paperid==null||paperid.length()<1||courseid==null||courseid.trim().length()<1||taskid==null||taskid.trim().length()<1){
-            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            jsonEntity.setMsg("-1||"+UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
         //验证任务
@@ -4263,7 +4263,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         tk.setTaskid(Long.parseLong(taskid));
         List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
         if(tkList==null||tkList.size()<1||!tkList.get(0).getCourseid().toString().equals(courseid.trim())){
-            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            jsonEntity.setMsg("-1||"+UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.toJSON());return ;
         }
         tk=tkList.get(0);
@@ -4410,9 +4410,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                             jsonEntity.setMsg("1||交卷成功，积分宝石保存成功！");
                         }
             }else
-                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+                jsonEntity.setMsg("-1||"+UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }else
-            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
+            jsonEntity.setMsg("-1||"+UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         response.getWriter().println(jsonEntity.toJSON());
     }
 
