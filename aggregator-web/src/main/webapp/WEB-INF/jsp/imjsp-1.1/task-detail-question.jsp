@@ -109,7 +109,12 @@
                     if (rmsg.type == "error") {
                         alert(0);
                     } else {
-                        alert(1);
+                        var msg = rmsg.msg;
+                        if(msg==1){
+                            alert(1);
+                        }else{
+                            alert(2);
+                        }
                     }
                 }
             });

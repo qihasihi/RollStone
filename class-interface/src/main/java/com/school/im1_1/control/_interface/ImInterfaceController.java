@@ -4,6 +4,7 @@ import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
 import com.school.entity.UserInfo;
+import com.school.entity.UserModelScoreLogsInfo;
 import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
@@ -237,39 +238,43 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
                 if(taskList!=null&&taskList.size()>0){
                     for(int j = 0;j<taskList.size();j++){
-                        int time =Integer.parseInt(taskList.get(j).get("LEFTTIME").toString());
-                        int days = 0;
-                        int hours =0;
-                        int mins = 0;
-                        int seconds = 0;
-                        if(time>0){
-                            seconds = time%60;
-                            if(seconds>0){
-                                mins = time/60;
-                            }else{
-                                seconds = seconds*60;
-                            }
-                            if(mins>0){
-                                hours = mins/60;
-                            }
-                            if(hours>0){
-                                days= hours/24;
-                            }
-                        }
-                        if(days>0){
-                            taskList.get(j).put("LEFTTIME",days+"天");
-                        }else{
-                            if(hours>0){
-                                taskList.get(j).put("LEFTTIME",hours+"小时");
-                            }else{
-                                if(mins>0){
-                                    taskList.get(j).put("LEFTTIME",mins+"分钟");
+                        if(taskList.get(j).get("LEFTTIME")!=null){
+                            int time =Integer.parseInt(taskList.get(j).get("LEFTTIME").toString());
+                            int days = 0;
+                            int hours =0;
+                            int mins = 0;
+                            int seconds = 0;
+                            if(time>0){
+                                seconds = time%60;
+                                if(seconds>0){
+                                    mins = time/60;
                                 }else{
-                                    if(seconds>0){
-                                        taskList.get(j).put("LEFTTIME",seconds+"秒");
+                                    seconds = seconds*60;
+                                }
+                                if(mins>0){
+                                    hours = mins/60;
+                                }
+                                if(hours>0){
+                                    days= hours/24;
+                                }
+                            }
+                            if(days>0){
+                                taskList.get(j).put("LEFTTIME",days+"天");
+                            }else{
+                                if(hours>0){
+                                    taskList.get(j).put("LEFTTIME",hours+"小时");
+                                }else{
+                                    if(mins>0){
+                                        taskList.get(j).put("LEFTTIME",mins+"分钟");
+                                    }else{
+                                        if(seconds>0){
+                                            taskList.get(j).put("LEFTTIME",seconds+"秒");
+                                        }
                                     }
                                 }
                             }
+                        }else{
+                            taskList.get(j).put("LEFTTIME","0");
                         }
                         String typename = "";
                         switch (Integer.parseInt(taskList.get(j).get("TASKTYPE").toString())){
@@ -318,6 +323,99 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         m.put("result","1");
         m.put("msg","成功");
         m.put("data",courseList);
+        JSONObject object = JSONObject.fromObject(m);
+        response.getWriter().print(object.toString());
+    }
+
+    /**
+     * 班级任务接口
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=TaskAllot",method= {RequestMethod.GET,RequestMethod.POST})
+    public void getTaskAllot(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String schoolid = request.getParameter("schoolId");
+        String userid = request.getParameter("jid");
+        String courseid = request.getParameter("courseId");
+        String timestamp = request.getParameter("time");
+        String sig = request.getParameter("sign");
+        if(!ImUtilTool.ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> map = new HashMap();
+        map.put("schoolId",schoolid);
+        map.put("jid",userid);
+        map.put("courseId",courseid);
+        map.put("time",timestamp);
+        //String sign = UrlSigUtil.makeSigSimple("TaskAllot",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("TaskAllot", map, sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
+            return;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
+        TpCourseClass tpCourseClass = new TpCourseClass();
+        tpCourseClass.setCourseid(Long.parseLong(courseid));
+        List<TpCourseClass> tpCourseClassList = this.tpCourseClassManager.getList(tpCourseClass,null);
+        Map classMap =null;
+        Map groupMap = null;
+        List groupList = null;
+        List classList = null;
+        Map returnMap = null;
+        if(tpCourseClassList!=null&&tpCourseClassList.size()>0){
+            returnMap = new HashMap();
+            for(TpCourseClass obj:tpCourseClassList){
+                if(obj.getClassid()!=null){
+                    ClassInfo ci = new ClassInfo();
+                    ci.setClassid(obj.getClassid());
+                    List<ClassInfo> ciList = this.classManager.getList(ci,null);
+                    if(ciList!=null&&ciList.size()>0){
+                        classList = new ArrayList();
+                        classMap = new HashMap();
+                        for(ClassInfo c:ciList){
+                            classMap.put("classId",c.getClassid());
+                            classMap.put("className",c.getClassname());
+                            TpGroupInfo tg = new TpGroupInfo();
+                            tg.setClassid(ci.getClassid());
+                            List<TpGroupInfo> tgList = this.tpGroupManager.getList(tg,null);
+                            if(tgList!=null&&tgList.size()>0){
+                                groupList = new ArrayList();
+                                for(TpGroupInfo g:tgList){
+                                    groupMap = new HashMap();
+                                    groupMap.put("teamId",g.getGroupid());
+                                    groupMap.put("teamName",g.getGroupname());
+                                    groupList.add(groupMap);
+                                }
+                                classMap.put("teams",groupList);
+                            }else{
+                                classMap.put("teams",null);
+                            }
+                            classList.add(classMap);
+                        }
+                    }
+                }
+            }
+            returnMap.put("classList",classList);
+        }else{
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前专题没有设置班级，请查看重试\"}");
+            return;
+        }
+        Map m = new HashMap();
+        m.put("data",returnMap);
         JSONObject object = JSONObject.fromObject(m);
         response.getWriter().print(object.toString());
     }
@@ -919,6 +1017,26 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String taskattach = jb.containsKey("taskAttach")?jb.getString("taskAttach"):"";
         int attachtype = jb.containsKey("attachType")?jb.getInt("attachType"):0;
         Object classesObj = jb.containsKey("classes")?jb.get("classes"):"";
+        if(courseid==null||courseid.equals(0)){
+            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"专题id丢失，请重试\\\"}\"");
+            return;
+        }
+        if(tasktype<1){
+            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"任务类型丢失，请重试\\\"}\"");
+            return;
+        }
+        if(tasktitle==null||tasktitle.length()<1){
+            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"任务名称丢失，请重试\\\"}\"");
+            return;
+        }
+        if(taskcontent==null||taskcontent.length()<1){
+            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"任务主体丢失，请重试\\\"}\"");
+            return;
+        }
+        if(classesObj==null){
+            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"任务对象丢失，请重试\\\"}\"");
+            return;
+        }
         //验证专题是否存在
         TpCourseInfo courseInfo=new TpCourseInfo();
         courseInfo.setCourseid(courseid);
@@ -980,9 +1098,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     //拆分json字符串，得到各个参数
                     if(jsonObject!=null&&jsonObject.size()>0){
                         Long classid=jsonObject.containsKey("taskUserTeamId")?jsonObject.getLong("taskUserTeamId"):0;
-                        int classtype=jsonObject.containsKey("taskUserType")?jsonObject.getInt("taskUserType"):0;
+                        int classtype=jsonObject.containsKey("taskUserType")?jsonObject.getInt("taskUserType"):-1;
                         String starttime=jsonObject.containsKey("startTime")?jsonObject.getString("startTime"):"";
                         String endtime=jsonObject.containsKey("endTime")?jsonObject.getString("endTime"):"";
+                        if(classid.equals(0)||classtype<0||starttime==null||starttime.length()<1||endtime==null||endtime.length()<1){
+                            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"发送任务对象参数丢失\\\"}\"");
+                            return;
+                        }
                         TpTaskAllotInfo tpTaskAllotInfo = new TpTaskAllotInfo();
                         tpTaskAllotInfo.setCourseid(courseid);
                         tpTaskAllotInfo.setTaskid(tasknextid);
@@ -1836,7 +1958,54 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(objListArray.size()>0&&sqlListArray.size()>0){
             boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
             if(flag){
-                je.setType("success");
+                UserInfo u = new UserInfo();
+                u.setRef(userRef);
+                List<UserInfo> userList = this.userManager.getList(u,null);
+                JSONObject jo = new JSONObject();
+                TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                tallot.setTaskid(Long.parseLong(taskid));
+
+                tallot.getUserinfo().setUserid(userList.get(0).getUserid());
+                List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                        ||clsMapList.get(0).get("CLASS_ID")==null){
+                    return ;
+                }
+
+                //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                //规则转换:    6             7         8
+                Integer type1=0;
+                switch(taskList.get(0).getTasktype()){
+                    case 3:     //试题
+                        type1=1;break;
+                    case 1:     //资源学习
+                        type1=2;break;
+                    case 2:
+                        type1=4;
+                        break;
+                    case 4:
+                        type1=6;
+                        break;
+                    case 5:
+                        type1=7;
+                        break;
+                    case 6:
+                        type1=8;
+                        break;
+                }
+
+                String msg=null;
+                                /*奖励加分通过*/
+                if(this.tpStuScoreLogsManager.awardStuScore(tmpTask.getCourseid()
+                        , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                        , tmpTask.getTaskid()
+                        , Long.parseLong(userList.get(0).getUserid()+""),userList.get(0).getEttuserid()+"", type1,userList.get(0).getDcschoolid())){
+                    je.setType("success");
+                    je.setMsg("2");
+                }else{
+                    je.setType("success");
+                   je.setMsg("1");
+                }
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
@@ -2155,8 +2324,49 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
             if(flag){
                 JSONObject jo = new JSONObject();
-                jo.put("result","1");
-                jo.put("msg","回答完成");
+                TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                tallot.setTaskid(Long.parseLong(taskid));
+
+                tallot.getUserinfo().setUserid(userList.get(0).getUserid());
+                List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                        ||clsMapList.get(0).get("CLASS_ID")==null){
+                    return ;
+                }
+
+                //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                //规则转换:    6             7         8
+                Integer type1=0;
+                switch(taskList.get(0).getTasktype()){
+                    case 3:     //试题
+                        type1=1;break;
+                    case 1:     //资源学习
+                        type1=2;break;
+                    case 2:
+                        type1=4;
+                        break;
+                    case 4:
+                        type1=6;
+                        break;
+                    case 5:
+                        type1=7;
+                        break;
+                    case 6:
+                        type1=8;
+                        break;
+                }
+                String msg=null;
+                                /*奖励加分通过*/
+                if(this.tpStuScoreLogsManager.awardStuScore(tmpTask.getCourseid()
+                        , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                        , tmpTask.getTaskid()
+                        , Long.parseLong(userList.get(0).getUserid()+""),userid, type1,Integer.parseInt(schoolid))){
+                    jo.put("result","1");
+                    jo.put("msg","答题成功，积分宝石保存成功！");
+                }else{
+                    jo.put("result","2");
+                    jo.put("msg","答题成功，积分宝石保存失败！");
+                }
                 Map m = new HashMap();
                 if(tmpTask.getTasktype()==4||tmpTask.getTasktype()==5||tmpTask.getTasktype()==6){
 
@@ -2412,8 +2622,49 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
         bool = this.imInterfaceManager.doExcetueArrayProc(sqlListArray,objListArray);
         if(bool){
-            jo.put("result", "1");
-            jo.put("msg","添加成功");
+            TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+            tallot.setTaskid(Long.parseLong(taskId));
+
+            tallot.getUserinfo().setUserid(userList.get(0).getUserid());
+            List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+            if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                    ||clsMapList.get(0).get("CLASS_ID")==null){
+                return ;
+            }
+
+            //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+            //规则转换:    6             7         8
+            Integer type1=0;
+            switch(tList.get(0).getTasktype()){
+                case 3:     //试题
+                    type1=1;break;
+                case 1:     //资源学习
+                    type1=2;break;
+                case 2:
+                    type1=4;
+                    break;
+                case 4:
+                    type1=6;
+                    break;
+                case 5:
+                    type1=7;
+                    break;
+                case 6:
+                    type1=8;
+                    break;
+            }
+            String msg=null;
+                                /*奖励加分通过*/
+            if(this.tpStuScoreLogsManager.awardStuScore(tList.get(0).getCourseid()
+                    , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                    , tList.get(0).getTaskid()
+                    , Long.parseLong(userList.get(0).getUserid() + ""), userid, type1, Integer.parseInt(schoolid))){
+                jo.put("result","1");
+                jo.put("msg","答题成功，积分宝石保存成功！");
+            }else{
+                jo.put("result","2");
+                jo.put("msg","答题成功，积分宝石保存失败！");
+            }
         }else{
             jo.put("result","0");
             jo.put("msg","添加失败");
@@ -3347,9 +3598,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             if(taskUserRecord!=null&&taskUserRecord.size()>0){
                 request.setAttribute("resname",taskList.get(0).getResourcename());
                 request.setAttribute("userRecord",taskUserRecord);
-                return new ModelAndView("");
+                return new ModelAndView("/imjsp-1.1/remote-resource-detail");
             }else{
-                request.getRequestDispatcher("http://www.baidu.com").forward(request,response);
+                request.setAttribute("resname",taskList.get(0).getResourcename());
+                return new ModelAndView("/imjsp-1.1/remote-resource-detail");
             }
         }
         return null;

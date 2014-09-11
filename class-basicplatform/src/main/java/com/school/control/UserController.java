@@ -6309,7 +6309,7 @@ public class UserController extends BaseController<UserInfo> {
     }
 
     /**
-     * 乐知行用户添加接口
+     * 云端分校管理员添加接口
      * @param request
      * @param response
      * @throws Exception
