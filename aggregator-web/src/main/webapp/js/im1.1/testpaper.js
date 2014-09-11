@@ -11,20 +11,18 @@ $(function(){
 //计时
 var tmpTime= 0,allowTmpNext=0,allowClickTime= 1,allowNext=true;
 function beginJs1(){
-    tmpTime++;
-    if(tmpTime>=allowClickTime){
-        tmpTime=0;
-        allowRight=true;
-    }else
-        allowRight=false;
-    if(!allowNext){
-        allowTmpNext++;
-        if(allowTmpNext%3==0){
-            allowNext=true;
-            tmpTime=0;
+//    tmpTime++;
+//    if(tmpTime>=allowClickTime){
+//        tmpTime=0;
+//        allowRight=true;
+//    }else
+//        allowRight=false;
+    setTimeout(function(){
+        if(!allowNext){
+                allowNext=true;
+                tmpTime=0;
         }
-    }
-    setTimeout("beginJs1()",300);
+    },1000);
 }
 
 /*************************************答题作答*************************/
@@ -121,7 +119,7 @@ TestPaperQues.prototype.subPaper=function(){
     //提交
     var pid=this.config.paperid;
     if(typeof(pid)=="undefined"||pid.length<1){
-        alert('异常错误，参数异常!');return;
+        alert('0||异常错误，参数异常!');return;
     }
     var confirmMsg='是否确定交卷？ 提示：提交之后，你将无法再次作答。 ';
 
@@ -169,16 +167,16 @@ TestPaperQues.prototype.subPaper=function(){
         data:{paperid:pid,courseid:this.config.courseid,taskid:this.config.taskid,userid:this.config.userid},
         cache: false,
         error:function(){
-            alert('当前网络不稳定，请重试11111');
+            alert('0||当前网络不稳定，请重试!');
         },success:function(rps){
             if(rps.type=="success"){
-                alert(rps.msg);
+                alert("1||答题成功！");
 //                // 进入详情页面
                 var lo='imapi1_1?m=testDetail&userid='+cf.userid+'&taskid='+cf.taskid+'&paperid='+cf.paperid+'&courseid='+cf.courseid;
                     lo+='&classid='+cf.classid+'&userType='+cf.userType;
                 location.href=lo;
             }else
-                alert(rps.msg);
+                alert("0||"+rps.msg);
         }
     })
 }
@@ -272,7 +270,7 @@ TestPaperQues.prototype.freeSubQuesAnswer=function(direcType){
         //提交数据
         this.subQues(direcType);
     }else{
-        alert('未作答!');
+        alert('3||未作答!');
         if(direcType!=-2)
             this.nextNum(direcType);
     }
@@ -309,7 +307,7 @@ TestPaperQues.prototype.subQues=function(direcType){
     //提交
     var pid=this.config.paperid;
     if(typeof(this.config.paperid)=="undefined"||pid.length<1){
-        alert('异常错误，参数异常!');return;
+        alert('0||异常错误，参数异常!');return;
     }
     //选择题
     var annexObj=$("#txt_f_"+quesid);
@@ -349,15 +347,15 @@ TestPaperQues.prototype.subQues=function(direcType){
             data:{taskid:taskid,paperid:pid,userid:this.config.userid,testQuesData:$.toJSON(data)},
             cache: false,
             error:function(){
-                alert('当前网络不稳定，请重试');
+                alert('0||当前网络不稳定，请重试');
             },success:function(rps){
                 if(rps.type=="success"){
                     if(subQuesId.indexOf(","+quesid+",")<0)
                         subQuesId+=quesid+",";
                     controlObj.nextNum(direcType);
-                    alert(rps.msg);
+                    alert("2||答题成功！");
                 }else
-                    alert(rps.msg);
+                    alert("0||"+rps.msg);
             }
         })
     }
@@ -426,11 +424,11 @@ TestPaperQues.prototype.loadQues=function(){
         dataType:'json',
         type:'post',
         data:p,
-        error:function(){alert('当前网络不稳定，请重试');},
+        error:function(){alert('0||当前网络不稳定，请重试');},
         success:function(rps){
             //失败
             if(rps.type=="error"){
-                alert(rps.msg);return;
+                alert("0"||rps.msg);return;
             }
             var h='';
             if(rps.type=="success"){
@@ -579,7 +577,9 @@ TestPaperQues.prototype.loadQues=function(){
                             var selObj=$(this).children().children("input[name*='rdo_answer']");
                             var selType=selObj.attr("type");
                             zm=this;
-                            if(!allowRight)return;
+                            if(!allowRight){
+                                allowRight=true;return;
+                            }
 
                             if(selType=='checkbox'){
                                 if($(zm).attr("class").indexOf("crumb")>-1){
@@ -666,7 +666,7 @@ TestPaperDetail.prototype.initController=function(obj){
 };
 TestPaperDetail.prototype.nextNum=function(type){
     if(typeof(this.config.quesidstr)=="undefined"||this.config.quesidstr.length<1){
-        alert('异常错误，参数异常!');return;
+        alert('0||异常错误，参数异常!');return;
     }
     if(type==-2)
         return;
@@ -804,11 +804,11 @@ TestPaperDetail.prototype.loadQues=function(){
         dataType:'json',
         type:'post',
         data:p,
-        error:function(){alert('当前网络不稳定，请重试');},
+        error:function(){alert('0||当前网络不稳定，请重试');},
         success:function(rps){
             //失败
             if(rps.type=="error"){
-                alert(rps.msg);return;
+                alert("0||"+rps.msg);return;
             }
             var h='';
             if(rps.type=="success"){

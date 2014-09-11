@@ -61,18 +61,23 @@
                    tqControler.nextNum(1);
             </c:if>
             document.getElementById("fm_free").submit=function(){
-                nextNum(-1,tqControler,2);
+                if(allowNext){
+                    nextNum(-1,tqControler,2);
+                }
             }
             document.getElementById("fm_next").submit=function(){
-                nextNum(1,tqControler,2);
+                if(allowNext){
+                    nextNum(1,tqControler,2);
+                }
             }
             document.getElementById("fm_subPaper").submit=function(){
                 subPaper(tqControler);
             }
             document.getElementById("fm_subQues").submit=function(){
                 if(!allowNext){
-                    alert('请勿过度频繁点击!');
-                    return(false);
+                    beginJs1();
+                    alert('4||请勿过度频繁点击!');
+                    return false;
                 }
                 tqControler.freeSubQuesAnswer(-2);
                 return false;
@@ -85,10 +90,10 @@
 <div class="zxcs_test" id="dv_question">
 </div>
 <!--先提交当前问题，再进入上一题-->
-<%--<a href="javascript:;" onclick="fm_subQues.submit();fm_free.submit();">上一题</a>--%>
-<%--<!--先提交当前问题，再进入下一题-->--%>
-<%--<a  href="javascript:;" onclick="fm_subQues.submit();fm_next.submit();">下一题</a>--%>
-<a href="javascript:;" onclick="fm_subQues.submit();fm_subPaper.submit()">交卷</a>
+<a href="javascript:;" onclick="fm_subQues.submit();fm_free.submit();">上一题</a>
+<!--先提交当前问题，再进入下一题-->
+<a  href="javascript:;" onclick="fm_subQues.submit();fm_next.submit();">下一题</a>
+<%--<a href="javascript:;" onclick="fm_subQues.submit();fm_subPaper.submit()">交卷</a>--%>
 <!--上一题的FRM-->
 <form action="#" id="fm_free" method="post">
 </form>

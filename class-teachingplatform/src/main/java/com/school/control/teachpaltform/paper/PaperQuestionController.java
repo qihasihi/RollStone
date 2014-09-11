@@ -4361,16 +4361,14 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         if(sqlArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
             if(this.stuPaperLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
                 jsonEntity.setType("success");
-                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-                //当UID==null的时候，说明是手机端过来。奖励加分由手机端触发。
-                if(uid==null||uid.trim().length()<1){
+                jsonEntity.setMsg("5||"+UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                         //添加奖励
                  /*奖励加分*/
                         //得到班级ID
                         TpTaskAllotInfo tallot=new TpTaskAllotInfo();
                         tallot.setTaskid(Long.parseLong(taskid));
 
-                        tallot.getUserinfo().setUserid(this.logined(request).getUserid());
+                        tallot.getUserinfo().setUserid(userid);
                         List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
                         if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
                                 ||clsMapList.get(0).get("CLASS_ID")==null){
@@ -4406,12 +4404,11 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                         if(this.tpStuScoreLogsManager.awardStuScore(tk.getCourseid()
                                 , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
                                 , tk.getTaskid()
-                                , Long.parseLong(this.logined(request).getUserid() + ""),jid, type,schoolid)){
-                            msg="恭喜您,获得了1积分和1蓝宝石!";
+                                , Long.parseLong(userid + ""),jid, type,schoolid)){
+                            msg="1||恭喜您,获得了1积分和1蓝宝石!";
                             request.getSession().setAttribute("msg",msg);
-                        }else
-                            System.out.println("awardScore err ");
-                }
+                            jsonEntity.setMsg(msg);
+                        }
             }else
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }else

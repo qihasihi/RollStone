@@ -61,17 +61,22 @@
             </c:if>
             //重写相关FORM submit事件,不让其真正提交
             document.getElementById("fm_free").submit=function(){
-                nextNum(-1,tqControler);
+                if(allowNext){
+                     nextNum(-1,tqControler);
+                }
             }
             document.getElementById("fm_next").submit=function(){
-                nextNum(1,tqControler);
+                if(allowNext){
+                     nextNum(1,tqControler);
+                }
             }
             document.getElementById("fm_subQues").submit=function(){
                 if(!allowNext){
-                    alert('请勿过度频繁点击!');
+                    beginJs1();
+                    alert('4||请勿过度频繁点击!');
                     return(false);
                 }
-                alert('作答成功!');
+                alert('1||作答成功!');
                 return false;
             }
         });
