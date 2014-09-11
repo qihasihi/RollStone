@@ -4469,11 +4469,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long ct=Long.parseLong(time.toString());
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
-        if(d>3){//大于三分钟
-            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
-            response.getWriter().print(returnJo.toString());
-            return;
-        }
+//        if(d>3){//大于三分钟
+//            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+//            response.getWriter().print(returnJo.toString());
+//            return;
+//        }
         //去除sign
         paramMap.remove("sign");
         //验证Md5
