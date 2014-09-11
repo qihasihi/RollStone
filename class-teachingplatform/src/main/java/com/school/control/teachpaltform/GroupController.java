@@ -744,8 +744,9 @@ public class GroupController extends BaseController<TpGroupInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
-
-
+        //记录操作相关的GroupId集合
+        List<Long> operateGroupIdList=new ArrayList<Long>();
+        operateGroupIdList.add(gsList.get(0).getGroupid());
         if(isleader.equals("1")){
             //清空GroupId组长
             TpGroupStudent gsUpd= new TpGroupStudent();
@@ -757,6 +758,9 @@ public class GroupController extends BaseController<TpGroupInfo>{
                 sqlListArray.add(sql.toString());
                 objListArray.add(objList);
             }
+            //记录
+            if(!operateGroupIdList.contains(Long.parseLong(groupid)))
+                operateGroupIdList.add(Long.parseLong(groupid));
         }
 
         TpGroupStudent groupStudent=gsList.get(0);
@@ -792,11 +796,38 @@ public class GroupController extends BaseController<TpGroupInfo>{
                 sqlListArray.add(sql.toString());
                 objListArray.add(objList);
             }
+            //记录
+            if(!operateGroupIdList.contains(Long.parseLong(groupid)))
+                operateGroupIdList.add(Long.parseLong(groupid));
         }
 
 		if(this.tpGroupStudentManager.doExcetueArrayProc(sqlListArray,objListArray)){
 			je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
 			je.setType("success");
+
+            if(operateGroupIdList!=null&&operateGroupIdList.size()>0){
+                for(Long gid:operateGroupIdList){
+                    if(gid!=null&&gid.toString().length()>0){
+                        //得到学校ID
+                        TpGroupInfo gp=new TpGroupInfo();
+                        gp.setGroupid(gid);
+                        List<TpGroupInfo> gpList=this.tpGroupManager.getList(gp,null);
+                        if(gpList!=null&&gpList.size()>0){
+                            Integer clsid=gpList.get(0).getClassid();
+                            ClassInfo c=new ClassInfo();
+                            c.setClassid(clsid);
+                            List<ClassInfo> clsList=this.classManager.getList(c,null);
+                            if(clsList!=null&&clsList.size()>0){
+                                Integer dcschoolid=clsList.get(0).getDcschoolid();
+                                if(!updateEttGroupUser(clsid, gpList.get(0).getGroupid(), dcschoolid)){
+                                    System.out.println("发送ETT修改小组人员命令失败!");
+                                }else
+                                    System.out.println("发送ETT修改小组人员命令成功!");
+                            }
+                        }
+                    }
+                }
+            }
 		}else{ 
 			je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
 		}

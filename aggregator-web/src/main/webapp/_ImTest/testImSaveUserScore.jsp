@@ -28,7 +28,7 @@
             text-decoration: brown;
         }
     </style>
-    <title>im接品---课堂纪实</title>
+    <title>im接品---添加积分道具</title>
     <script type="text/javascript">
 
         //生成加密串

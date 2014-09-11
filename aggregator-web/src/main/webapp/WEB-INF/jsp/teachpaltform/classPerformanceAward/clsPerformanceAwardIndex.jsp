@@ -206,7 +206,7 @@
                             </c:if>
                     </c:if>
                     h+='</td><td>${dlm.STU_NO}</td>';
-                    h+='<td>${dlm.STU_NAME}</td>';
+                    h+='<td><a href="javascript:;">${dlm.STU_NAME}</a></td>';
                     h+='<td  style="color:gray">${dlm.WSSCORE}</td>';
 
                     <c:if test="${!empty clsDcType&&clsDcType==3}">

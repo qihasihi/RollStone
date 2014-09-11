@@ -22,7 +22,7 @@ function beginJs1(){
                 allowNext=true;
                 tmpTime=0;
         }
-    },500);
+    },900);
 }
 
 /*************************************答题作答*************************/
@@ -384,6 +384,7 @@ TestPaperQues.prototype.loadQues=function(){
 
         if($("#dv_pq_"+this.currentQuesObj.parentQuesId).length>0){
             $("#dv_pq_"+this.currentQuesObj.parentQuesId).show();
+
         }
     }
 
@@ -402,8 +403,9 @@ TestPaperQues.prototype.loadQues=function(){
     }
 
 
-    if($("#dv_q_"+this.currentQuesObj.questionid).length>0){
-        $("#dv_q_"+this.currentQuesObj.questionid).show();
+    if($("#dv_q_"+this.currentQuesObj.quesid).length>0){
+        $("#dv_q_"+this.currentQuesObj.quesid).show();
+        $("#dv_df"+this.currentQuesObj.quesid).show();
     }
 
 
@@ -451,7 +453,7 @@ TestPaperQues.prototype.loadQues=function(){
                     h='<div id="dv_pq_'+parentQuesObj.questionid+'">';
                     hqx='<div id="dv_qx_'+parentQuesObj.questionid+'">';
                 }else
-               hqx+='<div id="dv_df_'+quesObj.questionid+'"><h1><span class="f_right" style="display:none">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
+               hqx+='<div id="dv_df'+quesObj.questionid+'"><h1><span class="f_right" style="display:none">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
                 //h+='<span class="f_right">得分：0分</span>';
                 var qtypeInfo='未知';
                 if(quesObj.questiontype==3||quesObj.questiontype==7)
@@ -782,8 +784,9 @@ TestPaperDetail.prototype.loadQues=function(){
     }
 
 
-    if($("#dv_q_"+this.currentQuesObj.questionid).length>0){
-        $("#dv_q_"+this.currentQuesObj.questionid).show();
+    if($("#dv_q_"+this.currentQuesObj.quesid).length>0){
+        $("#dv_q_"+this.currentQuesObj.quesid).show();
+        $("#dv_df"+this.currentQuesObj.quesid).show();
     }
 
     var config=this.config;
@@ -1104,6 +1107,8 @@ TestPaperDetail.prototype.loadQues=function(){
                                 });
                             }
                         }
+                    }else{
+                        $("#sp_df_"+quesObj.questionid).html("0.00");
                     }
                     //如果是选择题，则有每题正确率
                     if(config.userType==2&&typeof(quesObj.optTJMapList)!="undefined"&&quesObj.optTJMapList.length>0){

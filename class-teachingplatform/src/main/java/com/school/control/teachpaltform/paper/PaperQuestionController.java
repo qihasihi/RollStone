@@ -4281,7 +4281,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             userid=Integer.parseInt(uid);
             //验证用户
             UserInfo u=new UserInfo();
-
+            u.setUserid(userid);
             List<UserInfo> uList=this.userManager.getList(u,null);
             if(uList==null||uList.size()<1){
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));

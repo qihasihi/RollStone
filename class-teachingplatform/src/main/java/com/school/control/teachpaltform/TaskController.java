@@ -183,9 +183,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
         //当前学期
         request.setAttribute("currentTerm",this.termManager.getMaxIdTerm(false));
-
-
-
         String termid=teacherCourseList.get(0).getTermid();
         request.setAttribute("courseid", courseid);
         request.setAttribute("termid", termid);
@@ -3760,7 +3757,11 @@ public class TaskController extends BaseController<TpTaskInfo>{
     public ModelAndView toloadStuSelfPerformance(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         String termid=request.getParameter("termid");
         String subjectid=request.getParameter("subjectid");
-        List<Map<String,Object>> performanceList = this.taskPerformanceManager.getStuSelfPerformance(this.logined(request).getUserid(),Long.parseLong("0"),0,termid,Integer.parseInt(subjectid));
+        String uid=request.getParameter("userid");
+        Integer userid=this.logined(request).getUserid();
+        if(uid!=null&&uid.trim().length()>0)
+            userid=Integer.parseInt(uid.trim());
+        List<Map<String,Object>> performanceList = this.taskPerformanceManager.getStuSelfPerformance(userid,Long.parseLong("0"),0,termid,Integer.parseInt(subjectid));
         List<Map<String,Object>> courseObj = new ArrayList<Map<String, Object>>();
         for(Map o:performanceList){
             Map m = new HashMap();
@@ -3802,9 +3803,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String courseid = request.getParameter("courseid");
         String termid=request.getParameter("termid");
         String subjectid=request.getParameter("subjectid");
+        String userid=request.getParameter("userid");
+        Integer uid=this.logined(request).getUserid();
+        if(userid!=null&&userid.trim().length()>0)
+            uid=Integer.parseInt(userid);
         if(courseid==null)
             courseid="0";
-        List<Map<String,Object>> performanceList = this.taskPerformanceManager.getStuSelfPerformance(this.logined(request).getUserid(),Long.parseLong(courseid),1,termid,Integer.parseInt(subjectid));
+        List<Map<String,Object>> performanceList = this.taskPerformanceManager.getStuSelfPerformance(uid,Long.parseLong(courseid),1,termid,Integer.parseInt(subjectid));
         Integer totalNum=performanceList.size();
         Integer completeNum=0;
         Integer unBeginNum=0;

@@ -62,12 +62,15 @@
 
         function getPerformance(){
             var course_id = $("#courseSel").val();
+            var p={courseid:course_id,termid:term_id,subjectid:subject_id};
+            <c:if test="${!empty param.userid}">
+                p.userid="${param.userid}";
+            </c:if>
             $.ajax({
                 url:'task?m=stuSelfPerformance',//cls!??.action
                 dataType:'json',
                 type:'POST',
-                data:{courseid:course_id,termid:term_id,subjectid:subject_id
-                },
+                data:p,
                 cache: false,
                 error:function(){
                     alert('异常错误!系统未响应!');

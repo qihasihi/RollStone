@@ -4,15 +4,18 @@ import com.school.control.base.BaseController;
 import com.school.entity.DictionaryInfo;
 import com.school.entity.teachpaltform.TpCourseClass;
 import com.school.entity.teachpaltform.TpCourseInfo;
+import com.school.entity.teachpaltform.TpCourseTeachingMaterial;
 import com.school.entity.teachpaltform.TpOperateInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.manager.DictionaryManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
+import com.school.manager.inter.teachpaltform.ITpCourseTeachingMaterialManager;
 import com.school.manager.inter.teachpaltform.ITpOperateManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.teachpaltform.TpCourseManager;
+import com.school.manager.teachpaltform.TpCourseTeachingMaterialManager;
 import com.school.manager.teachpaltform.TpOperateManager;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
 import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
@@ -43,7 +46,9 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
         this.tpCourseManager=getManager(TpCourseManager.class);
         this.tpOperateManager=getManager(TpOperateManager.class);
         this.tpTopicThemeManager=getManager(TpTopicThemeManager.class);
+        this.tpCourseTeachingMaterialManager=getManager(TpCourseTeachingMaterialManager.class);
     }
+    private ITpCourseTeachingMaterialManager tpCourseTeachingMaterialManager;
     private ITpTopicThemeManager tpTopicThemeManager;
     private ITpTopicManager tpTopicManager;
     private IDictionaryManager dictionaryManager;
@@ -104,7 +109,14 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
         if(objMap!=null&&objMap.size()>0)
             mp.put("staticObj", objMap.get(0));
 
-
+        Integer subjectid=null;
+        //得到学科
+        //获取当前专题教材
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(topicInfo.getCourseid());
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0)
+            subjectid=materialList.get(0).getSubjectid();
 
         //身份处理
         if(roleStr.equals("TEACHER")){  //教师身份
@@ -112,11 +124,17 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
             TpCourseInfo tcentity=new TpCourseInfo();
             tcentity.setUserid(this.logined(request).getUserid());
             tcentity.setTermid(courseList.get(0).getTermid());
+            if(subjectid!=null)
+                tcentity.setSubjectid(subjectid);
+
+
             mp.put("courseList",this.tpCourseManager.getCourseList(tcentity, null));
         }else{                          //学生身份
             //查询学生可以查看到的专题
             TpCourseInfo tcentity=new TpCourseInfo();
             tcentity.setUserid(this.logined(request).getUserid());
+            if(subjectid!=null)
+                tcentity.setSubjectid(subjectid);
             mp.put("courseList",this.tpCourseManager.getStuCourseList(tcentity,null));
         }
         return new ModelAndView("/interactive/topic/index",mp);
