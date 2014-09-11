@@ -416,6 +416,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
         Map m = new HashMap();
         m.put("data",returnMap);
+        m.put("result","1");
+        m.put("msg","≤È—Ø≥…π¶");
         JSONObject object = JSONObject.fromObject(m);
         response.getWriter().print(object.toString());
     }
