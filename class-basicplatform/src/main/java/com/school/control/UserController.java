@@ -1917,30 +1917,30 @@ public class UserController extends BaseController<UserInfo> {
                 }
             }
 
-            //班级
-            if(clsstr!=null&&clsstr.length()>0){
-                //删除当前学年及以后的班级
-                ClassUser cudelete=new ClassUser();
-                cudelete.setAfteryear(clsyearList.get(0).getClassyearvalue());
-                cudelete.getUserinfo().setRef(ref);
-                cudelete.setRelationtype("任课老师");
-                List<ClassUser> cuList=this.classUserManager.getList(cudelete,null);
-                if(cuList!=null&&cuList.size()>0){
-                    for (ClassUser tmpCu:cuList){
-                        if(tmpCu!=null&&tmpCu.getClassid()!=null){
-                            if(!operateCls.contains(tmpCu.getClassid()))
-                                operateCls.add(tmpCu.getClassid());
-                        }
+            //删除当前学年及以后的班级
+            ClassUser cudelete=new ClassUser();
+            cudelete.setAfteryear(clsyearList.get(0).getClassyearvalue());
+            cudelete.getUserinfo().setRef(ref);
+            cudelete.setRelationtype("任课老师");
+            List<ClassUser> cuList=this.classUserManager.getList(cudelete,null);
+            if(cuList!=null&&cuList.size()>0){
+                for (ClassUser tmpCu:cuList){
+                    if(tmpCu!=null&&tmpCu.getClassid()!=null){
+                        if(!operateCls.contains(tmpCu.getClassid()))
+                            operateCls.add(tmpCu.getClassid());
                     }
                 }
+            }
 
-                sql=new StringBuilder();
-                objList=this.classUserManager.getDeleteSql(cudelete, sql);
-                if (objList != null && sql != null) {
-                    sqllist.add(sql.toString());
-                    objListArray.add(objList);
-                }
+            sql=new StringBuilder();
+            objList=this.classUserManager.getDeleteSql(cudelete, sql);
+            if (objList != null && sql != null) {
+                sqllist.add(sql.toString());
+                objListArray.add(objList);
+            }
 
+            //班级
+            if(clsstr!=null&&clsstr.length()>0){
                 //添加任课班级
                 String[]clsArray=clsstr.split(",");
                 for (int i = 0; i < clsArray.length; i++) {
@@ -1985,35 +1985,32 @@ public class UserController extends BaseController<UserInfo> {
                 sqllist.add(sql.toString());
             }
 
+            //删除当前学年及以后的班级
+            ClassUser cudelete=new ClassUser();
+            cudelete.setAfteryear(clsyearList.get(0).getClassyearvalue());
+            cudelete.getUserinfo().setRef(ref);
+            cudelete.setRelationtype("学生");
+
+
+            List<ClassUser> cuList=this.classUserManager.getList(cudelete,null);
+            if(cuList!=null&&cuList.size()>0){
+                for (ClassUser tmpCu:cuList){
+                    if(tmpCu!=null&&tmpCu.getClassid()!=null){
+                        if(!operateCls.contains(tmpCu.getClassid()))
+                            operateCls.add(tmpCu.getClassid());
+                    }
+                }
+            }
+
+            sql=new StringBuilder();
+            objList=this.classUserManager.getDeleteSql(cudelete, sql);
+            if (objList != null && sql != null) {
+                sqllist.add(sql.toString());
+                objListArray.add(objList);
+            }
 
             //班级
             if(clsstr!=null&&clsstr.length()>0){
-                //删除当前学年及以后的班级
-                ClassUser cudelete=new ClassUser();
-                cudelete.setAfteryear(clsyearList.get(0).getClassyearvalue());
-                cudelete.getUserinfo().setRef(ref);
-                cudelete.setRelationtype("学生");
-
-
-                List<ClassUser> cuList=this.classUserManager.getList(cudelete,null);
-                if(cuList!=null&&cuList.size()>0){
-                    for (ClassUser tmpCu:cuList){
-                        if(tmpCu!=null&&tmpCu.getClassid()!=null){
-                            if(!operateCls.contains(tmpCu.getClassid()))
-                                operateCls.add(tmpCu.getClassid());
-                        }
-                    }
-                }
-
-                sql=new StringBuilder();
-
-
-
-                objList=this.classUserManager.getDeleteSql(cudelete, sql);
-                if (objList != null && sql != null) {
-                    sqllist.add(sql.toString());
-                    objListArray.add(objList);
-                }
 
                 //添加班级
                 String[]clsArray=clsstr.split(",");

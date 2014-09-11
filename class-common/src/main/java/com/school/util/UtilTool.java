@@ -1031,6 +1031,44 @@ public class UtilTool implements java.io.Serializable {
         }
     }
 
+    public static void  ReduceImg(File file,String filename,int default_w,int default_h){
+        Long w;
+        Long h;
+        float cos;
+        try{
+            BufferedImage src = ImageIO.read(file);  // 读入源图像
+            w=Long.valueOf(src.getWidth());
+            h=Long.valueOf(src.getHeight());
+
+
+            if (w > default_w
+                    || h > default_h) {
+                // 该图片进行缩放
+                // 得到默认比便
+                if(w>h){
+                    if(w>default_w){
+                        cos=default_w*1.0f/w*1.0f;
+                        w=Math.round((w * default_w * 1.0 / w));
+                        h=Math.round(h*1.0*cos);
+                    }
+                }
+                if(w<=h){
+                    if(h>default_h){
+                        cos=default_h*1.0f/h*1.0f;
+                        h=Math.round((h * default_h * 1.0 / h));
+                        w=Math.round(w*1.0*cos);
+                    }
+                }
+            }
+            UtilTool.Redraw(file,filename,w.intValue(),h.intValue());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
+    }
+
     /**
      * 进行编码设置
      *

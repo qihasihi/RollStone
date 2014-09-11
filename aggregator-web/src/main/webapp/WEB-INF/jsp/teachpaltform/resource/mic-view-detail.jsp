@@ -80,11 +80,13 @@
                     <col class="w30"/>
                     <col class="w880"/>
                     <caption>
-                        <c:if test="${pq.questiontype==1||pq.questiontype==2}">
-                            <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${pq.questionid}&type=1&paperid=${paperid}" class="font-blue f_right">查看回答</a>
-                        </c:if>
-                        <c:if test="${pq.questiontype==3||pq.questiontype==4}">
-                            <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${pq.questionid}&type=2&paperid=${paperid}" class="font-blue f_right">查看回答</a>
+                        <c:if test="${!empty taskid}">
+                            <c:if test="${pq.questiontype==1||pq.questiontype==2}">
+                                <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${pq.questionid}&type=1&paperid=${paperid}" class="font-blue f_right">查看回答</a>
+                            </c:if>
+                            <c:if test="${pq.questiontype==3||pq.questiontype==4}">
+                                <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${pq.questionid}&type=2&paperid=${paperid}" class="font-blue f_right">查看回答</a>
+                            </c:if>
                         </c:if>
                         <span class="font-blue">${idx.index+1}</span>/${fn:length(pqList)}
                     </caption>
@@ -141,11 +143,13 @@
                                         <col class="w30"/>
                                         <col class="w850"/>
                                         <caption>
-                                            <c:if test="${c.questiontype<3}">
-                                                <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${c.questionid}&type=1&paperid=${paperid}" class="font-blue f_right">查看回答</a>
-                                            </c:if>
-                                            <c:if test="${c.questiontype==3||c.questiontype==4||c.questiontype==7||c.questiontype==8}">
-                                                <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${c.questionid}&type=2&paperid=${paperid}" class="font-blue f_right">查看回答</a>
+                                            <c:if test="${!empty taskid}">
+                                                <c:if test="${c.questiontype<3}">
+                                                    <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${c.questionid}&type=1&paperid=${paperid}" class="font-blue f_right">查看回答</a>
+                                                </c:if>
+                                                <c:if test="${c.questiontype==3||c.questiontype==4||c.questiontype==7||c.questiontype==8}">
+                                                    <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${c.questionid}&type=2&paperid=${paperid}" class="font-blue f_right">查看回答</a>
+                                                </c:if>
                                             </c:if>
                                         </caption>
                                         <c:forEach items="${c.questionOption}" var="option">

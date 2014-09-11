@@ -28,6 +28,9 @@
             <c:if test="${empty hasVideo}">
                 $("#task_type option[value=6]").remove();
             </c:if>
+            <c:if test="${empty hasPaper}">
+                $("#task_type option[value=4]").remove();
+            </c:if>
 
 
             $("input[name='time_rdo']").bind("click",function(){

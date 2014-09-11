@@ -157,7 +157,7 @@ function uploadImg(){
     <ul>
         <li><a href="user?m=list">用户管理</a></li>
         <li><a href="cls?m=list">组织管理</a></li>
-        <li class="crumb"><a href="term?m=list">系统设置</a></li>
+        <li class="crumb"><a href="sysm?m=logoconfig">系统设置</a></li>
     </ul>
 </div>
   
@@ -188,8 +188,10 @@ function uploadImg(){
 
     <div class="contentL">
       <ul>
+          <%if(visible){%>
         <li><a href="term?m=list">学年管理</a></li>
         <li><a href="subject?m=list">学科管理</a></li>
+          <%}%>
         <li class="crumb"><a href="sysm?m=logoconfig">Logo设置</a></li>
       </ul>
     </div>

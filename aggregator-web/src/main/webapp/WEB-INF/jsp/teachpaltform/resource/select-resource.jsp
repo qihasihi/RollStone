@@ -144,6 +144,8 @@
         function showLi(){
             $("li").filter(function(){return this.id.indexOf('li_')!=-1}).show();
         }
+
+
     </script>
 
 
@@ -166,7 +168,7 @@
                     <c:if test="${idx.index<=12}">
                         <li>
                     </c:if>
-                    <a href="#"  class="kapian"><p><img src="<%=fileSystemIpPort%>${r.resid>0?'clouduploadfile':'/uploadfile/'}${r.path}/001${r.filesuffixname}.pre.jpg" width="215" height="122"></p>
+                    <a href="javascript:showModalDialog('tpres?m=previewMic&courseid=${param.courseid}&resid=${r.resid}','','dialogWidth:900px;dialogHeight:700px;dialogLeft:100px;dialogTop:50px;status:no;location:no')"  class="kapian"><p><img src="<%=fileSystemIpPort%>${r.resid>0?'clouduploadfile':'/uploadfile/'}${r.path}/001${r.filesuffixname}.pre.jpg" width="215" height="122"></p>
                         <p class="text">${r.realname}&nbsp;&nbsp;${r.resname}</p></a>
                         <p class="pic"><a class="ico51" href="javascript:sub_data('${r.resid}')" title="发任务"></a></p>
                     </li>

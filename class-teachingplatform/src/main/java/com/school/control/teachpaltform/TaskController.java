@@ -1,5 +1,6 @@
 package com.school.control.teachpaltform;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -193,8 +194,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             request.getSession().setAttribute("session_grade",gradeid);
         if(subjectid!=null&&!subjectid.toString().equals("0"))
             request.getSession().setAttribute("session_subject",subjectid);
-        if(materialid!=null&&!materialid.toString().equals("0"))
-            request.getSession().setAttribute("session_material",materialid);
+        //if(materialid!=null&&!materialid.toString().equals("0"))
+        //    request.getSession().setAttribute("session_material",materialid);
 
         //任务库
         List<DictionaryInfo>courselevel=this.dictionaryManager.getDictionaryByType("COURSE_LEVEL");
@@ -830,170 +831,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
             //gradeid=materialList.get(0).getGradeid().toString();
         }
 
-
-
-        //验证是否所有学生都已有小组
-		/*for (TpCourseClass cc : courseclassList) {
-			if(cc.getClassid()!=null&&cc.getClasstype().intValue()==1){
-				//获取班级学生，增加默认小组
-				TpGroupInfo tmpg=new TpGroupInfo();
-				tmpg.setClassid(cc.getClassid());
-				//tmpg.setTeacherid(t.getTeacherId());
-				tmpg.setCuserid(this.logined(request).getUserid());
-				List<TpGroupInfo>tmpgList=this.tpGroupManager.getList(tmpg, null);
-				
-				ClassUser tmpu=new ClassUser();
-				tmpu.setClassid(cc.getClassid());
-				tmpu.setRelationtype("学生");
-				List<ClassUser>tmpuList=this.classUserManager.getList(tmpu, null);
-				
-				if((tmpgList==null||tmpgList.size()<1)&&(tmpuList!=null&&tmpuList.size()>0)){
-					Map<String,ClassUser>tmpmap=new HashMap<String, ClassUser>();
-					for (ClassUser classUser : tmpuList) {
-						if(!tmpmap.containsKey(classUser.getUserid()))
-							tmpmap.put(classUser.getUserid(), classUser);
-					}
-					
-					List<String>sqlList=new ArrayList<String>();
-					List<List<Object>>objListArray=new ArrayList<List<Object>>();
-					StringBuilder sql=null;
-					List<Object>objList=null;
-					Long nextGroupId=this.tpGroupManager.getNextId(true);
-                    TpGroupInfo saveg=new TpGroupInfo();
-					saveg.setGroupid(nextGroupId);
-					saveg.setClassid(cc.getClassid());
-					saveg.setGroupname("全部");
-					saveg.setCuserid(this.logined(request).getUserid());
-					saveg.setTermid(courseclassList.get(0).getTermid());
-					saveg.setClasstype(1);
-					sql=new StringBuilder();
-					objList=this.tpGroupManager.getSaveSql(saveg, sql);
-					if(sql!=null&&objList!=null){
-						sqlList.add(sql.toString()); 
-						objListArray.add(objList);
-					}
-					for (Map.Entry<String,ClassUser>currentMap : tmpmap.entrySet()) {
-						ClassUser cuser=currentMap.getValue();
-						TpGroupStudent savegs=new TpGroupStudent();
-						savegs.setUserid(cuser.getUid());
-						savegs.setGroupid(nextGroupId);
-						sql=new StringBuilder();
-						objList=this.tpGroupStudentManager.getSaveSql(savegs, sql);
-						if(sql!=null&&objList!=null){
-							sqlList.add(sql.toString());
-							objListArray.add(objList);
-						} 
-					}
-					
-					if(objListArray.size()>0&&sqlList.size()>0){
-						this.tpTaskManager.doExcetueArrayProc(sqlList, objListArray);
-					} 
-				}
-				//班级内人数
-				ClassUser cu=new ClassUser();
-				cu.getClassinfo().setClassid(cc.getClassid());
-				cu.setRelationtype("学生");
-				int count=0;
-				List<ClassUser>cuList=this.classUserManager.getList(cu, null);
-				//小组内人数
-				if(cuList!=null&&cuList.size()>0)
-					count=cuList.size();
-				TpGroupStudent gs=new TpGroupStudent();
-				gs.setClassid(cc.getClassid());
-				gs.setUserid(this.logined(request).getUserid());
-				List<TpGroupStudent>gsList=this.tpGroupStudentManager.getGroupStudentByClass(gs, null);
-				if(count>0&&gsList!=null&&gsList.size()>0){
-					if(count>gsList.size()){
-						je.setMsg("提示："+cc.getClassname()+"尚有学生未设置小组!请设置!");
-						response.getWriter().print(je.getAlertMsgAndSendRedirect("group?m=toGroupManager&termid="+termid));
-						return null;  
-					}
-				}else{
-					je.setMsg("提示："+cc.getClassname()+"小组人员为空!请设置!");
-					response.getWriter().print(je.getAlertMsgAndSendRedirect("group?m=toGroupManager&termid="+termid));
-					return null; 
-				}
-			}else{
-                //获取班级学生，增加默认小组
-                TpGroupInfo tmpg=new TpGroupInfo();
-                tmpg.setClassid(cc.getClassid());
-                //tmpg.setTeacherid(t.getTeacherId());
-                tmpg.setCuserid(this.logined(request).getUserid());
-                List<TpGroupInfo>tmpgList=this.tpGroupManager.getList(tmpg, null);
-
-                TpVirtualClassStudent tmpu=new TpVirtualClassStudent();
-                tmpu.setVirtualclassid(cc.getClassid());
-                //tmpu.setRelationtype("学生");
-                List<TpVirtualClassStudent>tmpuList=this.tpVirtualClassStudentManager.getList(tmpu, null);
-
-                if((tmpgList==null||tmpgList.size()<1)&&(tmpuList!=null&&tmpuList.size()>0)){
-                    Map<Integer,TpVirtualClassStudent>tmpmap=new HashMap<Integer, TpVirtualClassStudent>();
-                    for (TpVirtualClassStudent classUser : tmpuList) {
-                        if(!tmpmap.containsKey(classUser.getUserid()))
-                            tmpmap.put(classUser.getUserid(), classUser);
-                    }
-
-                    List<String>sqlList=new ArrayList<String>();
-                    List<List<Object>>objListArray=new ArrayList<List<Object>>();
-                    StringBuilder sql=null;
-                    List<Object>objList=null;
-                    Long nextGroupId=this.tpGroupManager.getNextId(true);
-                    TpGroupInfo saveg=new TpGroupInfo();
-                    saveg.setGroupid(nextGroupId);
-                    saveg.setClassid(cc.getClassid());
-                    saveg.setGroupname("全部");
-                    saveg.setCuserid(this.logined(request).getUserid());
-                    saveg.setTermid(courseclassList.get(0).getTermid());
-                    saveg.setClasstype(1);
-                    sql=new StringBuilder();
-                    objList=this.tpGroupManager.getSaveSql(saveg, sql);
-                    if(sql!=null&&objList!=null){
-                        sqlList.add(sql.toString());
-                        objListArray.add(objList);
-                    }
-                    for (Map.Entry<Integer,TpVirtualClassStudent>currentMap : tmpmap.entrySet()) {
-                        TpVirtualClassStudent cuser=currentMap.getValue();
-                        TpGroupStudent savegs=new TpGroupStudent();
-                        savegs.setUserid(cuser.getUserid());
-                        savegs.setGroupid(nextGroupId);
-                        sql=new StringBuilder();
-                        objList=this.tpGroupStudentManager.getSaveSql(savegs, sql);
-                        if(sql!=null&&objList!=null){
-                            sqlList.add(sql.toString());
-                            objListArray.add(objList);
-                        }
-                    }
-
-                    if(objListArray.size()>0&&sqlList.size()>0){
-                        this.tpTaskManager.doExcetueArrayProc(sqlList, objListArray);
-                    }
-                }
-                //班级内人数
-                TpVirtualClassStudent cu=new TpVirtualClassStudent();
-                cu.setVirtualclassid(cc.getClassid());
-                //cu.setRelationtype("学生");
-                int count=0;
-                List<TpVirtualClassStudent>cuList=this.tpVirtualClassStudentManager.getList(cu, null);
-                //小组内人数
-                if(cuList!=null&&cuList.size()>0)
-                    count=cuList.size();
-                TpGroupStudent gs=new TpGroupStudent();
-                gs.setClassid(cc.getClassid());
-                gs.setUserid(this.logined(request).getUserid());
-                List<TpGroupStudent>gsList=this.tpGroupStudentManager.getGroupStudentByClass(gs, null);
-                if(count>0&&gsList!=null&&gsList.size()>0){
-                    if(count>gsList.size()){
-                        je.setMsg("提示："+cc.getClassname()+"尚有学生未设置小组!请设置!");
-                        response.getWriter().print(je.getAlertMsgAndSendRedirect("group?m=toGroupManager&termid="+termid));
-                        return null;
-                    }
-                }else{
-                    je.setMsg("提示："+cc.getClassname()+"小组人员为空!请设置!");
-                    response.getWriter().print(je.getAlertMsgAndSendRedirect("group?m=toGroupManager&termid="+termid));
-                    return null;
-                }
-            }
-		} */
         //微视频
         TpCourseResource tr=new TpCourseResource();
         tr.setCourseid(Long.parseLong(courseid));
@@ -1001,9 +838,17 @@ public class TaskController extends BaseController<TpTaskInfo>{
         List<TpCourseResource>micList=this.tpCourseResourceManager.getList(tr,null);
         if(micList!=null&&micList.size()>0)
             mp.put("hasVideo",1);
+        //试卷
+        TpCoursePaper cp=new TpCoursePaper();
+        cp.setCourseid(Long.parseLong(courseid));
+        List<TpCoursePaper>paperList=this.tpCoursePaperManager.getList(cp,null);
+        if(micList!=null&&micList.size()>0)
+            mp.put("hasPaper",1);
 
 
-		//小组
+
+
+        //小组
 		TpGroupInfo g=new TpGroupInfo();
 		//g.setCuserid(this.logined(request).getUserid());
         g.setTermid(courseclassList.get(0).getTermid());
@@ -1197,6 +1042,15 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }else if(tasktype.toString().equals("5")){//自主测试
             //添加试卷
+            TpCourseQuestion cq=new TpCourseQuestion();
+            cq.setCourseid(Long.parseLong(courseid));
+            List<TpCourseQuestion>courseQuestionList=this.tpCourseQuestionManager.getList(cq,null);
+            if(courseQuestionList==null||courseQuestionList.size()<1){
+                je.setMsg("当前专题暂无试题，无法组卷!请添加试题后添加该任务!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+
             Long paperid=this.paperManager.getNextId(true);
             PaperInfo p=new PaperInfo();
             p.setPaperid(paperid);
@@ -1644,7 +1498,15 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }else if(tasktype.toString().equals("5")){//自主测试
-
+            //添加试卷
+            TpCourseQuestion cq=new TpCourseQuestion();
+            cq.setCourseid(Long.parseLong(courseid));
+            List<TpCourseQuestion>courseQuestionList=this.tpCourseQuestionManager.getList(cq,null);
+            if(courseQuestionList==null||courseQuestionList.size()<1){
+                je.setMsg("当前专题暂无试题，无法组卷!请添加试题后添加该任务!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
         }else if(tasktype.toString().equals("6")){//微视频测试
             if(taskvalueid==null||taskvalueid.trim().length()<1){
                 je.setMsg("异常错误，系统未获取到微视频标识!");
@@ -2385,6 +2247,25 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 response.getWriter().println(je.toJSON());return ;
             }
 
+            //压缩原图至w160 h 90
+            if(annexName!=null&&annexName.length()>0){
+                String suffix=annexName.substring(annexName.lastIndexOf("."));
+                if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
+                    String filename=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
+                    File file=new File(filename);
+                    if(!file.exists()){
+                        je.setMsg("未发现文件!");
+                        response.getWriter().println(je.toJSON());return ;
+                    }
+                    //新图
+                    String descFile=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
+                    UtilTool.copyFile(file,new File(descFile));
+                    //缩略图
+                    UtilTool.ReduceImg(file, filename, 160, 90);
+                }
+            }
+
+
 
             QuestionAnswer qa=new QuestionAnswer();
             qa.setCourseid(Long.parseLong(courseid));
@@ -2595,6 +2476,25 @@ public class TaskController extends BaseController<TpTaskInfo>{
         if(!isfileOk){
             je.setMsg("文件上传失败!请刷新页面后重试!");
             response.getWriter().println(je.toJSON());return ;
+        }
+
+        //压缩原图至w160 h 90
+        if(annexName!=null&&annexName.length()>0){
+            String suffix=annexName.substring(annexName.lastIndexOf("."));
+            if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
+                String filename=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
+                File file=new File(filename);
+                if(!file.exists()){
+                    je.setMsg("未发现文件!");
+                    response.getWriter().println(je.toJSON());return ;
+                }
+                //新图
+                String descFile=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
+                UtilTool.copyFile(file,new File(descFile));
+                //缩略图
+                UtilTool.ReduceImg(file,filename,160,90);
+
+            }
         }
 
 
@@ -2823,6 +2723,25 @@ public class TaskController extends BaseController<TpTaskInfo>{
         if(!isfileOk){
             je.setMsg("文件上传失败!请刷新页面后重试!");
             response.getWriter().println(je.toJSON());return ;
+        }
+
+        //压缩原图至w160 h 90
+        if(annexName!=null&&annexName.length()>0){
+            String suffix=annexName.substring(annexName.lastIndexOf("."));
+            if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
+                String filename=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
+                File file=new File(filename);
+                if(!file.exists()){
+                    je.setMsg("未发现文件!");
+                    response.getWriter().println(je.toJSON());return ;
+                }
+                //新图
+                String descFile=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
+                UtilTool.copyFile(file,new File(descFile));
+                //缩略图
+                UtilTool.ReduceImg(file,filename,160,90);
+
+            }
         }
 
 

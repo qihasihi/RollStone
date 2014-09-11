@@ -12,7 +12,12 @@
 	response.setHeader("Cache-Control", "Public"); 
 	response.setHeader("Pragma", "no-cache"); 
 	response.setDateHeader("Expires", 0); 
-%>      
+%>
+
+
+<%
+    boolean visible=Integer.parseInt(UtilTool.utilproperty.getProperty("SYSTEM_SETTINGS").toString())>0?true:false;
+%>
   
 <%
     String proc_name=UtilTool.utilproperty.getProperty("PROC_NAME");

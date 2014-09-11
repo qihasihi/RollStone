@@ -104,8 +104,10 @@
     </div>
     <div class="contentL">
       <ul>
-        <li class="crumb" ><a href="term?m=list">学年管理</a></li>
-        <li><a href="subject?m=list">学科管理</a></li>
+          <% if(visible){%>
+            <li class="crumb" ><a href="term?m=list">学年管理</a></li>
+            <li><a href="subject?m=list">学科管理</a></li>
+          <%}%>
         <li><a href="sysm?m=logoconfig">Logo设置</a></li>
       </ul>
     </div>

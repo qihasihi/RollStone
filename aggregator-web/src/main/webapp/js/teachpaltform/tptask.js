@@ -639,7 +639,10 @@ function load_task_detial(taskid) {
 
                         $.each(rmsg.objList[0], function (idx, itm) {
                             var timeObj = itm.taskstatus == 1 ? itm.tasktime : itm.taskstatus == 3 ? "0天00时00分" : itm.taskstatus;
-                            var tmpTime = '<strong><span class="ico_time"></span>' + timeObj + '</strong>';
+                            var tmpTime = '<strong';
+                            if(itm.taskstatus!="3"&&itm.taskstatus!="1")
+                                tmpTime+=' style="color:#22ac38;"'
+                            tmpTime+='><span class="ico_time"></span>' + timeObj + '</strong>';
                             if (idx != 0)
                                 tmpTime = '<br>' + tmpTime;
 

@@ -80,8 +80,8 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
 <div id="nav">
     <ul>
       <li><a href="user?m=list">用户管理</a></li>
-      <li class="crumb"><a href="cls?m=list">组织管理</a></li>
-      <li><a href="term?m=list">系统设置</a></li>
+            <li class="crumb"><a href="cls?m=list">组织管理</a></li>
+        <li ><a href="sysm?m=logoconfig">系统设置</a></li>
     </ul>
 </div>
   
@@ -154,7 +154,9 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
    <div class="contentL">
     <ul>
     <li class="crumb"><a href="cls?m=list">班级管理</a></li>
+        <%if(visible){%>
     <li><a href="dept?m=list">部门管理</a></li>
+        <%}%>
     </ul>
    </div>
    <div class="clear"></div>

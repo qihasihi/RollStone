@@ -95,6 +95,15 @@ public class PageUtilTool implements java.io.Serializable{
 		if(diff<1)
 			return "3";
 		//System.out.println(returnStr);
+
+        //若>24小时，显示X天X时；若>60分，<24小时，显示X时X分；若<60分，显示X分
+        if(day>0){
+            returnStr=day+"天"+hour+"时";
+        }else if(day<1&&hour>0){
+            returnStr=hour+"时"+min+"分";
+        }else if(hour<1){
+            returnStr=min+"分";
+        }
 		return returnStr;  
 	}
 
@@ -134,6 +143,13 @@ public class PageUtilTool implements java.io.Serializable{
             long min = diff%nd%nh/nm;//计算差多少分钟
             //long sec = diff%nd%nh%nm/ns;//计算差多少秒
             returnStr=day+"天"+hour+"时"+min+"分";
+            if(day>0){
+                returnStr=day+"天"+hour+"时";
+            }else if(day<1&&hour>0){
+                returnStr=hour+"时"+min+"分";
+            }else if(hour<1){
+                returnStr=min+"分";
+            }
         }
         return returnStr;
     }

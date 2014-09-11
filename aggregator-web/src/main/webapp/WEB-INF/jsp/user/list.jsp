@@ -101,7 +101,7 @@ request.setAttribute("isSetService",true);
     <ul>
       <li class="crumb"><a href="user?m=list">用户管理</a></li>
       <li><a href="cls?m=list">组织管理</a></li>
-      <li><a href="term?m=list">系统设置</a></li>  
+        <li ><a href="sysm?m=logoconfig">系统设置</a></li>
     </ul>  
 </div>
   
@@ -161,7 +161,9 @@ request.setAttribute("isSetService",true);
     <ul> 
     <li class="crumb"><a href="user?m=list">查询</a></li>
     <li><a href="user?m=toAdd">添加</a></li>
-    <li><a href="role?m=list">角色管理</a></li>
+        <% if(visible){%>
+            <li><a href="role?m=list">角色管理</a></li>
+        <%}%>
     </ul>
    </div>
    <div class="clear"></div>
