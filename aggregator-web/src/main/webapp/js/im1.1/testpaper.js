@@ -22,7 +22,7 @@ function beginJs1(){
                 allowNext=true;
                 tmpTime=0;
         }
-    },1000);
+    },500);
 }
 
 /*************************************答题作答*************************/
@@ -366,6 +366,7 @@ TestPaperQues.prototype.subQues=function(direcType){
  */
 TestPaperQues.prototype.loadQues=function(){
     allowNext=false;
+    if(!allowNext){beginJs1();}
     $("div[id*='dv_q_']").hide();
     var showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
     var id='';
@@ -737,7 +738,7 @@ TestPaperDetail.prototype.nextQues=function(quesid){
 TestPaperDetail.prototype.loadQues=function(){
     $("div[id*='dv_q_']").hide();
     allowNext=false;
-
+    if(!allowNext){beginJs1();}
     var showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
     var id='';
     if(showPqObj.length>0)

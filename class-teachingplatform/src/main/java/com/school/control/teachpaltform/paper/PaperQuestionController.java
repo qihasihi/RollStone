@@ -4301,7 +4301,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         presult.setPageSize(1);
         List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,presult);
         if(spList!=null&&spList.size()>0){
-            jsonEntity.setMsg("您已经提交过该试卷。无法进行修改!");
+            jsonEntity.setMsg("5||您已经提交过该试卷。无法进行修改!");
             response.getWriter().print(jsonEntity.toJSON());return;
         }
 //
@@ -4361,7 +4361,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         if(sqlArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
             if(this.stuPaperLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
                 jsonEntity.setType("success");
-                jsonEntity.setMsg("5||"+UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                jsonEntity.setMsg("5||交卷成功，积分宝石保存失败！");
                         //添加奖励
                  /*奖励加分*/
                         //得到班级ID
@@ -4405,9 +4405,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                                 , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
                                 , tk.getTaskid()
                                 , Long.parseLong(userid + ""),jid, type,schoolid)){
-                            msg="1||恭喜您,获得了1积分和1蓝宝石!";
+                            msg="恭喜您,获得了1积分和1蓝宝石!";
                             request.getSession().setAttribute("msg",msg);
-                            jsonEntity.setMsg(msg);
+                            jsonEntity.setMsg("1||交卷成功，积分宝石保存成功！");
                         }
             }else
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
