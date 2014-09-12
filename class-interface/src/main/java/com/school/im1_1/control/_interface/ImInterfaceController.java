@@ -1420,6 +1420,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             if(pList!=null&&pList.size()>0){
                 iscomplete=true;
             }
+
+
         }
         if(iscomplete){
             List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();

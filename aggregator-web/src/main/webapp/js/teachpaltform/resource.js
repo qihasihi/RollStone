@@ -1643,7 +1643,7 @@ function previewImg(imgaddress, resmd5id, resmd5name,resid) {
 
 
 /**
- * 验证是否发任务
+ * 验证文件是否转换
  * @param resid
  */
 function checkConvertStatus(resid) {

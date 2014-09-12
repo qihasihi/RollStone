@@ -2773,7 +2773,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
 
 
     /**
-     * ??????????
+     *
      * @param request
      * @throws Exception
      */
