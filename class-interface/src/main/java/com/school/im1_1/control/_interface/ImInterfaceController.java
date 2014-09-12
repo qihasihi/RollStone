@@ -311,6 +311,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         }else{
                             taskList.get(j).put("TASKNAME","任务 "+taskList.get(j).get("ORDERIDX")+" "+typename+" "+taskList.get(j).get("TASKNAME"));
                         }
+                        if(utype!=2){
+                            taskList.get(j).put("ORDERIDX",(j+1)+"");
+                        }
                     }
                 }
                 courseList.get(i).put("taskList",taskList);
@@ -505,13 +508,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                     String coureEtime = o.get("END_TIME").toString().substring((o.get("END_TIME").toString().indexOf(" ")+1),o.get("END_TIME").toString().lastIndexOf(":"));
                                     o2.put("courseDate",coureBtime+"~"+coureEtime);
                                 }else{
-                                    o2.put("courseDate",null);
+                                    o2.put("courseDate","");
                                 }
                             }else{
-                                o2.put("courseDate",null);
+                                o2.put("courseDate","");
                             }
                         }else{
-                            o2.put("courseDate",null);
+                            o2.put("courseDate","");
                         }
                         //o2.put("courseDate",o.get("BEGIN_TIME").toString().substring(0,19)+"~"+(o.get("END_TIME")!=null?o.get("END_TIME").toString().substring(0,19):"——"));
                         o2.put("schoolId",o.get("DC_SCHOOL_ID"));
@@ -682,13 +685,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 String coureEtime = o.get("END_TIME").toString().substring((o.get("END_TIME").toString().indexOf(" ")+1),o.get("END_TIME").toString().lastIndexOf(":"));
                                 o2.put("courseDate",coureBtime+"~"+coureEtime);
                             }else{
-                                o2.put("courseDate",null);
+                                o2.put("courseDate","");
                             }
                         }else{
-                            o2.put("courseDate",null);
+                            o2.put("courseDate","");
                         }
                     }else{
-                        o2.put("courseDate",null);
+                        o2.put("courseDate","");
                     }
                     //o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
                     o2.put("schoolId",o.get("DC_SCHOOL_ID"));
@@ -790,13 +793,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             String coureEtime = o.get("END_TIME").toString().substring((o.get("END_TIME").toString().indexOf(" ")+1),o.get("END_TIME").toString().lastIndexOf(":"));
                             o2.put("courseDate",coureBtime+"~"+coureEtime);
                         }else{
-                            o2.put("courseDate",null);
+                            o2.put("courseDate","");
                         }
                     }else{
-                        o2.put("courseDate",null);
+                        o2.put("courseDate","");
                     }
                 }else{
-                    o2.put("courseDate",null);
+                    o2.put("courseDate","");
                 }
                 //o2.put("courseDate",o.get("BEGIN_TIME")+"~"+o.get("END_TIME")!=null?o.get("END_TIME"):"——");
                 o2.put("schoolId",o.get("DC_SCHOOL_ID"));
@@ -885,13 +888,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             String coureEtime = o.get("END_TIME").toString().substring((o.get("END_TIME").toString().indexOf(" ")+1),o.get("END_TIME").toString().lastIndexOf(":"));
                             o2.put("courseDate",coureBtime+"~"+coureEtime);
                         }else{
-                            o2.put("courseDate",null);
+                            o2.put("courseDate","");
                         }
                     }else{
-                        o2.put("courseDate",null);
+                        o2.put("courseDate","");
                     }
                 }else{
-                    o2.put("courseDate",null);
+                    o2.put("courseDate","");
                 }
                 //o2.put("courseDate",o.get("BEGIN_TIME").toString().substring(0,19)+"~"+(o.get("END_TIME")!=null?o.get("END_TIME").toString().substring(0,19):"——"));
                 o2.put("schoolId",o.get("DC_SCHOOL_ID"));
@@ -1358,7 +1361,19 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 returnMap.put("isWatched",0);
             }
         }else{
-            returnMap.put("attachs", taskinfo.get(0).get("ATTACHS"));
+            Map att = new HashMap();
+            att.put("attach",taskinfo.get(0).get("ATTACHS"));
+            List attList = new ArrayList();
+            attList.add(att);
+            returnMap.put("attachs", attList);
+            if(taskList.get(0).getTasktype()==7){
+                returnMap.put("attachType",".mp3");
+            }else if(taskList.get(0).getTasktype()==8){
+                returnMap.put("attachType",".jpg");
+            }else if(taskList.get(0).getTasktype()==9){
+                returnMap.put("attachType",".txt");
+            }
+            //returnMap.put("attachs", taskinfo.get(0).get("ATTACHS"));
             //returnMap.put("attachType", taskinfo.get(0).get("ATTACHTYPE"));
             returnMap.put("isOver",taskinfo.get(0).get("ISOVER"));
             //拼接tasmname显示任务主体
