@@ -297,13 +297,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 typename="微课程学习";
                                 break;
                             case 7:
-                                typename="图片";
+                                typename="语音";
                                 break;
                             case 8:
-                                typename="文字";
+                                typename="图片";
                                 break;
                             case 9:
-                                typename="视频";
+                                typename="文字";
                                 break;
                         }
                         if(Integer.parseInt(taskList.get(j).get("TASKTYPE").toString())==3){
@@ -1294,13 +1294,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     typename="微课程学习";
                     break;
                 case 7:
-                    typename="图片";
+                    typename="语音";
                     break;
                 case 8:
-                    typename="文字";
+                    typename="图片";
                     break;
                 case 9:
-                    typename="视频";
+                    typename="文字";
                     break;
             }
             returnMap.put("taskContent", "任务 " + taskList.get(0).getOrderidx() + " " + typename+" "+rsList.get(0).getResname());
@@ -1339,13 +1339,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     typename="微课程学习";
                     break;
                 case 7:
-                    typename="图片";
+                    typename="语音";
                     break;
                 case 8:
-                    typename="文字";
+                    typename="图片";
                     break;
                 case 9:
-                    typename="视频";
+                    typename="文字";
                     break;
             }
             returnMap.put("taskContent", "任务 " + taskList.get(0).getOrderidx() + " " + typename+" "+rsList.get(0).getResname());
@@ -1383,13 +1383,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     typename="微课程学习";
                     break;
                 case 7:
-                    typename="图片";
+                    typename="语音";
                     break;
                 case 8:
-                    typename="文字";
+                    typename="图片";
                     break;
                 case 9:
-                    typename="视频";
+                    typename="文字";
                     break;
             }
             returnMap.put("taskContent",taskinfo.get(0).get("TASKCONTENT"));
@@ -1644,7 +1644,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         }
                     }
                     String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                    String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
+                    String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
+                    String url=ettip+"queryPhotoAndRealName.do";
                     //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
                     HashMap<String,String> signMap = new HashMap();
                     signMap.put("userList",jidstr);
@@ -2399,7 +2400,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 returnUserRecord.add(returnUserMap);
                             }
                             String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                            String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
+                            String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
+                            String url=ettip+"queryPhotoAndRealName.do";
                             //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
                             HashMap<String,String> signMap = new HashMap();
                             signMap.put("userList",jidstr);
@@ -3480,6 +3482,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
         List<Map<String,Object>> returnUserRecord = new ArrayList<Map<String, Object>>();
         Map returnUserMap = null;
+        String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
         if(utype!=2){
             //首先判断这个任务是否完成，跳转到不同的jsp
             //判断任务完成标准
@@ -3529,7 +3532,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         returnUserRecord.add(returnUserMap);
                     }
                     String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                    String url="http://192.168.10.26:8008/study-im-service-1.0/queryPhotoAndRealName.do";
+                    String url=ettip+"queryPhotoAndRealName.do";
                     //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
                     HashMap<String,String> signMap = new HashMap();
                     signMap.put("userList",jidstr);
@@ -3562,7 +3565,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 return new ModelAndView("/imjsp-1.1/remote-resource-detail");
             }else{
                 if(taskList.get(0).getRemotetype()!=null&&taskList.get(0).getRemotetype()==2){// 知识导学
-                    String url = "http://192.168.10.26:8008/study-im-service-1.0/getResourceZSDX.do";
+                    String url = ettip+"getResourceZSDX.do";
                     Long time = System.currentTimeMillis();
                     HashMap<String,String> param = new HashMap<String, String>();
                     param.put("resourceId",resid.toString());
@@ -3578,7 +3581,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         return null;
                     }
                 }else{//高清课堂
-                    String url = "http://192.168.10.26:8008/study-im-service-1.0/playVideoUrl.do";
+                    String url = ettip+"playVideoUrl.do";
                     Long time = System.currentTimeMillis();
                     HashMap<String,String> param = new HashMap<String, String>();
                     param.put("resourceId",resid.toString());
@@ -4572,7 +4575,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             sel.setCourseid(tmpTask.getCourseid());
             //查询没被我删除的任务
             sel.setSelecttype(1);
-            sel.setLoginuserid(this.logined(request).getUserid());
+            sel.setLoginuserid(userList.get(0).getUserid());
             sel.setStatus(1);
 
             //1 2 3 4 5
@@ -4736,13 +4739,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     typename="微课程学习";
                     break;
                 case 7:
-                    typename="图片";
+                    typename="语音";
                     break;
                 case 8:
-                    typename="文字";
+                    typename="图片";
                     break;
                 case 9:
-                    typename="视频";
+                    typename="文字";
                     break;
             }
             if(Integer.parseInt(taskMap.get("TASKTYPE").toString())==3){

@@ -13,8 +13,6 @@
             +"/"+proc_name + "/";
 %>
 
-<link rel="stylesheet" type="text/css" href="<%=basePath %>css/master.css"/>
-<link rel="stylesheet" type="text/css" href="<%=basePath %>css/style.css"/>
 <link rel="stylesheet" type="text/css" href="<%=basePath %>css/ios.css"/>
 <script src="<%=basePath %>util/xheditor/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
 <script src="<%=basePath %>js/common/common.js"></script>
