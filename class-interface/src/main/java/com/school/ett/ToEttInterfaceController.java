@@ -117,7 +117,7 @@ public class ToEttInterfaceController extends BaseController<String> {
             userInfo.setDcschoolid(Integer.parseInt(schoolid));
             List<UserInfo> uList=this.userManager.getList(userInfo,null);
             if(uList!=null&&uList.size()>0&&uList.get(0)!=null&&uList.get(0).getHeadimage()!=null&&uList.get(0).getHeadimage().trim().length()>0){
-                int returnType=HeadImgToEtt(userList.get(0));
+                int returnType=HeadImgToEtt(uList.get(0));
                 //1:成功        2:信息不完整，拒绝操作       3:图片不存在了    4：信息完整，操作成功，但执行返回失败
                 if(returnType==3){
                     type="error";

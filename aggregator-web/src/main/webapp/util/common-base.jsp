@@ -49,7 +49,7 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 	if(u==null){
 		response.getWriter().print("<script type='text/javascript'>alert('"
 				+UtilTool.msgproperty.getProperty("NO_LOGINED")+"');location.href='"
-				+UtilTool.getCurrentLocation(request)+"';</script>");
+				+UtilTool.getCurrentLocation()+"';</script>");
 		return;  
 	}else{
 		cruList=u.getCjJRoleUsers();
