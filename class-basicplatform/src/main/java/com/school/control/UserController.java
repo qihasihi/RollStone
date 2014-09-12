@@ -2709,6 +2709,20 @@ public class UserController extends BaseController<UserInfo> {
             request.getSession().setAttribute("CURRENT_USER", userinfo);
             je.getObjList().add(newname);
             je.setType("success");
+
+
+            //查询当前用户的信息
+            UserInfo userInfo=new UserInfo();
+            userInfo.setUserid(userinfo.getUserid());
+            userInfo.setDcschoolid(this.logined(request).getDcschoolid());
+            List<UserInfo> uList=this.userManager.getList(userInfo,null);
+            if(uList!=null&&uList.size()>0&&uList.get(0)!=null&&uList.get(0).getHeadimage()!=null&&uList.get(0).getHeadimage().trim().length()>0){
+                int returnType=HeadImgToEtt(uList.get(0));
+                if(returnType==1)
+                    System.out.println("同步用户头像成功!");
+                else
+                    System.out.println("同步用户头像失败!");
+            }
         } else {
             je.getObjList().add(newname);
             je.setType("error");
