@@ -7,17 +7,16 @@ import com.school.manager.UserManager;
 import com.school.manager.inter.IUserManager;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
-import jcore.jsonrpc.common.JSONObject;
+import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.*;
 
 /**
  * 提供给ETIANTIAN网站的接口
@@ -67,8 +66,6 @@ public class ToEttInterfaceController extends BaseController<String> {
         map.put("userId",userId);
         map.put("schoolId",schoolid);
         map.put("timeStamp",timestamp);
-//        String sign = UrlSigUtil.makeSigSimple("ETT-SCHOOL-MODEL", map, UtilTool.utilproperty.getProperty("TO_ETT_KEY").toString());
-//        System.out.println("ettKey"+key+"   key:"+sign);
         Boolean b = UrlSigUtil.verifySigSimple("bindJID", map, key);
         if(!b){
             returnJO.put("msg","验证失败，非法登录");
@@ -109,12 +106,33 @@ public class ToEttInterfaceController extends BaseController<String> {
             objArrayList.add(objList);
         }
 
-        if(this.userManager.doExcetueArrayProc(sqlArrayList,objArrayList))
-            returnJO.put("type","success");
-        else
+        if(this.userManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+             //绑定成功后，再调头像回传
+            //记录状态，信息
+            String type="success";
+            String msg=null;
+            //查询当前用户的信息
+            userInfo=new UserInfo();
+            userInfo.setUserid(Integer.parseInt(userId));
+            userInfo.setDcschoolid(Integer.parseInt(schoolid));
+            List<UserInfo> uList=this.userManager.getList(userInfo,null);
+            if(uList!=null&&uList.size()>0&&uList.get(0)!=null&&uList.get(0).getHeadimage()!=null&&uList.get(0).getHeadimage().trim().length()>0){
+                int returnType=HeadImgToEtt(userList.get(0));
+                //1:成功        2:信息不完整，拒绝操作       3:图片不存在了    4：信息完整，操作成功，但执行返回失败
+                if(returnType==3){
+                    type="error";
+                    msg="同步头像信息失败，原因：头像图片不存在!";
+                }else if(returnType==4){
+                    type="error";
+                    msg="同步头像信息失败!";
+                }
+            }
+            returnJO.put("type", type);
+            if(type=="error"&&msg!=null)
+                returnJO.put("msg",msg);
+        }else
             returnJO.put("msg","绑定失败!原因：未知，可能执行存储失败!");
         response.getWriter().println(returnJO.toString());
     }
-
 }
 

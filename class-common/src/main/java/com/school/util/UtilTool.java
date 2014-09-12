@@ -264,12 +264,18 @@ public class UtilTool implements java.io.Serializable {
     }
 
 
-    public static String getCurrentLocation(HttpServletRequest request){
-        return "http://"+request.getServerName()+":"+request.getLocalPort()+request.getContextPath();
+    public static String getCurrentLocation(){
+        return new StringBuilder("http://")
+                .append(utilproperty.getProperty("IP_ADDRESS"))
+                .append("/")
+                .append(utilproperty.getProperty("PROC_NAME"))
+                .append("/").toString();
     }
 
-    public static String getCurrentIpPort(HttpServletRequest request1){
-        return "http://"+request1.getServerName()+":"+request1.getLocalPort()+"/";
+    public static String getCurrentIpPort(){
+        return new StringBuilder("http://")
+                .append(utilproperty.getProperty("IP_ADDRESS"))
+                .append("/").toString();
     }
 
     /**

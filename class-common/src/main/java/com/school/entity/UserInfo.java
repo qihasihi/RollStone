@@ -40,14 +40,14 @@ public class UserInfo implements java.io.Serializable {
     private Integer ettuserid;//网校用户id
 
     /**
-     * 用户类型:  1=任课教师   3=学生
+     * 用户类型:  2=任课教师   3=学生
      * @return
      */
     public Integer getUserType() {
         if(this.stuname!=null&&this.stuname.trim().length()>0){
             return 3;
         }
-        return 1;
+        return 2;
     }
 
 

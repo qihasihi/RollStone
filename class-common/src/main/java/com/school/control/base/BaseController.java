@@ -2,6 +2,7 @@ package com.school.control.base;
 
 
 import FTsafe.Ry4S;
+import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.entity.RoleUser;
 import com.school.entity.UserInfo;
 import com.school.util.JsonEntity;
@@ -28,6 +29,7 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.List;
 
@@ -623,6 +625,81 @@ public class BaseController<T extends java.io.Serializable> {
             out.close();
         }
         return destFile.getPath();
+    }
+
+    /**
+     * 调用
+     * @param u     用户信息，必须存在ettuserid,jid,userid,headimage
+     * @return 1:成功        2:信息不完整，拒绝操作       3:图片不存在了    4：信息完整，操作成功，但执行返回失败
+     * @throws Exception
+     */
+    protected Integer HeadImgToEtt(UserInfo u)throws Exception{
+        Integer returnVal=2;
+        //信息不完整操作
+        if(u.getHeadimage()==null||u.getEttuserid()==null||u.getUserid()==null
+                ||u.getHeadimage().trim().length()<1)
+            return returnVal;
+        //信息完整，验证头像是否存在
+        //得到信息
+        String headImgUrl=UtilTool.getCurrentLocation()+u.getHeadimage();
+        URL url = new URL(headImgUrl);
+        URLConnection con = url.openConnection();
+        //httpHeader穿一件伪装服
+        setUrlConnHeader(con);
+        // 得到content的长度
+        long contentLength = con.getContentLength();
+        //如果  contentLength 为0就表示这个sss.gif是不存在的.
+        if(contentLength<1){
+            returnVal=3;  //图片不存在了
+        }else{
+            //开始发送图片
+            if(sendBindHeadImageToEtt(u.getUserType().toString(),u.getEttuserid().toString(),headImgUrl))
+                returnVal=1; //执行成功
+            else
+                returnVal=4;  //4：信息完整，操作成功，但执行返回失败
+        }
+        return returnVal;
+    }
+
+    /**
+     * 绑定并发送数据
+     * @param usertype
+     * @param ettuserid
+     * @param  headimage
+     * @return  boolean
+     */
+    protected static boolean sendBindHeadImageToEtt(String usertype,String ettuserid,String headimage){
+        //准备向ETT发送数据
+        HashMap<String,String> paramMap=new HashMap<String, String>();
+        paramMap.put("userType",usertype);    //u.getStuname!=null&&u.getStuname.length>0 则：3(学生)，反则是2(教师)
+        paramMap.put("jid",ettuserid);
+        paramMap.put("headUrl",headimage);
+        paramMap.put("timestamp",new Date().getTime()+"");
+        //生成
+        String sign= UrlSigUtil.makeSigSimple("savePhotoImgToEtt.do", paramMap);
+        paramMap.put("sign",sign);
+        JSONObject jo=UtilTool.sendPostUrl(UtilTool.utilproperty.getProperty("TO_SEND_HEADIMAGE_ETT_URL"),paramMap,"UTF-8");
+        if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1"))
+            return true;
+        if(jo!=null)
+            System.out.println(jo.get("msg"));
+        return false;
+    }
+    /**
+     * 填入相关信息到conn.
+     * @param con
+     */
+    protected static void setUrlConnHeader(URLConnection con) {
+        con.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.3) Gecko/2008092510 Ubuntu/8.04 (hardy) Firefox/3.0.3");
+        con.setRequestProperty("Accept-Language", "en-us,en;q=0.7,zh-cn;q=0.3");
+        con.setRequestProperty("Accept-Encoding", "aa");
+        con.setRequestProperty("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+        con.setRequestProperty("Keep-Alive", "300");
+        con.setRequestProperty("Connection", "keep-alive");
+        con.setRequestProperty("If-Modified-Since", "Fri, 02 Jan 2009 17:00:05 GMT");
+        con.setRequestProperty("If-None-Match", "\"1261d8-4290-df64d224\"");
+        con.setRequestProperty("Cache-Control", "max-age=0");
+        con.setRequestProperty("Referer", UtilTool.getCurrentLocation());
     }
 
 }
