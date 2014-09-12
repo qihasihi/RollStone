@@ -918,7 +918,7 @@ TestPaperDetail.prototype.loadQues=function(){
                 h+='<input  type="hidden" value="'+quesObj.questiontype+'" name="hd_questiontype" id="hd_questiontype_'+quesObj.questionid+'"/>';
                 h+='<input  type="hidden" value="2" name="hd_isright" id="hd_isright_'+quesObj.questionid+'"/>';
                     if(quesObj.questiontype==3||quesObj.questiontype==4||quesObj.questiontype==7||quesObj.questiontype==8){
-                        h+='<ul  class="daan test" id="ul_answer'+quesObj.questionid+'">';
+                        h+='<ul  class="daan" id="ul_answer'+quesObj.questionid+'">';
                         var qo=quesObj.questionOption;
                         if(ex==5&&parentQuesObj!=null)
                             qo=parentQuesObj.questionOption;
@@ -934,9 +934,9 @@ TestPaperDetail.prototype.loadQues=function(){
                                 });
                             }
                             if(quesObj.questiontype==3||quesObj.questiontype==7){
-                                h+='<input type="radio" name="rdo_answer'+quesObj.questionid+'" value="'+m.optiontype+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
+                                h+='<input type="radio" readonly name="rdo_answer'+quesObj.questionid+'" value="'+m.optiontype+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
                             }else
-                                h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ isrightTmp+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
+                                h+='<input type="checkbox" readonly name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ isrightTmp+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
                             h+='</span><label for="rdo_answer'+m.questionid+m.optiontype+'"><span class="blue">'+m.optiontype+'.</span>'+m.content;
                             if(typeof(isrightTmp)!="undefined"&&isrightTmp==1&&config.userType!=3){
                                 h+='<b class="right"></b>';

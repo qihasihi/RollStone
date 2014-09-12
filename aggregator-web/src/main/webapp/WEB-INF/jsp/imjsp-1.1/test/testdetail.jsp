@@ -12,6 +12,10 @@
     <script type="text/javascript" src="js/common/image-show.js"></script>
     <script type="text/javascript" src="js/im1.1/testpaper.js"></script>
     <title>试卷详情</title>
+    <style>
+        li.crumb{ background-color:#eee;}
+
+    </style>
     <script type="text/javascript">
         var quesSize="${quesSize}";
         var courseid="${courseid}";
@@ -25,6 +29,15 @@
         var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         var tqControler=null;
         $(function(){
+            $("#loading").ajaxStart(function(){
+                var w=$(document).width()/2-50;
+                var h=$(document).height()/2-20;
+                $(this).css({"left":w+"px","top":h+"px"});
+                $(this).show();
+            });
+            $("#loading").ajaxStop(function(){
+                $(this).hide();
+            });
             //分数
             for(i=0;i<quesSize;i++){
                 scoreArray[scoreArray.length]=avgScore;
@@ -63,11 +76,19 @@
             document.getElementById("fm_free").submit=function(){
                 if(allowNext){
                      nextNum(-1,tqControler);
+                }else{
+                    beginJs1();
+                    alert('4||请勿过度频繁点击!');
+                    return(false);
                 }
             }
             document.getElementById("fm_next").submit=function(){
                 if(allowNext){
                      nextNum(1,tqControler);
+                }else{
+                    beginJs1();
+                    alert('4||请勿过度频繁点击!');
+                    return(false);
                 }
             }
             document.getElementById("fm_subQues").submit=function(){
@@ -86,8 +107,8 @@
 <!--试卷里的试题-->
 <div class="zxcs_test" id="dv_question">
 </div>
-<a href="javascript:;" onclick="fm_subQues.submit();fm_free.submit();">上一题</a>
-<a  href="javascript:;" onclick="fm_subQues.submit();fm_next.submit();">下一题</a>
+<%--<a href="javascript:;" onclick="fm_subQues.submit();fm_free.submit();">上一题</a>--%>
+<%--<a  href="javascript:;" onclick="fm_subQues.submit();fm_next.submit();">下一题</a>--%>
 <form action="#"  id="fm_free" method="post">
 </form>
 <form  action="#"  id="fm_next" method="post">
@@ -95,5 +116,6 @@
 <!--提交试题的FRM-->
 <form action="#"  id="fm_subQues" method="post">
 </form>
+<div id="loading" style='display:none;position: absolute;z-index:1005;'><img src="images/loading.gif"/></div>
 </body>
 </html>
