@@ -4005,7 +4005,17 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         ImInterfaceInfo obj=new ImInterfaceInfo();
         if(subjectId!=null&&subjectId.equals("0")&&subjectList.size()>0){
             obj.setSubjectid(Integer.parseInt(subjectList.get(0).get("subjectId").toString()));
-            returnJo.put("msg","没有学科排名!");
+            returnJo.put("msg", "没有学科排名!");
+            JSONObject jdata=new JSONObject();
+            jdata.put("teamRankList","[]");
+            jdata.put("subjectList","[]");
+            if(ImUtilTool.getUserType(userType)!=2){
+                jdata.put("userScore",0);
+                jdata.put("doTaskNum",0);
+                jdata.put("presenceNum",0);
+            }
+
+            returnJo.put("data",jdata.toString());
             response.getWriter().print(returnJo.toString());
             return;
         }else
@@ -4026,7 +4036,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
                 tmpMap.put("uName",map.get("REALNAME"));
                 tmpMap.put("uScore",map.get("COURSE_TOTAL_SCORE"));
-                tmpMap.put("uTeam",map.get("GROUP_NAME"));
+                tmpMap.put("uTeam",map.get("GROUP_NAME")==null||map.get("GROUP_NAME").toString().length()<1?"":map.get("GROUP_NAME"));
                 tmpMap.put("uPosition",map.get("RANK"));
                 tmpRankList.add(tmpMap);
             }
@@ -4065,8 +4075,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
 
 
-        jo.put("teamRankList",tmpRankList==null||tmpRankList.size()<1?null:tmpRankList);
-        jo.put("subjectList",subjectList==null||subjectList.size()<1?null:subjectList);
+        jo.put("teamRankList",tmpRankList==null||tmpRankList.size()<1?"[]":tmpRankList);
+        jo.put("subjectList",subjectList==null||subjectList.size()<1?"[]":subjectList);
 
         if(ImUtilTool.getUserType(userType)!=2){  //学生
             obj.setUserid(userList.get(0).getUserid());

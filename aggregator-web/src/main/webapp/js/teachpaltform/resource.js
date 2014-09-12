@@ -1748,15 +1748,15 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     $("object[name='player1']").remove();
 
 
-
-   /* if (typeof ($("object[name='div_show']")) != "undefined")
+/*
+   if (typeof ($("object[name='div_show']")) != "undefined")
         $("object[name='div_show']").parent()
             .append('<div id="div_show" style="width:560px;height:500px;"></div>');
-    $("object[name='div_show']").remove();
+    $("object[name='div_show']").remove();  */
 
     if (typeof ($("div[id='div_show_wrapper']")) != "undefined")
         $("div[id='div_show_wrapper']").after('<div id="div_show" style="width:560px;height:500px;"></div>');
-    $("div[id='div_show_wrapper']").remove(); */
+    $("div[id='div_show_wrapper']").remove();
 
     //删除音频
     if (typeof($("object[id='b_sound']")))

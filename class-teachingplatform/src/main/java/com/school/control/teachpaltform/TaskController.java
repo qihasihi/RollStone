@@ -839,8 +839,16 @@ public class TaskController extends BaseController<TpTaskInfo>{
         TpCoursePaper cp=new TpCoursePaper();
         cp.setCourseid(Long.parseLong(courseid));
         List<TpCoursePaper>paperList=this.tpCoursePaperManager.getList(cp,null);
-        if(micList!=null&&micList.size()>0)
+        if(paperList!=null&&paperList.size()>0)
             mp.put("hasPaper",1);
+
+
+        //试题
+        TpCourseQuestion cq=new TpCourseQuestion();
+        cq.setCourseid(Long.parseLong(courseid));
+        List<TpCourseQuestion>questionList=this.tpCourseQuestionManager.getList(cq,null);
+        if(questionList!=null&&questionList.size()>0)
+            mp.put("hasQuestion",1);
 
 
 
@@ -858,9 +866,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
         mp.put("gradeid", request.getSession().getAttribute("session_grade"));
         mp.put("subjectid",request.getSession().getAttribute("session_subject"));
         mp.put("materialid",request.getSession().getAttribute("session_material"));
-        TpCourseQuestion cq=new TpCourseQuestion();
-        cq.setCourseid(Long.parseLong(courseid));
-        Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(cq);
+        TpCourseQuestion tcq=new TpCourseQuestion();
+        tcq.setCourseid(Long.parseLong(courseid));
+        Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(tcq);
         mp.put("objectiveQuesCount", objectiveQuesCount);   //专题下客观题数量
         return new ModelAndView("/teachpaltform/task/teacher/task-add",mp);
     }
