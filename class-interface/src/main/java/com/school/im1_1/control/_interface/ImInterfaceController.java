@@ -3989,8 +3989,28 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
         List<Map<String,Object>>tmpRankList=new ArrayList<Map<String, Object>>();
         List<Map<String,Object>>subjectList=new ArrayList<Map<String, Object>>();
+
+        //学科列表
+        List<Map<String,Object>>subList=this.imInterfaceManager.getStuScoreSubjectList(Integer.parseInt(classId));
+        if(subList!=null&&subList.size()>0){
+            for(Map<String,Object>m:subList){
+                Map<String,Object>tmpMap=new HashMap<String, Object>();
+                tmpMap.put("subjectName",m.get("SUBJECT_NAME").toString());
+                tmpMap.put("subjectId",m.get("SUBJECT_ID").toString());
+                if(!subjectList.contains(tmpMap))
+                    subjectList.add(tmpMap);
+            }
+        }
+
         ImInterfaceInfo obj=new ImInterfaceInfo();
-        obj.setSubjectid(Integer.parseInt(subjectId));
+        if(subjectId!=null&&subjectId.equals("0")&&subjectList.size()>0){
+            obj.setSubjectid(Integer.parseInt(subjectList.get(0).get("subjectId").toString()));
+            returnJo.put("msg","没有学科排名!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }else
+            obj.setSubjectid(Integer.parseInt(subjectId));
+
         obj.setClassid(Integer.parseInt(classId));
         List<Map<String,Object>>teamRankList=this.imInterfaceManager.getQryStatPerson(obj);
         StringBuilder jids = new StringBuilder();
@@ -4044,17 +4064,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
         }
 
-        //学科列表
-        List<Map<String,Object>>subList=this.imInterfaceManager.getStuScoreSubjectList(Integer.parseInt(classId));
-        if(subList!=null&&subList.size()>0){
-            for(Map<String,Object>m:subList){
-                Map<String,Object>tmpMap=new HashMap<String, Object>();
-                tmpMap.put("subjectName",m.get("SUBJECT_NAME").toString());
-                tmpMap.put("subjectId",m.get("SUBJECT_ID").toString());
-                if(!subjectList.contains(tmpMap))
-                    subjectList.add(tmpMap);
-            }
-        }
+
         jo.put("teamRankList",tmpRankList==null||tmpRankList.size()<1?null:tmpRankList);
         jo.put("subjectList",subjectList==null||subjectList.size()<1?null:subjectList);
 
@@ -4472,11 +4482,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long ct=Long.parseLong(time.toString());
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
-//        if(d>3){//大于三分钟
-//            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
-//            response.getWriter().print(returnJo.toString());
-//            return;
-//        }
+    /*    if(d>3){//大于三分钟
+            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        */
         //去除sign
         paramMap.remove("sign");
         //验证Md5

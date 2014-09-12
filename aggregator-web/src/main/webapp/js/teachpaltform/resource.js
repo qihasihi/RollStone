@@ -1458,8 +1458,7 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
     // 配置参数
 
 
-    if (typeof(imagepath) != "undefined" && imagepath.Trim().length > 0)
-        jwplayerSetup.image = imagepath;
+
 
     var jwplayerSetup = {
         'id': 'player'+new Date().getTime(),
@@ -1485,6 +1484,9 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
             }
         }
     };
+
+    if (typeof(imagepath) != "undefined" && imagepath.Trim().length > 0)
+        jwplayerSetup.image = imagepath;
     /*var jwplayerSetup={
      'width': '667',
      'height': '520',

@@ -7,6 +7,7 @@ import com.school.manager.inter.ISchoolManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import com.school.utils.EttInterfaceUserUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -79,12 +80,14 @@ public class TpUserController extends UserController {
 
 
 
+        boolean isNewUser=false;
         UserInfo u=new UserInfo();
         u.setDcschoolid(Integer.parseInt(schoolid));
         u.setEttuserid(Integer.parseInt(userid));
         List<UserInfo>userList=this.userManager.getList(u, null);
         if(userList==null||userList.size()<1){
             //添加用户
+            isNewUser=true;
             String userNextRef = UUID.randomUUID().toString();
             u.setRef(userNextRef);
             u.setPassword(schoolid+userid);
@@ -181,6 +184,16 @@ public class TpUserController extends UserController {
                     response.getWriter().print(je.toJSON());
                     return null;
                 };
+
+                //向ETT更新用户
+                UserInfo baseUser=new UserInfo();
+                baseUser.setDcschoolid(Integer.parseInt(schoolid));
+                baseUser.setEttuserid(Integer.parseInt(userid));
+                List<UserInfo>baseUserList=this.userManager.getList(baseUser,null);
+                if(!EttInterfaceUserUtil.addUserBase(baseUserList))
+                    System.out.println("Add ETT USER Error!");
+                else
+                    System.out.println("Add ETT USER Success!");
 
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -332,6 +345,7 @@ public class TpUserController extends UserController {
         StringBuilder sql=null;
         List<UserInfo>userList=null;
         String userNextRef = UUID.randomUUID().toString();
+        boolean isNewUser=false;
 
         ClassInfo c=new ClassInfo();
         c.setClassname(clsname);
@@ -355,15 +369,22 @@ public class TpUserController extends UserController {
                 return;
             }
             c=clsList.get(0);
+
+            //向ETT更新班级
+            if(!EttInterfaceUserUtil.addClassBase(c))
+                System.out.println("Add ETT USER Error!");
+            else
+                System.out.println("Add ETT USER Success!");
+
+
             //添加班主任帐号
-
-
             UserInfo u=new UserInfo();
             u.setDcschoolid(Integer.parseInt(dcschoolid));
             u.setEttuserid(Integer.parseInt(jid));
             userList=this.userManager.getList(u, null);
             if(userList==null||userList.size()<1){
                 //添加用户
+                isNewUser=true;
                 u.setRef(userNextRef);
                 u.setPassword(dcschoolid+jid);
                 u.setUsername("班主任"+dcschoolid+jid);
@@ -490,6 +511,22 @@ public class TpUserController extends UserController {
                     response.getWriter().print(je.toJSON());
                     return;
                 }
+
+                if(objListArray.size()>0){
+                    List<Map<String,Object>>mapList=this.getClassUserMap("班主任",c.getClassid());
+                    if(!EttInterfaceUserUtil.OperateClassUser(mapList,c.getClassid(),this.logined(request).getDcschoolid()))
+                        System.out.println("update ett classdriver error!");
+                    else
+                        System.out.println("update ett classdriver success!");
+
+                    //向网校更新用户
+                    if(isNewUser){
+                        if(!EttInterfaceUserUtil.addUserBase(userList))
+                            System.out.println("update ett user error!");
+                        else
+                            System.out.println("update ett user success!");
+                    }
+                }
             }else
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
@@ -522,6 +559,12 @@ public class TpUserController extends UserController {
         if(this.classManager.doDelete(classInfo)){
             je.setType("success");
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+
+            //向ETT更新班级
+            if(!EttInterfaceUserUtil.delClassBase(classInfoList.get(0)))
+                System.out.println("Delete ETT Cls Error!");
+            else
+                System.out.println("Delete ETT Cls Success!");
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         response.getWriter().print(je.toJSON());
@@ -554,6 +597,7 @@ public class TpUserController extends UserController {
         StringBuilder sql=null;
         List<UserInfo>userList=null;
         String userNextRef = UUID.randomUUID().toString();
+        boolean isNewUser=false;
 
 
         ClassInfo classInfo=new ClassInfo();
@@ -594,6 +638,7 @@ public class TpUserController extends UserController {
         userList=this.userManager.getList(u, null);
         if(userList==null||userList.size()<1){
             //添加用户
+            isNewUser=true;
             u.setRef(userNextRef);
             u.setPassword(dcschoolid+jid);
             u.setUsername("班主任"+dcschoolid+jid);
@@ -726,6 +771,33 @@ public class TpUserController extends UserController {
                     response.getWriter().print(je.toJSON());
                     return;
                 }
+
+
+                if(objListArray.size()>0){
+                    //向ETT更新班级
+                    if(!EttInterfaceUserUtil.updateClassBase(c))
+                        System.out.println("Update ETT Cls Error!");
+                    else
+                        System.out.println("Update ETT Cls Success!");
+
+                    if(isNewUser){
+                        //向ETT更新用户
+                        UserInfo baseUser=new UserInfo();
+                        baseUser.setDcschoolid(this.logined(request).getDcschoolid());
+                        baseUser.setEttuserid(Integer.parseInt(jid));
+                        List<UserInfo>baseUserList=this.userManager.getList(baseUser,null);
+                        if(!EttInterfaceUserUtil.addUserBase(baseUserList))
+                            System.out.println("Add ETT USER Error!");
+                        else
+                            System.out.println("Add ETT USER Success!");
+                    }
+
+                    List<Map<String,Object>>mapList=this.getClassUserMap("班主任",c.getClassid());
+                    if(!EttInterfaceUserUtil.OperateClassUser(mapList,c.getClassid(),this.logined(request).getDcschoolid()))
+                        System.out.println("update ett classdriver error!");
+                    else
+                        System.out.println("update ett classdriver success!");
+                }
             }else
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
@@ -760,6 +832,14 @@ public class TpUserController extends UserController {
         if(this.classUserManager.doDelete(cu)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");
+
+
+            //删除ETT User
+            List<Map<String,Object>>mapList=this.getClassUserMap(cuList.get(0).getRelationtype(),cuList.get(0).getClassid());
+            if(!EttInterfaceUserUtil.OperateClassUser(mapList, cuList.get(0).getClassid(), this.logined(request).getDcschoolid()))
+                System.out.println("delete ett classdriver error!");
+            else
+                System.out.println("delete ett classdriver success!");
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         response.getWriter().print(je.toJSON());
@@ -996,8 +1076,10 @@ public class TpUserController extends UserController {
         u.setEttuserid(Integer.parseInt(jid));
         u.setDcschoolid(this.logined(request).getDcschoolid());
         List<UserInfo>userList=this.userManager.getList(u,null);
+        boolean isNewUser=false;
         if(userList==null||userList.size()<1){
             //添加用户
+            isNewUser=true;
             u.setRef(userNextRef);
             u.setPassword(schoolid+jid);
             u.setUsername("任课教师"+schoolid+jid);
@@ -1122,6 +1204,24 @@ public class TpUserController extends UserController {
                 response.getWriter().print(je.toJSON());
                 return;
             }
+
+            if(isNewUser){
+                //向ETT更新用户
+                UserInfo baseUser=new UserInfo();
+                baseUser.setDcschoolid(Integer.parseInt(schoolid));
+                baseUser.setEttuserid(Integer.parseInt(jid));
+                List<UserInfo>baseUserList=this.userManager.getList(baseUser,null);
+                if(!EttInterfaceUserUtil.addUserBase(baseUserList))
+                    System.out.println("Add ETT USER Error!");
+                else
+                    System.out.println("Add ETT USER Success!");
+            }
+
+            List<Map<String,Object>>mapList=this.getClassUserMap("任课老师",Integer.parseInt(clsid));
+            if(!EttInterfaceUserUtil.OperateClassUser(mapList,Integer.parseInt(clsid),Integer.parseInt(schoolid)))
+                System.out.println("Add ett cls teacher error!");
+            else
+                System.out.println("Add ett cls teacher success!");
 
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -1344,6 +1444,17 @@ public class TpUserController extends UserController {
                     response.getWriter().print(je.toJSON());
                     return;
                 }
+
+                if(!EttInterfaceUserUtil.addUserBase(bindUserList))
+                    System.out.println("Add ett user error!");
+                else
+                    System.out.println("Add ett user success!");
+
+                List<Map<String,Object>>mapList=this.getClassUserMap("学生",Integer.parseInt(clsid));
+                if(!EttInterfaceUserUtil.OperateClassUser(mapList,Integer.parseInt(clsid),Integer.parseInt(schoolid)))
+                    System.out.println("Add ett cls stu error!");
+                else
+                    System.out.println("Add ett cls stu success!");
             }
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -1706,6 +1817,27 @@ public class TpUserController extends UserController {
         String ettParams="schoolId="+schoolid+"&userType="+userType+"&timestamp="+timestamp+"&sign="+sign+"&userList="+array.toString();
         System.out.println(ettUrl + "?" + ettParams);
         return sendValidateUserInfoTotalSchool(ettUrl, ettParams);
+    }
+
+
+    public  List<Map<String,Object>> getClassUserMap(String relationtype,Integer classid){
+        List<Map<String,Object>>mapList=null;
+        ClassUser cu=new ClassUser();
+        cu.setClassid(classid);
+        cu.setRelationtype(relationtype);
+        List<ClassUser> cuBanList=this.classUserManager.getList(cu,null);
+        if(cuBanList!=null&&cuBanList.size()>0){
+            mapList=new ArrayList<Map<String, Object>>();
+            for(ClassUser tmp:cuBanList){
+                // 必带 userId，userType,subjectId 的三个key
+                Map<String,Object> reMap=new HashMap<String, Object>();
+                reMap.put("userId",tmp.getUid());
+                reMap.put("subjectId",tmp.getSubjectid()==null?-1:tmp.getSubjectid());
+                reMap.put("userType",tmp.getRelationtype().equals("学生")?3:tmp.getRelationtype().equals("任课老师")?2:tmp.getRelationtype().equals("班主任")?1:null);
+                mapList.add(reMap);
+            }
+        }
+        return mapList;
     }
 }
 
