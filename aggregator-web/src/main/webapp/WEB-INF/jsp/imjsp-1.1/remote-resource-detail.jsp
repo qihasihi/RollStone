@@ -17,7 +17,7 @@
     <c:if test="${!empty replyList}">
         <c:forEach var="itm" items="${replyList}">
             <div class="over">
-                <b><img src="images/pic01_140811.png" width="36" height="36"></b>
+                <b><img src="${itm.uPhoto}" width="36" height="36"></b>
                 <p class="title"><span>${itm.replyDate}</span>${itm.uName}</p>
                 <c:if test="${!empty itm.replyAttach}">
                     <c:if test="${itm.attachType==1}">

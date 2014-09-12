@@ -18,8 +18,8 @@
     <c:if test="${!empty themeList}">
         <c:forEach items="${themeList}" var="itm">
             <div class="info">
-                <b><img src="images/pic01_140811.png" width="36" height="36"></b>
-                <p class="title"><span>${itm.C_TIME}</span>${itm.USER_NAME}</p>
+                <b><img src="${itm.uPhoto}" width="36" height="36"></b>
+                <p class="title"><span>${itm.C_TIME}</span>${itm.uName}</p>
                 <div class="black">${itm.THEME_TITLE}</div>
                 <c:if test="${itm.SOURCE_ID!=null and itm.SOURCE_ID!=1}">
                     <p>${itm.THEME_CONTENT}</p>
