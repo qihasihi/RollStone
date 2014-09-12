@@ -251,16 +251,15 @@ TestPaperQues.prototype.freeSubQuesAnswer=function(direcType){
 //            issubmit=false;
 //    }
     else if(questype==2){
+        var tkLen=$("#dv_q_"+quesid+" input[name='txt_tk']");
+        if(tkLen.length>0){
+            $.each(tkLen,function(ix,im){
+                answer+=im.value.Trim()+"|";
+            });
+            answer=answer.substring(0,answer.length-1);
+        }
 
-//        var tkLen=$("#dv_qs_"+quesid+" input[name='txt_tk']");
-//        if(tkLen.length>0){
-//            $.each(tkLen,function(ix,im){
-//                answer+=im.value.Trim()+"|";
-//            });
-//            answer=answer.substring(0,answer.length-1);
-//        }
-//
-//        if(answer.replace(/\|/g,"").Trim().length<1&&$("#txt_f2"+quesid).val().length<1)
+        if(answer.replace(/\|/g,"").Trim().length<1&&$("#txt_f2"+quesid).val().length<1)
             issubmit=false;
     }
     $("input[id='hs_val_stu_"+quesid+"']").val(score);
@@ -1031,7 +1030,7 @@ TestPaperDetail.prototype.loadQues=function(){
                     //空格出来
                     if(quesObj.questiontype==2){
                         $("span[name='fillbank']").each(function(idx,itm){
-                            $(this).replaceWith('<input type="text" name="txt_tk" id="txt_tk_'+quesObj.questionid+'"/>');
+                            $(this).replaceWith('<input type="text" readonly name="txt_tk" id="txt_tk_'+quesObj.questionid+'"/>');
                         });
                     }
 //                    else if(quesObj.questiontype==3||quesObj.questiontype==4||quesObj.questiontype==7||quesObj.questiontype==8){
@@ -1062,7 +1061,7 @@ TestPaperDetail.prototype.loadQues=function(){
                         var qtype=quesObj.questiontype;
                         if(qtype==1||qtype==2||qtype==9){
                             $("#sp_df_"+quesObj.questionid).html("待批改");
-                            if(qtype==1){
+                            if(qtype==1||qtype==9){
                                 //问答
                                 $("#txt_answer_"+quesObj.questionid).val(quesObj.spqLogs.answer);
                             }else{

@@ -16,7 +16,10 @@
 
 
 <%
-    boolean visible=Integer.parseInt(UtilTool.utilproperty.getProperty("SYSTEM_SETTINGS").toString())>0?true:false;
+
+    boolean visible=false;
+    if (UtilTool.utilproperty.getProperty("SYSTEM_SETTINGS")!=null)
+        visible=Integer.parseInt(UtilTool.utilproperty.getProperty("SYSTEM_SETTINGS").toString())>0?true:false;
 %>
   
 <%

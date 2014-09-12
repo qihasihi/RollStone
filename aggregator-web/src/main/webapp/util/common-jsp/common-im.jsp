@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <%@ page language="java" import="java.util.*,java.math.BigDecimal" pageEncoding="UTF-8"%>
 <%@ page import="com.school.util.UtilTool" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
