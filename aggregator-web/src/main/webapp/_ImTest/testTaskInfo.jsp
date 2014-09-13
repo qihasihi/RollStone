@@ -15,13 +15,14 @@
         function genderSign(methodName){
             var taskId = $("#taskId").val();
             var schoolId=$("#schoolId").val();
+            var orderidx = $("#orderIndex").val();
             var jid=$("#jid").val();
             var classId=$("#classId").val();
             var isvir = $("#isVirtual").val();
             var classType = $("#classType").val();
             var userType = $("#userType").val();
             var time=$("#txt_a_time").val();
-            var param={taskId:taskId,schoolId:schoolId,jid:jid,classId:classId,isVirtual:isvir,time:time,userType:userType,classType:classType};
+            var param={taskId:taskId,schoolId:schoolId,jid:jid,classId:classId,isVirtual:isvir,orderIndex:orderidx,time:time,userType:userType,classType:classType};
 
             param.method=methodName;
 
@@ -43,6 +44,10 @@
         <tr>
             <td>任务id</td>
             <td><input type="text" name="taskId" id="taskId" value="4"/> </td>
+        </tr>
+        <tr>
+            <td>任务序号</td>
+            <td><input type="text" name="orderIndex" id="orderIndex" value="4"/> </td>
         </tr>
         <tr>
             <td>班级id</td>

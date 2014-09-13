@@ -306,13 +306,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 typename="文字";
                                 break;
                         }
+                        if(utype!=2){
+                            taskList.get(j).put("ORDERIDX",(j+1)+"");
+                        }
                         if(Integer.parseInt(taskList.get(j).get("TASKTYPE").toString())==3){
                             taskList.get(j).put("TASKNAME","任务 "+taskList.get(j).get("ORDERIDX")+" "+typename);
                         }else{
                             taskList.get(j).put("TASKNAME","任务 "+taskList.get(j).get("ORDERIDX")+" "+typename+" "+taskList.get(j).get("TASKNAME"));
-                        }
-                        if(utype!=2){
-                            taskList.get(j).put("ORDERIDX",(j+1)+"");
                         }
                     }
                 }
@@ -1220,6 +1220,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String userid = request.getParameter("jid");
         String usertype = request.getParameter("userType");
         String schoolid = request.getParameter("schoolId");
+        String orderIndex = request.getParameter("orderIndex");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
         if(!ImUtilTool.ValidateRequestParam(request)){
@@ -1231,6 +1232,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             return;
         }
         HashMap<String,String> map = new HashMap();
+        map.put("orderIndex",orderIndex);
         map.put("taskId",taskid);
         map.put("classId",classid);
         map.put("classType",classtype);
@@ -1306,7 +1308,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     typename="文字";
                     break;
             }
-            returnMap.put("taskContent", "任务 " + taskList.get(0).getOrderidx() + " " + typename+" "+rsList.get(0).getResname());
+            returnMap.put("taskContent", "任务 " + (orderIndex!=null?orderIndex:0) + " " + typename+" "+rsList.get(0).getResname()+rsList.get(0).getFilesuffixname());
             returnMap.put("taskAnalysis",taskinfo.get(0).get("TASKANALYSIS"));
         }else if(taskList.get(0).getTasktype()==6){
             ResourceInfo rs = new ResourceInfo();
@@ -1351,7 +1353,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     typename="文字";
                     break;
             }
-            returnMap.put("taskContent", "任务 " + taskList.get(0).getOrderidx() + " " + typename+" "+rsList.get(0).getResname());
+            returnMap.put("taskContent", "任务 " + orderIndex!=null?orderIndex:0 + " " + typename+" "+rsList.get(0).getResname());
             returnMap.put("taskAnalysis",taskinfo.get(0).get("TASKANALYSIS"));
             //查询当前任务的微课程是否完整看过
             List<Map<String,Object>> list = this.imInterfaceManager.getTaskWatch(userList.get(0).getUserid(),taskList.get(0).getTaskvalueid());
@@ -1420,8 +1422,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             if(pList!=null&&pList.size()>0){
                 iscomplete=true;
             }
-
-
         }
         if(iscomplete){
             List<Map<String,Object>> taskUserRecord = new ArrayList<Map<String, Object>>();
@@ -1544,7 +1544,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     }
                 }
             }
-            returnMap.put("replyList",returnUserRecord);
+            if(utype==2){
+                returnMap.put("replyList",returnUserRecord);
+            }else{
+                returnMap.put("replyList",null);
+            }
         }
         returnInfo.add(returnMap);
         Map m = new HashMap();
