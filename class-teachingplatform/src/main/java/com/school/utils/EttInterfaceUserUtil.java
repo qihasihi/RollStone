@@ -159,7 +159,7 @@ public class EttInterfaceUserUtil {
         tmpMap.put("action",optype);
         tmpMap.put("schoolId",entity.getDcschoolid());
         tmpMap.put("classId",entity.getClassid());
-        tmpMap.put("className",entity.getClassname());
+        tmpMap.put("className",entity.getClassgrade()+entity.getClassname());
 //        Integer classType=1;
 //        if(entity.getPattern()!=null&&entity.getPattern().trim().equals("·Ö²ã°à"))
 //            classType=2;

@@ -30,8 +30,8 @@
         var tqControler=null;
         $(function(){
             $("#loading").ajaxStart(function(){
-                var w=$(document).width()/2-50;
-                var h=$(document).height()/2-20;
+                var w=$(document).width()/2-parseInt($(this).css("width"))/2;
+                var h=$(document).height()/2-parseInt($(this).css("height"))/2;
                 $(this).css({"left":w+"px","top":h+"px"});
                 $(this).show();
             });
@@ -116,6 +116,6 @@
 <!--提交试题的FRM-->
 <form action="#"  id="fm_subQues" method="post">
 </form>
-<div id="loading" style='display:none;position: absolute;z-index:1005;'><img src="images/loading.gif"/></div>
+<div id="loading" style='display:none;position: absolute;z-index:1005;width:32px;height:32px'><img src="images/loading.gif"/></div>
 </body>
 </html>
