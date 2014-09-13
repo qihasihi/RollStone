@@ -81,6 +81,7 @@ $(function(){
     });
 
 
+
     // getViewClickTop('week');
 	//getSubjectResource(subject);
 	//getScoreTop();
@@ -311,8 +312,8 @@ function myInfoAjaxList(rps){
             </ul>
         </div>
      <div class="zyxt_home_dongtaiB">
-            <ul id="ul_dt_data">
-               <%/* <li><b>2013年11月13日</b><span class="ico64"></span><a href="1" target="_blank" class="font-blue"><span class="ico_txt1"></span>雾里看花雾里看花雾里看花花雾里看花雾里看花</a>...&nbsp;&nbsp;审核通过&nbsp;+5分</li>
+         <ul id="ul_dt_data">
+             <%/* <li><b>2013年11月13日</b><span class="ico64"></span><a href="1" target="_blank" class="font-blue"><span class="ico_txt1"></span>雾里看花雾里看花雾里看花花雾里看花雾里看花</a>...&nbsp;&nbsp;审核通过&nbsp;+5分</li>
                 <li><b>2013年11月13日</b><span class="ico63"></span><a href="1" target="_blank" class="font-blue"><span class="ico_rtf1"></span>雾里看花雾里看花雾里看花雾里看花雾里看花雾里看花雾里看花</a>...&nbsp;&nbsp;被选入标准资源库&nbsp;+5分</li>
                 <li><b>2013年11月13日</b><span class="ico64"></span><a href="1" target="_blank" class="font-blue"><span class="ico_txt1"></span>雾里看花雾里看花雾里看里看花雾里看花雾里看花</a>...&nbsp;&nbsp;未通过审核！</li>
                 <li><b>2013年11月13日</b><span class="ico63"></span><a href="1" target="_blank" class="font-blue"><span class="ico_ppt1"></span>雾里看花雾里看花雾里花雾里看花雾里看花雾里看花</a>...&nbsp;&nbsp;被管理员删除！ </li>
@@ -321,7 +322,7 @@ function myInfoAjaxList(rps){
                 <li><b>2013年11月13日</b><span class="ico63"></span><a href="1" target="_blank" class="font-blue"><span class="ico_pdf1"></span>雾里看花雾里看花雾里看花雾里看花雾里看花雾里看花雾里看花</a>...&nbsp;&nbsp;为恶意文件&nbsp;被删除&nbsp;+5分</li>
                 <li><b>2013年11月13日</b><span class="ico63"></span><a href="1" target="_blank" class="font-blue"><span class="ico_doc1"></span>看花雾里看花雾里看花雾里看花雾里看花雾里看花</a>...&nbsp;&nbsp;审核通过&nbsp;+5分</li>
         */%>
-            </ul>
+                  </ul>
          <div class="nextpage" id="dv_dt_s_page">
              <span><a href="javascript:;" onclick="pageFirst('p_myinfo')"><b class="first"></b></a>
              </span><span><a href="javascript:;"  onclick="pagePre('p_myinfo')"><b class="before"></b></a></span>
@@ -340,6 +341,7 @@ function myInfoAjaxList(rps){
          <form name="fm_dto_form" id="fm_dto_form" method="post">
              <div class="nextpage" id="dv_dto_pageress" style="display:none"></div>
          </form>
+     </div>
         </div>
 
         <p class="zyxt_home_tjzy"><span class="ico14"></span>推荐资源</p>
@@ -369,7 +371,6 @@ function myInfoAjaxList(rps){
  <%@include file="/util/foot.jsp" %>
 
 <div class="public_windows" id="dv_firstInto"  style="display:none;>
-<div class="public_windows">
 <h3><a href="javascript:;" onclick="closeModel('dv_firstInto')" title="关闭"></a>欢迎进入资源系统！</h3>
 <p class="t_c p_tb_10">你可以上传、管理、共享自我资源，<br>也可查看、使用他人共享或网校配送的资源，快来试试吧！</p>
 <p class="t_c p_tb_10"><a  href="resource?m=toadd" onclick="closeModel('dv_firstInto');" target="_blank"  class="an_public1">上传资源</a>

@@ -13,8 +13,6 @@
             direcparent="clouduploadfile";
     }
 
-
-
 // %>
 <html>
   <head>
@@ -44,8 +42,20 @@
         var audiosuffix="${audiosuffix}";
         var videosuffix="${videosuffix}";
         var imagesuffix="${imagesuffix}";
+        $("#loading").ajaxStart(function(){
+            $(this).show();
+        });
 
         $(function(){
+            $("#loading").ajaxStart(function(){
+                var w=$(document).width()/2-50;
+                var h=$(document).height()/2-20;
+                $(this).css({"left":w+"px","top":h+"px"});
+                $(this).show();
+            });
+            $("#loading").ajaxStop(function(){
+                $(this).hide();
+            });
             //加载评论
             p1=new PageControl({
                 post_url:'commoncomment?m=ajaxlist',
@@ -80,7 +90,6 @@
             });
             //进入加载
             fn_changePanel(cufiletype);
-
         });
         /**
          * 更改pannel
@@ -244,6 +253,12 @@
             $("#cpn_1").html(rps.presult.recTotal);
         }
 
+      var allowViewDoc=true;
+        function timer(){
+          setTimeout(function(){
+              allowViewDoc=true;
+          },1000);
+        }
     /**
     *显示预览
     * @param loc
@@ -251,10 +266,34 @@
     * @param imgd
      *
      */
-    function showDocView(loc,path){
-        var p=loc+"/"+path+"/001.swf";
-        loadSwfReview(p,'dv_show_doc_view',980,800);
-        showModel('dv_doc_prview');
+    function showDocView(resid,loc,path){
+        if(typeof(resid)=="undefined"||resid==null)
+            return;
+        if(!allowViewDoc){
+            alert("别着急!休息一会再点!");
+            return;
+        }
+        allowViewDoc=false;
+        timer();
+        $.ajax({
+            url:"resource?m=ajx_mkDocFile",
+            data:{resid:resid},
+            dataType:'json',
+            error:function(){
+                alert('异常错误!系统未响应!');
+            },success:function(rps){
+                if(rps.type=="error"){
+                    alert(rps.msg);
+                    return;
+                }
+                var p=loc+"/"+path+"/001.swf";
+                //验证是否存在
+
+                loadSwfReview(p,'dv_show_doc_view',980,800);
+                showModel('dv_doc_prview');
+            },
+            type:"POST"
+        });
     }
     </script>
   </head>  
@@ -372,7 +411,7 @@
                       <span  id="sp_up_btn_resname"><a href="javascript:;" onclick="updateResColumn('${resObj.resid}','resname','sp_name','sp_up_btn_resname')" title="编辑" class="ico11"></a></span>
                   </c:if>
          <c:if test="${fileType=='doc'}">
-          <a href="javascript:;" onclick="showDocView(resourcepathHead,'${resObj.path}')" title="预览" class="ico76"></a>
+          <a href="javascript:;" onclick="showDocView(${resObj.resid},resourcepathHead,'${resObj.path}')" title="预览" class="ico76"></a>
          </c:if>
               </h1>
                   <p><span class="w220"><span id="sp_grade">${resObj.gradename}</span>&nbsp;
@@ -490,7 +529,7 @@
                   <a title="编辑" class="ico11" href="javascript:;" onclick="updateResColumn('${resObj.resid}','resintroduce','sp_remark','sp_btn_remark',3)"></a>
                   </c:if>
               </p>
-              <div class="height">
+              <div class="height wrapline">
                       <span id="sp_remark">${resObj.resintroduce}</span>
               </div>
           </div>
@@ -505,7 +544,7 @@
               举报，限制是对本校、其他教师发布、且未分享到云端的资源可进行举报操作，只能举报一次
               ，举报完成之后，显示文字"已举报"。当前对自己的资源也能举报，对其他学校的资源也能举报，对分享到云端的资源也能举报。
               */%>
-              <c:if test="${resObj.sharestatus==3&&resObj.userid!=sessionScope.CURRENT_USER.userid}">
+              <c:if test="${resObj.sharestatus==1&&resObj.userid!=sessionScope.CURRENT_USER.userid}">
                   <c:if test="${isreport==2}"><!--未举报-->
                       <a href="javascript:;" onclick="showModel('resource_report');" class="ico74" title="我要举报"></a>
                   </c:if>
@@ -650,6 +689,6 @@
   </div>
   <!--遮照层-->
   <div id="fade" class="black_overlay" style="background:black; filter: alpha(opacity=50); opacity: 0.5; -moz-opacity:0.5;"></div>
-
+  <div id="loading" style='display:none;position: absolute;z-index:1005;'><img src="images/loading.gif"/></div>
   </body>
 </html>

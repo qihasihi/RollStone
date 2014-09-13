@@ -150,7 +150,7 @@
                 html+="</td>";
 				html+="<td><p><a target='_blank' href='resource?m=todetail&resid="+itm.resid+"'>"+ itm.resname +"</a>&nbsp;&nbsp;&nbsp;&nbsp;"
                 html+="<a href='javascript:;' onmouseover=\"getResCourse('"+itm.resid+"')\" onmouseout=\"dv_res_course.style.display='none';ul_course.innerHTML='';\"  class='font-darkblue'>知识点</a>&nbsp;&nbsp;&nbsp;";
-                html+="<p>"+(itm.resintroduce==null?"无":itm.resintroduce)+"</p>";
+                html+="<p><div class='wrapline'>"+(itm.resintroduce==null?"无":itm.resintroduce)+"</div></p>";
                 var subname=itm.subjectname,grdname=itm.gradename;
                 if(lb.params.gradevalues!=null&&lb.params.gradevalues.Trim().length>0&&lb.params.gradevalues.indexOf(",")==-1){
                     grdname=$("#val_ls_gradevalues li[id='value_gradevalues_"+lb.params.gradevalues.Trim()+"'] a").html();

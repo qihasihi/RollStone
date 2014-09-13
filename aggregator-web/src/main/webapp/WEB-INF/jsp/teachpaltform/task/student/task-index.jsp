@@ -267,6 +267,12 @@
                             queshtm+='</tr>';
                         }
                         if(itm.taskstatus!="1" && itm.taskstatus!="3"){
+                            if(itm.questiontype==1){
+                                queshtm+='<tr>';
+                                queshtm+='<td>&nbsp;</td>';
+                                queshtm+='<td>上传附件：&nbsp;&nbsp;<input  type="file" id="txt_f_'+itm.taskid+'" name="txt_f_'+itm.taskid+'" /></td>';
+                                queshtm+='</tr>';
+                            }
                             queshtm+='<tr>';
                             queshtm+='<td>&nbsp;</td>';
                             queshtm+='<td><a class="an_public3" href="javascript:doStuSubmitQues('+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+',\'\','+itm.questiontype+')">保&nbsp;存</a></td>';

@@ -2442,4 +2442,53 @@ public class ResourceController extends BaseController<ResourceInfo> {
         response.getWriter().print(jsonEntity.toJSON());
     }
 
+    /**
+     * 验证资源文件是否存在
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=ajx_mkDocFile",method=RequestMethod.POST)
+    public void ajx_validateResFile(HttpServletRequest request,HttpServletResponse response)throws Exception{
+       String resid=request.getParameter("resid");
+        JsonEntity jsonEntity=new JsonEntity();
+        if(resid==null||resid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.toJSON());
+            return;
+        }
+        //得到资源信息
+        ResourceInfo resObj=new ResourceInfo();
+        resObj.setResid(Long.parseLong(resid.trim()));
+        List<ResourceInfo> rsList=this.resourceManager.getList(resObj,null);
+        if(rsList==null||rsList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.toJSON());
+            return;
+        }
+        resObj=rsList.get(0);
+        if(resObj.getFilesuffixname()==null||resObj.getFilesuffixname().trim().length()<1){
+            jsonEntity.setMsg("数据错误！没有后缀名!");
+            response.getWriter().println(jsonEntity.toJSON());
+            return;
+        }
+        String filepath=UtilTool.getResourceFileUrl(resObj.getResid().toString(),resObj.getFilesuffixname());
+        String filetype=UtilTool.getConvertResourseType(filepath);
+        if(filetype!=null&&filetype.equals("doc")){
+            //如果是
+            String destPath=UtilTool.getResourceLocation(Long.parseLong(resid),2)+"/"+UtilTool.getConvertPath(resid, resObj.getFilesuffixname());
+            String sourcepath=UtilTool.getResourceLocation(Long.parseLong(resid),2)+"/"+UtilTool.getResourceFileUrl(resid,resObj.getFilesuffixname());
+            //如果文件存在或者转换过的存在
+            if(new File(sourcepath).exists()){
+                if(!new File(destPath).exists()){
+                    boolean issuccess=UtilTool.Office2Swf(request,resid, resObj.getFilesuffixname());
+                    if(issuccess)jsonEntity.setType("success");
+                    else jsonEntity.setMsg(filetype+"转换失败!");
+                }else jsonEntity.setType("success");
+            }else jsonEntity.setMsg("没有源文件!");
+        }else
+            jsonEntity.setMsg("该资源类型不是文档类型，无法进行转换!");
+        response.getWriter().println(jsonEntity.toJSON());
+    }
+
 }

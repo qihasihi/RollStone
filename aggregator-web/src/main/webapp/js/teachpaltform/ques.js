@@ -393,11 +393,8 @@ function doAddQuestion(){
         return;
     }
     param.quesname=quesname;
-    if(quesanswer.Trim().length<1){
-        alert('提示：答案解析不能为空!');
-        return;
-    }
-    param.quesanswer=quesanswer;
+    if(quesanswer.Trim().length>0&&quesanswer!='点击编辑答案解析……')
+        param.quesanswer=quesanswer;
 
     if(questype=="1"){
         param.correctanswer =correctanswer;

@@ -90,7 +90,7 @@
 				html+="<p><strong>资源名称：</strong><a target='_blank' href='resource?m=todetail&resid="+itm.resid+"'>"+ itm.resname +"</a>&nbsp;&nbsp;";
 				html+="<span id='rec_"+itm.resid+"'>";
 				html+="</span></p>";
-				html+="<p><strong>简&nbsp; &nbsp; 介：</strong><span class='width'>"+(itm.resintroduce==null?"无":itm.resintroduce)+"</span></p>";  
+				html+="<p><strong>简&nbsp; &nbsp; 介：</strong><span class='width wrapline'>"+(itm.resintroduce==null?"无":itm.resintroduce)+"</span></p>";
 				html+="<p class='info'>资源类型："+itm.subjectname+"、"+itm.gradename+"、"+itm.restypename+"、"+itm.filetypename
                         +"&nbsp;&nbsp;&nbsp;赞："+itm.praisenum+"&nbsp;&nbsp;&nbsp;收藏："+itm.storenum+"&nbsp;&nbsp;&nbsp;浏览："+itm.clicks+"&nbsp;&nbsp;&nbsp;下载："+itm.downloadnum+"</p>";
 				html+="</div> ";

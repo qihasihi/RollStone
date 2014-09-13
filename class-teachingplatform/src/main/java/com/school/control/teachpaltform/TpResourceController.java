@@ -773,7 +773,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             PageResult pageResult=new PageResult();
             pageResult.setPageNo(0);
             pageResult.setPageSize(0);
-            pageResult.setOrderBy(" aa.diff_type desc,aa.res_id,aa.ctime desc,aa.operate_time desc ");
+            pageResult.setOrderBy("  aa.diff_type desc,aa.res_id,aa.ctime desc,aa.operate_time desc ");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
                 for(int i=0;i<resourceList.size();i++){
@@ -1246,7 +1246,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             PageResult pageResult=new PageResult();
             pageResult.setPageNo(0);
             pageResult.setPageSize(0);
-            pageResult.setOrderBy("aa.diff_type desc,aa.res_id,aa.ctime desc,aa.operate_time desc ");
+            pageResult.setOrderBy(" aa.diff_type desc,aa.res_id,aa.ctime desc,aa.operate_time desc ");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
                 for(int i=0;i<resourceList.size();i++){
@@ -2544,8 +2544,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String courseid=request.getParameter("courseid");
         String resid=request.getParameter("resid");
         String taskid=request.getParameter("taskid");
-        if(courseid==null||courseid.trim().length()<1
-               // ||taskid==null||taskid.trim().length()<1
+        if(courseid==null||courseid.trim().length()<1//||taskid==null||taskid.trim().length()<1
                 ){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());

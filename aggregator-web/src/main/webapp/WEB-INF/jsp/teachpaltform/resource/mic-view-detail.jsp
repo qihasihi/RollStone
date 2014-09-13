@@ -79,6 +79,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}">
                     <col class="w30"/>
                     <col class="w880"/>
+
                     <caption>
                         <c:if test="${!empty taskid}">
                             <c:if test="${pq.questiontype==1||pq.questiontype==2}">

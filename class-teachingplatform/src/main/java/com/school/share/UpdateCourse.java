@@ -569,6 +569,18 @@ public class UpdateCourse extends TimerTask{
                                  for(TpCourseQuestion cq:cqlist){
                                      if(cq==null)continue;
                                      sqlbuilder=new StringBuilder();
+                                     QuestionInfo q=new QuestionInfo();
+                                     q.setQuestionid(cq.getQuestionid());
+                                     List<QuestionInfo> qList=questionManager.getList(q,null);
+                                     if(qList!=null&&qList.size()>0){
+                                         //如果是组试题内的题，则不添加
+                                         if(qList.get(0).getQuestiontype()!=1&&qList.get(0).getQuestiontype()!=2
+                                                 &&qList.get(0).getQuestiontype()!=6
+                                                 &&qList.get(0).getQuestiontype()!=3
+                                                 &&qList.get(0).getQuestiontype()!=4){
+                                             continue;
+                                         }
+                                     }
                                      //得到专题问题的同步SQL
                                        objList=courseQuestionManager.getSynchroSql(cq,sqlbuilder);
                                      if(sqlbuilder!=null){
@@ -656,7 +668,7 @@ public class UpdateCourse extends TimerTask{
                                          sqlArrayList.add(sqlbuilder.toString());
                                      }
                                      //得到附件
-                                     topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(rsEntity.getResid().toString());
+                                    topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(rsEntity.getResid().toString());
                                      System.out.println("微视频资源文件"+topath);
                                      //下载微视频文件
                                      if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,rsEntity.getResid().toString(),key,-1,topath,rsEntity.getFilename(),null)){
@@ -825,7 +837,7 @@ public class UpdateCourse extends TimerTask{
                                      }
 
                                  }
-                                 //每条记录执行执行添加
+//                                 //每条记录执行执行添加
                                  if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
                                      istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
                                      if(!istrue){
@@ -903,7 +915,7 @@ class UpdateCourseUtil{
         //得到链接地址
         String fileUrl=map.get("objList").toString();
         if(fileUrl==null||fileUrl.trim().length()<1)//文件包不存在
-            return true;
+            return false;
 
         //复制文件
         //得到文件后缀名
@@ -998,7 +1010,7 @@ class UpdateCourseUtil{
                                 if(map.containsKey("Difftype")&&map.get("Difftype")!=null&&!map.get("Difftype").toString().trim().toUpperCase().equals("NULL")){
                                     res.setDifftype(Integer.parseInt(map.get("Difftype").toString()));
                                 }
-                                if(difftype!=null&&res.getDifftype()!=null&&res.getDifftype().intValue()!=difftype.intValue())
+                                if(difftype!=null&&(res.getDifftype()==null||res.getDifftype().intValue()!=difftype.intValue()))
                                     continue;
                                 if(map.containsKey("Appobj")&&map.get("Appobj")!=null&&!map.get("Appobj").toString().trim().toUpperCase().equals("NULL")){
                                     res.setUseobject(map.get("Appobj").toString());
@@ -2047,8 +2059,8 @@ class UpdateCourseUtil{
                                 quesAnswer.setRef(Integer.parseInt(quesOptMap.get("Ref").toString()));
                             }
 
-
-                            returnList.add(quesAnswer);
+                            if(!returnList.contains(quesAnswer))
+                                returnList.add(quesAnswer);
                         }
                     }
                 }

@@ -743,7 +743,8 @@ public class QuestionController extends BaseController<QuestionInfo> {
         }
         //ÐÞ¸ÄContent£¬analysis
         this.questionManager.getArrayUpdateLongText("question_info","question_id","content",quesname,nextref.toString(),sqlListArray,objListArray);
-        this.questionManager.getArrayUpdateLongText("question_info","question_id","analysis",quesanswer,nextref.toString(),sqlListArray,objListArray);
+        if(quesanswer!=null&&quesanswer.trim().length()>0)
+            this.questionManager.getArrayUpdateLongText("question_info","question_id","analysis",quesanswer,nextref.toString(),sqlListArray,objListArray);
         if(questype.equals("1")){
             this.questionManager.getArrayUpdateLongText("question_info","question_id","correct_answer",correctanswer,nextref.toString(),sqlListArray,objListArray);
         }
@@ -933,7 +934,8 @@ public class QuestionController extends BaseController<QuestionInfo> {
 
             //ÐÞ¸ÄContent£¬analysis
             this.questionManager.getArrayUpdateLongText("question_info","question_id","content",quesname,nextref.toString(),sqlListArray,objListArray);
-            this.questionManager.getArrayUpdateLongText("question_info","question_id","analysis",quesanswer,nextref.toString(),sqlListArray,objListArray);
+            if(quesanswer!=null&&quesanswer.trim().length()>0)
+                this.questionManager.getArrayUpdateLongText("question_info","question_id","analysis",quesanswer,nextref.toString(),sqlListArray,objListArray);
             if(q.getQuestiontype().toString().equals("1")){
                 this.questionManager.getArrayUpdateLongText("question_info","question_id","correct_answer",correctanswer,nextref.toString(),sqlListArray,objListArray);
             }

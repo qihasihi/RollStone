@@ -841,8 +841,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
         List<TpCoursePaper>paperList=this.tpCoursePaperManager.getList(cp,null);
         if(paperList!=null&&paperList.size()>0)
             mp.put("hasPaper",1);
-
-
         //试题
         TpCourseQuestion cq=new TpCourseQuestion();
         cq.setCourseid(Long.parseLong(courseid));
@@ -850,10 +848,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
         if(questionList!=null&&questionList.size()>0)
             mp.put("hasQuestion",1);
 
-
-
-
-        //小组
 		TpGroupInfo g=new TpGroupInfo();
 		//g.setCuserid(this.logined(request).getUserid());
         g.setTermid(courseclassList.get(0).getTermid());
@@ -1973,6 +1967,47 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     return;
                 }
 
+                quesanswer=new String(quesanswer.getBytes("iso-8859-1"),"UTF-8");
+
+                String annexName=null;
+                boolean isfileOk=true;
+                if(hasannex!=null&&hasannex.equals("1")){
+                    MultipartFile[] muFile=this.getUpload(request);
+                    if(muFile!=null&&muFile.length>0){//文件上传
+                        //this.setFname(annexName=this.getUploadFileName()[0]);
+                        this.setFname(annexName=new Date().getTime()+""
+                                +this.getUploadFileName()[0].substring(this.getUploadFileName()[0].lastIndexOf("."))
+                        );
+                        if(!fileupLoad(request)){
+                            isfileOk=!isfileOk;
+                        }
+                    }else
+                        isfileOk=false;
+                }
+
+                if(!isfileOk){
+                    je.setMsg("文件上传失败!请刷新页面后重试!");
+                    response.getWriter().println(je.toJSON());return ;
+                }
+
+                //压缩原图至w160 h 90
+                if(annexName!=null&&annexName.length()>0){
+                    String suffix=annexName.substring(annexName.lastIndexOf("."));
+                    if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
+                        String filename=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
+                        File file=new File(filename);
+                        if(!file.exists()){
+                            je.setMsg("未发现文件!");
+                            response.getWriter().println(je.toJSON());return ;
+                        }
+                        //新图
+                        String descFile=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
+                        UtilTool.copyFile(file,new File(descFile));
+                        //缩略图
+                        UtilTool.ReduceImg(file, filename, 160, 90);
+                    }
+                }
+
 
 
                 //录入答题记录
@@ -1984,7 +2019,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 qa.setQuesparentid(Long.parseLong(quesid));
                 qa.setUserid(this.logined(request).getRef());
                 qa.setRightanswer(1);
-
+                if(annexName!=null&&annexName.length()>0)
+                    qa.setReplyattach(annexName);
                 sql=new StringBuilder();
                 objList=this.questionAnswerManager.getSaveSql(qa, sql);
                 if(objList!=null&&sql!=null){
@@ -3576,19 +3612,42 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String type=request.getParameter("type"); //1:主观 2:客观
         if(courseid==null||courseid.trim().length()<1
                 ||questionid==null||questionid.trim().length()<1
-                ||type==null||type.trim().length()<1
+                //||type==null||type.trim().length()<1
                 ||paperid==null||paperid.trim().length()<1
                 ||taskid==null||taskid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        List<Map<String,Object>>allquesidList=paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
-        if(allquesidList==null||allquesidList.size()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+
+        QuestionInfo q=new QuestionInfo();
+        q.setQuestionid(Long.parseLong(questionid));
+        List<QuestionInfo>quesList=this.questionManager.getList(q,null);
+        if(quesList==null||quesList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
+        QuestionInfo ques=quesList.get(0);
+        if(ques.getQuestiontype()==3||ques.getQuestiontype()==4)
+            type="2";
+        else if(ques.getQuestiontype()==1||ques.getQuestiontype()==2)
+            type="1";
+
+        List<Map<String,Object>>allquesidList=paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
+        if(allquesidList==null||allquesidList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        mp.put("allquesId",allquesidList);
+
+
+        mp.put("allquesId",allquesidList.get(0).get("ALLQUESID"));
+        mp.put("currentQuesId",questionid);
+        mp.put("courseid",courseid);
+        mp.put("paperid",paperid);
+        mp.put("taskid",taskid);
 
         StuPaperQuesLogs logs=new StuPaperQuesLogs();
         logs.setPaperid(Long.parseLong(paperid));

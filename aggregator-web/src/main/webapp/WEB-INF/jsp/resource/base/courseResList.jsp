@@ -78,7 +78,7 @@
                        html+="<span class='ico70' title='北京四中网校标准资源库'></span>";
                     else
                         html+=itm.username;
-                    html+="</p><p>"+(itm.resintroduce==null?"无":itm.resintroduce)+"</p>";
+                    html+="</p><p><div class='wrapline'>"+(itm.resintroduce==null?"无":itm.resintroduce)+"</div></p>";
                     html+="<p class='text_info'>";
 
                     html+=subname+","+gradename+","+itm.restypename+","+itm.filetypename

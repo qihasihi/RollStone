@@ -10,12 +10,49 @@
     <script type="text/javascript" src="<%=basePath %>js/teachpaltform/tptask.js"></script>
     <script type="text/javascript">
         var taskid="${taskid}";
+        var courseid="${courseid}";
+        var paperid="${paperid}";
         var questype="${questype}";
         var tasktype="${taskInfo.tasktype}";
         var orderstr="";
+        var allQuesId="${allquesId}";
+        var currentQuesId="${currentQuesId}";
+        var currentIdx=-1;
+
         $(function(){
             $("#tbl tr:even").addClass("trbg1");
+
+            if(allQuesId.length>0){
+                var quesArray=allQuesId.split(",");
+                $.each(quesArray,function(ix,im){
+                    if(currentQuesId==im)
+                       currentIdx=ix;
+                });
+
+                if(currentIdx==0)
+                    $("#upquestion").remove();
+                else if(currentIdx==quesArray.length-1)
+                    $("#nextquestion").remove();
+            }
         });
+
+        /**
+         * 1上一题
+         * 2下一题
+         * @param type
+         */
+        function tabQuestion(type){
+            var quesArray=allQuesId.split(",");
+            if(currentIdx==-1||quesArray.length<1)
+                return;
+            var id;
+            if(type==1){
+                id=quesArray[currentIdx-1];
+            }else{
+                id=quesArray[currentIdx+1];
+            }
+            location.href='task?loadStuMicQuesPerformance&courseid='+courseid+'&taskid='+taskid+'&questionid='+id+'&type=1&paperid='+paperid+'';
+        }
 
     </script>
 
@@ -24,7 +61,13 @@
 <body>
 
 
-<div class="subpage_head"><span class="ico55"></span><strong>微课程—试卷&mdash;查看回答</strong></div>
+<div class="subpage_head"><span class="ico55"></span><strong>微课程—试卷&mdash;查看回答</strong>
+    <p style="float: right;">
+        <a  id="upquestion" href="javascript:;" onclick="tabQuestion(1)" class="an_public3">上一题</a>
+        &nbsp;&nbsp;
+        <a  href="javascript:;" onclick="tabQuestion(2)"  id="nextquestion" class="an_public3">下一题</a>
+    </p>
+</div>
 <div class="content1">
     <c:if test="${!empty optionList and !empty logList}">
 

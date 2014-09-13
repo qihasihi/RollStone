@@ -101,7 +101,7 @@
                     html+="<span class='ico70' title='北京四中网校标准资源库'></span>";
                 else
                     html+="<span>"+itm.username+"</span>";
-				html+="</p><p>"+(itm.resintroduce==null?"无":itm.resintroduce)+"</p>";
+				html+="</p><p><div class='wrapline'>"+(itm.resintroduce==null?"无":itm.resintroduce)+"</div></p>";
 				html+="<p class='text_info'>"+itm.subjectname+","+itm.gradename+","+itm.restypename+","+itm.filetypename
                         +"<span class='ico41' title='赞'></span><b>"+itm.praisenum+"</b>"
                         +"<span class='ico73' title='推荐'></span><b>"+itm.recomendnum+"</b>"
