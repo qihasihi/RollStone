@@ -486,7 +486,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             c.setTime(new Date(mTime - offset));
             String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
             String currentMonth = currentDay.split("-")[1];
-            if(Integer.parseInt(month)==Integer.parseInt(currentMonth)){
+            String currentYear = currentDay.split("-")[0];
+            if(Integer.parseInt(month)==Integer.parseInt(currentMonth)&&Integer.parseInt(year)==Integer.parseInt(currentYear)){
                 List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), utype, Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
                 if(courseArray!=null&&courseArray.size()>0){
                     List<Map<String,Object>> courseArray2 = new ArrayList<Map<String, Object>>();
@@ -1353,7 +1354,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     typename="文字";
                     break;
             }
-            returnMap.put("taskContent", "任务 " + orderIndex!=null?orderIndex:0 + " " + typename+" "+rsList.get(0).getResname());
+            returnMap.put("taskContent", "任务 " + (orderIndex!=null?orderIndex:0) + " " + typename+" "+rsList.get(0).getResname());
             returnMap.put("taskAnalysis",taskinfo.get(0).get("TASKANALYSIS"));
             //查询当前任务的微课程是否完整看过
             List<Map<String,Object>> list = this.imInterfaceManager.getTaskWatch(userList.get(0).getUserid(),taskList.get(0).getTaskvalueid());
@@ -1441,8 +1442,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     returnUserMap.put("replyDate",replyDate);
                     returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
                     returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
-                    returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
-                    returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                    Map att = new HashMap();
+                    List attList = new ArrayList();
+                    if(taskUserRecord.get(i).get("REPLYATTACH")!=null){
+                        att.put("attach",taskUserRecord.get(i).get("REPLYATTACH"));
+                        attList.add(att);
+                    }
+                    Map m = new HashMap();
+                    m.put("attachs",attList);
+                    returnUserMap.put("replyAttach",m);
+                    returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE")!=null?Integer.parseInt(taskUserRecord.get(i).get("REPLYATTACHTYPE").toString()):0);
                     if(taskUserRecord.get(i).get("JID")!=null){
                         jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
                     }else{
@@ -1502,8 +1511,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     returnUserMap.put("replyDate",replyDate);
                     returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
                     returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
-                    returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
-                    returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                    Map att = new HashMap();
+                    List attList = new ArrayList();
+                    if(taskUserRecord.get(i).get("REPLYATTACH")!=null){
+                        att.put("attach",taskUserRecord.get(i).get("REPLYATTACH"));
+                        attList.add(att);
+                    }
+                    Map m = new HashMap();
+                    m.put("attachs",attList);
+                    returnUserMap.put("replyAttach",m);
+                    returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE")!=null?Integer.parseInt(taskUserRecord.get(i).get("REPLYATTACHTYPE").toString()):0);
                     if(taskUserRecord.get(i).get("JID")!=null){
                         jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
                     }else{
@@ -1715,6 +1732,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     jids.append("[");
                     for(int i = 0;i<taskUserRecord.size();i++){
                         String replyDate = UtilTool.convertTimeForTask(Integer.parseInt(taskUserRecord.get(i).get("REPLYDATE").toString()),taskUserRecord.get(i).get("C_TIME").toString());
+                        if(replyDate==null||replyDate.length()<1){
+                            replyDate="1秒";
+                        }
                         taskUserRecord.get(i).put("REPLYDATE",replyDate);
                         if(taskUserRecord.get(i).get("JID")!=null){
                             jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
@@ -1744,9 +1764,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             for(int i = 0;i<jr.size();i++){
                                 JSONObject jo = jr.getJSONObject(i);
                                 for(int j = 0;j<taskUserRecord.size();j++){
-                                    if(jo.getInt("jid")==Integer.parseInt(taskUserRecord.get(j).get("JID").toString())){
-                                        taskUserRecord.get(j).put("uPhoto",jo.getString("headUrl"));
-                                        taskUserRecord.get(j).put("uName",jo.getString("realName"));
+                                    if(taskUserRecord.get(j).get("JID")!=null){
+                                        if(jo.getInt("jid")==Integer.parseInt(taskUserRecord.get(j).get("JID").toString())){
+                                            taskUserRecord.get(j).put("uPhoto",jo.getString("headUrl"));
+                                            taskUserRecord.get(j).put("uName",jo.getString("realName"));
+                                        }
                                     }
                                 }
                             }
@@ -2439,17 +2461,23 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         break;
                 }
                 String msg=null;
-                                /*奖励加分通过*/
-                if(this.tpStuScoreLogsManager.awardStuScore(tmpTask.getCourseid()
-                        , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
-                        , tmpTask.getTaskid()
-                        , Long.parseLong(userList.get(0).getUserid()+""),userid, type1,Integer.parseInt(schoolid))){
-                    jo.put("result","1");
-                    jo.put("msg","答题成功，积分宝石保存成功！");
-                }else{
+                            /*奖励加分通过*/
+                try{
+                    if(this.tpStuScoreLogsManager.awardStuScore(tmpTask.getCourseid()
+                            , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                            , tmpTask.getTaskid()
+                            , Long.parseLong(userList.get(0).getUserid()+""),userid, type1,Integer.parseInt(schoolid))){
+                        jo.put("result","1");
+                        jo.put("msg","答题成功，积分宝石保存成功！");
+                    }else{
+                        jo.put("result","2");
+                        jo.put("msg","答题成功，积分宝石保存失败！");
+                    }
+                }catch (Exception e){
                     jo.put("result","2");
                     jo.put("msg","答题成功，积分宝石保存失败！");
                 }
+
                 Map m = new HashMap();
                 if(tmpTask.getTasktype()==4||tmpTask.getTasktype()==5||tmpTask.getTasktype()==6){
 
