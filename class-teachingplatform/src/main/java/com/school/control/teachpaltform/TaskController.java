@@ -477,7 +477,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("t.order_idx desc ");
+        p.setOrderBy("t.order_idx");
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
         t.setUserid(this.logined(request).getUserid());
