@@ -669,7 +669,7 @@ function inputThinking() {
  */
 function showThinking(inputId) {
     var value = $.trim($("#" + inputId).val());
-    var materialid=$("#materialid").val();
+    var materialid=maid;
 // 只有输入框非空的时候才调用输入联想
     if(value && value != null && value != '') {
 // 发送ajax初始化输入联想页面

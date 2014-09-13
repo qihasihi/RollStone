@@ -15,8 +15,6 @@
     var questype="${param.questype}";
     var p1;
     $(function(){
-
-
         //翻页控件
         p1=new PageControl({
             post_url:'teachercourse?m=getCourseQuestionList',
@@ -235,9 +233,7 @@
     <c:if test="${!empty materialInfo}">
          $("#grade").val("${materialInfo.gradeid}");
          load_material("${materialInfo.teachingmaterialid}");
-
     </c:if>
-
     <c:if test="${!empty relateCourse}">
         $("#level").val(3);
     </c:if>

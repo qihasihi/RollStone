@@ -13,6 +13,7 @@
 </head>
 <script type="text/javascript">
     var materialid="${materialid}";
+    var maid="${!empty maid?maid:materialid}";
     var selectedCourseids='';
     $(function(){
         inputThinking();

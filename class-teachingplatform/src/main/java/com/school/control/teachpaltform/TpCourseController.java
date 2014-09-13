@@ -517,16 +517,16 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         if(addCourseId!=null&&addCourseId.length()>0){
             TpCourseTeachingMaterial tct=new TpCourseTeachingMaterial();
             tct.setCourseid(Long.parseLong(addCourseId));
-            Object gradeid=request.getSession().getAttribute("session_grade");
-            if(gradeid!=null&&gradeid.toString().length()>0)
-                tct.setGradeid(Integer.parseInt(gradeid.toString()));
-            Object materialid=request.getSession().getAttribute("session_material");
-            if(materialid!=null&&materialid.toString().length()>0)
-                tct.setTeachingmaterialid(Integer.parseInt(materialid.toString()));
+//            Object gradeid=request.getSession().getAttribute("session_grade");
+//            if(gradeid!=null&&gradeid.toString().length()>0)
+//                tct.setGradeid(Integer.parseInt(gradeid.toString()));
+//            Object materialid=request.getSession().getAttribute("session_material");
+//            if(materialid!=null&&materialid.toString().length()>0)
+//                tct.setTeachingmaterialid(Integer.parseInt(materialid.toString()));
             List<TpCourseTeachingMaterial>tctList=tpCourseTeachingMaterialManager.getList(tct,null);
             if(tctList!=null&&tctList.size()>0){
-                request.setAttribute("subjectid",tctList.get(0).getSubjectid());
-                request.setAttribute("materialInfo",tctList.get(0));
+                mp.put("subjectid", tctList.get(0).getSubjectid());
+                mp.put("materialInfo", tctList.get(0));
             }
         }
 
@@ -3081,6 +3081,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
                 return null;
             }
+
+
+
             tc = tcList.get(0);
             //add by panfei
             //mp.put("materialid", tc.getMaterialids()==null?"0":tc.getMaterialids());
@@ -3097,6 +3100,14 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
             cu.setSubjectid(tc.getSubjectid());
             cu.setClassgrade(gradeList.get(0).getGradevalue());
+
+            //得到当前专题的教材版本
+            TpCourseTeachingMaterial ctmInfo=new TpCourseTeachingMaterial();
+            ctmInfo.setCourseid(tc.getCourseid());
+            List<TpCourseTeachingMaterial> tctmList=this.tpCourseTeachingMaterialManager.getList(ctmInfo,null);
+            if(tctmList!=null&&tctmList.size()>0){
+                mp.put("maid",tctmList.get(0).getTeachingmaterialid());
+            }
         } else {
             if (gradeid == null || subjectid == null) {
                 jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));// 异常错误，参数不齐，无法正常访问!
@@ -3155,7 +3166,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 //        tsc = new TrusteeShipClass();
 //        tsc.setReceiveteacherid(user.getUserid());
 //        tsc.setYear(ti.getYear());
- //       List<Map<String, Object>> tsList = this.trusteeShipClassManager.getTsClassList(tsc);
+ //       List<Map<String, Object>> tsList = this.trusteeShipClassManager.getTsClassList(tsc);  
 
 
 
