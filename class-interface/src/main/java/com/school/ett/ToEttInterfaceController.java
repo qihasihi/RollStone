@@ -122,19 +122,19 @@ public class ToEttInterfaceController extends BaseController<String> {
             if(uList!=null&&uList.size()>0&&uList.get(0)!=null&&uList.get(0).getHeadimage()!=null&&uList.get(0).getHeadimage().trim().length()>0){
                 int returnType=HeadImgToEtt(uList.get(0));
                 //1:成功        2:信息不完整，拒绝操作       3:图片不存在了    4：信息完整，操作成功，但执行返回失败
-                if(returnType==3){
-                    type="error";
-                    msg="同步头像信息失败，原因：头像图片不存在!";
-                }else if(returnType==4){
-                    type="error";
-                    msg="同步头像信息失败!";
-                }
+//                if(returnType==3){
+//                    type="error";
+//                    msg="同步头像信息失败，原因：头像图片不存在!";
+//                }else if(returnType==4){
+//                    type="error";
+//                    msg="同步头像信息失败!";
+//                }
             }
-            System.out.println("imghead----6");
-            System.out.println("imghead----"+msg);
+//            System.out.println("imghead----6");
+//            System.out.println("imghead----"+msg);
             returnJO.put("type", type);
-            if(type=="error"&&msg!=null)
-                returnJO.put("msg",msg);
+//            if(type=="error"&&msg!=null)
+//                returnJO.put("msg",msg);
         }else
             returnJO.put("msg","绑定失败!原因：未知，可能执行存储失败!");
         System.out.println("imghead----"+returnJO.get("msg"));
