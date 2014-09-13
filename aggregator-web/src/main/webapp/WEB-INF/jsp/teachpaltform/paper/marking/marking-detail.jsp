@@ -302,7 +302,6 @@
                         <td>${detail.ORDERIDX}、${detail.CONTENT}
                             <c:if test="${!empty option}">
                                 <table border="0" cellpadding="0" cellspacing="0">
-                                    <col class="w30"/>
                                     <col class="w910"/>
                                     <c:forEach items="${option}" var="itm">
                                         <tr>

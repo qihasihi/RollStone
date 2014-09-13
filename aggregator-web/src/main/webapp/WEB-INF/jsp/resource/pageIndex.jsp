@@ -66,10 +66,10 @@ $(function(){
 
     p_omyinfo=new PageControl({
         post_url:'resource?m=ajx_RsMyInfoCloudOther',
-        page_id:'p_myinfo',
-        page_control_name:"p_myinfo",		//分页变量空间的对象名称
-        post_form:document.fm_dt_form,		//form
-        gender_address_id:'dv_dt_pageress',		//显示的区域
+        page_id:'p_omyinfo',
+        page_control_name:"p_omyinfo",		//分页变量空间的对象名称
+        post_form:document.fm_dto_form,		//form
+        gender_address_id:'dv_dto_pageress',		//显示的区域
         //  http_free_operate_handler:beforDtMethod,		//执行查询前操作的内容
         http_operate_handler:myInfoAjaxList,	//执行成功后返回方法
         return_type:'json',								//放回的值类型
@@ -306,8 +306,8 @@ function myInfoAjaxList(rps){
     <div class="zyxt_homeL">
           <div class="zyxt_home_dongtaiT">
             <ul id="ul_dt">
-                <li class="crumb" id="li_my"><a href="javascript:;" onclick="$('#ul_dt li').removeClass('crumb');$('#li_my').addClass('crumb');pageGo('p_myinfo')">我的动态</a></li>
-                <li id="li_other"><a href="javascript:;" onclick="$('#ul_dt li').removeClass('crumb');$('#li_other').addClass('crumb');pageGo('p_omyinfo')" >他人动态</a></li>
+                <li class="crumb" id="li_my"><a href="javascript:;" onclick="$('#ul_dt li').removeClass('crumb');$('#li_my').addClass('crumb');dv_dto_s_page.style.display='none';dv_dt_s_page.style.display='block';pageGo('p_myinfo');">我的动态</a></li>
+                <li id="li_other"><a href="javascript:;" onclick="$('#ul_dt li').removeClass('crumb');$('#li_other').addClass('crumb');dv_dt_s_page.style.display='none';dv_dto_s_page.style.display='block';pageGo('p_omyinfo')" >他人动态</a></li>
             </ul>
         </div>
      <div class="zyxt_home_dongtaiB">
@@ -322,9 +322,24 @@ function myInfoAjaxList(rps){
                 <li><b>2013年11月13日</b><span class="ico63"></span><a href="1" target="_blank" class="font-blue"><span class="ico_doc1"></span>看花雾里看花雾里看花雾里看花雾里看花雾里看花</a>...&nbsp;&nbsp;审核通过&nbsp;+5分</li>
         */%>
             </ul>
-      <form name="fm_dt_form" id="fm_dt_form" method="post">
-         <div class="nextpage" id="dv_dt_pageress"></div>
-      </form>
+         <div class="nextpage" id="dv_dt_s_page">
+             <span><a href="javascript:;" onclick="pageFirst('p_myinfo')"><b class="first"></b></a>
+             </span><span><a href="javascript:;"  onclick="pagePre('p_myinfo')"><b class="before"></b></a></span>
+             <span><a href="javascript:;" onclick="pageNext('p_myinfo')"><b class="after"></b></a></span>
+             <span><a  href="javascript:;"  onclick="pageLast('p_myinfo')"><b class="last"></b></a></span>
+         </div>
+         <div class="nextpage" id="dv_dto_s_page" style="display:none">
+             <span><a href="javascript:;" onclick="pageFirst('p_omyinfo')"><b class="first"></b></a>
+             </span><span><a href="javascript:;"  onclick="pagePre('p_omyinfo')"><b class="before"></b></a></span>
+             <span><a href="javascript:;" onclick="pageNext('p_omyinfo')"><b class="after"></b></a></span>
+             <span><a  href="javascript:;"  onclick="pageLast('p_omyinfo')"><b class="last"></b></a></span>
+         </div>
+         <form name="fm_dt_form" id="fm_dt_form" method="post">
+             <div class="nextpage" id="dv_dt_pageress" style="display:none"></div>
+         </form>
+         <form name="fm_dto_form" id="fm_dto_form" method="post">
+             <div class="nextpage" id="dv_dto_pageress" style="display:none"></div>
+         </form>
         </div>
 
         <p class="zyxt_home_tjzy"><span class="ico14"></span>推荐资源</p>

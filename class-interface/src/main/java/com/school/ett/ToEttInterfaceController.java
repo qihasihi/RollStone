@@ -38,6 +38,7 @@ public class ToEttInterfaceController extends BaseController<String> {
      */
     @RequestMapping(params="m=bindJID",method= {RequestMethod.POST,RequestMethod.GET})
     public void bindJid(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        System.out.println("bindJId----1");
         String jId = request.getParameter("jId");
         String userId=request.getParameter("userId");
         String schoolid = request.getParameter("schoolId");
@@ -51,6 +52,7 @@ public class ToEttInterfaceController extends BaseController<String> {
                 ||schoolid.toString().trim().length()<1
                 ||timestamp.toString().trim().length()<1
                 ||key.toString().trim().length()<1){
+            System.out.println("bindJId----2");
             returnJO.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
             response.getWriter().println(returnJO.toString());return;
         }
@@ -90,7 +92,7 @@ public class ToEttInterfaceController extends BaseController<String> {
         userInfo=new UserInfo();
         userInfo.setUserid(Integer.parseInt(userId));
         userInfo.setDcschoolid(Integer.parseInt(schoolid));
-
+        System.out.println("bindJId----3");
         List<UserInfo> userList=this.userManager.getList(userInfo,presult);
         if(userList==null||userList.size()<1){
             returnJO.put("msg","在该分校中没有发现该学生!分校:"+schoolid+" 学生:"+userId);
@@ -105,8 +107,9 @@ public class ToEttInterfaceController extends BaseController<String> {
             sqlArrayList.add(sqlbuilder.toString());
             objArrayList.add(objList);
         }
-
+        System.out.println("bindJId----4");
         if(this.userManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+            System.out.println("bindJId----5");
              //绑定成功后，再调头像回传
             //记录状态，信息
             String type="success";
@@ -127,11 +130,14 @@ public class ToEttInterfaceController extends BaseController<String> {
                     msg="同步头像信息失败!";
                 }
             }
+            System.out.println("imghead----6");
+            System.out.println("imghead----"+msg);
             returnJO.put("type", type);
             if(type=="error"&&msg!=null)
                 returnJO.put("msg",msg);
         }else
             returnJO.put("msg","绑定失败!原因：未知，可能执行存储失败!");
+        System.out.println("imghead----"+returnJO.get("msg"));
         response.getWriter().println(returnJO.toString());
     }
 }

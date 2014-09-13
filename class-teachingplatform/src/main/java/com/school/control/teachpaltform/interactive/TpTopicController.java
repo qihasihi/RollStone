@@ -126,8 +126,6 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
             tcentity.setTermid(courseList.get(0).getTermid());
             if(subjectid!=null)
                 tcentity.setSubjectid(subjectid);
-
-
             mp.put("courseList",this.tpCourseManager.getCourseList(tcentity, null));
         }else{                          //学生身份
             //查询学生可以查看到的专题

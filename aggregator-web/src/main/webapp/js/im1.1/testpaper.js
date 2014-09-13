@@ -452,7 +452,7 @@ TestPaperQues.prototype.loadQues=function(){
                     h='<div id="dv_pq_'+parentQuesObj.questionid+'">';
                     hqx='<div id="dv_qx_'+parentQuesObj.questionid+'">';
                 }else
-               hqx+='<div id="dv_df'+quesObj.questionid+'"><h1><span class="f_right" style="display:none">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
+               hqx+='<div id="dv_df'+quesObj.questionid+'"><h1><span>'+(cQuesObj.idx+1)+'、</span><span class="f_right" style="display:none">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
                 //h+='<span class="f_right">得分：0分</span>';
                 var qtypeInfo='未知';
                 if(quesObj.questiontype==3||quesObj.questiontype==7)
@@ -832,7 +832,15 @@ TestPaperDetail.prototype.loadQues=function(){
                     h='<div id="dv_pq_'+parentQuesObj.questionid+'">';
                     hqx='<div id="dv_qx_'+parentQuesObj.questionid+'">';
                 }
-                hqx+='<div id="dv_df'+quesObj.questionid+'"><h1><span class="f_right">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
+                hqx+='<div id="dv_df'+quesObj.questionid+'"><h1><span>'+(cQuesObj.idx+1)+'、</span>' ;
+                hqx+='<span class="f_right"';
+                //1:学生  2：老师  3：家长
+                if(config.userType==2){
+                    hqx+=' style="display:none"';
+                }
+                hqx+='>得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span>';
+
+                hqx+='<span id="sp_qx">';
                 //h+='<span class="f_right">得分：0分</span>';
                 var qtypeInfo='未知';
                 if(quesObj.questiontype==3||quesObj.questiontype==7)
@@ -938,6 +946,7 @@ TestPaperDetail.prototype.loadQues=function(){
                             }else
                                 h+='<input type="checkbox" readonly name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ isrightTmp+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
                             h+='</span><label for="rdo_answer'+m.questionid+m.optiontype+'"><span class="blue">'+m.optiontype+'.</span>'+m.content;
+                            //1:学生  2：老师  3：家长
                             if(typeof(isrightTmp)!="undefined"&&isrightTmp==1&&config.userType!=3){
                                 h+='<b class="right"></b>';
                             }
