@@ -5148,8 +5148,8 @@ public class UserController extends BaseController<UserInfo> {
         String requestUrl=null;
         Map<String,Object> paramMap=new HashMap<String, Object>();
         // 参数
-        String schoolid=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
-        String schoolname=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME");
+        String schoolid=this.logined(request).getDcschoolid()+"";
+        String schoolname="schoolId"+this.logined(request).getDcschoolid();
         if(isteacher){
             //教师。
             String isVip=request.getParameter("isVip");
