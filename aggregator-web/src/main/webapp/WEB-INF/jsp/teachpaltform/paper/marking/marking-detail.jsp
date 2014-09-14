@@ -410,6 +410,7 @@
             <p><strong>学生：</strong>${detail.STU_NAME} </p>
             <p><strong>答案：</strong>${detail.ANSWER}</p>
             <c:if test="${!empty detail.ANNEXNAME}">
+
                 <p><strong>附件：</strong><a href="<%=basePath%>/<%=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")%>/${detail.ANNEXNAME}" target="_blank" class="font-blue">${detail.ANNEXNAME}</a></p>
             </c:if>
 

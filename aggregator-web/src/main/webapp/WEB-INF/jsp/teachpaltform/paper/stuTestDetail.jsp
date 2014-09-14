@@ -20,7 +20,7 @@
         var isAllMark=true;
 
         function userAnswer(t,t1,score,nexName,ismak){
-            if(!ismak)
+            if(ismak&&ismak==0)
                 isAllMark=false;
             var qtObj=$("#hd_questiontype_"+t);
             var pqtype=$("#hd_pqtype_"+t);
@@ -44,10 +44,12 @@
                             $("#you_score"+t).html("待批改");
 
                         $("#dv_you_as"+t).html(t1);
-                        if(nexName!="undefined"&&nexName.length>0){
-                            $("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");
-                            $("#fujian"+t).parent().show();
-                        }
+                        <%--if(nexName!="undefined"&&nexName.length>0){--%>
+                            <%----%>
+                            <%--$("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");--%>
+
+                            <%--$("#fujian"+t).parent().show();--%>
+                        <%--}--%>
 
                     }else if(qtype==2){ //1:问题  2：填空 3：单选  4：多选
                         $("#you_score"+t).html(score);
@@ -62,10 +64,10 @@
                         }
 
 
-                        if(nexName!="undefined"&&nexName.length>0){
-                            $("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");
-                            $("#fujian"+t).parent().show();
-                        }
+                        <%--if(nexName!="undefined"&&nexName.length>0){--%>
+                            <%--$("#fujian"+t).html("<a target='_blank' href='<%=basePath%>/"+nexName+"'>"+nexName.substring(nexName.lastIndexOf("/")+1)+"</a>");--%>
+                            <%--$("#fujian"+t).parent().show();--%>
+                        <%--}--%>
 
                     }else if(qtype==3){
                         var obj=$("input[name='rdo_answer"+t+"']").filter(function(){return this.value.Trim()==t1});
@@ -110,7 +112,6 @@
         }
     </script>
 </head>
-<body>
 <body>
 <div class="subpage_head"><span class="ico55"></span><strong>查看试卷</strong>
     <c:if test="${taskIsend==1&&empty stuAnswer}">
@@ -324,7 +325,14 @@
             <c:if test="${!empty stuAnswer}">
                 <c:forEach items="${stuAnswer}" var="sa">
                 //得到quesid的questype
-                userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","${sa.annexNameFull}","${sa.ismarking}");
+                userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","","${sa.ismarking}");
+                <c:if test="${!empty sa.annexNameFullArray}">
+                    <c:forEach items="${sa.annexNameFullArray}" var="ax">
+                        var ax="${ax}";
+                         $("#fujian${sa.quesid}").append("<a target='_blank' href='"+ax+"'>"+ax.substring(ax.lastIndexOf("/")+1)+"</a>&nbsp;");
+                    </c:forEach>
+                     $("#fujian${sa.quesid}").parent().show();
+                </c:if>
                 </c:forEach>
             </c:if>
             //计算每题的分数
@@ -389,11 +397,7 @@
         </script>
 
     </div>
-
-
-
-
 </div>
 <%@include file="/util/foot.jsp"%>
-</body>
-    </html>
+</body></html>
+

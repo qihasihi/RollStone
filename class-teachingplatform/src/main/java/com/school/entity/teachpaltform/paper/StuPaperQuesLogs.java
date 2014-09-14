@@ -4,7 +4,10 @@ import com.school.util.UtilTool;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 @Entity
 public class StuPaperQuesLogs implements  Serializable {
 
@@ -113,12 +116,27 @@ public class StuPaperQuesLogs implements  Serializable {
         }
         return returnVal;
     }
-    public String getAnnexNameFull(){
-        String returnVal="";
+    public List<String> getAnnexNameFullArray(){
+        List<String> returnArr=new ArrayList<String>();
         if(getAnnexName()!=null){
-            returnVal=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getAnnexName();
+            if(getAnnexName().indexOf(",")>0){
+                String[] annexArray=getAnnexName().split(",");
+                for(String astr:annexArray){
+                    if(astr!=null&&astr.trim().length()>0){
+                        if(astr.indexOf("http:")==-1&&astr.indexOf("https:")==-1){
+                            astr=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+astr;
+                        }
+                        returnArr.add(astr);
+                    }
+                }
+            }else{
+                if(getAnnexName().indexOf("http:")==-1&&getAnnexName().indexOf("https:")==-1){
+                    returnArr.add(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getAnnexName());
+                }else
+                    returnArr.add(getAnnexName());
+            }
         }
-        return returnVal;
+        return returnArr;
     }
 
     public String getAnnexName() {
