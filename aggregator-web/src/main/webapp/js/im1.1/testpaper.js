@@ -40,7 +40,7 @@ TestPaperQues.prototype.initController=function(obj){
 };
 TestPaperQues.prototype.nextNum=function(type){
     if(typeof(this.config.quesidstr)=="undefined"||this.config.quesidstr.length<1){
-        alert('异常错误，参数异常!');return;
+        alert('0||异常错误，参数异常!');return;
     }
     if(type==-2)
         return;
@@ -314,7 +314,7 @@ TestPaperQues.prototype.subQues=function(direcType){
     if(annexObj.length>0&&annexObj.val().Trim().length>0){
         //先附件上传
         if(!isTishiAnnex){
-            alert("该题您选择了附件上传,将会先提交附件再提交数据，请耐心等待上传完毕!\n\n上传完毕后，会自动进行下一题!");
+            alert("0||该题您选择了附件上传,将会先提交附件再提交数据，请耐心等待上传完毕!\n\n上传完毕后，会自动进行下一题!");
             isTishiAnnex=true;
         }
         //   var lastname = annexObj.val().substring(annexObj.val().lastIndex("/"));
@@ -680,7 +680,7 @@ TestPaperDetail.prototype.nextNum=function(type){
                 this.currentQuesObj.idx=this.currentQuesObj.idx+1;
                 if(this.currentQuesObj.idx>arrayObj.length-1){
                     this.currentQuesObj.idx=arrayObj.length-1;
-                    alert("最后一题了!");
+                    alert("0||最后一题了!");
                     return;
                 }
             }else{
