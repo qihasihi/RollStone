@@ -255,16 +255,15 @@ public class TpGroupStudentDAO extends CommonDAO<TpGroupStudent> implements ITpG
     }
 
     // 获取班级未分配小组的学生
-    public List<Map<String,Object>> getNoGroupStudentList(Integer classid,Integer classtype,Integer userid,Integer subjectid,String termid) {
+    public List<Map<String,Object>> getNoGroupStudentList(Integer classid,Integer classtype,Integer userid,String termid) {
         if(classid==null||userid==null||classtype==null||termid==null)
             return null;
         StringBuilder sqlbuilder = new StringBuilder();
-        sqlbuilder.append("{CALL tp_group_student_qry_nogroupstu(?,?,?,?,?)}");
+        sqlbuilder.append("{CALL tp_group_student_qry_nogroupstu(?,?,?,?)}");
         List<Object> objList=new ArrayList<Object>();
         objList.add(classid);
         objList.add(classtype);
         objList.add(userid);
-        objList.add(subjectid);
         objList.add(termid);
         return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
     }

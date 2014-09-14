@@ -72,6 +72,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         this.tpCourseRelatedManager=this.getManager(TpCourseRelatedManager.class);
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
     }
+    private ITpCoursePaperManager tpCoursePaperManager;
     private ITpTaskManager tpTaskManager;
     private ITpCourseManager tpCourseManager;
     private IDictionaryManager dictionaryManager;
@@ -99,7 +100,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     private ISchoolManager schoolManager;
     private IResourceManager resourceManager;
     private ITpCourseRelatedManager tpCourseRelatedManager;
-    private ITpCoursePaperManager tpCoursePaperManager;
     /**
      * 进入教师课题页
      * @param request
@@ -1357,9 +1357,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             return;
         }
 
-        String classEndTimeStr = request.getParameter("classEndTimeArray");
-        String vclassEndTimeStr = request.getParameter("vclassEndTimeArray");
-
         List<String> sqlListArray = new ArrayList<String>();
         List<List<Object>> objListArray = new ArrayList<List<Object>>();
         List<Object> objList = null;
@@ -1419,12 +1416,10 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         }
 
         // 添加关联班级
-        if (classstr != null && classtimestr != null&& classEndTimeStr != null
-                && classstr.trim().length() > 0 && classtimestr.trim().length() > 0 && classEndTimeStr.trim().length() > 0
-                ) {
+        if (classstr != null && classtimestr != null
+                && classstr.trim().length() > 0 && classtimestr.trim().length() > 0) {
             String[] classArray = classstr.split(",");
             String[] classtimeArray = classtimestr.split(",");
-            String[] classEndtimeArray = classEndTimeStr.split(",");
             //教学班级
             for (int i = 0; i < classArray.length; i++) {
                 TpCourseClass cc = new TpCourseClass();
@@ -1434,8 +1429,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 cc.setGradeid(Integer.parseInt(gradeid));
                 cc.setTermid(termid);
                 cc.setBegintime(UtilTool.StringConvertToDate(classtimeArray[i]));
-                if(!classEndtimeArray[i].toString().equals("0"))
-                    cc.setEndtime(UtilTool.StringConvertToDate(classEndtimeArray[i]));
                 cc.setClasstype(1);
                 cc.setUserid(tc.getCuserid());
                 sql = new StringBuilder();
@@ -1453,11 +1446,10 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
 
         //虚拟班级
-        if (vclassstr != null && vclasstimestr != null &&  vclassEndTimeStr != null
-                && vclassstr.trim().length() > 0 && vclasstimestr.trim().length() > 0 && vclassEndTimeStr.trim().length()>0) {
+        if (vclassstr != null && vclasstimestr != null
+                && vclassstr.trim().length() > 0 && vclasstimestr.trim().length() > 0) {
             String[] vclassArray = vclassstr.split(",");
             String[] vclasstimeArray = vclasstimestr.split(",");
-            String[] vclassEndtimeArray = vclassEndTimeStr.split(",");
             for (int i = 0; i < vclassArray.length; i++) {
                 TpCourseClass cc = new TpCourseClass();
                 cc.setClassid(Integer.parseInt(vclassArray[i]));
@@ -1466,8 +1458,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 cc.setGradeid(Integer.parseInt(gradeid));
                 cc.setTermid(termid);
                 cc.setBegintime(UtilTool.StringConvertToDate(vclasstimeArray[i]));
-                if(!vclassEndtimeArray[i].equals("0"))
-                    cc.setEndtime(UtilTool.StringConvertToDate(vclassEndtimeArray[i]));
                 cc.setClasstype(2);
                 cc.setUserid(tc.getCuserid());
                 sql = new StringBuilder();
@@ -1762,7 +1752,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                     }
                 }
 
-
                 //试卷
                 TpCoursePaper coursePaper=new TpCoursePaper();
                 coursePaper.setCourseid(courseid);
@@ -1779,7 +1768,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                         }
                     }
                 }
-
                 //论题
               /*  TpTopicInfo tt=new TpTopicInfo();
                 tt.setCourseid(courseid);
@@ -2334,11 +2322,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
-
-        String classEndTimeStr = request.getParameter("classEndTimeArray");
-        String vclassEndTimeStr = request.getParameter("vclassEndTimeArray");
-
-
         List<String> sqlListArray = new ArrayList<String>();
         List<List<Object>> objListArray = new ArrayList<List<Object>>();
         List<Object> objList = null;
@@ -2422,13 +2405,10 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         sqlListArray.add(sql.toString());
         objListArray.add(objList);
         //添加新的专题班级关联记录
-        // 添加关联班级
-        if (classstr != null && classtimestr != null&& classEndTimeStr != null
-                && classstr.trim().length() > 0 && classtimestr.trim().length() > 0 && classEndTimeStr.trim().length() > 0
-                ) {
+        if (classstr != null && classtimestr != null
+                && classstr.trim().length() > 0 && classtimestr.trim().length() > 0) {
             String[] classArray = classstr.split(",");
             String[] classtimeArray = classtimestr.split(",");
-            String[] classEndtimeArray = classEndTimeStr.split(",");
             //教学班级
             for (int i = 0; i < classArray.length; i++) {
                 cc = new TpCourseClass();
@@ -2438,8 +2418,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 cc.setGradeid(Integer.parseInt(gradeid));
                 cc.setTermid(termid);
                 cc.setBegintime(UtilTool.StringConvertToDate(classtimeArray[i]));
-                if(!classEndtimeArray[i].toString().equals("0"))
-                    cc.setEndtime(UtilTool.StringConvertToDate(classEndtimeArray[i]));
                 cc.setClasstype(1);
                 cc.setUserid(tc.getCuserid());
                 sql = new StringBuilder();
@@ -2455,11 +2433,10 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             }
         }
         //虚拟班级
-        if (vclassstr != null && vclasstimestr != null &&  vclassEndTimeStr != null
-                && vclassstr.trim().length() > 0 && vclasstimestr.trim().length() > 0 && vclassEndTimeStr.trim().length()>0) {
+        if (vclassstr != null && vclasstimestr != null
+                && vclassstr.trim().length() > 0 && vclasstimestr.trim().length() > 0) {
             String[] vclassArray = vclassstr.split(",");
             String[] vclasstimeArray = vclasstimestr.split(",");
-            String[] vclassEndtimeArray = vclassEndTimeStr.split(",");
             for (int i = 0; i < vclassArray.length; i++) {
                 cc = new TpCourseClass();
                 cc.setClassid(Integer.parseInt(vclassArray[i]));
@@ -2468,8 +2445,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 cc.setGradeid(Integer.parseInt(gradeid));
                 cc.setTermid(termid);
                 cc.setBegintime(UtilTool.StringConvertToDate(vclasstimeArray[i]));
-                if(!vclassEndtimeArray[i].toString().equals("0"))
-                    cc.setEndtime(UtilTool.StringConvertToDate(vclassEndtimeArray[i]));
                 cc.setClasstype(2);
                 cc.setUserid(tc.getCuserid());
                 sql = new StringBuilder();

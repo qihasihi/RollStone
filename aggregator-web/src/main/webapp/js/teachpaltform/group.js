@@ -84,7 +84,7 @@ function getNoGroupStudentsByClassId(classId,classType){
         return;
 	$("#noGroupStudents").html("");
 	var url="group?m=getNoGroupStudents";
-	$.post(url,{classId:classId,classType:classType,subjectid:subjectid},
+	$.post(url,{classId:classId,classType:classType},
 			function(responseText){
 		if(responseText==null||responseText.objList==null){
 			//没有数		
@@ -286,7 +286,7 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
 			gtHtml+="<tr>";
             if(idx==0){
                 gtHtml+="<td rowspan="+responseText.objList.length+" class='v_c'>"+groupName;
-                gtHtml+="<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'></a>";
+                gtHtml+="<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'>";
                 gtHtml+=percentHtml;
                 gtHtml+="</td>";
             }

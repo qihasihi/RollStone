@@ -704,6 +704,7 @@ public class UpdateCourse extends TimerTask{
                                          objArrayList=new ArrayList<List<Object>>();
                                      }
 
+
                                      //查询是否有与试卷的对应关系
                                      MicVideoPaperInfo mvp=new MicVideoPaperInfo();
                                      mvp.setMicvideoid(rsEntity.getResid());
@@ -795,7 +796,6 @@ public class UpdateCourse extends TimerTask{
                                                  sqlArrayList.add(sqlbuilder.toString());
                                              }
                                          }
-
                                          ///////////////////////////////////微视频问题选项///////////////////////////
                                          //先删除,再添加
                                          sqlbuilder=new StringBuilder();
@@ -835,7 +835,6 @@ public class UpdateCourse extends TimerTask{
                                              objArrayList=new ArrayList<List<Object>>();
                                          }
                                      }
-
                                  }
 //                                 //每条记录执行执行添加
                                  if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
@@ -1397,7 +1396,6 @@ class UpdateCourseUtil{
                                     &&!quesMap.get("Grade").toString().trim().toUpperCase().equals("NULL")){
                                 ques.setGrade(quesMap.get("Grade").toString());
                             }
-
                             if(quesMap.containsKey("PaperType")&&quesMap.get("PaperType")!=null
                                     &&!quesMap.get("PaperType").toString().trim().toUpperCase().equals("NULL")){
                                 ques.setPapertypeid(Integer.parseInt(quesMap.get("PaperType").toString()));

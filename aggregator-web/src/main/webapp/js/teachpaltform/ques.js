@@ -50,8 +50,9 @@ function questionReturn(rps){
                 htm+=' class="trbg2"';
             htm+='><td';
             htm+='>'+queslevel+'</td>';
-            htm+='<td><span class="bg">'+questype+'</span>';
 
+            htm+='<td><span class="bg">'+questype+'</span>';
+            htm+=content;
             if(itm.extension=='4'){
                 htm+='<div  class="p_t_10" id="sp_mp3_'+itm.questionid+'" ></div>'
                 htm+='<script type="text/javascript">';

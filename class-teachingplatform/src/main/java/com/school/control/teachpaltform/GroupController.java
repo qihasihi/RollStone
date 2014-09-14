@@ -279,16 +279,14 @@ public class GroupController extends BaseController<TpGroupInfo>{
 		JsonEntity je =new JsonEntity();
 		String classid=request.getParameter("classId");
         String classtype=request.getParameter("classType");
-        String subjectid = request.getParameter("subjectid");
 		if(classid==null||classid.trim().length()<1
-                || classtype==null||classtype.trim().length()<1||subjectid==null||subjectid.trim().length()<1){
+                || classtype==null||classtype.trim().length()<1){//||subjectid==null||subjectid.trim().length()<1
 			return;
 		}
 		List<Map<String,Object>>stuList=this.tpGroupStudentManager
                 .getNoGroupStudentList(Integer.parseInt(classid),
                         Integer.parseInt(classtype),
                         this.logined(request).getUserid(),
-                        Integer.parseInt(subjectid),
                         this.termManager.getMaxIdTerm(false).getRef());
 		je.getObjList().add(stuList);
         je.getObjList().add(this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), Integer.parseInt(classid)));

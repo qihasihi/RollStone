@@ -133,7 +133,6 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Object classesid;
     private Object classtype;
     private Object classtimes;
-
     public Object getClassendtimes() {
         return classendtimes;
     }
@@ -141,6 +140,7 @@ public class TpCourseInfo  implements java.io.Serializable{
     public void setClassendtimes(Object classendtimes) {
         this.classendtimes = classendtimes;
     }
+
 
     private Object classendtimes;
 

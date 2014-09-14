@@ -564,8 +564,8 @@ public class PaperController extends BaseController<PaperInfo>{
         String gradeid=request.getParameter("gradeid");
         String subjectid=request.getParameter("subjectid");
         String coursename=request.getParameter("coursename");
-        if(courseid==null||courseid.trim().length()<1 //||coursename==null||coursename.trim().length()<1
-                ){
+        if(courseid==null||courseid.trim().length()<1
+                ||coursename==null||coursename.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
@@ -591,11 +591,7 @@ public class PaperController extends BaseController<PaperInfo>{
         TpCoursePaper t=new TpCoursePaper();
         t.setFiltercourseid(Long.parseLong(courseid));//排除当前专题
         t.setLocalstatus(1);
-        if(coursename!=null&&coursename.trim().length()>0){
-            t.setCoursepapername(coursename);
-        }
-
-
+        t.setCoursename(coursename);
 
 
       //  if(materialid!=null&&materialid.length()>0)

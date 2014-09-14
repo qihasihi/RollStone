@@ -54,6 +54,7 @@ public class TpCoursePaper {
     }
 
 
+
     public Integer getSeldatetype() {
         return seldatetype;
     }

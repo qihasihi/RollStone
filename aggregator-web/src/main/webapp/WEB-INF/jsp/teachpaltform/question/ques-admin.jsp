@@ -41,7 +41,6 @@
             quesType=idx;
         }
 
-
         function showCourseList(){
             var ulobj=$("#ul_courselist");
             if(ulobj.css("display")=="none")
@@ -75,6 +74,42 @@
         <li><a  href="tpres?toTeacherIdx&courseid=${courseid }&termid=${termid}">专题资源</a></li>
         <li><a href="tptopic?m=index&courseid=${courseid }">互动空间</a></li>
         <!--<li>
+=======
+
+            function showCourseList(){
+                var ulobj=$("#ul_courselist");
+                if(ulobj.css("display")=="none")
+                    ulobj.show();
+                else
+                    ulobj.hide();
+            }
+        </script>
+	</head>
+  
+  <body>
+  <%@include file="/util/head.jsp" %>
+      <%@include file="/util/nav-base.jsp" %>
+  <div class="zhuanti">
+      <p>${coursename }<a class="ico13" href="javascript:showCourseList();"></a></p>
+      <ul  style="display:none;" id="ul_courselist">
+          <c:if test="${!empty courseList}">
+              <c:forEach items="${courseList}" var="c">
+                  <c:if test="${c.courseid!=courseid}">
+                      <li>
+                          <a href="question?m=toQuestionList&courseid=${c.courseid }">${c.coursename }</a>
+                      </li>
+                  </c:if>
+              </c:forEach>
+          </c:if>
+      </ul>
+  </div>
+  <div class="subpage_nav">
+      <ul>
+          <li ><a href="task?toTaskList&courseid=${courseid }">学习任务</a></li>
+          <li><a  href="tpres?toTeacherIdx&courseid=${courseid }&termid=${termid}">专题资源</a></li>
+          <li><a href="tptopic?m=index&courseid=${courseid }">互动空间</a></li>
+          <!--<li>
+>>>>>>> .merge-right.r5421
                 <a href="commoncomment?m=toCourseCommentList&objectid=${courseid }">专题评价</a>
             </li> -->
         <li class="crumb"><a href="question?m=toQuestionList&courseid=${courseid}">试&nbsp;&nbsp;题</a></li>

@@ -20,7 +20,6 @@
         var extenname;
         var sign=${sign};
         var isHaveParent = ${sign};
-
         switch (parseInt(extension)){
             case 0:
                 extenname="客观";
@@ -148,11 +147,11 @@
                     var ulhtm='<ul>';
                     var lihtm='';
                     for(var j =0;j<10;j++){
-                        lihtm+='<li style="padding-left:1px"';
-//                        if(j==0){
-//                            lihtm+=' class="crumb"';
-//                        }
-                        lihtm+=' ><a href="1">'+(j+i*10)+'</a></li>';
+                        lihtm+='<li';
+                        if(j==0){
+                            lihtm+=' class="crumb"';
+                        }
+                        lihtm+=' ><a href="javascript:submitScore(${detail.REF},'+(j+i*10)+')">'+(j+i*10)+'</a></li>';
                         if(parseFloat((j+i*10))>=parseFloat(totalnum-0.5)){
                             break;
                         }
@@ -165,7 +164,6 @@
                         if(parseFloat((k+i*10))>=parseFloat(totalnum))
                             break;
                         lihtm2+='<li style="padding-left:1px"><a href="javascript:submitScore(${detail.REF},'+(k+i*10)+')">'+(k+i*10)+'</a></li>';
-
                     }
                     ulhtm2+=lihtm2+'</ul>';
                     divhtm+=ulhtm+ulhtm2+'</div>';
@@ -202,7 +200,6 @@
 
 
         function submitScore(ref,score){
-
             $.ajax({
                 url:"paper?m=doMarking",
                 type:"post",
@@ -222,7 +219,6 @@
                     window.location.href=htm;
                 }
             });
-
         }
         function tabQuestion(type){
             /**
@@ -410,10 +406,29 @@
             <p><strong>学生：</strong>${detail.STU_NAME} </p>
             <p><strong>答案：</strong>${detail.ANSWER}</p>
             <c:if test="${!empty detail.ANNEXNAME}">
-
-                <p><strong>附件：</strong><a href="<%=basePath%>/<%=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")%>/${detail.ANNEXNAME}" target="_blank" class="font-blue">${detail.ANNEXNAME}</a></p>
+                <p><strong>附件：</strong>
+                    <script type="text/javascript">
+                        var annextName="${detail.ANNEXNAME}";
+                        var h='';
+                        if(annextName.Trim().length>0){
+                            if(annextName.Trim().indexOf(",")!=-1){
+                                var axArr=annextName.split(",");
+                                if(axArr.length>0){
+                                    $.each(axArr,function(ix,im){
+                                        var annex='';
+                                       var tanname=im.substring(im.lastIndexOf("/")+1);
+                                        if(im.indexOf("http:")==-1&&im.indexOf("https:")==-1){
+                                            h+='<a href="<%=basePath%>/<%=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")%>/'+im+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
+                                        }else
+                                            h+='<a href="'+im+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
+                                    })
+                                }
+                            }
+                        }
+                        document.write(h);
+                    </script>
+                </p>
             </c:if>
-
             <p><strong>评分：</strong>请选择该学生的得分。</p>
             </div>
         </div>

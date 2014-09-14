@@ -78,8 +78,8 @@ public class  TpGroupStudentManager extends BaseManager<TpGroupStudent> implemen
 		return null;
 	}
 
-    public List<Map<String, Object>> getNoGroupStudentList(Integer classid,Integer classtype, Integer userid,Integer subjectid,String termid) {
-        return tpgroupstudentdao.getNoGroupStudentList(classid,classtype,userid,subjectid,termid);
+    public List<Map<String, Object>> getNoGroupStudentList(Integer classid,Integer classtype, Integer userid,String termid) {
+        return tpgroupstudentdao.getNoGroupStudentList(classid,classtype,userid,termid);
     }
 
     public List<TpGroupStudent> getGroupStudentByClass(TpGroupStudent gs, PageResult presult) {
