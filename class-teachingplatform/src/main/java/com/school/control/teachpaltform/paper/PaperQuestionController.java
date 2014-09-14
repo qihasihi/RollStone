@@ -4362,6 +4362,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             if(this.stuPaperLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
                 jsonEntity.setType("success");
                 jsonEntity.setMsg("5||交卷成功，积分宝石保存失败！");
+                try{
                         //添加奖励
                  /*奖励加分*/
                         //得到班级ID
@@ -4409,6 +4410,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                             request.getSession().setAttribute("msg",msg);
                             jsonEntity.setMsg("1||交卷成功，积分宝石保存成功！");
                         }
+                }catch(Exception e){
+                    System.out.println(e);
+                }
             }else
                 jsonEntity.setMsg("-1||"+UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }else

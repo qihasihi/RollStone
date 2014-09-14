@@ -57,4 +57,10 @@ public interface ITpStuScoreManager extends IBaseManager<TpStuScore>{
      */
     public List<Object> getUpdateStaticesGroupScore(final Long taskid,final Integer classid
             ,final Integer userid,final Long courseid,final Integer dcschoolid,StringBuilder sqlbuilder);
+    /**
+     * 满足条件执行统计
+     * （班级人数==已录入提交人数）
+     * @return
+     */
+    public boolean tpStuScoreCkAllComplateInput(final Long courseid,final Integer classid,final Integer subjectid,final Integer dcschoolid);
 }

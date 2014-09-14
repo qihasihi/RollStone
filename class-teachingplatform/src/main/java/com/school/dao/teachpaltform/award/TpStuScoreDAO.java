@@ -136,7 +136,7 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
      * @return
      */
     public List<Object> getUpdateStaticesGroupScore(final Long taskid,final Integer classid
-                ,final Integer userid,final Long courseid,final Integer dcschoolid,StringBuilder sqlbuilder){
+            ,final Integer userid,final Long courseid,final Integer dcschoolid,StringBuilder sqlbuilder){
         if(taskid==null||classid==null||userid==null||courseid==null||dcschoolid==null||sqlbuilder==null){
             return null;
         }
@@ -149,6 +149,26 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
         objList.add(dcschoolid);
         return objList;
     }
+    /**
+     * 满足条件执行统计
+     * （班级人数==已录入提交人数）
+     * @return
+     */
+    public boolean tpStuScoreCkAllComplateInput(final Long courseid,final Integer classid,final Integer subjectid,final Integer dcschoolid){
+        if(courseid==null||classid==null||subjectid==null||dcschoolid==null){
+            return false;
+        }
+        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_stu_score_ck_allComplateInput(?,?,?,?,?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(courseid);
+        objList.add(classid);
+        objList.add(subjectid);
+        objList.add(dcschoolid);
+        return this.executeQuery_PROC(sqlbuilder.toString(),objList.toArray());
+    }
+
+
+
     @Override
     public List<Object> getUpdateSql(final TpStuScore obj, StringBuilder sqlbuilder) {
         if(obj==null||sqlbuilder==null)

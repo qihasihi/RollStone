@@ -2,6 +2,7 @@ package com.school.control.teachpaltform.award;
 
 import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
+import com.school.entity.ClassUser;
 import com.school.entity.SubjectInfo;
 import com.school.entity.teachpaltform.TpCourseClass;
 import com.school.entity.teachpaltform.TpCourseInfo;
@@ -10,8 +11,10 @@ import com.school.entity.teachpaltform.TpVirtualClassInfo;
 import com.school.entity.teachpaltform.award.TpGroupScore;
 import com.school.entity.teachpaltform.award.TpStuScore;
 import com.school.manager.ClassManager;
+import com.school.manager.ClassUserManager;
 import com.school.manager.SubjectManager;
 import com.school.manager.inter.IClassManager;
+import com.school.manager.inter.IClassUserManager;
 import com.school.manager.inter.ISubjectManager;
 import com.school.manager.inter.teachpaltform.ITpCourseClassManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
@@ -61,7 +64,9 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
     private IClassManager classManage;
     private ITpVirtualClassManager virtualClassManager;
     private ISubjectManager subjectManager;
+    private IClassUserManager classUserManager;
     public TpGroupScoreController(){
+        this.classUserManager=this.getManager(ClassUserManager.class);
         this.subjectManager=this.getManager(SubjectManager.class);
         this.tpGroupScoreManager=this.getManager(TpGroupScoreManager.class);
         this.courseManager=this.getManager(TpCourseManager.class);
@@ -362,6 +367,8 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
                 response.getWriter().print(jsonEntity.toJSON());return;
             }
             entity.setDcschoolid(clsList.get(0).getDcschoolid().longValue());
+
+
         }else if(clstype==2){//虚拟班级
             TpVirtualClassInfo vc=new TpVirtualClassInfo();
             vc.setVirtualclassid(entity.getClassid().intValue());
@@ -437,8 +444,13 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
             //group初始化 并不充许修改
           if(objArrayList.size()>0&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
               if(this.tpStuScoreManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
-                  jsonEntity.setType("success");
                   jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                  //如果所有的数据都提交过。则计算总分
+                  if(!this.tpStuScoreManager.tpStuScoreCkAllComplateInput(courseid,classid.intValue(),subjectid,entity.getDcschoolid().intValue())){
+                     jsonEntity.setMsg("信息录入成功，但执行学生信息统计失败!");
+                  }else
+                      jsonEntity.setType("success");
+
               }else
                   jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
           }else{

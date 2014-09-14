@@ -120,6 +120,14 @@ public class TpStuScoreManager extends BaseManager<TpStuScore> implements ITpStu
             ,final Integer userid,final Long courseid,final Integer dcschoolid,StringBuilder sqlbuilder){
         return tpStuScoreDAO.getUpdateStaticesGroupScore(taskid, classid, userid, courseid, dcschoolid, sqlbuilder);
     }
+    /**
+     * 满足条件执行统计
+     * （班级人数==已录入提交人数）
+     * @return
+     */
+    public boolean tpStuScoreCkAllComplateInput(final Long courseid,final Integer classid,final Integer subjectid,final Integer dcschoolid){
+        return tpStuScoreDAO.tpStuScoreCkAllComplateInput(courseid, classid, subjectid, dcschoolid);
+    }
     @Override
     public TpStuScore getOfExcel(Sheet rs, int cols, int d, String type) {
         return null;

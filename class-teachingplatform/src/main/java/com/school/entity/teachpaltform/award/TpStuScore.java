@@ -23,6 +23,7 @@ public class TpStuScore implements  Serializable{
     private Integer taskscore;
     private Integer commentscore;
 
+
     public Integer getTaskscore() {
         return taskscore;
     }
