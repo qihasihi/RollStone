@@ -29,7 +29,7 @@
         $(function(){
             $("#loading").ajaxStart(function(){
                 loadingCount++;
-                if(loadingCount>1){
+                if(loadingCount>2){
                     var w=$(document).width()/2-parseInt($(this).css("width"))/2;
                     var h=$(document).height()/2-parseInt($(this).css("height"))/2;
                     $(this).css({"left":w+"px","top":h+"px"});
