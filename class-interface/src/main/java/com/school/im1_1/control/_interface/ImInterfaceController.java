@@ -3148,7 +3148,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Integer userid=userList.get(0).getUserid();
         //查询数据
         TpRecordInfo entity=new TpRecordInfo();
-        entity.setUserId(Long.parseLong(userid.toString()));
+        //entity.setUserId(Long.parseLong(userid.toString()));
         entity.setDcSchoolId(Long.parseLong(schoolId.trim()));
         entity.setClassId(Long.parseLong(classId.trim()));
         entity.setCourseId(Long.parseLong(courseId.trim()));
@@ -3255,7 +3255,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
 
         //验证是否已经答题
-        if(userType!=null&&Integer.parseInt(userType)!=2){  //如果是老师进入，则不验证是否提交
+        if(userType!=null&&Integer.parseInt(userType)!=2&&!isendTask){  //如果是老师进入，或者任务结束，则不验证是否提交
             StuPaperLogs splog=new StuPaperLogs();
             splog.setUserid(uid);
             splog.setPaperid(Long.parseLong(paperid));
@@ -3431,15 +3431,15 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             return null;
         }
 
-
-        //验证该任务是否在有效期内
-        TpTaskAllotInfo tpallot=new TpTaskAllotInfo();
-        tpallot.setTaskid(tk.getTaskid());
-        tpallot.getUserinfo().setUserid(userid);
-        if(!this.tpTaskAllotManager.getYXTkCount(tpallot)){
-            jsonEntity.setMsg("当前任务未开始或不存在!");
+        //得到试卷
+        PaperInfo p=new PaperInfo();
+        p.setPaperid(Long.parseLong(paperid));
+        List<PaperInfo> paperList=this.paperManager.getList(p,null);
+        if(paperList==null||paperList.size()<1){
+            jsonEntity.setMsg("试卷不匹配!");
             response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
+
         switch(tk.getTasktype().intValue()){
             case 4: //成卷测试
                 if(!tk.getTaskvalueid().toString().trim().equals(paperid.trim())){
@@ -3475,14 +3475,25 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
                 break;
         }
-        //得到试卷
-        PaperInfo p=new PaperInfo();
-        p.setPaperid(Long.parseLong(paperid));
-        List<PaperInfo> paperList=this.paperManager.getList(p,null);
-        if(paperList==null||paperList.size()<1){
-            jsonEntity.setMsg("试卷不匹配!");
-            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+
+        //验证该任务是否在有效期内
+        TpTaskAllotInfo tpallot=new TpTaskAllotInfo();
+        tpallot.setTaskid(tk.getTaskid());
+        tpallot.getUserinfo().setUserid(userid);
+        if(!this.tpTaskAllotManager.getYXTkCount(tpallot)){
+            //如果不存在，则直接查看详情页面
+            StringBuilder directBuilder=new StringBuilder("imapi1_1?m=testDetail&userid=")
+                    .append(userid).append("&taskid=").append(tk.getTaskid())
+                    .append("&paperid=").append(p.getPaperid()).append("&courseid=").append(tk.getCourseid())
+                    .append("&classid=").append(clsid).append("&userType=").append((uType==3?1:uType));//如果是家长，通过相关验证，则走孩子的流程。
+            if(quesid!=null&&quesid.trim().length()>0){
+                directBuilder.append("&quesId=").append(quesid);
+            }
+            response.sendRedirect(directBuilder.toString());
+//            jsonEntity.setMsg("当前任务未开始或不存在!");
+//            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
         }
+
 
 
         if(splogsList!=null&&splogsList.size()>0){

@@ -259,7 +259,7 @@ TestPaperQues.prototype.freeSubQuesAnswer=function(direcType){
             answer=answer.substring(0,answer.length-1);
         }
 
-        if(answer.replace(/\|/g,"").Trim().length<1&&$("#txt_f2"+quesid).val().length<1)
+        if(answer.replace(/\|/g,"").Trim().length<1)
             issubmit=false;
     }
     $("input[id='hs_val_stu_"+quesid+"']").val(score);
