@@ -267,34 +267,38 @@ public class GroupController extends BaseController<TpGroupInfo>{
         je.setObjList(stuList);
         response.getWriter().print(je.toJSON());
     }
-	
-	/** 
-	 * 获取不在小组中的学生列表
-	 * @param request
-	 * @param response
-	 * @throws Exception
+
+    /**
+     * 获取不在小组中的学生列表
+     * @param request
+     * @param response
+     * @throws Exception
      */
-	@RequestMapping(params="m=getNoGroupStudents",method=RequestMethod.POST)
-	public void getNoGroupStudentList(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		JsonEntity je =new JsonEntity();
-		String classid=request.getParameter("classId");
+    @RequestMapping(params="m=getNoGroupStudents",method=RequestMethod.POST)
+    public void getNoGroupStudentList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je =new JsonEntity();
+        String classid=request.getParameter("classId");
         String classtype=request.getParameter("classType");
-		if(classid==null||classid.trim().length()<1
-                || classtype==null||classtype.trim().length()<1){//||subjectid==null||subjectid.trim().length()<1
-			return;
-		}
-		List<Map<String,Object>>stuList=this.tpGroupStudentManager
+        String subjectid = request.getParameter("subjectid");
+        if(classid==null||classid.trim().length()<1
+                || classtype==null||classtype.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<Map<String,Object>>stuList=this.tpGroupStudentManager
                 .getNoGroupStudentList(Integer.parseInt(classid),
                         Integer.parseInt(classtype),
                         this.logined(request).getUserid(),
+                        Integer.parseInt(subjectid),
                         this.termManager.getMaxIdTerm(false).getRef());
-		je.getObjList().add(stuList);
+        je.getObjList().add(stuList);
         je.getObjList().add(this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), Integer.parseInt(classid)));
-		je.setType("success"); 
-		response.getWriter().print(je.toJSON());
-	} 
-	
-	/**
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
 	 * 获取班级小组
 	 * @param request
 	 * @param response

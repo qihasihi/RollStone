@@ -456,6 +456,14 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
           }else{
               jsonEntity.setType("success");
               jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+
+              //如果所有的数据都提交过。则计算总分
+              if(!this.tpStuScoreManager.tpStuScoreCkAllComplateInput(courseid,classid.intValue(),subjectid,entity.getDcschoolid().intValue())){
+                  jsonEntity.setMsg("信息录入成功，但执行学生信息统计失败!");
+              }else
+                  jsonEntity.setType("success");
+
+
           }
         }else{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));

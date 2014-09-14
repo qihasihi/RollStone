@@ -10,8 +10,8 @@ import java.util.Map;
 
 public interface ITpGroupStudentDAO extends ICommonDAO<TpGroupStudent>{
 
-    public List<Map<String,Object>> getNoGroupStudentList(Integer classid,Integer classtype,Integer userid,String termid);
-
     public List<TpGroupStudent> getGroupStudentByClass(TpGroupStudent gs,PageResult presult);
+    // 获取班级未分配小组的学生
+    public List<Map<String,Object>> getNoGroupStudentList(Integer classid,Integer classtype,Integer userid,Integer subjectid,String termid);
 
 }

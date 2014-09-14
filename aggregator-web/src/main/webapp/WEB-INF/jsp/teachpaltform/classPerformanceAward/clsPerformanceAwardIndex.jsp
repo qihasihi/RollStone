@@ -431,7 +431,7 @@
     function clsChanged(){
         var tclsid=$("#sel_clsid").val();
         if(tclsid.Trim().length>0){
-            var url="clsperformance?m=toIndex&courseid=${params.courseid}&classtype=${params.classtype}&subjectid=${params.subjectid}&termid=${params.termid}&classid=${classid}";
+            var url="clsperformance?m=toIndex&courseid=${param.courseid}&classtype=${param.classtype}&subjectid=${param.subjectid}&termid=${param.termid}&classid=${classid}";
             location.href=url;
         }
     }
