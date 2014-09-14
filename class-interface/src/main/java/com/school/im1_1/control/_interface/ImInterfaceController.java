@@ -230,7 +230,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Map m = new HashMap();
         if(courseList!=null&&courseList.size()>0){
             for(int i = 0;i<courseList.size();i++){
-                List<Map<String,Object>> taskList;
+                List<Map<String,Object>> taskList=null;
                 if(utype==2){
                     taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),null,Integer.parseInt(classid));
                 }else{
@@ -238,8 +238,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
                 if(taskList!=null&&taskList.size()>0){
                     for(int j = 0;j<taskList.size();j++){
-                        if(taskList.get(j).get("LEFTTIME")!=null){
-                            int time =Integer.parseInt(taskList.get(j).get("LEFTTIME").toString());
+                        Map<String,Object> tkMap=taskList.get(j);
+                        String leftTime="0";
+                        if(tkMap.get("LEFTTIME")!=null){
+                            int time =Integer.parseInt(tkMap.get("LEFTTIME").toString());
                             int days = 0;
                             int hours =0;
                             int mins = 0;
@@ -257,27 +259,28 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 if(hours>0){
                                     days= hours/24;
                                 }
-                            }
-                            if(days>0){
-                                taskList.get(j).put("LEFTTIME",days+"天");
-                            }else{
-                                if(hours>0){
-                                    taskList.get(j).put("LEFTTIME",hours+"小时");
+                              
+                                if(days>0){
+                                    leftTime=days+"天";
                                 }else{
-                                    if(mins>0){
-                                        taskList.get(j).put("LEFTTIME",mins+"分钟");
+                                    if(hours>0){
+                                        leftTime=hours+"小时";
                                     }else{
-                                        if(seconds>0){
-                                            taskList.get(j).put("LEFTTIME",seconds+"秒");
+                                        if(mins>0){
+                                            leftTime=mins+"分钟";
+                                        }else{
+                                            if(seconds>0){
+                                                leftTime=seconds+"秒";
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }else{
-                            taskList.get(j).put("LEFTTIME","0");
                         }
+                        tkMap.put("LEFTTIME",leftTime);
+
                         String typename = "";
-                        switch (Integer.parseInt(taskList.get(j).get("TASKTYPE").toString())){
+                        switch (Integer.parseInt(tkMap.get("TASKTYPE").toString())){
                             case 1:
                                 typename="资源学习";
                                 break;
@@ -307,16 +310,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 break;
                         }
                         if(utype!=2){
-                            taskList.get(j).put("ORDERIDX",(j+1)+"");
+                            tkMap.put("ORDERIDX", (j + 1) + "");
                         }
-                        if(Integer.parseInt(taskList.get(j).get("TASKTYPE").toString())==3){
-                            taskList.get(j).put("TASKNAME","任务 "+taskList.get(j).get("ORDERIDX")+" "+typename);
+                        if(Integer.parseInt(tkMap.get("TASKTYPE").toString())==3){
+                            tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename);
                         }else{
-                            taskList.get(j).put("TASKNAME","任务 "+taskList.get(j).get("ORDERIDX")+" "+typename+" "+taskList.get(j).get("TASKNAME"));
+                            tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename + " " + tkMap.get("TASKNAME"));
                         }
                     }
                 }
-                courseList.get(i).put("taskList",taskList);
+                courseList.get(i).put("taskList", taskList);
             }
         }else{
             m.put("result","0");
