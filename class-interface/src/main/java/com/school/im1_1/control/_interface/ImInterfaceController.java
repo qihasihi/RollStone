@@ -2101,15 +2101,20 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
                 String msg=null;
                                 /*奖励加分通过*/
-                if(this.tpStuScoreLogsManager.awardStuScore(tmpTask.getCourseid()
-                        , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
-                        , tmpTask.getTaskid()
-                        , Long.parseLong(userList.get(0).getUserid()+""),userList.get(0).getEttuserid()+"", type1,userList.get(0).getDcschoolid())){
+                try{
+                    if(this.tpStuScoreLogsManager.awardStuScore(tmpTask.getCourseid()
+                            , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                            , tmpTask.getTaskid()
+                            , Long.parseLong(userList.get(0).getUserid()+""),userList.get(0).getEttuserid()+"", type1,userList.get(0).getDcschoolid())){
+                        je.setType("success");
+                        je.setMsg("1");
+                    }else{
+                        je.setType("success");
+                       je.setMsg("2");
+                    }
+                }catch (Exception e){
                     je.setType("success");
                     je.setMsg("2");
-                }else{
-                    je.setType("success");
-                   je.setMsg("1");
                 }
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
