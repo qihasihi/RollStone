@@ -2917,6 +2917,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
             }
         }
+        request.setAttribute("type",taskList.get(0).getCriteria());
         request.setAttribute("topic",tiList.get(0));
         request.setAttribute("themeList",themeList);
         return new ModelAndView("/imjsp-1.1/topic-detail");
