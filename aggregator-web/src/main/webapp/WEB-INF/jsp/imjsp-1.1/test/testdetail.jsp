@@ -28,12 +28,16 @@
         var papertype="${paperObj.papertype}";
         var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         var tqControler=null;
+        var loadingCount=0;
         $(function(){
             $("#loading").ajaxStart(function(){
-                var w=$(document).width()/2-parseInt($(this).css("width"))/2;
-                var h=$(document).height()/2-parseInt($(this).css("height"))/2;
-                $(this).css({"left":w+"px","top":h+"px"});
-                $(this).show();
+                loadingCount++;
+                if(loadingCount>1){
+                    var w=$(document).width()/2-parseInt($(this).css("width"))/2;
+                    var h=$(document).height()/2-parseInt($(this).css("height"))/2;
+                    $(this).css({"left":w+"px","top":h+"px"});
+                    $(this).show();
+                }
             });
             $("#loading").ajaxStop(function(){
                 $(this).hide();
