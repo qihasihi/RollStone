@@ -71,7 +71,7 @@ public class TpUserController extends UserController {
        // String url="http://localhost:8080/totalSchool/";//UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION");
         String url=UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION");
         String totalSchoolUrl=url+"franchisedSchool?jwValidateSchool";
-        String totalParams="schoolid="+schoolid+"&schoolname="+java.net.URLEncoder.encode(schoolname,"UTF-8");
+        String totalParams="schoolid="+schoolid+"&schoolname="+schoolname;//java.net.URLEncoder.encode(schoolname,"UTF-8");
         if(!sendValidateUserInfoTotalSchool(totalSchoolUrl,totalParams)){
             je.setMsg("Operate SchoolInfo Error...");
             response.getWriter().print(je.getAlertMsgAndBack());
@@ -176,24 +176,29 @@ public class TpUserController extends UserController {
             }
         }
 
+
         if(sqlListArray.size()>0&&sqlListArray.size()>0){
             if(this.userManager.doExcetueArrayProc(sqlListArray,objListArray)){
                 //绑定教务帐号
-                if(!BindEttUser(userid,schoolid,"2")){
-                    je.setMsg("Bind EttUser Error!");
-                    response.getWriter().print(je.toJSON());
-                    return null;
-                };
 
-                //向ETT更新用户
-                UserInfo baseUser=new UserInfo();
-                baseUser.setDcschoolid(Integer.parseInt(schoolid));
-                baseUser.setEttuserid(Integer.parseInt(userid));
-                List<UserInfo>baseUserList=this.userManager.getList(baseUser,null);
-                if(!EttInterfaceUserUtil.addUserBase(baseUserList))
-                    System.out.println("Add ETT USER Error!");
-                else
-                    System.out.println("Add ETT USER Success!");
+                if(isNewUser){
+                    if(!BindEttUser(userid,schoolid,"2")){
+                        je.setMsg("Bind EttUser Error!");
+                        response.getWriter().print(je.toJSON());
+                        return null;
+                    };
+
+                    //向ETT更新用户
+                    UserInfo baseUser=new UserInfo();
+                    baseUser.setDcschoolid(Integer.parseInt(schoolid));
+                    baseUser.setEttuserid(Integer.parseInt(userid));
+                    List<UserInfo>baseUserList=this.userManager.getList(baseUser,null);
+                    if(!EttInterfaceUserUtil.addUserBase(baseUserList))
+                        System.out.println("Add ETT USER Error!");
+                    else
+                        System.out.println("Add ETT USER Success!");
+                }
+
 
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -254,6 +259,8 @@ public class TpUserController extends UserController {
         mp.put("classType",classType);
         mp.put("bzrList",ettUserList);
         mp.put("classYearList",classYearInfoList);
+        //重新获取用户
+        userList=this.userManager.getList(u,null);
         request.getSession().setAttribute("dcschoolid",userList.get(0).getDcschoolid());
         return new ModelAndView("/teachpaltform/ettClass/class-admin",mp);
     }
@@ -506,7 +513,7 @@ public class TpUserController extends UserController {
                     response.getWriter().print(je.toJSON());
                     return;
                 }
-                if(!BindEttUser(userList.get(0).getUserid().toString(),dcschoolid,"1")){
+                if(!BindEttUser(userList.get(0).getEttuserid().toString(),dcschoolid,"1")){
                     je.setMsg("绑定用户失败!");
                     response.getWriter().print(je.toJSON());
                     return;
@@ -766,7 +773,7 @@ public class TpUserController extends UserController {
                     response.getWriter().print(je.toJSON());
                     return;
                 }
-                if(!BindEttUser(userList.get(0).getUserid().toString(),dcschoolid,"1")){
+                if(!BindEttUser(userList.get(0).getEttuserid().toString(),dcschoolid,"1")){
                     je.setMsg("绑定用户失败!");
                     response.getWriter().print(je.toJSON());
                     return;
@@ -1199,7 +1206,7 @@ public class TpUserController extends UserController {
                 response.getWriter().print(je.toJSON());
                 return;
             }
-            if(!BindEttUser(userList.get(0).getUserid().toString(),schoolid,"1")){
+            if(!BindEttUser(userList.get(0).getEttuserid().toString(),schoolid,"1")){
                 je.setMsg("绑定用户失败!");
                 response.getWriter().print(je.toJSON());
                 return;
@@ -1433,17 +1440,16 @@ public class TpUserController extends UserController {
                         bindUserList.add(uList.get(0));
                 }
 
-                if(bindUserList.size()<1){
-                    je.setMsg("获取绑定用户失败!");
-                    response.getWriter().print(je.toJSON());
-                    return;
+                if(bindUserList.size()>0){
+                    if(!BindEttUser(bindUserList,schoolid,"1")){
+                        System.out.println("绑定ett学生帐号失败!");
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }else
+                        System.out.println("绑定ett学生帐号成功!");
                 }
 
-                if(!BindEttUser(bindUserList,schoolid,"1")){
-                    je.setMsg("绑定用户失败!");
-                    response.getWriter().print(je.toJSON());
-                    return;
-                }
+
 
                 if(!EttInterfaceUserUtil.addUserBase(bindUserList))
                     System.out.println("Add ett user error!");
@@ -1761,7 +1767,7 @@ public class TpUserController extends UserController {
      */
     public boolean BindEttUser(String userid,String schoolid,String userType){
         UserInfo sel=new UserInfo();
-        sel.setUserid(Integer.parseInt(userid));
+        sel.setEttuserid(Integer.parseInt(userid));
         sel.setDcschoolid(Integer.parseInt(schoolid));
         List<UserInfo>ettUserList=this.userManager.getList(sel,null);
         if(ettUserList!=null&&ettUserList.size()>0){
@@ -1784,6 +1790,7 @@ public class TpUserController extends UserController {
             System.out.println(ettUrl + "?" + ettParams);
             return sendValidateUserInfoTotalSchool(ettUrl, ettParams);
         }
+        System.out.println("BindEttUser ettUserList.size()"+ettUserList.size());
         return false;
     }
 

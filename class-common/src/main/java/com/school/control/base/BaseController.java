@@ -642,6 +642,7 @@ public class BaseController<T extends java.io.Serializable> {
         //信息完整，验证头像是否存在
         //得到信息
         String headImgUrl=UtilTool.getCurrentLocation()+u.getHeadimage();
+        System.out.println("sx headURL:"+headImgUrl);
         URL url = new URL(headImgUrl);
         URLConnection con = url.openConnection();
         //httpHeader穿一件伪装服
@@ -678,8 +679,8 @@ public class BaseController<T extends java.io.Serializable> {
         //生成
         String sign= UrlSigUtil.makeSigSimple("savePhotoImgToEtt.do", paramMap);
         paramMap.put("sign",sign);
-        //JSONObject jo=UtilTool.sendPostUrl(UtilTool.utilproperty.getProperty("TO_SEND_HEADIMAGE_ETT_URL"),paramMap,"UTF-8");
-        JSONObject jo=UtilTool.sendPostUrl("http://wangjie.etiantian.com:8080/savePhotoImgToEtt.do",paramMap,"UTF-8");
+        JSONObject jo=UtilTool.sendPostUrl(UtilTool.utilproperty.getProperty("TO_SEND_HEADIMAGE_ETT_URL"),paramMap,"UTF-8");
+        //JSONObject jo=UtilTool.sendPostUrl("http://wangjie.etiantian.com:8080/savePhotoImgToEtt.do",paramMap,"UTF-8");
         if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1"))
             return true;
         if(jo!=null)
