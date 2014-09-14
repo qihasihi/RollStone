@@ -64,9 +64,6 @@
                         </c:forEach>
                     </c:if>
                 </c:if>
-                <c:if test="${empty itm.replyAttach}">
-                    <p>${itm.replyDetail}</p>
-                </c:if>
             </div>
         </c:forEach>
     </c:if>
