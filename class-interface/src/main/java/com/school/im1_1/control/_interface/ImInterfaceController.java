@@ -2498,8 +2498,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 returnUserMap.put("replyDate",replyDate);
                                 returnUserMap.put("jid",taskUserRecord.get(i).get("JID"));
                                 returnUserMap.put("replyDetail",taskUserRecord.get(i).get("REPLYDETAIL"));
-                                returnUserMap.put("replyAttach",taskUserRecord.get(i).get("REPLYATTACH"));
-                                returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE"));
+                                Map att = new HashMap();
+                                List attList = new ArrayList();
+                                if(taskUserRecord.get(i).get("REPLYATTACH")!=null){
+                                    att.put("attach",taskUserRecord.get(i).get("REPLYATTACH"));
+                                    attList.add(att);
+                                }
+                                Map ma = new HashMap();
+                                ma.put("attachs",attList);
+                                returnUserMap.put("replyAttach",ma);
+                                returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE")!=null?Integer.parseInt(taskUserRecord.get(i).get("REPLYATTACHTYPE").toString()):0);
                                 if(taskUserRecord.get(i).get("JID")!=null){
                                     jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
                                 }else{
