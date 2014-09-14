@@ -92,6 +92,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
      * @return
      */
     public Boolean awardStuScore(final Long courseid,final Long classid,final Long taskid,final Long userid,final String jid,Integer type,Integer dcschool,Integer awardType){
+        System.out.println("award_stu_score------------------------------begin");
         if(courseid==null||classid==null||userid==null||type==null||dcschool==null)
             return false;
         Boolean returnVal=false;
@@ -105,12 +106,13 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
             entity.setTaskid(taskid);
         entity.setUserid(userid);
         entity.setDcschoolid(dcschool);
+        System.out.println("award_stu_score------------------------------1");
         tsScoreList=this.getList(entity,null);
-
+        System.out.println("award_stu_score------------------------------2");
         //如果不存在，则需要添加，否则直接返回true
         String awardSettings=getPropertiesAwardScore(type);
         String[] awardArray=awardSettings.split(",");
-
+        System.out.println("award_stu_score------------------------------3");
 
         boolean isAddEttBlue=true;
 
@@ -131,6 +133,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
             entity.setScore(Integer.parseInt(awardArray[0]));
             //添加
             StringBuilder sqlbuilder=new StringBuilder();
+            System.out.println("award_stu_score------------------------------4");
             List<Object> objList=this.tpStuScoreLogsDAO.getSaveSql(entity, sqlbuilder);
             if(sqlbuilder.toString().trim().length()>0){
                 sqlArrayList.add(sqlbuilder.toString());
@@ -151,6 +154,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
 //                objArrayList.add(objList);
 //            }
         }
+        System.out.println("award_stu_score------------------------------5");
         //查询班级的dc_school_id
         ClassInfo cls=new ClassInfo();
         cls.setClassid(entity.getClassid().intValue());
@@ -170,7 +174,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
                 objArrayList.add(objList);
             }
         }
-
+        System.out.println("award_stu_score------------------------------6");
         //添加课程积分。
         TpStuScore tss=new TpStuScore();
         tss.setDcschoolid(Long.parseLong(dcschool+""));
@@ -194,17 +198,20 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
             sqlArrayList.add(sqlbuilder.toString());
             objArrayList.add(objList);
         }
-
+        System.out.println("award_stu_score------------------------------7");
 
 
         if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
+            System.out.println("award_stu_score------------------------------8");
             if(this.doExcetueArrayProc(sqlArrayList,objArrayList)){
                 returnVal=true;
+                System.out.println("award_stu_score------------------------------9");
                 if(awardType==1&&isAddEttBlue&&jid!=null&&jid.trim().length()>0){
+                    System.out.println("award_stu_score------------------------------10");
                     //连接四中，添加蓝宝石,在UtilTool中进行调用 返回true
                     String u=UtilTool.utilproperty.getProperty("TO_ETT_ADD_SAPPHIRE").toString();
                     HashMap<String,String> paramMap=new HashMap<String,String>();
-                    paramMap.put("eventId","83");
+                    paramMap.put("eventId","84");
                     paramMap.put("taskId",taskid.toString());
                     paramMap.put("jid",jid.toString());
                     paramMap.put("sapphireCount","1");
@@ -222,7 +229,9 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
                     System.out.println(jo.get("result"));
                 }
             }
+
         }
+        System.out.println("award_stu_score------------------------------end");
         return returnVal;
 
     }
