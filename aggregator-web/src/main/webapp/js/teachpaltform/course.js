@@ -21,61 +21,30 @@ $(function(){
         }
     });
 
-
-    $("input[name='classEndTimeType']").bind("click",function(){
-        if($(this).val()==1){
-
-            $("#list_ct_end p").hide();
-            $("input[name='classes']:checked").each(function(idx,itm) {
-                $("#p_end_"+$(this).val()).show();
-            });
-            $("input[name='tsclasses']:checked").each(function(idx,itm) {
-                $("#p_ts_end_"+$(this).val()).show();
-            });
-            $("input[name='vclasses']:checked").each(function(idx,itm) {
-                $("#p_v_end_"+$(this).val()).show();
-            });
-            $("#all_ct_end").hide();
-            $("#list_ct_end").show('fast');
-        }else{
-            $("#list_ct_end").hide();
-            $("#all_ct_end").show('fast');
-        }
-    });
-
     $("input[name='classes']").bind("click",function(){
         if($(this).attr("checked")){
             $("#p_"+$(this).val()).show();
-            $("#p_end_"+$(this).val()).show();
         }else{
             $("#p_"+$(this).val()).hide();
-            $("#p_end_"+$(this).val()).hide();
             $("#"+$(this).val()+"_classtime").val("");
-            $("#"+$(this).val()+"_classEntTime").val("");
         }
     });
 
     $("input[name='tsclasses']").bind("click",function(){
         if($(this).attr("checked")){
             $("#p_ts_"+$(this).val()).show();
-            $("#p_ts_end_"+$(this).val()).show();
         }else{
             $("#p_ts_"+$(this).val()).hide();
-            $("#p_ts_end_"+$(this).val()).hide();
             $("#"+$(this).val()+"_ts_classtime").val("");
-            $("#"+$(this).val()+"_ts_classEndTime").val("");
         }
     });
 
     $("input[name='vclasses']").bind("click",function(){
         if($(this).attr("checked")){
             $("#p_v_"+$(this).val()).show();
-            $("#p_v_end_"+$(this).val()).show();
         }else{
             $("#p_v_"+$(this).val()).hide();
-            $("#p_v_end_"+$(this).val()).hide();
             $("#"+$(this).val()+"_v_classtime").val("");
-            $("#"+$(this).val()+"_v_classEndTime").val("");
         }
     });
 });
@@ -88,14 +57,11 @@ function addTeacherCourse(){
     var sharetype=$('input[name="sharetype"]:checked').val();
     var courselevel=$("#courselevel").val();
     var classtime=$("#all_classtime").val();
-    var classEndTime=$("#all_classEndTime").val().Trim().length<1?'0':$("#all_classEndTime").val();
     var materiaids = new Array();     //教材专题编号
     var classes = new Array();  //教学班级
     var vclasses = new Array();   //虚拟班级
     var classTimeArray = new Array();     //教学班级开课时间
     var vclassTimeArray = new Array();     //虚拟班级开课时间
-    var classEndTimeArray = new Array();     //教学班级结束时间
-    var vclassEndTimeArray = new Array();     //虚拟班级结束时间
 
     var materialidvalues;
 
@@ -200,8 +166,6 @@ function addTeacherCourse(){
         $("input[type='checkbox'][name='vclasses']:checked").each(function() {vclassEndTimeArray.push(classEndTime)});
     }
 
-
-
     var maid= $("#material_id").val();
     if($("#materialid").val()==0){
         materialidvalues=materiaids.join(',');
@@ -235,8 +199,6 @@ function addTeacherCourse(){
             materialidvalues:materialidvalues,
             classTimeArray:classTimeArray.join(','),
             vclassTimeArray:vclassTimeArray.join(','),
-            classEndTimeArray:classEndTimeArray.join(','),
-            vclassEndTimeArray:vclassEndTimeArray.join(','),
             selectcourseid:selectedcourseids
         },
         type:'POST',
@@ -294,13 +256,10 @@ function updateTeacherCourse(){
     var courselevel=$("#courselevel").val();
     var materiaids = new Array();
     var classtime=$("#all_classtime").val();
-    var classEndTime=$("#all_classEndTime").val().Trim().length<1?'0':$("#all_classEndTime").val();
     var classes = new Array();  //教学班级
     var vclasses = new Array();   //虚拟班级
     var classTimeArray = new Array();     //教学班级开课时间
     var vclassTimeArray = new Array();     //虚拟班级开课时间
-    var classEndTimeArray = new Array();     //教学班级结束时间
-    var vclassEndTimeArray = new Array();     //虚拟班级结束时间
 
     $("input[name='materialid']:checked").each(function() {materiaids.push($(this).val());});
     $("input[name='classes']:checked").each(function() {classes.push($(this).val());});
@@ -371,45 +330,6 @@ function updateTeacherCourse(){
         $("input[type='checkbox'][name='tsclasses']:checked").each(function() {classTimeArray.push(classtime)});
         $("input[type='checkbox'][name='vclasses']:checked").each(function() {vclassTimeArray.push(classtime)});
     }
-
-
-    //检查是否选择课程结束时间
-    if($("input[type='radio'][name='classEndTimeType']:checked").val()==1){
-        $("input[type='checkbox'][name='classes']:checked").each(function() {
-                if($("#"+$(this).val()+"_classEndTime").val().Trim().length<1)
-                    flag=true;
-                classEndTimeArray.push($("#"+$(this).val()+"_classEndTime").val().Trim().length<1?'0':$("#"+$(this).val()+"_classEndTime").val())}
-        );
-        $("input[type='checkbox'][name='tsclasses']:checked").each(function() {
-                if($("#"+$(this).val()+"_ts_classEndTime").val().Trim().length<1)
-                    flag=true;
-                classEndTimeArray.push($("#"+$(this).val()+"_ts_classEndTime").val().Trim().length<1?'0':$("#"+$(this).val()+"_ts_classEndTime").val())}
-        );
-        $("input[type='checkbox'][name='vclasses']:checked").each(function() {
-                if($("#"+$(this).val()+"_v_classEndTime").val().Trim().length<1)
-                    flag=true;
-                vclassEndTimeArray.push($("#"+$(this).val()+"_v_classEndTime").val().Trim().length<1?'0':$("#"+$(this).val()+"_v_classEndTime").val())}
-        );
-        /*if(flag){
-         alert('请选择开课时间!');
-         $("#addButton").attr("href","javascript:getTchingMaterial();");
-         return;
-         }*/
-    }else{
-        /* if(classEndTime.Trim().length<1){
-         alert('请选择开课时间!');
-         $("#addButton").attr("href","javascript:getTchingMaterial();");
-         return;
-         }*/
-        $("input[type='checkbox'][name='classes']:checked").each(function() {classEndTimeArray.push(classEndTime)});
-        $("input[type='checkbox'][name='tsclasses']:checked").each(function() {classEndTimeArray.push(classEndTime)});
-        $("input[type='checkbox'][name='vclasses']:checked").each(function() {vclassEndTimeArray.push(classEndTime)});
-    }
-
-
-
-
-
     var selectedcourseids='';
     $("#selectedCourse li").each(function(ix,im){
         selectedcourseids+=$(this).attr("id")+"|";
@@ -430,8 +350,6 @@ function updateTeacherCourse(){
             // materialidvalues:materiaids.join(','),
             classTimeArray:classTimeArray.join(','),
             vclassTimeArray:vclassTimeArray.join(','),
-            classEndTimeArray:classEndTimeArray.join(','),
-            vclassEndTimeArray:vclassEndTimeArray.join(','),
             selectcourseid:selectedcourseids
         },
         type:'POST',
