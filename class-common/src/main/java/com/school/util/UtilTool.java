@@ -1910,13 +1910,13 @@ public class UtilTool implements java.io.Serializable {
             returnVal=t;
         }else{
             if(hours>0){
-                returnVal=hours+"小时";
+                returnVal=hours+"小时前";
             }else{
                 if(mins>0){
-                    returnVal =mins+"分钟";
+                    returnVal =mins+"分钟前";
                 }else{
                     if(seconds>0){
-                        returnVal = seconds+"秒";
+                        returnVal = seconds+"秒前";
                     }
                 }
             }

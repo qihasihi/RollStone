@@ -40,7 +40,7 @@
         <c:forEach items="${themeList}" var="itm">
             <div class="info">
                 <b><img src="${itm.uPhoto}" width="36" height="36"></b>
-                <p class="title"><span>${itm.C_TIME}</span>${itm.uName}</p>
+                <p class="title"><span>${itm.replyDate}</span>${itm.uName}</p>
                 <div class="black">${itm.THEME_TITLE}</div>
                 <c:if test="${itm.SOURCE_ID!=null and itm.SOURCE_ID!=1}">
                     <p>${itm.THEME_CONTENT}</p>

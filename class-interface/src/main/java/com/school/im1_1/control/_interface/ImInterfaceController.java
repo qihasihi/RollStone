@@ -2778,6 +2778,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
             String msg=null;
                                 /*奖励加分通过*/
+            try{
             if(this.tpStuScoreLogsManager.awardStuScore(tList.get(0).getCourseid()
                     , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
                     , tList.get(0).getTaskid()
@@ -2785,6 +2786,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 jo.put("result","1");
                 jo.put("msg","答题成功，积分宝石保存成功！");
             }else{
+                jo.put("result","2");
+                jo.put("msg","答题成功，积分宝石保存失败！");
+            }
+            }catch (Exception e){
                 jo.put("result","2");
                 jo.put("msg","答题成功，积分宝石保存失败！");
             }
@@ -2865,6 +2870,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             StringBuilder jids = new StringBuilder();
             jids.append("[");
             for(Map m:themeList){
+                int time = Integer.parseInt(UtilTool.StringConvertToDate(m.get("C_TIME").toString()).getTime()/1000+"");
+                String replydate = UtilTool.convertTimeForTask(time,m.get("C_TIME").toString());
+                m.put("replyDate",replydate);
+                m.put("uPhoto","");
+                m.put("uName",m.get("REALNAME"));
                 if(m.get("ETT_USER_ID")!=null){
                     jids.append("{\"jid\":"+Integer.parseInt(m.get("ETT_USER_ID").toString())+"},");
                 }else{
