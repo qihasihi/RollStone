@@ -454,7 +454,7 @@ function loadClsDetial(clsid){
                 if(rps.objList[3]!=null){
                     $("#stu_count").html(rps.objList[3].length);
                     $.each(rps.objList[3],function(idx,itm){
-                        var h='<li>';
+                        var h='<li_'+itm.ref+'>';
                         h+='<img src="'+itm.headimage+'" width="80" height="80">'+itm.realname;
                         h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\')" title="移出"></a></p>';
                         h+='</li>';
