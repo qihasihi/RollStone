@@ -224,6 +224,11 @@ public class ClassUserDAO extends CommonDAO<ClassUser> implements IClassUserDAO 
                 objList.add(obj.getCompletenum());
             }else
                 sqlbuilder.append("NULL,");
+            if(obj.getClassinfo().getDcschoolid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getClassinfo().getDcschoolid());
+            }else
+                sqlbuilder.append("NULL,");
         }
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
