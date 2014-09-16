@@ -158,15 +158,18 @@
                     pList1.setRectotal(rps.presult.recTotal);
                     pList1.setPageSize(rps.presult.pageSize);
                     pList1.setPageNo(rps.presult.pageNo);
+                    $("font[id='pList1font']").html(rps.presult.pageNo+"/"+rps.presult.pageTotal);
                 }else
                 {
                     pList1.setPagetotal(0);
                     pList1.setRectotal(0);
                     pList1.setPageNo(1);
+                    $("font[id='pList1font']").html("1/1");
                 }
                 pList1.Refresh();
             }else{
-                $("#mainTab1").html('<tr><td colspan="20">没有资源</td></tr>');
+                $("#mainTab1").html('<tr><td colspan=2>没有数据</td></tr>');
+                $("font[id='pList1font']").html("1/1");
             }
         }
         function getInvestReturnMethod2(rps){
@@ -192,16 +195,18 @@
                     pList2.setRectotal(rps.presult.recTotal);
                     pList2.setPageSize(rps.presult.pageSize);
                     pList2.setPageNo(rps.presult.pageNo);
+                    $("font[id='pList2font']").html(rps.presult.pageNo+"/"+rps.presult.pageTotal);
                 }else
                 {
                     pList2.setPagetotal(0);
                     pList2.setRectotal(0);
                     pList2.setPageNo(1);
+                    $("font[id='pList2font']").html("1/1");
                 }
                 pList2.Refresh();
             }else{
-                htm+='<tr><td colspan="=20">没有资源</td></tr>';
-                $("#mainTab2").html(htm);
+                $("#mainTab2").html('<tr><td colspan=2>没有数据</td></tr>');
+                $("font[id='pList2font']").html("1/1");
             }
         }
         function getInvestReturnMethod3(rps){
@@ -227,16 +232,19 @@
                     pList3.setRectotal(rps.presult.recTotal);
                     pList3.setPageSize(rps.presult.pageSize);
                     pList3.setPageNo(rps.presult.pageNo);
+                    $("font[id='pList3font']").html(rps.presult.pageNo+"/"+rps.presult.pageTotal);
                 }else
                 {
                     pList3.setPagetotal(0);
                     pList3.setRectotal(0);
                     pList3.setPageNo(1);
+                    $("font[id='pList3font']").html("1/1");
                 }
                 pList3.Refresh();
             }else{
                 htm+='<tr><td colspan="=20">没有资源</td></tr>';
                 $("#mainTab3").html(htm);
+                $("font[id='pList3font']").html("1/1");
             }
         }
         function subData(resid){
@@ -523,7 +531,10 @@
             </table>
             <div class="nextpage">
                 <form id="pListForm1" name="pListForm1">
-                    <p class="Mt20" id="pListaddress1" align="center"></p>
+                    <span><a href="javascript:;"  onclick="pagePre('pList1');"><b class="before"></b></a></span>&nbsp;
+                    <font  id="pList1font">1/1</font>&nbsp;
+                    <span><a href="javascript:;" onclick="pageNext('pList1');"><b class="after"></b></a></span>
+                    <p id="pListaddress1"  style="display:none"></p>
                 </form>
             </div>
             <h6></h6>
@@ -539,7 +550,10 @@
             </table>
             <div class="nextpage">
                 <form id="pListForm2" name="pListForm2">
-                    <p class="Mt20" id="pListaddress2" align="center"></p>
+                    <span><a href="javascript:;"  onclick="pagePre('pList2');"><b class="before"></b></a></span>&nbsp;
+                    <font  id="pList2font">1/1</font>&nbsp;
+                    <span><a href="javascript:;" onclick="pageNext('pList2');"><b class="after"></b></a></span>
+                    <p class="Mt20" id="pListaddress2" align="center" style="display:none"></p>
                 </form>
             </div>
         </div>
@@ -554,7 +568,10 @@
             </table>
             <div class="nextpage">
                 <form id="pListForm3" name="pListForm3">
-                    <p class="Mt20" id="pListaddress3" align="center"></p>
+                    <span><a href="javascript:;"  onclick="pagePre('pList3');"><b class="before"></b></a></span>&nbsp;
+                    <font id="pList3font">1/1</font>&nbsp;
+                    <span><a href="javascript:;" onclick="pageNext('pList3');"><b class="after"></b></a></span>
+                    <p class="Mt20" id="pListaddress3" align="center"  style="display:none"></p>
                 </form>
             </div>
         </div>
