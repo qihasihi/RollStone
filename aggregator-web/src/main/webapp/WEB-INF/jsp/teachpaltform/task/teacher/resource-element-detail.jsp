@@ -166,7 +166,7 @@
                 }
                 pList1.Refresh();
             }else{
-                $("#mainTab1").html('没有数据');
+                $("#mainTab1").html('<tr><td colspan="20">没有资源</td></tr>');
             }
         }
         function getInvestReturnMethod2(rps){
@@ -200,7 +200,7 @@
                 }
                 pList2.Refresh();
             }else{
-                htm+='<tr><td>没有数据</td></tr>';
+                htm+='<tr><td colspan="=20">没有资源</td></tr>';
                 $("#mainTab2").html(htm);
             }
         }
@@ -235,7 +235,8 @@
                 }
                 pList3.Refresh();
             }else{
-                $("#mainTab3").html('没有数据');
+                htm+='<tr><td colspan="=20">没有资源</td></tr>';
+                $("#mainTab3").html(htm);
             }
         }
         function subData(resid){
@@ -580,7 +581,9 @@
                     <td class="font-black">
                         <c:if test="${!empty resType}">
                         <c:forEach items="${resType}" var="d">
-                        <input type="radio" name="res_type"  value="${d.dictionaryvalue}" />${d.dictionaryname}&nbsp;&nbsp;&nbsp;&nbsp;
+                            <c:if test="${d.dictionaryvalue!=6}">
+                                <input type="radio" name="res_type"  value="${d.dictionaryvalue}" />${d.dictionaryname}&nbsp;&nbsp;&nbsp;&nbsp;
+                            </c:if>
                         </c:forEach>
                         </c:if>
                 </tr>

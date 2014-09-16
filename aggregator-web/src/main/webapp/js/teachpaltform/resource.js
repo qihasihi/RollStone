@@ -3534,7 +3534,7 @@ function getRemoteResources(type){
                     });
                     $("#zhishi").html(htm);
                 }else{
-                    $("#zhishi").html('<li>没有数据</li>');
+                    $("#zhishi").html('<li>没有资源</li>');
                 }
                 if(rps.objList[4]!=null){
                     if(rps.objList[4]=="0"){
