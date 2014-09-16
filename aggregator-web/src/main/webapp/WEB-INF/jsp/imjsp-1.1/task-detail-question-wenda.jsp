@@ -12,6 +12,14 @@
     <title></title>
 </head>
 <body>
+<%
+    long mTime = System.currentTimeMillis();
+    int offset = Calendar.getInstance().getTimeZone().getRawOffset();
+    Calendar c = Calendar.getInstance();
+    c.setTime(new Date(mTime - offset));
+    String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
+    System.out.println("当前页面"+"------------"+"task-detail-question-wenda.jsp"+"         当前位置------------进入jsp      当前时间------"+currentDay);
+%>
 <div class="zxcs_test">
     <h1>${type}</h1>
     <div class="title">${content}</div>
@@ -29,5 +37,8 @@
         </c:forEach>
     </c:if>
 </div>
+<%
+    System.out.println("当前页面"+"------------"+"task-detail-question-wenda.jsp"+"         当前位置------------jsp结束      当前时间------"+currentDay);
+%>
 </body>
 </html>

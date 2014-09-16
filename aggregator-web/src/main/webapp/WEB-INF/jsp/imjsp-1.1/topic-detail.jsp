@@ -33,6 +33,14 @@
     </script>
 </head>
 <body>
+<%
+    long mTime = System.currentTimeMillis();
+    int offset = Calendar.getInstance().getTimeZone().getRawOffset();
+    Calendar c = Calendar.getInstance();
+    c.setTime(new Date(mTime - offset));
+    String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
+    System.out.println("当前页面"+"------------"+"topic-detail.jsp"+"         当前位置------------进入jsp      当前时间------"+currentDay);
+%>
 <div class="hzjl">
     <h1>${topic.topictitle} </h1>
     <div class="black">${topic.topiccontent}</div>
@@ -74,5 +82,8 @@
     </c:if>
 
 </div>
+<%
+    System.out.println("当前接口"+"------------"+"topic-detail.jsp"+"         当前位置------------jsp结束      当前时间------"+currentDay);
+%>
 </body>
 </html>

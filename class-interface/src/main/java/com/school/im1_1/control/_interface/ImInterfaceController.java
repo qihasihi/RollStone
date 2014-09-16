@@ -1621,6 +1621,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return new ModelAndView("");
         }
+        long mTime = System.currentTimeMillis();
+        int offset = Calendar.getInstance().getTimeZone().getRawOffset();
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date(mTime - offset));
+        String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
+        System.out.println("当前接口"+"------------"+"toQuestionJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------验证用户通过      当前时间------"+currentDay);
+        System.out.println();
         int utype = ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
@@ -1787,8 +1794,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             request.setAttribute("usertype",utype);
            // System.out.println(System.currentTimeMillis());
             if(questionInfoList.get(0).getQuestiontype()==1){
+                System.out.println("当前接口"+"------------"+"toQuestionJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------接口结束，跳转jsp      当前时间------"+currentDay);
                 return new ModelAndView("/imjsp-1.1/task-detail-question-wenda");
             }else{
+                System.out.println("当前接口"+"------------"+"toQuestionJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------接口结束，跳转jsp     当前时间------"+currentDay);
                 return new ModelAndView("/imjsp-1.1/task-detail-question");
             }
         }
@@ -2838,10 +2847,17 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         //String sign = UrlSigUtil.makeSigSimple("TaskInfo",paramMap,"*ETT#HONER#2014*");
         //验证，首先去掉sign，在进行md5验证
         paramMap.remove("sign");
+        long mTime = System.currentTimeMillis();
+        int offset = Calendar.getInstance().getTimeZone().getRawOffset();
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date(mTime - offset));
+        String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
         Boolean b = UrlSigUtil.verifySigSimple("toTopicJsp",paramMap,sig);
+        System.out.println("当前接口"+"------------"+"toTopicJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------进入接口      当前时间------"+currentDay);
         if(!b){
             je.setMsg("验证失败，非法登录");
             response.getWriter().print(je.getAlertMsgAndBack());
+            System.out.println("当前接口"+"------------"+"toTopicJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------验证失败      当前时间------"+currentDay);
             return null;
         }
         int utype = ImUtilTool.getUserType(usertype);
@@ -2851,6 +2867,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(userList==null||userList.size()<1){
             je.setMsg("当前用户未绑定");
             response.getWriter().print(je.getAlertMsgAndBack());
+            System.out.println("当前接口"+"------------"+"toTopicJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------当前用户未绑定      当前时间------"+currentDay);
             return null;
         }
         //验证当前任务，并得到论题id
@@ -2860,6 +2877,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(taskList==null&&taskList.size()==0){
             je.setMsg("当前任务不存在");
             response.getWriter().print(je.getAlertMsgAndBack());
+            System.out.println("当前接口"+"------------"+"toTopicJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------当前任务不存在      当前时间------"+currentDay);
             return null;
         }
         Long topicId = taskList.get(0).getTaskvalueid();
@@ -2870,6 +2888,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(tiList==null||tiList.size()==0){
             je.setMsg("当前论题不存在");
             response.getWriter().print(je.getAlertMsgAndBack());
+            System.out.println("当前接口"+"------------"+"toTopicJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------当前论题不存在      当前时间------"+currentDay);
             return null;
         }
         //接下来查询论题下的主题
@@ -2923,6 +2942,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         request.setAttribute("type",taskList.get(0).getCriteria());
         request.setAttribute("topic",tiList.get(0));
         request.setAttribute("themeList",themeList);
+        System.out.println("当前接口"+"------------"+"toTopicJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------接口结束跳转jsp      当前时间------"+currentDay);
         return new ModelAndView("/imjsp-1.1/topic-detail");
     }
 
@@ -3637,15 +3657,24 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String usertype = paramMap.get("userType");
         String schoolid =paramMap.get("schoolId");
         String sig = request.getParameter("sign");
-        String sign = UrlSigUtil.makeSigSimple("toRemoteResourceJsp",paramMap,"*ETT#HONER#2014*");
+        String system = request.getParameter("system");
+        String sign = UrlSigUtil.makeSigSimple("toRemoteResourceJsp", paramMap, "*ETT#HONER#2014*");
         //验证，首先去掉sign，在进行md5验证
         paramMap.remove("sign");
+        long mTime = System.currentTimeMillis();
+        int offset = Calendar.getInstance().getTimeZone().getRawOffset();
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date(mTime - offset));
+        String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
         Boolean b = UrlSigUtil.verifySigSimple("toRemoteResourceJsp",paramMap,sig);
         if(!b){
             je.setMsg("验证失败，非法登录");
             response.getWriter().print(je.getAlertMsgAndBack());
+            System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------验证失败，非法登录      当前时间------"+currentDay);
             return null;
         }
+
+        System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------验证用户通过      当前时间------"+currentDay);
         int utype = ImUtilTool.getUserType(usertype);
         UserInfo ui = new UserInfo();
         ui.setEttuserid(Integer.parseInt(userid));
@@ -3653,6 +3682,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(userList==null||userList.size()<1){
             je.setMsg("当前用户未绑定");
             response.getWriter().print(je.getAlertMsgAndBack());
+            System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------当前用户未绑定      当前时间------"+currentDay);
             return null;
         }
         //验证当前任务，并得到远程资源id
@@ -3662,11 +3692,13 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(taskList==null||taskList.size()==0){
             je.setMsg("当前任务不存在");
             response.getWriter().print(je.getAlertMsgAndBack());
+            System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------当前任务不存在      当前时间------"+currentDay);
             return null;
         }
         if(taskList.get(0).getResourcetype()==null||taskList.get(0).getResourcetype()==1){
             je.setMsg("当前任务资源不符合要求");
             response.getWriter().print(je.getAlertMsgAndBack());
+            System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------当前任务不存在      当前时间------"+currentDay);
             return null;
         }
         Long resid = taskList.get(0).getTaskvalueid();
@@ -3769,6 +3801,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     if(result==1){
                         response.sendRedirect(data);
                     }else{
+                        System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------未拿到只是导学地址      当前时间------"+currentDay);
                         return null;
                     }
                 }else{//高清课堂
@@ -3776,6 +3809,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     Long time = System.currentTimeMillis();
                     HashMap<String,String> param = new HashMap<String, String>();
                     param.put("resourceId",resid.toString());
+                    param.put("system",system);
                     param.put("timestamp",time.toString());
                     String signure =  UrlSigUtil.makeSigSimple("playVideoUrl.do",param,"*ETT#HONER#2014*");
                     param.put("sign",signure);
@@ -3785,6 +3819,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     if(result==1){
                         response.sendRedirect(data);
                     }else{
+                        System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------未拿到高清地址      当前时间------"+currentDay);
                         return null;
                     }
                 }
@@ -3855,6 +3890,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 return new ModelAndView("/imjsp-1.1/remote-resource-detail");
             }
         }
+        System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------接口结束但未跳转页面      当前时间------"+currentDay);
         return null;
     }
 

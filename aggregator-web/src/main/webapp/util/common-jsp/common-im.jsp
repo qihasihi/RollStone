@@ -4,14 +4,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%
-    response.setHeader("Cache-Control", "Public");
-    response.setHeader("Pragma", "no-cache");
-    response.setDateHeader("Expires",  -10);
+   // response.setHeader("Cache-Control", "Public");
+   // response.setHeader("Pragma", "no-cache");
+  //  response.setDateHeader("Expires",  -10);
     String proc_name= UtilTool.utilproperty.getProperty("PROC_NAME");
     String basePath = request.getScheme() + "://"
             + UtilTool.utilproperty.getProperty("IP_ADDRESS")
             +"/"+proc_name + "/";
 %>
+
+<%response.setHeader("Pragma","No-cache");
+    response.setHeader("Cache-Control","no-cache");
+    response.setDateHeader("Expires", 0);
+    //response.flushBuffer();%>
 
 <link rel="stylesheet" type="text/css" href="<%=basePath %>css/ios.css"/>
 <script src="<%=basePath %>util/xheditor/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>

@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/util/common-jsp/common-im.jsp"%>
+
 <html>
 <head>
     <title></title>
@@ -136,6 +137,14 @@
     </script>
 </head>
 <body>
+<%
+    long mTime = System.currentTimeMillis();
+    int offset = Calendar.getInstance().getTimeZone().getRawOffset();
+    Calendar c = Calendar.getInstance();
+    c.setTime(new Date(mTime - offset));
+    String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
+    System.out.println("当前页面"+"------------"+"task-detail-question.jsp"+"         当前位置------------进入jsp      当前时间------"+currentDay);
+%>
 <div class="zxcs_test"><form id="questionForm" onsubmit="return submitTask()"><input type="button" value="aaaa" onclick="submitTask()"></form>
     <h1>${type}</h1>
     <div class="title" id="title"></div>
@@ -201,6 +210,8 @@
             </div>
         </c:forEach>
     </c:if>
-
+                <%
+    System.out.println("当前接口"+"------------"+"task-detail-question.jsp"+"          当前位置------------jsp结束      当前时间------"+currentDay);
+%>
 </body>
 </html>
