@@ -123,7 +123,7 @@
 
     <tr id="atrContent">
         <th><span class="ico06"></span>内&nbsp;&nbsp;&nbsp;&nbsp;容：</th>
-      <td id="atdContent"><textarea style="width:480px;height:100px" id="acontent" name="acontent"/></textarea></td>
+      <td id="atdContent"><textarea style="width:480px;height:200px" id="acontent" name="acontent"/></textarea></td>
     </tr>
     <tr>
         <th><span class="ico06"></span>发送对象：</th>
@@ -205,7 +205,7 @@
 
           <tr id="utrContent">
               <th><span class="ico06"></span>内&nbsp;&nbsp;&nbsp;&nbsp;容：</th>
-              <td id="utdContent"><textarea style="width:480px;height:100px" id="ucontent" name="ucontent"/></textarea>
+              <td id="utdContent"><textarea style="width:480px;height:200px" id="ucontent" name="ucontent"/></textarea>
           </tr>
           <tr>
               <th><span class="ico06"></span>发送对象：</th>

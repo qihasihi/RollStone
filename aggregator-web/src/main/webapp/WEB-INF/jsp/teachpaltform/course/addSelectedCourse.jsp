@@ -75,9 +75,9 @@
                 if(srhType==2){
                     param.gradeid=$("#tgradeid").val();
                     var sname=$("#schoolname").val();
-                    if(schoolname!=sname){
-                        param.schoolname=sname;
-                    }
+//                    if(schoolname!=sname){
+//                        param.schoolname=sname;
+//                    }
                     if($("#teachername").val().Trim().length>0)
                         param.teachername=$("#teachername").val();
                     param.subjectid=subjectid;
@@ -292,13 +292,13 @@
                 <a href="javascript:pageGo('pList',1);" class="an_search" title="查询"></a></p>
             <!-- 按教师搜索 -->
             <p id="tchSrhType" class="public_input" style="display:none;">
-                <select name="schoolname" id="schoolname">
-                    <c:if test="${!empty schoolList}">
-                        <c:forEach var="itm" items="${schoolList}">
-                            <option value="${itm.name}">${itm.name}</option>
-                        </c:forEach>
-                    </c:if>
-                </select>
+                <%--<select name="schoolname" id="schoolname">--%>
+                    <%--<c:if test="${!empty schoolList}">--%>
+                        <%--<c:forEach var="itm" items="${schoolList}">--%>
+                            <%--<option value="${itm.name}">${itm.name}</option>--%>
+                        <%--</c:forEach>--%>
+                    <%--</c:if>--%>
+                <%--</select>--%>
                 <select id="tgradeid" name="tgradeid">
                     <c:if test="${!empty gradeList}">
                         <c:forEach var="grade" items="${ gradeList}">

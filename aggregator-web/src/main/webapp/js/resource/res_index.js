@@ -247,10 +247,19 @@ function afterVideoAjaxList(rps){
     if(rps.type=="success"){
         if(rps!=null&&rps.presult.list.length>0){
             $.each(rps.objList,function(idx,itm){
-                html+="<li><p class='one'>";
-                html+="<a href='resource?m=todetail&resid="+itm.resid+"' target='_blank' title='"+itm.resname+"'><img src='"+itm.imagepath+"' width='160' height='90' /></a></p>";
-                var name = (itm.resname.length>18?itm.resname.substring(0,18)+"…":itm.resname)+itm.filesuffixname;
-                html+="<p class='two'><a href='resource?m=todetail&resid="+itm.resid+"' target='_blank'>"+name+"</a></p></li>";
+//                html+="<li><p class='one'>";
+//                html+="<a href='resource?m=todetail&resid="+itm.resid+"' target='_blank' title='"+itm.resname+"'><img src='"+itm.imagepath+"' width='160' height='90' /></a></p>";
+//                var name = (itm.resname.length>18?itm.resname.substring(0,18)+"…":itm.resname)+itm.filesuffixname;
+//                html+="<p class='two'><a href='resource?m=todetail&resid="+itm.resid+"' target='_blank'>"+name+"</a></p></li>";
+                html+="<li><b>"+itm.ctimeString.substring(0,10)+"</b><b>" ;
+                if(typeof(itm.userref)=="undefined"||itm.userref.length<1)
+                    html+="<a href='resource?m=toteacherreslist&srhValue="+encodeURI(encodeURI(itm.username))+"' target='_blank'>";
+                else
+                    html+="<a href='resource?m=toteacherreslist&userid="+itm.userref+"' target='_blank'>";
+                html+=(itm.username.length>3?(itm.username.substring(0,3)+"..."):itm.username)+"</a></b>";
+                html+="<a title='"+itm.resname+"' href='resource?m=todetail&resid="+itm.resid+"' target='_blank'>";
+                var name = (itm.resname.length>38?itm.resname.substring(0,38)+"…":itm.resname)+itm.filesuffixname;
+                html+=name+"</a></li>";
             });
 
         }else{

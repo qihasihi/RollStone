@@ -159,7 +159,9 @@ function myInfoAjaxList(rps){
             </select>
             <input id="searchValue" name="searchValue" type="text" class="w240"/>&nbsp;
             <a href="javascript:doSearch()" class="an_search" title="搜索"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="resource?m=toAllResPage" target="_blank" class="font-darkblue">查看全部资源</a></p>
+            <%--<a href="resource?m=toAllResPage" target="_blank" class="font-darkblue">查看全部资源</a>--%>
+            <a href="resource?m=list" target="_blank" class="font-darkblue">高级搜索</a>
+            </p>
     </div>
 
     <div class="zyxt_homeR font-black">

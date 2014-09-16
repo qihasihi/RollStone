@@ -243,11 +243,11 @@ if(!isShowTbl){%>
                     }
                     </c:forEach>
                     <c:forEach items="${dataListMap}" var="dl1m">
-                        h='<tr>';
-                        <%--h+='<td>${dl1m.STU_NO}';--%>
+                        h='<tr><td>';
+                        <%--h+='<td>${dl1m.STU_NO}';</td>--%>
                         h+='<input type="hidden" name="group_id" id="hd_group_id" value="${dl1m.GROUP_ID}"/>';
                         h+='<input type="hidden" name="user_id" id="hd_user_id" value="${dl1m.USER_ID}"/>';
-                        h+='</td><td>${dl1m.STU_NAME}</td>';
+                        h+='${dl1m.STU_NAME}</td>';
                         h+='<td  style="color:gray">${dl1m.WSSCORE}</td>';
                         <c:if test="${!empty clsDcType&&clsDcType==3}">
                             var subFlag=${dl1m.SUBMIT_FLAG};
