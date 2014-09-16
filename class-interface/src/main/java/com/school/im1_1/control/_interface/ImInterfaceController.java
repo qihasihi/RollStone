@@ -5037,7 +5037,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 returnMap.put("taskAnalysis",taskMap.get("TASKANALYSIS").toString());
             }else{
                 returnMap.put("taskContent","");
-                if(questype==1){
+                if(questype==1&&tpTaskList.get(0).getResourcetype()==1){
                     ResourceInfo rs = new ResourceInfo();
                     rs.setResid(tpTaskList.get(0).getTaskvalueid());
                     List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
@@ -5164,7 +5164,95 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         response.getWriter().print(returnJo.toString());
     }
 
-
+    /**
+     * 任务提醒接口
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=getLiveAddress",method= {RequestMethod.GET,RequestMethod.POST})
+    public void getLiveAddress(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        JSONObject returnJo = new JSONObject();
+        returnJo.put("result","0");
+        HashMap<String,String> map = ImUtilTool.getRequestParam(request);
+        String taskid = map.get("taskId");
+        String courseid = map.get("courseId");
+        String schoolid = map.get("schoolId");
+        String userid = map.get("jid");
+        String timestamp = map.get("time");
+        String sig = map.get("sign");
+        if(!ImUtilTool.ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        //String sign = UrlSigUtil.makeSigSimple("taskRemind",map,"*ETT#HONER#2014*");
+        map.remove("sign");
+        Boolean b = UrlSigUtil.verifySigSimple("getLiveAddress", map, sig);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //验证任务 是否存在
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid));
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<TpTaskInfo> tpTaskList=this.tpTaskManager.getList(tk,presult);
+        if(tpTaskList==null||tpTaskList.size()<1){
+            returnJo.put("msg","错误，当前任务不存在!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        //验证专题
+        TpCourseInfo tc = new TpCourseInfo();
+        tc.setCourseid(Long.parseLong(courseid));
+        List<TpCourseInfo> tcList = this.tpCourseManager.getList(tc,null);
+        if(tcList==null||tcList.size()<1){
+            returnJo.put("msg","错误，当前专题不存在!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
+        HashMap<String,String> signMap = new HashMap();
+        signMap.put("courseName",tcList.get(0).getCoursename());
+        signMap.put("courseId",tpTaskList.get(0).getTaskid().toString().replace("-",""));
+        signMap.put("userId",userList.get(0).getUserid()+"");
+        signMap.put("userName",userList.get(0).getUsername());
+        signMap.put("rec","3");
+        signMap.put("srcId","90");
+        signMap.put("timestamp",System.currentTimeMillis()+"");
+        String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
+        signMap.put("sign",signture);
+        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+        if(type==1){
+            String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
+            if(liveurl!=null&&liveurl.trim().length()>0){
+                returnJo.put("result","1");
+                returnJo.put("msg","查询成功");
+                returnJo.put("data",liveurl);
+            }else{
+                returnJo.put("msg","查询失败");
+                returnJo.put("data","");
+            }
+        }
+        response.getWriter().print(returnJo.toString());
+    }
 
 
 }
