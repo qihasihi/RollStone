@@ -483,11 +483,14 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
     public ModelAndView toAwardStatices(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
         String subjectid=request.getParameter("subjectid");
         String classid=request.getParameter("classid");
+        String sort=request.getParameter("sort");
         JsonEntity jsonEntity=new JsonEntity();
         if(subjectid==null||subjectid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return null;
         }
+        if(sort==null)
+            sort="asc";
         //ÑéÖ¤classid
         ClassInfo cls=new ClassInfo();
         cls.setClassid(Integer.parseInt(classid.trim()));
@@ -496,7 +499,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
             response.getWriter().print(jsonEntity.toJSON());return null;
         }
-        List<Map<String,Object>> listMap=this.tpStuScoreManager.getScoreStatices(Integer.parseInt(subjectid),Integer.parseInt(classid));
+        List<Map<String,Object>> listMap=this.tpStuScoreManager.getScoreStatices(Integer.parseInt(subjectid),Integer.parseInt(classid),sort);
         mp.put("dataList",listMap);
         mp.put("currentLoginUID",this.logined(request).getUserid());
         mp.put("clsObj",clsList.get(0));

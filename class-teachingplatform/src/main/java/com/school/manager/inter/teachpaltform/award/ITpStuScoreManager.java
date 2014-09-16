@@ -44,7 +44,7 @@ public interface ITpStuScoreManager extends IBaseManager<TpStuScore>{
      * @param classid
      * @return
      */
-    public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid);
+    public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid,final String sort);
     /**
      * 更新统计小组分数
      * @param taskid

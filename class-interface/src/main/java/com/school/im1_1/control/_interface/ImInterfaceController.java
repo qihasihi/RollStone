@@ -2966,6 +2966,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String sign=paramMap.get("sign");
         if(jid==null||schoolId==null||classId==null||time==null||sign==null){
             returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            returnJo.put("data","");
             response.getWriter().println(returnJo.toString());return;
         }
         //验证时间

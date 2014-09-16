@@ -52,6 +52,9 @@ function addcomment(){
 		},success:function(rps){
 			if(rps.type=="success"){
                 $("#a_submit_comment").remove();
+               // $("#td_jy").html($("#commentcontext").val());
+                $("#commentcontext").attr("disabled",true);
+                $("#a_qx").html("关&nbsp;闭");
 				alert(rps.msg);
 			//	window.close();
 			}else{
@@ -87,11 +90,11 @@ function addcomment(){
         </tr>
         <tr>
             <th>想法及建议：</th>
-            <td><textarea id="commentcontext" name="commentcontext" class="h90 w500"></textarea></td>
+            <td><textarea  id="commentcontext" name="commentcontext" class="h90 w500"></textarea></td>
         </tr>
         <tr>
             <th>&nbsp;</th>
-            <td><a id="a_submit_comment" href="javascript:addcomment();" class="an_small">提&nbsp;交</a><a href="javascript:window.close();" class="an_small">取&nbsp;消</a></td>
+            <td><a id="a_submit_comment" href="javascript:addcomment();" class="an_small">提&nbsp;交</a><a id="a_qx" href="javascript:window.close();" class="an_small">取&nbsp;消</a></td>
         </tr>
     </table>
 </div>

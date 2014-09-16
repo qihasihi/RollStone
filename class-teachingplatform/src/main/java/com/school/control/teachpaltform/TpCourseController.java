@@ -71,7 +71,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         this.resourceManager=this.getManager(ResourceManager.class);
         this.tpCourseRelatedManager=this.getManager(TpCourseRelatedManager.class);
         this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
+        this.classManager=this.getManager(ClassManager.class);
     }
+    private IClassManager classManager;
     private ITpCoursePaperManager tpCoursePaperManager;
     private ITpTaskManager tpTaskManager;
     private ITpCourseManager tpCourseManager;
@@ -1119,24 +1121,33 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             if(groupIdStr!=null&&groupIdStr.toString().trim().length()>0){
                 if(courseids!=null&&courseids.trim().length()<1)
                     courseids=null;
-                List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(Integer.parseInt(classid),Integer.parseInt(subjectid),courseids,groupIdStr.toString(),2);
-                for(TpCourseInfo tctmp:stucourseList){
-                if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
-                      for(Map<String,Object> csOMap:courseScoreIsOverList){
-                        if(csOMap!=null&&csOMap.containsKey("STUSCORECOUNT")&&csOMap.containsKey("GROUPCOUNT")
-                                &&csOMap.containsKey("COURSE_ID")){
-                            String tcid=csOMap.get("COURSE_ID")!=null?csOMap.get("COURSE_ID").toString():null;
-                            String gCount=csOMap.get("GROUPCOUNT")!=null?csOMap.get("GROUPCOUNT").toString():null;
-                            String stuScoreCount=csOMap.get("STUSCORECOUNT")!=null?csOMap.get("STUSCORECOUNT").toString():null;
-                            if(tcid==null||tcid.trim().length()<1
-                                    ||gCount==null||stuScoreCount==null
-                                    )continue;
-                                if(tctmp!=null&&tctmp.getCourseid().toString().equals(tcid)&&(Integer.parseInt(stuScoreCount)==0||Integer.parseInt(gCount)==Integer.parseInt(stuScoreCount))){
-                                        tctmp.setCourseScoreIsOver(0);
-                                        break;
+                ClassInfo classInfo=new ClassInfo();
+                classInfo.setClassid(Integer.parseInt(classid));
+                List<ClassInfo> clsList=this.classManager.getList(classInfo,null);
+                if(clsList!=null&&clsList.size()>0&&clsList.get(0).getDctype()==3){
+                 List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(Integer.parseInt(classid),Integer.parseInt(subjectid),courseids,groupIdStr.toString(),2);
+                    for(TpCourseInfo tctmp:stucourseList){
+                        if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
+                              for(Map<String,Object> csOMap:courseScoreIsOverList){
+                                if(csOMap!=null&&csOMap.containsKey("STUSCORECOUNT")&&csOMap.containsKey("GROUPCOUNT")
+                                        &&csOMap.containsKey("COURSE_ID")){
+                                    String tcid=csOMap.get("COURSE_ID")!=null?csOMap.get("COURSE_ID").toString():null;
+                                    String gCount=csOMap.get("GROUPCOUNT")!=null?csOMap.get("GROUPCOUNT").toString():null;
+                                    String stuScoreCount=csOMap.get("STUSCORECOUNT")!=null?csOMap.get("STUSCORECOUNT").toString():null;
+                                    if(tcid==null||tcid.trim().length()<1
+                                            ||gCount==null||stuScoreCount==null
+                                            )continue;
+                                        if(tctmp!=null&&tctmp.getCourseid().toString().equals(tcid)&&(Integer.parseInt(stuScoreCount)==0||Integer.parseInt(gCount)==Integer.parseInt(stuScoreCount))){
+                                                tctmp.setCourseScoreIsOver(0);
+                                                break;
+                                        }
+                                    }
                                 }
                             }
-                        }
+                    }
+                }else{
+                    for(TpCourseInfo tctmp:stucourseList){
+                        tctmp.setCourseScoreIsOver(0);
                     }
                 }
             }else{
@@ -2699,6 +2710,25 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                             continue;
                         for (String clsid:clsidArray){
                             if(clsid!=null&&clsid.trim().length()>0){
+                                //查询得到班级类型
+                                ClassInfo cls=new ClassInfo();
+                                cls.setClassid(Integer.parseInt(clsid.trim()));
+                                List<ClassInfo> clsList=this.classManager.getList(cls,null);
+                                if(clsList==null||clsList.size()<1){
+                                    if(tctmp.getCourseScoreIsOverStr()==null||tctmp.getCourseScoreIsOverStr().trim().length()<1)
+                                        tctmp.setCourseScoreIsOverStr("0");
+                                    else{
+                                        tctmp.setCourseScoreIsOverStr(tctmp.getCourseScoreIsOverStr()+",0");
+                                    }
+                                    continue;
+                                }else if(clsList.get(0).getDctype()!=3){
+                                    if(tctmp.getCourseScoreIsOverStr()==null||tctmp.getCourseScoreIsOverStr().trim().length()<1)
+                                        tctmp.setCourseScoreIsOverStr("0");
+                                    else{
+                                        tctmp.setCourseScoreIsOverStr(tctmp.getCourseScoreIsOverStr()+",0");
+                                    }
+                                    continue;
+                                }
                                 List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(Integer.parseInt(clsid.trim()),tctmp.getSubjectid(),tctmp.getCourseid()+"",null,1);
                                 if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
                                     for(Map<String,Object> csOMap:courseScoreIsOverList){
@@ -2887,7 +2917,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 tcInfo, null);
         String courseids="";
         //如果是学生或者老师，则查询积分录入情况
-        if(usertype==1||usertype==2){
+        if(usertype==1||usertype==2||usertype==3){
             if(courseList!=null&&courseList.size()>0){
                 //组织courseid
                 for (TpCourseInfo tc:courseList){
@@ -2930,6 +2960,14 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                            //说明是该班的小组组长
                            if(groupIdStr!=null&&groupIdStr.toString().trim().length()>0){
 
+                               ClassInfo cls=new ClassInfo();
+                               cls.setClassid(tctmp.getClassid());
+                               List<ClassInfo> clsList=this.classManager.getList(cls,null);
+                               if(clsList==null||clsList.size()<1||clsList.get(0).getDctype()!=3){
+                                   tctmp.setCourseScoreIsOver(0);
+                                   continue;
+                               }
+
                            List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(tctmp.getClassid(),tctmp.getSubjectid(),courseids,groupIdStr.toString(),2);
                            if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
                                 for(Map<String,Object> csOMap:courseScoreIsOverList){
@@ -2954,6 +2992,14 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 }else{
                     for(TpCourseInfo tctmp:courseList){
                         if(tctmp!=null){
+                            ClassInfo cls=new ClassInfo();
+                            cls.setClassid(tctmp.getClassid());
+                            List<ClassInfo> clsList=this.classManager.getList(cls,null);
+                            if(clsList==null||clsList.size()<1||clsList.get(0).getDctype()!=3||!tctmp.getCuserid().equals(this.logined(request).getUserid())){
+                                tctmp.setCourseScoreIsOver(0);
+                                continue;
+                            }
+
                             List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(tctmp.getClassid(),tctmp.getSubjectid(),tctmp.getCourseid()+"",null,1);
                             if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
                                 for(Map<String,Object> csOMap:courseScoreIsOverList){
@@ -2971,8 +3017,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                         }
                                     }
                                 }
-                            }else
-                                tctmp.setCourseScoreIsOver(0);
+                            }
+//                            else
+//                                tctmp.setCourseScoreIsOver(0);
                         }
                     }
                 }

@@ -18,7 +18,8 @@
             $("#sp_rws").html($("#tr_${currentLoginUID} input[name='hd_rws']").val());
             //出勤数
             $("#sp_cqs").html($("#tr_${currentLoginUID} input[name='hd_cqs']").val());
-        })
+        });
+
     </script>
 </head>
 
@@ -38,12 +39,19 @@
             <th>网下表现得分</th>
             <th>小组得分</th>
             <th>课程积分</th>
-            <th>积分排行榜<a href="1" class="ico48a"></a><a href="1" class="ico48b"></a></th>
+            <th>积分排行榜
+              <c:if test="${!empty param.sort&&param.sort=='desc'}">
+                <a href="clsperformance?m=toAwardStaticesScore&subjectid=${param.subjectid}&classid=${param.classid}&sort=asc" class="ico48b"></a>
+            </c:if>
+              <c:if test="${empty param.sort||param.sort=='asc'}">
+                <a  href="clsperformance?m=toAwardStaticesScore&subjectid=${param.subjectid}&classid=${param.classid}&sort=desc"  class="ico48a"></a>
+            </c:if>
+            </th>
         </tr>
         <c:if test="${!empty dataList}">
                <c:forEach items="${dataList}" var="d" varStatus="dIdx">
                    <tr class="${dIdx.index%2==0?'trbg1':''}" id="tr_${d.USER_ID}">
-                       <td><a href="1" target="_blank">${d.STU_NAME}</a></td>
+                       <td>${d.STU_NAME}</td>
                        <td>${!empty d.WSDF?d.WSDF:'--'}</td>
                        <td>${!empty d.WXDF?d.WXDF:'--'}</td>
                        <td>${!empty d.GROUP_SCORE?d.GROUP_SCORE:'--'}</td>
@@ -71,7 +79,13 @@
             <th>网上得分</th>
             <th>小组得分</th>
             <th>课程积分</th>
-            <th>积分排行榜<a href="1" class="ico48a"></a><a href="1" class="ico48b"></a></th>
+            <th>积分排行榜
+                <c:if test="${!empty param.sort&&param.sort=='desc'}">
+                <a href="clsperformance?m=toAwardStaticesScore&subjectid=${param.subjectid}&classid=${param.classid}&sort=asc" class="ico48b"></a>
+                </c:if>
+                <c:if test="${empty param.sort||param.sort=='asc'}">
+                <a  href="clsperformance?m=toAwardStaticesScore&subjectid=${param.subjectid}&classid=${param.classid}&sort=desc"  class="ico48a"></a>
+                </c:if>
         </tr>
         <c:if test="${!empty dataList}">
             <c:forEach items="${dataList}" var="d" varStatus="dIdx">

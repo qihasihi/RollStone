@@ -40,7 +40,7 @@ function getInvestReturnMethod(rps){
                 html+="<td><p><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"'  class='"+uncompleateClass+"'>"+itm.uncompletenum+"</a></p></td>";
                 var stotalscore=itm.coursetotalscore;
                 if(stotalscore==-1){
-                    stotalscore="--";
+                    stotalscore="0";
                 }
                 html+='<td>'
                 html+='<a target="_blank" href="clsperformance?m=toIndex&courseid='+itm.courseid+'&subjectid='+$("#subjectid").val()

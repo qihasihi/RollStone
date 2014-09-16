@@ -502,11 +502,12 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
      * @param classid
      * @return
      */
-    public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid){
-        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_group_score_statices_score(?,?)}");
+    public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid,final String sort){
+        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_group_score_statices_score(?,?,?)}");
         List<Object> objlist=new ArrayList<Object>();
         objlist.add(subjectid);
         objlist.add(classid);
+        objlist.add(sort==null?"asc":sort);
         return this.executeResultListMap_PROC(sqlbuilder.toString(),objlist);
     }
 

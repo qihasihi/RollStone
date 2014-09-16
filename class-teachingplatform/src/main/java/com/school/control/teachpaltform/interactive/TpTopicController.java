@@ -121,11 +121,13 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
         //身份处理
         if(roleStr.equals("TEACHER")){  //教师身份
             //查询教师可以查看到的专题
+
             TpCourseInfo tcentity=new TpCourseInfo();
             tcentity.setUserid(this.logined(request).getUserid());
             tcentity.setTermid(courseList.get(0).getTermid());
             if(subjectid!=null)
                 tcentity.setSubjectid(subjectid);
+            tcentity.setLocalstatus(1);
             mp.put("courseList",this.tpCourseManager.getCourseList(tcentity, null));
         }else{                          //学生身份
             //查询学生可以查看到的专题
@@ -133,6 +135,8 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
             tcentity.setUserid(this.logined(request).getUserid());
             if(subjectid!=null)
                 tcentity.setSubjectid(subjectid);
+            tcentity.setLocalstatus(1);
+            tcentity.setTermid(courseList.get(0).getTermid());
             mp.put("courseList",this.tpCourseManager.getStuCourseList(tcentity,null));
         }
         return new ModelAndView("/interactive/topic/index",mp);

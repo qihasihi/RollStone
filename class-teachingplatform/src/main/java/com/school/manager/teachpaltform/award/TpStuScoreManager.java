@@ -103,8 +103,8 @@ public class TpStuScoreManager extends BaseManager<TpStuScore> implements ITpStu
      * @param classid
      * @return
      */
-    public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid){
-        return tpStuScoreDAO.getScoreStatices(subjectid,classid);
+    public List<Map<String,Object>> getScoreStatices(final Integer subjectid,final Integer classid,final String sort){
+        return tpStuScoreDAO.getScoreStatices(subjectid,classid,sort);
     }
     /**
      * 更新统计小组分数

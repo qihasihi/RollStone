@@ -175,7 +175,7 @@
                 <th>专题名称</th>
                 <th>授课教师</th>
                 <th>未完成任务</th>
-                <th>课堂表现</th>
+                <th>课堂积分</th>
                 <th>专题评价</th>
             </tr>
             <tbody id="courseTable">

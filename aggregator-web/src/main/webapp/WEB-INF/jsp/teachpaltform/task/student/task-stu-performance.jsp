@@ -203,8 +203,8 @@
                 </c:forEach>
             </c:if>
 
-        </select>
-        &nbsp;&nbsp;总数：<span id="totalNum"></span>&nbsp;&nbsp;完成任务数：<span id="completeNum"></span>  &nbsp;&nbsp;未开始任务数：<span id="unBeginNum"></span>&nbsp;&nbsp;已结束未完成任务数：<span id="endUnCompleteNum"></span>&nbsp;&nbsp;已开始未做任务数：<span id="unCompleteNum"></span></p>
+        </select><br/>
+        总数：<span id="totalNum" style="color: red"></span>&nbsp;&nbsp;完成任务数：<span id="completeNum" style="color: red"></span>  &nbsp;&nbsp;未开始任务数：<span id="unBeginNum" style="color: red"></span>&nbsp;&nbsp;已结束未完成任务数：<span id="endUnCompleteNum" style="color: red"></span>&nbsp;&nbsp;已开始未做任务数：<span id="unCompleteNum" style="color: red"></span></p>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
         <col class="w240"/>
         <col class="w140"/>
