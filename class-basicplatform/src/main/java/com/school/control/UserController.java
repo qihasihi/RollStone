@@ -1083,13 +1083,15 @@ public class UserController extends BaseController<UserInfo> {
                             request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
                         }
                         //查询分校的logo放入session
-                    /*   if(userinfo.getDcschoolid()!=null){
+                        if(userinfo.getDcschoolid()!=null){
                             ISchoolLogoManager schoolLogoManager = (SchoolLogoManager)this.getManager(SchoolLogoManager.class);
                             SchoolLogoInfo sl = new SchoolLogoInfo();
                             sl.setSchoolid(userinfo.getDcschoolid());
                             List<SchoolLogoInfo> logoList = schoolLogoManager.getList(sl,null);
-                            request.getSession().setAttribute("logoObj",logoList.get(0));
-                        } */
+                            if(logoList!=null&&logoList.size()>0){
+                                request.getSession().setAttribute("logoObj",logoList.get(0));
+                            }
+                        }
 
                         //    userinfo=userinfo;
                         je.setType("success");
@@ -6354,19 +6356,14 @@ public class UserController extends BaseController<UserInfo> {
         List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
         //已存在
         if(userInfoList!=null&&userInfoList.size()>0){
-            if(userInfoList.get(0).getStateid().toString().equals("1")){
-                UserInfo upd=new UserInfo();
-                upd.setUserid(userInfoList.get(0).getUserid());
-                upd.setStateid(0);
-                sql=new StringBuilder();
-                objList=this.userManager.getUpdateSql(upd,sql);
-                if (objList != null && sql != null) {
-                    sqlListArray.add(sql.toString());
-                    objListArray.add(objList);
-                }
-            }else{
-                je.setMsg("username:"+adminname+" already exists!");
-                response.getWriter().print(je.toJSON());return;
+            UserInfo upd=new UserInfo();
+            upd.setUserid(userInfoList.get(0).getUserid());
+            upd.setPassword(pwd);
+            sql=new StringBuilder();
+            objList=this.userManager.getUpdateSql(upd,sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
             }
         }else{
             //添加用户
