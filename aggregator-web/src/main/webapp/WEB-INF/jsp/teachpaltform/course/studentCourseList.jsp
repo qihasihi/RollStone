@@ -108,7 +108,7 @@
 <input type="hidden" id="subjectid" value="">
     <div class="jxxt_student_nav">
         <div id="nav">
-            <div class="arr"><a href="javascript:changeTab2('front');"><span class="up"></span></a><a href="javascript:changeTab2('back');"><span class="next"></span></a></div>
+            <div class="arr" id="dv_sub_operate"><a href="javascript:changeTab2('front');"><span class="up"></span></a><a href="javascript:changeTab2('back');"><span class="next"></span></a></div>
             <ul id="ul_grade">
                 <c:forEach var="sl" items="${subjectList}" varStatus="status">
                     <li id="sub_${sl.subjectid}"><a href="javascript:searchBySubject(${sl.subjectid})"><span id="sub_${status.index}">${sl.subjectname}</span></a></li>
@@ -147,7 +147,7 @@
     <div class="jxxt_studentL">
         <p class="font-darkblue f_right"><a href="" target="_blank" id="task_performance"><span class="ico37"></span>任务完成统计</a>&nbsp;&nbsp;<a href="javascript:;" onclick="location.href='clsperformance?m=toAwardStaticesScore&subjectid='+subjectid.value+'&classid='+_clsid;" target="_blank" ><span class="ico66"></span>课程积分</a></p>
         <div class="banji" id="dv_banji">
-            <p class="font-black"><span id="current_banji"></span><a href="javascript:;" onclick="autoShowObjById('stuClasses')" class="ico49a"></a></p>
+            <p class="font-black"><span id="current_banji"></span><a id="a_nextBj" href="javascript:;" onclick="autoShowObjById('stuClasses')" class="ico49a"></a></p>
             <ul class="banji hide" id="stuClasses">
             </ul></div>
 

@@ -100,7 +100,7 @@ function getInvestReturnMethod(rps){
     }
     $("#courseTable").html(html);
     $("#stuClasses").html(chtml);
-    if($("#stuClasses li").length<1){
+    if($("#stuClasses li").length<=1){
         $("#current_banji").parent().children().hide();
         $("#current_banji").show();
     }else{
@@ -114,6 +114,10 @@ function getInvestReturnMethod(rps){
         $("#ul_grade").html(shtml);
         $("#sub_"+subjectid).siblings().attr("class","");
         $("#sub_"+subjectid).attr("class","crumb");
+        if(rps.presult.list[4].length<6)
+            $("#dv_sub_operate").hide();
+        else
+            $("#dv_sub_operate").show();
     }else{
         $("#ul_grade").html('');
     }
