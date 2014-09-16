@@ -4246,10 +4246,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     subjectList.add(tmpMap);
             }
         }
-
-        ImInterfaceInfo obj=new ImInterfaceInfo();
-        if(subjectId!=null&&subjectId.equals("0")&&subjectList.size()>0){
-            obj.setSubjectid(Integer.parseInt(subjectList.get(0).get("subjectId").toString()));
+        if(subjectList.size()<1){
             returnJo.put("msg", "没有学科排名!");
             JSONObject jdata=new JSONObject();
             jdata.put("teamRankList","[]");
@@ -4263,6 +4260,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             returnJo.put("data",jdata.toString());
             response.getWriter().print(returnJo.toString());
             return;
+        }
+
+
+        ImInterfaceInfo obj=new ImInterfaceInfo();
+        if(subjectId!=null&&subjectId.equals("0")&&subjectList.size()>0){
+            obj.setSubjectid(Integer.parseInt(subjectList.get(0).get("subjectId").toString()));
         }else
             obj.setSubjectid(Integer.parseInt(subjectId));
 
