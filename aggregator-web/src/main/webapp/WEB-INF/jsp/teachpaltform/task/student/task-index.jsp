@@ -547,7 +547,7 @@
                 <a href="tpres?toStudentIdx&courseid=${courseid }">专题资源</a>
             </li>
             <li>
-                <a href="tptopic?m=index&courseid=${courseid }">互动空间</a>
+                <a href="tptopic?m=index&courseid=${courseid }&subjectid=${param.subjectid}">互动空间</a>
             </li>
         </ul>
     </div>

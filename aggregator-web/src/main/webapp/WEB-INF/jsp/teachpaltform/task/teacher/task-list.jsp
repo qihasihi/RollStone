@@ -525,7 +525,7 @@ function showCourseList(){
     <ul>
         <li class="crumb"><a>学习任务</a></li>
         <li><a  href="tpres?toTeacherIdx&courseid=${courseid }&termid=${termid}">专题资源</a></li>
-        <li><a href="tptopic?m=index&courseid=${courseid }">互动空间</a></li>
+        <li><a href="tptopic?m=index&courseid=${courseid }&subjectid=${param.subjectid}">互动空间</a></li>
         <!--<li>
                 <a href="commoncomment?m=toCourseCommentList&objectid=${courseid }">专题评价</a>
             </li> -->

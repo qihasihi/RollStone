@@ -153,7 +153,7 @@ function getTchMaterial(){
 
 function genderClick(courseid){
     var m=$("#material_id").val();
-    var href="task?toTaskList&courseid="+courseid+"&subjectid="+global_subjectid+"&gradeid="+global_gradeid+"&material_id="+m+"";
+    var href="task?toTaskList&courseid="+courseid+"&subjectid="+global_subjectid+"&gradeid="+global_gradeid+"&material_id="+m+"&termid="+selterm;
     window.open(href);
 }
 
