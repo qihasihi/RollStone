@@ -69,7 +69,7 @@
 	top:15px;
 	left:4px;
 }
-	.zxcs_test ul.test li.crumb,.zxcs_test ul.test li:hover{ background-color:#eee;}
+	.zxcs_test ul.test li.crumb,.zxcs_test ul.test li:hover{ border:1px solid #55b2ef;}
 
 	.zxcs_test ul.daan li {
 	padding:15px 30px 10px;
@@ -173,6 +173,9 @@
 }
 	.zxcs_test .wenda p.title {color:#55b2ef; padding-bottom:10px;}
 	.zxcs_test .wenda p.title span { float:right;color:#878787;}
+
+	.zxcs_test .yuyin { padding:5px 0 15px;}
+
 
 	.zsdx,.hzjl{
 	width:96%;

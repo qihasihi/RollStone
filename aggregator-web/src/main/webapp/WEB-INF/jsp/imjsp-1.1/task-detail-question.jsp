@@ -172,7 +172,14 @@
                        <a href="javascript:changeOption(${idx.index})">
                     </c:if>
                     <c:if test="${!empty answer}">
-                        <li>
+                        <c:forEach items="${answer}" var="im">
+                            <c:if test="${itm.optiontype eq im.answercontent}">
+                                <li class="crumb">
+                            </c:if>
+                            <c:if test="${itm.optiontype != im.answercontent}">
+                                <li>
+                            </c:if>
+                        </c:forEach>
                     </c:if>
                     <span class="blue"><input type="hidden" id="h_${itm.ref}" value="${itm.ref}"/>${itm.optiontype}、</span>${itm.content}
                     <c:if test="${!empty answer}">

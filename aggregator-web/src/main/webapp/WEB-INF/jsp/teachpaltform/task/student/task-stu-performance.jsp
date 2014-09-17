@@ -193,6 +193,13 @@
 </head>
 <body>
 <div class="subpage_head"><span class="ico19"></span><strong>个人任务统计—— <%=username%></strong></div>
+<div class="subpage_nav">
+    <ul>
+        <li class="crumb"><a href="javascript:getPerformance()">个人</a></li>
+        <li><a href="1">小组</a></li>
+        <li ><a href="1">班级</a></li>
+    </ul>
+</div>
 <div class="content1">
     <p class="public_input font-black">按专题：
         <select  onchange="getPerformance()" id="courseSel">
