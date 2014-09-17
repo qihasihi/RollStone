@@ -82,17 +82,17 @@ function getInvestReturnMethod(rps){
             });
         }
         $("#p_stuClasses").html('');
-        if(rps.presult.list[3]!=null&&rps.presult.list[3].length>0){
-            $.each(rps.presult.list[3],function(idx,itm){
-                $('#p_stuClasses option[value='+itm.classid+']').remove();
-                ghtml="<option value='"+itm.classid+"'>"+itm.classname+"</option>";
-                $("#p_stuClasses").append(ghtml);
-            });
-            $("#my_term").show();
-        }else{
-            //ghtml+="<option value='0'>没有班级信息</option>";
-            $("#my_term").hide();
-        }
+//        if(rps.presult.list[3]!=null&&rps.presult.list[3].length>0){
+//            $.each(rps.presult.list[3],function(idx,itm){
+//                $('#p_stuClasses option[value='+itm.classid+']').remove();
+//                ghtml="<option value='"+itm.classid+"'>"+itm.classname+"</option>";
+//                $("#p_stuClasses").append(ghtml);
+//            });
+//            $("#my_term").show();
+//        }else{
+//            //ghtml+="<option value='0'>没有班级信息</option>";
+//            $("#my_term").hide();
+//        }
     }else{
         html+="<tr><td colspan='5'>暂无数据</td></tr>";
         ghtml+="<option value='0'>没有班级信息</option>";
@@ -178,8 +178,11 @@ function getMyGroup(){
                         })
                     }
                 $("#my_group").html(html);
+                $("#my_term").show();
             }else{
                 $("#my_group").html("<li>没有小组信息</li>");
+                $("#term_name").html("没有小组信息");
+                $("#my_term").hide();
             }
         }
     });
@@ -257,6 +260,18 @@ function displayObj(id,type){
 
 function changeTab(direct){
     tabTotal=$("#ul_grade").children().length; //标签总数
+    //现在的总字数
+    var gdWord=$("#ul_grade").text()+tabTotal;
+    var tabSize=0;
+    $("#ul_grade").children("li").each(function(idx,itm){
+        var currentWordSize=$(itm).text().length+1;
+        if(currentWordSize<=tabWord)
+            tabSize+=1;
+        else return;
+
+    });
+
+
     var i=0,j=0;
     if(direct=="front"){
         if(currtenTab==1){
@@ -334,9 +349,16 @@ function loadTermData(){
             }
             var btimeStr=rps.objList[0].btimeString;
             if(typeof(btimeStr)!="undefined"){
-                $("#year").html(btimeStr.split("-")[0]);
-                $("#month").html(btimeStr.split("-")[1]);
-                showCalendar(btimeStr.split("-")[0],btimeStr.split("-")[1]);
+                var nd=new Date();
+                var fYear=nd.getFullYear();
+                var fMonth=nd.getMonth()+1;
+                if(fMonth>12){
+                    fYear+=1;
+                    fMonth=1;
+                }
+                $("#year").html(fYear);
+                $("#month").html(fMonth);
+                showCalendar(fYear,fMonth);
             }
         }
     });

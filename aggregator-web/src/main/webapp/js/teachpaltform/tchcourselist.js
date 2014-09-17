@@ -833,6 +833,17 @@ function displayObj(id,type){
 
 function changeTab(direct){
     tabTotal=$("#ul_grade").children().length; //标签总数
+    //现在的总字数
+    var gdWord=$("#ul_grade").text()+tabTotal;
+    var tabSize=0;
+    $("#ul_grade").children("li").each(function(idx,itm){
+        var currentWordSize=$(itm).text().length+1;
+        if(currentWordSize<=tabWord)
+            tabSize+=1;
+        else return;
+
+    });
+
     var i=0,j=0;
     if(direct=="front"){
         if(currtenTab==1){

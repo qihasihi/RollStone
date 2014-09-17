@@ -70,16 +70,16 @@
             getClassGroups('${classes[0].classid}',1);
         }
         </c:if>
-
+        loadClsCourse();
         if(isLession==2){
             $("#sp_subgrade").remove();
             $("#a_course").parent().hide();
+
         }
 
         $("a[name='h2a']").parent().each(function(idx,itm){
             if(idx==0){
                 $(itm).click(function(){
-                    $(".jifen").hide();
                     $("#dv_coursescore").hide();
                     $("#dv_lession").hide();
                     $("#dv_manage_stu").show();
@@ -88,7 +88,6 @@
 
             }else if(idx==1){
                 $(itm).click(function(){
-                    $(".jifen").hide();
                     $("#dv_coursescore").hide();
                     $("#dv_lession").show();
                     $("#dv_manage_stu").hide();
@@ -97,56 +96,68 @@
                 })
 
             }else if(idx==2){       //课程积分
-                $(itm).click(function(){
-                    $("#dv_lession").hide();
-                    $("#dv_manage_stu").hide();
-                    $(itm).siblings().removeClass('crumb').end().addClass('crumb');
-
-                    //积分显示
-                    $(".jifen").show();
-                    if(courseScoreClsId==null||courseScoreClsId!=$("#classId").val().Trim()){
-                        $("#dv_coursescore").html('');
-                        $(".jifen li").removeClass("crumb");
-                    }
-                    //加载学科
-                    if(courseScoreClsId==null||courseScoreClsId!=$("#classId").val().Trim()){
-                        courseScoreClsId=$("#classId").val().Trim();
-                        $.ajax({
-                            url:'teachercourse?m=getCourseSubByClsId',
-                            data:{classid:courseScoreClsId,termid:termid},
-                            type:'post',
-                            dataType:'json',
-                            error:function(){
-                                alert('异常错误,系统未响应！');
-                            },success:function(rps){
-                                if(rps.type!="success"){
-                                    alert(rps.msg);return;
-                                }
-                                var firstSub=null;
-                                $(".jifen").html('');
-                                $.each(rps.objList,function(ix,im){
-                                    if(ix==0)
-                                        firstSub=im.subjectid;
-                                    if($("#jifen_"+im.subjectid).length<1){
-                                        var h='<li id="jifen_'+im.subjectid+'"><a href="javascript:;" onclick="loadCourseScore('+im.subjectid+',classId.value,termid,1)"><span>'+im.subjectname+'</span></a></li>';
-                                        $(".jifen").append(h);
-                                    }
-                                });
-                                if(firstSub!=null)      //默认加载
-                                    loadCourseScore(firstSub,classId.value,termid,1);
-
-                            }
-                        });
-                    }
-                    $("#dv_coursescore").show();
-//                    getClassCourseList();
-                })
+//                $(itm).click(function(){
+//                    $("#dv_lession").hide();
+//                    $("#dv_manage_stu").hide();
+//                    $(itm).siblings().removeClass('crumb').end().addClass('crumb');
+//
+//                    //积分显示
+//                    $(".jifen").show();
+//                    if(courseScoreClsId==null||courseScoreClsId!=$("#classId").val().Trim()){
+//                        $("#dv_coursescore").html('');
+//                        $(".jifen li").removeClass("crumb");
+//                    }
+//                    $("#dv_coursescore").show();
+////                    getClassCourseList();
+//                })
             }
         });
 
         $("#a_course").attr("href",'teachercourse?toTeacherCourseList&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
         $("#a_calendar").attr("href",'teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
     });
+    function loadClsCourse(){
+        //加载学科
+            courseScoreClsId=$("#classId").val().Trim();
+            $.ajax({
+                url:'teachercourse?m=getCourseSubByClsId',
+                data:{classid:courseScoreClsId,termid:termid},
+                type:'post',
+                dataType:'json',
+                error:function(){
+                    alert('异常错误,系统未响应！');
+                },success:function(rps){
+                    if(rps.type!="success"){
+                        alert(rps.msg);return;
+                    }
+                    var firstSub=null;
+                    $(".jifen").html('');
+                    $.each(rps.objList,function(ix,im){
+                        if(ix==0)
+                            firstSub=im.subjectid;
+                        if($("#jifen_"+im.subjectid).length<1){
+                            var h='<li id="jifen_'+im.subjectid+'"><a href="javascript:;" data-bind="loadCourseScore('+im.subjectid+',classId.value,termid,1)"><span>'+im.subjectname+'</span></a></li>';
+                            $(".jifen").append(h);
+                        }
+                    });
+                    //绑定事件
+                    $(".jifen li[id*=jifen_]").click(function(){
+                        $("#dv_lession").hide();
+                        $("#dv_manage_stu").hide();
+//                        $("#a_calendar").siblings().removeClass('crumb').end().addClass('crumb');
+                        //$("#a_calendar").parent().parent().children("li").removeClass('crumb');
+                       // $("#a_calendar").addClass('crumb');
+                        $("a[name='h2a']").parent().siblings("h2").removeClass('crumb').last().addClass('crumb');
+                        eval($(this).children("a").attr("data-bind"));
+                    });
+
+//                    if(firstSub!=null)      //默认加载
+//                        loadCourseScore(firstSub,classId.value,termid,1);
+
+                }
+            });
+    }
+
 
 
 
@@ -266,7 +277,7 @@
     <div id="nav">
         <ul>
              <li><a href="javascript:;" id="a_course">教学组织</a></li>
-            <li class="crumb"><a href="javascript:;" id="a_clsid" >班级管理</a></li>
+             <li class="crumb"><a href="javascript:;" id="a_clsid" >班级管理</a></li>
             <li><a href="javascript:;"  id="a_calendar">课程日历</a></li>
         </ul>
     </div>
@@ -349,7 +360,7 @@
             <h1><span id="clsname">${classes[0].classgrade}${classes[0].classname}</span><a href="javascript:displayObj('ul_banji');" class="ico49a"></a></h1>
                 <ul class="banji" style="display: none;" id="ul_banji">
                     <c:forEach items="${classes}" var="c">
-                        <li><a href="javascript:setClsId('${c.classid}',1,'${c.dctype}','${c.relationtype}','${c.classgrade}${c.classname}');getNoGroupStudentsByClassId('${c.classid}',1);getClassGroups('${c.classid}',1);getClassCourseList();">${c.classgrade}${c.classname}</a></li>
+                        <li><a href="javascript:setClsId('${c.classid}',1,'${c.dctype}','${c.relationtype}','${c.classgrade}${c.classname}');getNoGroupStudentsByClassId('${c.classid}',1);getClassGroups('${c.classid}',1);getClassCourseList();loadClsCourse();">${c.classgrade}${c.classname}</a></li>
                     </c:forEach>
                 </ul>
             </c:if>
@@ -359,7 +370,7 @@
             <h2 class="crumb"><a name="h2a" href="javascript:;">学员管理</a></h2>
             <h2 id="h2_lession"><a name="h2a" href="javascript:;" >课程表</a></h2>
             <h2 ><a name="h2a" href="javascript:;" data-bind="course_score">课程积分</a></h2>
-            <ul class="jifen"　style="display:none">
+            <ul class="jifen">
             </ul>
         </div>
         <div class="clear"></div>

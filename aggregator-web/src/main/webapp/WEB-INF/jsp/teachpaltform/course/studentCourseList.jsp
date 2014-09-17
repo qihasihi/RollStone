@@ -10,7 +10,7 @@
         <script type="text/javascript" src="js/teachpaltform/course_calendar.js"></script>
 <script type="text/javascript">
     var currtenTab=1; //当前学科导航栏页数
-    var tabSize=10; //学科导航栏每页显示数量
+    var tabWord=36; //学科导航栏每页显示数量
     var _clsid="";
     var grade="";
     var gradeid="";
@@ -139,7 +139,7 @@
 
     <div class="content2">
     <div class="jxxt_studentR font-black" id="my_term">
-        <p><span class="ico22"></span><font id="term_name">好好学习天天向上组</font></p>
+        <p><span class="ico22"></span><font id="term_name"></font></p>
         <ul id="my_group">
         </ul>
     </div>

@@ -26,7 +26,11 @@
 <body>
 <div class="subpage_head"><span class="ico19"></span><strong>课程积分</strong></div>
 <div class="content1">
-    <p class="t_r">总积分：<span class="font-red" id="sp_zjf">--</span>&nbsp;&nbsp;&nbsp;任务数：<span class="font-red" id="sp_rws">--</span>&nbsp;&nbsp;&nbsp;出勤数：<span class="font-red" id="sp_cqs">--</span></p>
+    <p class="t_r">总积分：<span class="font-red" id="sp_zjf">--</span>&nbsp;&nbsp;&nbsp;任务数：<span class="font-red" id="sp_rws">0</span>
+        <c:if test="${!empty clsObj.dctype&&clsObj.dctype==3}">
+            &nbsp;&nbsp;&nbsp;出勤数：<span class="font-red" id="sp_cqs">0</span>
+        </c:if>
+    </p>
    <c:if test="${clsObj.dctype==3}">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
         <colgroup span="2" class="w150"></colgroup>
@@ -90,7 +94,7 @@
         <c:if test="${!empty dataList}">
             <c:forEach items="${dataList}" var="d" varStatus="dIdx">
                 <tr  class="${dIdx.index%2==0?'trbg1':''}" id="tr_${d.USER_ID}">
-                    <td><a href="1" target="_blank">${d.STU_NAME}</a></td>
+                    <td>${d.STU_NAME}</td>
                     <td>${!empty d.WSDF?d.WSDF:'--'}</td>
                     <%--<td>${!empty d.WXDF?d.WXDF:'--'}</td>--%>
                     <td>${!empty d.GROUP_SCORE?d.GROUP_SCORE:'--'}</td>

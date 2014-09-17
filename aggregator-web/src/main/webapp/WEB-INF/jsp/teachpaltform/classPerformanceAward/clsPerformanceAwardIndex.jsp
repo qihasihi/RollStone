@@ -76,7 +76,7 @@
 <%--<p class="t_c font-black"><strong>课堂总得分：${coursename}</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>--%>
 <input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/>
 <c:if test="${!empty stuMap}">
-<p class="t_c font-black"><strong>课堂总得分：${!empty tuMap.COURSE_TOTAL_SCORE?tuMap.COURSE_TOTAL_SCORE:"--"}</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>
+<p class="t_c font-black"><strong>课堂总得分：${!empty stuMap.COURSE_TOTAL_SCORE?stuMap.COURSE_TOTAL_SCORE:"0"}分</strong><input type="hidden" name="subjectid" id="subjectid" value="${subjectid}"/></p>
 <table border="0" cellpadding="0" cellspacing="0" class="public_tab2 public_input">
     <col class="w310"/>
     <col class="w320"/>
@@ -115,32 +115,32 @@
         <c:if test="${!empty clsDcType&&clsDcType!=3}">
             <tr>
                 <td class="v_c">小组得分<br><span class="font-red" id="sp_xzdf">
-                ${!empty tuMap.GROUP_SCORE?stuMap.GROUP_SCORE:'0'}分</span></td>
+                ${!empty stuMap.GROUP_SCORE?stuMap.GROUP_SCORE:'0'}分</span></td>
                 <td><p>本组每位同学都完成了任务</p></td>
-                <td  data-bind="gr_xzdf">${!empty tuMap.GROUP_SCORE?stuMap.GROUP_SCORE:'--'}</td>
+                <td  data-bind="gr_xzdf">${!empty stuMap.GROUP_SCORE?stuMap.GROUP_SCORE:0}</td>
             </tr>
         </c:if>
         <c:if test="${!empty clsDcType&&clsDcType==3}">
             <tr>
                 <td rowspan="5" class="v_c">小组得分<br><span class="font-red" id="sp_xzdf">10分</span></td>
                 <td><p>本组小红旗总数排全班第一</p></td>
-                <td  data-bind="gr_xzdf">${!empty tuMap.GSCORE3?stuMap.GSCORE3:'--'}</td>
+                <td  data-bind="gr_xzdf">${!empty stuMap.GSCORE3?stuMap.GSCORE3:'0'}</td>
             </tr>
             <tr>
                 <td><p>组内成员全部出勤且无迟到早退</p></td>
-                <td data-bind="gr_xzdf">${!empty tuMap.GSCORE1?tuMap.GSCORE1:'--'}</td>
+                <td data-bind="gr_xzdf">${!empty stuMap.GSCORE1?stuMap.GSCORE1:'0'}</td>
             </tr>
             <tr class="trbg1">
                 <td><p>本组笑脸总数排全班第一</p></td>
-                <td data-bind="gr_xzdf">${!empty tuMap.GSCORE2?tuMap.GSCORE2:'--'}</td>
+                <td data-bind="gr_xzdf">${!empty stuMap.GSCORE2?stuMap.GSCORE2:'0'}</td>
             </tr>
             <tr>
                 <td><p>本组违反纪律次数排全班第一</p></td>
-                <td data-bind="gr_xzdf">${!empty tuMap.GSCORE4?tuMap.GSCORE4:'--'}</td>
+                <td data-bind="gr_xzdf">${!empty stuMap.GSCORE4?stuMap.GSCORE4:'0'}</td>
             </tr>
             <tr class="trbg1">
                 <td><p>本组网上任务完成率排全班第一</p></td>
-                <td data-bind="gr_xzdf">${!empty tuMap.GSCORE5?tuMap.GSCORE5:'--'}</td>
+                <td data-bind="gr_xzdf">${!empty stuMap.GSCORE5?stuMap.GSCORE5:'0'}</td>
             </tr>
         </c:if>
     </c:if>
@@ -195,7 +195,7 @@ if(!isShowTbl){%>
             var h='';
                     <c:forEach items="${dataListMap}" var="dlm" varStatus="dlmidx">
                     h='<tr id="tr_${dlm.GROUP_ID}" >';
-                    h+='<td rowspan=1>';
+                    h+='<td rowspan=1 class="v_c">';
                     h+='<input type="hidden" name="group_id" id="hd_group_id" value="${dlm.GROUP_ID}"/>';
                     h+='<input type="hidden" name="user_id" id="hd_user_id" value="${dlm.USER_ID}"/>';
                     h+='${empty dlm.GROUP_NAME?"未分组":dlm.GROUP_NAME}';
@@ -221,7 +221,7 @@ if(!isShowTbl){%>
                             </c:if>
                     </c:if>
                     <%--h+='</td><td>${dlm.STU_NO}</td>';--%>
-                    h+='<td><a href="javascript:;">${dlm.STU_NAME}</a></td>';
+                    h+='<td>${dlm.STU_NAME}</td>';
                     h+='<td  style="color:gray">${dlm.WSSCORE}</td>';
 
                     <c:if test="${!empty clsDcType&&clsDcType==3}">
@@ -292,6 +292,12 @@ if(!isShowTbl){%>
             if($("#d_body tr").length<1){
                 $("#d_body").parent().remove();
             }
+
+            //添加样式
+            $("#d_body tr").each(function(idx,itm){
+                if(idx%2!=0)
+                    $(itm).addClass("trbg1");
+            })
         })
 
     </script>
@@ -466,7 +472,7 @@ if(!isShowTbl){%>
     function clsChanged(){
         var tclsid=$("#sel_clsid").val();
         if(tclsid.Trim().length>0){
-            var url="clsperformance?m=toIndex&courseid=${param.courseid}&classtype=${param.classtype}&subjectid=${param.subjectid}&termid=${param.termid}&classid=${classid}";
+            var url="clsperformance?m=toIndex&courseid=${param.courseid}&classtype=${param.classtype}&subjectid=${param.subjectid}&termid=${param.termid}&classid="+tclsid;
             location.href=url;
         }
     }

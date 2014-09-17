@@ -3696,6 +3696,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         StuPaperQuesLogs tspqLogs=new StuPaperQuesLogs();
         tspqLogs.setUserid(uid);
         tspqLogs.setPaperid(Long.parseLong(paperid));
+        tspqLogs.setTaskid(Long.parseLong(taskid));
         List<StuPaperQuesLogs> stuQuesLogs=this.stuPaperQuesLogsManager.getList(tspqLogs,null);
         StringBuilder answerQuesId=new StringBuilder(",");
         if(stuQuesLogs!=null&&stuQuesLogs.size()>0){

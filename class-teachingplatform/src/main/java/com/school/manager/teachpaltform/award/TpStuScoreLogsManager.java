@@ -165,15 +165,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
             return returnVal;
         }
         ITpStuScoreManager stuScoreManager=SpringBeanUtil.getBean(TpStuScoreManager.class);
-        //如果不是爱学课堂，则进入，进行
-        if(clsList.get(0).getDctype()!=null&&clsList.get(0).getDctype()!=3){
-            StringBuilder sqlbuilder=new StringBuilder();
-            List<Object> objList=stuScoreManager.getUpdateStaticesGroupScore(taskid,classid.intValue(),userid.intValue(),courseid,dcschool,sqlbuilder);
-            if(sqlbuilder.toString().trim().length()>0){
-                sqlArrayList.add(sqlbuilder.toString());
-                objArrayList.add(objList);
-            }
-        }
+
         System.out.println("award_stu_score------------------------------6");
         //添加课程积分。
         TpStuScore tss=new TpStuScore();
@@ -198,6 +190,17 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
             sqlArrayList.add(sqlbuilder.toString());
             objArrayList.add(objList);
         }
+        //如果不是爱学课堂，则进入，进行
+        if(clsList.get(0).getDctype()!=null&&clsList.get(0).getDctype()!=3){
+            sqlbuilder=new StringBuilder();
+            objList=stuScoreManager.getUpdateStaticesGroupScore(taskid,classid.intValue(),userid.intValue(),courseid,dcschool,sqlbuilder);
+            if(sqlbuilder.toString().trim().length()>0){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+        }
+
+
         System.out.println("award_stu_score------------------------------7");
 
 
