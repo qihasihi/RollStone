@@ -96,7 +96,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
     private IPaperQuestionManager paperQuestionManager;
     private IImInterfaceManager imInterfaceManager;
     private ITermManager termManager;
+    private IClassUserManager classUserManager;
     public TaskController(){
+        this.classUserManager = this.getManager(ClassUserManager.class);
         this.gradeManager=this.getManager(GradeManager.class);
         this.resourceManager=this.getManager(ResourceManager.class);
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
@@ -3825,6 +3827,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String termid=request.getParameter("termid");
         String subjectid=request.getParameter("subjectid");
         String uid=request.getParameter("userid");
+        String classid = request.getParameter("classid");
         Integer userid=this.logined(request).getUserid();
         if(uid!=null&&uid.trim().length()>0)
             userid=Integer.parseInt(uid.trim());
@@ -3838,6 +3841,26 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
         mp.put("course",courseObj);
         mp.put("userid",this.logined(request).getUserid());
+        //查询班级任务
+        ClassUser cu = new ClassUser();
+        cu.setClassid(Integer.parseInt(classid));
+        cu.setRelationtype("学生");
+        cu.setSubjectid(Integer.parseInt(subjectid));
+        cu.setCompletenum(1);//查询任务完成率
+        List<ClassUser> stuList = this.classUserManager.getList(cu, null);
+        mp.put("students", stuList);
+        //查询小组任务
+        List<TpGroupInfo> groupList = this.tpGroupManager.getMyGroupList(
+                Integer.parseInt(classid), 1, termid, null, userid,null);
+        if(groupList!=null && groupList.size()>0){
+            for(TpGroupInfo g:groupList){
+                TpGroupStudent gs = new TpGroupStudent();
+                gs.setGroupid(g.getGroupid());
+                List<TpGroupStudent> groupStudentList = this.tpGroupStudentManager.getList(gs, null);
+                g.setTpgroupstudent(groupStudentList);
+            }
+        }
+        mp.put("gsList",groupList);
         return new ModelAndView("/teachpaltform/task/student/task-stu-performance", mp);
     }
 

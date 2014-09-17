@@ -126,7 +126,7 @@
                             details="tptopic?m=toDetailTopic&topicid="+im.TASK_VALUE_ID;
                         }else if(im.TASK_TYPE==3){
                             typename="试题";
-                            details="question?m=todetail&id="+im.TASK_VALUE_ID;
+                            details="question?m=todetail&id="+im.TASK_VALUE_ID+"&courseid="+im.COURSE_ID;
                         }else if(im.TASK_TYPE==4){
                             typename="成卷测试";
                             details="paperques?m=toTestPaper&courseid="+im.COURSE_ID+"&taskid="+im.TASK_ID+"&paperid="+im.TASK_VALUE_ID+"";
@@ -189,18 +189,34 @@
                 }
             });
         }
+
+        function tabCutover(n){
+            $("#tabs").children().attr("class","");
+            $("#content").children().hide();
+            if(n==3){
+                $("#li_class_tab").attr("class","crumb");
+                $("#classstu").show();
+            }else if(n==2){
+                $("#li_group_tab").attr("class","crumb");
+                $("#groupstu").show();
+            }else{
+                $("#li_self_tab").attr("class","crumb");
+                $("#selfdiv").show();
+            }
+        }
     </script>
 </head>
 <body>
 <div class="subpage_head"><span class="ico19"></span><strong>个人任务统计—— <%=username%></strong></div>
 <div class="subpage_nav">
-    <ul>
-        <li class="crumb"><a href="javascript:getPerformance()">个人</a></li>
-        <li><a href="1">小组</a></li>
-        <li ><a href="1">班级</a></li>
+    <ul id="tabs">
+        <li id="li_self_tab" class="crumb"><a href="javascript:tabCutover(1)">个人</a></li>
+        <li id="li_group_tab"><a href="javascript:tabCutover(2)">小组</a></li>
+        <li id = "li_class_tab"><a href="javascript:tabCutover(3)">班级</a></li>
     </ul>
 </div>
-<div class="content1">
+<div class="content1" id="content">
+    <div id="selfdiv">
     <p class="public_input font-black">按专题：
         <select  onchange="getPerformance()" id="courseSel">
             <option selected value="0">全部</option>
@@ -257,6 +273,57 @@
         </tr>
         </tbody>
     </table>
+    </div>
+        <div id="classstu">
+            <%--
+            <p class="font-black"><strong>科代表</strong>：----&nbsp;&nbsp;----&nbsp;&nbsp;----</p>
+            <p>（科代表权限： 1. 删除恶意资源评论   2. 删除不符合要求的主帖  3. 删除主帖中的恶意评论  4. 主帖加精、置顶）</p>
+            --%>
+
+            <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
+                <colgroup span="3" class="w310"></colgroup>
+                <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>任务完成率</th>
+                </tr>
+                <c:forEach var="stu" items="${students }" varStatus="idx">
+                <tr ${(idx.index%2==1)?'class="trbg1"':''}>
+                    <td>${stu.stuno}</td>
+                    <td>${stu.realname}</td>
+                    <td><a href="javascript:void(0);" class="font-blue">${stu.completenum}%</a></td>
+                <tr>
+                    </c:forEach>
+
+            </table>
+        </div>
+        <div id="groupstu" style="display:none;">
+            <c:if test="${empty gsList}">
+                <p class="font-black"><strong>我的小组</strong>：没有找到小组</p>
+            </c:if>
+            <c:if test="${!empty gsList}">
+                <c:forEach var="gs" items="${gsList }"  varStatus="idx">
+                    <p class="font-black"><strong>我的小组</strong>：${(empty gs.groupname)?"没有找到小组":gs.groupname }</p>
+                    <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
+                        <colgroup span="3" class="w310"></colgroup>
+                        <tr>
+                            <th>学号</th>
+                            <th>姓名</th>
+                            <th>任务完成率</th>
+                        </tr>
+                        <c:if test="${!empty gs.tpgroupstudent}">
+                        <c:forEach var="cgs" items="${gs.tpgroupstudent }"  varStatus="ix">
+                        <tr ${(ix.index%2==1)?'class="trbg1"':''}>
+                            <td>${cgs.stuno}</td>
+                            <td>${cgs.stuname}</td>
+                            <td><a href="javascript:void(0);" class="font-blue">${cgs.completenum}%</a></td>
+                        <tr>
+                            </c:forEach>
+                            </c:if>
+                    </table>
+                </c:forEach>
+            </c:if>
+        </div>
 </div>
 <%@include file="/util/foot.jsp" %>
 </body>

@@ -134,6 +134,8 @@
                 $("#li"+idx).addClass("crumb");
             }
         }
+
+        var iscrumb = 0;
     </script>
 </head>
 <body>
@@ -172,19 +174,33 @@
                        <a href="javascript:changeOption(${idx.index})">
                     </c:if>
                     <c:if test="${!empty answer}">
-                        <c:forEach items="${answer}" var="im">
+                        <c:forEach items="${answer}" var="im" varStatus="idx">
                             <c:if test="${itm.optiontype eq im.answercontent}">
-                                <li class="crumb">
+                                <script type="text/javascript">
+                                    iscrumb+=1;
+                                </script>
                             </c:if>
                             <c:if test="${itm.optiontype != im.answercontent}">
-                                <li>
+                                <script type="text/javascript">
+                                    iscrumb+=0;
+                                </script>
+                            </c:if>
+                            <c:if test="${fn:length(answer)==(idx.index+1)}">
+                                <script type="text/javascript">
+                                    if(iscrumb>0){
+                                        document.write('<li class="crumb">');
+                                    }else{
+                                        document.write('<li>');
+                                    }
+                                    iscrumb=0;
+                                </script>
                             </c:if>
                         </c:forEach>
                     </c:if>
                     <span class="blue"><input type="hidden" id="h_${itm.ref}" value="${itm.ref}"/>${itm.optiontype}、</span>${itm.content}
                     <c:if test="${!empty answer}">
                         <c:forEach items="${answer}" var="im">
-                            <c:if test="${ itm.isright==1}">
+                            <c:if test="${ itm.isright==1 and itm.optiontype eq im.answercontent}">
                                 <b class="right"></b>
                             </c:if>
                             <c:if test="${itm.optiontype eq im.answercontent and itm.isright==0}">

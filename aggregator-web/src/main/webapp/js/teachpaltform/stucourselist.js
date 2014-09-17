@@ -193,8 +193,6 @@ function changeTerm(termid,termname){
     $("#termid").val(termid);
     $("#checkedTerm").html(termname);
     displayObj('termList',false);
-    var uri="task?m=tostuSelfPerformance&termid="+$("#termid").val()+"&subjectid="+$("#subjectid").val();
-    $("#task_performance").attr("href",uri);
     pageGo("pList");
 }
 
@@ -235,8 +233,8 @@ function searchBySubject(subjectid){
     subjectid=subjectid;
     $("#sub_"+subjectid).siblings().attr("class","");
     $("#sub_"+subjectid).attr("class","crumb");
-    var uri="task?m=tostuSelfPerformance&termid="+$("#termid").val()+"&subjectid="+$("#subjectid").val();
-    $("#task_performance").attr("href",uri);
+//    var uri="task?m=tostuSelfPerformance&termid="+$("#termid").val()+"&classid="+_clsid+"&subjectid="+$("#subjectid").val();
+//    $("#task_performance").attr("href",uri);
     pageGo("pList");
 }
 
