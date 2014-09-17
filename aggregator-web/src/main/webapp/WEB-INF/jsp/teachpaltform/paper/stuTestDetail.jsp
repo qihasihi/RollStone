@@ -147,7 +147,8 @@
                     h+='完形填空</span>：${q.parentQues.content}';
                 else if(pextension==4){
                     //如果是英语听力，则还需要添加控件，不用添加内容。
-                    h+='英语听力</span>：<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div><br/>${q.parentQues.content}';
+                    h+='英语听力</span>：<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div><br/>${q.parentQues.content}<br/>';
+                    h+='${q.parentQues.analysis}';  //听力原文
                 }else if(pextension==5){
                     h+='七选五</span>：${q.parentQues.content}';
                     h+='<div id="p_option_${q.parentQues.questionid}">';
@@ -217,7 +218,15 @@
                 }else if(questype==1){
                     h1+='</td></tr><tr><td><p><strong>学生答案：</strong><span id="dv_you_as${q.questionid}"></span></p>';
                     h1+='<p style="display:none"><strong>附件：</strong><span  class="font-blue" id="fujian${q.questionid}"></span></p>';
-                    h1+='<p><strong>正确答案：</strong>${q.correctanswer}</p>';
+                    var rightAnswer='${q.correctanswer}';
+                    <c:if test="${!empty q.questionOption}">
+                        <c:forEach items="${q.questionOption}" var="qoTmp">
+                            <c:if test="${qoTmp.isright==1}">
+                                 rightAnswer='${qoTmp.content}';
+                            </c:if>
+                        </c:forEach>
+                    </c:if>
+                    h1+='<p><strong>正确答案：</strong>'+rightAnswer+'</p>';
                     h1+='<p><strong>答案解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>';
                     h1+='</td></tr>';
                 }
@@ -260,13 +269,12 @@
                                 h1+=' <tr><th>';
                         if(questype==3||questype==7)
                             h1+='<input type="radio" disabled="true" value="${qo.optiontype}" name="rdo_answer${qo.questionid}" id="rdo_answer${qo.ref}">';
-                        else
+                        else if(questype==4||questype==8)
                             h1+='<input type="checkbox" disabled="true" value="${qo.optiontype}|${qo.isright}" id="ckx_answer${qo.ref}" name="ckx_answer${qo.questionid}">';
-
                         h1+='</th><td>';
                         if(questype==3||questype==7)
                             h1+='<label for="rdo_answer${qo.ref}">${qo.optiontype}.${qo.content}</label>';
-                        else
+                        else if(questype==4||questype==8)
                             h1+='<label for="rdo_answer${qo.ref}">${qo.optiontype}.${qo.content}</label>';
                     <c:if test="${qo.isright==1}">
                                 h1+='<span class="ico12"></span>';

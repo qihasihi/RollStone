@@ -3498,6 +3498,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     public void getCourseSubjectByClsId(HttpServletRequest request,HttpServletResponse response)throws Exception{
         String clsid=request.getParameter("classid");
         String termid=request.getParameter("termid");
+        String subjectid=request.getParameter("subjectid");
         JsonEntity jsonEntity=new JsonEntity();
         if(clsid==null||clsid.trim().length()<1||termid==null||termid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -3513,7 +3514,12 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 return;
             }
             jsonEntity.setObjList(subList);
-        }else if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID)){  // 如果是任课教师，则查询当前学科
+        }else if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID)){
+            if(subjectid==null||subjectid.trim().length()<1){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+                response.getWriter().println(jsonEntity.toJSON());return;
+            }
+            // 如果是任课教师，则查询当前学科
             TpCourseClass tcc=new TpCourseClass();
             tcc.setClassid(Integer.parseInt(clsid.trim()));
             tcc.setTermid(termid);
@@ -3523,7 +3529,25 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 response.getWriter().print(jsonEntity.toJSON());
                 return;
             }
-            jsonEntity.setObjList(tccList);
+            //得到该老师的教授学科
+//            SubjectUser su=new SubjectUser();
+//            su.setUserid(this.logined(request).getRef());
+//            List<SubjectUser> sbUlist=this.subjectUserManager.getList(su,null);
+//            if(sbUlist==null||sbUlist.size()<1){
+//                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+//                response.getWriter().print(jsonEntity.toJSON());
+//                return;
+//            }
+            List<TpCourseClass> tmpTccList=new ArrayList<TpCourseClass>();
+            //对比
+            for (TpCourseClass tccTmp:tccList){
+                if(tccTmp!=null&&tccTmp.getSubjectid().intValue()==Integer.parseInt(subjectid.trim())){
+                    if(!tmpTccList.contains(tccTmp))
+                        tmpTccList.add(tccTmp);
+                }
+            }
+            jsonEntity.setObjList(tmpTccList);
+
         }else{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NO_SERVICE_RIGHT"));
             response.getWriter().print(jsonEntity.toJSON());

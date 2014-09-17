@@ -950,13 +950,14 @@ public class UtilTool implements java.io.Serializable {
             BufferedImage bi = reader.read(0, param);
             ImageIO.write(bi, fileSuffix, new File(descpath));
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            System.out.println(ex);
         } finally {
             if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println(e);
                 }
                 is = null;
             }
@@ -964,7 +965,7 @@ public class UtilTool implements java.io.Serializable {
                 try {
                     iis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println(e);
                 }
                 iis = null;
             }

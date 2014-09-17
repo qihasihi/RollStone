@@ -56,18 +56,18 @@
                <c:forEach items="${dataList}" var="d" varStatus="dIdx">
                    <tr class="${dIdx.index%2==0?'trbg1':''}" id="tr_${d.USER_ID}">
                        <td>${d.STU_NAME}</td>
-                       <td>${!empty d.WSDF?d.WSDF:'--'}</td>
-                       <td>${!empty d.WXDF?d.WXDF:'--'}</td>
-                       <td>${!empty d.GROUP_SCORE?d.GROUP_SCORE:'--'}</td>
-                       <td>${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'--'}</td>
+                       <td>${!empty d.WSDF?d.WSDF:'0'}</td>
+                       <td>${!empty d.WXDF?d.WXDF:'0'}</td>
+                       <td>${!empty d.GROUP_SCORE?d.GROUP_SCORE:'0'}</td>
+                       <td>${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'0'}</td>
                        <td>${d.RNUM}
-                           <input type="hidden" value="${!empty d.WSDF?d.WSDF:'--'}" name="hd_wsdf"/>
-                           <input type="hidden" value="${!empty d.WXDF?d.WXDF:'--'}" name="hd_wxdf"/>
-                           <input type="hidden" value="${!empty d.GROUP_SCORE?d.GROUP_SCORE:'--'}" name="hd_xzdf"/>
-                           <input type="hidden" value="${!empty d.TASK_SCORE?d.TASK_SCORE:'--'}" name="hd_rwdf"/>
-                           <input type="hidden" value="${!empty d.CQS?d.CQS:'--'}" name="hd_cqs"/>
-                           <input type="hidden" value="${!empty d.RWS?d.RWS:'--'}" name="hd_rws"/>
-                           <input type="hidden" value="${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'--'}" name="hd_zjf"/>
+                           <input type="hidden" value="${!empty d.WSDF?d.WSDF:'0'}" name="hd_wsdf"/>
+                           <input type="hidden" value="${!empty d.WXDF?d.WXDF:'0'}" name="hd_wxdf"/>
+                           <input type="hidden" value="${!empty d.GROUP_SCORE?d.GROUP_SCORE:'0'}" name="hd_xzdf"/>
+                           <input type="hidden" value="${!empty d.TASK_SCORE?d.TASK_SCORE:'0'}" name="hd_rwdf"/>
+                           <input type="hidden" value="${!empty d.CQS?d.CQS:'0'}" name="hd_cqs"/>
+                           <input type="hidden" value="${!empty d.RWS?d.RWS:'0'}" name="hd_rws"/>
+                           <input type="hidden" value="${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'0'}" name="hd_zjf"/>
                        </td>
                    </tr>
                </c:forEach>
@@ -95,18 +95,18 @@
             <c:forEach items="${dataList}" var="d" varStatus="dIdx">
                 <tr  class="${dIdx.index%2==0?'trbg1':''}" id="tr_${d.USER_ID}">
                     <td>${d.STU_NAME}</td>
-                    <td>${!empty d.WSDF?d.WSDF:'--'}</td>
+                    <td>${!empty d.WSDF?d.WSDF:'0'}</td>
                     <%--<td>${!empty d.WXDF?d.WXDF:'--'}</td>--%>
-                    <td>${!empty d.GROUP_SCORE?d.GROUP_SCORE:'--'}</td>
-                    <td>${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'--'}</td>
+                    <td>${!empty d.GROUP_SCORE?d.GROUP_SCORE:'0'}</td>
+                    <td>${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'0'}</td>
                     <td>${d.RNUM}
-                        <input type="hidden" value="${!empty d.WSDF?d.WSDF:'--'}" name="hd_wsdf"/>
-                        <input type="hidden" value="${!empty d.WXDF?d.WXDF:'--'}" name="hd_wxdf"/>
-                        <input type="hidden" value="${!empty d.GROUP_SCORE?d.GROUP_SCORE:'--'}" name="hd_xzdf"/>
-                        <input type="hidden" value="${!empty d.TASK_SCORE?d.TASK_SCORE:'--'}" name="hd_rwdf"/>
-                        <input type="hidden" value="${!empty d.CQS?d.CQS:'--'}" name="hd_cqs"/>
-                        <input type="hidden" value="${!empty d.RWS?d.RWS:'--'}" name="hd_rws"/>
-                        <input type="hidden" value="${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'--'}" name="hd_zjf"/>
+                        <input type="hidden" value="${!empty d.WSDF?d.WSDF:'0'}" name="hd_wsdf"/>
+                        <input type="hidden" value="${!empty d.WXDF?d.WXDF:'0'}" name="hd_wxdf"/>
+                        <input type="hidden" value="${!empty d.GROUP_SCORE?d.GROUP_SCORE:'0'}" name="hd_xzdf"/>
+                        <input type="hidden" value="${!empty d.TASK_SCORE?d.TASK_SCORE:'0'}" name="hd_rwdf"/>
+                        <input type="hidden" value="${!empty d.CQS?d.CQS:'0'}" name="hd_cqs"/>
+                        <input type="hidden" value="${!empty d.RWS?d.RWS:'0'}" name="hd_rws"/>
+                        <input type="hidden" value="${!empty d.COURSE_TOTAL_SCORE?d.COURSE_TOTAL_SCORE:'0'}" name="hd_zjf"/>
                     </td>
                 </tr>
             </c:forEach>

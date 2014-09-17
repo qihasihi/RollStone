@@ -3019,7 +3019,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 if(this.taskPerformanceManager.doSave(tp)){
                        /*奖励加分*/
                     //得到班级ID
-                    /*
                     TpTaskAllotInfo tallot=new TpTaskAllotInfo();
                     tallot.setTaskid(Long.parseLong(taskid));
 
@@ -3031,8 +3030,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         response.getWriter().println(je.toJSON());return ;
                     }
 
-                    //taskinfo:   4:成卷测试  5：自主测试   6:微视频
-                    //规则转换:    6             7         8
+                    //taskinfo:   4:成卷测试  5：自主测试   6:微视频   10直播课
+                    //规则转换:    6             7         8         9
                     Integer type=0;
                     switch(taskCriList.get(0).getTasktype()){
                         case 3:     //试题
@@ -3042,20 +3041,21 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         case 2:
                             type=4;
                             break;
+                        case 10:
+                            type=9;
+                            break;
                     }
                     String jid=this.logined(request).getEttuserid()==null?null:this.logined(request).getEttuserid().toString();
-
 
                     String msg=null;
                     if(this.tpStuScoreLogsManager.awardStuScore(taskCriList.get(0).getCourseid()
                             , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
                             , taskCriList.get(0).getTaskid()
                             , Long.parseLong(this.logined(request).getUserid() + ""),jid, type,this.logined(request).getDcschoolid())){
-                        msg="查看并提交心得:恭喜您,获得了1积分和1蓝宝石(没有调用接口)";
+                        System.out.println("进入直播课.恭喜您,获得了1积分和1蓝宝石");
 //                        request.getSession().setAttribute("msg",msg);
                     }else
                         System.out.println("awardScore err ");
-                    */
 
                     response.sendRedirect(liveaddress);
                 }else{

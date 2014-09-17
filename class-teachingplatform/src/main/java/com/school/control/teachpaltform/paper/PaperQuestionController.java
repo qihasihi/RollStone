@@ -3770,7 +3770,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 }
 
                 QuestionInfo pques=pquesList.get(0);
-                if(pques!=null&&pques.getExtension().intValue()==5){
+                if(pques!=null&&(pques.getExtension().intValue()==5)){
                     //º”‘ÿ—°œÓ
                     QuestionOption qo=new QuestionOption();
                     qo.setQuestionid(pques.getQuestionid());

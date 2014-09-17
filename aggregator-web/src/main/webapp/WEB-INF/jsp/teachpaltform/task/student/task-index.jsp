@@ -241,9 +241,20 @@
                                 });
                             }
                         }
-                        if(itm.questiontype==1)
-                            answerhtm+='<p><strong>学习时间：</strong><span class="width">'+itm.questionAnswerList[0].ctimeString+'</span></p>';
-                        else{
+                        if(itm.questiontype==1){
+                            answerhtm+='<p><strong>学习时间：</strong><span class="width">'+itm.questionAnswerList[0].ctimeString+'</span>';
+                            if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].replyattachList)!="undefined"){
+                                if(itm.questionAnswerList[0].replyattachList.length>0){
+                                    answerhtm+='<span><br>心得附件：';
+                                    $.each(itm.questionAnswerList[0].replyattachList,function(idx,itm){
+                                        var name=itm.substring(itm.lastIndexOf("/")+1);
+                                        answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+                                    });
+                                    answerhtm+='</span>';
+                                }
+                            }
+                            answerhtm+='</p>';
+                        }else{
                             answerhtm+='<p><strong>正确答案：</strong><span class="width">'+right+'</span></p>';
                         }
                         //answerhtm+='<p><strong>答案解析：</strong><span class="width">'+(typeof(itm.rightAnswerList[0].analysis)=='undefined'?"":replaceAll(replaceAll(itm.rightAnswerList[0].analysis.toLowerCase(),"<p>",""),"</p>",""))+'</span></p>';
@@ -251,8 +262,16 @@
                     }else if(itm.tasktype==1){
                         answerhtm+='<p><strong>学习时间：</strong><span class="width">'+itm.taskPerformanceList[0].ctimeString+'</span></p>';
                         answerhtm+='<p><strong>学习心得：</strong><span class="width"  id="sp_note_'+itm.taskid+'"><font>'+(typeof(itm.questionAnswerList[0].answercontent)!='undefined'?replaceAll(replaceAll(itm.questionAnswerList[0].answercontent,"<p>",""),"</p>",""):"")+'</font>';
-                        if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0)
-                            answerhtm+='<span><br>心得附件：<a class="font-blue" target="_blank" href="uploadfile/'+itm.questionAnswerList[0].replyattach+'">'+itm.questionAnswerList[0].replyattach+'</a></span>';
+                        if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].replyattachList)!="undefined"){
+                            if(itm.questionAnswerList[0].replyattachList.length>0){
+                                answerhtm+='<span><br>心得附件：';
+                                $.each(itm.questionAnswerList[0].replyattachList,function(idx,itm){
+                                    var name=itm.substring(itm.lastIndexOf("/")+1);
+                                    answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+                                });
+                                answerhtm+='</span>';
+                            }
+                        }
                         if(itm.taskstatus!="1" && itm.taskstatus!="3"){
                             //answerhtm+='<a class="ico11" title="编辑" href="javascript:genderStuNoteUpdText('+itm.questionAnswerList[0].ref+','+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+')"></a>';
                         }

@@ -96,20 +96,20 @@
                 })
 
             }else if(idx==2){       //课程积分
-//                $(itm).click(function(){
-//                    $("#dv_lession").hide();
-//                    $("#dv_manage_stu").hide();
-//                    $(itm).siblings().removeClass('crumb').end().addClass('crumb');
-//
-//                    //积分显示
-//                    $(".jifen").show();
-//                    if(courseScoreClsId==null||courseScoreClsId!=$("#classId").val().Trim()){
-//                        $("#dv_coursescore").html('');
-//                        $(".jifen li").removeClass("crumb");
-//                    }
-//                    $("#dv_coursescore").show();
-////                    getClassCourseList();
-//                })
+                $(itm).click(function(){
+                    $("#dv_lession").hide();
+                    $("#dv_manage_stu").hide();
+                    $(itm).siblings().removeClass('crumb').end().addClass('crumb');
+
+                    //积分显示
+                  //  if(courseScoreClsId==null||courseScoreClsId!=$("#classId").val().Trim()){
+                        $("#dv_coursescore").html('');
+                        $(".jifen li").removeClass("crumb");
+                        $(".jifen li[id*=jifen_]:first").click();
+                //    }
+               //     $("#dv_coursescore").show();
+//                    getClassCourseList();
+                })
             }
         });
 
@@ -121,7 +121,7 @@
             courseScoreClsId=$("#classId").val().Trim();
             $.ajax({
                 url:'teachercourse?m=getCourseSubByClsId',
-                data:{classid:courseScoreClsId,termid:termid},
+                data:{classid:courseScoreClsId,termid:termid,subjectid:subjectid},
                 type:'post',
                 dataType:'json',
                 error:function(){
