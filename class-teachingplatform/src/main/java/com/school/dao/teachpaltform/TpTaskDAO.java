@@ -93,7 +93,7 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
             objList.add(tptaskinfo.getCloudstatus());
         } else
             sqlbuilder.append("null,");
-        if (tptaskinfo.getTaskremark() != null) {
+        if (tptaskinfo.getTaskremark() != null&&!tptaskinfo.getTaskremark().trim().equals("нч")) {
             sqlbuilder.append("?,");
             objList.add(tptaskinfo.getTaskremark());
         } else
