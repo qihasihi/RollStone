@@ -10,9 +10,6 @@
 <html>
 <head>
     <title></title>
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jxxt.css"/>
-    <script type="text/javascript" src="js/common/videoPlayer/new/jwplayer.js"></script>
-    <script type="text/javascript" src="<%=basePath %>js/videoPlayer/swfobject.js"></script>
     <script type="text/javascript" src="js/common/image-show.js"></script>
     <script type="text/javascript">
         $(function(){
@@ -44,7 +41,7 @@
 <div class="hzjl">
     <h1>${topic.topictitle} </h1>
     <div class="black">${topic.topiccontent}</div>
-    <c:if test="${type eq 2}}">
+    <c:if test="${criterial eq 2}">
         <c:if test="${!empty themeList}">
             <c:forEach items="${themeList}" var="itm">
                 <div class="info">
@@ -65,13 +62,14 @@
                             </c:forEach>
                         </c:if>
                         <c:if test="${itm.IM_ATTACH_TYPE eq 2}">
-                            <c:forEach items="${itm.IM_ATTACH}" var="at">
-                                <p>
-                                    <audio controls="controls">
+                            <c:forEach items="${itm.IM_ATTACH}" var="at" varStatus="atidx">
+                                <p><a style="cursor: hand"><img src="images/pic02_140811.png"  onclick="ado_${atidx.index}.play()"/></a>
+
+                                    <span style="display:none"><audio controls="controls" id="ado_${atidx.index}">
                                         <source src="${at}" type="audio/ogg">
                                         <source src="${at}" type="audio/mpeg">
                                         您的浏览器不支持 audio 标签。
-                                    </audio></p>
+                                    </audio></span></p>
                             </c:forEach>
                         </c:if>
                     </c:if>
@@ -80,7 +78,6 @@
             </c:forEach>
         </c:if>
     </c:if>
-
 </div>
 <%
     System.out.println("当前接口"+"------------"+"topic-detail.jsp"+"         当前位置------------jsp结束      当前时间------"+currentDay);

@@ -2874,7 +2874,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         TpTaskInfo task = new TpTaskInfo();
         task.setTaskid(Long.parseLong(taskId));
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(task,null);
-        if(taskList==null&&taskList.size()==0){
+        if(taskList==null||taskList.size()==0){
             je.setMsg("当前任务不存在");
             response.getWriter().print(je.getAlertMsgAndBack());
             System.out.println("当前接口"+"------------"+"toTopicJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------当前任务不存在      当前时间------"+currentDay);
@@ -2939,7 +2939,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
             }
         }
-        request.setAttribute("type",taskList.get(0).getCriteria());
+        request.setAttribute("criterial",taskList.get(0).getCriteria());
         request.setAttribute("topic",tiList.get(0));
         request.setAttribute("themeList",themeList);
         System.out.println("当前接口"+"------------"+"toTopicJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------接口结束跳转jsp      当前时间------"+currentDay);
