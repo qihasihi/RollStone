@@ -75,8 +75,8 @@ function EttImageShow(settings){
                 myOffset.top = 0;
                 $('#img_'+sets.fadeId).offset(myOffset);
                 $('#img_'+sets.fadeId).hide();
-                var h=$(document).height();
-                var w=$(document).width();
+                var h=window.screen.availHeight;
+                var w=window.screen.availWidth();
 
                 if(isIE()){
                     resizeimg($('#img_'+sets.fadeId).get(0),
@@ -141,8 +141,8 @@ function EttImageShow(settings){
                     }
                 }
             }
-            var h=$(document).height();
-            var w=$(document).width();
+            var h=window.screen.availHeight;
+            var w=window.screen.availWidth;
             var positionY =0;
             positionY =(h-ImgD.height)/2;
             if(positionY<0) positionY =0;
