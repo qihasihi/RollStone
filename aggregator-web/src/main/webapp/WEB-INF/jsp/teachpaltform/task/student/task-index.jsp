@@ -330,16 +330,16 @@
                         var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
                         html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+itm.taskobjname+'</a>';
                     }else
-                        html+='<a class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
+                        html+='<a class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);">'+itm.taskobjname+'</a>';
 
                 }else if(itm.tasktype==2){
-                    html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a  class="font-blue" onclick="toPostURL(\'task?doAddViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',themeid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);" >'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==4&&itm.taskstatus!="1"){
-                    html+='<a  class="font-blue" target="_blank" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a  class="font-blue" target="_blank" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" >'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==5&&itm.taskstatus!="1"){
-                    html+='<a  class="font-blue" target="_blank" href="paper?m=genderZiZhuPaper&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a  class="font-blue" target="_blank" href="paper?m=genderZiZhuPaper&taskid='+itm.taskid+'" >'+itm.taskobjname+'</a>';
                 }else if(itm.tasktype==6&&itm.taskstatus!="1"){
-                    html+='<a  class="font-blue target="_blank"" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a  class="font-blue target="_blank"" href="paperques?m=toTestPaper&paperid='+itm.taskvalueid+'&courseid='+itm.courseid+'&taskid='+itm.taskid+'" >'+itm.taskobjname+'</a>';
 
                   }else if(itm.tasktype==7){
                     html+='<a class="font-blue" href="task?m=stuQuesAnserList&taskid='+itm.taskid+'" target="_blank">'+itm.taskobjname+'</a>';
@@ -349,7 +349,7 @@
                     html+='<a class="font-blue" href="task?m=stuQuesAnserList&taskid='+itm.taskid+'" target="_blank">'+itm.taskobjname+'</a>';
 
                 }else if(itm.tasktype==10&&itm.taskstatus!="1"&&itm.taskstatus!="3"){
-                    html+='<a  class="font-blue" href="javascript:;" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"   style="color: blue;">'+itm.taskobjname+'</a>';
+                    html+='<a  class="font-blue" href="javascript:;" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"  >'+itm.taskobjname+'</a>';
                     html+='<a class="lm_ico08" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"></a>';
                 }
                 if(typeof itm.iscomplete!='undefined'&&itm.iscomplete>0)
