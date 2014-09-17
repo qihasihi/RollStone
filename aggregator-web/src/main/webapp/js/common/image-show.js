@@ -41,13 +41,13 @@ function EttImageShow(settings){
             var bindData=$(itm).attr("data-src");
             $(itm).css("cursor","pointer");
             //如果小图加载失败，则进行切割加载
-            $(itm).bind("error",function(){
-                if(bindData.lastIndexOf("/")!=-1){
-                    if(bindData.substring(bindData.lastIndexOf("/")).indexOf(".")!=-1){
-                        $(this).attr("src","imapi1_1?m=makeImImg&w="+sets.sw+"&h="+sets.sh+"&p="+bindData);
-                    }
-                }
-            });
+//            $(itm).bind("error",function(){
+//                if(bindData.lastIndexOf("/")!=-1){
+//                    if(bindData.substring(bindData.lastIndexOf("/")).indexOf(".")!=-1){
+//                        $(this).attr("src","imapi1_1?m=makeImImg&w="+sets.sw+"&h="+sets.sh+"&p="+bindData);
+//                    }
+//                }
+//            });
             //添加点击事件
             $(itm).click(function(){
                 /*属性*/
