@@ -14,7 +14,7 @@
  <script type="text/javascript" src="<%=basePath %>js/videoPlayer/swfobject.js"></script>
 <script type="text/javascript">
     var ques_mp3_path='<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>';
-
+    var bathPath='<%=basePath%>';
 </script>
 
 <div id="dv_award_zs" class="jxxt_float_jiangli" style="display:none">获得<strong>1</strong>积分及<strong>1</strong>颗<span class="ico90"></span></div>

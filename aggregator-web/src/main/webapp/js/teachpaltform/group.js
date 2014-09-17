@@ -95,7 +95,8 @@ function getNoGroupStudentsByClassId(classId,classType){
             var dcType=$("#dcType").val();
             $("#no_gs").html("");
 
-            if(responseText.objList[0]!=null){
+            if(responseText.objList[0]!=null&&responseText.objList[0].length>0){
+                $("#dv_addGroup").show();
                 $.each(responseText.objList[0],function(idx,itm){
                     var h='<li>'+itm.STU_NAME;
                     if(typeof responseText.objList[1]!='undefined'&&responseText.objList[1]==3&&dcType>1)
@@ -106,7 +107,8 @@ function getNoGroupStudentsByClassId(classId,classType){
                     $("#noGroupStudents").append(h);
                     $("#no_gs").append("<option value='"+itm.USER_ID+"' >"+itm.STU_NAME+"</option>");
                 });
-            }
+            }else
+                $("#dv_addGroup").hide();
 
             if(responseText.objList[0]!=null&&responseText.objList[0].length>0){
                 $("#no_gs").append("<option id='special_option' value='0' style='display:none;' ></option>");

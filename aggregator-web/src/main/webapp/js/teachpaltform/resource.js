@@ -1458,13 +1458,14 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
     // 配置参数
 
 
-
+    if (typeof(imagepath) != "undefined" && imagepath.Trim().length > 0)
+        imagepath=bathPath+imagepath;
 
     var jwplayerSetup = {
         'id': 'player'+new Date().getTime(),
         'width': '560',
         'height': '500',
-        'playlist': 'util/rss.jsp?filepath='+filepath+"&imgurl="+imagepath,
+        'playlist': ''+bathPath+'util/rss.jsp?filepath='+filepath+"&imgurl="+imagepath,
             //[{file:filepath}],
         'primary': 'flash',
         'controlbar': 'over',

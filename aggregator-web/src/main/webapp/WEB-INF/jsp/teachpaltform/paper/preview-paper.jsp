@@ -50,7 +50,7 @@ $(function(){
         if(paperSumScore%allqueslength>0){
             //// 使用数组翻转函数
             var yuScore=paperSumScore%allqueslength;
-            var s=jQuery.makeArray($("span[name='avg_score']")).reverse();
+            var s=jQuery.makeArray($("span[name='avg_score'][id='']")).reverse();
             $.each(s,function(idx,itm){
                 if(yuScore<1)return;
                 $(itm).html(parseFloat($(itm).html())+1);

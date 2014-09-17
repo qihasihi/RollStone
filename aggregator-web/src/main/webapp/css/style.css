@@ -25,8 +25,24 @@
 
 	#header ul li.one{ background-position:0 0;}
 	#header ul li.two{ background-position:-71px 0;}
-	#header ul li.three{ background-position:-143px 0;}
+	#header ul li.three{ background-position:-143px 0; position:relative;}
 	#header ul li.four{ background-position:-213px 0;}
+	#header ul li.three b{
+	height:12px;
+	font-weight:normal;
+	display:inline-block;
+	position: absolute;
+	text-align:center;
+	background: url(images/ico03_131230.png) no-repeat -425px 0;
+	padding-top:1px;
+	top:-2px;
+	line-height:12px;
+	color:#fff;
+	font-family: Arial, Helvetica, sans-serif;
+}
+	#header ul li.three a b{color:#fff;}
+	#header ul li.three b.one{right:11px;width:13px;}
+	#header ul li.three b.two{ background-position:-400px 0;right:6px;width:24px;}
 	
     #header p{
 	width:253px;
@@ -502,6 +518,83 @@
 	width:304px;
 	height:41px;
 	display:block;
+}
+    .denglu_duoxiao_bg{background:#e8f3f7 url(images/bg02_131230.jpg) no-repeat top center;}
+
+	.denglu_duoxiao_layout{
+	width:937px;
+	height:540px;
+	padding:7px 0 0 23px;
+	position:relative;
+	margin: 0 auto;
+}
+	.denglu_duoxiao_layout p.logo{
+	width:300px;
+	height:30px;
+	background: url(images/bg37_131230.png) no-repeat -280px -233px;
+	padding:2px 0 0 39px;
+	color:#5a5a5a;
+	font: 18px/26px Microsoft YaHei;
+}
+	.denglu_duoxiao{
+	width:280px;
+	height:212px;
+	background: url(images/bg37_131230.png) no-repeat;
+	padding:20px 30px 0;
+	position:absolute;
+	top:146px;
+	right:108px;
+}
+	.denglu_duoxiao h1{
+	font: normal 18px/26px Microsoft YaHei;
+	color:#5b5b5b;
+	padding-bottom:20px;
+}
+	.denglu_duoxiao div.input_bg{
+	width:269px;
+	height:29px;
+	background: url(images/bg37_131230.png) no-repeat 0 -268px;
+	padding:5px 0 0 10px;
+	margin-bottom:10px;
+}
+	.denglu_duoxiao div.input_bg:hover{ background-position: 0 -233px;}
+
+    .denglu_duoxiao div.input_bg input[type=text],.denglu_duoxiao div.input_bg input[type=password]{
+	width:160px;
+	height:18px;
+	padding: 4px 0;
+	background-color: transparent;
+	margin-left:20px; 
+    font: 12px/16px Microsoft YaHei;
+	border: none;
+	color:#999999;
+}
+    .denglu_duoxiao .ico_user,.denglu_duoxiao .ico_password,.denglu_duoxiao .ico_login{
+	width:16px;
+	height:16px;
+	background: url(images/bg37_131230.png) no-repeat -349px 0;
+	display:inline-block;
+	vertical-align:middle;
+}
+    .denglu_duoxiao .ico_password{ background-position:-349px -17px;}
+	.denglu_duoxiao .ico_login{ background-position:-280px -265px; width:68px; height:30px; float:right;}
+
+	.denglu_duoxiao div.input_info{
+	height:30px;
+	padding:5px 3px 0;
+	font: 12px/34px Microsoft YaHei;
+}
+	.denglu_duoxiao div.input_info b{font-weight:normal;color:#cacaca;}
+    .denglu_duoxiao div.input_info input[type=checkbox]{ vertical-align: middle; margin:0 1px 2px 0;}
+
+	.denglu_duoxiao_foot{
+	width:960px;
+	height:25px;
+	padding-top: 25px;
+	color:#8c8c8c;
+	font-weight:bold;
+	text-align:center;
+	margin:0 auto;
 }
 	.help_layout{
 	width: 1000px;

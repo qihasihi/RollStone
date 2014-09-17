@@ -133,12 +133,12 @@
 	}
     </script>
 </head>
-<body>
+<body class="denglu_duoxiao_bg">
 
 <%
     String logoSrc=UtilTool.utilproperty.getProperty("LOGO_SRC");
 %>
-<div id="denglu_layout">
+ <!--<div id="denglu_layout">
     <div class="denglu">
         <p class="logo"><span></span><img src="<%=basePath %>images/<%=logoSrc %>" width="253" height="64" /></p>
         <p><input id="username" name="username" type="text" /></p>
@@ -150,6 +150,24 @@
             自动登录</p>
         <p class="an_denglu"><a href="javascript:checkLoginForm();"  id="lgnBt" title="登录" ></a></p>
     </div>
+</div> -->
+
+
+
+<div class="denglu_duoxiao_layout">
+    <p class="logo">四中网校在线教育平台</p>
+    <div class="denglu_duoxiao">
+        <h1>云账号登录</h1>
+        <div class="input_bg"><span class="ico_user"></span><input id="username" name="username"  type="text" placeholder="输入用户名" /></div>
+        <div class="input_bg"><span class="ico_password"></span><input id="password" name="password" type="password" /></div>
+        <div class="input_info">
+            <a title="登录" href="javascript:checkLoginForm();"  id="lgnBt" class="ico_login"></a>
+            <input type="checkbox" name="remember" id="remember" value="1">
+            记住账号密码 <b>｜</b>
+            <input type="checkbox" name="autoLogin" id="autoLogin" value="1">
+            自动登陆</div>
+    </div>
 </div>
+<div class="denglu_duoxiao_foot">Copyright(C) <script type="text/javascript">document.write(new Date().getFullYear().toString());</script> 北京四中网校</div>
 </body>
 </html>

@@ -405,7 +405,7 @@ function queryLiveLession(courseid, trobj, type, taskvalueid,taskstatus) {
             var htm = '';
             htm += '<th><span class="ico06"></span>直播主题：</th>';
             htm += '<td class="font-black">';
-            htm += '<input type="text" id="task_name"';
+            htm += '<input placeholder="输入直播主题" class="w300" type="text" id="task_name"';
             if(typeof taskstatus!='undefined')
                 htm+=' disabled ';
             htm+='>';
@@ -638,7 +638,7 @@ function load_task_detial(taskid) {
                     if (rmsg.objList[0] != null) {
 
                         $.each(rmsg.objList[0], function (idx, itm) {
-                            var timeObj = itm.taskstatus == 1 ? itm.tasktime : itm.taskstatus == 3 ? "0天00时00分" : itm.taskstatus;
+                            var timeObj = itm.taskstatus == 1 ? itm.tasktime : itm.taskstatus == 3 ? "已结束" : itm.taskstatus;
                             var tmpTime = '<strong';
                             if(itm.taskstatus!="3"&&itm.taskstatus!="1")
                                 tmpTime+=' style="color:#22ac38;"'

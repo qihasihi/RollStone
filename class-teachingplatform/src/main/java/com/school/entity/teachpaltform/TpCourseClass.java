@@ -34,6 +34,23 @@ public class TpCourseClass {
 
     private Long quoteid;
     private Integer cuserid;
+
+    public Integer getCuserid() {
+        return cuserid;
+    }
+
+    public void setCuserid(Integer cuserid) {
+        this.cuserid = cuserid;
+    }
+
+    public Integer getCourselevel() {
+        return courselevel;
+    }
+
+    public void setCourselevel(Integer courselevel) {
+        this.courselevel = courselevel;
+    }
+
     private Integer courselevel;
 
 

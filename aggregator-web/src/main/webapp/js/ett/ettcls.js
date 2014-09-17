@@ -119,9 +119,11 @@ function doSetClassTeacher(clsid){
 
 /**
  * 删除班级用户
+ * 1:教师
+ * 2：学生
  * @param clsid
  */
-function delClassUser(ref){
+function delClassUser(ref,type){
     if(typeof ref=='undefined')
         return;
     if(!confirm('确认操作?'))return;
@@ -140,7 +142,8 @@ function delClassUser(ref){
             if (rps.type == "error") {
                 alert(rps.msg);
             } else {
-                $("#li_"+ref).remove();
+               // $("#li_"+ref).remove();
+               loadClsDetial($("#classId").val());
             }
         }
     });
@@ -275,7 +278,7 @@ function loadWXStudent(clsid){
             $("#ul_cls_stu").html(sx);
 
 
-            $("#dv_add_student li").dblclick(function(){
+            $("#dv_add_student li").click(function(){
                 var id=$(this).attr('id');
                 var parentId=$(this).parent('ul').attr('id');
                 var descId=parentId=='ul_wx_stu'?'ul_cls_stu':'ul_wx_stu';
@@ -333,7 +336,7 @@ function loadWXStudentByName(clsid){
             $("#ul_wx_stu").html(wx);
 
 
-            $("#dv_add_student li").dblclick(function(){
+            $("#dv_add_student li").click(function(){
                 var id=$(this).attr('id');
                 var parentId=$(this).parent('ul').attr('id');
                 var descId=parentId=='ul_wx_stu'?'ul_cls_stu':'ul_wx_stu';
@@ -425,7 +428,7 @@ function loadClsDetial(clsid){
                  je.getObjList().add(stuList);
                  */
                 if(rps.objList[0]!=null&&rps.objList[1]!=null){
-                    var clsname=rps.objList[0].year+'年'+rps.objList[0].classname+rps.objList[0].classgrade+'普通班';
+                    var clsname=rps.objList[0].classname+rps.objList[0].classgrade;
                     $("#p_edit").html('<a href="javascript:;" id="a_to_upd" class="ico11" title="编辑"></a><a href="javascript:void(0)" onclick="doDelCls(\''+rps.objList[0].classid+'\')" class="ico04" title="删除"></a>');
                     $("#s_clsname").html(clsname);
                     $("#add_teacher_clsname").html(clsname);
@@ -445,7 +448,7 @@ function loadClsDetial(clsid){
                     $.each(rps.objList[2],function(idx,itm){
                         var h='<li id="li_'+itm.ref+'">';
                         h+='<img src="'+itm.headimage+'" width="80" height="80">'+itm.realname+'<b>'+itm.subjectname+'</b>';
-                        h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\')" title="移出"></a></p>';
+                        h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\',1)" title="移出"></a></p>';
                         h+='</li>';
                         $("#ul_tea").append(h);
                     });
@@ -456,7 +459,7 @@ function loadClsDetial(clsid){
                     $.each(rps.objList[3],function(idx,itm){
                         var h='<li_'+itm.ref+'>';
                         h+='<img src="'+itm.headimage+'" width="80" height="80">'+itm.realname;
-                        h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\')" title="移出"></a></p>';
+                        h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\',2)" title="移出"></a></p>';
                         h+='</li>';
                         $("#ul_stu").append(h);
                     });
@@ -536,7 +539,7 @@ function sub_cls(clsid){
     var bzrName=$(bzrJid).find("option:selected").text();
     var year=$("#"+dvObj+" select[id='year']");
     var grade=$("#"+dvObj+" select[id='grade']");
-    var allowJoin=$("#"+dvObj+" input[name='rdo']");
+    var allowJoin=$("#"+dvObj+" input[name='rdo']:checked");
 
     if(clsname.val().Trim().length<1){
         alert('请输入班级名称!');

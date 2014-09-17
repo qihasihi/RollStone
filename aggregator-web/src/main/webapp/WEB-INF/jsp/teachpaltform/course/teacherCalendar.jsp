@@ -168,7 +168,7 @@
                     </tr> -->
                     <tbody id="calendar"></tbody>
                 </table>
-                <p class="bg"></p>
+                <p class="bg" id="pbg"></p>
             </div>
             <ul id="ul_lession">
                 <li>我的课表</li>

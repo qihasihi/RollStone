@@ -389,7 +389,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
         PageResult pageResult=new PageResult();
         pageResult.setPageSize(0);
         pageResult.setPageNo(0);
-        pageResult.setOrderBy(" s.stu_name,s.stu_no ");
+        pageResult.setOrderBy(" s.stu_no,s.stu_name ");
 
 		TpGroupStudent gs=new TpGroupStudent();
 		gs.setGroupid(Long.parseLong(groupid));

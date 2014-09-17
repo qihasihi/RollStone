@@ -363,10 +363,11 @@ function getTermCondition(tid,termname,iscalendar){
         success:function(rps){
 
             //没有授课信息的班主任
-            if(isBzr&&typeof isLession!='undefined'&&isLession==2){
+            if(typeof isBzr!='undefined'&&isBzr&&typeof isLession!='undefined'&&isLession==2){
                 location.href='teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'';
                 return false;
             }
+
             if(rps.objList[0]==null || rps.objList[0].length==0){
                 $("#ul_grade").html("");
                 $("#courseTable").html("<tr><td colspan='5'>沒有数据！</td></tr>");
@@ -382,6 +383,7 @@ function getTermCondition(tid,termname,iscalendar){
                 alert("您还没有被分配学科，请联系管理员!");
                 return ;
             }
+
             //当前学期
             if(rps.objList[1]!=null && typeof rps.objList[1]!='undefined'){
                 $("#hd_term_flag").val(rps.objList[1].flag);
@@ -409,6 +411,12 @@ function getTermCondition(tid,termname,iscalendar){
                 if($("#gradeSubjectList li a").length>0)
                     $("#gradeSubjectList li a").get(0).click();
             }
+
+
+            if(rps.objList[0].length>1)
+                $("#showMoreSubject").show();
+            else
+                $("#showMoreSubject").hide();
         }
     });
 }

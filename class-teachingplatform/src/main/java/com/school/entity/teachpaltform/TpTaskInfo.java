@@ -331,7 +331,7 @@ public class TpTaskInfo implements Serializable {
         this.mtime = mtime;
     }
     public java.lang.String getTaskremark(){
-        return taskremark;
+        return taskremark==null||taskremark.trim().length()<1?"нч":taskremark;
     }
     public void setTaskremark(java.lang.String taskremark){
         this.taskremark = taskremark;

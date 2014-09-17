@@ -293,7 +293,7 @@ function playSound(type,mp3Url,width,height,address,autoplay){
     if ($.trim(type) == "play") {
         // 播放文件地址
         var mp3url =mp3Url;
-        $("#b_sound").remove();
+       // $("#b_sound").remove();
         // 修改提示文字
 //        $("span[id*='play_operate_']").each(
 //            function(ix, itm) {

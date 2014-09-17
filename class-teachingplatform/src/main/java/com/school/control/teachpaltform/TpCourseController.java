@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -150,6 +151,15 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("termList", termList);
         mp.put("currtTerm", this.termManager.getMaxIdTerm(false));
         mp.put("selTerm",termInfo);
+
+
+        //主授学科
+        SubjectUser subjectUser=new SubjectUser();
+        subjectUser.setIsmajor(1);
+        subjectUser.setUserid(this.logined(request).getRef());
+        List<SubjectUser>subjectUserList=this.subjectUserManager.getList(subjectUser,null);
+
+
 
         //获取首页年级学科
         List<GradeInfo> gradeList = this.gradeManager.getTchGradeList(this.logined(request).getUserid(), termInfo.getYear());
@@ -1057,15 +1067,18 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                 signMap.put("timestamp",System.currentTimeMillis()+"");
                                 String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
                                 signMap.put("sign",signture);
-                                JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                                int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                                if(type==1){
-                                    String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
-                                    if(liveurl!=null&&liveurl.trim().length()>0){
-                                        stucourseList.get(i).setLiveaddress(java.net.URLDecoder.decode(liveurl, "UTF-8"));
-                                        stucourseList.get(i).setTaskid(tmpTask.getTaskid());
+                                try{
+                                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                                    if(type==1){
+                                        String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
+                                        if(liveurl!=null&&liveurl.trim().length()>0){
+                                            stucourseList.get(i).setLiveaddress(java.net.URLDecoder.decode(liveurl, "UTF-8"));
+                                            stucourseList.get(i).setTaskid(tmpTask.getTaskid());
+                                        }
                                     }
-
+                                }catch (Exception e){
+                                    System.out.println(e.getMessage());
                                 }
                                 break;
                             }
@@ -2787,12 +2800,17 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                     signMap.put("timestamp",System.currentTimeMillis()+"");
                                     String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
                                     signMap.put("sign",signture);
-                                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                                    if(type==1){
-                                        String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
-                                        if(liveurl!=null&&liveurl.trim().length()>0)
-                                            tctmp.setLiveaddress(java.net.URLDecoder.decode(liveurl,"UTF-8"));
+                                    try{
+                                        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                                        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                                        if(type==1){
+                                            String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
+                                            if(liveurl!=null&&liveurl.trim().length()>0)
+                                                tctmp.setLiveaddress(java.net.URLDecoder.decode(liveurl,"UTF-8"));
+                                        }
+
+                                    }catch (Exception e){
+                                        System.out.println(e.getMessage());
                                     }
                                     break;
                                 }

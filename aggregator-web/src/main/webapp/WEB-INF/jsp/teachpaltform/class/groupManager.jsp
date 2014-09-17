@@ -45,6 +45,7 @@
             $("#dv_addGroup").hide();
             $("#group_list").hide();
             $("#a_course").parent().hide();
+            $("#h2_lession").hide();
         }else{
             $("#a_addGroup").show();
             $("#dv_addGroup").show();
@@ -164,11 +165,13 @@
             $("#dv_addGroup").hide();
             $("#group_list").hide();
             $("#a_course").parent().hide();
+            $("#h2_lession").hide();
         }else{
             $("#a_addGroup").show();
             $("#dv_addGroup").show();
             $("#group_list").show();
             $("#a_course").parent().show();
+            $("#h2_lession").show();
         }
 
         var clsid=$("#classId").val();
@@ -354,7 +357,7 @@
             <input type="hidden" id="classId"/> <input type="hidden" id="classType"/><input type="hidden" id="dcType"/>
 
             <h2 class="crumb"><a name="h2a" href="javascript:;">学员管理</a></h2>
-            <h2><a name="h2a" href="javascript:;" >课程表</a></h2>
+            <h2 id="h2_lession"><a name="h2a" href="javascript:;" >课程表</a></h2>
             <h2 ><a name="h2a" href="javascript:;" data-bind="course_score">课程积分</a></h2>
             <ul class="jifen"　style="display:none">
             </ul>

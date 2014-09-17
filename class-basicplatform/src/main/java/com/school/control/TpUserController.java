@@ -1519,7 +1519,13 @@ public class TpUserController extends UserController {
         map.put("userType","3");
         map.put("timestamp",timestamp);
         String sign=UrlSigUtil.makeSigSimple("user.do",map);
-        String ettParams="schoolId="+this.logined(request).getDcschoolid().toString()+"&userType=3&grade="+gradeid+"&timestamp="+timestamp+"&sign="+sign;
+        //
+        Integer classType=1;
+        if(clsList.get(0).getDctype()==2)
+            classType=1;
+        else if(clsList.get(0).getDctype()==3)
+            classType=2;
+        String ettParams="schoolId="+this.logined(request).getDcschoolid().toString()+"&classType="+classType+"&userType=3&grade="+gradeid+"&timestamp="+timestamp+"&sign="+sign;
         if(stuName!=null&&stuName.trim().length()>0)
             ettParams+="&stuName="+java.net.URLEncoder.encode(stuName,"UTF-8");
         List<UserInfo>ettStudentList=getETTUserList(ettParams);

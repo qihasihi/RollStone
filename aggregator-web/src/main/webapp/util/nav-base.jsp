@@ -69,7 +69,7 @@ $(function(){
 
         <%if(isTeacher){%>
             <c:if test="${!empty gradeSubjectList}">
-                <div class="njxk"><span id="sp_subgrade">${subGradeInfo.gradevalue}${subGradeInfo.subjectname}</span><a  class="ico13" href="javascript:void(0);" onclick="displayObj('gradeSubjectList');"></a>
+                <div class="njxk"><span id="sp_subgrade">${subGradeInfo.gradevalue}${subGradeInfo.subjectname}</span><a  id="showMoreSubject" class="ico13" href="javascript:void(0);" onclick="displayObj('gradeSubjectList');"></a>
                     <ul id="gradeSubjectList" style="display: none;" class="hide">
                     <c:forEach items="${gradeSubjectList}" var="c" varStatus="idx">
                         <li id="li_${c.gradeid}_${c.subjectid}"><a href="javascript:;" onclick="changeGrade('${c.gradeid}','${c.subjectid}','${idx.index}','${c.gradevalue}${c.subjectname}')">${c.gradevalue}${c.subjectname}</a></li>

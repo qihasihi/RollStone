@@ -107,6 +107,8 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 	
 		for(RoleUser ru : cruList){
 			if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID)){
+                if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_CLASSADVISE_ID))
+                    isBzr=true;
 				isTeacher=true;
 			}else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_STU_ID)){
 				isStudent=true;
@@ -250,7 +252,8 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 	var isStudent=<%=isStudent%>;
 	var isTeacher=<%=isTeacher%>;
     var isBzr=<%=isBzr%>;
-	var fileSystemIpPort='<%=fileSystemIpPort%>'; 
+	var fileSystemIpPort='<%=fileSystemIpPort%>';
+
 </script>  
 <title><%=webTitle%></title>
 	

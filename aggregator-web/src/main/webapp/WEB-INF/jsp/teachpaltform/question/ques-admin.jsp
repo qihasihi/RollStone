@@ -87,8 +87,6 @@
 	</head>
   
   <body>
-  <%@include file="/util/head.jsp" %>
-      <%@include file="/util/nav-base.jsp" %>
   <div class="zhuanti">
       <p>${coursename }<a class="ico13" href="javascript:showCourseList();"></a></p>
       <ul  style="display:none;" id="ul_courselist">

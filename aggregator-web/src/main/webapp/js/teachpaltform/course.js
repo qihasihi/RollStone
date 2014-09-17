@@ -244,7 +244,7 @@ function addTeacherCourse(){
         },success:function(rps){
             if(rps.type=="success"){
                 if(maid!=null&&maid>0){
-                    window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&materialid="+maid+"&currentSubjectid="+$("#subjectid").val();
+                    window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&materialid="+maid+"&subjectid="+$("#subjectid").val();
                 }else{
                     var param={gradeid:$("#gradeid").val(),subjectid:$("#subjectid").val(),termid:term.val(),materialid:material_id};
                     $.ajax({
@@ -459,8 +459,11 @@ function getTchingMaterial(){
                     && rps.objList.length>0){
                     var html ="";
                     $.each(rps.objList,function(idx,itm) {
+                        var materialName=itm.materialname+"("+itm.versionname+")";
+                        if(itm.materialname=='其它')
+                            materialName='其它';
                         html+="<li  style=\"width:450px;\"><input  id='rdo_matid_"+itm.materialid+"' name='materialid' value='"+itm.materialid+"' type='radio' >" +
-                            "<label for=\"rdo_matid_"+itm.materialid+"\">"+itm.materialname+"("+itm.versionname+")</span></td>";
+                            "<label for=\"rdo_matid_"+itm.materialid+"\">"+materialName+"</span></td>";
                     });
                     $("#teaching_materia").html(html);
                     showModel("teaching_materia_div");
