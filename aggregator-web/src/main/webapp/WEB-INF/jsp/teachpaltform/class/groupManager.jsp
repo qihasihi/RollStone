@@ -157,8 +157,8 @@
         $("#classId").val(clsid);
         $("#classType").val(clstype);
         $("#dcType").val(dctype);
-
-
+        var clsid=$("#classId").val();
+        checkRelationType(clsid);
 
         if(isLession==2){ //班主任
             $("#a_addGroup").hide();
@@ -174,7 +174,7 @@
             $("#h2_lession").show();
         }
 
-        var clsid=$("#classId").val();
+
         if(dctype>1&&isLession>1){
             $("#a_addStudent").show();
             if(isLession==2){

@@ -87,6 +87,11 @@ public class GradeDAO extends CommonDAO<GradeInfo> implements IGradeDAO {
 				objList.add(obj.getGradename());
 			}else
 				sqlbuilder.append("NULL,");
+            if(obj.getGradevalue()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getGradevalue());
+            }else
+                sqlbuilder.append("NULL,");
 		}
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");

@@ -436,6 +436,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
 		
 		if(this.tpGroupManager.checkGroupName(tg)){
 			je.setMsg("error");
+            je.setType("errorname");
 			response.getWriter().print(je.toJSON());
 			return;
 		}

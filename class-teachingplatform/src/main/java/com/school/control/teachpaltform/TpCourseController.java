@@ -153,13 +153,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("selTerm",termInfo);
 
 
-        //主授学科
-        SubjectUser subjectUser=new SubjectUser();
-        subjectUser.setIsmajor(1);
-        subjectUser.setUserid(this.logined(request).getRef());
-        List<SubjectUser>subjectUserList=this.subjectUserManager.getList(subjectUser,null);
-
-
 
         //获取首页年级学科
         List<GradeInfo> gradeList = this.gradeManager.getTchGradeList(this.logined(request).getUserid(), termInfo.getYear());

@@ -273,6 +273,11 @@ public class TpGroupDAO extends CommonDAO<TpGroupInfo> implements ITpGroupDAO {
             objList.add(t.getClasstype());
         } else
             sqlbuilder.append("null,");
+        if (t.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
         sqlbuilder.append("?)}");
         Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
                 objList.toArray());

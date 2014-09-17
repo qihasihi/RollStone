@@ -1161,8 +1161,18 @@ public class TpUserController extends UserController {
                     }
                 }
             }
-        }else
+        }else{
             userNextRef=userList.get(0).getRef();
+            TeacherInfo t = new TeacherInfo();
+            t.setUserid(userNextRef);
+            t.setTeachername(realname);
+            sql = new StringBuilder();
+            objList = this.teacherManager.getUpdateSql(t, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
 
 
         ClassUser tea=new ClassUser();

@@ -243,7 +243,8 @@ function addTeacherCourse(){
             alert('异常错误,系统未响应！');
         },success:function(rps){
             if(rps.type=="success"){
-                if(maid!=null&&maid>0){
+                window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&materialid="+maid+"&subjectid="+$("#subjectid").val();
+               /* if(maid!=null&&maid>0){
                     window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&materialid="+maid+"&subjectid="+$("#subjectid").val();
                 }else{
                     var param={gradeid:$("#gradeid").val(),subjectid:$("#subjectid").val(),termid:term.val(),materialid:material_id};
@@ -264,7 +265,7 @@ function addTeacherCourse(){
                             }
                         }
                     });
-                }
+                }*/
 
             }else{
                 alert("无法添加!"+rps.msg);
@@ -274,8 +275,12 @@ function addTeacherCourse(){
 }
 
 function closeAddorUpdateWindow(){
+    var subjectid=$("#subjectid").val();
+    var gradeid=$("#gradeid").val();
     if(typeof(materialid)!='undefined'&&materialid!=null&&parseInt(materialid)>0){
         window.location.href="teachercourse?toTeacherCourseList&materialid="+materialid;
+    }else if(typeof subjectid!='undefined'&&subjectid.length>0&&typeof gradeid!='undefined'&&gradeid.length>0){
+        window.location.href="teachercourse?toTeacherCourseList&subjectid="+subjectid+"&gradeid="+gradeid;
     }else{
         window.location.href="teachercourse?toTeacherCourseList";
     }

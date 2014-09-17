@@ -28,6 +28,7 @@ function addNewGroup(){
         },success:function(rps){
             if(rps.type=="success"){
                 alert("添加成功!");
+                $("#groupName").val('');
                 closeModel('addGroupDiv');
                 getClassGroups(classId,classType);
             }else if(rps.type=="errorname"){
@@ -110,11 +111,11 @@ function getNoGroupStudentsByClassId(classId,classType){
             }else
                 $("#dv_addGroup").hide();
 
-            if(responseText.objList[0]!=null&&responseText.objList[0].length>0){
+           /* if(responseText.objList[0]!=null&&responseText.objList[0].length>0){
                 $("#no_gs").append("<option id='special_option' value='0' style='display:none;' ></option>");
             }else{
                 $("#no_gs").append("<option id='special_option' value='0' ></option>");
-            }
+            } */
             if(responseText.objList[0]!=null||responseText.objList[0].length==0){
                 $("#nogroup").hide();
             }
