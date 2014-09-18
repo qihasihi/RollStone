@@ -11,7 +11,9 @@
 <%  String proc_name= UtilTool.utilproperty.getProperty("PROC_NAME");
     String basePath = request.getScheme() + "://"
             + UtilTool.utilproperty.getProperty("IP_ADDRESS")
-            +"/"+proc_name + "/";%>
+            +"/"+proc_name + "/";
+    int ado_idx=0;
+%>
 <script src="<%=basePath %>util/xheditor/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
 <html>
 <head>
@@ -30,12 +32,14 @@
                         <li><img src="imapi1_1?m=makeImImg&w=90&h=70&p=${attach}" data-src="${attach}"></li>
                     </c:if>
                     <c:if test="${tk.imtaskattachtype==2}">
-                        <p>
-                            <audio controls="controls">
+                        <p><img style="cursor:pointer"  src="images/pic02_140811.png" onclick="ado_<%=ado_idx%>.play()"/>
+                            <span style="display:none"><audio controls="controls" id="ado_<%=ado_idx++%>">
                             <source src="${attach}" type="audio/ogg">
                             <source src="${attach}" type="audio/mpeg">
                             您的浏览器不支持 audio 标签。
-                           </audio></p>
+                           </audio>
+                            </span>
+                        </p>
                     </c:if>
                 </c:forEach>
             </c:if>
@@ -68,15 +72,18 @@
 
                    <c:forEach items="${qa.imtaskattachList}" var="at">
                     <c:if test="${qa.replyattachtype==1}">
-                        <li><img src="imapi1_1?m=makeImImg&w=90&h=70&p=${at}" data-src="${attach}"></li>
+                        <li><img src="imapi1_1?m=makeImImg&w=90&h=70&p=${at}" data-src="${at}"></li>
                     </c:if>
                     <c:if test="${qa.replyattachtype==2}">
                         <p>
-                            <audio controls="controls">
+                            <img style="cursor:pointer" src="images/pic02_140811.png" onclick="ado_<%=ado_idx%>.play()"/>
+                            <span style="display:none"><audio controls="controls" id="ado_<%=ado_idx++%>">
                                 <source src="${at}" type="audio/ogg">
                                 <source src="${at}" type="audio/mpeg">
                                 您的浏览器不支持 audio 标签。
-                            </audio></p>
+                            </audio>
+                            </span>
+                          </p>
                     </c:if>
                     </c:forEach>
                     <c:if test="${qa.replyattachtype==1}">

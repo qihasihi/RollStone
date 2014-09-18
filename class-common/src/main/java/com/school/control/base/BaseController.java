@@ -560,6 +560,7 @@ public class BaseController<T extends java.io.Serializable> {
      * @throws IOException
      */
     protected String ImgResize(String path,int w, int h) throws IOException {
+        path=path.replaceAll("\\\\","//");
         File _file = new File(path);
         _file.setReadOnly();
         File    srcFile  = _file;
