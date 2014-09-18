@@ -153,8 +153,10 @@
                         var  content=im.ANSWERCONTENT || "";
                         if(content==null||typeof(content)=="undefined"||typeof(content)==undefined){
                             if(im.STATUS>0){
-                                if(im.TASK_TYPE==1||im.TASK_TYPE==2){
+                                if(parseInt(im.TASK_TYPE)==1||parseInt(im.TASK_TYPE)==2){
                                     content="已查看";
+                                }else if(parseInt(im.TASK_TYPE)==4||parseInt(im.TASK_TYPE)==5){
+                                    content="已提交";
                                 }
                             }else{
                                 content="";
@@ -274,7 +276,7 @@
         </tbody>
     </table>
     </div>
-        <div id="classstu">
+        <div id="classstu" style="display:none;">
             <%--
             <p class="font-black"><strong>科代表</strong>：----&nbsp;&nbsp;----&nbsp;&nbsp;----</p>
             <p>（科代表权限： 1. 删除恶意资源评论   2. 删除不符合要求的主帖  3. 删除主帖中的恶意评论  4. 主帖加精、置顶）</p>

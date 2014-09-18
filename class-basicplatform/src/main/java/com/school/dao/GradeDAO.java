@@ -75,7 +75,7 @@ public class GradeDAO extends CommonDAO<GradeInfo> implements IGradeDAO {
 		StringBuilder sqlbuilder=new StringBuilder("{CALL grade_proc_search_split(");
 		List<Object> objList=new ArrayList<Object>();
 		if(obj==null)
-			sqlbuilder.append("NULL,NULL,");
+			sqlbuilder.append("NULL,NULL,NULL,");
 		else{
 			if(obj.getGradeid()!=null){
 				sqlbuilder.append("?,");
