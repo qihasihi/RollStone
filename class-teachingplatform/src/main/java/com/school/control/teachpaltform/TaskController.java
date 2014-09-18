@@ -3840,7 +3840,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
             courseObj.add(m);
         }
         mp.put("course",courseObj);
-        mp.put("userid",this.logined(request).getUserid());
+        mp.put("userid",userid);
+        UserInfo ui = new UserInfo();
+        ui.setUserid(userid);
+        List<UserInfo> uiList = this.userManager.getList(ui,null);
+        if(uiList!=null){
+            String username = uiList.get(0).getRealname();
+            mp.put("username",username);
+        }
         //查询班级任务
         ClassUser cu = new ClassUser();
         cu.setClassid(Integer.parseInt(classid));

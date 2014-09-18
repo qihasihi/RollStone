@@ -40,7 +40,7 @@
     <c:if test="${!empty dataMapList}">
            <c:forEach items="${dataMapList}" var="dm" varStatus="dmIdx">
                <tr class="${dmIdx.index%2==0?"trbg1":""}">
-                   <td><a href="task?m=tostuSelfPerformance&termid=${param.termid}&subjectid=${param.subjectid}&userid=${dm.USER_ID}" target="_blank">${dm.STU_NAME}</a></td>
+                   <td><a href="task?m=tostuSelfPerformance&termid=${param.termid}&subjectid=${param.subjectid}&userid=${dm.USER_ID}&classid=${param.classid}" target="_blank">${dm.STU_NAME}</a></td>
                    <td>${dm.COMPLATETASKBL}%</td>
                    <td>${dm.WSSCORE}</td>
                    <c:if test="${empty clsObj||clsObj.dctype==3}">

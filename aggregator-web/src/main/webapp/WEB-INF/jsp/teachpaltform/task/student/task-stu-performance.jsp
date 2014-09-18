@@ -8,8 +8,8 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 <%
-    UserInfo user=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
-    String username=user.getRealname();
+//    UserInfo user=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
+//    String username=user.getRealname();
 %>
 <html>
 <head>
@@ -209,7 +209,7 @@
     </script>
 </head>
 <body>
-<div class="subpage_head"><span class="ico19"></span><strong>个人任务统计—— <%=username%></strong></div>
+<div class="subpage_head"><span class="ico19"></span><strong>个人任务统计—— ${username}</strong></div>
 <div class="subpage_nav">
     <ul id="tabs">
         <li id="li_self_tab" class="crumb"><a href="javascript:tabCutover(1)">个人</a></li>
