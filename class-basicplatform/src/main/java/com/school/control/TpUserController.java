@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.*;
 
 @Controller
@@ -884,6 +886,11 @@ public class TpUserController extends UserController {
         for(ClassUser bzrUser:bzrList){
             bzrUser.setHeadimage("http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
         }
+        if(bzrList==null||bzrList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("未获取到当前班级班主任信息!"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
 
         ClassUser tea=new ClassUser();
         tea.setRelationtype("任课老师");
@@ -908,21 +915,23 @@ public class TpUserController extends UserController {
 
             if(jids.length()>0){
                 String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
-                //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                System.out.println("jidStr:" + jidstr);
+                String url=UtilTool.utilproperty.getProperty("GET_HEAD_IMG_URL");
                 HashMap<String,String> signMap = new HashMap();
                 signMap.put("userList",jidstr);
                 signMap.put("schoolId",this.logined(request).getDcschoolid().toString());
                 signMap.put("srcJid",this.logined(request).getEttuserid().toString());
                 signMap.put("userType","3");
                 signMap.put("timestamp",""+System.currentTimeMillis());
-                String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+                String signture = UrlSigUtil.makeSigSimple("queryEttHeadPhoto.do",signMap,"*ETT#HONER#2014*");
                 signMap.put("sign",signture);
-                JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                JSONObject jsonObject = this.sendPostUrl(url,signMap,"utf-8");
                 int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
                 if(type==1){
                     Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                    jsonObj = URLDecoder.decode(jsonObj.toString(), "utf-8");
                     JSONArray jr = JSONArray.fromObject(jsonObj);
+                    System.out.println(jr.toString());
                     if(jr!=null&&jr.size()>0){
                         for(int i = 0;i<jr.size();i++){
                             JSONObject jsono = jr.getJSONObject(i);
@@ -935,6 +944,8 @@ public class TpUserController extends UserController {
                         }
                     }
                 }
+
+
             }
 
         }
@@ -1083,7 +1094,8 @@ public class TpUserController extends UserController {
         u.setEttuserid(Integer.parseInt(jid));
         u.setDcschoolid(this.logined(request).getDcschoolid());
         List<UserInfo>userList=this.userManager.getList(u,null);
-        boolean isNewUser=false;
+        boolean isNewUser=false,isUpdTeacher=false;
+
         if(userList==null||userList.size()<1){
             //添加用户
             isNewUser=true;
@@ -1172,6 +1184,7 @@ public class TpUserController extends UserController {
                 sqlListArray.add(sql.toString());
                 objListArray.add(objList);
             }
+            isUpdTeacher=true;
         }
 
 
@@ -1232,6 +1245,17 @@ public class TpUserController extends UserController {
                     System.out.println("Add ETT USER Error!");
                 else
                     System.out.println("Add ETT USER Success!");
+            }
+            if(isUpdTeacher){
+                //向ETT更新用户
+                UserInfo baseUser=new UserInfo();
+                baseUser.setDcschoolid(Integer.parseInt(schoolid));
+                baseUser.setEttuserid(Integer.parseInt(jid));
+                List<UserInfo>baseUserList=this.userManager.getList(baseUser,null);
+                if(!EttInterfaceUserUtil.updateUserBase(baseUserList))
+                    System.out.println("Upd ETT Teacher Error!");
+                else
+                    System.out.println("Upd ETT Teacher Success!");
             }
 
             List<Map<String,Object>>mapList=this.getClassUserMap("任课老师",Integer.parseInt(clsid));
@@ -1304,12 +1328,6 @@ public class TpUserController extends UserController {
             String[]nameArray=nameStr.split(",");
 
             if(jidArray.length>0&&nameArray.length>0){
-
-                if(classInfo.getAllowjoin()==null||!classInfo.getAllowjoin().toString().equals("1")){
-                    je.setMsg("当前班级不允许学生加入!");
-                    response.getWriter().print(je.toJSON());
-                    return;
-                }
 
                 if(classInfo.getClsnum()!=null&&classInfo.getClsnum()<jidArray.length){
                     je.setMsg("学生人数超出限额!\n\n班级限额："+classInfo.getClsnum()+"人!");
@@ -1773,6 +1791,102 @@ public class TpUserController extends UserController {
         return userList;
     }
 
+    public static JSONObject sendPostUrl(String urlstr,Map<String,String> paramMap,String requestEncoding){
+        HttpURLConnection httpConnection=null;
+        URL url;
+        int code;
+        try {
+            //组织参数
+            StringBuffer params = new StringBuffer();
+            if(paramMap!=null&&paramMap.size()>0){
+                for (Iterator iter = paramMap.entrySet().iterator(); iter
+                        .hasNext();)
+                {
+                    Map.Entry element = (Map.Entry) iter.next();
+                    params.append(element.getKey().toString());
+                    params.append("=");
+                    params.append(URLEncoder.encode(element.getValue().toString(), requestEncoding));
+                    params.append("&");
+                }
+
+                if (params.length() > 0)
+                {
+                    params = params.deleteCharAt(params.length() - 1);
+                }
+            }
+
+            url = new URL(urlstr);
+
+            httpConnection = (HttpURLConnection) url.openConnection();
+
+            httpConnection.setRequestMethod("POST");
+            if(params!=null)
+                httpConnection.setRequestProperty("Content-Length",
+                        String.valueOf(params.toString().length()));
+            httpConnection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+
+            httpConnection.setDoOutput(true);
+            httpConnection.setDoInput(true);
+			/*
+			 * PrintWriter printWriter = new
+			 * PrintWriter(httpConnection.getOutputStream());
+			 * printWriter.print(parameters); printWriter.close();
+			 */
+
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                    httpConnection.getOutputStream(), "8859_1");
+            if(params!=null)
+                outputStreamWriter.write(params.toString());
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+
+            code = httpConnection.getResponseCode();
+        } catch (Exception e) {			// 异常提示
+            System.out.println("异常错误!TOTALSCHOOL未响应!");
+            if(httpConnection!=null)httpConnection.disconnect();
+            return null;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        if (code == HttpURLConnection.HTTP_OK) {
+            try {
+                String strCurrentLine;
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(httpConnection.getInputStream()));
+                while ((strCurrentLine = reader.readLine()) != null) {
+                    stringBuffer.append(strCurrentLine).append("\n");
+                }
+                reader.close();
+                if(httpConnection!=null)httpConnection.disconnect();
+            } catch (IOException e) {
+                System.out.println("异常错误!");
+                if(httpConnection!=null)httpConnection.disconnect();
+                return null;
+            }
+        }else if(code==404){
+            if(httpConnection!=null)httpConnection.disconnect();
+            // 提示 返回
+            System.out.println("异常错误!404错误，请联系管理人员!");
+            return null;
+        }else if(code==500){
+            if(httpConnection!=null)httpConnection.disconnect();
+            System.out.println("异常错误!500错误，请联系管理人员!");
+            return null;
+        }
+        String returnContent=null;
+        try {
+            //returnContent=java.net.URLDecoder.decode(stringBuffer.toString(),"UTF-8");  ///aa
+            returnContent=new String(stringBuffer.toString().getBytes("gbk"),requestEncoding);
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //转换成JSON
+        System.out.println(returnContent);
+        JSONObject jb=JSONObject.fromObject(returnContent);
+        System.out.println("tpuser JSONObject:"+jb.toString());
+        return jb;
+    }
 
     /**
      * userType 1:教师 2:教务 3:学生
@@ -1847,7 +1961,7 @@ public class TpUserController extends UserController {
         List<Map<String,Object>>mapList=null;
         ClassUser cu=new ClassUser();
         cu.setClassid(classid);
-        cu.setRelationtype(relationtype);
+        //cu.setRelationtype(relationtype);
         List<ClassUser> cuBanList=this.classUserManager.getList(cu,null);
         if(cuBanList!=null&&cuBanList.size()>0){
             mapList=new ArrayList<Map<String, Object>>();

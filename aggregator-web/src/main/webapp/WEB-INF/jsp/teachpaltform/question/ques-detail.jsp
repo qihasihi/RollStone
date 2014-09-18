@@ -34,6 +34,7 @@
                         <script type="text/javascript">
                             playSound('play','<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/${pq.questionid}/001.mp3',270,22,'sp_mp3_${pq.questionid}',false);
                         </script>
+                        ${pq.analysis}
                     </c:if>
                     <c:if test="${!empty pq.questionOptionList}">
                         <table border="0" cellpadding="0" cellspacing="0">

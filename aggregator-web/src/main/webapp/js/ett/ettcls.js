@@ -37,7 +37,7 @@ function loadCls(pageno){
                         if(idx==0)
                             h+=' class="crumb "';
                         h+='>';
-                        var clsname=itm.classgrade+itm.classname;
+                        var clsname=itm.classname;
                         var cname=qhs.GetLength(clsname)>20?clsname.substring(0,20)+'...':clsname;
                         h+='<a title="'+clsname+'" id="a_for_'+itm.classid+'" href="javascript:loadClsDetial('+itm.classid+')">'+cname+'</a></li>';
                         $("#ul_class").append(h);
@@ -123,7 +123,7 @@ function doSetClassTeacher(clsid){
  * 2：学生
  * @param clsid
  */
-function delClassUser(ref,type){
+function delClassUser(ref,clsid){
     if(typeof ref=='undefined')
         return;
     if(!confirm('确认操作?'))return;
@@ -143,7 +143,7 @@ function delClassUser(ref,type){
                 alert(rps.msg);
             } else {
                // $("#li_"+ref).remove();
-               loadClsDetial($("#classId").val());
+               loadClsDetial(clsid);
             }
         }
     });
@@ -428,7 +428,7 @@ function loadClsDetial(clsid){
                  je.getObjList().add(stuList);
                  */
                 if(rps.objList[0]!=null&&rps.objList[1]!=null){
-                    var clsname=rps.objList[0].classname+rps.objList[0].classgrade;
+                    var clsname=rps.objList[0].classname;
                     $("#p_edit").html('<a href="javascript:;" id="a_to_upd" class="ico11" title="编辑"></a><a href="javascript:void(0)" onclick="doDelCls(\''+rps.objList[0].classid+'\')" class="ico04" title="删除"></a>');
                     $("#s_clsname").html(clsname);
                     $("#add_teacher_clsname").html(clsname);
@@ -448,7 +448,7 @@ function loadClsDetial(clsid){
                     $.each(rps.objList[2],function(idx,itm){
                         var h='<li id="li_'+itm.ref+'">';
                         h+='<img src="'+itm.headimage+'" width="80" height="80">'+itm.realname+'<b>'+itm.subjectname+'</b>';
-                        h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\',1)" title="移出"></a></p>';
+                        h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\','+clsid+')" title="移出"></a></p>';
                         h+='</li>';
                         $("#ul_tea").append(h);
                     });
@@ -459,7 +459,7 @@ function loadClsDetial(clsid){
                     $.each(rps.objList[3],function(idx,itm){
                         var h='<li id="li_'+itm.ref+'">';
                         h+='<img src="'+itm.headimage+'" width="80" height="80" />'+itm.realname;
-                        h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\',2)" title="移出"></a></p>';
+                        h+='<p class="ico"><a class="ico34" href="javascript:void(0);" onclick="delClassUser(\''+itm.ref+'\','+clsid+')" title="移出"></a></p>';
                         h+='</li>';
                         $("#ul_stu").append(h);
                     });
@@ -501,7 +501,7 @@ function toUpdClass(clsid){
                  je.getObjList().add(stuList);
                  */
                 if(rps.objList[0]!=null&&rps.objList[1]!=null){
-                    var clsname=rps.objList[0].classgrade+rps.objList[0].classname;
+                    var clsname=rps.objList[0].classname;
 
                     $("#dv_edit input[id='cls_name']").val(rps.objList[0].classname);
                     $("#dv_edit select[id='type']").val(rps.objList[0].dctype);

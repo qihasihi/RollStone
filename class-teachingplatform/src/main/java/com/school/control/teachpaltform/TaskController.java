@@ -180,6 +180,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         tcs.setLocalstatus(1);
         if(subjectid!=null)
             tcs.setSubjectid(Integer.parseInt(subjectid));
+        if(gradeid!=null&&gradeid.trim().length()>0)
+            tcs.setGradeid(Integer.parseInt(gradeid));
         List<TpCourseInfo>courseList=this.tpCourseManager.getCourseList(tcs, null);
         request.setAttribute("courseList", courseList);
 
@@ -268,7 +270,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
              return;
          }
          PageResult p=this.getPageResultParameter(request);
-         p.setOrderBy("u.order_idx desc,u.c_time desc");
+         p.setOrderBy("u.order_idx,u.c_time ");
          TpTaskInfo t=new TpTaskInfo();
          t.setCourseid(Long.parseLong(courseid));
          //查询没被我删除的任务
@@ -1719,6 +1721,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
 //		}
         String courseid=request.getParameter("courseid");
         String termid=request.getParameter("termid");
+        String subjectid=request.getParameter("subjectid");
+        String gradeid=request.getParameter("gradeid");
         //根据课题ID和学生ID查出任务
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -1736,13 +1740,12 @@ public class TaskController extends BaseController<TpTaskInfo>{
 //			return null;
 //		}
         //查询学生课题列表
-        Integer subjectid=null;
         //获取当前专题教材
         TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
         ttm.setCourseid(Long.parseLong(courseid));
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0)
-            subjectid=materialList.get(0).getSubjectid();
+            subjectid=materialList.get(0).getSubjectid().toString();
 
         //课题列表
         TpCourseInfo tt=new TpCourseInfo();
@@ -1759,140 +1762,21 @@ public class TaskController extends BaseController<TpTaskInfo>{
             TpCourseInfo tcs1= new TpCourseInfo();
             tcs1.setUserid(this.logined(request).getUserid());
             tcs1.setTermid(courseList.get(0).getTermid());
-            tcs1.setSubjectid(subjectid);
+            tcs1.setSubjectid(Integer.parseInt(subjectid));
+            if(gradeid!=null&&gradeid.trim().length()>0&&!gradeid.equals("0"))
+                tcs1.setGradeid(Integer.parseInt(gradeid));
             if(termid==null||termid.trim().length()<1)
                 termid=courseList.get(0).getTermid();
             List<TpCourseInfo>courseList1=this.tpCourseManager.getStuCourseList(tcs1, null);
             request.setAttribute("courseList",courseList1);
         }
 
-		/*
-		 *  卢艳(422812115) 下午 2013-11-22 4:23:07
-		 *  切换专题里，有当前专题？而且，学生端，专题能不能按学科区分一下
 
-		List<TeacherCourseInfo> course2List=new ArrayList<TeacherCourseInfo>();
-		if(subjectid!=null){
-			for (TeacherCourseInfo tcTmp : course1List) {
-				System.out.println(tcTmp.getSubjectid()+"   "+subjectid);
-				if(tcTmp!=null&&tcTmp.getSubjectid()!=null&&tcTmp.getSubjectid()==subjectid){
-					System.out.println(subjectid+"  "+tcTmp.getSubjectid());
-					course2List.add(tcTmp);
-				}
-			}
-		}else
-			course2List=course1List;
-		request.setAttribute("courseList", course2List);
-		 */
-		
-    /*
-		for (TpTaskInfo tp : taskList) {
-			if(tp!=null&&tp.getTaskvalueid()!=null){
-				//课后作业    
-				if(tp.getTasktype().intValue()==3){
-					QuestionInfo qb=new QuestionInfo();
-					qb.setQuestionid(tp.getTaskvalueid());
+        if(gradeid!=null&&!gradeid.toString().equals("0")&&gradeid.trim().length()>0)
+            request.getSession().setAttribute("session_grade",gradeid);
+        if(subjectid!=null&&!subjectid.toString().equals("0")&&subjectid.trim().length()>0)
+            request.getSession().setAttribute("session_subject",subjectid);
 
-					List<QuestionInfo>qbList=this.questionManager.getList(qb, null);
-					if(qbList!=null&&qbList.size()>0){
-						tp.setQuestionList(qbList);
-                        QuestionInfo quesparent=qbList.get(0);
-						if(quesparent!=null&&(quesparent.getQuestiontype().intValue()==3||quesparent.getQuestiontype().intValue()==4))
-						{
-							QuestionOption qchild=new QuestionOption();
-							qchild.setQuestionid(quesparent.getQuestionid());
-							PageResult page=new PageResult();
-							page.setOrderBy("u.option_type");
-							page.setPageNo(0); 
-							page.setPageSize(0); 
-							List<QuestionOption>qchildList=this.questionOptionManager.getList(qchild, page);
-							tp.setQuestionOptionList(qchildList);
-						}
-					}
-					//正确答案（只有课后作业有）
-					Integer qtype=qbList.get(0).getQuestype();
-					if(qtype.intValue()==2||qtype.intValue()==3||qtype.intValue()==4){
-						QuestionBank qright=new QuestionBank();
-						qright.setIsright("1");
-						if(qtype.intValue()==2){
-							qright.setQuestionid(tp.getTaskvalueid());
-							qright.setParentquesid("0");
-						}else if(qtype.intValue()==3||qtype.intValue()==4){
-							qright.setParentquesid(tp.getTaskvalueid());
-						}
-						List<QuestionBank>quesRightList=this.questionBankManager.getList(qright, null);
-						tp.setTpQuesRightList(quesRightList);
-					}
-				}else if(tp.getTasktype().intValue()==2){ 
-					if(tp.getTaskvalueid()!=null){
-						InteractiveThemeInfo it=new InteractiveThemeInfo();
-						it.setThemeid(tp.getTaskvalueid());
-						List<InteractiveThemeInfo>itList=this.interactiveThemeManager.getList(it, null);
-						tp.setTpResTopicList(itList);
-						
-						//获取主题
-						InteractiveTopicInfo itopic=new InteractiveTopicInfo();
-						itopic.setThemeid(tp.getTaskvalueid());
-						itopic.setCuserid(this.logined(request).getRef());
-						List<InteractiveTopicInfo>topicList=this.interactiveTopicManager.getList(itopic, null);
-						tp.setTpThemeList(topicList);
-						//获取答题人数
-						TaskPerformanceInfo tper=new TaskPerformanceInfo();
-						tper.setTaskid(tp.getTaskid());
-						List<TaskPerformanceInfo>performList=this.taskPerformanceManager.getReplyColumsCount(tper);
-						tp.setViewOrReplyList(performList);
-						 
-					}
-				}else if(tp.getTasktype().intValue()==1){
-					if(tp.getTaskvalueid()!=null){
-						TpResourceBaseInfo rd=new TpResourceBaseInfo();
-						rd.setRef(tp.getTaskvalueid());
-						List<TpResourceBaseInfo>itList=this.tpResourceBaseManager.getList(rd, null);
-						tp.setTpResTopicList(itList);
-					}
-					
-				}
-			
-				//获取答题记录和心得
-				QuestionAnswer qa=new QuestionAnswer();
-				qa.setTaskid(tp.getTaskid());
-				qa.setUserid(this.logined(request).getRef());
-				List<QuestionAnswer>qaList=this.questionAnswerManager.getList(qa, null);
-				tp.setTpQuestionAnswerList(qaList);
-				
-				//查询完成状态(笑脸或哭脸)
-				TaskPerformanceInfo tper=new TaskPerformanceInfo();
-				tper.setTaskid(tp.getTaskid());
-				tper.setUserid(this.logined(request).getRef());
-				List<TaskPerformanceInfo>performList=this.taskPerformanceManager.getStuPerformanceStatus(tper);
-				tp.setTpTaskPerformList(performList);
-				
-				//已做未做
-				TaskPerformanceInfo taskdo=new TaskPerformanceInfo();
-				taskdo.setTaskid(tp.getTaskid());
-				taskdo.setUserid(this.logined(request).getRef());
-				List<TaskPerformanceInfo>doperformList=this.taskPerformanceManager.getList(taskdo, null);
-				tp.setTpDoPerformList(doperformList);
-				
-				//完成标准
-				TaskCriteriaInfo tc=new TaskCriteriaInfo();
-				tc.setTaskid(tp.getTaskid());
-				List<TaskCriteriaInfo>taskCriList=this.taskCriteriaManager.getList(tc,null);
-				tp.setTpTaskCriterList(taskCriList);
-				
-				//小组人员
-				GroupStudent gs=new GroupStudent();
-				gs.setGroupid(tp.getGroupid());
-				List<GroupStudent>groupStuList=this.groupStudentManager.getList(gs,null);
-				tp.setTpGroupStuList(groupStuList);
-				 
-				//小组内已完成的人数
-				QuestionAnswer quescount=new QuestionAnswer();
-				quescount.setTaskid(tp.getTaskid());
-				quescount.setGroupid(tp.getGroupid());
-				List<QuestionAnswer>comletecountList=this.questionAnswerManager.getListNoRepeat(quescount);
-				tp.setTpQuesAnswerCountList(comletecountList);
-			}
-		}*/
         request.setAttribute("courseid", courseid);
         request.setAttribute("termid", termid);
 

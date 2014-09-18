@@ -80,7 +80,7 @@ function showNoGroupStudent(type){
     }
 }
 
-function getNoGroupStudentsByClassId(classId,classType){
+function getNoGroupStudentsByClassId(classId,classType,dctype){
     if(typeof classId=='undefined'|| typeof classType=='undefined')
         return;
     $("#noGroupStudents").html("");
@@ -93,14 +93,13 @@ function getNoGroupStudentsByClassId(classId,classType){
                 $("#no_gs").html();
                 return;
             }
-            var dcType=$("#dcType").val();
             $("#no_gs").html("");
 
             if(responseText.objList[0]!=null&&responseText.objList[0].length>0){
-                $("#dv_addGroup").show();
+                //$("#dv_addGroup").show();
                 $.each(responseText.objList[0],function(idx,itm){
                     var h='<li>'+itm.STU_NAME;
-                    if(typeof responseText.objList[1]!='undefined'&&responseText.objList[1]==3&&dcType>1)
+                    if(typeof responseText.objList[1]!='undefined'&&responseText.objList[1]==3&&dctype>1)
                         h+='<a class="ico_delete" style="display: none;" title="删除"  href="javascript:delClassUser(\''+itm.REF+'\')"></a>';
                     h+='<a style="display: none;" name="view_pass" class="ico92" title="查看密码" href="javascript:;"></a>';
                     h+='<span style="display: none;" class="password" name="pass">'+itm.PASSWORD+'</span>';
@@ -419,7 +418,7 @@ function filterResult(){
  * 获取学生列表
  * @param clsid
  */
-function getStuList(clsid){
+function getStuList(clsid,dctype){
     if(typeof clsid=='undefined')
         return;
 
@@ -435,7 +434,9 @@ function getStuList(clsid){
             var h='';
             if(rps.objList.length>0){
                 $.each(rps.objList,function(idx,itm){
-                    h+='<li>'+itm.realname+'<a style="display: none;" href="javascript:delClassUser(\''+itm.ref+'\')" class="ico_delete" title="删除"></a>';
+                    h+='<li>'+itm.realname;
+                    if(dctype>1)
+                        h+='<a style="display: none;" href="javascript:delClassUser(\''+itm.ref+'\')" class="ico_delete" title="删除"></a>';
                     h+='<a style="display: none;" name="a_view" class="ico92" title="查看密码" href="javascript:;"></a>';
                     h+='<span style="display: none;"  class="password">'+itm.password+'</span>'
                     h+='</li>';
@@ -701,4 +702,15 @@ function getClassCourseList(){
         }
     });
     //teachercourse?m=toClassCourseList&classid=189&classtype=1&subjectid=2&gradeid=1
+}
+
+var ClassContainer;
+if(ClassContainer == undefined){
+    ClassContainer=function(settings){
+        this.initContainer(settings);
+    }
+}
+
+ClassContainer.prototype.initContainer=function(obj){
+    this.config=obj;
 }

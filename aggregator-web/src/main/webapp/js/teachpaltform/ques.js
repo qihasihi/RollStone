@@ -348,7 +348,7 @@ function BindText(){
 
 function ed_option(itm){
     var htm=$(itm).html();
-    if(htm=='请编辑选项..'||htm=='点击编辑题干……'||htm=='点击编辑答案解析……')
+    if(htm=='请编辑选项..'||htm=='点击编辑题干……'||htm=='点击编辑答案解析……'||htm=='请编辑正确答案……')
         htm='';
     editor.setContent(htm);
     var questype=$("input[name='rdo_ques_type']:checked").val();

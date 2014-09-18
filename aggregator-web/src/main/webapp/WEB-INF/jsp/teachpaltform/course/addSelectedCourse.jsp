@@ -15,7 +15,7 @@
             var materialid="${materialid}";
             var schoolname="${schoolname}";
             var subjectid="${subject.subjectid}";
-            var gradeid="${param.gradeid}";
+            var gradeid="${grade.gradeid}";
             $(function(){
                 //定位materialid 选中
                 if(materialid.Trim().length>0){
@@ -170,7 +170,7 @@
                     },success:function(rps){
                         if(rps.type=="success"){
                             alert("添加成功!");
-                            window.location.href="teachercourse?toTeacherCourseList&gradeid="+gradeid.val()+"&currentSubjectid="+subjectid.val();
+                            window.location.href="teachercourse?toTeacherCourseList&subjectid=${subject.subjectid}&gradeid=${grade.gradeid}";
                         }else{
                             alert("无法添加!"+rps.msg);
                         }
@@ -204,8 +204,8 @@
             }
 
             function closeAddorUpdateWindow(){
-                if(typeof(materialid)!='undefined'&&materialid!=null&&parseInt(materialid)>0){
-                    window.location.href="teachercourse?toTeacherCourseList&materialid="+materialid;
+                if(typeof subjectid!='undefined'&&subjectid.length>0&&typeof gradeid!='undefined'&&gradeid.length>0){
+                    window.location.href="teachercourse?toTeacherCourseList&subjectid="+subjectid+"&gradeid="+gradeid;
                 }else{
                     window.location.href="teachercourse?toTeacherCourseList";
                 }

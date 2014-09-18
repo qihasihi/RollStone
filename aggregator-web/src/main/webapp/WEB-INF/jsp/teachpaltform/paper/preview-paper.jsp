@@ -50,7 +50,7 @@ $(function(){
         if(paperSumScore%allqueslength>0){
             //// 使用数组翻转函数
             var yuScore=paperSumScore%allqueslength;
-            var s=jQuery.makeArray($("span[name='avg_score'][id='']")).reverse();
+            var s=jQuery.makeArray($("span[name='avg_score'][id^='score_']")).reverse();
             $.each(s,function(idx,itm){
                 if(yuScore<1)return;
                 $(itm).html(parseFloat($(itm).html())+1);
@@ -183,13 +183,16 @@ function preeDoPageSub(pObj){
                         </td>
                         <td>
                             <span class="bg">${pq.questiontypename}</span>
+                             ${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+
                             <c:if test="${pq.extension eq 4}">
                                 <div  class="p_t_10" id="sp_mp3_${pq.questionid}" ></div>
                                 <script type="text/javascript">
                                     playSound('play','<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/${pq.questionid}/001.mp3',270,22,'sp_mp3_${pq.questionid}',false);
                                 </script>
+                                ${pq.analysis}
                             </c:if>
-                            ${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+
                             <c:if test="${!empty pq.questionOption}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <col class="w30"/>

@@ -30,15 +30,29 @@
     var currentSubjectid=subjectid;
     var currentGradeid=gradeid;
 
-
+    var clsHandle;
     $(function(){
 
         timeTmp();//课程积分，记时器
+
+        $("#a_course").attr("href",'teachercourse?toTeacherCourseList&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
+        $("#a_calendar").attr("href",'teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
+
+
         <c:if test="${! empty classes}">
+            setClsId('${classes[0].classid}',1,'${classes[0].dctype}','','${classes[0].classgrade}${classes[0].classname}');
+
             $("#classId").val('${classes[0].classid}');
             $("#classType").val(1);
             $("#dcType").val('${classes[0].dctype}');
+        /*
+        var clsid=$("#classId").val();
 
+        if(isLession>1){
+            $("#dv_stu").show();
+            getStuList(clsid);
+        }else
+            $("#dv_stu").hide();
 
         if(isLession==2){
             $("#a_addGroup").hide();
@@ -55,13 +69,8 @@
 
         if($("#dcType").val()>1&&isLession>1){
             $("#a_addStudent").show();
-            if(isLession==2){
-                $("#dv_stu").show();
-                getStuList('${classes[0].classid}');
-            }
         }else{
             $("#a_addStudent").hide();
-            $("#dv_stu").hide();
         }
 
 
@@ -71,10 +80,10 @@
         }
         </c:if>
         loadClsCourse();
+        */
         if(isLession==2){
             $("#sp_subgrade").remove();
             $("#a_course").parent().hide();
-
         }
 
         $("a[name='h2a']").parent().each(function(idx,itm){
@@ -114,9 +123,6 @@
                 })
             }
         });
-
-        $("#a_course").attr("href",'teachercourse?toTeacherCourseList&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
-        $("#a_calendar").attr("href",'teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
     });
     function loadClsCourse(){
         //加载学科
@@ -153,9 +159,6 @@
                         eval($(this).children("a").attr("data-bind"));
                     });
 
-//                    if(firstSub!=null)      //默认加载
-//                        loadCourseScore(firstSub,classId.value,termid,1);
-
                 }
             });
     }
@@ -170,38 +173,11 @@
         $("#classId").val(clsid);
         $("#classType").val(clstype);
         $("#dcType").val(dctype);
-        var clsid=$("#classId").val();
         checkRelationType(clsid);
-
-        if(isLession==2){ //班主任
-            $("#a_addGroup").hide();
-            $("#dv_addGroup").hide();
-            $("#group_list").hide();
-            $("#a_course").parent().hide();
-            $("#h2_lession").hide();
-        }else{
-            $("#a_addGroup").show();
-            $("#dv_addGroup").show();
-            $("#group_list").show();
-            $("#a_course").parent().show();
-            $("#h2_lession").show();
-        }
-
-
-        if(dctype>1&&isLession>1){
-            $("#a_addStudent").show();
-            if(isLession==2){
-                $("#dv_stu").show();
-                getStuList(clsid);
-            }
-        }else{
-            $("#a_addStudent").hide();
-            $("#dv_stu").hide();
-        }
     }
 
 
-    function checkRelationType(clsid){
+    function checkRelationType(clsid,clstype,dctype){
         if(typeof clsid=='undefined')
             return;
 
@@ -217,26 +193,38 @@
                     if(rps.objList[0]!=null)
                         isLession=rps.objList[0];
 
-                    if(isLession==2){
+                    getNoGroupStudentsByClassId(clsid,1);
+                    getClassGroups(clsid,1);
+                    getClassCourseList();
+                    loadClsCourse();
+
+                    if(isLession>1){
+                        $("#dv_stu").show();
+                        getStuList(clsid,dctype);
+                    }else
+                        $("#dv_stu").hide();
+
+                    if(isLession==2){ //班主任
                         $("#a_addGroup").hide();
                         $("#dv_addGroup").hide();
                         $("#group_list").hide();
+                        $("#a_course").parent().hide();
+                        $("#h2_lession").hide();
                     }else{
                         $("#a_addGroup").show();
                         $("#dv_addGroup").show();
                         $("#group_list").show();
+                        $("#a_course").parent().show();
+                        $("#h2_lession").show();
                     }
 
-                    if($("#dcType").val()>1&&isLession>1){
+                    if(dctype>1&&isLession>1)
                         $("#a_addStudent").show();
-                        if(isLession==2){
-                            $("#dv_stu").show();
-                            getStuList(clsid);
-                        }
-                    }else{
+                    else
                         $("#a_addStudent").hide();
-                        $("#dv_stu").hide();
-                    }
+
+
+
                 }
             }
         });
@@ -362,7 +350,7 @@
             <h1><span id="clsname">${classes[0].classgrade}${classes[0].classname}</span><a href="javascript:displayObj('ul_banji');" class="ico49a"></a></h1>
                 <ul class="banji" style="display: none;" id="ul_banji">
                     <c:forEach items="${classes}" var="c">
-                        <li><a href="javascript:setClsId('${c.classid}',1,'${c.dctype}','${c.relationtype}','${c.classgrade}${c.classname}');getNoGroupStudentsByClassId('${c.classid}',1);getClassGroups('${c.classid}',1);getClassCourseList();loadClsCourse();">${c.classgrade}${c.classname}</a></li>
+                        <li><a href="javascript:setClsId('${c.classid}',1,'${c.dctype}','${c.relationtype}','${c.classgrade}${c.classname}');">${c.classgrade}${c.classname}</a></li>
                     </c:forEach>
                 </ul>
             </c:if>

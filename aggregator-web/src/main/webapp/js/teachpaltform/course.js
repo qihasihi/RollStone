@@ -277,10 +277,9 @@ function addTeacherCourse(){
 function closeAddorUpdateWindow(){
     var subjectid=$("#subjectid").val();
     var gradeid=$("#gradeid").val();
-    if(typeof(materialid)!='undefined'&&materialid!=null&&parseInt(materialid)>0){
-        window.location.href="teachercourse?toTeacherCourseList&materialid="+materialid;
-    }else if(typeof subjectid!='undefined'&&subjectid.length>0&&typeof gradeid!='undefined'&&gradeid.length>0){
-        window.location.href="teachercourse?toTeacherCourseList&subjectid="+subjectid+"&gradeid="+gradeid;
+    if(typeof subjectid!='undefined'&&subjectid.length>0&&typeof gradeid!='undefined'&&gradeid.length>0
+        &&typeof(materialid)!='undefined'&&materialid!=null&&parseInt(materialid)>0){
+        window.location.href="teachercourse?toTeacherCourseList&subjectid="+subjectid+"&gradeid="+gradeid+"&materialid="+materialid;
     }else{
         window.location.href="teachercourse?toTeacherCourseList";
     }

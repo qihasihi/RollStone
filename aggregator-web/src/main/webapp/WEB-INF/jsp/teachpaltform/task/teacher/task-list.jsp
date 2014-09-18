@@ -163,7 +163,7 @@ function getInvestReturnMethod(rps){
                 html+='<span class="ico35"></span><b style="color:gray;">'+itm.stucount+'/'+itm.totalcount+'</b>';
 
 
-            if(itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)){
+            if((itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)) && !(itm.tasktype>6&&itm.tasktype<10)){
                 html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
             }
             if(itm.taskstatus=="1")
@@ -228,7 +228,6 @@ function getInvestReturnMethod(rps){
                 html+='<p class="green">任务进行中</p>';
                 html+='<input type="hidden" name="hd_task_status" value="'+itm.taskid+'"/>';
             }
-
             html+='</div>';
             html+='<div class="clear">&nbsp;</div>';
             html+='</div>';

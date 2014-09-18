@@ -97,6 +97,11 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
             objList.add(tpcourseinfo.getSubjectid());
         } else
             sqlbuilder.append("null,");
+        if (tpcourseinfo.getGradeid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getGradeid());
+        } else
+            sqlbuilder.append("null,");
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
             sqlbuilder.append("?,?,");
