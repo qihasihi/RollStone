@@ -575,6 +575,7 @@ public class BaseController<T extends java.io.Serializable> {
 //                (srcFile.getPath().lastIndexOf(".")))
 //                + srcFile.getName().substring(0,srcFile.getName().lastIndexOf(".")) + "_"+(w+h)/100+"." + fileSuffix;
         File    destFile    = new File(fname);
+        System.out.println("cut-image-path:"+_file.getPath());
         if(!destFile.exists()){
             //说明是远程文件,
             if(_file.getPath().indexOf("http:")==0){
@@ -599,6 +600,9 @@ public class BaseController<T extends java.io.Serializable> {
                     bos.close();
                 }
                 _file=tmpWirteFile;
+            }
+            if(!_file.exists()){
+                System.out.println("图片不存在.");
             }
             Image srcImage  = javax.imageio.ImageIO.read(_file);
             //得到图片的原始大小， 以便按比例压缩。

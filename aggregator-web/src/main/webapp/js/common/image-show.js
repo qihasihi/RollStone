@@ -76,7 +76,7 @@ function EttImageShow(settings){
                 $('#img_'+sets.fadeId).offset(myOffset);
                 $('#img_'+sets.fadeId).hide();
                 var h=window.screen.availHeight;
-                var w=window.screen.availWidth();
+                var w=window.screen.availWidth;
 
                 if(isIE()){
                     resizeimg($('#img_'+sets.fadeId).get(0),
