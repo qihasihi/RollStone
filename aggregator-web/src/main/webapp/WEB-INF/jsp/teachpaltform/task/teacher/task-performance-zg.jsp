@@ -34,8 +34,9 @@
                 var uri="tptopic?m=toDetailTopic&topicid=${taskInfo.taskvalueid}";
                 $("#showdetail").attr("href",uri);
             }else{
-                var uri="question?m=todetail&id=${taskInfo.taskvalueid}";
-                $("#showdetail").attr("href",uri);
+                <%--var uri="question?m=todetail&id=${taskInfo.taskvalueid}";--%>
+                <%--$("#showdetail").attr("href",uri);--%>
+                $("#showdetail").hide();
             }
         });
     </script>
