@@ -579,11 +579,11 @@ public class BaseController<T extends java.io.Serializable> {
         System.out.println("cut-image-path:"+_file.getPath());
         if(!destFile.exists()){
             //说明是远程文件,
-            if(_file.getPath().indexOf("http:")==0){
+            if(_file.getPath().indexOf("http:")==0||_file.getPath().indexOf("https:")==0){
                 File tmpWirteFile=new File(destFile.getParent()+"/"+_file.getName());
                 if(!tmpWirteFile.exists()){
                     //实例化url
-                    URL url = new URL(_file.getPath().replaceAll("\\\\","//"));
+                    URL url = new URL(path);
                     //载入图片到输入流
                     java.io.BufferedInputStream bis = new BufferedInputStream(url.openStream());
                     //实例化存储字节数组
