@@ -63,7 +63,7 @@ function addStudentsToGroup(){
             if(rps.type=="success"){
                 alert(rps.msg);
                 closeModel("selectStudent_Div");
-                getNoGroupStudentsByClassId($("#classId").val(),1);
+                getNoGroupStudentsByClassId($("#classId").val(),1,$("#dcType").val());
                 getClassGroups($("#classId").val(),1);
             }else{
                 alert(rps.msg);
@@ -96,12 +96,13 @@ function getNoGroupStudentsByClassId(classId,classType,dctype){
             $("#no_gs").html("");
 
             if(responseText.objList[0]!=null&&responseText.objList[0].length>0){
-                //$("#dv_addGroup").show();
+                $("#dv_addGroup").show();
                 $.each(responseText.objList[0],function(idx,itm){
                     var h='<li>'+itm.STU_NAME;
                     if(typeof responseText.objList[1]!='undefined'&&responseText.objList[1]==3&&dctype>1)
                         h+='<a class="ico_delete" style="display: none;" title="删除"  href="javascript:delClassUser(\''+itm.REF+'\')"></a>';
-                    h+='<a style="display: none;" name="view_pass" class="ico92" title="查看密码" href="javascript:;"></a>';
+                    if(dctype==1)
+                        h+='<a style="display: none;" name="view_pass" class="ico92" title="查看密码" href="javascript:;"></a>';
                     h+='<span style="display: none;" class="password" name="pass">'+itm.PASSWORD+'</span>';
                     h+='</li>';
                     $("#noGroupStudents").append(h);
@@ -240,7 +241,7 @@ function delGroup(groupId){
                 alert("删除成功!"+rps.msg);
                 var clsid=$("#classId").val();
                 getClassGroups(clsid,1);
-                getNoGroupStudentsByClassId(clsid,1);
+                getNoGroupStudentsByClassId(clsid,1,$("#dcType").val());
             }else{
                 alert(rps.msg);
             }
@@ -256,7 +257,7 @@ function delGroupStudent(ref){
             if(rps.type=="success"){
                 alert(rps.msg);
                 $("#nogroup").show();
-                getNoGroupStudentsByClassId($("#classId").val(),1);
+                getNoGroupStudentsByClassId($("#classId").val(),1,$("#dcType").val());
                 getClassGroups($("#classId").val(),1);
             }else{
                 alert("删除失败");
@@ -284,6 +285,7 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
                 $("#group_"+groupId).html(gtHtml);
                 return;
             }
+            var dcType=$("#dcType").val();
             $.each(responseText.objList,function(idx,itm){
                 gtHtml+="<tr>";
                 if(idx==0){
@@ -292,10 +294,11 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
                     gtHtml+=percentHtml;
                     gtHtml+="</td>";
                 }
-                var stuno=typeof itm.stuno=='undefined'?'':itm.stuno;
+                var stuno=typeof itm.stuno=='undefined'?'--':itm.stuno;
                 gtHtml+="<td>"+stuno+"</td>";
                 gtHtml+="<td><span class='w60'>"+itm.stuname+"<b style='display: none;'>"+itm.password+"</b></span>";
-                gtHtml+='<a name="a_view" class="ico92" title="查看密码" href="javascript:void(0);"></a>';
+                if(dcType==1)
+                    gtHtml+='<a name="a_view" class="ico92" title="查看密码" href="javascript:void(0);"></a>';
                 gtHtml+='<a href="javascript:delGroupStudent(\''+itm.ref+'\');" class="ico34" title="移出小组"></a>';
                 if(itm.isleader==2)
                     gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\');" class="ico22" title="调组"></a></td>';
@@ -437,7 +440,8 @@ function getStuList(clsid,dctype){
                     h+='<li>'+itm.realname;
                     if(dctype>1)
                         h+='<a style="display: none;" href="javascript:delClassUser(\''+itm.ref+'\')" class="ico_delete" title="删除"></a>';
-                    h+='<a style="display: none;" name="a_view" class="ico92" title="查看密码" href="javascript:;"></a>';
+                    else
+                        h+='<a style="display: none;" name="a_view" class="ico92" title="查看密码" href="javascript:;"></a>';
                     h+='<span style="display: none;"  class="password">'+itm.password+'</span>'
                     h+='</li>';
                 });
@@ -515,7 +519,7 @@ function doAddClsStudent(){
             } else {
                 closeModel('dv_add_student');
                 getStuList(clsid);
-                getNoGroupStudentsByClassId(clsid,1);
+                getNoGroupStudentsByClassId(clsid,1,$("#dcType").val());
             }
         }
     });
@@ -651,10 +655,11 @@ function delClassUser(ref){
             } else {
                 //$("#li_"+ref).remove();
                 var clsid=$("#classId").val();
+                var dctype=$("dcType").val();
                 if(isLession==2){
                     getStuList(clsid);
                 }else if(isLession==3){
-                    getNoGroupStudentsByClassId(clsid,1);
+                    getNoGroupStudentsByClassId(clsid,1,dctype);
                 }
             }
         }

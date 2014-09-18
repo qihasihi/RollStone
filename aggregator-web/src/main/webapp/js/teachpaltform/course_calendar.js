@@ -105,7 +105,7 @@ function getTchCourseList(year,month,day){
     if(typeof year=='undefined'||  month=='undefined'||  day=='undefined')
         return;
     var param={};
-    if(typeof(isLession)!="undefined"&&isLession==1&&!isBzr&&typeof(_clsid)=="undefined"){
+    if(typeof(isLession)!="undefined"&&isLession&&!isBanzhuren&&typeof(_clsid)=="undefined"){
         param.gradeid=gradeid;
         param.subjectid=subjectid;
     }
@@ -152,7 +152,7 @@ function getTchCourseList(year,month,day){
                         h+='<li>';
                         h+='<a  href="group?m=toGroupManager&termid='+itm.termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'&classid='+itm.classid+'">'+itm.classgrade+itm.classname+'</a>&nbsp;&nbsp;';
                         if(itm.isself>0)
-                            h+='<a href="javascript:genderClick('+itm.courseid+')">'+itm.coursename+'</a>';
+                            h+='<a href="javascript:genderUrl('+itm.courseid+')">'+itm.coursename+'</a>';
                         else
                             h+=itm.coursename;
                         if(typeof(itm.courseScoreIsOver)!="undefined"&&itm.courseScoreIsOver==1)
@@ -179,7 +179,7 @@ function getTchCourseList(year,month,day){
 }
 
 
-function genderClick(courseid){
+function genderUrl(courseid){
     var href="task?toTaskList&courseid="+courseid+"&subjectid="+subjectid+"&gradeid="+gradeid+"&termid="+termid;
     window.open(href);
 }

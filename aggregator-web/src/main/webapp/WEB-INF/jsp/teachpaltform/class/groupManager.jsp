@@ -168,7 +168,8 @@
 
 
     function setClsId(clsid,clstype,dctype,relationtype,clsname){
-        $("#clsname").html(clsname);
+        var cname=qhs.GetLength(clsname)>20?clsname.substring(0,10):clsname;
+        $("#clsname").html(cname);
         displayObj('ul_banji',false);
         $("#classId").val(clsid);
         $("#classType").val(clstype);
@@ -193,16 +194,10 @@
                     if(rps.objList[0]!=null)
                         isLession=rps.objList[0];
 
-                    getNoGroupStudentsByClassId(clsid,1);
+                    getNoGroupStudentsByClassId(clsid,1,dctype);
                     getClassGroups(clsid,1);
                     getClassCourseList();
                     loadClsCourse();
-
-                    if(isLession>1){
-                        $("#dv_stu").show();
-                        getStuList(clsid,dctype);
-                    }else
-                        $("#dv_stu").hide();
 
                     if(isLession==2){ //班主任
                         $("#a_addGroup").hide();
@@ -210,20 +205,21 @@
                         $("#group_list").hide();
                         $("#a_course").parent().hide();
                         $("#h2_lession").hide();
+                        $("#dv_stu").show();
+                        getStuList(clsid,dctype);
                     }else{
                         $("#a_addGroup").show();
                         $("#dv_addGroup").show();
                         $("#group_list").show();
                         $("#a_course").parent().show();
                         $("#h2_lession").show();
+                        $("#dv_stu").hide();
                     }
 
                     if(dctype>1&&isLession>1)
                         $("#a_addStudent").show();
                     else
                         $("#a_addStudent").hide();
-
-
 
                 }
             }

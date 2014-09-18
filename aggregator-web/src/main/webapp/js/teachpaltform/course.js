@@ -442,7 +442,7 @@ function updateTeacherCourse(){
         },success:function(rps){
             if(rps.type=="success"){
                 alert("修改成功!");
-                window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&currentSubjectid="+$("#subjectid").val();
+                window.location.href="teachercourse?toTeacherCourseList&gradeid="+$("#gradeid").val()+"&subjectid="+$("#subjectid").val();
             }else{
                 $("#updateButton").attr("href","javascript:updateTeacherCourse();");
                 alert("无法修改!"+rps.msg);

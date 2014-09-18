@@ -5,6 +5,11 @@
 <%
     Object lession=request.getAttribute("isLession");
     boolean isLession=lession==null?false:true;
+
+    Object banzhuren=request.getAttribute("isBanzhuren");
+    boolean isBanzhuren=banzhuren==null?false:true;
+
+
 %>
 <html>
 	<head>
@@ -23,6 +28,7 @@
     var gradename='';
 
     var isLession=<%=isLession%>;
+    var isBanzhuren=<%=isBanzhuren%>;
 
     var termid="${selTerm.ref}";
     var currtterm="${currtTerm.ref}";

@@ -57,7 +57,7 @@
             http_operate_handler : getInvestReturnMethod, //执行成功后返回方法
             return_type : 'json', //放回的值类型
             page_no : 1, //当前的页数
-            page_size : 20, //当前页面显示的数量
+            page_size : 10, //当前页面显示的数量
             rectotal : 0, //一共多少
             pagetotal : 1,
             operate_id : "initItemList"

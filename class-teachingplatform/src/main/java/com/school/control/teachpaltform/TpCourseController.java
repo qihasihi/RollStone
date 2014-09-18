@@ -357,15 +357,21 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             }
 
             ClassUser c = new ClassUser();
+            List<ClassUser>clsList=null;
             //当前学期、学科、年级下的授课班级
             c.setClassgrade(gradeInfoList.get(0).getGradevalue());
             c.setUserid(this.logined(request).getRef());
             c.setRelationtype("任课老师");
             c.setSubjectid(Integer.parseInt(objectMap.get("subjectid").toString()));
             c.setYear(termInfo.getYear());
-            List<ClassUser>clsList=this.classUserManager.getList(c,null);
+            clsList=this.classUserManager.getList(c,null);
             if(clsList!=null&&clsList.size()>0)
                 mp.put("isLession",1);
+            c.setRelationtype("班主任");
+            c.setSubjectid(null);
+            clsList=this.classUserManager.getList(c,null);
+            if(clsList!=null&&clsList.size()>0)
+                mp.put("isBanzhuren",1);
             mp.put("subGradeInfo",objectMap);
         }
 
@@ -394,9 +400,25 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
+        String gradeValue=null;
+        if(gradeid!=null&&gradeid.trim().length()>0&&!gradeid.equals("0")){
+            GradeInfo gradeInfo=new GradeInfo();
+            gradeInfo.setGradeid(Integer.parseInt(gradeid));
+            List<GradeInfo>gradeInfoList=this.gradeManager.getList(gradeInfo,null);
+            if(gradeInfoList!=null&&gradeInfoList.size()>0)
+                gradeValue=gradeInfoList.get(0).getGradevalue();
+        }
+        ClassUser classUser=new ClassUser();
+        classUser.setUserid(this.logined(request).getRef());
+        if(gradeValue!=null)
+            classUser.setClassgrade(gradeValue);
+
+
+        //当前学期身份  教师1 班主任2 授课班主任3
+        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null);
 
         Integer usertype=null;
-        if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID))
+        if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID)&&userType>1)
            usertype=3;
         else if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID))
             usertype=2;
