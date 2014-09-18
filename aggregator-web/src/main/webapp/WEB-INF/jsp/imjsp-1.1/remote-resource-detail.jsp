@@ -55,7 +55,7 @@
                             <script type="text/javascript">
                                 var fpath="${at}";
                                 fpath=fpath.replaceAll('"',"").replaceAll("”","").replaceAll("[","").replaceAll("]","");
-                                var h='<img src="imapi1_1?m=makeImImg&w=90&h=70&p='+fpath+'" data-src="'+fpath+'">';
+                                var h='<img height="70" width="90" src="'+fpath+'" data-src="'+fpath+'">';
                                 document.write(h);
                             </script>
 
