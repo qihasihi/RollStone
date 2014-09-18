@@ -173,7 +173,7 @@
         $("#classId").val(clsid);
         $("#classType").val(clstype);
         $("#dcType").val(dctype);
-        checkRelationType(clsid);
+        checkRelationType(clsid,clstype,dctype);
     }
 
 

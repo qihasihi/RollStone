@@ -741,6 +741,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             termid=teacherCourseList.get(0).getTermid();
         if(subjectid!=null)
             tcs.setSubjectid(Integer.parseInt(subjectid));
+        Object gradeid=request.getSession().getAttribute("session_grade");
+        if(gradeid!=null&&gradeid.toString().length()>0&&!gradeid.equals("0"))
+            tcs.setGradeid(Integer.parseInt(gradeid.toString()));
         List<TpCourseInfo>courseList=this.tpCourseManager.getCourseList(tcs, null);
         //当前学期所有专题
         tcs=new TpCourseInfo();
@@ -1215,6 +1218,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         tcs1.setSubjectid(subjectid);
         if(termid==null||termid.trim().length()<1)
             termid=courseList.get(0).getTermid();
+        Object gradeid=request.getSession().getAttribute("session_grade");
+        if(gradeid!=null&&gradeid.toString().length()>0&&!gradeid.equals("0"))
+            tcs1.setGradeid(Integer.parseInt(gradeid.toString()));
         List<TpCourseInfo>courseList1=this.tpCourseManager.getStuCourseList(tcs1, null);
 
 

@@ -220,9 +220,20 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             }
             mp.put("subGradeInfo",objectMap);
         }
-
-        mp.put("userType",this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null));
+        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null);
+        mp.put("userType",userType);
         mp.put("userid", this.logined(request).getUserid());
+
+
+        //没有授课信息的班主任,直接跳到日历页面
+        ClassUser c = new ClassUser();
+        c.setUserid(this.logined(request).getRef());
+        c.setRelationtype("任课老师");
+        c.setYear(termInfo.getYear());
+        List<ClassUser>clsList=this.classUserManager.getList(c,null);
+        if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID)&&clsList==null||clsList.size()<1)
+            response.sendRedirect("teachercourse?toTeacherCalendarPage&termid="+termInfo.getRef());
+
         return new ModelAndView("/teachpaltform/course/teacherCourseList", mp);
     }
 
@@ -317,7 +328,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
         if(gradeSubjectList.size()>0){
             Map<String,Object>objectMap=gradeSubjectList.get(0);
-            if(subjectid!=null&&gradeid!=null){
+            if(subjectid!=null&&subjectid.trim().length()>0&&gradeid!=null&&gradeid.trim().length()>0){
                 SubjectInfo s=new SubjectInfo();
                 s.setSubjectid(Integer.parseInt(subjectid));
                 List<SubjectInfo>subList=this.subjectManager.getList(s,null);

@@ -1,7 +1,7 @@
 /**
  * 获取网校班级
  */
-function loadCls(pageno){
+function loadCls(pageno,clsid){
     var param={};
     var grade=$("#sel_grade");
     var year=$("#sel_year");
@@ -38,19 +38,13 @@ function loadCls(pageno){
                             h+=' class="crumb "';
                         h+='>';
                         var clsname=itm.classname;
-                        var cname=qhs.GetLength(clsname)>20?clsname.substring(0,20)+'...':clsname;
+                        var cname=qhs.GetLength(clsname)>32?clsname.substring(0,16)+'...':clsname;
                         h+='<a title="'+clsname+'" id="a_for_'+itm.classid+'" href="javascript:loadClsDetial('+itm.classid+')">'+cname+'</a></li>';
                         $("#ul_class").append(h);
                     });
                 }else{
                     $("#dv_detail").hide('fast');
                 }
-                var aObj = $('a').filter(function () {
-                    return this.id.indexOf('a_for_') != -1
-                });
-                if (aObj.length > 0)
-                    $(aObj).get(0).click();
-
 
                 $("#ul_class li").each(function(idx,itm){
                     $(itm).click(function(){
@@ -58,6 +52,16 @@ function loadCls(pageno){
                         $(this).addClass('crumb');
                     })
                 });
+
+
+                var clsIdObj='a_for_';
+                if(typeof clsid!='undefined'&&clsid.toString().length>0)
+                    clsIdObj='a_for_'+clsid;
+                var aObj = $('a').filter(function () {
+                    return this.id.indexOf(clsIdObj) != -1
+                });
+                if (aObj.length > 0)
+                    $(aObj).get(0).click();
 
                 //分页
                 $("#dv_page").html('');
@@ -111,7 +115,7 @@ function doSetClassTeacher(clsid){
                 alert(rps.msg);
             } else {
                closeModel('dv_add_teacher');
-               loadCls(1);
+               loadCls(1,clsid);
             }
         }
     });
@@ -191,7 +195,7 @@ function doAddClsStudent(clsid){
                 alert(rps.msg);
             } else {
                 closeModel('dv_add_student');
-                loadCls(1);
+                loadCls(1,clsid);
             }
         }
     });
@@ -585,7 +589,7 @@ function sub_cls(clsid){
             alert(rps.msg);
             if(rps.type=='success'){
                 closeModel(dvObj);
-                loadCls(1);
+                loadCls(1,clsid);
             }
         }
     });

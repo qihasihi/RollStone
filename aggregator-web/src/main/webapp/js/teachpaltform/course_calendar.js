@@ -178,6 +178,13 @@ function getTchCourseList(year,month,day){
     });
 }
 
+
+function genderClick(courseid){
+    var href="task?toTaskList&courseid="+courseid+"&subjectid="+subjectid+"&gradeid="+gradeid+"&termid="+termid;
+    window.open(href);
+}
+
+
 function markCalendar(selYear,selMonth){
     if(!selYear||!selMonth)
         return;

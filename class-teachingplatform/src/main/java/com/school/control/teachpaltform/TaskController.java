@@ -172,6 +172,11 @@ public class TaskController extends BaseController<TpTaskInfo>{
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0)
             subjectid=materialList.get(0).getSubjectid().toString();
+
+        if(gradeid!=null&&!gradeid.toString().equals("0"))
+            request.getSession().setAttribute("session_grade",gradeid);
+        if(subjectid!=null&&!subjectid.toString().equals("0"))
+            request.getSession().setAttribute("session_subject",subjectid);
         //课题样式
         request.setAttribute("coursename", teacherCourseList.get(0).getCoursename());
         TpCourseInfo tcs= new TpCourseInfo();
@@ -182,6 +187,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
             tcs.setSubjectid(Integer.parseInt(subjectid));
         if(gradeid!=null&&gradeid.trim().length()>0)
             tcs.setGradeid(Integer.parseInt(gradeid));
+        else
+            tcs.setGradeid(Integer.parseInt(request.getSession().getAttribute("session_grade").toString()));
+
+
         List<TpCourseInfo>courseList=this.tpCourseManager.getCourseList(tcs, null);
         request.setAttribute("courseList", courseList);
 
@@ -191,10 +200,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         request.setAttribute("courseid", courseid);
         request.setAttribute("termid", termid);
         request.setAttribute("subjectid", subjectid);
-        if(gradeid!=null&&!gradeid.toString().equals("0"))
-            request.getSession().setAttribute("session_grade",gradeid);
-        if(subjectid!=null&&!subjectid.toString().equals("0"))
-            request.getSession().setAttribute("session_subject",subjectid);
+
         //if(materialid!=null&&!materialid.toString().equals("0"))
         //    request.getSession().setAttribute("session_material",materialid);
 
@@ -1722,13 +1728,28 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String courseid=request.getParameter("courseid");
         String termid=request.getParameter("termid");
         String subjectid=request.getParameter("subjectid");
-        String gradeid=request.getParameter("gradeid");
+        String classid=request.getParameter("classid");
         //根据课题ID和学生ID查出任务
-        if(courseid==null||courseid.trim().length()<1){
+        if(courseid==null||courseid.trim().length()<1||classid==null||classid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
+
+        ClassInfo classInfo=new ClassInfo();
+        classInfo.setClassid(Integer.parseInt(classid));
+        List<ClassInfo>clsList=this.classManager.getList(classInfo,null);
+        if(clsList==null||clsList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        String gradeid=null;
+        GradeInfo g=new GradeInfo();
+        g.setGradevalue(clsList.get(0).getClassgrade());
+        List<GradeInfo>gradeList=this.gradeManager.getList(g,null);
+        if(gradeList!=null&&gradeList.size()>0)
+            gradeid=gradeList.get(0).getGradeid().toString();
 
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));

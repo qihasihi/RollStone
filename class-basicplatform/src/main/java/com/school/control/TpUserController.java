@@ -496,6 +496,19 @@ public class TpUserController extends UserController {
                 objListArray.add(objList);
             }
 
+            //添加班主任角色
+            RoleUser jwru = new RoleUser();
+            jwru.setRef(UUID.randomUUID().toString());
+            jwru.getUserinfo().setRef(userNextRef);
+            jwru.getRoleinfo().setRoleid(UtilTool._ROLE_CLASSADVISE_ID);
+
+            sql = new StringBuilder();
+            objList = this.roleUserManager.getSaveSql(jwru, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             response.getWriter().print(je.toJSON());
@@ -748,6 +761,21 @@ public class TpUserController extends UserController {
         }
 
 
+        //添加班主任角色
+        RoleUser jwru = new RoleUser();
+        jwru.getUserinfo().setRef(userNextRef);
+        jwru.getRoleinfo().setRoleid(UtilTool._ROLE_CLASSADVISE_ID);
+        List<RoleUser>ruList=this.roleUserManager.getList(jwru,null);
+        if(ruList==null||ruList.size()<1){
+            jwru.setRef(UUID.randomUUID().toString());
+            sql = new StringBuilder();
+            objList = this.roleUserManager.getSaveSql(jwru, sql);
+            if (objList != null && sql != null) {
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+
         //添加班级关联数据
         ClassUser cu=new ClassUser();
         cu.setClassid(c.getClassid());
@@ -910,8 +938,6 @@ public class TpUserController extends UserController {
             for(ClassUser tmpUser:stuList){
                 jids.append("{\"jid\":"+tmpUser.getEttuserid()+"},");
             }
-
-
 
             if(jids.length()>0){
                 String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
@@ -1336,12 +1362,20 @@ public class TpUserController extends UserController {
                 }
 
 
-
+                //删除当前班级学生
+                ClassUser delete=new ClassUser();
+                delete.setClassid(Integer.parseInt(clsid));
+                delete.setRelationtype("学生");
+                sql=new StringBuilder();
+                objList=this.classUserManager.getDeleteSql(delete,sql);
+                if(objList!=null&&sql!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
                 //检测当前学生是否已经创建帐号
                 for(int i=0;i<jidArray.length;i++){
                     String jid=jidArray[i].toString();
                     String realname=nameArray[i].toString();
-
                     String userNextRef = UUID.randomUUID().toString();
 
                     UserInfo u=new UserInfo();
@@ -1349,6 +1383,7 @@ public class TpUserController extends UserController {
                     u.setDcschoolid(this.logined(request).getDcschoolid());
                     List<UserInfo>userList=this.userManager.getList(u,null);
                     if(userList==null||userList.size()<1){
+
                         //添加用户
                         u.setRef(userNextRef);
                         u.setPassword(schoolid+jid);
@@ -1423,6 +1458,7 @@ public class TpUserController extends UserController {
                                 }
                             }
                         }
+                        userRefList.add(userNextRef);
                     }else
                         userNextRef=userList.get(0).getRef();
 
@@ -1444,11 +1480,9 @@ public class TpUserController extends UserController {
                             objListArray.add(objList);
                         }
                     }
-                    userRefList.add(userNextRef);
                 }
             }
         }
-
 
 
 
@@ -1463,8 +1497,7 @@ public class TpUserController extends UserController {
                     UserInfo usel=new UserInfo();
                     usel.setRef(userid);
                     List<UserInfo>uList=this.userManager.getList(usel,null);
-                    if(uList!=null&&uList.size()>0&&
-                            (uList.get(0).getEttuserid()==null||uList.get(0).getEttuserid().toString().length()<1))
+                    if(uList!=null&&uList.size()>0)
                         bindUserList.add(uList.get(0));
                 }
 
@@ -1480,9 +1513,9 @@ public class TpUserController extends UserController {
 
 
                 if(!EttInterfaceUserUtil.addUserBase(bindUserList))
-                    System.out.println("Add ett user error!");
+                    System.out.println("Add ett stu error!");
                 else
-                    System.out.println("Add ett user success!");
+                    System.out.println("Add ett stu success!");
 
                 List<Map<String,Object>>mapList=this.getClassUserMap("学生",Integer.parseInt(clsid));
                 if(!EttInterfaceUserUtil.OperateClassUser(mapList,Integer.parseInt(clsid),Integer.parseInt(schoolid)))

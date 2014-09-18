@@ -152,6 +152,9 @@ public class PaperController extends BaseController<PaperInfo>{
         tcs.setLocalstatus(1);
         if(subjectid!=null)
             tcs.setSubjectid(Integer.parseInt(subjectid));
+        Object gradeid=request.getSession().getAttribute("session_grade");
+        if(gradeid!=null&&gradeid.toString().length()>0&&!gradeid.equals("0"))
+            tcs.setGradeid(Integer.parseInt(gradeid.toString()));
         List<TpCourseInfo>courseList=this.tpCourseManager.getCourseList(tcs, null);
         request.setAttribute("courseList", courseList);
 

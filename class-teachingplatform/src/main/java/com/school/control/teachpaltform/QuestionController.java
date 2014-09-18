@@ -97,6 +97,9 @@ public class QuestionController extends BaseController<QuestionInfo> {
         tcs.setLocalstatus(1);
         if(subjectid!=null)
             tcs.setSubjectid(subjectid);
+        Object gradeid=request.getSession().getAttribute("session_grade");
+        if(gradeid!=null&&gradeid.toString().length()>0&&!gradeid.equals("0"))
+            tcs.setGradeid(Integer.parseInt(gradeid.toString()));
         List<TpCourseInfo>courseStyleList=this.tpCourseManager.getCourseList(tcs, null);
         request.setAttribute("courseList", courseStyleList);
  
