@@ -64,4 +64,13 @@ public interface IPaperQuestionManager  extends IBaseManager<PaperQuestion> {
      * @return
      */
     public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid,Long taskid);
+
+    /**
+     * 得到用户总分
+     * @param paperid
+     * @param userid
+     * @param taskid
+     * @return
+     */
+    public List<Map<String,Object>> getPaperScoreByUser(final long paperid,final Integer userid,final long taskid);
 }

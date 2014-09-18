@@ -607,10 +607,7 @@ public class BaseController<T extends java.io.Serializable> {
         if(!parF.exists())
               parF.mkdirs();
         fname+=srcFile.getName()+((w+h)/100)+"."+fileSuffix;
-//        String fname=srcFile.getPath().substring(0,
-//                (srcFile.getPath().lastIndexOf(".")))
-//                + srcFile.getName().substring(0,srcFile.getName().lastIndexOf(".")) + "_"+(w+h)/100+"." + fileSuffix;
-        File    destFile    = new File(fname);
+        File  destFile=new File(fname);
         System.out.println("cut-image-path:"+path);
         if(!destFile.exists()){
             //说明是远程文件,

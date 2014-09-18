@@ -23,6 +23,8 @@
                // $("#classSelect").val(currentclsid);
                 $("#classSelect").find("option[value='"+currentclsid+"|"+currenttype+"']").attr("selected",true);
             }
+            if($("#classSelect option").length<2)
+                $("#a_cls").hide();
            queryPaperques();
 
             if($("#question li").filter(function(){return this.className!='over'}).length<1){
@@ -148,7 +150,7 @@
                 </c:forEach>
             </select>
             <span id="sp_showCls"><script type="text/javascript">document.write($("#classSelect option[selected='true']").text());</script>
-              <a href="javascript:;" onclick="sp_showCls.style.display='none';$('#classSelect').show()" class="ico49a"></a>
+              <a id="a_cls" href="javascript:;" onclick="sp_showCls.style.display='none';$('#classSelect').show()" class="ico49a"></a>
             </span>
             </h2>
             <h3>注：客观题系统已自动完成批改</h3>

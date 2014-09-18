@@ -11,6 +11,7 @@
 <head>
     <title></title>
     <script type="text/javascript">
+         var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         var questiontype = "${detail.QUESTION_TYPE2!=null?detail.QUESTION_TYPE2:detail.QUESTION_TYPE}";
         var extension = "${detail.EXTENSION2!=null?detail.EXTENSION2:detail.EXTENSION}";
         var tabidx = "${param.tabidx}";
@@ -292,8 +293,20 @@
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940">
                 <c:if test="${!empty detail.CONTENT2}">
                     <tr>
-                        <td><span class="bg"  id="tname"></span>${detail.CONTENT2}</td>
+                        <td><span class="bg"  id="tname"></span>${detail.CONTENT2}
+                            <script type="text/javascript">
+                                if(extension==4){
+                                    var mp3url=_QUES_IMG_URL+"/${param.questionid}/001.mp3";
+                                    var h='<img src="images/pic05_140722.png" style="cursor:pointer" onclick="ado_audio.play()" alt="听力"/>' ;
+                                        h+='<span style="display:none"><audio controls="controls" id="ado_audio">';
+                                        h+='<source src="${at}" type="audio/ogg">';
+                                        h+='<source src="${at}" type="audio/mpeg">';
+                                        h+='您的浏览器不支持 audio 标签。</audio></span>';
+                                }
+                            </script>
+                        </td>
                     </tr>
+
                     <tr>
                         <td>${detail.ORDERIDX}、${detail.CONTENT}
                             <c:if test="${!empty option}">

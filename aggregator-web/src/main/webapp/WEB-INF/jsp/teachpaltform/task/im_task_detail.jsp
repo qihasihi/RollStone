@@ -29,7 +29,10 @@
             <c:if test="${!empty tk.imtaskattachList}">
                 <c:forEach items="${tk.imtaskattachList}" var="attach">
                     <c:if test="${tk.imtaskattachtype==1}">
-                        <li><img src="imapi1_1?m=makeImImg&w=90&h=70&p=${attach}" data-src="${attach}"></li>
+                        <li>
+                            <%--<img src="imapi1_1?m=makeImImg&w=90&h=70&p=${attach}" data-src="${attach}">--%>
+                                <img src="${attach}" data-src="${attach}" height="70">
+                        </li>
                     </c:if>
                     <c:if test="${tk.imtaskattachtype==2}">
                         <p><img style="cursor:pointer"  src="images/pic02_140811.png" onclick="ado_<%=ado_idx%>.play()"/>
@@ -72,7 +75,11 @@
 
                    <c:forEach items="${qa.imtaskattachList}" var="at">
                     <c:if test="${qa.replyattachtype==1}">
-                        <li><img src="imapi1_1?m=makeImImg&w=90&h=70&p=${at}" data-src="${at}"></li>
+                        <li>
+                            <%--<img src="imapi1_1?m=makeImImg&w=90&h=70&p=${at}" data-src="${at}">--%>
+                                <img src="${at}" data-src="${at}" height="70">
+                        </li>
+
                     </c:if>
                     <c:if test="${qa.replyattachtype==2}">
                         <p>

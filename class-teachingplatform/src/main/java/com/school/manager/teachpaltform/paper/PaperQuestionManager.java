@@ -150,6 +150,17 @@ public class  PaperQuestionManager extends BaseManager<PaperQuestion> implements
     public List<Map<String,Object>> getClsPaperQuesOptTJ(Long paperid,Long quesid,Integer classid,Long taskid){
         return this.paperquestiondao.getClsPaperQuesOptTJ(paperid,quesid,classid,taskid);
     }
-    
+
+    /**
+     * 得到用户总分
+     * @param paperid
+     * @param userid
+     * @param taskid
+     * @return
+     */
+    public List<Map<String,Object>> getPaperScoreByUser(final long paperid,final Integer userid,final long taskid){
+        return this.paperquestiondao.getPaperScoreByUser(paperid,userid,taskid);
+    }
+
 }
 

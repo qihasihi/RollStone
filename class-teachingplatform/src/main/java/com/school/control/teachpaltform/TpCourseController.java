@@ -3524,30 +3524,30 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             tcc.setClassid(Integer.parseInt(clsid.trim()));
             tcc.setTermid(termid);
             List<TpCourseClass> tccList=this.tpCourseClassManager.getTpCourseClassByClsTermId(Integer.parseInt(clsid.trim()),termid.trim());
-            if(tccList==null||tccList.size()<1){
-                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
-                response.getWriter().print(jsonEntity.toJSON());
-                return;
-            }
-            //得到该老师的教授学科
-//            SubjectUser su=new SubjectUser();
-//            su.setUserid(this.logined(request).getRef());
-//            List<SubjectUser> sbUlist=this.subjectUserManager.getList(su,null);
-//            if(sbUlist==null||sbUlist.size()<1){
+            if(tccList!=null&&tccList.size()>0){
 //                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
 //                response.getWriter().print(jsonEntity.toJSON());
 //                return;
 //            }
-            List<TpCourseClass> tmpTccList=new ArrayList<TpCourseClass>();
-            //对比
-            for (TpCourseClass tccTmp:tccList){
-                if(tccTmp!=null&&tccTmp.getSubjectid().intValue()==Integer.parseInt(subjectid.trim())){
-                    if(!tmpTccList.contains(tccTmp))
-                        tmpTccList.add(tccTmp);
+                //得到该老师的教授学科
+    //            SubjectUser su=new SubjectUser();
+    //            su.setUserid(this.logined(request).getRef());
+    //            List<SubjectUser> sbUlist=this.subjectUserManager.getList(su,null);
+    //            if(sbUlist==null||sbUlist.size()<1){
+    //                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+    //                response.getWriter().print(jsonEntity.toJSON());
+    //                return;
+    //            }
+                List<TpCourseClass> tmpTccList=new ArrayList<TpCourseClass>();
+                //对比
+                for (TpCourseClass tccTmp:tccList){
+                    if(tccTmp!=null&&tccTmp.getSubjectid().intValue()==Integer.parseInt(subjectid.trim())){
+                        if(!tmpTccList.contains(tccTmp))
+                            tmpTccList.add(tccTmp);
+                    }
                 }
+                jsonEntity.setObjList(tmpTccList);
             }
-            jsonEntity.setObjList(tmpTccList);
-
         }else{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NO_SERVICE_RIGHT"));
             response.getWriter().print(jsonEntity.toJSON());

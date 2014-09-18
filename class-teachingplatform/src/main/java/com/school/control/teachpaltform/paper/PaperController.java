@@ -3415,7 +3415,8 @@ public class PaperController extends BaseController<PaperInfo>{
                        fos = new FileOutputStream(request.getRealPath("/")+fname);
                        ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
                    }finally{
-                       fos.close();
+                       if(fos!=null)
+                         fos.close();
                    }
 
                    je.getObjList().add(fname);
@@ -3805,13 +3806,14 @@ public class PaperController extends BaseController<PaperInfo>{
         FileOutputStream fos = null;
         String imgRealPath=request.getRealPath("/")+"userUploadFile/optionPie/tk"+paperid+questid+classid+".png";
         File f=new File(imgRealPath);
-
+        if(!f.getParentFile().exists())
+            f.getParentFile().mkdirs();
         try{
             fos = new FileOutputStream(imgRealPath);
             ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
-
         }finally{
-            fos.close();
+            if(fos!=null)
+                 fos.close();
         }
         //«Â¿Ì
         System.gc();

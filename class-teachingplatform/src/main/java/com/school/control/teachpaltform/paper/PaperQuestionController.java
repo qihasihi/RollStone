@@ -4345,9 +4345,16 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         if(zgtCountList!=null&&zgtCountList.size()>0&&zgtCountList.get(0)!=null&&zgtCountList.get(0).containsKey("ZGTCOUNT")
                 &&zgtCountList.get(0).get("ZGTCOUNT")!=null){
             Object zgtCount=zgtCountList.get(0).get("ZGTCOUNT");
-            if(Integer.parseInt(zgtCount.toString().trim())>0)
+            if(Integer.parseInt(zgtCount.toString().trim())>0){
                 splog.setIsmarking(1);
-            else
+                //查询这个学生在该试题，该任务中的总分
+                float sumScore=0f;
+                List<Map<String,Object>> mapSumScoreList=this.paperQuestionManager.getPaperScoreByUser(Long.parseLong(paperid),userid,Long.parseLong(taskid));
+                if(mapSumScoreList!=null&&mapSumScoreList.size()>0&&!mapSumScoreList.get(0).containsKey("SUM_SCORE")){
+                    sumScore=Float.parseFloat(mapSumScoreList.get(0).get("SUM_SCORE").toString());
+                }
+                splog.setScore(sumScore);
+            }else
                 splog.setIsmarking(0);
         }
         sqlbuilder=new StringBuilder();
@@ -4495,7 +4502,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             stpq.setScore(score);
             stpq.setAnnexName(annexName);
             Integer questype=Integer.parseInt(questypeObj.toString());
-            if(questype==4||questype==3){
+            if(questype==4||questype==3||questype==7||questype==8){
                 stpq.setIsright(score>0?1:2);
                 stpq.setIsmarking(0);
             }

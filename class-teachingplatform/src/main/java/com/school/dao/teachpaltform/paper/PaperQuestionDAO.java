@@ -494,4 +494,20 @@ public class PaperQuestionDAO extends CommonDAO<PaperQuestion> implements IPaper
             presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
         return paperquestionList;
     }
+    /**
+     * 得到用户总分
+     * @param paperid
+     * @param userid
+     * @param taskid
+     * @return
+     */
+    public List<Map<String,Object>> getPaperScoreByUser(final long paperid,final  Integer userid,final  long taskid){
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL j_paper_question_kgtSumScore(?,?,?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(paperid);
+        objList.add(userid);
+        objList.add(taskid);
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
 }
