@@ -1480,6 +1480,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
                 if(type==1){
                     Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                    obj = URLDecoder.decode(obj.toString(),"utf-8");
                     JSONArray jr = JSONArray.fromObject(obj);
                     if(jr!=null&&jr.size()>0){
                         for(int i = 0;i<jr.size();i++){
@@ -1549,6 +1550,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
                 if(type==1){
                     Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                    obj = URLDecoder.decode(obj.toString(),"utf-8");
                     JSONArray jr = JSONArray.fromObject(obj);
                     if(jr!=null&&jr.size()>0){
                         for(int i = 0;i<jr.size();i++){
@@ -1768,7 +1770,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
                     int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
                     if(type==1){
-                        Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                       Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                        obj = URLDecoder.decode(obj.toString(),"utf-8");
                         JSONArray jr = JSONArray.fromObject(obj);
                         if(jr!=null&&jr.size()>0){
                             for(int i = 0;i<jr.size();i++){
@@ -2582,7 +2585,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
                             int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
                             if(type==1){
-                                Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                               Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                                obj = URLDecoder.decode(obj.toString(),"utf-8");
                                 JSONArray jr = JSONArray.fromObject(obj);
                                 if(jr!=null&&jr.size()>0){
                                     for(int i = 0;i<jr.size();i++){
@@ -2630,7 +2634,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
                         int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
                         if(type==1){
-                            Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                           Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                            obj = URLDecoder.decode(obj.toString(),"utf-8");
                             JSONArray jr = JSONArray.fromObject(obj);
                             if(jr!=null&&jr.size()>0){
                                 for(int i = 0;i<jr.size();i++){
@@ -3801,7 +3806,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
                     int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
                     if(type==1){
-                        Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                       Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                        obj = URLDecoder.decode(obj.toString(),"utf-8");
                         JSONArray jr = JSONArray.fromObject(obj);
                         if(jr!=null&&jr.size()>0){
                             for(int i = 0;i<jr.size();i++){
@@ -3899,7 +3905,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
                     int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
                     if(type==1){
-                        Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                       Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                        obj = URLDecoder.decode(obj.toString(),"utf-8");
                         JSONArray jr = JSONArray.fromObject(obj);
                         if(jr!=null&&jr.size()>0){
                             for(int i = 0;i<jr.size();i++){
@@ -4753,7 +4760,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
             int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
             if(type==1){
-                Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+               Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                obj = URLDecoder.decode(obj.toString(),"utf-8");
                 JSONArray jr = JSONArray.fromObject(obj);
                 if(jr!=null&&jr.size()>0){
                     for(int i = 0;i<jr.size();i++){
