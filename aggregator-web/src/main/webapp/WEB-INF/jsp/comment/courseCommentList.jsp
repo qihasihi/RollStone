@@ -66,7 +66,7 @@ function showCourseList(){
 <body>
 <%@include file="/util/head.jsp" %>
 <div class="jxpt_layout">
-<%@include file="/util/nav.jsp" %>
+<%@include file="/util/nav-base.jsp" %>
   <div class="jxpt_keti_title">
     <p>${course.coursename }<a href="javascript:showCourseList();"><img src="images/an01_130423.png" width="27" height="28" align="absbottom" class="p_l_20" /></a></p>
     <ul class="font-white" style="display:none;" id="ul_courselist">

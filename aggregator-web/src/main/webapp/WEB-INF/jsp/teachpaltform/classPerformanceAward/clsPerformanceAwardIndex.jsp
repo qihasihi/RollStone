@@ -61,8 +61,8 @@
 <div class="subpage_head"><span class="ico19"></span><strong>课堂积分</strong>
 
     <c:if test="${!empty tccClsList}">
-            <strong style="float:right" style="display:<%=isStudent?"none":"block"%>">
-                    <select id="sel_clsid" onchange="clsChanged()">
+            <strong style="float:right">
+                    <select id="sel_clsid" onchange="clsChanged()"  style="display:<%=isStudent?"none":"block"%>">
                            <c:forEach items="${tccClsList}" var="tcc">
                                <option value="${tcc.classid}">${tcc.classname}</option>
                            </c:forEach>

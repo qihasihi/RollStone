@@ -54,6 +54,8 @@ function addcomment(){
                 $("#a_submit_comment").remove();
                // $("#td_jy").html($("#commentcontext").val());
                 $("#commentcontext").attr("disabled",true);
+                $("#p_rate li").hover(function(){},function(){});//清空事件
+                $("#p_rate li").unbind("click");
                 $("#a_qx").html("关&nbsp;闭");
 				alert(rps.msg);
 			//	window.close();

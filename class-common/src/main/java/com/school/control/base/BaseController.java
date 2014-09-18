@@ -28,6 +28,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
@@ -553,13 +554,47 @@ public class BaseController<T extends java.io.Serializable> {
     }
 
     /**
+     * 下载图片
+     * @param path
+     * @param topath
+     * @return
+     */
+    public File downloadImage(String imgUrl,String topath){
+        File tmpWirteFile=new File(topath);
+        if(!tmpWirteFile.exists()){
+            try{
+                // 创建流
+                BufferedInputStream in = new BufferedInputStream(new URL(imgUrl)
+                        .openStream());
+                // 生成图片名
+                // 存放地址
+                File img = new File(topath);
+                // 生成图片
+                BufferedOutputStream out = new BufferedOutputStream(
+                        new FileOutputStream(img));
+                byte[] buf = new byte[2048];
+                int length = in.read(buf);
+                while (length != -1) {
+                    out.write(buf, 0, length);
+                    length = in.read(buf);
+                }
+                in.close();
+                out.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return new File(topath);
+    }
+
+    /**
      * 强制压缩/放大图片到固定的大小
      * @param  path String 原始图片路径(绝对完整路径)
      * @param w int 新宽度
      * @param h int 新高度
      * @throws IOException
      */
-    protected String ImgResize(String path,int w, int h) throws IOException {
+    public String ImgResize(String path,int w, int h) throws IOException {
         path=path.replaceAll("\\\\","//");
         File _file = new File(path);
         _file.setReadOnly();
@@ -576,31 +611,12 @@ public class BaseController<T extends java.io.Serializable> {
 //                (srcFile.getPath().lastIndexOf(".")))
 //                + srcFile.getName().substring(0,srcFile.getName().lastIndexOf(".")) + "_"+(w+h)/100+"." + fileSuffix;
         File    destFile    = new File(fname);
-        System.out.println("cut-image-path:"+_file.getPath());
+        System.out.println("cut-image-path:"+path);
         if(!destFile.exists()){
             //说明是远程文件,
             if(_file.getPath().indexOf("http:")==0||_file.getPath().indexOf("https:")==0){
-                File tmpWirteFile=new File(destFile.getParent()+"/"+_file.getName());
-                if(!tmpWirteFile.exists()){
-                    //实例化url
-                    URL url = new URL(path);
-                    //载入图片到输入流
-                    java.io.BufferedInputStream bis = new BufferedInputStream(url.openStream());
-                    //实例化存储字节数组
-                    byte[] bytes = new byte[1024];
-
-
-                    //设置写入路径以及图片名称
-                    OutputStream bos = new FileOutputStream(tmpWirteFile);
-                    int len;
-                    while ((len = bis.read(bytes)) > 0) {
-                        bos.write(bytes, 0, len);
-                    }
-                    bis.close();
-                    bos.flush();
-                    bos.close();
-                }
-                _file=tmpWirteFile;
+                //远程文件进行下载
+                _file=downloadImage(path,fname);
             }
             if(!_file.exists()){
                 System.out.println("图片不存在.");
@@ -638,7 +654,7 @@ public class BaseController<T extends java.io.Serializable> {
      * @return 1:成功        2:信息不完整，拒绝操作       3:图片不存在了    4：信息完整，操作成功，但执行返回失败
      * @throws Exception
      */
-    protected Integer HeadImgToEtt(UserInfo u)throws Exception{
+    public Integer HeadImgToEtt(UserInfo u)throws Exception{
         Integer returnVal=2;
         //信息不完整操作
         if(u.getHeadimage()==null||u.getEttuserid()==null||u.getUserid()==null
@@ -674,7 +690,7 @@ public class BaseController<T extends java.io.Serializable> {
      * @param  headimage
      * @return  boolean
      */
-    protected static boolean sendBindHeadImageToEtt(String usertype,String ettuserid,String headimage){
+    public static boolean sendBindHeadImageToEtt(String usertype,String ettuserid,String headimage){
         //准备向ETT发送数据
         HashMap<String,String> paramMap=new HashMap<String, String>();
         paramMap.put("userType",usertype);    //u.getStuname!=null&&u.getStuname.length>0 则：3(学生)，反则是2(教师)
@@ -696,7 +712,7 @@ public class BaseController<T extends java.io.Serializable> {
      * 填入相关信息到conn.
      * @param con
      */
-    protected static void setUrlConnHeader(URLConnection con) {
+    public static void setUrlConnHeader(URLConnection con) {
         con.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.3) Gecko/2008092510 Ubuntu/8.04 (hardy) Firefox/3.0.3");
         con.setRequestProperty("Accept-Language", "en-us,en;q=0.7,zh-cn;q=0.3");
         con.setRequestProperty("Accept-Encoding", "aa");

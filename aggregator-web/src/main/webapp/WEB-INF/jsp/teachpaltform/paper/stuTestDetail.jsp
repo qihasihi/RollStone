@@ -147,7 +147,7 @@
                     h+='完形填空</span>：${q.parentQues.content}';
                 else if(pextension==4){
                     //如果是英语听力，则还需要添加控件，不用添加内容。
-                    h+='英语听力</span>：<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div><br/>${q.parentQues.content}<br/>';
+                    h+='英语听力</span>：${q.parentQues.content}<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div><br/>';
                     h+='${q.parentQues.analysis}';  //听力原文
                 }else if(pextension==5){
                     h+='七选五</span>：${q.parentQues.content}';

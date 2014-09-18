@@ -84,6 +84,7 @@
                     $("#dv_lession").hide();
                     $("#dv_manage_stu").show();
                     $(itm).siblings().removeClass('crumb').end().addClass('crumb');
+                    $(".jifen li").removeClass('crumb');
                 })
 
             }else if(idx==1){
@@ -92,6 +93,7 @@
                     $("#dv_lession").show();
                     $("#dv_manage_stu").hide();
                     $(itm).siblings().removeClass('crumb').end().addClass('crumb');
+                    $(".jifen li").removeClass('crumb');
                     getClassCourseList();
                 })
 
