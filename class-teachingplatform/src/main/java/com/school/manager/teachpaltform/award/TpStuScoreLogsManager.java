@@ -229,7 +229,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
                             System.out.println("“Ï≥££°");
                         returnVal=false;
                     }
-                    System.out.println(jo.get("result"));
+//                    System.out.println(jo.get("result"));
                 }
             }
 
