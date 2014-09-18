@@ -1725,6 +1725,17 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                                         htm += '<td></td>';
                                     if (typeof(itm.answercontent) != 'undefined') {
                                         htm += '<td>' + itm.answercontent + '</td>';
+//                                        if(typeof itm.ATTACH!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].replyattachList)!="undefined"){
+//                                            if(itm.questionAnswerList[0].replyattachList.length>0){
+//                                                answerhtm+='<p><span><br>答题附件：';
+//                                                $.each(itm.questionAnswerList[0].replyattachList,function(idx,itm){
+//                                                    var name=itm.substring(itm.lastIndexOf("/")+1);
+//                                                    answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+//                                                });
+//                                                answerhtm+='</span></p>';
+//                                            }
+//                                        }
+
                                     }
                                     else {
                                         if (itm.status > 0 && (tasktype == 1 || tasktype == 2)) {

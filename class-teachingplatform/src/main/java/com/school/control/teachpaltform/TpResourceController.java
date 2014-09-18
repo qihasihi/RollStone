@@ -3065,20 +3065,20 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             if(keyword!=null&&keyword.length()>0){
                 param+="&tchVersionId="+versionid+"&keyword="+keyword;
             }else{
+                StringBuilder sb = new StringBuilder();
+                //首先得到本专题
+                TpCourseInfo tc = new TpCourseInfo();
+                tc.setCourseid(Long.parseLong(courseid));
+                List<TpCourseInfo> tcList = this.tpCourseManager.getList(tc,null);
+                if(tcList.get(0).getQuoteid()!=null)
+                    sb.append("{course_id:\""+tcList.get(0).getQuoteid()+"\"}");
                 if(trList!=null&&trList.size()>0){
-                    StringBuilder sb = new StringBuilder();
-                    //首先得到本专题
-                    TpCourseInfo tc = new TpCourseInfo();
-                    tc.setCourseid(Long.parseLong(courseid));
-                    List<TpCourseInfo> tcList = this.tpCourseManager.getList(tc,null);
-                    if(tcList.get(0).getQuoteid()!=null)
-                        sb.append("{course_id:\""+tcList.get(0).getQuoteid()+"\"}");
                     for(int i = 0;i<trList.size();i++){
                         sb.append("{course_id:\""+trList.get(i).getRelatedcourseid()+"\"}");
                     }
-                    String courseidlist = "["+sb.toString()+"]";
-                    param+="&courseIDList="+courseidlist;
                 }
+                String courseidlist = "["+sb.toString()+"]";
+                param+="&courseIDList="+courseidlist;
             }
             String returnval2=sendPostURL(url,param);
             if(returnval2!=null&&returnval2.length()>0){

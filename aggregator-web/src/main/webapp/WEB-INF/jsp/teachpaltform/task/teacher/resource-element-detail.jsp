@@ -255,7 +255,8 @@ function getInvestReturnMethod3(rps){
         }
         pList3.Refresh();
     }else{
-        $("#mainTab3").html('没有数据');
+        htm+='<tr><td colspan="=20">没有资源</td></tr>';
+        $("#mainTab3").html(htm);
         $("font[id='pList3font']").html("1/1");
     }
 }
@@ -613,7 +614,9 @@ function subUploadRes(usertype){
                     <td class="font-black">
                         <c:if test="${!empty resType}">
                         <c:forEach items="${resType}" var="d">
-                        <input type="radio" name="res_type"  value="${d.dictionaryvalue}" />${d.dictionaryname}&nbsp;&nbsp;&nbsp;&nbsp;
+                            <c:if test="${d.dictionaryvalue!=6}">
+                            <input type="radio" name="res_type"  value="${d.dictionaryvalue}" />${d.dictionaryname}&nbsp;&nbsp;&nbsp;&nbsp;
+                            </c:if>
                         </c:forEach>
                         </c:if>
                 </tr>
