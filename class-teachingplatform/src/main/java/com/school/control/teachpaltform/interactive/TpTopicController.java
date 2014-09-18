@@ -118,25 +118,22 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
         if(materialList!=null&&materialList.size()>0)
             subjectid=materialList.get(0).getSubjectid();
 
+        //查询列头
+        TpCourseInfo tcentity=new TpCourseInfo();
+        Object gradeid=request.getSession().getAttribute("session_grade");
+        if(gradeid!=null&&gradeid.toString().length()>0)
+                tcentity.setGradeid(Integer.parseInt(gradeid.toString()));
+        Object subject=request.getSession().getAttribute("session_subject");
+        if(gradeid!=null&&gradeid.toString().length()>0)
+            tcentity.setSubjectid(Integer.parseInt(subject.toString()));
+        tcentity.setUserid(this.logined(request).getUserid());
+        tcentity.setTermid(courseList.get(0).getTermid());
+        tcentity.setLocalstatus(1);
+
         //身份处理
         if(roleStr.equals("TEACHER")){  //教师身份
-            //查询教师可以查看到的专题
-
-            TpCourseInfo tcentity=new TpCourseInfo();
-            tcentity.setUserid(this.logined(request).getUserid());
-            tcentity.setTermid(courseList.get(0).getTermid());
-            if(subjectid!=null)
-                tcentity.setSubjectid(subjectid);
-            tcentity.setLocalstatus(1);
             mp.put("courseList",this.tpCourseManager.getCourseList(tcentity, null));
         }else{                          //学生身份
-            //查询学生可以查看到的专题
-            TpCourseInfo tcentity=new TpCourseInfo();
-            tcentity.setUserid(this.logined(request).getUserid());
-            if(subjectid!=null)
-                tcentity.setSubjectid(subjectid);
-            tcentity.setLocalstatus(1);
-            tcentity.setTermid(courseList.get(0).getTermid());
             mp.put("courseList",this.tpCourseManager.getStuCourseList(tcentity,null));
         }
         return new ModelAndView("/interactive/topic/index",mp);

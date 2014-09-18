@@ -8,6 +8,11 @@
 	var courseid=${courseid};
 	var p1;
 	$(function(){
+        if($("#ul_courselist li").length>1)
+            $("#a_courselist").show();
+        else
+            $("#a_courselist").hide();
+
 		p1 = new PageControl({
 			post_url:'tptopic?m=ajaxtopiclist',
 			page_id:'page1',
@@ -49,7 +54,7 @@
   			</c:if>
   		</c:forEach>
   	</c:if>
-  <a class="ico13" href="javascript:;" onclick="operateUI('ul_courselist')"></a></p>
+  <a class="ico13" href="javascript:;" onclick="operateUI('ul_courselist')" id="a_courselist"></a></p>
   <ul style="display:none" id="ul_courselist">
     <c:if test="${!empty courseList}">
   		<c:forEach items="${courseList}" var="ct">
