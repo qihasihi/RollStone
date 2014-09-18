@@ -75,8 +75,9 @@ function EttImageShow(settings){
                 myOffset.top = 0;
                 $('#img_'+sets.fadeId).offset(myOffset);
                 $('#img_'+sets.fadeId).hide();
-                var h=window.screen.availHeight;
-                var w=window.screen.availWidth;
+                var whObj=findDimensions();
+                var h=whObj.h;
+                var w=whObj.w;
 
                 if(isIE()){
                     resizeimg($('#img_'+sets.fadeId).get(0),
@@ -92,6 +93,29 @@ function EttImageShow(settings){
                 );
             });
         });
+    }
+
+    function findDimensions() //函数：获取尺寸
+    {
+        var winWidth= 0,winHeight=0;
+        //获取窗口宽度
+        if (window.innerWidth)
+            winWidth = window.innerWidth;
+        else if ((document.body) && (document.body.clientWidth))
+            winWidth = document.body.clientWidth;
+        //获取窗口高度
+        if (window.innerHeight)
+            winHeight = window.innerHeight;
+        else if ((document.body) && (document.body.clientHeight))
+            winHeight = document.body.clientHeight;
+        //通过深入Document内部对body进行检测，获取窗口大小
+        if (document.documentElement && document.documentElement.clientHeight && document.documentElement.clientWidth)
+        {
+            winHeight = document.documentElement.clientHeight;
+            winWidth = document.documentElement.clientWidth;
+        }
+        //结果输出至两个文本框
+        return {w:winWidth,h:winHeight};
     }
 
     /**
@@ -141,8 +165,9 @@ function EttImageShow(settings){
                     }
                 }
             }
-            var h=window.screen.availHeight;
-            var w=window.screen.availWidth;
+            var whObj=findDimensions();
+            var h=whObj.h;
+            var w=whObj.w;
             var positionY =0;
             positionY =(h-ImgD.height)/2;
             if(positionY<0) positionY =0;
