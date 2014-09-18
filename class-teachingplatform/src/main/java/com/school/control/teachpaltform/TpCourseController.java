@@ -3539,14 +3539,15 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         }
         //如果是班主任，则查询全部学科
         if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID)){
-            SubjectInfo sub=new SubjectInfo();
-            List<SubjectInfo> subList=this.subjectManager.getList(sub,null);
-            if(subList==null||subList.size()<1){
-                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
-                response.getWriter().print(jsonEntity.toJSON());
-                return;
-            }
-            jsonEntity.setObjList(subList);
+            // 如果是任课教师，则查询当前学科
+            TpCourseClass tcc=new TpCourseClass();
+            tcc.setClassid(Integer.parseInt(clsid.trim()));
+            tcc.setTermid(termid);
+            List<TpCourseClass> tccList=this.tpCourseClassManager.getTpCourseClassByClsTermId(Integer.parseInt(clsid.trim()),termid.trim());
+//            if(tccList!=null&&tccList.size()>0){
+             jsonEntity.setObjList(tccList);
+//            }
+
         }else if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID)){
             if(subjectid==null||subjectid.trim().length()<1){
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));

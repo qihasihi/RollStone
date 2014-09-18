@@ -4,25 +4,24 @@
  * Created by zhengzhou on 14-8-25.
  */
 var subQuesId=",";
-var allowRight=false;
+var allowRight=true;
 $(function(){
     beginJs1();
 });
 //计时
 var tmpTime= 0,allowTmpNext=0,allowClickTime= 1,allowNext=true;
 function beginJs1(){
-//    tmpTime++;
-//    if(tmpTime>=allowClickTime){
-//        tmpTime=0;
-//        allowRight=true;
-//    }else
-//        allowRight=false;
     setTimeout(function(){
         if(!allowNext){
-                allowNext=true;
-                tmpTime=0;
+            allowNext=true;
+            tmpTime=0;
         }
     },900);
+}
+function allowSelect(){
+        if(!allowRight){
+            allowRight=true;
+        }
 }
 
 /*************************************答题作答*************************/
@@ -531,7 +530,7 @@ TestPaperQues.prototype.loadQues=function(){
                     if(ex==5&&parentQuesObj!=null)
                         qo=parentQuesObj.questionOption;
                     $.each(qo,function(x,m){
-                        h+='<li><span style="display:none">' ;
+                        h+='<li data-bind="'+m.questionid+"|"+m.optiontype+'"><span style="display:none">' ;
                         var isrightTmp= m.isright;
                         if(ex==5&&parentQuesObj!=null){
                             $.each(quesObj.questionOption,function(zx,zm){
@@ -548,7 +547,7 @@ TestPaperQues.prototype.loadQues=function(){
                             }
                         }else
                             h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ isrightTmp+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
-                        h+='</span><label for="rdo_answer'+m.questionid+m.optiontype+'"><span class="blue">'+m.optiontype+'.</span>'+m.content;
+                        h+='</span<span class="blue">'+m.optiontype+'.</span>'+m.content;
 //                        if(typeof(isrightTmp)!="undefined"&&isrightTmp==1){
 //                            h+='<b class="right"></b>';
 //                        }
@@ -576,29 +575,29 @@ TestPaperQues.prototype.loadQues=function(){
                     }else if(quesObj.questiontype==3||quesObj.questiontype==4||quesObj.questiontype==7||quesObj.questiontype==8){
                         //如果是选择题则绑定选项事件
                         $("#ul_answer"+quesObj.questionid+" li").bind("click",function(){
-                            var selObj=$(this).children().children("input[name*='rdo_answer']");
+                            var dbObj=$(this).attr("data-bind").split("|");
+                            var selObj=$('#rdo_answer'+dbObj[0]+dbObj[1]);
                             var selType=selObj.attr("type");
-                            zm=this;
+                            //防止用户无限点击
                             if(!allowRight){
-                                allowRight=true;return;
+                                return;
+                            }else{
+                                allowRight=false;
+                                setTimeout(function(){allowSelect();},400);
                             }
-
                             if(selType=='checkbox'){
-                                if($(zm).attr("class").indexOf("crumb")>-1){
-                                    $(zm).removeClass("crumb");
+                                if($(this).attr("class").indexOf("crumb")>-1){
+                                    $(this).removeClass("crumb");
                                     selObj.attr("checked",false);
                                 }else{
-                                    $(zm).addClass("crumb");
+                                    $(this).addClass("crumb");
                                     selObj.attr("checked",true);
                                 }
                             }else{
-                                $(zm).parent().children("li").each(function(z,zd){
-                                    $(zd).removeClass("crumb");
-                                });
-                                $(zm).addClass("crumb");
+                                $(this).siblings("li").removeClass("crumb");
+                                $(this).addClass("crumb");
                                 selObj.attr("checked",true);
                             }
-                            allowRight=false;
                         });
                     }
                     if(subQuesId.indexOf(","+quesObj.questionid+",")==-1)

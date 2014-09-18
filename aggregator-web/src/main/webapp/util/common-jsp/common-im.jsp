@@ -19,6 +19,10 @@
     //response.flushBuffer();%>
 
 <link rel="stylesheet" type="text/css" href="<%=basePath %>css/ios.css"/>
+<style>
+    <%--重置样式--%>
+
+</style>
 <script src="<%=basePath %>util/xheditor/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
 <script src="<%=basePath %>js/common/common.js"></script>
 

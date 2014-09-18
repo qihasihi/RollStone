@@ -12,14 +12,17 @@ import javax.servlet.ServletContextListener;
 import com.school.share.SynchroEttColumns;
 import com.school.util.DESPlus;
 import com.school.util.UtilTool;
-import com.school.util.WriteProperties;
+import org.apache.log4j.Logger;
 
 public class TimerTaskListener implements ServletContextListener {
+    //记录Log4J
+    private Logger logger = Logger.getLogger(this.getClass());
     /**
      * 配置分校信息
      * @param request
      */
 	public void configSchool(ServletContext request){
+
       //  Map<String,Object> writeMap=new HashMap<String,Object>();
         String schoolId = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
         String schoolname=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME");
@@ -39,6 +42,7 @@ public class TimerTaskListener implements ServletContextListener {
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            logger.error(e.getMessage());
             e.printStackTrace();
             return;
         } finally {
@@ -80,6 +84,7 @@ public class TimerTaskListener implements ServletContextListener {
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            logger.error(e.getMessage());
             e.printStackTrace();
         }
 //        if(writeMap.size()>0){

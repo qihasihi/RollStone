@@ -98,7 +98,7 @@
         });
     </script>
 </head>
-<body>
+<body onselectstart="return false">
 <!--试卷里的试题-->
 <div class="zxcs_test" id="dv_question">
 </div>

@@ -24,6 +24,15 @@
 	<listener>
    		<listener-class>org.springframework.web.context.request.RequestContextListener </listener-class>
 	 </listener>
+    <servlet>
+        <servlet-name>log4jinit</servlet-name>
+        <servlet-class>com.school.config.Log4jInit</servlet-class>
+        <init-param>
+            <param-name>log4j</param-name>
+            <param-value>classpath:log4j.properties</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
 	<!-- Spring 刷新Introspector防止内存泄露 -->
 	<listener>
@@ -34,7 +43,6 @@
 	<listener>
 		<listener-class>com.school.listener.TimerTaskListener</listener-class>
 	</listener>
-
 
 	<!-- session超时定义,单位为分钟 -->
 	<session-config>

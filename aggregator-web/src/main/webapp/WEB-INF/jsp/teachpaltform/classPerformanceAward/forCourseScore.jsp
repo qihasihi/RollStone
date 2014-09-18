@@ -35,7 +35,13 @@
         </c:if>
         <th>小组得分</th>
         <th>课程积分</th>
-        <th>积分排行榜<a href="javascript:;" onclick="loadCourseScore(${param.subjectid},${param.classid},'${param.termid}',1)" class="ico48a"></a><a href="javascript:;" onclick="loadCourseScore(${param.subjectid},${param.classid},'${param.termid}',2)"  class="ico48b"></a></th>
+        <th>积分排行榜
+            <c:if test="${!empty param.sort&&param.sort==2}">
+                <a href="javascript:;" onclick="loadCourseScore(${param.subjectid},${param.classid},'${param.termid}',1)" class="ico48a"></a>
+            </c:if>
+            <c:if test="${empty param.sort||param.sort==1}">
+                <a href="javascript:;" onclick="loadCourseScore(${param.subjectid},${param.classid},'${param.termid}',2)"  class="ico48b"></a></th>
+            </c:if>
     </tr>
     <c:if test="${!empty dataMapList}">
            <c:forEach items="${dataMapList}" var="dm" varStatus="dmIdx">

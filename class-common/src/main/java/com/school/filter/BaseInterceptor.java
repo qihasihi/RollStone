@@ -1,21 +1,20 @@
 package com.school.filter;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.school.entity.DictionaryInfo;
 import com.school.manager.DictionaryManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.util.*;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.apache.log4j.Logger;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import com.school.entity.PageRightInfo;
@@ -29,6 +28,8 @@ import org.w3c.dom.NodeList;
  * 过滤器
  */
 public class BaseInterceptor implements HandlerInterceptor {
+    //记录Log4J
+    private Logger logger = Logger.getLogger(this.getClass());
     private static boolean iswrite=false;
     public void afterCompletion(HttpServletRequest arg0,
                                 HttpServletResponse arg1, Object arg2, Exception arg3)
@@ -65,6 +66,21 @@ public class BaseInterceptor implements HandlerInterceptor {
             }
         }
         UtilTool.isSynchroFileType=true;
+    }
+
+    /**
+     * 验证后缀面
+     * @param str
+     * @return
+     */
+    private static boolean validateLastName(String str){
+        //ppt,rar,zip,xls,xlsx,doc,docx,ppt,pptx,wps,js,jpg,png,gif,bmp,css,htm
+        Pattern pattern = Pattern.compile("(jpg|gif|bmg|ppt|rar|zip|xls|xlsx|doc|docx|ppt|pptx|wps|js|bmp|css|htm)$");
+        Matcher matcher = pattern.matcher(str);
+        return matcher.matches();
+    }
+    public static void main(String[] args){
+        System.out.println(validateLastName("基本原则栽基本原则栽dsafasdfasdfjpg"));
     }
 
     /**
@@ -124,6 +140,36 @@ public class BaseInterceptor implements HandlerInterceptor {
                         // suffix=pathObjStr.indexOf(".")!=-1?pathObjStr.substring(pathObjStr.indexOf(".")+1):pathObjStr;
                         if (realpath.toLowerCase().indexOf(pathObjStr) != -1) {
                             isfilterPath = true;
+                            String lastname=pathObjStr;
+                            if(lastname.indexOf(".")!=-1){
+                                lastname=lastname.substring(lastname.lastIndexOf(".")+1);
+                            }
+                            if(!validateLastName(lastname)){
+                                StringBuilder paramStr=new StringBuilder();
+                                Map<String,Object> objMap=request.getParameterMap();
+                                if(objMap!=null&&objMap.size()>0){
+
+                                    Iterator<String> iteKey=objMap.keySet().iterator();
+                                    while(iteKey.hasNext()){
+                                        String key=iteKey.next();
+                                        if(key.trim().equals("m"))
+                                            continue;
+                                        if(paramStr.toString().trim().length()>0)
+                                            paramStr.append("&");
+                                        paramStr.append(key).append("=").append(request.getParameter(key));
+                                    }
+                                    String method=request.getParameter("m");
+                                    if(method!=null&&method.trim().length()>0){
+                                        String pmstr=paramStr.toString();
+                                        paramStr=new StringBuilder("m="+method);
+                                        if(pmstr.trim().length()>0){
+                                            paramStr.append(pmstr);
+                                        }
+                                    }
+                                }
+
+                                logger.info("----------------\n----No Login active:     "+request.getRequestURL().toString()+"?"+paramStr.toString());
+                            }
                             break;
                         }
                     }

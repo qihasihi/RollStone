@@ -226,6 +226,16 @@
                         $.each(itm.questionAnswerList,function(ix,im){stuanswer+=im.answercontent+"&nbsp;"});
 
                         answerhtm+='<p><strong>您的答案：</strong><span class="width">'+ stuanswer +'</span></p>';
+                        if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].replyattachList)!="undefined"){
+                            if(itm.questionAnswerList[0].replyattachList.length>0){
+                                answerhtm+='<p><span><br>答题附件：';
+                                $.each(itm.questionAnswerList[0].replyattachList,function(idx,itm){
+                                    var name=itm.substring(itm.lastIndexOf("/")+1);
+                                    answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+                                });
+                                answerhtm+='</span></p>';
+                            }
+                        }
                         if(itm.questiontype==3||itm.questiontype==4){
                             if(itm.rightOptionAnswerList!=null&&itm.rightOptionAnswerList.length>0){
                                 right+='<span class="font-red">';
@@ -243,16 +253,7 @@
                         }
                         if(itm.questiontype==1){
                             answerhtm+='<p><strong>学习时间：</strong><span class="width">'+itm.questionAnswerList[0].ctimeString+'</span>';
-                            if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].replyattachList)!="undefined"){
-                                if(itm.questionAnswerList[0].replyattachList.length>0){
-                                    answerhtm+='<span><br>心得附件：';
-                                    $.each(itm.questionAnswerList[0].replyattachList,function(idx,itm){
-                                        var name=itm.substring(itm.lastIndexOf("/")+1);
-                                        answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
-                                    });
-                                    answerhtm+='</span>';
-                                }
-                            }
+
                             answerhtm+='</p>';
                         }else{
                             answerhtm+='<p><strong>正确答案：</strong><span class="width">'+right+'</span></p>';
