@@ -100,7 +100,7 @@ function EttImageShow(settings){
     function ImageShow_initPage(fadeId){
         var h='<div id="'+fadeId+'" style="display: none;">';
         h+='<div><a style="float: right" href="javascript:;" onclick="$(this).parent().parent().hide();">';
-        h+=' <img src="'+getRootPath()+'/images/close.png" width="80" height="80"/></a>';
+        h+=' <img src="'+getRootPath()+'/images/close.png" width="40" height="40"/></a>';
         h+=' <img id="img_'+fadeId+'"  src=""  />';
         h+=' <div>';
         h+=' </div>';
