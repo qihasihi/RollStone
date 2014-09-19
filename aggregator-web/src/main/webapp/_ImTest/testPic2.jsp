@@ -12,12 +12,14 @@
     <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script>
+        alert("clientWidth="+document.documentElement.clientWidth+"    clientHeight="+document.documentElement.clientHeight)
         $(function() {
             $( "#dialog" ).dialog({
                 autoOpen: false,
                 width:$(document).width(),
                // height:window.screen.availHeight,
                // height:$(document).height(),
+                height:document.documentElement.clientWidth,
                 height:document.documentElement.clientHeight,
                 close:function(){
                     $("#dialog").hide();
@@ -27,10 +29,24 @@
             });
             $( "#opener" ).click(function() {
                 $("#dialog").css({ "background": "black"  });
-                //resizeimg($("#dialog").get(0),w-40,h-40,"http://192.168.8.238/sz_school/images/test1.jpg");
+              //  $("#dialog").hide();
+                resizeimg($("#dimg").get(0),document.documentElement.clientWidth,document.documentElement.clientHeight,
+                        "http://192.168.8.238/sz_school/images/test.jpg");
 
+
+               // $("#dialog").show();
                 $( "#dialog" ).dialog( "open" );
-                $("#dialog").show();
+            });
+
+            $( "#opener1" ).click(function() {
+                $("#dialog").css({ "background": "black"  });
+               // $("#dialog").hide();
+                resizeimg($("#dimg").get(0),document.documentElement.clientWidth,document.documentElement.clientHeight,
+                        "http://192.168.8.238/sz_school/images/test1.jpg");
+
+
+                //$("#dialog").show();
+                $( "#dialog" ).dialog( "open" );
             });
         });
     </script>
@@ -43,7 +59,7 @@
        <table width="100%" height="100%" align="center">
            <tr>
                <td align="middle">
-                      <img src="http://192.168.8.238/sz_school/images/pic13_140704.jpg" style=""/>
+                      <img id="dimg" src="" />
             </td>
            </tr>
        </table>
@@ -60,7 +76,8 @@
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 5555555555555
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<button id="opener">Open Dialog</button>
+<button id="opener">Open Dialog</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button id="opener1">Open Dialog 1 </button>
 </body>
 </html>
 
@@ -78,7 +95,8 @@
         image.src = ImgD.src ;
 
 
-        setTimeout(function(){
+
+            $('#dimg').hide();
             if (image.width > 0 && image.height > 0) {
                 if( (image.width/image.height) >=(iwidth/iheight) )//宽高比做比较，看处理宽还是高
                 {
@@ -106,26 +124,22 @@
 
             }
 
-            alert("realh  "+realh+"w    "+w+"window.screen.availHeight     "+window.screen.availHeight+"#imgtop   =="+$("#img").offset().top+
-                    "ImgD.height    "+ImgD.height+"window.innerHeight  "+window.innerHeight);
-            var positionY =0;
-            //positionY =(h-ImgD.height)/2;
-            positionY =(h-ImgD.height)/2+$("#img").offset().top;
-
-            alert("positionY"+positionY+"            sTop"+sTop)
+            var h=document.documentElement.clientHeight;
+            var w= document.documentElement.clientWidth;
+           /* var positionY =0;
+            positionY =(h-ImgD.height)/2;
             if(positionY<0) positionY =0;
-
             var positionX = 0;
             positionX =(w-ImgD.width)/2;
             if(positionX<0) positionX =0;
 
-            // alert("w "+w+"         h "+h+"              img_w " +ImgD.width+"           img_h  "+ImgD.height+"             left "+positionX+"            top "+positionY);
-            var myOffset = new Object();
+             //alert("w "+w+"         h "+h+"              img_w " +ImgD.width+"           img_h  "+ImgD.height+"             left "+positionX+"            top "+positionY);
+           /* var myOffset = new Object();
             myOffset.left = positionX;
             myOffset.top = positionY;
-            $("#img").offset(myOffset);
-            $('#img').show();
-        },100);
+            $("#dimg").offset(myOffset);*/
+            $('#dimg').show();
+
     }
 
     $(document).ready(function () {
