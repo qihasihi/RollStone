@@ -137,7 +137,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
 
 
         //…Ì∑›
-        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), tmpList.get(0).getClassid());
+        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), tmpList.get(0).getClassid(),null,null);
         mp.put("userType",userType);
 
 
@@ -293,7 +293,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
                         Integer.parseInt(subjectid),
                         this.termManager.getMaxIdTerm(false).getRef());
         je.getObjList().add(stuList);
-        je.getObjList().add(this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), Integer.parseInt(classid)));
+        je.getObjList().add(this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), Integer.parseInt(classid),null,null));
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }

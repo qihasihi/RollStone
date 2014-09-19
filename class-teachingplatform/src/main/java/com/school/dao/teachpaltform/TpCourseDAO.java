@@ -203,7 +203,7 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
     }
 
     @Override
-    public List<Map<String, Object>> getCourseCalendar(Integer usertype,Integer userid, Integer dcschoolid, String year, String month,String gradeid,String subjectid,Integer classid) {
+    public List<Map<String, Object>> getCourseCalendar(Integer usertype,Integer userid, Integer dcschoolid, String year, String month,String gradeid,String subjectid,Integer classid,String termid) {
         if(usertype==null||dcschoolid==null||year==null||month==null)
             return null;
         StringBuilder sqlbuilder = new StringBuilder();
@@ -254,6 +254,12 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
         if(classid!=null){
             sqlbuilder.append("?,");
             objList.add(classid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(termid!=null&&termid.trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(termid);
         }else{
             sqlbuilder.append("NULL,");
         }

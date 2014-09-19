@@ -47,7 +47,7 @@ public interface ITpCourseDAO extends ICommonDAO<TpCourseInfo>{
      */
     public List<TpCourseInfo> getShareList(TpCourseInfo tpcourseinfo,PageResult presult);
 
-    List<Map<String,Object>>getCourseCalendar(Integer usertype,Integer userid,Integer dcschoolid,String year,String month,String gradeid,String subjectid,Integer classid);
+    List<Map<String,Object>>getCourseCalendar(Integer usertype,Integer userid,Integer dcschoolid,String year,String month,String gradeid,String subjectid,Integer classid,String termid);
 
     /**
      * 得到专题积分是否录取完毕

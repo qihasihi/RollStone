@@ -106,9 +106,10 @@ function getTchCourseList(year,month,day){
         return;
     var param={};
     if(typeof(isLession)!="undefined"&&isLession&&!isBanzhuren&&typeof(_clsid)=="undefined"){
-        param.gradeid=gradeid;
         param.subjectid=subjectid;
     }
+    if(typeof gradeid!='undefined'&&gradeid.toString().length>0)
+        param.gradeid=gradeid;
 
     if(typeof(_clsid)!="undefined"&&!isNaN(_clsid)){
       //  param.gradeid=gradeid;
@@ -194,6 +195,9 @@ function markCalendar(selYear,selMonth){
     }
     if(typeof(gradeid)!="undefined"){
         p.gradeid=gradeid;
+    }
+    if(typeof(termid)!="undefined"){
+        p.termid=termid;
     }
     if(typeof(_clsid)!="undefined"&&!isNaN(_clsid)){
         p.classid=_clsid;

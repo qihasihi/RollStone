@@ -631,6 +631,64 @@ function loadWXStudent(){
 
 
 /**
+ * 获取网校学生
+ */
+function loadWXStudentByName(){
+    var clsid=$("#classId").val();
+    if(typeof clsid=='undefined')
+        return;
+    var param={clsid:clsid};
+    var stuName=$("#txt_stuName");
+    if(stuName.val().Trim().length>0)
+        param.stuName=stuName.val();
+
+    $.ajax({
+        url: 'tpuser?loadWXStudent',
+        type: 'post',
+        data: param,
+        dataType: 'json',
+        cache: false,
+        error: function () {
+            alert('网络异常!')
+        },
+        success: function (rps) {
+            var wx='';
+            if (rps.type == "error") {
+                alert(rps.msg);
+            } else {
+                if(rps.objList[0]!=null&&rps.objList[0].length>0){
+                    $.each(rps.objList[0],function(idx,itm){
+                        wx+='<li id="'+itm.ettuserid+'" data-bind="'+itm.ettuserid+'|'+itm.realname+'"><span class="ico85a"></span>'+itm.realname+'</li>';
+                    });
+
+                }
+
+            }
+            $("#ul_wx_stu").html(wx);
+
+
+            $("#dv_add_student li").click(function(){
+                var id=$(this).attr('id');
+                var parentId=$(this).parent('ul').attr('id');
+                var descId=parentId=='ul_wx_stu'?'ul_cls_stu':'ul_wx_stu';
+                var clssName=parentId=='ul_wx_stu'?'ico85b':'ico85a';
+                var descObj=$('#'+descObj+' li[id="'+id+'"]');
+
+                if(descObj.length<1){
+                    $(this).children('span').attr("class",clssName);
+                    $(this).appendTo( $("#"+descId));
+                }else
+                    alert('当前学生已存在!');
+
+            });
+        }
+    });
+}
+
+
+
+
+/**
  * 删除班级用户
  * @param clsid
  */

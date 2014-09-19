@@ -59,5 +59,5 @@ public interface  IClassUserDAO extends ICommonDAO<ClassUser>{
      * @param classid
      * @return
      */
-    public Integer isTeachingBanZhuRen(String userid,Integer classid);
+    public Integer isTeachingBanZhuRen(String userid,Integer classid,String termid,String gradevalue);
 }

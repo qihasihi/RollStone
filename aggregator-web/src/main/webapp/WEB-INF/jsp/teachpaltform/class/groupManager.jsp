@@ -374,7 +374,7 @@
 
 <div class="public_windows public_input" id="dv_add_student" style="display: none;">
     <h3><a href="javascript:closeModel('dv_add_student')"  title="关闭"></a>学员管理</h3>
-    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;姓名：<input name="textfield5" id="txt_stuName" type="text" class="w140"/><a href="javascript:;" id="a_stuName" class="ico57" title="查询"></a></p>
+    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;姓名：<input name="textfield5" id="txt_stuName" type="text" class="w140"/><a href="javascript:loadWXStudentByName();" id="a_stuName" class="ico57" title="查询"></a></p>
     <div class="jxxt_float_bjgl">
         <p class="font-black"><a href="javascript:;" onclick="setAllStudent()" class="font-darkblue">全选</a>未添加成员：</p>
         <ul id="ul_wx_stu">

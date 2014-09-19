@@ -198,9 +198,10 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         } */
+        String gradeValue=null;
         if(gradeSubjectList.size()>0){
             Map<String,Object>objectMap=gradeSubjectList.get(0);
-            if(subjectid!=null&&gradeid!=null){
+            if(subjectid!=null&&subjectid.length()>0&&gradeid!=null&&gradeid.length()>0){
                 SubjectInfo s=new SubjectInfo();
                 s.setSubjectid(Integer.parseInt(subjectid));
                 List<SubjectInfo>subList=this.subjectManager.getList(s,null);
@@ -216,11 +217,12 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                     subGradeMap.put("subjectname",subList.get(0).getSubjectname());
                     subGradeMap.put("gradevalue",gList.get(0).getGradevalue());
                     objectMap=subGradeMap;
+                    gradeValue=gList.get(0).getGradevalue();
                 }
             }
             mp.put("subGradeInfo",objectMap);
         }
-        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null);
+        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null,termid,gradeValue);
         mp.put("userType",userType);
         mp.put("userid", this.logined(request).getUserid());
 
@@ -394,6 +396,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String subjectid=request.getParameter("subjectid");
         String gradeid=request.getParameter("gradeid");
         String clsid=request.getParameter("classid");
+        String termid=request.getParameter("termid");
 
         if(year==null||month==null||year.trim().length()<1||month.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -414,8 +417,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             classUser.setClassgrade(gradeValue);
 
 
-        //当前学期身份  教师1 班主任2 授课班主任3
-        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null);
+        //当前学期当前年级身份  教师1 班主任2 授课班主任3
+        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null,termid,gradeValue);
 
         Integer usertype=null;
         if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID)&&userType>1)
@@ -432,7 +435,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         }
 
         List<Map<String,Object>>courseCalendarList=this.tpCourseManager.getCourseCalendar(usertype, this.logined(request).getUserid(),
-                this.logined(request).getDcschoolid(), year, month, gradeid, subjectid, (clsid == null ? null : Integer.parseInt(clsid)));
+                this.logined(request).getDcschoolid(), year, month, gradeid, subjectid, (clsid == null ? null : Integer.parseInt(clsid)),termid);
 
         je.setType("success");
         je.setObjList(courseCalendarList);
@@ -2926,12 +2929,24 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
         tcInfo.setSeldate(UtilTool.DateConvertToString(calendar.getTime(), UtilTool.DateType.smollDATE));
 
-        Integer usertype=null;
+        String gradeValue=null;
+        if(gradeid!=null&&gradeid.trim().length()>0){
+            GradeInfo gradeInfo=new GradeInfo();
+            gradeInfo.setGradeid(Integer.parseInt(gradeid));
+            List<GradeInfo>gList=this.gradeManager.getList(gradeInfo,null);
+            if(gList!=null&&gList.size()>0)
+                gradeValue=gList.get(0).getGradevalue();
+        }
+
+        //当前学期、年级的身份信息 1:教师2:班主任3:任课班主任
+        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null,termid,gradeValue);
+
+        Integer usertype=2;
         subjectid=tcInfo.getSubjectid()+"";
         if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
             usertype=1;
             tcInfo.setSubjectid(null);
-        }else if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID))
+        }else if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID)&&userType>1)
             usertype=3;
         else if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID))
             usertype=2;
@@ -2941,9 +2956,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
-
-
-
 
         tcInfo.setUsertype(usertype);
         TermInfo t=new TermInfo();

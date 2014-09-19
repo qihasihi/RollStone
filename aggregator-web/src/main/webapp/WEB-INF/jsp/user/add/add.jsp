@@ -19,13 +19,16 @@ p {
 	<script type="text/javascript" src="<%=basePath %>js/user.js"></script>
 	<script type="text/javascript">  		
   		$(function(){
+            getClsByYear('addteacher');
+            getClsByYear('addstudent');
   			$('input[name="identity"]').each(function(idx,itm){
   				$(itm).bind("click",function(){
   	  				identityChange(itm.value);
   	  				role4add(itm.value);
-  	  	  		});        
-  	  		});   
-  	  		         
+                });
+            });
+
+
   			identityChange($('input[name="identity"]:checked').val());
   			role4add($('input[name="identity"]:checked').val());
 

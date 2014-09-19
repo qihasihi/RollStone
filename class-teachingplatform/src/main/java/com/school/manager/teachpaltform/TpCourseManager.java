@@ -151,8 +151,8 @@ public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCo
     }
 
     @Override
-    public List<Map<String, Object>> getCourseCalendar(Integer usertype, Integer userid, Integer dcschoolid, String year, String month, String gradeid, String subjectid,Integer classid) {
-        return tpcoursedao.getCourseCalendar(usertype,userid,dcschoolid,year,month,gradeid,subjectid,classid);
+    public List<Map<String, Object>> getCourseCalendar(Integer usertype, Integer userid, Integer dcschoolid, String year, String month, String gradeid, String subjectid,Integer classid,String termid) {
+        return tpcoursedao.getCourseCalendar(usertype,userid,dcschoolid,year,month,gradeid,subjectid,classid,termid);
     }
 
 }

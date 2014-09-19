@@ -165,7 +165,7 @@
             <input type="checkbox" name="remember" id="remember" value="1">
             记住账号密码 <b>｜</b>
             <input type="checkbox" name="autoLogin" id="autoLogin" value="1">
-            自动登陆</div>
+            自动登录</div>
     </div>
 </div>
 <div class="denglu_duoxiao_foot">Copyright(C) <script type="text/javascript">document.write(new Date().getFullYear().toString());</script> 北京四中网校</div>

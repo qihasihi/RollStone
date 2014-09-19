@@ -477,7 +477,7 @@ public class ClassUserDAO extends CommonDAO<ClassUser> implements IClassUserDAO 
     }
 
     @Override
-    public Integer isTeachingBanZhuRen(String userid, Integer classid) {
+    public Integer isTeachingBanZhuRen(String userid, Integer classid,String termid,String gradevalue) {
         if (userid == null)
             return 0;
         StringBuilder sqlbuilder = new StringBuilder("{call isTeacherAndBanZhuRen(?,");
@@ -485,6 +485,16 @@ public class ClassUserDAO extends CommonDAO<ClassUser> implements IClassUserDAO 
         objList.add(userid);
         if(classid!=null){
             objList.add(classid);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(termid!=null&&termid.length()>0){
+            objList.add(termid);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(gradevalue!=null&&gradevalue.length()>0){
+            objList.add(gradevalue);
             sqlbuilder.append("?,");
         }else
             sqlbuilder.append("NULL,");

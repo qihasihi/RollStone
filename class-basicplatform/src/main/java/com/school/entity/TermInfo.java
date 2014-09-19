@@ -62,6 +62,16 @@ public class TermInfo implements java.io.Serializable {
     public void setSemesterenddatestring(String semesterenddate){
         this.semesterenddate=UtilTool.StringConvertToDate(semesterenddate);
     }
+    public String getSemesterenddatestring(){
+        if(semesterenddate==null)
+            return "";
+        return UtilTool.DateConvertToString(semesterenddate,DateType.type1);
+    }
+    public String getSemesterbegindatestring(){
+        if(semesterbegindate==null)
+            return "";
+        return UtilTool.DateConvertToString(semesterbegindate,DateType.type1);
+    }
 	public Date getCtime() {
 		return ctime;
 	}

@@ -316,7 +316,7 @@ public class TpUserController extends UserController {
             url="teachercourse?m=toStudentCourseList";
         }else if (this.validateRole(request,UtilTool._ROLE_TEACHER_ID)){
             url="teachercourse?toTeacherCourseList";
-            Integer isLessionBzn=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null);
+            Integer isLessionBzn=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null,null,null);
             if(isLessionBzn!=null&&isLessionBzn==3)
                 url="teachercourse?toTeacherCourseList";
             else if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID))
@@ -1362,16 +1362,32 @@ public class TpUserController extends UserController {
                 }
 
 
-                //删除当前班级学生
-                ClassUser delete=new ClassUser();
-                delete.setClassid(Integer.parseInt(clsid));
-                delete.setRelationtype("学生");
-                sql=new StringBuilder();
-                objList=this.classUserManager.getDeleteSql(delete,sql);
-                if(objList!=null&&sql!=null){
-                    sqlListArray.add(sql.toString());
-                    objListArray.add(objList);
+                //删除当前班级学生,jid列表中没有的
+                ClassUser selStu=new ClassUser();
+                selStu.setClassid(Integer.parseInt(clsid));
+                selStu.setRelationtype("学生");
+                List<ClassUser>stuAllList=this.classUserManager.getList(selStu,null);
+                if(stuAllList!=null&&stuAllList.size()>0){
+                    for(ClassUser stu:stuAllList){
+                        boolean isExists=true;
+                        for(String tmpJid:jidArray){
+                            if(!tmpJid.equals(stu.getEttuserid().toString()))
+                                isExists=false;
+                        }
+                        if(!isExists){
+                            ClassUser delete=new ClassUser();
+                            delete.setRef(stu.getRef());
+                            sql=new StringBuilder();
+                            List<Object>objectList=this.classUserManager.getDeleteSql(delete,sql);
+                            if(sql!=null&&objectList!=null){
+                                sqlListArray.add(sql.toString());
+                                objListArray.add(objectList);
+                            }
+                        }
+                    }
                 }
+
+
                 //检测当前学生是否已经创建帐号
                 for(int i=0;i<jidArray.length;i++){
                     String jid=jidArray[i].toString();
@@ -1462,6 +1478,7 @@ public class TpUserController extends UserController {
                     }else
                         userNextRef=userList.get(0).getRef();
 
+                    //添加
                     ClassUser sel=new ClassUser();
                     sel.setClassid(Integer.parseInt(clsid));
                     sel.setUserid(userNextRef);
@@ -1502,7 +1519,7 @@ public class TpUserController extends UserController {
                 }
 
                 if(bindUserList.size()>0){
-                    if(!BindEttUser(bindUserList,schoolid,"1")){
+                    if(!BindEttUser(bindUserList,schoolid,"3")){
                         System.out.println("绑定ett学生帐号失败!");
                         response.getWriter().print(je.toJSON());
                         return;

@@ -117,8 +117,8 @@ public class  ClassUserManager extends BaseManager<ClassUser> implements IClassU
     }
 
     @Override
-    public Integer isTeachingBanZhuRen(String userid, Integer classid) {
-        return this.classuserdao.isTeachingBanZhuRen(userid,classid);
+    public Integer isTeachingBanZhuRen(String userid, Integer classid,String termid,String gradevalue) {
+        return this.classuserdao.isTeachingBanZhuRen(userid,classid,termid,gradevalue);
     }
 }
 
