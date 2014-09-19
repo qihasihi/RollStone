@@ -4437,7 +4437,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     @RequestMapping(params="m=doSaveTestPaper",method=RequestMethod.POST)
     public void doSaveTestPaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
        // request.setCharacterEncoding("GBK");
-        Thread.sleep(10000);
+       //  Thread.sleep(10000);
         String testQuesData=request.getParameter("testQuesData");
         String paperid=request.getParameter("paperid");
         String uid=request.getParameter("userid");
