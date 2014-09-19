@@ -16,7 +16,11 @@
 <%@include file="/util/head.jsp" %>
 <%@include file="/util/nav-base.jsp" %>
 <div class="zhuanti">
-    <p>${coursename }<a class="ico13" href="javascript:showCourseList();"></a></p>
+    <p>${coursename }
+        <c:if  test="${fn:length(courseList)>1}" >
+            <a class="ico13" href="javascript:showCourseList();"></a>
+        </c:if>
+    </p>
     <ul  style="display:none;" id="ul_courselist">
         <c:if test="${!empty courseList}">
             <c:forEach items="${courseList}" var="c">

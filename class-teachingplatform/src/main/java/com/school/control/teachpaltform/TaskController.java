@@ -1729,6 +1729,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String termid=request.getParameter("termid");
         String subjectid=request.getParameter("subjectid");
         String classid=request.getParameter("classid");
+        if(classid==null||classid.length()<1)
+            classid=request.getSession().getAttribute("session_class").toString();
         //根据课题ID和学生ID查出任务
         if(courseid==null||courseid.trim().length()<1||classid==null||classid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -1797,6 +1799,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             request.getSession().setAttribute("session_grade",gradeid);
         if(subjectid!=null&&!subjectid.toString().equals("0")&&subjectid.trim().length()>0)
             request.getSession().setAttribute("session_subject",subjectid);
+        request.getSession().setAttribute("session_class",classid);
 
         request.setAttribute("courseid", courseid);
         request.setAttribute("termid", termid);

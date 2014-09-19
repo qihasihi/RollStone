@@ -1310,7 +1310,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 addPaper.setQuestionid(Long.parseLong(questionid));
                 addPaper.setOrderidx(maxIdx);
                 addPaper.setScore(quesScore);
-                this.paperQuestionManager.getSaveSql(addPaper,sql);
+                this.paperQuestionManager.doSave(addPaper);
                /* sql=new StringBuilder();
                 objList=this.paperQuestionManager.getSaveSql(addPaper,sql);
                 if(objList!=null&&sql!=null){
@@ -1330,7 +1330,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
         }else{
-            je.setMsg("您的操作没有执行!");
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             this.modifyPaperTotalScore(Long.parseLong(paperid));
         }
         response.getWriter().print(je.toJSON());

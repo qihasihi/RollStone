@@ -118,6 +118,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+
         if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
             jo.put("result","0");
@@ -4268,9 +4269,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
         }
 
-
-
-
         jo.put("testId",paperid==null?0:paperid);
         jo.put("quesList",returnMapList.size()>0?returnMapList:null);
 
@@ -4415,6 +4413,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
             if(type==1){
                 Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                jsonObj = URLDecoder.decode(jsonObj.toString(), "utf-8");
                 JSONArray jr = JSONArray.fromObject(jsonObj);
                 if(jr!=null&&jr.size()>0){
                     for(int i = 0;i<jr.size();i++){

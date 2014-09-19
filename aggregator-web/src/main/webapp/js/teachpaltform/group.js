@@ -610,7 +610,7 @@ function loadWXStudent(){
             $("#ul_cls_stu").html(sx);
 
 
-            $("#dv_add_student li").dblclick(function(){
+            $("#dv_add_student li").click(function(){
                 var id=$(this).attr('id');
                 var parentId=$(this).parent('ul').attr('id');
                 var descId=parentId=='ul_wx_stu'?'ul_cls_stu':'ul_wx_stu';
@@ -622,7 +622,6 @@ function loadWXStudent(){
                     $(this).appendTo( $("#"+descId));
                 }else
                     alert('当前学生已存在!');
-
             });
         }
     });
