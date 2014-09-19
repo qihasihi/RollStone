@@ -124,15 +124,25 @@
 
         function changeOption(idx){
             if(quesType==3){
-                $("ul>li").each(function(){
-                    $(this).removeClass("crumb");
-                });
-            }
-            if($("#li"+idx).hasClass("crumb")){
-                $("#li"+idx).removeClass("crumb");
+                //$("#li"+idx).addClass("crumb").siblings().removeClass("crumb");
+                 $("#li"+idx).addClass("crumb");
+                 $("ul>li").each(function(){
+                     if($(this).attr("id").indexOf(idx)>0){
+                        // $("#li"+idx).addClass("crumb");
+                     }else{
+                         $(this).removeClass("crumb");
+                     }
+                 });
             }else{
-                $("#li"+idx).addClass("crumb");
+                if($("#li"+idx).hasClass("crumb")){
+                    $("#li"+idx).removeClass("crumb");
+                }else{
+                    $("#li"+idx).addClass("crumb");
+                }
             }
+        }
+        function setT(idx){
+            setTimeout("changeOption("+idx+")",0.1);
         }
 
         var iscrumb = 0;
@@ -171,7 +181,7 @@
             <c:forEach items="${option}" var="itm" varStatus="idx">
                     <c:if test="${empty answer}">
                         <li id="li${idx.index}">
-                       <a href="javascript:changeOption(${idx.index})">
+                       <a href="javascript:void(0);" onclick="setT(${idx.index})">
                     </c:if>
                     <c:if test="${!empty answer}">
                         <c:forEach items="${answer}" var="im" varStatus="idx">
