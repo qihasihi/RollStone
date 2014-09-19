@@ -87,13 +87,16 @@
                 subPaper(tqControler);
             }
             document.getElementById("fm_subQues").submit=function(){
+                setTimeout(function(){
                 if(!allowNext){
                     beginJs1();
                     alert('4||请勿过度频繁点击!');
                     return false;
                 }
                 tqControler.freeSubQuesAnswer(-2);
-                return false;
+                    return false;
+                },10000);
+
             }
         });
     </script>
