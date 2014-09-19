@@ -1856,6 +1856,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
+        //查询是否提交过
+        TaskPerformanceInfo tf = new TaskPerformanceInfo();
+        tf.setTaskid(taskList.get(0).getTaskid());
+        tf.setUserid(userRef);
+        tf.setCourseid(taskList.get(0).getCourseid());
+        List<TaskPerformanceInfo> tfList = this.taskPerformanceManager.getList(tf,null);
+        if(tfList!=null&&tfList.size()>0){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已回答，请查看后重试\"}");
+            return;
+        }
         TpTaskInfo tmpTask=taskList.get(0);
 
         //用得到的参数组织数据并生成存储过程执行
@@ -2244,6 +2254,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已结束，请查看后重试\"}");
                 return;
             }
+        }
+        //查询是否提交过
+        TaskPerformanceInfo tf = new TaskPerformanceInfo();
+        tf.setTaskid(taskList.get(0).getTaskid());
+        tf.setUserid(userList.get(0).getRef());
+        tf.setCourseid(taskList.get(0).getCourseid());
+        List<TaskPerformanceInfo> tfList = this.taskPerformanceManager.getList(tf,null);
+        if(tfList!=null&&tfList.size()>0){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已回答，请查看后重试\"}");
+            return;
         }
         List<Object>objList=null;
         StringBuilder sql=null;
@@ -2744,6 +2764,16 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<TpTopicInfo> tiList  = this.tpTopicManager.getList(ti,null);
         if(tiList==null||tiList.size()==0){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前论题不存在，请查看后重试\"}");
+            return;
+        }
+        //查询是否提交过
+        TaskPerformanceInfo tf = new TaskPerformanceInfo();
+        tf.setTaskid(tList.get(0).getTaskid());
+        tf.setUserid(userList.get(0).getRef());
+        tf.setCourseid(tList.get(0).getCourseid());
+        List<TaskPerformanceInfo> tfList = this.taskPerformanceManager.getList(tf,null);
+        if(tfList!=null&&tfList.size()>0){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已回答，请查看后重试\"}");
             return;
         }
         List<Object>objList=null;
