@@ -1303,8 +1303,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         UserInfo u = this.logined(request);
         List<SubjectInfo> subjectList = this.subjectManager.getHavaCourseSubject(termid,u.getRef(),u.getUserid());
         l.add(subjectList); //学生学科数据
-
-        je.setObjList(l);
+        presult.setList(l);
+        je.setPresult(presult);
         response.getWriter().print(je.toJSON());
     }
 

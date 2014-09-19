@@ -35,7 +35,7 @@
                         </li>
                     </c:if>
                     <c:if test="${tk.imtaskattachtype==2}">
-                        <p><img style="cursor:pointer"  src="images/pic02_140811.png" onclick="ado_<%=ado_idx%>.play()"/>
+                        <p><img style="cursor:pointer" width="99px" height="22px"  src="images/pic02_140811.png" onclick="ado_<%=ado_idx%>.play()"/>
                             <span style="display:none"><audio controls="controls" id="ado_<%=ado_idx++%>">
                             <source src="${attach}" type="audio/ogg">
                             <source src="${attach}" type="audio/mpeg">
@@ -66,7 +66,25 @@
              <c:if test="${qaIdx.index!=0}"><h6></h6></c:if>
             <div class="font-black jxxt_zhuanti_rw_tongji_yidongduan_xs">
                 <p class="pic"><img onerror="headError(this)" src="${qa.headimage}" width="75" height="75"></p>
-                <p><b>57分钟前</b><strong>${qa.realname}</strong></p>
+                <p><b>
+                    <script type="text/javascript">
+                        var dLong=(new Date().getTime()-${qa.ctimeLong});
+                        dLong=parseInt(dLong/60000);//分钟
+                        var sHtml="刚刚";
+                        if(dLong>1&&dLong<60)
+                            sHtml=dLong+"分钟前";
+                        else if(dLong>=60){
+                            dLong=parseInt(dLong/60);
+                            if(dLong<24)
+                                sHtml=dLong+"小时前";
+                            else{
+                                dLong=parseInt(dLong/24);
+                                sHtml=dLong+"天前";
+                            }
+                        }
+                        document.write(sHtml);
+                    </script>
+                </b><strong>${qa.realname}</strong></p>
                 <p>${qa.answercontent}</p>
                 <c:if test="${!empty qa.imtaskattachList}">
                 <c:if test="${qa.replyattachtype==1}">

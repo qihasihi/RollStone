@@ -225,6 +225,11 @@ public class QuestionAnswer  implements java.io.Serializable{
 	public Date getCtime() {
 		return ctime;
 	}
+    public Long getCtimeLong(){
+        if(this.getCtime()==null)
+            return 0L;
+        return getCtime().getTime();
+    }
 	public void setCtime(Date ctime) {
 		this.ctime = ctime;
 	}

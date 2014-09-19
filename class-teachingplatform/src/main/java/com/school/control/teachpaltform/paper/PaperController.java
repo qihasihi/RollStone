@@ -3493,6 +3493,15 @@ public class PaperController extends BaseController<PaperInfo>{
             response.getWriter().println(je.getAlertMsgAndBack());
             return null;
         }
+        PaperInfo paper=new PaperInfo();
+        paper.setPaperid(Long.parseLong(paperid));
+        List<PaperInfo> paperList=this.paperManager.getList(paper,null);
+        if(paperList==null||paperList.size()<1){
+            je.setMsg("该试卷已经被删除，请刷新任务列表页!");
+            response.getWriter().println(je.getAlertMsgAndBack());return null;
+        }
+
+
         List<Map<String,Object>> detailList = this.stuPaperLogsManager.getMarkingDetail(Long.parseLong(paperid),questionid,Long.parseLong(quesid),1,Integer.parseInt(classid),Integer.parseInt(classtype),Long.parseLong(taskid.trim()));
 //        if(detailList==null||detailList.size()<1){
 //            je.setMsg("该试卷还没有学生进行答题，无法批阅试卷!");
@@ -3588,10 +3597,12 @@ public class PaperController extends BaseController<PaperInfo>{
             response.getWriter().println(je.getAlertMsgAndBack());return null;
         }
         request.setAttribute("quesid",quesid);
-        request.setAttribute("allscoreObj",allquesidObj);
+        request.setAttribute("allquesidObj",allquesidObj);
         request.setAttribute("score",scoreMapList.get(0).get("SCORE"));
         request.setAttribute("detail",detailList.get(0));
         request.setAttribute("num",numList.get(0));
+        request.setAttribute("papertype",paperList.get(0).getPapertype());
+        request.setAttribute("paperScore",paperList.get(0).getScore());
         return new ModelAndView("teachpaltform/paper/marking/marking-detail");
     }
 

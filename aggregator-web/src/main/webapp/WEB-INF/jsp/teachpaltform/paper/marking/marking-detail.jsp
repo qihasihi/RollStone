@@ -15,12 +15,14 @@
         var questiontype = "${detail.QUESTION_TYPE2!=null?detail.QUESTION_TYPE2:detail.QUESTION_TYPE}";
         var extension = "${detail.EXTENSION2!=null?detail.EXTENSION2:detail.EXTENSION}";
         var tabidx = "${param.tabidx}";
-        var quesids = "${allscoreObj}";
+        var quesids = "${allquesidObj}";
         var currentQuesId="${quesid}";
         var typename;
         var extenname;
         var sign=${sign};
         var isHaveParent = ${sign};
+         var papertype="${papertype}";
+         var paperScore=${!empty paperScore?paperScore:0};
         switch (parseInt(extension)){
             case 0:
                 extenname="客观";
@@ -66,7 +68,6 @@
                 typename=extenname;
                 break;
         }
-
         function nextPiYue(pid,tid){
             if(typeof(pid)=="undefined"||pid==null||typeof(tid)=='undefined'||tid==null){
                 alert('异常错误，原因：参数错误!');return;
@@ -114,9 +115,31 @@
                 }
             });
         }
-
-
         var currentIdx=-1;
+        /**
+         * 加载分数
+         */
+         function getScore(){
+             if(papertype==1||papertype==2){
+                 var allqueslength=quesids.split(",").length;
+                 //得到平均分
+                 var avgScore=parseInt(paperScore/allqueslength);
+                 //如果还有多余
+                 if(paperScore%allqueslength>0){
+                     //$("span[id='avg_score']").last().html(avgScore+());
+                     //// 使用数组翻转函数
+                     var yuScore=paperScore%allqueslength;
+                     if(tabidx.length>0&&yuScore>0){
+                         var jlength=allqueslength-yuScore;
+                         if(jlength<=yuScore){
+                             avgScore+=1;
+                         }
+                     }
+                 }
+                 $("#sp_q_score").html(avgScore);
+             }
+         }
+
         $(function(){
             if($("span[name='fillbank']").length>0){
                 $("span[name='fillbank']").css({
@@ -127,6 +150,8 @@
                         "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                 );
             }
+            //上一题，下一题
+            getScore();
             //上一题，下一题控制
             showQuesOperate();
 
@@ -288,20 +313,21 @@
     <div class="subpage_head"><span class="ico55"></span><strong>批阅试卷</strong></div>
     <div class="content2">
         <p class="jxxt_zhuanti_rw_piyue_info"><a href="javascript:;" onclick="tabQuestion(2)"  id="nextquestion" class="an_public3">下一题</a>
-            <a id="upquestion" href="javascript:;" onclick="tabQuestion(1)" class="an_public3">上一题</a><strong class="font-blue">${param.idx}</strong>&nbsp;&nbsp;试题分数：<span class="font-blue">${score}</span>&nbsp;分</p>
+            <a id="upquestion" href="javascript:;" onclick="tabQuestion(1)" class="an_public3">上一题</a><strong class="font-blue">${param.idx}</strong>&nbsp;&nbsp;试题分数：<span class="font-blue" id="sp_q_score">${score}</span>&nbsp;分</p>
         <div class="jxxt_zhuanti_shijuan_add public_input font-black">
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940">
                 <c:if test="${!empty detail.CONTENT2}">
                     <tr>
-                        <td><span class="bg"  id="tname"></span>${detail.CONTENT2}
+                        <td><span class="bg"  id="tname"></span>${detail.CONTENT2}<br/>
                             <script type="text/javascript">
                                 if(extension==4){
                                     var mp3url=_QUES_IMG_URL+"/${param.questionid}/001.mp3";
                                     var h='<img src="images/pic05_140722.png" style="cursor:pointer" onclick="ado_audio.play()" alt="听力"/>' ;
                                         h+='<span style="display:none"><audio controls="controls" id="ado_audio">';
-                                        h+='<source src="${at}" type="audio/ogg">';
-                                        h+='<source src="${at}" type="audio/mpeg">';
+                                        h+='<source src="'+mp3url+'" type="audio/ogg">';
+                                        h+='<source src="'+mp3url+'" type="audio/mpeg">';
                                         h+='您的浏览器不支持 audio 标签。</audio></span>';
+                                    document.write(h);
                                 }
                             </script>
                         </td>

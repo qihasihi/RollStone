@@ -110,7 +110,8 @@ public class StudentController extends BaseController<StudentInfo> {
 	}
 	
 	public String loadExlForStudent(String filename,HttpServletRequest request) {
-		String msg = "{\"type\":\"success\",\"msg\":\"操作成功!\"}";
+		String msg = "用户导入成功!";
+        String type="success";
 		if (filename==null||filename.trim().length() < 1)
 			return "{\"type\":\"error\",\"msg\":\"文件上传失败!\"}";
 		List<Object>objList=null;
@@ -139,14 +140,20 @@ public class StudentController extends BaseController<StudentInfo> {
 					//验证班级存在
 					List<ClassInfo>clsList=this.classManager.getList(cls, null);
 					if(clsList==null||clsList.size()<1){
-						msg= "{\"type\":\"error\",\"msg\":\"当前班级不存在,请先设置班级再导入成员!\"}";
-						return msg;
+                        if(msg.trim().indexOf("其中")==-1){
+                            msg+="其中 ";
+                        }
+						msg+=stu.getStuno()+",";
+                        continue;
 					}
 
 					if(clsid!=null&&clsid.toString().trim().length()>0&&!clsid.trim().equals("undefined")){
 						if(!clsid.trim().equals(clsList.get(0).getClassid().toString())){
-							msg="{\"type\":\"error\",\"msg\":\"异常错误，当前导入只能导入该班学生!\"}";
-							return msg;
+                            if(msg.trim().indexOf("其中")==-1){
+                                msg+="其中 ";
+                            }
+							msg+=stu.getStuno()+",";
+							continue;
 						}
 					}
 
@@ -328,8 +335,10 @@ public class StudentController extends BaseController<StudentInfo> {
 				}else{
 					boolean flag=this.studentManager.doExcetueArrayProc(sqlListArray, objListArray);
 					if(flag){
-						msg="{\"type\":\"success\",\"msg\":\"操作成功!\"}";
-
+                        if(msg.trim().indexOf("其中")==-1){
+					    	msg="{\"type\":\"success\",\"msg\":\""+msg+"导入失败!\"}";
+                        }else
+                            msg="{\"type\":\"success\",\"msg\":\""+msg+"!\"}";
 
                         //向ETT传入用户数据(添加)
                         if(unionUserIdList!=null&&unionUserIdList.size()>0){
@@ -357,7 +366,8 @@ public class StudentController extends BaseController<StudentInfo> {
                     }else
 						msg="{\"type\":\"error\",\"msg\":\"导入班级成员失败!请重试!\"}"; 
 				}
-			}
+
+            }
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace(); 

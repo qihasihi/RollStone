@@ -559,7 +559,7 @@ public class ClassController extends BaseController<ClassInfo>{
                 tmpClsEntity.setPattern("行政班");
                 tmpClsEntity.setClassgrade(clsEntity.getClassgrade());
                 //tmpClsEntity.setSubjectid(clsEntity.getSubjectid());
-
+                tmpClsEntity.setDcschoolid(this.logined(request).getDcschoolid());
                 tmpClsList=this.classManager.getList(tmpClsEntity, presult);
             }
         }else if(clsEntity.getPattern().trim().equals("分层班")){
@@ -568,6 +568,7 @@ public class ClassController extends BaseController<ClassInfo>{
             tmpEntity.setYear(clsEntity.getYear());
             tmpEntity.setPattern("行政班");
             tmpEntity.setClassgrade(clsEntity.getClassgrade());
+            tmpEntity.setDcschoolid(this.logined(request).getDcschoolid());
             tmpClsList=this.classManager.getList(tmpEntity, presult);
         }
         jeEntity.setObjList(tmpClsList);

@@ -13,7 +13,7 @@
     <script type="text/javascript">
         $(function(){
             //加载另一个页面
-           $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid=${classid}",function(){
+           $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid=${classid} .content1",function(){
                //图片添加事件
                if($("#content li img").length>0)
                    EttImageShow({

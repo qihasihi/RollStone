@@ -185,8 +185,8 @@ function myInfoAjaxList(rps){
             </c:if>
         </ul>
 
-        <h1>共享排行榜</h1>
-        <ul id="ul_sharerank">
+        <h1 style="display:none">共享排行榜</h1>
+        <ul id="ul_sharerank  style="display:none">
 
         </ul>
         <div id="ul_share_rank_li_1" style="display:none"><!--个人校内排行榜-->
@@ -224,8 +224,8 @@ function myInfoAjaxList(rps){
                 <li class="t_r"><a href="#" target="_blank" title="more" class="ico_more"></a></li>
             </c:if>
         </div>
-              <h1>最热资源排行榜</h1>
-        <ul id="ulViewClickTop">
+              <h1  style="display:none">最热资源排行榜</h1>
+        <ul  style="display:none" id="ulViewClickTop">
 
 
 
@@ -255,7 +255,7 @@ function myInfoAjaxList(rps){
                 $(this).html(htm);
             });
         </script>
-        <div id="dv_li_hot_view_2" style="display:none"> <!--最热浏览（月）-->
+        <div id="dv_li_hot_view_2" style="display:none" > <!--最热浏览（月）-->
             <li><a href="javascript:;" onclick="document.getElementById('ulViewClickTop').innerHTML=document.getElementById('dv_li_hot_view_1').innerHTML;">周浏览</a>&nbsp;
                 |&nbsp;<a  href="javascript:;" onclick="document.getElementById('ulViewClickTop').innerHTML=document.getElementById('dv_li_hot_view_2').innerHTML;" class="font-blue">月浏览</a>&nbsp;|&nbsp;
                 <a  href="javascript:;" onclick="document.getElementById('ulViewClickTop').innerHTML=document.getElementById('dv_li_hot_view_3').innerHTML;">最热下载</a></li>

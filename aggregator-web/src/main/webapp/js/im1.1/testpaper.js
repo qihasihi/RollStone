@@ -51,9 +51,9 @@ TestPaperQues.prototype.nextNum=function(type){
                 this.currentQuesObj.idx=this.currentQuesObj.idx+1;
                 if(this.currentQuesObj.idx>arrayObj.length-1){
                     this.currentQuesObj.idx=arrayObj.length-1;
-                    if(confirm("最后一题了，是否交卷?")){
-                        this.subPaper();
-                    }else
+//                    if(confirm("最后一题了，是否交卷?")){
+//                        this.subPaper();
+//                    }else
                         return;
                 }
             }else{
@@ -120,7 +120,7 @@ TestPaperQues.prototype.subPaper=function(){
     if(typeof(pid)=="undefined"||pid.length<1){
         alert('0||异常错误，参数异常!');return;
     }
-    var confirmMsg='是否确定交卷？ 提示：提交之后，你将无法再次作答。 ';
+    //var confirmMsg='是否确定交卷？ 提示：提交之后，你将无法再次作答。 ';
 
 //    var alaqLastQues="";
 //    var allquesArray=this.config.quesidstr.split(",");
@@ -139,9 +139,9 @@ TestPaperQues.prototype.subPaper=function(){
 
 
 
-    if(subQuesId.Trim()==","||subQuesId.Trim().length<1){
-        confirmMsg="你尚未开始作答，确定交卷？\n\n提示：提交之后，你将无法再次作答。";
-    }
+     //  if(subQuesId.Trim()==","||subQuesId.Trim().length<1){
+     //     confirmMsg="你尚未开始作答，确定交卷？\n\n提示：提交之后，你将无法再次作答。";
+     //}
 //    else{
 //        var subid=subQuesId;
 //        if(subid.indexOf(",")==0)
@@ -154,8 +154,8 @@ TestPaperQues.prototype.subPaper=function(){
 //                confirmMsg="你尚有试题没有作答，确定交卷？\n\n提示：提交之后，你将无法再次作答。";
 //        }
 //    }
-    if(!confirm(confirmMsg))
-        return;
+//    if(!confirm(confirmMsg))
+//        return;
 
     var cf=this.config;
     var cid=courseid;
@@ -547,11 +547,12 @@ TestPaperQues.prototype.loadQues=function(){
                             }
                         }else
                             h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ isrightTmp+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
-                        h+='</span<span class="blue">'+m.optiontype+'.</span>'+m.content;
+                        h+='</span><span class="blue">'+m.optiontype+'.</span>'+m.content;
 //                        if(typeof(isrightTmp)!="undefined"&&isrightTmp==1){
 //                            h+='<b class="right"></b>';
 //                        }
-                        h+='</label></li>';
+//                        h+='</label>';
+                        h+='</li>';
                     });
                     h+='</ul>';
                 }

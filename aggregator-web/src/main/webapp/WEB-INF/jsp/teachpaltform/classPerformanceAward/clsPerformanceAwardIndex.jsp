@@ -11,7 +11,6 @@
 <html>
 <head>
     <script type="text/javascript">
-
         $(function(){
             //班级自动选中
             <c:if test="${!empty tccClsList}">
@@ -90,21 +89,23 @@
         <tr>
             <td rowspan="3" class="v_c">网下表现得分<br><span class="font-red" id="sp_wxdf">10分</span></td>
             <td><p>出勤次数</p></td>
-            <td data-bind="gr_wxdf">${stuMap.ATTENDANCENUM}</td>
+            <td data-bind="gr_wxdf">${stuMap.SUBMIT_FLAG==1?stuMap.ATTENDANCENUM:0}</td>
         </tr>
         <tr class="trbg1">
             <td><p>笑脸个数</p></td>
-            <td data-bind="gr_wxdf">${stuMap.SMILINGNUM}</td>
+            <td data-bind="gr_wxdf">${stuMap.SUBMIT_FLAG==1?stuMap.SMILINGNUM:0}</td>
         </tr>
         <tr class="trbg1">
             <td><p>违反纪律次数</p></td>
-            <td data-bind="gr_wxdf">${stuMap.VIOLATIONDISNUM}</td>
+            <td data-bind="gr_wxdf">${stuMap.SUBMIT_FLAG==1?stuMap.VIOLATIONDISNUM:0}</td>
         </tr>
     </c:if>
     <tr>
         <td rowspan="2" class="v_c">网上得分<br><span class="font-red"  id="sp_wsdf">100分</span></td>
         <td><p>完成网上任务</p></td>
-        <td data-bind="gr_wsdf">${!empty stuMap.TASK_SCORE?stuMap.TASK_SCORE:0}</td>
+        <td data-bind="gr_wsdf">
+                ${!empty stuMap.TASK_SCORE?stuMap.TASK_SCORE:0}
+        </td>
     </tr>
     <tr class="trbg1">
         <td><p>完成专题评价</p></td>
@@ -155,7 +156,7 @@ if(!isShowTbl){%>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2 public_input">
         <c:if test="${!empty clsDcType&&clsDcType==3}">
             <colgroup class="w350"></colgroup>
-            <colgroup span="6" class="w110"></colgroup>
+            <colgroup span="5" class="w130"></colgroup>
         </c:if>
         <c:if test="${empty clsDcType||clsDcType!=3}">
             <colgroup class="w400"></colgroup>
@@ -201,7 +202,7 @@ if(!isShowTbl){%>
                     h+='${empty dlm.GROUP_NAME?"未分组":dlm.GROUP_NAME}';
                     <c:if test="${!empty clsDcType&&clsDcType==3}">
                             <c:if test="${!empty dlm.GROUP_ID}">
-                                h+='<br><span class="ico78"></span> <a href="javascript:;" onclick="updateGroupAward(${dlm.GROUP_ID},${dlm.GROUPSUBMIT_FLAG})" id="a_award_${dlm.GROUP_ID}"><span id="sp_grp_award${dlm.GROUP_ID}">${dlm.AWARD_NUMBER}</span></a>个';
+                                h+='<br><span class="ico78"></span><span style="cursor:pointer" onclick="updateGroupAward(${dlm.GROUP_ID},${dlm.GROUPSUBMIT_FLAG})" id="sp_grp_award${dlm.GROUP_ID}">${dlm.AWARD_NUMBER}</span>个';
                                 h+='<br/>';
                                 <c:if test="${!empty dlm.GSCORE1&&dlm.GSCORE1!=0}"><%//分数+1：组内成员全部出勤且无迟到早退%>
                                 h+='<span class="ico86">出勤</span>';
@@ -325,20 +326,21 @@ if(!isShowTbl){%>
         <%--<%if(isStudent){%>--%>
         <%--return;--%>
         <%--<%}%>--%>
-        if(typeof(adminflag)=="undefined"||adminflag==1){
+        if(typeof(adminflag)=="undefined"||adminflag==1||(groupidstr.length<1&&!isTeacher)){
             return;
         }
         var cid=courseid;
-        $("a[id='a_award_"+groupid+"']").attr("onclick","");
-        $("a[id='a_award_"+groupid+"']").unbind("click");
+        $("span[id='sp_grp_award"+groupid+"']").attr("onclick","");
+        $("span[id='sp_grp_award"+groupid+"']").unbind("click");
         var h='<input name="txt_update_num" type="text"' +
                 ' id="txt_update_num" maxlength="4" class="w40" value="'+$("#sp_grp_award"+groupid).html().Trim()+'"/>';
         $("span[id='sp_grp_award"+groupid+"']").html(h);
-        $("#txt_update_num").focus();
 
         $('input[name="txt_update_num"]').bind("keyup afterpaste",function(){
             this.value=this.value.replace(/\D/g,'');
         });
+        $("#txt_update_num").focus();
+        $("#txt_update_num").select();
 
 
         $("#txt_update_num").bind("blur",function(){
@@ -364,7 +366,7 @@ if(!isShowTbl){%>
             //更新数据库
             $(this).parent().html(this.value.Trim());
 
-            $("a[id='a_award_"+groupid+"']").bind("click",function(){updateGroupAward(groupid,adminflag);});
+            $("span[id='sp_grp_award"+groupid+"']").bind("click",function(){updateGroupAward(groupid,adminflag);});
         });
     }
 
@@ -377,13 +379,13 @@ if(!isShowTbl){%>
         var cid=courseid;
         //alert(uid+"   "+groupid+"  "+this.innerText+" "+type);
         //生成数据
-        var t=this.innerText.replace(/\-/g,'');
+        var t=$(this).text().replace(/\-/g,'');
         if(type=="violationDisNum")
-            t=this.innerText.replace(/\-/g,'');
+            t=$(this).text().replace(/\-/g,'');
         var h='<input name="txt_update_num" type="text" id="txt_update_num" maxlength="4" class="w40" value="'+t+'"/>';
         $(this).html(h);
         $("#txt_update_num").focus();
-
+        $("#txt_update_num").select();
         $("#txt_update_num").bind("keyup afterpaste",function(){
             this.value=this.value.replace(/\D/g,'');
         });
@@ -442,7 +444,7 @@ if(!isShowTbl){%>
             jshtml='{'+jshtml+'}';
         }
 
-        if(!confirm("您确定编辑完学生在此课中的网下积分吗?\n\n提示：提交后将不能更新，小组组长提交后，教师也无法进行更改!"))
+        if(!confirm("确定提交?\n\n提交之后将不能修改！"))
             return;
         var p={};
         if(jshtml.length>0){
