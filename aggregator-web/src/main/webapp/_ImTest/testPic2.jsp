@@ -16,7 +16,9 @@
             $( "#dialog" ).dialog({
                 autoOpen: false,
                 width:$(document).width(),
-                height:$(document).height(),
+               // height:window.screen.availHeight,
+               // height:$(document).height(),
+                height:document.documentElement.clientHeight,
                 close:function(){
                     $("#dialog").hide();
                 },
@@ -25,6 +27,7 @@
             });
             $( "#opener" ).click(function() {
                 $("#dialog").css({ "background": "black"  });
+                //resizeimg($("#dialog").get(0),w-40,h-40,"http://192.168.8.238/sz_school/images/test1.jpg");
 
                 $( "#dialog" ).dialog( "open" );
                 $("#dialog").show();
@@ -40,7 +43,7 @@
        <table width="100%" height="100%" align="center">
            <tr>
                <td align="middle">
-                      <img src="http://192.168.8.238/sz_school/images/test1.jpg" style=""/>
+                      <img src="http://192.168.8.238/sz_school/images/pic13_140704.jpg" style=""/>
             </td>
            </tr>
        </table>
@@ -48,7 +51,15 @@
 </div><br>11111
 <br>11111
 <br>11111
-
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+333333333333
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+5555555555555
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <button id="opener">Open Dialog</button>
 </body>
 </html>
