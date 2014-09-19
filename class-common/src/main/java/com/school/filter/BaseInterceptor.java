@@ -75,7 +75,7 @@ public class BaseInterceptor implements HandlerInterceptor {
      */
     private static boolean validateLastName(String str){
         //ppt,rar,zip,xls,xlsx,doc,docx,ppt,pptx,wps,js,jpg,png,gif,bmp,css,htm
-        Pattern pattern = Pattern.compile("(jpg|gif|bmg|ppt|rar|zip|xls|xlsx|doc|docx|ppt|pptx|wps|js|bmp|css|htm)$");
+        Pattern pattern = Pattern.compile("(jpg|png|gif|bmg|ppt|rar|zip|xls|xlsx|doc|docx|ppt|pptx|wps|js|bmp|css|htm)$");
         Matcher matcher = pattern.matcher(str);
         return matcher.matches();
     }
@@ -148,7 +148,6 @@ public class BaseInterceptor implements HandlerInterceptor {
                                 StringBuilder paramStr=new StringBuilder();
                                 Map<String,Object> objMap=request.getParameterMap();
                                 if(objMap!=null&&objMap.size()>0){
-
                                     Iterator<String> iteKey=objMap.keySet().iterator();
                                     while(iteKey.hasNext()){
                                         String key=iteKey.next();
@@ -163,11 +162,10 @@ public class BaseInterceptor implements HandlerInterceptor {
                                         String pmstr=paramStr.toString();
                                         paramStr=new StringBuilder("m="+method);
                                         if(pmstr.trim().length()>0){
-                                            paramStr.append(pmstr);
+                                            paramStr.append("&").append(pmstr);
                                         }
                                     }
                                 }
-
                                 logger.info("----------------\n----No Login active:     "+request.getRequestURL().toString()+"?"+paramStr.toString());
                             }
                             break;
