@@ -51,6 +51,11 @@
   <ul>
       <c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
              <li <%= (pageType!=null&&pageType=="index"?"class='one crumb'":"one")%>><a href="<%=basePath %>user?m=toIndex">首&nbsp;页</a></li>
+
+            <%//加载网校联系人
+                if(sms_user.getEttuserid()!=null&&sms_user.getDcschoolid()!=null){%>
+                 <%@include file="webim.jsp"%>
+            <%}%>
          　　 <li class="four"><a href="javascript:;" onclick="loginDestory('<%=basePath %>')">退出</a></li>
       </c:if>
     <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
