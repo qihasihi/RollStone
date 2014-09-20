@@ -91,7 +91,7 @@ Integer modelType=0;
 			
 	String fileSystemIpPort=UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD");//"http://202.99.47.77:80/";//request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort()+"/";;
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
-			 boolean isTeacher=false,isStudent=false,isBzr=false,isteaidentity=false,isstuidentity=false;
+			 boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false,isteaidentity=false,isstuidentity=false;
  List<RoleUser> cruList=null;
 if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 		||!request.getServletPath().replaceAll("/","").equals(proc_name+"login.jsp")
@@ -112,7 +112,8 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 				isTeacher=true;
 			}else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_STU_ID)){
 				isStudent=true;
-			}
+			}else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_WXJW_ID))
+                isWxJw=true;
 		} 
 	}   
 	session.setAttribute("currentUserRoleList",cruList);		
@@ -128,6 +129,8 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 			}
             if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_CLASSADVISE_ID))
                 isBzr=true;
+            if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_WXJW_ID))
+                isWxJw=true;
 		}
 
 

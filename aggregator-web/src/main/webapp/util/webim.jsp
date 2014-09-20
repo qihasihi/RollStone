@@ -7,15 +7,17 @@
 <%
 
     long jid = sms_user.getEttuserid();
+    long schoolId =sms_user.getDcschoolid();
 
-
-    //1:学生 2:教师
+    //3:学生 2:教务:1教师
     long userType=1;
     if(sms_user.getStuname()!=null&&sms_user.getStuname().length()>0)
         userType=3;
+    else if(isWxJw||schoolId<50000)
+        userType=2;
     else
         userType=1;
-    long schoolId =sms_user.getDcschoolid();
+
 
 
     String webimtimestamp =String.valueOf(new Date().getTime());
