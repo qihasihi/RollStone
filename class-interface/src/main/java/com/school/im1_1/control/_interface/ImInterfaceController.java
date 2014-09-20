@@ -2643,30 +2643,32 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 unCompleteList.add(unComplete);
                             }
                         }
-                        String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                        String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
-                        //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-                        HashMap<String,String> signMap = new HashMap();
-                        signMap.put("userList",jidstr);
-                        signMap.put("schoolId",schoolid);
-                        signMap.put("srcJid",userid);
-                        signMap.put("userType","3");
-                        signMap.put("timestamp",""+System.currentTimeMillis());
-                        String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-                        signMap.put("sign",signture);
-                        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                        if(type==1){
-                           Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                            obj = URLDecoder.decode(obj.toString(),"utf-8");
-                            JSONArray jr = JSONArray.fromObject(obj);
-                            if(jr!=null&&jr.size()>0){
-                                for(int i = 0;i<jr.size();i++){
-                                    JSONObject jobj = jr.getJSONObject(i);
-                                    for(int j = 0;j<unCompleteList.size();j++){
-                                        unComplete = new HashMap();
-                                        if(jobj.getInt("jid")==Integer.parseInt(unCompleteList.get(j).get("jid").toString())){
-                                            unCompleteList.get(j).put("uName", jobj.getString("realName"));
+                        if(jids.length()>0){
+                            String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+                            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+                            HashMap<String,String> signMap = new HashMap();
+                            signMap.put("userList",jidstr);
+                            signMap.put("schoolId",schoolid);
+                            signMap.put("srcJid",userid);
+                            signMap.put("userType","3");
+                            signMap.put("timestamp",""+System.currentTimeMillis());
+                            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+                            signMap.put("sign",signture);
+                            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                            if(type==1){
+                               Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+                                obj = URLDecoder.decode(obj.toString(),"utf-8");
+                                JSONArray jr = JSONArray.fromObject(obj);
+                                if(jr!=null&&jr.size()>0){
+                                    for(int i = 0;i<jr.size();i++){
+                                        JSONObject jobj = jr.getJSONObject(i);
+                                        for(int j = 0;j<unCompleteList.size();j++){
+                                            unComplete = new HashMap();
+                                            if(jobj.getInt("jid")==Integer.parseInt(unCompleteList.get(j).get("jid").toString())){
+                                                unCompleteList.get(j).put("uName", jobj.getString("realName"));
+                                            }
                                         }
                                     }
                                 }
