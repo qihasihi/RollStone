@@ -95,6 +95,14 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
         System.out.println("award_stu_score------------------------------begin");
         if(courseid==null||classid==null||userid==null||type==null||dcschool==null)
             return false;
+        System.out.println("courseid--"+courseid);
+        System.out.println("classid--"+classid);
+        System.out.println("taskid--"+taskid);
+        System.out.println("userid--"+userid);
+        System.out.println("jid--"+jid);
+        System.out.println("type--"+type);
+        System.out.println("dcschool--"+dcschool);
+
         Boolean returnVal=false;
         List<TpStuScoreLogs> tsScoreList=null;
         TpStuScoreLogs entity=new TpStuScoreLogs();
