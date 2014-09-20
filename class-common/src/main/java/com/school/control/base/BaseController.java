@@ -42,7 +42,8 @@ import java.util.List;
 @Controller
 @Scope("prototype")
 public class BaseController<T extends java.io.Serializable> {
-
+    //¼ÇÂ¼Log4J
+    protected org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
 
 

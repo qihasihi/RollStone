@@ -714,9 +714,10 @@ public class ClassController extends BaseController<ClassInfo>{
                         if(clsidInte!=null){
                             //更新人员
                             if(!updateEttClassUser(clsidInte)){
-                                System.out.println(clsidInte+"向ett更新人员失败!");
-                            }else
-                                System.out.println(clsidInte+"向ett更新人员成功!");
+                                logger.info("后台调班:"+clsidInte+"向ett更新人员失败!");
+                            }else{
+                                logger.info("后台调班:"+clsidInte+"向ett更新人员成功!");
+                            }
                         }
                     }
                 }

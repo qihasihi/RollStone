@@ -2,6 +2,7 @@ package com.school.control;
 
 import java.io.File;
 import java.util.*;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -345,9 +346,11 @@ public class StudentController extends BaseController<StudentInfo> {
                             for (String tmpRef:unionUserIdList){
                                 if(tmpRef!=null){
                                     if(!addUserToEtt(tmpRef)){
-                                        System.out.println(tmpRef+"同步用户数据到ETT失败!");
-                                    }else
-                                        System.out.println(tmpRef+"同步用户数据到ETT成功!");
+                                        logger.info("学生导入:"+tmpRef+"同步用户数据到ETT失败!");
+                                    }else{
+                                        logger.info("学生导入:"+tmpRef+"同步用户数据到ETT成功!");
+                                    }
+
                                 }
                             }
                         }
@@ -356,9 +359,10 @@ public class StudentController extends BaseController<StudentInfo> {
                             for (Integer tmpCls:clsIdList){
                                 if(tmpCls!=null){
                                     if(!updateClassUserToEtt(tmpCls)){
-                                        System.out.println(tmpCls+"同步班级数据到ETT失败!");
-                                    }else
-                                        System.out.println(tmpCls+"同步班级数据到ETT成功!");
+                                        logger.info("学生导入:"+tmpCls+"同步班级数据到ETT失败!");
+                                    }else{
+                                        logger.info("学生导入:"+tmpCls+"同步班级数据到ETT成功!");
+                                    }
                                 }
                             }
                         }
