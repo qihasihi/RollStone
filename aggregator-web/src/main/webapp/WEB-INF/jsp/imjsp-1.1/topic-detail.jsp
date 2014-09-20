@@ -63,7 +63,7 @@
                         </c:if>
                         <c:if test="${itm.IM_ATTACH_TYPE eq 2}">
                             <c:forEach items="${itm.IM_ATTACH}" var="at" varStatus="atidx">
-                                <p><a style="cursor: hand"><img src="images/pic02_140811.png"  onclick="ado_${atidx.index}.play()"/></a>
+                                <p><a style="cursor: hand"><img src="images/pic02_140811.png" width="99" height="22"  onclick="ado_${atidx.index}.play()"/></a>
 
                                     <span style="display:none"><audio controls="controls" id="ado_${atidx.index}">
                                         <source src="${at}" type="audio/ogg">
