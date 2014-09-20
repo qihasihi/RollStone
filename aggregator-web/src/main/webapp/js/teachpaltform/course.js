@@ -593,7 +593,7 @@ function inputThinking() {
     }
 
 // 定义联想输入页面HTML, 定义输入框及联想输入页面的状态,状态1表示焦点状态，状态0表示非焦点状态
-    var tipHTML = "<div id='thinking' style='background-color:white;position:fixed;z-index:999999;border:1px solid #CDE4EF; width:" + width + "px;overflow:hidden;overflow:hidden;display:none;background-image: theme/default/imagesmember_right1.png'><li>&nbsp;</li></div><input type='hidden' id='inputId' value='" + inputId + "'><input type='hidden' id='status' value='1'><input type='hidden' id='thinking_status' value='0'><style>li.sel{background:#4d77bb;color:white;}li{font-size:14px;overflow:hidden;}</style>"
+    var tipHTML = "<div id='thinking' style='background-color:white;position:fixed;z-index:999999;border:1px solid #CDE4EF; width:437px;overflow:scroll;height:300px;display:none;background-image: theme/default/imagesmember_right1.png'><li>&nbsp;</li></div><input type='hidden' id='inputId' value='" + inputId + "'><input type='hidden' id='status' value='1'><input type='hidden' id='thinking_status' value='0'><style>li.sel{background:#4d77bb;color:white;}li{font-size:14px;overflow:hidden;}</style>"
 
     /********** 将联想输入页面嵌入原始页面 **********/
     $("#" + inputId).parent().append(tipHTML);

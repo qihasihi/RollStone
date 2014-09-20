@@ -289,7 +289,7 @@
             --%>
 
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
-                <colgroup span="3" class="w310"></colgroup>
+                <colgroup span="2" class="w470">
                 <tr>
                     <th>姓名</th>
                     <th>任务完成率</th>
@@ -311,7 +311,7 @@
                 <c:forEach var="gs" items="${gsList }"  varStatus="idx">
                     <p class="font-black"><strong>我的小组</strong>：${(empty gs.groupname)?"没有找到小组":gs.groupname }</p>
                     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
-                        <colgroup span="3" class="w310"></colgroup>
+                        <colgroup span="2" class="w470">
                         <tr>
                             <th>姓名</th>
                             <th>任务完成率</th>

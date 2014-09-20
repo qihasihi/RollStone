@@ -3335,6 +3335,21 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         return new ModelAndView("/teachpaltform/course/addSelectedCourse", mp);
     }
 
+    @RequestMapping(params = "m=getMaterial", method = RequestMethod.POST)
+    public void getMaterial(HttpServletRequest request,
+                                  HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String subjectid = request.getParameter("subjectid");
+        String gradeid = request.getParameter("gradeid");
+        TeachingMaterialInfo tm = new TeachingMaterialInfo();
+        tm.setGradeid(Integer.parseInt(gradeid));
+        tm.setSubjectid(Integer.parseInt(subjectid));
+        List<TeachingMaterialInfo> tmList = this.teachingMaterialManager.getList(tm, null);
+        je.setType("success");
+        je.setObjList(tmList);
+        response.getWriter().print(je.toJSON());
+    }
+
     @RequestMapping(params = "m=getClassByOptions", method = RequestMethod.POST)
     public void getClassByOptions(HttpServletRequest request,
                                   HttpServletResponse response) throws Exception {

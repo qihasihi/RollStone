@@ -242,6 +242,47 @@
                     }
                 });
             }
+            function getMaterial(){
+                var gid = $("#gradeid").val();
+                if(gid==1||gid==2||gid==3){
+                    if(subjectid==2){
+                        $("#wenli").show();
+                    }else{
+                        $("#wenli").hide();
+                    }
+                }else{
+                    $("#wenli").hide();
+                }
+                $.ajax({
+                    url:'teachercourse?m=getMaterial',
+                    data:{
+                        gradeid:gid,
+                        subjectid:subjectid
+                    },
+                    type:'POST',
+                    dataType:'json',
+                    error:function(){
+                        alert('异常错误,系统未响应！');
+                    },success:function(rps){
+                        var htm='';
+                        if(rps.type=="success"){
+                            $.each(rps.objList,function(idx,itm){
+                                htm+="<option value='"+itm.materialid+"'> ";
+                                htm+=itm.materialname;
+                                if(itm.versionname!=null){
+                                    if(itm.versionname!='其它')
+                                        htm+=itm.versionname;
+                                }
+                                htm+="</option>";
+                            })
+                            $("#materialid").html(htm);
+                        }else{
+                            alert("未知错误，请刷新页面重试");
+                        }
+                    }
+                });
+                pageGo('pList');
+            }
         </script>
 </head>
     <body>
@@ -264,7 +305,7 @@
             <!-- 按专题搜索 -->
             <p id="courSrhType" class="public_input">
                 <input id="termid" type="hidden" value="${termid}" />
-                <select id="gradeid" name="gradeid">
+                <select id="gradeid" name="gradeid" onchange="getMaterial();">
                     <c:if test="${!empty gradeList}">
                         <c:forEach var="grade" items="${ gradeList}">
                             <option value="${grade.gradeid}">${grade.gradename}</option>

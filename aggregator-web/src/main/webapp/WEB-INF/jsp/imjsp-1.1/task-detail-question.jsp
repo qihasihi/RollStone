@@ -111,11 +111,12 @@
                         alert(0);
                     } else {
                         var msg = rmsg.msg;
-                        if(msg==1){
-                            alert(1);
-                        }else{
-                            alert(2);
-                        }
+//                        if(parseInt(msg)==1){
+//                            alert(1);
+//                        }else{
+//                            alert(2);
+//                        }
+                        alert(msg);
                     }
                 }
             });
