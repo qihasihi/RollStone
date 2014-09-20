@@ -3274,13 +3274,40 @@ public class UserController extends BaseController<UserInfo> {
             String[] clsbzrArray = clsbzrstr.split(",");
             if (clsbzrArray.length > 0) {
                 for (String clsid : clsbzrArray) {
+                    ClassUser selBzr=new ClassUser();
+                    selBzr.setRelationtype("班主任");
+                    selBzr.setClassid(Integer.parseInt(clsid));
+                    List<ClassUser>clsBzrList=this.classUserManager.getList(selBzr,null);
+                    if(clsBzrList!=null&&clsBzrList.size()>0){
+                        for(ClassUser classUser:clsBzrList){
+                            RoleUser roleUser=new RoleUser();
+                            roleUser.setRoleid(UtilTool._ROLE_CLASSADVISE_ID);
+                            roleUser.setUserid(classUser.getUserid());
+                            sql=new StringBuilder();
+                            objList=this.roleUserManager.getDeleteSql(roleUser,sql);
+                            if (objList != null && sql != null) {
+                                sqlListArray.add(sql.toString());
+                                objListArray.add(objList);
+                            }
+                        }
+                    }
+
+                    ClassUser deleteBzr=new ClassUser();
+                    deleteBzr.setRelationtype("班主任");
+                    deleteBzr.setClassid(Integer.parseInt(clsid));
+                    sql = new StringBuilder();
+                    objList = this.classUserManager.getDeleteSql(deleteBzr,sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+                    //添加班主任
                     String cuNextRef = UUID.randomUUID().toString();
                     ClassUser cu = new ClassUser();
                     cu.getUserinfo().setRef(userNextRef);
                     cu.getClassinfo().setClassid(Integer.parseInt(clsid));
                     cu.setRef(cuNextRef);
                     cu.setRelationtype("班主任");
-
                     sql = new StringBuilder();
                     objList = this.classUserManager.getSaveSql(cu, sql);
                     if (objList != null && sql != null) {

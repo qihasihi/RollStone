@@ -10,11 +10,11 @@
 
 
     //1:学生 2:教师
-    long userType=6;
+    long userType=1;
     if(sms_user.getStuname()!=null&&sms_user.getStuname().length()>0)
         userType=3;
     else
-        userType=6;
+        userType=1;
     long schoolId =sms_user.getDcschoolid();
 
 

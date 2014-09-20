@@ -1332,6 +1332,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             this.modifyPaperTotalScore(Long.parseLong(paperid));
+            je.setType("success");
         }
         response.getWriter().print(je.toJSON());
     }

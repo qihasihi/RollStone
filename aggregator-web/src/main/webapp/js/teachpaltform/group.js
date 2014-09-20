@@ -301,9 +301,9 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
                     gtHtml+='<a name="a_view" class="ico92" title="查看密码" href="javascript:void(0);"></a>';
                 gtHtml+='<a href="javascript:delGroupStudent(\''+itm.ref+'\');" class="ico34" title="移出小组"></a>';
                 if(itm.isleader==2)
-                    gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\');" class="ico22" title="调组"></a></td>';
+                    gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\',\''+groupId+'\');" class="ico22" title="调组"></a></td>';
                 else if(itm.isleader==1)
-                    gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\');" class="ico23" title="调组"></a></td>';
+                    gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\',\''+groupId+'\');" class="ico23" title="调组"></a></td>';
                 gtHtml+='<td>'+itm.completenum+'%</td>';
                 gtHtml+='<td>'+itm.ctimestring+'</td>';
                 gtHtml+='</tr>';
@@ -330,8 +330,9 @@ function closeDiv(showId){
     showAndHidden('fade','hide');
 }
 
-function showGroupsPanel(ref){
+function showGroupsPanel(ref,groupid){
     $("#gs_ref").val(ref);
+    $("#changeGroups").val(groupid);
     showModel('changeGroupDiv');
 }
 

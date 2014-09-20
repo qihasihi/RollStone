@@ -1410,6 +1410,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             return;
         }
 
+        String classEndTimeStr = request.getParameter("classEndTimeArray");
+        String vclassEndTimeStr = request.getParameter("vclassEndTimeArray");
+
         List<String> sqlListArray = new ArrayList<String>();
         List<List<Object>> objListArray = new ArrayList<List<Object>>();
         List<Object> objList = null;
@@ -1469,10 +1472,12 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         }
 
         // 添加关联班级
-        if (classstr != null && classtimestr != null
-                && classstr.trim().length() > 0 && classtimestr.trim().length() > 0) {
+        if (classstr != null && classtimestr != null&& classEndTimeStr != null
+                && classstr.trim().length() > 0 && classtimestr.trim().length() > 0 && classEndTimeStr.trim().length() > 0
+                ) {
             String[] classArray = classstr.split(",");
             String[] classtimeArray = classtimestr.split(",");
+            String[] classEndtimeArray = classEndTimeStr.split(",");
             //教学班级
             for (int i = 0; i < classArray.length; i++) {
                 TpCourseClass cc = new TpCourseClass();
@@ -1482,6 +1487,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 cc.setGradeid(Integer.parseInt(gradeid));
                 cc.setTermid(termid);
                 cc.setBegintime(UtilTool.StringConvertToDate(classtimeArray[i]));
+                if(!classEndtimeArray[i].toString().equals("0"))
+                    cc.setEndtime(UtilTool.StringConvertToDate(classEndtimeArray[i]));
                 cc.setClasstype(1);
                 cc.setUserid(tc.getCuserid());
                 sql = new StringBuilder();
@@ -1499,10 +1506,11 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
 
         //虚拟班级
-        if (vclassstr != null && vclasstimestr != null
-                && vclassstr.trim().length() > 0 && vclasstimestr.trim().length() > 0) {
+        if (vclassstr != null && vclasstimestr != null &&  vclassEndTimeStr != null
+                && vclassstr.trim().length() > 0 && vclasstimestr.trim().length() > 0 && vclassEndTimeStr.trim().length()>0) {
             String[] vclassArray = vclassstr.split(",");
             String[] vclasstimeArray = vclasstimestr.split(",");
+            String[] vclassEndtimeArray = vclassEndTimeStr.split(",");
             for (int i = 0; i < vclassArray.length; i++) {
                 TpCourseClass cc = new TpCourseClass();
                 cc.setClassid(Integer.parseInt(vclassArray[i]));
@@ -1511,6 +1519,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 cc.setGradeid(Integer.parseInt(gradeid));
                 cc.setTermid(termid);
                 cc.setBegintime(UtilTool.StringConvertToDate(vclasstimeArray[i]));
+                if(!vclassEndtimeArray[i].equals("0"))
+                    cc.setEndtime(UtilTool.StringConvertToDate(vclassEndtimeArray[i]));
                 cc.setClasstype(2);
                 cc.setUserid(tc.getCuserid());
                 sql = new StringBuilder();
@@ -1556,7 +1566,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         }
         response.getWriter().print(je.toJSON());
     }
-
     /**
      * 添加引用课题（引用从专题库中选择的专题）
      * 1列表过滤掉当前教师引用过的专题（不分学期)
@@ -2910,6 +2919,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String year=request.getParameter("year");
         String month=request.getParameter("month");
         String day=request.getParameter("day");
+        PageResult pageResult=this.getPageResultParameter(request);
 
         if (year == null || month==null || day==null || termid == null) {
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));

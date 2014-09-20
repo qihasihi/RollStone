@@ -117,6 +117,9 @@
                         }
                     }
                 });
+            }else{
+                html='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
+                shtml='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
             }
             $("#ul_standard").html(html);
             $("#ul_native").html(shtml);

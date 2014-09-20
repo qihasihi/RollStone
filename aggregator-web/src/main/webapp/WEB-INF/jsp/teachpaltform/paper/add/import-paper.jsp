@@ -76,6 +76,9 @@ function getInvestReturnMethod(rps){
                 shtml+='</li>';
             }
         });
+    }else{
+        html='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
+        shtml='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
     }
     $("#ul_standard").html(html);
     $("#ul_native").html(shtml);
@@ -161,7 +164,9 @@ function preeDoPageSub(pObj){
             <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
             <p class="pic"><a href="1"><b><span class="ico02" title="导入"></span></b></a></p>
         </li> -->
-
+        <c:if test="${empty coursePaperList}">
+            <li><img src="images/pic06_140722.png" width="215" height="160"></li>
+        </c:if>
         <c:if test="${!empty coursePaperList}">
             <c:forEach items="${coursePaperList}" var="c">
                 <c:if test="${c.paperid>0}">
@@ -193,7 +198,9 @@ function preeDoPageSub(pObj){
     </ul>
     <p><strong>自建试卷</strong></p>
     <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
-
+        <c:if test="${empty coursePaperList}">
+            <li><img src="images/pic06_140722.png" width="215" height="160"></li>
+        </c:if>
         <c:forEach items="${coursePaperList}" var="c">
             <c:if test="${c.paperid<0}">
                 <li>

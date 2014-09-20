@@ -356,6 +356,7 @@ public class TpUserController extends UserController {
         String userNextRef = UUID.randomUUID().toString();
         boolean isNewUser=false;
 
+        Integer classid=null;
         ClassInfo c=new ClassInfo();
         c.setClassname(clsname);
         c.setDctype(Integer.parseInt(type));
@@ -378,7 +379,7 @@ public class TpUserController extends UserController {
                 return;
             }
             c=clsList.get(0);
-
+            classid=c.getClassid();
             //向ETT更新班级
             if(!EttInterfaceUserUtil.addClassBase(c))
                 System.out.println("Add ETT USER Error!");
@@ -552,6 +553,8 @@ public class TpUserController extends UserController {
             }else
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
+        if(classid!=null&&!UtilTool.isNumber(classid.toString()))
+            je.getObjList().add(c.getClassid());
         response.getWriter().print(je.toJSON());
      }
 
@@ -1371,7 +1374,12 @@ public class TpUserController extends UserController {
                     for(ClassUser stu:stuAllList){
                         boolean isExists=true;
                         for(String tmpJid:jidArray){
-                            if(!tmpJid.equals(stu.getEttuserid().toString()))
+                            //验证USER是否存在
+                            UserInfo selUser=new UserInfo();
+                            selUser.setEttuserid(Integer.parseInt(tmpJid));
+                            selUser.setDcschoolid(this.logined(request).getDcschoolid());
+                            List<UserInfo>tmpUser=this.userManager.getList(selUser,null);
+                            if(tmpUser!=null&&!tmpJid.equals(stu.getEttuserid().toString()))
                                 isExists=false;
                         }
                         if(!isExists){
@@ -1519,12 +1527,13 @@ public class TpUserController extends UserController {
                 }
 
                 if(bindUserList.size()>0){
+
                     if(!BindEttUser(bindUserList,schoolid,"3")){
-                        System.out.println("绑定ett学生帐号失败!");
+                        System.out.println("-----------------------------------------!!BIND STUDENT SUCCESS!!-----------------------------------------");
                         response.getWriter().print(je.toJSON());
                         return;
                     }else
-                        System.out.println("绑定ett学生帐号成功!");
+                        System.out.println("------------------------------------------!!BIND STUDENT ERROR!!-----------------------------------------");
                 }
 
 

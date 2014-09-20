@@ -589,7 +589,7 @@ function sub_cls(clsid){
             alert(rps.msg);
             if(rps.type=='success'){
                 closeModel(dvObj);
-                loadCls(1,clsid);
+                loadCls(1,clsid=='undefined'?rps.objList[0]:clsid);
             }
         }
     });

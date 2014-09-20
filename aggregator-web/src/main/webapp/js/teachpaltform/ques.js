@@ -375,7 +375,7 @@ function ed_option(itm){
  */  
 function doAddQuestion(){
 	var questype=$("input[name='rdo_ques_type']:checked").val();
-	var url='',iserror=0,param={},paramStr='?t='+new Date().getTime(),rflag=false;
+	var url='',iserror=0,param={},paramStr='?t='+new Date().getTime(),rflag=false,rightnum=0;
     var optionArry=new Array(),isrightArray=new Array();
 	//试题
     if(questionid.length<1){
@@ -433,6 +433,7 @@ function doAddQuestion(){
                        // paramStr+='&is_Right=1';
                         isrightArray.push(1);
                         rflag=true;
+                        rightnum+=1;
                     }else{
                         //paramStr+='&is_Right=0';
                         isrightArray.push(0);
@@ -448,6 +449,9 @@ function doAddQuestion(){
             }
             if(!rflag){
                 alert('您未设置正确答案!');
+                return;
+            }else if(questype=="4"&&rightnum<2){
+                alert('多选题至少两个正确答案!');
                 return;
             }
         }else{
