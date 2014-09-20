@@ -150,6 +150,10 @@
                         "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                 );
             }
+            //去掉内容开头P
+            if($("#sp_ct2").length>0&&$("#sp_ct2>p").length>0){
+                $("#sp_ct2").html($("#sp_ct2>p").html());
+            }
             //上一题，下一题
             getScore();
             //上一题，下一题控制
@@ -318,7 +322,7 @@
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940">
                 <c:if test="${!empty detail.CONTENT2}">
                     <tr>
-                        <td><span class="bg"  id="tname"></span>${detail.CONTENT2}<br/>
+                        <td><span class="bg"  id="tname"></span><span id="sp_ct2">${detail.CONTENT2}</span><br/>
                             <script type="text/javascript">
                                 if(extension==4){
                                     var mp3url=_QUES_IMG_URL+"/${param.questionid}/001.mp3";

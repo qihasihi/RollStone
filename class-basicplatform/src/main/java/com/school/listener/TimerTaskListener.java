@@ -97,7 +97,7 @@ public class TimerTaskListener implements ServletContextListener {
 
 
 
-	private Timer schoolTimer = null,teachMaterialTimer=null,vsTimer=null,upCourseTimer=null,ucTimer=null,dcTimer=null,rsRankTimer=null,upEttColumn=null;
+	private Timer schoolTimer = null,teachMaterialTimer=null,vsTimer=null,upCourseTimer=null,ucTimer=null,dcTimer=null,rsRankTimer=null,upEttColumn=null,upSchoolTmr=null;
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub
         if(schoolTimer!=null)
@@ -116,6 +116,8 @@ public class TimerTaskListener implements ServletContextListener {
             rsRankTimer.cancel();
         if(upEttColumn!=null)
             upEttColumn.cancel();
+        if(upSchoolTmr!=null)
+            upSchoolTmr.cancel();;
 	}
     //时间间隔(一天)
     private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
@@ -216,7 +218,22 @@ public class TimerTaskListener implements ServletContextListener {
         if (uedate.before(new Date())) {
             uedate = this.addDay(uedate, 1);
         }
-         upEttColumn.schedule(new SynchroEttColumns(),uedate,PERIOD_DAY);
+        upEttColumn.schedule(new SynchroEttColumns(),uedate,PERIOD_DAY);
+
+
+        /******************************每天凌晨5点到5.30更新分校下行**************************************/
+        upSchoolTmr=new Timer(true);
+        Calendar  ueSchoolCal = Calendar.getInstance();
+        //每天定点执行
+        ueSchoolCal.set(Calendar.HOUR_OF_DAY,5);
+        Random ueschool=new Random();
+        ueSchoolCal.set(Calendar.MINUTE,(00+ueschool.nextInt(29)));
+        ueSchoolCal.set(Calendar.SECOND,0);
+        Date uschooldate=ueSchoolCal.getTime(); //第一次执行定时任务的时间
+        if (uedate.before(new Date())) {
+            uschooldate = this.addDay(uedate, 1);
+        }
+        upSchoolTmr.schedule(new SynchroEttColumns(),uschooldate,PERIOD_DAY);
 
 	}
 

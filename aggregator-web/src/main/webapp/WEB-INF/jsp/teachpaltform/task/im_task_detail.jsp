@@ -66,25 +66,7 @@
              <c:if test="${qaIdx.index!=0}"><h6></h6></c:if>
             <div class="font-black jxxt_zhuanti_rw_tongji_yidongduan_xs">
                 <p class="pic"><img onerror="headError(this)" src="${qa.headimage}" width="75" height="75"></p>
-                <p><b>
-                    <script type="text/javascript">
-                        var dLong=(new Date().getTime()-${qa.ctimeLong});
-                        dLong=parseInt(dLong/60000);//分钟
-                        var sHtml="刚刚";
-                        if(dLong>1&&dLong<60)
-                            sHtml=dLong+"分钟前";
-                        else if(dLong>=60){
-                            dLong=parseInt(dLong/60);
-                            if(dLong<24)
-                                sHtml=dLong+"小时前";
-                            else{
-                                dLong=parseInt(dLong/24);
-                                sHtml=dLong+"天前";
-                            }
-                        }
-                        document.write(sHtml);
-                    </script>
-                </b><strong>${qa.realname}</strong></p>
+                <p><b>${qa.xgctime}</b><strong>${qa.realname}</strong></p>
                 <p>${qa.answercontent}</p>
                 <c:if test="${!empty qa.imtaskattachList}">
                 <c:if test="${qa.replyattachtype==1}">
@@ -102,7 +84,7 @@
                     <c:if test="${qa.replyattachtype==2}">
                         <p>
                             <img style="cursor:pointer" src="images/pic02_140811.png" onclick="ado_<%=ado_idx%>.play()"/>
-                            <span style="display:none"><audio controls="controls" id="ado_<%=ado_idx++%>">
+                            <span style="display:none"><audio width="99px" height="22px" controls="controls" id="ado_<%=ado_idx++%>">
                                 <source src="${at}" type="audio/ogg">
                                 <source src="${at}" type="audio/mpeg">
                                 您的浏览器不支持 audio 标签。

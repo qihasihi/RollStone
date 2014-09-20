@@ -146,7 +146,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
             TpGroupStudent gs=new TpGroupStudent();
             gs.setUserid(this.logined(request).getUserid());
             gs.getTpgroupinfo().setSubjectid(Integer.parseInt(subjectid));
-          //  gs.setIsleader(1);
+            gs.setIsleader(1);
             List<TpGroupStudent> tgList=this.tpGroupStudentManager.getList(gs,null);
 
             if(tgList!=null&&tgList.size()>0&&tgList.get(0)!=null){
@@ -179,7 +179,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         //根据参数得到值 。
         List<Map<String,Object>> dataListMap=null;
         if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID)){
-          dataListMap=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim())
+            dataListMap=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim())
                     ,Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid),null,null);
         }else if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
             if(groupid!=null&&groupid.trim().length()>0){
@@ -188,8 +188,9 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
             }
         }
         mp.put("dataListMap",dataListMap);
-        if(groupid!=null&&groupid.trim().length()>0)
-            mp.put("stuGroupId",groupid);
+        if(groupid.trim().length()<=1)
+            groupid=null;
+        mp.put("leanderGrpid",groupid);
         groupid=",";
         //如果是学生，则查询该学员的分数
         if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
@@ -206,7 +207,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
             TpGroupStudent gs=new TpGroupStudent();
             gs.setUserid(this.logined(request).getUserid());
             gs.getTpgroupinfo().setSubjectid(Integer.parseInt(subjectid));
-            gs.setIsleader(1);
+            //gs.setIsleader(1);
             List<TpGroupStudent> tgList=this.tpGroupStudentManager.getList(gs,null);
 
             if(tgList!=null&&tgList.size()>0&&tgList.get(0)!=null){
@@ -214,10 +215,11 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
                     groupid+=tgs.getGroupid()+",";
                 }
             }
+            if(groupid.trim().length()<=1)
+                groupid=null;
+            if(groupid!=null)
+                mp.put("stuGroupId",groupid);
         }
-        if(groupid.trim().length()<=1)
-            groupid=null;
-        mp.put("leanderGrpid",groupid);
         mp.put("classid",clsid);
         mp.put("classtype",typeid);
         mp.put("courseid",courseid);
@@ -427,7 +429,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
                         if(tpGsList.get(0).getSubmitflag()==null||tpGsList.get(0).getSubmitflag()==0){
                             tpGsList.get(0).setSubmitflag(1);
                             StringBuilder sqlbuilder=new StringBuilder();
-                            List<Object> objList=this.tpGroupScoreManager.getUpdateSql(gs, sqlbuilder);
+                            List<Object> objList=this.tpGroupScoreManager.getUpdateSql(tpGsList.get(0), sqlbuilder);
                             if(sqlbuilder.toString().trim().length()>0){
                                 objArrayList.add(objList);
                                 sqlArrayList.add(sqlbuilder.toString());
@@ -460,6 +462,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
               //如果所有的数据都提交过。则计算总分
               if(!this.tpStuScoreManager.tpStuScoreCkAllComplateInput(courseid,classid.intValue(),subjectid,entity.getDcschoolid().intValue())){
                   jsonEntity.setMsg("信息录入成功，但执行学生信息统计失败!");
+                  jsonEntity.setType("error");
               }else
                   jsonEntity.setType("success");
 

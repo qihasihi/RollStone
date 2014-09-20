@@ -30,7 +30,7 @@
             }
             if(ht==0){
                 //加载另一个页面
-                $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid="+ clsid+" .content1",function(){
+                $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid="+ clsid+" .jxxt_zhuanti_rw_tongji_yidongduan_js",function(){
                     //图片添加事件
                     if($("#content li img").length>0)
                         EttImageShow({

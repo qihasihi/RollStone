@@ -115,10 +115,10 @@ function getInvestReturnMethod(rps){
         $("#ul_grade").html(shtml);
         $("#sub_"+subjectid).siblings().attr("class","");
         $("#sub_"+subjectid).attr("class","crumb");
-        if(rps.presult.list[4].length<6)
-            $("#dv_sub_operate").hide();
-        else
-            $("#dv_sub_operate").show();
+//        if(rps.presult.list[4].length<6)
+//            $("#dv_sub_operate").hide();
+//        else
+//            $("#dv_sub_operate").show();
     }else{
         $("#ul_grade").html('');
     }
@@ -260,15 +260,19 @@ function displayObj(id,type){
 function changeTab(direct){
     tabTotal=$("#ul_grade").children().length; //标签总数
     //现在的总字数
-    var gdWord=$("#ul_grade").text()+tabTotal;
     var tabSize=0;
+    var currentWordSize=0;
     $("#ul_grade").children("li").each(function(idx,itm){
-        var currentWordSize=$(itm).text().length+1;
-        if(currentWordSize<=tabWord)
+        currentWordSize+=($(itm).text().length+1);
+        if(currentWordSize<=tabWord){
             tabSize+=1;
-        else return;
+        }else
+            return;
 
     });
+    if(currentWordSize>tabWord){
+        $("#dv_sub_operate").show();
+    }
 
 
     var i=0,j=0;

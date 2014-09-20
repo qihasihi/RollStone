@@ -108,7 +108,9 @@
 <input type="hidden" id="subjectid" value="">
     <div class="jxxt_student_nav">
         <div id="nav">
-            <div class="arr" id="dv_sub_operate"><a href="javascript:changeTab2('front');"><span class="up"></span></a><a href="javascript:changeTab2('back');"><span class="next"></span></a></div>
+            <div class="arr" id="dv_sub_operate" style="display: none">
+                <a href="javascript:changeTab2('front');"><span class="up"></span></a>
+                <a href="javascript:changeTab2('back');"><span class="next"></span></a></div>
             <ul id="ul_grade">
                 <c:forEach var="sl" items="${subjectList}" varStatus="status">
                     <li id="sub_${sl.subjectid}"><a href="javascript:searchBySubject(${sl.subjectid})"><span id="sub_${status.index}">${sl.subjectname}</span></a></li>

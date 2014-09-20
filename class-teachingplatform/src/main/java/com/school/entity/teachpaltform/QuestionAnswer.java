@@ -230,6 +230,25 @@ public class QuestionAnswer  implements java.io.Serializable{
             return 0L;
         return getCtime().getTime();
     }
+
+    public String getXgctime(){
+        Long dLong=(new Date().getTime()-getCtimeLong());
+        dLong=dLong/60000;//分钟
+        String sHtml="刚刚";
+        if(dLong>1&&dLong<60)
+            sHtml=dLong+"分钟前";
+        else if(dLong>=60){
+            dLong=dLong/60;
+            if(dLong<24)
+                sHtml=dLong+"小时前";
+            else{
+                dLong=dLong/24;
+                sHtml=dLong+"天前";
+            }
+        }
+        return sHtml;
+    }
+
 	public void setCtime(Date ctime) {
 		this.ctime = ctime;
 	}
