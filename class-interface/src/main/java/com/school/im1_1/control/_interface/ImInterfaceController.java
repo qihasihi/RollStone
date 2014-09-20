@@ -3614,7 +3614,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
             response.sendRedirect(directBuilder.toString());
 //            jsonEntity.setMsg("当前任务未开始或不存在!");
-//            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+//            response.getWriter().println(jsonEntity.getAlertMsgAndBack());
+             return null;
         }
 
 
