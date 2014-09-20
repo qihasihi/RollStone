@@ -63,12 +63,13 @@
                     </c:if>
                     <c:if test="${itm.replyAttachType eq 2}">
                         <c:forEach items="${itm.replyAttach}" var="at">
-                            <p>
-                                <audio controls="controls">
-                                    <source src="${at}" type="audio/ogg">
-                                    <source src="${at}" type="audio/mpeg">
-                                    您的浏览器不支持 audio 标签。
-                                </audio></p>
+                            <p><a style="cursor: hand"><img src="images/pic02_140811.png" width="99" height="22"  onclick="ado_${atidx.index}.play()"/></a>
+
+                                    <span style="display:none"><audio controls="controls" id="ado_${atidx.index}">
+                                        <source src="${at}" type="audio/ogg">
+                                        <source src="${at}" type="audio/mpeg">
+                                        您的浏览器不支持 audio 标签。
+                                    </audio></span></p>
                         </c:forEach>
                     </c:if>
                 </c:if>
