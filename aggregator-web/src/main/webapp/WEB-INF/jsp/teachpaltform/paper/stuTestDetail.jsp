@@ -73,6 +73,11 @@
                         var obj=$("input[name='rdo_answer"+t+"']").filter(function(){return this.value.Trim()==t1});
                         var answerObj={val:obj[0].value,id:obj[0].id,name:obj[0].name};
                         obj.parent().html("<input type='radio' checked=true id='"+answerObj.id+"' disabled=true name='"+answerObj.name+"' value='"+answerObj.value+"'>");
+                        var as=$("#you_score"+t).parent().children("#avg_score").html();
+                        var myScore=$("#you_score"+t).html();
+                        if(parseFloat(as)!=parseFloat(myScore)){
+                            $("#sp_quesIdx"+t).css("color",'red');
+                        }
                     }else if(qtype==4){
                         var splitChar="|";
                         if(t1.indexOf("%7C")!=-1)
@@ -87,6 +92,11 @@
                               }
                             }
                         });
+                        var as=$("#you_score"+t).parent().children("#avg_score").html();
+                        var myScore=$("#you_score"+t).html();
+                        if(parseFloat(as)!=parseFloat(myScore)){
+                            $("#sp_quesIdx"+t).css("color",'red');
+                        }
                     }
                 }
             }
@@ -177,7 +187,7 @@
 
             var h1=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_qs_${q.questionid}">';
             <c:if test="${empty q.parentQues}">
-                    h1+='<caption class="font-blue"><span class="f_right"><strong id="you_score${q.questionid}">0</strong>/<span id="avg_score">0</span>分</span><span class="font-blue">${qidx.index+1}</span></caption>';
+                    h1+='<caption class="font-blue"><span class="f_right"><strong id="you_score${q.questionid}">0</strong>/<span id="avg_score">0</span>分</span><span class="font-blue" id="sp_quesIdx${q.questionid}">${qidx.index+1}</span></caption>';
             </c:if>
             <c:if test="${!empty q.parentQues&&q.parentQues.extension!=5}">
                     h1+='<caption style="display:none"><span class="font-blue f_right"><strong id="you_score${q.questionid}">0</strong>/<span id="avg_score">0</span>分</span></caption>';
@@ -330,19 +340,6 @@
 
             //序号重排
             updateQuesIdx();
-            <c:if test="${!empty stuAnswer}">
-                <c:forEach items="${stuAnswer}" var="sa">
-                //得到quesid的questype
-                userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","","${sa.ismarking}");
-                <c:if test="${!empty sa.annexNameFullArray}">
-                    <c:forEach items="${sa.annexNameFullArray}" var="ax">
-                        var ax="${ax}";
-                         $("#fujian${sa.quesid}").append("<a target='_blank' href='"+ax+"'>"+ax.substring(ax.lastIndexOf("/")+1)+"</a>&nbsp;");
-                    </c:forEach>
-                     $("#fujian${sa.quesid}").parent().show();
-                </c:if>
-                </c:forEach>
-            </c:if>
             //计算每题的分数
             if(papertype==1||papertype==2){
                 var allqueslength=allquesid.split(",").length;
@@ -384,6 +381,21 @@
                 });
                 $("#"+this.id+" #you_sum").html(YSumScore);
             });
+
+            <c:if test="${!empty stuAnswer}">
+                <c:forEach items="${stuAnswer}" var="sa">
+                    //得到quesid的questype
+                    userAnswer(${sa.quesid},"${sa.answerString}","${sa.score}","","${sa.ismarking}");
+                    <c:if test="${!empty sa.annexNameFullArray}">
+                    <c:forEach items="${sa.annexNameFullArray}" var="ax">
+                        var ax="${ax}";
+                        $("#fujian${sa.quesid}").append("<a target='_blank' href='"+ax+"'>"+ax.substring(ax.lastIndexOf("/")+1)+"</a>&nbsp;");
+                    </c:forEach>
+                    $("#fujian${sa.quesid}").parent().show();
+                    </c:if>
+                </c:forEach>
+            </c:if>
+
             if(isshowfen||isAllMark){
                 var sumScore=0;
                 $("strong[id*='you_score']").each(function(idx,itm){
