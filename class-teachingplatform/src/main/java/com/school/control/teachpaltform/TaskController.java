@@ -3766,7 +3766,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         mp.put("students", stuList);
         //查询小组任务
         List<TpGroupInfo> groupList = this.tpGroupManager.getMyGroupList(
-                Integer.parseInt(classid), 1, termid, null, userid,null);
+                Integer.parseInt(classid), 1, termid, null, userid,Integer.parseInt(subjectid));
         if(groupList!=null && groupList.size()>0){
             for(TpGroupInfo g:groupList){
                 TpGroupStudent gs = new TpGroupStudent();

@@ -210,13 +210,19 @@
 </head>
 <body>
 <div class="subpage_head"><span class="ico19"></span><strong>个人任务统计—— ${username}</strong></div>
+
+
+        <c:if test="${param.userid==null}">
 <div class="subpage_nav">
-    <ul id="tabs">
-        <li id="li_self_tab" class="crumb"><a href="javascript:tabCutover(1)">个人</a></li>
-        <li id="li_group_tab"><a href="javascript:tabCutover(2)">小组</a></li>
-        <li id = "li_class_tab"><a href="javascript:tabCutover(3)">班级</a></li>
-    </ul>
+            <ul id="tabs">
+            <li id="li_self_tab" class="crumb"><a href="javascript:tabCutover(1)">个人</a></li>
+            <li id="li_group_tab"><a href="javascript:tabCutover(2)">小组</a></li>
+            <li id = "li_class_tab"><a href="javascript:tabCutover(3)">班级</a></li>
+            </ul>
 </div>
+        </c:if>
+
+
 <div class="content1" id="content">
     <div id="selfdiv">
     <p class="public_input font-black">按专题：
@@ -285,13 +291,11 @@
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
                 <colgroup span="3" class="w310"></colgroup>
                 <tr>
-                    <th>学号</th>
                     <th>姓名</th>
                     <th>任务完成率</th>
                 </tr>
                 <c:forEach var="stu" items="${students }" varStatus="idx">
                 <tr ${(idx.index%2==1)?'class="trbg1"':''}>
-                    <td>${stu.stuno}</td>
                     <td>${stu.realname}</td>
                     <td><a href="javascript:void(0);" class="font-blue">${stu.completenum}%</a></td>
                 <tr>
@@ -309,14 +313,12 @@
                     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
                         <colgroup span="3" class="w310"></colgroup>
                         <tr>
-                            <th>学号</th>
                             <th>姓名</th>
                             <th>任务完成率</th>
                         </tr>
                         <c:if test="${!empty gs.tpgroupstudent}">
                         <c:forEach var="cgs" items="${gs.tpgroupstudent }"  varStatus="ix">
                         <tr ${(ix.index%2==1)?'class="trbg1"':''}>
-                            <td>${cgs.stuno}</td>
                             <td>${cgs.stuname}</td>
                             <td><a href="javascript:void(0);" class="font-blue">${cgs.completenum}%</a></td>
                         <tr>

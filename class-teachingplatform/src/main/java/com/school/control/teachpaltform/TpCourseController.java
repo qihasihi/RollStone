@@ -2658,7 +2658,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity je = new JsonEntity();
         String materialid=request.getParameter("materialid");
         String coursename=request.getParameter("course_name");
-        if (materialid == null || coursename == null) {
+        if (materialid == null ) {
             je.setType("error");
             je.setMsg("参数错误，无法请求数据！");
             response.getWriter().print(je.toJSON());
@@ -3318,10 +3318,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         SubjectUser su = new SubjectUser();
         su.setUserid(user.getRef());
         suList = this.subjectUserManager.getList(su, null);
-        gradeList = this.gradeManager.getTchGradeList(user.getUserid(), ti.getYear());
+        gradeList = this.gradeManager.getList(new GradeInfo(),null);//this.gradeManager.getTchGradeList(user.getUserid(), ti.getYear());
 
         mp.put("subject", subject);
-
         mp.put("materialid",materialid);
         mp.put("grade", grade);
         mp.put("termid", termid);

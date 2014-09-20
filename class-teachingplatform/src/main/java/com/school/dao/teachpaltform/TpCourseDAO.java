@@ -146,7 +146,7 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
             sqlbuilder.append("?");
             objList.add(coursename);
         }else{
-            sqlbuilder.append("NULL,");
+            sqlbuilder.append("NULL");
         }
         sqlbuilder.append(")}");
         List<Map<String,Object>> courselist=this.executeResultListMap_PROC(sqlbuilder.toString(),objList);

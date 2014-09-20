@@ -171,6 +171,7 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Object rescount;
     private Object quescount;
     private Object topiccount;
+    private Object papercount;
     private Integer filterquote;    //去除被引用的专题
     private Integer uncompletenum;
     private Integer questiontype;
@@ -313,7 +314,13 @@ public class TpCourseInfo  implements java.io.Serializable{
         this.taskcount = taskcount;
     }
 
+    public Object getPapercount() {
+        return papercount;
+    }
 
+    public void setPapercount(Object papercount) {
+        this.papercount = papercount;
+    }
 
     public Integer getMaterialid() {
         return materialid;

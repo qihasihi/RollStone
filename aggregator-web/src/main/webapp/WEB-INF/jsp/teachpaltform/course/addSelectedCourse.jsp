@@ -25,7 +25,7 @@
                 srhMode(1);
                 <c:if test="${!empty grade}">
                     $("#gradeid").val('${grade.gradeid}');
-                    $("#gradeid").attr("disabled",true);
+                   // $("#gradeid").attr("disabled",true);
                 </c:if>
                 $("#schoolname").val(schoolname);
                 $("#gradeid").change(function(){
@@ -109,7 +109,7 @@
                         html += "</td><td><p><a href='teachercourse?m=toCourseDetial&courseid=" + itm.courseid + "&materialid="+materialid+"' target='_blank'>" + itm.coursename + "</a></p>";
                         html += "<p class='font-darkgray'>作者：" + (itm.schoolname==null?"北京四中网校":itm.schoolname) + "&nbsp;"+(itm.teachername==null?"":itm.teachername)+"</p>";
                         html += "<p>简介：" + (itm.introduction==null?"无":itm.introduction) + "</p>";
-                        html += "<p class='t_r'>任务：<b>"+itm.taskcount+"</b>专题资源：<b>"+itm.rescount+"</b> 论题：<b>"+itm.topiccount+"</b>";
+                        html += "<p class='t_r'>资源：<b>"+itm.rescount+"</b> 试题：<b>"+itm.quescount+"</b>试卷：<b>"+itm.papercount+"</b>论题：<b>"+itm.topiccount+"</b>任务：<b>"+itm.taskcount+"</b>";
                         for(var i=1;i<6;i++)
                             if(itm.avgscore>=i)
                                 html += "<span class='ico_star1'></span>";

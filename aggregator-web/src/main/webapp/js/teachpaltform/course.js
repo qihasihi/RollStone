@@ -699,7 +699,30 @@ function showThinking(inputId) {
             }
         });
     } else {
-        $("#thinking").html("");
+        $.ajax({
+            type: "POST",
+            dataType:"json",
+            cache: false,
+            url: "teachercourse?m=getRelatedCourse",
+            data: {materialid:materialid},
+            success: function(rps) {
+                if(rps.type="success") {
+                    var htm='';
+                    if(rps.objList!=null&&rps.objList.length>0){
+                        $.each(rps.objList,function(idx,itm){
+                            htm+='<a href="javascript:selectCourseName(\''+itm.COURSE_NAME+'\','+itm.COURSE_ID+')" >'+itm.COURSE_NAME+'</a><br>';
+                        });
+                    }
+                    $("#thinking").html(htm);
+                    $("#thinking").css("display", "block");
+                }else{
+                    alert("系统异常，请稍后重试")
+                }
+            },
+            error: function(msg) {
+                alert(msg);
+            }
+        });
     }
 }
 
