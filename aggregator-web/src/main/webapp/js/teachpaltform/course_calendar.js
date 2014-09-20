@@ -196,7 +196,9 @@ function markCalendar(selYear,selMonth){
     if(typeof(gradeid)!="undefined"){
         p.gradeid=gradeid;
     }
-    if(typeof(termid)!="undefined"){
+    if(typeof(termid)=="object"){
+        p.termid=termid.value;
+    }else if(typeof(termid)!="undefined"){
         p.termid=termid;
     }
     if(typeof(_clsid)!="undefined"&&!isNaN(_clsid)){
