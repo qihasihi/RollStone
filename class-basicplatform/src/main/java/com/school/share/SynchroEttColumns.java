@@ -20,7 +20,8 @@ import java.util.*;
 public class SynchroEttColumns  extends TimerTask {
   private  static  String ettColumnUrl=null,school_id=null;
     public SynchroEttColumns(){
-        ettColumnUrl= UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION")+UtilTool.utilproperty.getProperty("ETT_COLUMNS_UPDATE_ADDRESS");
+        //ettColumnUrl="http://yuechunyang.etiantian.com:8080/totalSchool/"+UtilTool.utilproperty.getProperty("ETT_COLUMNS_UPDATE_ADDRESS");
+        ettColumnUrl=UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION")+UtilTool.utilproperty.getProperty("ETT_COLUMNS_UPDATE_ADDRESS");
         school_id=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
     }
     public static void main(String[] args){
@@ -41,8 +42,10 @@ public class SynchroEttColumns  extends TimerTask {
         //ettColumnUrl="http://yuechunyang.etiantian.com:8080/totalSchool/ettcolumn?m=getEttColumn";
          IColumnManager columnManager= (ColumnManager)SpringBeanUtil.getBean("columnManager");
         Long dtime=new Date().getTime();
-        String checkcode= MD5_NEW.getMD5ResultCode(dtime+school_id+dtime);
-        String params="school_id="+school_id+"&timestamp="+dtime+"&checkcode="+checkcode;
+       // String checkcode= MD5_NEW.getMD5ResultCode(dtime+school_id+dtime);
+         String checkcode= MD5_NEW.getMD5ResultCode(dtime+""+dtime);//多校版
+        String params="timestamp="+dtime+"&checkcode="+checkcode;
+      //  params+="&school_id="+school_id;   //多校版,不传school_id
         Map<String,Object> mapObj=sendPostURL(ettColumnUrl,params);
        // System.out.println( + "  " + mapObj.get("msg"));
         List<String>sqlArrayList=new ArrayList<String>();
@@ -69,6 +72,7 @@ public class SynchroEttColumns  extends TimerTask {
                         Object ettstyle=jsObj.get("ettcolumnstyle");
                         Object ettroletype=jsObj.get("ettcolumntype"); //1:教师  2：学生
                         Object isShow=jsObj.get("isshow");
+                        Object schoolId=jsObj.get("schoolid");
                         EttColumnInfo ettEntity=new EttColumnInfo();
                         ettEntity.setEttcolumnid(Integer.parseInt(ettcolumnid.toString()));
                         if(ettcolumnname==null)
@@ -77,7 +81,9 @@ public class SynchroEttColumns  extends TimerTask {
                         if(ettcolumnurl==null)
                             ettcolumnurl="";
                            ettEntity.setEttcolumnurl(ettcolumnurl.toString());
-
+                        //分校ID
+                        if(schoolId!=null)
+                            ettEntity.setSchoolid(Integer.parseInt(schoolId.toString().trim()));
                         ettEntity.setStatus(Integer.parseInt(status.toString()));
                         if(ettstyle!=null)
                             ettEntity.setStyle(ettstyle.toString());

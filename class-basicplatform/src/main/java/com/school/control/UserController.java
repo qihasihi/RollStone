@@ -1080,6 +1080,7 @@ public class UserController extends BaseController<UserInfo> {
                                 ec.setRoletype(2);//学生
                             else
                                 ec.setRoletype(1);
+                            ec.setSchoolid(userinfo.getDcschoolid());
                             request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
                         }
                         //查询分校的logo放入session

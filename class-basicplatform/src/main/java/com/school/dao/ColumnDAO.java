@@ -319,7 +319,6 @@ public class ColumnDAO extends CommonDAO<ColumnInfo> implements IColumnDAO {
             sqlbuilder.append("?,");
         }else
             sqlbuilder.append("NULL,");
-
         if(entity.getStyle()!=null){
             returnObj.add(entity.getStyle());
         }else
@@ -333,6 +332,11 @@ public class ColumnDAO extends CommonDAO<ColumnInfo> implements IColumnDAO {
             sqlbuilder.append("NULL,");
         if(entity.getIsShow()!=null){
             returnObj.add(entity.getIsShow());
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(entity.getSchoolid()!=null){
+            returnObj.add(entity.getSchoolid());
             sqlbuilder.append("?,");
         }else
             sqlbuilder.append("NULL,");
@@ -374,7 +378,7 @@ public class ColumnDAO extends CommonDAO<ColumnInfo> implements IColumnDAO {
        StringBuilder sqlbuilder=new StringBuilder("{CALL ett_column_info_proc_split(");
         List<Object> objList=new ArrayList<Object>();
         if(entity==null){
-            sqlbuilder.append("NULL,NULL,NULL,NULL,");
+            sqlbuilder.append("NULL,NULL,NULL,NULL,NULL,NULL,");
         }else{
             if(entity.getRef()!=null){
                 objList.add(entity.getRef());
@@ -398,6 +402,11 @@ public class ColumnDAO extends CommonDAO<ColumnInfo> implements IColumnDAO {
                 sqlbuilder.append("NULL,");
             if(entity.getRoletype()!=null){
                 objList.add(entity.getRoletype());
+                sqlbuilder.append("?,");
+            }else
+                sqlbuilder.append("NULL,");
+            if(entity.getSchoolid()!=null){
+                objList.add(entity.getSchoolid());
                 sqlbuilder.append("?,");
             }else
                 sqlbuilder.append("NULL,");

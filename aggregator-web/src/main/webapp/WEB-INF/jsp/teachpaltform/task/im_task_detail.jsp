@@ -19,7 +19,7 @@
 <head>
 </head>
 <body>
-<div class="content1">
+<div id="dv_data">
     <div class="font-black jxxt_zhuanti_rw_tongji_yidongduan_js">
         <p><strong>${tk.taskobjname}</strong></p>
         <p>${tk.imtaskcontent}</p>
@@ -83,8 +83,8 @@
                     </c:if>
                     <c:if test="${qa.replyattachtype==2}">
                         <p>
-                            <img style="cursor:pointer" src="images/pic02_140811.png" onclick="ado_<%=ado_idx%>.play()"/>
-                            <span style="display:none"><audio width="99px" height="22px" controls="controls" id="ado_<%=ado_idx++%>">
+                            <img style="cursor:pointer" width="99px" height="22px"  src="images/pic02_140811.png" onclick="ado_<%=ado_idx%>.play()"/>
+                            <span style="display:none"><audio controls="controls" id="ado_<%=ado_idx++%>">
                                 <source src="${at}" type="audio/ogg">
                                 <source src="${at}" type="audio/mpeg">
                                 您的浏览器不支持 audio 标签。

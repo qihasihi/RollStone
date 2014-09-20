@@ -9,11 +9,12 @@
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 <html>
 <head>
+    <script type="text/javascript" src="js/1.6/jquery-ui-160.min.js"></script>
     <script type="text/javascript" src="js/common/image-show.js"></script>
     <script type="text/javascript">
         $(function(){
             //加载另一个页面
-           $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid=${classid} .jxxt_zhuanti_rw_tongji_yidongduan_js",function(){
+           $("#content").load("task?m=toAnswerList&taskid=${param.taskid}&classid=${classid} #dv_data",function(){
                //图片添加事件
                if($("#content li img").length>0)
                    EttImageShow({

@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jxxt.css"/>
     <script type="text/javascript" src="js/common/videoPlayer/new/jwplayer.js"></script>
     <script type="text/javascript" src="<%=basePath %>js/videoPlayer/swfobject.js"></script>
+    <script type="text/javascript" src="js/1.6/jquery-ui-160.min.js"></script>
     <script type="text/javascript" src="js/common/image-show.js"></script>
     <script type="text/javascript">
         $(function(){

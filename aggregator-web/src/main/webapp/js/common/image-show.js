@@ -51,44 +51,31 @@ function EttImageShow(settings){
             //添加点击事件
             $(itm).click(function(){
                 /*属性*/
-                $("#"+sets.fadeId).css({
-                    "display": "",
-                    "position": "absolute",
-                    "top": "0px",
-                    "left": "0px",
-                    "right": "0px",
-                    "bottom": "0px",
-                    "background": "black",
-                    "visibility": "visible",
-                    "filter": "Alpha(opacity=100)",
-                    "z-index":99999
-                });
-                /*高为屏幕的高*/
-                $("#"+sets.fadeId).css({
-                    height: function () {
-                        return $(document).height();
-                    },
-                    width:"100%"
-                });
-                var myOffset = new Object();
-                myOffset.left = 0;
-                myOffset.top = 0;
-                $('#img_'+sets.fadeId).offset(myOffset);
-                $('#img_'+sets.fadeId).hide();
+                $("#"+sets.fadeId).css({"background": "black"});
+                $("#dimg").hide();
+
+//                var myOffset = new Object();
+//                myOffset.left = 0;
+//                myOffset.top = 0;
+//                $('#img_'+sets.fadeId).offset(myOffset);
+//                $('#img_'+sets.fadeId).hide();
                 var whObj=findDimensions();
                 var h=whObj.h;
                 var w=whObj.w;
 
-                if(isIE()){
-                    resizeimg($('#img_'+sets.fadeId).get(0),
-                        w-160,
-                        h-160,
-                        $(this).attr("data-src")
-                    );
-                }
+//                if(isIE()){
+//                    resizeimg($('#img_'+sets.fadeId).get(0),
+//                        w-160,
+//                        h-160,
+//                        $(this).attr("data-src")
+//                    );
+//                }
+                $( "#"+sets.fadeId).dialog("open");
+                $('#img_'+sets.fadeId).hide();
+
                 resizeimg($('#img_'+sets.fadeId).get(0),
-                    w-160,
-                    h-160,
+                    w,
+                    h,
                     $(this).attr("data-src")
                 );
             });
@@ -122,13 +109,33 @@ function EttImageShow(settings){
      * 加载页面大层
      */
     function ImageShow_initPage(fadeId){
-        var h='<div id="'+fadeId+'" style="display: none;">';
-        h+='<div><a style="float: right" href="javascript:;" onclick="$(this).parent().parent().hide();">';
-        h+=' <img src="'+getRootPath()+'/images/close.png" width="40" height="40"/></a>';
-        h+=' <img id="img_'+fadeId+'"  src=""  />';
-        h+=' <div>';
+        var h='<div id="'+fadeId+'">';
+        h+='<table width="100%" height="100%" align="center">';
+        h+='<tr><td align="middle"  width="100%">';
+        h+='<center><img id="img_'+fadeId+'" src="" onclick="closedailog()" /></center>';
+        h+='</td></tr></table>';
         h+=' </div>';
         $("body").append(h);
+        //定义dialog
+        var whObj=findDimensions();
+        $("#"+fadeId).dialog({
+            autoOpen: false,
+            width:whObj.w,
+            // height:window.screen.availHeight,
+            // height:$(document).height(),
+            height:whObj.h,
+            close:function(){
+                $("#"+fadeId).hide();
+            },
+            overlay: { opacity: 0.1, background: "black" },
+            modal:true
+        });
+        $(".ui-dialog-titlebar").hide();
+        //定义事件
+        $("#img_"+fadeId).bind("click",function(){
+            $( "#"+fadeId).dialog("close");
+        });
+
     }
 
     /**
@@ -164,23 +171,9 @@ function EttImageShow(settings){
                         ImgD.height = image.height;
                     }
                 }
+                ImgD.style.display='block';
             }
-            var whObj=findDimensions();
-            var h=whObj.h;
-            var w=whObj.w;
-            var positionY =0;
-            positionY =(h-ImgD.height)/2;
-            if(positionY<0) positionY =0;
-            var positionX = 0;
-            positionX =(w-ImgD.width)/2;
-            if(positionX<0) positionX =0;
-            // alert("w "+w+"         h "+h+"              img_w " +ImgD.width+"           img_h  "+ImgD.height+"             left "+positionX+"            top "+positionY);
-            var myOffset = new Object();
-            myOffset.left = positionX;
-            myOffset.top = positionY;
-            $("#"+ImgD.id).offset(myOffset);
-            $('#'+ImgD.id).show();
-        },100);
+        },200);
     }
 
 

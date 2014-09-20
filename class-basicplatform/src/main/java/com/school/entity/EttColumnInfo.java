@@ -16,6 +16,16 @@ public class EttColumnInfo implements  Serializable{
     private String style;
     private Integer roletype;
     private Integer isShow;
+    private Integer schoolid;
+
+
+    public Integer getSchoolid() {
+        return schoolid;
+    }
+
+    public void setSchoolid(Integer schoolid) {
+        this.schoolid = schoolid;
+    }
 
     public Integer getIsShow() {
         return isShow;
