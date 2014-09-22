@@ -4,10 +4,7 @@ import com.school.entity.UserModelTotalScoreInfo;
 import com.school.entity.resource.score.UserModelTotalScore;
 import com.school.manager.inter.resource.score.IUserModelTotalScoreManager;
 import com.school.manager.resource.score.UserModelTotalScoreManager;
-import com.school.util.OperateXMLUtil;
-import com.school.util.SpringBeanUtil;
-import com.school.util.UtilTool;
-import com.school.util.ZipUtil;
+import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.util.Streams;
@@ -34,8 +31,17 @@ public class UpdateUserModelTotalScore extends TimerTask {
     private final static String _Template_name="ShareTemplate.xml";
 
 
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     @Override
     public void run() {
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._updateUserModelTotalScore){
+            SynchroUtil._updateUserModelTotalScore=true;
+            logger.info("-------------------- 更新用户总分排行启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("-------------------- 更新用户总分排行启动执行-------------------");
         // Date currentDate=new Date();//记录当前更新的时间点
         String key=UpdateCourseUtil.getCurrentSchoolKey(request);
         if(key==null){//记录操作日志
@@ -79,7 +85,7 @@ public class UpdateUserModelTotalScore extends TimerTask {
             System.out.println("没有发现可以解析的文件，即没有版本更新，记录到数据库中");return;
         }
         //该分校的用户排行
-        IUserModelTotalScoreManager userModelTotalScoreManager=(UserModelTotalScoreManager) SpringBeanUtil.getBean("userModelTotalScoreManager");
+        IUserModelTotalScoreManager userModelTotalScoreManager=(UserModelTotalScoreManager)SpringBeanUtil.getBean("userModelTotalScoreManager");
         //循环解析folderFiles
 
         List<List<Object>> objArrayList=new ArrayList<List<Object>>();

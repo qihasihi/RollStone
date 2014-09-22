@@ -78,7 +78,7 @@ public class ClassYearDAO extends CommonDAO<ClassYearInfo> implements IClassYear
 		StringBuilder sqlbuilder=new StringBuilder("{CALL class_year_proc_search_split(");
 		List<Object> objList=new ArrayList<Object>();
 		if(obj==null)
-			sqlbuilder.append("NULL,NULL,NULL,"); 
+			sqlbuilder.append("NULL,NULL,NULL,NULL,");
 		else{
 			if(obj.getClassyearid()!=null){
 				sqlbuilder.append("?,");
@@ -90,11 +90,16 @@ public class ClassYearDAO extends CommonDAO<ClassYearInfo> implements IClassYear
 				objList.add(obj.getClassyearname());
 			}else
 				sqlbuilder.append("NULL,");
-			if(obj.getClassyearvalue()!=null){
-				sqlbuilder.append("?,");
-				objList.add(obj.getClassyearvalue()); 
-			}else
-				sqlbuilder.append("NULL,");
+            if(obj.getClassyearvalue()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getClassyearvalue());
+            }else
+                sqlbuilder.append("NULL,");
+            if(obj.getDyEqClassyearvalue()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getDyEqClassyearvalue());
+            }else
+                sqlbuilder.append("NULL,");
 		} 
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");

@@ -259,7 +259,7 @@ function displayObj(id,type){
 
 function changeTab(direct){
     tabTotal=$("#ul_grade").children().length; //标签总数
-    //现在的总字数
+    //总个数
     var tabSize=0;
     var currentWordSize=0;
     $("#ul_grade").children("li").each(function(idx,itm){
@@ -283,9 +283,9 @@ function changeTab(direct){
             currtenTab-=1;
             i=(currtenTab-1)*tabSize;
             j=currtenTab*tabSize-1;
-            $("#ul_grade").children().show();
-            $("#ul_grade").children(":lt("+i+")").hide();
-            $("#ul_grade").children(":gt("+j+")").hide();
+            $("#ul_grade li").show();
+            $("#ul_grade li:lt("+i+")").hide();
+            $("#ul_grade li:gt("+j+")").hide();
             return;
         }
     }
@@ -296,9 +296,9 @@ function changeTab(direct){
             currtenTab+=1;
             i=(currtenTab-1)*tabSize;
             j=currtenTab*tabSize-1;
-            $("#ul_grade").children().show();
-            $("#ul_grade").children(":lt("+i+")").hide();
-            $("#ul_grade").children(":gt("+j+")").hide();
+            $("#ul_grade li").show();
+            $("#ul_grade li:lt("+i+")").hide();
+            $("#ul_grade li:gt("+j+")").hide();
             return;
         }
     }

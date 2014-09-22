@@ -5,6 +5,7 @@ import com.school.manager.ColumnManager;
 import com.school.manager.inter.IColumnManager;
 import com.school.util.MD5_NEW;
 import com.school.util.SpringBeanUtil;
+import com.school.util.SynchroUtil;
 import com.school.util.UtilTool;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -13,12 +14,16 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by zhengzhou on 14-7-2.
  */
 public class SynchroEttColumns  extends TimerTask {
   private  static  String ettColumnUrl=null,school_id=null;
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+
     public SynchroEttColumns(){
         //ettColumnUrl="http://yuechunyang.etiantian.com:8080/totalSchool/"+UtilTool.utilproperty.getProperty("ETT_COLUMNS_UPDATE_ADDRESS");
         ettColumnUrl=UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION")+UtilTool.utilproperty.getProperty("ETT_COLUMNS_UPDATE_ADDRESS");
@@ -39,6 +44,13 @@ public class SynchroEttColumns  extends TimerTask {
     }
     @Override
     public void run() {
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._synchroEttColumns){
+            SynchroUtil._synchroEttColumns=true;
+            logger.info("-------------------- 更新栏目启动，不执行-------------------");
+            return;
+        }
+        logger.info("-----------------------------更新栏目启动!-----------------------------");
         //ettColumnUrl="http://yuechunyang.etiantian.com:8080/totalSchool/ettcolumn?m=getEttColumn";
          IColumnManager columnManager= (ColumnManager)SpringBeanUtil.getBean("columnManager");
         Long dtime=new Date().getTime();

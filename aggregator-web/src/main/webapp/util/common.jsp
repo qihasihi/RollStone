@@ -192,7 +192,7 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 		<script type="text/javascript" src="<%=basePath %>js/common/dtree.js"></script>
 
 	
-        <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jcpt.css"/>
+        <%--<link rel="stylesheet" type="text/css" href="<%=basePath %>css/jcpt.css"/>--%>
 		<!-- <link rel="stylesheet" type="text/css"	href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" /> -->
 
 		<script src="<%=basePath %>util/My97DatePicker/WdatePicker.js" language="javascript" type="text/javascript"></script>

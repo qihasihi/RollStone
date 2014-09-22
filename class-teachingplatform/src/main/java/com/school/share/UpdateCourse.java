@@ -61,10 +61,18 @@ public class UpdateCourse extends TimerTask{
      * 获取更新XML的每次数量
      */
     private static final Integer _getXmlLenPath_Size=150;
-
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     //分校端同步资源
     @Override
     public void run() {
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._updateCourse){
+            SynchroUtil._updateCourse=true;
+            logger.info("--------------------下行专题启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("--------------------下行专题启动执行-------------------");
         Date currentDate=new Date();//记录当前更新的时间点
         String key=UpdateCourseUtil.getCurrentSchoolKey(request);
         if(key==null){//记录操作日志

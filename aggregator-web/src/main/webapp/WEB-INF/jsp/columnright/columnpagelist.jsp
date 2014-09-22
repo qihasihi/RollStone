@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
-<%@include file="/util/common.jsp" %>
+<%@include file="/util/common-base.jsp" %>
 <%
 	request.setAttribute("isSelect",true);	 //查询功能权限
     request.setAttribute("isAdd",true);	 //添加功能权限 

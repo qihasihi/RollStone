@@ -384,6 +384,8 @@ TestPaperQues.prototype.loadQues=function(){
             $("#dv_pq_"+this.currentQuesObj.parentQuesId).show();
 
         }
+    }else{
+        $("div[id*='dv_pq_']").hide();
     }
 
     showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
@@ -450,7 +452,7 @@ TestPaperQues.prototype.loadQues=function(){
                 if(parentQuesObj!=null){
                     h='<div id="dv_pq_'+parentQuesObj.questionid+'">';
                     hqx='<div id="dv_qx_'+parentQuesObj.questionid+'">';
-                }else
+                }
                hqx+='<div id="dv_df'+quesObj.questionid+'"><h1><span>'+(cQuesObj.idx+1)+'、</span><span class="f_right" style="display:none">得分：<span id="sp_df_'+quesObj.questionid+'">'+sc+'</span></span><span id="sp_qx">';
                 //h+='<span class="f_right">得分：0分</span>';
                 var qtypeInfo='未知';
@@ -469,7 +471,7 @@ TestPaperQues.prototype.loadQues=function(){
                 if($("#dv_df"+quesObj.questionid).length>0){
                     $("#dv_df"+quesObj.questionid).show();
                 }else{
-                    if(parentQuesObj!=null)
+                    if(parentQuesObj!=null&&$("#dv_qx_"+parentQuesObj.questionid).length>0)
                         $("#dv_qx_"+parentQuesObj.questionid).append(hqx);
                     else
                         h+=hqx;
@@ -530,7 +532,7 @@ TestPaperQues.prototype.loadQues=function(){
                     if(ex==5&&parentQuesObj!=null)
                         qo=parentQuesObj.questionOption;
                     $.each(qo,function(x,m){
-                        h+='<li data-bind="'+m.questionid+"|"+m.optiontype+'"><span style="display:none">' ;
+                        h+='<li data-bind="'+quesObj.questionid+"|"+m.optiontype+'"><span style="display:none">' ;
                         var isrightTmp= m.isright;
                         if(ex==5&&parentQuesObj!=null){
                             $.each(quesObj.questionOption,function(zx,zm){
@@ -541,12 +543,12 @@ TestPaperQues.prototype.loadQues=function(){
                             });
                         }
                         if(quesObj.questiontype==3||quesObj.questiontype==7){
-                            h+='<input type="radio" name="rdo_answer'+quesObj.questionid+'" value="'+m.optiontype+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
+                            h+='<input type="radio" name="rdo_answer'+quesObj.questionid+'" value="'+m.optiontype+'" id="rdo_answer'+quesObj.questionid+m.optiontype+'"/>';
                             if(typeof(isrightTmp)!="undefined"&&isrightTmp==1){
                                 h+='<input type="hidden" value="'+ m.optiontype+'"  name="hd_rightVal"  id="hd_rightVal'+quesObj.questionid+'"/>';
                             }
                         }else
-                            h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ isrightTmp+'" id="rdo_answer'+m.questionid+m.optiontype+'"/>';
+                            h+='<input type="checkbox" name="rdo_answer'+quesObj.questionid+'"  value="'+m.optiontype+'|'+ isrightTmp+'" id="rdo_answer'+quesObj.questionid+m.optiontype+'"/>';
                         h+='</span><span class="blue">'+m.optiontype+'.</span>'+m.content;
 //                        if(typeof(isrightTmp)!="undefined"&&isrightTmp==1){
 //                            h+='<b class="right"></b>';
@@ -738,6 +740,7 @@ TestPaperDetail.prototype.nextQues=function(quesid){
  */
 TestPaperDetail.prototype.loadQues=function(){
     $("div[id*='dv_q_']").hide();
+    $("div[id*='dv_df']").hide();
     allowNext=false;
     if(!allowNext){beginJs1();}
     var showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
@@ -745,9 +748,6 @@ TestPaperDetail.prototype.loadQues=function(){
     if(showPqObj.length>0)
         id=showPqObj.attr("id");
     if(this.currentQuesObj.parentQuesId!=0){
-
-
-
         var pid=this.currentQuesObj.parentQuesId;
         $("div[id*='dv_pq_']").each(function(x,m){
             if(m.id!=('dv_pq_'+pid))
@@ -765,6 +765,8 @@ TestPaperDetail.prototype.loadQues=function(){
         if($("#dv_pq_"+this.currentQuesObj.parentQuesId).length>0){
             $("#dv_pq_"+this.currentQuesObj.parentQuesId).show();
         }*/
+    }else{
+        $("div[id*='dv_pq_']").hide();
     }
 
     showPqObj=$("div[id*='dv_pq_']").filter(function(){return this.style.display!='none'});
@@ -858,7 +860,7 @@ TestPaperDetail.prototype.loadQues=function(){
                 if($("#dv_df"+quesObj.questionid).length>0){
                     $("#dv_df"+quesObj.questionid).show();
                 }else {
-                    if(parentQuesObj!=null)
+                    if(parentQuesObj!=null&&$("#dv_qx_"+parentQuesObj.questionid).length>0)
                         $("#dv_qx_"+parentQuesObj.questionid).append(hqx);
                     else
                         h+=hqx;
@@ -1007,7 +1009,7 @@ TestPaperDetail.prototype.loadQues=function(){
                                     $.each(anXNameObj,function(zqx,zq){
                                         ch+='<p>';
                                         if(zm.attachType==1){       //IM端提交的附件类型，1：图片 2：语音 attach_type
-                                            ch+='<img src="imapi1_1?m=makeImImg&w=160&h=90&p='+zq+'" data-src="'+zq+'"/>';
+                                            ch+='<img src="'+zq+'" height="90px" data-src="'+zq+'"/>';  //w:160  height:90
                                         }else if(zm.attachType==2){
 //                                            ch+='<img src="m=makeImImg&w=160&h=90&p='+zq+'"/>';
 //                                            var mp3H='<a href="javascript:;" id="mp3_a_'+parentQuesObj.questionid+'"><img src="images/pic05_140722.png" alt="听力"/></a>' ;

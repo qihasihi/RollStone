@@ -27,6 +27,9 @@ import java.util.*;
  * Created by zhengzhou on 14-5-22.
  */
 public class ShareResNum extends TimerTask {
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+
     private String _Schoolid=null;
     private ServletContext request;
     public ShareResNum(ServletContext application){
@@ -48,6 +51,12 @@ public class ShareResNum extends TimerTask {
 
     @Override
     public void run(){
+        if(!SynchroUtil._shareResNumBo){
+            SynchroUtil._shareResNumBo=true;
+            logger.info("--------------------分享资源数量启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("--------------------分享资源数量执行-------------------");
         String key=UpdateCourseUtil.getCurrentSchoolKey(request);
         if(key==null){//记录操作日志
             System.out.println("异常错误，得到分校KEY失败，请检测是否存在School.txt文件!");return;

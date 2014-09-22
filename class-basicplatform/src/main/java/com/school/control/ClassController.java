@@ -52,11 +52,24 @@ public class ClassController extends BaseController<ClassInfo>{
 
     @RequestMapping(params="m=list",method=RequestMethod.GET)
     public ModelAndView toClassList(HttpServletRequest request,ModelMap mp )throws Exception{
+        JsonEntity jsonEntity=new JsonEntity();
         PageResult p = new PageResult();
-        p.setOrderBy("c.e_time desc");
-        List<ClassYearInfo>classyearList=this.classYearManager.getList(null, p);
-        List<GradeInfo>gradeList=this.gradeManager.getList(null, null);
+
+        List<ClassYearInfo> classyearList=null;
+        //得到当前学年
+        TermInfo crnTerm=this.termManager.getAutoTerm();
+        if(crnTerm==null||crnTerm.getYear()==null){
+            //jsonEntity.setMsg("当前时间不属于任何学年!");
+            classyearList=this.classYearManager.getList(null, p);
+        }else{
+            ClassYearInfo cy=new ClassYearInfo();
+            cy.setDyEqClassyearvalue(crnTerm.getYear());
+            classyearList=this.classYearManager.getList(cy,p);
+        }
         mp.put("classyearList", classyearList);
+
+        p.setOrderBy("c.e_time desc");
+        List<GradeInfo>gradeList=this.gradeManager.getList(null, null);
         mp.put("gradeList", gradeList);
 
         //得到全部学科

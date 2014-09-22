@@ -9,10 +9,7 @@ import com.school.manager.inter.teachpaltform.ITeachVersionManager;
 import com.school.manager.inter.teachpaltform.ITeachingMaterialManager;
 import com.school.manager.teachpaltform.TeachVersionManager;
 import com.school.manager.teachpaltform.TeachingMaterialManager;
-import com.school.util.OperateXMLUtil;
-import com.school.util.SpringBeanUtil;
-import com.school.util.UtilTool;
-import com.school.util.ZipUtil;
+import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.util.Streams;
@@ -34,9 +31,18 @@ public class ShareTeachingMaterial extends TimerTask {
         this.request=application;
     }
 
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
      @Override
     public void run() {
+         //如果是这第一次执行，则是启动执行，则直接返回
+         if(!SynchroUtil._shareTeachingMaterial){
+             SynchroUtil._shareTeachingMaterial=true;
+             logger.info("--------------------分享教材启动执行，不执行-------------------");
+             return;
+         }
+         logger.info("--------------------分享教材启动执行-------------------");
         Date currentDate=new Date();//记录当前更新的时间点
         String key=UpdateCourseUtil.getCurrentSchoolKey(request);
         if(key==null){//记录操作日志

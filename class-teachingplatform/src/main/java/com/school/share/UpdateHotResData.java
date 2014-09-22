@@ -4,10 +4,7 @@ import com.school.entity.resource.ResourceInfo;
 import com.school.entity.resource.RsHotRankInfo;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.resource.ResourceManager;
-import com.school.util.OperateXMLUtil;
-import com.school.util.SpringBeanUtil;
-import com.school.util.UtilTool;
-import com.school.util.ZipUtil;
+import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.util.Streams;
@@ -28,9 +25,17 @@ public class UpdateHotResData extends TimerTask {
     public UpdateHotResData(ServletContext application){
         this.request=application;
     }
-
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     @Override
     public void run() {
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._updateHotResData){
+            SynchroUtil._updateHotResData=true;
+            logger.info("--------------------下行最热资源排行版启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("--------------------下行最热资源排行版启动执行-------------------");
         String key=UpdateHotResDataUtil.getCurrentSchoolKey(request);
         if(key==null){//记录操作日志
             System.out.println("异常错误，得到分校KEY失败，请检测是否存在School.txt文件!");return;

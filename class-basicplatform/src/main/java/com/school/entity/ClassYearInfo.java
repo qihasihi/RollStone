@@ -15,8 +15,17 @@ public class ClassYearInfo implements java.io.Serializable{
 	  private Date btime;
 	  private Date ctime;
 	  private Date etime;
-	  
-	  
+
+    private String dyEqClassyearvalue;
+
+    public String getDyEqClassyearvalue() {
+        return dyEqClassyearvalue;
+    }
+
+    public void setDyEqClassyearvalue(String dyEqClassyearvalue) {
+        this.dyEqClassyearvalue = dyEqClassyearvalue;
+    }
+
     public String getClassyearname() {
 		return classyearname;
 	}

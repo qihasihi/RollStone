@@ -28,7 +28,7 @@
   <body onselectstart="return false" ondragstart="return false"> 
   <%@include file="/util/head.jsp" %>
    
-  <%@include file="/util/nav.jsp" %>
+  <%@include file="/util/nav-base.jsp" %>
 
 <div class="jxpt_layout">
  <div class="public_lable_layout">

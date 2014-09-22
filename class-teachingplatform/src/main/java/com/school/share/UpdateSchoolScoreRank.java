@@ -3,10 +3,7 @@ package com.school.share;
 import com.school.entity.resource.score.SchoolScoreRank;
 import com.school.manager.inter.resource.score.ISchoolScoreRankManager;
 import com.school.manager.resource.score.SchoolScoreRankManager;
-import com.school.util.OperateXMLUtil;
-import com.school.util.SpringBeanUtil;
-import com.school.util.UtilTool;
-import com.school.util.ZipUtil;
+import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.util.Streams;
@@ -33,9 +30,17 @@ public class UpdateSchoolScoreRank extends TimerTask {
      */
     private final static String _Template_name="ShareTemplate.xml";
 
-
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     @Override
     public void run() {
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._updateSchoolScoreRank){
+            SynchroUtil._updateSchoolScoreRank=true;
+            logger.info("-------------------- 更新分校积分排行启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("-------------------- 更新分校积分排行启动执行-------------------");
        // Date currentDate=new Date();//记录当前更新的时间点
         String key=UpdateSchoolScoreRankUtil.getCurrentSchoolKey(request);
         if(key==null){//记录操作日志

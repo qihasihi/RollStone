@@ -56,10 +56,17 @@ public class ShareTpOperate extends TimerTask {
     private String _Schoolid=null;
     //上传的文件序列
     private final String _UploadFileName="uploadFile.txt";
-
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     //上传核心
     public void run(){
-
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._shareTpOperate){
+            SynchroUtil._shareTpOperate=true;
+            logger.info("--------------------分享资源操作启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("--------------------分享资源操作启动执行-------------------");
         String firstDirectory= MD5_NEW.getMD5Result(MD5_NEW.getMD5Result(_Schoolid) + UtilTool.utilproperty.getProperty("TO_ETT_KEY").toString());
         String parentDirectory=request.getRealPath("/")+"/uploadfile/tmp/shareTpOperate/"; //根路径
         String filename=new StringBuffer().append(firstDirectory).append(".xml").toString();    //xml文件的文件名

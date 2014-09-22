@@ -31,8 +31,17 @@ public class UpdateUserScoreRankRealname extends TimerTask {
      * 生成的模板XML
      */
     private final static String _Template_name="ShareTemplate.xml";
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     @Override
     public void run() {
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._updateUserScoreRankRealname){
+            SynchroUtil._updateUserScoreRankRealname=true;
+            logger.info("-------------------- 同步用户分数排行真实姓名启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("-------------------- 同步用户分数排行真实姓名启动执行-------------------");
         // Date currentDate=new Date();//记录当前更新的时间点
         String key=UpdateSchoolScoreRankUtil.getCurrentSchoolKey(request);
         if(key==null){//记录操作日志

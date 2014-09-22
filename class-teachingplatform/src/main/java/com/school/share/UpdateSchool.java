@@ -5,10 +5,7 @@ import com.school.entity.resource.score.SchoolScoreRank;
 import com.school.manager.SchoolManager;
 import com.school.manager.inter.ISchoolManager;
 import com.school.manager.resource.score.SchoolScoreRankManager;
-import com.school.util.OperateXMLUtil;
-import com.school.util.SpringBeanUtil;
-import com.school.util.UtilTool;
-import com.school.util.ZipUtil;
+import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.util.Streams;
@@ -30,11 +27,17 @@ public class UpdateSchool  extends TimerTask {
         //分校ID
         this.request=application;
     }
-
-    /**
-     * 主方法
-     */
-    public void run(){
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    @Override
+    public void run() {
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._updateSchool){
+            SynchroUtil._updateSchool=true;
+            logger.info("--------------------分校信息表更新启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("--------------------分校信息表更新启动执行-------------------");
         // Date currentDate=new Date();//记录当前更新的时间点
         String key=UpdateSchoolUtil.getCurrentSchoolKey(request);
         if(key==null){//记录操作日志

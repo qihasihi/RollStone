@@ -4,10 +4,7 @@ package com.school.share;
 import com.school.entity.resource.MyInfoCloudInfo;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.resource.ResourceManager;
-import com.school.util.OperateXMLUtil;
-import com.school.util.SpringBeanUtil;
-import com.school.util.UtilTool;
-import com.school.util.ZipUtil;
+import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.util.Streams;
@@ -20,7 +17,7 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * 更新资源最热浏览，下载等数据
+ * 更新资源消息
  * Created by zhengzhou on 14-6-3.
  */
 public class UpdateRsMyInfoData extends TimerTask {
@@ -29,8 +26,17 @@ public class UpdateRsMyInfoData extends TimerTask {
         this.request=application;
     }
 
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     @Override
     public void run() {
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._updateRsmyInfoData){
+            SynchroUtil._updateResNum=true;
+            logger.info("--------------------更新资源消息启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("--------------------更新资源消息启动执行-------------------");
         String key=UpdateResMyInfoDataUtil.getCurrentSchoolKey(request);
         if(key==null){//记录操作日志
             System.out.println("异常错误，得到分校KEY失败，请检测是否存在School.txt文件!");return;

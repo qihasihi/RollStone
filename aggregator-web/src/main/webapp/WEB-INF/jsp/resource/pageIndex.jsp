@@ -344,7 +344,7 @@ function myInfoAjaxList(rps){
              <div class="nextpage" id="dv_dto_pageress" style="display:none"></div>
          </form>
      </div>
-        </div>
+
 
         <p class="zyxt_home_tjzy"><span class="ico14"></span>推荐资源</p>
         <div class="subpage_lm">
@@ -367,7 +367,7 @@ function myInfoAjaxList(rps){
             <div id="pageDaddress"  class="nextpage" style="display:none;">
             </div>
         </form>
-
+    </div>
     </div>
 </div>
  <%@include file="/util/foot.jsp" %>

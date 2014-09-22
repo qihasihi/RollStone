@@ -70,13 +70,17 @@ function EttImageShow(settings){
 //                        $(this).attr("data-src")
 //                    );
 //                }
+                var srcStr=$(this).attr("data-src");
+                if(srcStr.indexOf(".")!=-1){
+                    srcStr=srcStr.substring(0,srcStr.lastIndexOf("."))+srcStr.substring(srcStr.lastIndexOf("."))
+                }
                 $( "#"+sets.fadeId).dialog("open");
                 $('#img_'+sets.fadeId).hide();
 
                 resizeimg($('#img_'+sets.fadeId).get(0),
                     w,
                     h,
-                    $(this).attr("data-src")
+                    srcStr
                 );
             });
         });

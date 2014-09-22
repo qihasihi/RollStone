@@ -10,7 +10,7 @@
         <script type="text/javascript" src="js/teachpaltform/course_calendar.js"></script>
 <script type="text/javascript">
     var currtenTab=1; //当前学科导航栏页数
-    var tabWord=36; //学科导航栏每页显示数量
+    var tabWord=35; //学科导航栏每页显示数量
     var _clsid="";
     var grade="";
     var gradeid="";

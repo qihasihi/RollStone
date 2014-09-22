@@ -24,7 +24,10 @@ var imgwidth = 0;
 var imgheight = 0;
 var imgareaselectObj;
 $(function(){
-
+    if($("ul li a[href='notice?m=list']").length>0){
+        $("ul li a[href='notice?m=list']").parent().remove();
+        $("#a_adNotice").show();
+    }
     <c:if test="${empty initObj}">
             showSetupWizard("dv_zhong");
     </c:if>
@@ -418,7 +421,7 @@ function closeEditUser(){
 <div class="home_layout">
 <div class="home_layoutR">
     <!-- 通知公告 -->
-    <h1><a href="notice?m=tomore&noticetype=<%=UtilTool._NOTICE_TYPE[1]%>" target="_blank" title="more" class="ico_more"></a><span class="ico09"></span>通知公告</h1>
+    <h1><a href="notice?m=tomore&noticetype=<%=UtilTool._NOTICE_TYPE[1]%>" target="_blank" title="more" class="ico_more"></a><span class="ico09"></span>通知公告<a id="a_adNotice" style="display:none" href="notice?m=list" target="_blank" class="ico36" title="添加公告"></a></h1>
     <ul class="one" style="height:130px;">
         <c:if test="${!empty notices}">
             <c:forEach items="${notices}" var="n">
@@ -958,10 +961,11 @@ function closeEditUser(){
 </div>
 <script type="text/javascript">
         <%if(!isStudent){%>
-        <c:if test="${empty teachClass}">
-                $("#sp_role").html($("#sp_role").html().replace("任课老师&nbsp;&nbsp;",""));
-         </c:if>
+            <c:if test="${empty teachClass}">
+                    $("#sp_role").html($("#sp_role").html().replace("任课老师&nbsp;&nbsp;",""));
+             </c:if>
         <%}%>
+
 
 </script>
 <%@include file="/util/foot.jsp"%>

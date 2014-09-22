@@ -30,6 +30,8 @@ import org.w3c.dom.Document;
  *
  */
 public class ShareResource extends TimerTask {
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     /**
      * 生成的模板XML
      */
@@ -52,6 +54,13 @@ public class ShareResource extends TimerTask {
 	}
 	public void run() {
 		// TODO Auto-generated method stub
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._shareResource){
+            SynchroUtil._shareCourseBo=true;
+            logger.info("--------------------分享资源启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("--------------------分享资源启动执行-------------------");
             String firstDirectory=MD5_NEW.getMD5Result(MD5_NEW.getMD5Result(schoolid)+UtilTool.utilproperty.getProperty("TO_ETT_KEY").toString());
 			//String firstDirectory=UtilTool.DateConvertToString(new Date(),DateType.smollDATE)+"_"+schoolid;
 			String parentDirectory=request.getRealPath("/")+"/uploadfile/tmp/"; //根路径

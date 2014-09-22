@@ -44,6 +44,8 @@ import java.util.TimerTask;
  *  DC_TP_TOPIC_THEME_INFO           专题论题主题
  */
 public class ShareCourse extends TimerTask {
+    //记录Log4J
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     /**
      * 生成的模板XML
      */
@@ -81,6 +83,13 @@ public class ShareCourse extends TimerTask {
 
     @Override
     public void run() {
+        //如果是这第一次执行，则是启动执行，则直接返回
+        if(!SynchroUtil._shareCourseBo){
+            SynchroUtil._shareCourseBo=true;
+            logger.info("--------------------分享云端专题启动执行，不执行-------------------");
+            return;
+        }
+        logger.info("--------------------分享云端专题执行-------------------");
         String firstDirectory= MD5_NEW.getMD5Result(MD5_NEW.getMD5Result(_Schoolid) + UtilTool.utilproperty.getProperty("TO_ETT_KEY").toString())+UtilTool.DateConvertToString(new Date(), UtilTool.DateType.smollDATE);
         String parentDirectory=request.getRealPath("/")+"/uploadfile/tmp/"; //根路径
         String filename=new StringBuffer().append(firstDirectory).append(".xml").toString();    //xml文件的文件名

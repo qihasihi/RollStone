@@ -144,7 +144,7 @@ public class StudentController extends BaseController<StudentInfo> {
                         if(msg.trim().indexOf("其中")==-1){
                             msg+="其中 ";
                         }
-						msg+=stu.getStuno()+",";
+						msg+=stu.getStuno()+"（班级不存在）,";
                         continue;
 					}
 
@@ -153,10 +153,41 @@ public class StudentController extends BaseController<StudentInfo> {
                             if(msg.trim().indexOf("其中")==-1){
                                 msg+="其中 ";
                             }
-							msg+=stu.getStuno()+",";
+							msg+=stu.getStuno()+"（班级信息不匹配）,";
 							continue;
 						}
 					}
+                    StudentInfo selstu=new StudentInfo();
+                    selstu.setStuno(stu.getStuno());
+                    //selstu.setDcschoolid(this.logined(request).getDcschoolid());
+                    //验证学生存在
+                    List<StudentInfo> selstuList=this.studentManager.getList(selstu, null);
+                    //如果学生存在，并具导入的班级是行政班，则判断该学生是否在当前班级学年中有多个行政班级，如果有多个，不导入相关数据
+                    if(selstuList!=null&&selstuList.size()>0&&selstuList.get(0)!=null
+                            &&clsList!=null&&clsList.get(0)!=null&&clsList.get(0).getPattern()!=null&&clsList.get(0).getPattern().trim().equals("行政班")){
+                        //得到当前学生的行政班级
+                        ClassUser cu=new ClassUser();
+                        cu.setYear(stu.getClassinfo().getYear().trim());
+                        cu.setUserid(selstuList.get(0).getUserref());
+                        cu.setRelationtype("学生");
+                        cu.setPattern("行政班");
+                        List<ClassUser> cuList=this.classUserManager.getList(cu,null);
+                        boolean ishasPatternCls=false;
+                        if(cuList!=null&&cuList.size()>0){
+                            for(ClassUser tmp:cuList){
+                                if(tmp!=null&&tmp.getClassid().intValue()!=clsList.get(0).getClassid().intValue()){
+                                    ishasPatternCls=true;break;
+                                }
+                            }
+                        }
+                        if(ishasPatternCls){
+                            if(msg.trim().indexOf("其中")==-1){
+                                msg+="其中 ";
+                            }
+                            msg+=stu.getStuno()+"（存在行政班）,";
+                            continue;
+                        }
+                     }
 
 					//删除该班级下的所有学生
 					if(freeClsid==null||(freeClsid!=null&&clsList.get(0).getClassid().intValue()!=freeClsid.intValue())){
@@ -179,13 +210,9 @@ public class StudentController extends BaseController<StudentInfo> {
 						sqlListArray.add(sqlbuilder.toString());
 					}
 
-					StudentInfo selstu=new StudentInfo();
-					selstu.setStuno(stu.getStuno());
-                    //selstu.setDcschoolid(this.logined(request).getDcschoolid());
-					//验证学生存在
-					List<StudentInfo> selstuList=this.studentManager.getList(selstu, null);
-					if(selstuList!=null&&selstuList.size()>0
-							&&selstuList.get(0)!=null){
+
+
+					if(selstuList!=null&&selstuList.size()>0&&selstuList.get(0)!=null){
 						ClassUser cu=new ClassUser();
 						cu.getClassinfo().setClassid(clsList.get(0).getClassid());
 						cu.getUserinfo().setRef(selstuList.get(0).getUserref());
