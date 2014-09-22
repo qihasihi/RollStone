@@ -134,7 +134,7 @@ function EttImageShow(settings){
             overlay: { opacity: 0.1, background: "black" },
             modal:true
         });
-        $(".ui-dialog-titlebar").hide();
+        $(".ui-dialog-titlebar a").html("&nbsp;");
         //定义事件
         $("#img_"+fadeId).bind("click",function(){
             $( "#"+fadeId).dialog("close");
