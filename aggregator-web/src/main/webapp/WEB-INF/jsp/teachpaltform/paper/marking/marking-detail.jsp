@@ -1,5 +1,5 @@
 <%--
-  Created by IntelliJ IDEA.
+Created by IntelliJ IDEA.
   User: yuechunyang
   Date: 14-7-4
   Time: 上午10:32
@@ -178,10 +178,10 @@
                     var lihtm='';
                     for(var j =0;j<10;j++){
                         lihtm+='<li';
-                        if(j==0){
+                        if(j==0&&i==0){
                             lihtm+=' class="crumb"';
                         }
-                        lihtm+=' ><a href="javascript:submitScore(${detail.REF},'+(j+i*10)+')">'+(j+i*10)+'</a></li>';
+                        lihtm+=' style="padding-left:1px"><a href="javascript:submitScore(${detail.REF},'+(j+i*10)+')">'+(j+i*10)+'</a></li>';
                         if(parseFloat((j+i*10))>=parseFloat(totalnum-0.5)){
                             break;
                         }
@@ -399,7 +399,7 @@
                         </c:if>
                         <c:if test="${!empty detail.CORRECT_ANSWER}">${detail.CORRECT_ANSWER}</c:if>
                     </span></p>
-                        <p><strong>答案解析：</strong>${detail.ANALYSIS}</p></td>
+                        <p><strong>答案解析：</strong>${!empty detail.ANALYSIS?detail.ANALYSIS:"无"}</p></td>
                 </tr>
             </table>
 
@@ -466,6 +466,12 @@
                                             h+='<a href="'+im+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
                                     })
                                 }
+                            }else{
+                                var tanname=annextName.substring(annextName.lastIndexOf("/")+1);
+                                if(annextName.indexOf("http:")==-1&&annextName.indexOf("https:")==-1){
+                                    h+='<a href="<%=basePath%>/<%=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")%>/'+annextName+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
+                                }else
+                                    h+='<a href="'+annextName+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
                             }
                         }
                         document.write(h);

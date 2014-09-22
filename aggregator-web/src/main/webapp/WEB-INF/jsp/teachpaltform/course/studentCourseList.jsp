@@ -108,7 +108,7 @@
 <input type="hidden" id="subjectid" value="">
     <div class="jxxt_student_nav">
         <div id="nav">
-            <div class="arr" id="dv_sub_operate" style="display: none">
+            <div class="arr" id="dv_sub_operate" style="display: none;width:55px;">
                 <a href="javascript:changeTab2('front');"><span class="up"></span></a>
                 <a href="javascript:changeTab2('back');"><span class="next"></span></a></div>
             <ul id="ul_grade">

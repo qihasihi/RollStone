@@ -188,6 +188,9 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
             }
         }
         mp.put("dataListMap",dataListMap);
+        if(groupid!=null){
+            groupid=new StringBuilder(",").append(groupid).append(",").toString();
+        }
         mp.put("leanderGrpid",groupid);
         groupid=",";
         //如果是学生，则查询该学员的分数

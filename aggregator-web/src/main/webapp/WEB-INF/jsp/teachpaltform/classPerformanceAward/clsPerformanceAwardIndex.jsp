@@ -228,7 +228,7 @@ if(!isShowTbl){%>
                     <c:if test="${!empty clsDcType&&clsDcType==3}">
 
                             var subFlag1=${dlm.SUBMIT_FLAG};
-                            if((isTeacher||(groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1&&ctumid!=${dlm.USER_ID}))&&subFlag1==0){
+                            if((isTeacher||groupidstr.indexOf(",${dlm.GROUP_ID},")!=-1)&&subFlag1==0){
                                     h+='<td name="td_data">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
                                     h+='<td name="td_data">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
                                     h+='<td name="td_data">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';

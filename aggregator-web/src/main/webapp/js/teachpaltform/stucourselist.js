@@ -109,12 +109,12 @@ function getInvestReturnMethod(rps){
     }
     if(rps.presult.list[4]!=null&&rps.presult.list[4].length>0){
         var shtml='';
-        $.each(rps.presult.list[4],function(idx,itm){
-            shtml+='<li id="sub_'+itm.subjectid+'"><a href="javascript:searchBySubject('+itm.subjectid+')"><span id="sub_'+idx+'">'+itm.subjectname+'</span></a></li>';
-        });
-        $("#ul_grade").html(shtml);
-        $("#sub_"+subjectid).siblings().attr("class","");
-        $("#sub_"+subjectid).attr("class","crumb");
+//        $.each(rps.presult.list[4],function(idx,itm){
+//            shtml+='<li id="sub_'+itm.subjectid+'"><a href="javascript:searchBySubject('+itm.subjectid+')"><span id="sub_'+idx+'">'+itm.subjectname+'</span></a></li>';
+//        });
+//        $("#ul_grade").html(shtml);
+//        $("#sub_"+subjectid).siblings().attr("class","");
+//        $("#sub_"+subjectid).attr("class","crumb");
 //        if(rps.presult.list[4].length<6)
 //            $("#dv_sub_operate").hide();
 //        else

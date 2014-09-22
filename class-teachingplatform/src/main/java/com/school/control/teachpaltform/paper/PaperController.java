@@ -3649,21 +3649,30 @@ public class PaperController extends BaseController<PaperInfo>{
         if(b){
             je.setType("success");
             //判断试卷是否批改完毕，首先得到试卷的试题数量
-            PaperQuestion paperQuestion = new PaperQuestion();
-            paperQuestion.setPaperid(quesLogs.get(0).getPaperid());
-            List<PaperQuestion> paperQuestionList = this.paperQuestionManager.getList(paperQuestion,null);
-            //然后得到批改的数量
+
+//            PaperQuestion paperQuestion = new PaperQuestion();
+//            paperQuestion.setPaperid(quesLogs.get(0).getPaperid());
+//            List<PaperQuestion> paperQuestionList = this.paperQuestionManager.getList(paperQuestion,null);
+//            //然后得到批改的数量
             StuPaperQuesLogs stuPaperQuesLogs = new StuPaperQuesLogs();
             stuPaperQuesLogs.setPaperid(quesLogs.get(0).getPaperid());
-            stuPaperQuesLogs.setIsmarking(0);
+            stuPaperQuesLogs.setIsmarking(1);
             stuPaperQuesLogs.setUserid(quesLogs.get(0).getUserid());
+            stuPaperQuesLogs.setTaskid(quesLogs.get(0).getTaskid());
             List<StuPaperQuesLogs> stuPaperQuesLogsList = this.stuPaperQuesLogsManager.getList(stuPaperQuesLogs,null);
-            //对比数量，如果相等，那么批改完毕，进行试卷的状态更新
-            if(paperQuestionList.size()==stuPaperQuesLogsList.size()){
+//            //对比数量，如果相等，那么批改完毕，进行试卷的状态更新
+            if(stuPaperQuesLogsList==null||stuPaperQuesLogsList.size()<1){
                 StuPaperLogs stuPaperLogs = new StuPaperLogs();
                 stuPaperLogs.setPaperid(quesLogs.get(0).getPaperid());
                 stuPaperLogs.setUserid(quesLogs.get(0).getUserid());
+                stuPaperLogs.setTaskid(quesLogs.get(0).getTaskid());
                 stuPaperLogs.setIsmarking(0);
+                //得到总分
+                List<Map<String,Object>> paperScoreListMap=this.paperQuestionManager.getPaperScoreByUser(quesLogs.get(0).getPaperid(),quesLogs.get(0).getUserid(),quesLogs.get(0).getTaskid());
+                float sumScore=0F;
+                if(paperScoreListMap!=null&&paperScoreListMap.size()>0&&paperScoreListMap.get(0).containsKey("SUM_SCORE")&&paperScoreListMap.get(0).get("SUM_SCORE")!=null){
+                    stuPaperLogs.setScore(Float.parseFloat(paperScoreListMap.get(0).get("SUM_SCORE").toString()));
+                }
                 Boolean bl = this.stuPaperLogsManager.doUpdateScore(stuPaperLogs);
             }
         }else{

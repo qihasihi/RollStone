@@ -20,7 +20,7 @@
         var isAllMark=true;
 
         function userAnswer(t,t1,score,nexName,ismak){
-            if(ismak&&ismak==0)
+            if(ismak&&ismak!=0)
                 isAllMark=false;
             var qtObj=$("#hd_questiontype_"+t);
             var pqtype=$("#hd_pqtype_"+t);
