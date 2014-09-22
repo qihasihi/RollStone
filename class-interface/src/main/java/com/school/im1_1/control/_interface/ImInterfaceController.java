@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
@@ -229,6 +230,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         }
         List<Map<String,Object>> courseList = this.imInterfaceManager.getClassTaskCourse(obj);
         Map m = new HashMap();
+        //定义新的list和map用来接受查到的任务列表
+        List<Map<String,Object>> returnList = null;
+        Map<String,Object> returnMap = null;
         if(courseList!=null&&courseList.size()>0){
             for(int i = 0;i<courseList.size();i++){
                 List<Map<String,Object>> taskList=null;
@@ -240,48 +244,30 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 if(taskList!=null&&taskList.size()>0){
                     for(int j = 0;j<taskList.size();j++){
                         Map<String,Object> tkMap=taskList.get(j);
+                        //实例化返回数据对象
+                        returnMap = new HashMap<String, Object>();
+                        returnList = new ArrayList<Map<String, Object>>();
+                        //遍历数据，放到新的返回对象里
+                        returnMap.put("FINISHSTANDARD",tkMap.get("FINISHSTANDARD"));
+                        returnMap.put("TOTALNUM",tkMap.get("TOTALNUM"));
+                        returnMap.put("STARTTIME",tkMap.get("STARTTIME"));
+                        returnMap.put("ISOVER",tkMap.get("ISOVER"));
+                        returnMap.put("DONUM",tkMap.get("DONUM"));
+                        returnMap.put("ISDONE",tkMap.get("ISDONE"));
+                        returnMap.put("QUESTYPE",tkMap.get("QUESTYPE"));
+                        returnMap.put("TASKTYPE",tkMap.get("TASKTYPE"));
+                        returnMap.put("ISSTART",tkMap.get("ISSTART"));
+                        returnMap.put("TASKID",tkMap.get("TASKID"));
+                        returnMap.put("REMOTETYPE",tkMap.get("REMOTETYPE"));
                         String leftTime="0";
                         if(tkMap.get("LEFTTIME")!=null){
-                            int time =Integer.parseInt(tkMap.get("LEFTTIME").toString());
-                            int days = 0;
-                            int hours =0;
-                            int mins = 0;
-                            int seconds = 0;
-                            if(time>0){
-                                seconds = time%60;
-                                if(seconds>0){
-                                    mins = time/60;
-                                }else{
-                                    seconds = seconds*60;
-                                }
-                                if(mins>0){
-                                    hours = mins/60;
-                                }
-                                if(hours>0){
-                                    days= hours/24;
-                                }
-                              
-                                if(days>0){
-                                    leftTime=days+"天";
-                                }else{
-                                    if(hours>0){
-                                        leftTime=hours+"小时";
-                                    }else{
-                                        if(mins>0){
-                                            leftTime=mins+"分钟";
-                                        }else{
-                                            if(seconds>0){
-                                                leftTime=seconds+"秒";
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            leftTime=ImUtilTool.getTaskOvertime(tkMap.get("LEFTTIME").toString());
+                            returnMap.put("LEFTTIME",leftTime);
+//                            tkMap.remove("LEFTTIME");
+//                            tkMap.put("LEFTTIME",leftTime);
                         }else{
-                            System.out.print("任务"+tkMap.get("TASKID")+"-------"+tkMap.get("LEFTTIME"));
+                            System.out.print("任务结束时间异常"+tkMap.get("TASKID")+"-------"+tkMap.get("LEFTTIME"));
                         }
-                        tkMap.put("LEFTTIME",leftTime);
-
                         String typename = "";
                         switch (Integer.parseInt(tkMap.get("TASKTYPE").toString())){
                             case 1:
@@ -313,16 +299,22 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 break;
                         }
                         if(utype!=2){
-                            tkMap.put("ORDERIDX", (j + 1) + "");
+                            //tkMap.put("ORDERIDX", (j + 1) + "");
+                            returnMap.put("ORDERIDX",(j + 1) + "");
+                        }else{
+                            returnMap.put("ORDERIDX",tkMap.get("ORDERIDX"));
                         }
                         if(Integer.parseInt(tkMap.get("TASKTYPE").toString())==3){
-                            tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename);
+                            //tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename);
+                            returnMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename);
                         }else{
-                            tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename + " " + tkMap.get("TASKNAME"));
+                            //tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename + " " + tkMap.get("TASKNAME"));
+                            returnMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename + " " + tkMap.get("TASKNAME"));
                         }
+                        returnList.add(returnMap);
                     }
                 }
-                courseList.get(i).put("taskList", taskList);
+                courseList.get(i).put("taskList", returnList);
             }
         }else{
             m.put("result","0");
@@ -1189,15 +1181,15 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             List<Map<String,Object>> unCompleteList = new ArrayList<Map<String, Object>>();
             Map unComplete = null;
             for(int i = 0;i<classList.size();i++){
-                unComplete = new HashMap();
                 List<Map<String,Object>> stuList = this.imInterfaceManager.getUnCompleteStu(tasknextid,1,Integer.parseInt(classList.get(i).get("classid").toString()),null);
                 if(stuList!=null&&stuList.size()>0){
                     for(int j=0;j<stuList.size();j++){
-                        if(stuList.get(i).get("ETT_USER_ID")!=null){
+                        if(stuList.get(j).get("ETT_USER_ID")!=null){
+                            unComplete = new HashMap();
                             unComplete.put("jid",Integer.parseInt(stuList.get(j).get("ETT_USER_ID").toString()));
+                            unCompleteList.add(unComplete);
                         }
                     }
-                    unCompleteList.add(unComplete);
                 }
             }
             Map stulist = new HashMap();
@@ -1469,31 +1461,44 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     returnUserRecord.add(returnUserMap);
                 }
                 String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
-                //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-                HashMap<String,String> signMap = new HashMap();
-                signMap.put("userList",jidstr);
-                signMap.put("schoolId",schoolid);
-                signMap.put("srcJid",userid);
-                signMap.put("userType","3");
-                signMap.put("timestamp",""+System.currentTimeMillis());
-                String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-                signMap.put("sign",signture);
-                JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                if(type==1){
-                    Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                    obj = URLDecoder.decode(obj.toString(),"utf-8");
-                    JSONArray jr = JSONArray.fromObject(obj);
-                    if(jr!=null&&jr.size()>0){
-                        for(int i = 0;i<jr.size();i++){
-                            JSONObject jo = jr.getJSONObject(i);
-                            for(int j = 0;j<returnUserRecord.size();j++){
-                                returnUserMap = new HashMap();
-                                if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
-                                    returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
-                                    returnUserRecord.get(j).put("uName", jo.getString("realName"));
-                                }
+//                String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+//                //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+//                HashMap<String,String> signMap = new HashMap();
+//                signMap.put("userList",jidstr);
+//                signMap.put("schoolId",schoolid);
+//                signMap.put("srcJid",userid);
+//                signMap.put("userType","3");
+//                signMap.put("timestamp",""+System.currentTimeMillis());
+//                String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+//                signMap.put("sign",signture);
+//                JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//                int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//                if(type==1){
+//                    Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+//                    obj = URLDecoder.decode(obj.toString(),"utf-8");
+//                    JSONArray jr = JSONArray.fromObject(obj);
+//                    if(jr!=null&&jr.size()>0){
+//                        for(int i = 0;i<jr.size();i++){
+//                            JSONObject jo = jr.getJSONObject(i);
+//                            for(int j = 0;j<returnUserRecord.size();j++){
+//                                returnUserMap = new HashMap();
+//                                if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+//                                    returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
+//                                    returnUserRecord.get(j).put("uName", jo.getString("realName"));
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+                JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                if(jr!=null&&jr.size()>0){
+                    for(int i = 0;i<jr.size();i++){
+                        JSONObject jo = jr.getJSONObject(i);
+                        for(int j = 0;j<returnUserRecord.size();j++){
+                            returnUserMap = new HashMap();
+                            if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
+                                returnUserRecord.get(j).put("uName", jo.getString("realName"));
                             }
                         }
                     }
@@ -1539,31 +1544,44 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     returnUserRecord.add(returnUserMap);
                 }
                 String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
-                //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-                HashMap<String,String> signMap = new HashMap();
-                signMap.put("userList",jidstr);
-                signMap.put("schoolId",schoolid);
-                signMap.put("srcJid",userid);
-                signMap.put("userType","3");
-                signMap.put("timestamp",""+System.currentTimeMillis());
-                String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-                signMap.put("sign",signture);
-                JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                if(type==1){
-                    Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                    obj = URLDecoder.decode(obj.toString(),"utf-8");
-                    JSONArray jr = JSONArray.fromObject(obj);
-                    if(jr!=null&&jr.size()>0){
-                        for(int i = 0;i<jr.size();i++){
-                            JSONObject jo = jr.getJSONObject(i);
-                            for(int j = 0;j<returnUserRecord.size();j++){
-                                returnUserMap = new HashMap();
-                                if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
-                                    returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
-                                    returnUserRecord.get(j).put("uName", jo.getString("realName"));
-                                }
+//                String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+//                //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+//                HashMap<String,String> signMap = new HashMap();
+//                signMap.put("userList",jidstr);
+//                signMap.put("schoolId",schoolid);
+//                signMap.put("srcJid",userid);
+//                signMap.put("userType","3");
+//                signMap.put("timestamp",""+System.currentTimeMillis());
+//                String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+//                signMap.put("sign",signture);
+//                JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//                int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//                if(type==1){
+//                    Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+//                    obj = URLDecoder.decode(obj.toString(),"utf-8");
+//                    JSONArray jr = JSONArray.fromObject(obj);
+//                    if(jr!=null&&jr.size()>0){
+//                        for(int i = 0;i<jr.size();i++){
+//                            JSONObject jo = jr.getJSONObject(i);
+//                            for(int j = 0;j<returnUserRecord.size();j++){
+//                                returnUserMap = new HashMap();
+//                                if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+//                                    returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
+//                                    returnUserRecord.get(j).put("uName", jo.getString("realName"));
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+                JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                if(jr!=null&&jr.size()>0){
+                    for(int i = 0;i<jr.size();i++){
+                        JSONObject jo = jr.getJSONObject(i);
+                        for(int j = 0;j<returnUserRecord.size();j++){
+                            returnUserMap = new HashMap();
+                            if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
+                                returnUserRecord.get(j).put("uName", jo.getString("realName"));
                             }
                         }
                     }
@@ -1759,32 +1777,46 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         }
                     }
                     String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                    String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
-                    String url=ettip+"queryPhotoAndRealName.do";
-                    //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-                    HashMap<String,String> signMap = new HashMap();
-                    signMap.put("userList",jidstr);
-                    signMap.put("schoolId",schoolid);
-                    signMap.put("srcJid",userid);
-                    signMap.put("userType","3");
-                    signMap.put("timestamp",""+System.currentTimeMillis());
-                    String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-                    signMap.put("sign",signture);
-                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                    if(type==1){
-                       Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                        obj = URLDecoder.decode(obj.toString(),"utf-8");
-                        JSONArray jr = JSONArray.fromObject(obj);
-                        if(jr!=null&&jr.size()>0){
-                            for(int i = 0;i<jr.size();i++){
-                                JSONObject jo = jr.getJSONObject(i);
-                                for(int j = 0;j<taskUserRecord.size();j++){
-                                    if(taskUserRecord.get(j).get("JID")!=null){
-                                        if(jo.getInt("jid")==Integer.parseInt(taskUserRecord.get(j).get("JID").toString())){
-                                            taskUserRecord.get(j).put("uPhoto",jo.getString("headUrl"));
-                                            taskUserRecord.get(j).put("uName",jo.getString("realName"));
-                                        }
+//                    String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
+//                    String url=ettip+"queryPhotoAndRealName.do";
+//                    //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+//                    HashMap<String,String> signMap = new HashMap();
+//                    signMap.put("userList",jidstr);
+//                    signMap.put("schoolId",schoolid);
+//                    signMap.put("srcJid",userid);
+//                    signMap.put("userType","3");
+//                    signMap.put("timestamp",""+System.currentTimeMillis());
+//                    String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+//                    signMap.put("sign",signture);
+//                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//                    if(type==1){
+//                       Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+//                        obj = URLDecoder.decode(obj.toString(),"utf-8");
+//                        JSONArray jr = JSONArray.fromObject(obj);
+//                        if(jr!=null&&jr.size()>0){
+//                            for(int i = 0;i<jr.size();i++){
+//                                JSONObject jo = jr.getJSONObject(i);
+//                                for(int j = 0;j<taskUserRecord.size();j++){
+//                                    if(taskUserRecord.get(j).get("JID")!=null){
+//                                        if(jo.getInt("jid")==Integer.parseInt(taskUserRecord.get(j).get("JID").toString())){
+//                                            taskUserRecord.get(j).put("uPhoto",jo.getString("headUrl"));
+//                                            taskUserRecord.get(j).put("uName",jo.getString("realName"));
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+                    JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                    if(jr!=null&&jr.size()>0){
+                        for(int i = 0;i<jr.size();i++){
+                            JSONObject jo = jr.getJSONObject(i);
+                            for(int j = 0;j<taskUserRecord.size();j++){
+                                if(taskUserRecord.get(j).get("JID")!=null){
+                                    if(jo.getInt("jid")==Integer.parseInt(taskUserRecord.get(j).get("JID").toString())){
+                                        taskUserRecord.get(j).put("uPhoto",jo.getString("headUrl"));
+                                        taskUserRecord.get(j).put("uName",jo.getString("realName"));
                                     }
                                 }
                             }
@@ -2594,32 +2626,45 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 returnUserRecord.add(returnUserMap);
                             }
                             String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                            String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
-                            String url=ettip+"queryPhotoAndRealName.do";
-                            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-                            HashMap<String,String> signMap = new HashMap();
-                            signMap.put("userList",jidstr);
-                            signMap.put("schoolId",schoolid);
-                            signMap.put("srcJid",userid);
-                            signMap.put("userType","3");
-                            signMap.put("timestamp",""+System.currentTimeMillis());
-                            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-                            signMap.put("sign",signture);
-                            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                            if(type==1){
-                               Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                                obj = URLDecoder.decode(obj.toString(),"utf-8");
-                                JSONArray jr = JSONArray.fromObject(obj);
-                                if(jr!=null&&jr.size()>0){
-                                    for(int i = 0;i<jr.size();i++){
-                                        JSONObject jObject = jr.getJSONObject(i);
-                                        for(int j = 0;j<returnUserRecord.size();j++){
-                                            returnUserMap = new HashMap();
-                                            if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
-                                                returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
-                                                returnUserRecord.get(j).put("uName", jObject.getString("realName"));
-                                            }
+//                            String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
+//                            String url=ettip+"queryPhotoAndRealName.do";
+//                            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+//                            HashMap<String,String> signMap = new HashMap();
+//                            signMap.put("userList",jidstr);
+//                            signMap.put("schoolId",schoolid);
+//                            signMap.put("srcJid",userid);
+//                            signMap.put("userType","3");
+//                            signMap.put("timestamp",""+System.currentTimeMillis());
+//                            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+//                            signMap.put("sign",signture);
+//                            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//                            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//                            if(type==1){
+//                               Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+//                                obj = URLDecoder.decode(obj.toString(),"utf-8");
+//                                JSONArray jr = JSONArray.fromObject(obj);
+//                                if(jr!=null&&jr.size()>0){
+//                                    for(int i = 0;i<jr.size();i++){
+//                                        JSONObject jObject = jr.getJSONObject(i);
+//                                        for(int j = 0;j<returnUserRecord.size();j++){
+//                                            returnUserMap = new HashMap();
+//                                            if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+//                                                returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
+//                                                returnUserRecord.get(j).put("uName", jObject.getString("realName"));
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+                            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                            if(jr!=null&&jr.size()>0){
+                                for(int i = 0;i<jr.size();i++){
+                                    JSONObject jObject = jr.getJSONObject(i);
+                                    for(int j = 0;j<returnUserRecord.size();j++){
+                                        returnUserMap = new HashMap();
+                                        if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                            returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
+                                            returnUserRecord.get(j).put("uName", jObject.getString("realName"));
                                         }
                                     }
                                 }
@@ -2645,30 +2690,42 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         }
                         if(jids.length()>0){
                             String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
-                            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-                            HashMap<String,String> signMap = new HashMap();
-                            signMap.put("userList",jidstr);
-                            signMap.put("schoolId",schoolid);
-                            signMap.put("srcJid",userid);
-                            signMap.put("userType","3");
-                            signMap.put("timestamp",""+System.currentTimeMillis());
-                            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-                            signMap.put("sign",signture);
-                            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                            if(type==1){
-                               Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                                obj = URLDecoder.decode(obj.toString(),"utf-8");
-                                JSONArray jr = JSONArray.fromObject(obj);
-                                if(jr!=null&&jr.size()>0){
-                                    for(int i = 0;i<jr.size();i++){
-                                        JSONObject jobj = jr.getJSONObject(i);
-                                        for(int j = 0;j<unCompleteList.size();j++){
-                                            unComplete = new HashMap();
-                                            if(jobj.getInt("jid")==Integer.parseInt(unCompleteList.get(j).get("jid").toString())){
-                                                unCompleteList.get(j).put("uName", jobj.getString("realName"));
-                                            }
+//                            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+//                            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+//                            HashMap<String,String> signMap = new HashMap();
+//                            signMap.put("userList",jidstr);
+//                            signMap.put("schoolId",schoolid);
+//                            signMap.put("srcJid",userid);
+//                            signMap.put("userType","3");
+//                            signMap.put("timestamp",""+System.currentTimeMillis());
+//                            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+//                            signMap.put("sign",signture);
+//                            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//                            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//                            if(type==1){
+//                               Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+//                                obj = URLDecoder.decode(obj.toString(),"utf-8");
+//                                JSONArray jr = JSONArray.fromObject(obj);
+//                                if(jr!=null&&jr.size()>0){
+//                                    for(int i = 0;i<jr.size();i++){
+//                                        JSONObject jobj = jr.getJSONObject(i);
+//                                        for(int j = 0;j<unCompleteList.size();j++){
+//                                            unComplete = new HashMap();
+//                                            if(jobj.getInt("jid")==Integer.parseInt(unCompleteList.get(j).get("jid").toString())){
+//                                                unCompleteList.get(j).put("uName", jobj.getString("realName"));
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+                            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                            if(jr!=null&&jr.size()>0){
+                                for(int i = 0;i<jr.size();i++){
+                                    JSONObject jobj = jr.getJSONObject(i);
+                                    for(int j = 0;j<unCompleteList.size();j++){
+                                        unComplete = new HashMap();
+                                        if(jobj.getInt("jid")==Integer.parseInt(unCompleteList.get(j).get("jid").toString())){
+                                            unCompleteList.get(j).put("uName", jobj.getString("realName"));
                                         }
                                     }
                                 }
@@ -2982,32 +3039,46 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
             }
             String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-            String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
-            String url=ettip+"queryPhotoAndRealName.do";
-            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-            HashMap<String,String> signMap = new HashMap();
-            signMap.put("userList",jidstr);
-            signMap.put("schoolId",schoolid);
-            signMap.put("srcJid",userid);
-            signMap.put("userType","3");
-            signMap.put("timestamp",""+System.currentTimeMillis());
-            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-            signMap.put("sign",signture);
-            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-            if(type==1){
-                Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                obj = URLDecoder.decode(obj.toString(),"utf-8");
-                JSONArray jr = JSONArray.fromObject(obj);
-                if(jr!=null&&jr.size()>0){
-                    for(int i = 0;i<jr.size();i++){
-                        JSONObject jObject = jr.getJSONObject(i);
-                        for(int j = 0;j<themeList.size();j++){
-                            if(themeList.get(j).get("ETT_USER_ID")!=null){
-                                if(jObject.getInt("jid")==Integer.parseInt(themeList.get(j).get("ETT_USER_ID").toString())){
-                                    themeList.get(j).put("uPhoto", jObject.getString("headUrl"));
-                                    themeList.get(j).put("uName", jObject.getString("realName"));
-                                }
+//            String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
+//            String url=ettip+"queryPhotoAndRealName.do";
+//            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+//            HashMap<String,String> signMap = new HashMap();
+//            signMap.put("userList",jidstr);
+//            signMap.put("schoolId",schoolid);
+//            signMap.put("srcJid",userid);
+//            signMap.put("userType","3");
+//            signMap.put("timestamp",""+System.currentTimeMillis());
+//            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+//            signMap.put("sign",signture);
+//            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//            if(type==1){
+//                Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+//                obj = URLDecoder.decode(obj.toString(),"utf-8");
+//                JSONArray jr = JSONArray.fromObject(obj);
+//                if(jr!=null&&jr.size()>0){
+//                    for(int i = 0;i<jr.size();i++){
+//                        JSONObject jObject = jr.getJSONObject(i);
+//                        for(int j = 0;j<themeList.size();j++){
+//                            if(themeList.get(j).get("ETT_USER_ID")!=null){
+//                                if(jObject.getInt("jid")==Integer.parseInt(themeList.get(j).get("ETT_USER_ID").toString())){
+//                                    themeList.get(j).put("uPhoto", jObject.getString("headUrl"));
+//                                    themeList.get(j).put("uName", jObject.getString("realName"));
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+            if(jr!=null&&jr.size()>0){
+                for(int i = 0;i<jr.size();i++){
+                    JSONObject jObject = jr.getJSONObject(i);
+                    for(int j = 0;j<themeList.size();j++){
+                        if(themeList.get(j).get("ETT_USER_ID")!=null){
+                            if(jObject.getInt("jid")==Integer.parseInt(themeList.get(j).get("ETT_USER_ID").toString())){
+                                themeList.get(j).put("uPhoto", jObject.getString("headUrl"));
+                                themeList.get(j).put("uName", jObject.getString("realName"));
                             }
                         }
                     }
@@ -3833,31 +3904,44 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         returnUserRecord.add(returnUserMap);
                     }
                     String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                    String url=ettip+"queryPhotoAndRealName.do";
-                    //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-                    HashMap<String,String> signMap = new HashMap();
-                    signMap.put("userList",jidstr);
-                    signMap.put("schoolId",schoolid);
-                    signMap.put("srcJid",userid);
-                    signMap.put("userType","3");
-                    signMap.put("timestamp",""+System.currentTimeMillis());
-                    String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-                    signMap.put("sign",signture);
-                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                    if(type==1){
-                       Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                        obj = URLDecoder.decode(obj.toString(),"utf-8");
-                        JSONArray jr = JSONArray.fromObject(obj);
-                        if(jr!=null&&jr.size()>0){
-                            for(int i = 0;i<jr.size();i++){
-                                JSONObject jo = jr.getJSONObject(i);
-                                for(int j = 0;j<returnUserRecord.size();j++){
-                                    returnUserMap = new HashMap();
-                                    if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
-                                        returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
-                                        returnUserRecord.get(j).put("uName", jo.getString("realName"));
-                                    }
+//                    String url=ettip+"queryPhotoAndRealName.do";
+//                    //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+//                    HashMap<String,String> signMap = new HashMap();
+//                    signMap.put("userList",jidstr);
+//                    signMap.put("schoolId",schoolid);
+//                    signMap.put("srcJid",userid);
+//                    signMap.put("userType","3");
+//                    signMap.put("timestamp",""+System.currentTimeMillis());
+//                    String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+//                    signMap.put("sign",signture);
+//                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//                    if(type==1){
+//                       Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+//                        obj = URLDecoder.decode(obj.toString(),"utf-8");
+//                        JSONArray jr = JSONArray.fromObject(obj);
+//                        if(jr!=null&&jr.size()>0){
+//                            for(int i = 0;i<jr.size();i++){
+//                                JSONObject jo = jr.getJSONObject(i);
+//                                for(int j = 0;j<returnUserRecord.size();j++){
+//                                    returnUserMap = new HashMap();
+//                                    if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+//                                        returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
+//                                        returnUserRecord.get(j).put("uName", jo.getString("realName"));
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+                    JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                    if(jr!=null&&jr.size()>0){
+                        for(int i = 0;i<jr.size();i++){
+                            JSONObject jo = jr.getJSONObject(i);
+                            for(int j = 0;j<returnUserRecord.size();j++){
+                                returnUserMap = new HashMap();
+                                if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                    returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
+                                    returnUserRecord.get(j).put("uName", jo.getString("realName"));
                                 }
                             }
                         }
@@ -3931,32 +4015,45 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         returnUserRecord.add(returnUserMap);
                     }
                     String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                     ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
-                    String url=ettip+"queryPhotoAndRealName.do";
-                    //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-                    HashMap<String,String> signMap = new HashMap();
-                    signMap.put("userList",jidstr);
-                    signMap.put("schoolId",schoolid);
-                    signMap.put("srcJid",userid);
-                    signMap.put("userType","3");
-                    signMap.put("timestamp",""+System.currentTimeMillis());
-                    String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-                    signMap.put("sign",signture);
-                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-                    if(type==1){
-                       Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                        obj = URLDecoder.decode(obj.toString(),"utf-8");
-                        JSONArray jr = JSONArray.fromObject(obj);
-                        if(jr!=null&&jr.size()>0){
-                            for(int i = 0;i<jr.size();i++){
-                                JSONObject jObject = jr.getJSONObject(i);
-                                for(int j = 0;j<returnUserRecord.size();j++){
-                                    returnUserMap = new HashMap();
-                                    if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
-                                        returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
-                                        returnUserRecord.get(j).put("uName", jObject.getString("realName"));
-                                    }
+//                     ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
+//                    String url=ettip+"queryPhotoAndRealName.do";
+//                    //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+//                    HashMap<String,String> signMap = new HashMap();
+//                    signMap.put("userList",jidstr);
+//                    signMap.put("schoolId",schoolid);
+//                    signMap.put("srcJid",userid);
+//                    signMap.put("userType","3");
+//                    signMap.put("timestamp",""+System.currentTimeMillis());
+//                    String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+//                    signMap.put("sign",signture);
+//                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//                    if(type==1){
+//                       Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+//                        obj = URLDecoder.decode(obj.toString(),"utf-8");
+//                        JSONArray jr = JSONArray.fromObject(obj);
+//                        if(jr!=null&&jr.size()>0){
+//                            for(int i = 0;i<jr.size();i++){
+//                                JSONObject jObject = jr.getJSONObject(i);
+//                                for(int j = 0;j<returnUserRecord.size();j++){
+//                                    returnUserMap = new HashMap();
+//                                    if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+//                                        returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
+//                                        returnUserRecord.get(j).put("uName", jObject.getString("realName"));
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+                    JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                    if(jr!=null&&jr.size()>0){
+                        for(int i = 0;i<jr.size();i++){
+                            JSONObject jObject = jr.getJSONObject(i);
+                            for(int j = 0;j<returnUserRecord.size();j++){
+                                returnUserMap = new HashMap();
+                                if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                    returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
+                                    returnUserRecord.get(j).put("uName", jObject.getString("realName"));
                                 }
                             }
                         }
@@ -4406,31 +4503,44 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
         if(jids.length()>0){
             String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
-            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-            HashMap<String,String> signMap = new HashMap();
-            signMap.put("userList",jidstr);
-            signMap.put("schoolId",schoolId);
-            signMap.put("srcJid",jid);
-            signMap.put("userType","3");
-            signMap.put("timestamp",""+System.currentTimeMillis());
-            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-            signMap.put("sign",signture);
-            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-            if(type==1){
-                Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                jsonObj = URLDecoder.decode(jsonObj.toString(), "utf-8");
-                JSONArray jr = JSONArray.fromObject(jsonObj);
-                if(jr!=null&&jr.size()>0){
-                    for(int i = 0;i<jr.size();i++){
-                        JSONObject jsono = jr.getJSONObject(i);
-                        for(int j = 0;j<tmpRankList.size();j++){
-                            if(tmpRankList.get(j).get("ETT_USER_ID")!=null&&tmpRankList.get(j).get("ETT_USER_ID").toString().length()>0&&
-                                    jsono.getInt("jid")==Integer.parseInt(tmpRankList.get(j).get("ETT_USER_ID").toString())){
-                                tmpRankList.get(j).put("uPhoto", jsono.getString("headUrl"));
-                                tmpRankList.get(j).put("uName", jsono.getString("realName"));
-                            }
+//            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+//            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+//            HashMap<String,String> signMap = new HashMap();
+//            signMap.put("userList",jidstr);
+//            signMap.put("schoolId",schoolId);
+//            signMap.put("srcJid",jid);
+//            signMap.put("userType","3");
+//            signMap.put("timestamp",""+System.currentTimeMillis());
+//            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+//            signMap.put("sign",signture);
+//            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//            if(type==1){
+//                Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+//                jsonObj = URLDecoder.decode(jsonObj.toString(), "utf-8");
+//                JSONArray jr = JSONArray.fromObject(jsonObj);
+//                if(jr!=null&&jr.size()>0){
+//                    for(int i = 0;i<jr.size();i++){
+//                        JSONObject jsono = jr.getJSONObject(i);
+//                        for(int j = 0;j<tmpRankList.size();j++){
+//                            if(tmpRankList.get(j).get("ETT_USER_ID")!=null&&tmpRankList.get(j).get("ETT_USER_ID").toString().length()>0&&
+//                                    jsono.getInt("jid")==Integer.parseInt(tmpRankList.get(j).get("ETT_USER_ID").toString())){
+//                                tmpRankList.get(j).put("uPhoto", jsono.getString("headUrl"));
+//                                tmpRankList.get(j).put("uName", jsono.getString("realName"));
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolId,jid);
+            if(jr!=null&&jr.size()>0){
+                for(int i = 0;i<jr.size();i++){
+                    JSONObject jsono = jr.getJSONObject(i);
+                    for(int j = 0;j<tmpRankList.size();j++){
+                        if(tmpRankList.get(j).get("ETT_USER_ID")!=null&&tmpRankList.get(j).get("ETT_USER_ID").toString().length()>0&&
+                                jsono.getInt("jid")==Integer.parseInt(tmpRankList.get(j).get("ETT_USER_ID").toString())){
+                            tmpRankList.get(j).put("uPhoto", jsono.getString("headUrl"));
+                            tmpRankList.get(j).put("uName", jsono.getString("realName"));
                         }
                     }
                 }
@@ -4785,30 +4895,42 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 }
             }
             String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
-            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
-            HashMap<String,String> signMap = new HashMap();
-            signMap.put("userList",jidstr);
-            signMap.put("schoolId",schoolId);
-            signMap.put("srcJid",jid);
-            signMap.put("userType","3");
-            signMap.put("timestamp",""+System.currentTimeMillis());
-            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
-            signMap.put("sign",signture);
-            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-            if(type==1){
-               Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
-                obj = URLDecoder.decode(obj.toString(),"utf-8");
-                JSONArray jr = JSONArray.fromObject(obj);
-                if(jr!=null&&jr.size()>0){
-                    for(int i = 0;i<jr.size();i++){
-                        JSONObject jo = jr.getJSONObject(i);
-                        for(int j = 0;j<returnUserRecord.size();j++){
-                            returnUserMap = new HashMap();
-                            if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
-                                returnUserRecord.get(j).put("uName", jo.getString("realName"));
-                            }
+//            String url=UtilTool.utilproperty.getProperty("ETT_GET_HEAD_IMG_URL");
+//            //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+//            HashMap<String,String> signMap = new HashMap();
+//            signMap.put("userList",jidstr);
+//            signMap.put("schoolId",schoolId);
+//            signMap.put("srcJid",jid);
+//            signMap.put("userType","3");
+//            signMap.put("timestamp",""+System.currentTimeMillis());
+//            String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+//            signMap.put("sign",signture);
+//            JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//            int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//            if(type==1){
+//               Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+//                obj = URLDecoder.decode(obj.toString(),"utf-8");
+//                JSONArray jr = JSONArray.fromObject(obj);
+//                if(jr!=null&&jr.size()>0){
+//                    for(int i = 0;i<jr.size();i++){
+//                        JSONObject jo = jr.getJSONObject(i);
+//                        for(int j = 0;j<returnUserRecord.size();j++){
+//                            returnUserMap = new HashMap();
+//                            if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+//                                returnUserRecord.get(j).put("uName", jo.getString("realName"));
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolId,jid);
+            if(jr!=null&&jr.size()>0){
+                for(int i = 0;i<jr.size();i++){
+                    JSONObject jo = jr.getJSONObject(i);
+                    for(int j = 0;j<returnUserRecord.size();j++){
+                        returnUserMap = new HashMap();
+                        if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                            returnUserRecord.get(j).put("uName", jo.getString("realName"));
                         }
                     }
                 }
@@ -5445,5 +5567,82 @@ class ImUtilTool{
             type=3;
         }
         return type;
+    }
+
+    public static JSONArray getEttPhoneAndRealNmae(String jidstr,String schoolid,String userid) throws UnsupportedEncodingException {
+        String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
+        String url=ettip+"queryPhotoAndRealName.do";
+        //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+        HashMap<String,String> signMap = new HashMap();
+        signMap.put("userList",jidstr);
+        signMap.put("schoolId",schoolid);
+        signMap.put("srcJid",userid);
+        signMap.put("userType","3");
+        signMap.put("timestamp",""+System.currentTimeMillis());
+        String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+        signMap.put("sign",signture);
+        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+        if(type==1){
+            Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+            obj = URLDecoder.decode(obj.toString(),"utf-8");
+            JSONArray jr = JSONArray.fromObject(obj);
+            if(jr!=null)
+                return jr;
+            else
+                return null;
+        }else{
+            return null;
+        }
+    }
+
+    public static void main(String[] args){
+        String leftime = ImUtilTool.getTaskOvertime("705780");
+        System.out.println(leftime+"=========================");
+    }
+
+    public static String getTaskOvertime(String tasktime){
+        String leftTime = "";
+        int time =Integer.parseInt(tasktime);
+        int days = 0;
+        int hours =0;
+        int mins = 0;
+        int seconds = 0;
+        if(time>0){
+            seconds = time%60;
+            if(seconds>0||time>=60){
+                mins = time/60;
+            }else{
+                seconds = seconds*60;
+            }
+            if(mins>0){
+                hours = mins/60;
+            }
+            if(hours>0){
+                days= hours/24;
+            }
+
+            if(days>0){
+                leftTime=days+"天";
+            }else{
+                if(hours>0){
+                    leftTime=hours+"小时";
+                }else{
+                    if(mins>0){
+                        leftTime=mins+"分钟";
+                    }else{
+                        if(seconds>0){
+                            leftTime=seconds+"秒";
+                        }
+                    }
+                }
+            }
+            if(leftTime.indexOf("天")==-1&&leftTime.indexOf("小时")==-1&&leftTime.indexOf("分钟")==-1&&leftTime.indexOf("秒")==-1){
+                System.out.println("***********************************************************************************************");
+                System.out.println("班级任务结束时间出错啦------------------------------------------------------------------------"+leftTime+"*******"+time);
+                System.out.println("***********************************************************************************************");
+            }
+        }
+        return leftTime;
     }
 }

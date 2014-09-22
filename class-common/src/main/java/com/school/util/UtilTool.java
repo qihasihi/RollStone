@@ -1893,7 +1893,7 @@ public class UtilTool implements java.io.Serializable {
         int seconds = 0;
         if(time>0){
             seconds = time%60;
-            if(seconds>0){
+            if(seconds>0||time>=60){
                 mins = time/60;
             }else{
                 seconds = seconds*60;

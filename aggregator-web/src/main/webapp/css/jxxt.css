@@ -731,15 +731,9 @@
 	margin-left:-30px;
 }
 	.jxxt_zhuanti_rw_add ul.zsdx li{
-	width:360px;
-	padding:5px 50px 12px 60px;
-	position:relative;
+	width:390px;
+	padding:5px 20px 12px 60px;
 	display:inline-table;
-}
-	.jxxt_zhuanti_rw_add ul.zsdx li b{
-	position: absolute;
-	top:8px;
-	right:25px;
 }
 	.jxxt_zhuanti_rw_wkc { width:920px; height:30px; margin:10px auto 25px;}
 	.jxxt_zhuanti_rw_wkc li{

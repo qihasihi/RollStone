@@ -54,7 +54,6 @@
 	width:261px;
 	height:72px;
 	position: absolute;
-	z-index:99;
 	background: url(images/bg01_131230.png) no-repeat;
 	display:block;
 	top:0;
@@ -520,7 +519,6 @@
 	display:block;
 }
     .denglu_duoxiao_bg{background:#e8f3f7 url(images/bg02_131230.jpg) no-repeat top center;}
-
 	.denglu_duoxiao_layout{
 	width:937px;
 	height:540px;

@@ -152,15 +152,17 @@
 
                         var  content=im.ANSWERCONTENT || "";
                         if(content==null||typeof(content)=="undefined"||typeof(content)==undefined){
-                            if(im.STATUS>0){
-                                if(parseInt(im.TASK_TYPE)==1||parseInt(im.TASK_TYPE)==2){
+
+                        }
+                        if(im.STATUS>0){
+                            if(parseInt(im.TASK_TYPE)==1||parseInt(im.TASK_TYPE)==2){
+                                if(parseInt(im.CRITERIA)==1)
                                     content="已查看";
-                                }else if(parseInt(im.TASK_TYPE)==4||parseInt(im.TASK_TYPE)==5){
-                                    content="已提交";
-                                }
-                            }else{
-                                content="";
+                            }else if(parseInt(im.TASK_TYPE)==4||parseInt(im.TASK_TYPE)==5){
+                                content="已提交";
                             }
+                        }else{
+                            content="";
                         }
                        if($("#tr_"+im.COURSE_ID+" td").length<2){
                            zhongjianshu=ix;
