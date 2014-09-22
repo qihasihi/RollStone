@@ -137,4 +137,7 @@ public class UserManager extends BaseManager<UserInfo> implements IUserManager{
         return this.userdao.getUserNotCompleteTask(taskid,userid,classid,flag);
     }
 
+    public List<Map<String,Object>> getCourseTaskCount(Integer userid){
+        return this.userdao.getCourseTaskCount(userid);
+    }
 }

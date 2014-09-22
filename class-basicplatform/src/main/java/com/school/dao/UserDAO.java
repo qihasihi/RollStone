@@ -107,6 +107,19 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
         return objList;
     }
 
+    /**
+     * 得到学生首页，显示任务提醒
+     * @param uid
+     * @return
+     */
+    public List<Map<String,Object>> getCourseTaskCount(final Integer uid){
+        if(uid==null)return null;
+        StringBuilder sqlbuilder=new StringBuilder("{CALL cal_stu_task_remark_count(?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(uid);
+        return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
+
 	public List<UserInfo> getList(UserInfo obj, PageResult presult) {
 		StringBuilder sqlbuilder = new StringBuilder(
 				"{CALL user_info_proc_split(");
@@ -626,5 +639,4 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
         List<UserInfo> userList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, UserInfo.class, objArray);
         return userList;
     }
-
 }

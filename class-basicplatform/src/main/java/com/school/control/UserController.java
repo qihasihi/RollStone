@@ -3967,6 +3967,11 @@ public class UserController extends BaseController<UserInfo> {
         List<MyInfoUserInfo> tzMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("tzMSGList", tzMSGList);
         mp.put("tzMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+        //如果是学生，则得到该学生的当前任务信息
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+            List<Map<String,Object>> tkMapList=this.userManager.getCourseTaskCount(this.logined(request).getUserid());
+            mp.put("stuTkList",tkMapList);
+        }
         //初始化向导状态
         List<InitWizardInfo> initList = this.initWizardManager.getList(null,null);
         if(initList.size()>0){
@@ -3974,6 +3979,7 @@ public class UserController extends BaseController<UserInfo> {
         }else{
             request.setAttribute("initObj",null);
         }
+
         //初始化用户名状态
         UserInfo sel=new UserInfo();
         sel.setUserid(this.logined(request).getUserid());
