@@ -1030,23 +1030,23 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         int attachtype = jb.containsKey("attachType")?jb.getInt("attachType"):0;
         Object classesObj = jb.containsKey("classes")?jb.get("classes"):"";
         if(courseid==null||courseid.equals(0)){
-            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"专题id丢失，请重试\\\"}\"");
+            response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"专题id丢失，请重试\"}\"");
             return;
         }
         if(tasktype<1){
-            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"任务类型丢失，请重试\\\"}\"");
+            response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"任务类型丢失，请重试\"}\"");
             return;
         }
         if(tasktitle==null||tasktitle.length()<1){
-            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"任务名称丢失，请重试\\\"}\"");
+            response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"任务名称丢失，请重试\"}\"");
             return;
         }
         if(taskcontent==null||taskcontent.length()<1){
-            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"任务主体丢失，请重试\\\"}\"");
+            response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"任务主体丢失，请重试\"}\"");
             return;
         }
         if(classesObj==null){
-            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"任务对象丢失，请重试\\\"}\"");
+            response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"任务对象丢失，请重试\"}\"");
             return;
         }
         //验证专题是否存在
@@ -1054,7 +1054,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         courseInfo.setCourseid(courseid);
         List<TpCourseInfo>courseList=this.tpCourseManager.getList(courseInfo,null);
         if(courseList==null||courseList.size()<1){
-            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"专题不存在，请检查重试\\\"}\"");
+            response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"专题不存在，请检查重试\"}\"");
             return;
         }
         /**
@@ -1114,7 +1114,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         String starttime=jsonObject.containsKey("startTime")?jsonObject.getString("startTime"):"";
                         String endtime=jsonObject.containsKey("endTime")?jsonObject.getString("endTime"):"";
                         if(classid.equals(0)||classtype<0||starttime==null||starttime.length()<1||endtime==null||endtime.length()<1){
-                            response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"发送任务对象参数丢失\\\"}\"");
+                            response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"发送任务对象参数丢失\"}\"");
                             return;
                         }
                         TpTaskAllotInfo tpTaskAllotInfo = new TpTaskAllotInfo();
@@ -1133,7 +1133,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     }
                 }
             }else{
-                response.getWriter().print("\"{\\\"result\\\":\\\"0\\\",\\\"msg\\\":\\\"未获取到任务对象，请重试\\\"}\"");
+                response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"未获取到任务对象，请重试\"}\"");
                 return;
             }
         }
@@ -2868,7 +2868,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             String msg=null;
                                 /*奖励加分通过*/
             try{
-            if(this.tpStuScoreLogsManager.awardStuScore(tList.get(0).getCourseid()
+                if(this.tpStuScoreLogsManager.awardStuScore(tList.get(0).getCourseid()
                     , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
                     , tList.get(0).getTaskid()
                     , Long.parseLong(userList.get(0).getUserid() + ""), userid, type1, Integer.parseInt(schoolid))){
@@ -3003,9 +3003,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     for(int i = 0;i<jr.size();i++){
                         JSONObject jObject = jr.getJSONObject(i);
                         for(int j = 0;j<themeList.size();j++){
-                            if(jObject.getInt("jid")==Integer.parseInt(themeList.get(j).get("ETT_USER_ID").toString())){
-                                themeList.get(j).put("uPhoto", jObject.getString("headUrl"));
-                                themeList.get(j).put("uName", jObject.getString("realName"));
+                            if(themeList.get(j).get("ETT_USER_ID")!=null){
+                                if(jObject.getInt("jid")==Integer.parseInt(themeList.get(j).get("ETT_USER_ID").toString())){
+                                    themeList.get(j).put("uPhoto", jObject.getString("headUrl"));
+                                    themeList.get(j).put("uName", jObject.getString("realName"));
+                                }
                             }
                         }
                     }
