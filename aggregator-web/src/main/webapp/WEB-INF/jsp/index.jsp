@@ -559,6 +559,17 @@ function closeEditUser(){
 
 <div class="home_ywxg">
     <h1>与我相关</h1>
+    <!--教学任务-->
+    <c:if test="${!empty stuTkList}">
+        <div class="index_me_content">
+            <h2><span class="ico07"></span>任务<strong>${fn:length(stuTkList)}</strong></h2>
+            <ul>
+                <c:forEach items="${stuTkList}" var="stk">
+                    <li>在${stk.COURSE_NAME}专题中，你尚有<span style="color:red">${stk.TKCOUNT}</span>个任务未完成</li>
+                </c:forEach>
+            </ul>
+        </div>
+    </c:if>
     <!--<c:if test="${!empty activityList}">
       	<div class="index_me_content">
       	 <h2><span class="ico07"></span>新活动<strong><a href="activity?m=list" target="_blank">${fn:length(activityList)}</a></strong></h2>

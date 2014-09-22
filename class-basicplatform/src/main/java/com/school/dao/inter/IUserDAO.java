@@ -44,4 +44,6 @@ public interface IUserDAO extends ICommonDAO<UserInfo> {
      * @return
      */
     List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag);
+
+    public List<Map<String,Object>> getCourseTaskCount(final Integer userid);
 }

@@ -47,4 +47,6 @@ public interface IUserManager extends IBaseManager<UserInfo> {
      * @return
      */
     public List<Object> getUpdateEttUserByEttUserIdSql(final Integer ettUserid,StringBuilder sqlbuilder);
+
+    public List<Map<String,Object>> getCourseTaskCount(Integer userid);
 }
