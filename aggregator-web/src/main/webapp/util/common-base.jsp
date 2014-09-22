@@ -30,7 +30,7 @@
 			
 	String fileSystemIpPort=UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD");//"http://202.99.47.77:80/";//request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort()+"/";;
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
-			 boolean isTeacher=false,isStudent=false,isBzr=false;
+			 boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false;
  List<RoleUser> cruList=null;
 // System.out.println(request.getRequestURI().trim().replaceAll("/",""));
 // System.out.println(request.getServletPath().replaceAll("/",""));
@@ -63,6 +63,8 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 			}
             if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID))
                 isBzr=true;
+            if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_WXJW_ID))
+                isWxJw=true;
 		} 
 	}   
 	session.setAttribute("currentUserRoleList",cruList);		
@@ -76,6 +78,8 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 			}else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_STU_ID)){
 				isStudent=true;
 			}
+            if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_WXJW_ID))
+                isWxJw=true;
 		} 
 	}
 	session.setAttribute("currentUserRoleList",cruList);	
@@ -101,6 +105,10 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 		return true;
 } %>
 
+<link rel="stylesheet" type="text/css"	href="<%=basePath %>css/common.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath %>css/master.css"/>
+<link rel="stylesheet" type="text/css" href="<%=basePath %>css/style.css"/>
+
 <link rel="stylesheet" type="text/css"	href="<%=basePath %>css/dtree.css" />
 <link rel="stylesheet" type="text/css" href="<%=basePath %>css/WdatePicker.css" />
 <!-- <link rel="stylesheet" type="text/css"	href="<%=basePath %>util/progressupload-1/css/progressupload.css" /> -->
@@ -116,10 +124,8 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 		
 		
 
-		<link rel="stylesheet" type="text/css"	href="<%=basePath %>css/common.css" />
-        <link rel="stylesheet" type="text/css" href="<%=basePath %>jcpt/css/master.css"/>
-        <link rel="stylesheet" type="text/css" href="<%=basePath %>jcpt/css/style.css"/>
-        <link rel="stylesheet" type="text/css" href="<%=basePath %>jcpt/css/jcpt.css"/>
+
+        <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jcpt.css"/>
   
 		<link rel="stylesheet" type="text/css"	href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" />
 

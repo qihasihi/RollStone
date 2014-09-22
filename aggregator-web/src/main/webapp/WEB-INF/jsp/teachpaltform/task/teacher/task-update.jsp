@@ -136,7 +136,7 @@
                 <td class="font-black">
                     <p id="p_operate_ques"><a href="javascript:showTaskElement(3)"  class="font-darkblue">>>&nbsp;选择已有试题</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="showDialogPage(3)" class="font-darkblue">>>&nbsp;添加试题</a></p>
-                    <div class="jxxt_zhuanti_add_shiti"  id="tb_ques" style="display:none;">
+                    <div class="jxxt_zhuanti_add_shiti"  id="tb_ques" style="overflow-y: auto;display:none;">
                         <table border="0" cellspacing="0" cellpadding="0" class="font-black">
                             <col class="w70"/>
                             <col class="w600"/>
