@@ -131,7 +131,7 @@ function EttImageShow(settings){
             close:function(){
                 $("#"+fadeId).hide();
             },
-            overlay: { opacity: 0.1, background: "black" },
+            overlay: { opacity: 1, background: "black" },
             modal:true
         });
         $(".ui-dialog-titlebar a").html("&nbsp;");
