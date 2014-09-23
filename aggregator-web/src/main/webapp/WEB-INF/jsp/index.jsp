@@ -895,21 +895,29 @@ function closeEditUser(){
         <h4>修改密码</h4>
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab1">
             <input type="hidden" value="<%=pass%>" id="oldpass"/>
+            <caption><a href="javascript:;" onclick="changeOption(this,1)" class="crumb">校园账号</a>｜<a href="javascript:;" onclick="changeOption(this,2)" >云账号</a></caption>
+            <tr>
+                <th>用&nbsp;户&nbsp;名：</th>
+                <td id="td_username"><%=username%></td>
+            </tr>
             <tr>
                 <th>旧&nbsp;密&nbsp;码：</th>
                 <td><input onblur="validateOldPass(this)" name="textfield13" type="password" id="oldHeadPass"/>
+                    <a href="javascript:showPwd('oldHeadPass')" class="ico92" title="查看密码"></a><span class="font-gray">6-12字符</span>&nbsp;&nbsp;
                     <span style="display: none" class="font-red" id="oldPassMsg">输入的原密码不对</span></td>
             </tr>
             <tr>
                 <th>新&nbsp;密&nbsp;码：</th>
                 <td><input onblur="validateNewPass(this)" name="textfield12" type="password" id="newHeadPass"/>
+                    <a href="javascript:showPwd('newHeadPass')" class="ico92" title="查看密码"></a><span class="font-gray">6-12字符</span>&nbsp;&nbsp;
                     <span style="display: none" class="font-red" id="newPassMsg">密码至少六个字符</span></td>
             </tr>
-            <tr>
+          <!--  <tr>
                 <th>再次确认：</th>
                 <td><input onblur="validateMorePass(this)" name="textfield4" type="password" id="moreHeadPass"/>
+                    <a href="javascript:showPwd('moreHeadPass')" class="ico92" title="查看密码"></a><span class="font-gray">6-12字符</span>&nbsp;&nbsp;
                     <span style="display: none" class="font-red" id="morePassMsg">两次密码不一致</span></td>
-            </tr>
+            </tr> -->
             <tr>
                 <th>&nbsp;</th>
                 <td><a href="javascript:updatePass();"  class="an_public1">修改</a><a href="javascript:closeEditUser();"  class="an_public1">取消</a></td>
@@ -918,7 +926,34 @@ function closeEditUser(){
     </div>
 </div>
 
+<script type="text/javascript">
+    <%if(!isStudent){%>
+    <c:if test="${empty teachClass}">
+        $("#sp_role").html($("#sp_role").html().replace("任课老师&nbsp;&nbsp;",""));
+    </c:if>
+    <%}%>
 
+    $(function(){
+        $("input[type='password']").focus(function(){
+            $(this).get(0).type='password';
+        });
+    });
+
+    function showPwd(divid){
+        var dvObj=$("#"+divid);
+        if(typeof  dvObj=='undefined')return;
+        $(dvObj).get(0).type="text";
+    }
+
+    function changeOption(obj,type){
+        $(obj).addClass("crumb");
+        $(obj).siblings("a").removeClass("crumb");
+        if(type==2){
+            $("#td_username").html('<input type="text" id="txt_username" />')
+        }else
+            $("#td_username").html('<%=username%>');
+    }
+</script>
 
 <!-- 设置用户名-->
 
@@ -970,15 +1005,7 @@ function closeEditUser(){
         </div>
     </div>
 </div>
-<script type="text/javascript">
-        <%if(!isStudent){%>
-            <c:if test="${empty teachClass}">
-                    $("#sp_role").html($("#sp_role").html().replace("任课老师&nbsp;&nbsp;",""));
-             </c:if>
-        <%}%>
 
-
-</script>
 <%@include file="/util/foot.jsp"%>
 </body>
 </html>

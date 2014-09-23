@@ -48,6 +48,7 @@ function getInvestReturnMethod(rps){
                 shtml+='<input type="checkbox"  name="question" disabled checked/>';
             else
                 shtml+='<input type="checkbox" name="ck_quesid"  value="'+itm.questionid+'"/>';
+           // shtml+='<span class="bg">'+itm.questiontypename+'</span>';
             var content=replaceAll(itm.content.toLowerCase(),'<span name="fillbank"></span>','______');
             shtml+='</td>';
             shtml+='<td>';

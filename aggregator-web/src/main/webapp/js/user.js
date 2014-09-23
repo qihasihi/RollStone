@@ -1578,6 +1578,8 @@ function edit_info(){
 	$("#edit_info").hide();
 	$("#btn_info").show();
 	$("#p_history").hide();
+
+
 	 
 	if(isTea){
 		var mail=$("#sp_mail");
@@ -1591,6 +1593,8 @@ function edit_info(){
 		$("#sp_major").html($("#edit_major").html());
 		$("#sp_subject").html($("#edit_subject").html());
 		$("#sp_teacls").html($("#edit_cls").html());
+
+        getClsByYear('view_body');
 		
 		$(mail).html('<input  type="text" id="txt_mail" value="'+mail.html().Trim()+'"/>');
 		$(phone).html('<input  type="text" id="txt_phone" value="'+phone.html().Trim()+'"/>');
@@ -1704,6 +1708,7 @@ function edit_role(){
 		if(hd_cls.get(0).options.length>0){ 
 			$("#cls_bzr_result").html('')
 			$("#tr_bzr").show();
+            getClsByYear('edit_role');
 			$.each(hd_cls.get(0).options,function(idx,itm){ 
 				//$("#cls_bzr_result")[0].options.add(new Option($(itm).text(),$(itm).val()));
 				genderLi(itm,'cls_bzr_result','edit_role');
