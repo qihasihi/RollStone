@@ -439,7 +439,7 @@ function getBankInvestReturnMethod(rps){
             }
             html+='</p>';
             html+='<p id="dv_option_'+itm.taskid+'">';
-            if(itm.questionOptionList!=null&&itm.questionOptionList.length>0){
+            if(itm.questionOptionList!=null&&itm.questionOptionList.length>0 && itm.questiontype!=1){
                 $.each(itm.questionOptionList,function(idx,im){
                     var type=itm.questiontype==3?"radio":"checkbox";
                     html+='<input disabled type="'+type+'"/>';

@@ -164,11 +164,11 @@ function preeDoPageSub(pObj){
             <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
             <p class="pic"><a href="1"><b><span class="ico02" title="导入"></span></b></a></p>
         </li> -->
-        <c:if test="${empty coursePaperList}">
+        <c:if test="${fn:length(standardList)<1}">
             <li><img src="images/pic06_140722.png" width="215" height="160"></li>
         </c:if>
-        <c:if test="${!empty coursePaperList}">
-            <c:forEach items="${coursePaperList}" var="c">
+        <c:if test="${!empty standardList}">
+            <c:forEach items="${standardList}" var="c">
                 <c:if test="${c.paperid>0}">
                     <li>
                         <a href="paper?toPreviewPaper&courseid=${c.courseid}&paperid=${c.paperid}">
@@ -198,36 +198,39 @@ function preeDoPageSub(pObj){
     </ul>
     <p><strong>自建试卷</strong></p>
     <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
-        <c:if test="${empty coursePaperList}">
+        <c:if test="${fn:length(nativeList)<1}">
             <li><img src="images/pic06_140722.png" width="215" height="160"></li>
         </c:if>
-        <c:forEach items="${coursePaperList}" var="c">
-            <c:if test="${c.paperid<0}">
-                <li>
-                    <a href="paper?toPreviewPaper&courseid=${c.courseid}&paperid=${c.paperid}">
-                        <p class="one">${c.papername}</p>
-                        <p class="two">
-                            <c:if test="${c.objectivenum>0 and c.subjectivenum>0}">
-                                <span class="bg1" style="width:50%">${c.objectivenum}</span><span class="bg2" style="width:50%">${c.subjectivenum}</span>
-                            </c:if>
+        <c:if test="${fn:length(nativeList)>0}">
+            <c:forEach items="${nativeList}" var="c">
+                <c:if test="${c.paperid<0}">
+                    <li>
+                        <a href="paper?toPreviewPaper&courseid=${c.courseid}&paperid=${c.paperid}">
+                            <p class="one">${c.papername}</p>
+                            <p class="two">
+                                <c:if test="${c.objectivenum>0 and c.subjectivenum>0}">
+                                    <span class="bg1" style="width:50%">${c.objectivenum}</span><span class="bg2" style="width:50%">${c.subjectivenum}</span>
+                                </c:if>
 
-                            <c:if test="${c.objectivenum>0 and c.subjectivenum<1}">
-                                <span class="bg1" style="width:100%">${c.objectivenum}</span>
-                            </c:if>
-                            <c:if test="${c.subjectivenum>0 and c.objectivenum<1}">
-                                <span class="bg2" style="width:100%">${c.subjectivenum}</span>
-                            </c:if>
-                            <c:if test="${!empty c.quesnum}">
-                                <span class="bg1" style="width:100%">${c.quesnum}</span>
-                            </c:if>
+                                <c:if test="${c.objectivenum>0 and c.subjectivenum<1}">
+                                    <span class="bg1" style="width:100%">${c.objectivenum}</span>
+                                </c:if>
+                                <c:if test="${c.subjectivenum>0 and c.objectivenum<1}">
+                                    <span class="bg2" style="width:100%">${c.subjectivenum}</span>
+                                </c:if>
+                                <c:if test="${!empty c.quesnum}">
+                                    <span class="bg1" style="width:100%">${c.quesnum}</span>
+                                </c:if>
+                            </p>
+                        </a>
+                        <p class="pic">
+                            <a href="javascript:importPaperQues('${c.courseid}','${c.paperid}')"><b><span class="ico02" title="导入"></span></b></a>
                         </p>
-                    </a>
-                    <p class="pic">
-                        <a href="javascript:importPaperQues('${c.courseid}','${c.paperid}')"><b><span class="ico02" title="导入"></span></b></a>
-                    </p>
-                </li>
-            </c:if>
-        </c:forEach>
+                    </li>
+                </c:if>
+            </c:forEach>
+        </c:if>
+
     </ul>
 </div>
 

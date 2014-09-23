@@ -397,6 +397,11 @@ function getTermCondition(tid,termname,iscalendar){
                 html+=gitm.gradevalue+gitm.subjectname;
                 html+='</a>';
             });
+            if(rps.objList[0]!=null&&rps.objList[0].length>0){
+                var showMore='<a  id="showMoreSubject" class="ico13" href="javascript:void(0);" onclick="displayObj(\'gradeSubjectList\');"></a>';
+                if($("#showMoreSubject").length<1)
+                    $("#gradeSubjectList").before(showMore);
+            }
              $("#gradeSubjectList").html(html);
             $("#sp_subgrade").next().show();
             if(typeof currentSubjectid!="undefined"&&currentSubjectid!=null&&currentSubjectid.length>0){

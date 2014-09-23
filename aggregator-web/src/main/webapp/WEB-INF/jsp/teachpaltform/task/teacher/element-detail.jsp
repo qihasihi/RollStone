@@ -93,7 +93,7 @@
                             htm+='<td><input type="radio" name="rdo_data" id="rdo_data" value="'+itm.questionid+'"></td>';
                             htm+='<td><p>'+quesname+'</p>';
                             htm+='<p>';
-                            if(itm.questionOptionList!=null&&itm.questionOptionList.length>0){
+                            if(itm.questionOptionList!=null&&itm.questionOptionList.length>0&&itm.questiontype!=1){
                                 $.each(itm.questionOptionList,function(idx,im){
                                     var type=itm.questiontype==3?"radio":"checkbox";
                                     htm+='<input disabled type="'+type+'"/>';

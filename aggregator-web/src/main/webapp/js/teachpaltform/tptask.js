@@ -595,7 +595,7 @@ function load_ques_detial(questionid, type) {
                         if (typeof itm.analysis != 'undefined')
                             $("#ques_answer").html(itm.analysis);
 
-                        if (itm.questionOptionList != null && itm.questionOptionList.length > 0) {
+                        if (itm.questionOptionList != null && itm.questionOptionList.length > 0 &&itm.questiontype!=1) {
                             $.each(itm.questionOptionList, function (idx, im) {
                                 var type = itm.questiontype == 3 ? "radio" : "checkbox";
                                 htm += '<li><input disabled type="' + type + '"/>';
@@ -716,6 +716,7 @@ function load_task_detial(taskid) {
                     if (rmsg.objList[2] != null) {
                         $.each(rmsg.objList[2], function (ix, im) {
                             //var taskObj=replaceAll(replaceAll(replaceAll(im.content.toLowerCase(),"<p>",""),"</p>",""),"<br>","");
+                            if(im.questiontype==1)return;
                             var taskObj = im.content;
                             ohtm += '<li>';
                             var type = im.questiontype == 3 ? "radio" : "checkbox";

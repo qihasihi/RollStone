@@ -455,6 +455,9 @@ function getStuList(clsid,dctype){
                         h+='<a style="display: none;" href="javascript:delClassUser(\''+itm.ref+'\')" class="ico_delete" title="删除"></a>';
                         h+='<a style="display: none;" name="a_view" class="ico92" title="查看ID" href="javascript:;"></a>';
                         h+='<span style="display: none;"  class="password">'+itm.ettuserid+'</span>'
+                    }else{
+                        h+='<a style="display: none;" name="a_view" class="ico92" title="查看密码" href="javascript:;"></a>';
+                        h+='<span style="display: none;"  class="password">'+itm.password+'</span>'
                     }
                     h+='</li>';
                 });

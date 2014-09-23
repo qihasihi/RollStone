@@ -60,7 +60,7 @@ function getInvestReturnMethod(rps){
             }
             if(itm.extension!='4')
                 shtml+='<p>'+content+'</p>';
-            if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0){
+            if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0&&itm.questiontype!=1){
                 shtml+='<table border="0" cellpadding="0" cellspacing="0" class="tab">';
                 shtml+='<col class="w30"/>';
                 shtml+='<col class="w850"/>';

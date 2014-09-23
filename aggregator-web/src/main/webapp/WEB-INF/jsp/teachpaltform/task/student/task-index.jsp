@@ -327,7 +327,7 @@
                 }
 
                 /*问题选项*/
-                if(itm.questionOptionList!=null&&itm.questionOptionList.length>0){
+                if(itm.questionOptionList!=null&&itm.questionOptionList.length>0&&itm.questiontype!=1){
                     $.each(itm.questionOptionList,function(idx,im){
                         var type=itm.questiontype==3?"radio":"checkbox";
                         optionhtm+='<input type="'+type+'" value="'+im.ref+'" name="ques_option_'+im.questionid+'"/>';

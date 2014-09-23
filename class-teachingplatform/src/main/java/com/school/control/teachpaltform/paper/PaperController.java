@@ -1244,8 +1244,21 @@ public class PaperController extends BaseController<PaperInfo>{
         sel.setCourseid(Long.parseLong(courseid));
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,null);
 
+        List<TpCoursePaper>standardList=new ArrayList<TpCoursePaper>();
+        List<TpCoursePaper>nativeList=new ArrayList<TpCoursePaper>();
+        if(coursePaperList!=null&&coursePaperList.size()>0){
+            for(TpCoursePaper cp:coursePaperList){
+                if(cp.getPaperid()>0){
+                    standardList.add(cp);
+                }else if(cp.getPaperid()<0){
+                    nativeList.add(cp);
+                }
+            }
+        }
 
-        request.setAttribute("coursePaperList", coursePaperList);
+
+        request.setAttribute("standardList", standardList);
+        request.setAttribute("nativeList", nativeList);
         request.setAttribute("courseid", courseid);
         request.setAttribute("paperid", paperid);
         request.setAttribute("subjectid", subjectid);

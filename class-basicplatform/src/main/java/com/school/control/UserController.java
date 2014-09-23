@@ -5526,7 +5526,10 @@ public class UserController extends BaseController<UserInfo> {
                     UserIdentityInfo ui = new UserIdentityInfo();
                     ui.setRef(identityNextRef);
                     ui.getUserinfo().setRef(userNextRef);
-                    ui.setIdentityname(identityname);
+                    if(isTea)
+                        ui.setIdentityname("教职工");
+                    else if(isStu)
+                        ui.setIdentityname("学生");
                     sql = new StringBuilder();
                     objList = this.userIdentityManager.getSaveSql(ui, sql);
                     if (objList != null && sql != null) {

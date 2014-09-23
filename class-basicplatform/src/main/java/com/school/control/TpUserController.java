@@ -1358,15 +1358,12 @@ public class TpUserController extends UserController {
             cdelete.setClassid(clsList.get(0).getClassid());
             cdelete.setRelationtype("学生");
             sql=new StringBuilder();
-            objList=this.classUserManager.getDeleteSql(cdelete,null);
+            objList=this.classUserManager.getDeleteSql(cdelete,sql);
             if(objList!=null&&sql!=null){
                 sqlListArray.add(sql.toString());
                 objListArray.add(objList);
             }
-        }
 
-         //清空小组
-        if(groupFlag!=null&&groupFlag.length()>0&&flag!=null&&flag.length()>0){
             TpGroupStudent groupStudent=new TpGroupStudent();
             groupStudent.setClassid(Integer.parseInt(clsid));
             sql=new StringBuilder();
@@ -1376,6 +1373,11 @@ public class TpUserController extends UserController {
                 objListArray.add(objList);
             }
             isDelGroup=true;
+        }
+
+         //清空小组
+        if(groupFlag!=null&&groupFlag.length()>0&&flag!=null&&flag.length()>0){
+
         }
 
         if(jidStr!=null&&nameStr!=null&&jidStr.length()>0&&nameStr.length()>0){
@@ -1431,7 +1433,7 @@ public class TpUserController extends UserController {
                                         objList=this.groupStudentManager.getDeleteSql(gsdelete,sql);
                                         if(sql!=null&&objList!=null){
                                             sqlListArray.add(sql.toString());
-                                            objListArray.add(objectList);
+                                            objListArray.add(objList);
                                         }
                                         isDelGroup=true;
                                     }
@@ -1592,11 +1594,9 @@ public class TpUserController extends UserController {
                     System.out.println("Add ett cls stu error!");
                 else
                     System.out.println("Add ett cls stu success!");
-
                 if(isDelGroup){
                     this.OperateGroupUser(Integer.parseInt(clsid),this.logined(request).getDcschoolid());
                 }
-
             }
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));

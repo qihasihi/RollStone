@@ -63,7 +63,7 @@
                         }
                         if(itm.extension!=4)
                             htm+=content;
-                        if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0){
+                        if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0&&itm.questiontype!=1){
                             htm+='<table border="0" cellpadding="0" cellspacing="0" >';
                             htm+='<col class="w30"/>';
                             htm+='<col class="910"/>';

@@ -406,7 +406,7 @@ function reSetScrollDiv(){
                             </c:if>
 
 
-                            <c:if test="${!empty pq.questionOption}">
+                            <c:if test="${!empty pq.questionOption and pq.questiontype ne 1}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <col class="w30"/>
                                     <col class="w880"/>
@@ -487,7 +487,17 @@ function reSetScrollDiv(){
                             <td>
                                 <p>
                                     <strong>正确答案：</strong>
-                                    <c:if test="${pq.questiontype eq 1 or  pq.questiontype eq 2 }">
+                                    <c:if test="${pq.questiontype eq 1 and pq.questionid>0}">
+                                        <c:if test="${!empty pq.questionOption}">
+                                            ${pq.questionOption[0].content}
+                                        </c:if>
+                                    </c:if>
+
+                                    <c:if test="${pq.questiontype eq 1 and pq.questionid<0}">
+                                        ${pq.correctanswer}
+                                    </c:if>
+
+                                    <c:if test="${pq.questiontype eq 2 }">
                                         ${pq.correctanswer}
                                     </c:if>
                                     <c:if test="${pq.questiontype eq 3 or  pq.questiontype eq 4 }">

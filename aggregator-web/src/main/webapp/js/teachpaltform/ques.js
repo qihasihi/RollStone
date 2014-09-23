@@ -61,7 +61,7 @@ function questionReturn(rps){
             }
             /*if(itm.extension!=4)
                 htm+=content; */
-            if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0 && itm.extension !=4){
+            if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0 && itm.extension !=4 && itm.questiontype!=1){
                 htm+='<table border="0" cellpadding="0" cellspacing="0" class="tab">';
                 htm+='<col class="w30"/>';
                 htm+='<col class="w850"/>';
