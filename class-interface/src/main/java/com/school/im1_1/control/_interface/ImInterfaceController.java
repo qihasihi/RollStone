@@ -231,11 +231,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> courseList = this.imInterfaceManager.getClassTaskCourse(obj);
         Map m = new HashMap();
         //定义新的list和map用来接受查到的任务列表
-        List<Map<String,Object>> returnList = null;
+        List<Map<String,Object>> returnList = new ArrayList<Map<String, Object>>();
         Map<String,Object> returnMap = null;
         if(courseList!=null&&courseList.size()>0){
             for(int i = 0;i<courseList.size();i++){
                 List<Map<String,Object>> taskList=null;
+                returnList = new ArrayList<Map<String, Object>>();
                 if(utype==2){
                     taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),null,Integer.parseInt(classid));
                 }else{
@@ -246,7 +247,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         Map<String,Object> tkMap=taskList.get(j);
                         //实例化返回数据对象
                         returnMap = new HashMap<String, Object>();
-                        returnList = new ArrayList<Map<String, Object>>();
                         //遍历数据，放到新的返回对象里
                         returnMap.put("FINISHSTANDARD",tkMap.get("FINISHSTANDARD"));
                         returnMap.put("TOTALNUM",tkMap.get("TOTALNUM"));
