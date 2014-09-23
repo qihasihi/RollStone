@@ -56,6 +56,7 @@
                 if(sms_user.getEttuserid()!=null&&sms_user.getDcschoolid()!=null){%>
                  <%@include file="webim.jsp"%>
             <%}%>
+              <li class="five"><a href="APP.html" target="_blank">应&nbsp;用</a></li>
          　　 <li class="four"><a href="javascript:;" onclick="loginDestory('<%=basePath %>')">退出</a></li>
       </c:if>
     <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">

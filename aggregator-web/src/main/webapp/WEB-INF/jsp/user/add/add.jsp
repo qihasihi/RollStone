@@ -21,6 +21,8 @@ p {
   		$(function(){
             getClsByYear('addteacher');
             getClsByYear('addstudent');
+            getClsByYear('div_role');
+
   			$('input[name="identity"]').each(function(idx,itm){
   				$(itm).bind("click",function(){
   	  				identityChange(itm.value);

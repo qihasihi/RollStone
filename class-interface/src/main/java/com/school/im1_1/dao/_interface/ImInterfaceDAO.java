@@ -420,7 +420,7 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
     @Override
     public List<Map<String, Object>> getQryStatPersonStu(ImInterfaceInfo obj) {
         StringBuilder sqlbuilder = new StringBuilder();
-        sqlbuilder.append("{CALL imapi_query_stat_person(");
+        sqlbuilder.append("{CALL imapi_query_stat_person_stu(");
         List<Object> objList=new ArrayList<Object>();
         if(obj.getUserid()!=null){
             sqlbuilder.append("?,");

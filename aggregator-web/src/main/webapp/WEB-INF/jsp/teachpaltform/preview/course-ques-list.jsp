@@ -111,7 +111,12 @@
                                 htm+='<tr>';
                                 htm+='<td>';
                                 if(m.questiontype<3){
-                                    htm+='<p><strong>正确答案：</strong>'+m.correctanswer+'</p>';
+                                    if(m.questiontype==1&& m.questionid>0){
+                                        if(typeof m.questionOptionList!='undefined'&&m.questionOptionList.length>0){
+                                            htm+='<p><strong>正确答案：</strong>'+m.questionOptionList[0].content+'</p>';
+                                        }
+                                    }else
+                                        htm+='<p><strong>正确答案：</strong>'+m.correctanswer+'</p>';
                                 }
                                 htm+='<p><strong>答案解析：</strong>'+m.analysis+'</p>';
                                 htm+='</td>';
@@ -126,8 +131,16 @@
                             htm+='<td>';
                             if(itm.questiontype!=3&&itm.questiontype!=4){
                                 htm+='<p><strong>正确答案：</strong>';
-                                if(itm.questiontype<3)
-                                    htm+=itm.correctanswer;
+                                if(itm.questiontype<3){
+                                    if(itm.questiontype==1&& itm.questionid>0){
+                                        if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0){
+                                            htm+=itm.questionOptionList[0].content+'</p>';
+                                        }
+                                    }else
+                                        htm+=itm.correctanswer;
+                                }
+
+
                                 if(itm.questiontype==3||itm.questiontype==4){
                                     $.each(itm.questionOptionList,function(ix,im){
                                         if(im.isright==1)

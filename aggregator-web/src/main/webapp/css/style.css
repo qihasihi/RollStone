@@ -7,7 +7,7 @@
 	margin: 0 auto;
 }
 	#header ul{
-	width:284px;
+	min-width:213px;
 	height:65px;
 	margin-top:10px;
 	float:right;
@@ -26,7 +26,6 @@
 	#header ul li.one{ background-position:0 0;}
 	#header ul li.two{ background-position:-71px 0;}
 	#header ul li.three{ background-position:-143px 0; position:relative;}
-	#header ul li.four{ background-position:-213px 0;}
 	#header ul li.three b{
 	height:12px;
 	font-weight:normal;
@@ -43,6 +42,8 @@
 	#header ul li.three a b{color:#fff;}
 	#header ul li.three b.one{right:11px;width:13px;}
 	#header ul li.three b.two{ background-position:-400px 0;right:6px;width:24px;}
+	#header ul li.four{ background-position:-213px 0;}
+	#header ul li.five{ background-position:-284px 0;}
 	
     #header p{
 	width:253px;
@@ -430,9 +431,15 @@
 
 	.home_grxx_float .public_windows { width:690px;}
 	.home_grxx_float th { width:80px;}
-	.home_grxx_float td { width:500px;}
+	.home_grxx_float td { width:500px; position:relative;}
+	.home_grxx_float td a.ico92{ position: absolute; left:215px; bottom:2px;}
+	.home_grxx_float table caption { font-size:14px; font-weight:bold; text-align:left; padding-top:10px;}
+	.home_grxx_float table caption a:link,.home_grxx_float table caption a:visited{color:#b6b6b6;}
+    .home_grxx_float table caption a:hover,.home_grxx_float table caption a:active{color:#0d7a99;}
+	.home_grxx_float table caption a.crumb{color:#0d7a99;}
+	
 	.home_grxx_float h4 { margin-left:20px; color:#000;}
-	.home_grxx_float input[type=password] { width:200px;}
+	.home_grxx_float input[type=password],.home_grxx_float input[type=text]{ width:200px; margin-right:20px;}
 	.home_grxx_float .an_public1 { margin-right:10px;}
 
 	.home_grxx_float .touxiang {
@@ -459,6 +466,29 @@
 	height:135px;
 	background: url(images/bg27_131230.png) no-repeat -305px 0;
 }
+    .home_app_layout{
+	width:100%;
+	background: url(images/bg38_131230.png) repeat-x;
+}
+    .home_app{
+	width:1000px;
+	height:840px;
+	background: url(images/bg03_131230.jpg) no-repeat;
+	margin:0 auto;
+}
+    .home_app{
+	width:1000px;
+	height:840px;
+	background: url(images/bg03_131230.jpg) no-repeat;
+	margin:0 auto;
+	position:relative;
+	color:#000;
+}
+    .home_app p.one{position:absolute;top:12px;right:30px; color:#afafaf;}
+	.home_app p.two{position:absolute;bottom:60px;left:180px;}
+	.home_app p.three{position:absolute;bottom:60px;left:510px;}
+	.home_app p.four{position:absolute;bottom:60px;left:865px;}
+
     #denglu_layout {
 	width:417px;
 	height:100%;

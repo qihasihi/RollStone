@@ -34,10 +34,20 @@ public class Test {
         System.out.println(url+"&"+param);
         System.out.println(sendPostURL(url,param)); */
 
+        /* String url="http://school.etiantian.com/schoolgroup1/user?m=addSchoolAdmin";
+        String param="schoolId=1&jId=2&schoolName="+java.net.URLEncoder.encode("北京分校","UTF-8");
+        System.out.println(url+"&"+param);
+        System.out.println(sendPostURL(url,param)); */
 
 
 
 
+
+
+
+
+
+/*
 
             int i=0;
             Set set=new HashSet();
@@ -53,7 +63,7 @@ public class Test {
             }
             System.out.println(set.size());
 
-
+*/
 
 
         //验证添加分校信息

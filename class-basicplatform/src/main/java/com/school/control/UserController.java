@@ -1558,6 +1558,35 @@ public class UserController extends BaseController<UserInfo> {
                         if(clsstr!=null&&clsstr.length()>0){
                             String[]clsArray=clsstr.split(",");
                             for (String clsid : clsArray) {
+                                //删除该班级班主任角色信息
+                                ClassUser selBzr=new ClassUser();
+                                selBzr.setRelationtype("班主任");
+                                selBzr.setClassid(Integer.parseInt(clsid));
+                                List<ClassUser>clsBzrList=this.classUserManager.getList(selBzr,null);
+                                if(clsBzrList!=null&&clsBzrList.size()>0){
+                                    for(ClassUser classUser:clsBzrList){
+                                        RoleUser roleUser=new RoleUser();
+                                        roleUser.setRoleid(UtilTool._ROLE_CLASSADVISE_ID);
+                                        roleUser.setUserid(classUser.getUserid());
+                                        sql=new StringBuilder();
+                                        objList=this.roleUserManager.getDeleteSql(roleUser,sql);
+                                        if (objList != null && sql != null) {
+                                            sqllist.add(sql.toString());
+                                            objListArray.add(objList);
+                                        }
+                                    }
+                                }
+                                //删除该班级班主任
+                                ClassUser deleteBzr=new ClassUser();
+                                deleteBzr.setRelationtype("班主任");
+                                deleteBzr.setClassid(Integer.parseInt(clsid));
+                                sql = new StringBuilder();
+                                objList = this.classUserManager.getDeleteSql(deleteBzr,sql);
+                                if (objList != null && sql != null) {
+                                    sqllist.add(sql.toString());
+                                    objListArray.add(objList);
+                                }
+
                                 ClassUser clsu=new ClassUser();
                                 clsu.setRef(this.classUserManager.getNextId());
                                 clsu.setClassid(Integer.parseInt(clsid));

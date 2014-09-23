@@ -136,8 +136,11 @@ public class QuestionInfo implements java.io.Serializable {
 
             if(correctanswer.indexOf("<p>")==0)
                 correctanswer=correctanswer.replaceFirst("<p>","");
-            if(correctanswer.lastIndexOf("</p>")!=-1)
-                correctanswer=correctanswer.substring(0,correctanswer.lastIndexOf("</p>"));
+            if(correctanswer.lastIndexOf("</p>")!=-1){
+                StringBuilder before=new StringBuilder(correctanswer.substring(0,correctanswer.lastIndexOf("</p>")));
+                StringBuilder after=new StringBuilder(correctanswer.substring(correctanswer.lastIndexOf("</p>")+4));
+                correctanswer=before.append(after).toString();
+            }
         }
         return correctanswer;
     }
@@ -181,8 +184,11 @@ public class QuestionInfo implements java.io.Serializable {
             }
             if(content.indexOf("<p>")==0)
                 content=content.replaceFirst("<p>","");
-            if(content.lastIndexOf("</p>")!=-1)
-                content=content.substring(0,content.lastIndexOf("</p>"));
+            if(content.lastIndexOf("</p>")!=-1){
+                StringBuilder before=new StringBuilder(content.substring(0,content.lastIndexOf("</p>")));
+                StringBuilder after=new StringBuilder(content.substring(content.lastIndexOf("</p>")+4));
+                content=before.append(after).toString();
+            }
         }
         return content;
     }
@@ -315,8 +321,11 @@ public class QuestionInfo implements java.io.Serializable {
             }
             if(analysis.indexOf("<p>")==0)
                 analysis=analysis.replaceFirst("<p>","");
-            if(analysis.lastIndexOf("</p>")!=-1)
-                analysis=analysis.substring(0,analysis.lastIndexOf("</p>"));
+            if(analysis.lastIndexOf("</p>")!=-1){
+                StringBuilder before=new StringBuilder(analysis.substring(0,analysis.lastIndexOf("</p>")));
+                StringBuilder after=new StringBuilder(analysis.substring(analysis.lastIndexOf("</p>")+4));
+                analysis=before.append(after).toString();
+            }
         }else
             analysis="нч";
         return analysis;

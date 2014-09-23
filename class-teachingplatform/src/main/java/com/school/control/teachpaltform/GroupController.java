@@ -106,12 +106,24 @@ public class GroupController extends BaseController<TpGroupInfo>{
                 tmpList.add(clsList.get(0));
         }
 
+        //过滤只为班主任的班级
         ClassUser bzr=new ClassUser();
         bzr.setRelationtype("班主任");
         bzr.setYear(termInfo.getYear());
         bzr.setUserid(this.logined(request).getRef());
         clsList=this.classUserManager.getList(bzr,null);
-        tmpList.addAll(clsList);
+        if(clsList!=null&&clsList.size()>0){
+            for(ClassUser cu:clsList){
+                ClassUser selTeacher=new ClassUser();
+                selTeacher.setUserid(this.logined(request).getRef());
+                selTeacher.setRelationtype("任课老师");
+                selTeacher.setYear(termInfo.getYear());
+                selTeacher.setClassid(cu.getClassid());
+                List<ClassUser>teaList=this.classUserManager.getList(selTeacher,null);
+                if(teaList==null||teaList.size()<1)
+                    tmpList.add(cu);
+            }
+        }
 
         ClassUser c = new ClassUser();
         //当前学期、学科、年级下的授课班级
@@ -144,8 +156,8 @@ public class GroupController extends BaseController<TpGroupInfo>{
 
 
         //身份
-        Integer userType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), tmpList.get(0).getClassid(),null,null);
-        mp.put("userType",userType);
+        Integer uType=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), tmpList.get(0).getClassid(),null,null);
+        mp.put("userType",uType);
 
 
 
