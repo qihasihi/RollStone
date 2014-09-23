@@ -310,10 +310,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         }
                         if(Integer.parseInt(tkMap.get("TASKTYPE").toString())==3){
                             //tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename);
-                            returnMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename);
+                            returnMap.put("TASKNAME", "任务 " + returnMap.get("ORDERIDX") + " " + typename);
                         }else{
                             //tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename + " " + tkMap.get("TASKNAME"));
-                            returnMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename + " " + tkMap.get("TASKNAME"));
+                            returnMap.put("TASKNAME", "任务 " + returnMap.get("ORDERIDX") + " " + typename + " " + tkMap.get("TASKNAME"));
                         }
                         returnList.add(returnMap);
                     }
