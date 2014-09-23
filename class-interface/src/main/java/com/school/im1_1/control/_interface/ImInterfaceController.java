@@ -253,7 +253,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         returnMap.put("STARTTIME",tkMap.get("STARTTIME"));
                         returnMap.put("ISOVER",tkMap.get("ISOVER"));
                         returnMap.put("DONUM",tkMap.get("DONUM"));
-                        returnMap.put("ISDONE",tkMap.get("ISDONE"));
+                        if(utype==2){
+                            returnMap.put("ISDONE","1");
+                        }else{
+                            returnMap.put("ISDONE",tkMap.get("ISDONE"));
+                        }
                         returnMap.put("QUESTYPE",tkMap.get("QUESTYPE"));
                         returnMap.put("TASKTYPE",tkMap.get("TASKTYPE"));
                         returnMap.put("ISSTART",tkMap.get("ISSTART"));
