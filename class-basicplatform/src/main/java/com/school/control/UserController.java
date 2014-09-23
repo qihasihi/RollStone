@@ -4847,6 +4847,7 @@ public class UserController extends BaseController<UserInfo> {
 //		BigDecimal uid = u.getUserId(); // 当前登录的ID
         String uidRef=u.getRef();
         Integer uid=u.getUserid();
+        String username=u.getUsername();
         List<Integer> gradeidList = new ArrayList<Integer>(); // 年级列表
         String realname = null;
         Long usertype = null;
@@ -5047,13 +5048,13 @@ public class UserController extends BaseController<UserInfo> {
             }
         }
         TermInfo t = this.termManager.getAutoTerm();
+        String tmYear = t.getYear().trim();
         // 加载年级
         if (!ishasgrade) {
             ClassUser cu = new ClassUser();
             cu.setUserid(uidRef);
             // 查询当前的年级  如果当前学期没有数据，则不存入学期
-            String tmYear = t.getYear().trim();
-            cu.setYear(tmYear);
+            cu.setYear(t.getYear().trim());
             List<ClassUser> cuList = this.classUserManager.getList(cu, null);
             // 加载老师教授最新年级GradeId
             // 标识是否在7.15 - 1.1号之间
@@ -5065,7 +5066,6 @@ public class UserController extends BaseController<UserInfo> {
                 // 现在的
                 Date nowd = new Date();
                 Date d = UtilTool.StringConvertToDate(UtilTool.DateConvertToString(nowd,DateType.year) + "-07-15 00:00:00");
-
                 if (nowd.getTime() >= d.getTime() && usertype == 3)
                     isshengji = true;
             }
@@ -5073,6 +5073,7 @@ public class UserController extends BaseController<UserInfo> {
             if (cuList != null && cuList.size() > 0) {
                 boolean isbiye = false;
                 for (ClassUser cuObj : cuList) {
+                    tmYear=cuObj.getYear();
                     String clsGrade = cuObj.getClassgrade();
                     if (clsGrade != null) {
                         if (clsGrade.trim().equals("高三")
@@ -5273,6 +5274,7 @@ public class UserController extends BaseController<UserInfo> {
             if(modelName==null)
                 modelName="";
             paramMap.put("modelName",modelName);
+
             requestUrl=UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_URL").toString(); //教师进入ett入口
         }else if(isstuflag){
             //组织学生参数
@@ -5298,11 +5300,13 @@ public class UserController extends BaseController<UserInfo> {
                 isVipJson=null;
             }
             paramMap.put("uid",uid);
+
             if(mid!=null)
                 paramMap.put("mid",mid);
             if(isVipJson!=null)
                 paramMap.put("isVip",isVipJson);
             paramMap.put("realname",  java.net.URLEncoder.encode(realname,"UTF-8"));
+            paramMap.put("username",java.net.URLEncoder.encode(username,"UTF-8"))
             paramMap.put("usertype", usertype);
             paramMap.put("sex",sex);
             paramMap.put("time", time);
@@ -5323,7 +5327,11 @@ public class UserController extends BaseController<UserInfo> {
 
             //学校名称
             paramMap.put("s",UserTool.zuzhiStudentSParameter(uid.toString(), gradeidList, realname, usertype.toString(), sex+"", email, schoolid,isVipJson, time.toString(), key));
-
+            String year=tmYear;
+            if(year!=null&&year.trim().length()>0){
+                year=year.split("~")[0];
+            }
+            paramMap.put("stuYear",year);
             requestUrl=UtilTool.utilproperty.getProperty("STU_TO_ETT_REQUEST_URL").toString(); //学生进入ett入口
         }
         paramMap.put("srcId",50006);//UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID").toString());

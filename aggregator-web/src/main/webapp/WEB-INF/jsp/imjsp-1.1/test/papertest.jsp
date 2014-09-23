@@ -107,10 +107,10 @@
 <div class="zxcs_test" id="dv_question">
 </div>
 <%--<!--先提交当前问题，再进入上一题-->--%>
-<a href="javascript:;" onclick="fm_subQues.submit();fm_free.submit();">上一题</a>
-<!--先提交当前问题，再进入下一题-->
-<a  href="javascript:;" onclick="fm_subQues.submit();fm_next.submit();">下一题</a>
-<a href="javascript:;" onclick="fm_subQues.submit();fm_subPaper.submit()">交卷</a>
+<%--<a href="javascript:;" onclick="fm_subQues.submit();fm_free.submit();">上一题</a>--%>
+<%--<!--先提交当前问题，再进入下一题-->--%>
+<%--<a  href="javascript:;" onclick="fm_subQues.submit();fm_next.submit();">下一题</a>--%>
+<%--<a href="javascript:;" onclick="fm_subQues.submit();fm_subPaper.submit()">交卷</a>--%>
 <!--上一题的FRM-->
 <form action="#" id="fm_free" method="post">
 </form>

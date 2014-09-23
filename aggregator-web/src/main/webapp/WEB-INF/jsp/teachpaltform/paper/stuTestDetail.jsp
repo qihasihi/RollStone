@@ -73,11 +73,6 @@
                         var obj=$("input[name='rdo_answer"+t+"']").filter(function(){return this.value.Trim()==t1});
                         var answerObj={val:obj[0].value,id:obj[0].id,name:obj[0].name};
                         obj.parent().html("<input type='radio' checked=true id='"+answerObj.id+"' disabled=true name='"+answerObj.name+"' value='"+answerObj.value+"'>");
-                        var as=$("#you_score"+t).parent().children("#avg_score").html();
-                        var myScore=$("#you_score"+t).html();
-                        if(parseFloat(as)!=parseFloat(myScore)){
-                            $("#sp_quesIdx"+t).css("color",'red');
-                        }
                     }else if(qtype==4){
                         var splitChar="|";
                         if(t1.indexOf("%7C")!=-1)
@@ -92,6 +87,8 @@
                               }
                             }
                         });
+                    }
+                    if(ismak!=1){
                         var as=$("#you_score"+t).parent().children("#avg_score").html();
                         var myScore=$("#you_score"+t).html();
                         if(parseFloat(as)!=parseFloat(myScore)){

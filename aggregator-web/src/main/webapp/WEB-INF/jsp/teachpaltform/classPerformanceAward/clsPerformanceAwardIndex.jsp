@@ -464,7 +464,7 @@ if(!isShowTbl){%>
                 if(rps.type!='success'){
                     alert(rps.msg);
                 }else{
-                    history.go(0);
+                    location.href=location.href;
                 }
             }
         });

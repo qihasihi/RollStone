@@ -38,7 +38,7 @@ function getInvestReturnMethod(rps){
                 if(itm.uncompletenum<1){
                     uncompleateClass="";
                 }
-                html+="<td><p><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"&classid="+itm.classEntity[0].CLASS_ID+"&subjectid="+subjectid+"'  class='"+uncompleateClass+"'>"+itm.uncompletenum+"</a></p></td>";
+                html+="<td align='center'><a target='_blank' href='task?toStuTaskIndex&courseid="+itm.courseid+"&classid="+itm.classEntity[0].CLASS_ID+"&subjectid="+subjectid+"'  class='"+uncompleateClass+"'>"+itm.uncompletenum+"</a></td>";
                 var stotalscore=itm.coursetotalscore;
                 if(stotalscore==-1){
                     stotalscore="0";
