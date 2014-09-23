@@ -392,7 +392,23 @@
                     </c:if>
                 </c:forEach>
             </c:if>
-
+            //计算是否存在试题组等题
+            $("table[id*='dv_pqs_']").each(function(idx,itm){
+//                var ex=$("#"+this.id+" input[name='hd_extension']").val();
+//                var teamScore=$("#"+this.id+" td[id*='td_child_']").children().length*avgScore;
+//                if(papertype==3||papertype==1||papertype==2){
+//                    teamScore=0;
+//                    $("#"+itm.id+" #avg_score").each(function(x,m){
+//                        teamScore=parseFloat(teamScore)+parseFloat($(this).html());
+//                    });
+//                }
+//                $("#"+this.id+" #p_s_score").html(teamScore);
+                var YSumScore=0;
+                $("#"+this.id+" strong[id*='you_score']").each(function(x,m){
+                    YSumScore+=parseInt($(this).html());
+                });
+                $("#"+this.id+" #you_sum").html(YSumScore);
+            });
             if(isshowfen||isAllMark){
                 var sumScore=0;
                 $("strong[id*='you_score']").each(function(idx,itm){
