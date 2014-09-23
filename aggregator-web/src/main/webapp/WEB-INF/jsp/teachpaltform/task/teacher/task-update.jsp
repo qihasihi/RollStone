@@ -80,8 +80,24 @@
 		function changeTaskType(questype,taskvalueid,taskstatus,quesnum){
             $("#tr_ques_obj").hide();
 			var tasktype=$("#task_type").val();
-			if(tasktype=="1"){//资源 
-				queryResource(courseid,'tr_task_obj',taskvalueid,taskstatus)
+			if(tasktype=="1"){//资源
+                if(${taskInfo.resourcetype==1}){
+                    queryResource(courseid,'tr_task_obj',taskvalueid,taskstatus)
+                }else{
+                    var htm='';
+                    htm+='<th><span class="ico06"></span>选择资源：</th>';
+                    htm+='<td class="font-black">';
+                    if(typeof taskstatus=='undefined')
+                        htm+='<p><a class="font-darkblue"  href="javascript:showResourceElementJsp()">>> 选择资源</a><!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue"  href="javascript:showDialogPage(1)">>> 添加资源</a>--></p>';
+                    htm+='<div class="jxxt_zhuanti_add_ziyuan" id="dv_res_name"></div>';
+                    htm+='<input type="hidden" id="hd_elementid"/>';
+                    htm+='</td>';
+                    $("#tr_task_obj").html(htm);
+                    $("#tb_ques").hide();
+                    var h = '<span class="ico_mp41"></span>'+'${taskInfo.resourcename}';
+                    $("#dv_res_name").html(h);
+                    $("#hd_elementid").val(${taskInfo.taskvalueid});
+                }
 			}else if(tasktype=="2"){//论题
 				queryInteraction(courseid,'tr_task_obj',taskvalueid,taskstatus);
 			}else if(tasktype=="3"){ //问题类型
@@ -109,6 +125,9 @@
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
             <col class="w120"/>
             <col class="w700"/>
+            <input type="hidden" id="resource_type"/>
+            <input type="hidden" id="remote_type"/>
+            <input type="hidden" id="resource_name"/>
             <tr>
                 <th><span class="ico06"></span>任务类型：</th>
                 <td> <select name="select" id="task_type" disabled="disabled" onchange="changeTaskType()">

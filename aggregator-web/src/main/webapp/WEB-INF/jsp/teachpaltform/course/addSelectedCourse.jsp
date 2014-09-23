@@ -25,7 +25,7 @@
                 srhMode(1);
                 <c:if test="${!empty grade}">
                     $("#gradeid").val('${grade.gradeid}');
-                   // $("#gradeid").attr("disabled",true);
+                    $("#gradeid").attr("disabled",true);
                 </c:if>
                 $("#schoolname").val(schoolname);
                 $("#gradeid").change(function(){
