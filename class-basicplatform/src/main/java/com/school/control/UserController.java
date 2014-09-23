@@ -5306,7 +5306,7 @@ public class UserController extends BaseController<UserInfo> {
             if(isVipJson!=null)
                 paramMap.put("isVip",isVipJson);
             paramMap.put("realname",  java.net.URLEncoder.encode(realname,"UTF-8"));
-            paramMap.put("username",java.net.URLEncoder.encode(username,"UTF-8"))
+            paramMap.put("username",java.net.URLEncoder.encode(username,"UTF-8"));
             paramMap.put("usertype", usertype);
             paramMap.put("sex",sex);
             paramMap.put("time", time);
