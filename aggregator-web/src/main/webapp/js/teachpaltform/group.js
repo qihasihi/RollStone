@@ -96,14 +96,19 @@ function getNoGroupStudentsByClassId(classId,classType,dctype){
             $("#no_gs").html("");
 
             if(responseText.objList[0]!=null&&responseText.objList[0].length>0){
-                $("#dv_addGroup").show();
+                //$("#dv_addGroup").show();
                 $.each(responseText.objList[0],function(idx,itm){
                     var h='<li>'+itm.STU_NAME;
                     if(typeof responseText.objList[1]!='undefined'&&responseText.objList[1]==3&&dctype>1)
                         h+='<a class="ico_delete" style="display: none;" title="删除"  href="javascript:delClassUser(\''+itm.REF+'\')"></a>';
                     if(dctype==1)
                         h+='<a style="display: none;" name="view_pass" class="ico92" title="查看密码" href="javascript:;"></a>';
-                    h+='<span style="display: none;" class="password" name="pass">'+itm.PASSWORD+'</span>';
+                    else
+                        h+='<a style="display: none;" name="view_pass" class="ico92" title="查看ID" href="javascript:;"></a>';
+                    if(dctype==1)
+                        h+='<span style="display: none;" class="password" name="pass">'+itm.PASSWORD+'</span>';
+                    else
+                        h+='<span style="display: none;" class="password" name="pass">'+itm.ETT_USER_ID+'</span>';
                     h+='</li>';
                     $("#noGroupStudents").append(h);
                     $("#no_gs").append("<option value='"+itm.USER_ID+"' >"+itm.STU_NAME+"</option>");
@@ -296,9 +301,16 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
                 }
                 var stuno=typeof itm.stuno=='undefined'?'--':itm.stuno;
                 gtHtml+="<td>"+stuno+"</td>";
-                gtHtml+="<td><span class='w60'>"+itm.stuname+"<b style='display: none;'>"+itm.password+"</b></span>";
+                gtHtml+="<td><span class='w60'>"+itm.stuname;
+                if(dcType==1)
+                    gtHtml+="<b style='display: none;'>"+itm.password+"</b>";
+                else
+                    gtHtml+="<b style='display: none;'>"+itm.ettuserid+"</b>";
+                gtHtml+="</span>";
                 if(dcType==1)
                     gtHtml+='<a name="a_view" class="ico92" title="查看密码" href="javascript:void(0);"></a>';
+                else
+                    gtHtml+='<a name="a_view" class="ico92" title="查看ID" href="javascript:void(0);"></a>';
                 gtHtml+='<a href="javascript:delGroupStudent(\''+itm.ref+'\');" class="ico34" title="移出小组"></a>';
                 if(itm.isleader==2)
                     gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\',\''+groupId+'\');" class="ico22" title="调组"></a></td>';
@@ -439,11 +451,11 @@ function getStuList(clsid,dctype){
             if(rps.objList.length>0){
                 $.each(rps.objList,function(idx,itm){
                     h+='<li>'+itm.realname;
-                    if(dctype>1)
+                    if(dctype>1){
                         h+='<a style="display: none;" href="javascript:delClassUser(\''+itm.ref+'\')" class="ico_delete" title="删除"></a>';
-                    else
-                        h+='<a style="display: none;" name="a_view" class="ico92" title="查看密码" href="javascript:;"></a>';
-                    h+='<span style="display: none;"  class="password">'+itm.password+'</span>'
+                        h+='<a style="display: none;" name="a_view" class="ico92" title="查看ID" href="javascript:;"></a>';
+                        h+='<span style="display: none;"  class="password">'+itm.ettuserid+'</span>'
+                    }
                     h+='</li>';
                 });
             }
@@ -486,7 +498,7 @@ function doAddClsStudent(){
     if(typeof clsid=='undefined')
         return;
 
-    var msg='数据验证完毕!确认操作?',param={clsid:clsid},jidArray=new Array(),nameArray=new Array();
+    var msg='数据验证完毕!确认操作?',param={clsid:clsid,groupflag:1},jidArray=new Array(),nameArray=new Array();
     var liArray=$("#ul_cls_stu li");
     if(liArray.length<1){
         param.flag=1;
@@ -711,7 +723,6 @@ function delClassUser(ref){
             if (rps.type == "error") {
                 alert(rps.msg);
             } else {
-                //$("#li_"+ref).remove();
                 var clsid=$("#classId").val();
                 var dctype=$("dcType").val();
                 if(isLession==2){

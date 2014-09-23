@@ -4356,6 +4356,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 //已结束的任务获取总分、排名
                 TaskPerformanceInfo taskPerformanceInfo=new TaskPerformanceInfo();
                 taskPerformanceInfo.setTaskid(Long.parseLong(taskId));
+                taskPerformanceInfo.setOrderstr("t.c_time desc");
                 Long clsid=null;
                 if(classId!=null&&classId.length()>0&&!classId.equals("null")){
                     clsid=Long.parseLong(classId);
@@ -4366,7 +4367,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getPerformListByTaskid(taskPerformanceInfo,clsid,1);
                 TaskPerformanceInfo scoreRankInfo=null;
                 if(tList!=null&&tList.size()>0){
-                    scoreRankInfo=tList.get(0);
+                    for(TaskPerformanceInfo p:tList){
+                        if(p.getUserid().equals(tmpUser.getRef()))
+                            scoreRankInfo=p;
+                    }
                     jo.put("order",scoreRankInfo.getRank());
                     jo.put("totalScore",scoreRankInfo.getScore());
                 }

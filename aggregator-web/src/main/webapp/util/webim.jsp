@@ -79,7 +79,7 @@
                         webimtoken: '<%=webimtoken %>',
                         webimtimestamp: '<%=webimtimestamp %>'
                     },
-                    zindex:9999
+                    zindex:20000
 
                 });
             });

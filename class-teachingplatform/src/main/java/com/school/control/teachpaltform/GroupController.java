@@ -106,6 +106,13 @@ public class GroupController extends BaseController<TpGroupInfo>{
                 tmpList.add(clsList.get(0));
         }
 
+        ClassUser bzr=new ClassUser();
+        bzr.setRelationtype("班主任");
+        bzr.setYear(termInfo.getYear());
+        bzr.setUserid(this.logined(request).getRef());
+        clsList=this.classUserManager.getList(bzr,null);
+        tmpList.addAll(clsList);
+
         ClassUser c = new ClassUser();
         //当前学期、学科、年级下的授课班级
         if(subjectid!=null&&subjectid.trim().length()>0)
@@ -113,7 +120,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
         if(gradeValue!=null)
             c.setClassgrade(gradeValue);
         c.setUserid(this.logined(request).getRef());
-        c.setNorelationtype("学生");
+        c.setRelationtype("任课老师");
         c.setYear(termInfo.getYear());
         clsList=this.classUserManager.getList(c,null);
         if(clsList!=null&&clsList.size()>0){

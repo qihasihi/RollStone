@@ -2,8 +2,14 @@ package com.school.control;
 
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.entity.*;
+import com.school.entity.teachpaltform.TpGroupInfo;
+import com.school.entity.teachpaltform.TpGroupStudent;
 import com.school.manager.SchoolManager;
 import com.school.manager.inter.ISchoolManager;
+import com.school.manager.inter.teachpaltform.ITpGroupManager;
+import com.school.manager.inter.teachpaltform.ITpGroupStudentManager;
+import com.school.manager.teachpaltform.TpGroupManager;
+import com.school.manager.teachpaltform.TpGroupStudentManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -17,21 +23,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/tpuser")
 public class TpUserController extends UserController {
 
     private ISchoolManager schoolManager;
-
+    private ITpGroupManager groupManager;
+    private ITpGroupStudentManager groupStudentManager;
     public TpUserController(){
         this.schoolManager=this.getManager(SchoolManager.class);
+        this.groupManager=this.getManager(TpGroupManager.class);
+        this.groupStudentManager=this.getManager(TpGroupStudentManager.class);
     }
     /**
      * 网校教务进入班级管理
@@ -536,12 +547,6 @@ public class TpUserController extends UserController {
                 }
 
                 if(objListArray.size()>0){
-                    List<Map<String,Object>>mapList=this.getClassUserMap("班主任",c.getClassid());
-                    if(!EttInterfaceUserUtil.OperateClassUser(mapList,c.getClassid(),this.logined(request).getDcschoolid()))
-                        System.out.println("update ett classdriver error!");
-                    else
-                        System.out.println("update ett classdriver success!");
-
                     //向网校更新用户
                     if(isNewUser){
                         if(!EttInterfaceUserUtil.addUserBase(userList))
@@ -549,6 +554,12 @@ public class TpUserController extends UserController {
                         else
                             System.out.println("update ett user success!");
                     }
+
+                    List<Map<String,Object>>mapList=this.getClassUserMap("班主任",c.getClassid());
+                    if(!EttInterfaceUserUtil.OperateClassUser(mapList,c.getClassid(),this.logined(request).getDcschoolid()))
+                        System.out.println("update ett classdriver error!");
+                    else
+                        System.out.println("update ett classdriver success!");
                 }
             }else
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -1318,6 +1329,7 @@ public class TpUserController extends UserController {
         String jidStr=request.getParameter("jidStr");
         String nameStr=request.getParameter("nameStr");
         String flag=request.getParameter("flag");
+        String groupFlag=request.getParameter("groupflag");
         //验证班级
         ClassInfo c=new ClassInfo();
         c.setClassid(Integer.parseInt(clsid));
@@ -1329,11 +1341,12 @@ public class TpUserController extends UserController {
         }
 
         ClassInfo classInfo = clsList.get(0);
-
+        boolean isDelGroup=false;
         List<Object>objList=null;
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
+
 
         //学生UserId列表
         List<String>userRefList=new ArrayList<String>();
@@ -1352,6 +1365,19 @@ public class TpUserController extends UserController {
             }
         }
 
+         //清空小组
+        if(groupFlag!=null&&groupFlag.length()>0&&flag!=null&&flag.length()>0){
+            TpGroupStudent groupStudent=new TpGroupStudent();
+            groupStudent.setClassid(Integer.parseInt(clsid));
+            sql=new StringBuilder();
+            objList=this.groupStudentManager.getDeleteSql(groupStudent,sql);
+            if(sql!=null&&objList!=null){
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+            isDelGroup=true;
+        }
+
         if(jidStr!=null&&nameStr!=null&&jidStr.length()>0&&nameStr.length()>0){
             String[]jidArray=jidStr.split(",");
             String[]nameArray=nameStr.split(",");
@@ -1363,7 +1389,13 @@ public class TpUserController extends UserController {
                     response.getWriter().print(je.toJSON());
                     return;
                 }
-
+                //删除班级小组人员
+                List<TpGroupStudent>tgsList=null;
+                if(groupFlag!=null&&groupFlag.length()>0){
+                    TpGroupStudent tgs=new TpGroupStudent();
+                    tgs.setClassid(Integer.parseInt(clsid));
+                    tgsList=this.groupStudentManager.getList(tgs,null);
+                }
 
                 //删除当前班级学生,jid列表中没有的
                 ClassUser selStu=new ClassUser();
@@ -1372,15 +1404,12 @@ public class TpUserController extends UserController {
                 List<ClassUser>stuAllList=this.classUserManager.getList(selStu,null);
                 if(stuAllList!=null&&stuAllList.size()>0){
                     for(ClassUser stu:stuAllList){
-                        boolean isExists=true;
+                        boolean isExists=false;
                         for(String tmpJid:jidArray){
-                            //验证USER是否存在
-                            UserInfo selUser=new UserInfo();
-                            selUser.setEttuserid(Integer.parseInt(tmpJid));
-                            selUser.setDcschoolid(this.logined(request).getDcschoolid());
-                            List<UserInfo>tmpUser=this.userManager.getList(selUser,null);
-                            if(tmpUser!=null&&!tmpJid.equals(stu.getEttuserid().toString()))
-                                isExists=false;
+                            if(tmpJid.equals(stu.getEttuserid().toString())){
+                                isExists=true;
+                                break;
+                            }
                         }
                         if(!isExists){
                             ClassUser delete=new ClassUser();
@@ -1391,11 +1420,26 @@ public class TpUserController extends UserController {
                                 sqlListArray.add(sql.toString());
                                 objListArray.add(objectList);
                             }
+
+                            //删除班级小组人员
+                            if(tgsList!=null&&tgsList.size()>0){
+                                for(TpGroupStudent tgs:tgsList){
+                                    if(tgs.getUserid().equals(stu.getUid())){
+                                        TpGroupStudent gsdelete=new TpGroupStudent();
+                                        gsdelete.setRef(tgs.getRef());
+                                        sql=new StringBuilder();
+                                        objList=this.groupStudentManager.getDeleteSql(gsdelete,sql);
+                                        if(sql!=null&&objList!=null){
+                                            sqlListArray.add(sql.toString());
+                                            objListArray.add(objectList);
+                                        }
+                                        isDelGroup=true;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-
-
                 //检测当前学生是否已经创建帐号
                 for(int i=0;i<jidArray.length;i++){
                     String jid=jidArray[i].toString();
@@ -1548,6 +1592,11 @@ public class TpUserController extends UserController {
                     System.out.println("Add ett cls stu error!");
                 else
                     System.out.println("Add ett cls stu success!");
+
+                if(isDelGroup){
+                    this.OperateGroupUser(Integer.parseInt(clsid),this.logined(request).getDcschoolid());
+                }
+
             }
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -2034,6 +2083,58 @@ public class TpUserController extends UserController {
             }
         }
         return mapList;
+    }
+
+
+
+
+    public  boolean OperateGroupUser(Integer classid,Integer schoolid){
+        String addToEtt_URL=UtilTool.utilproperty.getProperty("TO_ETT_GROUPUSER_INTERFACE").toString();
+        if(schoolid==null||classid==null)return false;
+        TpGroupInfo groupInfo=new TpGroupInfo();
+        groupInfo.setClassid(classid);
+        List<TpGroupInfo> groupInfoList=this.groupManager.getList(groupInfo,null);
+        if(groupInfoList!=null&&groupInfoList.size()>0){
+            for(TpGroupInfo group:groupInfoList){
+                HashMap<String,String> paramMap=new HashMap<String,String>();
+                paramMap.put("time",new Date().getTime()+"");
+                Map<String,Object> tmpMap=new HashMap<String, Object>();
+                tmpMap.put("groupId",group.getGroupid());
+                tmpMap.put("classId",classid);
+                tmpMap.put("schoolId",schoolid);
+
+                TpGroupStudent groupStudent=new TpGroupStudent();
+                groupStudent.setGroupid(group.getGroupid());
+                List<TpGroupStudent>gsList=this.groupStudentManager.getList(groupStudent,null);
+                List<Map<String,Object>> userList=null;
+                if(gsList!=null&&gsList.size()>0){
+                    userList=new ArrayList<Map<String, Object>>();
+                    for(TpGroupStudent tgs:gsList){
+                        if(tgs!=null){
+                            //必带 userId，userType 的key
+                            Map<String,Object> map=new HashMap<String, Object>();
+                            map.put("userId",tgs.getUserid());
+                            map.put("userType",3);   //3:学生
+                            userList.add(map);
+                        }
+                    }
+
+                }
+                if(userList!=null&&userList.size()>0)
+                    tmpMap.put("userList",JSONArray.fromObject(userList).toString());
+                paramMap.put("data",JSONObject.fromObject(tmpMap).toString());
+                String val = UrlSigUtil.makeSigSimple("jionGroupUserInterFace.do", paramMap);
+                paramMap.put("sign",val);
+                JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"UTF-8");
+                if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1")){
+                    System.out.println("Operate Ett GroupStudent Success--------------------------");
+                }else
+                    System.out.println("Operate Ett GroupStudent Error----------------------------");
+                if(jo!=null)
+                    System.out.println(jo.get("msg"));
+            }
+        }
+        return true;
     }
 }
 

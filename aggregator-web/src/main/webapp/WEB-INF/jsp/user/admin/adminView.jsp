@@ -210,14 +210,14 @@
 													</select>
 
 													<p class="font-blue1" id="p_history">
-														<a href="javascript:showModel('div_history_cls')">查看历史所在班级</a>
-													</p> 
+														<a href="javascript:showModel('div_history_cls')">查看以往所在班级</a>
+													</p>
 													<!-- 学生历史所在班级 -->
 													<div class="public_windows" id="div_history_cls" 
 														style="display: none;">
 														<h3>
 															<a href="javascript:closeModel('div_history_cls')"
-																title="关闭"></a>历史所在班级
+																title="关闭"></a>以往所在班级
 														</h3> 
 														<div class="jcpt_yfgl_floatt02">
 															<table border="0" cellpadding="0" cellspacing="0"
@@ -487,13 +487,13 @@
 													</ul>  
 													 
 													<p class="font-blue1" id="p_history"> 
-														<a href="javascript:showModel('div_history_cls')">查看历史授课班级</a>
+														<a href="javascript:showModel('div_history_cls')">查看以往授课班级</a>
 													</p>
 
 													<div class="public_windows" id="div_history_cls"
 														style="display: none;">
 														<h3> 
-															<a href="javascript:closeModel('div_history_cls')" title="关闭"></a>历史授课班级
+															<a href="javascript:closeModel('div_history_cls')" title="关闭"></a>以往授课班级
 														</h3>
 														<div class="jcpt_yfgl_float02">
 															<table border="0" cellpadding="0" cellspacing="0"

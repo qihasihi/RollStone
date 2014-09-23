@@ -2013,16 +2013,24 @@ public class UserController extends BaseController<UserInfo> {
             }
 
             //班级
+            Set<String>gradeValueSet=new HashSet<String>();
             if(clsstr!=null&&clsstr.length()>0){
 
                 //添加班级
                 String[]clsArray=clsstr.split(",");
                 for (int i = 0; i < clsArray.length; i++) {
+                    ClassInfo classInfo=new ClassInfo();
+                    classInfo.setClassid(Integer.parseInt(clsArray[i]));
+                    List<ClassInfo>clsList=this.classManager.getList(classInfo,null);
+                    if(clsList!=null&&clsList.size()>0)
+                        gradeValueSet.add(clsList.get(0).getClassgrade());
+
                     ClassUser cuadd=new ClassUser();
                     cuadd.setRef(this.classUserManager.getNextId());
                     cuadd.getUserinfo().setRef(ref);
                     cuadd.setRelationtype("学生");
                     cuadd.setClassid(Integer.parseInt(clsArray[i]));
+
 
                     if(!operateCls.contains(Integer.parseInt(clsArray[i])))
                         operateCls.add(Integer.parseInt(clsArray[i]));
@@ -2034,7 +2042,12 @@ public class UserController extends BaseController<UserInfo> {
                         objListArray.add(objList);
                     }
                 }
+            }
 
+            if(gradeValueSet.size()>1){
+                je.setMsg("提示：同一学年学生不可存在多个年级中，请修改!");
+                response.getWriter().print(je.toJSON());
+                return;
             }
 
 
@@ -3101,6 +3114,7 @@ public class UserController extends BaseController<UserInfo> {
         }
 
         // 添加班级关系
+        Set<String>gradeValueSet=new HashSet<String>();
         if(clsstr!=null&&clsstr.length()>0){
             String[] classArray = clsstr.split(",");
             if (classArray.length > 0) {
@@ -3110,6 +3124,13 @@ public class UserController extends BaseController<UserInfo> {
                     cu.getUserinfo().setRef(userNextRef);
                     cu.setRef(cuNextRef);
                     if (isstu) {
+                        //验证年级
+                        ClassInfo classInfo=new ClassInfo();
+                        classInfo.setClassid(Integer.parseInt(classid));
+                        List<ClassInfo>clsList=this.classManager.getList(classInfo,null);
+                        if(clsList!=null&&clsList.size()>0)
+                            gradeValueSet.add(clsList.get(0).getClassgrade());
+
                         cu.setRelationtype("学生");
                         cu.getClassinfo().setClassid(Integer.parseInt(classid));
                     } else {
@@ -3128,6 +3149,12 @@ public class UserController extends BaseController<UserInfo> {
                     }
                 }
             }
+        }
+
+        if(isstu&&gradeValueSet.size()>1){
+            je.setMsg("提示：同一学年学生不可存在多个年级中，请修改!");
+            response.getWriter().print(je.toJSON());
+            return;
         }
 
 

@@ -19,6 +19,15 @@ public class TpGroupStudent {
     private Object completenum;
     private Integer stateid;
     private String password;
+    private Integer ettuserid;
+
+    public Integer getEttuserid() {
+        return ettuserid;
+    }
+
+    public void setEttuserid(Integer ettuserid) {
+        this.ettuserid = ettuserid;
+    }
 
     public String getPassword() {
         return password;

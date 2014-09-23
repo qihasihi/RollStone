@@ -82,7 +82,7 @@
         loadClsCourse();
         */
         if(isLession==2){
-            $("#sp_subgrade").remove();
+           // $("#sp_subgrade").remove();
             $("#a_course").parent().hide();
         }
 
@@ -343,7 +343,11 @@
 
         <div class="jxxt_banji_layoutL public_input">
             <c:if test="${!empty classes}">
-            <h1><span id="clsname">${classes[0].classgrade}${classes[0].classname}</span><a href="javascript:displayObj('ul_banji');" class="ico49a"></a></h1>
+            <h1><span id="clsname">${classes[0].classgrade}${classes[0].classname}</span>
+               <c:if test="${fn:length(classes)>1}">
+                   <a href="javascript:displayObj('ul_banji');" class="ico49a"></a>
+               </c:if>
+            </h1>
                 <ul class="banji" style="display: none;" id="ul_banji">
                     <c:forEach items="${classes}" var="c">
                         <li><a href="javascript:setClsId('${c.classid}',1,'${c.dctype}','${c.relationtype}','${c.classgrade}${c.classname}');">${c.classgrade}${c.classname}</a></li>
