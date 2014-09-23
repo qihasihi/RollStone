@@ -31,6 +31,15 @@ public class TaskPerformanceInfo  implements java.io.Serializable{
     private Object rank;
     private Integer creteriatype;
     private Object clsname; //临时字段
+    private Object attach;//回答的附件
+
+    public Object getAttach() {
+        return attach;
+    }
+
+    public void setAttach(Object attach) {
+        this.attach = attach;
+    }
 
     public Object getClsname() {
         return clsname;

@@ -1525,8 +1525,9 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                         recordhtm += '<th>作答内容</th>';
                         recordhtm += '<th>是否完成</th>';
                         recordhtm += '</tr>';
+                        var signnature=0;
                         $.each(rmsg.objList[2], function (idx, itm) {
-                            if (im.tpgroupstudent.stuno == itm.userinfo.stuNo) {
+                            if (im.tpgroupstudent.stuno == itm.userinfo.stuNo) {signnature++;
                                 recordhtm += '<tr';
                                 if (idx % 2 == 0) {
                                     recordhtm += ' class="trbg1"';
@@ -1552,6 +1553,9 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                                 else
                                     recordhtm += '<td><span class="ico24" title="进行中"></span></td>';
                                 recordhtm += '</tr>';
+                            }
+                            if(signnature==0){
+                                recordhtm+='<tr><td>暂无数据!</td></tr>';
                             }
                         });
                         recordhtm += '</table>';
@@ -1696,7 +1700,7 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
             if (rmsg.objList[1] != null && typeof rmsg.objList[1] != 'undefined' && rmsg.objList[1].length > 0) {
                 if (rmsg.objList[2] != null && rmsg.objList[2].length > 0) {
                     $.each(rmsg.objList[2], function (ix, im) {
-                        htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2">';
+                        htm += '<table border="0" id="recordList_'+im.groupid+'" cellpadding="0" cellspacing="0" class="public_tab2">';
                         htm += '<colgroup span="4" class="w190"></colgroup>';
                         htm += '<colgroup class="w180"></colgroup>';
                         htm += '<colgroup class="w180"></colgroup>';
@@ -1712,9 +1716,10 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                         htm += '<th>作答内容</th>';
                         htm += '<th>是否完成</th>';
                         htm += '</tr>';
+                        var signnature = 0;
                         $.each(rmsg.objList[1], function (idx, itm) {
                             $.each(im.tpgroupstudent2, function (i, m) {
-                                if (m.stuno == itm.userinfo.stuNo) {
+                                if (m.stuno == itm.userinfo.stuNo) {signnature++;
                                     htm += '<tr>';
                                     if(classid==0)
                                         htm += '<td>' + itm.clsname + '</td>';
@@ -1725,7 +1730,17 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                                     else
                                         htm += '<td></td>';
                                     if (typeof(itm.answercontent) != 'undefined') {
-                                        htm += '<td>' + itm.answercontent + '</td>';
+                                        htm += '<td>' + itm.answercontent;
+                                        if(typeof itm.attach !='undefined'&&itm.attach!=null){
+                                            htm+='<p><span><br>答题附件：';
+                                            var attachs = "["+itm.attach+"]";
+                                            $.each(attachs,function(idx,itm){
+                                                    var name=itm.substring(itm.lastIndexOf("/")+1);
+                                                htm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+                                            });
+                                            htm+='</span></p>';
+                                        }
+                                        htm+='</td>';
 //                                        if(typeof itm.ATTACH!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].replyattachList)!="undefined"){
 //                                            if(itm.questionAnswerList[0].replyattachList.length>0){
 //                                                answerhtm+='<p><span><br>答题附件：';
@@ -1751,8 +1766,10 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                                         htm += '<td><span class="ico24" title="进行中"></span></td>';
                                     htm += '</tr>';
                                 }
+                                if(signnature==0){
+                                    htm+='<tr><td>暂无数据!</td></tr>';
+                                }
                             });
-
                         });
                         htm += '</table>';
                     });
@@ -1799,7 +1816,6 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                     });
                     htm += '</table>';
                 }
-
             } else {
                 htm += '<table><tr><td>暂无数据!</td></tr></table>';
             }
