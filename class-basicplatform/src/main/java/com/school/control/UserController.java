@@ -5312,6 +5312,7 @@ public class UserController extends BaseController<UserInfo> {
             paramMap.put("s",UserTool.zuzhiTeacherSParameter(uid.toString(),gradeidList,realname,usertype.toString(),sex+"",email,schoolid,servertime,isVip,time.toString(),key));
             if(modelName==null)
                 modelName="";
+            //paramMap.put("modelName",modelName);
             paramMap.put("modelName",modelName);
 
             requestUrl=UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_URL").toString(); //教师进入ett入口
