@@ -311,7 +311,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         }else{
                             returnMap.put("ORDERIDX",tkMap.get("ORDERIDX"));
                         }
-                        if(Integer.parseInt(tkMap.get("TASKTYPE").toString())==3){
+                        if(Integer.parseInt(tkMap.get("TASKTYPE").toString())==3||Integer.parseInt(tkMap.get("TASKTYPE").toString())==4||Integer.parseInt(tkMap.get("TASKTYPE").toString())==5){
                             //tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename);
                             returnMap.put("TASKNAME", "任务 " + returnMap.get("ORDERIDX") + " " + typename);
                         }else{
@@ -386,19 +386,20 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Map returnMap = null;
         if(tpCourseClassList!=null&&tpCourseClassList.size()>0){
             returnMap = new HashMap();
+            classList = new ArrayList();
             for(TpCourseClass obj:tpCourseClassList){
                 if(obj.getClassid()!=null){
                     ClassInfo ci = new ClassInfo();
                     ci.setClassid(obj.getClassid());
                     List<ClassInfo> ciList = this.classManager.getList(ci,null);
                     if(ciList!=null&&ciList.size()>0){
-                        classList = new ArrayList();
                         classMap = new HashMap();
                         for(ClassInfo c:ciList){
                             classMap.put("classId",c.getClassid());
                             classMap.put("className",c.getClassname());
                             TpGroupInfo tg = new TpGroupInfo();
                             tg.setClassid(ci.getClassid());
+                            tg.setSubjectid(obj.getSubjectid());
                             List<TpGroupInfo> tgList = this.tpGroupManager.getList(tg,null);
                             if(tgList!=null&&tgList.size()>0){
                                 groupList = new ArrayList();
