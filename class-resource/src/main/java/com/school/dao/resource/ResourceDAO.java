@@ -699,7 +699,11 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
             objList.add(resourceinfo.getConvertstatus());
         } else
             sqlbuilder.append("null,");
-
+        if (resourceinfo.getDifftype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getDifftype());
+        } else
+            sqlbuilder.append("null,");
         sqlbuilder.append("?)}");
         return objList;
     }

@@ -805,7 +805,7 @@ function doDelRes(resid){
             if(rps.type=="error"){
                 alert(rps.msg);
             }else{
-               alert(rps.msg+",该资源已经不存在!\n\n提示：系统将退出该页面!");
+               alert(rps.msg)   ;
                 try{pageGo('pmyRes');}catch(e){
                     window.close(); //关闭页面
                 }
