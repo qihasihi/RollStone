@@ -301,6 +301,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             case 9:
                                 typename="文字";
                                 break;
+                            case 10:
+                                typename="直播课";
+                                break;
                         }
                         if(utype!=2){
                             //tkMap.put("ORDERIDX", (j + 1) + "");
@@ -1310,6 +1313,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 case 9:
                     typename="文字";
                     break;
+                case 10:
+                    typename="直播课";
+                    break;
             }
             returnMap.put("taskContent", "任务 " + (orderIndex!=null?orderIndex:0) + " " + typename+" "+rsList.get(0).getResname()+rsList.get(0).getFilesuffixname());
             returnMap.put("taskAnalysis",taskinfo.get(0).get("TASKANALYSIS"));
@@ -1354,6 +1360,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     break;
                 case 9:
                     typename="文字";
+                    break;
+                case 10:
+                    typename="直播课";
                     break;
             }
             returnMap.put("taskContent", "任务 " + (orderIndex!=null?orderIndex:0) + " " + typename+" "+rsList.get(0).getResname());
@@ -1410,6 +1419,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     break;
                 case 9:
                     typename="文字";
+                    break;
+                case 10:
+                    typename="直播课";
                     break;
             }
             returnMap.put("taskContent",taskinfo.get(0).get("TASKCONTENT"));
@@ -3031,9 +3043,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             jids.append("[");
             for(Map m:themeList){
                 int time = Integer.parseInt(UtilTool.StringConvertToDate(m.get("C_TIME").toString()).getTime()/1000+"");
-                Long currenttime = System.currentTimeMillis();
-                time = Integer.parseInt(currenttime+"")/1000-time;
-                String replydate = UtilTool.convertTimeForTask(time,m.get("C_TIME").toString());
+                Long currenttime = System.currentTimeMillis()/1000;
+                int seconds = Integer.parseInt(currenttime+"");
+                time = seconds-time;
+                String replydate = UtilTool.convertTimeForTask(Integer.parseInt(m.get("REPLYDATE").toString()),m.get("C_TIME").toString());
                 if(replydate!=null&&replydate.length()<1)
                     replydate="1秒前";
                 m.put("replyDate",replydate);
@@ -3955,7 +3968,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         }
                     }
                 }
-                request.setAttribute("replyList",returnUserRecord);
+                request.setAttribute("userRecord",returnUserRecord);
                 return new ModelAndView("/imjsp-1.1/remote-resource-detail");
             }else{
                 if(taskList.get(0).getRemotetype()!=null&&taskList.get(0).getRemotetype()==2){// 知识导学
@@ -5268,6 +5281,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     break;
                 case 9:
                     typename="文字";
+                    break;
+                case 10:
+                    typename="直播课";
                     break;
             }
             if(Integer.parseInt(taskMap.get("TASKTYPE").toString())==3){

@@ -1527,7 +1527,7 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                         recordhtm += '</tr>';
                         var signnature=0;
                         $.each(rmsg.objList[2], function (idx, itm) {
-                            if (im.tpgroupstudent.stuno == itm.userinfo.stuNo) {signnature++;
+                            if (im.tpgroupstudent.userid == itm.userinfo.userid) {signnature++;
                                 recordhtm += '<tr';
                                 if (idx % 2 == 0) {
                                     recordhtm += ' class="trbg1"';
@@ -1554,10 +1554,10 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                                     recordhtm += '<td><span class="ico24" title="进行中"></span></td>';
                                 recordhtm += '</tr>';
                             }
-                            if(signnature==0){
-                                recordhtm+='<tr><td>暂无数据!</td></tr>';
-                            }
                         });
+                        if(signnature==0){
+                            recordhtm+='<tr><td>暂无数据!</td></tr>';
+                        }
                         recordhtm += '</table>';
                     });
                 } else {
@@ -1656,6 +1656,7 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
         return;
     }
     var param = {};
+    param.subjectid=g_subjectid;
     param.taskid = taskid;
     if (classid != null && classid.toString().length > 0) {
         param.classid = classid;
@@ -1719,11 +1720,14 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                         var signnature = 0;
                         $.each(rmsg.objList[1], function (idx, itm) {
                             $.each(im.tpgroupstudent2, function (i, m) {
-                                if (m.stuno == itm.userinfo.stuNo) {signnature++;
+                                if (m.userid == itm.userinfo.userid) {signnature++;
                                     htm += '<tr>';
                                     if(classid==0)
                                         htm += '<td>' + itm.clsname + '</td>';
-                                    htm += '<td>' + itm.userinfo.stuNo + '</td>';
+                                    if(typeof(itm.userinfo.stuNo)=='undefined')
+                                        htm += '<td>' + '--' + '</td>';
+                                    else
+                                        htm += '<td>' + itm.userinfo.stuNo + '</td>';
                                     htm += '<td>' + itm.userinfo.stuname + '</td>';
                                     if (typeof(itm.ctimeString) != 'undefined')
                                         htm += '<td>' + itm.ctimeString + '</td>';
@@ -1766,10 +1770,11 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                                         htm += '<td><span class="ico24" title="进行中"></span></td>';
                                     htm += '</tr>';
                                 }
-                                if(signnature==0){
-                                    htm+='<tr><td>暂无数据!</td></tr>';
-                                }
+
                             });
+                            if(signnature==0){
+                                htm+='<tr><td colspan="5">暂无数据!</td></tr>';
+                            }
                         });
                         htm += '</table>';
                     });

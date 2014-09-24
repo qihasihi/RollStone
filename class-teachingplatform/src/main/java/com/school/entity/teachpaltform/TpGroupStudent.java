@@ -20,6 +20,15 @@ public class TpGroupStudent {
     private Integer stateid;
     private String password;
     private Integer ettuserid;
+    private Integer subjectid;
+
+    public Integer getSubjectid() {
+        return subjectid;
+    }
+
+    public void setSubjectid(Integer subjectid) {
+        this.subjectid = subjectid;
+    }
 
     public Integer getEttuserid() {
         return ettuserid;
