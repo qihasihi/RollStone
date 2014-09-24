@@ -233,9 +233,15 @@ if(!isShowTbl){%>
                                     h+='<td name="td_data">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
                                     h+='<td name="td_data">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
                             }else{
-                                h+='<td style="color:gray">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
-                                h+='<td style="color:gray">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
-                                h+='<td style="color:gray">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
+                                if(groupidstr.Trim>1&&subFlag1==1){
+                                    h+='<td style="color:gray">${dlm.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
+                                    h+='<td style="color:gray">${dlm.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
+                                    h+='<td style="color:gray">${dlm.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
+                                }else if(subFlag1==0){
+                                    h+='<td style="color:gray">0<input type="hidden" value="attendanceNum"/></td>';
+                                    h+='<td style="color:gray">0<input type="hidden" value="similingNum"/></td>';
+                                    h+='<td style="color:gray">0<input type="hidden" value="violationDisNum"/></td>';
+                                }
                             }
                     </c:if>
                     h+='</tr>';
@@ -257,9 +263,16 @@ if(!isShowTbl){%>
                                 h+='<td name="td_data">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
                                 h+='<td name="td_data">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
                              }else{
-                                h+='<td style="color:gray">${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
-                                h+='<td style="color:gray">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
-                                h+='<td  style="color:gray">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
+                                 if(groupidstr.Trim>1&&subFlag==1){
+                                     h+='<td style="color:gray">${dl1m.ATTENDANCENUM}<input type="hidden" value="attendanceNum"/></td>';
+                                     h+='<td style="color:gray">${dl1m.SMILINGNUM}<input type="hidden" value="similingNum"/></td>';
+                                     h+='<td  style="color:gray">${dl1m.VIOLATIONDISNUM}<input type="hidden" value="violationDisNum"/></td>';
+                                 }else if(subFlag1==0){
+                                     h+='<td style="color:gray">0<input type="hidden" value="attendanceNum"/></td>';
+                                     h+='<td style="color:gray">0<input type="hidden" value="similingNum"/></td>';
+                                     h+='<td style="color:gray">0<input type="hidden" value="violationDisNum"/></td>';
+                                 }
+
                              }
                         </c:if>
                         h+='</tr>';

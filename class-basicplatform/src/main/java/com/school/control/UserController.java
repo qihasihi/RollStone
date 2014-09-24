@@ -5341,7 +5341,7 @@ public class UserController extends BaseController<UserInfo> {
             paramMap.put("uid",uid);
 
             if(mid!=null)
-                paramMap.put("mid",-1);//paramMap.put("mid",mid);
+               paramMap.put("mid",mid);
             if(isVipJson!=null)
                 paramMap.put("isVip",isVipJson);
             paramMap.put("realname",  java.net.URLEncoder.encode(realname,"UTF-8"));

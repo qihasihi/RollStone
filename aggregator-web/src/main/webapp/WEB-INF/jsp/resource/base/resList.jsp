@@ -119,6 +119,11 @@
 		}else{
 			html+="<tr><td colspan='2'>暂无数据！</td></tr> ";
             $("#resTotal").html(0);
+            p1.setPageSize(rps.presult.pageSize);
+            p1.setPageNo(1);
+            p1.setRectotal(0);
+            p1.setPagetotal(1);
+            p1.Refresh();
 		}
 		$("#resData").html(html);
 	}
