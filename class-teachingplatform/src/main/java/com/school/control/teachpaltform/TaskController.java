@@ -2837,7 +2837,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     //µÃµ½°à¼¶ID
                     TpTaskAllotInfo tallot=new TpTaskAllotInfo();
                     tallot.setTaskid(Long.parseLong(taskid));
-
                     tallot.getUserinfo().setUserid(this.logined(request).getUserid());
                     List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
                     if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")

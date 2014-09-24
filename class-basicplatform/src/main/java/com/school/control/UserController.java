@@ -5341,7 +5341,7 @@ public class UserController extends BaseController<UserInfo> {
             paramMap.put("uid",uid);
 
             if(mid!=null)
-                paramMap.put("mid",mid);
+                paramMap.put("mid",-1);//paramMap.put("mid",mid);
             if(isVipJson!=null)
                 paramMap.put("isVip",isVipJson);
             paramMap.put("realname",  java.net.URLEncoder.encode(realname,"UTF-8"));
@@ -5373,7 +5373,7 @@ public class UserController extends BaseController<UserInfo> {
             paramMap.put("stuYear",year);
             requestUrl=UtilTool.utilproperty.getProperty("STU_TO_ETT_REQUEST_URL").toString(); //学生进入ett入口
         }
-        paramMap.put("srcId",50006);//UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID").toString());
+        paramMap.put("srcId",this.logined(request).getDcschoolid());//UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID").toString());
         paramMap.put("schoolid",schoolid);
         //得到学生名称
         paramMap.put("schoolname", java.net.URLEncoder.encode(schoolname,"UTF-8"));

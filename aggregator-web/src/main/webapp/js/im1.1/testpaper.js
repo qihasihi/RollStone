@@ -961,7 +961,7 @@ TestPaperDetail.prototype.loadQues=function(){
                         if(config.userType!=2){
                             var zqlv=quesObj.rightLv;
                             if(typeof(zqlv)!="undefined"&&zqlv!=null)
-                                h+='<span>'+quesObj.rightLv+'%答对</span>';
+                                h+='<span>'+parseFloat(quesObj.rightLv).toFixed(2)+'%答对</span>';
                         }
                         h+='答案与解析</p>';
                         h+='<div>'+quesObj.analysis+'</div>';

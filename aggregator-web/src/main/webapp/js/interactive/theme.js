@@ -150,13 +150,18 @@
 					alert('您尚未输入论题标题，请输入!'); 
 					title.focus();return;
 				}
+             var content=ueditor.getContent();
+            if(content.Trim.length<1){
+                alert('您尚未输入论题内容，请输入!');
+                title.focus();return;
+            }
             if(typeof(newthemeid)!="undefined"&&newthemeid!=null&&newthemeid.length>0)
                 param.themeid=newthemeid;
                 //不显示提交按钮
                 $('a[onclick="doAddTheme\\(\\)"]').hide();
 
 				param.themetitle=title.val().Trim();
-				var content=ueditor.getContent();
+
 				param.themecontent=content.Trim();
                 param.topicid=topicid;               
 				$.ajax({

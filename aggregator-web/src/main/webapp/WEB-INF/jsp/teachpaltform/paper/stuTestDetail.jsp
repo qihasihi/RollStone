@@ -91,8 +91,8 @@
                     if(ismak!=1){
                         var as=$("#you_score"+t).parent().children("#avg_score").html();
                         var myScore=$("#you_score"+t).html();
-                        if(parseFloat(as)!=parseFloat(myScore)){
-                            $("#sp_quesIdx"+t).css("color",'red');
+                        if(parseFloat(as)==parseFloat(myScore)){
+                            $("#sp_quesIdx"+t).css("color",'');
                         }
                     }
                 }
@@ -184,7 +184,7 @@
 
             var h1=' <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940"  id="dv_qs_${q.questionid}">';
             <c:if test="${empty q.parentQues}">
-                    h1+='<caption class="font-blue"><span class="f_right"><strong id="you_score${q.questionid}">0</strong>/<span id="avg_score">0</span>分</span><span class="font-blue" id="sp_quesIdx${q.questionid}">${qidx.index+1}</span></caption>';
+                    h1+='<caption class="font-blue"><span class="f_right"><strong id="you_score${q.questionid}">0</strong>/<span id="avg_score">0</span>分</span><span class="font-blue" id="sp_quesIdx${q.questionid}"  style="color:red">${qidx.index+1}</span></caption>';
             </c:if>
             <c:if test="${!empty q.parentQues&&q.parentQues.extension!=5}">
                     h1+='<caption style="display:none"><span class="font-blue f_right"><strong id="you_score${q.questionid}">0</strong>/<span id="avg_score">0</span>分</span></caption>';
