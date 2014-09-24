@@ -3034,6 +3034,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 Long currenttime = System.currentTimeMillis();
                 time = Integer.parseInt(currenttime+"")/1000-time;
                 String replydate = UtilTool.convertTimeForTask(time,m.get("C_TIME").toString());
+                if(replydate!=null&&replydate.length()<1)
+                    replydate="1ÃëÇ°";
                 m.put("replyDate",replydate);
                 m.put("uPhoto","");
                 m.put("uName",m.get("REALNAME"));
@@ -4014,13 +4016,29 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
                         }else{
                             returnUserMap.put("uPhoto","http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
-                            returnUserMap.put("uName",taskUserRecord.get(i).get("realname"));
+                            returnUserMap.put("uName",taskUserRecord.get(i).get("STUNAME"));
                         }
                         // returnUserMap.put("uPhoto","img");
                         // returnUserMap.put("uName","Ð¡»¢");
                         returnUserRecord.add(returnUserMap);
                     }
-                    String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                    if(jids.toString().indexOf("jid")>0){
+                        String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
+                        JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                        if(jr!=null&&jr.size()>0){
+                            for(int i = 0;i<jr.size();i++){
+                                JSONObject jObject = jr.getJSONObject(i);
+                                for(int j = 0;j<returnUserRecord.size();j++){
+                                    returnUserMap = new HashMap();
+                                    if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                        returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
+                                        returnUserRecord.get(j).put("uName", jObject.getString("realName"));
+                                    }
+                                }
+                            }
+                        }
+                    }
+
 //                     ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
 //                    String url=ettip+"queryPhotoAndRealName.do";
 //                    //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
@@ -4051,19 +4069,6 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 //                            }
 //                        }
 //                    }
-                    JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
-                    if(jr!=null&&jr.size()>0){
-                        for(int i = 0;i<jr.size();i++){
-                            JSONObject jObject = jr.getJSONObject(i);
-                            for(int j = 0;j<returnUserRecord.size();j++){
-                                returnUserMap = new HashMap();
-                                if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
-                                    returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
-                                    returnUserRecord.get(j).put("uName", jObject.getString("realName"));
-                                }
-                            }
-                        }
-                    }
                 }
                 request.setAttribute("resname",taskList.get(0).getResourcename());
                 request.setAttribute("userRecord",returnUserRecord);

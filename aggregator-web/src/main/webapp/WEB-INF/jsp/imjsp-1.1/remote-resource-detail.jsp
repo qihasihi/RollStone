@@ -44,8 +44,8 @@
 %>
 <div class="zsdx">
     <div class="timu">${resname} </div>
-    <c:if test="${!empty replyList}">
-        <c:forEach var="itm" items="${replyList}">
+    <c:if test="${!empty userRecord}">
+        <c:forEach var="itm" items="${userRecord}">
             <div class="over">
                 <b><img src="${itm.uPhoto}" width="36" height="36"></b>
                 <p class="title"><span>${itm.replyDate}</span>${itm.uName}</p>
