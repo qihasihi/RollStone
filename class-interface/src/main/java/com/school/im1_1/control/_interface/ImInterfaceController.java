@@ -3031,6 +3031,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             jids.append("[");
             for(Map m:themeList){
                 int time = Integer.parseInt(UtilTool.StringConvertToDate(m.get("C_TIME").toString()).getTime()/1000+"");
+                Long currenttime = System.currentTimeMillis();
+                time = Integer.parseInt(currenttime+"")/1000-time;
                 String replydate = UtilTool.convertTimeForTask(time,m.get("C_TIME").toString());
                 m.put("replyDate",replydate);
                 m.put("uPhoto","");
