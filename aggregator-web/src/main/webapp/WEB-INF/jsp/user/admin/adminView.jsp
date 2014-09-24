@@ -16,7 +16,7 @@
 	var identityname="${identityname}",rolestr="${rolestr}",username="${username}";  
 	var isTea=false,isStu=false;
 	$(function() {
-        getClsByYear('edit_role');
+        //getClsByYear('edit_role');
 
 		<c:forEach items="${roleUser}" var="role">
 			<c:if test="${role.roleinfo.roleid==1}">

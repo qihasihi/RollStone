@@ -1651,6 +1651,7 @@ function edit_info(){
 		var cls=$("select[id='hd_cls']")[0].options;  
 		$("#sp_stucls").html($("#edit_cls").html());
 		$("#view_body ol[id='stucls_result']").html('');
+        getClsByYear('view_body');
 		$.each(cls,function(idx,itm){
 			/*var id='';
 			if($(itm).val().split('|').length>1)

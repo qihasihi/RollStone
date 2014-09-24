@@ -1604,15 +1604,15 @@ public class TpUserController extends UserController {
                     System.out.println("Add ett stu error!");
                 else
                     System.out.println("Add ett stu success!");
+            }
 
-                List<Map<String,Object>>mapList=this.getClassUserMap("学生",Integer.parseInt(clsid));
-                if(!EttInterfaceUserUtil.OperateClassUser(mapList,Integer.parseInt(clsid),Integer.parseInt(schoolid)))
-                    System.out.println("Add ett cls stu error!");
-                else
-                    System.out.println("Add ett cls stu success!");
-                if(isDelGroup){
-                    this.OperateGroupUser(Integer.parseInt(clsid),this.logined(request).getDcschoolid());
-                }
+            List<Map<String,Object>>mapList=this.getClassUserMap("学生",Integer.parseInt(clsid));
+            if(!EttInterfaceUserUtil.OperateClassUser(mapList,Integer.parseInt(clsid),Integer.parseInt(schoolid)))
+                System.out.println("Add ett cls stu error!");
+            else
+                System.out.println("Add ett cls stu success!");
+            if(isDelGroup){
+                this.OperateGroupUser(Integer.parseInt(clsid),this.logined(request).getDcschoolid());
             }
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));

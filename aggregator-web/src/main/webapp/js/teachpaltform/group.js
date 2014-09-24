@@ -262,6 +262,7 @@ function delGroupStudent(ref){
             if(rps.type=="success"){
                 alert(rps.msg);
                 $("#nogroup").show();
+                $("#dv_addGroup").show();
                 getNoGroupStudentsByClassId($("#classId").val(),1,$("#dcType").val());
                 getClassGroups($("#classId").val(),1);
             }else{
@@ -535,7 +536,9 @@ function doAddClsStudent(){
             } else {
                 closeModel('dv_add_student');
                 getStuList(clsid);
+                $("#dv_addGroup").show();
                 getNoGroupStudentsByClassId(clsid,1,$("#dcType").val());
+                getClassGroups($("#classId").val(),1);
             }
         }
     });
@@ -730,8 +733,9 @@ function delClassUser(ref){
                 var dctype=$("dcType").val();
                 if(isLession==2){
                     getStuList(clsid);
-                }else if(isLession==3){
+                }else{
                     getNoGroupStudentsByClassId(clsid,1,dctype);
+                    getClassGroups(clsid,1);
                 }
             }
         }

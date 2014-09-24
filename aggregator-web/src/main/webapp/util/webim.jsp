@@ -105,10 +105,6 @@
         });
     </script>
 </head>
-<body>
 <li class="three">
     <a id="webimopen" href="javascript:void(0)" >爱&nbsp;学<span id="webimcnt"></span></a>
 </li>
-
-</body>
-</html>

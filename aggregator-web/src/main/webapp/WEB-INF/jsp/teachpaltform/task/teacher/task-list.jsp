@@ -149,6 +149,9 @@ function getInvestReturnMethod(rps){
             html+='<div class="jxxt_zhuanti_rwR">';
             html+='<div class="title">';
             html+='<p class="f_right">';
+            var stucount=itm.stucount;
+            if(itm.totalcount<1)
+                stucount=0;
 
             if(itm.taskstatus!="1"&&!(itm.tasktype>6&&itm.tasktype<10)){
                 var qtype=itm.questiontype;
@@ -158,16 +161,16 @@ function getInvestReturnMethod(rps){
                     qtype=-2;
                 else if (itm.tasktype==1)
                     qtype=undefined;
-                html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'"><span class="ico35"></span><b>'+itm.stucount+'/'+itm.totalcount+'</b></a>';
+                html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'"><span class="ico35"></span><b>'+stucount+'/'+itm.totalcount+'</b></a>';
             }else
-                html+='<span class="ico35"></span><b style="color:gray;">'+itm.stucount+'/'+itm.totalcount+'</b>';
+                html+='<span class="ico35"></span><b style="color:gray;">'+stucount+'/'+itm.totalcount+'</b>';
 
 
             if((itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)) && !(itm.tasktype>6&&itm.tasktype<10)){
                 html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
             }
             if(itm.taskstatus=="1")
-                html+='<a title="删除" class="ico04" href="javascript:doDelTask('+itm.taskid+','+itm.stucount+')"></a>';
+                html+='<a title="删除" class="ico04" href="javascript:doDelTask('+itm.taskid+','+stucount+')"></a>';
             html+='</p>';
             html+='<p><a class="ico49b"  id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务</a><span data-bind="'+itm.taskid+'" id="order_'+itm.taskid+'" class="m_lr_10">'+itm.orderidx+'</span>：'+type+'';
             if(itm.tasktype==1){

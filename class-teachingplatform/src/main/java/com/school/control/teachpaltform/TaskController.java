@@ -1890,7 +1890,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     return;
                 }
 
-                quesanswer=new String(quesanswer.getBytes("iso-8859-1"),"UTF-8");
+
 
                 String annexName=null;
                 boolean isfileOk=true;
@@ -1915,6 +1915,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
                 //压缩原图至w160 h 90
                 if(annexName!=null&&annexName.length()>0){
+                    quesanswer=new String(quesanswer.getBytes("iso-8859-1"),"UTF-8");
                     String suffix=annexName.substring(annexName.lastIndexOf("."));
                     if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
                         String filename=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
@@ -2188,7 +2189,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 response.getWriter().print(je.toJSON());
                 return;
             }
-            quesanswer=new String(quesanswer.getBytes("iso-8859-1"),"UTF-8");
+
 
             String annexName=null;
             boolean isfileOk=true;
@@ -2213,6 +2214,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
             //压缩原图至w160 h 90
             if(annexName!=null&&annexName.length()>0){
+                quesanswer=new String(quesanswer.getBytes("iso-8859-1"),"UTF-8");
                 String suffix=annexName.substring(annexName.lastIndexOf("."));
                 if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
                     String filename=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;

@@ -165,7 +165,10 @@
     <div class="contentL">
       <ul>
         <li class="crumb"><a href="cls?m=list">班级管理</a></li>
-        <li><a href="dept?m=list">部门管理</a></li>
+          <%if(visible){%>
+            <li><a href="dept?m=list">部门管理</a></li>
+          <%}%>
+
       </ul>
     </div>
     <div class="clear"></div>

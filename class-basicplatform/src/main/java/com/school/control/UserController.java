@@ -1600,6 +1600,16 @@ public class UserController extends BaseController<UserInfo> {
                                     sqllist.add(sql.toString());
                                 }
                             }
+                            //添加班主任角色
+                            RoleUser roleUser=new RoleUser();
+                            roleUser.setRoleid(UtilTool._ROLE_CLASSADVISE_ID);
+                            roleUser.setUserid(ref);
+                            sql=new StringBuilder();
+                            objList=this.roleUserManager.getSaveSql(roleUser,sql);
+                            if (objList != null && sql != null) {
+                                sqllist.add(sql.toString());
+                                objListArray.add(objList);
+                            }
                         }
                     }else if(roleid.equals(UtilTool._ROLE_DEPT_LEADER_ID.toString())||roleid.equals(UtilTool._ROLE_DEPT_FU_LEADER_ID.toString())){
                         if(deptid!=null&&deptid.trim().length()>0){

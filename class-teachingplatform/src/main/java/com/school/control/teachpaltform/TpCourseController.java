@@ -123,7 +123,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             TeachingMaterialInfo tm = new TeachingMaterialInfo();
             tm.setMaterialid(Integer.parseInt(materialid));
             List<TeachingMaterialInfo> tmList = this.teachingMaterialManager.getList(tm, null);
-            mp.put("materialinfo",tmList.get(0));
+            if(tmList!=null&&tmList.size()>0)
+                mp.put("materialinfo",tmList.get(0));
         }
         TermInfo termInfo=null;
         if(termid!=null){
@@ -2312,7 +2313,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity je = new JsonEntity();
         TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
         if (tc.getCourseid() == null) {
-            je.setMsg("专题编号错误！");// 异常错误，参数不齐，无法正常访问!
+            je.setMsg("专题编号错误！！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
@@ -2384,6 +2385,11 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
+
+        String classEndTimeStr = request.getParameter("classEndTimeArray");
+        String vclassEndTimeStr = request.getParameter("vclassEndTimeArray");
+
+
         List<String> sqlListArray = new ArrayList<String>();
         List<List<Object>> objListArray = new ArrayList<List<Object>>();
         List<Object> objList = null;
@@ -2467,10 +2473,13 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         sqlListArray.add(sql.toString());
         objListArray.add(objList);
         //添加新的专题班级关联记录
-        if (classstr != null && classtimestr != null
-                && classstr.trim().length() > 0 && classtimestr.trim().length() > 0) {
+        // 添加关联班级
+        if (classstr != null && classtimestr != null&& classEndTimeStr != null
+                && classstr.trim().length() > 0 && classtimestr.trim().length() > 0 && classEndTimeStr.trim().length() > 0
+                ) {
             String[] classArray = classstr.split(",");
             String[] classtimeArray = classtimestr.split(",");
+            String[] classEndtimeArray = classEndTimeStr.split(",");
             //教学班级
             for (int i = 0; i < classArray.length; i++) {
                 cc = new TpCourseClass();
@@ -2480,6 +2489,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 cc.setGradeid(Integer.parseInt(gradeid));
                 cc.setTermid(termid);
                 cc.setBegintime(UtilTool.StringConvertToDate(classtimeArray[i]));
+                if(!classEndtimeArray[i].toString().equals("0"))
+                    cc.setEndtime(UtilTool.StringConvertToDate(classEndtimeArray[i]));
                 cc.setClasstype(1);
                 cc.setUserid(tc.getCuserid());
                 sql = new StringBuilder();
@@ -2495,10 +2506,11 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             }
         }
         //虚拟班级
-        if (vclassstr != null && vclasstimestr != null
-                && vclassstr.trim().length() > 0 && vclasstimestr.trim().length() > 0) {
+        if (vclassstr != null && vclasstimestr != null &&  vclassEndTimeStr != null
+                && vclassstr.trim().length() > 0 && vclasstimestr.trim().length() > 0 && vclassEndTimeStr.trim().length()>0) {
             String[] vclassArray = vclassstr.split(",");
             String[] vclasstimeArray = vclasstimestr.split(",");
+            String[] vclassEndtimeArray = vclassEndTimeStr.split(",");
             for (int i = 0; i < vclassArray.length; i++) {
                 cc = new TpCourseClass();
                 cc.setClassid(Integer.parseInt(vclassArray[i]));
@@ -2507,6 +2519,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 cc.setGradeid(Integer.parseInt(gradeid));
                 cc.setTermid(termid);
                 cc.setBegintime(UtilTool.StringConvertToDate(vclasstimeArray[i]));
+                if(!vclassEndtimeArray[i].toString().equals("0"))
+                    cc.setEndtime(UtilTool.StringConvertToDate(vclassEndtimeArray[i]));
                 cc.setClasstype(2);
                 cc.setUserid(tc.getCuserid());
                 sql = new StringBuilder();
