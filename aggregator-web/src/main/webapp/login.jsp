@@ -168,6 +168,6 @@
             自动登录</div>
     </div>
 </div>
-<div class="denglu_duoxiao_foot">Copyright(C) <script type="text/javascript">document.write(new Date().getFullYear().toString());</script> 北京四中网校</div>
+<div class="denglu_duoxiao_foot">北京四中网校<br>Copyright &copy; <script type="text/javascript">document.write(new Date().getFullYear().toString());</script> etiantian.ALL Rights Reserved.<a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001070300043" target="_blank"></a></div>
 </body>
 </html>

@@ -2214,7 +2214,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
          /*
         * 查询当前资源是否发任务
         */
-        boolean isTaskEnd=false;
+        boolean isTaskEnd=false,isAnswer=false;
         if(usertype!=null&&usertype.equals("1")){
             PageResult p=new PageResult();
             p.setPageNo(1);
@@ -2246,7 +2246,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                     je.getObjList().add("off");
                     isTaskEnd=true;
                 }
-
+                QuestionAnswer qa=new QuestionAnswer();
+                qa.setUserid(this.logined(request).getRef());
+                qa.setTaskid(taskList.get(0).getTaskid());
+                List<QuestionAnswer> qaList=this.questionAnswerManager.getList(qa,null);
+                if(qaList!=null&&qaList.size()>0)
+                    isAnswer=true;
             }
 
         }
@@ -2259,7 +2264,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         //得到一级评论
         t.setQuesparentid(Long.parseLong(resid));
         t.setQuesid(Long.parseLong("0"));
-        if(usertype!=null&&usertype.equals("1")&&!isTaskEnd)
+        if(usertype!=null&&usertype.equals("1")&&(!isTaskEnd&&!isAnswer))
             t.setUserid(this.logined(request).getRef());
         List<QuestionAnswer>commentList=this.questionAnswerManager.getResouceStuNoteList(t, presult);
 

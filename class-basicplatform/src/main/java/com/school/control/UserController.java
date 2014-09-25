@@ -1395,6 +1395,9 @@ public class UserController extends BaseController<UserInfo> {
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             return;
         }
+        //用来记录操作过的classid
+        List<Integer> operateCls=new ArrayList<Integer>();
+
         List<String>sqllist=new ArrayList<String>();
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<Object>objList=null;
@@ -1432,6 +1435,15 @@ public class UserController extends BaseController<UserInfo> {
             cdelete.setRelationtype("班主任");
             cdelete.setYear(clsyearList.get(0).getClassyearvalue());
             cdelete.setUserid(ref);
+            //查询删除的班级
+            List<ClassUser> cuList=this.classUserManager.getList(cdelete,null);
+            if(cuList!=null&&cuList.size()>0){
+                for (ClassUser tmpCu:cuList){
+                    if(tmpCu!=null&&tmpCu.getClassid()!=null&&!operateCls.contains(tmpCu.getClassid())){
+                        operateCls.add(tmpCu.getClassid());
+                    }
+                }
+            }
             sql=new StringBuilder();
             objList=this.classUserManager.getDeleteSql(cdelete, sql);
             if(objList!=null&&objList.size()>0){
@@ -1574,6 +1586,9 @@ public class UserController extends BaseController<UserInfo> {
                                             sqllist.add(sql.toString());
                                             objListArray.add(objList);
                                         }
+                                        //记录相关班级，同步网校
+                                        if(!operateCls.contains(Integer.parseInt(clsid.toString())))
+                                            operateCls.add(Integer.parseInt(clsid.toString()));
                                     }
                                 }
                                 //删除该班级班主任
@@ -1599,6 +1614,10 @@ public class UserController extends BaseController<UserInfo> {
                                     objListArray.add(objList);
                                     sqllist.add(sql.toString());
                                 }
+                                //记录相关班级，同步网校
+                                if(!operateCls.contains(Integer.parseInt(clsid)))
+                                    operateCls.add(Integer.parseInt(clsid));
+
                             }
                             //添加班主任角色
                             RoleUser roleUser=new RoleUser();
@@ -1810,13 +1829,9 @@ public class UserController extends BaseController<UserInfo> {
                     teacu.setYear(clsyearList.get(0).getClassyearvalue());
                     teacu.setRelationtype("班主任");
                     teacu.setUserid(ref);
+
                     List<ClassUser>teaClsList=this.classUserManager.getList(teacu, null);
                     je.getObjList().add(teaClsList);
-
-
-
-
-
 
                     List<DeptUser>duList=null;
                     DeptUser du=new DeptUser();
@@ -1844,6 +1859,13 @@ public class UserController extends BaseController<UserInfo> {
                 }else if(isStu!=null&&isStu.equals("true")){
 
 
+                }
+                //同步班级信息
+                if(operateCls.size()>0){
+                    if(updateToEttClassUser(operateCls,this.logined(request).getDcschoolid())){
+                        System.out.println("班主任提交网校成功!");
+                    }else
+                        System.out.println("班主任提交网校失败!");
                 }
 
             }else

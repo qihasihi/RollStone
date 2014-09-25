@@ -2756,9 +2756,16 @@ public class TaskController extends BaseController<TpTaskInfo>{
         QuestionAnswer qa=new QuestionAnswer();
         qa.setCourseid(Long.parseLong(courseid));
         qa.setQuesparentid(Long.parseLong(resourceid));
+        //如果是学生，则判断是否已经答题
+
+
         //查学生心得
-        if(type!=null&&type.equals("1"))
+        if(type!=null&&type.equals("1")){
+//            if(this.validateRole(request,UtilTool._ROLE_STU_ID)){   //如果是学生查询，则判断是否
+//
+//            }
             qa.setUserid(this.logined(request).getRef());
+        }
         List<QuestionAnswer>qaList=this.questionAnswerManager.getList(qa, null);
         je.getObjList().add(qaList!=null&&qaList.size()>0?qaList.get(0):null);
 

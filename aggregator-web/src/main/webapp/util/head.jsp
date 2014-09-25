@@ -62,9 +62,19 @@
              <li <%= (pageType!=null&&pageType=="index"?"class='one crumb'":"one")%>><a href="<%=basePath %>user?m=toIndex">首&nbsp;页</a></li>
 
             <%//加载网校联系人
+                StringBuilder webimUrl=new StringBuilder("user?m=toEttUrl");
+                if(isStudent){
+                    webimUrl.append("&mid=-1");
+                }else{
+                    webimUrl.append("&isVip=0");
+                }
                 if(sms_user.getEttuserid()!=null&&sms_user.getDcschoolid()!=null){%>
                  <%@include file="webim.jsp"%>
-            <%}%>
+            <%}else{%>
+          <li class="three">
+              <a  href="<%=webimUrl%>" >爱&nbsp;学</a>
+          </li>
+          <%}%>
             <li class="five"><a href="APP.html" target="_blank">应&nbsp;用</a></li>
           <li class="four"><a href="javascript:;" onclick="loginDestory('<%=basePath %>')">退出</a></li>
       </c:if>
