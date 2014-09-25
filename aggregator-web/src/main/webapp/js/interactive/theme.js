@@ -153,7 +153,7 @@
              var content=ueditor.getContent();
             if(content.Trim.length<1){
                 alert('您尚未输入论题内容，请输入!');
-                title.focus();return;
+                return;
             }
             if(typeof(newthemeid)!="undefined"&&newthemeid!=null&&newthemeid.length>0)
                 param.themeid=newthemeid;
