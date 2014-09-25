@@ -842,10 +842,16 @@ public class TpUserController extends UserController {
 
                 if(objListArray.size()>0){
                     //向ETT更新班级
-                    if(!EttInterfaceUserUtil.updateClassBase(c))
-                        System.out.println("Update ETT Cls Error!");
-                    else
-                        System.out.println("Update ETT Cls Success!");
+                    ClassInfo clsupdate=new ClassInfo();
+                    clsupdate.setClassid(Integer.parseInt(clsid));
+                    List<ClassInfo>classInfos=this.classManager.getList(clsupdate,null);
+                    if(classInfos!=null&&classInfos.size()>0){
+                        if(!EttInterfaceUserUtil.updateClassBase(classInfos.get(0)))
+                            System.out.println("Update ETT Cls Error!");
+                        else
+                            System.out.println("Update ETT Cls Success!");
+                    }
+
 
                     if(isNewUser){
                         //向ETT更新用户

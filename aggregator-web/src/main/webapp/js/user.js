@@ -1752,7 +1752,7 @@ function edit_role(){
         }
 
 
-		
+        getClsByYear('edit_role');
 		//角色提示
 		/*var options=$("#admin_result").get(0).options;
 	        $.each(options,function(idx,itm){
@@ -2038,6 +2038,7 @@ function save_role(uid){
 		
 	}else if(isTea){
 		//管理班级
+        getClsByYear('edit_role');
 		var clsstr='',cls_bzr_result=$("#edit_role ol[id='cls_bzr_result']").children('li');
 		$.each(cls_bzr_result,function(idx,itm){
 			if(clsstr.length>0)
@@ -2077,7 +2078,6 @@ function save_role(uid){
 			param.prepareid=prepareid;
         if(deptfzrid!=null&&deptfzrid.length>0)
             param.deptfzrid=deptfzrid;
-		
 	}
 	
 	$ajax('user?m=edit_role',param,'POST','json',function(rps){

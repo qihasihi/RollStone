@@ -13,8 +13,10 @@ import com.school.entity.teachpaltform.paper.*;
 import com.school.im1_1.entity._interface.ImInterfaceInfo;
 import com.school.im1_1.manager._interface.ImInterfaceManager;
 import com.school.manager.ClassManager;
+import com.school.manager.ClassUserManager;
 import com.school.manager.UserManager;
 import com.school.manager.inter.IClassManager;
+import com.school.manager.inter.IClassUserManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
@@ -79,8 +81,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     private ITpCourseClassManager tpCourseClassManager;
     private ITpGroupManager tpGroupManager;
     private IClassManager classManager;
+    private IClassUserManager classUserManager;
     public ImInterfaceController(){
         this.classManager = this.getManager(ClassManager.class);
+        this.classUserManager=this.getManager(ClassUserManager.class);
         this.tpGroupManager=this.getManager(TpGroupManager.class);
         this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
         this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
@@ -4472,11 +4476,19 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             response.getWriter().print(returnJo.toString());
             return;
         }
+        UserInfo currentUser=userList.get(0);
         List<Map<String,Object>>tmpRankList=new ArrayList<Map<String, Object>>();
         List<Map<String,Object>>subjectList=new ArrayList<Map<String, Object>>();
 
-        //学科列表
-        List<Map<String,Object>>subList=this.imInterfaceManager.getStuScoreSubjectList(Integer.parseInt(classId));
+        String teacherUserid=null;
+        if(ImUtilTool.getUserType(userType)!=2){
+        }else{
+            Integer uType=this.classUserManager.isTeachingBanZhuRen(currentUser.getRef(),Integer.parseInt(classId),null,null);
+            if(uType<2)
+                teacherUserid=currentUser.getRef();
+        }
+
+        List<Map<String,Object>>subList=this.imInterfaceManager.getStuScoreSubjectList(Integer.parseInt(classId),teacherUserid);
         if(subList!=null&&subList.size()>0){
             for(Map<String,Object>m:subList){
                 Map<String,Object>tmpMap=new HashMap<String, Object>();

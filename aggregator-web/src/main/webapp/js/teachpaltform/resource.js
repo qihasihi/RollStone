@@ -3026,8 +3026,19 @@ function loadStudyNotes(usertype) {
                         if (usertype == 1) {
                             htm += '<p>我的心得&nbsp;';//<a  class="ico11" title="编辑" href="javascript:genderStuNoteTextArea(' + rps.objList[0].ref + ')"></a>';
                             htm += '<div id="dv_updnote" class="two">' + rps.objList[0].answercontent;
-                            if(typeof rps.objList[0].replyattach!='undefined'&&rps.objList[0].replyattach.toString().length>0)
-                                htm += '<p id="p_stu_note">心得附件：<a class="font-blue" target="_blank" href="uploadfile/' + rps.objList[0].replyattach + '">' + rps.objList[0].replyattach + '</a></p>';
+                            if(typeof rps.objList[0].replyattach!='undefined'&&rps.objList[0].replyattach.toString().length>0&&typeof(rps.objList[0].replyattachList)!="undefined"){
+                                if(rps.objList[0].replyattachList.length>0){
+                                    htm+='<p id="p_stu_note">心得附件：';
+                                    $.each(rps.objList[0].replyattachList,function(idx,itm){
+                                        var name=itm.substring(itm.lastIndexOf("/")+1);
+                                        var lastName=name.substring(name.lastIndexOf("."));
+                                        htm+='<a class="font-blue" target="_blank" href="'+itm+'">'+(idx+1)+lastName+'</a>&nbsp;';
+                                        //htm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+                                    });
+                                    htm+='</p>';
+                                }
+                            }
+                            //htm += '<p id="p_stu_note">心得附件：<a class="font-blue" target="_blank" href="uploadfile/' + rps.objList[0].replyattach + '">' + rps.objList[0].replyattach + '</a></p>';
                             htm += '</div>';
                             htm += '</p>';
                         }

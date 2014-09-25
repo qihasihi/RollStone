@@ -268,7 +268,8 @@
                                 answerhtm+='<span><br>心得附件：';
                                 $.each(itm.questionAnswerList[0].replyattachList,function(idx,itm){
                                     var name=itm.substring(itm.lastIndexOf("/")+1);
-                                    answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+                                    var lastName=name.substring(name.lastIndexOf("."));
+                                    answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+(idx+1)+lastName+'</a>&nbsp;';
                                 });
                                 answerhtm+='</span>';
                             }

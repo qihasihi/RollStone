@@ -1423,7 +1423,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         Long tasknextid;
         TpTaskInfo ta=new TpTaskInfo();
-        ta.setOrderidx(orderIdx);
+       // ta.setOrderidx(orderIdx);
 
         //¿Îºó×÷Òµ 3
         if(tasktype.toString().equals("3")){
