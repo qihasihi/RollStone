@@ -336,7 +336,7 @@ function updatePass(){
         $("#newPassMsg").hide();
     }
 
-    var pass2 = $("#moreHeadPass").val();
+  /*  var pass2 = $("#moreHeadPass").val();
     if(pass2.Trim().length<1){
         $("#moreHeadPass").html("请再次输入密码");
         $("#moreHeadPass").show();
@@ -345,7 +345,7 @@ function updatePass(){
     if(pass!=pass2){
         $("#moreHeadPass").show();
         return;
-    }
+    } */
 
     $.ajax({
         url:'user?m=changepassword',//cls!??.action
@@ -357,7 +357,7 @@ function updatePass(){
         error:function(){
             alert('异常错误!系统未响应!');
         },success:function(rps){
-            alert("修改成功");
+            alert("修改成功!");
         }
     });
 }
@@ -895,7 +895,12 @@ function closeEditUser(){
         <h4>修改密码</h4>
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab1">
             <input type="hidden" value="<%=pass%>" id="oldpass"/>
-            <caption><a href="javascript:;" onclick="changeOption(this,1)" class="crumb">校园账号</a>｜<a href="javascript:;" onclick="changeOption(this,2)" >云账号</a></caption>
+            <caption>
+                <a href="javascript:;" onclick="changeOption(this,1)" class="crumb">校园账号</a>
+                <%if(u.getEttuserid()!=null&&u.getDcschoolid()!=null){%>
+                    ｜<a href="javascript:;" onclick="changeOption(this,2)" >云账号</a>
+                <%}%>
+            </caption>
             <tr>
                 <th>用&nbsp;户&nbsp;名：</th>
                 <td id="td_username"><%=username%></td>

@@ -955,19 +955,24 @@ public class TpUserController extends UserController {
             response.getWriter().print(je.toJSON());
             return;
         }
-
+        PageResult pageResult=new PageResult();
+        pageResult.setPageSize(0);
+        pageResult.setPageNo(0);
+        pageResult.setOrderBy(" sub.subject_id ");
         ClassUser tea=new ClassUser();
         tea.setRelationtype("任课老师");
         tea.setClassid(c.getClassid());
-        List<ClassUser>teaList=this.classUserManager.getList(tea,null);
+        List<ClassUser>teaList=this.classUserManager.getList(tea,pageResult);
         for(ClassUser teaUser:teaList){
             teaUser.setHeadimage("http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
         }
 
+
         ClassUser stu=new ClassUser();
         stu.setRelationtype("学生");
         stu.setClassid(c.getClassid());
-        List<ClassUser>stuList=this.classUserManager.getList(stu,null);
+        pageResult.setOrderBy(" stu.stu_name ");
+        List<ClassUser>stuList=this.classUserManager.getList(stu,pageResult);
         if(stuList!=null&&stuList.size()>0){
             StringBuilder jids = new StringBuilder();
             jids.append("[");
@@ -1006,8 +1011,6 @@ public class TpUserController extends UserController {
                         }
                     }
                 }
-
-
             }
 
         }
@@ -1707,6 +1710,49 @@ public class TpUserController extends UserController {
 
         je.getObjList().add(tmpUserList);
         je.getObjList().add(stuList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+
+
+    /**
+     * 获取网校云账号
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "loadEttUserName", method = {RequestMethod.POST})
+    public void loadEttUserName(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        UserInfo userInfo=new UserInfo();
+        userInfo.setRef(this.logined(request).getRef());
+        userInfo.setDcschoolid(this.logined(request).getDcschoolid());
+        List<UserInfo>uList=this.userManager.getList(userInfo,null);
+        if(uList==null||uList.size()<1||uList.get(0).getEttuserid()==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        UserInfo tmpUser=uList.get(0);
+
+        String timestamp=System.currentTimeMillis()+"";
+        HashMap<String,String>map=new HashMap<String, String>();
+        map.put("jid", tmpUser.getEttuserid().toString());
+        map.put("timestamp",timestamp);
+        String sign=UrlSigUtil.makeSigSimple("queryEttUserName.do",map);
+        map.put("sign",sign);
+        String ettUrl=UtilTool.utilproperty.get("ETT_INTER_IP").toString()+"queryEttUserName.do";
+        JSONObject jsonObject=sendPostUrl(ettUrl,map,"utf-8");
+        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+        if(type==1){
+            Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+            jsonObj = URLDecoder.decode(jsonObj.toString(), "utf-8");
+            JSONObject dataObj=JSONObject.fromObject(jsonObj);
+            String userName=dataObj.containsKey("userName")?jsonObject.get("userName").toString():null;
+            je.getObjList().add(userName);
+        }
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }

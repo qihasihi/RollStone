@@ -70,7 +70,7 @@ $(function(){
         <%if(isTeacher){%>
             <c:if test="${!empty gradeSubjectList}">
                 <div class="njxk"><span id="sp_subgrade">${subGradeInfo.gradevalue}${subGradeInfo.subjectname}</span>
-                    <c:if test="${fn:length(gradeSubjectList)>1}">
+                    <c:if test="${!empty gradeSubjectList and fn:length(gradeSubjectList)>1}">
                         <a  id="showMoreSubject" class="ico13" href="javascript:void(0);" onclick="displayObj('gradeSubjectList');"></a>
                     </c:if>
                     <ul id="gradeSubjectList" style="display: none;" class="hide">
