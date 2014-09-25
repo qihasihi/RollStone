@@ -31,14 +31,42 @@ public class TaskPerformanceInfo  implements java.io.Serializable{
     private Object rank;
     private Integer creteriatype;
     private Object clsname; //临时字段
-    private Object attach;//回答的附件
+    private String replyattach;//回答的附件
 
-    public Object getAttach() {
-        return attach;
+    public String getReplyattach() {
+        return replyattach;
     }
 
-    public void setAttach(Object attach) {
-        this.attach = attach;
+    public void setReplyattach(String replyattach) {
+        this.replyattach = replyattach;
+    }
+
+    /**
+     * 文件List
+     * @return
+     */
+    public List<String> getReplyattachList(){
+        List<String> returnList=new ArrayList<String>();
+        if(this.getReplyattach()!=null&&this.getReplyattach().length()>0){
+            if(this.getReplyattach().indexOf(",")!=-1){
+                String replyAttach=this.getReplyattach().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
+                String[] annexArray=getReplyattach().split(",");
+                for(String astr:annexArray){
+                    if(astr!=null&&astr.trim().length()>0){
+                        if(astr.indexOf("http:")==-1&&astr.indexOf("https:")==-1){
+                            astr=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+astr;
+                        }
+                        returnList.add(astr);
+                    }
+                }
+            }else{
+                if(getReplyattach().indexOf("http:")==-1&&getReplyattach().indexOf("https:")==-1){
+                    returnList.add(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getReplyattach());
+                }else
+                    returnList.add(getReplyattach());
+            }
+        }
+        return returnList;
     }
 
     public Object getClsname() {

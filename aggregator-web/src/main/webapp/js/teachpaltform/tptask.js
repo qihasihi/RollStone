@@ -1735,24 +1735,25 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                                         htm += '<td></td>';
                                     if (typeof(itm.answercontent) != 'undefined') {
                                         htm += '<td>' + itm.answercontent;
-                                        if(typeof itm.attach !='undefined'&&itm.attach!=null){
-                                            htm+='<p><span><br>答题附件：';
-                                            var attachs = "["+itm.attach+"]";
-                                            $.each(attachs,function(idx,itm){
-                                                    var name=itm.substring(itm.lastIndexOf("/")+1);
-                                                htm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
-                                            });
-                                            htm+='</span></p>';
+                                        if(itm.replyattach.length>0&&typeof(itm.replyattachList)!="undefined"){
+                                            if(itm.replyattachList.length>0){
+                                                //htm+='<p><span><br>答题附件：';
+                                                $.each(itm.replyattachList,function(index,itmObj){
+                                                    var name=itmObj.substring(itmObj.lastIndexOf("/")+1);
+                                                    htm+='<a class="font-blue" target="_blank" href="'+itmObj+'">'+name+'</a>&nbsp;';
+                                                });
+                                               // htm+='</span></p>';
+                                            }
                                         }
                                         htm+='</td>';
-//                                        if(typeof itm.ATTACH!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].replyattachList)!="undefined"){
+//                                        if(itm..replyattach.length>0&&typeof(itm.replyattachList)!="undefined"){
 //                                            if(itm.questionAnswerList[0].replyattachList.length>0){
-//                                                answerhtm+='<p><span><br>答题附件：';
+//                                                htm+='<p><span><br>答题附件：';
 //                                                $.each(itm.questionAnswerList[0].replyattachList,function(idx,itm){
 //                                                    var name=itm.substring(itm.lastIndexOf("/")+1);
-//                                                    answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+//                                                    htm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
 //                                                });
-//                                                answerhtm+='</span></p>';
+//                                                htm+='</span></p>';
 //                                            }
 //                                        }
 
@@ -1804,7 +1805,29 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                         else
                             htm += '<td></td>';
                         if (typeof(itm.answercontent) != 'undefined') {
-                            htm += '<td>' + itm.answercontent + '</td>';
+                            htm += '<td>' + itm.answercontent;
+                            if(itm.replyattach.length>0&&typeof(itm.replyattachList)!="undefined"){
+                                if(itm.replyattachList.length>0){
+                                    //htm+='<p><span><br>答题附件：';
+                                    $.each(itm.replyattachList,function(index,itmObj){
+                                        var name=itmObj.substring(itmObj.lastIndexOf("/")+1);
+                                        htm+='<a class="font-blue" target="_blank" href="'+itmObj+'">'+name+'</a>&nbsp;';
+                                    });
+                                    //htm+='</span></p>';
+                                }
+                            }
+                            htm+='</td>';
+//                                        if(itm..replyattach.length>0&&typeof(itm.replyattachList)!="undefined"){
+//                                            if(itm.questionAnswerList[0].replyattachList.length>0){
+//                                                htm+='<p><span><br>答题附件：';
+//                                                $.each(itm.questionAnswerList[0].replyattachList,function(idx,itm){
+//                                                    var name=itm.substring(itm.lastIndexOf("/")+1);
+//                                                    htm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+//                                                });
+//                                                htm+='</span></p>';
+//                                            }
+//                                        }
+
                         }
                         else {
                             if (itm.status > 0 && (tasktype == 1 || tasktype == 2)) {
