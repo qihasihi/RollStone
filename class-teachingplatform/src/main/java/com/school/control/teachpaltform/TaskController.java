@@ -1151,6 +1151,43 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //添加任务对象 小组
         if(groupArray!=null&&groupArray.length>0){
             for (int i=0;i<groupArray.length;i++) {
+                /**
+                 * * 任务的结束时间 要早于 专题的开始时间。（也就是说任务的开始和结束时间都要早于专题的开始时间）
+                 * 任务的开始时间默认为当前时间，任务的结束时间默认为专题的开始时间。
+                 */
+                TpGroupInfo groupInfo=new TpGroupInfo();
+                groupInfo.setGroupid(Long.parseLong(groupArray[i]));
+                List<TpGroupInfo>groupInfos=this.tpGroupManager.getList(groupInfo,null);
+                if(groupInfos!=null&&groupInfos.size()>0){
+                    //专题时间
+                    TpCourseClass tpCourseClass=new TpCourseClass();
+                    tpCourseClass.setClassid(groupInfos.get(0).getClassid());
+                    tpCourseClass.setCourseid(Long.parseLong(courseid));
+                    tpCourseClass.setSubjectid(groupInfos.get(0).getSubjectid());
+                    List<TpCourseClass>courseClsList=this.tpCourseClassManager.getList(tpCourseClass,null);
+                    if(courseClsList==null||courseClsList.size()<1){
+                        je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }
+                    TpCourseClass tmpCourseClass=courseClsList.get(0);
+
+                    ClassInfo cls=new ClassInfo();
+                    cls.setClassid(groupInfos.get(0).getClassid());
+                    List<ClassInfo>clsList=this.classManager.getList(cls,null);
+                    if(clsList!=null&&clsList.size()>0){
+                        ClassInfo tmpCls=clsList.get(0);
+                        if(tmpCls!=null&&tmpCls.getDctype()==3){
+                            if(UtilTool.StringConvertToDate(eClsArray[i]).after(tmpCourseClass.getBegintime())){
+                                je.setMsg("爱学课堂的任务的结束时间需早于专题的开始时间!\n\n提示：请重新设置"+groupInfos.get(0).getClassname()+groupInfos.get(0).getGroupname()+"任务时间!");
+                                response.getWriter().print(je.toJSON());
+                                return;
+                            }
+                        }
+                    }
+                }
+
+
                 TpTaskAllotInfo tal=new TpTaskAllotInfo();
                 tal.setTaskid(tasknextid);
                 tal.setUsertype(2);
@@ -1177,6 +1214,50 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
             String[]classTypeArray=clstype.split(",");
             for (int i=0;i<clsArray.length;i++) {
+                /**
+                 * 任务的结束时间 要早于 专题的开始时间。（也就是说任务的开始和结束时间都要早于专题的开始时间）
+                 * 任务的开始时间默认为当前时间，任务的结束时间默认为专题的开始时间。
+                 */
+                ClassUser classUser=new ClassUser();
+                classUser.setClassid(Integer.parseInt(clsArray[i]));
+                classUser.setRelationtype("任课老师");
+                classUser.setUserid(this.logined(request).getRef());
+                Object subjectid=request.getSession().getAttribute("session_subject");
+                if(subjectid!=null&&subjectid.toString().length()>0)
+                    classUser.setSubjectid(Integer.parseInt(subjectid.toString()));
+                List<ClassUser>clsUserList=this.classUserManager.getList(classUser,null);
+                if(clsUserList!=null&&clsUserList.size()>0){
+                    //专题时间
+                    TpCourseClass tpCourseClass=new TpCourseClass();
+                    tpCourseClass.setClassid(Integer.parseInt(clsArray[i]));
+                    tpCourseClass.setCourseid(Long.parseLong(courseid));
+                    tpCourseClass.setSubjectid(clsUserList.get(0).getSubjectid());
+                    List<TpCourseClass>courseClsList=this.tpCourseClassManager.getList(tpCourseClass,null);
+                    if(courseClsList==null||courseClsList.size()<1){
+                        je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }
+                    TpCourseClass tmpCourseClass=courseClsList.get(0);
+
+                    ClassInfo cls=new ClassInfo();
+                    cls.setClassid(Integer.parseInt(clsArray[i]));
+                    List<ClassInfo>clsList=this.classManager.getList(cls,null);
+                    if(clsList!=null&&clsList.size()>0){
+                        ClassInfo tmpCls=clsList.get(0);
+                        if(tmpCls!=null&&tmpCls.getDctype()==3){
+                            if(UtilTool.StringConvertToDate(eClsArray[i]).after(tmpCourseClass.getBegintime())){
+                                je.setMsg("爱学课堂的任务的结束时间需早于专题的开始时间!\n\n提示：请重新设置"+tmpCls.getClassgrade()+tmpCls.getClassname()+"任务时间!");
+                                response.getWriter().print(je.toJSON());
+                                return;
+                            }
+                        }
+                    }
+                }
+
+
+
+
                 TpTaskAllotInfo tal=new TpTaskAllotInfo();
                 //验证班级类型
                 if(classTypeArray[i].equals("1")){
@@ -1650,6 +1731,45 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //添加任务对象 小组
         if(groupArray!=null&&groupArray.length>0){
             for (int i=0;i<groupArray.length;i++) {
+                /**
+                 * * 任务的结束时间 要早于 专题的开始时间。（也就是说任务的开始和结束时间都要早于专题的开始时间）
+                 * 任务的开始时间默认为当前时间，任务的结束时间默认为专题的开始时间。
+                 */
+                TpGroupInfo groupInfo=new TpGroupInfo();
+                groupInfo.setGroupid(Long.parseLong(groupArray[i]));
+                List<TpGroupInfo>groupInfos=this.tpGroupManager.getList(groupInfo,null);
+                if(groupInfos!=null&&groupInfos.size()>0){
+                    //专题时间
+                    TpCourseClass tpCourseClass=new TpCourseClass();
+                    tpCourseClass.setClassid(groupInfos.get(0).getClassid());
+                    tpCourseClass.setCourseid(Long.parseLong(courseid));
+                    tpCourseClass.setSubjectid(groupInfos.get(0).getSubjectid());
+                    List<TpCourseClass>courseClsList=this.tpCourseClassManager.getList(tpCourseClass,null);
+                    if(courseClsList==null||courseClsList.size()<1){
+                        je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }
+                    TpCourseClass tmpCourseClass=courseClsList.get(0);
+
+                    ClassInfo cls=new ClassInfo();
+                    cls.setClassid(groupInfos.get(0).getClassid());
+                    List<ClassInfo>clsList=this.classManager.getList(cls,null);
+                    if(clsList!=null&&clsList.size()>0){
+                        ClassInfo tmpCls=clsList.get(0);
+                        if(tmpCls!=null&&tmpCls.getDctype()==3){
+                            if(UtilTool.StringConvertToDate(eClsArray[i]).after(tmpCourseClass.getBegintime())){
+                                je.setMsg("爱学课堂的任务的结束时间需早于专题的开始时间!\n\n提示：请重新设置"+groupInfos.get(0).getClassname()+groupInfos.get(0).getGroupname()+"任务时间!");
+                                response.getWriter().print(je.toJSON());
+                                return;
+                            }
+                        }
+                    }
+                }
+
+
+
+
                 TpTaskAllotInfo tal=new TpTaskAllotInfo();
                 tal.setTaskid(tasknextid);
                 tal.setUsertype(2);
@@ -1676,6 +1796,48 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
             String[]classTypeArray=clstype.split(",");
             for (int i=0;i<clsArray.length;i++) {
+                /**
+                 * 任务的结束时间 要早于 专题的开始时间。（也就是说任务的开始和结束时间都要早于专题的开始时间）
+                 * 任务的开始时间默认为当前时间，任务的结束时间默认为专题的开始时间。
+                 */
+                ClassUser classUser=new ClassUser();
+                classUser.setClassid(Integer.parseInt(clsArray[i]));
+                classUser.setRelationtype("任课老师");
+                classUser.setUserid(this.logined(request).getRef());
+                Object subjectid=request.getSession().getAttribute("session_subject");
+                if(subjectid!=null&&subjectid.toString().length()>0)
+                    classUser.setSubjectid(Integer.parseInt(subjectid.toString()));
+                List<ClassUser>clsUserList=this.classUserManager.getList(classUser,null);
+                if(clsUserList!=null&&clsUserList.size()>0){
+                    //专题时间
+                    TpCourseClass tpCourseClass=new TpCourseClass();
+                    tpCourseClass.setClassid(Integer.parseInt(clsArray[i]));
+                    tpCourseClass.setCourseid(Long.parseLong(courseid));
+                    tpCourseClass.setSubjectid(clsUserList.get(0).getSubjectid());
+                    List<TpCourseClass>courseClsList=this.tpCourseClassManager.getList(tpCourseClass,null);
+                    if(courseClsList==null||courseClsList.size()<1){
+                        je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }
+                    TpCourseClass tmpCourseClass=courseClsList.get(0);
+
+                    ClassInfo cls=new ClassInfo();
+                    cls.setClassid(Integer.parseInt(clsArray[i]));
+                    List<ClassInfo>clsList=this.classManager.getList(cls,null);
+                    if(clsList!=null&&clsList.size()>0){
+                        ClassInfo tmpCls=clsList.get(0);
+                        if(tmpCls!=null&&tmpCls.getDctype()==3){
+                            if(UtilTool.StringConvertToDate(eClsArray[i]).after(tmpCourseClass.getBegintime())){
+                                je.setMsg("爱学课堂的任务的结束时间需早于专题的开始时间!\n\n提示：请重新设置"+tmpCls.getClassgrade()+tmpCls.getClassname()+"任务时间!");
+                                response.getWriter().print(je.toJSON());
+                                return;
+                            }
+                        }
+                    }
+                }
+
+
                 TpTaskAllotInfo tal=new TpTaskAllotInfo();
                 //验证是什么类型的班级
                 if(classTypeArray[i].equals("1")){

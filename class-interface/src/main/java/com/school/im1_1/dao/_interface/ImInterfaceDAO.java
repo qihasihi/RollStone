@@ -517,6 +517,7 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
         List<Object> objList=new ArrayList<Object>();
         if(userid!=null&& userid.length()>0){
             objList.add(userid);
+            sqlbuilder.append("?,");
         }else
             sqlbuilder.append("NULL,");
        objList.add(classid);

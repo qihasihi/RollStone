@@ -207,6 +207,7 @@
                         $("#h2_lession").hide();
                         $("#dv_stu").show();
                         getStuList(clsid,dctype);
+                        $("#a_calendar").attr("href",'teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid=&gradeid=');
                     }else{
                         $("#a_addGroup").show();
                         $("#dv_addGroup").show();
@@ -214,6 +215,7 @@
                         $("#a_course").parent().show();
                         $("#h2_lession").show();
                         $("#dv_stu").hide();
+                        $("#a_calendar").attr("href",'teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
                     }
 
                     if(dctype>1&&isLession>1)

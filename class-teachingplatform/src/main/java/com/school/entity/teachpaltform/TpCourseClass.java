@@ -10,7 +10,15 @@ public class TpCourseClass {
 
     private java.util.Date begintime;
     private java.util.Date endtime;
+    private Integer dctype;
 
+    public Integer getDctype() {
+        return dctype;
+    }
+
+    public void setDctype(Integer dctype) {
+        this.dctype = dctype;
+    }
 
     private java.lang.Integer ref;
     private java.util.Date ctime;

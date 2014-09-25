@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="http://web.etiantian.com/js/ett/webim/css/webim.css" type="text/css"/>
 
 
-   <script src="<%=testhost%>/js/o/jquery/1.7.1/jquery-1.7.1.js"></script>
+   <!--<script src="<%=testhost%>/js/o/jquery/1.7.1/jquery-1.7.1.js"></script>-->
     <script src="http://web.etiantian.com/js/o/jplugins/ui/1.8.16/js/jquery-ui-1.8.16.custom.min.js"></script>
     <script src="http://web.etiantian.com/js/o/jplugins/cross-domian/1.0.3/jquery.xdomainrequest.min.js"></script>
     <script src="http://web.etiantian.com/js/o/jplugins/ba-postmessage/0.5/jquery.ba-postmessage.min.js"></script>
