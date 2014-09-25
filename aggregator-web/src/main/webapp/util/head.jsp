@@ -45,11 +45,20 @@
     <div id="header">
     <%}%>
 </c:if>
-<c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
+
+<c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='ett'}">
+    <%if(modelType==2){%>
+    <div class="jxxt_lzx_header">
+    <%}else{%>
+    <div id="header">
+    <%}%>
+</c:if>
+
+<c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
 <div id="header">
 </c:if>
   <ul>
-      <c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
+      <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
              <li <%= (pageType!=null&&pageType=="index"?"class='one crumb'":"one")%>><a href="<%=basePath %>user?m=toIndex">首&nbsp;页</a></li>
 
             <%//加载网校联系人
@@ -59,6 +68,10 @@
             <li class="five"><a href="APP.html" target="_blank">应&nbsp;用</a></li>
           <li class="four"><a href="javascript:;" onclick="loginDestory('<%=basePath %>')">退出</a></li>
       </c:if>
+
+
+
+
     <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
         <%
             if(isTeacher&&!isStudent&&modelType==2){
@@ -101,11 +114,16 @@
   	消息中心<%=receiveSMSList!=null&&receiveSMSList.size()>0?"(<font color='red'>"+receiveSMSList.size()+"</font>)":"" %>
   	</a></li>-->
 
+
+    <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='ett'}">
+
+    </c:if>
+
   </ul>
-<c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
+<c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
  <p><span></span><img src="<%=basePath %><%=logosrc %>" width="253" height="64"/></p>
 </c:if>
-<c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
+<c:if test="${!empty sessionScope.fromType&&(sessionScope.fromType=='lzx'||sessionScope.fromType=='ett')}">
     <%if(modelType==2){%>
     <p style="width:210px;height:50px"><span></span></p>
     <%}%>

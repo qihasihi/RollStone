@@ -333,7 +333,7 @@ public class TpUserController extends UserController {
             else if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID))
                 url="group?m=toGroupManager";
         }
-
+        request.getSession().setAttribute("fromType","ett");
         response.sendRedirect(url);
         return null;
     }

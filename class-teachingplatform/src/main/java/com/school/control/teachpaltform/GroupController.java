@@ -309,7 +309,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
                 .getNoGroupStudentList(Integer.parseInt(classid),
                         Integer.parseInt(classtype),
                         this.logined(request).getUserid(),
-                        Integer.parseInt(subjectid),
+                        subjectid==null||subjectid.trim().length()<1?null:Integer.parseInt(subjectid),
                         this.termManager.getMaxIdTerm(false).getRef());
         je.getObjList().add(stuList);
         je.getObjList().add(this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(), Integer.parseInt(classid),null,null));

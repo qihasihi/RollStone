@@ -995,9 +995,11 @@
 						<li>
 							<a href="user?m=toAdd">添加</a>
 						</li>
-						<li>
-							<a href="role?m=list">角色管理</a>
-						</li>
+                        <%if(visible){%>
+                            <li>
+                                <a href="role?m=list">角色管理</a>
+                            </li>
+                        <%}%>
 					</ul>
 				</div>
 				<div class="clear"></div>
