@@ -2,6 +2,7 @@
 package  com.school.manager.inter;
 
 import java.util.List;
+import java.util.Map;
 
 import com.school.entity.MyInfoUserInfo;
 import com.school.manager.base.IBaseManager;
@@ -28,4 +29,17 @@ public interface IMyInfoUserManager  extends IBaseManager<MyInfoUserInfo> {
 	 * @return
 	 */
 	public Integer getMyInfoUserInfoCountFirstPage(Integer msgid,String userref,String btime,String etime);
+
+    /**
+     * 得到首页的动态数据个数
+     * @param userref
+     * @return
+     */
+    public List<Map<String,Object>> getSYMsgDataCount(String userref);
+    /**
+     * 得到首页的动态数据
+     * @param userref
+     * @return
+     */
+    public List<MyInfoUserInfo> getSYMsgData(String userref);
 } 

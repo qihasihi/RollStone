@@ -206,7 +206,37 @@ public class MyInfoUserDAO extends CommonDAO<MyInfoUserInfo> implements IMyInfoU
 		sqlbuilder.append("?)}");
 		return objList;
 	}
-	/**
+
+    /**
+     * 得到首页的动态数据
+     * @param userref
+     * @return
+     */
+    public List<MyInfoUserInfo> getSYMsgData(String userref){
+        if(userref==null||userref.trim().length()<1)return null;
+        StringBuilder sqlbuilder=new StringBuilder("{CALL cal_page_index_msg_data(?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(userref);
+        List<MyInfoUserInfo> myinfouserinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, null, MyInfoUserInfo.class, null);
+        return myinfouserinfoList;
+    }
+
+    /**
+     * 得到首页的动态数据个数
+     * @param userref
+     * @return
+     */
+    public List<Map<String,Object>> getSYMsgDataCount(String userref){
+        if(userref==null||userref.trim().length()<1)return null;
+        StringBuilder sqlbuilder=new StringBuilder("{CALL cal_page_index_msg_data_count(?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(userref);
+       return this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+    }
+
+
+
+    /**
 	 * 添加消息，通用 评教系统
 	 * @param templateid  模版ID
 	 * @param userref   接收人REF

@@ -2,6 +2,8 @@
 package  com.school.manager;
 
 import java.util.List;
+import java.util.Map;
+
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +85,23 @@ public class  MyInfoUserManager extends BaseManager<MyInfoUserInfo> implements I
 	public Integer getMyInfoUserInfoCountFirstPage(Integer msgid,String userref,String btime,String etime){
 		return myinfouserdao.getMyInfoUserInfoCountFirstPage(msgid, userref, btime, etime);
 	}
+    /**
+     * 得到首页的动态数据个数
+     * @param userref
+     * @return
+     */
+    public List<Map<String,Object>> getSYMsgDataCount(String userref){
+        return myinfouserdao.getSYMsgDataCount(userref);
+    }
+    /**
+     * 得到首页的动态数据
+     * @param userref
+     * @return
+     */
+    public List<MyInfoUserInfo> getSYMsgData(String userref){
+        return myinfouserdao.getSYMsgData(userref);
+    }
+
 	@Override
 	public String getNextId() {
 		// TODO Auto-generated method stub

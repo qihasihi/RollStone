@@ -65,7 +65,7 @@
         <c:forEach items="${qaList}" var="qa" varStatus="qaIdx">
              <c:if test="${qaIdx.index!=0}"><h6></h6></c:if>
             <div class="font-black jxxt_zhuanti_rw_tongji_yidongduan_xs">
-                <p class="pic"><img onerror="headError(this)" src="${qa.headimage}" width="75" height="75"></p>
+                <p class="pic"><img onerror="headError(this)" src="${empty qa.headimage?'asds':qa.headimage}" width="75" height="75"></p>
                 <p><b>${qa.xgctime}</b><strong>${qa.realname}</strong></p>
                 <p>${qa.answercontent}</p>
                 <c:if test="${!empty qa.imtaskattachList}">

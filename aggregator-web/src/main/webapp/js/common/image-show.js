@@ -72,7 +72,8 @@ function EttImageShow(settings){
 //                }
                 var srcStr=$(this).attr("data-src");
                 if(srcStr.indexOf(".")!=-1){
-                    srcStr=srcStr.substring(0,srcStr.lastIndexOf("."))+srcStr.substring(srcStr.lastIndexOf("."))
+                    //大图asdfasfasdf_1.jpg
+                    srcStr=srcStr.substring(0,srcStr.lastIndexOf("."))+"_1"+srcStr.substring(srcStr.lastIndexOf("."))
                 }
                 $( "#"+sets.fadeId).dialog("open");
                 $('#img_'+sets.fadeId).hide();
@@ -177,7 +178,7 @@ function EttImageShow(settings){
                 }
                 ImgD.style.display='block';
             }
-        },200);
+        },300);
     }
 
 

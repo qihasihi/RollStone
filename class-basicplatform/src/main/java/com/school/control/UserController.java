@@ -3869,13 +3869,13 @@ public class UserController extends BaseController<UserInfo> {
         List<NoticeInfo> wsgsList=this.noticeManager.getUserList(notic, presult);
         mp.put("internetNotices", wsgsList);
 
-        presult=new PageResult();
-        presult.setPageNo(1);
-        presult.setPageSize(5);
-        presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
-        notic.setNoticetype(UtilTool._NOTICE_TYPE[2]); //校内参考
-        List<NoticeInfo> xnckNotice=this.noticeManager.getUserList(notic, presult);
-        mp.put("xnckNotices", xnckNotice);
+//        presult=new PageResult();
+//        presult.setPageNo(1);
+//        presult.setPageSize(5);
+//        presult.setOrderBy("n.IS_TOP ASC,C_TIME DESC");
+//        notic.setNoticetype(UtilTool._NOTICE_TYPE[2]); //校内参考
+//        List<NoticeInfo> xnckNotice=this.noticeManager.getUserList(notic, presult);
+//        mp.put("xnckNotices", xnckNotice);
         //得到最近的关于我的活动信息
         ActivityInfo activity=new ActivityInfo();
         activity.setUserid(this.logined(request).getRef());
@@ -3888,173 +3888,146 @@ public class UserController extends BaseController<UserInfo> {
         //得到部门类别
         mp.put("deptType", UtilTool._GetDeptType());
         //得到消息
-        /**
-         * 	/** 
-         关于p_msg_id的相关
-         1:公告(ggtd)
-         2:申请(sqtd)
-         3:审核(shtd)
-         4:报名(bmtd)
-         5:录取(lqtd)
-         6:发帖(fttd)
-         7:任命(rmtd)
-         8:任务(rwtd)
-         9:成绩(cjtd)
-         10:活动(hdtd)
-         11:用户修改(yhxgtd)
-         12:调班(tbtd)
-         13:校风提醒(xftd)	  
-         14:通知
-         */
-        PageResult prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
-        MyInfoUserInfo mu=new MyInfoUserInfo();
+
+        //得到全部的数据
+        List<MyInfoUserInfo> mu=this.myInfoUserManager.getSYMsgData(this.logined(request).getRef());
         //公告消息
-        mu.setUserref(this.logined(request).getRef());
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.NOTICE.getValue()); //公告
-        List<MyInfoUserInfo> msgNoticeList=this.myInfoUserManager.getList(mu,prmsg);
+        List<MyInfoUserInfo> msgNoticeList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> shenqingMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> shenheMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> baomingMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> luquMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> fatieMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> renmingMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> renwuMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> chengjiMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> huodongMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> userUpdateMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> tiaobanMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> xftxMSGList=new ArrayList<MyInfoUserInfo>();
+        List<MyInfoUserInfo> tzMSGList=new ArrayList<MyInfoUserInfo>();
+        if(mu!=null&&mu.size()>0){
+            for (MyInfoUserInfo muTmp:mu){
+                if(muTmp!=null&&muTmp.getMsgid()!=null){
+                    Integer msgid= muTmp.getMsgid();
+                    switch(msgid){
+                        case 1: //1:公告(ggtd)
+                            msgNoticeList.add(muTmp);
+                            break;
+                        case 2: //2:申请(sqtd)
+                            shenqingMSGList.add(muTmp);
+                            break;
+                        case 3://   3:审核(shtd)
+                            shenheMSGList.add(muTmp);
+                            break;
+                        case 4://4:报名(bmtd)
+                            baomingMSGList.add(muTmp);
+                            break;
+                        case 5://5:录取(lqtd)
+                            luquMSGList.add(muTmp);
+                            break;
+                        case 6://6:发帖(fttd)
+                            fatieMSGList.add(muTmp);
+                            break;
+                        case 7://7:任命(rmtd)
+                            renmingMSGList.add(muTmp);
+                            break;
+                        case 8://8:任务(rwtd)
+                            renwuMSGList.add(muTmp);
+                            break;
+                        case 9://9:成绩(cjtd)
+                            chengjiMSGList.add(muTmp);
+                            break;
+                        case 10://10:活动(hdtd)
+                            huodongMSGList.add(muTmp);
+                            break;
+                        case 11://11:用户修改(yhxgtd)
+                            userUpdateMSGList.add(muTmp);
+                            break;
+                        case 12://12:调班(tbtd)
+                            tiaobanMSGList.add(muTmp);
+                            break;
+                        case 13://13:校风提醒(xftd)
+                            xftxMSGList.add(muTmp);
+                            break;
+                        case 14://14:通知
+                            tzMSGList.add(muTmp);
+                            break;
+                    }
+                }
+            }
+        }
+        //公告
         mp.put("msgNoticeList", msgNoticeList);
-        Date d=new Date();
-        d.setDate(new Date().getDate()-2);
-        String btime=UtilTool.DateConvertToString(d, DateType.type1);
-
-        String etime=UtilTool.DateConvertToString(new Date(), DateType.type1);
-        //System.out.println(etime);
-        mp.put("msgNoticeCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
-        //申请消息
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.SHENQING.getValue());
-        List<MyInfoUserInfo> shenqingMSGList=this.myInfoUserManager.getList(mu,prmsg);
+        //申请
         mp.put("shenqingMSGList", shenqingMSGList);
-        mp.put("shenqingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //审核消息
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.SHENHE.getValue());
-        List<MyInfoUserInfo> shenheMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("shenheMSGList", shenheMSGList);
-        mp.put("shenheMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //报名消息
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.BAOMING.getValue());
-        List<MyInfoUserInfo> baomingMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("baomingMSGList", baomingMSGList);
-        mp.put("baomingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //录取消息
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.LUQU.getValue());
-        List<MyInfoUserInfo> luquMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("luquMSGList", luquMSGList);
-        mp.put("luquMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
-
-
         //帖消息
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.FATIE.getValue());
-        List<MyInfoUserInfo> fatieMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("fatieMSGList", fatieMSGList);
-        mp.put("fatieMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //任命消息
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.RENMING.getValue());
-        List<MyInfoUserInfo> renmingMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("renmingMSGList", renmingMSGList);
-        mp.put("renmingMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //任务消息
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.RENWU.getValue());
-        List<MyInfoUserInfo> renwuMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("renwuMSGList", renwuMSGList);
-        mp.put("renwuMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //成绩消息
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.CHENGJI.getValue());
-        List<MyInfoUserInfo> chengjiMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("chengjiMSGList", chengjiMSGList);
-        mp.put("chengjiMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //活动消息
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.HUODONG.getValue());
-        List<MyInfoUserInfo> huodongMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("huodongMSGList", huodongMSGList);
-        mp.put("huodongMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //用户修改
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.YONGHUXIUGAI.getValue());
-        List<MyInfoUserInfo> userUpdateMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("userUpdateMSGList", userUpdateMSGList);
-        mp.put("userUpdateMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //调班
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.TIAOBAN.getValue());
-        List<MyInfoUserInfo> tiaobanMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("tiaobanMSGList", tiaobanMSGList);
-        mp.put("tiaobanMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //校风提醒
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.XFTX.getValue());
-        List<MyInfoUserInfo> xftxMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("xftxMSGList", xftxMSGList);
-        mp.put("xftxMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
-
-        prmsg=new PageResult();
-        prmsg.setPageNo(1);
-        prmsg.setPageSize(5);
-        prmsg.setOrderBy("mu.C_TIME DESC");
         //通知
-        mu.setMsgid(UtilTool.MYINFO_MSG_TYPE.TONGZHI.getValue());
-        List<MyInfoUserInfo> tzMSGList=this.myInfoUserManager.getList(mu,prmsg);
         mp.put("tzMSGList", tzMSGList);
-        mp.put("tzMSGCount", this.myInfoUserManager.getMyInfoUserInfoCountFirstPage(mu.getMsgid(), mu.getUserref(), btime, etime));
+        List<Map<String,Object>> mapList=this.myInfoUserManager.getSYMsgDataCount(this.logined(request).getRef());
+        // 记录数量
+        Integer[] msgNumArray={0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        if(mapList!=null&&mapList.size()>0){
+            for (Map<String,Object> tmpmp:mapList){
+                if(tmpmp!=null&&tmpmp.containsKey("MSG_ID")&&tmpmp.get("MSG_ID")!=null){
+                        Integer msgid= Integer.parseInt(tmpmp.get("MSG_ID").toString().trim());
+                    msgNumArray[msgid-1]=Integer.parseInt(tmpmp.get("MSGCOUNT").toString());
+                }
+            }
+        }
+        /**
+         * 资源审核通过
+         *   1:公告(ggtd)
+         *2:申请(sqtd)
+         *3:审核(shtd)
+         *4:报名(bmtd)
+         *5:录取(lqtd)
+         *6:发帖(fttd)
+         *7:任命(rmtd)
+         *8:任务(rwtd)
+         *9:成绩(cjtd)
+         *10:活动(hdtd)
+         *11:用户修改(yhxgtd)
+         *12:调班(tbtd)
+         *13:校风提醒(xftd)
+         *14:通知(tztd)
+         */
+        mp.put("msgNoticeCount", msgNumArray[0]);
+        mp.put("shenqingMSGCount", msgNumArray[1]);
+        mp.put("shenheMSGCount", msgNumArray[2]);
+        mp.put("baomingMSGCount",msgNumArray[3]);
+        mp.put("luquMSGCount",msgNumArray[4]);
+        mp.put("fatieMSGCount",msgNumArray[5]);
+        mp.put("renmingMSGCount",msgNumArray[6]);
+        mp.put("renwuMSGCount",msgNumArray[7]);
+        mp.put("chengjiMSGCount",msgNumArray[8]);
+        mp.put("huodongMSGCount",msgNumArray[9]);
+        mp.put("userUpdateMSGCount",msgNumArray[10]);
+        mp.put("tiaobanMSGCount",msgNumArray[11]);
+        mp.put("xftxMSGCount",msgNumArray[12]);
+        mp.put("tzMSGCount",msgNumArray[13]);
+
         //如果是学生，则得到该学生的当前任务信息
         if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
             List<Map<String,Object>> tkMapList=this.userManager.getCourseTaskCount(this.logined(request).getUserid());
@@ -5336,7 +5309,7 @@ public class UserController extends BaseController<UserInfo> {
                 modelName="";
             //paramMap.put("modelName",modelName);
             paramMap.put("modelName",modelName);
-
+            paramMap.put("username",java.net.URLEncoder.encode(username,"UTF-8"));
             requestUrl=UtilTool.utilproperty.getProperty("TEA_TO_ETT_REQUEST_URL").toString(); //教师进入ett入口
         }else if(isstuflag){
             //组织学生参数

@@ -4,6 +4,9 @@ package com.school.dao.inter;
 import com.school.dao.base.ICommonDAO;
 import com.school.entity.MyInfoUserInfo;
 
+import java.util.List;
+import java.util.Map;
+
 public interface IMyInfoUserDAO extends ICommonDAO<MyInfoUserInfo>{
 	/**
 	 * 添加消息，通用 评教系统
@@ -26,4 +29,17 @@ public interface IMyInfoUserDAO extends ICommonDAO<MyInfoUserInfo>{
 	 * @return
 	 */
 	public Integer getMyInfoUserInfoCountFirstPage(Integer msgid,String userref,String btime,String etime);
+
+    /**
+     * 得到首页的动态数据个数
+     * @param userref
+     * @return
+     */
+    public List<Map<String,Object>> getSYMsgDataCount(String userref);
+    /**
+     * 得到首页的动态数据
+     * @param userref
+     * @return
+     */
+    public List<MyInfoUserInfo> getSYMsgData(String userref);
 }
