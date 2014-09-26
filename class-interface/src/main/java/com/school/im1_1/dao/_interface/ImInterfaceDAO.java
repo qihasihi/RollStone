@@ -109,7 +109,7 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
         return null;
     }
 
-    public List<Map<String, Object>> getClassTaskTask(Long courseid,Integer userid,Integer classid) {
+    public List<Map<String, Object>> getClassTaskTask(String courseid,Integer userid,Integer classid) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL imapi_classtask_proc_task(");
         List<Object> objList=new ArrayList<Object>();

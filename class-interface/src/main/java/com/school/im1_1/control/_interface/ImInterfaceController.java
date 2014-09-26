@@ -238,94 +238,91 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         List<Map<String,Object>> returnList = new ArrayList<Map<String, Object>>();
         Map<String,Object> returnMap = null;
         if(courseList!=null&&courseList.size()>0){
+            StringBuilder courseids = new StringBuilder();
             for(int i = 0;i<courseList.size();i++){
+                courseids.append(courseList.get(i).get("COURSEID"));
+                if(i!=(courseList.size()-1)){
+                    courseids.append(",");
+                }
+            }
+            if(courseids.length()>0){
                 List<Map<String,Object>> taskList=null;
-                returnList = new ArrayList<Map<String, Object>>();
                 if(utype==2){
-                    taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),null,Integer.parseInt(classid));
+                    taskList = this.imInterfaceManager.getClassTaskTask(courseids.toString(),null,Integer.parseInt(classid));
                 }else{
-                    taskList = this.imInterfaceManager.getClassTaskTask(Long.parseLong(courseList.get(i).get("COURSEID").toString()),userList.get(0).getUserid(),Integer.parseInt(classid));
+                    taskList = this.imInterfaceManager.getClassTaskTask(courseids.toString(),userList.get(0).getUserid(),Integer.parseInt(classid));
                 }
-                if(taskList!=null&&taskList.size()>0){
-                    for(int j = 0;j<taskList.size();j++){
-                        Map<String,Object> tkMap=taskList.get(j);
-                        //实例化返回数据对象
-                        returnMap = new HashMap<String, Object>();
-                        //遍历数据，放到新的返回对象里
-                        returnMap.put("FINISHSTANDARD",tkMap.get("FINISHSTANDARD"));
-                        returnMap.put("TOTALNUM",tkMap.get("TOTALNUM"));
-                        returnMap.put("STARTTIME",tkMap.get("STARTTIME"));
-                        returnMap.put("ISOVER",tkMap.get("ISOVER"));
-                        returnMap.put("DONUM",tkMap.get("DONUM"));
-                        if(utype==2){
-                            returnMap.put("ISDONE","1");
-                        }else{
-                            returnMap.put("ISDONE",tkMap.get("ISDONE"));
+                for(int i = 0;i<courseList.size();i++){
+                    returnList = new ArrayList<Map<String, Object>>();
+                    if(taskList!=null&&taskList.size()>0){
+                        for(int j = 0;j<taskList.size();j++){
+                            if(courseList.get(i).get("COURSEID").equals(taskList.get(j).get("COURSEID"))){
+                                Map<String,Object> tkMap=taskList.get(j);
+                                returnList.add(tkMap);
+                            }
                         }
-                        returnMap.put("QUESTYPE",tkMap.get("QUESTYPE"));
-                        returnMap.put("TASKTYPE",tkMap.get("TASKTYPE"));
-                        returnMap.put("ISSTART",tkMap.get("ISSTART"));
-                        returnMap.put("TASKID",tkMap.get("TASKID"));
-                        returnMap.put("REMOTETYPE",tkMap.get("REMOTETYPE"));
-                        String leftTime="0";
-                        if(tkMap.get("LEFTTIME")!=null){
-                            leftTime=ImUtilTool.getTaskOvertime(tkMap.get("LEFTTIME").toString());
-                            returnMap.put("LEFTTIME",leftTime);
-//                            tkMap.remove("LEFTTIME");
-//                            tkMap.put("LEFTTIME",leftTime);
-                        }else{
-                            System.out.print("任务结束时间异常"+tkMap.get("TASKID")+"-------"+tkMap.get("LEFTTIME"));
-                        }
-                        String typename = "";
-                        switch (Integer.parseInt(tkMap.get("TASKTYPE").toString())){
-                            case 1:
-                                typename="资源学习";
-                                break;
-                            case 2:
-                                typename="互动交流";
-                                break;
-                            case 3:
-                                typename="试题";
-                                break;
-                            case 4:
-                                typename="成卷测试";
-                                break;
-                            case 5:
-                                typename="自主测试";
-                                break;
-                            case 6:
-                                typename="微课程学习";
-                                break;
-                            case 7:
-                                typename="语音";
-                                break;
-                            case 8:
-                                typename="图片";
-                                break;
-                            case 9:
-                                typename="文字";
-                                break;
-                            case 10:
-                                typename="直播课";
-                                break;
-                        }
-                        if(utype!=2){
-                            //tkMap.put("ORDERIDX", (j + 1) + "");
-                            returnMap.put("ORDERIDX",(j + 1) + "");
-                        }else{
-                            returnMap.put("ORDERIDX",tkMap.get("ORDERIDX"));
-                        }
-                        if(Integer.parseInt(tkMap.get("TASKTYPE").toString())==3||Integer.parseInt(tkMap.get("TASKTYPE").toString())==4||Integer.parseInt(tkMap.get("TASKTYPE").toString())==5){
-                            //tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename);
-                            returnMap.put("TASKNAME", "任务 " + returnMap.get("ORDERIDX") + " " + typename);
-                        }else{
-                            //tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename + " " + tkMap.get("TASKNAME"));
-                            returnMap.put("TASKNAME", "任务 " + returnMap.get("ORDERIDX") + " " + typename + " " + tkMap.get("TASKNAME"));
-                        }
-                        returnList.add(returnMap);
                     }
+                    if(returnList!=null&&returnList.size()>0){
+                        for(int x=0;x<returnList.size();x++){
+                            Map<String,Object> tkMap=returnList.get(x);
+                            //实例化返回数据对象
+                            returnMap = new HashMap<String, Object>();
+                            tkMap.remove("COURSEID");
+                            if(utype==2){
+                                tkMap.put("ISDONE","1");
+                            }
+                            String leftTime="";
+                            if(tkMap.get("LEFTTIME")!=null){
+                                leftTime=ImUtilTool.getTaskOvertime(tkMap.get("LEFTTIME").toString());
+                                tkMap.put("LEFTTIME",leftTime);
+                            }else{
+                                System.out.print("任务结束时间异常"+tkMap.get("TASKID")+"-------"+tkMap.get("LEFTTIME"));
+                            }
+                            String typename = "";
+                            switch (Integer.parseInt(tkMap.get("TASKTYPE").toString())){
+                                case 1:
+                                    typename="资源学习";
+                                    break;
+                                case 2:
+                                    typename="互动交流";
+                                    break;
+                                case 3:
+                                    typename="试题";
+                                    break;
+                                case 4:
+                                    typename="成卷测试";
+                                    break;
+                                case 5:
+                                    typename="自主测试";
+                                    break;
+                                case 6:
+                                    typename="微课程学习";
+                                    break;
+                                case 7:
+                                    typename="语音";
+                                    break;
+                                case 8:
+                                    typename="图片";
+                                    break;
+                                case 9:
+                                    typename="文字";
+                                    break;
+                                case 10:
+                                    typename="直播课";
+                                    break;
+                            }
+                            if(utype!=2){
+                                tkMap.put("ORDERIDX",(x + 1) + "");
+                            }
+                            if(Integer.parseInt(tkMap.get("TASKTYPE").toString())==3||Integer.parseInt(tkMap.get("TASKTYPE").toString())==4||Integer.parseInt(tkMap.get("TASKTYPE").toString())==5){
+                                tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename);
+                            }else{
+                                tkMap.put("TASKNAME", "任务 " + tkMap.get("ORDERIDX") + " " + typename + " " + tkMap.get("TASKNAME"));
+                            }
+                        }
+                    }
+                    courseList.get(i).put("taskList", returnList);
                 }
-                courseList.get(i).put("taskList", returnList);
             }
         }else{
             m.put("result","0");
@@ -1464,13 +1461,24 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     Map att = new HashMap();
                     List attList = new ArrayList();
                     if(taskUserRecord.get(i).get("REPLYATTACH")!=null){
-                        att.put("attach",taskUserRecord.get(i).get("REPLYATTACH"));
+                        if(taskUserRecord.get(i).get("REPLYATTACHTYPE")==null){
+                            String fujianType = taskUserRecord.get(i).get("REPLYATTACH").toString().substring(taskUserRecord.get(i).get("REPLYATTACH").toString().lastIndexOf("."));
+                            if(fujianType.equalsIgnoreCase("jpg")||fujianType.equalsIgnoreCase("png")){
+                                returnUserMap.put("replyAttachType",1);
+                            }else if(fujianType.equalsIgnoreCase("m4a")||fujianType.equalsIgnoreCase("mp3")){
+                                returnUserMap.put("replyAttachType",2);
+                            }
+                            String fujian = UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"+UtilTool.utilproperty.getProperty("PROC_NAME")+"/uploadfile/"+taskUserRecord.get(i).get("REPLYATTACH");
+                            att.put("attach",fujian);
+                        }else{
+                            att.put("attach",taskUserRecord.get(i).get("REPLYATTACH"));
+                            returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE")!=null?Integer.parseInt(taskUserRecord.get(i).get("REPLYATTACHTYPE").toString()):0);
+                        }
                         attList.add(att);
                     }
                     Map m = new HashMap();
                     m.put("attachs",attList);
                     returnUserMap.put("replyAttach",m);
-                    returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE")!=null?Integer.parseInt(taskUserRecord.get(i).get("REPLYATTACHTYPE").toString()):0);
                     if(taskUserRecord.get(i).get("JID")!=null){
                         jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
                     }else{
