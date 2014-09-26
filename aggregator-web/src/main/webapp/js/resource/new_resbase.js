@@ -115,7 +115,7 @@ LeibieControl.prototype={
             trHtml+='<input id="restypevalues_title" type="hidden" value="资源类型">';
             trHtml+='<input id="filetypevalues_title" type="hidden" value="文件类型">';
             trHtml+='<input id="timerange_title" type="hidden" value="发布时间">';
-            trHtml+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1" style="float: left">';
+            trHtml+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1" style="float: left;width:100%">';
             trHtml+='<tr id="extend_sharestatusvalues"><th>共享类型：</th><td id="ev_area_sharestatusvalues"></td></tr>';
             trHtml+='<tr id="extend_subjectvalues"><th>学&nbsp;&nbsp;&nbsp;&nbsp;科：</th>';
             trHtml+='<td id="ev_area_subjectvalues">&nbsp;</td></tr>';
