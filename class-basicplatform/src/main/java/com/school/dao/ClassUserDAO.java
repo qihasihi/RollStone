@@ -237,12 +237,12 @@ public class ClassUserDAO extends CommonDAO<ClassUser> implements IClassUserDAO 
 		}else{
 			sqlbuilder.append("NULL,NULL,");
 		}
-      /*  if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
             sqlbuilder.append("?,");
             objList.add(presult.getOrderBy());
         }else{
             sqlbuilder.append("NULL,");
-        } */
+        }
 		sqlbuilder.append("?)}");	
 		List<Integer> types=new ArrayList<Integer>();
 		types.add(Types.INTEGER);

@@ -17,8 +17,8 @@
     var bathPath='<%=basePath%>';
 </script>
 
-<div id="dv_award_zs" class="jxxt_float_jiangli" style="display:none">获得<strong>1</strong>积分及<strong>1</strong>颗<span class="ico90"></span></div>
-<div id="dv_award_jf"  class="jxxt_float_jiangli" style="display:none">获得<strong>1</strong>积分</div>
+<div id="dv_award_zs" class="jxxt_float_jiangli" style="display:none;z-index:9999">获得<strong>1</strong>积分及<strong>1</strong>颗<span class="ico90"></span></div>
+<div id="dv_award_jf"  class="jxxt_float_jiangli" style="display:none;z-index:9999">获得<strong>1</strong>积分</div>
 <script type="text/javascript">
     var alertMsg="${sessionScope.msg}";
     var WinAlerts = window.alert;
@@ -64,7 +64,7 @@
             awardTime=0;return;
         }
         awardTime++;
-        setTimeout("hideAwardDiv()",2000);
+        setTimeout("hideAwardDiv()",2500);
     }
 
 </script>

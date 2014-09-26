@@ -204,6 +204,7 @@ function swfobjPlayer(path, playeraddressid,width,height, isshow,imagepath) {
         id: "player1",
         name: "player1"
     };
+    attributes.wmode="transparent";
     swfobject.embedSWF(path, playeraddressid, width, height, "9.0.0", "flexpaper/swfobject/expressInstall.swf", flashvars, params, attributes);
     if (isshow)
         showModel("swfplayer", false);
@@ -250,12 +251,13 @@ function loadSwfReview(swfpath,showdiv,width,height){
     var attributes = {};
     attributes.id = "FlexPaperViewer";
     attributes.name = "FlexPaperViewer";
+    attributes.wmode="transparent";
     swfobject.embedSWF(
         "flexpaper/swf/FlexPaperViewer.swf", showdiv,
         width, height,
         swfVersionStr, xiSwfUrlStr,
         flashvars, params, attributes);
-    //swfobject.createCSS("#"+showdiv+"", "display:block;text-align:left;");
+    swfobject.createCSS("#"+showdiv+"", "z-index:500");
 }
 
 /**
@@ -402,6 +404,7 @@ function loadSwfReview(swfpath,showdiv,width,height){
     var attributes = {};
     attributes.id = "FlexPaperViewer";
     attributes.name = "FlexPaperViewer";
+    attributes.wmode="transparent";
     swfobject.embedSWF(
         "flexpaper/swf/FlexPaperViewer.swf", showdiv,
         width, height,
@@ -1018,7 +1021,7 @@ function showModel(showId,isdrop,height){
     $("#fade").css("height",findDimensions().height+parseFloat(getScrollTop()));
     $("#fade").css("width",findDimensions().width);
     try{
-        $("#"+showId).css("z-index",1005);
+        $("#"+showId).css("z-index",9999);
         $("#"+showId).css("top",(20+parseInt(getScrollTop()))+h);
         $("#"+showId).css("left",(findDimensions().width/2-parseFloat($("#"+showId).css("width"))/2));
         $("#"+showId).css("position","absolute");
