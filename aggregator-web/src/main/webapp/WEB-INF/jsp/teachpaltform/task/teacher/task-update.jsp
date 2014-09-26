@@ -16,6 +16,8 @@
 		var taskid="${taskid}";
         var objectiveQuesCount="${objectiveQuesCount}";
 		$(function(){
+            //存放资源类型，否则不选择资源修改会有错误
+            $("#resource_type").val("${taskinfo.resourcetype}");
 			//任务
 			<c:if test="${!empty taskInfo}">
 				$("#task_type").val("${taskInfo.tasktype}");

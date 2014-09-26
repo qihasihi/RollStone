@@ -4995,7 +4995,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     }
 
     /**
-     * @decription 获取未完成任务学生名单
+     * @decription 删除任务
      * @author yuechunyang
      * */
     @RequestMapping(params="m=deleteTask",method={RequestMethod.GET,RequestMethod.POST})
@@ -5458,7 +5458,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
     }
 
     /**
-     * 任务提醒接口
+     * 获取直播地址接口
      * @param request
      * @param mp
      * @return
