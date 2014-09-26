@@ -744,6 +744,15 @@ public class TaskController extends BaseController<TpTaskInfo>{
             objListArray.add(objList);
         }
 
+        //清除任务积分，删除任务完成记录
+        sql=new StringBuilder();
+        objList=this.tpTaskManager.getDelTpStuTaskScore(tmpTask.getTaskid(),sql);
+        if(objList!=null&&sql!=null){
+            sqlStrList.add(sql.toString());
+            objListArray.add(objList);
+        }
+
+
         if(tmpTask.getTaskid()>0){
             /*TpOperateInfo to=new TpOperateInfo();
             to.setRef(this.tpOperateManager.getNextId(true));
@@ -787,6 +796,11 @@ public class TaskController extends BaseController<TpTaskInfo>{
             objListArray.add(objList);
             sqlStrList.add(sql.toString());
         })*/
+
+        /*修改积分及相关信息*/
+
+
+
 
         if(sqlStrList.size()>0&&objListArray.size()>0){
             boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlStrList,objListArray);

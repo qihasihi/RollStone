@@ -35,5 +35,12 @@ public interface ITpTaskManager  extends IBaseManager<TpTaskInfo> {
     public Boolean doSaveTaskMsg(TpTaskInfo t);
 
     public List<TpTaskInfo> getDoTaskResourceId(TpTaskInfo obj);
+    /**
+     * 删除任务时，清除任务积分，删除完成记录
+     * @param taskid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getDelTpStuTaskScore(final Long taskid, StringBuilder sqlbuilder);
 
 } 

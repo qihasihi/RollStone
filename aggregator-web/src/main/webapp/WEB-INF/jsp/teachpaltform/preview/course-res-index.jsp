@@ -21,6 +21,107 @@
             load_resource(1,1,true);
 		});
 
+
+
+        /**
+         * 显示资源
+         *
+         * @param divid
+         *            所在DIV
+         * @param type
+         *            类型
+         * @param preimg
+         *            预览图
+         * @param docmd5
+         * @return
+         */
+        function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, resdetailid, swfpath, liobj) {
+            //genderHtml();
+            //获取文件路径
+            fileSystemIpPort=fileSystemIpPort.substring(0,fileSystemIpPort.indexOf("fileoperate"))+"fileoperate/";
+            if(resid>0)
+                fileSystemIpPort+="/clouduploadfile/";
+            else
+                fileSystemIpPort+="/uploadfile/";
+            var afname='<a style="color:#000000;" title="下载" href="javascript:resourceDownLoadFile(\'' + resid + '\',\'' + fname + '\',1)">'+fname+'</a>';
+            $("#h1_resname").html(afname);
+            //选中效果
+            $("#ul_resource li").removeClass();
+            $(liobj).parent().parent().addClass("crumb");
+
+            if (typeof(tarray[1]) != "undefined")
+                clearTimeout(tarray[1]);
+            var htm = '';
+            $("#" + divid).removeClass();
+            $("#" + divid).attr("style", "");
+            $("#" + divid).css({"width": "560", "height": "500"});
+            $("#hd_resdetailid").val(resid)
+            //删除播放器
+            if (typeof ($("object[name='player1']")) != "undefined")
+                $("object[name='player1']").after(
+                        '<div id="div_show" style="width:560px;height:500px;"></div>');
+            $("object[name='player1']").remove();
+
+            if (typeof ($("object[name='div_show']")) != "undefined")
+                $("object[name='div_show']").parent()
+                        .append('<div id="div_show" style="width:560px;height:500px;"></div>');
+            $("object[name='div_show']").remove();
+            //删除音频
+            if (typeof($("object[id='b_sound']")))
+                $("object[name='player1']").after(
+                        '<div id="div_show" style="width:560px;height:500px;"></div>');
+            $("object[id='b_sound']").remove();
+            //删除SWF
+            if (typeof($("object[id='FlexPaperViewer']")))
+                $("object[id='FlexPaperViewer']").after(
+                        '<div id="div_show" style="width:560px;height:500px;"></div>');
+            $("object[id='FlexPaperViewer']").remove();
+            var lastname = "";
+            if (typeof(fname) != 'undefined' && fname.Trim().length > 0 && fname.indexOf(".") != -1)
+                lastname = fname.substring(fname.lastIndexOf(".")).toLowerCase();
+
+            if (type == 1) {
+                htm = "<img src='" + preimg + "' width='560' height='370'  title='" + fname + "' id='img_res'  />";
+            } else if (type == 2) {
+                htm += "<div style='color:gray;font-size:10px' id='progress_1'>";
+                htm += "</div>";
+                videoConvertProgress(resid, fname, md5name, 1, md5id, fileSystemIpPort);
+            } else if (type == 4) {
+                loadSwfReview(swfpath, divid, 560, 500);
+            } else if (type == 3) {
+                //showMp3Resource('div_show', 0, md5name, md5id,fileSystemIpPort);
+                var priviewimg='';
+                loadSWFPlayer(md5id, md5name, divid, false, lastname, 'mp3','images/mp3.jpg');
+            } else if (type == 0) {
+                htm += '<p>' + fname + '</p>';
+            } else if (type == 5) {
+                //showMp3Resource('div_show', 0, md5name, md5id,fileSystemIpPort);
+                swfobjPlayer(md5id, md5name, divid, false, lastname, 'swf');
+                //var path=fileSystemIpPort+"uploadfile/" + md5id + "/"+ md5name;
+                //loadSwfReview(path,'div_show',560,370);
+            }
+            if (type != 3) {
+                $("#" + divid).html(htm);
+                $("#" + divid).hide();
+            }
+            if (type == 1) {
+                var imgobj = $("#img_res").get(0);
+                resizeimg(imgobj, 560, 500);
+            }
+            if (type != 3)
+                $("#" + divid).show('slow');
+
+
+            // 控制下载
+            $("#sp_download").html('<a class="ico59" title="下载" href="javascript:resourceDownLoadFile(\'' + resid + '\',\'' + fname + '\',1)"></a>');
+            //资源详情
+            load_resdetail(resid);
+            loadRelatePaper(resid);
+
+        }
+
+
+
         /**
          * 加载专题资源
          * ajax
@@ -216,105 +317,6 @@
         }
 
 
-
-        /**
-         * 显示资源
-         *
-         * @param divid
-         *            所在DIV
-         * @param type
-         *            类型
-         * @param preimg
-         *            预览图
-         * @param docmd5
-         * @return
-         */
-        function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, resdetailid, swfpath, liobj) {
-            //genderHtml();
-            //获取文件路径
-            fileSystemIpPort=fileSystemIpPort.substring(0,fileSystemIpPort.indexOf("fileoperate"))+"fileoperate/";
-            if(resid>0)
-                fileSystemIpPort+="/clouduploadfile/";
-            else
-                fileSystemIpPort+="/uploadfile/";
-            var afname='<a style="color:#000000;" title="下载" href="javascript:resourceDownLoadFile(\'' + resid + '\',\'' + fname + '\',1)">'+fname+'</a>';
-            $("#h1_resname").html(afname);
-            //选中效果
-            $("#ul_resource li").removeClass();
-            $(liobj).parent().parent().addClass("crumb");
-
-            if (typeof(tarray[1]) != "undefined")
-                clearTimeout(tarray[1]);
-            var htm = '';
-            $("#" + divid).removeClass();
-            $("#" + divid).attr("style", "");
-            $("#" + divid).css({"width": "560", "height": "500"});
-            $("#hd_resdetailid").val(resid)
-            //删除播放器
-            if (typeof ($("object[name='player1']")) != "undefined")
-                $("object[name='player1']").after(
-                        '<div id="div_show" style="width:560px;height:500px;"></div>');
-            $("object[name='player1']").remove();
-
-            if (typeof ($("object[name='div_show']")) != "undefined")
-                $("object[name='div_show']").parent()
-                        .append('<div id="div_show" style="width:560px;height:500px;"></div>');
-            $("object[name='div_show']").remove();
-            //删除音频
-            if (typeof($("object[id='b_sound']")))
-                $("object[name='player1']").after(
-                        '<div id="div_show" style="width:560px;height:500px;"></div>');
-            $("object[id='b_sound']").remove();
-            //删除SWF
-            if (typeof($("object[id='FlexPaperViewer']")))
-                $("object[id='FlexPaperViewer']").after(
-                        '<div id="div_show" style="width:560px;height:500px;"></div>');
-            $("object[id='FlexPaperViewer']").remove();
-            var lastname = "";
-            if (typeof(fname) != 'undefined' && fname.Trim().length > 0 && fname.indexOf(".") != -1)
-                lastname = fname.substring(fname.lastIndexOf(".")).toLowerCase();
-
-            if (type == 1) {
-                htm = "<img src='" + preimg + "' width='560' height='370'  title='" + fname + "' id='img_res'  />";
-            } else if (type == 2) {
-                htm += "<div style='color:gray;font-size:10px' id='progress_1'>";
-                htm += "</div>";
-                videoConvertProgress(resid, fname, md5name, 1, md5id, fileSystemIpPort);
-            } else if (type == 4) {
-                loadSwfReview(swfpath, divid, 560, 500);
-            } else if (type == 3) {
-                //showMp3Resource('div_show', 0, md5name, md5id,fileSystemIpPort);
-                var priviewimg='';
-                loadSWFPlayer(md5id, md5name, divid, false, lastname, 'mp3','images/mp3.jpg');
-            } else if (type == 0) {
-                htm += '<p>' + fname + '</p>';
-            } else if (type == 5) {
-                //showMp3Resource('div_show', 0, md5name, md5id,fileSystemIpPort);
-                swfobjPlayer(md5id, md5name, divid, false, lastname, 'swf');
-                //var path=fileSystemIpPort+"uploadfile/" + md5id + "/"+ md5name;
-                //loadSwfReview(path,'div_show',560,370);
-            }
-            if (type != 3) {
-                $("#" + divid).html(htm);
-                $("#" + divid).hide();
-            }
-            if (type == 1) {
-                var imgobj = $("#img_res").get(0);
-                resizeimg(imgobj, 560, 500);
-            }
-            if (type != 3)
-                $("#" + divid).show('slow');
-
-
-            // 控制下载
-            $("#sp_download").html('<a class="ico59" title="下载" href="javascript:resourceDownLoadFile(\'' + resid + '\',\'' + fname + '\',1)"></a>');
-            //资源详情
-            load_resdetail(resid);
-            loadRelatePaper(resid);
-
-        }
-
-
         function loadRelatePaper(resid){
             if(isNaN(resid))
                 return;
@@ -328,7 +330,9 @@
                     if(rps.type=="error"){
                         alert(rps.msg);
                     }else{
-                        var h='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>关联试卷</a>';
+                        var h='';
+                        if(rps.objList[0]!=null)
+                            h+='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>关联试卷</a>';
                         $("#relate_paper").html(h);
                     }
                 }

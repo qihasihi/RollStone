@@ -261,24 +261,39 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
 		return objList;
 	}
 
-	public List<Object> getDeleteSql(TpTaskInfo tptaskinfo, StringBuilder sqlbuilder) {
-		if(tptaskinfo==null || sqlbuilder==null)
-			return null;
-		sqlbuilder.append("{CALL tp_task_info_proc_delete(");
-		List<Object>objList = new ArrayList<Object>();
-			if (tptaskinfo.getTaskid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskinfo.getTaskid());
-			} else
-				sqlbuilder.append("null,");
-			if (tptaskinfo.getCourseid() != null) {
-				sqlbuilder.append("?,");
-				objList.add(tptaskinfo.getCourseid());
-			} else
-				sqlbuilder.append("null,");
-		sqlbuilder.append("?)}");
-		return objList;
-	}
+    public List<Object> getDeleteSql(TpTaskInfo tptaskinfo, StringBuilder sqlbuilder) {
+        if(tptaskinfo==null || sqlbuilder==null)
+            return null;
+        sqlbuilder.append("{CALL tp_task_info_proc_delete(");
+        List<Object>objList = new ArrayList<Object>();
+        if (tptaskinfo.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getTaskid());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskinfo.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        sqlbuilder.append("?)}");
+        return objList;
+    }
+
+    /**
+     * 删除任务时，清除任务积分，删除完成记录
+     * @param taskid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getDelTpStuTaskScore(final Long taskid, StringBuilder sqlbuilder) {
+        if(taskid==null || sqlbuilder==null)
+            return null;
+        sqlbuilder.append("{CALL del_tp_stu_score_task_award(?,?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(taskid);
+        return objList;
+    }
 
 	public List<Object> getUpdateSql(TpTaskInfo tptaskinfo, StringBuilder sqlbuilder) {
 		if(tptaskinfo==null||sqlbuilder==null)

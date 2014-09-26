@@ -100,5 +100,14 @@ public class  TpTaskManager extends BaseManager<TpTaskInfo> implements ITpTaskMa
     public List<TpTaskInfo> getListbyStu(TpTaskInfo t, PageResult presult) {
         return this.tptaskdao.getListbyStu(t,presult);
     }
+    /**
+     * 删除任务时，清除任务积分，删除完成记录
+     * @param taskid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getDelTpStuTaskScore(final Long taskid, StringBuilder sqlbuilder){
+        return this.tptaskdao.getDelTpStuTaskScore(taskid,sqlbuilder);
+    }
 }
 

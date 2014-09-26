@@ -1023,9 +1023,9 @@ function doSubManageTask(taskid) {
 function doDelTask(taskid, doFlag) {
     if (typeof taskid == 'undefined')
         return;
-    var msg = '确定删除?';
+    var msg = '是否删除？ ';
     if (typeof(doFlag) != 'undefined' && doFlag > 0)
-        msg = "已有学生完成任务,删除操作会删掉所有数据," + msg;
+        msg = "任务中已有学生作答数据，" + msg;
     if (!confirm(msg))return;
 
     $.ajax({
