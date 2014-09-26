@@ -72,7 +72,7 @@
                  <%@include file="webim.jsp"%>
             <%}else{%>
           <li class="three">
-              <a  href="<%=webimUrl%>" >爱&nbsp;学</a>
+              <a  href="<%=webimUrl%>" target="_blank" >爱&nbsp;学</a>
           </li>
           <%}%>
             <li class="five"><a href="APP.html" target="_blank">应&nbsp;用</a></li>
