@@ -902,7 +902,38 @@ public class TpUserController extends UserController {
             response.getWriter().print(je.toJSON());
             return;
         }
-        if(this.classUserManager.doDelete(cu)){
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+
+        sql=new StringBuilder();
+        objList=this.classUserManager.getDeleteSql(cu,sql);
+        if(sql!=null&&objList!=null){
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+
+
+        if(cuList.get(0).getRelationtype().equals("学生")){
+            UserInfo userInfo=new UserInfo();
+            userInfo.setRef(cuList.get(0).getUserid());
+            List<UserInfo>userList=this.userManager.getList(userInfo,null);
+            if(userList!=null&&userList.size()>0){
+                TpGroupStudent groupStudent=new TpGroupStudent();
+                groupStudent.setClassid(cuList.get(0).getClassid());
+                groupStudent.setUserid(userList.get(0).getUserid());
+                sql=new StringBuilder();
+                objList=this.groupStudentManager.getDeleteSql(groupStudent,sql);
+                if(sql!=null&&objList!=null){
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }
+        }
+
+
+        if(this.classUserManager.doExcetueArrayProc(sqlListArray,objListArray)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");
 
@@ -913,6 +944,10 @@ public class TpUserController extends UserController {
                 System.out.println("delete ett classdriver error!");
             else
                 System.out.println("delete ett classdriver success!");
+
+            if(cuList.get(0).getRelationtype().equals("学生")){
+                this.OperateGroupUser(cuList.get(0).getClassid(),this.logined(request).getDcschoolid());
+            }
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         response.getWriter().print(je.toJSON());
@@ -1750,12 +1785,127 @@ public class TpUserController extends UserController {
             Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
             jsonObj = URLDecoder.decode(jsonObj.toString(), "utf-8");
             JSONObject dataObj=JSONObject.fromObject(jsonObj);
-            String userName=dataObj.containsKey("userName")?jsonObject.get("userName").toString():null;
+            String userName=dataObj.containsKey("userName")?dataObj.get("userName").toString():null;
             je.getObjList().add(userName);
         }
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }
+
+
+
+    /**
+     * 验证网校云账号
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "checkEttUserName", method = {RequestMethod.POST})
+    public void checkEttUserName(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String userName=request.getParameter("userName");
+        if(userName==null||userName.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        UserInfo userInfo=new UserInfo();
+        userInfo.setRef(this.logined(request).getRef());
+        userInfo.setDcschoolid(this.logined(request).getDcschoolid());
+        List<UserInfo>uList=this.userManager.getList(userInfo,null);
+        if(uList==null||uList.size()<1||uList.get(0).getEttuserid()==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        UserInfo tmpUser=uList.get(0);
+
+        String timestamp=System.currentTimeMillis()+"";
+        HashMap<String,String>map=new HashMap<String, String>();
+        map.put("jid", tmpUser.getEttuserid().toString());
+        map.put("userName", userName);
+        map.put("timestamp",timestamp);
+        String sign=UrlSigUtil.makeSigSimple("checkEttUserName.do",map);
+        map.put("sign",sign);
+        String ettUrl=UtilTool.utilproperty.get("ETT_INTER_IP").toString()+"checkEttUserName.do";
+        JSONObject jsonObject=sendPostUrl(ettUrl,map,"utf-8");
+        Integer type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+        if(type==0){
+            Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+            jsonObj = URLDecoder.decode(jsonObj.toString(), "utf-8");
+            je.getObjList().add(jsonObj);
+        }else
+            je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     *修改网校云账号
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "modifyEttUser", method = {RequestMethod.POST})
+    public void modifyEttUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String oldUserName=request.getParameter("oldUserName");
+        String newUserName=request.getParameter("newUserName");
+        String oldPwd=request.getParameter("oldPwd");
+        String newPwd=request.getParameter("newPwd");
+
+        if(oldUserName==null||oldUserName.trim().length()<1||
+                newUserName==null||newUserName.trim().length()<1||
+                oldPwd==null||oldPwd.trim().length()<1||
+                newPwd==null||newPwd.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+
+        UserInfo userInfo=new UserInfo();
+        userInfo.setRef(this.logined(request).getRef());
+        userInfo.setDcschoolid(this.logined(request).getDcschoolid());
+        List<UserInfo>uList=this.userManager.getList(userInfo,null);
+        if(uList==null||uList.size()<1||uList.get(0).getEttuserid()==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        UserInfo tmpUser=uList.get(0);
+        Integer userType=1;
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID))
+            userType=2;
+        else if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID))
+            userType=1;
+
+
+        String timestamp=System.currentTimeMillis()+"";
+        HashMap<String,String>map=new HashMap<String, String>();
+        map.put("jid", tmpUser.getEttuserid().toString());
+        map.put("oldUserName", oldUserName);
+        map.put("newUserName", newUserName);
+        map.put("oldPassword", oldPwd);
+        map.put("newPassword", newPwd);
+        map.put("type",userType.toString());
+
+        map.put("timestamp",timestamp);
+        String sign=UrlSigUtil.makeSigSimple("updateEttUserNameAndPassword.do",map);
+        map.put("sign",sign);
+        String ettUrl=UtilTool.utilproperty.get("ETT_INTER_IP").toString()+"updateEttUserNameAndPassword.do";
+        JSONObject jsonObject=sendPostUrl(ettUrl,map,"utf-8");
+        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+        if(type==0){
+            Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+            jsonObj = URLDecoder.decode(jsonObj.toString(), "utf-8");
+            JSONObject dataObj=JSONObject.fromObject(jsonObj);
+            je.getObjList().add(dataObj);
+        }else
+            je.setType("success");
+
+        response.getWriter().print(je.toJSON());
+    }
+
+
 
     public  boolean sendValidateUserInfoTotalSchool(String sendUrl,String params){
         if(sendUrl==null)return false;

@@ -250,8 +250,12 @@ public class ClassController extends BaseController<ClassInfo>{
         ClassInfo classinfo = this.getParameter(request, ClassInfo.class);
         String type=request.getParameter("dtype");
         String flag=request.getParameter("flag");
+        String subjectStr=request.getParameter("subject");
         if(type!=null&&type.trim().length()>0){
             classinfo.setType(type);
+        }
+        if(subjectStr!=null&&subjectStr.trim().length()>0){
+            classinfo.setSubjectstr(subjectStr);
         }
         PageResult pageresult = this.getPageResultParameter(request);
         pageresult.setOrderBy(" u.c_time desc ");//排序，启用，在前，禁用在后

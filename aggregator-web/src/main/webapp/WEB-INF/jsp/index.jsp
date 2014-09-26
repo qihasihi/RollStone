@@ -321,21 +321,10 @@ function submitHeadCut(){
     });
 }
 function updatePass(){
-    var pass = $("#newHeadPass").val();
-    if(pass.Trim().length<1){
-        $("#newPassMsg").html("请输入密码");
-        $("#newPassMsg").show();
-        return;
-    }else{
-        $("#newPassMsg").hide();
-    }
-    if(pass.Trim().length<6){
-        $("#newPassMsg").show();
-        return;
-    }else{
-        $("#newPassMsg").hide();
-    }
-
+   var type=$("#pwd_type").val();
+   validateNewPass($("#newHeadPass").get(0));
+   validateOldPass($("#oldHeadPass").get(0));
+   var pass=$("#newHeadPass").val();
   /*  var pass2 = $("#moreHeadPass").val();
     if(pass2.Trim().length<1){
         $("#moreHeadPass").html("请再次输入密码");
@@ -346,45 +335,57 @@ function updatePass(){
         $("#moreHeadPass").show();
         return;
     } */
-
-    $.ajax({
-        url:'user?m=changepassword',//cls!??.action
-        dataType:'json',
-        type:'POST',
-        data:{new_password:pass
-        },
-        cache: false,
-        error:function(){
-            alert('异常错误!系统未响应!');
-        },success:function(rps){
-            alert("修改成功!");
-        }
-    });
+    if(type==1){
+        $.ajax({
+            url:'user?m=changepassword',
+            dataType:'json',
+            type:'POST',
+            data:{new_password:pass
+            },
+            cache: false,
+            error:function(){
+                alert('异常错误!系统未响应!');
+            },success:function(rps){
+                alert("修改成功!");
+            }
+        });
+    }else{
+        //修改云账号
+        checkEttUserName($("#txt_username").get(0),true);
+    }
 }
 function validateOldPass(obj){
+    var type=$("#pwd_type").val();
     var pass=obj.value;
-    var oldpass=$("#oldpass").val();
-    if(pass!=oldpass){
-        $("#oldPassMsg").show();
+    if(type==1){
+        var oldpass=$("#oldpass").val();
+        if(pass!=oldpass){
+            $("#oldPassMsg").html('输入的原密码不对');
+        }else{
+            $("#oldPassMsg").html('');
+        }
     }else{
-        $("#oldPassMsg").hide();
+        if(pass.Trim().length<6){
+            $("#oldPassMsg").html('密码至少六个字符');
+        }else
+            $("#oldPassMsg").html('');
     }
+
+
 }
 function validateNewPass(obj){
     var pass = obj.value;
     if(pass.Trim().length<1){
         $("#newPassMsg").html("请输入密码");
-        $("#newPassMsg").show();
         return;
     }else{
-        $("#newPassMsg").hide();
+        $("#newPassMsg").html('');
     }
     if(pass.Trim().length<6){
         $("#newPassMsg").html("请输入大于等于6个字符的密码长度");
-        $("#newPassMsg").show();
         return;
     }else{
-        $("#newPassMsg").hide();
+        $("#newPassMsg").html('');
     }
 }
 
@@ -393,17 +394,15 @@ function validateMorePass(obj){
     var pass2 = obj.value;
     if(pass2.Trim().length<1){
         $("#morePassMsg").html("请再次输入密码");
-        $("#morePassMsg").show();
         return;
     }else{
-        $("#morePassMsg").hide();
+        $("#morePassMsg").html('');
     }
     if(pass!=pass2){
         $("#morePassMsg").html("两次输入密码不一致，请重新输入");
-        $("#morePassMsg").show();
         return;
     }else{
-        $("#morePassMsg").hide();
+        $("#morePassMsg").html('');
     }
 }
 function closeEditUser(){
@@ -895,6 +894,7 @@ function closeEditUser(){
         <h4>修改密码</h4>
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab1">
             <input type="hidden" value="<%=pass%>" id="oldpass"/>
+            <input type="hidden" value="" id="oldname"/>
             <caption>
                 <a href="javascript:;" onclick="changeOption(this,1)" class="crumb">校园账号</a>
                 <%if(u.getEttuserid()!=null&&u.getDcschoolid()!=null){%>
@@ -903,19 +903,21 @@ function closeEditUser(){
             </caption>
             <tr>
                 <th>用&nbsp;户&nbsp;名：</th>
-                <td id="td_username"><%=username%></td>
+                <td><span id="td_username"><%=username%></span>
+                    <span style="" class="font-red" id="userNameMsg"></span>
+                </td>
             </tr>
             <tr>
                 <th>旧&nbsp;密&nbsp;码：</th>
                 <td><input onblur="validateOldPass(this)" name="textfield13" type="password" id="oldHeadPass"/>
                     <a href="javascript:showPwd('oldHeadPass')" class="ico92" title="查看密码"></a><span class="font-gray">6-12字符</span>&nbsp;&nbsp;
-                    <span style="display: none" class="font-red" id="oldPassMsg">输入的原密码不对</span></td>
+                    <span style="" class="font-red" id="oldPassMsg"></span></td>
             </tr>
             <tr>
                 <th>新&nbsp;密&nbsp;码：</th>
                 <td><input onblur="validateNewPass(this)" name="textfield12" type="password" id="newHeadPass"/>
                     <a href="javascript:showPwd('newHeadPass')" class="ico92" title="查看密码"></a><span class="font-gray">6-12字符</span>&nbsp;&nbsp;
-                    <span style="display: none" class="font-red" id="newPassMsg">密码至少六个字符</span></td>
+                    <span style="" class="font-red" id="newPassMsg"></span></td>
             </tr>
           <!--  <tr>
                 <th>再次确认：</th>
@@ -930,7 +932,7 @@ function closeEditUser(){
         </table>
     </div>
 </div>
-
+<input type="hidden" id="pwd_type" value="1"/>
 <script type="text/javascript">
     <%if(!isStudent){%>
     <c:if test="${empty teachClass}">
@@ -951,13 +953,103 @@ function closeEditUser(){
     }
 
     function changeOption(obj,type){
+        $("#pwd_type").val(type);
         $(obj).addClass("crumb");
         $(obj).siblings("a").removeClass("crumb");
+
         if(type==2){
-            $("#td_username").html('<input type="text" id="txt_username" />')
+            $("#td_username").html('<input type="text" id="txt_username" onblur="checkEttUserName(this)"/>')
+            //获取云帐号
+            loadEttUserName();
         }else
             $("#td_username").html('<%=username%>');
     }
+
+    function checkEttUserName(obj,issub){
+        var username=obj.value;
+        if(username.Trim().length<1){
+            $("#userNameMsg").html('请输入用户名!');
+        }else{
+            $.ajax({
+                url:"tpuser?checkEttUserName",
+                type:"post",
+                data:{userName:username.Trim()},
+                dataType:'json',
+                cache: false,
+                error:function(){
+                    alert('系统未响应，请稍候重试!');
+                },
+                success:function(json){
+                    if(json.type=='error'){
+                        if(json.objList[0]!=null&&json.objList[0].toString().length>0){
+                            $("#userNameMsg").html(json.objList[0]);
+                        }
+                    }else{
+                        $("#userNameMsg").html('');
+                        if(typeof issub!='undefined'&&issub){
+                            doUpdPwd();
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+
+
+    function doUpdPwd(){
+        var param={};
+        param.oldUserName=$("#oldname");
+        param.newUserName=$("#txt_username");
+        param.oldPwd=$("#oldHeadPass");
+        param.newPwd=$("#newHeadPass");
+
+        $.ajax({
+            url:'tpuser?modifyEttUser',
+            dataType:'json',
+            type:'POST',
+            data:param,
+            cache: false,
+            error:function(){
+                alert('系统未响应!');
+            },success:function(rps){
+                if(rps.type=='error'){
+                    if(rps.objList[0]!=null&&rps.objList[0].toString().length>0){
+                       alert(rps.objList[0]);
+                    }
+                }else{
+                    alert("修改成功!");
+                }
+            }
+        });
+    }
+
+
+    function loadEttUserName(){
+        $.ajax({
+            url:"tpuser?loadEttUserName",
+            type:"post",
+            dataType:'json',
+            cache: false,
+            error:function(){
+                alert('系统未响应，请稍候重试!');
+            },
+            success:function(json){
+                if(json.objList[0]!=null&&json.objList[0].toString().length>0){
+                    $("#txt_username").val(json.objList[0]);
+                    $("#oldname").val(json.objList[0]);
+                }
+
+                <%if(u.getStuname()!=null&&u.getStuname().length()>0){%>
+                    $("#txt_username").attr("disabled",false);
+                <%}else {%>
+                    $("#txt_username").attr("disabled",true);
+                <%}%>
+            }
+        });
+    }
+
+
 </script>
 
 <!-- 设置用户名-->

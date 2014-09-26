@@ -168,8 +168,9 @@
 
 
     function setClsId(clsid,clstype,dctype,relationtype,clsname){
-        var cname=qhs.GetLength(clsname)>20?clsname.substring(0,9):clsname;
+        var cname=qhs.GetLength(clsname)>18?clsname.substring(0,9)+'...':clsname;
         $("#clsname").html(cname);
+        $("#clsname").attr("title",clsname);
         displayObj('ul_banji',false);
         $("#classId").val(clsid);
         $("#classType").val(clstype);

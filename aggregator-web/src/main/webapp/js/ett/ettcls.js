@@ -162,7 +162,7 @@ function doAddClsStudent(clsid){
     if(typeof clsid=='undefined')
         return;
 
-    var msg='数据验证完毕!确认操作?',param={clsid:clsid},jidArray=new Array(),nameArray=new Array();
+    var msg='数据验证完毕!确认操作?',param={clsid:clsid,groupflag:1},jidArray=new Array(),nameArray=new Array();
     var liArray=$("#ul_cls_stu li");
     if(liArray.length<1){
         param.flag=1;

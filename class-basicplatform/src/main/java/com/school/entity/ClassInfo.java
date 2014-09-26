@@ -26,6 +26,15 @@ public class ClassInfo implements java.io.Serializable {
     private Integer clsnum; //班级限额
     private Date verifytime;    //失效时间
     private Integer gradeid;
+    private String subjectstr;
+
+    public String getSubjectstr() {
+        return subjectstr;
+    }
+
+    public void setSubjectstr(String subjectstr) {
+        this.subjectstr = subjectstr;
+    }
 
     public Integer getGradeid() {
         return gradeid;

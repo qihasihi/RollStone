@@ -1359,6 +1359,18 @@ function getClsByYear(dobj){
 		alert('请选择年级!');
 		return;
 	}
+
+    var subIdArray=new Array();
+    //教职工获取已选学科
+    var subject_major=$("#"+dobj+" input[name='subject_major']").filter(function(){return this.checked==true;});
+    var subject=$("#"+dobj+" input[name='subject']").filter(function(){return this.checked==true;});
+    if(subject_major.length>0)
+        subIdArray.push(subject_major.get(0).value);
+    if(subject.length>0){
+        $.each(subject,function(idx,itm){
+            subIdArray.push(itm.value);
+        });
+    }
 	
 	
 	$.ajax({
@@ -1368,7 +1380,8 @@ function getClsByYear(dobj){
 		data:{
 			year:year,
 			classgrade:grade,
-            flag:1
+            flag:1,
+            subject:subIdArray.join(',')
 		},
 		error:function(){
 			alert('程序异常无响应!');
@@ -1411,7 +1424,7 @@ function setClsSubject(div){
 		$("#cls_subject").hide(); 
 		return; 
 	}
-	 
+
 	  
 	$.ajax({
 		url:'cls?m=ajaxlist',
@@ -1426,10 +1439,11 @@ function setClsSubject(div){
 		success:function(rps){ 
 			if(rps.objList.length>0){ 
 				if(typeof(isStu)!='undefined'&&isStu){return;}
-				//教职工获取已选学科
-				var subject_major=$("#"+div+" input[name='subject_major']").filter(function(){return this.checked==true;});
-				var subject=$("#"+div+" input[name='subject']").filter(function(){return this.checked==true;});
-				var options=$("#cls_subject").get(0).options; 
+                //教职工获取已选学科
+                var subject_major=$("#"+div+" input[name='subject_major']").filter(function(){return this.checked==true;});
+                var subject=$("#"+div+" input[name='subject']").filter(function(){return this.checked==true;});
+
+                var options=$("#cls_subject").get(0).options;
 				//清空 
 				$("#cls_subject").html(""); 
 				$.each(subject_major,function(idx,itm){
