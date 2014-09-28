@@ -1739,7 +1739,7 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                                             if(itm.replyattachList.length>0){
                                                 //htm+='<p><span><br>答题附件：';
                                                 $.each(itm.replyattachList,function(index,itmObj){
-                                                    var name=itmObj.substring(itmObj.lastIndexOf("/")+1);
+                                                    var name=(index+1)+itmObj.substring(itmObj.lastIndexOf("."));
                                                     htm+='<a class="font-blue" target="_blank" href="'+itmObj+'">'+name+'</a>&nbsp;';
                                                 });
                                                // htm+='</span></p>';
@@ -1773,10 +1773,10 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                                 }
 
                             });
-                            if(signnature==0){
-                                htm+='<tr><td colspan="5">暂无数据!</td></tr>';
-                            }
                         });
+                        if(signnature==0){
+                            htm+='<tr><td colspan="5">暂无数据!</td></tr>';
+                        }
                         htm += '</table>';
                     });
                 } else {
@@ -1810,7 +1810,7 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                                 if(itm.replyattachList.length>0){
                                     //htm+='<p><span><br>答题附件：';
                                     $.each(itm.replyattachList,function(index,itmObj){
-                                        var name=itmObj.substring(itmObj.lastIndexOf("/")+1);
+                                        var name=(index+1)+itmObj.substring(itmObj.lastIndexOf("."));
                                         htm+='<a class="font-blue" target="_blank" href="'+itmObj+'">'+name+'</a>&nbsp;';
                                     });
                                     //htm+='</span></p>';

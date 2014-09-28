@@ -371,6 +371,8 @@ public class GroupController extends BaseController<TpGroupInfo>{
                 //首先查询没个小组的所有任务
                 List<TpTaskAllotInfo> taskList=this.tpTaskAllotManager.getTaskByGroup(groupList.get(i).getGroupid());
                 //然后根据任务查询每个任务的完成数和接收任务数
+                completenum=0;
+                totalnum=0;
                 if(taskList!=null&&taskList.size()>0){
                     for(int j = 0;j<taskList.size();j++){
                         //完成数
