@@ -119,9 +119,6 @@
           <li class="four"><a href="javascript:;" onclick="loginDestory('<%=basePath %>')">退出</a></li>
       </c:if>
 
-
-
-
     <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
         <%
             if(isTeacher&&!isStudent&&modelType==2){

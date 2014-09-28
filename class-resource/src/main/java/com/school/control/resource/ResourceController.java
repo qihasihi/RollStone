@@ -1555,20 +1555,23 @@ public class ResourceController extends BaseController<ResourceInfo> {
         PageResult presult = this.getPageResultParameter(request);
         String type = request.getParameter("type");
         if(type!=null&&type.equals("video")){           //视频包括视频与动画
-            type=UtilTool._VIEW_SUFFIX_TYPE_REGULAR;
-            type+="|"+UtilTool._SWF_SUFFIX_TYPE_REGULAR;
-            type=type.replaceAll("\\(|\\)|\\$","");
+//            type=UtilTool._VIEW_SUFFIX_TYPE_REGULAR;
+//            type+="|"+UtilTool._SWF_SUFFIX_TYPE_REGULAR;
+//            type=type.replaceAll("\\(|\\)|\\$","");
+            type="1";
         }else if(type!=null&&type.equals("doc")){       //文档包含除视频与动画以外的文件
-            type=UtilTool._DOC_SUFFIX_TYPE_REGULAR;
-            type+="|"+UtilTool._IMG_SUFFIX_TYPE_REGULAR;
-            type+="|"+UtilTool._MP3_SUFFIX_TYPE_REGULAR;
-            type+="|"+UtilTool._PDF_SUFFIX_TYPE_REGULAR;
-            type=type.replaceAll("\\(|\\)|\\$","");
-        }else{
-            type=UtilTool._VIEW_SUFFIX_TYPE_REGULAR+"|"+UtilTool._DOC_SUFFIX_TYPE_REGULAR;
-            type=type.replaceAll("\\(|\\)|\\$","");
-            reverse=true;
+//            type=UtilTool._DOC_SUFFIX_TYPE_REGULAR;
+//            type+="|"+UtilTool._IMG_SUFFIX_TYPE_REGULAR;
+//            type+="|"+UtilTool._MP3_SUFFIX_TYPE_REGULAR;
+//            type+="|"+UtilTool._PDF_SUFFIX_TYPE_REGULAR;
+//            type=type.replaceAll("\\(|\\)|\\$","");
+            type="2";
         }
+//        else{
+//            type=UtilTool._VIEW_SUFFIX_TYPE_REGULAR+"|"+UtilTool._DOC_SUFFIX_TYPE_REGULAR;
+//            type=type.replaceAll("\\(|\\)|\\$","");
+//            reverse=true;
+//        }
         resourceinfo.setType(type);
         resourceinfo.setReverse(reverse);
         presult.setOrderBy(" r.RECOMENDNUM desc,r.praisenum desc ");

@@ -354,7 +354,8 @@ function myInfoAjaxList(rps){
             </ul>
         </div>
 
-        <ul id="excellentRes_Video" class="sp font-black"></ul>
+        <%--<ul id="excellentRes_Video" class="sp font-black"></ul>--%>
+        <ul id="excellentRes_Video" class="wb font-black"></ul>
 
         <ul id="excellentRes_Doc" class="wb font-black"  style="display:none;"></ul>
 

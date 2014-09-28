@@ -195,8 +195,9 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         groupid=",";
         //如果是学生，则查询该学员的分数
         if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+            // 查询个人
             List<Map<String,Object>> maplist=tpStuScoreManager.getPageDataList(Long.parseLong(courseid),Long.parseLong(clsid.trim())
-                    ,Integer.parseInt(typeid.trim()),Integer.parseInt(subjectid),null,this.logined(request).getUserid());
+                    ,2,Integer.parseInt(subjectid),null,this.logined(request).getUserid());
             if(maplist!=null&&maplist.get(0)!=null)
                 mp.put("stuMap",maplist.get(0));
             //参数验证。

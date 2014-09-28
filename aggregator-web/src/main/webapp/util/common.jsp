@@ -243,7 +243,7 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
     title=request.getSession().getAttribute("_TITLE");*/
     String webTitle="北京四中网校--数字化校园";//java.net.URLDecoder.decode(title.toString());
     if(request.getSession().getAttribute("fromType")!=null&&request.getSession().getAttribute("fromType").toString().trim().equals("lzx")){
-        webTitle="北京四中教育云";
+      //  webTitle="北京四中教育云";
     }
   //  System.out.println(webTitle);
 
