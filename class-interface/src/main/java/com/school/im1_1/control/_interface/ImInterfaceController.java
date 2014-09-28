@@ -5525,7 +5525,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         signMap.put("courseName",tcList.get(0).getCoursename());
         signMap.put("courseId",tpTaskList.get(0).getTaskid().toString().replace("-",""));
         signMap.put("userId",userList.get(0).getUserid()+"");
-        signMap.put("userName",userList.get(0).getUsername());
+        signMap.put("userName",userList.get(0).getRealname()!=null?userList.get(0).getRealname():userList.get(0).getUsername());
         signMap.put("rec","3");
         signMap.put("srcId","90");
         signMap.put("timestamp",System.currentTimeMillis()+"");
