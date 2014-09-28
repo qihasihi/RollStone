@@ -2555,6 +2555,18 @@ function getStuNoteReturnMethod(rps) {
         $.each(rps.objList[0], function (idx, itm) {
             html += '<div class="pinglun" id="div_comment_' + itm.ref + '">';
             html += '        <p class="font-black"><span class="font-blue">' + itm.cuserinfo.realname + '：</span>' + itm.answercontent + '</p>';
+            if(typeof itm.replyattach!='undefined'&&itm.replyattach.toString().length>0&&typeof(itm.replyattachList)!="undefined"){
+                if(itm.replyattachList.length>0){
+                    html+='<p id="">心得附件：';
+                    $.each(itm.replyattachList,function(idx,itm){
+                        var name=itm.substring(itm.lastIndexOf("/")+1);
+                        var lastName=name.substring(name.lastIndexOf("."));
+                        html+='<a class="font-blue" target="_blank" href="'+itm+'">'+(idx+1)+lastName+'</a>&nbsp;';
+                        //htm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+                    });
+                    html+='</p>';
+                }
+            }
             html += '        <p>' + itm.ctimeString + '&nbsp;&nbsp;<a href="javascript:loadStuNoteReplyTextArea(\'' + itm.ref + '\',\'' + itm.userid + '\',\'' + itm.quesparentid + '\');" class="ico45" title="回复"></a></p>';
             html += '<p class="pic"><img src="' + itm.cuserinfo.headimage + '" width="38" height="38" /></p>';
             html += '<div id="div_reply_' + itm.ref + '"></div>';

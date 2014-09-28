@@ -999,10 +999,10 @@ function closeEditUser(){
 
     function doUpdPwd(){
         var param={};
-        param.oldUserName=$("#oldname");
-        param.newUserName=$("#txt_username");
-        param.oldPwd=$("#oldHeadPass");
-        param.newPwd=$("#newHeadPass");
+        param.oldUserName=$("#oldname").val().Trim();
+        param.newUserName=$("#txt_username").val().Trim();
+        param.oldPwd=$("#oldHeadPass").val().Trim();
+        param.newPwd=$("#newHeadPass").val().Trim();
 
         $.ajax({
             url:'tpuser?modifyEttUser',

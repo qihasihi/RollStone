@@ -48,9 +48,9 @@
 
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='ett'}">
     <%if(modelType==2){%>
-    <div class="jxxt_lzx_header">
+        <div class="jxxt_lzx_header">
     <%}else{%>
-    <div id="header">
+         <div id="header">
     <%}%>
 </c:if>
 
@@ -63,7 +63,7 @@
           <li <%= (pageType!=null&&pageType=="index"?"class='one crumb'":"one")%>><a href="<%=basePath %>user?m=toIndex">首&nbsp;页</a></li>
       </c:if>
       <!--如果不是乐知行,则显示爱学，应用-->
-    <c:if test="${empty sessionScope.fromType||sessionScope.fromType!='lzx'}">
+    <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
           <%//加载网校联系人
               StringBuilder webimUrl=new StringBuilder("user?m=toEttUrl");
               if(isStudent){
@@ -74,13 +74,19 @@
               if(sms_user.getEttuserid()!=null&&sms_user.getDcschoolid()!=null){%>
           <%@include file="webim.jsp"%>
           <%}else{%>
-          <li class="three">
-              <a  href="<%=webimUrl%>" target="_blank" >爱&nbsp;学</a>
-          </li>
+              <li class="three">
+                  <a  href="<%=webimUrl%>" target="_blank" >爱&nbsp;学</a>
+              </li>
           <%}%>
 
-          <li class="five"><a href="APP.html" target="_blank">应&nbsp;用</a></li>
+
      </c:if>
+
+      <!--如果是网校进入，则显示应用-->
+      <c:if test="${empty sessionScope.fromType}">
+          <li class="five"><a href="APP.html" target="_blank">应&nbsp;用</a></li>
+      </c:if>
+
       <!--如果不是乐知行,网校进入，则显示退出-->
       <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='ett'&&sessionScope.fromType!='lzx')}">
           <li class="four"><a href="javascript:;" onclick="loginDestory('<%=basePath %>')">退出</a></li>

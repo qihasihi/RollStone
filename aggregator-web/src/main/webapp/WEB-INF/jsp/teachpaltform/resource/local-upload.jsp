@@ -349,7 +349,7 @@
         </div>
     </div>
 
-    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black" style="float: left">
+    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black" style="float: left;width:100%">
         <col class="w50"/>
         <col class="w700"/>
         <tbody id="resData" >

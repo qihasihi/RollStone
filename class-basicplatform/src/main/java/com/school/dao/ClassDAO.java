@@ -157,11 +157,11 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 				objList.add(obj.getIsflag());
 			}else
 				sqlbuilder.append("NULL,");
-            if(obj.getSubjectstr()!=null){
+         /*   if(obj.getSubjectstr()!=null){
                 sqlbuilder.append("?,");
                 objList.add(obj.getSubjectstr());
             }else
-                sqlbuilder.append("NULL,");
+                sqlbuilder.append("NULL,"); */
 		}
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");

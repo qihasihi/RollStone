@@ -231,7 +231,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
         mp.put("subGradeInfo",objectMap);
 
 
-        return new ModelAndView("/teachpaltform/class/groupManager",mp);
+        return new ModelAndView("/teachpaltform/classmanager/groupManager",mp);
 	}
 
 

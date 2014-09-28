@@ -159,7 +159,7 @@
     <div class="denglu_duoxiao">
         <h1>校园帐号登录</h1>
         <div class="input_bg"><span class="ico_user"></span><input id="username" name="username"  type="text" placeholder="输入用户名" /></div>
-        <div class="input_bg"><span class="ico_password"></span><input id="password" name="password" type="password" /></div>
+        <div class="input_bg"><span class="ico_password"></span><input id="password" name="password" type="password" placeholder="输入密码" /></div>
         <div class="input_info">
             <a title="登录" href="javascript:checkLoginForm();"  id="lgnBt" class="ico_login"></a>
             <input type="checkbox" name="remember" id="remember" value="1">

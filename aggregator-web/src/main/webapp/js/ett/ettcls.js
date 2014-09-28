@@ -29,6 +29,7 @@ function loadCls(pageno,clsid){
             $("#ul_class").html('');
             if (rps.type == "error") {
                 alert(rps.msg);
+
             } else {
                 if(rps.objList.length>0){
                     $("#dv_detail").show('fast');
@@ -37,7 +38,7 @@ function loadCls(pageno,clsid){
                         if(idx==0)
                             h+=' class="crumb "';
                         h+='>';
-                        var clsname=itm.classname;
+                        var clsname=itm.classgrade+itm.classname;
                         var cname=qhs.GetLength(clsname)>32?clsname.substring(0,16)+'...':clsname;
                         h+='<a title="'+clsname+'" id="a_for_'+itm.classid+'" href="javascript:loadClsDetial('+itm.classid+')">'+cname+'</a></li>';
                         $("#ul_class").append(h);
@@ -424,7 +425,13 @@ function loadClsDetial(clsid){
 
             if (rps.type == "error") {
                 alert(rps.msg);
+                $("#p_edit").hide();
+                $("#a_addTeacher").attr("href","javascript:;");
+                $("#a_addStudent").attr("href","javascript:;");
+                $("#stu_count").html('0');
+                $("#tea_count").html('0');
             } else {
+
                 /**
                  *   je.getObjList().add(clsList);
                  je.getObjList().add(bzrList);
@@ -432,6 +439,7 @@ function loadClsDetial(clsid){
                  je.getObjList().add(stuList);
                  */
                 if(rps.objList[0]!=null&&rps.objList[1]!=null){
+                    $("#p_edit").show();
                     var clsname=rps.objList[0].classname;
                     $("#p_edit").html('<a href="javascript:;" id="a_to_upd" class="ico11" title="编辑"></a><a href="javascript:void(0)" onclick="doDelCls(\''+rps.objList[0].classid+'\')" class="ico04" title="删除"></a>');
                     $("#s_clsname").html(clsname);
@@ -569,7 +577,7 @@ function sub_cls(clsid){
     var param={dcschoolid:schoolid,clsname:clsname.val(),type:type.val(),jid:bzrJid.val(),realname:bzrName,gradeid:grade.val(),year:year.val()};
     if(verifyTime.val().length>0)
         param.verifyTime=verifyTime.val();
-    if(allowJoin.val().length>0)
+    if(allowJoin.length>0&&allowJoin.val().length>0)
         param.allowJoin=allowJoin.val();
     if(num.val().length>0)
         param.num=num.val();

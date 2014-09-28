@@ -858,7 +858,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("classtype",classtype);
         mp.put("classes", clsList);
         mp.put("vclasses", tvcList);
-        return new ModelAndView("/teachpaltform/class/classCourseList",mp);
+        return new ModelAndView("/teachpaltform/classmanager/classCourseList",mp);
     }
 
     */
@@ -929,7 +929,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("vclasses", tvcList);
         mp.put("courseid",courseid);
         mp.put("tchid", this.logined(request).getUserid());
-        return new ModelAndView("/teachpaltform/class/classCommentList",mp);
+        return new ModelAndView("/teachpaltform/classmanager/classCommentList",mp);
     }
 
     /**
@@ -1005,7 +1005,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("classtype",classtype);
         mp.put("classes", clsList);
         mp.put("vclasses", tvcList);
-        return new ModelAndView("/teachpaltform/class/classStudentList",mp);
+        return new ModelAndView("/teachpaltform/classmanager/classStudentList",mp);
     }
 
     /**

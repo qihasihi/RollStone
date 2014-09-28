@@ -986,7 +986,7 @@ public class TpUserController extends UserController {
             bzrUser.setHeadimage("http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
         }
         if(bzrList==null||bzrList.size()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("未获取到当前班级班主任信息!"));
+            je.setMsg("未获取到当前班级班主任信息!");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1897,8 +1897,7 @@ public class TpUserController extends UserController {
         if(type==0){
             Object jsonObj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
             jsonObj = URLDecoder.decode(jsonObj.toString(), "utf-8");
-            JSONObject dataObj=JSONObject.fromObject(jsonObj);
-            je.getObjList().add(dataObj);
+            je.getObjList().add(jsonObj);
         }else
             je.setType("success");
 

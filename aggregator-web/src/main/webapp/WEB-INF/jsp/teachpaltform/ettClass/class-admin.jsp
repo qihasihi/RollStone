@@ -20,8 +20,10 @@
 <div class="subpage_head"><span class="ico28"></span><strong>班级管理</strong></div>
 <div class="content3">
     <div class="jxxt_banji_jiaowuT public_input">
+        <a href="javascript:void(0);" onclick="showModel('dv_add');" class="font-darkblue font_strong"><span class="ico26"></span>添加班级</a>
+        &nbsp;
         <select id="sel_year" onchange="loadCls(1)">
-            <option value="">--请选择学年--</option>
+            <option value="">请选择学年</option>
             <c:if test="${!empty classYearList}">
                 <c:forEach items="${classYearList}" var="c">
                     <option value="${c.classyearvalue}">${c.classyearname}</option>
@@ -30,7 +32,7 @@
         </select>
 
         <select id="sel_grade" onchange="loadCls(1)">
-            <option value="">--请选择年级--</option>
+            <option value="">请选择年级</option>
             <c:if test="${!empty gradeList}" >
                 <c:forEach items="${gradeList}" var="c">
                     <option value="${c.gradevalue}">${c.gradename}</option>
@@ -39,14 +41,14 @@
         </select>
 
         <select id="sel_type" onchange="loadCls(1)">
-            <option value="">--请选择班级类型--</option>
+            <option value="">请选择班级类型</option>
             <c:if test="${!empty classType}">
                 <c:forEach items="${classType}" var="c">
                     <option value="${c.dictionaryvalue}">${c.dictionaryname}</option>
                 </c:forEach>
             </c:if>
         </select>
-        <a href="javascript:void(0);" onclick="showModel('dv_add');" class="an_small">添加班级</a>
+
     </div>
 
     <div class="jxxt_banji_jiaowuR font-black" id="dv_detail">
@@ -58,7 +60,7 @@
         </div>
 
         <div class="jxxt_banji_list">
-            <p>任课教师（<span id="tea_count">0</span>）&nbsp;&nbsp;&nbsp;&nbsp;<a id="a_addTeacher" href="javascript:;"  class="font-darkblue"><span class="ico26"></span>添加课程</a></p>
+            <p>任课教师（<span id="tea_count">0</span>）&nbsp;&nbsp;&nbsp;&nbsp;<a id="a_addTeacher" href="javascript:;"  class="font-darkblue"><span class="ico26"></span>添加教师</a></p>
             <ul id="ul_tea">
                 <!--<li><img src="../images/pic01_140226.jpg" width="80" height="80">王小红<b>语文</b><p class="ico"><a class="ico34" title="移出"></a></p></li>-->
             </ul>
@@ -87,7 +89,7 @@
 
 
 <div class="public_windows" id="dv_add_teacher" style="display: none;">
-    <h3><a href="javascript:closeModel('dv_add_teacher')" title="关闭"></a>添加课程</h3>
+    <h3><a href="javascript:closeModel('dv_add_teacher')" title="关闭"></a>添加教师</h3>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
         <col class="w50"/>
         <col class="w170"/>
@@ -205,10 +207,10 @@
             <th>&nbsp;&nbsp;班级限额：</th>
             <td><input  id="num" type="text" class="w100" /></td>
         </tr>
-        <tr>
+        <!--<tr>
             <th>允许学生加入：</th>
             <td colspan="3"><input  type="radio" name="rdo" checked="checked" value="1"> 是&nbsp;&nbsp;&nbsp;&nbsp;<input  type="radio" name="rdo" value="0"> 否</td>
-        </tr>
+        </tr>-->
         <tr>
             <th>&nbsp;</th>
             <td colspan="3" ><a href="javascript:sub_cls();"  class="an_public1">确&nbsp;认</a></td>
@@ -280,10 +282,10 @@
             <th>&nbsp;&nbsp;班级限额：</th>
             <td><input  id="num" type="text" class="w100" /></td>
         </tr>
-        <tr>
+       <!-- <tr>
             <th>允许学生加入：</th>
             <td colspan="3"><input  type="radio" name="rdo"  value="1"> 是&nbsp;&nbsp;&nbsp;&nbsp;<input  type="radio" name="rdo" value="0"> 否</td>
-        </tr>
+        </tr> -->
         <tr>
             <th>&nbsp;</th>
             <td colspan="3" ><a id="a_sub_upd" href="javascript:;"  class="an_public1">确&nbsp;认</a></td>
