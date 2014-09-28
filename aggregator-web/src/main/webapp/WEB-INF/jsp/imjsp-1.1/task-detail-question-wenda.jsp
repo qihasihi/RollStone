@@ -10,6 +10,28 @@
 <html>
 <head>
     <title></title>
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jxxt.css"/>
+    <script type="text/javascript" src="js/common/videoPlayer/new/jwplayer.js"></script>
+    <script type="text/javascript" src="<%=basePath %>js/videoPlayer/swfobject.js"></script>
+    <script type="text/javascript" src="js/1.6/jquery-ui-160.min.js"></script>
+    <script type="text/javascript" src="js/common/image-show.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var imgArrayObj=$("img").filter(function(){
+                var dsrc=$(this).attr("data-src");
+                return typeof(dsrc)!="undefined"&&dsrc.length>0;
+            });
+            if(imgArrayObj.length>0){
+                EttImageShow({
+                    image:imgArrayObj,
+                    fadeId:'dv_imageShow1-1',
+                    sw:90,
+                    sh:70
+                });
+            }
+        })
+
+    </script>
 </head>
 <body>
 <%
@@ -28,11 +50,38 @@
         <div>${analysis}</div>
     </c:if>
     <c:if test="${!empty answer and !empty userRecord and quesType!=3 and quesType!=4}">
+        <div class="dajx">
+            <b>答案解析</b>${analysis}</div>
+
         <c:forEach items="${userRecord}" var="itm">
             <div class="wenda">
                 <b><img src="${itm.uPhoto}" width="36" height="36"></b>
-                <p class="title"><span>${itm.REPLYDATE}前</span>${itm.uName}</p>
+                <p class="title"><span>${itm.REPLYDATE}</span>${itm.uName}</p>
                 <p>${itm.REPLYDETAIL}</p>
+                <c:if test="${!empty itm.REPLYATTACH}">
+                    <c:if test="${itm.REPLYATTACHTYPE eq 1}">
+                        <c:forEach items="${itm.REPLYATTACH}" var="at">
+                            <script type="text/javascript">
+                                var fpath="${at}";
+                                fpath=fpath.replaceAll('"',"").replaceAll("”","").replaceAll("[","").replaceAll("]","");
+                                var h='<img height="70" width="90" src="'+fpath+'" data-src="'+fpath+'">';
+                                document.write(h);
+                            </script>
+
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${itm.REPLYATTACHTYPE eq 2}">
+                        <c:forEach items="${itm.REPLYATTACH}" var="at">
+                            <p><a style="cursor: hand"><img src="images/pic02_140811.png" width="99" height="22"  onclick="ado_${atidx.index}.play()"/></a>
+
+                                    <span style="display:none"><audio controls="controls" id="ado_${atidx.index}">
+                                        <source src="${at}" type="audio/ogg">
+                                        <source src="${at}" type="audio/mpeg">
+                                        您的浏览器不支持 audio 标签。
+                                    </audio></span></p>
+                        </c:forEach>
+                    </c:if>
+                </c:if>
             </div>
         </c:forEach>
     </c:if>

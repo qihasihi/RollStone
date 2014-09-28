@@ -1468,7 +1468,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             }else if(fujianType.equalsIgnoreCase("m4a")||fujianType.equalsIgnoreCase("mp3")){
                                 returnUserMap.put("replyAttachType",2);
                             }
-                            String fujian = UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"+UtilTool.utilproperty.getProperty("PROC_NAME")+"/uploadfile/"+taskUserRecord.get(i).get("REPLYATTACH");
+                            String fujian = "http://"+UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"+UtilTool.utilproperty.getProperty("PROC_NAME")+"/uploadfile/"+taskUserRecord.get(i).get("REPLYATTACH");
                             att.put("attach",fujian);
                         }else{
                             att.put("attach",taskUserRecord.get(i).get("REPLYATTACH"));
