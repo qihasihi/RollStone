@@ -1168,26 +1168,31 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 classInfo.setClassid(Integer.parseInt(classid));
                 List<ClassInfo> clsList=this.classManager.getList(classInfo,null);
                 if(clsList!=null&&clsList.size()>0&&clsList.get(0).getDctype()==3){
-                 List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(Integer.parseInt(classid),Integer.parseInt(subjectid),courseids,groupIdStr.toString(),2);
-                    for(TpCourseInfo tctmp:stucourseList){
-                        if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
-                              for(Map<String,Object> csOMap:courseScoreIsOverList){
-                                if(csOMap!=null&&csOMap.containsKey("STUSCORECOUNT")&&csOMap.containsKey("GROUPCOUNT")
-                                        &&csOMap.containsKey("COURSE_ID")){
-                                    String tcid=csOMap.get("COURSE_ID")!=null?csOMap.get("COURSE_ID").toString():null;
-                                    String gCount=csOMap.get("GROUPCOUNT")!=null?csOMap.get("GROUPCOUNT").toString():null;
-                                    String stuScoreCount=csOMap.get("STUSCORECOUNT")!=null?csOMap.get("STUSCORECOUNT").toString():null;
-                                    if(tcid==null||tcid.trim().length()<1
-                                            ||gCount==null||stuScoreCount==null
-                                            )continue;
-                                        if(tctmp!=null&&tctmp.getCourseid().toString().equals(tcid)&&(Integer.parseInt(stuScoreCount)==0||Integer.parseInt(gCount)==Integer.parseInt(stuScoreCount))){
-                                                tctmp.setCourseScoreIsOver(0);
-                                                break;
+                   for(TpCourseInfo tctmp:stucourseList){
+                       List<Map<String,Object>> courseScoreIsOverList=tpCourseManager.getCourseScoreIsOver(Integer.parseInt(classid),Integer.parseInt(subjectid),tctmp.getCourseid()+"",groupIdStr.toString(),2);
+                       if(courseScoreIsOverList!=null&&courseScoreIsOverList.size()>0){
+                                  for(Map<String,Object> csOMap:courseScoreIsOverList){
+                                    if(csOMap!=null&&csOMap.containsKey("STUSCORECOUNT")&&csOMap.containsKey("GROUPCOUNT")
+                                            &&csOMap.containsKey("COURSE_ID")){
+                                        String tcid=csOMap.get("COURSE_ID")!=null?csOMap.get("COURSE_ID").toString():null;
+                                        String gCount=csOMap.get("GROUPCOUNT")!=null?csOMap.get("GROUPCOUNT").toString():null;
+                                        String stuScoreCount=csOMap.get("STUSCORECOUNT")!=null?csOMap.get("STUSCORECOUNT").toString():null;
+                                        if(tcid==null||tcid.trim().length()<1
+                                                ||gCount==null||stuScoreCount==null
+                                                )continue;
+                                            if(tctmp!=null&&tctmp.getCourseid().toString().equals(tcid)&&(Integer.parseInt(stuScoreCount)==0||Integer.parseInt(gCount)==Integer.parseInt(stuScoreCount))){
+                                                    tctmp.setCourseScoreIsOver(0);
+                                                    break;
+                                            }
                                         }
                                     }
-                                }
-                            }
-                    }
+                       }else{
+                           //查询course内是否已经录入分数
+                           List<Map<String,Object>> mlist=tpCourseManager.getCourseScoreIsOver(Integer.parseInt(classid),Integer.parseInt(subjectid),tctmp.getCourseid()+"",null,1);
+                           if(mlist!=null&&mlist.size()>0)  //如果已录小组，则认为已经录入
+                                tctmp.setCourseScoreIsOver(0);
+                       }
+                   }
                 }else{
                     for(TpCourseInfo tctmp:stucourseList){
                         tctmp.setCourseScoreIsOver(0);

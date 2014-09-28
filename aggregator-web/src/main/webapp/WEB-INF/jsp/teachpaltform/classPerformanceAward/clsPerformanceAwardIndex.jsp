@@ -339,6 +339,8 @@ if(!isShowTbl){%>
         <%--<%if(isStudent){%>--%>
         <%--return;--%>
         <%--<%}%>--%>
+        if($("td[name='td_data']").length<1)
+        return;
         if(typeof(adminflag)=="undefined"||adminflag==1||(groupidstr.length<1&&!isTeacher)){
             return;
         }

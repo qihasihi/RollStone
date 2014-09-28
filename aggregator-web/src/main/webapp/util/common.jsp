@@ -151,7 +151,7 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
         session.setAttribute("currentUserRoleList",cruList);
     }
 }
-
+    String testhost = "http://web.etiantian.com";
 %> 
 <%!/**
 页面权限验证
@@ -259,4 +259,13 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 
 </script>  
 <title><%=webTitle%></title>
+
+
+<script src="http://web.etiantian.com/js/o/jplugins/ui/1.8.16/js/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="http://web.etiantian.com/js/o/jplugins/cross-domian/1.0.3/jquery.xdomainrequest.min.js"></script>
+<script src="http://web.etiantian.com/js/o/jplugins/ba-postmessage/0.5/jquery.ba-postmessage.min.js"></script>
+<script src="http://web.etiantian.com/js/o/jplugins/ba-bbq/1.2.1/jquery.ba-bbq.min.js"></script>
+
+<script src="<%=testhost%>/js/ett/frame-bridge/jquery.top-dialog.js" charset="utf-8"></script>
+<script src="<%=testhost%>/js/ett/frame-bridge/jquery.top-bridge.js" charset="utf-8"></script>
 	

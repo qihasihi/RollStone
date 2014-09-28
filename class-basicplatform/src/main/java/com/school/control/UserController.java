@@ -4941,7 +4941,7 @@ public class UserController extends BaseController<UserInfo> {
             // 教师显示全部年纪 2012-02-03 11:06
             gradeidList.clear();
             gradeidList.add(0);
-            ishasgrade = true;// 已经存在年级的处理
+           // ishasgrade = true;// 已经存在年级的处理
 
             // email
             usertype = Long.valueOf(1);
@@ -5085,6 +5085,7 @@ public class UserController extends BaseController<UserInfo> {
         String tmYear = t.getYear().trim();
         // 加载年级
         if (!ishasgrade) {
+            gradeidList.clear();
             ClassUser cu = new ClassUser();
             cu.setUserid(uidRef);
             // 查询当前的年级  如果当前学期没有数据，则不存入学期
@@ -6521,6 +6522,28 @@ public class UserController extends BaseController<UserInfo> {
         response.getWriter().print(jo.toString());
     }
 
+    /**
+     * 验证WebIm权限
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=loadWebImRight",method=RequestMethod.POST)
+    public void loadWebImRight(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JsonEntity jsonEntity=new JsonEntity();
+        //查询用户
+        UserInfo user=new UserInfo();
+        user.setUserid(this.logined(request).getUserid());
+        List<UserInfo> uList=this.userManager.getList(user,null);
+        if(uList!=null&&uList.size()>0&&uList.get(0).getEttuserid()!=null){
+            this.logined(request).setEttuserid(uList.get(0).getEttuserid());
+            jsonEntity.getObjList().add(0);
+        }else
+            jsonEntity.getObjList().add(1);
+        jsonEntity.setType("success");
+        response.getWriter().println(jsonEntity.toJSON());
+    }
+
 }
 
 
@@ -6723,5 +6746,7 @@ class UserTool{
         outputBuilder.append("</html>");
         return outputBuilder.toString();
     }
+
+
 }
 

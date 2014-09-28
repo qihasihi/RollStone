@@ -37,6 +37,15 @@
     if(logoObj!=null){
         logosrc=logoObj.getLogosrc();
     }
+
+
+    //加载网校联系人
+    StringBuilder webimUrl=new StringBuilder("user?m=toEttUrl");
+    if(isStudent){
+        webimUrl.append("&mid=-1");
+    }else{
+        webimUrl.append("&isVip=0");
+    }
   %>
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
     <%if(modelType==2){%>
@@ -53,7 +62,31 @@
          <div id="header">
     <%}%>
 </c:if>
+<script type="text/javascript">
+    function loadWeImRight(){
+        $.ajax({
+            url:"user?m=loadWebImRight",
+            dataType:'json',
+            type:'post',
+            cache: false,
+            error:function(){
+                alert('当前网络不稳定，请重试!');
+            },success:function(rps){
+                if(rps.type=="success"){
+                  if(rps.objList[0]==0){
+                      $("#li_web_im").load("util/webim.jsp",function(){
+                          $("#webimopen").click();
+                      });
+                  }else{
+                      window.open("<%=webimUrl%>");
+                  }
+                }else
+                    alert(rps.msg);
+            }
+        })
+    }
 
+</script>
 <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
 <div id="header">
 </c:if>
@@ -64,18 +97,12 @@
       </c:if>
       <!--如果不是乐知行,则显示爱学，应用-->
     <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
-          <%//加载网校联系人
-              StringBuilder webimUrl=new StringBuilder("user?m=toEttUrl");
-              if(isStudent){
-                  webimUrl.append("&mid=-1");
-              }else{
-                  webimUrl.append("&isVip=0");
-              }
+          <%
               if(sms_user.getEttuserid()!=null&&sms_user.getDcschoolid()!=null){%>
-          <%@include file="webim.jsp"%>
+                <%@include file="webim.jsp"%>
           <%}else{%>
-              <li class="three">
-                  <a  href="<%=webimUrl%>" target="_blank" >爱&nbsp;学</a>
+              <li class="three" id="li_web_im">
+                  <a  href="javascript:;" onclick="loadWeImRight()">爱&nbsp;学</a>
               </li>
           <%}%>
 

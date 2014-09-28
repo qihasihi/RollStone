@@ -135,12 +135,10 @@ public class ToEttInterfaceController extends BaseController<String> {
             returnJO.put("type", type);
 //            if(type=="error"&&msg!=null)
 //                returnJO.put("msg",msg);
-
-
             //将当前的JID存入session中jid
-            UserInfo sessionU=this.logined(request);
-            sessionU.setEttuserid(Integer.parseInt(jId));
-            this.setAttributeSession(request, "CURRENT_USER", sessionU);
+//            UserInfo sessionU=this.logined(request);
+//            sessionU.setEttuserid(Integer.parseInt(jId));
+//            this.setAttributeSession(request, "CURRENT_USER", sessionU);
         }else
             returnJO.put("msg","绑定失败!原因：未知，可能执行存储失败!");
         System.out.println("imghead----"+returnJO.get("msg"));

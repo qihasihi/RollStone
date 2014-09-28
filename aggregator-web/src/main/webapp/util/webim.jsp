@@ -3,49 +3,55 @@
 
 <%@ page import="org.apache.commons.codec.digest.DigestUtils" %>
 <%@ page import="com.school.util.MD5" %>
+<%@ page import="com.school.entity.UserInfo" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.school.entity.RoleUser" %>
+<%@ page import="com.school.util.UtilTool" %>
 
 <%
+    UserInfo sms_user1=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
+    long jid = sms_user1.getEttuserid();
+    long schoolId =sms_user1.getDcschoolid();
 
-    long jid = sms_user.getEttuserid();
-    long schoolId =sms_user.getDcschoolid();
+
+    List<RoleUser> cruList1=sms_user1.getCjJRoleUsers();
+    boolean isWxJw1=false;
+    if(cruList1!=null){
+        for(RoleUser ru : cruList1){
+            if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID)){
+              if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_WXJW_ID)){
+                  isWxJw1=true;
+                  break;
+              }
+            }
+        }
+    }
 
     //3:学生 2:教务:1教师
     long userType=1;
-    if(sms_user.getStuname()!=null&&sms_user.getStuname().length()>0)
+    if(sms_user1.getStuname()!=null&&sms_user1.getStuname().length()>0)
         userType=3;
-    else if(isWxJw||schoolId<50000)
+    else if(isWxJw1||schoolId<50000)
         userType=2;
     else
         userType=1;
 
 
-
     String webimtimestamp =String.valueOf(new Date().getTime());
     String webimtoken = DigestUtils.md5Hex(jid + webimtimestamp);
     String webimkey= MD5.getJDKMD5(jid + "#etttigase#");
-    String testhost = "http://web.etiantian.com";
 
+    String testhost1 = "http://web.etiantian.com";
 %>
-<html>
-<head>
     <title>im</title>
     <link rel="stylesheet" href="http://web.etiantian.com/js/ett/webim/css/webim.css" type="text/css"/>
 
-
-   <!--<script src="<%=testhost%>/js/o/jquery/1.7.1/jquery-1.7.1.js"></script>-->
-    <script src="http://web.etiantian.com/js/o/jplugins/ui/1.8.16/js/jquery-ui-1.8.16.custom.min.js"></script>
-    <script src="http://web.etiantian.com/js/o/jplugins/cross-domian/1.0.3/jquery.xdomainrequest.min.js"></script>
-    <script src="http://web.etiantian.com/js/o/jplugins/ba-postmessage/0.5/jquery.ba-postmessage.min.js"></script>
-    <script src="http://web.etiantian.com/js/o/jplugins/ba-bbq/1.2.1/jquery.ba-bbq.min.js"></script>
-
-    <script src="<%=testhost%>/js/ett/frame-bridge/jquery.top-dialog.js" charset="utf-8"></script>
-    <script src="<%=testhost%>/js/ett/frame-bridge/jquery.top-bridge.js" charset="utf-8"></script>
     <script>
         $(document).ready(function () {
 
 
-            var jsURL = "<%=testhost%>/js/ett/webim/webim-panel.html";
-            var webim_info_url = "<%=testhost%>/js/ett/webim/webim-info.html";
+            var jsURL = "<%=testhost1%>/js/ett/webim/webim-panel.html";
+            var webim_info_url = "<%=testhost1%>/js/ett/webim/webim-info.html";
 
 
             $("#webimopen").click(function () {
@@ -104,7 +110,7 @@
             $.framebridge.openDialog({windowId: "123456",windowClass:"webim_group_layout", target_url: jsURL,width: 262, height: 590, queryString:{jid:<%=jid %>,userType:<%=userType %>,schoolId:<%=schoolId %>,webimtoken:'<%=webimtoken %>',webimtimestamp:'<%=webimtimestamp %>',webimkey:'<%=webimkey%>'}, position: [100, 20],autoOpen: false, autoCreate: true});
         });
     </script>
-</head>
+
 <li class="three">
     <a id="webimopen" href="javascript:void(0)" >爱&nbsp;学<span id="webimcnt"></span></a>
 </li>
