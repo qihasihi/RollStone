@@ -1735,7 +1735,7 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                                         htm += '<td></td>';
                                     if (typeof(itm.answercontent) != 'undefined') {
                                         htm += '<td>' + itm.answercontent;
-                                        if(typeof(itm.replyattachList)!="undefined"&&itm.replyattach.length>0){
+                                        if(typeof(itm.replyattachList)!="undefined"&&itm.replyattachList.length>0){
                                             if(itm.replyattachList.length>0){
                                                 //htm+='<p><span><br>答题附件：';
                                                 $.each(itm.replyattachList,function(index,itmObj){
@@ -1806,7 +1806,7 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                             htm += '<td></td>';
                         if (typeof(itm.answercontent) != 'undefined') {
                             htm += '<td>' + itm.answercontent;
-                            if(typeof(itm.replyattachList)!="undefined"&&itm.replyattach.length>0){
+                            if(typeof(itm.replyattachList)!="undefined"&&itm.replyattachList.length>0){
                                 if(itm.replyattachList.length>0){
                                     //htm+='<p><span><br>答题附件：';
                                     $.each(itm.replyattachList,function(index,itmObj){
