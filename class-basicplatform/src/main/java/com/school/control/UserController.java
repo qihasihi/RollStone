@@ -5285,8 +5285,9 @@ public class UserController extends BaseController<UserInfo> {
             paramMap.put("realname", java.net.URLEncoder.encode(realname, "UTF-8"));
             paramMap.put("usertype", usertype);
             paramMap.put("sex",sex);
-            if(isVip!=null)
-                paramMap.put("isVip",isVip);
+            if(isVip==null)
+                isVip="{\"nowTime\":"+new Date().getTime()+"}";
+            paramMap.put("isVip",isVip);
             paramMap.put("time", time);
             if (email != null && email.trim().indexOf("@") != -1)
                 paramMap.put("email",email.trim());
@@ -5351,8 +5352,9 @@ public class UserController extends BaseController<UserInfo> {
 
             if(mid!=null)
                paramMap.put("mid",mid);
-            if(isVipJson!=null)
-                paramMap.put("isVip",isVipJson);
+            if(isVipJson==null)
+                isVipJson="{\"nowTime\":\""+new Date().getTime()+"\"}";
+            paramMap.put("isVip",isVipJson);
             paramMap.put("realname",  java.net.URLEncoder.encode(realname,"UTF-8"));
             paramMap.put("username",java.net.URLEncoder.encode(username,"UTF-8"));
             paramMap.put("usertype", usertype);

@@ -105,8 +105,6 @@
                   <a  href="javascript:;" onclick="loadWeImRight()">爱&nbsp;学</a>
               </li>
           <%}%>
-
-
      </c:if>
 
       <!--如果是网校进入，则显示应用-->

@@ -122,6 +122,10 @@ public class BaseInterceptor implements HandlerInterceptor {
         //System.out.println(currentpath);
 
         boolean returnType = false;
+        //如果是用户上传的两个目录，则直接pass
+        if(request.getRequestURI().indexOf("/userUploadFile/")!=-1||request.getRequestURI().indexOf("/uploadfile/")!=-1){
+            return true;
+        }
         String realpath = this.getLocationUrlMethod(request);
         // 未登录时用户访问以下链接不需要拦截
         //System.out.println(realpath);
@@ -166,7 +170,7 @@ public class BaseInterceptor implements HandlerInterceptor {
                                         }
                                     }
                                 }
-                                logger.info("----------------\n----No Login active:     "+request.getRequestURL().toString()+"?"+paramStr.toString());
+                                logger.error("----------------\n----No Login active:     "+request.getRequestURL().toString()+"?"+paramStr.toString());
                             }
                             break;
                         }
