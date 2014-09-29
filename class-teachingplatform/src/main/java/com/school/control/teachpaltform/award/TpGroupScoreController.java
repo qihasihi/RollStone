@@ -492,7 +492,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         JsonEntity jsonEntity=new JsonEntity();
         if(subjectid==null||subjectid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-            response.getWriter().print(jsonEntity.toJSON());return null;
+            response.getWriter().print(jsonEntity.getAlertMsgAndBack());return null;
         }
         if(sort==null)
             sort="asc";
@@ -502,7 +502,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         List<ClassInfo> clsList=this.classManage.getList(cls,null);
         if(clsList==null||clsList.size()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NOT_EXISTS"));
-            response.getWriter().print(jsonEntity.toJSON());return null;
+            response.getWriter().print(jsonEntity.getAlertMsgAndBack());return null;
         }
         List<Map<String,Object>> listMap=this.tpStuScoreManager.getScoreStatices(Integer.parseInt(subjectid),Integer.parseInt(classid),sort);
         mp.put("dataList",listMap);
