@@ -90,6 +90,12 @@ public class QuestionAnswer  implements java.io.Serializable{
                     if(astr!=null&&astr.trim().length()>0){
                         if(astr.indexOf("http:")==-1&&astr.indexOf("https:")==-1){
                             astr=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+astr;
+                        }else{
+                            String suffix=astr.substring(astr.lastIndexOf("."));
+                            if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR, suffix)){
+                                String fileName=astr.substring(0,astr.lastIndexOf("."));
+                                astr=fileName+"_1"+suffix;
+                            }
                         }
                         returnList.add(astr);
                     }
