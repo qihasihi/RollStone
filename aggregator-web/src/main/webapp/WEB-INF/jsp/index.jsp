@@ -341,8 +341,9 @@ function updatePass(){
                 alert('异常错误!系统未响应!');
             },success:function(rps){
                 if(rps.type=='success'){
-                    $("#oldpass").val($("#pass").val());
+                    $("#oldpass").val($("#newHeadPass").val());
                     alert("修改成功!");
+                    //$("#newHeadPass");
                 }else
                     alert(rps.msg);
             }
