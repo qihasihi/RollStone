@@ -71,7 +71,7 @@ $(function(){
         post_form:document.fm_dto_form,		//form
         gender_address_id:'dv_dto_pageress',		//显示的区域
         //  http_free_operate_handler:beforDtMethod,		//执行查询前操作的内容
-        http_operate_handler:myInfoAjaxList,	//执行成功后返回方法
+        http_operate_handler:myInfoAjaxList1,	//执行成功后返回方法
         return_type:'json',								//放回的值类型
         page_no:1,					//当前的页数
         page_size:8,				//当前页面显示的数量
@@ -140,6 +140,41 @@ function myInfoAjaxList(rps){
         p_myinfo.setRectotal(rps.presult.recTotal);
         p_myinfo.setPagetotal(rps.presult.pageTotal);
         p_myinfo.Refresh();
+    }else{
+        h+='<li>'+rps.msg+'</li>';
+    }
+    $("#ul_dt_data").html(h);
+}
+
+
+function myInfoAjaxList1(rps){
+    var h='';
+    if(rps.type=="success"){
+        if(rps.objList.length>0){
+            $.each(rps.objList,function(idx,itm){
+                var sMsg=itm.dataMsg;
+                if(typeof(itm.realName)!="undefined"&&itm.realName.Trim().length>0)
+                    sMsg=itm.otherDataMsg;
+                h+='<li><b>'+itm.ctimeString+'</b>';
+                if(sMsg.indexOf("分享")!=-1&&sMsg.indexOf("资源库")!=-1){
+                    h+='<span class="ico63">';
+                }else if(sMsg.indexOf("评论")!=-1){
+                    h+='<span class="ico67">';
+                }else/* if(sMsg.indexOf("分享")!=-1)*/{
+                    h+='<span class="ico64">';
+                }
+//                if(itm.targetid>0)
+//                    h+='<span class="ico64">';
+//                else
+//                    h+='<span class="ico63">';
+                h+='</span>&nbsp;'+sMsg+'</li>';
+            });
+        }
+        p_omyinfo.setPageSize(rps.presult.pageSize);
+        p_omyinfo.setPageNo(rps.presult.pageNo);
+        p_omyinfo.setRectotal(rps.presult.recTotal);
+        p_omyinfo.setPagetotal(rps.presult.pageTotal);
+        p_omyinfo.Refresh();
     }else{
         h+='<li>'+rps.msg+'</li>';
     }
