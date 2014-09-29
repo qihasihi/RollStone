@@ -1577,18 +1577,27 @@ public class UserController extends BaseController<UserInfo> {
                                 List<ClassUser>clsBzrList=this.classUserManager.getList(selBzr,null);
                                 if(clsBzrList!=null&&clsBzrList.size()>0){
                                     for(ClassUser classUser:clsBzrList){
+                                        //记录相关班级 ，同步网校
+                                        if(!operateCls.contains(Integer.parseInt(clsid.toString())))
+                                            operateCls.add(Integer.parseInt(clsid.toString()));
+
                                         RoleUser roleUser=new RoleUser();
                                         roleUser.setRoleid(UtilTool._ROLE_CLASSADVISE_ID);
                                         roleUser.setUserid(classUser.getUserid());
+
+                                        ClassUser bzrRight=new ClassUser();
+                                        bzrRight.setRelationtype("班主任");
+                                        bzrRight.setUserid(classUser.getUserid());
+                                        List<ClassUser>bzrRightList=this.classUserManager.getList(bzrRight,null);
+
                                         sql=new StringBuilder();
-                                        objList=this.roleUserManager.getDeleteSql(roleUser,sql);
-                                        if (objList != null && sql != null) {
-                                            sqllist.add(sql.toString());
-                                            objListArray.add(objList);
+                                        if(bzrRightList!=null&&bzrRightList.size()==1){//为多个班的班主任，不删除角色
+                                            objList=this.roleUserManager.getDeleteSql(roleUser,sql);
+                                            if (objList != null && sql != null) {
+                                                sqllist.add(sql.toString());
+                                                objListArray.add(objList);
+                                            }
                                         }
-                                        //记录相关班级，同步网校
-                                        if(!operateCls.contains(Integer.parseInt(clsid.toString())))
-                                            operateCls.add(Integer.parseInt(clsid.toString()));
                                     }
                                 }
                                 //删除该班级班主任

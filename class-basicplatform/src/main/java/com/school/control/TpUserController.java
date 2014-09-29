@@ -780,11 +780,19 @@ public class TpUserController extends UserController {
                 RoleUser ru = new RoleUser();
                 ru.getUserinfo().setRef(cu.getUserid());
                 ru.getRoleinfo().setRoleid(UtilTool._ROLE_CLASSADVISE_ID);
-                sql = new StringBuilder();
-                objList = this.roleUserManager.getDeleteSql(ru, sql);
-                if (objList != null && sql != null) {
-                    sqlListArray.add(sql.toString());
-                    objListArray.add(objList);
+
+
+                ClassUser bzrRight=new ClassUser();
+                bzrRight.setRelationtype("班主任");
+                bzrRight.setUserid(cu.getUserid());
+                List<ClassUser>bzrRightList=this.classUserManager.getList(bzrRight,null);
+                if(bzrRightList!=null&&bzrRightList.size()==1){//为多个班的班主任，不删除角色
+                    sql = new StringBuilder();
+                    objList = this.roleUserManager.getDeleteSql(ru, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
                 }
             }
         }

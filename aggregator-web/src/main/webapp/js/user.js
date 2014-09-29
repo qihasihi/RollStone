@@ -1608,7 +1608,7 @@ function edit_info(){
 		$("#sp_subject").html($("#edit_subject").html());
 		$("#sp_teacls").html($("#edit_cls").html());
 
-        getClsByYear('view_body');
+
 		
 		$(mail).html('<input  type="text" id="txt_mail" value="'+mail.html().Trim()+'"/>');
 		$(phone).html('<input  type="text" id="txt_phone" value="'+phone.html().Trim()+'"/>');
@@ -1619,11 +1619,13 @@ function edit_info(){
             $(itm).bind("click",function(){
                 $('#view_body input[name="subject"][value="'+itm.value+'"]').attr({"checked":false,"disabled":true});
                 $('#view_body input[name="subject"][value!="'+itm.value+'"]').attr({"disabled":false});
+                getClsByYear('view_body');
             });
         });
 
         $('#view_body input[name="subject"]').each(function(idx,itm){
             $(itm).bind("click",function(){
+                getClsByYear('view_body');
                 if(itm.value==$("#view_body input[name='subject_major']:checked").val())
                     $(itm).attr({"checked":false,"disabled":true});
             });
@@ -1636,7 +1638,10 @@ function edit_info(){
 		});
 		$.each(subject,function(idx,itm){
 			$("#view_body input[name='subject']").filter(function(){return this.value==itm.value}).attr("checked",true);
-		});        
+		});
+
+        getClsByYear('view_body');
+
 		//班级   
 		$("#view_bodyr ol[id='cls_result']").html(''); 
 		$.each(cls,function(idx,itm){

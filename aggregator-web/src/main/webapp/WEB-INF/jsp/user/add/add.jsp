@@ -43,10 +43,12 @@ p {
                 $(itm).bind("click",function(){
                     $('#addteacher input[name="subject"][value="'+itm.value+'"]').attr({"checked":false,"disabled":true});
                     $('#addteacher input[name="subject"][value!="'+itm.value+'"]').attr({"disabled":false});
+                    getClsByYear('addteacher');
                 });
             });
             $('#addteacher input[name="subject"]').each(function(idx,itm){
                 $(itm).bind("click",function(){
+                    getClsByYear('addteacher');
                     if(itm.value==$("#addteacher input[name='subject_major']:checked").val())
                         $(itm).attr({"checked":false,"disabled":true});
                 });
