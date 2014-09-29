@@ -147,7 +147,7 @@
     </div>
 
     <div class="jxxt_studentL">
-        <p class="font-darkblue f_right"><a href="javascript: ;" onclick="window.open('task?m=tostuSelfPerformance&termid='+termid.value+'&classid='+_clsid+'&subjectid='+subjectid.value)" id="task_performance"><span class="ico37"></span>任务完成统计</a>&nbsp;&nbsp;<a href="javascript:;" onclick="window.open('clsperformance?m=toAwardStaticesScore&subjectid='+subjectid.value+'&classid='+_clsid);" ><span class="ico66"></span>课程积分</a></p>
+        <p class="font-darkblue f_right"><a href="javascript: ;" onclick="window.open('task?m=tostuSelfPerformance&termid='+termid.value+'&classid='+_clsid+'&subjectid='+subjectid.value)" id="task_performance"><span class="ico37"></span>任务完成统计</a>&nbsp;&nbsp;<a href="javascript:;" onclick="window.open('clsperformance?m=toAwardStaticesScore&subjectid='+subjectid.value+'&classid='+_clsid+'&termid='+termid.value);" ><span class="ico66"></span>课程积分</a></p>
         <div class="banji" id="dv_banji">
             <p class="font-black"><span id="current_banji"></span><a id="a_nextBj" href="javascript:;" onclick="autoShowObjById('stuClasses')" class="ico49a"></a></p>
             <ul class="banji hide" id="stuClasses">
