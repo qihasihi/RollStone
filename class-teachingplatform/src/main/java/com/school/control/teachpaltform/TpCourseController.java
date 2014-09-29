@@ -1091,7 +1091,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                 signMap.put("courseName",tmpTask.getCoursename());
                                 signMap.put("courseId",tmpTask.getTaskid().toString().replace("-",""));
                                 signMap.put("userId",this.logined(request).getUserid().toString());
-                                signMap.put("userName",this.logined(request).getUsername());
+                                signMap.put("userName",this.logined(request).getRealname());
                                 signMap.put("rec","3");
                                 signMap.put("srcId","90");
                                 signMap.put("timestamp",System.currentTimeMillis()+"");
@@ -2851,7 +2851,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                     signMap.put("courseName",tctmp.getCoursename());
                                     signMap.put("courseId",tmpTask.getTaskid().toString().replace("-",""));
                                     signMap.put("userId",this.logined(request).getUserid().toString());
-                                    signMap.put("userName",this.logined(request).getUsername());
+                                    signMap.put("userName",this.logined(request).getRealname());
                                     signMap.put("rec","2");
                                     signMap.put("srcId","90");
                                     signMap.put("timestamp",System.currentTimeMillis()+"");

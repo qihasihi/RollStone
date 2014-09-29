@@ -5,6 +5,7 @@
 
     UserInfo user=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
     String username = user.getUsername();
+    //String pass=request.getAttribute("pass").toString();
     String pass=user.getPassword();
     request.setAttribute("pageType","index" );
 %>
@@ -322,19 +323,12 @@ function submitHeadCut(){
 }
 function updatePass(){
    var type=$("#pwd_type").val();
-   validateNewPass($("#newHeadPass").get(0));
-   validateOldPass($("#oldHeadPass").get(0));
+   var newPwd=$("#newHeadPass").get(0);
+   var oldPwd=$("#oldHeadPass").get(0);
+   if(!(validateNewPass(newPwd)&&validateOldPass(oldPwd)))
+        return;
    var pass=$("#newHeadPass").val();
-  /*  var pass2 = $("#moreHeadPass").val();
-    if(pass2.Trim().length<1){
-        $("#moreHeadPass").html("请再次输入密码");
-        $("#moreHeadPass").show();
-        return;
-    }
-    if(pass!=pass2){
-        $("#moreHeadPass").show();
-        return;
-    } */
+
     if(type==1){
         $.ajax({
             url:'user?m=changepassword',
@@ -346,7 +340,11 @@ function updatePass(){
             error:function(){
                 alert('异常错误!系统未响应!');
             },success:function(rps){
-                alert("修改成功!");
+                if(rps.type=='success'){
+                    $("#oldpass").val($("#pass").val());
+                    alert("修改成功!");
+                }else
+                    alert(rps.msg);
             }
         });
     }else{
@@ -361,32 +359,39 @@ function validateOldPass(obj){
         var oldpass=$("#oldpass").val();
         if(pass!=oldpass){
             $("#oldPassMsg").html('输入的原密码不对');
+            return false;
         }else{
             $("#oldPassMsg").html('');
         }
+        if(pass.Trim().length<6||pass.Trim().length>12){
+            $("#oldPassMsg").html('密码为6-12个字符');
+            return false;
+        }else
+            $("#oldPassMsg").html('');
     }else{
-        if(pass.Trim().length<6){
-            $("#oldPassMsg").html('密码至少六个字符');
+        if(pass.Trim().length<6||pass.Trim().length>12){
+            $("#oldPassMsg").html('密码为6-12个字符');
+            return false;
         }else
             $("#oldPassMsg").html('');
     }
-
-
+    return true;
 }
 function validateNewPass(obj){
     var pass = obj.value;
     if(pass.Trim().length<1){
         $("#newPassMsg").html("请输入密码");
-        return;
+        return false;
     }else{
         $("#newPassMsg").html('');
     }
-    if(pass.Trim().length<6){
-        $("#newPassMsg").html("请输入大于等于6个字符的密码长度");
-        return;
+    if(pass.Trim().length<6||pass.Trim().length>12){
+        $("#newPassMsg").html("请输入6-12个字符的密码长度");
+        return false;
     }else{
         $("#newPassMsg").html('');
     }
+    return true;
 }
 
 function validateMorePass(obj){
@@ -956,6 +961,12 @@ function closeEditUser(){
         $("#pwd_type").val(type);
         $(obj).addClass("crumb");
         $(obj).siblings("a").removeClass("crumb");
+        $("#oldHeadPass").val('');
+        $("#newHeadPass").val('');
+
+        $("#userNameMsg").html('');
+        $("#oldPassMsg").html('');
+        $("#newPassMsg").html('');
 
         if(type==2){
             $("#td_username").html('<input type="text" id="txt_username" onblur="checkEttUserName(this)"/>')

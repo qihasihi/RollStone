@@ -263,9 +263,9 @@ function afterAjaxCourseResList(rps) {
             html += '<tr>';
             html += '<td>';
             if(itm.resflag>0)
-                html+='<input type="radio" disabled checked>';
+                html+='<input type="checkbox" disabled checked>';
             else
-                html+='<input type="radio"  name="ck_course_resource" value=' + itm.resid + '>';
+                html+='<input type="checkbox"  name="ck_course_resource" value=' + itm.resid + '>';
             html+='<span class="' + itm.suffixtype + '"></span></td>';
             html += '<td>';
             html += '<p><a href="resource?m=todetail&resid=' + itm.resid + '" target="_blank">' + itm.resname + '</a></p>';
@@ -2555,10 +2555,10 @@ function getStuNoteReturnMethod(rps) {
         $.each(rps.objList[0], function (idx, itm) {
             html += '<div class="pinglun" id="div_comment_' + itm.ref + '">';
             html += '        <p class="font-black"><span class="font-blue">' + itm.cuserinfo.realname + '：</span>' + itm.answercontent + '</p>';
-            if(typeof itm.replyattach!='undefined'&&itm.replyattach.toString().length>0&&typeof(itm.replyattachList)!="undefined"){
-                if(itm.replyattachList.length>0){
+            if(typeof itm.replyattach!='undefined'&&itm.replyattach.toString().length>0&&typeof(itm.originalReplyattachList)!="undefined"){
+                if(itm.originalReplyattachList.length>0){
                     html+='<p id="">心得附件：';
-                    $.each(itm.replyattachList,function(idx,itm){
+                    $.each(itm.originalReplyattachList,function(idx,itm){
                         var name=itm.substring(itm.lastIndexOf("/")+1);
                         var lastName=name.substring(name.lastIndexOf("."));
                         html+='<a class="font-blue" target="_blank" href="'+itm+'">'+(idx+1)+lastName+'</a>&nbsp;';
@@ -3038,10 +3038,10 @@ function loadStudyNotes(usertype) {
                         if (usertype == 1) {
                             htm += '<p>我的心得&nbsp;';//<a  class="ico11" title="编辑" href="javascript:genderStuNoteTextArea(' + rps.objList[0].ref + ')"></a>';
                             htm += '<div id="dv_updnote" class="two">' + rps.objList[0].answercontent;
-                            if(typeof rps.objList[0].replyattach!='undefined'&&rps.objList[0].replyattach.toString().length>0&&typeof(rps.objList[0].replyattachList)!="undefined"){
-                                if(rps.objList[0].replyattachList.length>0){
+                            if(typeof rps.objList[0].replyattach!='undefined'&&rps.objList[0].replyattach.toString().length>0&&typeof(rps.objList[0].originalReplyattachList)!="undefined"){
+                                if(rps.objList[0].originalReplyattachList.length>0){
                                     htm+='<p id="p_stu_note">心得附件：';
-                                    $.each(rps.objList[0].replyattachList,function(idx,itm){
+                                    $.each(rps.objList[0].originalReplyattachList,function(idx,itm){
                                         var name=itm.substring(itm.lastIndexOf("/")+1);
                                         var lastName=name.substring(name.lastIndexOf("."));
                                         htm+='<a class="font-blue" target="_blank" href="'+itm+'">'+(idx+1)+lastName+'</a>&nbsp;';

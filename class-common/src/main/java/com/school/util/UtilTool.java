@@ -64,6 +64,7 @@ public class UtilTool implements java.io.Serializable {
     private final static String _TYPE2 = "yyyy/MM/dd HH:mm:ss";
     private final static String _TYPE3 = "HH:mm:ss";
     private final static String _TYPE4="yyyy/MM/dd HH:mm";
+    private final static String _TYPE5="M‘¬dd»’ HH:mm";
     private final static String _YEAR = "yyyy";
     private final static String _YEARANDMONTH = "yyyy-MM";
     private final static String _SMOLLDATE = "yyyy-MM-dd";
@@ -308,6 +309,8 @@ public class UtilTool implements java.io.Serializable {
             daformat = new SimpleDateFormat(_TYPE3);
         } else if (DateType.type4 == dt) {
             daformat = new SimpleDateFormat(_TYPE4);
+        } else if (DateType.type5 == dt) {
+            daformat = new SimpleDateFormat(_TYPE5);
         } else if (DateType.year == dt) {
             daformat = new SimpleDateFormat(_YEAR);
         } else if (DateType.yearAndMonth == dt) {
@@ -362,6 +365,8 @@ public class UtilTool implements java.io.Serializable {
             daformat = new SimpleDateFormat(_TYPE3);
         }else if (DateType.type4 == dt) {
             daformat = new SimpleDateFormat(_TYPE4);
+        }else if (DateType.type5 == dt) {
+            daformat = new SimpleDateFormat(_TYPE5);
         } else if (DateType.year == dt) {
             daformat = new SimpleDateFormat(_YEAR);
         } else if (DateType.yearAndMonth == dt) {
@@ -395,6 +400,10 @@ public class UtilTool implements java.io.Serializable {
          *  yyyy/MM/dd hh:mm
          */
         type4,
+        /**
+         * MM/dd hh:mm
+         */
+        type5,
         /**
          * yyyy
          */

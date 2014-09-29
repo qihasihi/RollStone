@@ -538,7 +538,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         signMap.put("courseName",task.getCoursename().toString());
                         signMap.put("courseId",lessionid);
                         signMap.put("userId",this.logined(request).getUserid().toString());
-                        signMap.put("userName",this.logined(request).getUsername());
+                        signMap.put("userName",this.logined(request).getRealname());
                         signMap.put("rec","3");
                         signMap.put("srcId","90");
                         signMap.put("timestamp",System.currentTimeMillis()+"");

@@ -48,7 +48,7 @@ public class QuestionAnswer  implements java.io.Serializable{
     }
 
     /**
-     * 文件List
+     * 文件List (缩略图)
      * @return
      */
     public List<String> getReplyattachList(){
@@ -68,6 +68,43 @@ public class QuestionAnswer  implements java.io.Serializable{
             }else{
                 if(getReplyattach().indexOf("http:")==-1&&getReplyattach().indexOf("https:")==-1){
                     returnList.add(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getReplyattach());
+                }else
+                    returnList.add(getReplyattach());
+            }
+        }
+        return returnList;
+    }
+
+
+    /**
+     * 文件List (原图)
+     * @return
+     */
+    public List<String> getOriginalReplyattachList(){
+        List<String> returnList=new ArrayList<String>();
+        if(this.getReplyattach()!=null&&this.getReplyattach().length()>0){
+            if(this.getReplyattach().indexOf(",")!=-1){
+                String replyAttach=this.getReplyattach().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
+                String[] annexArray=getReplyattach().split(",");
+                for(String astr:annexArray){
+                    if(astr!=null&&astr.trim().length()>0){
+                        if(astr.indexOf("http:")==-1&&astr.indexOf("https:")==-1){
+                            astr=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+astr;
+                        }
+                        returnList.add(astr);
+                    }
+                }
+            }else{
+                if(getReplyattach().indexOf("http:")==-1&&getReplyattach().indexOf("https:")==-1){
+                    String attachUrl=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getReplyattach();
+                    String suffix=getReplyattach().substring(getReplyattach().lastIndexOf("."));
+                    //123.jpg
+                    if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR, suffix)){
+                        String[]fileNameArr=getReplyattach().split("\\.");
+                        if(fileNameArr.length>0)
+                            attachUrl=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fileNameArr[0]+"_1"+suffix;
+                    }
+                    returnList.add(attachUrl);
                 }else
                     returnList.add(getReplyattach());
             }

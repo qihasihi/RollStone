@@ -194,10 +194,12 @@ function getInvestReturnMethod(rps){
                 html+='<a class="font-blue" href="task?m=teaQuesAnserList&taskid='+itm.taskid+'" target="_blank">'+taskObj+'</a>';
             }else if(itm.tasktype==9){
                 html+='<a class="font-blue" href="task?m=teaQuesAnserList&taskid='+itm.taskid+'"target="_blank" >'+taskObj+'</a>';
-            }else if(itm.tasktype==10&&itm.taskstatus!="3"&&itm.taskstatus!="1"){
-
-                html+='<a class="font-blue" target="_blank" href="'+itm.liveaddress+'" >'+taskObj+'</a>';
-                html+='<a class="lm_ico08" title="直播课" target="_blank" href="'+itm.liveaddress+'"></a>';
+            }else if(itm.tasktype==10){
+                if(itm.taskstatus!="3"&&itm.taskstatus!="1"){
+                    html+='<a class="font-blue" target="_blank" href="'+itm.liveaddress+'" >'+taskObj+'</a>';
+                    html+='<a class="lm_ico08" title="直播课" target="_blank" href="'+itm.liveaddress+'"></a>';
+                }
+                html+='&nbsp;&nbsp;&nbsp;&nbsp<span style="color:gray;">'+itm.btimeSimpleString+'</span>';
             }
             if(itm.tasktype==4&&itm.taskstatus=="3"){
                 html+='<a class="ico84" title="批阅" target="_blank" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
@@ -210,7 +212,7 @@ function getInvestReturnMethod(rps){
             html+='<p class="time" id="p_obj_'+itm.taskid+'"></p>';//<strong>任务对象：</strong>
             if(itm.tasktype<6)
                 html+='<p><strong>完成标准：</strong> '+criteria+'</p>';
-            if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9)
+            if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9&&itm.taskremark!='undefined'&&itm.taskremark.length>0)
                 html+='<p><strong>任务描述：</strong><span  style="color:#000000;">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';//class="width"
             html+='<table border="0" cellspacing="0" cellpadding="0" class="black">';
             html+='<col class="w50"/>'

@@ -6,6 +6,7 @@ import com.school.util.PageUtil.PageUtilTool;
 import com.school.util.UtilTool;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -331,7 +332,8 @@ public class TpTaskInfo implements Serializable {
         this.mtime = mtime;
     }
     public java.lang.String getTaskremark(){
-        return taskremark==null||taskremark.trim().length()<1?"нч":taskremark;
+       // return taskremark==null||taskremark.trim().length()<1?"нч":taskremark;
+        return taskremark;
     }
     public void setTaskremark(java.lang.String taskremark){
         this.taskremark = taskremark;
@@ -418,6 +420,11 @@ public class TpTaskInfo implements Serializable {
         if(btime==null)
             return null;
         return UtilTool.DateConvertToString(UtilTool.StringConvertToDate(btime.toString()), UtilTool.DateType.type1);
+    }
+    public String getBtimeSimpleString(){
+        if(btime==null)
+            return null;
+        return UtilTool.DateConvertToString(UtilTool.StringConvertToDate(btime.toString()), UtilTool.DateType.type5);
     }
 
     public String getEtimeString(){

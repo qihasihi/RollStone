@@ -110,7 +110,7 @@
      </c:if>
 
       <!--如果是网校进入，则显示应用-->
-      <c:if test="${empty sessionScope.fromType}">
+      <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='ett'&&sessionScope.fromType!='lzx')}">
           <li class="five"><a href="APP.html" target="_blank">应&nbsp;用</a></li>
       </c:if>
 

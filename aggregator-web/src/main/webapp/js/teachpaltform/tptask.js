@@ -757,9 +757,11 @@ function initTaskCriteria(tasktype) {
         htm += '<input value="2" name="ck_criteria" type="radio" />发主帖&nbsp;';
     } else if (tasktype == "3") {//课后作业
         htm += '<input checked value="1" name="ck_criteria" type="radio" />提交&nbsp;';
+        $("#td_criteria").parent().hide();
         //htm+='<input value="right" name="ck_criteria" type="radio" />提交并正确';
     } else if(tasktype=="4"||tasktype=="5") {
         htm += '<input checked value="1" name="ck_criteria" type="radio" />提交试卷';
+        $("#td_criteria").parent().hide();
     } else if(tasktype=="6"){
         htm += '<input  value="1" name="ck_criteria" type="radio" />查看视频';
         htm += '<input checked value="2" name="ck_criteria" type="radio" />提交试卷';

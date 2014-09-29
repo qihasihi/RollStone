@@ -225,17 +225,19 @@
                         var stuanswer='';
                         $.each(itm.questionAnswerList,function(ix,im){stuanswer+=im.answercontent+"&nbsp;"});
 
-                        answerhtm+='<p><strong>您的答案：</strong><span class="width">'+ stuanswer +'</span></p>';
-                        if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].replyattachList)!="undefined"){
-                            if(itm.questionAnswerList[0].replyattachList.length>0){
-                                answerhtm+='<p><span><br>答题附件：';
-                                $.each(itm.questionAnswerList[0].replyattachList,function(idx,itm){
+                        answerhtm+='<p><strong>您的答案：</strong><span class="width">'+ stuanswer;
+                        if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].originalReplyattachList)!="undefined"){
+                            if(itm.questionAnswerList[0].originalReplyattachList.length>0){
+                                answerhtm+='<span><br>答题附件：';
+                                $.each(itm.questionAnswerList[0].originalReplyattachList,function(idx,itm){
                                     var name=itm.substring(itm.lastIndexOf("/")+1);
-                                    answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+name+'</a>&nbsp;';
+                                    var lastName=name.substring(name.lastIndexOf("."));
+                                    answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+(idx+1)+lastName+'</a>&nbsp;';
                                 });
-                                answerhtm+='</span></p>';
+                                answerhtm+='</span>';
                             }
                         }
+                        answerhtm+='</span></p>';
                         if(itm.questiontype==3||itm.questiontype==4){
                             if(itm.rightOptionAnswerList!=null&&itm.rightOptionAnswerList.length>0){
                                 right+='<span class="font-red">';
@@ -263,10 +265,10 @@
                     }else if(itm.tasktype==1){
                         answerhtm+='<p><strong>学习时间：</strong><span class="width">'+itm.taskPerformanceList[0].ctimeString+'</span></p>';
                         answerhtm+='<p><strong>学习心得：</strong><span class="width"  id="sp_note_'+itm.taskid+'"><font>'+(typeof(itm.questionAnswerList[0].answercontent)!='undefined'?replaceAll(replaceAll(itm.questionAnswerList[0].answercontent,"<p>",""),"</p>",""):"")+'</font>';
-                        if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].replyattachList)!="undefined"){
-                            if(itm.questionAnswerList[0].replyattachList.length>0){
+                        if(typeof itm.questionAnswerList[0].replyattach!='undefined'&&itm.questionAnswerList[0].replyattach.length>0&&typeof(itm.questionAnswerList[0].originalReplyattachList)!="undefined"){
+                            if(itm.questionAnswerList[0].originalReplyattachList.length>0){
                                 answerhtm+='<span><br>心得附件：';
-                                $.each(itm.questionAnswerList[0].replyattachList,function(idx,itm){
+                                $.each(itm.questionAnswerList[0].originalReplyattachList,function(idx,itm){
                                     var name=itm.substring(itm.lastIndexOf("/")+1);
                                     var lastName=name.substring(name.lastIndexOf("."));
                                     answerhtm+='<a class="font-blue" target="_blank" href="'+itm+'">'+(idx+1)+lastName+'</a>&nbsp;';
@@ -369,9 +371,12 @@
                 }else if(itm.tasktype==9){
                     html+='<a class="font-blue" href="task?m=stuQuesAnserList&taskid='+itm.taskid+'" target="_blank">'+itm.taskobjname+'</a>';
 
-                }else if(itm.tasktype==10&&itm.taskstatus!="1"&&itm.taskstatus!="3"){
-                    html+='<a  class="font-blue" href="javascript:;" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"  >'+itm.taskobjname+'</a>';
-                    html+='<a class="lm_ico08" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"></a>';
+                }else if(itm.tasktype==10){
+                    if(itm.taskstatus!="1"&&itm.taskstatus!="3"){
+                        html+='<a  class="font-blue" href="javascript:;" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"  >'+itm.taskobjname+'</a>';
+                        html+='<a class="lm_ico08" onclick="toPostURL(\'task?doAddLiveLessionRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:void(0);" title="直播课" href="'+itm.liveaddress+'"></a>';
+                    }
+                    html+='&nbsp;&nbsp;&nbsp;&nbsp<span style="color:gray;">'+itm.btimeSimpleString+'</span>';
                 }
                 if(typeof itm.iscomplete!='undefined'&&itm.iscomplete>0)
                     html+='&nbsp;&nbsp;&nbsp;<img src="css/images/an06_131126.png" width="49" height="21" align="absmiddle">';
