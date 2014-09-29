@@ -120,12 +120,19 @@ function myInfoAjaxList(rps){
                 var sMsg=itm.dataMsg;
                 if(typeof(itm.realName)!="undefined"&&itm.realName.Trim().length>0)
                     sMsg=itm.otherDataMsg;
-               h+='<li><b>'+itm.ctimeString+'</b>';
-                if(itm.targetid>0)
-                h+='<span class="ico64">';
-                else
+                h+='<li><b>'+itm.ctimeString+'</b>';
+                if(sMsg.indexOf("分享")!=-1&&sMsg.indexOf("资源库")!=-1){
                     h+='<span class="ico63">';
-               h+='</span>&nbsp;'+sMsg+'</li>';
+                }else if(sMsg.indexOf("评论")!=-1){
+                    h+='<span class="ico67">';
+                }else/* if(sMsg.indexOf("分享")!=-1)*/{
+                    h+='<span class="ico64">';
+                }
+//                if(itm.targetid>0)
+//                    h+='<span class="ico64">';
+//                else
+//                    h+='<span class="ico63">';
+                h+='</span>&nbsp;'+sMsg+'</li>';
             });
         }
         p_myinfo.setPageSize(rps.presult.pageSize);
@@ -138,6 +145,7 @@ function myInfoAjaxList(rps){
     }
     $("#ul_dt_data").html(h);
 }
+
 
 </script>
 </head>
