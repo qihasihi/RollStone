@@ -7063,12 +7063,17 @@ public class UserController extends BaseController<UserInfo> {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(params="m=foreighLogin",method={RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(params="m=foreighLoginM",method={RequestMethod.GET,RequestMethod.POST})
     public void foreighLogin(HttpServletRequest request,HttpServletResponse response) throws Exception{
         String logintime=request.getParameter("login_time");
         JsonEntity jsonEntity=new JsonEntity();
         if(logintime==null||logintime.trim().length()<1||!UtilTool.isNumber(logintime)){
             jsonEntity.setMsg("异常错误，登陆时间戳参数缺少!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+        }
+        String dcschoolid=request.getParameter("dcschoolid");
+        if(dcschoolid==null||dcschoolid.trim().length()<1){
+            jsonEntity.setMsg("异常错误，网校分校ID为空!!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         UserInfo loginUsr=new UserInfo();
@@ -7099,6 +7104,7 @@ public class UserController extends BaseController<UserInfo> {
             loginUsr.setUsername(username);
             loginUsr.setPassword(pass);
         }
+        loginUsr.setDcschoolid(Integer.parseInt(dcschoolid));
         String flag_id=request.getParameter("flag_id");
         if(flag_id==null||flag_id.trim().length()<1||!UtilTool.isNumber(flag_id.trim())){
             jsonEntity.setMsg("异常错误，功能ID为空，无法进行跳转!");
@@ -7120,6 +7126,7 @@ public class UserController extends BaseController<UserInfo> {
         }else{
             md5key+=loginUsr.getUsername()+loginUsr.getPassword();
         }
+        md5key+=dcschoolid; //添加dc_school_id
         md5key+=flag_id+loginCode+logintime;
         md5key=MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
         if(!md5key.trim().equals(loginKey.trim())){//如果不一致，则说明非法登陆
