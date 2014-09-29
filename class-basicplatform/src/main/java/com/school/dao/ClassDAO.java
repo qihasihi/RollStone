@@ -78,11 +78,16 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 			objList.add(obj.getSubjectid());
 		}else
 			sqlbuilder.append("NULL,");
-		if(obj.getIsflag()!=null){
-			sqlbuilder.append("?,");
-			objList.add(obj.getIsflag());
-		}else
-			sqlbuilder.append("NULL,");
+        if(obj.getIsflag()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getIsflag());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getDcschoolid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getDcschoolid());
+        }else
+            sqlbuilder.append("NULL,");
 		sqlbuilder.append("?)}"); 
 		return objList; 
 	}
@@ -443,6 +448,11 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         if(obj.getIsflag()!=null){
             sqlbuilder.append("?,");
             objList.add(obj.getIsflag());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getDcschoolid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getDcschoolid());
         }else
             sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");

@@ -833,10 +833,11 @@ public class ClassController extends BaseController<ClassInfo>{
 
 
 
-    @RequestMapping(params ="m=lzxUpdate",method=RequestMethod.POST)
+    @RequestMapping(params ="m=lzxUpdateM",method=RequestMethod.POST)
     public void lzxUpdate(HttpServletRequest request,HttpServletResponse response) throws Exception{
         Object timeStr=request.getParameter("timestamp");
         Object schoolid=request.getParameter("lzx_school_id");
+        Object dcschoolid=request.getParameter("dcschoolid");
         Object key=request.getParameter("key");
         //验证相关参数
         if(timeStr==null||timeStr.toString().trim().length()<1||!UtilTool.isNumber(timeStr.toString())){
@@ -844,6 +845,9 @@ public class ClassController extends BaseController<ClassInfo>{
         }
         if(schoolid==null||schoolid.toString().trim().length()<1||!UtilTool.isNumber(schoolid.toString())){
             response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，分校ID为空!!\"}");return;
+        }
+        if(dcschoolid==null||dcschoolid.toString().trim().length()<1||!UtilTool.isNumber(dcschoolid.toString())){
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，网校分校ID为空!!\"}");return;
         }
 
 
@@ -870,7 +874,7 @@ public class ClassController extends BaseController<ClassInfo>{
             return;
         }
         //验证key
-        String md5key=timeStr.toString()+schoolid;
+        String md5key=timeStr.toString()+schoolid+dcschoolid;
         md5key+=timeStr.toString();
         md5key= MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
         if(!md5key.trim().equals(key.toString().trim())){//如果不一致，则说明非法登陆
@@ -936,6 +940,7 @@ public class ClassController extends BaseController<ClassInfo>{
             cls.setYear(year.toString());
             cls.setPattern(pattern.toString());
             cls.setLzxclassid(Integer.parseInt(classid.toString()));
+            cls.setDcschoolid(Integer.parseInt(dcschoolid.toString()));
 //            List<ClassInfo> clsList=this.classManager.getList(cls,null);
 //            if(clsList!=null&&clsList.size()>0){
 //                hasClsid=(hasClsid==null?classid.toString():hasClsid+","+classid.toString());
@@ -979,10 +984,11 @@ public class ClassController extends BaseController<ClassInfo>{
      * @param request
      * @param response
      */
-    @RequestMapping(params="m=lzxDel",method=RequestMethod.POST)
+    @RequestMapping(params="m=lzxDelM",method=RequestMethod.POST)
     public void lzxDel(HttpServletRequest request,HttpServletResponse response) throws Exception{
         Object timeStr=request.getParameter("timestamp");
         Object schoolid=request.getParameter("lzx_school_id");
+        Object dcschoolid=request.getParameter("dcschoolid");
         Object key=request.getParameter("key");
         //验证相关参数
         if(timeStr==null||timeStr.toString().trim().length()<1){
@@ -1013,7 +1019,7 @@ public class ClassController extends BaseController<ClassInfo>{
             response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，响应超时!接口三分钟内有效!\"}");return;
         }
         //验证key
-        String md5key=timeStr.toString()+schoolid;
+        String md5key=timeStr.toString()+schoolid+dcschoolid;
         md5key+=timeStr.toString();
         md5key= MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
         if(!md5key.trim().equals(key.toString().trim())){//如果不一致，则说明非法登陆
@@ -1046,6 +1052,7 @@ public class ClassController extends BaseController<ClassInfo>{
             //验证通过
             ClassInfo cls=new ClassInfo();
             cls.setLzxclassid(Integer.parseInt(classid.toString()));
+            cls.setDcschoolid(Integer.parseInt(dcschoolid.toString()));
             StringBuilder sqlbuilder=new StringBuilder();
             List<Object> objList=this.classManager.getDeleteSql(cls, sqlbuilder);
             if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
