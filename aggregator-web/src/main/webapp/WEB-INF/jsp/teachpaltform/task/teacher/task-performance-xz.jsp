@@ -11,6 +11,7 @@
     <script type="text/javascript">
         var taskid="${taskid}";
         var questype="${questype}";
+        var g_subjectid="${param.subjectid}";
         $(function(){
             $("input[name='classradio']").eq(0).attr("checked",true);
             <c:if test="${!empty classList}">

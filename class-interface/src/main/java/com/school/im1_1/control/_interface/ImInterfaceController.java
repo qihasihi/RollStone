@@ -1467,6 +1467,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 returnUserMap.put("replyAttachType",1);
                             }else if(fujianType.equalsIgnoreCase("m4a")||fujianType.equalsIgnoreCase("mp3")){
                                 returnUserMap.put("replyAttachType",2);
+                            }else{
+                                returnUserMap.put("replyAttachType",0);
                             }
                             String fujian = "http://"+UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"+UtilTool.utilproperty.getProperty("PROC_NAME")+"/uploadfile/"+taskUserRecord.get(i).get("REPLYATTACH");
                             att.put("attach",fujian);
@@ -1561,6 +1563,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 returnUserMap.put("replyAttachType",1);
                             }else if(fujianType.equalsIgnoreCase("m4a")||fujianType.equalsIgnoreCase("mp3")){
                                 returnUserMap.put("replyAttachType",2);
+                            }else{
+                                returnUserMap.put("replyAttachType",0);
                             }
                             String fujian = "http://"+UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"+UtilTool.utilproperty.getProperty("PROC_NAME")+"/uploadfile/"+taskUserRecord.get(i).get("REPLYATTACH");
                             att.put("attach",fujian);
@@ -1570,6 +1574,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         }
                         attList.add(att);
                     }
+                    Map m = new HashMap();
+                    m.put("attachs",attList);
+                    returnUserMap.put("replyAttach",m);
                     if(taskUserRecord.get(i).get("JID")!=null){
                         jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
                     }else{

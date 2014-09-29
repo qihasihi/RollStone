@@ -1439,6 +1439,7 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
         return;
     }
     var param = {};
+    param.subjectid=g_subjectid;
     param.taskid = taskid;
     if (classid != null && classid.toString().length > 0) {
         param.classid = classid;
@@ -1529,33 +1530,37 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                         recordhtm += '</tr>';
                         var signnature=0;
                         $.each(rmsg.objList[2], function (idx, itm) {
-                            if (im.tpgroupstudent.userid == itm.userinfo.userid) {signnature++;
-                                recordhtm += '<tr';
-                                if (idx % 2 == 0) {
-                                    recordhtm += ' class="trbg1"';
+                            $.each(im.tpgroupstudent2, function (i, m) {
+                                if (m.userid == itm.userinfo.userid) {signnature++;
+                                    recordhtm += '<tr';
+                                    if (idx % 2 == 0) {
+                                        recordhtm += ' class="trbg1"';
+                                    }
+                                    recordhtm += '>';
+                                    if(classid==0)
+                                        recordhtm += '<td>' + itm.clsname + '</td>';
+                                    recordhtm += '<td>' + itm.userinfo.stuNo + '</td>';
+                                    recordhtm += '<td>' + itm.userinfo.stuname + '</td>';
+                                    if (typeof(itm.ctimeString) != 'undefined')
+                                        recordhtm += '<td>' + itm.ctimeString + '</td>';
+                                    else
+                                        recordhtm += '<td></td>';
+                                    recordhtm += '<td>';
+                                    if (itm.isright == 1) {
+                                        recordhtm += '<span class="font-red">' + itm.answercontent + '</span>';
+                                    } else {
+                                        recordhtm += itm.answercontent;
+                                    }
+                                    recordhtm += '</td>';
+                                    if (itm.status > 0)
+                                        recordhtm += '<td><span class="ico12" title="完成"></span></td>';
+                                    else
+                                        recordhtm += '<td><span class="ico24" title="进行中"></span></td>';
+                                    recordhtm += '</tr>';
                                 }
-                                recordhtm += '>';
-                                if(classid==0)
-                                    recordhtm += '<td>' + itm.clsname + '</td>';
-                                recordhtm += '<td>' + itm.userinfo.stuNo + '</td>';
-                                recordhtm += '<td>' + itm.userinfo.stuname + '</td>';
-                                if (typeof(itm.ctimeString) != 'undefined')
-                                    recordhtm += '<td>' + itm.ctimeString + '</td>';
-                                else
-                                    recordhtm += '<td></td>';
-                                recordhtm += '<td>';
-                                if (itm.isright == 1) {
-                                    recordhtm += '<span class="font-red">' + itm.answercontent + '</span>';
-                                } else {
-                                    recordhtm += itm.answercontent;
-                                }
-                                recordhtm += '</td>';
-                                if (itm.status > 0)
-                                    recordhtm += '<td><span class="ico12" title="完成"></span></td>';
-                                else
-                                    recordhtm += '<td><span class="ico24" title="进行中"></span></td>';
-                                recordhtm += '</tr>';
-                            }
+
+                            });
+
                         });
                         if(signnature==0){
                             recordhtm+='<tr><td>暂无数据!</td></tr>';

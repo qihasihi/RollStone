@@ -3521,6 +3521,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String taskid=request.getParameter("taskid");
         String questype = request.getParameter("questype");
         String questionid=request.getParameter("questionid");
+        String subjectid = request.getParameter("subjectid");
         if(classid==null||classid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
@@ -3553,15 +3554,17 @@ public class TaskController extends BaseController<TpTaskInfo>{
             optionnumList = this.taskPerformanceManager.getPerformanceOptionNum2(Long.parseLong(taskid),clsid);
             TpGroupStudent tgsinfo = new TpGroupStudent();
             tgsinfo.setClassid(Integer.parseInt(classid));
+            tgsinfo.setSubjectid(Integer.parseInt(subjectid));
             List<TpGroupStudent> tgsList = this.tpGroupStudentManager.getGroupStudentByClass(tgsinfo,null);
             TpGroupInfo ti = new TpGroupInfo();
             ti.setClassid(Integer.parseInt(classid));
+            ti.setSubjectid(Integer.parseInt(subjectid));
             tiList = this.tpGroupManager.getList(ti,null);
             for(int i = 0;i<tiList.size();i++){
                 TpGroupStudent ts = new TpGroupStudent();
                 for(int j = 0;j<tgsList.size();j++){
-                    if(tiList.get(i).getGroupid()==tgsList.get(j).getGroupid()){
-                        tiList.get(i).setTpgroupstudent(tgsList);
+                    if(tiList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
+                        tiList.get(i).setTpgroupstudent2(tgsList.get(j));
                     }
                 }
             }
