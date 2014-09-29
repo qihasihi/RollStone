@@ -56,12 +56,25 @@ public class TaskPerformanceInfo  implements java.io.Serializable{
                         if(astr.indexOf("http:")==-1&&astr.indexOf("https:")==-1){
                             astr=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+astr;
                         }
+                        String firstname = astr.substring(0,astr.lastIndexOf("."));
+                        String lastname = astr.substring(astr.lastIndexOf("."));
+                        if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR, lastname)){
+                            astr=firstname+"_1"+lastname;
+                        }
                         returnList.add(astr);
                     }
                 }
             }else{
                 if(getReplyattach().indexOf("http:")==-1&&getReplyattach().indexOf("https:")==-1){
-                    returnList.add(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getReplyattach());
+                    String attachUrl=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getReplyattach();
+                    String suffix=getReplyattach().substring(getReplyattach().lastIndexOf("."));
+                    //123.jpg
+                    if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR, suffix)){
+                        String[]fileNameArr=getReplyattach().split("\\.");
+                        if(fileNameArr.length>0)
+                            attachUrl=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fileNameArr[0]+"_1"+suffix;
+                    }
+                    returnList.add(attachUrl);
                 }else
                     returnList.add(getReplyattach());
             }
