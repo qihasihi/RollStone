@@ -186,7 +186,7 @@ function myInfoAjaxList(rps){
         </ul>
 
         <h1 style="display:none">共享排行榜</h1>
-        <ul id="ul_sharerank  style="display:none">
+        <ul id="ul_sharerank"  style="display:none">
 
         </ul>
         <div id="ul_share_rank_li_1" style="display:none"><!--个人校内排行榜-->

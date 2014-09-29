@@ -374,15 +374,25 @@
                   <c:if test="${fileType=='video'}">
                       <!--加载视频-->
                       <c:if test="${!empty resObj.userid&&resObj.userid!=0}">
-                          <img src="images/video_gszh.jpg" width="578px" height="400px" alt="正在排列,转换"/>
-                          <span id="progress_0">排列中</span>
-                          <script type="text/javascript">
+                          <c:if test="${empty resObj.difftype||resObj.difftype!=1}">
+                              <img src="images/video_gszh.jpg" width="578px" height="400px" alt="正在排列,转换"/>
+                              <span id="progress_0">排列中</span>
+                              <script type="text/javascript">
                                   videoConvertProgress('${resObj.resid}',"001${resObj.filesuffixname}"
                                           ,"001",0,'${resObj.path}/'
                                           ,'<%=fileSystemIpPort%>',resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
                                           ,578
                                           ,480
                                   );
+                              </script>
+                          </c:if>
+                      </c:if>
+                      <!--微视频-->
+                      <c:if test="${!empty resObj.difftype&&resObj.difftype==1}">
+                          <script type="text/javascript">
+                              loadSWFPlayerLitterView(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
+                                      ,resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
+                                      ,${resObj.resid},578,400,true,undefined);
                           </script>
                       </c:if>
                   </c:if>

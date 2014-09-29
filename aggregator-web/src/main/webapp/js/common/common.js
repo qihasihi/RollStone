@@ -176,6 +176,84 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
     return returnPobj;
 }
 
+/**
+ * 加载SWF视频播放器
+ * @param resmd5id    RES_ID标识的MD5加密
+ * @param filemd5name	FILE_NAME 的MD5加密[加后缀名]例：10a588b503909378cde366ef95b41d25.rmvb
+ * @param playeraddressid 播放器的位置
+ * @return
+ */
+function loadSWFPlayerLitterView(filepath,playeraddressid,imagepath,resid,width,height,isshowBar,playEndMethod){
+    if(typeof(width)=="undefined"&&typeof(height)=="undefined"){
+        width=435;
+        height:270;
+    }
+
+    //清空
+    //由于SWFplayer生成的时候，是替换DIV层。如果想重新生成一个,需重新生成DIV并且删除SWFPlayer
+    jwplayerSetup={
+        'id': 'player1',
+        'width': width,
+        'height': height,
+        //'playlistfile': "/ett20/studyrvice_class/free/toxml.jsp?resourceID=<%=resourceID%>&frame=1",
+        'file':  filepath,
+        'primary': 'flash',
+        'controlbar':'bottom',
+        'controlbar.idlehide':'false',
+        'modes': [
+            {type: 'flash', src: 'js/common/videoPlayer/new/jwplayer.flash.swf', //
+                config: {
+                    provider: "http",
+                    autostart:"false",
+                    menu:"false"
+                }
+            }
+            ,{type: 'html5'}
+        ]
+//        ,events:{
+//            onReady:function(){
+//                jwplayer().play();
+//            }
+//        }
+    };
+
+    if(typeof(isshowBar)!="undefined"&&!isshowBar){
+        jwplayerSetup.controls=false;
+    }
+
+
+    if(typeof(imagepath)!="undefined"&&imagepath.Trim().length>0)
+        jwplayerSetup.image=imagepath;
+    var returnPobj= jwplayer(playeraddressid).setup(jwplayerSetup);
+    if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+        jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
+    if(typeof(isshowBar)!="undefined"&&!isshowBar){
+        jwplayer(playeraddressid).onReady(function(){
+            jwplayer(playeraddressid).play(); //.seek(0)
+        });
+    }
+
+//     if(typeof(resid)!="undefined"){
+//        var suffixName=filepath;
+//        if(filepath.lastIndexOf(".mp4")!=-1){
+//            suffixName=filepath.substring(filepath.lastIndexOf(".mp4",filepath.lastIndexOf("/")),filepath.lastIndexOf(".mp4"));
+//        }else
+//            suffixName=filepath.substring(filepath.lastIndexOf("."));
+//        if(suffixName.indexOf(".")>-1){
+//            jwplayer().addButton(
+//                "images/down.png",
+//                "下载文件",
+//                function() {
+//                    resourceDownLoadFile(resid+"",suffixName);
+//                    try{sp_downnum.innerHTML=parseInt(sp_downnum.innerHTML)+1;}catch(e){}
+//                },
+//                "download"
+//            );
+//        }
+//    }
+    return returnPobj;
+}
+
 function swfobjPlayer(path, playeraddressid,width,height, isshow,imagepath) {
     // 清空
     // 由于SWFplayer生成的时候，是替换DIV层。如果想重新生成一个,需重新生成DIV并且删除SWFPlayer

@@ -196,7 +196,8 @@
         </c:if>
         </select>
         <input id="searchValue"  placeholder="输入信息按资源名称搜索!" name="searchValue" type="text" class="w320"/>&nbsp;
-        <a class="an_search" href="javascript:pageGo('p1',1);" title="搜索"></a>&nbsp;&nbsp;<a href="resource?m=list" class=" font-darkblue" >高级搜索</a>
+        <a class="an_search" href="javascript:pageGo('p1',1);" title="搜索"></a>
+        <%--&nbsp;&nbsp;<a href="resource?m=list" class=" font-darkblue" >高级搜索</a>--%>
         <p class="number">搜到资源 <span id="resTotal" class="font-red">0</span></p>
     </div>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
