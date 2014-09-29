@@ -5286,7 +5286,7 @@ public class UserController extends BaseController<UserInfo> {
             paramMap.put("usertype", usertype);
             paramMap.put("sex",sex);
             if(isVip==null)
-                isVip="{\"nowTime\":"+new Date().getTime()+"}";
+                isVip="0";//д╛хон╙0
             paramMap.put("isVip",isVip);
             paramMap.put("time", time);
             if (email != null && email.trim().indexOf("@") != -1)
