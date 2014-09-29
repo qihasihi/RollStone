@@ -1462,7 +1462,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     List attList = new ArrayList();
                     if(taskUserRecord.get(i).get("REPLYATTACH")!=null){
                         if(taskUserRecord.get(i).get("REPLYATTACHTYPE")==null){
-                            String fujianType = taskUserRecord.get(i).get("REPLYATTACH").toString().substring(taskUserRecord.get(i).get("REPLYATTACH").toString().lastIndexOf("."));
+                            String fujianType = taskUserRecord.get(i).get("REPLYATTACH").toString().substring(taskUserRecord.get(i).get("REPLYATTACH").toString().lastIndexOf(".")+1);
                             if(fujianType.equalsIgnoreCase("jpg")||fujianType.equalsIgnoreCase("png")){
                                 returnUserMap.put("replyAttachType",1);
                             }else if(fujianType.equalsIgnoreCase("m4a")||fujianType.equalsIgnoreCase("mp3")){
@@ -1555,13 +1555,21 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     Map att = new HashMap();
                     List attList = new ArrayList();
                     if(taskUserRecord.get(i).get("REPLYATTACH")!=null){
-                        att.put("attach",taskUserRecord.get(i).get("REPLYATTACH"));
+                        if(taskUserRecord.get(i).get("REPLYATTACHTYPE")==null){
+                            String fujianType = taskUserRecord.get(i).get("REPLYATTACH").toString().substring(taskUserRecord.get(i).get("REPLYATTACH").toString().lastIndexOf(".")+1);
+                            if(fujianType.equalsIgnoreCase("jpg")||fujianType.equalsIgnoreCase("png")){
+                                returnUserMap.put("replyAttachType",1);
+                            }else if(fujianType.equalsIgnoreCase("m4a")||fujianType.equalsIgnoreCase("mp3")){
+                                returnUserMap.put("replyAttachType",2);
+                            }
+                            String fujian = "http://"+UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"+UtilTool.utilproperty.getProperty("PROC_NAME")+"/uploadfile/"+taskUserRecord.get(i).get("REPLYATTACH");
+                            att.put("attach",fujian);
+                        }else{
+                            att.put("attach",taskUserRecord.get(i).get("REPLYATTACH"));
+                            returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE")!=null?Integer.parseInt(taskUserRecord.get(i).get("REPLYATTACHTYPE").toString()):0);
+                        }
                         attList.add(att);
                     }
-                    Map m = new HashMap();
-                    m.put("attachs",attList);
-                    returnUserMap.put("replyAttach",m);
-                    returnUserMap.put("replyAttachType",taskUserRecord.get(i).get("REPLYATTACHTYPE")!=null?Integer.parseInt(taskUserRecord.get(i).get("REPLYATTACHTYPE").toString()):0);
                     if(taskUserRecord.get(i).get("JID")!=null){
                         jids.append("{\"jid\":"+Integer.parseInt(taskUserRecord.get(i).get("JID").toString())+"},");
                     }else{
