@@ -834,7 +834,7 @@ public class ClassController extends BaseController<ClassInfo>{
 
 
     @RequestMapping(params ="m=lzxUpdateM",method=RequestMethod.POST)
-    public void lzxUpdate(HttpServletRequest request,HttpServletResponse response) throws Exception{
+    public void lzxUpdateM(HttpServletRequest request,HttpServletResponse response) throws Exception{
         Object timeStr=request.getParameter("timestamp");
         Object schoolid=request.getParameter("lzx_school_id");
         Object dcschoolid=request.getParameter("dcschoolid");
@@ -904,7 +904,7 @@ public class ClassController extends BaseController<ClassInfo>{
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，班级名称为空!!\"}");
                 return;
             }else
-                  className=java.net.URLDecoder.decode(className.toString(),"GBK");
+                className=java.net.URLDecoder.decode(className.toString(),"GBK");
             if(pattern==null||pattern.toString().trim().length()<1){
                 //response.getWriter().print("异常错误，班级类型为空!!");return;
                 pattern="行政班";
@@ -978,6 +978,147 @@ public class ClassController extends BaseController<ClassInfo>{
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");return;
         }
     }
+    @RequestMapping(params ="m=lzxUpdate",method=RequestMethod.POST)
+    public void lzxUpdate(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        Object timeStr=request.getParameter("timestamp");
+        Object schoolid=request.getParameter("lzx_school_id");
+        Object key=request.getParameter("key");
+        //验证相关参数
+        if(timeStr==null||timeStr.toString().trim().length()<1||!UtilTool.isNumber(timeStr.toString())){
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，登陆时间戳参数缺少!\"}");return;
+        }
+        if(schoolid==null||schoolid.toString().trim().length()<1||!UtilTool.isNumber(schoolid.toString())){
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，分校ID为空!!\"}");return;
+        }
+
+
+
+        String clsArrayjson=request.getParameter("clsarrayjson");
+        if(clsArrayjson==null||clsArrayjson.toString().trim().length()<1){
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，没有发现您要添加或修改的班级数据Json!\"}");
+            return;
+        }
+        net.sf.json.JSONArray clsJr=net.sf.json.JSONArray.fromObject(clsArrayjson);
+        if(clsJr==null||clsJr.isEmpty()){
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，没有发现您要添加或修改的班级数据Json!\"}");return;
+        }
+        if(key==null||key.toString().trim().length()<1){
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，key为空!!\"}");
+            return;
+        }
+
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(timeStr.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，响应超时!接口三分钟内有效!\"}");
+            return;
+        }
+        //验证key
+        String md5key=timeStr.toString()+schoolid;
+        md5key+=timeStr.toString();
+        md5key= MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
+        if(!md5key.trim().equals(key.toString().trim())){//如果不一致，则说明非法登陆
+            response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，非法登陆!!\"}");return;
+        }
+
+
+        String hasClsid=null;
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+        Iterator jrIte=clsJr.iterator();
+        while(jrIte.hasNext()){
+            net.sf.json.JSONObject clsJo=(net.sf.json.JSONObject)jrIte.next();
+            Object classid=clsJo.get("lzx_classid");
+            Object className=clsJo.get("class_name");
+            Object pattern=clsJo.get("pattern");
+            Object classGrade=clsJo.get("class_grade");
+            Object year=clsJo.get("year");
+            Object type= clsJo.get("type");
+            Object subjectid=clsJo.get("subject_id");
+            Object isflag=clsJo.get("isflag");
+
+            if(classid==null||classid.toString().trim().length()<1||!UtilTool.isNumber(classid.toString())){
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，班级ID为空!!\"}");return;
+            }
+            if(className==null||className.toString().trim().length()<1){
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，班级名称为空!!\"}");
+                return;
+            }else
+                className=java.net.URLDecoder.decode(className.toString(),"GBK");
+            if(pattern==null||pattern.toString().trim().length()<1){
+                //response.getWriter().print("异常错误，班级类型为空!!");return;
+                pattern="行政班";
+            }else
+                pattern=java.net.URLDecoder.decode(pattern.toString(),"GBK");
+            if(classGrade==null||classGrade.toString().trim().length()<1){
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，年级为空!!\"}");
+                return;
+            }else
+                classGrade=java.net.URLDecoder.decode(classGrade.toString(),"GBK");
+            if(year==null||year.toString().trim().length()<1){
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，学年为空!!\"}");
+                return;
+            }
+            if(type==null||type.toString().trim().length()<1){
+                // response.getWriter().print("异常错误，班级类型为空!!");return;
+                type="NORMAL";
+            }
+            if(pattern!=null&&pattern.toString().trim().equals("分层班")){
+                if(subjectid==null||subjectid.toString().trim().length()<1||!UtilTool.isNumber(subjectid.toString())){
+                    response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，分层班的班级要添加学科ID,学科ID为空!!\"}");
+                    return;
+                }
+            }
+            if(isflag==null||isflag.toString().trim().length()<1||!UtilTool.isNumber(isflag.toString())){
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，班级是否启用为空!!\"}");return;
+            }
+
+            //验证通过
+            ClassInfo cls=new ClassInfo();
+            cls.setClassname(className.toString());
+            cls.setClassgrade(classGrade.toString());
+            cls.setYear(year.toString());
+            cls.setPattern(pattern.toString());
+            cls.setLzxclassid(Integer.parseInt(classid.toString()));
+//            List<ClassInfo> clsList=this.classManager.getList(cls,null);
+//            if(clsList!=null&&clsList.size()>0){
+//                hasClsid=(hasClsid==null?classid.toString():hasClsid+","+classid.toString());
+//                continue;
+//            }
+
+            cls.setType(type.toString());
+
+            cls.setClassid(Integer.parseInt(classid.toString()));
+            cls.setIsflag(Integer.parseInt(isflag.toString()));
+            if(pattern.toString().trim().equals("分层班")){
+                cls.setSubjectid(Integer.parseInt(subjectid.toString()));
+            }
+            StringBuilder sqlbuilder=new StringBuilder();
+            List<Object> objList=this.classManager.getSaveOrUpdateSql(cls,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+        }
+
+        if(sqlArrayList!=null&&sqlArrayList.size()>0&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
+            if(this.classManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+                if(hasClsid!=null){
+                    response.getWriter().println("{\"type\":\"error\",\"msg\":\""+hasClsid+"\"}");
+                }else
+                    response.getWriter().println("{\"type\":\"success\"}");
+            }else{
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，原因：未知!\"}");return;
+            }
+        }else{
+            if(hasClsid!=null)
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\""+hasClsid+"\"}");
+            else
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");return;
+        }
+    }
 
     /**
      * 乐知行，删除方法
@@ -985,7 +1126,7 @@ public class ClassController extends BaseController<ClassInfo>{
      * @param response
      */
     @RequestMapping(params="m=lzxDelM",method=RequestMethod.POST)
-    public void lzxDel(HttpServletRequest request,HttpServletResponse response) throws Exception{
+    public void lzxDelM(HttpServletRequest request,HttpServletResponse response) throws Exception{
         Object timeStr=request.getParameter("timestamp");
         Object schoolid=request.getParameter("lzx_school_id");
         Object dcschoolid=request.getParameter("dcschoolid");
@@ -1041,6 +1182,7 @@ public class ClassController extends BaseController<ClassInfo>{
             //查看是否存在学生记录
             ClassUser cutmp=new ClassUser();
             cutmp.setClassid(Integer.parseInt(classid.toString()));
+            cutmp.getUserinfo().setDcschoolid(Integer.parseInt(dcschoolid.toString()));
             PageResult presult=new PageResult();
             presult.setPageSize(1);
             presult.setPageNo(1);
@@ -1053,6 +1195,99 @@ public class ClassController extends BaseController<ClassInfo>{
             ClassInfo cls=new ClassInfo();
             cls.setLzxclassid(Integer.parseInt(classid.toString()));
             cls.setDcschoolid(Integer.parseInt(dcschoolid.toString()));
+            StringBuilder sqlbuilder=new StringBuilder();
+            List<Object> objList=this.classManager.getDeleteSql(cls, sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+        }
+
+        if(sqlArrayList!=null&&sqlArrayList.size()>0&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
+            if(this.classManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+                if(noDelClsId!=null&&noDelClsId.toString().trim().length()>0){
+                    response.getWriter().println("{\"type\":\"success\",\"msg\":\""+noDelClsId+"\"}");
+                }else
+                    response.getWriter().println("{\"type\":\"success\"}");
+            }else{
+                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，原因：未知!\"}");
+            }
+        }else{
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");
+        }
+    }
+    /**
+     * 乐知行，删除方法
+     * @param request
+     * @param response
+     */
+    @RequestMapping(params="m=lzxDel",method=RequestMethod.POST)
+    public void lzxDel(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        Object timeStr=request.getParameter("timestamp");
+        Object schoolid=request.getParameter("lzx_school_id");
+        Object key=request.getParameter("key");
+        //验证相关参数
+        if(timeStr==null||timeStr.toString().trim().length()<1){
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，登陆时间戳参数缺少!\"}");return;
+        }
+        if(schoolid==null||schoolid.toString().trim().length()<1||!UtilTool.isNumber(schoolid.toString())){
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，分校ID为空!!\"}");return;
+        }
+        if(key==null||key.toString().trim().length()<1){
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，key为空!!\"}");
+            return;
+        }
+
+        String clsArrayjson=request.getParameter("clsarrayjson");
+        if(clsArrayjson==null||clsArrayjson.toString().trim().length()<1){
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，没有发现您要添加或修改的班级数据Json!\"}");return;
+        }
+        net.sf.json.JSONArray clsJr=net.sf.json.JSONArray.fromObject(clsArrayjson);
+        if(clsJr==null||clsJr.isEmpty()){
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，没有发现您要添加或修改的班级数据Json!\"}");return;
+        }
+
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(timeStr.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，响应超时!接口三分钟内有效!\"}");return;
+        }
+        //验证key
+        String md5key=timeStr.toString()+schoolid;
+        md5key+=timeStr.toString();
+        md5key= MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
+        if(!md5key.trim().equals(key.toString().trim())){//如果不一致，则说明非法登陆
+            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，非法登陆!!\"}");
+            return;
+        }
+
+        String noDelClsId=null;
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+        Iterator jrIte=clsJr.iterator();
+        while(jrIte.hasNext()){
+            net.sf.json.JSONObject clsJo=(net.sf.json.JSONObject)jrIte.next();
+            Object classid=clsJo.get("lzx_classid");
+
+            if(classid==null||classid.toString().trim().length()<1||!UtilTool.isNumber(classid.toString())){
+                response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，班级ID为空!!\"}");return;
+            }
+            //查看是否存在学生记录
+            ClassUser cutmp=new ClassUser();
+            cutmp.setClassid(Integer.parseInt(classid.toString()));
+            PageResult presult=new PageResult();
+            presult.setPageSize(1);
+            presult.setPageNo(1);
+            List<ClassUser> cuList=this.classUserManager.getList(cutmp,presult);
+            if(cuList!=null&&cuList.size()>0){
+                noDelClsId=(noDelClsId==null?classid.toString():noDelClsId+","+classid);
+                continue;
+            }
+            //验证通过
+            ClassInfo cls=new ClassInfo();
+            cls.setLzxclassid(Integer.parseInt(classid.toString()));
             StringBuilder sqlbuilder=new StringBuilder();
             List<Object> objList=this.classManager.getDeleteSql(cls, sqlbuilder);
             if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){

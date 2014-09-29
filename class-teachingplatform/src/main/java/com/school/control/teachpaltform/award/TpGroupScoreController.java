@@ -489,9 +489,8 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         String subjectid=request.getParameter("subjectid");
         String classid=request.getParameter("classid");
         String sort=request.getParameter("sort");
-        String termid=request.getParameter("termid");
         JsonEntity jsonEntity=new JsonEntity();
-        if(subjectid==null||subjectid.trim().length()<1||termid==null||termid.trim().length()<1){
+        if(subjectid==null||subjectid.trim().length()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jsonEntity.toJSON());return null;
         }
