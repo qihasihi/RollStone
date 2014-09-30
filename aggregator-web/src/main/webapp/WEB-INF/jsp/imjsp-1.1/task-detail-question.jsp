@@ -239,7 +239,7 @@
         <c:forEach items="${userRecord}" var="itm">
             <div class="wenda">
                 <b><img src="${itm.uPhoto}" width="36" height="36"></b>
-                <p class="title"><span>${itm.REPLYDATE}前</span>${itm.uName}</p>
+                <p class="title"><span>${itm.REPLYDATE}</span>${itm.uName}</p>
                 <p>${itm.REPLYDETAIL}</p>
             </div>
         </c:forEach>

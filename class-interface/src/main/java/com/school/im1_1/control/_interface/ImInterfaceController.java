@@ -2855,11 +2855,43 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         allot.setTaskid(Long.parseLong(taskId));
         allot.setUsertypeid(Long.parseLong(classid));
         List<TpTaskAllotInfo> allotList = this.tpTaskAllotManager.getList(allot,null);
-        Long etime = allotList.get(0).getEtime().getTime();
-        Long currenttime = System.currentTimeMillis();
-        if(etime<currenttime){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已结束，请查看后重试\"}");
-            return;
+        if(allotList==null||allotList.size()<1){
+            TpGroupStudent tg  = new TpGroupStudent();
+            tg.setClassid(Integer.parseInt(classid));
+            tg.setUserid(userList.get(0).getUserid());
+            //查询学科作为查询小组的条件
+            TpCourseClass tcc  = new TpCourseClass();
+            tcc.setCourseid(tList.get(0).getCourseid());
+            tcc.setClassid(Integer.parseInt(classid));
+            List<TpCourseClass> tcclist = this.tpCourseClassManager.getList(tcc,null);
+            if(tcclist!=null){
+                tg.getTpgroupinfo().setSubjectid(tcclist.get(0).getSubjectid());
+            }
+            ITpGroupStudentManager tpGroupStudentManager = this.getManager(TpGroupStudentManager.class);
+            List<TpGroupStudent> tgList =tpGroupStudentManager.getList(tg,null);
+            if(tgList!=null&&tgList.size()==1){
+                allot = new TpTaskAllotInfo();
+                allot.setTaskid(Long.parseLong(taskId));
+                allot.setUsertypeid(tgList.get(0).getGroupid());
+                allotList = new ArrayList<TpTaskAllotInfo>();
+                allotList = this.tpTaskAllotManager.getList(allot,null);
+                Long etime = allotList.get(0).getEtime().getTime();
+                Long currenttime = System.currentTimeMillis();
+                if(etime<currenttime){
+                    response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已结束，请查看后重试\"}");
+                    return;
+                }
+            }else{
+                response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前存在数据错误，无法获取准确小组，请查看后重试\"}");
+                return;
+            }
+        }else{
+            Long etime = allotList.get(0).getEtime().getTime();
+            Long currenttime = System.currentTimeMillis();
+            if(etime<currenttime){
+                response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前任务已结束，请查看后重试\"}");
+                return;
+            }
         }
         Long topicId = tList.get(0).getTaskvalueid();
         TpTopicInfo ti = new TpTopicInfo();
