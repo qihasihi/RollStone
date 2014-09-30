@@ -244,6 +244,15 @@
             </div>
         </c:forEach>
     </c:if>
+<c:if test="${usertype eq 2 and !empty userRecord and quesType!=3 and quesType!=4}">
+            <c:forEach items="${userRecord}" var="itm">
+            <div class="wenda">
+                <b><img src="${itm.uPhoto}" width="36" height="36"></b>
+                <p class="title"><span>${itm.REPLYDATE}</span>${itm.uName}</p>
+                <p>${itm.REPLYDETAIL}</p>
+            </div>
+            </c:forEach>
+</c:if>
                 <%
     System.out.println("当前接口"+"------------"+"task-detail-question.jsp"+"          当前位置------------jsp结束      当前时间------"+currentDay);
 %>

@@ -197,7 +197,7 @@ function getInvestReturnMethod2(rps){
                 htm+='<a class="ico52" title="已发任务"></a>';
 
             htm+='<span class="'+itm.suffixtype+'"></span></td>';
-            htm+='<td><p><a href="javascript:void(0);" target="_blank">'+itm.resname+'</a></p>';
+            htm+='<td><p>'+itm.resname+'</p>';
             htm+='<p>'+introduce+'</p>';
             htm+='<p class="jxxt_zhuanti_zy_add_text">'+username+'&nbsp;&nbsp;&nbsp;'+type+'&nbsp;&nbsp;&nbsp;'+itm.restypename+'</p></td>';
             htm+='</tr>';
@@ -687,22 +687,18 @@ function subUploadRes(usertype){
             </table>
         </div>
     </div>
+    <!--上传须知与文件类型-->
+    <div class="public_windows font-black" id="dv_allow_filetype" name="dv_allow_filetype" style="z-index:1000;display:none;position: absolute;background-color:white;padding: 10px 40px 40px 30px;">
+        <h3><!--<a href="1" target="_blank" title="关闭"></a>-->上传文件类型</h3>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>您可以上传以下文件格式：</strong></p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;文档<span class="ico_doc1"></span>doc/docx<span class="ico_pdf1"></span>pdf<span class="ico_xls1"></span>xls/xlsx<span class="ico_txt1"></span>txt<span class="ico_wps1"></span>wps<span class="ico_vsd1"></span>vsd<span class="ico_rtf1"></span>rtf<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ico_ppt1"></span>ppt/pptx、pot、pps</p>
+        <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;图片<span class="ico_jpg1"></span>bmp  jpg  png  gif  tiff  pcx  tga</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;音频<span class="ico_mp31"></span>mp3 midi wma realaudi asf wav</p>
+        <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;视频<span class="ico_mp41"></span>mp4</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;动画<span class="ico_swf1"></span>swf</p>
+    </div>
 </div>
-
-
-<!--上传须知与文件类型-->
-<div class="public_windows font-black" id="dv_allow_filetype" name="dv_allow_filetype" style="display:none;position: absolute;background-color:white;padding: 10px 40px 40px 30px;">
-    <h3><!--<a href="1" target="_blank" title="关闭"></a>-->上传文件类型</h3>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>您可以上传以下文件格式：</strong></p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;文档<span class="ico_doc1"></span>doc/docx<span class="ico_pdf1"></span>pdf<span class="ico_xls1"></span>xls/xlsx<span class="ico_txt1"></span>txt<span class="ico_wps1"></span>wps<span class="ico_vsd1"></span>vsd<span class="ico_rtf1"></span>rtf<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ico_ppt1"></span>ppt/pptx、pot、pps</p>
-    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;图片<span class="ico_jpg1"></span>bmp  jpg  png  gif  tiff  pcx  tga</p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;音频<span class="ico_mp31"></span>mp3 midi wma realaudi asf wav</p>
-    <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;视频<span class="ico_mp41"></span>mp4</p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;动画<span class="ico_swf1"></span>swf</p>
-</div>
-
-
 <%@include file="/util/foot.jsp"%>
 </body>
 </html>
