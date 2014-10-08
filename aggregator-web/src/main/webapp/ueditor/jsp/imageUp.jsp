@@ -70,12 +70,13 @@ if ( dir == null || "".equals( dir ) ) {
     dir = savePath.get( 0 );
 
     //安全验证
-} else if ( !savePath.contains( dir ) ) {
-
-    response.getWriter().print( "{'state':'\\u975e\\u6cd5\\u4e0a\\u4f20\\u76ee\\u5f55'}" );
-    return;
-
 }
+//else if ( !savePath.contains( dir ) ) {
+//
+//    response.getWriter().print( "{'state':'\\u975e\\u6cd5\\u4e0a\\u4f20\\u76ee\\u5f55'}" );
+//    return;
+//
+//}
 
 up.setSavePath( dir );
 String[] fileType = {".gif" , ".png" , ".jpg" , ".jpeg" , ".bmp"};

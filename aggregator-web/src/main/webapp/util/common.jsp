@@ -91,7 +91,8 @@ Integer modelType=0;
 			
 	String fileSystemIpPort=UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD");//"http://202.99.47.77:80/";//request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort()+"/";;
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
-			 boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false,isteaidentity=false,isstuidentity=false;
+//    String uuploadfile=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE");
+ boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false,isteaidentity=false,isstuidentity=false;
  List<RoleUser> cruList=null;
 if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 		||!request.getServletPath().replaceAll("/","").equals(proc_name+"login.jsp")
@@ -172,6 +173,9 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 		}*/ 
 		return true;
 } %>
+<%--<script type="text/javascript">--%>
+    <%--var uuploadfile='<%=uuploadfile%>';--%>
+<%--</script>--%>
 <link rel="stylesheet" type="text/css"	href="<%=basePath %>css/common.css" />
 	<link rel="stylesheet" type="text/css" href="<%=basePath %>css/master.css"/> 
 		<link rel="stylesheet" type="text/css" href="<%=basePath %>css/style.css"/>

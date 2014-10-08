@@ -1028,7 +1028,7 @@ TestPaperDetail.prototype.loadQues=function(){
                                 ch+='</div>';
                             })
                             $("#dv_wd"+quesObj.questionid).html(ch);
-                            var imgObj=$("#dv_wd"+quesObj.questionid+" img").filter(function(){return (typeof(this.data-src)!="undefined"&&this.data-src!=null&&this.data-src.length>0);});
+                            var imgObj=$("#dv_wd"+quesObj.questionid+" img").filter(function(){return ($(this).attr("data-src")!="undefined"&&$(this).attr("data-src")!=null&&$(this).attr("data-src").length>0);});
                             if(imgObj.length>0)
                                 EttImageShow({
                                     image:imgObj,

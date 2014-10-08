@@ -83,7 +83,7 @@ public class SystemManagerController extends BaseController<TermInfo>{
 			response.getWriter().print(returnVal);
 			return;
 		}
-		String filename = request.getRealPath("/") + "uploadfile/"
+		String filename = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"
 				+ filenameString.get(0);
 		String returnname = filename;
 		File f = new File(filename);
@@ -126,7 +126,7 @@ public class SystemManagerController extends BaseController<TermInfo>{
 			// ¿ªÊ¼Ëõ·Å
 			returnname = new Date().getTime() + "zz"
 					+ returnname.substring(returnname.lastIndexOf("."));
-			UtilTool.Redraw(f, request.getRealPath("/") + "uploadfile/"
+			UtilTool.Redraw(f, UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"
 					+ returnname, w.intValue(), h.intValue());
 			if (f.exists())
 				f.delete();
@@ -184,8 +184,8 @@ public class SystemManagerController extends BaseController<TermInfo>{
 		}
 		String lastname = src.substring(src.lastIndexOf("."));
 		//String firstname = src.substring(0, src.lastIndexOf("."));
-		String newname = "uploadfile/logo" + lastname;
-		String newnamerealpath = request.getRealPath("/") + newname;
+		String newname = "logo" + lastname;
+		String newnamerealpath =UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ newname;
 		if(x1 == null
 				|| x1.trim().length() < 1 || !UtilTool.isDouble(x1)
 				|| y1 == null || y1.trim().length() < 1

@@ -1099,7 +1099,7 @@ function showModel(showId,isdrop,height){
     $("#fade").css("height",findDimensions().height+parseFloat(getScrollTop()));
     $("#fade").css("width",findDimensions().width);
     try{
-        $("#"+showId).css("z-index",9999);
+        $("#"+showId).css("z-index",1002);
         $("#"+showId).css("top",(20+parseInt(getScrollTop()))+h);
         $("#"+showId).css("left",(findDimensions().width/2-parseFloat($("#"+showId).css("width"))/2));
         $("#"+showId).css("position","absolute");

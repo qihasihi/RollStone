@@ -112,7 +112,7 @@
         function loadExam(){
             //jwplayer('div_show0').pause();
             //如果存在，则不加载
-            if($("#div_exam").html().Trim().length<1){
+            if($("#div_exam").length<1||$("#div_exam").html().Trim().length<1){
                 var url="paperques?m=testPaper&courseid="+courseid+"&taskid="+taskid+"&paperid="+paperid+"&isVlidateAnswer=1";
                 <c:if test="${!empty param.flag&&param.flag==1}">
                     url+="&flag=1&userid=${param.userid}";
@@ -207,19 +207,7 @@
     <div class="jxxt_zhuanti_rw_wkc_sp">
         <div id="div_show0">
             <img src="images/video_gszh.jpg" width="578px" height="400px" alt="正在排列,转换"/>
-            <%--如果是教师查看，则不显示视频，--%>
-            <c:if test="${empty param.flag||param.flag!=1}">
-                <script type="text/javascript">
-                    //是否显示进度条的判断
-                    var isShowBar=false;
-                    <c:if test="${!empty isViewVideo&&isViewVideo!=0||taskstatus=='3'}">
-                    isShowBar=true;
-                    </c:if>
-                    loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
-                            ,resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
-                            ,${resObj.resid},769,432,isShowBar,jwplayEnd);
-                </script>
-            </c:if>
+
         </div>
      </div>
        <%--<a href="javascript:;" onclick="jwplayEnd()">看完了（测试）</a>--%>
@@ -228,5 +216,21 @@
     </div>
 </div>
 <%@include file="/util/foot.jsp"%>
+<%--如果是教师查看，则不显示视频，--%>
+<c:if test="${empty param.flag||param.flag!=1}">
+<script type="text/javascript">
+    $(function(){
+        //是否显示进度条的判断
+        var isShowBar=false;
+        <c:if test="${!empty isViewVideo&&isViewVideo!=0||taskstatus=='3'}">
+        isShowBar=true;
+        </c:if>
+        loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
+                ,resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
+                ,${resObj.resid},769,432,isShowBar,jwplayEnd);
+    })
+
+</script>
+</c:if>
 </body>
 </html>

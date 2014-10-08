@@ -4,14 +4,15 @@
 <%@ page import="javax.servlet.ServletContext"%>
 <%@ page import="javax.servlet.http.HttpServletRequest"%>
 <%@ page import="com.school.util.MD5_NEW" %>
+<%@ page import="com.school.util.UtilTool" %>
 <%
     String dataid=request.getParameter("dataid");
     if(dataid!=null&&dataid.trim().length()>0)
         dataid=MD5_NEW.getMD5Result(dataid);
     //仅做示例用，请自行修改
-	String path = "../../uploadfile/"+dataid;
+	String path = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+dataid;
 	String imgStr ="";
-	String realpath = getRealPath(request)+path;
+	String realpath =path; //getRealPath(request)+path;
 	List<File> files = getFiles(realpath,new ArrayList());
 	for(File file :files ){
 		imgStr+=file.getPath().replace(getRealPath(request),"")+"ue_separate_ue";

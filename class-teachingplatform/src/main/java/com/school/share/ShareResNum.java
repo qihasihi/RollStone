@@ -64,7 +64,7 @@ public class ShareResNum extends TimerTask {
         String firstDirectory= "ShareResNum";
         String filename=new StringBuffer().append(firstDirectory).append(".xml").toString();    //xml文件的文件名
         //String firstDirectory=UtilTool.DateConvertToString(new Date(),DateType.smollDATE)+"_"+schoolid;
-        String parentDirectory=request.getRealPath("/")+"/uploadfile/tmp/"; //根路径
+        String parentDirectory=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/tmp/"; //根路径
         String directionPath=parentDirectory+firstDirectory+"/";
         String dataFileParent=directionPath+"data/";
         String xmlPathUrl=dataFileParent+"/"+filename;

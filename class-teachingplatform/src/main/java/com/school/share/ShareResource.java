@@ -63,7 +63,7 @@ public class ShareResource extends TimerTask {
         logger.info("--------------------分享资源启动执行-------------------");
             String firstDirectory=MD5_NEW.getMD5Result(MD5_NEW.getMD5Result(schoolid)+UtilTool.utilproperty.getProperty("TO_ETT_KEY").toString());
 			//String firstDirectory=UtilTool.DateConvertToString(new Date(),DateType.smollDATE)+"_"+schoolid;
-			String parentDirectory=request.getRealPath("/")+"/uploadfile/tmp/"; //根路径
+			String parentDirectory=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/tmp/"; //根路径
 			String directionPath=parentDirectory+firstDirectory+"/";
             //数据文件存放的文件夹
             String dataFileParent=directionPath+"data/";

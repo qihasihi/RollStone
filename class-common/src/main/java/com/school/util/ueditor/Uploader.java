@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.school.util.MD5_NEW;
+import com.school.util.UtilTool;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.servlet.*;
@@ -130,13 +131,9 @@ public class Uploader {
             BufferedInputStream bis = new BufferedInputStream(this.inputStream);
             byte[] buff = new byte[128];
             int count = -1;
-
             while ((count = bis.read(buff)) != -1) {
-
                 fos.write(buff, 0, count);
-
             }
-
             bis.close();
             fos.close();
 
@@ -291,10 +288,9 @@ public class Uploader {
      * @return
      */
     private String getPhysicalPath(String path) {
-        String servletPath = this.request.getServletPath();
-        String realPath = this.request.getSession().getServletContext()
-                .getRealPath(servletPath);
-        return new File(realPath).getParent() + "/" + path;
+        //String servletPath = this.request.getServletPath();
+        String realPath = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/";
+        return new File(realPath).getParent() + "/" + path.replaceAll("\\.\\.\\/","");
     }
 
     /**

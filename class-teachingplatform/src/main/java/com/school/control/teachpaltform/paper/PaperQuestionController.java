@@ -3894,7 +3894,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
                        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
                        if(type==1){
-                           Object obj = jsonObject.containsKey("data")?java.net.URLDecoder.decode(jsonObject.get("data").toString()):null;
+                           Object obj = jsonObject.containsKey("data")?java.net.URLDecoder.decode(jsonObject.get("data").toString(),"UTF-8"):null;
                            JSONArray jr = JSONArray.fromObject(obj);
                            if(jr!=null&&jr.size()>0){
                                for(Object o:jr){

@@ -3381,9 +3381,9 @@ public class PaperController extends BaseController<PaperInfo>{
                    je.setType("success");
                    JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
                    FileOutputStream fos = null;
-                   String fname="userUploadFile/optionPie/pt"+new Date().getTime()+".png";
+                   String fname="/optionPie/pt"+new Date().getTime()+".png";
                    try{
-                       fos = new FileOutputStream(request.getRealPath("/")+fname);
+                       fos = new FileOutputStream(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fname);
                        ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
                    }finally{
                        fos.close();
@@ -3426,9 +3426,9 @@ public class PaperController extends BaseController<PaperInfo>{
                    je.setType("success");
                    JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
                    FileOutputStream fos = null;
-                   String fname="userUploadFile/optionPie/pt"+new Date().getTime()+".png";
+                   String fname="/optionPie/pt"+new Date().getTime()+".png";
                    try{
-                       fos = new FileOutputStream(request.getRealPath("/")+fname);
+                       fos = new FileOutputStream(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+fname);
                        ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
                    }finally{
                        if(fos!=null)
@@ -3840,7 +3840,7 @@ public class PaperController extends BaseController<PaperInfo>{
         }
         JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
         FileOutputStream fos = null;
-        String imgRealPath=request.getRealPath("/")+"userUploadFile/optionPie/tk"+paperid+questid+classid+".png";
+        String imgRealPath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/optionPie/tk"+paperid+questid+classid+".png";
         File f=new File(imgRealPath);
         if(!f.getParentFile().exists())
             f.getParentFile().mkdirs();

@@ -91,7 +91,7 @@ public class ShareCourse extends TimerTask {
         }
         logger.info("--------------------分享云端专题执行-------------------");
         String firstDirectory= MD5_NEW.getMD5Result(MD5_NEW.getMD5Result(_Schoolid) + UtilTool.utilproperty.getProperty("TO_ETT_KEY").toString())+UtilTool.DateConvertToString(new Date(), UtilTool.DateType.smollDATE);
-        String parentDirectory=request.getRealPath("/")+"/uploadfile/tmp/"; //根路径
+        String parentDirectory=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/tmp/"; //根路径
         String filename=new StringBuffer().append(firstDirectory).append(".xml").toString();    //xml文件的文件名
         ITpCourseManager courseManager=(TpCourseManager)SpringBeanUtil.getBean("tpCourseManager");
         String directionPath=parentDirectory+firstDirectory+"/";
@@ -160,7 +160,7 @@ public class ShareCourse extends TimerTask {
                 UtilTool.writeFile(request,directionPath,_UploadFileName,"");
                 //得到专题所用的图片素材进行上传
                 String path=MD5_NEW.getMD5Result(tc.getCourseid().toString());
-                String folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                String folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                 File f=new File(folderpath);
                 if(f.exists()&&f.isDirectory()){
                     ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -254,7 +254,7 @@ public class ShareCourse extends TimerTask {
                         if(topic==null||topic.getTopicid()==null)continue;
                         //写入XML文件,并得到备注里的 附件 进行压综
                         path=MD5_NEW.getMD5Result(topic.getTopicid().toString());
-                        folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                        folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                         f=new File(folderpath);
                         if(f.exists()&&f.isDirectory()){
                             ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -271,7 +271,7 @@ public class ShareCourse extends TimerTask {
                             //记录XML中，并 得到  附件 成生压缩文件
                             for(TpTopicThemeInfo theme:themeList){
                                 path= MD5_NEW.getMD5Result(theme.getThemeid().toString());
-                                folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                                folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                                 f=new File(folderpath);
                                 System.out.println(folderpath);
 
@@ -313,7 +313,7 @@ public class ShareCourse extends TimerTask {
 
                         //记录XML中,并得到相关图片进行压综
                         path=MD5_NEW.getMD5Result(courseQues.getQuestionid().toString());
-                        folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                        folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                         f=new File(folderpath);
                         if(f.exists()&&f.isDirectory()){
                             ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -338,7 +338,7 @@ public class ShareCourse extends TimerTask {
 
                                 //写入XML文件,并得到备注里的 附件 进行压综
                                 path=MD5_NEW.getMD5Result(qoption.getQuestionid().toString());
-                                folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                                folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                                 f=new File(folderpath);
                                 if(f.exists()&&f.isDirectory()){
                                     ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -369,7 +369,7 @@ public class ShareCourse extends TimerTask {
                         if(tk==null)continue;
                         //记录XML中,并得到相关图片进行压综
                         path=MD5_NEW.getMD5Result(tk.getTaskid().toString());
-                        folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                        folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                         f=new File(folderpath);
                         if(f.exists()&&f.isDirectory()){
                             ZipUtil.genZip(folderpath,directionPath,path);    //生成zip

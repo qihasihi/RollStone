@@ -8,6 +8,7 @@
 <%@page import="java.io.FileOutputStream"%>
 <%@page import="org.apache.commons.fileupload.ProgressListener"%>
 <%@page import="com.school.util.ProgressUtil"%>
+<%@ page import="com.school.util.UtilTool" %>
 <%
   try {  
   			request.setCharacterEncoding("UTF-8");
@@ -39,7 +40,7 @@
             p.setLength(request.getContentLength());  
              System.out.println("上传文件大小为 : " + p.getLength());  
             // 上传临时路径  
-            String path = request.getSession().getServletContext().getRealPath("/")+"/userUploadFile/";  
+            String path = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/";//request.getSession().getServletContext().getRealPath("/")+"/userUploadFile/";
              System.out.println("上传临时路径 : " + path);  
             // 设置上传工厂  
             DiskFileItemFactory factory = new DiskFileItemFactory();  

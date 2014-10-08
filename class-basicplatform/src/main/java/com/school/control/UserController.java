@@ -2671,8 +2671,7 @@ public class UserController extends BaseController<UserInfo> {
         }
         returnname = new Date().getTime() + "zz"
                 + returnname.substring(returnname.lastIndexOf("."));
-        UtilTool.Redraw(f, request.getRealPath("/") + "userUploadFile/"
-                + returnname, w.intValue(), h.intValue());
+        UtilTool.Redraw(f, UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ returnname, w.intValue(), h.intValue());
         if (f.exists())
             f.delete();
 //		UserInfo user = new UserInfo();
@@ -2690,7 +2689,7 @@ public class UserController extends BaseController<UserInfo> {
 //		returnname = returnname.substring(returnname.lastIndexOf("/") + 1);
 //		user.setHeadimage("userUploadFile//" + returnname);
         if (true) {
-            msg = "userUploadFile/" + returnname + "|" + w + "|" + h + "|"
+            msg = "uploadfile/" + returnname + "|" + w + "|" + h + "|"
                     + propertyMap.get("s");
             returnVal = "{success:'" + msg + "'}";
 
@@ -2820,8 +2819,7 @@ public class UserController extends BaseController<UserInfo> {
         try {
             this.setFname(this.getFileNameList().get(0));
             String filename = this.getFname();
-            File imageFile = new File(request.getRealPath("/")
-                    + "userUploadFile/" + filename);
+            File imageFile = new File(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/" + filename);
             if (myFile == null)
                 myFile = this.getUpload(request)[0];
             copy(myFile.getInputStream(), imageFile);

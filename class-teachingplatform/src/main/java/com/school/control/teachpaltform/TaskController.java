@@ -3497,7 +3497,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
         JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
         FileOutputStream fos = null;
-        String imgRealPath=request.getRealPath("/")+"userUploadFile/optionPie/op"+taskid+classid+classtype+".png";
+        String imgRealPath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/optionPie/op"+taskid+classid+classtype+".png";
         try{
             fos = new FileOutputStream(imgRealPath);
             ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
@@ -3614,7 +3614,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         FileOutputStream fos = null;
         Date d = new Date();
         try{
-            fos = new FileOutputStream(request.getRealPath("/")+"userUploadFile/optionPie/"+d.getTime()+"taskPie.png");
+            fos = new FileOutputStream(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/optionPie/"+d.getTime()+"taskPie.png");
             ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
         }finally{
             fos.close();

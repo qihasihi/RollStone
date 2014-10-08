@@ -331,8 +331,8 @@ public class RoleController extends BaseController<RoleInfo>{
 		if(fname!=null&&fname.size()>0){
 			if(this.fileupLoad(request)){
 				for(int i=0;i<fname.size();i++){
-					String currentPathFname="uploadfile/" + fname.get(i);
-					File f=new File(request.getRealPath("/")+currentPathFname);
+					String currentPathFname=fname.get(i);
+					File f=new File(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+currentPathFname);
 				}
 			}else{
 				je.setMsg("文件上传失败!");

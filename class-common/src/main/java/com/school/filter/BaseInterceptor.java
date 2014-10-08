@@ -123,7 +123,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 
         boolean returnType = false;
         //如果是用户上传的两个目录，则直接pass
-        if(request.getRequestURI().indexOf("/userUploadFile/")!=-1||request.getRequestURI().indexOf("/uploadfile/")!=-1){
+        if(request.getRequestURI().indexOf("/uploadfile/")!=-1||request.getRequestURI().indexOf("/uploadfile/")!=-1){
             return true;
         }
         String realpath = this.getLocationUrlMethod(request);
@@ -440,58 +440,58 @@ public class BaseInterceptor implements HandlerInterceptor {
 //                                + request.getServerPort()
 //                                + "/fileoperate/uploadfile/");
 
-            writeMap.put("RESOURCE_FILE_PATH_HEAD", localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/uploadfile/");
-
-            UtilTool.utilproperty.setProperty("RESOURCE_FILE_PATH_HEAD",
-                    localpath + "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/uploadfile/");
-
-
-
-            UtilTool.utilproperty.setProperty("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD",
-                    localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/clouduploadfile/");
-
-            writeMap.put("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD",localpath +"/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/clouduploadfile/");
-
-
-
-            String bijiaoServerPath=loadServerUploadFile(request,"/fileoperate/uploadfile");
-            //  System.out.println("localrealpath:"+bijiaoServerPath);
-            if(bijiaoServerPath==null||bijiaoServerPath.toString().trim().length()<1||!new File(bijiaoServerPath).exists()){
-                bijiaoServerPath = request.getRealPath("/").replaceAll("\\\\",
-                        "/").substring(
-                        0,
-                        request.getRealPath("/").replaceAll("\\\\", "/").lastIndexOf(
-                                "/"+UtilTool.utilproperty.getProperty("PROC_NAME")))
-                        + "/fileoperate/uploadfile";
-            }
-            if (!new File(bijiaoServerPath).exists()) {
-                bijiaoServerPath = System.getProperty("catalina.home").replaceAll(
-                        "\\\\", "/")
-                        + "/webapps/fileoperate/uploadfile";
-            }
-            writeMap.put("RESOURCE_SERVER_PATH", bijiaoServerPath);
-            UtilTool.utilproperty.setProperty("RESOURCE_SERVER_PATH",
-                    bijiaoServerPath);
+//            writeMap.put("RESOURCE_FILE_PATH_HEAD", localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/uploadfile/");
+//
+//            UtilTool.utilproperty.setProperty("RESOURCE_FILE_PATH_HEAD",
+//                    localpath + "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/uploadfile/");
+//
+//
+//
+//            UtilTool.utilproperty.setProperty("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD",
+//                    localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/clouduploadfile/");
+//
+//            writeMap.put("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD",localpath +"/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/clouduploadfile/");
 
 
-            bijiaoServerPath=loadServerUploadFile(request,"/fileoperate/clouduploadfile");
-            // System.out.println("cloudrealpath:"+bijiaoServerPath);
-            if(bijiaoServerPath==null||bijiaoServerPath.toString().trim().length()<1||!new File(bijiaoServerPath).exists()){
-                bijiaoServerPath = request.getRealPath("/").replaceAll("\\\\",
-                        "/").substring(
-                        0,
-                        request.getRealPath("/").replaceAll("\\\\", "/").lastIndexOf(
-                                "/"+UtilTool.utilproperty.getProperty("PROC_NAME")))
-                        + "/fileoperate/clouduploadfile";
-            }
-            if (!new File(bijiaoServerPath).exists()) {
-                bijiaoServerPath = System.getProperty("catalina.home").replaceAll(
-                        "\\\\", "/")
-                        + "/webapps/fileoperate/clouduploadfile";
-            }
-            writeMap.put("RESOURCE_CLOUD_SERVER_PATH", bijiaoServerPath);
-            UtilTool.utilproperty.setProperty("RESOURCE_CLOUD_SERVER_PATH",
-                    bijiaoServerPath);
+
+//            String bijiaoServerPath=loadServerUploadFile(request,"/fileoperate/uploadfile");
+//            //  System.out.println("localrealpath:"+bijiaoServerPath);
+//            if(bijiaoServerPath==null||bijiaoServerPath.toString().trim().length()<1||!new File(bijiaoServerPath).exists()){
+//                bijiaoServerPath = request.getRealPath("/").replaceAll("\\\\",
+//                        "/").substring(
+//                        0,
+//                        request.getRealPath("/").replaceAll("\\\\", "/").lastIndexOf(
+//                                "/"+UtilTool.utilproperty.getProperty("PROC_NAME")))
+//                        + "/fileoperate/uploadfile";
+//            }
+//            if (!new File(bijiaoServerPath).exists()) {
+//                bijiaoServerPath = System.getProperty("catalina.home").replaceAll(
+//                        "\\\\", "/")
+//                        + "/webapps/fileoperate/uploadfile";
+//            }
+//            writeMap.put("RESOURCE_SERVER_PATH", bijiaoServerPath);
+//            UtilTool.utilproperty.setProperty("RESOURCE_SERVER_PATH",
+//                    bijiaoServerPath);
+
+
+//            bijiaoServerPath=loadServerUploadFile(request,"/fileoperate/clouduploadfile");
+//            // System.out.println("cloudrealpath:"+bijiaoServerPath);
+//            if(bijiaoServerPath==null||bijiaoServerPath.toString().trim().length()<1||!new File(bijiaoServerPath).exists()){
+//                bijiaoServerPath = request.getRealPath("/").replaceAll("\\\\",
+//                        "/").substring(
+//                        0,
+//                        request.getRealPath("/").replaceAll("\\\\", "/").lastIndexOf(
+//                                "/"+UtilTool.utilproperty.getProperty("PROC_NAME")))
+//                        + "/fileoperate/clouduploadfile";
+//            }
+//            if (!new File(bijiaoServerPath).exists()) {
+//                bijiaoServerPath = System.getProperty("catalina.home").replaceAll(
+//                        "\\\\", "/")
+//                        + "/webapps/fileoperate/clouduploadfile";
+//            }
+//            writeMap.put("RESOURCE_CLOUD_SERVER_PATH", bijiaoServerPath);
+//            UtilTool.utilproperty.setProperty("RESOURCE_CLOUD_SERVER_PATH",
+//                    bijiaoServerPath);
             //写入XML中
             WriteProperties.writeProperties(request.getRealPath("/") + "/WEB-INF/classes/properties/util.properties",writeMap);
             // System.out.println(UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH").toString()+"           "+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD").toString());
@@ -503,23 +503,23 @@ public class BaseInterceptor implements HandlerInterceptor {
      * @param request
      * @return
      */
-    private static String loadServerUploadFile(HttpServletRequest request,String eqStr){
-        String serverPath=System.getProperty("catalina.home").replaceAll("\\\\", "/")+"/conf/server.xml";
-        String returnVal=null;
-        try{
-            NodeList ndList=XmlReader.getChildNodeListElement(XmlReader.parse(serverPath).getDocumentElement(), "Context");
-            if(ndList!=null&&ndList.getLength()>0){
-                for (int i=0;i<ndList.getLength();i++){
-                    Element em=(Element)ndList.item(i);
-                    if( em.getAttributeNode("path")!=null&&em.getAttributeNode("path").getValue()!=null){
-                        if(em.getAttributeNode("path").getValue().equals(eqStr)){
-                            returnVal=em.getAttributeNode("docBase").getValue();
-                            break;
-                        }
-                    }
-                }
-            }
-        }catch(Exception e){e.printStackTrace();}
-        return returnVal;
-    }
+//    private static String loadServerUploadFile(HttpServletRequest request,String eqStr){
+//        String serverPath=System.getProperty("catalina.home").replaceAll("\\\\", "/")+"/conf/server.xml";
+//        String returnVal=null;
+//        try{
+//            NodeList ndList=XmlReader.getChildNodeListElement(XmlReader.parse(serverPath).getDocumentElement(), "Context");
+//            if(ndList!=null&&ndList.getLength()>0){
+//                for (int i=0;i<ndList.getLength();i++){
+//                    Element em=(Element)ndList.item(i);
+//                    if( em.getAttributeNode("path")!=null&&em.getAttributeNode("path").getValue()!=null){
+//                        if(em.getAttributeNode("path").getValue().equals(eqStr)){
+//                            returnVal=em.getAttributeNode("docBase").getValue();
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//        }catch(Exception e){e.printStackTrace();}
+//        return returnVal;
+//    }
 }

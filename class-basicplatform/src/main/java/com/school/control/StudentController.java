@@ -99,7 +99,7 @@ public class StudentController extends BaseController<StudentInfo> {
 		String msg="{\"type\":\"error\",\"msg\":\"文件名获取失败!\"}";
 		if(fname!=null&&fname.size()>0){
 			if(this.fileupLoad(request)){
-				String filename=request.getRealPath("/")+"uploadfile/"+fname.get(0); 
+				String filename=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fname.get(0);
 				msg=this.loadExlForStudent(filename,request);
 				File f=new File(filename);
 				if(f.exists()){

@@ -68,7 +68,7 @@ public class ShareTpOperate extends TimerTask {
         }
         logger.info("--------------------分享资源操作启动执行-------------------");
         String firstDirectory= MD5_NEW.getMD5Result(MD5_NEW.getMD5Result(_Schoolid) + UtilTool.utilproperty.getProperty("TO_ETT_KEY").toString());
-        String parentDirectory=request.getRealPath("/")+"/uploadfile/tmp/shareTpOperate/"; //根路径
+        String parentDirectory=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/tmp/shareTpOperate/"; //根路径
         String filename=new StringBuffer().append(firstDirectory).append(".xml").toString();    //xml文件的文件名
         String directionPath=parentDirectory+firstDirectory+"/";
         String dataFileParent=directionPath+"data/";
@@ -158,7 +158,7 @@ public class ShareTpOperate extends TimerTask {
                     }
                     //记录XML中,并得到相关图片进行压综
                    String path=MD5_NEW.getMD5Result(taskList.get(0).getTaskid().toString());
-                    String  folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                    String  folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                    File f=new File(folderpath);
                     if(f.exists()&&f.isDirectory()){
                         ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -178,7 +178,7 @@ public class ShareTpOperate extends TimerTask {
                             }
                             //记录XML中,并得到相关图片进行压综
                              path=MD5_NEW.getMD5Result(resEntity.getResid().toString());
-                              folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                              folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                              f=new File(folderpath);
                             if(f.exists()&&f.isDirectory()){
                                 ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -194,7 +194,7 @@ public class ShareTpOperate extends TimerTask {
                             }
                             //记录XML中,并得到相关图片进行压综
                                 path=MD5_NEW.getMD5Result(tpcList.get(0).getTopicid().toString());
-                                folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                                folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                                 f=new File(folderpath);
                                 if(f.exists()&&f.isDirectory()){
                                     ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -214,7 +214,7 @@ public class ShareTpOperate extends TimerTask {
                                     theme.setCourseid(op.getCourseid());
                                     //记录XML中,并得到相关图片进行压综
                                     path=MD5_NEW.getMD5Result(theme.getThemeid().toString());
-                                     folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                                     folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                                      f=new File(folderpath);
                                     if(f.exists()&&f.isDirectory()){
                                         ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -227,7 +227,7 @@ public class ShareTpOperate extends TimerTask {
                                 }
 //                                //记录XML中,并得到相关图片进行压综
 //                                path=MD5_NEW.getMD5Result(topicthemeList.get(0).getTopicid().toString());
-//                                folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+//                                folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
 //                                f=new File(folderpath);
 //                                if(f.exists()&&f.isDirectory()){
 //                                    ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -245,7 +245,7 @@ public class ShareTpOperate extends TimerTask {
                             }
                             //记录XML中,并得到相关图片进行压综
                             path=MD5_NEW.getMD5Result(quesEntity.getQuestionid().toString());
-                             folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                             folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                              f=new File(folderpath);
                             if(f.exists()&&f.isDirectory()){
                                 ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -273,7 +273,7 @@ public class ShareTpOperate extends TimerTask {
                     }
                     //记录XML中,并得到相关图片进行压综
                     String path=MD5_NEW.getMD5Result(resEntity.getResid().toString());
-                    String  folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                    String  folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                     File f=new File(folderpath);
                     if(f.exists()&&f.isDirectory()){
                         ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -301,7 +301,7 @@ public class ShareTpOperate extends TimerTask {
                             theme.setCourseid(op.getCourseid());
                             //记录XML中,并得到相关图片进行压综
                             String path=MD5_NEW.getMD5Result(theme.getThemeid().toString());
-                            String  folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                            String  folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                             File f=new File(folderpath);
                             if(f.exists()&&f.isDirectory()){
                                 ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -315,7 +315,7 @@ public class ShareTpOperate extends TimerTask {
 
                         //记录XML中,并得到相关图片进行压综
                         String path=MD5_NEW.getMD5Result(topicthemeList.get(0).getTopicid().toString());
-                        String  folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                        String  folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                         File f=new File(folderpath);
                         if(f.exists()&&f.isDirectory()){
                             ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -333,7 +333,7 @@ public class ShareTpOperate extends TimerTask {
                     }
                     //记录XML中,并得到相关图片进行压综
                     String path=MD5_NEW.getMD5Result(topicthemeList.get(0).getTopicid().toString());
-                    String  folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                    String  folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                     File f=new File(folderpath);
                     if(f.exists()&&f.isDirectory()){
                         ZipUtil.genZip(folderpath,directionPath,path);    //生成zip
@@ -358,7 +358,7 @@ public class ShareTpOperate extends TimerTask {
                     }
                     //记录XML中,并得到相关图片进行压综
                     String path=MD5_NEW.getMD5Result(quesEntity.getQuestionid().toString());
-                    String  folderpath=request.getRealPath("/")+"uploadfile/"+path+"/";
+                    String  folderpath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+path+"/";
                     File f=new File(folderpath);
                     if(f.exists()&&f.isDirectory()){
                         ZipUtil.genZip(folderpath,directionPath,path);    //生成zip

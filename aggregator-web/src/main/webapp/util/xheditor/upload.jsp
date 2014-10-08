@@ -23,7 +23,7 @@
 	double MAX_SIZE = 2; //2GB
 	InputStream ins = null;
 	OutputStream outs = null;
-	String baseDir = request.getRealPath("/") + "/userUploadFile/";
+	String baseDir = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/";
 	String tempPath = baseDir + "tmp";
 	File f = new File(baseDir);
 	List<String> urlPath = new ArrayList<String>();
@@ -112,7 +112,7 @@
 
 			oute.close();
 
-			urlPath.add(basePath + "/userUploadFile/" + fileName + "."
+			urlPath.add(basePath + "/uploadfile/" + fileName + "."
 					+ extensionName);
 
 		} else {
@@ -154,7 +154,7 @@
 					fi.write(tpFile);
 
 					fi.delete();
-					urlPath.add(basePath + "/userUploadFile/"
+					urlPath.add(basePath + "/uploadfile/"
 							+ filename);
 				} catch (Exception e) {
 					e.printStackTrace();

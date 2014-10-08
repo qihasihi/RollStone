@@ -46,17 +46,17 @@ public class UpdateRsMyInfoData extends TimerTask {
         String postFileUrl=UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION")+teamaterialLocal[0];
         String params=teamaterialLocal[1]+"&key="+key;
         //开始请求并返回更新资源下载地址
-      //  Map<String,Object> fileLocaMap=UpdateResMyInfoDataUtil.sendPostURL(postFileUrl,params);
+        Map<String,Object> fileLocaMap=UpdateResMyInfoDataUtil.sendPostURL(postFileUrl,params);
 
 
-        String updateFileLocaPath="http://localhost:8080/fileoperate/uploadfile//tmp/UpdateResHotRank/50000/1401785409891/1401870856991.zip";
+    //    String updateFileLocaPath="http://localhost:8080/fileoperate/uploadfile//tmp/UpdateResHotRank/50000/1401785409891/1401870856991.zip";
 
-//        if(fileLocaMap==null&&fileLocaMap.get("type")!=null&&!fileLocaMap.get("type").toString().trim().equals("success")){
-//            //记录异常错误日志，
-//            System.out.println(fileLocaMap.get("msg"));
-//            return;
-//        }
-        //updateFileLocaPath=fileLocaMap.get("objList").toString();
+        if(fileLocaMap==null&&fileLocaMap.get("type")!=null&&!fileLocaMap.get("type").toString().trim().equals("success")){
+            //记录异常错误日志，
+            System.out.println(fileLocaMap.get("msg"));
+            return;
+        }
+        String updateFileLocaPath=fileLocaMap.get("objList").toString();
 //        //下载文件XMLpath到对应目录下
         String fileName=UpdateHotResDataUtil.getFileName(updateFileLocaPath);
         String toPathFolder=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/tmp/sendfile/updateCloudMyInfo/";

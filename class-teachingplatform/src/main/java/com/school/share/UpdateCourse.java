@@ -217,7 +217,7 @@ public class UpdateCourse extends TimerTask{
                                  sqlArrayList.add(sqlbuilder.toString());
                              }
                              //得到附件
-                            String topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(ctmp.getCourseid().toString());
+                            String topath= UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+MD5_NEW.getMD5Result(ctmp.getCourseid().toString());
 
                              if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,ctmp.getCourseid().toString(),key,2,topath,null,null)){
                                  //文件失败
@@ -271,7 +271,7 @@ public class UpdateCourse extends TimerTask{
                                              sqlArrayList.add(sqlbuilder.toString());
                                          }
                                          //得到附件
-                                         topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(tp.getTopicid().toString());
+                                         topath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+MD5_NEW.getMD5Result(tp.getTopicid().toString());
 
                                          if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,tp.getTopicid().toString(),key,2,topath,null,null)){
                                              //文件失败
@@ -298,7 +298,7 @@ public class UpdateCourse extends TimerTask{
 
 
                                              //得到附件
-                                             topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(theme.getThemeid().toString());
+                                             topath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+MD5_NEW.getMD5Result(theme.getThemeid().toString());
 
                                              if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,theme.getThemeid().toString(),key,2,topath,null,null)){
                                                  //文件失败
@@ -406,7 +406,7 @@ public class UpdateCourse extends TimerTask{
                                          objArrayList.add(objList);
                                          sqlArrayList.add(sqlbuilder.toString());
                                      }
-                                     topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(ques.getQuestionid().toString());
+                                     topath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+MD5_NEW.getMD5Result(ques.getQuestionid().toString());
                                      if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,ques.getQuestionid().toString(),key,2,topath,null,ques.getSourceType())){
                                          //文件失败
                                          System.out.println("问题附件文件下载失败!");//istrue=false;break;
@@ -444,7 +444,7 @@ public class UpdateCourse extends TimerTask{
                                                  objArrayList=new ArrayList<List<Object>>();
                                              }
 
-//                                             topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(option.getRef().toString());
+//                                             topath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+MD5_NEW.getMD5Result(option.getRef().toString());
 //                                             if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,option.getRef().toString(),key,2,topath,null,null)){
 //                                                 //文件失败
 //                                                 System.out.println("问题选项附件文件下载失败!");//istrue=false;break;
@@ -634,7 +634,7 @@ public class UpdateCourse extends TimerTask{
                                              sqlArrayList.add(sqlbuilder.toString());
                                          }
 
-//                                        topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(tk.getTaskid().toString());
+//                                        topath= UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+MD5_NEW.getMD5Result(tk.getTaskid().toString());
 //                                        if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,tk.getTaskid().toString(),key,2,topath,null,null)){
 //                                            //文件失败
 //                                            System.out.println("任务附件文件下载失败!");//istrue=false;break;
@@ -825,7 +825,7 @@ public class UpdateCourse extends TimerTask{
                                                      objArrayList.add(objList);
                                                      sqlArrayList.add(sqlbuilder.toString());
                                                  }
-    //                                             topath= request.getRealPath("/")+"/uploadfile/"+MD5_NEW.getMD5Result(option.getRef().toString());
+    //                                             topath=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+MD5_NEW.getMD5Result(option.getRef().toString());
     //                                             if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,option.getRef().toString(),key,2,topath,null,null)){
     //                                                 //文件失败
     //                                                 System.out.println("问题选项附件文件下载失败!");//istrue=false;break;
