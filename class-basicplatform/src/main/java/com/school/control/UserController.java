@@ -2725,6 +2725,8 @@ public class UserController extends BaseController<UserInfo> {
             return;
         }
 
+
+
         String src1 = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ src.split("/")[1];
         File f = new File(src1);
         if (!f.exists()) {
@@ -2732,6 +2734,13 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
+        if (user.getHeadimage() != null && user.getHeadimage().trim() != "") {
+            File temf = new File(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ user.getHeadimage().split("/")[1]);
+            if (temf.exists())
+                temf.delete();
+        }
+
+
         String lastname = src.substring(src.lastIndexOf("."));
         String firstname = src.split("/")[1].substring(0,src.split("/")[1].lastIndexOf("."));
         String newname = firstname + "-header" + lastname;
@@ -2774,11 +2783,7 @@ public class UserController extends BaseController<UserInfo> {
                     Integer.parseInt(y1));
         }
 
-        if (user.getHeadimage() != null && user.getHeadimage().trim() != "") {
-            File temf = new File(request.getRealPath("/") + user.getHeadimage());
-            if (temf.exists())
-                temf.delete();
-        }
+
         user.setHeadimage(src.split("/")[0]+"/"+newname);
         if (userManager.doUpdate(user)) {
             Integer tempid=user.getUserid();
@@ -2790,9 +2795,9 @@ public class UserController extends BaseController<UserInfo> {
             userinfo.setClassUsers(cuInfo.getClassUsers());
             userinfo.setFunctionRightList(cuInfo.getFunctionRightList());
             userinfo.setPathRightList(cuInfo.getPathRightList());
-            userinfo.setHeadimage(src.split("/")[0]+"/"+newname);
+            userinfo.setHeadimage(src.split("/")[0] + "/" + newname);
             request.getSession().setAttribute("CURRENT_USER", userinfo);
-            je.getObjList().add( src.split("/")[0]+"/"+newname);
+            je.getObjList().add(src.split("/")[0] + "/" + newname);
             je.setType("success");
 
 
