@@ -2744,7 +2744,7 @@ public class UserController extends BaseController<UserInfo> {
         String lastname = src.substring(src.lastIndexOf("."));
         String firstname = src.split("/")[1].substring(0,src.split("/")[1].lastIndexOf("."));
         String newname = firstname + "-header" + lastname;
-        String newnamerealpath = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+ newname;
+        String newnamerealpath = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ newname;
         if(x1 == null
                 || x1.trim().length() < 1 || !UtilTool.isDouble(x1)
                 || y1 == null || y1.trim().length() < 1
@@ -2785,6 +2785,7 @@ public class UserController extends BaseController<UserInfo> {
 
 
         user.setHeadimage(src.split("/")[0]+"/"+newname);
+        System.out.println(user.getHeadimage());
         if (userManager.doUpdate(user)) {
             Integer tempid=user.getUserid();
             user = new UserInfo();
