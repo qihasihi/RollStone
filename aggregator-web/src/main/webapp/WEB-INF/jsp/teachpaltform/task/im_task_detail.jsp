@@ -8,7 +8,13 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%  String proc_name=request.getContextPath();
+<%   String proc_name=request.getHeader("x-etturl");
+    if(proc_name==null){
+        proc_name=request.getContextPath();
+    }else{
+        ///group1/1.jsp
+        proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/"));
+    }
     String ipStr=request.getServerName()+":"+request.getServerPort();
     //UtilTool.utilproperty.getProperty("PROC_NAME");
     String basePath = request.getScheme() + "://"

@@ -3,10 +3,7 @@
 <%@page import="java.util.*"%>
 <%@page import="java.text.*"%>
 <%@include file="/util/common.jsp" %> 
-<%
-String basepath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ request.getContextPath() + "/"; %>
+
 <HTML>		
 <HEAD>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">

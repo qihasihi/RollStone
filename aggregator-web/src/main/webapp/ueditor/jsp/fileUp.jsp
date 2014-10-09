@@ -8,7 +8,9 @@
     <%
     request.setCharacterEncoding( Uploader.ENCODEING );
     response.setCharacterEncoding( Uploader.ENCODEING );
-    
+
+
+
     String currentPath = request.getRequestURI().replace( request.getContextPath(), "" );
     String dataid=request.getParameter("dataid");  //防止文件夹重复，建议ID+表名(大写)
     File currentFile = new File( currentPath );

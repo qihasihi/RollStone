@@ -4,7 +4,13 @@
     if(UtilTool._IS_SIMPLE_RESOURCE==2){
         response.sendRedirect("user?m=simpleResLogin");return;
     }
-    String pcname=request.getContextPath().replace("/","");
+    String pcname=request.getHeader("x-etturl");
+    if(pcname==null){
+        pcname=request.getContextPath();
+    }else{
+        ///group1/1.jsp
+        pcname=pcname.substring(0,pcname.substring(1).indexOf("/"));
+    }
 
 %>
 <%@ include file="/util/common.jsp" %>

@@ -1,9 +1,17 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
-
-String basePath = request.getScheme() + "://"
-		+ request.getServerName() + ":" + request.getServerPort()
-		+ request.getContextPath() + "/";
+    String proc_name=request.getHeader("x-etturl");
+    if(proc_name==null){
+        proc_name=request.getContextPath();
+    }else{
+        ///group1/1.jsp
+        proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/"));
+    }
+    String ipStr=request.getServerName()+":"+request.getServerPort();
+    //UtilTool.utilproperty.getProperty("PROC_NAME");
+    String basePath = request.getScheme() + "://"
+            + ipStr
+            +"/"+proc_name + "/";
 %>
 	<script src="<%=basePath %>js/common/jquery1.4.js"></script>
 

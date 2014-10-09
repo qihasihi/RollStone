@@ -89,8 +89,13 @@ public class BaseInterceptor implements HandlerInterceptor {
      */
     private void setProjectValidate(HttpServletRequest request){
         String ipStr=request.getServerName()+":"+request.getServerPort();
-        String proc_name=request.getContextPath();
-
+        String proc_name=request.getHeader("x-etturl");
+        if(proc_name==null){
+            proc_name=request.getContextPath();
+        }else{
+            ///group1/1.jsp
+            proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/"));
+        }
         //UtilTool.utilproperty.getProperty("PROC_NAME");
         String basePath = request.getScheme() + "://"
                 + ipStr
@@ -101,7 +106,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         //公用的文件服务器项目链接
         String publicFileSystemIpPort=new StringBuilder(request.getScheme()).append("://")
                 .append(request.getServerName()).append(":").append(request.getServerPort())
-                .append(request.getContextPath()).append("/").toString();
+                .append(proc_name).append("/").toString();
         //项目
         String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
         if(request.getSession().getAttribute("FILE_SYSTEM_IP_PORT")==null||!request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))

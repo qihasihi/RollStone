@@ -1,6 +1,12 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
-String path = request.getContextPath();
+    String path=request.getHeader("x-etturl");
+    if(path==null){
+        path=request.getContextPath();
+    }else{
+        ///group1/1.jsp
+        path=path.substring(0,path.substring(1).indexOf("/"));
+    }
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 

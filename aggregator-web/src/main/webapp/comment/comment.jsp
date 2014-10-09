@@ -1,6 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
-String path = request.getContextPath();
+    String path=request.getHeader("x-etturl");
+    if(path==null){
+        path=request.getContextPath();
+    }else{
+        path=path.substring(0,path.substring(1).indexOf("/"));
+    }
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 <style type="text/css">
