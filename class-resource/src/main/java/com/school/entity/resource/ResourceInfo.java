@@ -1,14 +1,10 @@
 package com.school.entity.resource;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import com.school.entity.UserInfo;
 import com.school.util.UtilTool;
 import com.school.util.UtilTool.DateType;
-
 import javax.persistence.Entity;
 
 @Entity
@@ -735,7 +731,7 @@ public class ResourceInfo implements java.io.Serializable {
         String imagepath = "";
         if(!UtilTool.getResourseType(this.getFilesuffixname()).equals("video"))
                     return null;
-            imagepath =UtilTool.getResourceLocation(this.getResid(),1)
+        imagepath =UtilTool.getResourceLocation(this.getResid(),1)
                     + this.getPath()+"/001"
                     + this.getFilesuffixname() + ".pre.jpg";
             return imagepath;

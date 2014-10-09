@@ -233,7 +233,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
         request.setAttribute("courseid",courseid);
         request.setAttribute("resType", resourceTypeList);
-        request.setAttribute("fileSystemIpPort", UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD"));
+        request.setAttribute("fileSystemIpPort", request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString());
         request.setAttribute("nextid", this.resourceManager.getNextId(true));
 
 

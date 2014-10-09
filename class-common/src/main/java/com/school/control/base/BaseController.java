@@ -651,7 +651,7 @@ public class BaseController<T extends java.io.Serializable> {
      * @return 1:成功        2:信息不完整，拒绝操作       3:图片不存在了    4：信息完整，操作成功，但执行返回失败
      * @throws Exception
      */
-    public Integer HeadImgToEtt(UserInfo u)throws Exception{
+    public Integer HeadImgToEtt(HttpServletRequest request,UserInfo u)throws Exception{
         Integer returnVal=2;
         //信息不完整操作
         if(u.getHeadimage()==null||u.getEttuserid()==null||u.getUserid()==null
@@ -659,12 +659,12 @@ public class BaseController<T extends java.io.Serializable> {
             return returnVal;
         //信息完整，验证头像是否存在
         //得到信息
-        String headImgUrl=UtilTool.getCurrentLocation()+u.getHeadimage();
+        String headImgUrl=UtilTool.getCurrentLocation(request)+u.getHeadimage();
         System.out.println("sx headURL:"+headImgUrl);
         URL url = new URL(headImgUrl);
         URLConnection con = url.openConnection();
         //httpHeader穿一件伪装服
-        setUrlConnHeader(con);
+        setUrlConnHeader(request,con);
         // 得到content的长度
         long contentLength = con.getContentLength();
         //如果  contentLength 为0就表示这个sss.gif是不存在的.
@@ -709,7 +709,7 @@ public class BaseController<T extends java.io.Serializable> {
      * 填入相关信息到conn.
      * @param con
      */
-    public static void setUrlConnHeader(URLConnection con) {
+    public static void setUrlConnHeader(HttpServletRequest request,URLConnection con) {
         con.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.3) Gecko/2008092510 Ubuntu/8.04 (hardy) Firefox/3.0.3");
         con.setRequestProperty("Accept-Language", "en-us,en;q=0.7,zh-cn;q=0.3");
         con.setRequestProperty("Accept-Encoding", "aa");
@@ -719,7 +719,7 @@ public class BaseController<T extends java.io.Serializable> {
         con.setRequestProperty("If-Modified-Since", "Fri, 02 Jan 2009 17:00:05 GMT");
         con.setRequestProperty("If-None-Match", "\"1261d8-4290-df64d224\"");
         con.setRequestProperty("Cache-Control", "max-age=0");
-        con.setRequestProperty("Referer", UtilTool.getCurrentLocation());
+        con.setRequestProperty("Referer", UtilTool.getCurrentLocation(request));
     }
 
 }

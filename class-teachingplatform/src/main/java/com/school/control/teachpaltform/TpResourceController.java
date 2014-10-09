@@ -856,7 +856,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         mp.put("resType",resourceTypeList);
         mp.put("gradeList",gradeList);
         mp.put("courseLevel",courseLevelList);
-        mp.put("fileSystemIpPort",UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD"));
+        mp.put("fileSystemIpPort",request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString());
         Long nextid=this.resourceManager.getNextId(true);
         mp.put("nextid",nextid);
         System.out.println("nextid:" + nextid);
@@ -917,7 +917,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         mp.put("resType",resourceTypeList);
         mp.put("gradeList",gradeList);
         mp.put("courseLevel",courseLevelList);
-        mp.put("fileSystemIpPort",UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD"));
+        mp.put("fileSystemIpPort",request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString());
         mp.put("nextid",this.resourceManager.getNextId(true));
         return new ModelAndView("/teachpaltform/resource/dialog-local-upload",mp);
     }

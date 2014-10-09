@@ -4,7 +4,7 @@
     if(UtilTool._IS_SIMPLE_RESOURCE==2){
         response.sendRedirect("user?m=simpleResLogin");return;
     }
-    String pcname=UtilTool.utilproperty.getProperty("PROC_NAME");
+    String pcname=request.getContextPath().replace("/","");
 
 %>
 <%@ include file="/util/common.jsp" %>

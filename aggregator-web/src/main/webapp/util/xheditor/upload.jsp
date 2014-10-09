@@ -13,8 +13,13 @@
 <%@ page import="com.school.util.UtilTool" %>
 <%
 	String path = request.getContextPath();
-	String basePath = "http://"+UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"
-            + UtilTool.utilproperty.getProperty("PROC_NAME") + "/";
+    String proc_name=request.getContextPath();
+    String ipStr=request.getServerName()+":"+request.getServerPort();
+    //UtilTool.utilproperty.getProperty("PROC_NAME");
+    String basePath = request.getScheme() + "://"
+            + ipStr
+            +"/"+proc_name + "/";
+    session.setAttribute("IP_PROC_NAME",basePath);
     //String basePath="http://"+request.getServerName()+":"+request.getLocalPort()+request.getContextPath();
 	response.setContentType("text/html;charset=utf-8");
 	response.setCharacterEncoding("UTF-8");

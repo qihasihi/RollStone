@@ -84,6 +84,39 @@ public class BaseInterceptor implements HandlerInterceptor {
     }
 
     /**
+     * 设置项目动态变量
+     * @param request
+     */
+    private void setProjectValidate(HttpServletRequest request){
+        String ipStr=request.getServerName()+":"+request.getServerPort();
+        String proc_name=request.getContextPath();
+
+        //UtilTool.utilproperty.getProperty("PROC_NAME");
+        String basePath = request.getScheme() + "://"
+                + ipStr
+                +"/"+proc_name + "/";
+        if(request.getSession().getAttribute("IP_PROC_NAME")==null||!request.getSession().getAttribute("IP_PROC_NAME").toString().equals(basePath))
+        request.getSession().setAttribute("IP_PROC_NAME", basePath);
+
+        //公用的文件服务器项目链接
+        String publicFileSystemIpPort=new StringBuilder(request.getScheme()).append("://")
+                .append(request.getServerName()).append(":").append(request.getServerPort())
+                .append(request.getContextPath()).append("/").toString();
+        //项目
+        String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
+        if(request.getSession().getAttribute("FILE_SYSTEM_IP_PORT")==null||!request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
+          request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
+        // 本地的文件
+        String fileSystemUpload=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_PATH_HEAD")+"/";
+         if(request.getSession().getAttribute("RESOURCE_FILE_PATH_HEAD")==null||!request.getSession().getAttribute("RESOURCE_FILE_PATH_HEAD").toString().equals(fileSystemUpload))
+            request.getSession().setAttribute("RESOURCE_FILE_PATH_HEAD", fileSystemUpload);
+        // 云端的文件
+        String fileSystemCloudUpload=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD")+"/";
+        if(request.getSession().getAttribute("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD")==null||!request.getSession().getAttribute("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD").toString().equals(fileSystemCloudUpload))
+             request.getSession().setAttribute("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD", fileSystemCloudUpload);
+    }
+
+    /**
      * 访问时拦截
      */
     public boolean preHandle(HttpServletRequest request,
@@ -97,11 +130,8 @@ public class BaseInterceptor implements HandlerInterceptor {
         if (request.getSession().getAttribute("_TITLE") == null)
             request.getSession().setAttribute("_TITLE",UtilTool.utilproperty.getProperty("CURRENT_PAGE_TITLE"));
 
-
-//		if (request.getSession().getAttribute("CURRENT_TITLE") == null) {
-//			String dbTitle = UtilTool._PAGE_TITLE;
-//			request.getSession().setAttribute("CURRENT_TITLE", dbTitle);
-//		}
+        //设置文件服务器变量，设置项目访问的路径变量
+        setProjectValidate(request);
         writeUtilProperties(request);	//写配置文件
         //加载资源文件的各种配置
         if(!UtilTool.isSynchroFileType)
@@ -409,10 +439,8 @@ public class BaseInterceptor implements HandlerInterceptor {
                 e.printStackTrace();
             }
 
-            String ipAddress=UtilTool.utilproperty.getProperty("IP_ADDRESS");
-            String localpath="http://"+ request.getServerName() + ":"+request.getServerPort();
-            if(ipAddress!=null&&ipAddress.toString().trim().length()>0)
-                localpath="http://"+ipAddress;
+//            if(ipAddress!=null&&ipAddress.toString().trim().length()>0)
+//                localpath="http://"+ipAddress;
 
 
 //                WriteProperties.writeProperties(request.getRealPath("/")
@@ -421,16 +449,16 @@ public class BaseInterceptor implements HandlerInterceptor {
 //                                + request.getServerName() + ":"
 //                                + request.getServerPort() + "/fileoperate/");
 
-            writeMap.put("RESOURCE_FILE_UPLOAD_HEAD", localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/");
+         //   writeMap.put("RESOURCE_FILE_UPLOAD_HEAD", localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/");
 
 
-            UtilTool.utilproperty.setProperty("RESOURCE_FILE_UPLOAD_HEAD",
-                    localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/");
-
-
-            String pt=localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/"+"/questionimg/package/";
-            writeMap.put("RESOURCE_QUESTION_IMG_PARENT_PATH",pt);
-            UtilTool.utilproperty.setProperty("RESOURCE_QUESTION_IMG_PARENT_PATH",pt);
+//            UtilTool.utilproperty.setProperty("RESOURCE_FILE_UPLOAD_HEAD",
+//                    localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/");
+//
+//
+//            String pt=localpath+ "/"+UtilTool.utilproperty.getProperty("FILEOPERATE_PROJECT")+"/"+"/questionimg/package/";
+//            writeMap.put("RESOURCE_QUESTION_IMG_PARENT_PATH",pt);
+//            UtilTool.utilproperty.setProperty("RESOURCE_QUESTION_IMG_PARENT_PATH",pt);
 
 
 //                WriteProperties.writeProperties(request.getRealPath("/")

@@ -23,12 +23,20 @@
 %>
   
 <%
-    String proc_name=UtilTool.utilproperty.getProperty("PROC_NAME");
-	String basePath = request.getScheme() + "://"
-            + UtilTool.utilproperty.getProperty("IP_ADDRESS")
-			+"/"+proc_name + "/";
+    String proc_name=request.getContextPath();
+    String ipStr=request.getServerName()+":"+request.getServerPort();
+    //UtilTool.utilproperty.getProperty("PROC_NAME");
+    String basePath = request.getScheme() + "://"
+            + ipStr
+            +"/"+proc_name + "/";
+    session.setAttribute("IP_PROC_NAME",basePath);
 			
-	String fileSystemIpPort=UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD");//"http://202.99.47.77:80/";//request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort()+"/";;
+	String fileSystemIpPort=request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString();
+    //"http://202.99.47.77:80/";//request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort()+"/";;
+
+
+
+
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
 			 boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false;
  List<RoleUser> cruList=null;
@@ -49,7 +57,7 @@ if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
 	if(u==null){
 		response.getWriter().print("<script type='text/javascript'>alert('"
 				+UtilTool.msgproperty.getProperty("NO_LOGINED")+"');location.href='"
-				+UtilTool.getCurrentLocation()+"';</script>");
+				+UtilTool.getCurrentLocation(request)+"';</script>");
 		return;  
 	}else{
 		cruList=u.getCjJRoleUsers();

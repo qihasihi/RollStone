@@ -42,6 +42,8 @@ package com.school.util;
         import net.sf.json.JSONArray;
         import net.sf.json.JSONObject;
         import org.apache.commons.lang.math.RandomUtils;
+        import org.springframework.web.context.request.RequestContextHolder;
+        import org.springframework.web.context.request.ServletRequestAttributes;
         import org.w3c.dom.Element;
         import org.w3c.dom.NodeList;
 
@@ -265,17 +267,17 @@ public class UtilTool implements java.io.Serializable {
     }
 
 
-    public static String getCurrentLocation(){
-        return new StringBuilder("http://")
-                .append(utilproperty.getProperty("IP_ADDRESS"))
+    public static String getCurrentLocation(HttpServletRequest request){
+        return  new StringBuilder(request.getScheme()).append("://")
+                .append(request.getServerName()).append(":").append(request.getServerPort())
                 .append("/")
-                .append(utilproperty.getProperty("PROC_NAME"))
+                .append(request.getContextPath())
                 .append("/").toString();
     }
 
-    public static String getCurrentIpPort(){
-        return new StringBuilder("http://")
-                .append(utilproperty.getProperty("IP_ADDRESS"))
+    public static String getCurrentIpPort(HttpServletRequest request){
+        return new StringBuilder(request.getScheme()).append("://")
+                .append(request.getServerName()).append(":").append(request.getServerPort())
                 .append("/").toString();
     }
 
@@ -1374,15 +1376,16 @@ public class UtilTool implements java.io.Serializable {
      * @return
      */
     public static String getResourceLocation(Long resid,Integer type){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String returnVal=null;
         if(resid>0){
             if(type==null||type==1)     //云端
-                returnVal=UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD");
+                returnVal=request.getSession().getAttribute("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD").toString();
             else if(type==2)                //云端真实路径
                 returnVal=UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH");
         }else{
             if(type==null||type==1)     //本地
-                returnVal=UtilTool.utilproperty.getProperty("RESOURCE_FILE_PATH_HEAD");
+                returnVal=request.getSession().getAttribute("RESOURCE_FILE_PATH_HEAD").toString();
             else if(type==2)                //本地真实路径
                 returnVal=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH");
         }

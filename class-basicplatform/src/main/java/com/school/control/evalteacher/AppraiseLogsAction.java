@@ -22,13 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import sun.awt.RepaintArea;
-
 import com.school.control.base.BaseController;
 import com.school.entity.ClassUser;
 import com.school.entity.ClassYearInfo;
 import com.school.entity.GradeInfo;
-import com.school.entity.RoleUser;
 import com.school.entity.SubjectInfo;
 import com.school.entity.TeacherInfo;
 import com.school.entity.UserInfo;

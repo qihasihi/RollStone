@@ -1470,7 +1470,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             }else{
                                 returnUserMap.put("replyAttachType",0);
                             }
-                            String fujian = "http://"+UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"+UtilTool.utilproperty.getProperty("PROC_NAME")+"/uploadfile/"+taskUserRecord.get(i).get("REPLYATTACH");
+                            String fujian =request.getSession().getAttribute("IP_PROC_NAME")+"/uploadfile/"+taskUserRecord.get(i).get("REPLYATTACH");
                             att.put("attach",fujian);
                         }else{
                             att.put("attach",taskUserRecord.get(i).get("REPLYATTACH"));
@@ -1566,7 +1566,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             }else{
                                 returnUserMap.put("replyAttachType",0);
                             }
-                            String fujian = "http://"+UtilTool.utilproperty.getProperty("IP_ADDRESS")+"/"+UtilTool.utilproperty.getProperty("PROC_NAME")+"/uploadfile/"+taskUserRecord.get(i).get("REPLYATTACH");
+                            String fujian = request.getSession().getAttribute("IP_PROC_NAME")+"/uploadfile/"+taskUserRecord.get(i).get("REPLYATTACH");
                             att.put("attach",fujian);
                         }else{
                             att.put("attach",taskUserRecord.get(i).get("REPLYATTACH"));

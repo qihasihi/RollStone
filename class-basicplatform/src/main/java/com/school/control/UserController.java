@@ -2808,7 +2808,7 @@ public class UserController extends BaseController<UserInfo> {
             userInfo.setDcschoolid(this.logined(request).getDcschoolid());
             List<UserInfo> uList=this.userManager.getList(userInfo,null);
             if(uList!=null&&uList.size()>0&&uList.get(0)!=null&&uList.get(0).getHeadimage()!=null&&uList.get(0).getHeadimage().trim().length()>0){
-                int returnType=HeadImgToEtt(uList.get(0));
+                int returnType=HeadImgToEtt(request,uList.get(0));
                 if(returnType==1)
                     System.out.println("同步用户头像成功!");
                 else

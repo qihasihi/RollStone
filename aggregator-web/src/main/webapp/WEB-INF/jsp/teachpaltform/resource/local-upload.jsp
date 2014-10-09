@@ -2,10 +2,13 @@
 <%@ page import="com.school.util.UtilTool" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%
-    String proc_name= UtilTool.utilproperty.getProperty("PROC_NAME");
+    String proc_name=request.getContextPath();
+    String ipStr=request.getServerName()+":"+request.getServerPort();
+    //UtilTool.utilproperty.getProperty("PROC_NAME");
     String basePath = request.getScheme() + "://"
-            + UtilTool.utilproperty.getProperty("IP_ADDRESS")
+            + ipStr
             +"/"+proc_name + "/";
+    session.setAttribute("IP_PROC_NAME",basePath);
 %>
 <!-- 上传控件 -->
 <script type="text/javascript" src="<%=basePath %>js/common/uploadControl.js"></script>

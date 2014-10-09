@@ -7,10 +7,13 @@
    // response.setHeader("Cache-Control", "Public");
    // response.setHeader("Pragma", "no-cache");
   //  response.setDateHeader("Expires",  -10);
-    String proc_name= UtilTool.utilproperty.getProperty("PROC_NAME");
+    String proc_name=request.getContextPath();
+    String ipStr=request.getServerName()+":"+request.getServerPort();
+    //UtilTool.utilproperty.getProperty("PROC_NAME");
     String basePath = request.getScheme() + "://"
-            + UtilTool.utilproperty.getProperty("IP_ADDRESS")
+            + ipStr
             +"/"+proc_name + "/";
+    session.setAttribute("IP_PROC_NAME",basePath);
 %>
 
 <%response.setHeader("Pragma","No-cache");

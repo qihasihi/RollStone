@@ -2,8 +2,11 @@ package  com.school.entity.teachpaltform;
 
 import com.school.entity.resource.ResourceInfo;
 import com.school.util.UtilTool;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import sun.security.util.BigInt;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -211,6 +214,7 @@ public class TpCourseResource implements Serializable {
         //String file=UtilTool.gender_MD5(this.getFilename().replaceAll("'"," ").replaceAll(","," ").trim());
         String file="001";
        // return UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"uploadfile/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
+
         return UtilTool.getResourceLocation(this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
     }
     public String getImgpath(){

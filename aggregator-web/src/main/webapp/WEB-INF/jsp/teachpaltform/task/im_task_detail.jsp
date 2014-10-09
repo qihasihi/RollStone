@@ -8,10 +8,13 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%  String proc_name= UtilTool.utilproperty.getProperty("PROC_NAME");
+<%  String proc_name=request.getContextPath();
+    String ipStr=request.getServerName()+":"+request.getServerPort();
+    //UtilTool.utilproperty.getProperty("PROC_NAME");
     String basePath = request.getScheme() + "://"
-            + UtilTool.utilproperty.getProperty("IP_ADDRESS")
+            + ipStr
             +"/"+proc_name + "/";
+    session.setAttribute("IP_PROC_NAME",basePath);
     int ado_idx=0;
 %>
 <script src="<%=basePath %>util/xheditor/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
