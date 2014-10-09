@@ -263,7 +263,6 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 	var isTeacher=<%=isTeacher%>;
     var isBzr=<%=isBzr%>;
 	var fileSystemIpPort='<%=fileSystemIpPort%>';
-
 </script>  
 <title><%=webTitle%></title>
 

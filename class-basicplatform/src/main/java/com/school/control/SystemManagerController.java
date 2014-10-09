@@ -175,7 +175,7 @@ public class SystemManagerController extends BaseController<TermInfo>{
 			return;
 		}
 		
-		String src1 = request.getRealPath("/") + src;
+		String src1 = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+src.split("/")[1];
 		File f = new File(src1);
 		if (!f.exists()) {
 			je.setMsg("异常错误，该图片已经不存在!");

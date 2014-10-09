@@ -233,9 +233,8 @@ public class BaseController<T extends java.io.Serializable> {
                 this.setFname(this.getFileNameList().get(0));
             }
             String filename = this.getFname();
-            File imageFile = new File(request.getRealPath("/")
-                    + UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ filename);
-            if(myFile==null)
+            File imageFile = new File(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ filename);
+           // if(myFile==null)
                 myFile=this.getUpload(request)[0];
             copy(myFile.getInputStream(),imageFile);
             myFile=null;

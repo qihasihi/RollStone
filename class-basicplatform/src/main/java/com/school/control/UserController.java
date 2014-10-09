@@ -2618,7 +2618,7 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(returnVal);
             return;
         }
-        String filename = request.getRealPath("/") + "userUploadFile/"
+        String filename = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"
                 + filenameString.get(0);
         String returnname = filename;
         File f = new File(filename);
@@ -2725,7 +2725,7 @@ public class UserController extends BaseController<UserInfo> {
             return;
         }
 
-        String src1 = request.getRealPath("/") + src;
+        String src1 = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ src.split("/")[1];
         File f = new File(src1);
         if (!f.exists()) {
             je.setMsg("异常错误，该图片已经不存在!");
@@ -2733,9 +2733,9 @@ public class UserController extends BaseController<UserInfo> {
             return;
         }
         String lastname = src.substring(src.lastIndexOf("."));
-        String firstname = src.substring(0, src.lastIndexOf("."));
+        String firstname = src.split("/")[1].substring(0,src.split("/")[1].lastIndexOf("."));
         String newname = firstname + "-header" + lastname;
-        String newnamerealpath = request.getRealPath("/") + newname;
+        String newnamerealpath = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+ newname;
         if(x1 == null
                 || x1.trim().length() < 1 || !UtilTool.isDouble(x1)
                 || y1 == null || y1.trim().length() < 1
@@ -2779,7 +2779,7 @@ public class UserController extends BaseController<UserInfo> {
             if (temf.exists())
                 temf.delete();
         }
-        user.setHeadimage(newname);
+        user.setHeadimage(src.split("/")[0]+"/"+newname);
         if (userManager.doUpdate(user)) {
             Integer tempid=user.getUserid();
             user = new UserInfo();
@@ -2790,9 +2790,9 @@ public class UserController extends BaseController<UserInfo> {
             userinfo.setClassUsers(cuInfo.getClassUsers());
             userinfo.setFunctionRightList(cuInfo.getFunctionRightList());
             userinfo.setPathRightList(cuInfo.getPathRightList());
-            userinfo.setHeadimage(newname);
+            userinfo.setHeadimage(src.split("/")[0]+"/"+newname);
             request.getSession().setAttribute("CURRENT_USER", userinfo);
-            je.getObjList().add(newname);
+            je.getObjList().add( src.split("/")[0]+"/"+newname);
             je.setType("success");
 
 
