@@ -90,14 +90,16 @@ Integer modelType=0;
 	String basePath = request.getScheme() + "://"
 			+ ipStr
             +"/"+proc_name + "/";
-    session.setAttribute("IP_PROC_NAME",basePath);
+    if(session.getAttribute("IP_PROC_NAME")==null||!session.getAttribute("IP_PROC_NAME").toString().equals(basePath))
+        session.setAttribute("IP_PROC_NAME",basePath);
     //公用的文件服务器项目链接
     String publicFileSystemIpPort=new StringBuilder(request.getScheme()).append("://")
             .append(request.getServerName()).append(":").append(request.getServerPort())
             .append(request.getContextPath()).append("/").toString();
     //项目
     String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
-   // request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
+    if(session.getAttribute("FILE_SYSTEM_IP_PORT")==null||!session.getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
+     request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
 
 
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
