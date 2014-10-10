@@ -1,5 +1,4 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ page import="com.school.filter.BaseInterceptor" %>
 <%
     if(UtilTool._IS_SIMPLE_RESOURCE==2){
         response.sendRedirect("user?m=simpleResLogin");return;
