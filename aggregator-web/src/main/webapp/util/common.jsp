@@ -102,13 +102,13 @@ Integer modelType=0;
     //公用的文件服务器项目链接
     String publicFileSystemIpPort=new StringBuilder(request.getScheme()).append("://")
             .append(request.getServerName()).append(":").append(request.getServerPort())
-            .append(request.getContextPath()).append("/").toString();
+            .append(proc_name).append("/").toString();
     //项目
     String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
     if(session.getAttribute("FILE_SYSTEM_IP_PORT")==null||!session.getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
      request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
 
-
+out.println(basePath);
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
 //    String uuploadfile=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE");
  boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false,isteaidentity=false,isstuidentity=false;

@@ -45,7 +45,7 @@
 
 
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
-			 boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false;
+ boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false;
  List<RoleUser> cruList=null;
 // System.out.println(request.getRequestURI().trim().replaceAll("/",""));
 // System.out.println(request.getServletPath().replaceAll("/",""));
