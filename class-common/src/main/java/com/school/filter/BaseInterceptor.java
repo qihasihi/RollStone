@@ -94,7 +94,7 @@ public class BaseInterceptor implements HandlerInterceptor {
             proc_name=request.getContextPath();
         }else{
             ///group1/1.jsp
-            proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/"));
+            proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1);
         }
         //UtilTool.utilproperty.getProperty("PROC_NAME");
         String basePath = request.getScheme() + "://"

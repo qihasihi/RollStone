@@ -273,7 +273,7 @@ public class UtilTool implements java.io.Serializable {
             proc_name=request.getContextPath();
         }else{
             ///group1/1.jsp
-            proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/"));
+            proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1);
         }
         return  new StringBuilder(request.getScheme()).append("://")
                 .append(request.getServerName()).append(":").append(request.getServerPort())
