@@ -18,6 +18,13 @@ public interface ITpCourseManager  extends IBaseManager<TpCourseInfo> {
     public Boolean doCommentAndScore(TpCourseInfo tpcourseinfo);
 
     /**
+     * 检查专题是不是被引用并且在回收站里的
+     * @param tpcourseinfo
+     * @return
+     */
+    public List<TpCourseInfo> checkQuoteCourse(TpCourseInfo tpcourseinfo);
+
+    /**
      * 查询专题列表使用
      * @param tpcourseinfo
      * @param presult

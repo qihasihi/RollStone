@@ -136,6 +136,79 @@
                 $("#courseTable").html(html);
             }
 
+            //添加引用专题前的检查
+            function checkCourse(){
+                var courseid;
+                $("input[name='courseid']:checked").each(function() {courseid=$(this).val();});
+                $.ajax({
+                    url:'teachercourse?m=checkQuoteCourse',
+                    data:{
+                        courseid:courseid
+                    },
+                    type:'POST',
+                    dataType:'json',
+                    error:function(){
+                        alert('异常错误,系统未响应！');
+                    },success:function(rps){
+                        if(rps.type=="success"){
+                            if(rps.objList!=null&&rps.objList.length>0){
+                                var htm='';
+                                var courseid;
+                                $.each(rps.objList,function(idx,itm){
+                                   courseid=itm.courseid;
+                                });
+                                htm+='<input type="button" value="继续使用" onclick="revertCourse('+courseid+')"/>';
+                                htm+='<br/>';
+                                htm+='<input type="button" value="重新引用" onclick="deleteQuoteCourse('+courseid+')"/>';
+                                $("#confirmCourseDiv").html(htm);
+                                showModel('confirmCourseDiv');
+                            }
+                        }else{
+                            addTeacherCourse();
+                        }
+                    }
+                });
+            }
+            //执行恢复引用
+            function revertCourse(courseid){
+                $.ajax({
+                    url:'teachercourse?m=revertCourse',//cls!??.action
+                    dataType:'json',
+                    type:'POST',
+                    data:{courseid:courseid,
+                        localstatus:1
+                    },
+                    cache: false,
+                    error:function(){
+                        alert('异常错误!系统未响应!');
+                    },success:function(rps){
+                        alert("添加成功!");
+                        window.location.href="teachercourse?toTeacherCourseList&subjectid=${subject.subjectid}&gradeid=${grade.gradeid}";
+                    }
+                });
+            }
+            //重新引用，先删除回收站中的专题
+            function deleteQuoteCourse(courseid){
+                $.ajax({
+                    url:'teachercourse?m=delQuoteCourse',//cls!??.action
+                    dataType:'json',
+                    type:'POST',
+                    data:{courseid:courseid
+                    },
+                    cache: false,
+                    error:function(){
+                        alert('异常错误!系统未响应!');
+                    },success:function(rps){
+                       if(rps.type=="error"){
+                           alert("删除引用专题出错，请刷新重试")
+                       }else{
+                           addTeacherCourse();
+                       }
+                    }
+                });
+            }
+
+            //添加引用专题
             function addTeacherCourse(){
                 $("#addP").html('<a class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:closeAddorUpdateWindow();" class="an_small">取&nbsp;消</a>');
                 var term=$("#termid");
@@ -286,6 +359,7 @@
         </script>
 </head>
     <body>
+    <div id="confirmCourseDiv" style="display: none"></div>
     <input id="subjectid" type="hidden" value="${subject.subjectid}">
     <div class="subpage_head"><span class="ico55"></span><strong>添加专题</strong></div>
     <div class="subpage_nav">
@@ -360,7 +434,7 @@
             </table>
             <form id="pListForm" name="pListForm"><p class="nextpage" id="pListaddress" align="center"></p></form>
         </div>
-        <p class="p_tb_10 t_c" id="addP"><a href="javascript:addTeacherCourse();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <p class="p_tb_10 t_c" id="addP"><a href="javascript:checkCourse();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="javascript:closeAddorUpdateWindow();" class="an_small">取&nbsp;消</a></div>
     <%@include file="/util/foot.jsp" %>
     </body>

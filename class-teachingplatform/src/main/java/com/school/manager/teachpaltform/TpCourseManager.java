@@ -116,6 +116,11 @@ public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCo
     }
 
     @Override
+    public List<TpCourseInfo> checkQuoteCourse(TpCourseInfo tpcourseinfo) {
+        return tpcoursedao.checkQuoteCourse(tpcourseinfo);
+    }
+
+    @Override
     public List<TpCourseInfo> getCourseList(TpCourseInfo tpcourseinfo, PageResult presult) {
         return tpcoursedao.getCourseList(tpcourseinfo,presult);
     }

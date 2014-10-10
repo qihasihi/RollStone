@@ -1572,6 +1572,57 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         }
         response.getWriter().print(je.toJSON());
     }
+
+    /**
+     * 添加引用专题前检查是否引用过，如果引用过，提示是恢复还是重新引用
+     * */
+    @RequestMapping(params = "m=checkQuoteCourse", method = RequestMethod.POST)
+    public void checkQuoteCourse(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        int userid = this.logined(request).getUserid();
+        String quoteid = request.getParameter("courseid");
+        if(quoteid==null){
+            je.setMsg("专题id丢失");
+            je.getAlertMsgAndBack();
+            return;
+        }
+        TpCourseInfo obj = new TpCourseInfo();
+        obj.setCuserid(userid);
+        obj.setQuoteid(Long.parseLong(quoteid));
+        List<TpCourseInfo> tcList = this.tpCourseManager.checkQuoteCourse(obj);
+        if(tcList!=null&&tcList.size()==1){
+            je.setType("success");
+            je.setObjList(tcList);
+        }else{
+            je.setType("error");
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 删除引用专题
+     * */
+    @RequestMapping(params = "m=delQuoteCourse", method = RequestMethod.POST)
+    public void delQuoteCourse(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String courseid = request.getParameter("courseid");
+        if(courseid==null){
+            je.setMsg("专题id丢失");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpCourseInfo obj = new TpCourseInfo();
+        obj.setCourseid(Long.parseLong(courseid));
+        Boolean b = this.tpCourseManager.doDelete(obj);
+        if(b){
+            je.setType("success");
+        }else{
+            je.setType("error");
+        }
+        response.getWriter().print(je.toJSON());
+    }
     /**
      * 添加引用课题（引用从专题库中选择的专题）
      * 1列表过滤掉当前教师引用过的专题（不分学期)

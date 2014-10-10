@@ -26,6 +26,13 @@ public interface ITpCourseDAO extends ICommonDAO<TpCourseInfo>{
     public List<TpCourseInfo> getCourseList(TpCourseInfo tpcourseinfo, PageResult presult);
 
     /**
+     * 检查专题是不是被引用并且在回收站里的
+     * @param tpcourseinfo
+     * @return
+     */
+    public List<TpCourseInfo> checkQuoteCourse(TpCourseInfo tpcourseinfo);
+
+    /**
      * 查询关联专题
      * @return
      */

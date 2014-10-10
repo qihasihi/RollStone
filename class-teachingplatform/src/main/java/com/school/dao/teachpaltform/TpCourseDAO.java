@@ -126,6 +126,27 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
         return tpcourseinfoList;
     }
 
+    public List<TpCourseInfo> checkQuoteCourse(TpCourseInfo tpcourseinfo) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_course_info_proc_check(");
+        List<Object> objList=new ArrayList<Object>();
+        if(tpcourseinfo.getCuserid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getCuserid());
+        }else{
+            objList.add("null,");
+        }
+        if(tpcourseinfo.getQuoteid()!=null){
+            sqlbuilder.append("?");
+            objList.add(tpcourseinfo.getQuoteid());
+        }else{
+            objList.add("null");
+        }
+        sqlbuilder.append(")}");
+        List<TpCourseInfo> courseList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,TpCourseInfo.class,null);
+        return courseList;
+    }
+
     public List<Map<String,Object>> getRelatedCourseList(Integer materialid, Integer userid,String coursename) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_course_related_proc_list(");
@@ -869,11 +890,6 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
             objList.add(tpcourseinfo.getSchoolname());
         } else
             sqlbuilder.append("null,");
-        if (tpcourseinfo.getCtime() != null) {
-            sqlbuilder.append("?,");
-            objList.add(tpcourseinfo.getCtime());
-        } else
-            sqlbuilder.append("null,");
         if (tpcourseinfo.getTeachername() != null) {
             sqlbuilder.append("?,");
             objList.add(tpcourseinfo.getTeachername());
@@ -887,11 +903,6 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
         if (tpcourseinfo.getCoursestatus() != null) {
             sqlbuilder.append("?,");
             objList.add(tpcourseinfo.getCoursestatus());
-        } else
-            sqlbuilder.append("null,");
-        if (tpcourseinfo.getMtime() != null) {
-            sqlbuilder.append("?,");
-            objList.add(tpcourseinfo.getMtime());
         } else
             sqlbuilder.append("null,");
         if (tpcourseinfo.getCuserid() != null) {
