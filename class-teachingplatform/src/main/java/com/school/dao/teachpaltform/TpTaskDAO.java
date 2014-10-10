@@ -504,6 +504,52 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
             presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
         return tptaskinfoList;
     }
+
+    @Override
+    public List<TpTaskInfo> getUnionListbyStu(TpTaskInfo tptaskinfo, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        if(tptaskinfo.getUserid()==null)
+            return null;
+        sqlbuilder.append("{CALL tp_get_task_by_stu_union(");
+        List<Object> objList=new ArrayList<Object>();
+        if (tptaskinfo.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskinfo.getUserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getUserid());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskinfo.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getTaskid());
+        } else
+            sqlbuilder.append("null,");
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<TpTaskInfo> tptaskinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpTaskInfo.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return tptaskinfoList;
+    }
+
     /**
      * 得到同步的SQL
      * @param entity  对象实体

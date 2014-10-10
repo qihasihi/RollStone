@@ -2029,8 +2029,18 @@ function save_info(uid){
 			alert(rps.msg);
 	},function(){alert('网络异常!');}) 
 }
-	
 
+
+/**
+ * 验证当前班级是否有班主任
+ */
+function validateClsBzr(classIdArray){
+    var msg='';
+    if(typeof classIdArray=='undefined'||classIdArray.length<1)
+        return false;
+
+    return msg;
+}
 
 
 /**
@@ -2064,8 +2074,10 @@ function save_role(uid){
 				clsstr+=',';
 			clsstr+=$(itm).attr('data');
 		}); 
-		if(clsstr.length>0)
-			param.clsstr=clsstr; 
+		if(clsstr.length>0){
+            param.clsstr=clsstr;
+        }
+
 		
 		//管理员角色
 		var adminstr='',admin_result=$("#edit_role ol[id='admin_result']").children('li');
@@ -2214,6 +2226,35 @@ function save_role(uid){
 		}else    
 			alert(rps.msg);
 	},function(){alert('网络异常!');}) 
+}
+
+
+
+function verifyBzr(ref){
+    var param={ref:ref};
+    var clsstr='',cls_bzr_result=$("#edit_role ol[id='cls_bzr_result']").children('li');
+    $.each(cls_bzr_result,function(idx,itm){
+        if(clsstr.length>0)
+            clsstr+=',';
+        clsstr+=$(itm).attr('data');
+    });
+    if(clsstr.length>0){
+        param.clsstr=clsstr;
+        $ajax('user?m=verifyBzr',param,'POST','json',function(rps){
+            if(rps.type=='error'){
+                alert(rps.msg);
+            }else{
+                if(rps.msg.length>0){
+                    if(!confirm(rps.msg+",确定替换?"))return;
+                    else
+                        save_role(ref);
+                }else
+                    save_role(ref);
+            }
+        },function(){});
+    }else
+        save_role(ref);
+
 }
 
 

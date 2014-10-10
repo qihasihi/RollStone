@@ -100,6 +100,12 @@ public class  TpTaskManager extends BaseManager<TpTaskInfo> implements ITpTaskMa
     public List<TpTaskInfo> getListbyStu(TpTaskInfo t, PageResult presult) {
         return this.tptaskdao.getListbyStu(t,presult);
     }
+
+    @Override
+    public List<TpTaskInfo> getUnionListbyStu(TpTaskInfo t, PageResult presult) {
+        return this.tptaskdao.getUnionListbyStu(t,presult);
+    }
+
     /**
      * 删除任务时，清除任务积分，删除完成记录
      * @param taskid

@@ -487,12 +487,12 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("t.order_idx");
+        p.setOrderBy(" unionflag desc,order_idx ");
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
         t.setUserid(this.logined(request).getUserid());
         // 学生任务
-        List<TpTaskInfo>taskList=this.tpTaskManager.getListbyStu(t, p);
+        List<TpTaskInfo>taskList=this.tpTaskManager.getUnionListbyStu(t, p);
         if(taskList!=null&&taskList.size()>0){
             for(TpTaskInfo task:taskList){
                 if(task.getTasktype()==3){

@@ -201,8 +201,11 @@ function getInvestReturnMethod(rps){
                 }
                 html+='&nbsp;&nbsp;&nbsp;&nbsp<span style="color:gray;">'+itm.btimeSimpleString+'</span>';
             }
-            if(itm.tasktype==4&&itm.taskstatus=="3"){
-                html+='<a class="ico84" title="批阅" target="_blank" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
+            if(itm.tasktype==4){
+                if(itm.taskstatus=="3")
+                    html+='<a class="ico84" title="批阅" target="_blank" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
+                else
+                    html+='';//<a class="ico84" title="批阅" href="javascript:;"></a>';
             }
             html+='</p>';
             html+='</div>';

@@ -38,7 +38,15 @@ public class TpTaskInfo implements Serializable {
     private Object isend;
     private String imtaskanalysis;
     private Integer imtaskattachtype;
+    private Object unionflag;
 
+    public Object getUnionflag() {
+        return unionflag;
+    }
+
+    public void setUnionflag(Object unionflag) {
+        this.unionflag = unionflag;
+    }
 
     public String getLiveaddress() {
         return liveaddress;

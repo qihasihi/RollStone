@@ -234,7 +234,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         c.setRelationtype("хн©нюой╕");
         c.setYear(termInfo.getYear());
         List<ClassUser>clsList=this.classUserManager.getList(c,null);
-        if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID)&&clsList==null||clsList.size()<1)
+        if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID)&&(clsList==null||clsList.size()<1))
             response.sendRedirect("teachercourse?toTeacherCalendarPage&termid="+termInfo.getRef());
 
         return new ModelAndView("/teachpaltform/course/teacherCourseList", mp);

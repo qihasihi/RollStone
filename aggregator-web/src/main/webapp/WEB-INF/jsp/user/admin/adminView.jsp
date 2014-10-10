@@ -976,7 +976,7 @@
 													&nbsp;
 												</th>
 												<td> 
-													<a href="javascript:void(0);" onclick="save_role('${ref}')" class="an_small_long">保存角色信息</a>
+													<a href="javascript:void(0);" onclick="verifyBzr('${ref}')" class="an_small_long">保存角色信息</a>
 												</td>  
 											</tr>
 										</tbody>

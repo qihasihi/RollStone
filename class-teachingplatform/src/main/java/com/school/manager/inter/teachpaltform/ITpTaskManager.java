@@ -25,6 +25,14 @@ public interface ITpTaskManager  extends IBaseManager<TpTaskInfo> {
     List<TpTaskInfo>getListbyStu(TpTaskInfo t,PageResult presult);
 
     /**
+     * 获取学生任务，包含调班调组后已完成的任务
+     * @param t
+     * @param presult
+     * @return
+     */
+    List<TpTaskInfo>getUnionListbyStu(TpTaskInfo t,PageResult presult);
+
+    /**
      * 得到同步的SQL
      * @param entity  对象实体
      * @param sqlbuilder  传出的SQL语句，必须实例化后

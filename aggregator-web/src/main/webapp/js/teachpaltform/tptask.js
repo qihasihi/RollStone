@@ -1980,7 +1980,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                         htm += '</tr>';
                         $.each(rmsg.objList[1], function (idx, itm) {
                             $.each(im.tpgroupstudent2, function (i, m) {
-                                if (m.stuno == itm.userinfo.stuNo) {
+                                if (typeof itm!='undefined'&&typeof m!='undefined'&& m.stuno == itm.userinfo.stuNo) {
                                     htm += '<tr>';
                                     if(classid==0)
                                         htm += '<td>' + itm.clsname + '</td>';
@@ -2023,6 +2023,8 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                                     else
                                         htm += '<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid=' + itm.taskid + '&userid=' + itm.uid + '&flag=1">查看卷面</a></td>'
                                     htm += '</tr>';
+                                }else{
+                                    htm += '<tr><td colspan="7">暂无数据!</td></tr>';
                                 }
                             });
 
@@ -2221,27 +2223,31 @@ function loadLiveLessionPerformance(classid, tasktype, paperid, classtype) {
                         htm += '<th>学习时间</th>';
                         htm += '<th>是否完成</th>';
                         htm += '</tr>';
-                        $.each(rmsg.objList[1], function (idx, itm) {
-                            $.each(im.tpgroupstudent2, function (i, m) {
-                                if (m.stuno == itm.userinfo.stuNo) {
-                                    htm += '<tr>';
-                                    if(classid==0)
-                                        htm += '<td>' + itm.clsname + '</td>';
-                                    htm += '<td>' + itm.userinfo.stuNo + '</td>';
-                                    htm += '<td>' + itm.userinfo.stuname + '</td>';
-                                    if (typeof(itm.ctimeString) != 'undefined')
-                                        htm += '<td>' + itm.ctimeString + '</td>';
-                                    else
-                                        htm += '<td></td>';
-                                    if (itm.status > 0)
-                                        htm += '<td><span class="ico12" title="完成"></span></td>';
-                                    else
-                                        htm += '<td><span class="ico24" title="进行中"></span></td>';
-                                    htm += '</tr>';
-                                }
+                        if(rmsg.objList[1].length>0){
+                            $.each(rmsg.objList[1], function (idx, itm) {
+                                $.each(im.tpgroupstudent2, function (i, m) {
+                                    if (typeof(m)!='undefined'&&typeof itm!='undefined'&&m.stuno == itm.userinfo.stuNo) {
+                                        htm += '<tr>';
+                                        if(classid==0)
+                                            htm += '<td>' + itm.clsname + '</td>';
+                                        htm += '<td>' + itm.userinfo.stuNo + '</td>';
+                                        htm += '<td>' + itm.userinfo.stuname + '</td>';
+                                        if (typeof(itm.ctimeString) != 'undefined')
+                                            htm += '<td>' + itm.ctimeString + '</td>';
+                                        else
+                                            htm += '<td></td>';
+                                        if (itm.status > 0)
+                                            htm += '<td><span class="ico12" title="完成"></span></td>';
+                                        else
+                                            htm += '<td><span class="ico24" title="进行中"></span></td>';
+                                        htm += '</tr>';
+                                    }else{
+                                        htm+='<tr><td colspan="4">暂无数据!</td></tr>';
+                                    }
+                                });
                             });
+                        }
 
-                        });
                         htm += '</table>';
                     });
                 } else {

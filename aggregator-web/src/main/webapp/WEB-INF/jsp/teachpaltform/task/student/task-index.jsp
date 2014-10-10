@@ -344,7 +344,8 @@
                 html+='<div class="jxxt_zhuanti_rw">';
                 html+='        <div class="jxxt_zhuanti_rwR">';
                 html+='        <div class="title">';
-                html+='        <p class="f_right"><span class="ico35" style="cursor:pointer" onclick="loadNoCompleteStu(\''+itm.taskid+'\',\''+itm.usertypeid+'\',\''+itm.taskstatus+'\')"></span><b><a style="color: gray;">'+itm.stucount+'/'+itm.totalcount+'</a></b></p>';
+                if(typeof itm.unionflag!='undefined'&&itm.unionflag==1)
+                    html+='        <p class="f_right"><span class="ico35" style="cursor:pointer" onclick="loadNoCompleteStu(\''+itm.taskid+'\',\''+itm.usertypeid+'\',\''+itm.taskstatus+'\')"></span><b><a style="color: gray;">'+itm.stucount+'/'+itm.totalcount+'</a></b></p>';
                 //var ordIdx=rps.presult.recTotal-(rps.presult.pageNo-1)*(rps.presult.pageSize)-idx;
                 var ordIdx=(rps.presult.pageNo-1)*(rps.presult.pageSize)+(idx+1);
                 html+='        <p><a class="ico49b" id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务'+ordIdx+'：'+type+'</a>';
@@ -389,7 +390,7 @@
                     html+='<p><strong>完成标准：</strong><span class="font-black">'+criteria+'</span></p>';
                 if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9&&itm.taskremark!='undefined'&&itm.taskremark.length>0&&itm.taskremark!='无')  //IM端任务，不要任务描述
                     html+='<p><strong>任务描述：</strong><span class="width1">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
-                else
+                if(itm.tasktype==7||itm.tasktype==8||itm.tasktype==9)
                     html+='<p style="color: #808080;">移动端任务只能在手机端完成，PC端只能查看。</p>';
                 if(itm.taskstatus=="1"&&(itm.tasktype==1||itm.tasktype==2))
                     html+='<p class="font-black"><span class="ico33"></span>任务尚未开始，您的作答将不计入任务的统计结果中，请在任务开始之后重新作答！</p>';

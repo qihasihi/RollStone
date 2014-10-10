@@ -1365,6 +1365,43 @@ public class UserController extends BaseController<UserInfo> {
         response.getWriter().print(je.toJSON());
     }
 
+
+    /**
+     * 验证班主任
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=verifyBzr", method = RequestMethod.POST)
+    public void validateBanZhuRen(HttpServletRequest request,
+                          HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String classidStr=request.getParameter("clsstr");
+        String ref=request.getParameter("ref");
+        if(classidStr==null||classidStr.trim().length()<1||ref==null||ref.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String msg="";
+        String[]classidArray=classidStr.split(",");
+        for(String classid:classidArray){
+            ClassUser cu=new ClassUser();
+            cu.setClassid(Integer.parseInt(classid));
+            cu.setRelationtype("班主任");
+            List<ClassUser>classUsers=this.classUserManager.getList(cu,null);
+            if(classUsers!=null&&classUsers.size()>0&&!classUsers.get(0).getUserid().equals(ref)){
+                if(msg.length()>0)
+                    msg+="，\n\n";
+                msg+=classUsers.get(0).getClassgrade()+classUsers.get(0).getClassname()+"已有班主任"+classUsers.get(0).getRealname();
+            }
+        }
+        je.setMsg(msg);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+
     /**
      * 用户角色信息编辑
      * @param request
@@ -5550,7 +5587,7 @@ public class UserController extends BaseController<UserInfo> {
 
 
                 UserInfo userInfo=new UserInfo();
-                userInfo.setUsername(username);
+                userInfo.setUsername(lzxuserid);
                 userInfo.setLzxuserid(lzxuserid);
                 List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
                 //已存在
@@ -6346,7 +6383,7 @@ public class UserController extends BaseController<UserInfo> {
 
 
                 UserInfo userInfo=new UserInfo();
-                userInfo.setUsername(username);
+                userInfo.setUsername(lzxuserid);
                 userInfo.setLzxuserid(lzxuserid);
                 userInfo.setDcschoolid(Integer.parseInt(dcschoolid));
                 userInfo.setSchoolid(schoolid);
