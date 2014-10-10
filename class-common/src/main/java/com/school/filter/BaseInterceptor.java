@@ -294,8 +294,15 @@ public class BaseInterceptor implements HandlerInterceptor {
         String queryPath = request.getQueryString();
 //		String realpath = request.getRequestURI().substring(
 //				request.getRequestURI().lastIndexOf("/") + 1);
+        String pcname=request.getHeader("x-etturl");
+        if(pcname==null){
+            pcname=request.getContextPath();
+        }else{
+            ///group1/1.jsp
+            pcname=pcname.substring(0,pcname.substring(1).indexOf("/"));
+        }
         String realpath=request.getRequestURI().substring(
-                request.getRequestURI().indexOf(request.getContextPath())+request.getContextPath().length()
+                request.getRequestURI().indexOf(pcname)+pcname.length()
         );
         if(realpath.substring(0,1).equals("/"))
             realpath=realpath.substring(1);
