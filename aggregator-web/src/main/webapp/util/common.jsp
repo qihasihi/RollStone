@@ -96,7 +96,7 @@ Integer modelType=0;
     //UtilTool.utilproperty.getProperty("PROC_NAME");
 	String basePath = (request.getScheme() + "://"
 			+ ipStr
-            +"/"+proc_name + "/").replaceAll("//","/");
+            +"/"+proc_name + "/");
     if(session.getAttribute("IP_PROC_NAME")==null||!session.getAttribute("IP_PROC_NAME").toString().equals(basePath))
         session.setAttribute("IP_PROC_NAME",basePath);
     //公用的文件服务器项目链接
@@ -108,7 +108,7 @@ Integer modelType=0;
     if(session.getAttribute("FILE_SYSTEM_IP_PORT")==null||!session.getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
      request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
 
-out.println(basePath);
+//out.println(basePath);
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
 //    String uuploadfile=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE");
  boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false,isteaidentity=false,isstuidentity=false;
