@@ -270,10 +270,10 @@ public class UtilTool implements java.io.Serializable {
     public static String getCurrentLocation(HttpServletRequest request){
         String proc_name=request.getHeader("x-etturl");
         if(proc_name==null){
-            proc_name=request.getContextPath();
+            proc_name=request.getContextPath().replaceAll("/","");
         }else{
             ///group1/1.jsp
-            proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1);
+            proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1).replaceAll("/","");
         }
         return  new StringBuilder(request.getScheme()).append("://")
                 .append(request.getServerName()).append(":").append(request.getServerPort())

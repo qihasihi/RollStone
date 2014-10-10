@@ -4,10 +4,10 @@
 String outputHtml="";
     String proc_name=request.getHeader("x-etturl");
     if(proc_name==null){
-        proc_name=request.getContextPath();
+        proc_name=request.getContextPath().replaceAll("/","");
     }else{
         ///group1/1.jsp
-        proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1);
+        proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1).replaceAll("/","");
     }
     String ipStr=request.getServerName()+":"+request.getServerPort();
     //UtilTool.utilproperty.getProperty("PROC_NAME");
