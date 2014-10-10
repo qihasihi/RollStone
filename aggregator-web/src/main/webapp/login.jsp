@@ -11,6 +11,7 @@
         ///group1/1.jsp
         pcname=pcname.substring(0,pcname.substring(1).indexOf("/"));
     }
+    pcname=pcname.replaceAll("//","/");
 
 %>
 <%@ include file="/util/common.jsp" %>

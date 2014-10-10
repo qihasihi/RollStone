@@ -94,9 +94,9 @@ Integer modelType=0;
 
     String ipStr=request.getServerName()+":"+request.getServerPort();
     //UtilTool.utilproperty.getProperty("PROC_NAME");
-	String basePath = request.getScheme() + "://"
+	String basePath = (request.getScheme() + "://"
 			+ ipStr
-            +"/"+proc_name + "/";
+            +"/"+proc_name + "/").replaceAll("//","/");
     if(session.getAttribute("IP_PROC_NAME")==null||!session.getAttribute("IP_PROC_NAME").toString().equals(basePath))
         session.setAttribute("IP_PROC_NAME",basePath);
     //公用的文件服务器项目链接
