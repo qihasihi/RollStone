@@ -8,7 +8,7 @@
         pcname=request.getContextPath();
     }else{
         ///group1/1.jsp
-        pcname=pcname.substring(0,pcname.substring(1).indexOf("/"));
+        pcname=pcname.substring(0,pcname.substring(1).indexOf("/")+1);
     }
     pcname=pcname.replaceAll("/","");
 
