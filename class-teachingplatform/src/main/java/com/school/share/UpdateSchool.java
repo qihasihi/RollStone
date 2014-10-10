@@ -137,7 +137,7 @@ public class UpdateSchool  extends TimerTask {
                 }
             }
         }
-        System.out.println("更新分校排行完成!");
+        System.out.println("更新分校完成!");
         if(!hasData){
             System.out.println("没有可更新的信息！");
         }
@@ -179,6 +179,13 @@ class UpdateSchoolUtil{
                     if(courseMap.containsKey("Name")&&courseMap.get("Name")!=null
                             &&!courseMap.get("Name").toString().trim().toUpperCase().equals("NULL"))
                         ssr.setName(courseMap.get("Name").toString().trim());
+                    if(courseMap.containsKey("Ip")&&courseMap.get("Ip")!=null
+                            &&!courseMap.get("Ip").toString().trim().toUpperCase().equals("NULL")){
+                        ssr.setIp(courseMap.get("Ip").toString().trim());
+                        if(ssr.getIp().lastIndexOf("/")!=ssr.getIp().length()-1){
+                            ssr.setIp(ssr.getIp()+"/");
+                        }
+                    }
 //                    if(courseMap.containsKey("Ctime")&&courseMap.get("Ctime")!=null
 //                            &&!courseMap.get("Ctime").toString().trim().toUpperCase().equals("NULL"))
 //                        ssr.setCtime(UtilcourseMap.get("ModelId").toString()));

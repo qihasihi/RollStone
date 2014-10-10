@@ -17,7 +17,15 @@ public class SchoolInfo {
     private Long schoolid;
     private String name;
     private Date ctime;
+    private String ip;
 
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public Long getSchoolid() {
         return schoolid;

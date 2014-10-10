@@ -10,8 +10,9 @@ import com.school.manager.base.IBaseManager;
 import com.school.util.PageResult;
 
 public interface IUserManager extends IBaseManager<UserInfo> {
-	
-	public int checkUsername(String username);
+
+    public int checkUsername(String username,Integer dcschoolid);
+
 	
 	public UserInfo doLogin(UserInfo user);
 	

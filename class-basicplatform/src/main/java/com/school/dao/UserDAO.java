@@ -386,19 +386,23 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
 		return objList;
 	}
 
-	public int checkUsername(String username) {
+	public int checkUsername(String username,Integer dcschoolid) {
 		// TODO Auto-generated method stub
 		int result = 0;
 		if(username==null)
 			return 0;
 		StringBuilder sqlbuilder = new StringBuilder(
 				"select count(*) from user_info where 1=1");
-		Object[] obj = new Object[1];
+		List<Object> objList=new ArrayList<Object>();
 		if (username != null) {
 			sqlbuilder.append(" and user_name=?");
-			obj[0]= username;
+            objList.add(username);
 		}
-		Object o = this.executeSalar_SQL(sqlbuilder.toString(), obj);
+        if(dcschoolid!=null){
+            sqlbuilder.append(" AND dc_school_id=?");
+            objList.add(dcschoolid);
+        }
+		Object o = this.executeSalar_SQL(sqlbuilder.toString(), objList.toArray());
 
 		result = Integer.parseInt(o.toString());
 		return result;
@@ -418,6 +422,9 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
 		user.setUserid(u.getUserid());
 		user.setUsername(u.getUsername());
 		user.setStateid(u.getStateid());
+        if(u.getDcschoolid()!=null){
+            user.setDcschoolid(u.getDcschoolid());
+        }
 		List<UserInfo> userList= this.getList(user, null);
 		if(userList!=null && userList.size()==1 )
 			return userList.get(0);

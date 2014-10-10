@@ -84,9 +84,9 @@ public class UserManager extends BaseManager<UserInfo> implements IUserManager{
 
 
 
-	public int checkUsername(String username) {
+	public int checkUsername(String username,Integer dcschoolid) {
 		// TODO Auto-generated method stub
-		return this.userdao.checkUsername(username);
+		return this.userdao.checkUsername(username,dcschoolid);
 	}
 
 

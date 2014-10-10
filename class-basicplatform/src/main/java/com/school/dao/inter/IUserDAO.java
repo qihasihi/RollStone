@@ -10,7 +10,7 @@ import com.school.util.PageResult;
 
 public interface IUserDAO extends ICommonDAO<UserInfo> {
 	
-	public int checkUsername(String username);
+	public int checkUsername(String username,Integer dcschoolid);
 	
 	public UserInfo doLogin(UserInfo user);
 	

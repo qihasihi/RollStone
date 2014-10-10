@@ -61,8 +61,10 @@ public class UserController extends BaseController<UserInfo> {
     protected IActivityManager activityManager;
     protected IMyInfoUserManager myInfoUserManager;
     protected IInitWizardManager initWizardManager;
+    protected ISchoolManager schoolManager;
 
     public UserController(){
+        this.schoolManager=this.getManager(SchoolManager.class);
         this.userManager=this.getManager(UserManager.class);
         this.classYearManager=this.getManager(ClassYearManager.class);
         this.identityManager=this.getManager(IdentityManager.class);
@@ -672,120 +674,121 @@ public class UserController extends BaseController<UserInfo> {
 
 
 
-    @RequestMapping(params = "m=userregister", method = RequestMethod.POST)
-    public void userRegister(HttpServletRequest request,
-                             HttpServletResponse response) throws Exception {
-        JsonEntity je = new JsonEntity();
-        UserInfo userinfo = this.getParameter(request, UserInfo.class);
-        if (userinfo == null || userinfo.getUsername() == null
-                || userinfo.getPassword() == null
-                || userinfo.getMailaddress() == null
-                || userinfo.getGender() == null
-                || userinfo.getRealname() == null) {
-            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-        String roleid = request.getParameter("role");
-        if (roleid == null || !UtilTool.isNumber(roleid)) {
-            je.setMsg(UtilTool.msgproperty.getProperty("ROLE_ROLEID_EMPTY"));
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-        // 验证用户名是否可用
-        if (userManager.checkUsername(userinfo.getUsername()) > 0) {
-            je.setMsg(UtilTool.msgproperty.getProperty("USER_USERNAME_EXISTS"));
-            response.getWriter().print(je.toJSON());
-            return;
-        }
-        List<String> sqlListArray = new ArrayList<String>();
-        List<List<Object>> objListArray = new ArrayList<List<Object>>();
-        StringBuilder sql = null;
-        List<Object> objList = null;
-        String sex = "1".equals(userinfo.getGender()) ? "男" : "女";
-        // 添加user_info
-        String userref = UUID.randomUUID().toString();
-        userinfo.setRef(userref);
-        sql = new StringBuilder();
-        objList = userManager.getSaveSql(userinfo, sql);
-        if (sql.length() > 0 && objList != null) {
-            sqlListArray.add(sql.toString());
-            objListArray.add(objList);
-        }
-        // 根据身份添加（教师、学生、家长）
-        sql = new StringBuilder();
-        if (roleid.equals(UtilTool._ROLE_STU_ID.toString())) {
-            StudentInfo stu = new StudentInfo();
-            stu.setStuname(userinfo.getRealname());
-            stu.setStusex(sex);
-            stu.getUserinfo().setRef(userref);
-            stu.setRef(UUID.randomUUID().toString());
-            objList = this.studentManager.getSaveSql(stu, sql);
-
-        } else if (roleid.equals(UtilTool._ROLE_TEACHER_ID.toString())) {
-            TeacherInfo t = new TeacherInfo();
-            t.setTeachername(userinfo.getRealname());
-            t.setUserid(userref);
-            t.setTeachersex(sex);
-            objList = this.teacherManager.getSaveSql(t, sql);
-
-        } else if (roleid.equals(UtilTool._ROLE_STU_PARENT_ID.toString())) {
-            ParentInfo p = new ParentInfo();
-            p.setParentname(userinfo.getRealname());
-            p.setUserid(userref);
-            p.setRef(UUID.randomUUID().toString());
-            p.setParentsex(sex);
-            objList = this.parentManager.getSaveSql(p, sql);
-        }
-        if (sql.length() > 0 && objList != null) {
-            sqlListArray.add(sql.toString());
-            objListArray.add(objList);
-        }
-        // 增加用户与角色关联
-
-        RoleUser roleuser = new RoleUser();
-        roleuser.getUserinfo().setRef(userref);
-        roleuser.setRoleidstr(roleid);
-        roleuser.getRoleinfo().setRoleid(Integer.parseInt(roleid));
-        List<RoleUser> ruList = this.roleUserManager.getList(roleuser, null);
-        // 存在角色信息 则删除
-        if (ruList != null && ruList.size() > 0) {
-            sql = new StringBuilder();
-            objList = this.roleUserManager.getDeleteSql(roleuser, sql);
-            if (sql.length() > 0 && objList != null) {
-                sqlListArray.add(sql.toString());
-                objListArray.add(objList);
-            }
-        }
-        sql = new StringBuilder();
-        objList = this.roleUserManager.getSaveSql(roleuser, sql);
-        if (sql.length() > 0 && objList != null) {
-            sqlListArray.add(sql.toString());
-            objListArray.add(objList);
-        }
-
-        if (sqlListArray.size() > 0 && objListArray.size() > 0) {
-            boolean flag = this.userManager.doExcetueArrayProc(sqlListArray,
-                    objListArray);
-            if (flag) {
-                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
-                je.setType("success");
-            } else {
-                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-            }
-        } else {
-            je.setMsg(UtilTool.msgproperty
-                    .getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
-        }
-        response.getWriter().print(je.toJSON());
-    }
+//    @RequestMapping(params = "m=userregister", method = RequestMethod.POST)
+//    public void userRegister(HttpServletRequest request,
+//                             HttpServletResponse response) throws Exception {
+//        JsonEntity je = new JsonEntity();
+//        UserInfo userinfo = this.getParameter(request, UserInfo.class);
+//        if (userinfo == null || userinfo.getUsername() == null
+//                || userinfo.getPassword() == null
+//                || userinfo.getMailaddress() == null
+//                || userinfo.getGender() == null
+//                || userinfo.getRealname() == null) {
+//            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+//            response.getWriter().print(je.toJSON());
+//            return;
+//        }
+//        String roleid = request.getParameter("role");
+//        if (roleid == null || !UtilTool.isNumber(roleid)) {
+//            je.setMsg(UtilTool.msgproperty.getProperty("ROLE_ROLEID_EMPTY"));
+//            response.getWriter().print(je.toJSON());
+//            return;
+//        }
+//        // 验证用户名是否可用
+//        if (userManager.checkUsername(userinfo.getUsername()) > 0) {
+//            je.setMsg(UtilTool.msgproperty.getProperty("USER_USERNAME_EXISTS"));
+//            response.getWriter().print(je.toJSON());
+//            return;
+//        }
+//        List<String> sqlListArray = new ArrayList<String>();
+//        List<List<Object>> objListArray = new ArrayList<List<Object>>();
+//        StringBuilder sql = null;
+//        List<Object> objList = null;
+//        String sex = "1".equals(userinfo.getGender()) ? "男" : "女";
+//        // 添加user_info
+//        String userref = UUID.randomUUID().toString();
+//        userinfo.setRef(userref);
+//        sql = new StringBuilder();
+//        objList = userManager.getSaveSql(userinfo, sql);
+//        if (sql.length() > 0 && objList != null) {
+//            sqlListArray.add(sql.toString());
+//            objListArray.add(objList);
+//        }
+//        // 根据身份添加（教师、学生、家长）
+//        sql = new StringBuilder();
+//        if (roleid.equals(UtilTool._ROLE_STU_ID.toString())) {
+//            StudentInfo stu = new StudentInfo();
+//            stu.setStuname(userinfo.getRealname());
+//            stu.setStusex(sex);
+//            stu.getUserinfo().setRef(userref);
+//            stu.setRef(UUID.randomUUID().toString());
+//            objList = this.studentManager.getSaveSql(stu, sql);
+//
+//        } else if (roleid.equals(UtilTool._ROLE_TEACHER_ID.toString())) {
+//            TeacherInfo t = new TeacherInfo();
+//            t.setTeachername(userinfo.getRealname());
+//            t.setUserid(userref);
+//            t.setTeachersex(sex);
+//            objList = this.teacherManager.getSaveSql(t, sql);
+//
+//        } else if (roleid.equals(UtilTool._ROLE_STU_PARENT_ID.toString())) {
+//            ParentInfo p = new ParentInfo();
+//            p.setParentname(userinfo.getRealname());
+//            p.setUserid(userref);
+//            p.setRef(UUID.randomUUID().toString());
+//            p.setParentsex(sex);
+//            objList = this.parentManager.getSaveSql(p, sql);
+//        }
+//        if (sql.length() > 0 && objList != null) {
+//            sqlListArray.add(sql.toString());
+//            objListArray.add(objList);
+//        }
+//        // 增加用户与角色关联
+//
+//        RoleUser roleuser = new RoleUser();
+//        roleuser.getUserinfo().setRef(userref);
+//        roleuser.setRoleidstr(roleid);
+//        roleuser.getRoleinfo().setRoleid(Integer.parseInt(roleid));
+//        List<RoleUser> ruList = this.roleUserManager.getList(roleuser, null);
+//        // 存在角色信息 则删除
+//        if (ruList != null && ruList.size() > 0) {
+//            sql = new StringBuilder();
+//            objList = this.roleUserManager.getDeleteSql(roleuser, sql);
+//            if (sql.length() > 0 && objList != null) {
+//                sqlListArray.add(sql.toString());
+//                objListArray.add(objList);
+//            }
+//        }
+//        sql = new StringBuilder();
+//        objList = this.roleUserManager.getSaveSql(roleuser, sql);
+//        if (sql.length() > 0 && objList != null) {
+//            sqlListArray.add(sql.toString());
+//            objListArray.add(objList);
+//        }
+//
+//        if (sqlListArray.size() > 0 && objListArray.size() > 0) {
+//            boolean flag = this.userManager.doExcetueArrayProc(sqlListArray,
+//                    objListArray);
+//            if (flag) {
+//                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+//                je.setType("success");
+//            } else {
+//                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+//            }
+//        } else {
+//            je.setMsg(UtilTool.msgproperty
+//                    .getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
+//        }
+//        response.getWriter().print(je.toJSON());
+//    }
 
     @RequestMapping(params = "m=checkusername", method = RequestMethod.POST)
     public void checkUsername(HttpServletRequest request,
                               HttpServletResponse response) throws Exception {
+
         JsonEntity je = new JsonEntity();
         String username = request.getParameter("username");
-        if (userManager.checkUsername(username) == 0) {
+        if (userManager.checkUsername(username,this.logined(request).getDcschoolid()) == 0) {
             je.setType("success");
         } else {
             je.setMsg(UtilTool.msgproperty.getProperty("USER_USERNAME_EXISTS"));
@@ -988,7 +991,7 @@ public class UserController extends BaseController<UserInfo> {
                     .getProperty("USER_LOGIN_INFO_UNCOMPLETE"));
             je.setType("error");
         } else {
-            if (userManager.checkUsername(userinfo.getUsername()) == 0) {
+            if (userManager.checkUsername(userinfo.getUsername(),userinfo.getDcschoolid()) == 0) {
                 je.setMsg(UtilTool.msgproperty
                         .getProperty("USER_LOGIN_USERNAME_UNEXISTS"));
                 je.setType("error");
@@ -1113,12 +1116,39 @@ public class UserController extends BaseController<UserInfo> {
     public void doLogin(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         JsonEntity je = new JsonEntity();
+        Object isajax=request.getAttribute("isajax");
+
+        Long dcSchoolId=null;
+        //验证分校                            是否云端安端  1:是    2：否(分校本地安装则是2，云端代理则是1)
+        int isCloudSteup=Integer.parseInt(UtilTool.utilproperty.getProperty("IS_CLOUD_STEUP").toString());
+        if(isCloudSteup==1){
+            //验证云端安装，得到相关地址
+            String procBasePath=request.getSession().getAttribute("IP_PROC_NAME").toString();
+            SchoolInfo schoolInfo=new SchoolInfo();
+            schoolInfo.setIp(procBasePath);
+            List<SchoolInfo> schoolList=schoolManager.getList(schoolInfo,null);
+            if(schoolList==null||schoolList.size()<1){
+                je.setMsg("异常错误，该域名不存在!请联系相关人员进行更新!");
+                if(isajax==null||isajax.toString().trim().length()<1||!UtilTool.isNumber(isajax.toString().trim())||Integer.parseInt(isajax.toString().trim())!=1)
+                    response.getWriter().println(je.toJSON());
+                else
+                    response.getWriter().println(je.getAlertMsgAndBack());
+                return;
+            }else
+                dcSchoolId=schoolList.get(0).getSchoolid();
+
+        }
+
+
         UserInfo userinfo = this.getParameter(request, UserInfo.class);
         if(request.getAttribute("username")!=null)
             userinfo.setUsername(request.getAttribute("username").toString());
         if(request.getAttribute("password")!=null)
             userinfo.setPassword(request.getAttribute("password").toString());
         String rem=request.getParameter("remember");
+        if(dcSchoolId!=null){
+            userinfo.setDcschoolid(dcSchoolId.intValue());
+        }
 
         boolean remember =false;
         if(rem!=null&& rem.equals("1"))remember=true;
@@ -1191,7 +1221,7 @@ public class UserController extends BaseController<UserInfo> {
         }
 
 
-        Object isajax=request.getAttribute("isajax");
+
         if(isajax==null||isajax.toString().trim().length()<1||!UtilTool.isNumber(isajax.toString().trim())||Integer.parseInt(isajax.toString().trim())!=1)
             response.getWriter().write(je.toJSON());
         else{
@@ -1210,10 +1240,37 @@ public class UserController extends BaseController<UserInfo> {
     @RequestMapping(params = "m=autologin", method = RequestMethod.GET)
     public void autoLogin(HttpServletRequest request,
                           HttpServletResponse response) throws Exception {
-        String forwardPath = "/"+UtilTool.utilproperty.getProperty("PROC_NAME");
+        JsonEntity je=new JsonEntity();
+        String proc_name=request.getHeader("x-etturl");
+        if(proc_name==null){
+            proc_name=request.getContextPath().replaceAll("/", "");
+        }else{
+            ///group1/1.jsp
+            proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1).replaceAll("/", "");
+        }
+        Integer dcSchoolId=null;
+        //验证分校                            是否云端安端  1:是    2：否(分校本地安装则是2，云端代理则是1)
+        int isCloudSteup=Integer.parseInt(UtilTool.utilproperty.getProperty("IS_CLOUD_STEUP").toString());
+        if(isCloudSteup==1){
+            //验证云端安装，得到相关地址
+            String procBasePath=request.getSession().getAttribute("IP_PROC_NAME").toString();
+            SchoolInfo schoolInfo=new SchoolInfo();
+            schoolInfo.setIp(procBasePath);
+            List<SchoolInfo> schoolList=schoolManager.getList(schoolInfo,null);
+            if(schoolList==null||schoolList.size()<1){
+                je.setMsg("异常错误，该域名不存在!请联系相关人员进行更新!");
+                    response.getWriter().println(je.toJSON());
+                return;
+            }else
+                dcSchoolId=schoolList.get(0).getSchoolid().intValue();
+
+        }
+
+
+        String forwardPath = "/"+proc_name;
         UserInfo userinfo = new UserInfo();
         userinfo.setUsername(request.getAttribute("username").toString());
-        if (userManager.checkUsername(userinfo.getUsername()) != 0) {
+        if (userManager.checkUsername(userinfo.getUsername(),dcSchoolId) != 0) {
             UserInfo user = userManager.doLogin(userinfo);
             if (user != null) {
                 request.getSession().setAttribute("CURRENT_USER", user);

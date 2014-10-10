@@ -61,6 +61,11 @@ public class SchoolDAO extends CommonDAO<SchoolInfo> implements ISchoolDAO{
                 objList.add(obj.getName());
             }else
                 sqlbuilder.append("NULL,");
+            if(obj.getIp()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getIp());
+            }else
+                sqlbuilder.append("NULL,");
         }
         if (presult != null && presult.getPageNo() > 0
                 && presult.getPageSize() > 0) {
@@ -91,10 +96,11 @@ public class SchoolDAO extends CommonDAO<SchoolInfo> implements ISchoolDAO{
     public List<Object> getSaveSql(SchoolInfo obj, StringBuilder sqlbuilder) {
         if(obj==null||obj.getSchoolid()==null||obj.getName()==null||sqlbuilder==null)
             return null;
-        sqlbuilder.append("{CALL school_info_proc_synchro(?,?,?)}");
+        sqlbuilder.append("{CALL school_info_proc_synchro(?,?,?,?)}");
         List<Object> objList=new ArrayList<Object>();
         objList.add(obj.getSchoolid());
         objList.add(obj.getName());
+        objList.add(obj.getIp()==null?"":obj.getIp());
         return objList;
     }
 
