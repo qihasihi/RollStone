@@ -7523,11 +7523,11 @@ public class UserController extends BaseController<UserInfo> {
         Long ct=Long.parseLong(time.toString());
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
-//        if(d>3){//大于三分钟
-//            jo.put("msg","响应超时!");
-//            jo.put("result","0");
-//            response.getWriter().println(jo.toString());return;
-//        }
+        if(d>3){//大于三分钟
+            jo.put("msg","响应超时!");
+            jo.put("result","0");
+            response.getWriter().println(jo.toString());return;
+        }
         //md5验证
         HashMap<String,String> signMap=new HashMap<String, String>();
         signMap.put("schoolid",schoolid);
