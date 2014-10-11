@@ -516,11 +516,17 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                       HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         UserInfo user = this.logined(request);
+        String subjectid = request.getParameter("subjectid");
+        String termid = request.getParameter("termid");
+        String gradeid = request.getParameter("gradeid");
 
         TpCourseInfo tcInfo = this.getParameter(request,
                 TpCourseInfo.class);
         tcInfo.setUserid(user.getUserid());
         tcInfo.setLocalstatus(2);
+        tcInfo.setTermid(termid);
+        tcInfo.setSubjectid(Integer.parseInt(subjectid));
+        tcInfo.setGradeid(Integer.parseInt(gradeid));
         PageResult presult = this.getPageResultParameter(request);
         List<TpCourseInfo> courseList = this.tpCourseManager.getTchCourseList(
                 tcInfo, presult);

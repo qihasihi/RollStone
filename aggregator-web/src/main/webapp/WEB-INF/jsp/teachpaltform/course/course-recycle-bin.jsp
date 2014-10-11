@@ -24,6 +24,7 @@
                 page_control_name:'p1',
                 post_form:document.page1form,
                 gender_address_id:'page1address',
+                http_free_operate_handler : preeDoPageSub1, //执行查询前操作的内容
                 http_operate_handler:questionListReturn,
                 return_type:'json',
                 page_no:1,
@@ -34,6 +35,16 @@
             });
             pageGo("p1");
         });
+        function preeDoPageSub1(pObj){
+            var termid = "${param.termid}";
+            var subjectid ="${param.subjectid}";
+            var gradeid = "${param.gradeid}";
+            var param={};
+            param.termid=termid;
+            param.gradeid=gradeid;
+            param.subjectid=subjectid;
+            pObj.setPostParams(param);
+        }
     function revertcourse(courseid){
         $.ajax({
             url:'teachercourse?m=revertCourse',//cls!??.action
