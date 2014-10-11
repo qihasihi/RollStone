@@ -7504,31 +7504,30 @@ public class UserController extends BaseController<UserInfo> {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(params="m=synchroSchool",method=RequestMethod.POST)
+    @RequestMapping(params="m=synchroSchool",method={RequestMethod.POST,RequestMethod.GET})
     public void synchroSchoolInfo(HttpServletRequest request,HttpServletResponse response) throws Exception{
         String schoolid=request.getParameter("schoolid");
         String schoolname=request.getParameter("schoolname");
         String schoolip=request.getParameter("ip");
         String time=request.getParameter("time");
         String sign=request.getParameter("sign");
-        //参数验证
+        //参数验证z
          JSONObject jo=new JSONObject();
         if(schoolid==null||schoolname==null||time==null||sign==null){
             jo.put("msg","参数异常!");
             jo.put("result","0");
             response.getWriter().println(jo.toString());return;
         }
-        schoolname=java.net.URLDecoder.decode(schoolname,"UTF-8");
         //三分钟验证
         //验证是否在三分钟内
         Long ct=Long.parseLong(time.toString());
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
-        if(d>3){//大于三分钟
-            jo.put("msg","响应超时!");
-            jo.put("result","0");
-            response.getWriter().println(jo.toString());return;
-        }
+//        if(d>3){//大于三分钟
+//            jo.put("msg","响应超时!");
+//            jo.put("result","0");
+//            response.getWriter().println(jo.toString());return;
+//        }
         //md5验证
         HashMap<String,String> signMap=new HashMap<String, String>();
         signMap.put("schoolid",schoolid);
@@ -7541,6 +7540,8 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().println(jo.toString());
             return;
         }
+        //解密schoolname
+        schoolname=java.net.URLDecoder.decode(schoolname,"UTF-8");
         List<String> sqlArrayList=new ArrayList<String>();
         List<List<Object>> objArrayList=new ArrayList<List<Object>>();
 
