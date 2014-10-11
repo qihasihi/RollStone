@@ -20,6 +20,8 @@
         var currentSubjectid = "${param.subjectid}";
         var currentGradeid="${param.gradeid}";
         $(function(){
+            //给回收站连接
+            $("#recylebin").attr("href","teachercourse?m=toTeacherCourseRecycle&termid="+termid+"&subjectid="+global_subjectid+"&gradeid="+global_gradeid);
             if(materialid.length>0){
                 initMaterial();
             }
@@ -128,6 +130,20 @@
             getFTermCondition();
             showModel('followCourse_div');
         }
+
+        function toRecyleBin(){
+            if(global_gradeid<1){
+                alert("没有获取到年级参数！");
+                return;
+            }
+            if(global_subjectid<1){
+                alert("没有获取到学科参数！");
+                return;
+            }
+            var url = '';
+           $("#recylebin").attr("href",url);
+            $("#recylebin").click();
+        }
     </script>
 </head>
 <body>
@@ -157,7 +173,7 @@
                 <a id="a_tsc" href="javascript:getTrusteeShipNotices();">【<span id="tscNum">${tscSize}</span>】条托管消息</a>&nbsp;&nbsp;
             </c:if>
             <a name="a_hide" href="javascript:getTchingMaterial();"><span id="material_name">点击教材版本</span></a>
-            <a name="a_hide" target="_blank" href="teachercourse?m=toTeacherCourseRecycle" class="ico15" title="回收站"></a></p>
+            <a name="a_hide"  href="" target="_blank" class="ico15" id="recylebin" title="回收站"></a></p>
         <p><span class="ico14"></span><strong>课程表</strong>
             <a name="a_hide" href="javascript:toSaveCoursePage();" class="font-darkblue"><span class="ico26"></span>添加专题</a>
             <a name="a_hide" href="javascript:showYYCourse();" class="font-darkblue"><span class="ico27"></span>沿用专题</a>

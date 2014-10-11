@@ -82,6 +82,7 @@ function changeGrade(gradeid,subjectid,idx,name){
     $("#a_clsid").attr("href",'group?m=toGroupManager&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'');
     $("#a_course").attr("href",'teachercourse?toTeacherCourseList&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'');
     $("#a_calendar").attr("href",'teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'');
+    $("#recylebin").attr("href","teachercourse?m=toTeacherCourseRecycle&termid="+termid+"&subjectid="+global_subjectid+"&gradeid="+global_gradeid);
 
 
     if((typeof target=='undefined'||target.length<1)&&  (typeof isLession!='undefined'&&isLession)){

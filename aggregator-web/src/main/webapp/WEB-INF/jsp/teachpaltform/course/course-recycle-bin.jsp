@@ -85,7 +85,16 @@
 
                     shtml+=itm.coursename+'</p></td>';
                     shtml+='<td>'+itm.mtimestring+'</td>';
-                    shtml+='<td><a href="javascript:revertcourse(\''+itm.courseid+'\')" class="ico25" title="恢复"></a></td>';
+
+                    if(itm.quoteid==0)
+                        shtml+='<td><a href="javascript:revertcourse(\''+itm.courseid+'\')" class="ico25" title="恢复"></a></td>';
+                    else if(itm.quoteid!=0&&itm.qcuserid==userid)
+                        shtml+='<td><a href="javascript:revertcourse(\''+itm.courseid+'\')" class="ico25" title="恢复"></a></td>';
+                    else if(itm.quoteid!=0&&itm.qcourselevel==1)
+                        shtml+='<td><a href="javascript:checkCourse(\''+itm.courseid+'\','+itm.quoteid+')" class="ico25" title="恢复"></a></td>';
+                    else
+                        shtml+='<td><a href="javascript:checkCourse(\''+itm.courseid+'\','+itm.quoteid+')" class="ico25" title="恢复"></a></td>';
+                    //shtml+='<td><a href="javascript:revertcourse(\''+itm.courseid+'\')" class="ico25" title="恢复"></a></td>';
                 });
             }
             $("#mainTbl").hide();
@@ -101,12 +110,71 @@
             }
         }
     }
+        //标准专题选择恢复方式
+        function checkCourse(courseid,quoteid){
+            var htm = '';
+            htm+='<input type="button" value="继续使用" onclick="revertcourse('+courseid+')"/>';
+            htm+='<br/>';
+            htm+='<input type="button" value="重新引用" onclick="deleteQuoteCourse('+courseid+','+quoteid+')"/>';
+            $("#checkQuoteCourse").html(htm);
+            showModel("checkQuoteCourse");
+        }
+
+        //重新引用，先删除回收站中的专题
+        function deleteQuoteCourse(courseid,quoteid){
+            $.ajax({
+                url:'teachercourse?m=delQuoteCourse',//cls!??.action
+                dataType:'json',
+                type:'POST',
+                data:{courseid:courseid
+                },
+                cache: false,
+                error:function(){
+                    alert('异常错误!系统未响应!');
+                },success:function(rps){
+                    if(rps.type=="error"){
+                        alert("删除引用专题出错，请刷新重试")
+                    }else{
+                        addQuoteCourse(quoteid);
+                    }
+                }
+            });
+        }
+
+        //添加引用专题
+        function addQuoteCourse(courseid){
+           var termid = "${param.termid}";
+            var subjectid ="${param.subjectid}";
+            var gradeid = "${param.gradeid}";
+            $.ajax({
+                url:'teachercourse?m=doAddQuoteCourse',
+                data:{
+                    termid:termid,
+                    subjectid:subjectid,
+                    gradeid:gradeid,
+                    courseids:courseid
+                },
+                type:'POST',
+                dataType:'json',
+                error:function(){
+                    alert('异常错误,系统未响应！');
+                },success:function(rps){
+                    if(rps.type=="success"){
+                        alert("添加成功!");
+                        //window.location.href="teachercourse?toTeacherCourseList&subjectid=${param.subjectid}&gradeid=${param.gradeid}";
+                        pageGo(p1);
+                    }else{
+                        alert("无法添加!"+rps.msg);
+                    }
+                }
+            });
+        }
     </script>
 </head>
 <body>
 <%@include file="/util/head.jsp" %>
 <%@include file="/util/nav-base.jsp" %>
-
+<div id="checkQuoteCourse" style="display: none"></div>
 <div class="subpage_head"><span class="ico15"></span><strong>回收站</strong></div>
 <div class="content2">
     <div class="jxxt_tab_layout">
