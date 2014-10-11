@@ -7518,6 +7518,7 @@ public class UserController extends BaseController<UserInfo> {
             jo.put("result","0");
             response.getWriter().println(jo.toString());return;
         }
+        schoolname=java.net.URLDecoder.decode(schoolname,"UTF-8");
         //三分钟验证
         //验证是否在三分钟内
         Long ct=Long.parseLong(time.toString());
