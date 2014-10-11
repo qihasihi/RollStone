@@ -161,7 +161,7 @@
 
 
 <div class="denglu_duoxiao_layout">
-    <p class="logo">四中网校在线教育平台</p>
+    <p class="logo">四中网校在线教学平台</p>
     <div class="denglu_duoxiao">
         <h1>校园帐号登录</h1>
         <div class="input_bg"><span class="ico_user"></span><input id="username" name="username"  type="text" placeholder="输入用户名" /></div>

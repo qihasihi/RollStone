@@ -1,5 +1,6 @@
 package com.school.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -405,7 +406,7 @@ public class UserInfo implements java.io.Serializable {
 	public void setTeacherName(String teacherName) {
 		this.teacherName = teacherName;
 	}
-	public enum UserConditionEnum {
+	public enum UserConditionEnum implements Serializable {
 		user_Id, user_Name, password, state_id, pass_question, question_answer, c_time, m_time, nll
 
 	}

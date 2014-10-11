@@ -167,7 +167,7 @@
 
 
     function setClsId(clsid,clstype,dctype,relationtype,clsname){
-        var cname=qhs.GetLength(clsname)>18?clsname.substring(0,9)+'...':clsname;
+        var cname=qhs.GetLength(clsname)>18?clsname.substring(0,8)+'...':clsname;
         $("#clsname").html(cname);
         $("#clsname").attr("title",clsname);
         displayObj('ul_banji',false);
@@ -284,18 +284,7 @@
                     <div class="jxxt_banji_xzgl_text" id="dv_addGroup">
                         <p class="font-black">未分配成员：</p>
                         <ul id="noGroupStudents">
-                            <li>李小</li>
-                            <li>王大天使<a href="1" class="ico_delete" title="删除"></a></li>
-                            <li>周好人</li>
-                            <li>李小</li>
-                            <li>王大</li>
-                            <li>周好人人</li>
-                            <li>李小</li>
-                            <li>王大</li>
-                            <li>周好人</li>
-                            <li>李小</li>
-                            <li>王大</li>
-                            <li>白仙仙人</li>
+
                         </ul>
                         <p class="p_t_10"><a name="a_hide" href="javascript:showModel('selectStudent_Div');"  class="an_public3">分配到组</a></p>
                     </div>
