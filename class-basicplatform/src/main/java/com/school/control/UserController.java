@@ -9,6 +9,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.entity.*;
 import com.school.manager.*;
 import com.school.manager.impl.activity.ActivityManager;
@@ -7497,6 +7498,85 @@ public class UserController extends BaseController<UserInfo> {
         return true;
     }
 
+    /**
+     * 云端分校同步分校接口(如果存在该分校，则直接删除，重新添加)
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=synchroSchool",method=RequestMethod.POST)
+    public void synchroSchoolInfo(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String schoolid=request.getParameter("schoolid");
+        String schoolname=request.getParameter("schoolname");
+        String schoolip=request.getParameter("ip");
+        String time=request.getParameter("time");
+        String sign=request.getParameter("sign");
+        //参数验证
+         JSONObject jo=new JSONObject();
+        if(schoolid==null||schoolname==null||time==null||sign==null){
+            jo.put("msg","参数异常!");
+            jo.put("result","0");
+            response.getWriter().println(jo.toString());return;
+        }
+        //三分钟验证
+        //验证是否在三分钟内
+        Long ct=Long.parseLong(time.toString());
+        Long nt=new Date().getTime();
+        double d=(nt-ct)/(1000*60);
+        if(d>3){//大于三分钟
+            jo.put("msg","响应超时!");
+            jo.put("result","0");
+            response.getWriter().println(jo.toString());return;
+        }
+        //md5验证
+        HashMap<String,String> signMap=new HashMap<String, String>();
+        signMap.put("schoolid",schoolid);
+        signMap.put("schoolname",schoolname);
+        signMap.put("ip",schoolip);
+        signMap.put("time",time);
+        if(!UrlSigUtil.verifySigSimple("synchroSchool", signMap, sign)){
+            jo.put("msg","验证失败，非法登录!");
+            jo.put("result","0");
+            response.getWriter().println(jo.toString());
+            return;
+        }
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+
+        StringBuilder sqlbuilder;
+        List<Object> objList;
+        //验证是否存在了，如果存在，则删除，再添加
+        SchoolInfo  school=new SchoolInfo();
+        school.setSchoolid(Long.parseLong(schoolid.trim()));
+        List<SchoolInfo> schoolList=this.schoolManager.getList(school,null);
+        if(schoolList!=null&&schoolList.size()>0){
+            sqlbuilder=new StringBuilder();
+            objList=this.schoolManager.getDeleteSql(school,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+        }
+        //添加
+        school.setName(schoolname.trim());
+        school.setIp(schoolip);
+        sqlbuilder=new StringBuilder();
+        objList=this.schoolManager.getSaveSql(school,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+        if(sqlArrayList.size()>0&&objArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
+            boolean flag=this.schoolManager.doExcetueArrayProc(sqlArrayList,objArrayList);
+            if(flag){
+                jo.put("result",1);
+                jo.put("msg","操作成功!");
+            }
+        }else{
+            jo.put("result",0);
+            jo.put("msg","操作失败!");
+        }
+    }
     /**
      * 云端分校管理员添加接口
      * @param request

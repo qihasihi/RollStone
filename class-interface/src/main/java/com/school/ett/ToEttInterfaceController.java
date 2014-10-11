@@ -60,9 +60,9 @@ public class ToEttInterfaceController extends BaseController<String> {
         Long ct=Long.parseLong(timestamp.toString());
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
-//        if(d>3){//大于三分钟
-//              returnJO.put("msg","响应超时!");
-//        }
+        if(d>3){//大于三分钟
+              returnJO.put("msg","响应超时!");
+        }
         HashMap<String,String> map = new HashMap();
         map.put("jId",jId);
         map.put("userId",userId);
