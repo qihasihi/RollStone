@@ -334,7 +334,8 @@ public class TpUserController extends UserController {
                 url="group?m=toGroupManager";
         }
         request.getSession().setAttribute("fromType","ett");
-        response.sendRedirect(url);
+        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
+        response.sendRedirect(baseUrl+url);
         return null;
     }
 

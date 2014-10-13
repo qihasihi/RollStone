@@ -3010,10 +3010,11 @@ public class TaskController extends BaseController<TpTaskInfo>{
         tp.setUserid(this.logined(request).getRef());
         tp.setIsright(1);
         List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getList(tp,null);
+        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
         if(taskCriList!=null&&taskCriList.size()>0&&taskCriList.get(0).getTaskstatus()!=null
                 &&!taskCriList.get(0).getTaskstatus().equals("1")&&!taskCriList.get(0).getTaskstatus().equals("3")){
             if(tList!=null&&tList.size()>0){
-                response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+                response.sendRedirect(baseUrl+"tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
             }else{
                 if(this.taskPerformanceManager.doSave(tp)){
                        /*奖励加分*/
@@ -3055,14 +3056,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         System.out.println("awardScore err ");
 
 
-                    response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+                    response.sendRedirect(baseUrl+"tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
                 }else{
                     je.setMsg("异常错误!添加查看记录失败!请重试!");
                     response.getWriter().print(je.toJSON());
                 }
             }
         }else{
-            response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+            response.sendRedirect(baseUrl+"tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
         }
     }
 
@@ -3231,10 +3232,11 @@ public class TaskController extends BaseController<TpTaskInfo>{
         tp.setUserid(this.logined(request).getRef());
         tp.setIsright(1);
         List<TaskPerformanceInfo>tList=this.taskPerformanceManager.getList(tp,null);
+        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
         if(taskCriList!=null&&taskCriList.size()>0&&taskCriList.get(0).getTaskstatus()!=null
                 &&!taskCriList.get(0).getTaskstatus().equals("1")&&!taskCriList.get(0).getTaskstatus().equals("3")){
             if(tList!=null&&tList.size()>0){
-                response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
+                response.sendRedirect(baseUrl+"tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
             }else{
                 if(this.taskPerformanceManager.doSave(tp)){
                     /*奖励加分*/
@@ -3275,14 +3277,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     //    request.getSession().setAttribute("msg",msg);
                     }else
                         System.out.println("awardScore err ");
-                    response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
+                    response.sendRedirect(baseUrl+"tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
                 }else{
                     je.setMsg("异常错误!添加查看记录失败!请重试!");
                     response.getWriter().print(je.toJSON());
                 }
             }
         }else{
-            response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
+            response.sendRedirect(baseUrl+"tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
         }
     }
 

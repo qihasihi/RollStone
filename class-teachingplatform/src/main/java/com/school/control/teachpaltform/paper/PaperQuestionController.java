@@ -3666,19 +3666,20 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         splog.setPaperid(Long.parseLong(paperid));
         splog.setIsinpaper(2);
 
+        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
         List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,pr);
         if(spList!=null&&spList.size()>0||(flag!=null&&flag.trim().equals("1"))){ //已经交卷，不能再进入
             String url="paperques?m=toTestDetail&paperid="+paperid+"&taskid="+taskid;
             if(flag!=null)url+="&flag="+flag;
             if(userid!=null)url+="&userid="+userid;
-            response.sendRedirect(url);return null;
+            response.sendRedirect(baseUrl+url);return null;
         }
         //验证任务是否已经结束
         if(taskstatus.equals("3")){
             String url="paperques?m=toTestDetail&paperid="+paperid+"&taskid="+taskid;
             if(flag!=null)url+="&flag="+flag;
             if(userid!=null)url+="&userid="+userid;
-            response.sendRedirect(url);return null;
+            response.sendRedirect(baseUrl+url);return null;
         }
 
 
@@ -4011,7 +4012,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             }
             String paperid=mvpaperList.get(0).getPaperid().toString();
             String url="paperques?m=toTestPaper&paperid="+paperid+"&userid="+userid+"&courseid="+tkList.get(0).getCourseid()+"&taskid="+tkList.get(0).getTaskid()+"&flag=1";
-            response.sendRedirect(url);return null;
+            String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
+            response.sendRedirect(baseUrl+url);return null;
 
         }else if(tktype==5){
             PaperInfo pinfo=new PaperInfo();

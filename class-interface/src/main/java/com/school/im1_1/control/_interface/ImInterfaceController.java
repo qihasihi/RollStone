@@ -3692,12 +3692,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         splogs.setPaperid(Long.parseLong(paperid.trim()));
         List<StuPaperLogs> splogsList=this.stuPaperLogsManager.getList(splogs,presult);
 
-
+        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
         Integer uType=ImUtilTool.getUserType(userType);
         if(uType==2||uType==3){ //如果是老师，直接进入详情页面
 
             //如果是跳题，则直接跳
-            StringBuilder directBuilder=new StringBuilder("imapi1_1?m=testDetail&userid=")
+            StringBuilder directBuilder=new StringBuilder(baseUrl+"imapi1_1?m=testDetail&userid=")
                     .append(userid).append("&taskid=").append(tk.getTaskid())
                     .append("&paperid=").append(paperid).append("&courseid=").append(tk.getCourseid())
                     .append("&classid=").append(clsid).append("&userType=").append(uType);
@@ -3759,7 +3759,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         tpallot.getUserinfo().setUserid(userid);
         if(!this.tpTaskAllotManager.getYXTkCount(tpallot)){
             //如果不存在，则直接查看详情页面
-            StringBuilder directBuilder=new StringBuilder("imapi1_1?m=testDetail&userid=")
+            StringBuilder directBuilder=new StringBuilder(baseUrl+"imapi1_1?m=testDetail&userid=")
                     .append(userid).append("&taskid=").append(tk.getTaskid())
                     .append("&paperid=").append(p.getPaperid()).append("&courseid=").append(tk.getCourseid())
                     .append("&classid=").append(clsid).append("&userType=").append((uType==3?1:uType));//如果是家长，通过相关验证，则走孩子的流程。
@@ -3775,7 +3775,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
 
         if(splogsList!=null&&splogsList.size()>0){
-            StringBuilder directBuilder=new StringBuilder("imapi1_1?m=testDetail&userid=")
+            StringBuilder directBuilder=new StringBuilder(baseUrl+"imapi1_1?m=testDetail&userid=")
                     .append(userid).append("&taskid=").append(tk.getTaskid())
                     .append("&paperid=").append(p.getPaperid()).append("&courseid=").append(tk.getCourseid())
                     .append("&classid=").append(clsid).append("&userType=").append((uType==3?1:uType));//如果是家长，通过相关验证，则走孩子的流程。

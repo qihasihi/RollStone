@@ -227,7 +227,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("userType",userType);
         mp.put("userid", this.logined(request).getUserid());
 
-
+        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
         //没有授课信息的班主任,直接跳到日历页面
         ClassUser c = new ClassUser();
         c.setUserid(this.logined(request).getRef());
@@ -235,7 +235,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         c.setYear(termInfo.getYear());
         List<ClassUser>clsList=this.classUserManager.getList(c,null);
         if(this.validateRole(request,UtilTool._ROLE_CLASSADVISE_ID)&&(clsList==null||clsList.size()<1))
-            response.sendRedirect("teachercourse?toTeacherCalendarPage&termid="+termInfo.getRef());
+            response.sendRedirect(baseUrl+"teachercourse?toTeacherCalendarPage&termid="+termInfo.getRef());
 
         return new ModelAndView("/teachpaltform/course/teacherCourseList", mp);
     }
@@ -3627,10 +3627,11 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
      */
     @RequestMapping(params="m=toCourseByRole",method=RequestMethod.GET)
     public void toCourseByRole(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
         if(this.validateRole(request,UtilTool._ROLE_STU_ID)){ //进入学生首页
-            response.sendRedirect("teachercourse?m=toStudentCourseList");
+            response.sendRedirect(baseUrl+"teachercourse?m=toStudentCourseList");
         }else
-            response.sendRedirect("teachercourse?toTeacherCourseList"); //进入教师首页
+            response.sendRedirect(baseUrl+"teachercourse?toTeacherCourseList"); //进入教师首页
     }
 
     /**

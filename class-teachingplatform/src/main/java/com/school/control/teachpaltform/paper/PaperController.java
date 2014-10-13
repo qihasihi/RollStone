@@ -3772,7 +3772,8 @@ public class PaperController extends BaseController<PaperInfo>{
 //        else
 //            jsonEntity.setMsg("试卷已存在!共" + tkEntity.getQuesnum() + "道题!");
         Long paperid=paperList.get(0).getPaperid();
-        response.sendRedirect("paperques?m=testPaper&paperid=" + paperid + "&courseid=" + tkEntity.getCourseid() + "&taskid="+taskid);
+        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
+        response.sendRedirect(baseUrl+"paperques?m=testPaper&paperid=" + paperid + "&courseid=" + tkEntity.getCourseid() + "&taskid="+taskid);
         return null;
     }
 

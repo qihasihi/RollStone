@@ -1226,12 +1226,12 @@ public class UserController extends BaseController<UserInfo> {
         if(isajax==null||isajax.toString().trim().length()<1||!UtilTool.isNumber(isajax.toString().trim())||Integer.parseInt(isajax.toString().trim())!=1)
             response.getWriter().write(je.toJSON());
         else{
-
+            String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
             if(je.getType().equals("success")){
                 if(UtilTool._IS_SIMPLE_RESOURCE!=2)
-                    response.sendRedirect("user?m=toIndex");
+                    response.sendRedirect(baseUrl+"user?m=toIndex");
                 else
-                    response.sendRedirect("simpleRes?m=toindex");
+                    response.sendRedirect(baseUrl+"simpleRes?m=toindex");
             }else
                 response.getWriter().print(je.getAlertMsgAndCloseWin());
         }
@@ -7273,7 +7273,8 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         request.getSession().setAttribute("fromType","lzx");
-        response.sendRedirect(targetUrl);
+        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
+        response.sendRedirect(baseUrl+targetUrl);
     }
 
     /**
@@ -7375,7 +7376,8 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         request.getSession().setAttribute("fromType","lzx");
-        response.sendRedirect(targetUrl);
+        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
+        response.sendRedirect(baseUrl+targetUrl);
     }
 
 

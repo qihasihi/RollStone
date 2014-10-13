@@ -1,7 +1,8 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
     if(UtilTool._IS_SIMPLE_RESOURCE==2){
-        response.sendRedirect("user?m=simpleResLogin");return;
+        String bUrl=request.getSession().getAttribute("IP_PROC_NAME").toString();
+        response.sendRedirect(bUrl+"user?m=simpleResLogin");return;
     }
     String pcname=request.getHeader("x-etturl");
     if(pcname==null){
