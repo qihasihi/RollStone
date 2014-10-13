@@ -1904,6 +1904,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                         TpTopicThemeInfo themeInfo=new TpTopicThemeInfo();
                         themeInfo.setCourseid(nextCourseId);
                         themeInfo.setTopicid(nextTopicid);
+                        themeInfo.setSelectType(2);//查询内容
                         List<TpTopicThemeInfo>themeInfoList=this.tpTopicThemeManager.getList(themeInfo,null);
                         if(themeInfoList!=null&&themeInfoList.size()>0){
                             for(TpTopicThemeInfo tmpThemeInfo :themeInfoList){
@@ -1912,6 +1913,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                 tmpThemeInfo.setThemeid(this.tpTopicThemeManager.getNextId(true));
                                 tmpThemeInfo.setTopicid(nextTopicid);
                                 tmpThemeInfo.setCourseid(nextCourseId);
+
                                 tmpThemeInfo.setStatus(2L);//引用专题下  1：显示   2：不显示
                                 sql=new StringBuilder();
                                 objList=this.tpTopicThemeManager.getSaveSql(tmpThemeInfo,sql);

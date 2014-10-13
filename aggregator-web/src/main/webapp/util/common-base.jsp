@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page language="java" import="java.util.*,java.math.BigDecimal" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>   
+<%@ taglib uri="/SchoolTabFunctions" prefix="fn"%>
 <%@page import="com.school.entity.RoleUser"%>
 <%@page import="com.school.util.UtilTool"%>
 <%@page import="com.school.util.JsonEntity"%> 

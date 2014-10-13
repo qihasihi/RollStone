@@ -171,36 +171,44 @@
                         </c:if>
         </div>
         <c:if test="${!empty theme.imattachArray&&theme.sourceid==1}">
+            <p class="p_t_10">
             <c:forEach items="${theme.imattachArray}" var="imItm" varStatus="viIdx">
-                <c:if test="${imattachtype==1}">
-                    <img src="${imItm}" title="${imItm}"/>
+                <c:if test="${theme.imattachtype==1}">
+                    <a href="${imItm}">图片${viIdx.index+1}</a>&nbsp;
                 </c:if>
-                <c:if test="${imattachtype==2}">
-                    <span id="sp_mp3_${viIdx.index}"></span>
-                    <script type="text/javascript">
-                        jwplayerSetup={
-                            'id': 'player1',
-                            'width': 65,
-                            'height': 50,
-                            'file':  '${imItm}',
-                            //   'primary': 'flash',
-                            'controlbar':'bottom',
-                            'controlbar.idlehide':'false',
-                            'modes': [
-                                {type: 'flash', src: 'js/common/videoPlayer/new/jwplayer.flash.swf', //
-                                    config: {
-                                        provider: "http",
-                                        autostart:"false",
-                                        menu:"false"
-                                    }
-                                },
-                                {type: 'html5'}
-                            ]
-                        };
-                        jwplayer("sp_mp3_${viIdx.index}").setup(jwplayerSetup);
-                    </script>
+                <c:if test="${theme.imattachtype==2}">
+                    <a href="${imItm}">语音${viIdx.index+1}</a>&nbsp;
                 </c:if>
+                <%--<c:if test="${theme.imattachtype==1}">--%>
+                    <%--<img src="${imItm}" title="${imItm}"/>--%>
+                <%--</c:if>--%>
+                <%--<c:if test="${theme.imattachtype==2}">--%>
+                    <%--<span id="sp_mp3_${viIdx.index}"></span>--%>
+                    <%--<script type="text/javascript">--%>
+                        <%--jwplayerSetup={--%>
+                            <%--'id': 'player1',--%>
+                            <%--'width': 65,--%>
+                            <%--'height': 50,--%>
+                            <%--'file':  '${imItm}',--%>
+                            <%--//   'primary': 'flash',--%>
+                            <%--'controlbar':'bottom',--%>
+                            <%--'controlbar.idlehide':'false',--%>
+                            <%--'modes': [--%>
+                                <%--{type: 'flash', src: 'js/common/videoPlayer/new/jwplayer.flash.swf', //--%>
+                                    <%--config: {--%>
+                                        <%--provider: "http",--%>
+                                        <%--autostart:"false",--%>
+                                        <%--menu:"false"--%>
+                                    <%--}--%>
+                                <%--},--%>
+                                <%--{type: 'html5'}--%>
+                            <%--]--%>
+                        <%--};--%>
+                        <%--jwplayer("sp_mp3_${viIdx.index}").setup(jwplayerSetup);--%>
+                    <%--</script>--%>
+                <%--</c:if>--%>
             </c:forEach>
+            </p>
         </c:if>
     </div>
 </div>
