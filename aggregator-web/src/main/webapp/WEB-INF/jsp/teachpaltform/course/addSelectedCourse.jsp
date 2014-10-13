@@ -153,13 +153,14 @@
                         if(rps.type=="success"){
                             if(rps.objList!=null&&rps.objList.length>0){
                                 var htm='';
+                                htm+= '<h3><a href="javascript:closeModel(\'confirmCourseDiv\')"  title="关闭"></a>引用专题</h3>';
                                 var courseid;
                                 $.each(rps.objList,function(idx,itm){
                                    courseid=itm.courseid;
                                 });
-                                htm+='<input type="button" value="继续使用" onclick="revertCourse('+courseid+')"/>';
-                                htm+='<br/>';
-                                htm+='<input type="button" value="重新引用" onclick="deleteQuoteCourse('+courseid+')"/>';
+                                htm+='<p class="p_t_20 t_c"><input type="radio" name="checkQuote" value="1">&nbsp;继续使用';
+                                htm+='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="2" name="checkQuote">&nbsp;重新引用</p>';
+                                htm+='<p class="p_t_20 t_c"><a href="javascript:subCheckQuote('+courseid+')"  class="an_public1">确&nbsp;定</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:closeModel(\'confirmCourseDiv\')"  class="an_public1">取&nbsp;消</a></p>';
                                 $("#confirmCourseDiv").html(htm);
                                 showModel('confirmCourseDiv');
                             }
@@ -169,6 +170,18 @@
                     }
                 });
             }
+
+            //提交选择后的引用
+            function subCheckQuote(courseid){
+                var radiovalue;
+                $("input[name='checkQuote']:checked").each(function() {radiovalue=$(this).val();});
+                if(radiovalue==1){
+                    revertCourse(courseid);
+                }else if(radiovalue==2){
+                    deleteQuoteCourse(courseid);
+                }
+            }
+
             //执行恢复引用
             function revertCourse(courseid){
                 $.ajax({
@@ -359,7 +372,7 @@
         </script>
 </head>
     <body>
-    <div id="confirmCourseDiv" style="display: none"></div>
+    <div id="confirmCourseDiv"  class="public_windows" style="display: none"></div>
     <input id="subjectid" type="hidden" value="${subject.subjectid}">
     <div class="subpage_head"><span class="ico55"></span><strong>添加专题</strong></div>
     <div class="subpage_nav">

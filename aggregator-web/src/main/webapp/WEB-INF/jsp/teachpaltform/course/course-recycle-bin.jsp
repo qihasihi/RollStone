@@ -59,6 +59,7 @@
             },success:function(rps){
                 alert(rps.msg)
                 pageGo(p1);
+                closeModel('checkQuoteCourse');
             }
         });
     }
@@ -123,12 +124,32 @@
     }
         //标准专题选择恢复方式
         function checkCourse(courseid,quoteid){
-            var htm = '';
-            htm+='<input type="button" value="继续使用" onclick="revertcourse('+courseid+')"/>';
-            htm+='<br/>';
-            htm+='<input type="button" value="重新引用" onclick="deleteQuoteCourse('+courseid+','+quoteid+')"/>';
+//            var htm = '';
+//            htm+='<input type="button" value="继续使用" onclick="revertcourse('+courseid+')"/>';
+//            htm+='<br/>';
+//            htm+='<input type="button" value="重新引用" onclick="deleteQuoteCourse('+courseid+','+quoteid+')"/>';
+//            $("#checkQuoteCourse").html(htm);
+//            showModel("checkQuoteCourse");
+
+
+            var htm='';
+            htm+= '<h3><a href="javascript:closeModel(\'checkQuoteCourse\')"  title="关闭"></a>引用专题</h3>';
+            htm+='<p class="p_t_20 t_c"><input type="radio" name="checkQuote" value="1">&nbsp;继续使用';
+            htm+='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="2" name="checkQuote">&nbsp;重新引用</p>';
+            htm+='<p class="p_t_20 t_c"><a href="javascript:subCheckQuote('+courseid+','+quoteid+')"  class="an_public1">确&nbsp;定</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:closeModel(\'checkQuoteCourse\')"  class="an_public1">取&nbsp;消</a></p>';
             $("#checkQuoteCourse").html(htm);
-            showModel("checkQuoteCourse");
+            showModel('checkQuoteCourse');
+        }
+
+        //提交选择后的引用
+        function subCheckQuote(courseid,quoteid){
+            var radiovalue;
+            $("input[name='checkQuote']:checked").each(function() {radiovalue=$(this).val();});
+            if(radiovalue==1){
+                revertcourse(courseid);
+            }else if(radiovalue==2){
+                deleteQuoteCourse(courseid,quoteid);
+            }
         }
 
         //重新引用，先删除回收站中的专题
@@ -174,6 +195,7 @@
                         alert("添加成功!");
                         //window.location.href="teachercourse?toTeacherCourseList&subjectid=${param.subjectid}&gradeid=${param.gradeid}";
                         pageGo(p1);
+                        closeModel('checkQuoteCourse');
                     }else{
                         alert("无法添加!"+rps.msg);
                     }
@@ -185,7 +207,7 @@
 <body>
 <%@include file="/util/head.jsp" %>
 <%@include file="/util/nav-base.jsp" %>
-<div id="checkQuoteCourse" style="display: none"></div>
+<div id="checkQuoteCourse" class="public_windows" style="display: none"></div>
 <div class="subpage_head"><span class="ico15"></span><strong>回收站</strong></div>
 <div class="content2">
     <div class="jxxt_tab_layout">
