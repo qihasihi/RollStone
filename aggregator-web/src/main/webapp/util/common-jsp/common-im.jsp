@@ -2,7 +2,7 @@
 <%@ page language="java" import="java.util.*,java.math.BigDecimal" pageEncoding="UTF-8"%>
 <%@ page import="com.school.util.UtilTool" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="/SchoolTabFunctions" prefix="fn"%>
 <%
    // response.setHeader("Cache-Control", "Public");
    // response.setHeader("Pragma", "no-cache");
