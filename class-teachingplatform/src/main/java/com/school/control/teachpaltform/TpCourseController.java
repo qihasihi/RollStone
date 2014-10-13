@@ -1775,7 +1775,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                         //互动交流任务
                         if(tmpTask.getTasktype().toString().equals("2")){
                             //论题
-                            TpTopicInfo tt=new TpTopicInfo();
+                           /* TpTopicInfo tt=new TpTopicInfo();
                             tt.setCourseid(courseid);
                             tt.setTopicid(tmpTask.getTaskvalueid());
                             List<TpTopicInfo>topicInfoList=this.tpTopicManager.getList(tt,null);
@@ -1814,7 +1814,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
                                             }
                                         }
-                                    }*/
+                                    }
                                     //引用的TOPIC_ID
                                     tmpTopic.setQuoteid(tmpTopic.getTopicid());
                                     tmpTopic.setCourseid(nextCourseId);
@@ -1827,7 +1827,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                         sqlListArray.add(sql.toString());
                                         objListArray.add(objList);
                                     }
-                            }
+                            }*/
                         }
 
 
@@ -1894,7 +1894,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                     }
                 }
                 //论题
-              /*  TpTopicInfo tt=new TpTopicInfo();
+                TpTopicInfo tt=new TpTopicInfo();
                 tt.setCourseid(courseid);
                 List<TpTopicInfo>topicInfoList=this.tpTopicManager.getList(tt,null);
                 if(topicInfoList!=null&&topicInfoList.size()>0){
@@ -1902,8 +1902,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                         Long nextTopicid=this.tpTopicManager.getNextId(true);
                         //主题
                         TpTopicThemeInfo themeInfo=new TpTopicThemeInfo();
-                        themeInfo.setCourseid(tmpTopic.getCourseid());
-                        themeInfo.setTopicid(tmpTopic.getTopicid());
+                        themeInfo.setCourseid(nextCourseId);
+                        themeInfo.setTopicid(nextTopicid);
                         List<TpTopicThemeInfo>themeInfoList=this.tpTopicThemeManager.getList(themeInfo,null);
                         if(themeInfoList!=null&&themeInfoList.size()>0){
                             for(TpTopicThemeInfo tmpThemeInfo :themeInfoList){
@@ -1912,7 +1912,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                 tmpThemeInfo.setThemeid(this.tpTopicThemeManager.getNextId(true));
                                 tmpThemeInfo.setTopicid(nextTopicid);
                                 tmpThemeInfo.setCourseid(nextCourseId);
-                                tmpThemeInfo.setStatus(2L);//引用专题下  1：显示   2：不显示
+                                tmpThemeInfo.setStatus(1L);//引用专题下  1：显示   2：不显示
                                 sql=new StringBuilder();
                                 objList=this.tpTopicThemeManager.getSaveSql(tmpThemeInfo,sql);
                                 if(sql!=null&&objList!=null){
@@ -1945,7 +1945,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                             objListArray.add(objList);
                         }
                     }
-                } */
+                }
             }
         }
 

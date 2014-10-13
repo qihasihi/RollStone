@@ -590,29 +590,39 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
     public void addOrDelQuoteTheme(HttpServletRequest request,HttpServletResponse response) throws Exception{
     	JsonEntity jeEntity=new JsonEntity();
     	TpTopicThemeInfo entity=this.getParameter(request, TpTopicThemeInfo.class);
-    	if(entity.getTopicid()==null||entity.getQuoteid()==null){
+    	if(entity.getThemeid()==null){
     		 jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
              response.getWriter().print(jeEntity.toJSON());return;
     	}
     	String type=request.getParameter("type"); //1:可见，2：不可见
     	//验证Topicid是否存在，QuoteId是否存在
-    	TpTopicInfo tpc=new TpTopicInfo();
-    	tpc.setTopicid(entity.getTopicid());
-    	List<TpTopicInfo> tpcList=this.tpTopicManager.getList(tpc, null);
-    	if(tpcList==null||tpcList.size()<1){
-    		jeEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-            response.getWriter().print(jeEntity.toJSON());return;
-    	}
+//    	TpTopicInfo tpc=new TpTopicInfo();
+//    	tpc.setTopicid(entity.getTopicid());
+//    	List<TpTopicInfo> tpcList=this.tpTopicManager.getList(tpc, null);
+//    	if(tpcList==null||tpcList.size()<1){
+//    		jeEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+//            response.getWriter().print(jeEntity.toJSON());return;
+//    	}
     	//得到当前的TPICID对象
-    	TpTopicInfo tpcEntity=tpcList.get(0);
+//    	TpTopicInfo tpcEntity=tpcList.get(0);
     	//验证引用的THEME entity
     	TpTopicThemeInfo theEntity=new TpTopicThemeInfo();
-    	theEntity.setThemeid(entity.getQuoteid());
+    	theEntity.setThemeid(entity.getThemeid());
     	List<TpTopicThemeInfo> theList=this.tpTopicThemeManager.getList(theEntity, null);
     	if(theList==null||theList.size()<1){
     		jeEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().print(jeEntity.toJSON());return;
     	}
+        //验证上一层是否存在
+        Long topicid=theList.get(0).getTopicid();
+        TpTopicInfo tpc=new TpTopicInfo();
+    	tpc.setTopicid(topicid);
+    	List<TpTopicInfo> tpcList=this.tpTopicManager.getList(tpc, null);
+    	if(tpcList==null||tpcList.size()<1){
+    		jeEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(jeEntity.toJSON());return;
+    	}
+
     	//得到引用的数据themeid
     	TpTopicThemeInfo quoteEntity=theList.get(0);
     	//组织数据，进行批量操作
@@ -622,62 +632,37 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
     	StringBuilder sqlbuilder=null;
     	//查询是否存在了相关引用数据(每个主题只能被引用一次)
     	theEntity=new TpTopicThemeInfo();
-    	theEntity.setQuoteid(entity.getQuoteid());
-    	theEntity.setCourseid(tpcEntity.getCourseid());
+    	theEntity.setQuoteid(quoteEntity.getQuoteid());
+    	theEntity.setCourseid(quoteEntity.getCourseid());
     	List<TpTopicThemeInfo> entityList=this.tpTopicThemeManager.getList(theEntity, null);
     	//记录引用的Course_id
     	Long quoteCourseid=quoteEntity.getCourseid();
-    	//没有相关数据，进行添加
-    	if(entityList==null||entityList.size()<1){
-    		quoteEntity.setCourseid(tpcEntity.getCourseid());
-    		quoteEntity.setQuoteid(quoteEntity.getThemeid());
-    		quoteEntity.setTopicid(tpcEntity.getTopicid());
-    		quoteEntity.setThemeid(this.tpTopicManager.getNextId(true));
-    		quoteEntity.setStatus(Long.parseLong(type));
-    		sqlbuilder=new StringBuilder();
-    		objList=this.tpTopicThemeManager.getSaveSql(quoteEntity, sqlbuilder);
-    		if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
-    			sqlArrayList.add(sqlbuilder.toString());
-    			objArrayList.add(objList);
-    		}
-    		
-    		if(quoteEntity.getThemecontent()!=null){    			
-               this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
-                       , quoteEntity.getThemecontent(), quoteEntity.getThemeid().toString(),sqlArrayList,objArrayList);
-    		}
-    		if(quoteEntity.getCommentcontent()!=null){
-           	  //得到comment_content的更新语句
-               this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
-                       , quoteEntity.getCommentcontent(), quoteEntity.getThemeid().toString(),sqlArrayList,objArrayList);
-    		}    		
-    		//操作记录
-    	}else{ //存在引用数据，修改状态
-    		theEntity=entityList.get(0);
-    		theEntity.setStatus(Long.parseLong(type));
-    		sqlbuilder=new StringBuilder();
-    		objList=this.tpTopicThemeManager.getUpdateSql(theEntity, sqlbuilder);
-    		if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
-    			sqlArrayList.add(sqlbuilder.toString());
-    			objArrayList.add(objList);
-    		}    		
-    		if(theEntity.getThemecontent()!=null){
-    			  this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
-                          , "", quoteEntity.getThemeid().toString(),sqlArrayList,objArrayList);
-    			  
-             	  //得到theme_content的更新语句
-                 this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
-                         , theEntity.getThemecontent(), theEntity.getThemeid().toString(),sqlArrayList,objArrayList);
-      		}
-      		if(theEntity.getCommentcontent()!=null){
-      		     this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
-                         , "", theEntity.getThemeid().toString(),sqlArrayList,objArrayList);
-      		
-      			//得到comment_content的更新语句
-                 this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
-                         , theEntity.getCommentcontent(), theEntity.getThemeid().toString(),sqlArrayList,objArrayList);
-      		}
-    		
+    	theEntity=theList.get(0);
+        theEntity.setCuserid(this.logined(request).getUserid());
+    	theEntity.setStatus(Long.parseLong(type));
+    	sqlbuilder=new StringBuilder();
+    	objList=this.tpTopicThemeManager.getUpdateSql(theEntity, sqlbuilder);
+    	if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+    		sqlArrayList.add(sqlbuilder.toString());
+    		objArrayList.add(objList);
     	}
+//    		if(theEntity.getThemecontent()!=null){
+//    			  this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
+//                          , "", quoteEntity.getThemeid().toString(),sqlArrayList,objArrayList);
+//
+//             	  //得到theme_content的更新语句
+//                 this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
+//                         , theEntity.getThemecontent(), theEntity.getThemeid().toString(),sqlArrayList,objArrayList);
+//      		}
+//      		if(theEntity.getCommentcontent()!=null){
+//      		     this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
+//                         , "", theEntity.getThemeid().toString(),sqlArrayList,objArrayList);
+//
+//      			//得到comment_content的更新语句
+//                 this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
+//                         , theEntity.getCommentcontent(), theEntity.getThemeid().toString(),sqlArrayList,objArrayList);
+//      		}
+
     	
     	TpOperateInfo opEntity=new TpOperateInfo();
     	opEntity.setCourseid(quoteCourseid);
@@ -687,8 +672,7 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
     	opEntity.setCuserid(this.logined(request).getUserid());
     	//查询是否存在
     	List<TpOperateInfo> tpOperateEntity=this.tpOperateManager.getList(opEntity, null);
-    	boolean ishasOperate=false;
-    	ishasOperate=(tpOperateEntity!=null&&tpOperateEntity.size()>0);
+    	boolean ishasOperate=(tpOperateEntity!=null&&tpOperateEntity.size()>0);
     	//添加操作记录
     	if(Integer.parseInt(type)==1){  //1:可见，则添加记录   2:不可见，则删除记录
     		//可见的情况下，不存在数据，则添加
@@ -701,7 +685,8 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
         			objArrayList.add(objList);
         		}
     		}
-    	}else if(Integer.parseInt(type)==2){ 
+    	}else
+        if(Integer.parseInt(type)==2){
     		//不可见的情况下，存在数据，则删除
     		if(ishasOperate){
     			sqlbuilder=new StringBuilder();

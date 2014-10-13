@@ -956,8 +956,9 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
 							valObj = UtilTool.DateConvertToString(rs
 									.getTimestamp(j + 1),
 									com.school.util.UtilTool.DateType.type1);
-						else
-							valObj = (Date) rs.getTimestamp(j + 1);
+						else{
+							    try{valObj = (Date) rs.getTimestamp(j + 1);}catch(Exception e){}
+                        }
 					else
 						valObj = rs.getObject(j + 1);
 					if (objList != null) {

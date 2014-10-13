@@ -13,8 +13,8 @@
             var ueditor;
             var newthemeid="${newthemeid}";
             var baseUrl="<%=basePath %>";
-            var quotecourseid="${coursequoteid}";
-            var quotetopicid="${topic.quoteid}";
+            var quotecourseid="${topic.courseid}";
+            var quotetopicid="${topic.topicid}";
 
             var pclsid="${param.clsid}";
             var pclstype="${param.type}";
@@ -56,7 +56,7 @@
 
                 //加载分页控件
 				p1=new PageControl({
-					post_url:'tptopictheme?m=themeListjson&cloudstatus=-3&&selectType=-3',
+					post_url:'tptopictheme?m=themeListjson&&selectType=-3&status=1',
 					page_id:'page1',
 					page_control_name:"p1",		//分页变量空间的对象名称
 					post_form:document.page1form,		//form
@@ -76,7 +76,7 @@
 				<c:if test="${!empty roleStr&&roleStr=='TEACHER'&&!empty topic.quoteid&&topic.quoteid!=0}">
 				  //加载分页控件  如果是老师，则显示所有的引用专题主题
 					p2=new PageControl({
-						post_url:'tptopictheme?m=themeListjson&cloudstatus=3&selectType=-4&status=1',
+						post_url:'tptopictheme?m=themeListjson&cloudstatus=3&selectType=-4',
 						page_id:'page2',
 						page_control_name:"p2",		//分页变量空间的对象名称
 						post_form:document.page2form,		//form

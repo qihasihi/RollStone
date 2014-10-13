@@ -235,9 +235,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
         request.setAttribute("resType", resourceTypeList);
         request.setAttribute("fileSystemIpPort", request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString());
         request.setAttribute("nextid", this.resourceManager.getNextId(true));
-
-
-
         if(type.equals("1")){
             //栏目
             IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
@@ -283,7 +280,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
          t.setSelecttype(1);
          t.setLoginuserid(this.logined(request).getUserid());
          t.setStatus(1);
-
         //已发布的任务
         List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t, p);
          if(taskList!=null&&taskList.size()>0){
@@ -683,15 +679,11 @@ public class TaskController extends BaseController<TpTaskInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
-
         //批量操作记录
         List<List<Object>> objListArray=new ArrayList<List<Object>>();
         List<String> sqlStrList=new ArrayList<String>();
         StringBuilder sql=null;
         List<Object>objList=null;
-
-
-
 
         TpTaskInfo tmpTask=taskList.get(0);
 
@@ -724,7 +716,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
         }
 
-
         TpTaskAllotInfo ta=new TpTaskAllotInfo();
         ta.setTaskid(tmpTask.getTaskid());
         ta.setCourseid(tmpTask.getCourseid());
@@ -751,7 +742,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
             sqlStrList.add(sql.toString());
             objListArray.add(objList);
         }
-
 
         if(tmpTask.getTaskid()>0){
             /*TpOperateInfo to=new TpOperateInfo();
@@ -796,11 +786,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
             objListArray.add(objList);
             sqlStrList.add(sql.toString());
         })*/
-
-        /*修改积分及相关信息*/
-
-
-
 
         if(sqlStrList.size()>0&&objListArray.size()>0){
             boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlStrList,objListArray);

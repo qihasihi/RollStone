@@ -393,10 +393,10 @@ function deleteTopic(id){
 						htm+='<td>'+itm.schoolname+'</td>';	
 						if(typeof(roleStr)!="undefined"&&roleStr=="TEACHER"){
 							if(itm.isquote<1){
-								htm+='<td id="td_quote_'+itm.topicid+'">';
-								htm+='<a href="javascript:;" onclick="addOrDelQuoteTheme('+topicid+','+itm.topicid+',\'td_quote_'+itm.topicid+'\',1)" title="可见" class="ico46"></a></td>';
+								htm+='<td id="td_quote_'+itm.themeid+'">';
+								htm+='<a href="javascript:;" onclick="addOrDelQuoteTheme('+itm.themeid+',\'td_quote_'+itm.themeid+'\',1)" title="可见" class="ico46"></a></td>';
 							}else
-								htm+='<td id="td_quote_'+itm.topicid+'"><a href="javascript:;" onclick="addOrDelQuoteTheme('+topicid+','+itm.topicid+',\'td_quote_'+itm.topicid+'\',2)" title="不可见"  class="ico47"></a></td>';
+								htm+='<td id="td_quote_'+itm.themeid+'"><a href="javascript:;" onclick="addOrDelQuoteTheme('+itm.themeid+',\'td_quote_'+itm.themeid+'\',2)" title="不可见"  class="ico47"></a></td>';
 						}					
 						htm+='</tr>';
 					})
@@ -1114,11 +1114,11 @@ function updateTopicStatus(id,val){
  * @param type 1:代表可见操作  2：不可见操作
  * @return
  */
-function addOrDelQuoteTheme(crtpcid,quoteid,tdid,type){
-	if(typeof(crtpcid)=="undefined"||typeof(quoteid)=="undefined"){
+function addOrDelQuoteTheme(theid,tdid,type){
+	if(typeof(theid)=="undefined"){
 		alert("异常错误，参数异常!");return;
 	}
-	var param={topicid:crtpcid,quoteid:quoteid,type:type};
+	var param={themeid:theid,type:type};
 	$.ajax({ 
 		url:'tptopictheme?m=addOrDelQuoteTheme',
 		dataType:'json',
@@ -1132,11 +1132,11 @@ function addOrDelQuoteTheme(crtpcid,quoteid,tdid,type){
 				alert(rps.msg);
 			}else {
 				//修改成功
-				var h='';
+				var htm='';
 				if(type==2){
-					htm+='<a href="javascript:;" onclick="addOrDelQuoteTheme('+topicid+','+itm.topicid+',\'td_quote_'+itm.topicid+'\',1)" title="可见" class="ico46"></a>';
+					htm+='<a href="javascript:;" onclick="addOrDelQuoteTheme('+theid+',\'td_quote_'+theid+'\',1)" title="可见" class="ico46"></a>';
 				}else
-					htm+='<a href="javascript:;" onclick="addOrDelQuoteTheme('+topicid+','+itm.topicid+',\'td_quote_'+itm.topicid+'\',2)" title="不可见"  class="ico47"></a>';
+					htm+='<a href="javascript:;" onclick="addOrDelQuoteTheme('+theid+',\'td_quote_'+theid+'\',2)" title="不可见"  class="ico47"></a>';
 				$("#"+tdid).html(htm);
 			}
 		}
