@@ -11,8 +11,7 @@
         if(rstmp.getResid()>0)
             direcparent="clouduploadfile";
     }
-
-// %>
+//%>
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="css/resComment_star.css"/>
