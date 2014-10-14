@@ -60,14 +60,14 @@ public class QuestionAnswer  implements java.io.Serializable{
                 for(String astr:annexArray){
                     if(astr!=null&&astr.trim().length()>0){
                         if(astr.indexOf("http:")==-1&&astr.indexOf("https:")==-1){
-                            astr=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+astr;
+                            astr="uploadfile/"+astr;
                         }
                         returnList.add(astr);
                     }
                 }
             }else{
                 if(getReplyattach().indexOf("http:")==-1&&getReplyattach().indexOf("https:")==-1){
-                    returnList.add(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getReplyattach());
+                    returnList.add("uploadfile/"+getReplyattach());
                 }else
                     returnList.add(getReplyattach());
             }
@@ -89,7 +89,7 @@ public class QuestionAnswer  implements java.io.Serializable{
                 for(String astr:annexArray){
                     if(astr!=null&&astr.trim().length()>0){
                         if(astr.indexOf("http:")==-1&&astr.indexOf("https:")==-1){
-                            astr=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+astr;
+                            astr="uploadfile/"+astr;
                         }else{
                             String suffix=astr.substring(astr.lastIndexOf("."));
                             if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR, suffix)){
@@ -102,13 +102,13 @@ public class QuestionAnswer  implements java.io.Serializable{
                 }
             }else{
                 if(getReplyattach().indexOf("http:")==-1&&getReplyattach().indexOf("https:")==-1){
-                    String attachUrl=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getReplyattach();
+                    String attachUrl="uploadfile/"+getReplyattach();
                     String suffix=getReplyattach().substring(getReplyattach().lastIndexOf("."));
                     //123.jpg
                     if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR, suffix)){
                         String[]fileNameArr=getReplyattach().split("\\.");
                         if(fileNameArr.length>0)
-                            attachUrl=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fileNameArr[0]+"_1"+suffix;
+                            attachUrl="uploadfile/"+fileNameArr[0]+"_1"+suffix;
                     }
                     returnList.add(attachUrl);
                 }else

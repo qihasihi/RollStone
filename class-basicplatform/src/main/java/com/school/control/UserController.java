@@ -5087,6 +5087,7 @@ public class UserController extends BaseController<UserInfo> {
                         "<script type='text/javascript'>alert('" + msg
                                 + "');this.close();</script>");
                 return;
+
             }
 
 
@@ -5099,7 +5100,8 @@ public class UserController extends BaseController<UserInfo> {
                 }else{
                     Object[] courseArray = teaList.get(0).getSubjects().split(
                             ",");
-                    if (courseArray != null && courseArray.length > 0 && !ishasflag) {
+                    if (courseArray != null && courseArray.length > 0) {
+                        if(!ishasflag){
                         // 存储学科临时参数
                         for (Object obj : courseArray) {
                             if (obj != null && obj.toString().trim().length() > 0) {
@@ -5164,6 +5166,7 @@ public class UserController extends BaseController<UserInfo> {
                         // 不显示学科信息
                         if (!ishasflag) {
                             subjectid.add(Long.valueOf(-1));
+                        }
                         }
                     }
                 }
@@ -5351,19 +5354,29 @@ public class UserController extends BaseController<UserInfo> {
                     return;
                 }
             } else {
+                if(isteacher){
+                    gradeidList.clear();
+                    gradeidList.add(0);
+                }else{
+                  String msg = "您当前学期中没有班级信息，请联系相关老师进行修改!";
+                  response.getWriter().print(
+                        "<script type='text/javascript'>alert('" + msg
+                                + "');this.close();</script>");
+                 return;
+                }
+            }
+        }
+        if(gradeidList == null ||gradeidList.size() <1){
+            if(isteacher){
+                gradeidList.clear();
+                gradeidList.add(0);
+            }else{
                 String msg = "您当前学期中没有班级信息，请联系相关老师进行修改!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
                                 + "');this.close();</script>");
                 return;
             }
-        }
-        if(gradeidList == null ||gradeidList.size() <1){
-            String msg = "您当前学期中没有班级信息，请联系相关老师进行修改!";
-            response.getWriter().print(
-                    "<script type='text/javascript'>alert('" + msg
-                            + "');this.close();</script>");
-            return;
         }
 
         String requestUrl=null;

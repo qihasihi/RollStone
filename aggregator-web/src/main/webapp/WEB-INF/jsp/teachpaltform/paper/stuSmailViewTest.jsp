@@ -135,9 +135,9 @@
                     $("#div_exam").load(url+" #dv_test",function(){
                         if(papertype!=3){
                             //分数
-                            for(i=0;i<quesSize;i++){
+                            for(i=0;i<quesSize;i++)
                                 scoreArray[scoreArray.length]=avgScore;
-                            }
+
                             //如果分数有余数。则从最后分数开始算
                             var yuScore=sumScore%quesSize;
                             if(yuScore>0){
@@ -158,8 +158,7 @@
             <c:if test="${empty param.flag||param.flag!=1}">
                 $("#li_exam").unbind("click");
                // $("#li_exam").bind("click",
-                        isViewVideo();
-
+                isViewVideo();
                 $("#li_view").html("<a><strong>微视频</strong></a>");
                 $("#li_exam").html("<a><strong>试卷</strong></a>");
                 $("#li_exam").attr("class","crumb");
@@ -219,7 +218,6 @@
 <%--如果是教师查看，则不显示视频，--%>
 <c:if test="${empty param.flag||param.flag!=1}">
 <script type="text/javascript">
-    $(function(){
         //是否显示进度条的判断
         var isShowBar=false;
         <c:if test="${!empty isViewVideo&&isViewVideo!=0||taskstatus=='3'}">
@@ -228,8 +226,6 @@
         loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
                 ,resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
                 ,${resObj.resid},769,432,isShowBar,jwplayEnd);
-    })
-
 </script>
 </c:if>
 </body>

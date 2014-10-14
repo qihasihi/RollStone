@@ -27,6 +27,12 @@ public class StudentInfo implements java.io.Serializable {
 	public String getUserref() {
 		return this.getUserinfo().getRef(); 
 	}
+    public void setDcSchoolId(Integer dcSchoolId){
+        this.getUserinfo().setDcschoolid(dcSchoolId);
+    }
+    public Integer getDcSchoolId(){
+        return this.getUserinfo().getDcschoolid();
+    }
 	public void setUserref(String userref) {
 		this.getUserinfo().setRef(userref);
 	}

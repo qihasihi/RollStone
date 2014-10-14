@@ -159,7 +159,7 @@ public class StudentController extends BaseController<StudentInfo> {
 					}
                     StudentInfo selstu=new StudentInfo();
                     selstu.setStuno(stu.getStuno());
-                    //selstu.setDcschoolid(this.logined(request).getDcschoolid());
+                    selstu.setDcSchoolId(this.logined(request).getDcschoolid());
                     //验证学生存在
                     List<StudentInfo> selstuList=this.studentManager.getList(selstu, null);
                     //如果学生存在，并具导入的班级是行政班，则判断该学生是否在当前班级学年中有多个行政班级，如果有多个，不导入相关数据
