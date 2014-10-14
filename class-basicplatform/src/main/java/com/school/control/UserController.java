@@ -7298,7 +7298,7 @@ public class UserController extends BaseController<UserInfo> {
         }
         request.getSession().setAttribute("fromType","lzx");
         String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
-        response.sendRedirect(baseUrl+targetUrl);
+        response.sendRedirect(baseUrl+"/"+targetUrl);
     }
 
     /**
@@ -7401,7 +7401,7 @@ public class UserController extends BaseController<UserInfo> {
         }
         request.getSession().setAttribute("fromType","lzx");
         String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
-        response.sendRedirect(baseUrl+targetUrl);
+        response.sendRedirect(baseUrl+"/"+targetUrl);
     }
 
 
