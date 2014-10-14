@@ -43,8 +43,7 @@
                     <td><p>${l.answer}</p></td>
                     <td><p>
                         <c:if test="${!empty l.annexName}">
-                            <%String uploadfile=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE");%>
-                            <a target="_blank" href="<%=uploadfile%>/${l.annexName}" class="font-blue">${l.annexName}</a>
+                            <a target="_blank" href="uploadfile/${l.annexName}" class="font-blue">${l.annexName}</a>
                         </c:if>
                     </p></td>
                 </tr>

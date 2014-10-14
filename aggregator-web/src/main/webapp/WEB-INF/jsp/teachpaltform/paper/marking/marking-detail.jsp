@@ -461,7 +461,7 @@ Created by IntelliJ IDEA.
                                         var annex='';
                                        var tanname=im.substring(im.lastIndexOf("/")+1);
                                         if(im.indexOf("http:")==-1&&im.indexOf("https:")==-1){
-                                            h+='<a href="<%=basePath%>/<%=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")%>/'+im+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
+                                            h+='<a href="<%=basePath%>/uploadfile/'+im+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
                                         }else
                                             h+='<a href="'+im+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
                                     })
@@ -469,7 +469,7 @@ Created by IntelliJ IDEA.
                             }else{
                                 var tanname=annextName.substring(annextName.lastIndexOf("/")+1);
                                 if(annextName.indexOf("http:")==-1&&annextName.indexOf("https:")==-1){
-                                    h+='<a href="<%=basePath%>/<%=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")%>/'+annextName+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
+                                    h+='<a href="<%=basePath%>/uploadfile/'+annextName+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
                                 }else
                                     h+='<a href="'+annextName+'" target="_blank" class="font-blue">'+tanname+'</a>&nbsp;';
                             }

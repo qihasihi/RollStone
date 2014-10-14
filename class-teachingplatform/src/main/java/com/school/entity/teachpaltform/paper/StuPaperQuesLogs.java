@@ -124,14 +124,14 @@ public class StuPaperQuesLogs implements  Serializable {
                 for(String astr:annexArray){
                     if(astr!=null&&astr.trim().length()>0){
                         if(astr.indexOf("http:")==-1&&astr.indexOf("https:")==-1){
-                            astr=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+astr;
+                            astr="uploadfile/"+astr;
                         }
                         returnArr.add(astr);
                     }
                 }
             }else{
                 if(getAnnexName().indexOf("http:")==-1&&getAnnexName().indexOf("https:")==-1){
-                    returnArr.add(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getAnnexName());
+                    returnArr.add("uploadfile/"+getAnnexName());
                 }else
                     returnArr.add(getAnnexName());
             }

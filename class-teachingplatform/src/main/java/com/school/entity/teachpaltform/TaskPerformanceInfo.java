@@ -54,7 +54,7 @@ public class TaskPerformanceInfo  implements java.io.Serializable{
                 for(String astr:annexArray){
                     if(astr!=null&&astr.trim().length()>0){
                         if(astr.indexOf("http:")==-1&&astr.indexOf("https:")==-1){
-                            astr=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+astr;
+                            astr="uploadfile/"+astr;
                         }
                         String firstname = astr.substring(0,astr.lastIndexOf("."));
                         String lastname = astr.substring(astr.lastIndexOf("."));
@@ -72,7 +72,7 @@ public class TaskPerformanceInfo  implements java.io.Serializable{
                     if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR, suffix)){
                         String[]fileNameArr=getReplyattach().split("\\.");
                         if(fileNameArr.length>0)
-                            attachUrl=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fileNameArr[0]+"_1"+suffix;
+                            attachUrl="uploadfile/"+fileNameArr[0]+"_1"+suffix;
                     }
                     returnList.add(attachUrl);
                 }else
