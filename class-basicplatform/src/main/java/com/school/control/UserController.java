@@ -471,6 +471,7 @@ public class UserController extends BaseController<UserInfo> {
         JsonEntity je = new JsonEntity();
         PageResult presult = this.getPageResultParameter(request);
         UserInfo userinfo = this.getParameter(request, UserInfo.class);
+        userinfo.setDcschoolid(this.logined(request).getDcschoolid());
         List<UserInfo> userList = userManager.getList(userinfo, presult);
         je.setObjList(userList);
         je.setType("success");
@@ -3048,6 +3049,16 @@ public class UserController extends BaseController<UserInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
+        UserInfo sel=new UserInfo();
+        sel.setUsername(user.getUsername());
+        sel.setDcschoolid(this.logined(request).getDcschoolid());
+        List<UserInfo>selList=this.userManager.getList(sel,null);
+        if(selList!=null&&selList.size()>0){
+            je.setMsg(UtilTool.msgproperty.getProperty("当前用户名已存在!"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
         List<String> sqlListArray = new ArrayList<String>();
         List<List<Object>> objListArray = new ArrayList<List<Object>>();
         List<Object> objList = null;

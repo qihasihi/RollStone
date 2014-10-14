@@ -2079,14 +2079,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     quesanswer=new String(quesanswer.getBytes("iso-8859-1"),"UTF-8");
                     String suffix=annexName.substring(annexName.lastIndexOf("."));
                     if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
-                        String filename=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
+                        String filename=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
                         File file=new File(filename);
                         if(!file.exists()){
                             je.setMsg("未发现文件!");
                             response.getWriter().println(je.toJSON());return ;
                         }
                         //新图
-                        String descFile=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
+                        String descFile=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
                         UtilTool.copyFile(file,new File(descFile));
                         //缩略图
                         UtilTool.ReduceImg(file, filename, 160, 90);
@@ -2378,14 +2378,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 quesanswer=new String(quesanswer.getBytes("iso-8859-1"),"UTF-8");
                 String suffix=annexName.substring(annexName.lastIndexOf("."));
                 if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
-                    String filename=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
+                    String filename=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
                     File file=new File(filename);
                     if(!file.exists()){
                         je.setMsg("未发现文件!");
                         response.getWriter().println(je.toJSON());return ;
                     }
                     //新图
-                    String descFile=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
+                    String descFile=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
                     UtilTool.copyFile(file,new File(descFile));
                     //缩略图
                     UtilTool.ReduceImg(file, filename, 160, 90);
@@ -2609,14 +2609,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
         if(annexName!=null&&annexName.length()>0){
             String suffix=annexName.substring(annexName.lastIndexOf("."));
             if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
-                String filename=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
+                String filename=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
                 File file=new File(filename);
                 if(!file.exists()){
                     je.setMsg("未发现文件!");
                     response.getWriter().println(je.toJSON());return ;
                 }
                 //新图
-                String descFile=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
+                String descFile=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
                 UtilTool.copyFile(file,new File(descFile));
                 //缩略图
                 UtilTool.ReduceImg(file,filename,160,90);
@@ -2863,14 +2863,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
         if(annexName!=null&&annexName.length()>0){
             String suffix=annexName.substring(annexName.lastIndexOf("."));
             if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
-                String filename=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
+                String filename=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName;
                 File file=new File(filename);
                 if(!file.exists()){
                     je.setMsg("未发现文件!");
                     response.getWriter().println(je.toJSON());return ;
                 }
                 //新图
-                String descFile=request.getRealPath("/")+ UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
+                String descFile=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ annexName.substring(0,annexName.lastIndexOf("."))+"_1"+suffix;
                 UtilTool.copyFile(file,new File(descFile));
                 //缩略图
                 UtilTool.ReduceImg(file,filename,160,90);

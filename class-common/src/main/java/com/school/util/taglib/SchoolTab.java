@@ -12,7 +12,6 @@ public class SchoolTab{
      */
     public static int lastIndexOf(String text, String searchString) {
         return text.lastIndexOf(searchString);
-
     }
 
 }

@@ -164,6 +164,7 @@
             if (window.opener != undefined) {
                 //for chrome
                 window.opener.returnValue =dataObj.val();
+                //window.opener.test(tasktype);
             }
             else {
                 window.returnValue =dataObj.val();

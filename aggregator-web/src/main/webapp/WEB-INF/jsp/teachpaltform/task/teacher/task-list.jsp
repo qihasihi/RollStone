@@ -205,7 +205,7 @@ function getInvestReturnMethod(rps){
                 if(itm.taskstatus=="3")
                     html+='<a class="ico84" title="批阅" target="_blank" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
                 else
-                    html+='';//<a class="ico84" title="批阅" href="javascript:;"></a>';
+                    html+='<a class="ico84b" title="任务尚未结束"  href="javascript:;"></a>';
             }
             html+='</p>';
             html+='</div>';

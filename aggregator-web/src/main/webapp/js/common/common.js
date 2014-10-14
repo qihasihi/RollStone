@@ -10,6 +10,11 @@ function loginDestory(baseIp){
 }
 $(function(){
     document.onmousemove = mouseMove;
+    /*if(typeof window.showModalDialog=='undefined'){
+        window.showModalDialog= function(sUrl,vArguments,sFeatures) {
+            window.open(sUrl,"newwindow",vArguments);
+        };
+    }*/
 });
 
 

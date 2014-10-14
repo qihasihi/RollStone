@@ -155,8 +155,8 @@
                     <c:if test="${!empty theme.headimage}"><img  onerror="headError(this);"  src="${theme.cheadimage}" width="125" height="125" /></c:if></p>
       <div class="name">
       <p>姓&nbsp;名：<span id="realname_theme">${theme.crealname }</span></p>
-      <p>用户名：<b>${theme.cusername }</b></p>
-      <p>身&nbsp;&nbsp;份：${theme.croleType }</p>
+      <%--<p>用户名：<b>${theme.cusername }</b></p>--%>
+      <p>身&nbsp;&nbsp;份：${theme.croleType }</p
       <p>主帖数：${theme.cfatieshu }</p>
       <p>评论数：${theme.cpinglunshu }</p>
       </div>
