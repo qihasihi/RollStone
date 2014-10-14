@@ -74,6 +74,8 @@ public class TpTopicThemeInfo  implements Serializable {
         if(this.getImattach()!=null){
             if(this.getImattach().indexOf(",")!=-1){
                return this.getImattach().split(",");
+            }else{
+                return new String[]{this.getImattach()};
             }
         }
         return null;
