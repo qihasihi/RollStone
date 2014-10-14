@@ -2,7 +2,6 @@
 <%@ page import="com.school.entity.resource.ResourceInfo" %>
 <%@page import="com.school.util.UtilTool"%>
 <%@ include file="/util/common-jsp/common-zrxt.jsp" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%String fname=null;//文件名称
     String direcparent="uploadfile/";
     Object resObj=request.getAttribute("resObj");
