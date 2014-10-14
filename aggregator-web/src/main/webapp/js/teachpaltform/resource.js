@@ -1690,7 +1690,7 @@ function convertDocResource(resid) {
         dataType: 'json',
         cache: false,
         error: function () {
-            alert('网络异常!')
+            //alert('网络异常!')
         },
         success: function (rps) {
             if (rps.type == "error") {
