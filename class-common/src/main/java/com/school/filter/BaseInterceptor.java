@@ -206,7 +206,8 @@ public class BaseInterceptor implements HandlerInterceptor {
                                         }
                                     }
                                 }
-                                logger.error("----------------\n----No Login active:     "+request.getRequestURL().toString()+"?"+paramStr.toString());
+                                logger.error("----------------\n----No Login active:  realpth:"+request.getRequestURL().toString()+"?"+paramStr.toString()+"");
+                                logger.error("----------------\n----No Login active:  procpath:"+request.getSession().getAttribute("FILE_SYSTEM_IP_PORT")+"?"+paramStr.toString()+"");
                             }
                             break;
                         }
