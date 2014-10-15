@@ -107,8 +107,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         request.getSession().setAttribute("IP_PROC_NAME", basePath);
 
         //公用的文件服务器项目链接
-        String publicFileSystemIpPort=new StringBuilder(basePath)
-                .append(proc_name).append("/").toString();
+        String publicFileSystemIpPort=new StringBuilder(basePath).append("/").toString();
         //项目
         String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
         if(request.getSession().getAttribute("FILE_SYSTEM_IP_PORT")==null||!request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
