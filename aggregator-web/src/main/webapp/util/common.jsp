@@ -103,9 +103,9 @@ Integer modelType=0;
     if(session.getAttribute("IP_PROC_NAME")==null||!session.getAttribute("IP_PROC_NAME").toString().equals(basePath))
         session.setAttribute("IP_PROC_NAME",basePath);
     //公用的文件服务器项目链接
-//    String publicFileSystemIpPort=new StringBuilder(basePath).toString();
+    String publicFileSystemIpPort=new StringBuilder(basePath).toString();
 //    //项目
-//    String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
+    String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
 //    if(session.getAttribute("FILE_SYSTEM_IP_PORT")==null||!session.getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
 //     request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
 
