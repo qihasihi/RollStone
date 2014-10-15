@@ -3280,10 +3280,10 @@ public class PaperController extends BaseController<PaperInfo>{
             }
         }
         //验证是否已经结速
-        if(isValidate){
-            je.setMsg("该班级任务尚未结束，无法进行批阅");
-            response.getWriter().println(je.getAlertMsgAndBack());return null;
-        }
+//        if(isValidate){
+//            je.setMsg("该班级任务尚未结束，无法进行批阅");
+//            response.getWriter().println(je.getAlertMsgAndBack());return null;
+//        }
 
 
 
@@ -3388,7 +3388,7 @@ public class PaperController extends BaseController<PaperInfo>{
                    }finally{
                        fos.close();
                    }
-                   je.getObjList().add(fname);
+                   je.getObjList().add(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fname);
                }else{
                    int totalScore = 100;
                    int percentNum = 10;
@@ -3435,7 +3435,7 @@ public class PaperController extends BaseController<PaperInfo>{
                          fos.close();
                    }
 
-                   je.getObjList().add(fname);
+                   je.getObjList().add(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fname);
                }
             }else{
                 je.setType("error");

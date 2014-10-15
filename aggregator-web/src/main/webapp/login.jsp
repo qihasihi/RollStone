@@ -20,9 +20,11 @@
 <head>
     <script type="text/javascript">
 
+
+
     var state = "${state}";
     var sign = "login${login_hour}"; 
-     
+     var winAlert=window.alert;
     function dosub(){
     	$("#lg").hide();
    		$("#lging").show();
