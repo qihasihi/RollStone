@@ -14,7 +14,10 @@
         ///group1/1.jsp
         proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1).replaceAll("/","");
     }
-    String ipStr=request.getServerName()+":"+request.getServerPort();
+    String ipStr=request.getServerName();
+    if(request.getServerPort()!=80){
+        ipStr+=":"+request.getServerPort();
+    }
     //UtilTool.utilproperty.getProperty("PROC_NAME");
     String basePath = request.getScheme() + "://"
             + ipStr

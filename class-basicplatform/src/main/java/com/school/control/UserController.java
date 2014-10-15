@@ -1130,7 +1130,7 @@ public class UserController extends BaseController<UserInfo> {
             schoolInfo.setIp(procBasePath);
             List<SchoolInfo> schoolList=schoolManager.getList(schoolInfo,null);
             if(schoolList==null||schoolList.size()<1){
-                je.setMsg("异常错误，该域名不存在!请联系相关人员进行更新!");
+                je.setMsg("该域名不存在!请联系相关人员进行更新!");
                 if(isajax==null||isajax.toString().trim().length()<1||!UtilTool.isNumber(isajax.toString().trim())||Integer.parseInt(isajax.toString().trim())!=1)
                     response.getWriter().println(je.toJSON());
                 else

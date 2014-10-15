@@ -92,7 +92,10 @@ Integer modelType=0;
         proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1).replaceAll("/","");
     }
 
-    String ipStr=request.getServerName()+":"+request.getServerPort();
+    String ipStr=request.getServerName();
+    if(request.getServerPort()!=80){
+        ipStr+=":"+request.getServerPort();
+    }
     //UtilTool.utilproperty.getProperty("PROC_NAME");
 	String basePath = (request.getScheme() + "://"
 			+ ipStr
@@ -100,14 +103,11 @@ Integer modelType=0;
     if(session.getAttribute("IP_PROC_NAME")==null||!session.getAttribute("IP_PROC_NAME").toString().equals(basePath))
         session.setAttribute("IP_PROC_NAME",basePath);
     //公用的文件服务器项目链接
-    String publicFileSystemIpPort=new StringBuilder(request.getScheme()).append("://")
-            .append(request.getServerName()).append(":").append(request.getServerPort())
-            .append("/")
-            .append(proc_name).append("/").toString();
-    //项目
-    String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
-    if(session.getAttribute("FILE_SYSTEM_IP_PORT")==null||!session.getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
-     request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
+//    String publicFileSystemIpPort=new StringBuilder(basePath).toString();
+//    //项目
+//    String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
+//    if(session.getAttribute("FILE_SYSTEM_IP_PORT")==null||!session.getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
+//     request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
 
 //out.println(basePath);
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
