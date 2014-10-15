@@ -269,7 +269,7 @@
         <tr>
             <th></th>
             <td>
-                <a href="javascript:void(0);" onclick="doSubManageTask(undefined);" class="an_small">提&nbsp;交</a>
+                <a href="javascript:doSubManageTask(undefined);" id="submit_btn"  class="an_small">提&nbsp;交</a>
                 <a href="javascript:history.go(-1);"  class="an_small">取&nbsp;消</a>
             </td>
         </tr>

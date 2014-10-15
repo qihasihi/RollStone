@@ -51,6 +51,7 @@ function addStudentsToGroup(){
         alert("请选择学生！");
         return;
     }
+    $("#btn_addStu").attr("href","javascript:;");
     var dat={groupid:groupId,stusId:stusId.join(",")};
     $.ajax({
         url:'group?m=addStudentsToGroup',
@@ -60,6 +61,7 @@ function addStudentsToGroup(){
         error:function(){
             alert('异常错误,系统未响应！');
         },success:function(rps){
+            $("#btn_addStu").attr("href","javascript:addStudentsToGroup();");
             if(rps.type=="success"){
                 alert(rps.msg);
                 closeModel("selectStudent_Div");

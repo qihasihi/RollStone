@@ -1043,6 +1043,7 @@ function doSubManageTask(taskid) {
 
     if (!confirm('数据验证完毕!确认提交?'))
         return;
+    $("#submint_btn").attr("href","javascript:;");
 
     if (typeof(taskid) != 'undefined') {
         url = 'task?doSubUpdTask';
@@ -1062,6 +1063,7 @@ function doSubManageTask(taskid) {
         }, success: function (rmsg) {
             if (rmsg.type == "error") {
                 alert(rmsg.msg);
+                $("#submint_btn").attr("href","javascript:doSubManageTask(undefined);");
             } else {
                 alert(rmsg.msg);
                 location.href = 'task?toTaskList&courseid=' + courseid;

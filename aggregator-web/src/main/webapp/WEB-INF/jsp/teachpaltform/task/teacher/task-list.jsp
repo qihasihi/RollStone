@@ -202,10 +202,10 @@ function getInvestReturnMethod(rps){
                 html+='&nbsp;&nbsp;&nbsp;&nbsp<span style="color:gray;">'+itm.btimeSimpleString+'</span>';
             }
             if(itm.tasktype==4){
-                if(itm.taskstatus=="3")
+                if(itm.taskstatus!="1")
                     html+='<a class="ico84" title="批阅" target="_blank" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
                 else
-                    html+='<a class="ico84b" title="任务尚未结束"  href="javascript:;"></a>';
+                    html+='<a class="ico84b" title="任务未开始"  href="javascript:;"></a>';
             }
             html+='</p>';
             html+='</div>';

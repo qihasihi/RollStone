@@ -156,6 +156,7 @@ function questionSubmit(){
         param.questionids=ids;
         if(addCourseId.length>0){
             param.addCourseId = addCourseId;
+            $("#btn_addQues").attr("href","javascript:;");
             $.ajax({
                 url:'question?m=addQuestionByCourse',
                 dataType:'json',
@@ -164,7 +165,9 @@ function questionSubmit(){
                 data:param,
                 error:function(){
                     alert('异常错误!系统未响应!');
+                    $("#btn_addQues").attr("href","javascript:questionSubmit();");
                 },success:function(rps){
+                    $("#btn_addQues").attr("href","javascript:questionSubmit();");
                     if(rps.type="success"){
                         alert(rps.msg);
                         if(operate_type.length>0){

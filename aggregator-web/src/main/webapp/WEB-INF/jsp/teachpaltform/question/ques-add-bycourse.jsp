@@ -99,7 +99,7 @@
             <%--</c:forEach>--%>
         <%--</c:if>--%>
     <%--</div>--%>
-    <p class="t_c p_tb_10"><a href="javascript:questionSubmit();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:history.go(-1)" class="an_small">取&nbsp;消</a></p>
+    <p class="t_c p_tb_10"><a href="javascript:questionSubmit();" id="btn_addQues" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:history.go(-1)" class="an_small">取&nbsp;消</a></p>
 </div>
 <%@include file="/util/foot.jsp" %>
 </body>

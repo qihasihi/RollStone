@@ -164,7 +164,7 @@ function preeDoPageSub(pObj){
     $.each(objArray,function(idx,itm){
        quesArray.push($(itm).val());
     });
-
+    $("#btn_addQues").attr("href","javascript:;");
     $.ajax({
         url:"paperques?m=doAddImportQues",
         type:"post",
@@ -177,7 +177,9 @@ function preeDoPageSub(pObj){
         cache: false,
         error:function(){
             alert('系统未响应，请稍候重试!');
+            $("#btn_addQues").attr("href","javascript:addImportQues();");
         },success:function(rmsg){
+            $("#btn_addQues").attr("href","javascript:addImportQues();");
             if(rmsg.type=="error"){
                 alert(rmsg.msg);
             }else{
@@ -239,7 +241,7 @@ function preeDoPageSub(pObj){
         <p class="Mt20" id="pListaddress" align="center"></p>
     </form>
 
-    <p class="t_c p_tb_10"><a href="javascript:addImportQues()"  class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:window.close();"  class="an_small">取&nbsp;消</a></p>
+    <p class="t_c p_tb_10"><a href="javascript:addImportQues()" id="btn_addQues" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:window.close();"  class="an_small">取&nbsp;消</a></p>
 </div>
 
 <%@include file="/util/foot.jsp" %>

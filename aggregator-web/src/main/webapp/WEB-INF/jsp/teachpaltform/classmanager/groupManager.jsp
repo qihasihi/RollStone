@@ -440,7 +440,7 @@
     <div class="jxxt_float_fpdzR">
         <p class="font-black">分配到</p>
         <ul id="forGroupList"></ul>
-        <p><a href="javascript:void(0);" onclick="addStudentsToGroup();" class="an_public1">确&nbsp;定</a>&nbsp;&nbsp;<a href="javascript:closeModel('selectStudent_Div');" class="an_public1">取&nbsp;消</a></p>
+        <p><a href="javascript:addStudentsToGroup();" id="btn_addStu" class="an_public1">确&nbsp;定</a>&nbsp;&nbsp;<a href="javascript:closeModel('selectStudent_Div');" class="an_public1">取&nbsp;消</a></p>
     </div>
     <div class="jxxt_float_fpdzL">
         <p class="font-black">未分配人员</p>
