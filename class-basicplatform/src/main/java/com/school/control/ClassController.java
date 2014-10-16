@@ -12,6 +12,7 @@ import com.school.utils.*;
 import jcore.jsonrpc.common.JSONArray;
 import jcore.jsonrpc.common.JSONObject;
 import net.sf.json.JSON;
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,6 +32,8 @@ import com.school.entity.UserInfo;
 @Controller
 @RequestMapping(value="/cls")
 public class ClassController extends BaseController<ClassInfo>{
+    //记录Log4J
+    private Logger logger = Logger.getLogger(this.getClass());
     private IClassManager classManager;
     private IClassYearManager classYearManager;
     private IGradeManager gradeManager;
@@ -880,7 +883,8 @@ public class ClassController extends BaseController<ClassInfo>{
         if(!md5key.trim().equals(key.toString().trim())){//如果不一致，则说明非法登陆
             response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，非法登陆!!\"}");return;
         }
-
+        //添加到相应集合中，用于传入ett中    规则是 lzx_class_id+","+dc_school_id
+        List<String> lzxClsList=new ArrayList<String>();
 
         String hasClsid=null;
         List<String> sqlArrayList=new ArrayList<String>();
@@ -960,6 +964,19 @@ public class ClassController extends BaseController<ClassInfo>{
                 sqlArrayList.add(sqlbuilder.toString());
                 objArrayList.add(objList);
             }
+            //查询该用户是否存在，存在则是修改不存在则是添加
+            ClassInfo searchCls=new ClassInfo();
+            searchCls.setDcschoolid(Integer.parseInt(dcschoolid.toString()));
+            searchCls.setLzxclassid(Integer.parseInt(classid.toString()));
+            List<ClassInfo> tmpClsList=this.classManager.getList(searchCls,null);
+            int opType=1;  //添加
+            if(tmpClsList!=null&&tmpClsList.size()>0)
+               opType=2;            //修改
+
+            //添加到相应集合中，用于传入ett中
+            if(cls.getLzxclassid()!=null&&cls.getDcschoolid()!=null){
+                lzxClsList.add(cls.getLzxclassid()+","+cls.getDcschoolid()+","+opType);
+            }
         }
 
         if(sqlArrayList!=null&&sqlArrayList.size()>0&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
@@ -968,6 +985,41 @@ public class ClassController extends BaseController<ClassInfo>{
                     response.getWriter().println("{\"type\":\"error\",\"msg\":\""+hasClsid+"\"}");
                 }else
                     response.getWriter().println("{\"type\":\"success\"}");
+
+               //////////////////////////同步班级至ETTfd
+
+                //开始同步ETT
+                if(lzxClsList!=null&&lzxClsList.size()>0){
+                    for(String tmpstr:lzxClsList){
+                        String[] itemArray=tmpstr.split(",");
+                        Integer lzxclassid=Integer.parseInt(itemArray[0].trim());
+                        Integer scl=Integer.parseInt(itemArray[1].trim());
+                        Integer optype=Integer.parseInt(itemArray[2].trim());
+
+                            //查询
+                            ClassInfo tmpCls=new ClassInfo();
+                            tmpCls.setLzxclassid(lzxclassid);
+                            tmpCls.setDcschoolid(scl);
+                            List<ClassInfo> cList=this.classManager.getList(tmpCls,null);
+                            if(cList!=null&&cList.size()>0){
+                                if(optype==1){
+                                   if(EttInterfaceUserUtil.addClassBase(cList.get(0))){
+                                       logger.error(cList.get(0).getClassid()+"更新班级成功!");
+                                   }else
+                                       logger.error(cList.get(0).getClassid()+"更新班级失败!");
+                                }else{
+                                    if(EttInterfaceUserUtil.updateClassBase(cList.get(0))){
+                                        logger.error(cList.get(0).getClassid()+"更新班级成功!");
+                                    }else
+                                        logger.error(cList.get(0).getClassid()+"更新班级失败!");
+                                }
+                            }
+                    }
+                }
+
+
+
+
             }else{
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，原因：未知!\"}");return;
             }
@@ -1167,7 +1219,7 @@ public class ClassController extends BaseController<ClassInfo>{
             response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，非法登陆!!\"}");
             return;
         }
-
+        List<String> lzxClsList=new ArrayList<String>();
         String noDelClsId=null;
         List<String> sqlArrayList=new ArrayList<String>();
         List<List<Object>> objArrayList=new ArrayList<List<Object>>();
@@ -1201,6 +1253,11 @@ public class ClassController extends BaseController<ClassInfo>{
                 sqlArrayList.add(sqlbuilder.toString());
                 objArrayList.add(objList);
             }
+
+            //添加到相应集合中，用于传入ett中
+            if(cls.getLzxclassid()!=null&&cls.getDcschoolid()!=null){
+                lzxClsList.add(cls.getLzxclassid()+","+cls.getDcschoolid());
+            }
         }
 
         if(sqlArrayList!=null&&sqlArrayList.size()>0&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
@@ -1209,6 +1266,29 @@ public class ClassController extends BaseController<ClassInfo>{
                     response.getWriter().println("{\"type\":\"success\",\"msg\":\""+noDelClsId+"\"}");
                 }else
                     response.getWriter().println("{\"type\":\"success\"}");
+
+                //////////////////////////同步班级至ETTfd
+
+                //开始同步ETT
+                if(lzxClsList!=null&&lzxClsList.size()>0){
+                    for(String tmpstr:lzxClsList){
+                        String[] itemArray=tmpstr.split(",");
+                        Integer lzxclassid=Integer.parseInt(itemArray[0].trim());
+                        Integer scl=Integer.parseInt(itemArray[1].trim());
+                        //查询
+                        ClassInfo tmpCls=new ClassInfo();
+                        tmpCls.setLzxclassid(lzxclassid);
+                        tmpCls.setDcschoolid(scl);
+                        List<ClassInfo> cList=this.classManager.getList(tmpCls,null);
+                        if(cList!=null&&cList.size()>0){
+                                if(EttInterfaceUserUtil.delClassBase(cList.get(0))){
+                                    logger.error(cList.get(0).getClassid()+"删除Ett班级成功!");
+                                }else
+                                    logger.error(cList.get(0).getClassid()+"删除Ett班级失败!");
+                        }
+                    }
+                }
+
             }else{
                 response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，原因：未知!\"}");
             }
