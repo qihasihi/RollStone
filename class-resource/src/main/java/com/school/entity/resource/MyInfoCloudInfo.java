@@ -116,7 +116,7 @@ public class MyInfoCloudInfo implements  Serializable{
 //            if(this.type==1)
 //                typeStr="资源";
 //            returnVal=realName+" 分享了"+typeStr+" "+returnVal;
-            if(returnVal.trim().indexOf("分享了")==0)
+            if(returnVal.trim().indexOf("分享了")!=0)
                 returnVal=realName+" 分享了 "+returnVal;
         }
         return returnVal;

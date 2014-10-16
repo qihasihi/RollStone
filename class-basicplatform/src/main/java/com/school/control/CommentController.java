@@ -132,9 +132,9 @@ public class CommentController extends BaseController<CommentInfo> {
                 mc.setTargetid(Long.parseLong(commentinfo.getCommentobjectid().toString()));
                 mc.setUserid(Long.parseLong(rsList.get(0).getUserid().toString()));
                 if(commentinfo.getAnonymous()==null&&commentinfo.getAnonymous()!=1)
-                    mc.setData("\"" + this.logined(request).getRealname() + "\"评论了你的资源\"<a href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a>\"");
+                    mc.setData(this.logined(request).getRealname() + " 评论了你的资源 <a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a>");
                 else
-                    mc.setData("您的资源\"<a href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a>\" 被匿名评论了!");
+                    mc.setData("我的资源 <a href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a> 被匿名评论了!");
                 mc.setType(1);
                 objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
                 if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){

@@ -2080,10 +2080,27 @@ public class ResourceController extends BaseController<ResourceInfo> {
             objArrayList.add(objList);
         }
 
+        //添加资源系统通知记录
+        MyInfoCloudInfo mc=new MyInfoCloudInfo();
+        mc.setTargetid(res.getResid());
+        mc.setUserid(Long.parseLong(res.getUserid().toString()));
+//                if(commentinfo.getAnonymous()==null&&commentinfo.getAnonymous()!=1)
+//                    mc.setData(this.logined(request).getRealname() + " 评论了你的资源 <a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a>");
+//                else
+        mc.setData("我的资源 <a href=\"resource?m=todetail&resid="+res.getResid()+"\">#ETIANTIAN_SPLIT#</a> 被管理员删除!");
+        mc.setType(1);
+        objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+
         if(sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
             if(this.resourceManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
                 jsonEntity.setType("success");
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+
+
             }else
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
         }else{
