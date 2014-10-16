@@ -241,6 +241,9 @@
                     alert('请选择专题!');
                     return;
                 }
+//                $("#addButton").attr("href","");
+//                $("#addButton").removeClass("an_small");
+//                $("#addButton").addClass("an_gray_small");
                 $.ajax({
                     url:'teachercourse?m=doAddQuoteCourse',
                     data:{
@@ -447,7 +450,7 @@
             </table>
             <form id="pListForm" name="pListForm"><p class="nextpage" id="pListaddress" align="center"></p></form>
         </div>
-        <p class="p_tb_10 t_c" id="addP"><a href="javascript:checkCourse();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <p class="p_tb_10 t_c" id="addP"><a id="addButton" href="javascript:checkCourse();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="javascript:closeAddorUpdateWindow();" class="an_small">取&nbsp;消</a></div>
     <%@include file="/util/foot.jsp" %>
     </body>

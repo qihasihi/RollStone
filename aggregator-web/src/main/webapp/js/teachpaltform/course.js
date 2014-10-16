@@ -217,6 +217,9 @@ function addTeacherCourse(){
     $("#selectedCourse li").each(function(ix,im){
         selectedcourseids+=$(this).attr("id")+"|";
     });
+//    $("#addButton").attr("href","");
+//    $("#addButton").removeClass("an_small");
+//    $("#addButton").addClass("an_gray_small");
     $.ajax({
         url:'teachercourse?m=addCourse',
         data:{
@@ -415,6 +418,9 @@ function updateTeacherCourse(){
     $("#selectedCourse li").each(function(ix,im){
         selectedcourseids+=$(this).attr("id")+"|";
     });
+//    $("#updateButton").attr("href","");
+//    $("#updateButton").removeClass("an_small");
+//    $("#updateButton").addClass("an_gray_small");
     $.ajax({
         url:'teachercourse?m=updateCourse',
         data:{
