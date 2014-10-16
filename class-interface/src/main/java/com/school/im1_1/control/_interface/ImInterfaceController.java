@@ -1948,7 +1948,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         //用得到的参数组织数据并生成存储过程执行
         if(questype.equals("2")){//填空
             if(fbanswerArray==null||fbanswerArray.length<1){
-                je.setMsg("异常错误，未获取到问答题答案!");
+                je.setMsg("错误，未获取到问答题答案!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1957,7 +1957,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             qb.setQuestionid(tmpTask.getTaskvalueid());
             List<QuestionInfo>qbList=this.questionManager.getList(qb, null);
             if(qbList==null||qbList.size()<1){
-                je.setMsg("异常错误!当前试题已不存在!");
+                je.setMsg("错误!当前试题已不存在!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1967,11 +1967,11 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             if(fbanswer!=null&&fbanswer.length()>0){
                 answerArray=fbanswer.split("\\|");
                 if(answerArray.length<1){
-                    je.setMsg("异常错误!未获取到填空题教师设置的答案!");
+                    je.setMsg("错误!未获取到填空题教师设置的答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }else if(answerArray.length!=fbanswerArray.length){
-                    je.setMsg("异常错误!填空题题目或答案有误!");
+                    je.setMsg("错误!填空题题目或答案有误!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1983,7 +1983,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     }
                 }
             }else{
-                je.setMsg("异常错误!系统未获取到填空题答案!");
+                je.setMsg("错误!系统未获取到填空题答案!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -2025,7 +2025,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
         }else if(questype.equals("3")){//单选
             if(optionArray==null||optionArray.length<1){
-                je.setMsg("异常错误，未获取到选择题答案!");
+                je.setMsg("错误，未获取到选择题答案!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -2036,7 +2036,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             qo.setIsright(1);
             List<QuestionOption>qbList=this.questionOptionManager.getList(qo, null);
             if(qbList==null||qbList.size()<1){
-                je.setMsg("异常错误!未获取到教师设置的选择题答案!");
+                je.setMsg("错误!未获取到教师设置的选择题答案!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -2053,7 +2053,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             qstu.setRef(Integer.parseInt(optionArray[0]));
             List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
             if(qbstuList==null||qbstuList.size()<1){
-                je.setMsg("异常错误!当前选项已不存在!");
+                je.setMsg("错误!当前选项已不存在!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -2091,7 +2091,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 
         }else if(questype.equals("4")){//多选
             if(optionArray==null||optionArray.length<1){
-                je.setMsg("异常错误，未获取到复选题答案!");
+                je.setMsg("错误，未获取到复选题答案!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -2102,7 +2102,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             qb.setIsright(1);
             List<QuestionOption>qbList=this.questionOptionManager.getList(qb, null);
             if(qbList==null||qbList.size()<1){
-                je.setMsg("异常错误!未获取到教师设置的复选题答案!");
+                je.setMsg("错误!未获取到教师设置的复选题答案!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -2125,7 +2125,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 qstu.setRef(Integer.parseInt(opnid));
                 List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
                 if(qbstuList==null||qbstuList.size()<1){
-                    je.setMsg("异常错误!当前选项已不存在!");
+                    je.setMsg("错误!当前选项已不存在!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -3224,7 +3224,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
         if(d>3){//大于三分钟
-            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            returnJo.put("msg","错误，响应超时!接口三分钟内有效!");
             response.getWriter().print(returnJo.toString());
             return;
         }
@@ -3317,7 +3317,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
         if(d>3){//大于三分钟
-            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            returnJo.put("msg","错误，响应超时!接口三分钟内有效!");
             response.getWriter().print(returnJo.toString());
             return;
         }
@@ -3400,7 +3400,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
         if(d>3){//大于三分钟
-            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            returnJo.put("msg","错误，响应超时!接口三分钟内有效!");
             response.getWriter().print(returnJo.toString());
             return;
         }
@@ -3649,7 +3649,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
         if(d>3){//大于三分钟
-            jsonEntity.setMsg("异常错误，响应超时!接口三分钟内有效!");
+            jsonEntity.setMsg("错误，响应超时!接口三分钟内有效!");
             response.getWriter().print(jsonEntity.getAlertMsgAndBack());
             return null;
         }
@@ -4204,7 +4204,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
         if(d>3){//大于三分钟
-            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            returnJo.put("msg","错误，响应超时!接口三分钟内有效!");
             response.getWriter().print(returnJo.toString());
             return;
         }
@@ -4508,7 +4508,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
         if(d>3){//大于三分钟
-            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            returnJo.put("msg","错误，响应超时!接口三分钟内有效!");
             response.getWriter().print(returnJo.toString());
             return;
         }
@@ -4707,7 +4707,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
         if(d>3){//大于三分钟
-            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            returnJo.put("msg","错误，响应超时!接口三分钟内有效!");
             response.getWriter().print(returnJo.toString());
             return;
         }
@@ -4781,7 +4781,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             returnJo.put("msg", "恭喜您,获得了1积分和1蓝宝石");
             returnJo.put("result","1");
         }else{
-            returnJo.put("msg", "异常错误，奖励加分失败，原因：该任务已经存在相关记录");
+            returnJo.put("msg", "错误，奖励加分失败，原因：该任务已经存在相关记录");
         }
         response.getWriter().println(returnJo.toString());
     }
@@ -4821,7 +4821,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
         if(d>3){//大于三分钟
-            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            returnJo.put("msg","错误，响应超时!接口三分钟内有效!");
             response.getWriter().print(returnJo.toString());
             return;
         }
@@ -4936,7 +4936,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
         if(d>3){//大于三分钟
-            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            returnJo.put("msg","错误，响应超时!接口三分钟内有效!");
             response.getWriter().print(returnJo.toString());
             return;
         }
@@ -5075,7 +5075,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
     /*    if(d>3){//大于三分钟
-            returnJo.put("msg","异常错误，响应超时!接口三分钟内有效!");
+            returnJo.put("msg","错误，响应超时!接口三分钟内有效!");
             response.getWriter().print(returnJo.toString());
             return;
         }

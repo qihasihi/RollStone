@@ -9,7 +9,7 @@
 		 var courseid="${courseid}";
 		$(function(){
 			if(courseid==null){
-					alert('异常错误，非法访问!参数异常!');return;
+					alert('错误，非法访问!参数异常!');return;
 				}
 			if(tpcid.length>0){
 				$("input[id='rdo_tpc_state${tpc.status}']").attr("checked",true);

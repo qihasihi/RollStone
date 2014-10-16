@@ -900,7 +900,7 @@ public class UserController extends BaseController<UserInfo> {
         String callback=request.getParameter("jsoncallback");
         JsonEntity jeEntity=new JsonEntity();
         if(roletypeStr==null||roletypeStr.trim().length()<1){
-            jeEntity.setMsg("异常错误，没有发现必要角色类型相关参数! code: roletype is empty!");
+            jeEntity.setMsg("错误，没有发现必要角色类型相关参数! code: roletype is empty!");
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return;
         }
 
@@ -935,7 +935,7 @@ public class UserController extends BaseController<UserInfo> {
          * 四中帐号
          */
         if(userName==null||userName.trim().length()<1){
-            jeEntity.setMsg("异常错误，用户名配置失败! code: ETT_COME_USER property is empty!");
+            jeEntity.setMsg("错误，用户名配置失败! code: ETT_COME_USER property is empty!");
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return;
         }
         request.setAttribute("username", userName);
@@ -961,11 +961,11 @@ public class UserController extends BaseController<UserInfo> {
          * 精简版帐号
          */
         if(userName==null||userName.trim().length()<1){
-            jeEntity.setMsg("异常错误，用户名配置失败! code: _SIMPLE_RES_LOGIN_USRNAME property is empty!");
+            jeEntity.setMsg("错误，用户名配置失败! code: _SIMPLE_RES_LOGIN_USRNAME property is empty!");
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return null;
         }
         if(pass==null||pass.trim().length()<1){
-            jeEntity.setMsg("异常错误，密码配置失败! code: _SIMPLE_RES_LOGIN_PASS property is empty!");
+            jeEntity.setMsg("错误，密码配置失败! code: _SIMPLE_RES_LOGIN_PASS property is empty!");
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return null;
         }
         request.setAttribute("isajax",1);
@@ -986,7 +986,7 @@ public class UserController extends BaseController<UserInfo> {
      */
     protected JsonEntity loginBase(UserInfo userinfo,HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity je=new JsonEntity();
-        je.setMsg("异常错误，原因：参数异常!");
+        je.setMsg("错误，原因：参数异常!");
         if(userinfo==null)return je;
         if (userinfo.getUsername() == null || userinfo.getPassword() == null) {
             je.setMsg(UtilTool.msgproperty
@@ -1260,7 +1260,7 @@ public class UserController extends BaseController<UserInfo> {
             schoolInfo.setIp(procBasePath);
             List<SchoolInfo> schoolList=schoolManager.getList(schoolInfo,null);
             if(schoolList==null||schoolList.size()<1){
-                je.setMsg("异常错误，该域名不存在!请联系相关人员进行更新!");
+                je.setMsg("错误，该域名不存在!请联系相关人员进行更新!");
                     response.getWriter().println(je.toJSON());
                 return;
             }else
@@ -2816,7 +2816,7 @@ public class UserController extends BaseController<UserInfo> {
 
         JsonEntity je = new JsonEntity();
         if (src == null || src.trim().length() < 1 ) {
-            je.setMsg("异常错误，原因：参数不齐!");
+            je.setMsg("错误，原因：参数不齐!");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -2826,7 +2826,7 @@ public class UserController extends BaseController<UserInfo> {
         String src1 = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ src.split("/")[1];
         File f = new File(src1);
         if (!f.exists()) {
-            je.setMsg("异常错误，该图片已经不存在!");
+            je.setMsg("错误，该图片已经不存在!");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -3952,7 +3952,7 @@ public class UserController extends BaseController<UserInfo> {
         JsonEntity jeEntity=new JsonEntity();
         if(term==null){
             if(!this.termManager.InitTerm()){
-                jeEntity.setMsg("异常错误，网站设置错误，请联系管理人员设置学期!");
+                jeEntity.setMsg("错误，网站设置错误，请联系管理人员设置学期!");
                 response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return null;
             }
             term=this.termManager.getAutoTerm();
@@ -4204,7 +4204,7 @@ public class UserController extends BaseController<UserInfo> {
         TermInfo term=this.termManager.getAutoTerm();
         JsonEntity jeEntity=new JsonEntity();
         if(term==null){
-            jeEntity.setMsg("异常错误，网站设置错误，请联系管理人员设置学期!");
+            jeEntity.setMsg("错误，网站设置错误，请联系管理人员设置学期!");
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());return;
         }
         //得到教授班级
@@ -4502,7 +4502,7 @@ public class UserController extends BaseController<UserInfo> {
         userInfo.setLzxuserid(lzxUserid);
         List<UserInfo> uList=this.userManager.getList(userInfo,null);
         if(uList==null||uList.size()<1){
-            jsonEntity.setMsg("异常错误，原因：没有帐号信息!");
+            jsonEntity.setMsg("错误，原因：没有帐号信息!");
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         userInfo=uList.get(0);
@@ -4622,7 +4622,7 @@ public class UserController extends BaseController<UserInfo> {
                 else
                     sex = 1;
             } else {
-                String msg = "异常错误!您的信息中没有详细信息，请联系管理人员!!";
+                String msg = "错误!您的信息中没有详细信息，请联系管理人员!!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
                                 + "');history.go(-1);</script>");
@@ -4713,7 +4713,7 @@ public class UserController extends BaseController<UserInfo> {
 //				}
 
             } else if (!isflag) {
-                String msg = "异常错误!您的信息中存在异常，请联系管理人员!!";
+                String msg = "错误!您的信息中存在异常，请联系管理人员!!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
                                 + "');history.go(-1);</script>");
@@ -4948,7 +4948,7 @@ public class UserController extends BaseController<UserInfo> {
             response
                     .getWriter()
                     .print(
-                            "<script type='text/javascript'>alert('异常错误!您的信息不完整并且验证失败!请重新登陆后重试!');window.close();</script>");
+                            "<script type='text/javascript'>alert('错误!您的信息不完整并且验证失败!请重新登陆后重试!');window.close();</script>");
             return;
         }
         JSONObject jo=JSONObject.fromObject(responseHTML);
@@ -4957,7 +4957,7 @@ public class UserController extends BaseController<UserInfo> {
             response
                     .getWriter()
                     .print(
-                            "<script type='text/javascript'>alert('异常错误!您的信息不完整并且验证失败!请重新登陆后重试!');window.close();</script>");
+                            "<script type='text/javascript'>alert('错误!您的信息不完整并且验证失败!请重新登陆后重试!');window.close();</script>");
             return;
         }
 //        String urlStr = "http://web.etiantian.com/ett20/study/common/szlogin.jsp?code="
@@ -5082,7 +5082,7 @@ public class UserController extends BaseController<UserInfo> {
                 else
                     sex = 1;
             } else {
-                String msg = "异常错误，没有找到您的教师信息数据，请联系管理人员!";
+                String msg = "错误，没有找到您的教师信息数据，请联系管理人员!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
                                 + "');this.close();</script>");
@@ -5176,7 +5176,7 @@ public class UserController extends BaseController<UserInfo> {
             stu.setUserref(uidRef);
             List<StudentInfo> stuList = this.studentManager.getList(stu,null);
             if(stuList==null||stuList.size()<1){
-                String msg = "异常错误，没有找到您的学生信息数据，请联系管理人员!";
+                String msg = "错误，没有找到您的学生信息数据，请联系管理人员!";
 
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
@@ -5199,7 +5199,7 @@ public class UserController extends BaseController<UserInfo> {
                 }
 
             } else if (!isflag) {
-                String msg = "异常错误，没有找到您的学生信息数据，请联系管理人员!";
+                String msg = "错误，没有找到您的学生信息数据，请联系管理人员!";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
                                 + "');this.close();</script>");
@@ -5388,7 +5388,7 @@ public class UserController extends BaseController<UserInfo> {
             //教师。
             String isVip=request.getParameter("isVip");
             if(isVip==null||isVip.length()<1){
-                String msg = "异常错误，没有权限相关信息。";
+                String msg = "错误，没有权限相关信息。";
                 response.getWriter().print(
                         "<script type='text/javascript'>alert('" + msg
                                 + "');this.close();</script>");
@@ -7202,18 +7202,18 @@ public class UserController extends BaseController<UserInfo> {
         String logintime=request.getParameter("login_time");
         JsonEntity jsonEntity=new JsonEntity();
         if(logintime==null||logintime.trim().length()<1||!UtilTool.isNumber(logintime)){
-            jsonEntity.setMsg("异常错误，登陆时间戳参数缺少!");
+            jsonEntity.setMsg("错误，登陆时间戳参数缺少!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         String dcschoolid=request.getParameter("dcschoolid");
         if(dcschoolid==null||dcschoolid.trim().length()<1){
-            jsonEntity.setMsg("异常错误，网校分校ID为空!!");
+            jsonEntity.setMsg("常错误，网校分校ID为空!!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         UserInfo loginUsr=new UserInfo();
         String schoolid=request.getParameter("lzx_school_id");
         if(schoolid==null||schoolid.trim().length()<1){//||!UtilTool.isNumber(schoolid)
-            jsonEntity.setMsg("异常错误，分校ID为空!!");
+            jsonEntity.setMsg("错误，分校ID为空!!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         String lzx_userid=request.getParameter("lzx_userid");
@@ -7221,18 +7221,18 @@ public class UserController extends BaseController<UserInfo> {
         String pass=request.getParameter("password");
         String loginCode=request.getParameter("login_code");
         if(loginCode==null||loginCode.trim().length()<1){
-            jsonEntity.setMsg("异常错误，登陆码参数缺少!");
+            jsonEntity.setMsg("错误，登陆码参数缺少!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         if(username==null||username.trim().length()<1){
             if(lzx_userid==null||lzx_userid.trim().length()<1){
-                jsonEntity.setMsg("异常错误，登陆用户ID戳参数缺少!");
+                jsonEntity.setMsg("错误，登陆用户ID戳参数缺少!");
                 response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
             }
             loginUsr.setLzxuserid(lzx_userid);
         }else{
             if(pass==null||pass.trim().length()<1){
-                jsonEntity.setMsg("异常错误，登陆密码为空!");
+                jsonEntity.setMsg("错误，登陆密码为空!");
                 response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
             }
             loginUsr.setUsername(username);
@@ -7241,7 +7241,7 @@ public class UserController extends BaseController<UserInfo> {
         loginUsr.setDcschoolid(Integer.parseInt(dcschoolid));
         String flag_id=request.getParameter("flag_id");
         if(flag_id==null||flag_id.trim().length()<1||!UtilTool.isNumber(flag_id.trim())){
-            jsonEntity.setMsg("异常错误，功能ID为空，无法进行跳转!");
+            jsonEntity.setMsg("错误，功能ID为空，无法进行跳转!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         //验证是否在三分钟内
@@ -7249,7 +7249,7 @@ public class UserController extends BaseController<UserInfo> {
         Long nt=new Date().getTime();
         double d=(nt-logint)/(1000*60);
         if(d>30){//大于三分钟
-            //jsonEntity.setMsg("异常错误，响应超时!接口三分钟内有效!");
+            //jsonEntity.setMsg("错误，响应超时!接口三分钟内有效!");
             //response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         String loginKey=request.getParameter("login_key");
@@ -7264,7 +7264,7 @@ public class UserController extends BaseController<UserInfo> {
         md5key+=flag_id+loginCode+logintime;
         md5key=MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
         if(!md5key.trim().equals(loginKey.trim())){//如果不一致，则说明非法登陆
-            jsonEntity.setMsg("异常错误，非法登陆!!");
+            jsonEntity.setMsg("错误，非法登陆!!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         List<UserInfo> usrList=this.userManager.getList(loginUsr,null);
@@ -7293,7 +7293,7 @@ public class UserController extends BaseController<UserInfo> {
             }
         }
         if(targetUrl==null){
-            jsonEntity.setMsg("异常错误，网校端配置错误!请联系管理人员");
+            jsonEntity.setMsg("错误，网校端配置错误!请联系管理人员");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         request.getSession().setAttribute("fromType","lzx");
@@ -7312,13 +7312,13 @@ public class UserController extends BaseController<UserInfo> {
         String logintime=request.getParameter("login_time");
         JsonEntity jsonEntity=new JsonEntity();
         if(logintime==null||logintime.trim().length()<1||!UtilTool.isNumber(logintime)){
-            jsonEntity.setMsg("异常错误，登陆时间戳参数缺少!");
+            jsonEntity.setMsg("错误，登陆时间戳参数缺少!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         UserInfo loginUsr=new UserInfo();
         String schoolid=request.getParameter("lzx_school_id");
         if(schoolid==null||schoolid.trim().length()<1){//||!UtilTool.isNumber(schoolid)
-            jsonEntity.setMsg("异常错误，分校ID为空!!");
+            jsonEntity.setMsg("错误，分校ID为空!!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         String lzx_userid=request.getParameter("lzx_userid");
@@ -7326,18 +7326,18 @@ public class UserController extends BaseController<UserInfo> {
         String pass=request.getParameter("password");
         String loginCode=request.getParameter("login_code");
         if(loginCode==null||loginCode.trim().length()<1){
-            jsonEntity.setMsg("异常错误，登陆码参数缺少!");
+            jsonEntity.setMsg("错误，登陆码参数缺少!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         if(username==null||username.trim().length()<1){
             if(lzx_userid==null||lzx_userid.trim().length()<1){
-                jsonEntity.setMsg("异常错误，登陆用户ID戳参数缺少!");
+                jsonEntity.setMsg("错误，登陆用户ID戳参数缺少!");
                 response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
             }
             loginUsr.setLzxuserid(lzx_userid);
         }else{
             if(pass==null||pass.trim().length()<1){
-                jsonEntity.setMsg("异常错误，登陆密码为空!");
+                jsonEntity.setMsg("错误，登陆密码为空!");
                 response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
             }
             loginUsr.setUsername(username);
@@ -7345,7 +7345,7 @@ public class UserController extends BaseController<UserInfo> {
         }
         String flag_id=request.getParameter("flag_id");
         if(flag_id==null||flag_id.trim().length()<1||!UtilTool.isNumber(flag_id.trim())){
-            jsonEntity.setMsg("异常错误，功能ID为空，无法进行跳转!");
+            jsonEntity.setMsg("错误，功能ID为空，无法进行跳转!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         //验证是否在三分钟内
@@ -7353,7 +7353,7 @@ public class UserController extends BaseController<UserInfo> {
         Long nt=new Date().getTime();
         double d=(nt-logint)/(1000*60);
         if(d>30){//大于三分钟
-            //jsonEntity.setMsg("异常错误，响应超时!接口三分钟内有效!");
+            //jsonEntity.setMsg("错误，响应超时!接口三分钟内有效!");
             //response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         String loginKey=request.getParameter("login_key");
@@ -7367,7 +7367,7 @@ public class UserController extends BaseController<UserInfo> {
         md5key+=flag_id+loginCode+logintime;
         md5key=MD5_NEW.getMD5ResultCode(md5key);//生成md5加密
         if(!md5key.trim().equals(loginKey.trim())){//如果不一致，则说明非法登陆
-            jsonEntity.setMsg("异常错误，非法登陆!!");
+            jsonEntity.setMsg("错误，非法登陆!!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         List<UserInfo> usrList=this.userManager.getList(loginUsr,null);
@@ -7396,7 +7396,7 @@ public class UserController extends BaseController<UserInfo> {
             }
         }
         if(targetUrl==null){
-            jsonEntity.setMsg("异常错误，网校端配置错误!请联系管理人员");
+            jsonEntity.setMsg("错误，网校端配置错误!请联系管理人员");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
         request.getSession().setAttribute("fromType","lzx");

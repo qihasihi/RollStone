@@ -38,7 +38,7 @@ EttViewPhoto.prototype={
             $("body").append(h);
         }
         if(this.settings.photoObj.length<1){
-            alert('异常错误，没有预览文件!');return;
+            alert('错误，没有预览文件!');return;
         }
         this.settings.ulAddressId="rotateme";
         h='<ul id="'+this.settings.ulAddressId+'"></ul>';

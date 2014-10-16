@@ -241,7 +241,7 @@
     		}
     		var valueid=$("#ul_result_1 li input[type='hidden']");	
     		/*if(valueid.length<1){
-    			alert('异常错误，您尚未选择节点，请选择后再操作!');return;
+    			alert('错误，您尚未选择节点，请选择后再操作!');return;
     		}
     		if(valueid.val().Trim().length<1){
     			if(!confirm('您清空了该节点的审核权限，可能导致该节点的资源没无法进行审核!\n\n您确认此操作吗?'))

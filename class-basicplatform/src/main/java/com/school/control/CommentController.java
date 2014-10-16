@@ -526,7 +526,7 @@ public class CommentController extends BaseController<CommentInfo> {
         resInfo.setType(Integer.parseInt(type));
         List<TpResCommentInfo> resList=this.tpResCommentManager.getList(resInfo, null);
         if(resList==null||resList.size()<1){
-            jeEntity.setMsg("异常错误，您要删除的数据，已经不存在，请刷新页面后重试!");
+            jeEntity.setMsg("您要删除的数据，已经不存在，请刷新页面后重试!");
             response.getWriter().print(jeEntity.toJSON());return;
         }
         //执行删除

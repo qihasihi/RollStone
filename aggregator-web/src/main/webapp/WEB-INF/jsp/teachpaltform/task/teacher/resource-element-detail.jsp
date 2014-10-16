@@ -366,7 +366,7 @@ function subUploadRes(usertype){
             }
         })
         if (fname.length < 1) {
-            alert('异常错误，原因：请添加文件!');
+            alert('错误，请添加文件!');
             return;
         }
 

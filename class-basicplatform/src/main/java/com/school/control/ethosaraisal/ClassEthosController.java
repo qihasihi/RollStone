@@ -215,12 +215,12 @@ public class ClassEthosController extends BaseController<ClassEthosInfo>{
 		JsonEntity je = new JsonEntity();
 		// 验证
 		if (termid == null || termid.trim().length() < 1) {
-			je.setMsg("异常错误，系统检测到您尚未选择学期，无法查询，请选择后重试！");
+			je.setMsg("错误，系统检测到您尚未选择学期，无法查询，请选择后重试！");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return;
 		}
 		if (weekid == null || weekid.trim().length() < 1) {
-			je.setMsg("异常错误，系统尚未检测到您尚未选择周次，无法查询，请选择后重试！");
+			je.setMsg("错误，系统尚未检测到您尚未选择周次，无法查询，请选择后重试！");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return;
 		}
@@ -273,7 +273,7 @@ public class ClassEthosController extends BaseController<ClassEthosInfo>{
 		filename=title;
 		String flag=this.operaterexcelmanager.ExplortExcel(response, filename, columnList, objData, title, String.class, null);
 		if(flag!=null){
-			je.setMsg("异常错误，无法导出!");
+			je.setMsg("错误，无法导出!");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 		}
     }
@@ -368,7 +368,7 @@ public class ClassEthosController extends BaseController<ClassEthosInfo>{
 		  filename=title;
 		  String flag=this.operaterexcelmanager.ExplortExcel(response, filename, null, classStatices, title, String.class, null);
 			if(flag!=null){
-				je.setMsg("异常错误，无法导出!");
+				je.setMsg("错误，无法导出!");
 				response.getWriter().print(je.getAlertMsgAndCloseWin());
 			}	
     }  

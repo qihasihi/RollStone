@@ -12,7 +12,7 @@
 			$(function(){
 				$(".header_ico1 a").attr("href","../"+$(".header_ico1 a").attr("href"));
 				if(courseteacher==null||year==null||year.Trim().length<1){
-					alert('异常错误，非法访问!参数异常!');return;
+					alert('错误，非法访问!参数异常!');return;
 				}
 				p1=new PageControl({
 						post_url:'columnsList',

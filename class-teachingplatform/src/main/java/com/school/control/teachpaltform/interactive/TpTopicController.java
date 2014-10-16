@@ -563,7 +563,7 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
 
 
         if(roleStr.equals("STUDENT")&&topic.getStatus().intValue()==2){
-            jsonEntity.setMsg("异常错误，该论题已经关闭，无法进行查看!");
+            jsonEntity.setMsg("错误，该论题已经关闭，无法进行查看!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
 
@@ -632,7 +632,7 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
         mp.put("tccList",tccList);
         if(clsid==null||clsid.toString().trim().length()<1){
             if(tccList==null||tccList.size()<1){
-                jsonEntity.setMsg("异常错误，无法查询到您所在的班级信息!");
+                jsonEntity.setMsg("错误，无法查询到您所在的班级信息!");
                 response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
             }
             clsid=tccList.get(0).get("CLASS_ID").toString();

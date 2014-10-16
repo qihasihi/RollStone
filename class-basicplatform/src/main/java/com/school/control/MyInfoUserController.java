@@ -38,7 +38,7 @@ public class MyInfoUserController extends BaseController<MyInfoUserInfo>{
 		MyInfoUserInfo myUserEntity=this.getParameter(request, MyInfoUserInfo.class);
 		//验证参数
 		if(myUserEntity==null||myUserEntity.getMsgid()==null||myUserEntity.getMsgname()==null){
-			jeEntity.setMsg("异常错误，参数异常!");
+			jeEntity.setMsg("错误，参数异常!");
 			response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
 			return null;
 		}		
@@ -62,7 +62,7 @@ public class MyInfoUserController extends BaseController<MyInfoUserInfo>{
 		MyInfoUserInfo myUserEntity=this.getParameter(request, MyInfoUserInfo.class);
 		//验证参数
 		if(myUserEntity==null||myUserEntity.getMsgid()==null){
-			jeEntity.setMsg("异常错误，参数异常!");
+			jeEntity.setMsg("错误，参数异常!");
 			response.getWriter().print(jeEntity.toJSON());
 			return;
 		}

@@ -100,7 +100,7 @@ ajaxUpload.prototype = {
 			} else
 				returnBool = false;
 			if (!returnBool)
-				alert('异常错误，还有File未选择!');
+				alert('还有File未选择!');
 
 		} else {
 			alert('请正确配置参数,filename!');

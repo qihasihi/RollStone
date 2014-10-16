@@ -811,7 +811,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String courseid=request.getParameter("courseid");
         String termid=request.getParameter("termid");
         if(courseid==null||courseid.trim().length()<1){
-            je.setMsg("异常错误,系统未获取到课题标识!");
+            je.setMsg("错误,系统未获取到课题标识!");
             je.getAlertMsgAndBack();
             return null;
         }
@@ -822,7 +822,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         c.setCourseid(Long.parseLong(courseid));
         List<TpCourseClass>courseclassList=this.tpCourseClassManager.getList(c, null);
         if(courseclassList==null||courseclassList.size()<1){
-            je.setMsg("异常错误，未获取到该课题的班级信息!请设置后操作任务!");
+            je.setMsg("错误，未获取到该课题的班级信息!请设置后操作任务!");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
@@ -921,18 +921,18 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
 
         if(StringUtils.isBlank(courseid)){
-            je.setMsg("异常错误,未获取到课题标识!");
+            je.setMsg("错误,未获取到课题标识!");
             response.getWriter().print(je.toJSON());
             return;
         }
         if((groupArray==null||groupArray.length<1)
                 &&(clsArray==null||clsArray.length<1)){
-            je.setMsg("异常错误,未获取到任务对象!");
+            je.setMsg("错误,未获取到任务对象!");
             response.getWriter().print(je.toJSON());
             return;
         }
         if(!(StringUtils.isNotBlank(questype)&&questype.equals("5"))&&criteriaArray.length<1){
-            je.setMsg("异常错误,未获取到任务完成标准!");
+            je.setMsg("错误,未获取到任务完成标准!");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -957,7 +957,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //课后作业 3
         if(tasktype.toString().equals("3")){
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到试题标识!");
+                je.setMsg("错误，系统未获取到试题标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -972,7 +972,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }else if(tasktype.toString().equals("2")){//论题
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到论题标识!");
+                je.setMsg("错误，系统未获取到论题标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -990,7 +990,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             resourcetype=resourcetype==null||resourcetype.length()<1?"1":resourcetype;
             if(resourcetype.equals("1")){
                 if(taskvalueid==null||taskvalueid.trim().length()<1){
-                    je.setMsg("异常错误，系统未获取到资源标识!");
+                    je.setMsg("错误，系统未获取到资源标识!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1035,7 +1035,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
         }else if(tasktype.toString().equals("4")){//成卷测试
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到试卷标识!");
+                je.setMsg("错误，系统未获取到试卷标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1085,7 +1085,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(paperid);
         }else if(tasktype.toString().equals("6")){//微视频测试
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到微视频标识!");
+                je.setMsg("错误，系统未获取到微视频标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1101,7 +1101,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }else if(tasktype.toString().equals("10")){//直播课
             if(taskname==null||taskname.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到直播主题!");
+                je.setMsg("错误，系统未获取到直播主题!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1207,7 +1207,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //添加任务对象 班级
         if(clsArray!=null&&clsArray.length>0){
             if(clstype==null||clstype.trim().length()<1){
-                je.setMsg("异常错误!系统未获取到班级类型!");
+                je.setMsg("错误!系统未获取到班级类型!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1270,7 +1270,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     List<TpVirtualClassInfo>vclsList=this.tpVirtualClassManager.getList(tv,null);*/
                     tal.setUsertype(1);
                 }else{
-                    je.setMsg("异常错误!任务班级无效!");
+                    je.setMsg("错误!任务班级无效!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1360,12 +1360,12 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String taskid=request.getParameter("taskid");
 
         if(courseid==null||courseid.trim().length()<1){
-            je.setMsg("异常错误,系统未获取到课题标识!");
+            je.setMsg("错误,系统未获取到课题标识!");
             je.getAlertMsgAndBack();
             return null;
         }
         if(taskid==null||taskid.trim().length()<1){
-            je.setMsg("异常错误,系统未获取到任务标识!");
+            je.setMsg("错误,系统未获取到任务标识!");
             je.getAlertMsgAndBack();
             return null;
         }
@@ -1376,7 +1376,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         c.setCourseid(Long.parseLong(courseid));
         List<TpCourseClass>courseclassList=this.tpCourseClassManager.getList(c, null);
         if(courseclassList==null||courseclassList.size()<1){
-            je.setMsg("异常错误，未获取到该课题的班级信息!请设置后操作任务!");
+            je.setMsg("错误，未获取到该课题的班级信息!请设置后操作任务!");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
@@ -1469,18 +1469,18 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
 
         if(StringUtils.isBlank(courseid)){
-            je.setMsg("异常错误,未获取到课题标识!");
+            je.setMsg("错误,未获取到课题标识!");
             response.getWriter().print(je.toJSON());
             return;
         }
         if((groupArray==null||groupArray.length<1)
                 &&(clsArray==null||clsArray.length<1)){
-            je.setMsg("异常错误,未获取到任务对象!");
+            je.setMsg("错误,未获取到任务对象!");
             response.getWriter().print(je.toJSON());
             return;
         }
         if(!(StringUtils.isNotBlank(questype)&&questype.equals("5"))&&criteriaArray.length<1){
-            je.setMsg("异常错误,未获取到任务完成标准!");
+            je.setMsg("错误,未获取到任务完成标准!");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1508,7 +1508,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //课后作业 3
         if(tasktype.toString().equals("3")){
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到试题标识!");
+                je.setMsg("错误，系统未获取到试题标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1523,7 +1523,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }else if(tasktype.toString().equals("2")){//论题
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到论题标识!");
+                je.setMsg("错误，系统未获取到论题标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1538,7 +1538,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }else if(tasktype.toString().equals("1")){//资源
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到资源标识!");
+                je.setMsg("错误，系统未获取到资源标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1586,7 +1586,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
         }else if(tasktype.toString().equals("4")){//成卷测试
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到试卷标识!");
+                je.setMsg("错误，系统未获取到试卷标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1611,7 +1611,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
         }else if(tasktype.toString().equals("6")){//微视频测试
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到微视频标识!");
+                je.setMsg("错误，系统未获取到微视频标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1627,7 +1627,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }else if(tasktype.toString().equals("10")){//直播课
             if(taskname==null||taskname.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到直播主题!");
+                je.setMsg("错误，系统未获取到直播主题!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1789,7 +1789,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //添加任务对象 班级
         if(clsArray!=null&&clsArray.length>0){
             if(clstype==null||clstype.trim().length()<1){
-                je.setMsg("异常错误!系统未获取到班级类型!");
+                je.setMsg("错误!系统未获取到班级类型!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1850,7 +1850,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     List<TpVirtualClassInfo>vclsList=this.tpVirtualClassManager.getList(tv,null);*/
                     tal.setUsertype(1);
                 }else{
-                    je.setMsg("异常错误!任务班级无效!");
+                    je.setMsg("错误!任务班级无效!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1951,7 +1951,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         tt.setUserid(this.logined(request).getUserid());
         List<TpCourseInfo>courseList=this.tpCourseManager.getStuCourseList(tt, null);
         if(courseList==null||courseList.size()<1){
-            je.setMsg("异常错误，没有发现当前专题!请刷新后重试!");
+            je.setMsg("错误，没有发现当前专题!请刷新后重试!");
             response.getWriter().print(je.getAlertMsgAndBack());return null;
         }else{
             request.setAttribute("coursename", courseList.get(0).getCoursename());
@@ -2038,7 +2038,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
         if(Integer.parseInt(tasktype)==3){
             if(questype==null||!UtilTool.isNumber(questype)){
-                je.setMsg("异常错误，系统未获取到问题类型!");
+                je.setMsg("错误，系统未获取到问题类型!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -2046,7 +2046,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
             if(questype.equals("1")){//问答
                 if(quesanswer==null||quesanswer.trim().length()<1){
-                    je.setMsg("异常错误，未获取到问答题答案!");
+                    je.setMsg("错误，未获取到问答题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2129,7 +2129,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 }
             }else if(questype.equals("2")){//填空
                 if(fbanswerArray==null||fbanswerArray.length<1){
-                    je.setMsg("异常错误，未获取到问答题答案!");
+                    je.setMsg("错误，未获取到问答题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2138,7 +2138,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 qb.setQuestionid(tmpTask.getTaskvalueid());
                 List<QuestionInfo>qbList=this.questionManager.getList(qb, null);
                 if(qbList==null||qbList.size()<1){
-                    je.setMsg("异常错误!当前试题已不存在!");
+                    je.setMsg("错误!当前试题已不存在!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2148,11 +2148,11 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 if(fbanswer!=null&&fbanswer.length()>0){
                     answerArray=fbanswer.split("\\|");
                     if(answerArray.length<1){
-                        je.setMsg("异常错误!未获取到填空题教师设置的答案!");
+                        je.setMsg("错误!未获取到填空题教师设置的答案!");
                         response.getWriter().print(je.toJSON());
                         return;
                     }else if(answerArray.length!=fbanswerArray.length){
-                        je.setMsg("异常错误!填空题题目或答案有误!");
+                        je.setMsg("错误!填空题题目或答案有误!");
                         response.getWriter().print(je.toJSON());
                         return;
                     }
@@ -2164,7 +2164,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         }
                     }
                 }else{
-                    je.setMsg("异常错误!系统未获取到填空题答案!");
+                    je.setMsg("错误!系统未获取到填空题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2206,7 +2206,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 }
             }else if(questype.equals("3")){//单选
                 if(optionArray==null||optionArray.length<1){
-                    je.setMsg("异常错误，未获取到选择题答案!");
+                    je.setMsg("错误，未获取到选择题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2217,7 +2217,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 qo.setIsright(1);
                 List<QuestionOption>qbList=this.questionOptionManager.getList(qo, null);
                 if(qbList==null||qbList.size()<1){
-                    je.setMsg("异常错误!未获取到教师设置的选择题答案!");
+                    je.setMsg("错误!未获取到教师设置的选择题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2234,7 +2234,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 qstu.setRef(Integer.parseInt(optionArray[0]));
                 List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
                 if(qbstuList==null||qbstuList.size()<1){
-                    je.setMsg("异常错误!当前选项已不存在!");
+                    je.setMsg("错误!当前选项已不存在!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2272,7 +2272,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
             }else if(questype.equals("4")){//多选
                 if(optionArray==null||optionArray.length<1){
-                    je.setMsg("异常错误，未获取到复选题答案!");
+                    je.setMsg("错误，未获取到复选题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2283,7 +2283,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 qb.setIsright(1);
                 List<QuestionOption>qbList=this.questionOptionManager.getList(qb, null);
                 if(qbList==null||qbList.size()<1){
-                    je.setMsg("异常错误!未获取到教师设置的复选题答案!");
+                    je.setMsg("错误!未获取到教师设置的复选题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2306,7 +2306,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     qstu.setRef(Integer.parseInt(opnid));
                     List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
                     if(qbstuList==null||qbstuList.size()<1){
-                        je.setMsg("异常错误!当前选项已不存在!");
+                        je.setMsg("错误!当前选项已不存在!");
                         response.getWriter().print(je.toJSON());
                         return;
                     }
@@ -2346,7 +2346,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
         }else if(Integer.parseInt(tasktype)==1){
             if(quesanswer==null||quesanswer.trim().length()<1){
-                je.setMsg("异常错误,未获取到资源学习心得!");
+                je.setMsg("错误,未获取到资源学习心得!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -2496,12 +2496,12 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String topicid=request.getParameter("topicid");
         String taskflag=request.getParameter("taskflag");
         if(courseid==null||courseid.trim().length()<1){
-            je.setMsg("异常错误，系统未获取到课题标识!");
+            je.setMsg("错误，系统未获取到课题标识!");
             response.getWriter().print(je.toJSON());
             return;
         }
 //		if(clsid==null||clsid.trim().length()<1){
-//			je.setMsg("异常错误，系统未获取到班级标识!");
+//			je.setMsg("错误，系统未获取到班级标识!");
 //			response.getWriter().print(je.toJSON());
 //			return;
 //		}
@@ -3043,7 +3043,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
                     response.sendRedirect(baseUrl+"tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
                 }else{
-                    je.setMsg("异常错误!添加查看记录失败!请重试!");
+                    je.setMsg("错误!添加查看记录失败!请重试!");
                     response.getWriter().print(je.toJSON());
                 }
             }
@@ -3150,7 +3150,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
 
                     response.sendRedirect(liveaddress);
                 }else{
-                    je.setMsg("异常错误!添加查看记录失败!请重试!");
+                    je.setMsg("错误!添加查看记录失败!请重试!");
                     response.getWriter().print(je.toJSON());
                 }
             }
@@ -3264,7 +3264,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         System.out.println("awardScore err ");
                     response.sendRedirect(baseUrl+"tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
                 }else{
-                    je.setMsg("异常错误!添加查看记录失败!请重试!");
+                    je.setMsg("错误!添加查看记录失败!请重试!");
                     response.getWriter().print(je.toJSON());
                 }
             }

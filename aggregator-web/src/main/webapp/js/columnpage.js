@@ -307,7 +307,7 @@ function pagerightSearch(txtid,selid){
 function pageRightAddToRight(){
 	var opts=$("#sel_op_1 option:selected");
 	if(opts.length<1){
-		alert('异常错误，没有发现您已经选择的页面权限!');return;
+		alert('没有发现您已经选择的页面权限!');return;
 	}
 	var msg='';
 	var htm='';
@@ -331,7 +331,7 @@ function pageRightAddToRight(){
 function doDelPageRight(){
 	var opts=$("#sel_op_2 option:selected");
 	if(opts.length<1){
-		alert('异常错误，没有发现您已经选择的页面权限!');return;
+		alert('没有发现您已经选择的页面权限!');return;
 	}
 	$.each(opts,function(idx,itm){	
 		$("#sel_op_1 option[value='"+itm.value+"']").css("color","black");

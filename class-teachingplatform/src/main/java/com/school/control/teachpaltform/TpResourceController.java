@@ -1236,7 +1236,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         stuInfo1.setUserref(this.logined(request).getRef());
         List<StudentInfo> stuList=this.studentManager.getList(stuInfo1,null);
         if(stuList==null){
-            je.setMsg("异常错误，加载学生失败!");
+            je.setMsg("错误，加载学生失败!");
             response.getWriter().print(je.getAlertMsgAndBack());return null;
         }
         List<DictionaryInfo>resourceTypeList=this.dictionaryManager.getDictionaryByType("RES_TYPE");
@@ -1281,7 +1281,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     public ModelAndView toResourceCheckList(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
 //		if(this.getModel().getCourseid()==null||!UtilTool.isNumber(this.getModel().getCourseid().toString())){
-//			je.setMsg("异常错误!系统未获取到课题标识!");
+//			je.setMsg("错误!系统未获取到课题标识!");
 //			je.getAlertMsgAndBack();
 //			response.getWriter().print(je.toJSON());
 //			return null;
@@ -1303,7 +1303,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
      JsonEntity je = new JsonEntity();
      String courseid=request.getParameter("courseid");
      //		if(courseid==null||courseid.trim().length()<1){
-     //			je.setMsg("异常错误!系统未获取到专题标识!");
+     //			je.setMsg("错误!系统未获取到专题标识!");
      //			response.getWriter().print(je.toJSON());
      //			return;
      //		}
@@ -1348,7 +1348,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     public void getStuResourceList(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();
 //		if(this.getModel().getCourseid()==null){
-//			je.setMsg("异常错误,系统未获取到课题标识!");
+//			je.setMsg("错误,系统未获取到课题标识!");
 //			response.getWriter().print(je.toJSON());
 //			return;
 //		}
@@ -1416,7 +1416,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String resid=request.getParameter("resid");
         if(ref==null||ref.trim().length()<1
                 ||resid==null||resid.trim().length()<1){
-            je.setMsg("异常错误!系统未获取到资源收藏标识!");
+            je.setMsg("错误!系统未获取到资源收藏标识!");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1481,7 +1481,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     public ModelAndView toTeacherResource(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
 //		if(this.getModel().getCourseid()==null||!UtilTool.isNumber(this.getModel().getCourseid().toString())){
-//			je.setMsg("异常错误!系统未获取到课题标识!");
+//			je.setMsg("错误!系统未获取到课题标识!");
 //			je.getAlertMsgAndBack();
 //			response.getWriter().print(je.toJSON());
 //			return null;
@@ -1503,7 +1503,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
      public void getTeacherResourceList(HttpServletRequest request,HttpServletResponse response)throws Exception{
      JsonEntity je=new JsonEntity();
      //		if(this.getModel().getCourseid()==null){
-     //			je.setMsg("异常错误,系统未获取到课题标识!");
+     //			je.setMsg("错误,系统未获取到课题标识!");
      //			response.getWriter().print(je.toJSON());
      //			return;
      //		}
@@ -1538,7 +1538,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
      }
      String baseidstr=request.getParameter("baseidstr");
      if(baseidstr==null||baseidstr.trim().length()<1){
-     je.setMsg("异常错误!系统未获取到资源标识!");
+     je.setMsg("错误!系统未获取到资源标识!");
      response.getWriter().print(je.toJSON());
      return;
      }
@@ -1614,7 +1614,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         JsonEntity je = new JsonEntity();
         String ref=request.getParameter("ref");
         if(ref==null||ref.trim().length()<1){
-            je.setMsg("异常错误,系统未获取到资源标识!");
+            je.setMsg("错误,系统未获取到资源标识!");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1641,7 +1641,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
 
      String baseidstr=request.getParameter("baseidstr");
      if(baseidstr==null||baseidstr.trim().length()<1){
-     je.setMsg("异常错误!系统未获取到资源标识!");
+     je.setMsg("错误!系统未获取到资源标识!");
      response.getWriter().print(je.toJSON());
      return;
      }
@@ -2896,7 +2896,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                         if(this.taskPerformanceManager.doSave(tp)){
                             System.out.println("添加资源查看记录成功...");
                         }else{
-                            je.setMsg("异常错误!添加查看记录失败!请重试!");
+                            je.setMsg("错误!添加查看记录失败!请重试!");
                             response.getWriter().print(je.toJSON());
                             return;
                         }
@@ -3392,7 +3392,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
 
             code = httpConnection.getResponseCode();
         } catch (Exception e) {			// 异常提示
-            System.out.println("异常错误!TOTALSCHOOL未响应!");
+            System.out.println("错误!TOTALSCHOOL未响应!");
             return null;
         }
         StringBuffer stringBuffer = new StringBuffer();
@@ -3406,16 +3406,16 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                 }
                 reader.close();
             } catch (IOException e) {
-                System.out.println("异常错误!");
+                System.out.println("错误!");
                 e.printStackTrace();;
                 return null;
             }
         }else if(code==404){
             // 提示 返回
-            System.out.println("异常错误!404错误，请联系管理人员!");
+            System.out.println("错误!404错误，请联系管理人员!");
             return null;
         }else if(code==500){
-            System.out.println("异常错误!500错误，请联系管理人员!");
+            System.out.println("错误!500错误，请联系管理人员!");
             return null;
         }
         String  returnContent=stringBuffer.toString();

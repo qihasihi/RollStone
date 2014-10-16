@@ -246,7 +246,7 @@ public class DeptController extends BaseController<DeptInfo> {
 		 d.setDeptid(deptid);
 		 deptList=this.deptManager.getList(d, null);
 		 if(deptList==null||deptList.size()<1){
-			je.setMsg("异常错误，系统尚未发现该部门信息，或许已经不存在，请刷新后重试!错误代码：deList is empty!");
+			je.setMsg("错误，系统尚未发现该部门信息，或许已经不存在，请刷新后重试!");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return; 
 		 }  
@@ -417,7 +417,7 @@ public class DeptController extends BaseController<DeptInfo> {
 		tmpdept.setDeptid(Integer.parseInt(ref));
 		List<DeptInfo> deptList=this.deptManager.getList(tmpdept, null);
 		if(deptList==null||deptList.size()<1){
-			je.setMsg("异常错误，系统尚未发现您要设置的部门信息，或部门已经不存在!");
+			je.setMsg("错误，系统尚未发现您要设置的部门信息，或部门已经不存在!");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return null;
 		}

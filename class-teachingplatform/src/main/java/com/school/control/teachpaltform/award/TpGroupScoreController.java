@@ -158,7 +158,7 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
             //得到学生所在的班级及classtype
             List<Map<String,Object>> tpccList=this.tpCourseClassManager.getTpClassCourse(Long.parseLong(courseid.trim()),this.logined(request).getUserid(),termid);
             if(tpccList==null||tpccList.size()<1){
-                jsonEntity.setMsg("异常错误，这当前学期中本专题没有您的班级信息!请重试!");
+                jsonEntity.setMsg("错误，这当前学期中本专题没有您的班级信息!请重试!");
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
             }
             clsid=tpccList.get(0).get("CLASS_ID").toString();

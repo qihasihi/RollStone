@@ -198,18 +198,18 @@ public class AppraiseLogsAction extends BaseController<AppraiseLogsInfo> {
 			return;
 		}
 		if (ali.getTargetclassuserref() == null) {
-			je.setMsg("异常错误，系统尚未获取到您要评价教职员工的班级引用! 请刷新重试!    错误标识: Classuserref");
+			je.setMsg("错误，系统尚未获取到您要评价教职员工的班级引用! 请刷新重试!    错误标识: Classuserref");
 			response.getWriter().print(je.toJSON());
 			return;
 		}
 		if (ali.getTargetuserref() == null) {
-			je.setMsg("异常错误，系统尚未获取到您要评价的用户标识！请刷新后重试，错误标识：User_Id");
+			je.setMsg("错误，系统尚未获取到您要评价的用户标识！请刷新后重试，错误标识：User_Id");
 			response.getWriter().print(je.toJSON());
 			return;
 		}
 		String[] answerOptions = request.getParameterValues("answeroption");
 		if (answerOptions == null || answerOptions.length < 1) {
-			je.setMsg("异常错误，系统尚未获取到您评价的信息！请重新提交!   错误标识：answeroption");
+			je.setMsg("错误，系统尚未获取到您评价的信息！请重新提交!   错误标识：answeroption");
 			response.getWriter().print(je.toJSON());
 			return;
 		}
@@ -253,7 +253,7 @@ public class AppraiseLogsAction extends BaseController<AppraiseLogsInfo> {
 				}
 			}
 		}
-		je.setMsg("异常错误，系统没有发现可以执行的语句!");
+		je.setMsg("错误，系统没有发现可以执行的语句!");
 		// 开始执行
 		if (sqlStrList.size() > 0 && objArrayList.size() > 0) {
 			boolean flag = this.appraiseLogsManager.doExcetueArrayProc(

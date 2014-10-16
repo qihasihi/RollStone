@@ -47,7 +47,7 @@
 				}
 				$(".header_ico1 a").attr("href",$(".header_ico1 a").attr("href"));
 				if(topicid==null||topicid.Trim().length<1){
-					alert('异常错误，非法访问!参数异常!');return;
+					alert('错误，非法访问!参数异常!');return;
 				}
                 //加载富文本框
                 ueditor= new UE.ui.Editor(edotpr_opt)

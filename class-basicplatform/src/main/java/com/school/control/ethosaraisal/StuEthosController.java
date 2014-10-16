@@ -117,22 +117,22 @@ public class StuEthosController extends BaseController<StuEthosInfo> {
 		String weekId = request.getParameter("weekId");
 		
 		if (classId <0) {
-			je.setMsg("异常错误，系统尚未获取到您要操作的班级信息，请返回班级校风页面选择班级信息！");
+			je.setMsg("错误，系统尚未获取到您要操作的班级信息，请返回班级校风页面选择班级信息！");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return null;
 		}
 		if (year == null || year.trim().length() < 1 ) {
-			je.setMsg("异常错误，系统尚未获取您要操作的学期信息，请返回班级校风页面选择学期信息！");
+			je.setMsg("错误，系统尚未获取您要操作的学期信息，请返回班级校风页面选择学期信息！");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return null;
 		}
 		if(grade == null || grade.trim().length()<1){
-			je.setMsg("异常错误，系统尚未获取您要操作的年级信息，请返回班级校风页面选择年级信息！");
+			je.setMsg("错误，系统尚未获取您要操作的年级信息，请返回班级校风页面选择年级信息！");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return null;
 		}
 		if (weekId == null || weekId.trim().length()<1) {
-			je.setMsg("异常错误，系统尚未获取您要操作的学期信息，请返回班级校风页面选择学期信息！");
+			je.setMsg("错误，系统尚未获取您要操作的学期信息，请返回班级校风页面选择学期信息！");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return null;
 		}
@@ -317,13 +317,13 @@ public class StuEthosController extends BaseController<StuEthosInfo> {
     	JsonEntity je=new JsonEntity();
     	String termid=request.getParameter("termid");
     	if(termid==null||termid.trim().length()<1){
-    		je.setMsg("异常错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
+    		je.setMsg("错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
     		response.getWriter().print(je.getAlertMsgAndCloseWin());
     		return;
     	}
     	String classid=request.getParameter("classid");
     	if(classid==null||classid.trim().length()<1){
-    		je.setMsg("异常错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
+    		je.setMsg("错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
     		response.getWriter().print(je.getAlertMsgAndCloseWin());
     		return;
     	}
@@ -385,7 +385,7 @@ public class StuEthosController extends BaseController<StuEthosInfo> {
 		filename=title;
 		String flag=this.operaterexcelmanager.ExplortExcel(response, filename, columnList, objData, title, String.class, null);
 		if(flag!=null){
-			je.setMsg("异常错误，无法导出!");
+			je.setMsg("错误，无法导出!");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 		}
     }
@@ -400,13 +400,13 @@ public class StuEthosController extends BaseController<StuEthosInfo> {
     	JsonEntity je=new JsonEntity();
     	String termid=request.getParameter("termid");
     	if(termid==null||termid.trim().length()<1){
-    		je.setMsg("异常错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
+    		je.setMsg("错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
     		response.getWriter().print(je.getAlertMsgAndCloseWin());
     		return;
     	}
     	String classid=request.getParameter("classid");
     	if(classid==null||classid.trim().length()<1){
-    		je.setMsg("异常错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
+    		je.setMsg("错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
     		response.getWriter().print(je.getAlertMsgAndCloseWin());
     		return;
     	}
@@ -468,7 +468,7 @@ public class StuEthosController extends BaseController<StuEthosInfo> {
 		filename=title;
 		String flag=this.operaterexcelmanager.ExplortExcel(response, filename, columnList, objData, title, String.class, null);
 		if(flag!=null){
-			je.setMsg("异常错误，无法导出!");
+			je.setMsg("错误，无法导出!");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 		}
     }
@@ -483,13 +483,13 @@ public class StuEthosController extends BaseController<StuEthosInfo> {
     	JsonEntity je=new JsonEntity();
     	String termid=request.getParameter("termid");
     	if(termid==null||termid.trim().length()<1){
-    		je.setMsg("异常错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
+    		je.setMsg("错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
     		response.getWriter().print(je.getAlertMsgAndCloseWin());
     		return;
     	}
     	String classid=request.getParameter("classid");
     	if(classid==null||classid.trim().length()<1){
-    		je.setMsg("异常错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
+    		je.setMsg("错误，系统检测到您没有正常浏览本系统！请正常浏览本系统!");
     		response.getWriter().print(je.getAlertMsgAndCloseWin());
     		return;
     	}
@@ -552,7 +552,7 @@ public class StuEthosController extends BaseController<StuEthosInfo> {
 		filename=title;
 		String flag=this.operaterexcelmanager.ExplortExcel(response, filename, columnList, objData, title, String.class, null);
 		if(flag!=null){
-			je.setMsg("异常错误，无法导出!");
+			je.setMsg("错误，无法导出!");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 		}
     }

@@ -634,7 +634,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
                 || resTypeEVList==null || resTypeEVList.size()==0
                 || resFileTypeEVList==null || resFileTypeEVList.size()==0) {
             jeEntity.setMsg(UtilTool.msgproperty
-                    .getProperty("PARAM_ERROR"));// 异常错误，参数不齐，无法正常访问!
+                    .getProperty("PARAM_ERROR"));// 错误，参数不齐，无法正常访问!
             response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
             return null;
         }
@@ -988,7 +988,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         }
         if (resInfo.getResname() == null
                 || resInfo.getResname().trim().length() < 1) {
-            // jeEntity.setMsg("异常错误，资源名称不能为空，请刷重试!");
+            // jeEntity.setMsg("错误，资源名称不能为空，请刷重试!");
             jeEntity.setMsg(UtilTool.msgproperty
                     .getProperty("RESOURCE_NO_RESNAME"));
             response.getWriter().print(jeEntity.toJSON());
@@ -996,7 +996,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         }
         if (resInfo.getReskeyword() == null
                 || resInfo.getReskeyword().trim().length() < 1) {
-            // 异常错误，关键字不能为空，请重试!
+            // 错误，关键字不能为空，请重试!
             jeEntity.setMsg(UtilTool.msgproperty
                     .getProperty("RESOURCE_NO_KEYWORD"));
             response.getWriter().print(jeEntity.toJSON());
@@ -1030,7 +1030,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
 
         if (resInfo.getResname() == null
                 || resInfo.getResname().trim().length() < 1) {
-            // jeEntity.setMsg("异常错误，资源名称不能为空，请刷重试!");
+            // jeEntity.setMsg("错误，资源名称不能为空，请刷重试!");
             jeEntity.setMsg(UtilTool.msgproperty
                     .getProperty("RESOURCE_NO_RESNAME"));
             response.getWriter().print(jeEntity.toJSON());
@@ -1048,7 +1048,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         }
 //		if (resInfo.getReskeyword() == null
 //				|| resInfo.getReskeyword().trim().length() < 1) {
-//			// 异常错误，关键字不能为空，请重试!
+//			// 错误，关键字不能为空，请重试!
 //			jeEntity.setMsg(UtilTool.msgproperty
 //					.getProperty("RESOURCE_NO_KEYWORD"));
 //			response.getWriter().print(jeEntity.toJSON());
@@ -1061,7 +1061,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         String filename = request.getParameter("filename");
         if (filename == null || filename.trim().length() < 1) {
             jeEntity.setMsg(UtilTool.msgproperty
-                    .getProperty("RESOURCE_NO_FILE"));// 异常错误，没有发现文件!请刷新页面后重试!
+                    .getProperty("RESOURCE_NO_FILE"));// 错误，没有发现文件!请刷新页面后重试!
             response.getWriter().print(jeEntity.toJSON());
             return;
         }
@@ -1141,7 +1141,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
             if(mapList==null||mapList.size()<1){
                 List<SubjectInfo> subList=this.subjectManager.getList(null,null);
                 if(subList==null||subList.size()<1){
-                    jeEntity.setMsg("异常错误，没有发现学校的学科数据，请联系相关人员进行配置填加!");
+                    jeEntity.setMsg("错误，没有发现学校的学科数据，请联系相关人员进行配置填加!");
                     response.getWriter().print(jeEntity.toJSON());return;
                 }
                 resInfo.setSubject(subList.get(0).getSubjectid());
@@ -1183,7 +1183,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
 //            if(sbuList==null||sbuList.size()<1){
 //                List<SubjectInfo> subList=this.subjectManager.getList(null,null);
 //                if(subList==null||subList.size()<1){
-//                    jeEntity.setMsg("异常错误，没有发现学校的学科数据，请联系相关人员进行配置填加!");
+//                    jeEntity.setMsg("错误，没有发现学校的学科数据，请联系相关人员进行配置填加!");
 //                    response.getWriter().print(jeEntity.toJSON());return;
 //                }
 //                resInfo.setSubject(subList.get(0).getSubjectid());

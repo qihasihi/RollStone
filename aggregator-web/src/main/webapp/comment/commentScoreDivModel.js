@@ -67,7 +67,7 @@ function pRate(userId,callBack){
 			type:'post',
 			dataType:'json',
 			error:function(){
-				alert('异常错误,系统未响应！');
+				alert('错误,系统未响应！');
 			},success:function(rps){
 				if(rps.type=="success"){
 					alert("评论成功!");

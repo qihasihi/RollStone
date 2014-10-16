@@ -59,7 +59,7 @@ public class ShareResNum extends TimerTask {
         logger.info("--------------------分享资源数量执行-------------------");
         String key=UpdateCourseUtil.getCurrentSchoolKey(request);
         if(key==null){//记录操作日志
-            System.out.println("异常错误，得到分校KEY失败，请检测是否存在School.txt文件!");return;
+            System.out.println("错误，得到分校KEY失败，请检测是否存在School.txt文件!");return;
         }
         String firstDirectory= "ShareResNum";
         String filename=new StringBuffer().append(firstDirectory).append(".xml").toString();    //xml文件的文件名
@@ -125,13 +125,13 @@ public class ShareResNum extends TimerTask {
             for (ShareResNumInfo entity:shareNumList){
                 if(!ShareCourseUtil.addDateToXml(writeUrl,entity)){
                     isSuccess=false;
-                    System.out.println("异常错误，写入专题至XML文件失败，原因：未知!");
+                    System.out.println("错误，写入专题至XML文件失败，原因：未知!");
                     return;
                 }
             }
          }
         if(!isSuccess){
-           //跳转，异常错误!
+           //跳转，错误!
            return;
         }
         //先记录空值
@@ -153,7 +153,7 @@ public class ShareResNum extends TimerTask {
         params+="&key="+key+"&resolveFilename="+firstDirectory+".zip";
         Map<String,Object> fileLocaMap=ShareResNumUtil.sendPostURL(totalSchoolUrl,params);
         if(fileLocaMap==null||fileLocaMap.get("type")!=null&&!fileLocaMap.get("type").toString().trim().equals("success")){
-            //记录异常错误日志，
+            //记录错误日志，
             System.out.println(fileLocaMap.get("msg"));
             return;
         }else
@@ -366,7 +366,7 @@ class ShareResNumUtil{
 
             code = httpConnection.getResponseCode();
         } catch (Exception e) {			// 异常提示
-            System.out.println("异常错误!TOTALSCHOOL未响应!");
+            System.out.println("错误!TOTALSCHOOL未响应!");
             return null;
         }
         StringBuffer stringBuffer = new StringBuffer();
@@ -380,16 +380,16 @@ class ShareResNumUtil{
                 }
                 reader.close();
             } catch (IOException e) {
-                System.out.println("异常错误!");
+                System.out.println("错误!");
                 e.printStackTrace();;
                 return null;
             }
         }else if(code==404){
             // 提示 返回
-            System.out.println("异常错误!404错误，请联系管理人员!");
+            System.out.println("错误!404错误，请联系管理人员!");
             return null;
         }else if(code==500){
-            System.out.println("异常错误!500错误，请联系管理人员!");
+            System.out.println("错误!500错误，请联系管理人员!");
             return null;
         }
         String returnContent=null;

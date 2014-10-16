@@ -487,7 +487,7 @@ public class StudentController extends BaseController<StudentInfo> {
 		String year=request.getParameter("year");
 		String pattern=request.getParameter("pattern");
 		if(classIdStr==null||classIdStr.trim().length()<1){
-			jeEntity.setMsg("异常错误，班级未接收到，请刷新页面后重试！");
+			jeEntity.setMsg("错误，班级未接收到，请刷新页面后重试！");
 			response.getWriter().print(jeEntity.toJSON());
 			return;
 		}
@@ -510,7 +510,7 @@ public class StudentController extends BaseController<StudentInfo> {
 		JsonEntity jeEntity=new JsonEntity();
 		String stuno = request.getParameter("stuno");
 		if(stuno==null||stuno.trim().length()<1){
-			jeEntity.setMsg("异常错误，学号未接收到，请刷新页面后重试！");
+			jeEntity.setMsg("错误，学号未接收到，请刷新页面后重试！");
 			response.getWriter().print(jeEntity.toJSON());
 			return;
 		}

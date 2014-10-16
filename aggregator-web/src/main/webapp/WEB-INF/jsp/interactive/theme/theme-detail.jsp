@@ -34,7 +34,7 @@
         $(function(){
 
             if(topicid==null||themeid==null){
-                alert('异常错误，非法访问!参数异常!');return;
+                alert('错误，非法访问!参数异常!');return;
             }
             //加载富文本框
             edotpr_opt= {

@@ -388,10 +388,10 @@ public class AppraiseItemAction extends BaseController<AppraiseItemInfo> {
 	 * 
 	 *             public void doYyong() throws Exception{ JsonEntity je=new
 	 *             JsonEntity(); if(this.getModel().getPjyear()==null){
-	 *             je.setMsg("异常错误，系统尚未获取到您要引用的年份！请重试!");
+	 *             je.setMsg("错误，系统尚未获取到您要引用的年份！请重试!");
 	 *             response.getWriter().print(je.toJSON()); return ; }
 	 *             if(this.getModel().getTargetidentitytype()==null){
-	 *             je.setMsg("异常错误，系统尚未获取到您要引用的评教项针对身份！请重试!");
+	 *             je.setMsg("错误，系统尚未获取到您要引用的评教项针对身份！请重试!");
 	 *             response.getWriter().print(je.toJSON()); return ; } String
 	 *             currentYear=this.getTermmanager().getMaxIdTerm().getYear();
 	 * 
@@ -425,7 +425,7 @@ public class AppraiseItemAction extends BaseController<AppraiseItemInfo> {
 	 * 
 	 *             } else{ je.setMsg("引用失败！原因：未知!");
 	 *             response.getWriter().print(je.toJSON()); return ; } }else{
-	 *             je.setMsg("异常错误，系统尚未获取到可以引用的数据！");
+	 *             je.setMsg("错误，系统尚未获取到可以引用的数据！");
 	 *             response.getWriter().print(je.toJSON()); return ; }
 	 * 
 	 *             }

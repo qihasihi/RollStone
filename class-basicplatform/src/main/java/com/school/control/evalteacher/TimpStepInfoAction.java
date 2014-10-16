@@ -48,7 +48,7 @@ public class TimpStepInfoAction extends BaseController<TimeStepInfo> {
 		TimeStepInfo timestepinfo = this.getParameter(request, TimeStepInfo.class);
 		if(timestepinfo==null||timestepinfo.getYearid()==null
 				||timestepinfo.getPjstarttimeString()==null||timestepinfo.getPjendtimeString()==null){
-			je.setMsg("异常错误，原因：参数错误!");
+			je.setMsg("错误，原因：参数错误!");
 			response.getWriter().print(je.toJSON());
 			return;
 		}
@@ -70,7 +70,7 @@ public class TimpStepInfoAction extends BaseController<TimeStepInfo> {
 			je.setMsg("保存成功！");
 			
 		}else{
-			je.setMsg("异常错误，原因：SQL执行错误！");
+			je.setMsg("错误，原因：SQL执行错误！");
 		}
 		response.getWriter().print(je.toJSON());
 		

@@ -56,7 +56,7 @@ public class JobController extends BaseController<JobInfo>{
 		//验证参数
 		JsonEntity je=new JsonEntity();
 		if(jobInfo.getJobname()==null||jobInfo.getJobname().length()<1){
-			je.setMsg("异常错误，请输入职务名称!");
+			je.setMsg("错误，请输入职务名称!");
 			response.getWriter().print(je.toJSON());return;
 		}
 		boolean isflag=this.jobManager.doSave(jobInfo);		
@@ -74,7 +74,7 @@ public class JobController extends BaseController<JobInfo>{
 		//验证参数
 		JsonEntity je=new JsonEntity();
 		if(jobInfo.getJobid()==null||jobInfo.getJobid()==0){
-			je.setMsg("异常错误!");
+			je.setMsg("错误!");
 			response.getWriter().print(je.toJSON());return;
 		}
 		boolean isflag=this.jobManager.doDelete(jobInfo);		
@@ -94,11 +94,11 @@ public class JobController extends BaseController<JobInfo>{
 		//验证参数
 		JsonEntity je=new JsonEntity();
 		if(jobInfo.getJobid()==null||jobInfo.getJobid()==0){
-			je.setMsg("异常错误!");
+			je.setMsg("错误!");
 			response.getWriter().print(je.toJSON());return;
 		}
 		if(jobInfo.getJobname()==null||jobInfo.getJobname().length()<1){
-			je.setMsg("异常错误，请输入职务名称!");
+			je.setMsg("错误，请输入职务名称!");
 			response.getWriter().print(je.toJSON());return;
 		}
 		boolean isflag=this.jobManager.doUpdate(jobInfo);		

@@ -495,7 +495,7 @@ $get={	TargetDOM : null, // 储存当前拖拽的DOM对象引用
 	*/
 	function moveReturnFun(pref,cref){
 		if(isNaN(pref)||isNaN(cref)){ 
-			alert('异常错误，拖拽错误!');
+			alert('拖拽错误!');
 			return;
 		}
 		

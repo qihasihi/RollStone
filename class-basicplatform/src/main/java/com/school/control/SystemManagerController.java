@@ -170,7 +170,7 @@ public class SystemManagerController extends BaseController<TermInfo>{
 		int w = 320;
 		int h = 96;
 		if (src == null || src.trim().length() < 1 ) {
-			je.setMsg("异常错误，原因：参数不齐!");
+			je.setMsg("错误，原因：参数不齐!");
 			response.getWriter().print(je.toJSON());
 			return;
 		}
@@ -178,7 +178,7 @@ public class SystemManagerController extends BaseController<TermInfo>{
 		String src1 = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+src.split("/")[1];
 		File f = new File(src1);
 		if (!f.exists()) {
-			je.setMsg("异常错误，该图片已经不存在!");
+			je.setMsg("错误，该图片已经不存在!");
 			response.getWriter().print(je.toJSON());
 			return;
 		}

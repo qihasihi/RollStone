@@ -335,7 +335,7 @@ public class ColumnRightController extends BaseController<ColumnRightInfo>{
 			}else
 				jeEntity.setMsg("操作失败，原因：未知!");
 		}else
-			jeEntity.setMsg("异常错误，没有可操作的内容!");
+			jeEntity.setMsg("错误，没有可操作的内容!");
 		response.getWriter().print(jeEntity.toJSON());
 	}
 }

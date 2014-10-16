@@ -227,7 +227,7 @@ public class PjPeerItemController extends BaseController<PjPeerItemInfo> {
     public ModelAndView getItemView(HttpServletRequest request,HttpServletResponse response,ModelAndView mp )throws Exception{
 		JsonEntity je=new JsonEntity();
 		if(request.getParameter("peerbaseref")==null){
-			je.setMsg("异常错误，系统尚未发现您要预览的baseref,请刷新后重试！错误代码：peerbaseref is notfound!");
+			je.setMsg("错误，系统尚未发现您要预览的baseref,请刷新后重试！错误代码：peerbaseref is notfound!");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return null;
 		}
@@ -245,7 +245,7 @@ public class PjPeerItemController extends BaseController<PjPeerItemInfo> {
 		request.setAttribute("typename", typename);
 		List<PjPeerBaseInfo> pbList=this.pjPeerBaseManager.getList(pb, null);
 		if(pbList==null||pbList.size()<1){
-			je.setMsg("异常错误，系统尚未获取到您要预览的基础信息，请刷新页面后重试！pbList is notfound!");
+			je.setMsg("错误，系统尚未获取到您要预览的基础信息，请刷新页面后重试！pbList is notfound!");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return null;
 		}
@@ -269,7 +269,7 @@ public class PjPeerItemController extends BaseController<PjPeerItemInfo> {
 		request.setAttribute("deptnames", deptnames);
 		String pjidObj=request.getParameter("pjid");
 		if(pjidObj.toString().trim().length()<1){
-			je.setMsg("异常错误，系统尚未检测到必要的数据，请刷新面面后重试!错误代码：pjidobj is empty！");
+			je.setMsg("错误，系统尚未检测到必要的数据，请刷新面面后重试!错误代码：pjidobj is empty！");
 			response.getWriter().print(je.getAlertMsgAndCloseWin());
 			return null;
 		}
@@ -289,13 +289,13 @@ public class PjPeerItemController extends BaseController<PjPeerItemInfo> {
 				//评价项目
 				String pjItemStr=request.getParameter("pjparent"+tmpid);
 				if(pjItemStr==null||pjItemStr.length()<1){
-					je.setMsg("异常错误！数据不完整!错误代码：pjItemStr is empty! strTmpIdx:"+tmpid);
+					je.setMsg("错误！数据不完整!错误代码：pjItemStr is empty! strTmpIdx:"+tmpid);
 					isflag=true;
 					break;
 				}
 				String pjscore=request.getParameter("pjscore"+tmpid);
 				if(pjscore==null||pjscore.length()<1||!UtilTool.isDouble(pjscore)){
-					je.setMsg("异常错误！数据不完整!错误代码：pjscore is empty! strTmpIdx:"+tmpid);
+					je.setMsg("错误！数据不完整!错误代码：pjscore is empty! strTmpIdx:"+tmpid);
 					isflag=true;
 					break;
 				}
@@ -308,18 +308,18 @@ public class PjPeerItemController extends BaseController<PjPeerItemInfo> {
 				//得到等级
 				String[] cldStrArray=request.getParameterValues("pjchild"+tmpid);
 				if(cldStrArray==null||cldStrArray.length<1){
-					je.setMsg("异常错误，数据不完整!错误代码：cldStrArray is empty!");
+					je.setMsg("错误，数据不完整!错误代码：cldStrArray is empty!");
 					isflag=true;
 					break;
 				}
 				String[] levelScoreArray=request.getParameterValues("levelscore"+tmpid);
 				if(levelScoreArray==null||levelScoreArray.length<1){
-					je.setMsg("异常错误，数据不完整!错误代码：levelScoreArray is empty!");
+					je.setMsg("错误，数据不完整!错误代码：levelScoreArray is empty!");
 					isflag=true;
 					break;
 				}
 				if(levelScoreArray.length!=cldStrArray.length){
-					je.setMsg("异常错误，数据不完整!错误代码：levelScoreArray.length<>cldStrArray.length!");
+					je.setMsg("错误，数据不完整!错误代码：levelScoreArray.length<>cldStrArray.length!");
 					isflag=true;
 					break;
 				}
@@ -328,7 +328,7 @@ public class PjPeerItemController extends BaseController<PjPeerItemInfo> {
 				for (int i = 0; i < levelScoreArray.length; i++) {
 					if(levelScoreArray[i]==null||levelScoreArray[i].trim().length()<1
 						||cldStrArray[i]==null||cldStrArray[i].trim().length()<1){
-						je.setMsg("异常错误，数据不完整!错误代码：levelScoreArray["+i+"] OR cldStrArray["+i+"] is empty! ");
+						je.setMsg("错误，数据不完整!错误代码：levelScoreArray["+i+"] OR cldStrArray["+i+"] is empty! ");
 						isflag=true;
 						break;
 					}

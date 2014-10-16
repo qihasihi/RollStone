@@ -153,7 +153,7 @@ public class ShareCourse extends TimerTask {
                 //tc.setSchoolname(UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME"));
                 //写入XML
                 if(!ShareCourseUtil.addDateToXml(writeUrl,tc)){
-                    System.out.println("异常错误，写入专题至XML文件失败，原因：未知!");
+                    System.out.println("错误，写入专题至XML文件失败，原因：未知!");
                     return;
                 }
                 //先记录空值
@@ -181,7 +181,7 @@ public class ShareCourse extends TimerTask {
                     //记录写入XML
                     //写入XML                   ;
                     if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid() + "", tpOperateList)){
-                        System.out.println("异常错误，写入专题操作记录至XML文件失败，原因：未知!");
+                        System.out.println("错误，写入专题操作记录至XML文件失败，原因：未知!");
                         return;
                     }
                 }*/
@@ -194,7 +194,7 @@ public class ShareCourse extends TimerTask {
 //                    for(int i=0;i<teachingMaterialList.size();i++){
                         //写入XML中
                         if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",teachingMaterialList)){
-                            System.out.println("异常错误，写入专题教材记录至XML文件失败，原因：未知!");
+                            System.out.println("错误，写入专题教材记录至XML文件失败，原因：未知!");
                             return;
                         }
 //                  }
@@ -217,7 +217,7 @@ public class ShareCourse extends TimerTask {
                                 List<ResourceInfo> resList=new ArrayList<ResourceInfo>();
                                 resList.add(resEntity);
                                 if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",resList)){
-                                    System.out.println("异常错误，写入资源记录至XML文件失败，原因：未知!");
+                                    System.out.println("错误，写入资源记录至XML文件失败，原因：未知!");
                                     return;
                                 }
                                 //查看资源文件是否存在，如果存在，则进行压缩
@@ -234,7 +234,7 @@ public class ShareCourse extends TimerTask {
                     }
                     //写入XML中，
                     if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",tpCourseResourceList)){
-                        System.out.println("异常错误，写入专题资源记录至XML文件失败，原因：未知!");
+                        System.out.println("错误，写入专题资源记录至XML文件失败，原因：未知!");
                         return;
                     }
                 }
@@ -247,7 +247,7 @@ public class ShareCourse extends TimerTask {
                     if(topicList==null||topicList.size()<1)break;
                     //写入XML中，
                     if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",topicList)){
-                        System.out.println("异常错误，写入专题教材记录至XML文件失败，原因：未知!");
+                        System.out.println("错误，写入专题教材记录至XML文件失败，原因：未知!");
                         return;
                     }
                     for(TpTopicInfo topic:topicList){
@@ -282,7 +282,7 @@ public class ShareCourse extends TimerTask {
                                 }
                             }
                             if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",themeList)){
-                                System.out.println("异常错误，写入专题教材记录至XML文件失败，原因：未知!");
+                                System.out.println("错误，写入专题教材记录至XML文件失败，原因：未知!");
                                 return;
                             }
                         }
@@ -323,7 +323,7 @@ public class ShareCourse extends TimerTask {
                         List<QuestionInfo> quesList=new ArrayList<QuestionInfo>();
                         quesList.add(ques);
                         if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",quesList)){
-                            System.out.println("异常错误，写入专题教材记录至XML文件失败，原因：未知!");
+                            System.out.println("错误，写入专题教材记录至XML文件失败，原因：未知!");
                             return;
                         }
                         //得到答案信息
@@ -348,13 +348,13 @@ public class ShareCourse extends TimerTask {
                         }
                         //保存答案信息到数据库
                         if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",quesOptsList)){
-                            System.out.println("异常错误，写入专题教材记录至XML文件失败，原因：未知!");
+                            System.out.println("错误，写入专题教材记录至XML文件失败，原因：未知!");
                             return;
                         }
 
                     }
                     if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",courseQuestionList)){
-                        System.out.println("异常错误，写入专题教材记录至XML文件失败，原因：未知!");
+                        System.out.println("错误，写入专题教材记录至XML文件失败，原因：未知!");
                         return;
                     }
                 }
@@ -377,7 +377,7 @@ public class ShareCourse extends TimerTask {
                         }
                     }
                     if(!OperateXMLUtil.updateEntityToXml(writeUrl, "Courseid", tc.getCourseid()+"",taskList)){
-                        System.out.println("异常错误，写入专题教材记录至XML文件失败，原因：未知!");
+                        System.out.println("错误，写入专题教材记录至XML文件失败，原因：未知!");
                         return;
                     }
                 }
@@ -423,7 +423,7 @@ public class ShareCourse extends TimerTask {
                     }catch(Exception e){e.printStackTrace();}
             }
             if(content==null||content.toString().trim().length()<1){
-                System.out.println("异常错误，school.txt中没有发现加密狗码!请联系总校相关客服人员!");
+                System.out.println("错误，school.txt中没有发现加密狗码!请联系总校相关客服人员!");
                 //插入错误信息
                 return;
             }
@@ -688,7 +688,7 @@ class ShareCourseUtil{
 
             code = httpConnection.getResponseCode();
         } catch (Exception e) {			// 异常提示
-            System.out.println("异常错误!TOTALSCHOOL未响应!");
+            System.out.println("错误!TOTALSCHOOL未响应!");
             return false;
         }
         StringBuffer stringBuffer = new StringBuffer();
@@ -702,15 +702,15 @@ class ShareCourseUtil{
                 }
                 reader.close();
             } catch (IOException e) {
-                System.out.println("异常错误!");
+                System.out.println("错误!");
                 return false;
             }
         }else if(code==404){
             // 提示 返回
-            System.out.println("异常错误!404错误，请联系管理人员!");
+            System.out.println("错误!404错误，请联系管理人员!");
             return false;
         }else if(code==500){
-            System.out.println("异常错误!500错误，请联系管理人员!");
+            System.out.println("错误!500错误，请联系管理人员!");
             return false;
         }
         String returnContent=null;

@@ -15,7 +15,7 @@
 				$("input[type='text']").bind("keyup",function(){});
 				$("input[type='text']").bind("keydown",function(){}); 
 				if(columnsid==null){
-					alert('异常错误，非法访问!参数异常!');return;
+					alert('错误，非法访问!参数异常!');return;
 				}
 				p1=new PageControl({
 						post_url:'getThemeList',

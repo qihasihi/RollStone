@@ -666,7 +666,7 @@ public class ClassController extends BaseController<ClassInfo>{
             utmp.setRef(tmpuid.trim());
             List<UserInfo> uList=this.userManager.getList(utmp, null);
             if(uList==null||uList.size()<1){
-                jeEntity.setMsg("异常错误，学生ID:"+tmpuid.trim()+" 没有发现该学生!");
+                jeEntity.setMsg("错误，学生ID:"+tmpuid.trim()+" 没有发现该学生!");
                 response.getWriter().print(jeEntity.toJSON());
                 return;
             }
@@ -741,7 +741,7 @@ public class ClassController extends BaseController<ClassInfo>{
             }else
                 jeEntity.setMsg("操作失败，原因：未知!");
         }else{
-            jeEntity.setMsg("异常错误，没有可执行的操作!请重试!");
+            jeEntity.setMsg("错误，没有可执行的操作!请重试!");
         }
         response.getWriter().print(jeEntity.toJSON());
     }
@@ -774,7 +774,7 @@ public class ClassController extends BaseController<ClassInfo>{
         presult.setPageSize(1);
         List<TermInfo> tmList=this.termManager.getList(tm, presult);
         if(tmList==null||tmList.size()<1){
-            jeEntity.setMsg("异常错误，没有发现当前年份!");
+            jeEntity.setMsg("错误，没有发现当前年份!");
             response.getWriter().print(jeEntity.toJSON());return;
         }
         //如果当前时间小于9--1号。
@@ -791,7 +791,7 @@ public class ClassController extends BaseController<ClassInfo>{
         clsentity.setPattern("行政班");
         List<ClassInfo> nextClsList=this.classManager.getList(clsentity, presult);
         if(nextClsList!=null&&nextClsList.size()>0){
-            jeEntity.setMsg("异常错误，在"+nextyear+"中存在于新的行政班级!请确认!");
+            jeEntity.setMsg("错误，在"+nextyear+"中存在于新的行政班级!请确认!");
             response.getWriter().print(jeEntity.toJSON());return;
         }
 
@@ -802,7 +802,7 @@ public class ClassController extends BaseController<ClassInfo>{
             tm.setDYYear(nextyear);
             tmList=this.termManager.getList(tm, presult);
             if(tmList==null||tmList.size()<1){
-                jeEntity.setMsg("异常错误，没有发现下一个年份!请确认是跨年!");
+                jeEntity.setMsg("错误，没有发现下一个年份!请确认是跨年!");
                 response.getWriter().print(jeEntity.toJSON());return;
             }
 
@@ -814,7 +814,7 @@ public class ClassController extends BaseController<ClassInfo>{
 
             tmList=this.termManager.getList(tm, presult);
             if(tmList==null||tmList.size()<1){
-                jeEntity.setMsg("异常错误，没有发现下一个年份!请确认是跨年!");
+                jeEntity.setMsg("错误，没有发现下一个年份!请确认是跨年!");
                 response.getWriter().print(jeEntity.toJSON());return;
             }
             nextyear=tmList.get(0).getYear();

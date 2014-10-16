@@ -740,7 +740,7 @@ public class PaperController extends BaseController<PaperInfo>{
         String courseid=request.getParameter("courseid");
         String termid=request.getParameter("termid");
         if(courseid==null||courseid.trim().length()<1){
-            je.setMsg("异常错误,系统未获取到课题标识!");
+            je.setMsg("错误,系统未获取到课题标识!");
             je.getAlertMsgAndBack();
             return null;
         }
@@ -751,7 +751,7 @@ public class PaperController extends BaseController<PaperInfo>{
         c.setCourseid(Long.parseLong(courseid));
         List<TpCourseClass>courseclassList=this.tpCourseClassManager.getList(c, null);
         if(courseclassList==null||courseclassList.size()<1){
-            je.setMsg("异常错误，未获取到该课题的班级信息!请设置后操作任务!");
+            je.setMsg("错误，未获取到该课题的班级信息!请设置后操作任务!");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
@@ -958,7 +958,7 @@ public class PaperController extends BaseController<PaperInfo>{
             return;
         }
         if(StringUtils.isBlank(courseid)){
-            je.setMsg("异常错误,未获取到课题标识!");
+            je.setMsg("错误,未获取到课题标识!");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1365,18 +1365,18 @@ public class PaperController extends BaseController<PaperInfo>{
 
 
         if(StringUtils.isBlank(courseid)){
-            je.setMsg("异常错误,未获取到课题标识!");
+            je.setMsg("错误,未获取到课题标识!");
             response.getWriter().print(je.toJSON());
             return;
         }
         if((groupArray==null||groupArray.length<1)
                 &&(clsArray==null||clsArray.length<1)){
-            je.setMsg("异常错误,未获取到任务对象!");
+            je.setMsg("错误,未获取到任务对象!");
             response.getWriter().print(je.toJSON());
             return;
         }
         if(!(StringUtils.isNotBlank(questype)&&questype.equals("5"))&&criteriaArray.length<1){
-            je.setMsg("异常错误,未获取到任务完成标准!");
+            je.setMsg("错误,未获取到任务完成标准!");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1390,7 +1390,7 @@ public class PaperController extends BaseController<PaperInfo>{
         //课后作业 3
         if(tasktype.toString().equals("3")){
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到试题标识!");
+                je.setMsg("错误，系统未获取到试题标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1405,7 +1405,7 @@ public class PaperController extends BaseController<PaperInfo>{
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }else if(tasktype.toString().equals("2")){//论题
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到论题标识!");
+                je.setMsg("错误，系统未获取到论题标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1420,7 +1420,7 @@ public class PaperController extends BaseController<PaperInfo>{
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
         }else if(tasktype.toString().equals("1")){//资源
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("异常错误，系统未获取到资源标识!");
+                je.setMsg("错误，系统未获取到资源标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1573,7 +1573,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 }else if(vclsList!=null&&vclsList.size()>0){
                     tal.setUsertype(1);
                 }else {
-                    je.setMsg("异常错误!任务班级无效!");
+                    je.setMsg("错误!任务班级无效!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1656,7 +1656,7 @@ public class PaperController extends BaseController<PaperInfo>{
         tt.setUserid(this.logined(request).getUserid());
         List<TpCourseInfo>courseList=this.tpCourseManager.getStuCourseList(tt, null);
         if(courseList==null||courseList.size()<1){
-            je.setMsg("异常错误，没有发现当前专题!请刷新后重试!");
+            je.setMsg("错误，没有发现当前专题!请刷新后重试!");
             response.getWriter().print(je.getAlertMsgAndBack());return null;
         }else{
             request.setAttribute("coursename", courseList.get(0).getCoursename());
@@ -1855,7 +1855,7 @@ public class PaperController extends BaseController<PaperInfo>{
 
         if(Integer.parseInt(tasktype)==3){
             if(questype==null||!UtilTool.isNumber(questype)){
-                je.setMsg("异常错误，系统未获取到问题类型!");
+                je.setMsg("错误，系统未获取到问题类型!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1863,7 +1863,7 @@ public class PaperController extends BaseController<PaperInfo>{
 
             if(questype.equals("1")){//问答
                 if(quesanswer==null||quesanswer.trim().length()<1){
-                    je.setMsg("异常错误，未获取到问答题答案!");
+                    je.setMsg("错误，未获取到问答题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1899,7 +1899,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 }
             }else if(questype.equals("2")){//填空
                 if(fbanswerArray==null||fbanswerArray.length<1){
-                    je.setMsg("异常错误，未获取到问答题答案!");
+                    je.setMsg("错误，未获取到问答题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1908,7 +1908,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 qb.setQuestionid(tmpTask.getTaskvalueid());
                 List<QuestionInfo>qbList=this.questionManager.getList(qb, null);
                 if(qbList==null||qbList.size()<1){
-                    je.setMsg("异常错误!当前试题已不存在!");
+                    je.setMsg("错误!当前试题已不存在!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1918,11 +1918,11 @@ public class PaperController extends BaseController<PaperInfo>{
                 if(fbanswer!=null&&fbanswer.length()>0){
                     answerArray=fbanswer.split("\\|");
                     if(answerArray.length<1){
-                        je.setMsg("异常错误!未获取到填空题教师设置的答案!");
+                        je.setMsg("错误!未获取到填空题教师设置的答案!");
                         response.getWriter().print(je.toJSON());
                         return;
                     }else if(answerArray.length!=fbanswerArray.length){
-                        je.setMsg("异常错误!填空题题目或答案有误!");
+                        je.setMsg("错误!填空题题目或答案有误!");
                         response.getWriter().print(je.toJSON());
                         return;
                     }
@@ -1934,7 +1934,7 @@ public class PaperController extends BaseController<PaperInfo>{
                         }
                     }
                 }else{
-                    je.setMsg("异常错误!系统未获取到填空题答案!");
+                    je.setMsg("错误!系统未获取到填空题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1976,7 +1976,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 }
             }else if(questype.equals("3")){//单选
                 if(optionArray==null||optionArray.length<1){
-                    je.setMsg("异常错误，未获取到选择题答案!");
+                    je.setMsg("错误，未获取到选择题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1987,7 +1987,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 qo.setIsright(1);
                 List<QuestionOption>qbList=this.questionOptionManager.getList(qo, null);
                 if(qbList==null||qbList.size()<1){
-                    je.setMsg("异常错误!未获取到教师设置的选择题答案!");
+                    je.setMsg("错误!未获取到教师设置的选择题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2004,7 +2004,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 qstu.setRef(Integer.parseInt(optionArray[0]));
                 List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
                 if(qbstuList==null||qbstuList.size()<1){
-                    je.setMsg("异常错误!当前选项已不存在!");
+                    je.setMsg("错误!当前选项已不存在!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2042,7 +2042,7 @@ public class PaperController extends BaseController<PaperInfo>{
 
             }else if(questype.equals("4")){//多选
                 if(optionArray==null||optionArray.length<1){
-                    je.setMsg("异常错误，未获取到复选题答案!");
+                    je.setMsg("错误，未获取到复选题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2053,7 +2053,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 qb.setIsright(1);
                 List<QuestionOption>qbList=this.questionOptionManager.getList(qb, null);
                 if(qbList==null||qbList.size()<1){
-                    je.setMsg("异常错误!未获取到教师设置的复选题答案!");
+                    je.setMsg("错误!未获取到教师设置的复选题答案!");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -2076,7 +2076,7 @@ public class PaperController extends BaseController<PaperInfo>{
                     qstu.setRef(Integer.parseInt(opnid));
                     List<QuestionOption>qbstuList=this.questionOptionManager.getList(qstu, null);
                     if(qbstuList==null||qbstuList.size()<1){
-                        je.setMsg("异常错误!当前选项已不存在!");
+                        je.setMsg("错误!当前选项已不存在!");
                         response.getWriter().print(je.toJSON());
                         return;
                     }
@@ -2116,7 +2116,7 @@ public class PaperController extends BaseController<PaperInfo>{
             }
         }else if(Integer.parseInt(tasktype)==1){
             if(quesanswer==null||quesanswer.trim().length()<1){
-                je.setMsg("异常错误,未获取到资源学习心得!");
+                je.setMsg("错误,未获取到资源学习心得!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -2180,12 +2180,12 @@ public class PaperController extends BaseController<PaperInfo>{
         String topicid=request.getParameter("topicid");
         String taskflag=request.getParameter("taskflag");
         if(courseid==null||courseid.trim().length()<1){
-            je.setMsg("异常错误，系统未获取到课题标识!");
+            je.setMsg("错误，系统未获取到课题标识!");
             response.getWriter().print(je.toJSON());
             return;
         }
 //		if(clsid==null||clsid.trim().length()<1){
-//			je.setMsg("异常错误，系统未获取到班级标识!");
+//			je.setMsg("错误，系统未获取到班级标识!");
 //			response.getWriter().print(je.toJSON());
 //			return;
 //		}
@@ -2548,7 +2548,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 if(this.taskPerformanceManager.doSave(tp)){
                     response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
                 }else{
-                    je.setMsg("异常错误!添加查看记录失败!请重试!");
+                    je.setMsg("错误!添加查看记录失败!请重试!");
                     response.getWriter().print(je.toJSON());
                 }
             }
@@ -2621,7 +2621,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 if(this.taskPerformanceManager.doSave(tp)){
                     response.sendRedirect("tpres?toStudentIdx&courseid="+courseid+"&tpresdetailid="+tpresdetailid+"&taskid="+taskid+"&groupid="+groupid);
                 }else{
-                    je.setMsg("异常错误!添加查看记录失败!请重试!");
+                    je.setMsg("错误!添加查看记录失败!请重试!");
                     response.getWriter().print(je.toJSON());
                 }
             }
@@ -3162,7 +3162,7 @@ public class PaperController extends BaseController<PaperInfo>{
         String classtype=request.getParameter("classtype");
         JsonEntity je = new JsonEntity();
         if(paperid==null||paperid.length()<1||taskid==null||taskid.trim().length()<1){
-            je.setMsg("异常错误，请刷新页面重试");
+            je.setMsg("错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
 
@@ -3458,7 +3458,7 @@ public class PaperController extends BaseController<PaperInfo>{
        String taskid=request.getParameter("taskid");
         JsonEntity je = new JsonEntity();
         if(paperid==null||paperid.length()<1||quesid==null||quesid.length()<1||classid==null||classid.trim().length()<1||taskid==null||taskid.trim().length()<1){
-            je.setMsg("异常错误，请刷新页面重试");
+            je.setMsg("错误，请刷新页面重试");
             response.getWriter().println(je.getAlertMsgAndBack());
         }
         List<StuPaperLogs> logsList = this.stuPaperLogsManager.getMarkingLogs(Long.parseLong(paperid),Long.parseLong(quesid),Integer.parseInt(classid),Long.parseLong(taskid.trim()));
@@ -3480,7 +3480,7 @@ public class PaperController extends BaseController<PaperInfo>{
         String taskid=request.getParameter("taskid");
         JsonEntity je=new JsonEntity();
         if(taskid==null||paperid==null||classid==null){
-            je.setMsg("异常错误，请刷新页面重试");
+            je.setMsg("错误，请刷新页面重试");
             response.getWriter().println(je.getAlertMsgAndBack());return null;
         }
         //验证任务
@@ -3488,7 +3488,7 @@ public class PaperController extends BaseController<PaperInfo>{
         tk.setTaskid(Long.parseLong(taskid.trim()));
         List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
         if(tkList==null||tkList.size()<1){
-            je.setMsg("异常错误，没有该任务信息!");
+            je.setMsg("错误，没有该任务信息!");
             response.getWriter().println(je.getAlertMsgAndBack());return null;
         }
 
@@ -3502,7 +3502,7 @@ public class PaperController extends BaseController<PaperInfo>{
         String idx = request.getParameter("idx");
 
         if(paperid==null||paperid.length()<1||quesid==null||quesid.length()<1||taskid==null||taskid.trim().length()<1){
-            je.setMsg("异常错误，请刷新页面重试");
+            je.setMsg("错误，请刷新页面重试");
             response.getWriter().println(je.getAlertMsgAndBack());
             return null;
         }
@@ -3571,7 +3571,7 @@ public class PaperController extends BaseController<PaperInfo>{
                     Integer.parseInt(classid.trim()),
                     Long.parseLong(taskid.trim()));
             if(zqlMapList==null||zqlMapList.size()<1||zqlMapList.get(0)==null||!zqlMapList.get(0).containsKey("ZQL")){
-                je.setMsg("异常错误，请刷新页面重试");
+                je.setMsg("错误，请刷新页面重试");
                 response.getWriter().println(je.getAlertMsgAndBack());
                 return null;
             }
@@ -3582,7 +3582,7 @@ public class PaperController extends BaseController<PaperInfo>{
                     Integer.parseInt(classid.trim()),
                     Long.parseLong(taskid.trim()));
             if(optTJMapList==null||optTJMapList.size()<1||optTJMapList.get(0)==null){
-                je.setMsg("异常错误，请刷新页面重试");
+                je.setMsg("错误，请刷新页面重试");
                 response.getWriter().println(je.getAlertMsgAndBack());
                 return null;
             }
@@ -3631,7 +3631,7 @@ public class PaperController extends BaseController<PaperInfo>{
         String userid = request.getParameter("userid");
         JsonEntity je = new JsonEntity();
         if(ref==null||ref.length()<1||score==null||score.length()<1){
-            je.setMsg("异常错误，请刷新页面重试");
+            je.setMsg("错误，请刷新页面重试");
             je.getAlertMsgAndBack();
         }
         //批量操作记录

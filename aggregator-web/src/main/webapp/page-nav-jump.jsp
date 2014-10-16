@@ -27,7 +27,7 @@
  if(u==null){
  	%>
  	<script type="text/javascript">
-		alert('异常错误!您尚未登陆，请登陆后重试!!');
+		alert('您尚未登陆，请登陆后重试!!');
 		window.close();
 	</script>
  	<%
@@ -37,7 +37,7 @@
  if(ruList==null||ruList.size()<1){
  	%>
  	<script type="text/javascript">
-		alert('异常错误!当前登陆的用户，信息不完整!!');
+		alert('当前登陆的用户，信息不完整!!');
 		window.close();
 	</script>
  	<%
