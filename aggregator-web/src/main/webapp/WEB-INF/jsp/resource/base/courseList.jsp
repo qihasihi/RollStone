@@ -21,7 +21,7 @@
                 $("#searchValue").val(defaultSearchValue);
 
             p1=new PageControl({
-                post_url:'teachercourse?m=getCourseLibraryListAjax',
+                post_url:'teachercourse?m=getCourseLibraryListAjax&searchType=1',
                 page_id:'page1',
                 page_control_name:"p1",		//分页变量空间的对象名称
                 post_form:document.page1form,		//form
