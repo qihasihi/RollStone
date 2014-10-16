@@ -3418,7 +3418,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("userid", user.getUserid());
         List<SchoolInfo> schoolList = this.schoolManager.getList(null,null);
         mp.put("schoolList",schoolList);
-        String schoolname=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME");
+        String schoolname=this.logined(request).getDcschoolname();
         mp.put("schoolname",schoolname);
         return new ModelAndView("/teachpaltform/course/addSelectedCourse", mp);
     }

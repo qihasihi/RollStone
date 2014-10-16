@@ -1069,13 +1069,34 @@ public class UserController extends BaseController<UserInfo> {
 
                         userinfo.setDeptUsers(deptList);
 
+                        //查询分校的logo放入session
+                        if(userinfo.getDcschoolid()!=null){
+                            ISchoolLogoManager schoolLogoManager = (SchoolLogoManager)this.getManager(SchoolLogoManager.class);
+                            SchoolLogoInfo sl = new SchoolLogoInfo();
+                            sl.setSchoolid(userinfo.getDcschoolid());
+                            List<SchoolLogoInfo> logoList = schoolLogoManager.getList(sl,null);
+                            if(logoList!=null&&logoList.size()>0){
+                                request.getSession().setAttribute("logoObj",logoList.get(0));
+                            }
+
+                            //得到分校名称
+                            SchoolInfo sc=new SchoolInfo();
+                            sc.setSchoolid(userinfo.getDcschoolid().longValue());
+                            List<SchoolInfo> schoolList=this.schoolManager.getList(sc,null);
+                            if(schoolList==null||schoolList.size()<1){
+                                je.setType("error");
+                                je.setMsg("错误，没有发现您所在的分校!请联系相关维护人员!");
+                                return je;
+                            }
+                            //将分校名称传入至dcschoolname中
+                            userinfo.setDcschoolname(schoolList.get(0).getName());
+                        }
+//栏目
                         UserIdentityInfo uitmp=new UserIdentityInfo();
                         uitmp.setUserid(userinfo.getRef());
                         List<UserIdentityInfo> uidtttList=this.userIdentityManager.getList(uitmp,null);
-
                         request.getSession().setAttribute("cut_uidentity", uidtttList);//存入Session中
                         request.getSession().setAttribute("CURRENT_USER", userinfo);//存入Session中
-
 
                         if(UtilTool._IS_SIMPLE_RESOURCE!=2){
                             //栏目
@@ -1088,17 +1109,6 @@ public class UserController extends BaseController<UserInfo> {
                             ec.setSchoolid(userinfo.getDcschoolid());
                             request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
                         }
-                        //查询分校的logo放入session
-                        if(userinfo.getDcschoolid()!=null){
-                            ISchoolLogoManager schoolLogoManager = (SchoolLogoManager)this.getManager(SchoolLogoManager.class);
-                            SchoolLogoInfo sl = new SchoolLogoInfo();
-                            sl.setSchoolid(userinfo.getDcschoolid());
-                            List<SchoolLogoInfo> logoList = schoolLogoManager.getList(sl,null);
-                            if(logoList!=null&&logoList.size()>0){
-                                request.getSession().setAttribute("logoObj",logoList.get(0));
-                            }
-                        }
-
                         //    userinfo=userinfo;
                         je.setType("success");
                         je.setMsg("登陆成功并记录成功!");

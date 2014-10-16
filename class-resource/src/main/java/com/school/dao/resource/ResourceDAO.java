@@ -1096,6 +1096,11 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
             objList.add(resourceinfo.getReverse());
         } else
             sqlbuilder.append("null,");
+        if (resourceinfo.getDcschoolid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getDcschoolid());
+        } else
+            sqlbuilder.append("null,");
         if (presult != null && presult.getPageNo() > 0
                 && presult.getPageSize() > 0) {
             sqlbuilder.append("?,?,");

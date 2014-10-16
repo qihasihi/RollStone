@@ -958,11 +958,42 @@ public class ResourceController extends BaseController<ResourceInfo> {
             response.getWriter().print(jeEntity.toJSON());
             return;
         }
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+        List<String> sqlArrayList=new ArrayList<String>();
+        StringBuilder sqlbuilder=new StringBuilder();
+        List<Object> objList=this.resourceManager.getUpdateSql(resInfo,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
+
+        ResourceInfo rs=new ResourceInfo();
+        rs.setResid(resInfo.getResid());
+        List<ResourceInfo> rsList=this.resourceManager.getList(rs,null);
+        if(rsList!=null&&rsList.size()>0&&resInfo.getResstatus()!=null&&resInfo.getResstatus()==3){
+            ResourceInfo res=rsList.get(0);
+
+            sqlbuilder=new StringBuilder();
+            //添加资源系统通知记录
+            MyInfoCloudInfo mc=new MyInfoCloudInfo();
+            mc.setTargetid(res.getResid());
+            mc.setUserid(Long.parseLong(res.getUserid().toString()));
+            //                if(commentinfo.getAnonymous()==null&&commentinfo.getAnonymous()!=1)
+            //                    mc.setData(this.logined(request).getRealname() + " 评论了你的资源 <a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a>");
+            //                else
+            mc.setData("我的资源 <a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+res.getResid()+"\">#ETIANTIAN_SPLIT#</a> 被管理员删除!");
+            mc.setType(1);
+            objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+        }
 
         // 执行
-        if (this.resourceManager.doUpdate(resInfo))
+        if (sqlArrayList!=null&&sqlArrayList.size()>0&&this.resourceManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
             jeEntity.setType("success");
-        else
+        }else
             jeEntity.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         response.getWriter().print(jeEntity.toJSON());
     }
@@ -1086,7 +1117,11 @@ public class ResourceController extends BaseController<ResourceInfo> {
         resInfo.setFilesuffixname(suffix);
 
         resInfo.setUsername(this.logined(request).getRealname());
-        resInfo.setSchoolname(UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME"));
+
+
+        resInfo.setSchoolname(this.logined(request).getDcschoolname());
+
+        resInfo.setDcschoolid(this.logined(request).getDcschoolid());
         // ----------------------------------------------------------
         // 默认值
         resInfo.setUserid(this.logined(request).getUserid());
@@ -1233,7 +1268,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
             MyInfoCloudInfo mc=new MyInfoCloudInfo();
             mc.setTargetid(Long.parseLong(resInfo.getResid().toString()));
             mc.setUserid(Long.parseLong(this.logined(request).getUserid().toString()));
-            mc.setData("分享了资源\"<a href=\"resource?m=todetail&resid="+resInfo.getResid()+"\">#ETIANTIAN_SPLIT#</a>\"!");
+            mc.setData("分享了资源<a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+resInfo.getResid()+"\">#ETIANTIAN_SPLIT#</a>!");
             mc.setType(1);
             objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
             if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){
@@ -1658,7 +1693,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         presult.setOrderBy(" r.RES_STATUS ASC,r.REPORTNUM DESC,r.C_time DESC ");
         resourceinfo.setResstatus(-100);//(r.RES_STATUS=1 OR r.res_status=3)   只查询已经通过的 或者删除的
         resourceinfo.setSharestatusvalues("1,2");//校内，云端都查
-        // resourceinfo.setIsunion(1);
+         //resourceinfo.setIsunion(1);
         List<ResourceInfo> extList = this.resourceManager.getCheckListByExtendValue(resourceinfo, presult);
         if(extList!=null&&extList.size()>0){
             StringBuilder resStrBuilder=new StringBuilder();
@@ -1963,7 +1998,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
             MyInfoCloudInfo mc=new MyInfoCloudInfo();
             mc.setTargetid(Long.parseLong(resEntity.getResid().toString()));
             mc.setUserid(Long.parseLong(this.logined(request).getUserid().toString()));
-            mc.setData("\""+this.logined(request).getRealname()+"\"分享了资源\"<a href=\"resource?m=todetail&resid="+resEntity.getResid()+"\">#ETIANTIAN_SPLIT#</a>\"!");
+            mc.setData(this.logined(request).getRealname()+"\"分享了资源\"<a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+resEntity.getResid()+"\">#ETIANTIAN_SPLIT#</a>!");
             mc.setType(1);
             objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
             if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){
@@ -2087,7 +2122,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
 //                if(commentinfo.getAnonymous()==null&&commentinfo.getAnonymous()!=1)
 //                    mc.setData(this.logined(request).getRealname() + " 评论了你的资源 <a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a>");
 //                else
-        mc.setData("我的资源 <a href=\"resource?m=todetail&resid="+res.getResid()+"\">#ETIANTIAN_SPLIT#</a> 被管理员删除!");
+        mc.setData("我的资源 <a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+res.getResid()+"\">#ETIANTIAN_SPLIT#</a> 被管理员删除!");
         mc.setType(1);
         objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
         if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){

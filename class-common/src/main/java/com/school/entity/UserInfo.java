@@ -63,6 +63,15 @@ public class UserInfo implements java.io.Serializable {
     public Integer getDcschoolid() {
         return dcschoolid;
     }
+    //
+    private String dcschoolname;
+    public void setDcschoolname(String dcschoolname){
+        this.dcschoolname=dcschoolname;
+    }
+    //¥Ê»Î
+    public String getDcschoolname(){
+        return dcschoolname;
+    }
 
     public void setDcschoolid(Integer dcschoolid) {
         this.dcschoolid = dcschoolid;

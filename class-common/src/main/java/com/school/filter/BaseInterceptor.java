@@ -144,11 +144,11 @@ public class BaseInterceptor implements HandlerInterceptor {
             writeUtilToolDocType();
 
         // 设置结束
-        Object sessionCuName=request.getSession().getAttribute("CURRENT_SCHOOL_NAME");
-        if (sessionCuName == null||sessionCuName.toString().trim().length()<1) {
-            String currentSchool = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME");
-            request.getSession().setAttribute("CURRENT_SCHOOL_NAME", currentSchool);
-        }
+//        Object sessionCuName=request.getSession().getAttribute("CURRENT_SCHOOL_NAME");
+//        if (sessionCuName == null||sessionCuName.toString().trim().length()<1) {
+//            String currentSchool = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME");
+//            request.getSession().setAttribute("CURRENT_SCHOOL_NAME", currentSchool);
+//        }
 
         //将分校名称写入Session中
         String currentpath = request.getRequestURL().toString();
@@ -393,65 +393,65 @@ public class BaseInterceptor implements HandlerInterceptor {
         //单例写
         if(iswrite)return;
         synchronized(tmp){
-            Map<String,Object> writeMap=new HashMap<String,Object>();
-            iswrite=true;
-            String schoolId = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
-            String schoolname=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME");
-            //   if(schoolId==null||schoolId.trim().length()<1||schoolname==null||schoolname.trim().length()<1){
-            //得到文件中的KEY
-            String fpath = request.getRealPath("/") + "school.txt";
-            BufferedReader br = null;
-            StringBuilder content = null;
-            try {
-                br = new BufferedReader(new FileReader(fpath.trim()));
-                String lineContent = null;
-                while ((lineContent = br.readLine()) != null) {
-                    if (content == null)
-                        content = new StringBuilder(lineContent);
-                    else
-                        content.append("\n" + lineContent);
-                }
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return;
-            } finally {
-                if (br != null)
-                    try{
-                        br.close();
-                    }catch(Exception e){e.printStackTrace();}
-            }
-            //解析key  并写入schoolid,schoolname
-            try {
-                DESPlus des = new DESPlus();
-                String schoolkeyfn = des.decrypt(content.toString());
-                //得到分校已经买的栏目
-                String[] schoolArray = schoolkeyfn.split("\\*");
-                if(schoolId==null||schoolId.length()<1){
-                    String schoolid=schoolArray[0];
-
-//                        WriteProperties.writeProperties(request.getRealPath("/")
-//                                + "/WEB-INF/classes/properties/util.properties",
-//                                "CURRENT_SCHOOL_ID", schoolid);
-                    writeMap.put("CURRENT_SCHOOL_ID",schoolid);
-                    UtilTool.utilproperty.setProperty("CURRENT_SCHOOL_ID",
-                            schoolid);
-                }
-                //得到Schoolid后，得到名称,并赋值
-                if(schoolArray.length>3){
-                    //对中文进行解码
-                    String schoolnameChina=java.net.URLDecoder.decode(schoolArray[3],"UTF-8");
-                    if(schoolname==null|| schoolname.trim().length()<1||!schoolnameChina.equals(schoolname)){
-//                            WriteProperties.writeProperties(request.getRealPath("/")+ "/WEB-INF/classes/properties/util.properties","CURRENT_SCHOOL_NAME",schoolnameChina);
-                        UtilTool.utilproperty.setProperty("CURRENT_SCHOOL_NAME",
-                                schoolnameChina);
-                        writeMap.put("CURRENT_SCHOOL_NAME",schoolnameChina);
-                    }
-                }
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+//            Map<String,Object> writeMap=new HashMap<String,Object>();
+//            iswrite=true;
+//            String schoolId = UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_ID");
+//            String schoolname=UtilTool.utilproperty.getProperty("CURRENT_SCHOOL_NAME");
+//            //   if(schoolId==null||schoolId.trim().length()<1||schoolname==null||schoolname.trim().length()<1){
+//            //得到文件中的KEY
+//            String fpath = request.getRealPath("/") + "school.txt";
+//            BufferedReader br = null;
+//            StringBuilder content = null;
+//            try {
+//                br = new BufferedReader(new FileReader(fpath.trim()));
+//                String lineContent = null;
+//                while ((lineContent = br.readLine()) != null) {
+//                    if (content == null)
+//                        content = new StringBuilder(lineContent);
+//                    else
+//                        content.append("\n" + lineContent);
+//                }
+//            } catch (Exception e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//                return;
+//            } finally {
+//                if (br != null)
+//                    try{
+//                        br.close();
+//                    }catch(Exception e){e.printStackTrace();}
+//            }
+//            //解析key  并写入schoolid,schoolname
+//            try {
+//                DESPlus des = new DESPlus();
+//                String schoolkeyfn = des.decrypt(content.toString());
+//                //得到分校已经买的栏目
+//                String[] schoolArray = schoolkeyfn.split("\\*");
+//                if(schoolId==null||schoolId.length()<1){
+//                    String schoolid=schoolArray[0];
+//
+////                        WriteProperties.writeProperties(request.getRealPath("/")
+////                                + "/WEB-INF/classes/properties/util.properties",
+////                                "CURRENT_SCHOOL_ID", schoolid);
+//                    writeMap.put("CURRENT_SCHOOL_ID",schoolid);
+//                    UtilTool.utilproperty.setProperty("CURRENT_SCHOOL_ID",
+//                            schoolid);
+//                }
+//                //得到Schoolid后，得到名称,并赋值
+//                if(schoolArray.length>3){
+//                    //对中文进行解码
+//                    String schoolnameChina=java.net.URLDecoder.decode(schoolArray[3],"UTF-8");
+//                    if(schoolname==null|| schoolname.trim().length()<1||!schoolnameChina.equals(schoolname)){
+////                            WriteProperties.writeProperties(request.getRealPath("/")+ "/WEB-INF/classes/properties/util.properties","CURRENT_SCHOOL_NAME",schoolnameChina);
+//                        UtilTool.utilproperty.setProperty("CURRENT_SCHOOL_NAME",
+//                                schoolnameChina);
+//                        writeMap.put("CURRENT_SCHOOL_NAME",schoolnameChina);
+//                    }
+//                }
+//            } catch (Exception e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
 
 //            if(ipAddress!=null&&ipAddress.toString().trim().length()>0)
 //                localpath="http://"+ipAddress;
@@ -535,7 +535,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 //            UtilTool.utilproperty.setProperty("RESOURCE_CLOUD_SERVER_PATH",
 //                    bijiaoServerPath);
             //写入XML中
-            WriteProperties.writeProperties(request.getRealPath("/") + "/WEB-INF/classes/properties/util.properties",writeMap);
+//            WriteProperties.writeProperties(request.getRealPath("/") + "/WEB-INF/classes/properties/util.properties",writeMap);
             // System.out.println(UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH").toString()+"           "+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD").toString());
         }
     }
