@@ -96,7 +96,7 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 		StringBuilder sqlbuilder=new StringBuilder("{CALL class_info_proc_split(");
 		List<Object> objList=new ArrayList<Object>(); 
 		if(obj==null)  
-			sqlbuilder.append("null,null,null,null,null,null,null,null,null,null,0,null,null,null,");
+			sqlbuilder.append("null,null,null,null,null,null,null,null,null,null,0,null,null,null,null,");
 		else{
             if(obj.getClassid()!=null){
                 sqlbuilder.append("?,");
@@ -165,6 +165,11 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
             if(obj.getSubjectstr()!=null){
                 sqlbuilder.append("?,");
                 objList.add(obj.getSubjectstr());
+            }else
+                sqlbuilder.append("NULL,");
+            if(obj.getInvitecode()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getInvitecode());
             }else
                 sqlbuilder.append("NULL,");
 		}
@@ -296,6 +301,12 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
             objList.add(obj.getClsnum());
         }else
             sqlbuilder.append("NULL,");
+        if(obj.getInvitecode()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getInvitecode());
+        }else
+            sqlbuilder.append("NULL,");
+
 		sqlbuilder.append("?)}");
 		return objList;
 	}
@@ -367,6 +378,11 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         if(obj.getClsnum()!=null){
             sqlbuilder.append("?,");
             objList.add(obj.getClsnum());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getInvitecode()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getInvitecode());
         }else
             sqlbuilder.append("NULL,");
 		sqlbuilder.append("?)}");

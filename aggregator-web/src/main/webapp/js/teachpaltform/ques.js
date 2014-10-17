@@ -465,7 +465,7 @@ function doAddQuestion(){
 
 	if(!confirm('数据验证完毕!确认提交?'))
 		 return;
-    $("#btn_addQues").attr("href","javascript:;");
+    resetBtnAttr("btn_addQues","an_small","an_gray_small","",2);
 	//开始向后台添加数据
 	$.ajax({
 		url:'question?m=doSubAddQuestion',
@@ -475,9 +475,10 @@ function doAddQuestion(){
 		cache: false,     
 		error:function(){
 			alert('系统未响应，请稍候重试!');
-            $("#btn_addQues").attr("href","javascript:doAddQuestion();");
+            resetBtnAttr("btn_addQues","an_small","an_gray_small","doAddQuestion()",1);
+
 		},success:function(rmsg){
-            $("#btn_addQues").attr("href","javascript:doAddQuestion();");
+            resetBtnAttr("btn_addQues","an_small","an_gray_small","doAddQuestion()",1);
 			if(rmsg.type=="error"){
 				alert(rmsg.msg);
 			}else{

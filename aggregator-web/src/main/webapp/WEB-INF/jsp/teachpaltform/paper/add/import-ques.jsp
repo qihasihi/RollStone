@@ -164,7 +164,7 @@ function preeDoPageSub(pObj){
     $.each(objArray,function(idx,itm){
        quesArray.push($(itm).val());
     });
-    $("#btn_addQues").attr("href","javascript:;");
+    resetBtnAttr("btn_addQues","an_small","an_gray_small","",2);
     $.ajax({
         url:"paperques?m=doAddImportQues",
         type:"post",
@@ -177,9 +177,9 @@ function preeDoPageSub(pObj){
         cache: false,
         error:function(){
             alert('系统未响应，请稍候重试!');
-            $("#btn_addQues").attr("href","javascript:addImportQues();");
+            resetBtnAttr("btn_addQues","an_small","an_gray_small","addImportQues()",1);
         },success:function(rmsg){
-            $("#btn_addQues").attr("href","javascript:addImportQues();");
+            resetBtnAttr("btn_addQues","an_small","an_gray_small","addImportQues()",1);
             if(rmsg.type=="error"){
                 alert(rmsg.msg);
             }else{

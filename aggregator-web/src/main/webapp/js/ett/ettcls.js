@@ -526,6 +526,17 @@ function toUpdClass(clsid){
                         $("#dv_edit input[id='verify_time']").val(rps.objList[0].verifyTimeString);
                     if(typeof rps.objList[0].allowjoin !='undefined' )
                         $("#dv_edit input[name='rdo'][value='"+rps.objList[0].allowjoin+"']").attr("checked",true);
+                    if(rps.objList[0].dctype==2&&schoolid=="1"){
+                        $("#dv_edit tr[id='tr_invite']").show();
+                        if(typeof rps.objList[0].invitecode !='undefined'&&rps.objList[0].invitecode.toString().length>0){
+                            $("#dv_edit input[id='invite_code']").val(rps.objList[0].invitecode);
+                            $("#dv_edit a[id='btn_invitecode']").hide();
+                        }else{
+                            $("#dv_edit a[id='btn_invitecode']").show();
+                            $("#dv_edit input[id='invite_code']").empty();
+                        }
+                    }
+
 
                     //添加确认Click
                     $("#a_sub_upd").attr("href","javascript:sub_cls("+rps.objList[0].classid+")");
@@ -552,6 +563,7 @@ function sub_cls(clsid){
     var year=$("#"+dvObj+" select[id='year']");
     var grade=$("#"+dvObj+" select[id='grade']");
     var allowJoin=$("#"+dvObj+" input[name='rdo']:checked");
+    var invitecode=$("#"+dvObj+" input[id='invite_code']");
 
     if(clsname.val().Trim().length<1){
         alert('请输入班级名称!');
@@ -573,7 +585,6 @@ function sub_cls(clsid){
         alert('请选择年级!');
         grade.focus();return;
     }
-
     var param={dcschoolid:schoolid,clsname:clsname.val(),type:type.val(),jid:bzrJid.val(),realname:bzrName,gradeid:grade.val(),year:year.val()};
     if(verifyTime.val().length>0)
         param.verifyTime=verifyTime.val();
@@ -581,6 +592,8 @@ function sub_cls(clsid){
         param.allowJoin=allowJoin.val();
     if(num.val().length>0)
         param.num=num.val();
+    if(schoolid=="1"&&invitecode.val().length>0)
+        param.invitecode=invitecode.val().Trim();
 
     var url='tpuser?m=doAddCls';
     if(typeof clsid!='undefined')
@@ -592,11 +605,12 @@ function sub_cls(clsid){
         data:param,
         cache: false,
         error:function(){
-            //alert('异常错误!系统未响应!');
+            $("#btn_invitecode").show();
         },success:function(rps){
             alert(rps.msg);
             if(rps.type=='success'){
                 closeModel(dvObj);
+                $("#dv_add input[id='btn_invitecode']").empty();
                 loadCls(1,clsid=='undefined'?rps.objList[0]:clsid);
             }
         }
@@ -628,6 +642,31 @@ function doDelCls(clsid){
                 alert(rps.msg);
             } else {
                 loadCls(1);
+            }
+        }
+    });
+}
+
+/**
+ * 生成公共家长邀请码
+ */
+function genderInviteCode(dvObj){
+    $.ajax({
+        url: 'tpuser?genderInviteCode',
+        type: 'post',
+        dataType: 'json',
+        cache: false,
+        error: function () {
+            alert('网络异常!')
+        },
+        success: function (rps) {
+            if (rps.type == "error") {
+                alert(rps.msg);
+            } else {
+                if(rps.objList[0]!=null&&rps.objList[0].toString().length>0){
+                    $("#"+dvObj+" input[id='invite_code']").val(rps.objList[0]);
+                    $("#"+dvObj+" a[id='btn_invitecode']").hide();
+                }
             }
         }
     });

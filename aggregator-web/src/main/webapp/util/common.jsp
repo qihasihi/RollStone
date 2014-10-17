@@ -106,6 +106,8 @@ Integer modelType=0;
     String publicFileSystemIpPort=new StringBuilder(basePath).toString();
 //    //项目
     String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
+    //分校后台查看用户详情连接
+    String viewEttUserURL=UtilTool.utilproperty.getProperty("ETT_USER_DETAIL");
 //    if(session.getAttribute("FILE_SYSTEM_IP_PORT")==null||!session.getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
 //     request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
 
@@ -283,6 +285,7 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 	var isTeacher=<%=isTeacher%>;
     var isBzr=<%=isBzr%>;
 	var fileSystemIpPort='<%=fileSystemIpPort%>';
+    var viewEttUserURL='<%=viewEttUserURL%>';
 </script>  
 <title><%=webTitle%></title>
 

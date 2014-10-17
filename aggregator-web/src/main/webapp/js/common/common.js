@@ -1583,6 +1583,25 @@ function formartFloat(num){
     return s;
 }
 
+/**
+ * 重置按钮属性
+ * @param className
+ * @param rClassName
+ * @param funcName
+ * @param type 1:可用 2：不可用
+ */
+function resetBtnAttr(obj,className,rClassName,funcName,type){
+    if(type==1){
+        $("#"+obj).removeClass(rClassName);
+        $("#"+obj).addClass(className);
+        $("#"+obj).attr("href","javascript:"+funcName+";");
+    }else{
+        $("#"+obj).removeClass(className);
+        $("#"+obj).addClass(rClassName);
+        $("#"+obj).attr("href","javascript:;");
+    }
+}
+
 // 注册ajax事件
 // u:url p:parameter obj|string returnType: text|json fun: reutrn method;
 $ajax=function(u,p,type,returnType,sfun,efun){

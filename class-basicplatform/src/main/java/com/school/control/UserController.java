@@ -64,6 +64,27 @@ public class UserController extends BaseController<UserInfo> {
     protected IInitWizardManager initWizardManager;
     protected ISchoolManager schoolManager;
 
+    public  List<Map<String,Object>> getClassUserMap(String relationtype,Integer classid){
+        List<Map<String,Object>>mapList=null;
+        ClassUser cu=new ClassUser();
+        cu.setClassid(classid);
+        //cu.setRelationtype(relationtype);
+        List<ClassUser> cuBanList=this.classUserManager.getList(cu,null);
+        if(cuBanList!=null&&cuBanList.size()>0){
+            mapList=new ArrayList<Map<String, Object>>();
+            for(ClassUser tmp:cuBanList){
+                // 必带 userId，userType,subjectId 的三个key
+                Map<String,Object> reMap=new HashMap<String, Object>();
+                reMap.put("userId",tmp.getUid());
+                reMap.put("subjectId",tmp.getSubjectid()==null?-1:tmp.getSubjectid());
+                reMap.put("userType",tmp.getRelationtype().equals("学生")?3:tmp.getRelationtype().equals("任课老师")?2:tmp.getRelationtype().equals("班主任")?1:null);
+                mapList.add(reMap);
+            }
+        }
+        return mapList;
+    }
+
+
     public UserController(){
         this.schoolManager=this.getManager(SchoolManager.class);
         this.userManager=this.getManager(UserManager.class);
@@ -6416,7 +6437,7 @@ public class UserController extends BaseController<UserInfo> {
             return;
         }
 
-
+        List<String>userRefList=new ArrayList<String>();
         List<Object>objList=null;
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
@@ -6475,7 +6496,7 @@ public class UserController extends BaseController<UserInfo> {
 
 
                 UserInfo userInfo=new UserInfo();
-                userInfo.setUsername(lzxuserid);
+                userInfo.setUsername(username);
                 userInfo.setLzxuserid(lzxuserid);
                 userInfo.setDcschoolid(Integer.parseInt(dcschoolid));
                 userInfo.setSchoolid(schoolid);
@@ -6499,6 +6520,7 @@ public class UserController extends BaseController<UserInfo> {
                 }else{
                     //添加用户
                     String userNextRef = UUID.randomUUID().toString();
+                    userRefList.add(userNextRef);
                     userInfo.setRef(userNextRef);
                     userInfo.setPassword("111111");
                     userInfo.setStateid(0);
@@ -6630,7 +6652,6 @@ public class UserController extends BaseController<UserInfo> {
                             }
                         }
                     }
-
                 }
             }
         }else {
@@ -6641,8 +6662,27 @@ public class UserController extends BaseController<UserInfo> {
 
         if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
             boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
-            if(flag)
+            if(flag){
                 je.setType("success");
+
+                List<UserInfo>bindUserList=new ArrayList<UserInfo>();
+                if(userRefList.size()>0){
+                    for (String userid:userRefList){
+                        UserInfo usel=new UserInfo();
+                        usel.setRef(userid);
+                        List<UserInfo>uList=this.userManager.getList(usel,null);
+                        if(uList!=null&&uList.size()>0)
+                            bindUserList.add(uList.get(0));
+                    }
+
+                    if(!EttInterfaceUserUtil.addUserBase(bindUserList))
+                        System.out.println("Add lzx-ett user error!");
+                    else
+                        System.out.println("Add lzx-ett user success!");
+                }
+            }
+
+
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         response.getWriter().print(je.toJSON());
@@ -6713,6 +6753,7 @@ public class UserController extends BaseController<UserInfo> {
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
+        List<String>userRefList=new ArrayList<String>();
 
         if(jsonArray!=null&&jsonArray.size()>0){
             Iterator iterator=jsonArray.iterator();
@@ -6746,6 +6787,8 @@ public class UserController extends BaseController<UserInfo> {
                     je.setMsg("LzxSchoolId:"+schoolid+" LzxUserId:"+lzxuserid+" not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }else{
+                    userRefList.add(userInfo.getRef());
+
                     //修改用户头像
                     if(headimage!=null&&headimage.trim().length()>0){
                         UserInfo update=new UserInfo();
@@ -6800,8 +6843,25 @@ public class UserController extends BaseController<UserInfo> {
 
         if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
             boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
-            if(flag)
+            if(flag){
                 je.setType("success");
+
+                List<UserInfo>bindUserList=new ArrayList<UserInfo>();
+                if(userRefList.size()>0){
+                    for (String userid:userRefList){
+                        UserInfo usel=new UserInfo();
+                        usel.setRef(userid);
+                        List<UserInfo>uList=this.userManager.getList(usel,null);
+                        if(uList!=null&&uList.size()>0)
+                            bindUserList.add(uList.get(0));
+                    }
+
+                    if(!EttInterfaceUserUtil.updateUserBase(bindUserList))
+                        System.out.println("Update lzx-ett user error!");
+                    else
+                        System.out.println("Update lzx-ett user success!");
+                }
+            }
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         response.getWriter().print(je.toJSON());
@@ -6871,6 +6931,7 @@ public class UserController extends BaseController<UserInfo> {
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
+        List<String>userRefList=new ArrayList<String>();
 
         if(jsonArray!=null&&jsonArray.size()>0){
             Iterator iterator=jsonArray.iterator();
@@ -6889,6 +6950,7 @@ public class UserController extends BaseController<UserInfo> {
                     je.setMsg("LzxSchoolId:"+schoolid+" LzxUserId:"+lzxuserid+" not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }else{
+
                     userInfo.setStateid(1);
                     userInfo.setSchoolid(schoolid);
                     sql=new StringBuilder();
@@ -6897,6 +6959,7 @@ public class UserController extends BaseController<UserInfo> {
                         objListArray.add(objList);
                         sqlListArray.add(sql.toString());
                     }
+                    userRefList.add(userInfo.getRef());
                 }
             }
         }else {
@@ -6907,8 +6970,25 @@ public class UserController extends BaseController<UserInfo> {
 
         if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
             boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
-            if(flag)
+            if(flag){
                 je.setType("success");
+
+                List<UserInfo>bindUserList=new ArrayList<UserInfo>();
+                if(userRefList.size()>0){
+                    for (String userid:userRefList){
+                        UserInfo usel=new UserInfo();
+                        usel.setRef(userid);
+                        List<UserInfo>uList=this.userManager.getList(usel,null);
+                        if(uList!=null&&uList.size()>0)
+                            bindUserList.add(uList.get(0));
+                    }
+
+                    if(!EttInterfaceUserUtil.delUserBase(bindUserList))
+                        System.out.println("Delete lzx-ett user error!");
+                    else
+                        System.out.println("Delete lzx-ett user success!");
+                }
+            }
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         response.getWriter().print(je.toJSON());
@@ -6977,6 +7057,8 @@ public class UserController extends BaseController<UserInfo> {
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
+        List<Integer>clsIdList=new ArrayList<Integer>();
+
 
         if(jsonArray!=null&&jsonArray.size()>0){
             Iterator iterator=jsonArray.iterator();
@@ -7032,6 +7114,8 @@ public class UserController extends BaseController<UserInfo> {
                     je.setMsg("classid:"+classid+" class not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }
+                clsIdList.add(clsList.get(0).getClassid());
+
                 ClassUser sel=new ClassUser();
                 sel.setUserid(userInfoList.get(0).getRef());
                 sel.setClassid(clsList.get(0).getClassid());
@@ -7066,8 +7150,19 @@ public class UserController extends BaseController<UserInfo> {
 
         if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
             boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
-            if(flag)
+            if(flag){
                 je.setType("success");
+
+                if(clsIdList.size()>0){
+                    for(Integer classid:clsIdList){
+                        List<Map<String,Object>>mapList=getClassUserMap("学生", classid);
+                        if(!EttInterfaceUserUtil.OperateClassUser(mapList,classid,Integer.parseInt(schoolid)))
+                            System.out.println("Add lzx-ett clsuser error!");
+                        else
+                            System.out.println("Add lzx-ett clsuser success!");
+                    }
+                }
+            }
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         response.getWriter().print(je.toJSON());
@@ -7135,6 +7230,7 @@ public class UserController extends BaseController<UserInfo> {
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
+        List<Integer>clsIdList=new ArrayList<Integer>();
 
         if(jsonArray!=null&&jsonArray.size()>0){
             Iterator iterator=jsonArray.iterator();
@@ -7170,6 +7266,7 @@ public class UserController extends BaseController<UserInfo> {
                     je.setMsg("classid:"+classid+" class not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }
+                clsIdList.add(clsList.get(0).getClassid());
 
                 ClassUser cu=new ClassUser();
                 cu.setUserid(userInfoList.get(0).getRef());
@@ -7189,8 +7286,19 @@ public class UserController extends BaseController<UserInfo> {
 
         if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
             boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
-            if(flag)
+            if(flag){
                 je.setType("success");
+
+                if(clsIdList.size()>0){
+                    for(Integer classid:clsIdList){
+                        List<Map<String,Object>>mapList=getClassUserMap("学生", classid);
+                        if(!EttInterfaceUserUtil.OperateClassUser(mapList,classid,Integer.parseInt(schoolid)))
+                            System.out.println("Delete lzx-ett clsuser error!");
+                        else
+                            System.out.println("Delete lzx-ett clsuser success!");
+                    }
+                }
+            }
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         response.getWriter().print(je.toJSON());

@@ -27,6 +27,14 @@ public class ClassInfo implements java.io.Serializable {
     private Date verifytime;    //Ê§Ð§Ê±¼ä
     private Integer gradeid;
     private String subjectstr;
+    private String invitecode;
+
+    public String getInvitecode() {
+        return invitecode;
+    }
+    public void setInvitecode(String invitecode) {
+        this.invitecode = invitecode;
+    }
 
     public String getSubjectstr() {
         return subjectstr;

@@ -668,7 +668,7 @@ function doUploadResource(usertype) {
         }
 
         /*提交按钮不可用*/
-        $("#a_submit").remove();
+        resetBtnAttr("a_submit","an_small","an_gray_small","",2);
         $.ajax({
             url: 'tpres?doUploadResource',
             type: 'post',
@@ -682,6 +682,7 @@ function doUploadResource(usertype) {
                 if (rps.type == "error") {
                     alert(rps.msg);
                 } else {
+                    resetBtnAttr("a_submit","an_small","an_gray_small","doUploadResource("+usertype+")",1);
                     closeModel('dv_loading');
                     alert(rps.msg);
                     if (operate_type.length) {
@@ -770,7 +771,7 @@ function doUploadResource(usertype) {
 
 
                     /*提交按钮不可用*/
-                    $("#a_submit").remove();
+                    resetBtnAttr("a_submit","an_small","an_gray_small","",2);
                     $.ajax({
                         url: 'tpres?doUploadResource',
                         type: 'post',
@@ -786,7 +787,7 @@ function doUploadResource(usertype) {
                             } else {
                                 closeModel('dv_loading');
                                 alert(rps.msg);
-
+                                resetBtnAttr("a_submit","an_small","an_gray_small","doUploadResource("+usertype+")",1);
                                 if (operate_type.length) {
                                     if (window.opener != undefined) {
                                         //for chrome

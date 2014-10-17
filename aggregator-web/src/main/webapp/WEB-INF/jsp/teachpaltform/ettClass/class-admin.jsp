@@ -10,8 +10,19 @@
     <script type="text/javascript">
         var schoolid="${dcschoolid}";
         $(function(){
+
             loadCls(1);
+            changeClsType('dv_add');
+            changeClsType('dv_edit');
         });
+
+        function changeClsType(dvObj){
+            var clstype=$("#"+dvObj+" select[id='type']").val();
+            if(clstype==2&&schoolid=="1")
+                $("#"+dvObj+" tr[id='tr_invite']").show();
+            else
+                $("#"+dvObj+" tr[id='tr_invite']").hide();
+        }
     </script>
 
 
@@ -77,8 +88,8 @@
     </div>
     <div class="subpage_contentL">
         <ul id="ul_class">
-            <li class="crumb"><a href="1">2014年网下指导教师培训初一普通班...</a></li>
-            <li><a href="1">2014年网下指导教师培训初三普通班</a></li>
+           <!-- <li class="crumb"><a href="1">2014年网下指导教师培训初一普通班...</a></li>
+            <li><a href="1">2014年网下指导教师培训初三普通班</a></li> -->
         </ul>
         <div class="nextpage" id="dv_page"><span><b class="before"></b></span>&nbsp;1/1&nbsp;<span><a href="1"><b class="after"></b></a></span></div>
     </div>
@@ -155,7 +166,7 @@
         </tr>
         <tr>
             <th><span class="ico06"></span>班级类型：</th>
-            <td><select id="type"  class="w100">
+            <td><select id="type"  class="w100" onchange="changeClsType('dv_add')">
                 <option value="">选择班级类型</option>
                 <c:if test="${!empty classType}">
                     <c:forEach items="${classType}" var="c">
@@ -207,6 +218,13 @@
             <th>&nbsp;&nbsp;班级限额：</th>
             <td><input  id="num" type="text" class="w100" /></td>
         </tr>
+        <c:if test="${!empty dcschoolid and dcschoolid eq 1}">
+            <tr id="tr_invite" style="display: none;">
+                <td colspan="4">&nbsp;&nbsp;公共家长邀请码：<input readonly="readonly" class="w120" id="invite_code"  type="text" /> &nbsp;&nbsp;<a id="btn_invitecode" href="javascript:genderInviteCode('dv_add');" style="color: #0000ff">生成邀请码</a>
+                </td>
+            </tr>
+        </c:if>
+
         <!--<tr>
             <th>允许学生加入：</th>
             <td colspan="3"><input  type="radio" name="rdo" checked="checked" value="1"> 是&nbsp;&nbsp;&nbsp;&nbsp;<input  type="radio" name="rdo" value="0"> 否</td>
@@ -231,7 +249,7 @@
         </tr>
         <tr>
             <th><span class="ico06"></span>班级类型：</th>
-            <td><select id="type"  class="w100">
+            <td><select id="type"  class="w100" onchange="changeClsType('dv_edit')">
                 <option value="">选择班级类型</option>
                 <c:if test="${!empty classType}">
                     <c:forEach items="${classType}" var="c">
@@ -286,6 +304,14 @@
             <th>允许学生加入：</th>
             <td colspan="3"><input  type="radio" name="rdo"  value="1"> 是&nbsp;&nbsp;&nbsp;&nbsp;<input  type="radio" name="rdo" value="0"> 否</td>
         </tr> -->
+
+        <c:if test="${!empty dcschoolid and dcschoolid eq 1}">
+            <tr id="tr_invite" style="display: none;">
+                <td colspan="4">&nbsp;&nbsp;公共家长邀请码：<input readonly="readonly" class="w120" id="invite_code"  type="text" /> &nbsp;&nbsp;<a id="btn_invitecode" href="javascript:genderInviteCode('dv_edit');" style="color: #0000ff">生成邀请码</a>
+                </td>
+            </tr>
+        </c:if>
+
         <tr>
             <th>&nbsp;</th>
             <td colspan="3" ><a id="a_sub_upd" href="javascript:;"  class="an_public1">确&nbsp;认</a></td>

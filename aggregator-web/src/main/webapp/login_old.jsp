@@ -11,4 +11,4 @@
     System.out.println(a);
 %>
 
-<body><iframe src="APP.html" frameborder="0" scrolling="no" style="width: 50%;height: 100%;" ></iframe></body>
+<body><iframe src="APP.html" frameborder="0" scrolling="yes" style="width:100%;height: 100%;" ></iframe></body>
