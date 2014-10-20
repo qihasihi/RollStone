@@ -66,7 +66,7 @@ public class TaskPerformanceInfo  implements java.io.Serializable{
                 }
             }else{
                 if(getReplyattach().indexOf("http:")==-1&&getReplyattach().indexOf("https:")==-1){
-                    String attachUrl=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+getReplyattach();
+                    String attachUrl="uploadfile/"+getReplyattach();
                     String suffix=getReplyattach().substring(getReplyattach().lastIndexOf("."));
                     //123.jpg
                     if(UtilTool.matchingText(UtilTool._IMG_SUFFIX_TYPE_REGULAR, suffix)){
