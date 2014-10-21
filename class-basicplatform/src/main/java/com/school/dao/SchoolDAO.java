@@ -49,7 +49,7 @@ public class SchoolDAO extends CommonDAO<SchoolInfo> implements ISchoolDAO{
         StringBuilder sqlbuilder=new StringBuilder("{CALL school_info_proc_split(");
         List<Object> objList=new ArrayList<Object>();
         if(obj==null){
-            sqlbuilder.append("NULL,NULL,");
+            sqlbuilder.append("NULL,NULL,NULL,");
         }else{
             if(obj.getSchoolid()!=null){
                 sqlbuilder.append("?,");

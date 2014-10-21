@@ -1902,8 +1902,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                         Long nextTopicid=this.tpTopicManager.getNextId(true);
                         //主题
                         TpTopicThemeInfo themeInfo=new TpTopicThemeInfo();
-                        themeInfo.setCourseid(nextCourseId);
-                        themeInfo.setTopicid(nextTopicid);
+                        themeInfo.setCourseid(tmpTopic.getCourseid());
+                        themeInfo.setTopicid(tmpTopic.getTopicid());
                         themeInfo.setSelectType(2);//查询内容
                         List<TpTopicThemeInfo>themeInfoList=this.tpTopicThemeManager.getList(themeInfo,null);
                         if(themeInfoList!=null&&themeInfoList.size()>0){
