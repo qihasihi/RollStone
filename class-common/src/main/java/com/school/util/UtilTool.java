@@ -1415,7 +1415,8 @@ public class UtilTool implements java.io.Serializable {
     }
 
     public static void main(String[] args){
-
+        String uname="asdfas324asdf÷–°≠°≠";
+        System.out.println(matchingText("/^([u4e00-u9fa5]|[ufe30-uffa0]|[a-za-z0-9_])*$/",uname));
     }
 
 
