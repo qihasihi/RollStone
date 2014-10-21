@@ -82,8 +82,9 @@ $(function(){
             </c:if>
 
         <%}%>
+
+    </div>
     </c:if>
-   </div>
 </div>
 
 	
