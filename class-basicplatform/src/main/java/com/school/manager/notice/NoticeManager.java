@@ -78,12 +78,12 @@ public class NoticeManager extends BaseManager<NoticeInfo> implements
 
 	public List<Object> getSaveSql(NoticeInfo obj, StringBuilder sqlbuilder) {
 		// TODO Auto-generated method stub
-		return null;
+		return this.noticedao.getSaveSql(obj,sqlbuilder);
 	}
 
 	public List<Object> getUpdateSql(NoticeInfo obj, StringBuilder sqlbuilder) {
 		// TODO Auto-generated method stub
-		return null;
+		return this.noticedao.getUpdateSql(obj,sqlbuilder);
 	}
 	public List<NoticeInfo> getUserList(NoticeInfo obj, PageResult presult) {
 		// TODO Auto-generated method stub

@@ -1910,8 +1910,11 @@ public class UtilTool implements java.io.Serializable {
             }
             //×ª»»³ÉJSON
             System.out.println(returnContent);
-            JSONObject jb=JSONObject.fromObject(returnContent);
-            return jb;
+            if(returnContent!=null&&returnContent.length()>0){
+                JSONObject jb=JSONObject.fromObject(returnContent);
+                return jb;
+            }
+            return new JSONObject();
     }
 
     /**

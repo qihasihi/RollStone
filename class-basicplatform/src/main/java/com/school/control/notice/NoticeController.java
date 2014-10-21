@@ -180,7 +180,23 @@ public class NoticeController extends BaseController<NoticeInfo> {
 			String userid = this.logined(request).getRef();
 			obj.setCuserid(userid);
             obj.setDcschoolid(this.logined(request).getDcschoolid());
-			Boolean b = this.noticeManager.doSave(obj);
+            //整理执行语句
+            List<String> sqlList=new ArrayList<String>();
+            List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+            StringBuilder sqlbuilder=new StringBuilder();
+            List<Object> objList = new ArrayList<Object>();
+            objList=this.noticeManager.getSaveSql(obj,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                sqlList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+            //更新程序
+            if(obj.getNoticecontent()!=null&&obj.getNoticecontent().trim().length()>0){
+                //得到theme_content的更新语句
+                this.noticeManager.getArrayUpdateLongText("notice_info", "ref", "notice_content"
+                        , obj.getNoticecontent(), obj.getRef(), sqlList, objArrayList);
+            }
+			Boolean b = this.noticeManager.doExcetueArrayProc(sqlList,objArrayList);
 			if(b){			
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
 				je.setType("success");
@@ -229,7 +245,23 @@ public class NoticeController extends BaseController<NoticeInfo> {
 			je.setMsg("系统异常，数据没有接收到缺少标识，请重试");
 			je.setType("error");
 		}else{
-			Boolean b = this.noticeManager.doUpdate(obj);
+            //整理执行语句
+            List<String> sqlList=new ArrayList<String>();
+            List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+            StringBuilder sqlbuilder=new StringBuilder();
+            List<Object> objList = new ArrayList<Object>();
+            objList=this.noticeManager.getUpdateSql(obj,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                sqlList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
+            //更新程序
+            if(obj.getNoticecontent()!=null&&obj.getNoticecontent().trim().length()>0){
+                //得到theme_content的更新语句
+                this.noticeManager.getArrayUpdateLongText("notice_info", "ref", "notice_content"
+                        , obj.getNoticecontent(), obj.getRef(), sqlList, objArrayList);
+            }
+            Boolean b = this.noticeManager.doExcetueArrayProc(sqlList,objArrayList);
 			if(b){			
 				je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
 				je.setType("success");

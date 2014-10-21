@@ -1,6 +1,7 @@
 package com.school.entity.notice;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.util.Date;
 
 import com.school.entity.UserInfo;
