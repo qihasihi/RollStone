@@ -225,7 +225,7 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 		<!-- <script src="<%=basePath %>util/xheditor/xheditor-1.1.6-zh-cn.js"type="text/javascript"></script>-->
 
 		<!-- xheditor 1.2.1 -->
-		<script src="<%=basePath %>util/xheditor/xheditor-1.2.1.min.js"type="text/javascript"></script>
+		<script src="<%=basePath %>util/xheditor/xheditor-1.2.1.min.js" type="text/javascript"></script>
 		
 		<script type="text/javascript" src="<%=basePath %>util/xheditor/xheditor_lang/zh-cn.js"></script>
 		

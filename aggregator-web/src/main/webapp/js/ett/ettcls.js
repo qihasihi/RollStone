@@ -617,7 +617,7 @@ function sub_cls(clsid){
             alert(rps.msg);
             if(rps.type=='success'){
                 closeModel(dvObj);
-                $("#dv_add input[id='btn_invitecode']").empty();
+                $("#dv_add input[id='invite_code']").empty();
                 loadCls(1,clsid=='undefined'?rps.objList[0]:clsid);
             }
         }
