@@ -1998,7 +1998,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
             MyInfoCloudInfo mc=new MyInfoCloudInfo();
             mc.setTargetid(Long.parseLong(resEntity.getResid().toString()));
             mc.setUserid(Long.parseLong(this.logined(request).getUserid().toString()));
-            mc.setData(this.logined(request).getRealname()+"\"分享了资源\"<a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+resEntity.getResid()+"\">#ETIANTIAN_SPLIT#</a>!");
+            mc.setData("分享了资源 <a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+resEntity.getResid()+"\">#ETIANTIAN_SPLIT#</a>! ");
             mc.setType(1);
             objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
             if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){

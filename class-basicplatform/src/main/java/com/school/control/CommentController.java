@@ -131,8 +131,8 @@ public class CommentController extends BaseController<CommentInfo> {
                 MyInfoCloudInfo mc=new MyInfoCloudInfo();
                 mc.setTargetid(Long.parseLong(commentinfo.getCommentobjectid().toString()));
                 mc.setUserid(Long.parseLong(rsList.get(0).getUserid().toString()));
-                if(commentinfo.getAnonymous()==null&&commentinfo.getAnonymous()!=1)
-                    mc.setData(this.logined(request).getRealname() + " 评论了你的资源 <a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a>");
+                if(commentinfo.getAnonymous()==null||commentinfo.getAnonymous()!=1)
+                    mc.setData(this.logined(request).getRealname() + " 评论了你的资源 <a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a> !");
                 else
                     mc.setData("我的资源 <a style=\"color:#0066CC\"  href=\"resource?m=todetail&resid="+commentinfo.getCommentobjectid()+"\">#ETIANTIAN_SPLIT#</a> 被匿名评论了!");
                 mc.setType(1);

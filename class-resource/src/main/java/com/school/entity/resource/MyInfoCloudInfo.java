@@ -105,19 +105,32 @@ public class MyInfoCloudInfo implements  Serializable{
             if(this.data.indexOf(splitChar)!=-1){
                 returnVal=this.data.replace("#ETIANTIAN_SPLIT#",targetName+"");
             }
+            if(returnVal.indexOf("分享了")==0){
+                returnVal="我"+returnVal;
+            }
         }
+
         return returnVal;
     }
 
     public String getOtherDataMsg(){
-        String returnVal=this.getDataMsg();
+        String returnVal=this.data;
+        String splitChar="#ETIANTIAN_SPLIT#";
+        if(this.getType()!=null&&this.data!=null){
+            if(this.data.indexOf(splitChar)!=-1){
+                returnVal=this.data.replace("#ETIANTIAN_SPLIT#",targetName+"");
+            }
+//            if(returnVal.indexOf("分享了")==0){
+//                returnVal="我"+returnVal;
+//            }
+        }
         if(realName!=null&&realName.trim().length()>0){
 //           String typeStr="专题";
 //            if(this.type==1)
 //                typeStr="资源";
 //            returnVal=realName+" 分享了"+typeStr+" "+returnVal;
-            if(returnVal.trim().indexOf("分享了")!=0)
-                returnVal=realName+" 分享了 "+returnVal;
+            if(returnVal.trim().indexOf("分享了")==0)
+                returnVal=realName+" "+returnVal;
         }
         return returnVal;
     }

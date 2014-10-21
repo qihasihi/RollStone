@@ -182,10 +182,18 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=SynchroDataToEtt")
-    public void SynchroDataToEtt(HttpServletRequest request,HttpServletResponse response){
+    public void SynchroDataToEtt(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String dcschoolid=request.getParameter("dcschoolid");
+        //只处理>50000的分校
+        if(dcschoolid==null||dcschoolid.trim().length()<1||Integer.parseInt(dcschoolid.trim())<50000){
+            response.getWriter().println("<script type='text/javascript'>alert('参数dcschoolid不能为空!');</script>");
+            return;
+        }
+        Integer schoolid=Integer.parseInt(dcschoolid.trim());
         //用户表同步
         UserInfo tmpUser=new UserInfo();
         tmpUser.setStateid(0);
+        tmpUser.setDcschoolid(schoolid);
         IUserManager userManager=this.getManager(UserManager.class);
         PageResult presult=new PageResult();
         presult.setPageSize(100);
@@ -195,7 +203,6 @@ public class TestController extends BaseController<String>{
             List<UserInfo> uList=userManager.getList(tmpUser,presult);
             if(uList==null||uList.size()<1)break;
             for(UserInfo u:uList){
-
             }
             //开始同步
             if(EttInterfaceUserUtil.delUserBase(uList))
@@ -204,6 +211,7 @@ public class TestController extends BaseController<String>{
         ///////////////////////班级，班级用户//////////////////////////
         //班级表同步
         ClassInfo clsEntity=new ClassInfo();
+        clsEntity.setDcschoolid(schoolid);
         IClassManager classManager=this.getManager(ClassManager.class);
         //班级用户同步
         IClassUserManager classUserManager=this.getManager(ClassUserManager.class);
@@ -242,52 +250,51 @@ public class TestController extends BaseController<String>{
                         }
                         EttInterfaceUserUtil.OperateClassUser(mapList, cls.getClassid(),cls.getDcschoolid());
                     }
-
             }
         }
 
         //////////更新小组学生人员信息
-
-        ITpGroupManager groupManager=this.getManager(TpGroupManager.class);
-        ITpGroupStudentManager groupStudentManager=this.getManager(TpGroupStudentManager.class);
-        //更新小组信息
-        TpGroupInfo tmpGroup=new TpGroupInfo();
-        presult.setPageNo(0);
-        while(true){
-            presult.setPageNo(presult.getPageNo()+1);
-            List<TpGroupInfo> groupList=groupManager.getList(tmpGroup,presult);
-            if(groupList==null||groupList.size()<1)break;
-            for(TpGroupInfo g:groupList){
-                if(g!=null){
-                    Integer clsid=g.getClassid();
-                    ClassInfo tmpCls=new ClassInfo();
-                    tmpCls.setClassid(clsid);
-                    List<ClassInfo> clsList=classManager.getList(tmpCls,null);
-                    if(clsList==null||clsList.size()<1)continue;
-                    Integer schoolid=clsList.get(0).getDcschoolid();
-                    if(EttInterfaceUserUtil.delGroupBase(g,schoolid))
-                        if(EttInterfaceUserUtil.addGroupBase(g,schoolid)){
-                            List<Map<String,Object>> objMapList=null;
-                            //小组人员
-                            TpGroupStudent gs=new TpGroupStudent();
-                            gs.setGroupid(g.getGroupid());
-                            List<TpGroupStudent> tgsList=groupStudentManager.getList(gs,null);
-                            if(tgsList!=null&&tgsList.size()>0){
-                                objMapList=new ArrayList<Map<String, Object>>();
-                                for(TpGroupStudent tgs:tgsList){
-                                    if(tgs!=null){
-                                        //必带 userId，userType 的key
-                                        Map<String,Object> tmpMap=new HashMap<String, Object>();
-                                        tmpMap.put("userId",tgs.getUserid());
-                                        tmpMap.put("userType",3);   //3:学生
-                                        objMapList.add(tmpMap);
-                                    }
-                                }
-                            }
-                            EttInterfaceUserUtil.OperateGroupUser(objMapList,clsid,gs.getGroupid(),schoolid);
-                    }
-                }
-            }
-        }
+//
+//        ITpGroupManager groupManager=this.getManager(TpGroupManager.class);
+//        ITpGroupStudentManager groupStudentManager=this.getManager(TpGroupStudentManager.class);
+//        //更新小组信息
+//        TpGroupInfo tmpGroup=new TpGroupInfo();
+//        presult.setPageNo(0);
+//        while(true){
+//            presult.setPageNo(presult.getPageNo()+1);
+//            List<TpGroupInfo> groupList=groupManager.getList(tmpGroup,presult);
+//            if(groupList==null||groupList.size()<1)break;
+//            for(TpGroupInfo g:groupList){
+//                if(g!=null){
+//                    Integer clsid=g.getClassid();
+//                    ClassInfo tmpCls=new ClassInfo();
+//                    tmpCls.setClassid(clsid);
+//                    List<ClassInfo> clsList=classManager.getList(tmpCls,null);
+//                    if(clsList==null||clsList.size()<1)continue;
+//                    Integer schoolid=clsList.get(0).getDcschoolid();
+//                    if(EttInterfaceUserUtil.delGroupBase(g,schoolid))
+//                        if(EttInterfaceUserUtil.addGroupBase(g,schoolid)){
+//                            List<Map<String,Object>> objMapList=null;
+//                            //小组人员
+//                            TpGroupStudent gs=new TpGroupStudent();
+//                            gs.setGroupid(g.getGroupid());
+//                            List<TpGroupStudent> tgsList=groupStudentManager.getList(gs,null);
+//                            if(tgsList!=null&&tgsList.size()>0){
+//                                objMapList=new ArrayList<Map<String, Object>>();
+//                                for(TpGroupStudent tgs:tgsList){
+//                                    if(tgs!=null){
+//                                        //必带 userId，userType 的key
+//                                        Map<String,Object> tmpMap=new HashMap<String, Object>();
+//                                        tmpMap.put("userId",tgs.getUserid());
+//                                        tmpMap.put("userType",3);   //3:学生
+//                                        objMapList.add(tmpMap);
+//                                    }
+//                                }
+//                            }
+//                            EttInterfaceUserUtil.OperateGroupUser(objMapList,clsid,gs.getGroupid(),schoolid);
+//                    }
+//                }
+//            }
+//        }
     }
 }

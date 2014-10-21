@@ -3284,8 +3284,10 @@ public class PaperController extends BaseController<PaperInfo>{
 //            je.setMsg("该班级任务尚未结束，无法进行批阅");
 //            response.getWriter().println(je.getAlertMsgAndBack());return null;
 //        }
-
-
+        if(clsid==null&&classList!=null&&classList.size()>0&&classList.get(0).containsKey("classid")){
+            clsid=classList.get(0).get("classid").toString();
+        }
+        classtype="1";
 
         //获取试卷内所有试题的提交人数和审批人数
         List<PaperQuestion> objList = this.paperQuestionManager.getQuestionByPaper(Long.parseLong(paperid),Integer.parseInt(clsid),Integer.parseInt(classtype),Long.parseLong(taskid.trim()));
@@ -3388,7 +3390,7 @@ public class PaperController extends BaseController<PaperInfo>{
                    }finally{
                        fos.close();
                    }
-                   je.getObjList().add(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fname);
+                   je.getObjList().add("uploadfile/"+fname);
                }else{
                    int totalScore = 100;
                    int percentNum = 10;
@@ -3435,7 +3437,7 @@ public class PaperController extends BaseController<PaperInfo>{
                          fos.close();
                    }
 
-                   je.getObjList().add(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fname);
+                   je.getObjList().add("uploadfile/"+fname);
                }
             }else{
                 je.setType("error");

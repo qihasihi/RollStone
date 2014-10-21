@@ -27,20 +27,24 @@
                 $("#a_cls").hide();
            queryPaperques();
 
-            if($("#question li").filter(function(){return this.className!='over'}).length<1){
-                //验证是否没有作答
-                var isStuAnswer=true;
+
+            getPercentScoreByType(2);
+            $("#dv_tj_fsd").show();
+
+//            if($("#question li").filter(function(){return this.className!='over'}).length<1){
+//                //验证是否没有作答
+//                var isStuAnswer=true;
 //                $("#question li b").each(function(idx,itm){
 //                    var h=$(itm).html().Trim().split("/");
 //                    if(h[0]==0||h[1]==0){
 //                        isStuAnswer=false;return;
 //                    }
 //                })
-                if(isStuAnswer){
-                    getPercentScoreByType(2);
-                    $("#dv_tj_fsd").show();
-                }
-            }
+//                if(isStuAnswer){
+//                    getPercentScoreByType(2);
+//                    $("#dv_tj_fsd").show();
+//                }
+//            }
 
         });
         function queryPaperques(){
