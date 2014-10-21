@@ -27,11 +27,6 @@ public class ClassYearDAO extends CommonDAO<ClassYearInfo> implements IClassYear
 		}return false;
 	} 
 
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
-			List<List<Object>> objArrayList) {
-		return this.executeArray_SQL(sqlArrayList, objArrayList);
-	}
-
 	public Boolean doSave(ClassYearInfo obj) {
 		if (obj == null)
 			return false;

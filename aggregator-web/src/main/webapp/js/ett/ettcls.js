@@ -526,15 +526,22 @@ function toUpdClass(clsid){
                         $("#dv_edit input[id='verify_time']").val(rps.objList[0].verifyTimeString);
                     if(typeof rps.objList[0].allowjoin !='undefined' )
                         $("#dv_edit input[name='rdo'][value='"+rps.objList[0].allowjoin+"']").attr("checked",true);
+                    $("#dv_edit input[id='invite_code']").next("span").remove();
                     if(rps.objList[0].dctype==2&&schoolid=="1"){
                         $("#dv_edit tr[id='tr_invite']").show();
                         if(typeof rps.objList[0].invitecode !='undefined'&&rps.objList[0].invitecode.toString().length>0){
-                            $("#dv_edit input[id='invite_code']").val(rps.objList[0].invitecode);
+                            $("#dv_edit input[id='invite_code']").after('<span>'+rps.objList[0].invitecode+'</span>');
                             $("#dv_edit a[id='btn_invitecode']").hide();
+                            $("#dv_edit input[id='invite_code']").hide();
                         }else{
                             $("#dv_edit a[id='btn_invitecode']").show();
                             $("#dv_edit input[id='invite_code']").empty();
+                            $("#dv_edit input[id='invite_code']").show();
                         }
+                    }else{
+                        $("#dv_edit a[id='btn_invitecode']").show();
+                        $("#dv_edit input[id='invite_code']").empty();
+                        $("#dv_edit tr[id='tr_invite']").hide();
                     }
 
 

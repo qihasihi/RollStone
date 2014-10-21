@@ -106,11 +106,11 @@ function getNoGroupStudentsByClassId(classId,classType,dctype){
                     if(dctype==1)
                         h+='<a style="display: none;" name="view_pass" class="ico92" title="查看密码" href="javascript:;"></a>';
                     else
-                        h+='<a style="display: none;" name="view_pass" class="ico92" title="查看ID" href="javascript:;"></a>';
+                        h+='<a style="display: none;" name="view_pass" class="ico92" title="查看ID" href="'+viewEttUserURL+itm.ETT_USER_ID+'"></a>';
                     if(dctype==1)
                         h+='<span style="display: none;" class="password" name="pass">'+itm.PASSWORD+'</span>';
-                    else
-                        h+='<span style="display: none;" class="password" name="pass"><a target="_blank" href="'+viewEttUserURL+itm.ETT_USER_ID+'">'+itm.ETT_USER_ID+'</a></span>';
+                    //else
+                        //h+='<span style="display: none;" class="password" name="pass"><a target="_blank" href="'+viewEttUserURL+itm.ETT_USER_ID+'">'+itm.ETT_USER_ID+'</a></span>';
                     h+='</li>';
                     $("#noGroupStudents").append(h);
                     $("#no_gs").append("<option value='"+itm.USER_ID+"' >"+itm.STU_NAME+"</option>");
@@ -307,13 +307,13 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
                 gtHtml+="<td><span class='w60'>"+itm.stuname;
                 if(dcType==1)
                     gtHtml+="<b style='display: none;'>"+itm.password+"</b>";
-                else
-                    gtHtml+="<b style='display: none;'><a target='_blank' href='"+viewEttUserURL+itm.ettuserid+"'>"+itm.ettuserid+"</a></b>";
+                //else
+                    //gtHtml+="<b style='display: none;'><a target='_blank' href='"+viewEttUserURL+itm.ettuserid+"'>"+itm.ettuserid+"</a></b>";
                 gtHtml+="</span>";
                 if(dcType==1)
                     gtHtml+='<a name="a_view" class="ico92" title="查看密码" href="javascript:void(0);"></a>';
                 else
-                    gtHtml+='<a name="a_view" class="ico92" title="查看ID" href="javascript:void(0);"></a>';
+                    gtHtml+='<a name="a_view" class="ico92" title="查看ID" href="'+viewEttUserURL+itm.ettuserid+'"></a>';
                 gtHtml+='<a href="javascript:delGroupStudent(\''+itm.ref+'\');" class="ico34" title="移出小组"></a>';
                 if(itm.isleader==2)
                     gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\',\''+groupId+'\');" class="ico22" title="调组"></a></td>';
@@ -456,8 +456,8 @@ function getStuList(clsid,dctype){
                     h+='<li>'+itm.realname;
                     if(dctype>1){
                         h+='<a style="display: none;" href="javascript:delClassUser(\''+itm.ref+'\')" class="ico_delete" title="删除"></a>';
-                        h+='<a style="display: none;" name="a_view" class="ico92" title="查看ID" href="javascript:;"></a>';
-                        h+='<span style="display: none;"  class="password"><a target="_blank" href="'+viewEttUserURL+itm.ettuserid+'">'+itm.ettuserid+'</a></span>'
+                        h+='<a style="display: none;" name="a_view" class="ico92" title="查看ID" href="'+viewEttUserURL+itm.ettuserid+'"></a>';
+                        //h+='<span style="display: none;"  class="password"><a target="_blank" href="'+viewEttUserURL+itm.ettuserid+'">'+itm.ettuserid+'</a></span>'
                     }else{
                         h+='<a style="display: none;" name="a_view" class="ico92" title="查看密码" href="javascript:;"></a>';
                         h+='<span style="display: none;"  class="password">'+itm.password+'</span>'

@@ -25,3 +25,12 @@
     }
 
 %>
+<script>
+    function a(){
+        alert("test");
+    }
+</script>
+<script type="text/javascript" src="js/teachpaltform/1.js"></script>¡¡
+<body>
+    <span onclick="b();">asdfasdfa</span>
+</body>

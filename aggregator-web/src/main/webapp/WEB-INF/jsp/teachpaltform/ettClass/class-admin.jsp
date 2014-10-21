@@ -18,10 +18,14 @@
 
         function changeClsType(dvObj){
             var clstype=$("#"+dvObj+" select[id='type']").val();
-            if(clstype==2&&schoolid=="1")
+            if(clstype==2&&schoolid=="1"){
                 $("#"+dvObj+" tr[id='tr_invite']").show();
-            else
+                $("#"+dvObj+" input[id='invite_code']").show();
+            }else{
                 $("#"+dvObj+" tr[id='tr_invite']").hide();
+                $("#"+dvObj+" input[id='invite_code']").hide();
+            }
+
         }
     </script>
 

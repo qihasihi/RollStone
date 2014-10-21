@@ -6384,7 +6384,7 @@ public class UserController extends BaseController<UserInfo> {
      * @throws Exception
      */
 
-    @RequestMapping(params = "m=receiveLZXUserM", method = RequestMethod.POST)
+    @RequestMapping(params = "m=receiveLZXUserM", method = {RequestMethod.POST,RequestMethod.GET})
     public void m_receiveLZXUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolid");
@@ -6697,7 +6697,7 @@ public class UserController extends BaseController<UserInfo> {
      * @throws Exception
      */
 
-    @RequestMapping(params = "m=modifyLZXUserM", method = RequestMethod.POST)
+    @RequestMapping(params = "m=modifyLZXUserM",  method = {RequestMethod.POST,RequestMethod.GET})
     public void m_modifyLZXUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolid");
@@ -6875,7 +6875,7 @@ public class UserController extends BaseController<UserInfo> {
      * @throws Exception
      */
 
-    @RequestMapping(params = "m=deleteLZXUserM", method = RequestMethod.POST)
+    @RequestMapping(params = "m=deleteLZXUserM",  method = {RequestMethod.POST,RequestMethod.GET})
     public void m_deleteLZXUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolid");
@@ -7002,7 +7002,7 @@ public class UserController extends BaseController<UserInfo> {
      * @throws Exception
      */
 
-    @RequestMapping(params = "m=receiveLZXClsUserM", method = RequestMethod.POST)
+    @RequestMapping(params = "m=receiveLZXClsUserM",  method = {RequestMethod.POST,RequestMethod.GET})
     public void m_receiveLZXClsUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolid");
@@ -7174,7 +7174,7 @@ public class UserController extends BaseController<UserInfo> {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(params = "m=deleteLZXClsUserM", method = RequestMethod.POST)
+    @RequestMapping(params = "m=deleteLZXClsUserM",  method = {RequestMethod.POST,RequestMethod.GET})
     public void m_deleteLZXClsUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolid");

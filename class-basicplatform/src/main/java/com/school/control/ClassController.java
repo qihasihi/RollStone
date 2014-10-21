@@ -872,10 +872,10 @@ public class ClassController extends BaseController<ClassInfo>{
         Long ct=Long.parseLong(timeStr.toString());
         Long nt=new Date().getTime();
         double d=(nt-ct)/(1000*60);
-        if(d>3){//大于三分钟
+      /*  if(d>3){//大于三分钟
             response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，响应超时!接口三分钟内有效!\"}");
             return;
-        }
+        }*/
         //验证key
         String md5key=timeStr.toString()+schoolid+dcschoolid;
         md5key+=timeStr.toString();
@@ -1016,9 +1016,6 @@ public class ClassController extends BaseController<ClassInfo>{
                             }
                     }
                 }
-
-
-
 
             }else{
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，原因：未知!\"}");return;

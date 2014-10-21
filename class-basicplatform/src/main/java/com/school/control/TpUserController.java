@@ -83,6 +83,7 @@ public class TpUserController extends UserController {
 
         //验证添加分校信息
        // String url="http://localhost:8080/totalSchool/";//UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION");
+/*
         String url=UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION");
         String totalSchoolUrl=url+"franchisedSchool?jwValidateSchool";
         String totalParams="schoolid="+schoolid+"&schoolname="+schoolname;//java.net.URLEncoder.encode(schoolname,"UTF-8");
@@ -91,6 +92,7 @@ public class TpUserController extends UserController {
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
+*/
 
 
 

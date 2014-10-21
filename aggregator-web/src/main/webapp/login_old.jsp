@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@include file="/util/common-jsp/common-jxpt.jsp"%>
 <%
    // response.sendRedirect(baseUrl+"/1.jsp");
     String a="/group1/1.jsp";
@@ -10,5 +11,21 @@
     }
     System.out.println(a);
 %>
+<head>
+    <script>
+        $(function(){
 
-<body><iframe src="APP.html" frameborder="0" scrolling="yes" style="width:100%;height: 100%;" ></iframe></body>
+
+        });
+        function loadJsp(){
+            $("#div").load("1.jsp");
+        }
+    </script>
+</head>
+<body>
+<a href="javascript:loadJsp()">loadJsp</a>
+<a href="javascript:b()">Click</a>
+<div id="div" onclick="">
+
+</div>
+</body>
