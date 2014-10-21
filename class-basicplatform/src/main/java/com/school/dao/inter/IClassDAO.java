@@ -1,10 +1,10 @@
 
 package com.school.dao.inter;
 
-import java.util.List;
-
 import com.school.dao.base.ICommonDAO;
 import com.school.entity.ClassInfo;
+
+import java.util.List;
 
 public interface  IClassDAO extends ICommonDAO<ClassInfo>{
 	/**
@@ -30,4 +30,12 @@ public interface  IClassDAO extends ICommonDAO<ClassInfo>{
      * @return
      */
     public List<Object> getSaveOrUpdateSql(ClassInfo obj, StringBuilder sqlbuilder);
+
+    /**
+     * 得到已建立的班级数量
+     * @param schoolId 分校id
+     * @param year 学年的值
+     * @return 已有的班级数量
+     */
+    public int getTotalClass(int schoolId, String year);
 }

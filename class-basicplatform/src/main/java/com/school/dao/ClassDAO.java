@@ -1,17 +1,16 @@
 package  com.school.dao;
 
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.school.util.UtilTool;
-import org.springframework.stereotype.Component;
-
 import com.school.dao.base.CommonDAO;
 import com.school.dao.inter.IClassDAO;
 import com.school.entity.ClassInfo;
 import com.school.entity.ClassUser;
 import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.stereotype.Component;
+
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component  
 public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
@@ -475,4 +474,24 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         return objList;
     }
 
+    /**
+     * 得到已建立的班级数量
+     * @param schoolId 分校id
+     * @param year 学年的值
+     * @return 已有的班级数量
+     */
+    public int getTotalClass(int schoolId, String year) {
+        int total = 0;
+
+        if(schoolId < 50000 || year == null || year.equals(""))
+            return 0;
+
+        StringBuilder sb = new StringBuilder("{call class_proc_total(");
+        sb.append(schoolId);
+        sb.append(",'");
+        sb.append(year);
+        sb.append("',?)}");
+        total = (Integer)this.executeFunction(sb.toString(),null);
+        return total;
+    }
 }

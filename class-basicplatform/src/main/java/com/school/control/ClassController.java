@@ -1517,6 +1517,15 @@ public class ClassController extends BaseController<ClassInfo>{
         return true;
     }
 
+    /**
+     * 得到已建立的班级数量
+     * @param schoolId 分校id
+     * @param year 学年的值
+     * @return 已有的班级数量
+     */
+    public int getTotalClass(int schoolId, String year) {
+        return this.classManager.getTotalClass(schoolId, year);
+    }
 }
 
 

@@ -59,6 +59,7 @@
 		<!-- <mvc:interceptor>	-->
 			<!-- 所有通用的拦截器 -->
 			<bean class="com.school.filter.BaseInterceptor"/>
+            <bean class="com.school.Interceptor.AddClassInterceptor"/>
 		<!-- </mvc:interceptor> -->
 	</mvc:interceptors>
 

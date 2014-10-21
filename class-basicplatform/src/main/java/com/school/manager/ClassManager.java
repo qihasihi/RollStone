@@ -1,20 +1,18 @@
 
 package  com.school.manager;
 
-import java.util.List;
-
-import jxl.Sheet;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 import com.school.dao.base.ICommonDAO;
 import com.school.dao.inter.IClassDAO;
-import com.school.util.PageResult;
 import com.school.entity.ClassInfo;
 import com.school.manager.base.BaseManager;
 import com.school.manager.inter.IClassManager;
+import com.school.util.PageResult;
+import jxl.Sheet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class  ClassManager extends BaseManager<ClassInfo> implements IClassManager  {
@@ -100,8 +98,16 @@ public class  ClassManager extends BaseManager<ClassInfo> implements IClassManag
     public List<Object> getSaveOrUpdateSql(ClassInfo obj, StringBuilder sqlbuilder){
         return this.classdao.getSaveOrUpdateSql(obj,sqlbuilder);
     }
-	
-	
+
+    /**
+     * 得到已建立的班级数量
+     * @param schoolId 分校id
+     * @param year 学年的值
+     * @return 已有的班级数量
+     */
+    public int getTotalClass(int schoolId, String year) {
+        return this.getTotalClass(schoolId, year);
+    }
 	
 }
 
