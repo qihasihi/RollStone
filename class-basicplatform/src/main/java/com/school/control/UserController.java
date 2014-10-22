@@ -1091,7 +1091,7 @@ public class UserController extends BaseController<UserInfo> {
                         userinfo.setDeptUsers(deptList);
 
                         //查询分校的logo放入session
-                        if(userinfo.getDcschoolid()!=null){
+                        if(userinfo.getDcschoolid()!=null&&userinfo.getDcschoolid()>=50000){
                             ISchoolLogoManager schoolLogoManager = (SchoolLogoManager)this.getManager(SchoolLogoManager.class);
                             SchoolLogoInfo sl = new SchoolLogoInfo();
                             sl.setSchoolid(userinfo.getDcschoolid());
