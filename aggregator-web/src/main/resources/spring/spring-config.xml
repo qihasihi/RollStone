@@ -48,9 +48,9 @@
 	<mvc:resources mapping="/util/xheditor/xheditor_emot/ipb/**" location="/util/xheditor/xheditor_emot/ipb/" />
 	<mvc:resources mapping="/util/xheditor/xheditor_emot/msn/**" location="/util/xheditor/xheditor_emot/msn/" />
 	<mvc:resources mapping="/util/xheditor/xheditor_emot/pidgin/**" location="/util/xheditor/xheditor_emot/pidgin/" />
-	<!-- 资源文件引用下载 
-	<mvc:resources mapping="/userUploadFile/**" location="/userUploadFile/**" /> 
-	-->
+
+	<mvc:resources mapping="/userUploadFile/**" location="/userUploadFile/" />
+    <mvc:resources mapping="/uploadfile/**" location="/uploadfile/" />
     <mvc:resources mapping="/js/**" location="/js/" />
 
 	<mvc:default-servlet-handler />  
@@ -59,7 +59,7 @@
 		<!-- <mvc:interceptor>	-->
 			<!-- 所有通用的拦截器 -->
 			<bean class="com.school.filter.BaseInterceptor"/>
-            <bean class="com.school.Interceptor.AddClassInterceptor"/>
+            <!--<bean class="com.school.Interceptor.AddClassInterceptor"/>-->
 		<!-- </mvc:interceptor> -->
 	</mvc:interceptors>
 
