@@ -1,34 +1,25 @@
 package com.school.control;
 
-import java.io.IOException;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.etiantian.unite.utils.UrlSigUtil;
+import com.school.control.base.BaseController;
+import com.school.entity.*;
 import com.school.manager.*;
 import com.school.manager.inter.*;
-import com.school.util.*;
-import com.school.utils.*;
-import jcore.jsonrpc.common.JSONArray;
-import jcore.jsonrpc.common.JSONObject;
-import net.sf.json.JSON;
+import com.school.util.JsonEntity;
+import com.school.util.MD5_NEW;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import com.school.utils.EttInterfaceUserUtil;
 import org.apache.log4j.Logger;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ClassInfo;
-import com.school.entity.ClassUser;
-import com.school.entity.ClassYearInfo;
-import com.school.entity.GradeInfo;
-import com.school.entity.SubjectInfo;
-import com.school.entity.TermInfo;
-import com.school.entity.UserInfo;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 @Controller
 @RequestMapping(value="/cls")
@@ -379,10 +370,17 @@ public class ClassController extends BaseController<ClassInfo>{
     @RequestMapping(params="m=ajaxsave",method=RequestMethod.POST)
     public void doSubmitAddClassyear(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
+
         ClassInfo classinfo = this.getParameter(request, ClassInfo.class);
         String type=request.getParameter("dtype");
         String year=request.getParameter("dyear");
         String pattern=request.getParameter("dpattern");
+        String schoolid=request.getParameter("dcschoolid");
+        if(!validateClassNum(Integer.valueOf(schoolid), year, 1)) {
+            je.setMsg("错误，已达到最大班级数量!");
+            response.getWriter().print(je.toJSON());return;
+        }
+
         if(classinfo.getClassgrade()==null||
                 classinfo.getClassgrade().trim().length()<1||
                 classinfo.getClassname()==null||
@@ -391,6 +389,7 @@ public class ClassController extends BaseController<ClassInfo>{
             response.getWriter().print(je.toJSON());
             return;
         }
+
         classinfo.setYear(year);
         classinfo.setIslike(1);
         //已存在当前数据 无法添加
@@ -743,7 +742,7 @@ public class ClassController extends BaseController<ClassInfo>{
                     }
                 }
             }else
-                jeEntity.setMsg("操作失败，原因：未知!");
+                jeEntity.setMsg("操作失败，原因：wwww未知!");
         }else{
             jeEntity.setMsg("错误，没有可执行的操作!请重试!");
         }
@@ -759,8 +758,14 @@ public class ClassController extends BaseController<ClassInfo>{
     public void doClsLevelUp(HttpServletRequest request,HttpServletResponse response) throws Exception{
         String year=request.getParameter("year");
         String schoolid=request.getParameter("schoolid");
-
         JsonEntity jeEntity=new JsonEntity();
+
+        if(!validateClassNum(Integer.valueOf(schoolid), year, 2)) {
+            jeEntity.setMsg("错误，超过班级数量限制，无法自动升级!");
+            response.getWriter().print(jeEntity.toJSON());return;
+        }
+
+
         if(year==null||year.trim().length()<1){
             jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(jeEntity.toJSON());return;
@@ -834,7 +839,45 @@ public class ClassController extends BaseController<ClassInfo>{
         response.getWriter().print(jeEntity.toJSON());
     }
 
+    private Boolean validateClassNum(int schoolId, String year, int from){
+        int existClass = 0;
+        int maxClass = 0;
+        if (schoolId >= 50000) {
+            existClass = getTotalClass(schoolId, year);
+            HashMap<String,String> paramMap=new HashMap<String,String>();
+            paramMap.put("time",new Date().getTime()+"");
 
+            Map<String,Object> tmpMap=new HashMap<String, Object>();
+            tmpMap.put("schoolId",schoolId);
+            tmpMap.put("year",year);
+
+            net.sf.json.JSONObject jsonObject= net.sf.json.JSONObject.fromObject(tmpMap);
+            paramMap.put("data",jsonObject.toString());
+            String val = UrlSigUtil.makeSigSimple("groupInterFace.do", paramMap);
+            paramMap.put("sign",val);
+            // http\://int.etiantian.com\:34180/totalSchool/ cls?m=getClsNum&schoolid=&year=
+            String url=UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION");
+            if(from == 1)
+                url +="/franchisedSchool?m=getTotalClass";
+            else
+                url +="/franchisedSchool?m=getNTotalClass";
+            net.sf.json.JSONObject jo=UtilTool.sendPostUrl(url,paramMap,"UTF-8");
+            if(jo!=null&&jo.containsKey("result"))
+                maxClass = Integer.valueOf(jo.get("result").toString());
+            if(jo!=null)
+                return false;
+            if(from == 1 && existClass<maxClass)
+                return true;
+            else if(from !=1 && existClass <= maxClass)
+                return true;
+        }
+        return false;
+
+
+
+
+
+    }
 
 
     @RequestMapping(params ="m=lzxUpdateM",method=RequestMethod.POST)
@@ -1521,16 +1564,8 @@ public class ClassController extends BaseController<ClassInfo>{
     /**
      * 得到已建立的班级数量
      */
-    @RequestMapping(params = "m=cCheck", method = RequestMethod.POST)
-    public void getTotalClass(HttpServletRequest request,HttpServletResponse response) {
-        int schoolId =  Integer.valueOf(request.getParameter("schoolId"));
-        String year = request.getParameter("year");
-        int res = this.classManager.getTotalClass(schoolId, year);
-        try {
-            response.getWriter().write(res);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public int getTotalClass(int schoolId, String year) {
+        return this.classManager.getTotalClass(schoolId, year);
     }
 }
 
