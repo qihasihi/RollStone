@@ -3536,6 +3536,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //数量统计
         List<Map<String,Object>> numList = new ArrayList<Map<String, Object>>();
         List<TpGroupInfo> tiList=new ArrayList<TpGroupInfo>();
+        List<TpGroupInfo>tmpGroupList=new ArrayList<TpGroupInfo>();
         if(Integer.parseInt(type)==8||Integer.parseInt(type)==9){
             numList=this.taskPerformanceManager.getPerformanceNum2(Long.parseLong(taskid),clsid);
             optionnumList = this.taskPerformanceManager.getPerformanceOptionNum2(Long.parseLong(taskid),clsid);
@@ -3547,11 +3548,25 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ti.setClassid(Integer.parseInt(classid));
             ti.setSubjectid(Integer.parseInt(subjectid));
             tiList = this.tpGroupManager.getList(ti,null);
-            for(int i = 0;i<tiList.size();i++){
+            //过滤没用的小组
+            TpTaskAllotInfo ta=new TpTaskAllotInfo();
+            ta.setTaskid(Long.parseLong(taskid));
+            ta.setUsertype(2);
+            List<TpTaskAllotInfo> taskAllotInfoList=this.tpTaskAllotManager.getList(ta,null);
+            if(taskAllotInfoList!=null&&taskAllotInfoList.size()>0&&tiList!=null){
+                for(TpTaskAllotInfo allotInfo:taskAllotInfoList){
+                    for(TpGroupInfo groupInfo:tiList){
+                        if(allotInfo.getUsertypeid().equals(groupInfo.getGroupid()))
+                            tmpGroupList.add(groupInfo);
+                    }
+                }
+            }
+            //添加小组人员到小组中
+            for(int i = 0;i<tmpGroupList.size();i++){
                 TpGroupStudent ts = new TpGroupStudent();
                 for(int j = 0;j<tgsList.size();j++){
-                    if(tiList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
-                        tiList.get(i).setTpgroupstudent2(tgsList.get(j));
+                    if(tmpGroupList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
+                        tmpGroupList.get(i).setTpgroupstudent2(tgsList.get(j));
                     }
                 }
             }
@@ -3617,7 +3632,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         je.getObjList().add(numList);
         je.getObjList().add(option);
         je.getObjList().add(tList);
-        je.getObjList().add(tiList);
+        je.getObjList().add(tmpGroupList);
         je.getObjList().add(notCompleteList);
         je.setType("success");
         response.getWriter().print(je.toJSON());
@@ -3657,6 +3672,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //数量统计
         List<Map<String,Object>> numList = new ArrayList<Map<String, Object>>();
         List<TpGroupInfo> tiList=new ArrayList<TpGroupInfo>();
+        List<TpGroupInfo>tmpGroupList=new ArrayList<TpGroupInfo>();
         if(Integer.parseInt(type)==8||Integer.parseInt(type)==9){
             numList=this.taskPerformanceManager.getPerformanceNum2(Long.parseLong(taskid),clsid);
             TpGroupStudent tgsinfo = new TpGroupStudent();
@@ -3667,11 +3683,25 @@ public class TaskController extends BaseController<TpTaskInfo>{
             ti.setClassid(Integer.parseInt(classid));
             ti.setSubjectid(Integer.parseInt(subjectid));
             tiList = this.tpGroupManager.getList(ti,null);
-            for(int i = 0;i<tiList.size();i++){
+            //过滤没用的小组
+            TpTaskAllotInfo ta=new TpTaskAllotInfo();
+            ta.setTaskid(Long.parseLong(taskid));
+            ta.setUsertype(2);
+            List<TpTaskAllotInfo> taskAllotInfoList=this.tpTaskAllotManager.getList(ta,null);
+            if(taskAllotInfoList!=null&&taskAllotInfoList.size()>0&&tiList!=null){
+                for(TpTaskAllotInfo allotInfo:taskAllotInfoList){
+                    for(TpGroupInfo groupInfo:tiList){
+                        if(allotInfo.getUsertypeid().equals(groupInfo.getGroupid()))
+                            tmpGroupList.add(groupInfo);
+                    }
+                }
+            }
+            //添加小组人员到小组中
+            for(int i = 0;i<tmpGroupList.size();i++){
                 TpGroupStudent ts = new TpGroupStudent();
                 for(int j = 0;j<tgsList.size();j++){
-                    if(tiList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
-                        tiList.get(i).setTpgroupstudent2(tgsList.get(j));
+                    if(tmpGroupList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
+                        tmpGroupList.get(i).setTpgroupstudent2(tgsList.get(j));
                     }
                 }
             }
@@ -3688,7 +3718,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         List<UserInfo>notCompleteList=this.userManager.getUserNotCompleteTask(task.getTaskid(),null,cid,"1");
         je.getObjList().add(numList);
         je.getObjList().add(tList);
-        je.getObjList().add(tiList);
+        je.getObjList().add(tmpGroupList);
         je.getObjList().add(notCompleteList);
         je.setType("success");
         response.getWriter().print(je.toJSON());
