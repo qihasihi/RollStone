@@ -9,6 +9,6 @@ if(ft==null||!ft.toString().trim().equals("lzx")){
     北京四中网校<br>Copyright &copy;<%=fuYear%> etiantian.ALL Rights Reserved.<a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001070300043" target="_blank"></a>
 <%}%>
 </div>
-<div id="fade" class="black_overlay" style="background:black; filter: alpha(opacity=50); opacity: 0.5; -moz-opacity:0.5;" >
+<div id="fade" class="black_overlay" style="background:black; filter: alpha(opacity=10); opacity: 0.1; -moz-opacity:0.1;" >
 
 </div>

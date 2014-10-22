@@ -56,6 +56,15 @@
 
             $("#webimopen").click(function () {
                 $.framebridge.openDialog({windowId: "123456",windowClass:"webim_group_layout", target_url: jsURL,width: 262, height: 590, queryString:{jid:<%=jid %>,userType:<%=userType %>,schoolId:<%=schoolId %>,webimtoken:'<%=webimtoken %>',webimtimestamp:'<%=webimtimestamp %>',webimkey:'<%=webimkey%>'}, position: [100, 20]});
+                //如果是乐知行帐号，则执行
+                try{
+                    if(fromType=='lzx'){
+                        showModel("dv_modify_ettAccount",false);
+                        lzxLoadEttUserName();
+                    }
+                }catch(e){
+
+                }
             });
 
 

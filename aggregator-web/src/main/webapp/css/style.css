@@ -131,7 +131,7 @@
 
 	.content,.content3{
 	width: 1000px;
-	min-height:406px;
+	min-height:280px;
 	background: url(images/bg03_131230.png) repeat-y;
 	margin:0 auto;
 }
@@ -156,14 +156,14 @@
 
 	.content1{
 	width: 940px;
-	min-height:390px;
+	min-height:280px;
 	background-color:#f1f1f1;
 	padding:15px 30px 1px;
 	margin:0 auto;
 }
 	.content2{
 	width: 1000px;
-	min-height:396px;
+	min-height:280px;
 	background-color:#f1f1f1;
 	padding:5px 0;
 	margin:0 auto;
@@ -265,7 +265,6 @@
 }
 	.home_layout{
 	width:1000px;
-	min-height:498px;
 	background:url(images/bg14_131230.png) repeat-y;
 	margin:0 auto;
 }

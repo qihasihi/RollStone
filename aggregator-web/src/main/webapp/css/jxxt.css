@@ -1333,3 +1333,87 @@
 
 	.jxxt_lzx_header ul li.one{ background-position:-75px -48px;}
 	.jxxt_lzx_header ul li.two{ background-position:-150px -48px;}
+	.jxxt_lzx_header ul li.three{ background-position:-225px -48px;}
+
+	.jxxt_lzx_float{
+	width: 344px;
+	height: 394px;
+	padding:7px 7px 0 390px;
+	background: url(images/bg40_131230.png) no-repeat;
+}
+	.jxxt_lzx_float p.close{
+	height: 40px;
+	text-align: right;
+}
+	.jxxt_lzx_float p.close a{
+	width: 15px;
+	height: 15px;
+	background: url(images/bg40_131230.png) no-repeat -742px 0;
+	display:inline-block;
+}
+	.jxxt_lzx_float p.an a{	
+	width: 231px;
+	height: 26px;
+	background: url(images/bg40_131230.png) no-repeat -156px -437px;
+	display:inline-block;
+	font-size:14px;
+	font-weight:bold;
+	color:#fff;
+	margin:20px 0 0 2px;
+	text-align:center;
+	padding-top:4px;
+}
+	.jxxt_lzx_float p.close a{
+	width: 15px;
+	height: 15px;
+	background: url(images/bg40_131230.png) no-repeat -742px 0;
+	display:inline-block;
+}
+	.jxxt_lzx_float h1{
+	height: 55px;
+	font: normal 24px/28px Microsoft YaHei;
+	color:#0e92c7;
+}
+	.jxxt_lzx_float h2{
+	width:155px;
+	height: 35px;
+	background: url(images/bg40_131230.png) no-repeat 0 -402px;
+	margin:70px 0 20px 40px;
+}
+	.jxxt_lzx_float div.input{width:346px;height: 65px;}
+	.jxxt_lzx_float div.input span.one{
+	width:221px;
+	height:29px;
+	background: url(images/bg40_131230.png) no-repeat -156px -402px;
+	padding:5px 4px 0 10px;
+	color:#999;
+	display:inline-block;
+	margin-right:5px;
+}
+	.jxxt_lzx_float div.input span.one:hover{ background-position:-392px -402px;color:#999;}
+
+	.jxxt_lzx_float div.input span.one strong{
+	width:68px;
+	display: inline-block;
+	font:bold 14px/20px Microsoft YaHei;
+	color:#999;
+	vertical-align:middle;
+}
+	.jxxt_lzx_float .ico12{ margin:0;}
+	.jxxt_lzx_float .ico92{ margin-right:5px;}
+	
+	.jxxt_lzx_float div.input p.two{
+	width:300px;
+	padding:0 0 0 10px;
+	color:#f00;
+}
+    .jxxt_lzx_float div.input input{
+	width:145px;
+	height:18px;
+    background-color: transparent;
+	border:none;
+	font-size:12px;
+	line-height:18px;
+	vertical-align:middle;
+	color:#999;
+}

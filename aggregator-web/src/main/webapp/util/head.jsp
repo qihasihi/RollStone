@@ -63,6 +63,7 @@
     <%}%>
 </c:if>
 <script type="text/javascript">
+
     function loadWeImRight(){
         $.ajax({
             url:"user?m=loadWebImRight",
@@ -86,6 +87,52 @@
         })
     }
 
+    //乐知行
+    function loadLZXWeImRight(){
+        $.ajax({
+            url:"user?m=loadWebImRight",
+            dataType:'json',
+            type:'post',
+            cache: false,
+            error:function(){
+                alert('当前网络不稳定，请重试!');
+            },success:function(rps){
+                if(rps.type=="success"){
+                    if(rps.objList[0]==0){
+                        $("#li_web_im").load("util/webim.jsp",function(){
+                            //加载
+                            $("#webimopen").click();
+                        });
+                    }else{
+                        showModel("dv_register_ettAccount",false);
+                    }
+                }else
+                    alert(rps.msg);
+            }
+        })
+    }
+
+    function lzxLoadEttUserName(){
+        $.ajax({
+            url:"tpuser?loadEttUserName",
+            type:"post",
+            dataType:'json',
+            cache: false,
+            error:function(){
+                alert('系统未响应，请稍候重试!');
+            },
+            success:function(json){
+                if(json.objList[0]!=null&&json.objList[0].toString().length>0){
+                    $("#u_userName").val(json.objList[0]);
+                    $("#oldUserName").val(json.objList[0]);
+                }
+                if(typeof(isStudent)!="undefined"&&!isStudent){
+                    $("#u_userName").attr("disabled",true);
+                }
+            }
+        });
+    }
+
 </script>
 <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
 <div id="header">
@@ -107,6 +154,7 @@
           <%}%>
      </c:if>
 
+
       <!--如果是网校进入，则显示应用-->
       <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='ett'&&sessionScope.fromType!='lzx')}">
           <li class="five"><a href="APP.html" target="_blank">应&nbsp;用</a></li>
@@ -116,10 +164,16 @@
       <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='ett'&&sessionScope.fromType!='lzx')}">
           <li class="four"><a href="javascript:;" onclick="loginDestory('<%=basePath %>')">退出</a></li>
       </c:if>
-
+      <!--乐知行-->
     <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
         <%
+        if(modelType==2||modelType==1){
+            %>
+        <li class="three" id="li_web_im"><a href="javascript:;" onclick="loadLZXWeImRight()">爱学</a></li>
+        <%
+        }
             if(isTeacher&&!isStudent&&modelType==2){
+
             //加载乐知行，教学首页，左上角的链接
             if(ettColumnInfos!=null&&ettColumnInfos.size()>0){
                 String headcolumnico=UtilTool.utilproperty.getProperty("LZX_HEAD_COLUMN_ICO");
@@ -177,3 +231,278 @@
     <%}%>
 </c:if>
 </div>
+<c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
+    <div style="display:none" id="dv_modify_ettAccount">
+        <div class="jxxt_lzx_float">
+            <div class="menu">
+                <p class="close"><a href="javascript:;" onclick="closeModel('dv_modify_ettAccount')" title="关闭"></a></p>
+                <h1>修改爱学账号</h1>
+                <div class="input"> <span class="one"><strong>用&nbsp;户&nbsp;名</strong>
+                  <input type="text" name="u_userName" maxlength="12" id="u_userName" onblur="validateUName('u_userName','p_m_uname_msg','sp_m_uname_isright',<%=(isStudent?"true":"false")%>);"/>
+                     <input type="text" name="oldUserName" style="display:none" id="oldUserName"/>
+                  </span><span id="sp_m_uname_isright">6-12字符/6个汉字</span>
+                    <p class="two" id="p_m_uname_msg"></p>
+                </div>
+                <div class="input"> <span class="one"><strong>旧&nbsp;密&nbsp;码</strong>
+                  <input type="password" name="u_password" id="u_password"/><!-- onblur="validatePass('u_password','p_u_pass_msg','p_u_pass_isright')"-->
+                  </span><a href="javascript:;" onclick="changePassType('u_password','p_u_pass_msg','p_u_pass_isright')" class="ico92" title="显示密码"></a><span id="p_u_pass_isright">6-12字符</span>
+                    <p class="two" id="p_u_pass_msg"></p>
+                </div>
+                <div class="input"> <span class="one"><strong>新&nbsp;密&nbsp;码</strong>
+                <input type="password" name="u_new_password"  id="u_new_password" onblur="validatePass('u_new_password','p_u_new_pass_msg','p_u_newpass_isright',true);"/>
+                    </span><a href="javascript:;" onclick="changePassType('u_new_password','p_u_new_pass_msg','p_u_newpass_isright')"  class="ico92" title="显示密码"></a><span id="p_u_newpass_isright">6-12字符</span>
+                    <p class="two" id="p_u_new_pass_msg"></p>
+                </div>
+                <p class="an"><a href="javascript:;" onclick="doModifyEttAccount()">修&nbsp;&nbsp;改</a></p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div style="display: none" id="dv_register_ettAccount">
+    <div class="jxxt_lzx_float" id="dv_do_register">
+        <div class="menu">
+            <p class="close"><a href="javascript:;" onclick="closeModel('dv_register_ettAccount')" title="关闭"></a></p>
+            <h1>注册爱学账号</h1>
+            <div class="input">
+           <span class="one"><strong>用&nbsp;户&nbsp;名</strong>
+             <input type="text" name="userName" id="userName" onblur="validateUName('userName','p_uname_msg','sp_uname_isright')" maxlength="12"/>
+
+           </span><span id="sp_uname_isright">6-12字符/6个汉字</span>
+                <p class="two" id="p_uname_msg"></p>
+            </div>
+            <div class="input">
+           <span class="one"><strong>密&nbsp;&nbsp;&nbsp;&nbsp;码</strong>
+            <input type="password" maxlength="12" onblur="validatePass('password','p_pass_msg','p_pass_isright')" name="password" id="password" /></span>
+                <a href="javascript:;" onclick="changePassType('password','p_pass_msg','p_pass_isright')" class="ico92" title="显示密码"></a>
+                <span id="p_pass_isright">6-12字符</span>
+                <p class="two" id="p_pass_msg"></p>
+            </div>
+            <div class="input">
+           <span class="one"><strong>邮箱地址</strong>
+            <input type="text" name="email" id="email"  onblur="validateEmail('email','p_email_msg','p_email_isright')"/></span><span id="p_email_isright"></span></a>
+                <p class="two" id="p_email_msg"></p>
+            </div>
+            <p class="an"><a href="javascript:;" onclick="doRegister()">确&nbsp;&nbsp;定</a></p>
+        </div>
+    </div>
+         <div class="jxxt_lzx_float" id="dv_register_ok" style="display:none">
+            <div class="menu">
+                <p class="close"><a href="javascript:;" onclick="closeModel('dv_register_ettAccount')" title="关闭"></a></p>
+                <h2 title="注册成功"></h2>
+                <p class="an"><a href="javascript:;" onclick="loadWeImRight();closeModel('dv_register_ettAccount');">立即体验</a></p>
+            </div>
+        </div>
+    </div>
+    <!--注删-->
+    <script type="text/javascript">
+        //修改相关信息
+        function doModifyEttAccount(){
+            var uNameValidateBo=isStudent?validateUName('u_userName','p_m_uname_msg','sp_m_uname_isright',false):true;
+            var oldPassValidateBo=true;//validatePass('u_password','p_u_pass_msg','p_u_pass_isright');
+            var newPassValidateBo=validatePass('u_new_password','p_u_new_pass_msg','p_u_newpass_isright');
+            if(uNameValidateBo){
+                if(isStudent){
+                    if(!validteHasUName('u_userName','p_m_uname_msg','sp_m_uname_isright')){
+                        alert('用户名已存在，请更改');return false;
+                    }
+                }
+                if(oldPassValidateBo&&newPassValidateBo){
+                    var param={};
+                    param.oldUserName=$("#oldUserName").val().Trim();
+                    param.newUserName=$("#u_userName").val().Trim();
+                    param.oldPwd=$("#u_password").val().Trim();
+                    param.newPwd=$("#u_new_password").val().Trim();
+
+                    $.ajax({
+                        url:'tpuser?modifyEttUser',
+                        dataType:'json',
+                        type:'POST',
+                        data:param,
+                        cache: false,
+                        error:function(){
+                            alert('系统未响应!');
+                        },success:function(rps){
+                            if(rps.type=='error'){
+                                if(rps.objList[0]!=null&&rps.objList[0].toString().length>0){
+                                    alert(rps.objList[0]);
+                                }
+                            }else{
+                                alert("修改成功!");
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+
+
+        //注册
+        function doRegister(){
+            var uNameValidateBo=validateUName('userName','p_uname_msg','sp_uname_isright',false);
+            var passValidateBo=validatePass('password','p_pass_msg','p_pass_isright');
+            var emailValidateBo=validateEmail('email','p_email_msg','p_email_isright');
+            //用户名通过
+            if(uNameValidateBo&&$("#sp_uname_isright .ico12").length>0){
+               //密码通过,邮箱通过
+                if(passValidateBo&&emailValidateBo){
+                    $.ajax({
+                        type: "POST",
+                        dataType:"json",
+                        url: "operateEtt?m=doRegisterEttAccount",
+                        data: {
+                                userName:$("#userName").val().Trim(),
+                                password:$("#password").val().Trim(),
+                                email:$("#email").val().Trim()
+                            },
+                        error:function(){
+                            alert('网络不通畅!');
+                        },
+                        success: function(rps){     //根据后台返回的result判断是否成功!
+                            if(rps.type=="success"){
+                                $("#dv_do_register").hide();
+                                $("#dv_register_ok").show();
+                            }else{
+                               alert(rps.msg);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        /**
+        *   密码框可见
+        * @param idController
+         */
+        function changePassType(idController,msgid,pisrightid){
+            var controlObj=$("#"+idController);
+            var ty=$("#"+idController).attr("type");
+            var val=$("#"+idController).val();
+                //$("#"+idController).replaceWith();
+            controlObj.replaceWith('<input value="'+val+'" type="'+(ty=='password'?'text':'password')+'" maxlength="12" onblur="validatePass(\''+controlObj.attr("id")+'\',\''+msgid+'\',\''+pisrightid+'\')" name="'+controlObj.attr("name")+'" id="'+controlObj.attr('id')+'" />').clone().insertAfter().remove();
+        }
+        function validateEmail(controlid,pmsgid,spisrightid){
+            $("#"+spisrightid).html("");
+            var cdataController=$("#"+controlid);
+            if(cdataController.val().Trim().length<1){
+                $("#"+pmsgid).html("邮箱不能为空，请更改");
+                return false;
+            }
+            //验证空格
+            var reg=/^([\w\.-]{4,18})@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            if(!reg.test(cdataController.val().Trim())){
+                $("#"+pmsgid).html("邮箱格式不符合要求!请更改");
+                return false;
+            }
+            $("#"+pmsgid).html("");
+            $("#"+spisrightid).html('<a href="javascript:;" class="ico12" title="正确"></a>');
+            return true;
+        }
+
+
+        //验证密码
+        function validatePass(controlid,pmsgid,spisrightid){
+            $("#"+pmsgid).html("");
+            var cdataController=$("#"+controlid);
+            if(cdataController.val().Trim().length<6){
+                $("#"+pmsgid).html("密码不能少于6个字符或多于12个字符!请更改");
+                $("#"+spisrightid).html("6-12字符");
+                return false;
+            }
+            //验证空格
+            var reg=/\s/;
+            if(reg.test(cdataController.val().Trim())){
+                $("#"+pmsgid).html("密码不符合要求!请更改");
+                $("#"+spisrightid).html("6-12字符");
+                return false;
+            }
+            //验证密码格式
+            reg=/^[a-zA-Z0-9_]+$/;
+            if(!reg.test(cdataController.val().Trim())){
+                $("#"+pmsgid).html("密码不符合要求!请更改");
+                $("#"+spisrightid).html("6-12字符");
+                return false;
+            }
+            //验证密码是否有数字
+            reg=/[\d{1,}]+/;
+            if(!reg.test(cdataController.val().Trim())){
+                $("#"+pmsgid).html("密码必须由字符与数字组成!请更改1");
+                $("#"+spisrightid).html("6-12字符");
+                return false;
+            }
+            //验证密码是否有数字
+            reg=/[a-zA-Z_]+/;
+            if(!reg.test(cdataController.val().Trim())){
+                $("#"+pmsgid).html("密码必须由字符与数字组成!请更改2");
+                $("#"+spisrightid).html("6-12字符");
+                return false;
+            }
+            $("#"+spisrightid).html('<a href="javascript:;" class="ico12" title="正确"></a>');
+            return true;
+        }
+        //验证用户名
+        function validateUName(controlid,pmsgid,spisrightid,isValidateHas){
+            var cdataController=$("#"+controlid);
+            if(cdataController.val().Trim().length<6){
+                $("#"+pmsgid).html("用户名不能少于6个字或多于12个字!请更改");
+                $("#"+spisrightid).html("6-12字符/6个汉字");
+                return false;
+            }
+            //验证用户名是否存在空格
+            var reg=/\s/;
+            if(reg.test(cdataController.val().Trim())){
+                $("#"+pmsgid).html("用户名不符合要求!请更改1");
+                $("#"+spisrightid).html("6-12字符/6个汉字");
+                return false;
+            }
+            //验证用户名格式
+            reg=/^[a-zA-Z0-9_\u0391-\uFFE5]+$/
+            if(!reg.test(cdataController.val().Trim())){
+                $("#"+pmsgid).html("用户名不符合要求!请更改2");
+                $("#"+spisrightid).html("6-12字符/6个汉字");
+               return false;
+            }
+
+            if(typeof(isValidateHas)=="undefined"||isValidateHas==true){
+                $("#"+spisrightid).html("<img src='images/loading_smail.gif'/>");
+                 validteHasUName(cdataController,pmsgid,spisrightid);
+            }
+            return true;
+        }
+        /**
+        *验证用户名是否存在
+        * @param cdataController
+        * @param pmsgid
+        * @param spisrightid
+         */
+        function validteHasUName(cdataController,pmsgid,spisrightid){
+
+            var odUName=$("#oldUserName").val().Trim();
+            var p={userName:cdataController.val().Trim()};
+            if(odUName.length>0)
+                p.oldUserName=odUName;
+            //验证是否有重名
+            $.ajax({
+                type: "POST",
+                dataType:"json",
+                url: "operateEtt?m=validateUserName",
+                data:p,
+                error:function(){
+                    $("#"+spisrightid).html("6-12字符/6个汉字");
+                    $("#"+pmsgid).html("网络不通畅!");
+                },
+                success: function(rps){     //根据后台返回的result判断是否成功!
+                    if(rps.type=="success"){
+                        $("#"+pmsgid).html("");
+                        $("#"+spisrightid).html('<a href="javascript:;" class="ico12" title="正确"></a>');
+                    }else{
+                        $("#"+pmsgid).html(rps.msg);
+                        $("#"+spisrightid).html("6-12字符/6个汉字");
+                    }
+                }
+            });
+        }
+    </script>
+</c:if>

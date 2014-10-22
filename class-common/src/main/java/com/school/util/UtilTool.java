@@ -1813,6 +1813,110 @@ public class UtilTool implements java.io.Serializable {
         }
     }
 
+    /**
+     * 发送POST
+     * @param urlstr URL
+     * @param paramMap  参数
+     * @param  requestEncoding 参数编码
+     */
+    public static JSONObject sendPostUrlNotEncoding(String urlstr,Map<String,String> paramMap,String requestEncoding){
+            HttpURLConnection httpConnection=null;
+        URL url;
+        int code;
+        try {
+            //组织参数
+            StringBuffer params = new StringBuffer();
+            if(paramMap!=null&&paramMap.size()>0){
+                for (Iterator iter = paramMap.entrySet().iterator(); iter
+                        .hasNext();)
+                {
+                    Map.Entry element = (Map.Entry) iter.next();
+                    params.append(element.getKey().toString());
+                    params.append("=");
+                    params.append(URLEncoder.encode(element.getValue().toString(),"UTF-8"));
+                    params.append("&");
+                }
+
+                if (params.length() > 0)
+                {
+                    params = params.deleteCharAt(params.length() - 1);
+                }
+            }
+
+            url = new URL(urlstr);
+
+            httpConnection = (HttpURLConnection) url.openConnection();
+
+            httpConnection.setRequestMethod("POST");
+            if(params!=null)
+                httpConnection.setRequestProperty("Content-Length",
+                        String.valueOf(params.toString().length()));
+            httpConnection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+
+            httpConnection.setDoOutput(true);
+            httpConnection.setDoInput(true);
+			/*
+			 * PrintWriter printWriter = new
+			 * PrintWriter(httpConnection.getOutputStream());
+			 * printWriter.print(parameters); printWriter.close();
+			 */
+
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                    httpConnection.getOutputStream(), "8859_1");
+            if(params!=null)
+                outputStreamWriter.write(params.toString());
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+
+            code = httpConnection.getResponseCode();
+        } catch (Exception e) {			// 异常提示
+            System.out.println("异常错误!TOTALSCHOOL未响应!");
+            if(httpConnection!=null)httpConnection.disconnect();
+            return null;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        if (code == HttpURLConnection.HTTP_OK) {
+            try {
+                String strCurrentLine;
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(httpConnection.getInputStream()));
+                while ((strCurrentLine = reader.readLine()) != null) {
+                    stringBuffer.append(strCurrentLine).append("\n");
+                }
+                reader.close();
+                if(httpConnection!=null)httpConnection.disconnect();
+            } catch (IOException e) {
+                System.out.println("异常错误!");
+                if(httpConnection!=null)httpConnection.disconnect();
+                return null;
+            }
+        }else if(code==404){
+            if(httpConnection!=null)httpConnection.disconnect();
+            // 提示 返回
+            System.out.println("异常错误!404错误，请联系管理人员!");
+            return null;
+        }else if(code==500){
+            if(httpConnection!=null)httpConnection.disconnect();
+            System.out.println("异常错误!500错误，请联系管理人员!");
+            return null;
+        }
+        String returnContent=null;
+//            try {
+        returnContent=stringBuffer.toString();
+//                returnContent=returnContent.replaceAll("\\?}","\"}");
+//            } catch (UnsupportedEncodingException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+        //转换成JSON
+        System.out.println(returnContent);
+        if(returnContent!=null&&returnContent.length()>0){
+            JSONObject jb=JSONObject.fromObject(returnContent);
+            return jb;
+        }
+        return new JSONObject();
+    }
 
     /**
      * 发送POST

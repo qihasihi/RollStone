@@ -286,6 +286,7 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
     var isBzr=<%=isBzr%>;
 	var fileSystemIpPort='<%=fileSystemIpPort%>';
     var viewEttUserURL='<%=viewEttUserURL%>';
+    var fromType="${sessionScope.fromType}";
 </script>  
 <title><%=webTitle%></title>
 

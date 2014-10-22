@@ -2,10 +2,15 @@ package com.school.ett;
 
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
+import com.school.entity.UserInfo;
+import com.school.manager.UserManager;
+import com.school.manager.inter.IUserManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
 import net.sf.json.JSONObject;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,13 +24,20 @@ import java.util.regex.Pattern;
  * 操作ETT相关数据的存储过程。
  * Created by zhengzhou on 14-10-21.
  */
-public class OperateEttController extends BaseController{
+@Controller
+@RequestMapping(value="/operateEtt")
+public class OperateEttController extends BaseController<String>{
+    private IUserManager userManager;
+    public OperateEttController(){
+        this.userManager=this.getManager(UserManager.class);
+    }
     /**
      * 验证用户名(1、非空验证  2、是否重复)
      * @param request
      * @param response
      * @throws Exception
      */
+    @RequestMapping(params="m=validateUserName")
     public void validateUserName(HttpServletRequest request,HttpServletResponse response) throws Exception{
         response.getWriter().println(OperateEttControllerUtil.validateEttUserNameHas(request,this.validateRole(request,UtilTool._ROLE_STU_ID)).toJSON());
     }
@@ -65,13 +77,25 @@ public class OperateEttController extends BaseController{
             paraMap.put("identity",this.validateRole(request,UtilTool._ROLE_STU_ID)?"1":"2");
             paraMap.put("timestamp",new Date().getTime()+"");
             // paraMap.put("identity",this.validateRole(request,UtilTool._ROLE_STU_ID)?1:2);
-            paraMap.put("sign", UrlSigUtil.makeSigSimple("",paraMap));
+            paraMap.put("sign", UrlSigUtil.makeSigSimple("registerax.do",paraMap));
             String urlstr=UtilTool.utilproperty.getProperty("REGISTER_ETT_ACCOUNT");
             JSONObject jsonObject=UtilTool.sendPostUrl(urlstr,paraMap,"UTF-8");
             //1:成功
             if(jsonObject!=null&&jsonObject.containsKey("result")&& jsonObject.getInt("result")==1){
-                jsonEntity.setType("success");
-                jsonEntity.setMsg("修改成功!");
+                if(jsonObject.containsKey("data")&&jsonObject.get("data")!=null){
+                    int jid=jsonObject.getJSONObject("data").getInt("jid");
+                    UserInfo updateU=new UserInfo();
+                    updateU.setEttuserid(jid);
+                    updateU.setUserid(this.logined(request).getUserid());
+                    updateU.setRef(this.logined(request).getRef());
+                    if(userManager.doUpdate(updateU)){
+                        jsonEntity.setType("success");
+                        jsonEntity.setMsg("注册成功!");
+                        response.getWriter().println(jsonEntity.toJSON());return;
+                    }
+                }
+                jsonEntity.setType("error");
+                jsonEntity.setMsg("注册成功!但绑定失败!");
             }else{
                 jsonEntity.setType("error");
                 jsonEntity.setMsg(jsonObject.getString("msg"));
@@ -118,7 +142,7 @@ public class OperateEttController extends BaseController{
             // paraMap.put("identity",this.validateRole(request,UtilTool._ROLE_STU_ID)?1:2);
             paraMap.put("sign", UrlSigUtil.makeSigSimple("",paraMap));
             String urlstr=UtilTool.utilproperty.getProperty("MODIFY_ETT_ACCOUNT");
-            JSONObject jsonObject=UtilTool.sendPostUrl(urlstr,paraMap,"UTF-8");
+            JSONObject jsonObject=UtilTool.sendPostUrl(urlstr,paraMap,"GBK");
             //1:成功
             if(jsonObject!=null&&jsonObject.containsKey("result")&& jsonObject.getInt("result")==1){
                 jsonEntity.setType("success");
@@ -171,7 +195,7 @@ class OperateEttControllerUtil{
      * @param request
      * @return
      */
-    public static JsonEntity validateEttUserNameHas(HttpServletRequest request,Boolean isstu){
+    public static JsonEntity validateEttUserNameHas(HttpServletRequest request,Boolean isstu) throws Exception{
         String userName=request.getParameter("userName");
         String oldUserName=request.getParameter("oldUserName");
         JsonEntity jsonEntity=new JsonEntity();
@@ -185,20 +209,21 @@ class OperateEttControllerUtil{
             return jsonEntity;
         }
         HashMap<String,String> paraMap=new HashMap<String, String>();
-        paraMap.put("username",userName);
+        String encoding="UTF-8";
         String urlstr=UtilTool.utilproperty.getProperty("VALIDATE_ETT_TEA_USERNAME_HAS_URL");
         if(isstu){
             urlstr=UtilTool.utilproperty.getProperty("VALIDATE_ETT_STU_USERNAME_HAS_URL");
             paraMap.put("userName",userName);
-        }
-        JSONObject jsonObject=UtilTool.sendPostUrl(urlstr,paraMap,"UTF-8");
+        }else
+            paraMap.put("username",java.net.URLEncoder.encode(userName,"UTF-8"));
+        JSONObject jsonObject=UtilTool.sendPostUrlNotEncoding(urlstr,paraMap,encoding);
         //1:成功
         if(jsonObject!=null&&jsonObject.containsKey("code")&& jsonObject.getInt("code")==1){
             jsonEntity.setType("success");
             jsonEntity.setMsg("验证成功!");
         }else{
             jsonEntity.setType("error");
-            jsonEntity.setMsg(jsonObject.getString("msg"));
+            jsonEntity.setMsg(java.net.URLDecoder.decode(jsonObject.getString("msg"),"UTF-8"));
         }
         return jsonEntity;
     }
@@ -240,7 +265,7 @@ class OperateEttControllerUtil{
         if(!UtilTool.matchingText("[\\w[0-9]]+",paramMap.get("password")))
             return "密码必须同时有数字和字母!请更改";
         //验证是否存在字符
-        if(!UtilTool.matchingText("[\\w[0-9]]+",paramMap.get("password")))
+        if(!UtilTool.matchingText("[\\w[a-zA-Z_]]+",paramMap.get("password")))
             return "密码必须同时有数字和字母!请更改";
         if(paramMap.containsKey("email")){
             //验证邮箱
