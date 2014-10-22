@@ -1,5 +1,6 @@
 package com.school.control;
 
+import java.io.IOException;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1519,12 +1520,17 @@ public class ClassController extends BaseController<ClassInfo>{
 
     /**
      * 得到已建立的班级数量
-     * @param schoolId 分校id
-     * @param year 学年的值
-     * @return 已有的班级数量
      */
-    public int getTotalClass(int schoolId, String year) {
-        return this.classManager.getTotalClass(schoolId, year);
+    @RequestMapping(params = "m=cCheck", method = RequestMethod.POST)
+    public void getTotalClass(HttpServletRequest request,HttpServletResponse response) {
+        int schoolId =  Integer.valueOf(request.getParameter("schoolId"));
+        String year = request.getParameter("year");
+        int res = this.classManager.getTotalClass(schoolId, year);
+        try {
+            response.getWriter().write(res);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
