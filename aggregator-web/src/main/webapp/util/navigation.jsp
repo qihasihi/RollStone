@@ -155,6 +155,7 @@
             }
         }
     }
+//    writeHtml.append("<li><a><span class='lm_ico17'></span>道具积分</a>");
     if(isStudent||isTeacher){
         List<EttColumnInfo> ettColumnInfos1 =(List<EttColumnInfo>)request.getSession().getAttribute("ettColumnList");
         if(ettColumnInfos1!=null&&ettColumnInfos1.size()>0){

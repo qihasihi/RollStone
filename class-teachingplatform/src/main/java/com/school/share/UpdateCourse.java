@@ -95,7 +95,7 @@ public class UpdateCourse extends TimerTask{
                 //开始请求并返回更新资源下载地址
                 String updateFileLocaPath=null;//"http://192.168.8.96:8080/fileoperate/uploadfile//tmp/UpdateCourse/50000/firstUpdateCourse/firstUpdateCourse.zip";
                 Map<String,Object> fileLocaMap= UpdateCourseUtil.getUpdateCourse(key,ftime);
-                if(fileLocaMap==null&&fileLocaMap.get("type")!=null&&!fileLocaMap.get("type").toString().trim().equals("success")){
+                if(fileLocaMap==null||fileLocaMap.get("objList")==null||(fileLocaMap.get("type")!=null&&!fileLocaMap.get("type").toString().trim().equals("success"))){
                     //记录异常错误日志，
                     System.out.println("异常错误，原因：totalSchool生成XML失败!");
                     return;

@@ -283,7 +283,7 @@
 	.home_layoutL ul li.crumb{ background-position: 0 -130px;}
 	.home_layoutL ul li.crumb a{color:#fff100;}
 
-	.lm_ico01,.lm_ico02,.lm_ico03,.lm_ico04,.lm_ico05,.lm_ico06,.lm_ico07,.lm_ico08,.lm_ico09,.lm_ico10,.lm_ico11,.lm_ico12,.lm_ico13,.lm_ico14,.lm_ico15,.lm_ico16{
+	.lm_ico01,.lm_ico02,.lm_ico03,.lm_ico04,.lm_ico05,.lm_ico06,.lm_ico07,.lm_ico08,.lm_ico09,.lm_ico10,.lm_ico11,.lm_ico12,.lm_ico13,.lm_ico14,.lm_ico15,.lm_ico16,.lm_ico17{
 	width:19px;
 	height:19px;
 	background: url(images/ico02_131230.png) no-repeat -36px 0;
@@ -306,6 +306,7 @@
 	.lm_ico14{ background-position:-173px -40px;}
 	.lm_ico15{ background-position:-193px 0;}
 	.lm_ico16{ background-position:-193px -40px;}
+    .lm_ico17{ background-position:-256px 0;}
 
     .home_layoutL ul li.crumb .lm_ico01{ background-position:-36px -20px;}
 	.home_layoutL ul li.crumb .lm_ico02{ background-position:-36px -60px;}
@@ -323,6 +324,7 @@
 	.home_layoutL ul li.crumb .lm_ico14{ background-position:-173px -60px;}
 	.home_layoutL ul li.crumb .lm_ico15{ background-position:-193px -20px;}
 	.home_layoutL ul li.crumb .lm_ico16{ background-position:-193px -60px;}
+    .home_layoutL ul li.crumb .lm_ico17{ background-position:-256px -20px;}
 
 	.home_layoutR{
 	width:224px;
