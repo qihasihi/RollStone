@@ -157,10 +157,6 @@ public class OperateEttController extends BaseController<String>{
         response.getWriter().println(jsonEntity.toJSON());
     }
     public static void main(String[] args){
-        String uname="a332_qqcom国家";
-        String regex = "[a-zA-Z0-9_\\u4e00-\\u9fa5]+";
-
-        System.out.println(matchingText(regex, uname));
 
     }
     /**
@@ -245,7 +241,7 @@ class OperateEttControllerUtil{
             return "没有检测到密码!请刷新后重试";
         ///////////////////验证用户名
         //位数6--12字符（1个汉字算2个字符）
-        int uNameSize=paramMap.get("userName").toString().trim().length();
+        int uNameSize=checkWordSize(paramMap.get("userName").toString().trim());
         //用户名少于6个字或多于12个字
         if(uNameSize<6||uNameSize>12)
             return "用户名不能少于6个字或多于12个字!请更改";
@@ -276,8 +272,25 @@ class OperateEttControllerUtil{
         return "TRUE";
     }
 
+    /**
+     * 统计字符串的字符数量(中文2个字符)
+     * @param str
+     * @return
+     */
+    private static int checkWordSize(String str) {
+        if(str == null || str.length() == 0) {
+            return 0;
+        }
+        int count = 0;
+        char[] chs = str.toCharArray();
+        for(int i = 0; i < chs.length; i++) {
+            count += (chs[i] > 0xff) ? 2 : 1;
+        }
+        return count;
+    }
 
- /*******-------------------------------注册 网校帐号-------------------------*******/
+
+    /*******-------------------------------注册 网校帐号-------------------------*******/
     /**
      * 注册Ett帐号
      * @param dcSchoolId 数校分校ID

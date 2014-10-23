@@ -1070,6 +1070,29 @@ function getScrollTop()
     }
     return scrollTop;
 }
+/**
+ * 得到字符串的字符数量(汉字算2个字符)
+ * @param chars
+ * @returns {number}
+ */
+function checkStrLength(chars)
+{
+    var sum = 0;
+    for (var i=0; i<chars.length; i++)
+    {
+        var c = chars.charCodeAt(i);
+        if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f))
+
+        {
+            sum++;
+        }
+        else
+        {
+            sum+=2;
+        }
+    }
+    return sum;
+}
 function findDimensions() //函数：获取尺寸
 {
     var winWidth= 0,winHeight=0;
