@@ -1247,7 +1247,7 @@ function setPageRight(uid,isbatch){
 		type:'post', 
 		data:{
 			useridstr  : uidstr, 
-			prightidstr : returnValue,
+			prightidstr : returnValue
 		},
 		dataType:'json',
 		error:function(){alert("网络异常!")},  
