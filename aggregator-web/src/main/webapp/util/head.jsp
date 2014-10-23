@@ -432,14 +432,14 @@
             //验证密码是否有数字
             reg=/[\d{1,}]+/;
             if(!reg.test(cdataController.val().Trim())){
-                $("#"+pmsgid).html("密码必须由字符与数字组成!请更改1");
+                $("#"+pmsgid).html("密码必须由字符与数字组成!请更改");
                 $("#"+spisrightid).html("6-12字符");
                 return false;
             }
             //验证密码是否有数字
             reg=/[a-zA-Z_]+/;
             if(!reg.test(cdataController.val().Trim())){
-                $("#"+pmsgid).html("密码必须由字符与数字组成!请更改2");
+                $("#"+pmsgid).html("密码必须由字符与数字组成!请更改");
                 $("#"+spisrightid).html("6-12字符");
                 return false;
             }
@@ -458,14 +458,14 @@
             //验证用户名是否存在空格
             var reg=/\s/;
             if(reg.test(cdataController.val().Trim())){
-                $("#"+pmsgid).html("用户名不符合要求!请更改1");
+                $("#"+pmsgid).html("用户名不符合要求!请更改");
                 $("#"+spisrightid).html("6-12字符/6个汉字");
                 return false;
             }
             //验证用户名格式
             reg=/^[a-zA-Z0-9_\u0391-\uFFE5]+$/
             if(!reg.test(cdataController.val().Trim())){
-                $("#"+pmsgid).html("用户名不符合要求!请更改2");
+                $("#"+pmsgid).html("用户名不符合要求!请更改");
                 $("#"+spisrightid).html("6-12字符/6个汉字");
                return false;
             }
