@@ -449,7 +449,8 @@
         //验证用户名
         function validateUName(controlid,pmsgid,spisrightid,isValidateHas){
             var cdataController=$("#"+controlid);
-            if(cdataController.val().Trim().length<6){
+            var uNameLength=checkStrLength(cdataController.val().Trim());
+            if(uNameLength<6||uNameLength>12){
                 $("#"+pmsgid).html("用户名不能少于6个字或多于12个字!请更改");
                 $("#"+spisrightid).html("6-12字符/6个汉字");
                 return false;
@@ -475,6 +476,7 @@
             }
             return true;
         }
+
         /**
         *验证用户名是否存在
         * @param cdataController
