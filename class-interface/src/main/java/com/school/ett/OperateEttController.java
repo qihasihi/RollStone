@@ -2,8 +2,14 @@ package com.school.ett;
 
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
+import com.school.entity.ClassUser;
+import com.school.entity.TermInfo;
 import com.school.entity.UserInfo;
+import com.school.manager.ClassUserManager;
+import com.school.manager.TermManager;
 import com.school.manager.UserManager;
+import com.school.manager.inter.IClassUserManager;
+import com.school.manager.inter.ITermManager;
 import com.school.manager.inter.IUserManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
@@ -17,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,8 +35,12 @@ import java.util.regex.Pattern;
 @RequestMapping(value="/operateEtt")
 public class OperateEttController extends BaseController<String>{
     private IUserManager userManager;
+    private IClassUserManager classUserManager;
+    private ITermManager termManager;
     public OperateEttController(){
         this.userManager=this.getManager(UserManager.class);
+        this.classUserManager=this.getManager(ClassUserManager.class);
+        this.termManager=this.getManager(TermManager.class);
     }
     /**
      * 验证用户名(1、非空验证  2、是否重复)
@@ -66,6 +77,56 @@ public class OperateEttController extends BaseController<String>{
             if(!je.getType().trim().equals("success")){
                 response.getWriter().println(je.toJSON());return;
             }
+            //得到该用户的年级
+            UserInfo u = request.getAttribute("tmpUser")==null?this.logined(request):(UserInfo)request.getAttribute("tmpUser");
+            // ////////////////////////////变量存储
+            int currentClsCode=0;
+            // 如果是学生，则传入年级的ID 老师不传
+            if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+                    TermInfo tm=this.termManager.getAutoTerm();
+                    String uidRef=u.getRef();
+                    ClassUser cu = new ClassUser();
+                    cu.setUserid(uidRef);
+                    // 查询当前的年级  如果当前学期没有数据，则不存入学期
+                    cu.setYear(tm.getYear().trim());
+                    List<ClassUser> cuList = this.classUserManager.getList(cu, null);
+                    if(cuList!=null&&cuList.size()>0){
+                        String clsGrade=cuList.get(0).getClassgrade();
+                        if (clsGrade != null) {
+                            if (clsGrade.trim().equals("高三")
+                                    || clsGrade.trim().equals("高中三年级")) {
+                                    currentClsCode=1;
+                            } else if (clsGrade.trim().equals("高二")
+                                    || clsGrade.trim().equals("高中二年级")) {
+                                 currentClsCode = 2;
+                            } else if (clsGrade.trim().equals("高一")
+                                    || clsGrade.trim().equals("高中一年级")) {
+                                 currentClsCode = 3;
+                            } else if (clsGrade.trim().equals("初三")
+                                    || clsGrade.trim().equals("初中三年级")) {
+                                currentClsCode= 4;
+                            } else if (clsGrade.trim().equals("初二")
+                                    || clsGrade.trim().equals("初中二年级")) {
+                                currentClsCode= 5;
+                            } else if (clsGrade.trim().equals("初一")
+                                    || clsGrade.trim().equals("初中一年级")) {
+                                currentClsCode= 6;
+                            } else if (clsGrade.trim().equals("小学六年级")
+                                    || clsGrade.trim().equals("小六")) {
+                                currentClsCode= 7;
+                            } else if (clsGrade.trim().equals("小学五年级")
+                                    || clsGrade.trim().equals("小五")) {
+                                currentClsCode= 8;
+                            } else if (clsGrade.trim().equals("小学四年级")
+                                    || clsGrade.trim().equals("小四")) {
+                                currentClsCode= 9;
+                            } else if (clsGrade.trim().equals("小学三年级")
+                                    || clsGrade.trim().equals("小三")) {
+                                currentClsCode= 10;
+                            }
+                    }
+                }
+            }
             //******************************注册帐号-------------------------/
             //如果可用，则调接口添加相关数据
             HashMap<String,String> paraMap=new HashMap<String, String>();
@@ -74,6 +135,8 @@ public class OperateEttController extends BaseController<String>{
             paraMap.put("userName",userName);
             paraMap.put("password",password);
             paraMap.put("email",email);
+//            if(this.validateRole(request,UtilTool._ROLE_STU_ID))
+            paraMap.put("gradeId",currentClsCode+"");
             paraMap.put("identity",this.validateRole(request,UtilTool._ROLE_STU_ID)?"1":"2");
             paraMap.put("timestamp",new Date().getTime()+"");
             // paraMap.put("identity",this.validateRole(request,UtilTool._ROLE_STU_ID)?1:2);
