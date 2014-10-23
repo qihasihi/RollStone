@@ -130,14 +130,14 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
       </table>
     </div>
     <h6></h6>
-    <p class="t_c"><a href="javascript:showModel('div_add')" class="an_big">新建班级</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <p class="t_c"><a href="javascript:checkClass('addClass')" class="an_big">新建班级</a>&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="javascript:showModel('loadExcel')" class="an_big">导入学生</a>    
     &nbsp;&nbsp;&nbsp;&nbsp;
     <c:if test="${allowAutoLevel==1}">
-   	 <a href="javascript:showModel('dv_autoShenj')"  class="an_big">自动升级</a></p>
+   	 <a href="javascript:checkClass('levelup') "  class="an_big">自动升级</a></p>
     </c:if>
      <c:if test="${allowAutoLevel!=1}">
-   	 <a href="javascript:showModel('dv_autoShenj')"  class="an_gray">自动升级</a></p>
+   	 <a href="javascript:showModel('dv_autoShenj')  "  class="an_gray">自动升级</a></p>
     </c:if>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2 m_t_10">
        <colgroup span="6" class="w120"></colgroup>

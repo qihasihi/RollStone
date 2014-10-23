@@ -816,13 +816,42 @@ function autoLeaveUp(year){
 			$("#loading").hide();
 			if(rps.type=="error"){
 				alert(rps.msg);
-			}else{				
+			}else{
 				closeModel('dv_autoShenj');
 			}
 		}
 	})
 }
 
+function checkClass(from) {
+    var year = $("#add_sel_year").val();
+    var dcschoolid=$("#dcSchoolID").val();
+
+    $.ajax({
+        type: "POST",
+        dataType:"json",
+        url:"cls?m=validateClass",
+        data: {
+            schoolId:dcschoolid,
+            year:year,
+            from:from
+        },
+        success: function(rps){     //根据后台返回的result判断是否成功!
+            if(rps.result=="success"){
+                if(from == "addClass")
+                    showModel('div_add');
+                else
+                    showModel('dv_autoShenj');
+            }else{
+                if(from == "addClass")
+                    alert("错误，班级数量已达到最大限制！");
+                else
+                    alert("错误，班级数量已超过最大限制！");
+            }
+        }
+    });
+
+}
 
 
 
