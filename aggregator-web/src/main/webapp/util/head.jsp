@@ -235,7 +235,9 @@
     <div style="display:none" id="dv_modify_ettAccount">
         <div class="jxxt_lzx_float">
             <div class="menu">
-                <p class="close"><a href="javascript:;" onclick="closeModel('dv_modify_ettAccount')" title="关闭"></a></p>
+                <p class="close"><a href="javascript:;"
+                                    onclick="closeModel('dv_modify_ettAccount');u_password.value='';u_new_password.value='';sp_m_uname_isright='6-12字符/6个汉字';p_u_pass_isright.innerHTML=p_u_newpass_isright.innerHTML='6-12字符';"
+                                    title="关闭"></a></p>
                 <h1>修改爱学账号</h1>
                 <div class="input"> <span class="one"><strong>用&nbsp;户&nbsp;名</strong>
                   <input type="text" name="u_userName" maxlength="12" id="u_userName" onblur="validateUName('u_userName','p_m_uname_msg','sp_m_uname_isright',<%=(isStudent?"true":"false")%>);"/>
@@ -263,7 +265,9 @@
     <div style="display: none" id="dv_register_ettAccount">
     <div class="jxxt_lzx_float" id="dv_do_register">
         <div class="menu">
-            <p class="close"><a href="javascript:;" onclick="closeModel('dv_register_ettAccount')" title="关闭"></a></p>
+            <p class="close"><a href="javascript:;"
+                                onclick="closeModel('dv_register_ettAccount');userName.value='';password.value='';email.value='';u_password.value='';u_new_password.value='';sp_uname_isright.innerHTML='6-12字符/6个汉字';p_pass_isright.innerHTML='6-12字符';p_email_isright.innerHTML='';"
+                                title="关闭"></a></p>
             <h1>注册爱学账号</h1>
             <div class="input">
            <span class="one"><strong>用&nbsp;户&nbsp;名</strong>
