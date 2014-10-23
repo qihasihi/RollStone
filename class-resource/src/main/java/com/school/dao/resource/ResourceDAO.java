@@ -1563,6 +1563,11 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
             objList.add(entity.getFilename());
         } else
             sqlbuilder.append("null,");
+        if (entity.getDifftype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(entity.getDifftype());
+        } else
+            sqlbuilder.append("null,");
         sqlbuilder.append("?)}");
         return objList;
     }
