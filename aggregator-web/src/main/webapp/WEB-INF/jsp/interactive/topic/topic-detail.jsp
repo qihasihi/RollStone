@@ -71,7 +71,7 @@
 					operate_id:"tbl_body_data"
 				});
                 //执行分页
-				//pageGo('p1');
+				pageGo('p1');
 
 				<c:if test="${!empty roleStr&&roleStr=='TEACHER'&&!empty topic.quoteid&&topic.quoteid!=0}">
 				  //加载分页控件  如果是老师，则显示所有的引用专题主题
@@ -93,7 +93,7 @@
 					pageGo('p2');
 				</c:if>
 				<c:if test="${!empty roleStr&&roleStr=='STUDENT'&&!empty topic.quoteid&&topic.quoteid!=0}">
-				  //加载分页控件  如果是老师，则显示所有的引用专题主题
+				  //加载分页控件  如果是学生，则显示所有的引用专题主题
 					p2=new PageControl({
 						post_url:'tptopictheme?m=themeListjson&selectType=-4&status=1',//quote_id IS NOT NULL
 						page_id:'page2',

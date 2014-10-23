@@ -1913,7 +1913,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                 tmpThemeInfo.setThemeid(this.tpTopicThemeManager.getNextId(true));
                                 tmpThemeInfo.setTopicid(nextTopicid);
                                 tmpThemeInfo.setCourseid(nextCourseId);
-
+                                tmpThemeInfo.setCloudstatus(3);// 3：通过
                                 tmpThemeInfo.setStatus(2L);//引用专题下  1：显示   2：不显示
                                 sql=new StringBuilder();
                                 objList=this.tpTopicThemeManager.getSaveSql(tmpThemeInfo,sql);
