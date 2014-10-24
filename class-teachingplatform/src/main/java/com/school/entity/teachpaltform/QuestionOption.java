@@ -1,12 +1,14 @@
 package  com.school.entity.teachpaltform;
 
 import com.school.util.UtilTool;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Date;
 
 public class QuestionOption implements Serializable{
-
 	public void QuestionOption (){}
     private java.lang.String content;
     private java.lang.Integer isright;
@@ -45,9 +47,12 @@ public class QuestionOption implements Serializable{
     public java.lang.String getContent(){
         if(content!=null&&content.trim().length()>0){
             content=content.trim();
-            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
+            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+
             while(content.indexOf("_QUESTIONPIC+")!=-1)
-                content=content.replace("_QUESTIONPIC+",t);
+                content=content.replaceAll("_QUESTIONPIC\\+", t);
             while (
                     content.indexOf("\r\n\t")!=-1||
                             content.indexOf("\r\n")!=-1||
@@ -56,12 +61,12 @@ public class QuestionOption implements Serializable{
                             content.indexOf("\t")!=-1||
                             content.indexOf("'")!=-1
                     ){
-                content=content.replace("\r\n\t", "");
-                content=content.replace("\r\n", "&nbsp;&nbsp;<br>");
-                content=content.replace("\n", "<br>");
-                content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
-                content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                content=content.replace("'", "£§");
+                content=content.replaceAll("\r\n\t", "");
+                content=content.replaceAll("\r\n", "&nbsp;&nbsp;<br>");
+                content=content.replaceAll("\n", "<br>");
+                content=content.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
+                content=content.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                content=content.replaceAll("'", "£§");
             }
 
             if(content.indexOf("<p>")==0)

@@ -21,6 +21,17 @@
             ${fn:lastIndexOf(name, "-")}
         </example>
     </function>
+    <function>
+        <description>
+            Returns the index withing a string of the first occurrence of a specified substring.
+        </description>
+        <name>replaceAll</name>
+        <function-class>com.school.util.taglib.SchoolTab</function-class>
+        <function-signature>java.lang.String replaceAll(java.lang.String,java.lang.String,java.lang.String)</function-signature>
+        <example>
+            ${fn:replaceAll(name, "-","aa")}
+        </example>
+    </function>
 
 
 

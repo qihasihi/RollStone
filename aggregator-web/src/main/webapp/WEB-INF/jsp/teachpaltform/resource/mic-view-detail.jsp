@@ -103,7 +103,7 @@
                             <c:if test="${pq.extension eq 4}">
                                 <div  class="p_t_10" id="sp_mp3_${pq.questionid}" ></div>
                                 <script type="text/javascript">
-                                    playSound('play','<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/${pq.questionid}/001.mp3',270,22,'sp_mp3_${pq.questionid}',false);
+                                    playSound('play','<%=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/${pq.questionid}/001.mp3',270,22,'sp_mp3_${pq.questionid}',false);
                                 </script>
                             </c:if>
                             <c:if test="${!empty pq.questionOption}">

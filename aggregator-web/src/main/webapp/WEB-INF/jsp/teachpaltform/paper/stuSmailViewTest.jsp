@@ -27,7 +27,7 @@
         var allquesidObj="${allquesidObj}";
         var papertype="${paperObj.papertype}";
         var isanswer="${isAnswer}";
-        var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
+        var _QUES_IMG_URL="<%=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         var sumScore=${!empty paperObj.score?paperObj.score:100},avgScore=parseInt(sumScore/quesSize);
         var scoreArray=[];
         var t=1;

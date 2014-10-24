@@ -4,7 +4,10 @@ import com.school.entity.UserInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.util.PageUtil.PageUtilTool;
 import com.school.util.UtilTool;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -282,9 +285,11 @@ public class TpTaskInfo implements Serializable {
         if(taskobjname==null)return null;
         String content=taskobjname.toString();
         if(content!=null&&content.trim().length()>0){
-            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getTaskvalueid()+"/";
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
+            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getTaskvalueid()+"/";
             while(content.indexOf("_QUESTIONPIC+")!=-1)
-                content=content.replace("_QUESTIONPIC+",t);
+                content=content.replaceAll("_QUESTIONPIC\\+",t);
             while (content.indexOf("\n")!=-1||content.indexOf("\n\r")!=-1||content.indexOf("\t")!=-1){
                 content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
                 content=content.replace("\n", "<br>");

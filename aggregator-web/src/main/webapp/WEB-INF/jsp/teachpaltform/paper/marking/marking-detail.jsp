@@ -7,11 +7,15 @@ Created by IntelliJ IDEA.
 --%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="/util/common-jsp/common-jxpt.jsp"%>
+<%
+String quesImgPath=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH");
+    pageContext.setAttribute("quesImgpath",quesImgPath);
+%>
 <html>
 <head>
     <title></title>
     <script type="text/javascript">
-         var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
+         var _QUES_IMG_URL="<%=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         var questiontype = "${detail.QUESTION_TYPE2!=null?detail.QUESTION_TYPE2:detail.QUESTION_TYPE}";
         var extension = "${detail.EXTENSION2!=null?detail.EXTENSION2:detail.EXTENSION}";
         var tabidx = "${param.tabidx}";
@@ -322,7 +326,7 @@ Created by IntelliJ IDEA.
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940">
                 <c:if test="${!empty detail.CONTENT2}">
                     <tr>
-                        <td><span class="bg"  id="tname"></span><span id="sp_ct2">${detail.CONTENT2}</span><br/>
+                        <td><span class="bg"  id="tname"></span><span id="sp_ct2">${fn:replaceAll(detail.CONTENT2,"_QUESTIONPIC+",pageScope.quesImgpath)}</span><br/>--%>
                             <script type="text/javascript">
                                 if(extension==4){
                                     var mp3url=_QUES_IMG_URL+"/${param.questionid}/001.mp3";
@@ -338,14 +342,14 @@ Created by IntelliJ IDEA.
                     </tr>
 
                     <tr>
-                        <td>${detail.ORDERIDX}、${detail.CONTENT}
+                        <td>${detail.ORDERIDX}、${fn:replaceAll(detail.CONTENT,"_QUESTIONPIC+",pageScope.quesImgpath)}
                             <c:if test="${!empty option}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <col class="w910"/>
                                     <c:forEach items="${option}" var="itm">
                                         <tr>
                                             <%--<th><input type="radio" name="radio"  disabled  value="radio"></th>--%>
-                                            <td><span>${itm.optiontype}</span>. ${itm.content}
+                                            <td><span>${itm.optiontype}</span>. ${fn:replaceAll(itm.content,"_QUESTIONPIC+",pageScope.quesImgpath)}
                                                     <c:if test="${empty rightoption&&itm.isright==1}">
                                                         <span class="ico12"></span>
                                                     </c:if>
@@ -366,7 +370,7 @@ Created by IntelliJ IDEA.
                 </c:if>
                 <c:if test="${empty detail.CONTENT2}">
                     <tr>
-                        <td><span class="bg"><span id="tname"></span>：</span>${detail.CONTENT}
+                        <td><span class="bg"><span id="tname"></span>：</span>${fn:replaceAll(detail.CONTENT,"_QUESTIONPIC\\+",pageScope.quesImgpath)}
                             <c:if test="${!empty option}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <%--<col class="w30"/>--%>
@@ -374,7 +378,7 @@ Created by IntelliJ IDEA.
                                     <c:forEach items="${option}" var="itm">
                                         <tr>
                                             <%--<th><input type="radio" disabled name="rdo_option" value="${itm.isright}|${itm.optiontype}"  value="radio"></th>--%>
-                                            <td><span>${itm.optiontype}</span>. ${itm.content}
+                                            <td><span>${itm.optiontype}</span>. ${fn:replaceAll(itm.content,"_QUESTIONPIC+",pageScope.quesImgpath)}
                                                 <c:if test="${itm.isright==1}">
                                                     <span class="ico12"></span>
                                                 </c:if>
@@ -397,9 +401,17 @@ Created by IntelliJ IDEA.
                                 document.write(rightHtm);
                             </script>
                         </c:if>
-                        <c:if test="${!empty detail.CORRECT_ANSWER}">${detail.CORRECT_ANSWER}</c:if>
+                        <c:if test="${!empty detail.CORRECT_ANSWER}">${fn:replaceAll(detail.CORRECT_ANSWER,"_QUESTIONPIC\\+",pageScope.quesImgpath)}</c:if>
                     </span></p>
-                        <p><strong>答案解析：</strong>${!empty detail.ANALYSIS?detail.ANALYSIS:"无"}</p></td>
+                        <p><strong>答案解析：</strong>
+                            <c:if test="${!empty detail.ANALYSIS}">
+                                ${fn:replaceAll(detail.ANALYSIS,"_QUESTIONPIC\\+",pageScope.quesImgpath)}
+                            </c:if>
+                            <c:if test="${empty detail.ANALYSIS}">
+                                无
+                            </c:if>
+                        </p>
+                    </td>
                 </tr>
             </table>
 

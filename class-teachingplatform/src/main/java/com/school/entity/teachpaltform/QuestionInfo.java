@@ -2,7 +2,10 @@ package  com.school.entity.teachpaltform;
 
 import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
 import com.school.util.UtilTool;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.*;
 
@@ -119,9 +122,11 @@ public class QuestionInfo implements java.io.Serializable {
 
     public String getCorrectanswer() {
         if(correctanswer!=null&&correctanswer.trim().length()>0){
-            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
+            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(correctanswer.indexOf("_QUESTIONPIC+")!=-1)
-                correctanswer=correctanswer.replace("_QUESTIONPIC+",t);
+                correctanswer=correctanswer.replaceAll("_QUESTIONPIC\\+",t);
             while (correctanswer.indexOf("\r\n\t")!=-1||
                     correctanswer.indexOf("\r\n")!=-1||
                     correctanswer.indexOf("\n")!=-1||correctanswer.indexOf("\n\r")!=-1||correctanswer.indexOf("\t")!=-1){
@@ -165,9 +170,12 @@ public class QuestionInfo implements java.io.Serializable {
         if(content!=null&&content.trim().length()>0){
             content=content.trim();
             if(content.trim().equals("空"))content="";
-            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
+            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+           // String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(content.indexOf("_QUESTIONPIC+")!=-1)
-                content=content.replace("_QUESTIONPIC+",t);
+                content=content.replaceAll("_QUESTIONPIC\\+", t);
             while (content.indexOf("\r\n\t")!=-1||
                     content.indexOf("\r\n")!=-1||
                     content.indexOf("\n")!=-1||
@@ -175,12 +183,12 @@ public class QuestionInfo implements java.io.Serializable {
                     content.indexOf("\t")!=-1||
                     content.indexOf("'")!=-1){
                 //content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
-                content=content.replace("\r\n\t", "");
-                content=content.replace("\r\n", "&nbsp;&nbsp;<br>");
-                content=content.replace("\n", "<br>");
-                content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
-                content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                content=content.replace("'", "＇");
+                content=content.replaceAll("\r\n\t", "");
+                content=content.replaceAll("\r\n", "&nbsp;&nbsp;<br>");
+                content=content.replaceAll("\n", "<br>");
+                content=content.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
+                content=content.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                content=content.replaceAll("'", "＇");
             }
             if(content.indexOf("<p>")==0)
                 content=content.replaceFirst("<p>","");
@@ -305,18 +313,21 @@ public class QuestionInfo implements java.io.Serializable {
     public java.lang.String getAnalysis(){
         if(analysis!=null&&analysis.trim().length()>0){
             analysis=analysis.trim();
-            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
+            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+
             while(analysis.indexOf("_QUESTIONPIC+")!=-1)
-                analysis=analysis.replace("_QUESTIONPIC+",t);
+                analysis=analysis.replaceAll("_QUESTIONPIC\\+", t);
             while (analysis.indexOf("\r\n\t")!=-1||analysis.indexOf("\n")!=-1||analysis.indexOf("\n\r")!=-1||analysis.indexOf("\t")!=-1||analysis.indexOf("'")!=-1){
-                //analysis=analysis.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
-                analysis=analysis.replace("\r\n\t", "");
-                analysis=analysis.replace("\r\n", "&nbsp;&nbsp;<br>");
-                analysis=analysis.replace("\n", "<br>");
-                analysis=analysis.replace("\n\r", "<br>&nbsp;&nbsp;");
-                analysis=analysis.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                analysis=analysis.replace("'","＇");
-                //content=content.replace(" ", "&nbsp;");
+                //analysis=analysis.replaceAll("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                analysis=analysis.replaceAll("\r\n\t", "");
+                analysis=analysis.replaceAll("\r\n", "&nbsp;&nbsp;<br>");
+                analysis=analysis.replaceAll("\n", "<br>");
+                analysis=analysis.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
+                analysis=analysis.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                analysis=analysis.replaceAll("'", "＇");
+                //content=content.replaceAll(" ", "&nbsp;");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
             if(analysis.indexOf("<p>")==0)

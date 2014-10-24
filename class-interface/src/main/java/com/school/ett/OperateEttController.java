@@ -220,7 +220,8 @@ public class OperateEttController extends BaseController<String>{
         response.getWriter().println(jsonEntity.toJSON());
     }
     public static void main(String[] args){
-
+        String msg="_QUESTIONPIC+dsafasdf_QUESTIONPIC+dafsdf_QUESTIONPIC+asdfasdf_QUESTIONPIC+2341234gf_QUESTIONPIC+";
+        System.out.println(msg.replaceAll("_QUESTIONPIC+","_____"));
     }
     /**
      * 正则验证 (在UtilTool类中)

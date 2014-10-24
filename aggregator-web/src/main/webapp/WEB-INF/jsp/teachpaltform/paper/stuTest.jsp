@@ -20,7 +20,7 @@
         var sumScore=${!empty paperObj.score?paperObj.score:100},avgScore=parseInt(sumScore/quesSize);
         var scoreArray=[];
         var papertype="${paperObj.papertype}";
-        var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
+        var _QUES_IMG_URL="<%=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         $(function(){
             //分数
             for(i=0;i<quesSize;i++){

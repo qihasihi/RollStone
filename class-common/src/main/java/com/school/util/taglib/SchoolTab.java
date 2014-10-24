@@ -14,4 +14,16 @@ public class SchoolTab{
         return text.lastIndexOf(searchString);
     }
 
+    /**
+     * 自定义标签,使用replaceAll
+     * @param text
+     * @param findCodeReg
+     * @param replaceCode
+     * @return
+     */
+    public static String replaceAll(String text,String findCodeReg,String replaceCode){
+        if(text==null)return "";
+        return text.replaceAll(findCodeReg,replaceCode);
+    }
+
 }

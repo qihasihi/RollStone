@@ -9,8 +9,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 //import com.school.share.*;
-import com.school.share.SynchroEttColumns;
-import com.school.share.UpdateSchool;
+import com.school.share.*;
 import com.school.util.DESPlus;
 import com.school.util.UtilTool;
 import org.apache.log4j.Logger;
@@ -142,30 +141,30 @@ public class TimerTaskListener implements ServletContextListener {
             date = this.addDay(date, 1);
         }
         schoolTimer.schedule(new UpdateSchool(arg0.getServletContext()),date,PERIOD_DAY);
-//        /**************************每天凌晨1点10开始执行教材信息更新***********************************/
-//        teachMaterialTimer=new Timer(true);
-//        Calendar  teachMaterialcal = Calendar.getInstance();
-//        //每天定点执行
-//        teachMaterialcal.set(Calendar.HOUR_OF_DAY,1);
-//        teachMaterialcal.set(Calendar.MINUTE,10);
-//        teachMaterialcal.set(Calendar.SECOND,0);
-//        Date tmdate=teachMaterialcal.getTime(); //第一次执行定时任务的时间
-//        if (tmdate.before(new Date())) {
-//            tmdate = this.addDay(tmdate, 1);
-//        }
-//        //teachMaterialTimer.schedule(new ShareTeachingMaterial(arg0.getServletContext()),tmdate,PERIOD_DAY);
-//        /**************************每天凌晨1点20开始执行版本信息更新***********************************/
-//        vsTimer=new Timer(true);
-//        Calendar  vscal = Calendar.getInstance();
-//        //每天定点执行
-//        vscal.set(Calendar.HOUR_OF_DAY,1);
-//        vscal.set(Calendar.MINUTE,20);
-//        vscal.set(Calendar.SECOND,0);
-//        Date vsdate=vscal.getTime(); //第一次执行定时任务的时间
-//        if (vsdate.before(new Date())) {
-//            vsdate = this.addDay(vsdate, 1);
-//        }
-//       // vsTimer.schedule(new ShareTeachVersion(arg0.getServletContext()),vsdate,PERIOD_DAY);
+        /**************************每天凌晨1点10开始执行教材信息更新***********************************/
+        teachMaterialTimer=new Timer(true);
+        Calendar  teachMaterialcal = Calendar.getInstance();
+        //每天定点执行
+        teachMaterialcal.set(Calendar.HOUR_OF_DAY,1);
+        teachMaterialcal.set(Calendar.MINUTE,10);
+        teachMaterialcal.set(Calendar.SECOND,0);
+        Date tmdate=teachMaterialcal.getTime(); //第一次执行定时任务的时间
+        if (tmdate.before(new Date())) {
+            tmdate = this.addDay(tmdate, 1);
+        }
+        teachMaterialTimer.schedule(new ShareTeachingMaterial(arg0.getServletContext()),tmdate,PERIOD_DAY);
+        /**************************每天凌晨1点20开始执行版本信息更新***********************************/
+        vsTimer=new Timer(true);
+        Calendar  vscal = Calendar.getInstance();
+        //每天定点执行
+        vscal.set(Calendar.HOUR_OF_DAY,1);
+        vscal.set(Calendar.MINUTE,20);
+        vscal.set(Calendar.SECOND,0);
+        Date vsdate=vscal.getTime(); //第一次执行定时任务的时间
+        if (vsdate.before(new Date())) {
+            vsdate = this.addDay(vsdate, 1);
+        }
+        vsTimer.schedule(new ShareTeachVersion(arg0.getServletContext()),vsdate,PERIOD_DAY);
 //        /**************************每天凌晨1点30--2.00开始执行资源上行***********************************/
 //        ucTimer=new Timer(true);
 //        Calendar  uCourseCal = Calendar.getInstance();
@@ -195,19 +194,19 @@ public class TimerTaskListener implements ServletContextListener {
 //        }
      //   rsRankTimer.schedule(new UpdateHotResData(arg0.getServletContext()),rsRankDate,PERIOD_DAY);
         /**************************三天执行一次 凌晨3点00--3.30开始执行专题下行***********************************/
-//        dcTimer=new Timer(true);
-//        Calendar  dCourseCal = Calendar.getInstance();
-//        //每天定点执行
-//        dCourseCal.set(Calendar.HOUR_OF_DAY,3);
-//        Random dcrd=new Random();
-//        dCourseCal.set(Calendar.MINUTE,(dcrd.nextInt(29)));
-//        dCourseCal.set(Calendar.SECOND,0);
-//        Date dcdate=dCourseCal.getTime(); //第一次执行定时任务的时间
-//        if (dcdate.before(new Date())) {
-//            dcdate = this.addDay(dcdate, 1);
-//        }
-//        long courseCal=PERIOD_DAY*3;
-//        dcTimer.schedule(new UpdateCourse(arg0.getServletContext()),dcdate,courseCal);
+        dcTimer=new Timer(true);
+        Calendar  dCourseCal = Calendar.getInstance();
+        //每天定点执行
+        dCourseCal.set(Calendar.HOUR_OF_DAY,3);
+        Random dcrd=new Random();
+        dCourseCal.set(Calendar.MINUTE,(dcrd.nextInt(29)));
+        dCourseCal.set(Calendar.SECOND,0);
+        Date dcdate=dCourseCal.getTime(); //第一次执行定时任务的时间
+        if (dcdate.before(new Date())) {
+            dcdate = this.addDay(dcdate, 1);
+        }
+        long courseCal=PERIOD_DAY*3;
+        dcTimer.schedule(new UpdateCourse(arg0.getServletContext()),dcdate,courseCal);
         /**************************每天凌晨4点00--4.30开始执行专题下行***********************************/
         upEttColumn=new Timer(true);
         Calendar  ueCourseCal = Calendar.getInstance();
@@ -221,8 +220,6 @@ public class TimerTaskListener implements ServletContextListener {
             uedate = this.addDay(uedate, 1);
         }
         upEttColumn.schedule(new SynchroEttColumns(),uedate,PERIOD_DAY);
-
-
 	}
 
     // 增加或减少天数
