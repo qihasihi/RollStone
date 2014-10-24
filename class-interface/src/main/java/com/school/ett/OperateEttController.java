@@ -170,60 +170,6 @@ public class OperateEttController extends BaseController<String>{
     }
 
     /**
-     * 注册网校帐号
-     * @param request
-     * @param response
-     */
-    @RequestMapping(params="m=doUpdateEttAccount")
-    public void doUpdateEttAccount(HttpServletRequest request,HttpServletResponse response)throws Exception{
-        //验证参数
-        String userName=request.getParameter("userName");
-        String password=request.getParameter("password");
-        String email=request.getParameter("email");
-        JsonEntity jsonEntity=new JsonEntity();
-        String msg=OperateEttControllerUtil.validateRegisterParam(request);
-        if(msg!=null&&msg.trim().length()>0){
-            if(!msg.trim().equals("TRUE")){
-                jsonEntity.setMsg(msg);
-                response.getWriter().println(jsonEntity.toJSON());return;
-            }
-            //重新检测用户名是否可用
-            JsonEntity je=OperateEttControllerUtil.validateEttUserNameHas(request,this.validateRole(request,UtilTool._ROLE_STU_ID));
-            if(!je.getType().trim().equals("success")){
-                response.getWriter().println(je.toJSON());return;
-            }
-            //******************************注册帐号-------------------------/
-            //如果可用，则调接口添加相关数据
-            HashMap<String,String> paraMap=new HashMap<String, String>();
-            paraMap.put("dcSchoolId",this.logined(request).getDcschoolid()+"");
-            paraMap.put("dcUserId",this.logined(request).getUserid()+"");
-            paraMap.put("userName",userName);
-            paraMap.put("password",password);
-            paraMap.put("email",email);
-            paraMap.put("identity",this.validateRole(request,UtilTool._ROLE_STU_ID)?"1":"2");
-            paraMap.put("timestamp",new Date().getTime()+"");
-            // paraMap.put("identity",this.validateRole(request,UtilTool._ROLE_STU_ID)?1:2);
-            paraMap.put("sign", UrlSigUtil.makeSigSimple("",paraMap));
-            String urlstr=UtilTool.utilproperty.getProperty("MODIFY_ETT_ACCOUNT");
-            JSONObject jsonObject=UtilTool.sendPostUrl(urlstr,paraMap,"GBK");
-            //1:成功
-            if(jsonObject!=null&&jsonObject.containsKey("result")&& jsonObject.getInt("result")==1){
-                jsonEntity.setType("success");
-                jsonEntity.setMsg("注册成功!");
-            }else{
-                jsonEntity.setType("error");
-                jsonEntity.setMsg(jsonObject.getString("msg"));
-            }
-        }else{
-            jsonEntity.setMsg("错误，原因：未知!");
-        }
-        response.getWriter().println(jsonEntity.toJSON());
-    }
-    public static void main(String[] args){
-        String msg="_QUESTIONPIC+dsafasdf_QUESTIONPIC+dafsdf_QUESTIONPIC+asdfasdf_QUESTIONPIC+2341234gf_QUESTIONPIC+";
-        System.out.println(msg.replaceAll("_QUESTIONPIC+","_____"));
-    }
-    /**
      * 正则验证 (在UtilTool类中)
      *
      * @author 郑舟(2010-06-31 下午02:20:16)

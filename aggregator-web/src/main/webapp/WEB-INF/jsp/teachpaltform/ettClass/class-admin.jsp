@@ -235,7 +235,7 @@
         </tr>-->
         <tr>
             <th>&nbsp;</th>
-            <td colspan="3" ><a href="javascript:sub_cls();"  class="an_public1">确&nbsp;认</a></td>
+            <td colspan="3" ><a href="javascript:sub_cls();" id="a_sub_add"  class="an_public1">确&nbsp;认</a></td>
         </tr>
     </table>
 </div>

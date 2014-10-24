@@ -602,6 +602,12 @@ function sub_cls(clsid){
     if(schoolid=="1"&&invitecode.val().length>0)
         param.invitecode=invitecode.val().Trim();
 
+
+    if(typeof clsid=='undefined')
+        resetBtnAttr("a_sub_add","an_public1","an_gray_public1","",2);
+
+
+
     var url='tpuser?m=doAddCls';
     if(typeof clsid!='undefined')
         url='tpuser?m=doUpdCls&clsid='+clsid;
@@ -613,6 +619,8 @@ function sub_cls(clsid){
         cache: false,
         error:function(){
             $("#btn_invitecode").show();
+            if(typeof clsid=='undefined')
+                resetBtnAttr("a_sub_add","an_public1","an_gray_public1","sub_cls()",1);
         },success:function(rps){
             alert(rps.msg);
             if(rps.type=='success'){
@@ -620,6 +628,8 @@ function sub_cls(clsid){
                 $("#dv_add input[id='invite_code']").empty();
                 loadCls(1,clsid=='undefined'?rps.objList[0]:clsid);
             }
+            if(typeof clsid=='undefined')
+                resetBtnAttr("a_sub_add","an_public1","an_gray_public1","sub_cls()",1);
         }
     });
 }

@@ -7156,7 +7156,7 @@ public class UserController extends BaseController<UserInfo> {
                 if(clsIdList.size()>0){
                     for(Integer classid:clsIdList){
                         List<Map<String,Object>>mapList=getClassUserMap("学生", classid);
-                        if(!EttInterfaceUserUtil.OperateClassUser(mapList,classid,Integer.parseInt(schoolid)))
+                        if(!EttInterfaceUserUtil.OperateClassUser(mapList,classid,Integer.parseInt(dcschoolid)))
                             System.out.println("Add lzx-ett clsuser error!");
                         else
                             System.out.println("Add lzx-ett clsuser success!");
@@ -7292,7 +7292,7 @@ public class UserController extends BaseController<UserInfo> {
                 if(clsIdList.size()>0){
                     for(Integer classid:clsIdList){
                         List<Map<String,Object>>mapList=getClassUserMap("学生", classid);
-                        if(!EttInterfaceUserUtil.OperateClassUser(mapList,classid,Integer.parseInt(schoolid)))
+                        if(!EttInterfaceUserUtil.OperateClassUser(mapList,classid,Integer.parseInt(dcschoolid)))
                             System.out.println("Delete lzx-ett clsuser error!");
                         else
                             System.out.println("Delete lzx-ett clsuser success!");

@@ -2035,7 +2035,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                         htm += '</tr>';
                         $.each(rmsg.objList[1], function (idx, itm) {
                             $.each(im.tpgroupstudent2, function (i, m) {
-                                if (typeof itm!='undefined'&&typeof m!='undefined'&& m.stuno == itm.userinfo.stuNo) {
+                                if (typeof itm!='undefined'&&typeof m!='undefined'&&im.groupname== m.groupname&& m.stuno == itm.userinfo.stuNo){
                                     htm += '<tr>';
                                     if(classid==0)
                                         htm += '<td>' + itm.clsname + '</td>';
@@ -2196,9 +2196,15 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
             $("#mainTbl").html(htm);
             $("#mainTbl").show("");
 
-            if($("#mainTbl td:contains('暂无数据')").length>1){
-                $("#mainTbl td:contains('暂无数据'):not(:first)").remove();
-            }
+            $("#mainTbl table").each(function(idx,itm){
+                var obj=$(itm).find("td:has(a)");
+                if(typeof obj=='object'&&obj.length>0){
+                    $(itm).find("td:contains('暂无数据')").remove();
+                }else{
+                    $(itm).find("td:contains('暂无数据'):not(:first)").remove();
+                }
+            })
+
         }
     });
 }
@@ -2378,6 +2384,15 @@ function loadLiveLessionPerformance(classid, tasktype, paperid, classtype) {
             if($("#mainTbl td:contains('暂无数据')").length>1){
                 $("#mainTbl td:contains('暂无数据'):not(:first)").remove();
             }
+
+            $("#mainTbl table").each(function(idx,itm){
+                var obj=$(itm).find("td:has(span)");
+                if(typeof obj=='object'&&obj.length>0){
+                    $(itm).find("td:contains('暂无数据')").remove();
+                }else{
+                    $(itm).find("td:contains('暂无数据'):not(:first)").remove();
+                }
+            })
         }
     });
 }

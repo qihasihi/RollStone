@@ -262,7 +262,7 @@
     .font-darkblue a:link,.font-darkblue a:visited,a.font-darkblue:link,a.font-darkblue:visited{color: #257aa7;}
     .font-darkblue a:hover,.font-darkblue a:active,a.font-darkblue:hover,a.font-darkblue:active{color:#35aebd;}
 
-	.an_small,.an_small_long{
+	.an_small,.an_small_long,.an_gray_small{
 	height:28px;
 	background: url(images/bg08_131230.png) no-repeat 0 -59px;
 	text-align: center;
@@ -272,7 +272,8 @@
 	padding-top:4px;
 	display: inline-block;
 }
-	.an_small{width:80px;}
+	.an_small,.an_gray_small{width:80px;}
+	.an_gray_small{background-position: 0 -351px; color:#fff;}
 	.an_small_long{width:103px;background-position:0 -123px;}
     a.an_small,a.an_small_long,a.an_big,a.an_big_long{color:#fff;}
 	a.an_small:hover{background-position:0 -91px;}
@@ -295,7 +296,7 @@
 	a.an_big:hover{background-position:0 -226px;}
 	a.an_big_long:hover{background-position:0 -304px;}
 
-	.an_public1{
+	.an_public1,.an_gray_public1{
 	width:68px;
 	height:21px;
 	background: url(images/bg10_131230.png) no-repeat -156px -150px;
@@ -307,6 +308,7 @@
 	vertical-align: middle;
 	color:#fff;
 }
+    .an_gray_public1{background: url(images/bg08_131230.png) no-repeat -81px -351px;}
 	a.an_public1{color:#fff;}
 	a.an_public1:hover{background-position:-156px -172px;}
 
