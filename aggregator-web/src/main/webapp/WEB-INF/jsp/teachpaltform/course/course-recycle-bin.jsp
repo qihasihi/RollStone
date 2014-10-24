@@ -205,8 +205,6 @@
     </script>
 </head>
 <body>
-<%@include file="/util/head.jsp" %>
-<%@include file="/util/nav-base.jsp" %>
 <div id="checkQuoteCourse" class="public_windows" style="display: none"></div>
 <div class="subpage_head"><span class="ico15"></span><strong>回收站</strong></div>
 <div class="content2">
