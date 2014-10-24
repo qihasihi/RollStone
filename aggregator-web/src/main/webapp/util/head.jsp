@@ -308,9 +308,9 @@
             var newPassValidateBo=validatePass('u_new_password','p_u_new_pass_msg','p_u_newpass_isright');
             if(uNameValidateBo){
                 if(isStudent){
-                    if(!validteHasUName('u_userName','p_m_uname_msg','sp_m_uname_isright')){
-                        alert('用户名已存在，请更改');return false;
-                    }
+                   if($("#sp_m_uname_isright .ico12").length<1){
+                       alert('用户名不符合标准，请更改!');return;
+                   }
                 }
                 if(oldPassValidateBo&&newPassValidateBo){
                     var param={};
