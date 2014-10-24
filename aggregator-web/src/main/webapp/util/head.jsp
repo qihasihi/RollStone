@@ -86,7 +86,6 @@
             }
         })
     }
-
     //乐知行
     function loadLZXWeImRight(){
         $.ajax({
@@ -111,7 +110,6 @@
             }
         })
     }
-
     function lzxLoadEttUserName(){
         $.ajax({
             url:"tpuser?loadEttUserName",
@@ -132,7 +130,6 @@
             }
         });
     }
-
 </script>
 <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
 <div id="header">
@@ -153,8 +150,6 @@
               </li>
           <%}%>
      </c:if>
-
-
       <!--如果是网校进入，则显示应用-->
       <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='ett'&&sessionScope.fromType!='lzx')}">
           <li class="five"><a href="APP.html" target="_blank">应&nbsp;用</a></li>
@@ -173,7 +168,6 @@
         <%
         }
             if(isTeacher&&!isStudent&&modelType==2){
-
             //加载乐知行，教学首页，左上角的链接
             if(ettColumnInfos!=null&&ettColumnInfos.size()>0){
                 String headcolumnico=UtilTool.utilproperty.getProperty("LZX_HEAD_COLUMN_ICO");
@@ -212,12 +206,8 @@
     <li class="three"><a href="sms?m=inbox" target="_blank">
   	消息中心<%=receiveSMSList!=null&&receiveSMSList.size()>0?"(<font color='red'>"+receiveSMSList.size()+"</font>)":"" %>
   	</a></li>-->
-
-
     <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='ett'}">
-
     </c:if>
-
   </ul>
 <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
  <p><span></span><img src="<%=basePath %><%=logosrc %>" width="253" height="64"/></p>
