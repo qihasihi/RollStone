@@ -108,12 +108,13 @@ public class ClassController extends BaseController<ClassInfo>{
             String maxYear =  this.termManager.getMaxIdTerm(true).getYear();
             clsentity.setYear(maxYear);
             List<ClassInfo> maxClsList=this.classManager.getList(clsentity, null);
-            for (ClassInfo cls:maxClsList) {
-                if(cls.getGradeid() == 1 || cls.getGradeid() == 4) {
-                    allowAutoLevel = 0;
-                    break;
+            if(maxClsList!=null&&maxClsList.size()>0)
+                for (ClassInfo cls:maxClsList) {
+                    if(cls.getGradeid() == 1 || cls.getGradeid() == 4) {
+                        allowAutoLevel = 0;
+                        break;
+                    }
                 }
-            }
         }
         request.setAttribute("allowAutoLevel", allowAutoLevel);
         return new ModelAndView("/class/list");
