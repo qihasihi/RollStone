@@ -164,8 +164,9 @@ public class NoticeDAO extends CommonDAO<NoticeInfo> implements INoticeDAO {
 				sqlbuilder.append("NULL,");
 			}
 			if(obj.getNoticecontent()!=null){
-				sqlbuilder.append("?,");
-				objlist.add(obj.getNoticecontent());
+//				sqlbuilder.append("?,");
+//				objlist.add(obj.getNoticecontent());
+                sqlbuilder.append("NULL,");
 			}else{
 				sqlbuilder.append("NULL,");
 			}
@@ -257,7 +258,7 @@ public class NoticeDAO extends CommonDAO<NoticeInfo> implements INoticeDAO {
 			}
 			if(obj.getNoticecontent()!=null){
 				sqlbuilder.append("?,");
-				objlist.add(obj.getNoticecontent());
+				objlist.add("");
 			}else{
 				sqlbuilder.append("NULL,");
 			}
