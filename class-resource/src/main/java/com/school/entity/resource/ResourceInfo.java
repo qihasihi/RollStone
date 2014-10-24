@@ -599,6 +599,9 @@ public class ResourceInfo implements java.io.Serializable {
     }
 
     public java.lang.String getResintroduce() {
+        if(resintroduce!=null){
+            resintroduce=resintroduce.replaceAll("\\\\","/");
+        }
         return resintroduce;
     }
 
