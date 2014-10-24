@@ -1200,7 +1200,7 @@ public class UserController extends BaseController<UserInfo> {
 //                    ec.setRoletype(1);
 //                request.getSession().setAttribute("ettColumnList", columnManager.getEttColumnSplit(ec, null));
 //            }
-            request.getSession().setAttribute("fromType","lzx");  //szschool
+            request.getSession().setAttribute("fromType","szschool");  //
 //                    System.out.println("loginUser:"+(UserInfo) request.getSession().getAttribute("CURRENT_USER"));
             if (remember) {
                 Cookie ck = new Cookie("SZ_SCHOOL_USER_REC",userinfo.getRef());
