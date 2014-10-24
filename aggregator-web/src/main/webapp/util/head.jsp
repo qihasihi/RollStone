@@ -167,7 +167,7 @@
       <!--乐知行-->
     <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
         <%
-        if(modelType==2||modelType==1){
+        if(modelType==2){//||modelType==1
             %>
         <li class="three" id="li_web_im"><a href="javascript:;" onclick="loadLZXWeImRight()">爱学</a></li>
         <%
