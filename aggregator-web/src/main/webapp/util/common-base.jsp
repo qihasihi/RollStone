@@ -27,6 +27,8 @@
     if(proc_name==null){
         proc_name=request.getContextPath().replaceAll("/","");
     }else{
+        if(proc_name.indexOf("/")==-1)
+            proc_name+="/";
         ///group1/1.jsp
         proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1).replaceAll("/","");
     }
