@@ -1,7 +1,11 @@
 package com.school.control.teachpaltform;
 
 import com.school.control.base.BaseController;
+import com.school.dao.inter.IGradeDAO;
+import com.school.entity.GradeInfo;
 import com.school.entity.teachpaltform.TeachingMaterialInfo;
+import com.school.manager.GradeManager;
+import com.school.manager.inter.IGradeManager;
 import com.school.manager.inter.teachpaltform.ITeachingMaterialManager;
 import com.school.manager.teachpaltform.TeachingMaterialManager;
 import com.school.util.JsonEntity;
@@ -17,8 +21,10 @@ import java.util.List;
 @RequestMapping(value = "teachingmaterial")
 public class TeachingMaterialAction extends BaseController<TeachingMaterialInfo> {
     private ITeachingMaterialManager teachingMaterialManager;
+    private IGradeManager gradeManager;
     public TeachingMaterialAction(){
         this.teachingMaterialManager=this.getManager(TeachingMaterialManager.class);
+        this.gradeManager=this.getManager(GradeManager.class);
     }
 	/**
 	 * 获取教材列表(分页)
@@ -35,6 +41,16 @@ public class TeachingMaterialAction extends BaseController<TeachingMaterialInfo>
         TeachingMaterialInfo tm = this.getParameter(request, TeachingMaterialInfo.class);
         if(subjectid!=null&&subjectid.trim().length()>0)
             tm.setSubjectid(Integer.parseInt(subjectid));
+
+        if(tm!=null&&tm.getGradeid()!=null){
+            GradeInfo g=new GradeInfo();
+            g.setGradeid(tm.getGradeid());
+            List<GradeInfo>gList=this.gradeManager.getList(g,null);
+            if(gList!=null&&gList.size()>0){
+                tm.setGradename(gList.get(0).getGradevalue().substring(0,1));
+            }
+        }
+        tm.setGradeid(null);
 		List<TeachingMaterialInfo> tmList = this.teachingMaterialManager.getList(tm, null);
         je.setObjList(tmList);
         je.setType("success");

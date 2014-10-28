@@ -749,9 +749,10 @@ function getTchingMaterial(isinit){
                 var html ="";
                 var material_id = $("#material_id").val();
                 $.each(rps.objList,function(idx,itm) {
-                    var materialName=itm.materialname+"("+itm.versionname+")";
+                    var gradename=typeof  itm.gradename=='undefined'?"":itm.gradename;
+                    var materialName=gradename+itm.materialname+"("+itm.versionname+")";
                     if(itm.materialname=='其它')
-                        materialName='其它';
+                        materialName=gradename+'其它';
                     html+="<li style=\"width:450px;\"><input id='rdo_matid_"+itm.materialid+"' name='materialid' value='"+itm.materialid+"' type='radio' title='"+materialName;
                     if(material_id!="undefind"&&material_id.length>0){
                         if(material_id==itm.materialid){

@@ -2771,7 +2771,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String gradeid = request.getParameter("gradeid");
         String subjectid = request.getParameter("subjectid");
         String termid=request.getParameter("atermid");
-        if (gradeid == null || subjectid == null || termid==null) {
+        if (subjectid == null || termid==null) { //gradeid == null ||
             je.setMsg("参数错误，无法请求数据！");
             response.getWriter().print(je.toJSON());
             return;
@@ -2779,11 +2779,11 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
         List<TpTeacherTeachMaterial> entityList=null;
         //得到 该教师的当前教材
-        if(gradeid!=null&&gradeid.trim().length()>0&&subjectid!=null&&subjectid.trim().length()>0
+        if(subjectid!=null&&subjectid.trim().length()>0 //gradeid!=null&&gradeid.trim().length()>0&&
                 &&termid!=null&&termid.length()>0){
             TpTeacherTeachMaterial tentity=new TpTeacherTeachMaterial();
             tentity.setUserid(this.logined(request).getUserid());
-            tentity.setGradeid(Integer.parseInt(gradeid));
+           // tentity.setGradeid(Integer.parseInt(gradeid));
             tentity.setSubjectid(Integer.parseInt(subjectid));
             tentity.setTermid(termid);
             entityList=this.tpTeacherTeachMaterialManager.getList(tentity,null);

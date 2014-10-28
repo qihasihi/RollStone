@@ -59,7 +59,7 @@ public class TeachingMaterialDAO extends CommonDAO<TeachingMaterialInfo> impleme
         List<Object> objList=new ArrayList<Object>();
 		sqlbuilder.append("{CALL teaching_materia_info_proc_split(");
         if(TeachingMaterialInfo==null){
-            sqlbuilder.append("NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,");
+            sqlbuilder.append("NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,");
         }else{
             if (TeachingMaterialInfo.getVersionid() != null) {
                 sqlbuilder.append("?,");
@@ -99,6 +99,11 @@ public class TeachingMaterialDAO extends CommonDAO<TeachingMaterialInfo> impleme
             if (TeachingMaterialInfo.getType() != null) {
                 sqlbuilder.append("?,");
                 objList.add(TeachingMaterialInfo.getType());
+            } else
+                sqlbuilder.append("null,");
+            if (TeachingMaterialInfo.getGradename() != null) {
+                sqlbuilder.append("?,");
+                objList.add(TeachingMaterialInfo.getGradename());
             } else
                 sqlbuilder.append("null,");
         }
