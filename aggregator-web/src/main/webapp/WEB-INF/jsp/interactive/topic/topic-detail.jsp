@@ -160,7 +160,10 @@
 	</head>  
   <body>  
  <div class="subpage_head">
-     <span class="back"><a href="tptopic?m=index&courseid=${topic.courseid}">返回</a></span>
+     <span class="back">
+         <!--<a href="tptopic?m=index&courseid=${topic.courseid}">返回</a>-->
+         <a href="javascript:history.go(-1)">返回</a>
+     </span>
      <span class="ico55"></span><strong>论题详情</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="font-black">分班级查看：</span>
      <select name="select" onchange="pclsid=this.value.split('.')[0];pclstype=this.value.split('.')[1];pageGo('p1');">
          <option value="t=1">全部</option>

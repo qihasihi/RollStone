@@ -136,7 +136,9 @@
     </script>
 </head>
 <body>
-    <div class="subpage_head"><span class="ico55"></span><strong>
+    <div class="subpage_head">
+        <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+        <span class="ico55"></span><strong>
         <c:if test="${papertype==1}">标准A--</c:if>
         <c:if test="${papertype==2}">标准B--</c:if>
         <c:if test="${papertype==3}">成卷测试--</c:if>

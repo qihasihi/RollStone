@@ -209,7 +209,7 @@ function getInvestReturnMethod(rps){
             }
             if(itm.tasktype==4){
                 if(itm.taskstatus!="1")
-                    html+='<a class="ico84" title="批阅" target="_blank" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
+                    html+='<a class="ico84" title="批阅"  href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
                 else
                     html+='<a class="ico84b" title="任务未开始"  href="javascript:;"></a>';
             }
