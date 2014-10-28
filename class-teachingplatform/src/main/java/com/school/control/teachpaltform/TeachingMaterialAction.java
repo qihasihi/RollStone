@@ -37,20 +37,23 @@ public class TeachingMaterialAction extends BaseController<TeachingMaterialInfo>
 			HttpServletResponse response) throws Exception {
 		JsonEntity je = new JsonEntity();
         String subjectid=request.getParameter("subjectid");
+        String isindex=request.getParameter("isindex");
 		// ·ÖÒ³²éÑ¯
         TeachingMaterialInfo tm = this.getParameter(request, TeachingMaterialInfo.class);
         if(subjectid!=null&&subjectid.trim().length()>0)
             tm.setSubjectid(Integer.parseInt(subjectid));
 
-        if(tm!=null&&tm.getGradeid()!=null){
-            GradeInfo g=new GradeInfo();
-            g.setGradeid(tm.getGradeid());
-            List<GradeInfo>gList=this.gradeManager.getList(g,null);
-            if(gList!=null&&gList.size()>0){
-                tm.setGradename(gList.get(0).getGradevalue().substring(0,1));
+        if(isindex!=null&&isindex.equals("1")){
+            if(tm!=null&&tm.getGradeid()!=null){
+                GradeInfo g=new GradeInfo();
+                g.setGradeid(tm.getGradeid());
+                List<GradeInfo>gList=this.gradeManager.getList(g,null);
+                if(gList!=null&&gList.size()>0){
+                    tm.setGradename(gList.get(0).getGradevalue().substring(0,1));
+                }
+                tm.setGradeid(null);
             }
         }
-        tm.setGradeid(null);
 		List<TeachingMaterialInfo> tmList = this.teachingMaterialManager.getList(tm, null);
         je.setObjList(tmList);
         je.setType("success");

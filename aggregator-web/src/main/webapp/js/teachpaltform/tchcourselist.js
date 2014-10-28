@@ -741,7 +741,7 @@ function getTchingMaterial(isinit){
     }
     $("#materia_button").hide();
     $("#addReportBtn").attr("href","javascript:selectMaterial()");
-    $.post('teachingmaterial?m=getTchingMaterialList',{gradeid:global_gradeid,subjectid:global_subjectid},
+    $.post('teachingmaterial?m=getTchingMaterialList',{gradeid:global_gradeid,subjectid:global_subjectid,isindex:1},
         function(rps){
             if(rps!=null
                 && rps.objList!=null
