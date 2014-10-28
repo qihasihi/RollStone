@@ -136,6 +136,9 @@
                         }else if(im.TASK_TYPE==6){
                             typename="微课程学习";
                             details="paperques?m=toTestPaper&courseid="+im.COURSE_ID+"&taskid="+im.TASK_ID+"&paperid="+im.TASK_VALUE_ID+"";
+                        }else if(im.TASK_TYPE==10){
+                            typename="直播课";
+                            details="javascript:toZhiBoKe("+im.COURSE_ID+","+im.TASK_ID+");";
                         }
 
 
@@ -169,7 +172,15 @@
                            var h='<td>任务'+''+1+''+typename+'</td>';
                            h+='<td>'+timestring+'</td>';
                            h+='<td>'+content+'</td>';
-                           h+='<td class="v_c"><a href="'+details+'" class="ico46" title="浏览详情"></a></td> ';
+                           if(im.TASK_TYPE==10){
+                               if(validateTwoDate(now,im.E_TIME)){
+                                   h+='<td class="v_c"><a href="'+details+'" class="ico46" title="浏览详情"></a></td> ';
+                               }else{
+                                   h+='<td class="v_c"></td> ';
+                               }
+                           }else{
+                               h+='<td class="v_c"><a href="'+details+'" class="ico46" title="浏览详情"></a></td> ';
+                           }
                            h+='<td>'+status+'</td>';
                            $("#tr_"+im.COURSE_ID).append(h);
                        }else{
@@ -179,7 +190,15 @@
                            h+='<td>任务'+(ix+1-zhongjianshu)+typename+'</td>';
                            h+='<td>'+timestring+'</td>';
                            h+='<td>'+content+'</td>';
-                           h+='<td class="v_c"><a href="'+details+'" class="ico46" title="浏览详情"></a></td> ';
+                           if(im.TASK_TYPE==10){
+                               if(validateTwoDate(now,im.E_TIME)){
+                                   h+='<td class="v_c"><a href="'+details+'" class="ico46" title="浏览详情"></a></td> ';
+                               }else{
+                                   h+='<td class="v_c"></td> ';
+                               }
+                           }else{
+                               h+='<td class="v_c"><a href="'+details+'" class="ico46" title="浏览详情"></a></td> ';
+                           }
                            h+='<td>'+status+'</td>';
                            h+='</tr>';
 
@@ -190,6 +209,26 @@
                        }
                     });
 
+                }
+            });
+        }
+
+        function toZhiBoKe(courseid,taskid){
+            $.ajax({
+                url:'task?m=toZhiBoKe',//cls!??.action
+                dataType:'json',
+                type:'POST',
+                data:{courseid:courseid,taskid:taskid},
+                cache: false,
+                error:function(){
+                    alert('异常错误!系统未响应!');
+                },success:function(rps){
+                    if(rps.type=='success'){
+                        var url = rps.objList[0];
+                        window.location.href=url;
+                    }else{
+                        alert("为获取到直播课地址，请刷新重试");
+                    }
                 }
             });
         }

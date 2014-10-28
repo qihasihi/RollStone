@@ -4537,4 +4537,49 @@ public class TaskController extends BaseController<TpTaskInfo>{
         mp.put("tk",tk);
         return new ModelAndView("/teachpaltform/task/im_task_detail",mp);
     }
+
+    /**
+     * 跳转到直播课播放页面
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=toZhiBoKe",method= {RequestMethod.GET,RequestMethod.POST})
+    public void toZhiboke(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String taskid = request.getParameter("taskid");
+        String courseid = request.getParameter("courseid");
+        //验证专题
+        TpCourseInfo tc = new TpCourseInfo();
+        tc.setCourseid(Long.parseLong(courseid));
+        List<TpCourseInfo> tcList = this.tpCourseManager.getList(tc,null);
+        //
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid));
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<TpTaskInfo> tpTaskList=this.tpTaskManager.getList(tk,presult);
+        String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
+        HashMap<String,String> signMap = new HashMap();
+        signMap.put("courseName",tcList.get(0).getCoursename());
+        signMap.put("courseId",tpTaskList.get(0).getTaskid().toString().replace("-",""));
+        signMap.put("userId",this.logined(request).getUserid()+"");
+        signMap.put("userName",this.logined(request).getRealname()!=null?this.logined(request).getRealname():this.logined(request).getUsername());
+        signMap.put("rec","3");
+        signMap.put("srcId","90");
+        signMap.put("timestamp",System.currentTimeMillis()+"");
+        String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
+        signMap.put("sign",signture);
+        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+        if(type==1){
+            String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
+            je.setType("success");
+            je.getObjList().add(liveurl);
+        }else{
+            je.setType("error");
+        }
+        response.getWriter().print(je.toJSON());
+    }
 }
