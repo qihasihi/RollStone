@@ -1644,6 +1644,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String subjectid = request.getParameter("subjectid");
         String gradeid = request.getParameter("gradeid");
         String termid = request.getParameter("termid");
+        String materialid = request.getParameter("materialid");
 
         if (subjectid == null || subjectid.length() < 1) {
             je.setMsg("没有获取学科参数！");// 异常错误，参数不齐，无法正常访问!
@@ -1718,29 +1719,31 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             if(tc.getCourseid()!=null){
                 //任务
                 TpCourseTeachingMaterial ctm=new TpCourseTeachingMaterial();
-                ctm.setCourseid(courseid);//引用专题ID
-                List<TpCourseTeachingMaterial> ctmList=this.tpCourseTeachingMaterialManager.getList(ctm,null);
-                if(ctmList!=null&&ctmList.size()>0){
-                    for (TpCourseTeachingMaterial tctm : ctmList){
-                        tctm.setRef(null);
-                        tctm.setCtime(null);
-                        tctm.setCourseid(tc.getCourseid()); //新建专题
-                        sql=new StringBuilder();
-                        objList=this.tpCourseTeachingMaterialManager.getSaveSql(tctm,sql);
-                        if(sql!=null&&objList!=null){
-                            sqlListArray.add(sql.toString());
-                            objListArray.add(objList);
-                        }
-                    }
+                ctm.setCourseid(nextCourseId);//引用专题ID
+                ctm.setTeachingmaterialid(Integer.parseInt(materialid));
+                sql=new StringBuilder();
+                objList=this.tpCourseTeachingMaterialManager.getSaveSql(ctm,sql);
+                if(sql!=null&&objList!=null){
+                     sqlListArray.add(sql.toString());
+                     objListArray.add(objList);
                 }
             }
-
+            //查询当前要添加的年级学科
+            TpTeacherTeachMaterial teacherTeachMaterial = new TpTeacherTeachMaterial();
+            teacherTeachMaterial.setUserid(this.logined(request).getUserid());
+            teacherTeachMaterial.setMaterialid(Integer.parseInt(materialid));
+            List<TpTeacherTeachMaterial> teacherTeachMaterialList = this.tpTeacherTeachMaterialManager.getList(teacherTeachMaterial,null);
+            //获取当默认年级学科
+            Integer currGradeid = null;
+            if(teacherTeachMaterialList!=null&&teacherTeachMaterialList.size()>0){
+                currGradeid = teacherTeachMaterialList.get(0).getGradeid();
+            }
             // 添加默认专题班级关联记录
             TpCourseClass cc = new TpCourseClass();
             cc.setClassid(0);
             cc.setCourseid(tc.getCourseid());
             cc.setSubjectid(Integer.parseInt(subjectid));
-            cc.setGradeid(Integer.parseInt(gradeid));
+            cc.setGradeid(currGradeid);
             cc.setTermid(termid);
             //沿用专题，开始时间获取当前时间
             Date d = new Date();

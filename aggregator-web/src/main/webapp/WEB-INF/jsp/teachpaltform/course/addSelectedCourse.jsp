@@ -25,7 +25,7 @@
                 srhMode(1);
                 <c:if test="${!empty grade}">
                     $("#gradeid").val('${grade.gradeid}');
-                    $("#gradeid").attr("disabled",true);
+                    //$("#gradeid").attr("disabled",true);
                 </c:if>
                 $("#schoolname").val(schoolname);
                 $("#gradeid").change(function(){
@@ -250,7 +250,8 @@
                         termid:term.val(),
                         subjectid:subjectid.val(),
                         gradeid:gradeid.val(),
-                        courseids:courseids.join(',')
+                        courseids:courseids.join(','),
+                        materialid:materialid
                     },
                     type:'POST',
                     dataType:'json',
