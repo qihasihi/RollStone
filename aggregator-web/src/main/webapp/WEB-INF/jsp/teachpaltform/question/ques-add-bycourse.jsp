@@ -54,7 +54,9 @@
     </script>
 </head>
 <body>
-<div class="subpage_head"><span class="ico55"></span><strong>添加试题</strong></div>
+<div class="subpage_head">
+    <span class="ico55"></span><strong>添加试题</strong>
+</div>
 <div class="subpage_nav">
     <ul>
         <li><a  href="question?m=toAddQuestion&courseid=${param.addCourseId}">新建试题</a></li>
@@ -63,6 +65,7 @@
 </div>
 <div class="content1">
     <div class="jxxt_zhuanti_shiti_add_info">
+        <p class="back"><a href="javascript:window.history.go(-1);" class="one">返回</a></p>
         <p class="font-black"><strong>${courseObj.coursename}　（${courseObj.materialname}）</strong></p>
         <p>类型：${courseObj.courselevel eq 3?"自建专题":"标准/共享专题"}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作者：${!empty courseObj.teachername and fn:length(courseObj.teachername)>0?courseObj.teachername:"北京四中网校"}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年级：${courseObj.gradename}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <%
