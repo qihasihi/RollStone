@@ -42,7 +42,10 @@
 
 
 
-<div class="subpage_head"><span class="ico55"></span><strong>专题详情&mdash;&mdash;${courseInfo.coursename}</strong></div>
+<div class="subpage_head">
+    <span class="back"><a href="javascript:window.history.go(-1)">返回</a></span>
+    <span class="ico55"></span><strong>专题详情&mdash;&mdash;${courseInfo.coursename}</strong>
+</div>
 <div class="jxxt_zhuanti_hdkj_nr">
     <p class="font-darkgray">${materialList[0].materialname}${!empty materialList[0].versionname?materialList[0].versionname:""}&nbsp;&nbsp;&nbsp;&nbsp;发布者：${!empty courseInfo.realname?courseInfo.realname:"北京四中网校"}</p>
     <p>${courseInfo.introduction==null?"":courseInfo.introduction}</p>

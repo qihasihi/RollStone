@@ -54,11 +54,17 @@
 <body>
 <input type="hidden" id="material_id"/>
 <c:if test="${!empty tc}">
-    <div class="subpage_head"><span class="ico55"></span><strong>修改专题</strong></div>
+    <div class="subpage_head">
+        <span class="back"><a href="javascript:closeAddorUpdateWindow();">返回</a></span>
+        <span class="ico55"></span><strong>修改专题</strong>
+    </div>
 </c:if>
 
 <c:if test="${empty tc}">
-    <div class="subpage_head"><span class="ico55"></span><strong>添加专题</strong></div>
+    <div class="subpage_head">
+        <span class="back"><a href="javascript:closeAddorUpdateWindow();">返回</a></span>
+        <span class="ico55"></span><strong>添加专题</strong>
+    </div>
     <div class="subpage_nav">
         <ul>
             <li class="crumb"><a href="javascript:void(0);">新建专题</a></li>
@@ -222,7 +228,6 @@
                 <c:if test="${empty tc}">
                     <a id="addButton" href="javascript:getTchingMaterial();" class="an_small">提&nbsp;交</a>
                 </c:if>
-                <a href="javascript:closeAddorUpdateWindow();" class="an_small">取&nbsp;消</a></td>
         </tr>
     </table>
 </div>

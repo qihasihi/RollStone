@@ -206,7 +206,10 @@
 </head>
 <body>
 <div id="checkQuoteCourse" class="public_windows" style="display: none"></div>
-<div class="subpage_head"><span class="ico15"></span><strong>回收站</strong></div>
+<div class="subpage_head">
+    <span class="back"><a href="javascript:window.history.go(-1)">返回</a></span>
+    <span class="ico15"></span><strong>回收站</strong>
+</div>
 <div class="content2">
     <div class="jxxt_tab_layout">
 

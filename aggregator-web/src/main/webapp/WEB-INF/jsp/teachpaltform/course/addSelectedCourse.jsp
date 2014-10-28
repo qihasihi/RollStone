@@ -106,7 +106,7 @@
                             html += "<span class='ico17' title='共享'></span>";
                         //else if(itm.sourceType==3)
                             //html += "<span class='ico44' title='参考'></span>";
-                        html += "</td><td><p><a href='teachercourse?m=toCourseDetial&courseid=" + itm.courseid + "&materialid="+materialid+"' target='_blank'>" + itm.coursename + "</a></p>";
+                        html += "</td><td><p><a href='teachercourse?m=toCourseDetial&courseid=" + itm.courseid + "&materialid="+materialid+"' target='_self'>" + itm.coursename + "</a></p>";
                         html += "<p class='font-darkgray'>作者：" + (itm.schoolname==null?"北京四中网校":itm.schoolname) + "&nbsp;"+(itm.teachername==null?"":itm.teachername)+"</p>";
                         html += "<p>简介：" + (itm.introduction==null?"无":itm.introduction) + "</p>";
                         html += "<p class='t_r'>资源：<b>"+itm.rescount+"</b> 试题：<b>"+itm.quescount+"</b>试卷：<b>"+itm.papercount+"</b>论题：<b>"+itm.topiccount+"</b>任务：<b>"+itm.taskcount+"</b>";
@@ -378,7 +378,10 @@
     <body>
     <div id="confirmCourseDiv"  class="public_windows" style="display: none"></div>
     <input id="subjectid" type="hidden" value="${subject.subjectid}">
-    <div class="subpage_head"><span class="ico55"></span><strong>添加专题</strong></div>
+    <div class="subpage_head">
+        <span class="back"><a href="javascript:closeAddorUpdateWindow();">返回</a></span>
+        <span class="ico55"></span><strong>添加专题</strong>
+    </div>
     <div class="subpage_nav">
         <ul>
             <li><a href="teachercourse?m=toSaveOrUpdate&subjectid=${subject.subjectid}&gradeid=${grade.gradeid}">新建专题</a></li>
@@ -451,8 +454,8 @@
             </table>
             <form id="pListForm" name="pListForm"><p class="nextpage" id="pListaddress" align="center"></p></form>
         </div>
-        <p class="p_tb_10 t_c" id="addP"><a id="addButton" href="javascript:checkCourse();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="javascript:closeAddorUpdateWindow();" class="an_small">取&nbsp;消</a></div>
+        <p class="p_tb_10 t_c" id="addP"><a id="addButton" href="javascript:checkCourse();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            </div>
     <%@include file="/util/foot.jsp" %>
     </body>
 </html>
