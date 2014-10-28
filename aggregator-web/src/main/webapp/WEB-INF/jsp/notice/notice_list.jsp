@@ -54,8 +54,6 @@
         }
 </script>  
   <body>
-  <%@include file="/util/head.jsp" %>
-  <%@include file="/util/nav-base.jsp" %>
   <div class="ej_content">
   <p class="p_20"><a href="javascript:showAddDiv('addDiv')" class="an_small">添加公告</a><a href="javascript:deleteSelected()" class="an_small">删除已选</a></p>
   <table border="0" cellpadding="0" cellspacing="0" class="public_tab2" >
