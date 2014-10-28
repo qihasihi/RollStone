@@ -105,8 +105,8 @@ public class  ClassManager extends BaseManager<ClassInfo> implements IClassManag
      * @param year 学年的值
      * @return 已有的班级数量
      */
-    public int getTotalClass(int schoolId, String year) {
-        return this.classdao.getTotalClass(schoolId, year);
+    public int getTotalClass(int schoolId, String year, int from) {
+        return this.classdao.getTotalClass(schoolId, year, from);
     }
 	
 }

@@ -105,16 +105,30 @@ public class ClassController extends BaseController<ClassInfo>{
                 allowAutoLevel=1;
             }
             if (allowAutoLevel == 1) {
-                String maxYear =  this.termManager.getMaxIdTerm(true).getYear();
-                clsentity.setYear(maxYear);
-                List<ClassInfo> maxClsList=this.classManager.getList(clsentity, null);
-                System.out.println(maxClsList.size());
-                for (ClassInfo cls:maxClsList) {
-                    if(cls.getClassgrade() != null && (cls.getClassgrade().equals("高三")  || cls.getClassgrade().equals("初三"))) {
-                        allowAutoLevel = 0;
-                        break;
+                int count = 0;
+                int pre = 0;
+                int num = 0;
+                int [] sYear = new int[5];
+                String transYear = nextyear+"#";
+                for (int i = 0; i < transYear.length(); i++) {
+                    if(transYear.charAt(i) < 48 || transYear.charAt(i) > 57) {
+                        if(i > pre) {
+                            sYear[num] = Integer.valueOf(transYear.substring(pre, i)) - 1;
+                            num++;
+                        }
+                        pre = i + 1;
                     }
                 }
+                transYear = sYear[0] +"~"+ sYear[1];
+                clsentity.setYear(transYear);
+                List<ClassInfo> maxClsList=this.classManager.getList(clsentity, null);
+                for (ClassInfo cls:maxClsList) {
+                    if(cls.getClassgrade() != null && !cls.getClassgrade().equals("高三")  && !cls.getClassgrade().equals("初三")) {
+                        count ++;
+                    }
+                }
+                if(count == 0)
+                    allowAutoLevel = 0;
             }
         }
         request.setAttribute("allowAutoLevel", allowAutoLevel);
@@ -387,7 +401,6 @@ public class ClassController extends BaseController<ClassInfo>{
         String type=request.getParameter("dtype");
         String year=request.getParameter("dyear");
         String pattern=request.getParameter("dpattern");
-        String schoolid=request.getParameter("dcschoolid");
         if(classinfo.getClassgrade()==null||
                 classinfo.getClassgrade().trim().length()<1||
                 classinfo.getClassname()==null||
@@ -1545,7 +1558,11 @@ public class ClassController extends BaseController<ClassInfo>{
         }
 
         if (schoolId >= 50000) {
-            existClass = getTotalClass(schoolId, year);
+            if(from.equals("addClass"))
+                existClass = this.classManager.getTotalClass(schoolId, year, 1);
+            else
+                existClass = this.classManager.getTotalClass(schoolId, year, 2);
+            System.out.println("this is existclass="+existClass);
             HashMap<String,String> paramMap=new HashMap<String,String>();
             paramMap.put("time",new Date().getTime()+"");
 
@@ -1556,10 +1573,8 @@ public class ClassController extends BaseController<ClassInfo>{
             // http\://int.etiantian.com\:34180/totalSchool/ cls?m=getClsNum&schoolid=&year=
             String url=UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION");
             //http://localhost:8080/totalSchool/franchisedSchool?m=getTC
-            if(from.equals("addClass"))
-                url +="franchisedSchool?m=getTC";
-            else
-                url +="franchisedSchool?m=getNTC";
+            url +="franchisedSchool?m=getTC";
+
             net.sf.json.JSONObject jo=UtilTool.sendPostUrl(url,paramMap,"UTF-8");
             if(jo!=null&&jo.containsKey("result"))
                 maxClass = Integer.valueOf(jo.get("result").toString());
@@ -1604,13 +1619,6 @@ public class ClassController extends BaseController<ClassInfo>{
                 e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * 得到已建立的班级数量
-     */
-    public int getTotalClass(int schoolId, String year) {
-        return this.classManager.getTotalClass(schoolId, year);
     }
 }
 

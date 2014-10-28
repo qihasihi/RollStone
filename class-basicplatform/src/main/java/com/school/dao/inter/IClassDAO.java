@@ -37,5 +37,5 @@ public interface  IClassDAO extends ICommonDAO<ClassInfo>{
      * @param year 学年的值
      * @return 已有的班级数量
      */
-    public int getTotalClass(int schoolId, String year);
+    public int getTotalClass(int schoolId, String year, int from);
 }

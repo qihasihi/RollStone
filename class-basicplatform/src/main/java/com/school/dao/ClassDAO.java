@@ -317,7 +317,7 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 		List<Object>objList = new ArrayList<Object>();
 		if(obj.getClassid()!=null){
 			sqlbuilder.append("?,");
-			objList.add(obj.getClassid()); 
+			objList.add(obj.getClassid());
 		}else
 			sqlbuilder.append("NULL,");
 		if(obj.getClassgrade()!=null){
@@ -480,9 +480,25 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
      * @param year 学年的值
      * @return 已有的班级数量
      */
-    public int getTotalClass(int schoolId, String year) {
+    public int getTotalClass(int schoolId, String year, int from) {
         int total = 0;
+        int pre = 0;
+        int num = 0;
+        int [] sYear = new int[5];
+        if(from != 1) {
+            String transYear = year+"#";
+            for (int i = 0; i < transYear.length(); i++) {
+                if(transYear.charAt(i) < 48 || transYear.charAt(i) > 57) {
+                    if(i > pre) {
+                        sYear[num] = Integer.valueOf(transYear.substring(pre, i)) - 1;
+                        num++;
+                    }
+                    pre = i + 1;
+                }
+            }
 
+            year = sYear[0] +"~"+ sYear[1];
+        }
         if(schoolId < 50000 || year == null || year.equals(""))
             return 0;
 
@@ -490,7 +506,9 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         sb.append(schoolId);
         sb.append(",'");
         sb.append(year);
-        sb.append("',?)}");
+        sb.append("',");
+        sb.append(from);
+        sb.append(",?)}");
         total = (Integer)this.executeFunction(sb.toString(),null);
         return total;
     }
