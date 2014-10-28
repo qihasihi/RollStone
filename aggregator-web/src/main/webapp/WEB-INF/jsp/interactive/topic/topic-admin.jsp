@@ -19,7 +19,11 @@
 </head>
 
 <body>
-<div class="subpage_head"><span class="ico55"></span>
+<div class="subpage_head">
+          <c:if test="${empty param.operate_type}">
+              <span class="back"><a href="tptopic?m=index&courseid=${courseid}">返回</a></span>
+          </c:if>
+    <span class="ico55"></span>
 <strong>
 <c:if test="${!empty tpc }">
 编辑论题
@@ -62,9 +66,9 @@
           <c:if test="${!empty param.operate_type}">
               <a href="javascript:window.close();" class="an_small">取&nbsp;消</a>
           </c:if>
-          <c:if test="${empty param.operate_type}">
-              <a href="tptopic?m=index&courseid=${courseid}" class="an_small">取&nbsp;消</a>
-          </c:if>
+          <%--<c:if test="${empty param.operate_type}">--%>
+              <%--<a href="tptopic?m=index&courseid=${courseid}" class="an_small">取&nbsp;消</a>--%>
+          <%--</c:if>--%>
       </td>
     </tr>
   </table>

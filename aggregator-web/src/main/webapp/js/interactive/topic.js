@@ -974,7 +974,7 @@ function listReturn(rps){
                     h+='<div>'
                     h+='<div class="title">';
                     h+='<p class="f_right" style="width:160px">';
-                    h+='<a href="tptopic?m=toTopicStatices&topicid='+itm.topicid+'" target="_blank" class="ico37" title="统计"></a>';
+                    h+='<a href="tptopic?m=toTopicStatices&topicid='+itm.topicid+'" class="ico37" title="统计"></a>';
                     if(rt.length>0&&rt.Trim()=="TEACHER"){
                         //task?toAddTask&courseid='+courseid+'&tasktype=1&taskvalueid='+itm.resid+'"
                         if(itm.isPublishTask==0)
@@ -1003,7 +1003,7 @@ function listReturn(rps){
                         }
                     }
                     h+='<a class="ico49b" id="a_op_'+itm.topicid+'" onclick="operateUI(\'dv_main_'+itm.topicid+'\',\'ico49\',\'a_op_'+itm.topicid+'\')" href="javascript:;"></a>';
-                    h+='<a href="tptopic?m=toDetailTopic&topicid='+itm.topicid+'" target="_blank">'+itm.topictitle+'</a> </p><!-- ico49a -->';
+                    h+='<a href="tptopic?m=toDetailTopic&topicid='+itm.topicid+'">'+itm.topictitle+'</a> </p><!-- ico49a -->';
                     h+='</div>';
                     h+='<div id="dv_main_'+itm.topicid+'" class="text" style="display:none">';
                     h+='<div class="f_right">';

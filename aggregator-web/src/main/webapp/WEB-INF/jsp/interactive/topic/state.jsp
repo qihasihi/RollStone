@@ -11,7 +11,10 @@ $(function(){
 </head>
 
 <body>
-<div class="subpage_head"><span class="ico55"></span><strong>论题统计&mdash;&mdash;${tpc.topictitle}</strong></div>
+<div class="subpage_head">
+    <span class="back"><a href="tptopic?m=index&courseid=${tpc.courseid}">返回</a></span>
+    <span class="ico55"></span><strong>论题统计&mdash;&mdash;${tpc.topictitle}</strong>
+</div>
 <div class="content1">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2 public_input">
         <colgroup span="2" class="w240"></colgroup>
