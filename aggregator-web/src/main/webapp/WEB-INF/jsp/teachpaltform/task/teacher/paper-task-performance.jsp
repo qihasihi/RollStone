@@ -42,7 +42,9 @@
 </head>
 <body>
 
-<div class="subpage_head"><span class="ico55"></span><strong>任务统计</strong></div>
+<div class="subpage_head">
+    <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+    <span class="ico55"></span><strong>任务统计</strong></div>
 <div class="content1">
     <p class="font-black">
 

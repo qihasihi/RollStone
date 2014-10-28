@@ -47,7 +47,11 @@
 </head>
 <body>
 
-<div class="subpage_head"><span class="ico55"></span><strong>添加试题</strong></div>
+<div class="subpage_head">
+    <c:if test="${empty param.operate_type}">
+        <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+    </c:if>
+    <span class="ico55"></span><strong>添加试题</strong></div>
 <div class="subpage_nav">
     <ul>
         <li class="crumb"><a>新建试题</a></li>
@@ -150,7 +154,9 @@
         </tr>
         <tr>
             <th>&nbsp;</th>
-            <td><a href="javascript:doAddQuestion();" id="btn_addQues" class="an_small">提&nbsp;交</a><a  href="javascript:window.close()" class="an_small">取&nbsp;消</a></td>
+            <td><a href="javascript:doAddQuestion();" id="btn_addQues" class="an_small">提&nbsp;交</a>
+              <!--  <a  href="javascript:window.close()" class="an_small">取&nbsp;消</a>-->
+            </td>
         </tr>
     </table>
 </div>

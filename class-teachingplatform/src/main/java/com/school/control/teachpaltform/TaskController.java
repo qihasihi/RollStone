@@ -209,6 +209,16 @@ public class TaskController extends BaseController<TpTaskInfo>{
         request.setAttribute("courselevel",courselevel);
         //SESSION添加专题状态
         request.getSession().setAttribute("coursestate", teacherCourseList.get(0).getLocalstatus());
+        request.setAttribute("course_level",teacherCourseList.get(0).getCourselevel());
+
+        TpTaskInfo t=new TpTaskInfo();
+        t.setCourseid(Long.parseLong(courseid));
+        //查询没被我删除,未发布任务
+        t.setSelecttype(2);
+        t.setLoginuserid(this.logined(request).getUserid());
+        t.setStatus(1);
+        List<TpTaskInfo>bankList=this.tpTaskManager.getList(t,null);
+        request.setAttribute("quoteList",bankList);
         return new ModelAndView("/teachpaltform/task/teacher/task-list");
     }
 
@@ -618,8 +628,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             p.setPageNo(1);
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
-        //查询没被我删除的任务
-        t.setSelecttype(1);
+        //查询没被我删除,未发布任务
+        t.setSelecttype(2);
         t.setLoginuserid(this.logined(request).getUserid());
         t.setStatus(1);
 

@@ -121,8 +121,8 @@
 
 <div class="content2">
     <div class="jxxt_zhuanti_hdkj_add">
-        <p class="f_right"><a class="ico15" target="_blank"  href="tpres?m=toRecycleIdx&type=3&courseid=${courseid}" title="回收站"></a></p>
-        <p class="font-darkblue"><a href="question?m=toAddQuestion&courseid=${courseid}" target="_blank"><span class="ico26"></span>添加试题</a></p>
+        <p class="f_right"><a class="ico15"  href="tpres?m=toRecycleIdx&type=3&courseid=${courseid}" title="回收站"></a></p>
+        <p class="font-darkblue"><a href="question?m=toAddQuestion&courseid=${courseid}" ><span class="ico26"></span>添加试题</a></p>
     </div>
 
     <div class="subpage_lm">

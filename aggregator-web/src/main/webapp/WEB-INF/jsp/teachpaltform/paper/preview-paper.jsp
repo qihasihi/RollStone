@@ -130,7 +130,9 @@ function preeDoPageSub(pObj){
 </head>
 <body>
 
-<div class="subpage_head"><span class="ico55"></span><strong>查看试卷</strong></div>
+<div class="subpage_head">
+    <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+    <span class="ico55"></span><strong>查看试卷</strong></div>
 <div class="content2">
     <div class="jxxt_zhuanti_shijuan_add font-black public_input">
         <p class="p_b_10 font-gray">${coursename}</p>

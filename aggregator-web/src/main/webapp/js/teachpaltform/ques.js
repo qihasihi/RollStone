@@ -30,7 +30,7 @@ function questionReturn(rps){
             htm+='<col class="w910"/>';
             htm+='<caption>';
             htm+='<p class="t_r">';
-            htm+='<a target="_blank" href="question?m=todetail&id='+itm.questionid+'&courseid='+itm.courseid+'" title="浏览详情" class="ico46"></a>';
+            htm+='<a  href="question?m=todetail&id='+itm.questionid+'&courseid='+itm.courseid+'" title="浏览详情" class="ico46"></a>';
             if(itm.questiontype<6){
                 if(parseInt(itm.flag)>0)
                     htm+='<a  title="已发任务" class="ico52"></a><a title="不可删除" class="ico03"></a>';

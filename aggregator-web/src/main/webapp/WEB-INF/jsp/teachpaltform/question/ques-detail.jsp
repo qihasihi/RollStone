@@ -19,7 +19,9 @@
     </script>
 </head>
 <body>
-<div class="subpage_head"><span class="ico55"></span><strong>试题详情</strong></div>
+<div class="subpage_head">
+    <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+    <span class="ico55"></span><strong>试题详情</strong></div>
 <div class="content2">
     <div class="jxxt_zhuanti_shijuan_add font-black public_input">
 <c:if test="${!empty pqList}">

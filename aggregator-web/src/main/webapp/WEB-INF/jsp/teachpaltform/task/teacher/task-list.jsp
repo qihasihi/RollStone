@@ -16,6 +16,12 @@ $(function(){
         $("#btn_add").hide();
     </c:if>
 
+    <c:if test="${!empty  quoteList}">
+         $("#li_task_bank").show();
+    </c:if>
+
+
+
     pList = new PageControl( {
         post_url : 'task?m=ajaxTaskList',
         page_id : 'page1',
@@ -70,7 +76,7 @@ $(function(){
         pagetotal : 1,
         operate_id : "bankList"
     });
-    //pageGo('pBankList');
+  //  pageGo('pBankList');
 
     $("li[name='li_nav']").each(function(idx,itm){
         $(itm).bind("click",function(){
@@ -358,6 +364,7 @@ function preeDoBankPageSub(pObj){
 function getBankInvestReturnMethod(rps){
     var html='';
     if(rps.objList!=null&&rps.objList.length>0){
+        //$("#li_task_bank").show();
         $.each(rps.objList,function(idx,itm){
             var type="",criteria,status='',questype='';
             switch (itm.tasktype){
@@ -482,6 +489,7 @@ function getBankInvestReturnMethod(rps){
         });
     }else{
         html='<p>暂无数据!</p>';
+       // $("#li_task_bank").hide();
     }
     $("#bankList").html(html);
     $("#tbl_bank").show();
@@ -549,7 +557,9 @@ function showCourseList(){
         <!--<p class="f_right"><a class="ico15" target="_blank" href="tpres?m=toRecycleIdx&type=1&courseid=${courseid}" title="回收站"></a></p>-->
         <ul>
             <li name="li_nav" id="li_" class="crumb"><a href='javascript:pageGo("pList")'>已发任务</a></li>
-            <li name="li_nav"><a href='javascript:pageGo("pBankList")'>任务库</a></li>
+            <c:if test="${course_level==1||course_level==2}">
+                <li style="display: none;" id="li_task_bank" name="li_nav"><a href='javascript:pageGo("pBankList")'>未发任务</a></li>
+            </c:if>
         </ul>
     </div>
 

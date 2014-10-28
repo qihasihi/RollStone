@@ -88,7 +88,7 @@
 
         <div class="jxxt_zhuanti_zy_layoutL">
             <p class="t_c p_b_10"><a  href="javascript:showUploadDiv(2)" class="an_big">添加资源</a><a href="javascript:loadCheckPage()" class="an_big">审核资源</a></p>
-            <p class="f_right"><a href="tpres?m=toRecycleIdx&type=2&courseid=${courseid}" target="_blank" class="ico15" title="回收站"></a></p>
+            <p class="f_right"><a href="tpres?m=toRecycleIdx&type=2&courseid=${courseid}"  class="ico15" title="回收站"></a></p>
             <ul class="one">
                 <li class="crumb" id="li_nav_1"><a  onclick="load_resource(1,1)">学习资源</a></li>
                 <li id="li_nav_2"><a onclick="load_resource(2,1)">教学参考</a></li>

@@ -185,7 +185,9 @@
 <body>
 
 
-    <div class="subpage_head"><span class="ico55"></span><strong>添加试题</strong></div>
+    <div class="subpage_head">
+        <span class="back"><a  href="question?m=toQuestionList&courseid=${param.addCourseId}">返回</a></span>
+        <span class="ico55"></span><strong>添加试题</strong></div>
     <div class="subpage_nav">
         <ul>
             <li><a href="question?m=toAddQuestion&courseid=${param.addCourseId}">新建试题</a></li>

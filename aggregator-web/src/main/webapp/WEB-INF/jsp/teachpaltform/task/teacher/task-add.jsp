@@ -125,7 +125,9 @@
 </head>
 <body>
 <input type="hidden" id="returnValue"/>
-<div class="subpage_head"><span class="ico55"></span><strong>添加任务</strong></div>
+<div class="subpage_head">
+    <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+    <span class="ico55"></span><strong>添加任务</strong></div>
 <div class="content1">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
         <col class="w120"/>

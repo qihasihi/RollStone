@@ -356,7 +356,9 @@ function reSetScrollDiv(){
 </script>
 </head>
 <body>
-<div class="subpage_head"><span class="ico55"></span><strong>添加试卷</strong></div>
+<div class="subpage_head">
+    <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+    <span class="ico55"></span><strong>添加试卷</strong></div>
 <div class="content2">
 
      <div  id="p_operate" class="jxxt_zhuanti_shijuan_add_an"    ><a href="javascript:showDialogPage(1,'${paper.paperid}','',this)" class="an_big">导入试卷</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(2,'${paper.paperid}','',this)" class="an_big">导入试题</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}','',this)" class="an_big">新建试题</a></div>

@@ -72,7 +72,10 @@
 </head>
 <body>
 
-<div class="subpage_head"><span class="ico55"></span><strong>修改试题</strong></div>
+<div class="subpage_head">
+    <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+    <span class="ico55"></span><strong>修改试题</strong>
+</div>
 <!--<div class="subpage_nav">
     <ul>
         <li class="crumb"><a href="1">新建试题</a></li>

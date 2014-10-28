@@ -43,13 +43,18 @@
 
         /**
          * 加载试卷中的试题
+         *
+         *
+         *
          */
     </script>
 </head>
 <body>
 <input type="hidden" value="${paperid}" name="hd_paper_id" id="hd_paper_id"/>
 
-<div class="subpage_head"><span class="ico55"></span><strong>微课程</strong></div>
+<div class="subpage_head">
+    <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+    <span class="ico55"></span><strong>微课程</strong></div>
 <div class="content1">
     <ul class="jxxt_zhuanti_rw_wkc">
         <li id="c_1" class="crumb"><a href="javascript:;" onclick="$('#dv_view').show();$('#dv_paper').hide();"><strong>微视频</strong></a></li>

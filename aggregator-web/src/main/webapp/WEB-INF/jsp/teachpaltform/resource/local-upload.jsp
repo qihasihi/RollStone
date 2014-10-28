@@ -234,7 +234,9 @@
         </tr>
         <tr>
             <th>&nbsp;</th>
-            <td><a id="a_submit" onclick="doUploadResource(${param.usertype})"   class="an_small">提&nbsp;交</a><a href="javascript:void(0);" onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a></td>
+            <td><a id="a_submit" onclick="doUploadResource(${param.usertype})"   class="an_small">提&nbsp;交</a>
+                <!--<a href="javascript:void(0);" onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a>-->
+            </td>
         </tr>
     </table>
 </div>
@@ -242,6 +244,9 @@
 <div id="dv_upload_course" style="display: none">
     <div id="p_upload_course2" style="display: none;">
         <div class="jxxt_zhuanti_zy_add_info">
+            <p class="back">
+                <a class="one"  href="javascript:;" onclick="p_upload_course2.style.display='NONE';p_upload_course1.style.display='block';dv_detail_course.style.display='block';">返回</a>
+            </p>
             <p class="font-black" id="p_coursename">
 
             </p>
@@ -280,7 +285,9 @@
         <form action="/role/ajaxlist" id="page2form" name="page2form" method="post" >
             <p align="center" id="page2address"></p>
         </form>
-        <p class="t_c"><a href="javascript:void(0);" onclick="sub_res('dv_upload_course',1)" class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="sub_res('dv_upload_course',2)" class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="p_upload_course2.style.display='NONE';p_upload_course1.style.display='block';dv_detail_course.style.display='block';" class="an_small">取&nbsp;消</a></p><!--hideUploadDiv()-->
+        <p class="t_c"><a href="javascript:void(0);" onclick="sub_res('dv_upload_course',1)" class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="sub_res('dv_upload_course',2)" class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <!--<a onclick="p_upload_course2.style.display='NONE';p_upload_course1.style.display='block';dv_detail_course.style.display='block';" class="an_small">取&nbsp;消</a>-->
+        </p><!--hideUploadDiv()-->
     </div>
 
     <p class="public_input t_l" id="p_upload_course1">
@@ -394,7 +401,9 @@
     <form action="/role/ajaxlist" id="page1form" name="page1form" method="post">
         <p align="center" id="page1address"></p>
     </form>
-    <p class="t_c p_tb_10"><a onclick="sub_res('dv_upload_resource',1)"  class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="sub_res('dv_upload_resource',2)"  class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a></p>
+    <p class="t_c p_tb_10"><a onclick="sub_res('dv_upload_resource',1)"  class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="sub_res('dv_upload_resource',2)"  class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <!--<a onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a>-->
+    </p>
 
 </div>
 </div>

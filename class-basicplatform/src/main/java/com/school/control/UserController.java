@@ -1133,6 +1133,7 @@ public class UserController extends BaseController<UserInfo> {
                         //    userinfo=userinfo;
                         je.setType("success");
                         je.setMsg("登陆成功并记录成功!");
+                        System.out.print("login success!");
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         System.out.println(e.getMessage());

@@ -325,7 +325,10 @@
 
 </head>
 <body>
-<div class="subpage_head"><span class="ico15"></span><strong>回收站——${coursename}</strong></div>
+<div class="subpage_head">
+    <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+    <span class="ico15"></span><strong>回收站——${coursename}</strong>
+</div>
 <div class="subpage_nav">
     <ul>
         <!--<li id="li_1"><a href="javascript:;" onclick="changePannel(1)">任务</a></li>-->
