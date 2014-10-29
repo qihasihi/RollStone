@@ -1097,7 +1097,7 @@ class UpdateCourseUtil{
                                 }
                                 //修改 微视频学习资源，从学生版同步到资源系统中，其资源类型标签为课件。( http://192.168.10.8:8080/browse/PZYXT-171)
                                 if(res.getDifftype()!=null&&res.getDifftype().intValue()==1){
-                                    res.setRestype(3);  //3:课件  资源类型
+                                    res.setRestype(6);  //6:微课  资源类型
                                     res.setFiletype(2);
                                     res.setFilesuffixname(".mp4");
                                 }else if(map.containsKey("Restype")&&map.get("Restype")!=null&&!map.get("Restype").toString().trim().toUpperCase().equals("NULL")){
