@@ -19,6 +19,16 @@ public class SchoolInfo {
     private Date ctime;
     private String ip;
 
+    private Integer enable;
+
+    public Integer getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Integer enable) {
+        this.enable = enable;
+    }
+
     public String getIp() {
         return ip;
     }

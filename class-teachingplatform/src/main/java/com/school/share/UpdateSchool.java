@@ -91,13 +91,13 @@ public class UpdateSchool  extends TimerTask {
         List<String> sqlArrayList=new ArrayList<String>();
         StringBuilder sqlbuilder=new StringBuilder();
         List<Object> objList=null;
-        //删除原有的记录
-        SchoolInfo entity=new SchoolInfo();
-        objList=schoolManager.getDeleteSql(entity,sqlbuilder);
-        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
-            sqlArrayList.add(sqlbuilder.toString());
-            objArrayList.add(objList);
-        }
+//        //删除原有的记录
+//        SchoolInfo entity=new SchoolInfo();
+//        objList=schoolManager.getDeleteSql(entity,sqlbuilder);
+//        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+//            sqlArrayList.add(sqlbuilder.toString());
+//            objArrayList.add(objList);
+//        }
 
 
         boolean hasData=false,isError=false;
@@ -107,11 +107,20 @@ public class UpdateSchool  extends TimerTask {
                 //从XML中得到学校积分数据
                 List<SchoolInfo> ssrList=UpdateSchoolUtil.getSchoolByXml(f.getPath());
                 if(ssrList==null||ssrList.size()<1)continue;
-                //删除
-                sqlbuilder=new StringBuilder();
-
                 for(SchoolInfo sr:ssrList){
                     if(sr==null)continue;
+                    if(sr.getEnable()==1){
+                        //删除该分校
+                        SchoolInfo delSchool=new SchoolInfo();
+                        delSchool.setSchoolid(sr.getSchoolid());
+                        sqlbuilder=new StringBuilder();
+                        objList=schoolManager.getDeleteSql(delSchool,sqlbuilder);
+                        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                            sqlArrayList.add(sqlbuilder.toString());
+                            objArrayList.add(objList);
+                        }
+                        continue;
+                    }
                     hasData=true;
                     sqlbuilder=new StringBuilder();
                     objList=schoolManager.getSaveSql(sr, sqlbuilder);
@@ -179,6 +188,9 @@ class UpdateSchoolUtil{
                     if(courseMap.containsKey("Name")&&courseMap.get("Name")!=null
                             &&!courseMap.get("Name").toString().trim().toUpperCase().equals("NULL"))
                         ssr.setName(courseMap.get("Name").toString().trim());
+                    if(courseMap.containsKey("Enable")&&courseMap.get("Enable")!=null
+                            &&!courseMap.get("Enable").toString().trim().toUpperCase().equals("NULL"))
+                        ssr.setEnable(Integer.parseInt(courseMap.get("Enable").toString().trim()));
                     if(courseMap.containsKey("Ip")&&courseMap.get("Ip")!=null
                             &&!courseMap.get("Ip").toString().trim().toUpperCase().equals("NULL")){
                         ssr.setIp(courseMap.get("Ip").toString().trim());
