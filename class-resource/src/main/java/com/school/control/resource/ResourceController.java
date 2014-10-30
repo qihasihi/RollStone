@@ -1641,7 +1641,10 @@ public class ResourceController extends BaseController<ResourceInfo> {
                         if(resourceinfo.getSubjectvalues()!=null&&resourceinfo.getSubjectvalues().trim().length()>0
                                 &&resourceinfo.getSubjectvalues().indexOf(objMap.get("SUBJECT_ID").toString())<0)
                             resourceinfo.setSubjectvalues(resourceinfo.getSubjectvalues() + ",");
-                        resourceinfo.setSubjectvalues(resourceinfo.getSubjectvalues()+objMap.get("SUBJECT_ID").toString());
+                        if(resourceinfo.getSubjectvalues()==null)
+                            resourceinfo.setSubjectvalues(objMap.get("SUBJECT_ID").toString());
+                        else
+                            resourceinfo.setSubjectvalues( resourceinfo.getSubjectvalues()+objMap.get("SUBJECT_ID").toString());
                     }
                 }
             }
