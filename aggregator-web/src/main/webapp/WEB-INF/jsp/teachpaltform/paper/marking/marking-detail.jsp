@@ -8,8 +8,10 @@ Created by IntelliJ IDEA.
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="/util/common-jsp/common-jxpt.jsp"%>
 <%
-String quesImgPath=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH");
-    pageContext.setAttribute("quesImgpath",quesImgPath);
+    String quesImgPath=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH");
+    Object quesid=request.getAttribute("quesid");
+    if(quesid!=null||quesid.toString().length()>0)
+    pageContext.setAttribute("quesImgpath",quesImgPath+"/"+quesid+"/");
 %>
 <html>
 <head>
