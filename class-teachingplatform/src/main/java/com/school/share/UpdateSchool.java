@@ -109,6 +109,7 @@ public class UpdateSchool  extends TimerTask {
                 if(ssrList==null||ssrList.size()<1)continue;
                 for(SchoolInfo sr:ssrList){
                     if(sr==null)continue;
+                    hasData=true;
                     if(sr.getEnable()==1){
                         //É¾³ý¸Ã·ÖÐ£
                         SchoolInfo delSchool=new SchoolInfo();
@@ -121,7 +122,6 @@ public class UpdateSchool  extends TimerTask {
                         }
                         continue;
                     }
-                    hasData=true;
                     sqlbuilder=new StringBuilder();
                     objList=schoolManager.getSaveSql(sr, sqlbuilder);
                     if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
