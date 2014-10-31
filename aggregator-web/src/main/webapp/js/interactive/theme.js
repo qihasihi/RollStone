@@ -638,6 +638,11 @@ function tpThemeReplyListReturn(rps){
 		p1.setPageSize(rps.presult.pageSize);
 		p1.setPageNo(rps.presult.pageNo);	
 		p1.Refresh();
+
+        if(rps.presult.pageTotal<=1)
+            $('#page1address').hide();
+        else
+            $('#page1address').show();
 	}	
 	
 }

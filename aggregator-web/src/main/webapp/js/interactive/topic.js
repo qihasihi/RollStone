@@ -361,7 +361,12 @@ function deleteTopic(id){
 							p1.setRectotal(rps.presult.recTotal);
 							p1.setPageSize(rps.presult.pageSize);
 							p1.setPageNo(rps.presult.pageNo);	
-							p1.Refresh(); 							
+							p1.Refresh();
+
+                            if(rps.presult.pageTotal<=1)
+                                $('#page1address').hide();
+                            else
+                                $('#page1address').show();
 						}
 				}	
 			}
@@ -412,7 +417,12 @@ function deleteTopic(id){
 							p2.setRectotal(rps.presult.recTotal);
 							p2.setPageSize(rps.presult.pageSize);
 							p2.setPageNo(rps.presult.pageNo);	
-							p2.Refresh(); 							
+							p2.Refresh();
+
+                            if(rps.presult.pageTotal<=1)
+                                $('#page2address').hide();
+                            else
+                                $('#page2address').show();
 						}
 				}	
 			}
@@ -1037,9 +1047,16 @@ function listReturn(rps){
 			p1.setPageSize(rps.presult.pageSize);
 			p1.setPageNo(rps.presult.pageNo);	
 			p1.Refresh();
+
+            if(rps.presult.pageTotal<=1)
+                $('#pageAddress1').hide();
+            else
+                $('#pageAddress1').show();
 		}			 
 		 }
-	}		
+	}
+
+
 }	
 /**
 * 专题选择
