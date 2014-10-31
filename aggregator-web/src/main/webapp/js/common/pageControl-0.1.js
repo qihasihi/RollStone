@@ -640,14 +640,14 @@ PageControl.prototype.doSubURL = function(pageidx) {
     //				this.settings.http_operate_handler);
             $.ajax({url:this.settings.post_url + url
                 ,data:this.settings.post_params,error:function(){
-                    alert('异常错误!系统未响应!');
+//                    alert('异常错误!系统未响应!');
                 },success:this.settings.http_operate_handler,
                 type:"POST"
             });
         } else {
             $.ajax({url:this.settings.post_url + url,dataType:this.settings.return_type
                     ,data:this.settings.post_params,error:function(){
-                    alert('异常错误!系统未响应!');
+//                    alert('异常错误!系统未响应!');
                 },success:this.settings.http_operate_handler,
                 type:"POST"
             });
