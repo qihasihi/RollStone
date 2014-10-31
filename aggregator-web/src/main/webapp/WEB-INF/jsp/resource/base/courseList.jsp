@@ -87,7 +87,8 @@
 
         function getTchingMaterial(){
             var gradeid=$("#gradeid").val();
-            $.post('teachingmaterial?m=getTchingMaterialList',{gradeid:gradeid},
+            var subjectid=$("#subjectid").val();
+            $.post('teachingmaterial?m=getTchingMaterialList',{gradeid:gradeid,subjectid:subjectid},
                 function(rps){
                     var html ="";
                     if(rps!=null && rps.objList!=null && rps.objList.length>0){
