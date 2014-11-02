@@ -61,6 +61,7 @@ function loadStudentByClsid(){
     tmpStr+="post_form:document.page${tcs.classid}form,";
     tmpStr+="gender_address_id:'page${tcs.classid}address',";
     tmpStr+="http_operate_handler:clsListReturn,";
+    tmpStr+="isShowController:false,";
     tmpStr+="return_type:'json',page_no:1,page_size:9,rectotal:0,pagetotal:1,";
     tmpStr+="operate_id:'ul_dept_${tcs.classid}'})";
     eval("("+tmpStr+")");
@@ -126,6 +127,7 @@ function loadDeptByType(){
     tmpStr+="post_form:document.page${dt1.deptid}form,";
     tmpStr+="gender_address_id:'page${dt1.deptid}address',";
     tmpStr+="http_operate_handler:deptListReturn,";
+    tmpStr+="isShowController:false,";
     tmpStr+="return_type:'json',page_no:1,page_size:9,rectotal:0,pagetotal:1,";
     tmpStr+="operate_id:'ul_dept_${dt1.deptid}'})";
     eval("("+tmpStr+")");

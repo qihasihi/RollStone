@@ -25,6 +25,7 @@ $(function(){
 		gender_address_id:'pageVaddress',		//显示的区域
 		http_free_operate_handler:beforeVideoAjaxList,		//执行查询前操作的内容
 		http_operate_handler:afterVideoAjaxList,	//执行成功后返回方法
+        isShowController:false,
 		return_type:'json',								//放回的值类型
 		page_no:1,					//当前的页数
 		page_size:8,				//当前页面显示的数量
@@ -40,6 +41,7 @@ $(function(){
 		gender_address_id:'pageDaddress',		//显示的区域
 		http_free_operate_handler:beforeDocAjaxList,		//执行查询前操作的内容
 		http_operate_handler:afterDocAjaxList,	//执行成功后返回方法
+        isShowController:false,
 		return_type:'json',								//放回的值类型
 		page_no:1,					//当前的页数
 		page_size:8,				//当前页面显示的数量
@@ -56,6 +58,7 @@ $(function(){
         gender_address_id:'dv_dt_pageress',		//显示的区域
       //  http_free_operate_handler:beforDtMethod,		//执行查询前操作的内容
         http_operate_handler:myInfoAjaxList,	//执行成功后返回方法
+        isShowController:false,
         return_type:'json',								//放回的值类型
         page_no:1,					//当前的页数
         page_size:8,				//当前页面显示的数量
@@ -72,6 +75,7 @@ $(function(){
         gender_address_id:'dv_dto_pageress',		//显示的区域
         //  http_free_operate_handler:beforDtMethod,		//执行查询前操作的内容
         http_operate_handler:myInfoAjaxList1,	//执行成功后返回方法
+        isShowController:false,
         return_type:'json',								//放回的值类型
         page_no:1,					//当前的页数
         page_size:8,				//当前页面显示的数量

@@ -63,7 +63,8 @@ PageControl.prototype.initSettings = function() {
 	this.ensureDefault("page_sort", ""); //
 	this.ensureDefault("new_page_html_mode", false); //新版样式分页栏
 	this.ensureDefault("page_abbreviated", false); //分页栏缩略显示
-	this.ensureDefault("operate_id", "");//操作对象
+    this.ensureDefault("operate_id", "");//操作对象
+    this.ensureDefault("isShowController", true);//操作对象
 	this.customSettings = this.settings.custom_settings;
 	delete this.ensureDefault;
 };
@@ -348,6 +349,7 @@ PageControl.prototype.loadPageControl = function() {
     }else{
         tempParent.innerHTML = this.getPageHtml();tempParent.className='nextpage';
     }
+    $("#"+this.settings.gender_address_id).hide();
 };
 
 
@@ -644,10 +646,12 @@ PageControl.prototype.doSubURL = function(pageidx) {
 //                    alert('异常错误!系统未响应!');
                 },success:function(rps){
                     tmpSettings.http_operate_handler(rps);
-                    if(rps.presult.pageTotal<=1)
-                        $('#'+tmpSettings.gender_address_id).hide();
-                    else
-                        $('#'+tmpSettings.gender_address_id).show();
+                    if(tmpSettings.isShowController){
+                        if(rps.presult.pageTotal<=1)
+                            $('#'+tmpSettings.gender_address_id).hide();
+                        else
+                            $('#'+tmpSettings.gender_address_id).show();
+                    }
                 },type:"POST"
             });
         } else {
@@ -656,10 +660,12 @@ PageControl.prototype.doSubURL = function(pageidx) {
 //                    alert('异常错误!系统未响应!');
                 },success:function(rps){
                     tmpSettings.http_operate_handler(rps);
-                    if(rps.presult.pageTotal<=1)
-                        $('#'+tmpSettings.gender_address_id).hide();
-                    else
-                        $('#'+tmpSettings.gender_address_id).show();
+                    if(tmpSettings.isShowController){
+                        if(rps.presult.pageTotal<=1)
+                            $('#'+tmpSettings.gender_address_id).hide();
+                        else
+                            $('#'+tmpSettings.gender_address_id).show();
+                    }
                 },
                 type:"POST"
             });
