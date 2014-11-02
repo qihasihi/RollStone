@@ -635,17 +635,22 @@ PageControl.prototype.doSubURL = function(pageidx) {
 	//操作
     if(typeof(isallowRefresh)=="undefined"||isallowRefresh){
         $("#"+this.settings.operate_id).html(this.settings.http_operate_html);
+        var tmpSettings=this.settings;
         if (this.settings.return_type == "") {
     //		$.post(this.settings.post_url + url, this.settings.post_params,
     //				this.settings.http_operate_handler);
             $.ajax({url:this.settings.post_url + url
                 ,data:this.settings.post_params,error:function(){
 //                    alert('异常错误!系统未响应!');
-                },success:this.settings.http_operate_handler,
-                type:"POST"
+                },success:function(rps){
+                    tmpSettings.http_operate_handler(rps);
+                    if(rps.presult.pageTotal<=1)
+                        $('#'+tmpSettings.gender_address_id).hide();
+                    else
+                        $('#'+tmpSettings.gender_address_id).show();
+                },type:"POST"
             });
         } else {
-            var tmpSettings=this.settings;
             $.ajax({url:this.settings.post_url + url,dataType:this.settings.return_type
                     ,data:this.settings.post_params,error:function(){
 //                    alert('异常错误!系统未响应!');
