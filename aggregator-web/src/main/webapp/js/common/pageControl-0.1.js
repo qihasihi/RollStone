@@ -645,16 +645,16 @@ PageControl.prototype.doSubURL = function(pageidx) {
                 type:"POST"
             });
         } else {
-            var successMethod= this.settings.http_operate_handler;
+            var tmpSettings=this.settings;
             $.ajax({url:this.settings.post_url + url,dataType:this.settings.return_type
                     ,data:this.settings.post_params,error:function(){
 //                    alert('异常错误!系统未响应!');
                 },success:function(rps){
-                    successMethod(rps);
+                    tmpSettings.http_operate_handler(rps);
                     if(rps.presult.pageTotal<=1)
-                        $('#'+gender_address_id).hide();
+                        $('#'+tmpSettings.gender_address_id).hide();
                     else
-                        $('#'+gender_address_id).show();
+                        $('#'+tmpSettings.gender_address_id).show();
                 },
                 type:"POST"
             });
