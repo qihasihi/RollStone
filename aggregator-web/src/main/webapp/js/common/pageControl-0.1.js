@@ -648,7 +648,13 @@ PageControl.prototype.doSubURL = function(pageidx) {
             $.ajax({url:this.settings.post_url + url,dataType:this.settings.return_type
                     ,data:this.settings.post_params,error:function(){
 //                    alert('异常错误!系统未响应!');
-                },success:this.settings.http_operate_handler,
+                },success:function(rps){
+                    this.settings.http_operate_handler(rps);
+                    if(rps.presult.pageTotal<=1)
+                        $('#'+gender_address_id).hide();
+                    else
+                        $('#'+gender_address_id).show();
+                },
                 type:"POST"
             });
         }
