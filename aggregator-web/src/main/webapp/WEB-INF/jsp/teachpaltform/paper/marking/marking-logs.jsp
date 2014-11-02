@@ -13,7 +13,12 @@
     <title></title>
 </head>
 <body>
-    <div class="subpage_head"><span class="ico55"></span><strong>批阅试卷—试题统计</strong></div>
+    <div class="subpage_head">
+         <span class="back">
+             <a href="${param.freeLoca}">返回</a>
+         <%--<a href="javascript:history.go(-1)">返回</a>--%>
+     </span>
+        <span class="ico55"></span><strong>批阅试卷—试题统计</strong></div>
     <div class="content1">
         <p><strong>试题序号：${idx}</strong></p>
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">

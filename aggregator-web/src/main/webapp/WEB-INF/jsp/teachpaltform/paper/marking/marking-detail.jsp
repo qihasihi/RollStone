@@ -320,7 +320,11 @@ Created by IntelliJ IDEA.
     </script>
 </head>
 <body>
-    <div class="subpage_head"><span class="ico55"></span><strong>批阅试卷</strong></div>
+    <div class="subpage_head">
+          <span class="back">
+             <a href="paper?m=toMarking&taskid=${param.taskid}&paperid=${param.paperid}">返回</a>
+         <%--<a href="javascript:history.go(-1)">返回</a>--%>
+     </span><span class="ico55"></span><strong>批阅试卷</strong></div>
     <div class="content2">
         <p class="jxxt_zhuanti_rw_piyue_info"><a href="javascript:;" onclick="tabQuestion(2)"  id="nextquestion" class="an_public3">下一题</a>
             <a id="upquestion" href="javascript:;" onclick="tabQuestion(1)" class="an_public3">上一题</a><strong class="font-blue">${param.idx}</strong>&nbsp;&nbsp;试题分数：<span class="font-blue" id="sp_q_score">${score}</span>&nbsp;分</p>
@@ -424,7 +428,11 @@ Created by IntelliJ IDEA.
                 <script type="text/javascript">var avgFloat="${num.AVGSCORE}";document.write(parseFloat(avgFloat).toFixed(2));</script>
                 </span>分&nbsp;&nbsp;&nbsp;&nbsp;
                         <%--<strong>已批改：</strong><span class="font-blue">4/20</span>&nbsp;&nbsp;&nbsp;&nbsp;--%>
-                    <a target="_blank" href="paper?m=toMarkingLogs&paperid=${param.paperid}&quesid=${quesid}&idx=${param.idx}&classid=${param.classid}&taskid=${param.taskid}" class="font-blue">查看统计</a></p>
+                    <a href="" id="a_searchTJ" class="font-blue">查看统计</a>
+                    <script type="text/javascript">
+                        $("#a_searchTJ").attr("href","paper?m=toMarkingLogs&paperid=${param.paperid}&quesid=${quesid}&idx=${param.idx}&classid=${param.classid}&taskid=${param.taskid}&freeLoca="+encodeURIComponent(location.href));
+                    </script>
+                </p>
                 <p><strong>正确率：</strong>${zqlMap.ZQL}%</p>
                 <div class="jxxt_zhuanti_rw_tongji">
                     <div class="right"><img src="paper/img/${param.paperid}/${quesid}/${param.classid}/${param.taskid}/write" width="193" height="140"></div>
