@@ -112,6 +112,12 @@
             $("#mainTbl").hide();
             $("#mainTbl").html(shtml);
             $("#mainTbl").show('fast');
+
+            if(rps.presult.pageTotal<=1)
+                $('#page1address').hide();
+            else
+                $('#page1address').show();
+
             //翻页信息
             if (typeof (p1) != "undefined" && typeof (p1) == "object") {
                 p1.setPagetotal(rps.presult.pageTotal);

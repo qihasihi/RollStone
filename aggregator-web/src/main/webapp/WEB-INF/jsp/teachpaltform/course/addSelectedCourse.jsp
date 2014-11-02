@@ -120,6 +120,12 @@
                         html += itm.avgscore + "</p>";
                         html += "</p></td></tr>";
                     });
+
+                    if(rps.presult.pageTotal<=1)
+                        $('#pListaddress').hide();
+                    else
+                        $('#pListaddress').show();
+
                     if (rps.presult.list.length > 0) {
                         pList.setPagetotal(rps.presult.pageTotal);
                         pList.setRectotal(rps.presult.recTotal);

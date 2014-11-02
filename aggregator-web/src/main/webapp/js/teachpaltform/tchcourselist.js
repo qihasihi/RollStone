@@ -219,6 +219,10 @@ function getInvestReturnMethod(rps){
         });
 
 
+        if(rps.presult.pageTotal<=1)
+            $('#pListaddress').hide();
+        else
+            $('#pListaddress').show();
 
 
         if(rps.presult.list[0].length>0){
