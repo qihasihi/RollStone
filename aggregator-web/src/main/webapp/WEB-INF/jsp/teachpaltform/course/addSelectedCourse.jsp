@@ -229,7 +229,7 @@
 
             //添加引用专题
             function addTeacherCourse(){
-                $("#addP").html('<a class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:closeAddorUpdateWindow();" class="an_small">取&nbsp;消</a>');
+                $("#addP").html('<a class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;');
                 var term=$("#termid");
                 var courseids=new Array();
                 var subjectid=$("#subjectid");
