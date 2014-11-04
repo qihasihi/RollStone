@@ -5544,7 +5544,7 @@ public class UserController extends BaseController<UserInfo> {
         //得到学生名称
         paramMap.put("schoolname", java.net.URLEncoder.encode(schoolname,"UTF-8"));
         // 执行链接(为了安全性)
-        System.out.println(requestUrl);
+       logger.error(requestUrl+"&subjectid="+paramMap.get("subjectid"));
 
         //组织html准备输出页面并跳转
 //        if(paramMap!=null&&paramMap.size()>0){
