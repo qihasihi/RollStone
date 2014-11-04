@@ -100,6 +100,27 @@ function showTaskElement(type) {
     }
 }
 
+
+
+
+
+
+function loadTaskElement(type) {
+    var url = 'task?m=toTaskElementDetial&tasktype=' + type + '&courseid=' + courseid;
+    if (type == 3) {
+        var questype = $("input[name='rdo_ques_type']:checked").val();
+        url += '&questype=' + questype;
+    } else if (type == 4) {//成卷测试
+        url = 'paper?m=toSelTaskPaper&tasktype=' + type + '&courseid=' + courseid;
+    } else if (type == 6){//微视频
+        url = 'tpres?m=queryMicViewList&tasktype=' + type + '&courseid=' + courseid;
+    }
+    $("#dv_content").load("1.jsp",function(){
+        $("#dv_content").show();
+        $("#a_click").click();
+    });
+}
+
 function test(type){
     if (returnValue == null || returnValue.toString().length < 1) {
         alert("操作取消!");
