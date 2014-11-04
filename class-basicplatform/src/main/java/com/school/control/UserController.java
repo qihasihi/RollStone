@@ -4697,7 +4697,7 @@ public class UserController extends BaseController<UserInfo> {
                             } else if (obj.toString().trim().indexOf("政治") != -1) {
                                 subjectid.add(Long.valueOf(9));
                                 ishasflag = true;
-                            } else if (obj.toString().trim().indexOf("自然科学") != -1) {
+                            } else if (obj.toString().trim().indexOf("科学") != -1||obj.toString().trim().indexOf("自然科学") != -1) {
                                 subjectid.add(Long.valueOf(10));
                                 ishasflag = true;
                             } else if (obj.toString().trim().indexOf("学生处") != -1
@@ -4717,7 +4717,7 @@ public class UserController extends BaseController<UserInfo> {
                     }
                     // 不显示学科信息
                     if (!ishasflag) {
-                        subjectid.add(Long.valueOf(-1));
+                        subjectid.add(0L);
                     }
                 }
             }
@@ -5174,7 +5174,7 @@ public class UserController extends BaseController<UserInfo> {
                                     if(subjectid.size()<1)
                                         subjectid.add(Long.valueOf(9));
                                     ishasflag = true;
-                                } else if (obj.toString().trim().indexOf("自然科学") != -1) {
+                                } else if (obj.toString().trim().indexOf("科学") != -1||obj.toString().trim().indexOf("自然科学") != -1) {
                                     if(subjectid.size()<1)
                                         subjectid.add(Long.valueOf(10));
                                     ishasflag = true;
@@ -5197,7 +5197,7 @@ public class UserController extends BaseController<UserInfo> {
                         }
                         // 不显示学科信息
                         if (!ishasflag) {
-                            subjectid.add(Long.valueOf(-1));
+                            subjectid.add(0L);
                         }
                         }
                     }
