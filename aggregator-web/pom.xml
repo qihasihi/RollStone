@@ -13,8 +13,46 @@
     <name>aggregator-web</name>
 
 
+
+    <properties>
+        <package.target>dev</package.target>
+        <!--<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <package.target>dev</package.target>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <properties>
+                <package.target>test</package.target>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>product</id>
+            <properties>
+                <package.target>product</package.target>
+            </properties>
+        </profile>
+    </profiles>
+
+
+
     <build>
-        <finalName>aggregator-web</finalName>
+        <finalName>sz_school</finalName>
+        <filters>
+            <!--<filter>profiles/${package.target}/resources/config.properties</filter>-->
+        </filters>
+
         <plugins>
 
             <!-- 合并web项目。聚合项目需配置依赖。 -->
@@ -23,6 +61,21 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
+                    <webResources>
+                        <!-- 按环境拷贝配置文件。结束 -->
+                        <resource>
+                            <!-- this is relative to the pom.xml directory -->
+                            <directory>profiles/${package.target}/resources</directory>
+                            <targetPath>WEB-INF/classes</targetPath>
+                            <filtering>true</filtering>
+                        </resource>
+                        <resource>
+                            <directory>src/main/resources</directory>
+                            <targetPath>WEB-INF/classes</targetPath>
+                            <includes></includes>
+                            <filtering>true</filtering>
+                        </resource>
+                    </webResources>
                     <overlays>
                         <overlay>
                             <groupId>sz_school</groupId>
@@ -32,6 +85,8 @@
                     </overlays>
                 </configuration>
             </plugin>
+
+
 
 
 
