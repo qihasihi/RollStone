@@ -15,6 +15,7 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import net.sf.json.JSONObject;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +44,7 @@ import java.util.List;
 @Scope("prototype")
 public class BaseController<T extends java.io.Serializable> {
     //¼ÇÂ¼Log4J
-    protected org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    public Logger logger = Logger.getLogger(BaseController.class);
 
 
 
