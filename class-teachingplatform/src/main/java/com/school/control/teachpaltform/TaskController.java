@@ -15,10 +15,7 @@ import com.school.entity.*;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
-import com.school.entity.teachpaltform.paper.PaperInfo;
-import com.school.entity.teachpaltform.paper.StuPaperLogs;
-import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
-import com.school.entity.teachpaltform.paper.TpCoursePaper;
+import com.school.entity.teachpaltform.paper.*;
 import com.school.im1_1.manager._interface.ImInterfaceManager;
 import com.school.im1_1.manager.inter._interface.IImInterfaceManager;
 import com.school.manager.*;
@@ -210,6 +207,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //SESSION添加专题状态
         request.getSession().setAttribute("coursestate", teacherCourseList.get(0).getLocalstatus());
         request.setAttribute("course_level",teacherCourseList.get(0).getCourselevel());
+        request.setAttribute("share_type",teacherCourseList.get(0).getSharetype());
+
 
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
@@ -264,9 +263,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }
             request.setAttribute("gradeList", this.gradeManager.getList(null, null));
             return new ModelAndView("/teachpaltform/task/teacher/resource-element-detail");
-        }else{
-            return new ModelAndView("/teachpaltform/task/teacher/element-detail");
-        }
+        }else if(type.equals("3")){
+            return new ModelAndView("/teachpaltform/task/teacher/dialog/select-ques");
+        }else
+            return new ModelAndView("/teachpaltform/task/teacher/dialog/select-ques");
     }
 
     /**
@@ -555,7 +555,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         if(type==1){
                             String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
                             if(liveurl!=null&&liveurl.trim().length()>0)
-                                task.setLiveaddress(java.net.URLDecoder.decode(liveurl,"UTF-8"));
+                                task.setLiveaddress(liveurl);
                         }
                     }
                 }
@@ -835,7 +835,16 @@ public class TaskController extends BaseController<TpTaskInfo>{
             je.setMsg("错误，未获取到该课题的班级信息!请设置后操作任务!");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
+        }else {
+            for(TpCourseClass cc:courseclassList){
+                if(cc.getDctype()!=null&&cc.getDctype()==2){
+                    je.setMsg("当前专题班级类型为网校班级，不支持在电脑上发任务!");
+                    response.getWriter().print(je.getAlertMsgAndBack());
+                    return null;
+                }
+            }
         }
+
         String subjectid=null,gradeid=null;
 
         //获取当前专题教材
@@ -851,6 +860,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         TpCourseResource tr=new TpCourseResource();
         tr.setCourseid(Long.parseLong(courseid));
         tr.setDifftype(1);
+        tr.setHaspaper(1);
         List<TpCourseResource>micList=this.tpCourseResourceManager.getList(tr,null);
         if(micList!=null&&micList.size()>0)
             mp.put("hasVideo",1);
