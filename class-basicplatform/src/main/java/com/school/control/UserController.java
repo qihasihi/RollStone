@@ -5531,7 +5531,7 @@ public class UserController extends BaseController<UserInfo> {
             }
 
             //Ñ§Ð£Ãû³Æ
-            paramMap.put("s",UserTool.zuzhiStudentSParameter(uid.toString(), gradeidList, realname, usertype.toString(), sex+"", email, schoolid,isVipJson, time.toString(), key));
+            paramMap.put("s",UserTool.zuzhiStudentSParameter(uid.toString(), gradeidList, null, usertype.toString(), sex+"", email, schoolid,isVipJson, time.toString(), key));
             String year=tmYear;
             if(year!=null&&year.trim().length()>0){
                 year=year.split("~")[0];

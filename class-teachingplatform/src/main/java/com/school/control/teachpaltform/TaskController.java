@@ -897,6 +897,19 @@ public class TaskController extends BaseController<TpTaskInfo>{
     }
 
     /**
+     * 任务，发布论题任务时，选择。
+     *      author :zhengzhou
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=toSelTopicForTask",method=RequestMethod.GET)
+    public ModelAndView toSelTopicForTask(HttpServletRequest request,HttpServletResponse response) throws Exception{
+         return  new ModelAndView("/teachpaltform/task/teacher/dialog/select-topic");
+    }
+
+    /**
      * 获取问题类型
      * @throws Exception
      */
