@@ -311,7 +311,7 @@ public class TpUserController extends UserController {
         u.setEttuserid(Integer.parseInt(jid));
         List<UserInfo>userList=this.userManager.getList(u, null);
         if(userList==null||userList.size()<1){
-            je.setMsg("当前云帐号未绑定!");
+            je.setMsg("您尚未被分配到任何班级!");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
