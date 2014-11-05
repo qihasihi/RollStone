@@ -123,6 +123,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         String schoolid = request.getParameter("schoolId");
         String timestamp = request.getParameter("time");
         String sig = request.getParameter("sign");
+        String lastAccessTime = request.getParameter("lastAccessTime");
 
         if(!ImUtilTool.ValidateRequestParam(request)){
             JSONObject jo=new JSONObject();
@@ -137,6 +138,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("userType",usertype);
         map.put("schoolId",schoolid);
         map.put("time",timestamp);
+        map.put("lastAccessTime",lastAccessTime);
         String sign = UrlSigUtil.makeSigSimple("StudyModule",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
         if(!b){
@@ -165,7 +167,35 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         Map m2 = new HashMap();
         if(list!=null&&list.size()>0){
             m2.put("classes",list);
-            m2.put("activityNotifyNum","12");
+            //String etturl = "http://192.168.10.59/study-im-service-1.0/activityNotifyNum.do";
+            String etturl = UtilTool.utilproperty.getProperty("ETT_GET_NOTIFYNUM_IP");
+            HashMap<String,String> ettMap = new HashMap();
+            ettMap.put("jid",userid);
+            ettMap.put("userType",usertype);
+            ettMap.put("schoolId",schoolid);
+            ettMap.put("time",timestamp);
+            if(lastAccessTime==null||lastAccessTime.length()<1){
+                lastAccessTime="0";
+            }
+            ettMap.put("lastAccessTime",lastAccessTime);
+            String ettSig = UrlSigUtil.makeSigSimple("activityNotifyNum.do",ettMap,"*ETT#HONER#2014*");
+            ettMap.put("sign",ettSig);
+            JSONObject ettJo = UtilTool.sendPostUrl(etturl,ettMap,"utf-8");
+            if(ettJo!=null&&ettJo.toString().length()>0){
+                int result = ettJo.containsKey("result")?ettJo.getInt("result"):0;
+                if(result==1){
+                    int notifynum = 0;
+                    JSONObject data = ettJo.containsKey("data")?ettJo.getJSONObject("data"):null;
+                    if(data!=null){
+                        notifynum = data.containsKey("activityNotifyNum")?data.getInt("activityNotifyNum"):0;
+                    }
+                    m2.put("activityNotifyNum",notifynum);
+                }else{
+                    m2.put("activityNotifyNum",-1);
+                }
+            }else{
+                m2.put("activityNotifyNum",-1);
+            }
         }else{
             m.put("result","0");
             m.put("msg","当前用户没有学习目录，请联系管理员");
@@ -247,11 +277,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             }
             if(courseids.length()>0){
                 List<Map<String,Object>> taskList=null;
+                List<Map<String,Object>> taskListOld = null;
                 if(utype==2){
                     taskList = this.imInterfaceManager.getClassTaskTask(courseids.toString(),null,Integer.parseInt(classid));
                 }else{
                     taskList = this.imInterfaceManager.getClassTaskTask(courseids.toString(),userList.get(0).getUserid(),Integer.parseInt(classid));
-                }
+                    taskListOld = this.imInterfaceManager.getClassTaskTaskOld(courseids.toString(),userList.get(0).getUserid(),Integer.parseInt(classid));                }
                 for(int i = 0;i<courseList.size();i++){
                     returnList = new ArrayList<Map<String, Object>>();
                     if(taskList!=null&&taskList.size()>0){
@@ -259,6 +290,26 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                             if(courseList.get(i).get("COURSEID").equals(taskList.get(j).get("COURSEID"))){
                                 Map<String,Object> tkMap=taskList.get(j);
                                 returnList.add(tkMap);
+                            }
+                            if(taskListOld!=null&&taskListOld.size()>0){
+                                for(int k = 0;k<taskListOld.size();k++){
+                                    if(taskListOld.get(k).get("TASKID").equals(taskList.get(j).get("TASKID"))){
+                                        taskListOld.remove(k);
+                                    }
+                                }
+                            }
+                        }
+                        if(taskListOld!=null&&taskListOld.size()>0){
+                            for(int j = 0;j<taskListOld.size();j++){
+                                if(courseList.get(i).get("COURSEID").equals(taskListOld.get(j).get("COURSEID"))){
+                                    Map<String,Object> tkMap=taskListOld.get(j);
+                                    tkMap.put("TOTALNUM","");
+                                    tkMap.put("DONUM","");
+                                    tkMap.put("LEFTTIME","");
+                                    tkMap.put("ISSTART","1");
+                                    tkMap.put("ISOVER","1");
+                                    returnList.add(tkMap);
+                                }
                             }
                         }
                     }
@@ -272,7 +323,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                                 tkMap.put("ISDONE","1");
                             }
                             String leftTime="";
-                            if(tkMap.get("LEFTTIME")!=null){
+                            if(tkMap.get("LEFTTIME")!=null&&tkMap.get("LEFTTIME").toString().length()>0){
                                 leftTime=ImUtilTool.getTaskOvertime(tkMap.get("LEFTTIME").toString());
                                 tkMap.put("LEFTTIME",leftTime);
                             }else{

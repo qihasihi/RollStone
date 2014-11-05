@@ -11,6 +11,7 @@ public interface IImInterfaceDAO extends ICommonDAO<ImInterfaceInfo>{
     public List<Map<String ,Object>> getStudyModule(ImInterfaceInfo obj);
     public List<Map<String,Object>> getClassTaskCourse(ImInterfaceInfo obj);
     public List<Map<String,Object>> getClassTaskTask(String courseid,Integer userid,Integer classid);
+    public List<Map<String,Object>> getClassTaskTaskOld(String courseid,Integer userid,Integer classid);
     public List<Map<String,Object>> getTaskInfo(Long taskid,Integer classid);
     public List<Map<String,Object>> getTaskUserRecord(Long taskid,Integer classid,Integer isvir,Integer userid);
     public List<Map<String,Object>> getTeacherCalendar(Integer userid,Integer schoolid,Integer year,Integer month);

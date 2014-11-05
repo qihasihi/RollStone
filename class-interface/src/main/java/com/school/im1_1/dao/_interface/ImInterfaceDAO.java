@@ -138,6 +138,35 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
         return null;
     }
 
+    public List<Map<String, Object>> getClassTaskTaskOld(String courseid, Integer userid, Integer classid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi_classtask_proc_task_old(");
+        List<Object> objList=new ArrayList<Object>();
+        if(courseid!=null){
+            sqlbuilder.append("?,");
+            objList.add(courseid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
+
     public List<Map<String, Object>> getTaskInfo(Long taskid, Integer classid) {
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL imapi_taskinfo_proc_gettask(");

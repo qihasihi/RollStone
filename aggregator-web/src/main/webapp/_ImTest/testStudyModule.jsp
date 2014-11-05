@@ -37,7 +37,8 @@
             var jid=$("#txt_jid").val();
             var time=$("#txt_time").val();
             var userType = $("#txt_userType").val();
-            var param={schoolId:schoolId,jid:jid,time:time,userType:userType};
+            var lastAccessTime = $("#lastAccessTime").val();
+            var param={schoolId:schoolId,jid:jid,time:time,userType:userType,lastAccessTime:lastAccessTime};
             param.method=methodName;
 
             $.ajax({
@@ -97,6 +98,11 @@
                     <td><input type="text" name="time" id="txt_time" value=""/></td>
                     <td><input type="button" value="当前时间" onclick="txt_time.value=new Date().getTime()+'';"/>
                         <span style="color:red;font-size:12px;">提示：三分钟内有效!</span></td>
+                </tr>
+                <tr>
+                    <td>lastAccessTime:</td>
+                    <td><input type="text" name="lastAccessTime" id="lastAccessTime" value=""/></td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>sign:</td>
