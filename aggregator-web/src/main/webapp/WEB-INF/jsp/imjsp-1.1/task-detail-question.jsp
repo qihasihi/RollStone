@@ -158,7 +158,7 @@
     String currentDay =UtilTool.DateConvertToString(c.getTime(),UtilTool.DateType.type1);
     System.out.println("当前页面"+"------------"+"task-detail-question.jsp"+"         当前位置------------进入jsp      当前时间------"+currentDay);
 %>
-<div class="zxcs_test"><form id="questionForm" onsubmit="return submitTask()"></form><input type="button" onclick="submitTask()" value="sub"/>
+<div class="zxcs_test"><form id="questionForm" onsubmit="return submitTask()"></form>
     <h1>${type}</h1>
     <div class="title" id="title"></div>
     <div class="zhengquedaan" id="zhengquedaan">
