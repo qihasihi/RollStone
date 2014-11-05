@@ -71,7 +71,7 @@
         <%--String sign=paramMap.get("sign");--%>
 
 
-        <form action="../imapi1_1?m=StudyModule"  target="ifm_result" method="post">
+        <form action="../imapi1_1?m=StudyModule1_1_1"  target="ifm_result" method="post">
             <table style="width:650px;">
                 <!-- <tr>
                      <td colspan="3" align="center"><h3>getTaskPaperQuestion</h3></td>
@@ -107,7 +107,7 @@
                 <tr>
                     <td>sign:</td>
                     <td><input type="text" name="sign" id="txt_sign" value=""/></td>
-                    <td><input type="button" value="生成" onclick="genderSign('StudyModule')"/>
+                    <td><input type="button" value="生成" onclick="genderSign('StudyModule1_1_1')"/>
 
                     </td>
                 </tr>
