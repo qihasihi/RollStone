@@ -1925,6 +1925,7 @@ public class UtilTool implements java.io.Serializable {
      * @param  requestEncoding 参数编码
      */
     public static JSONObject sendPostUrl(String urlstr,Map<String,String> paramMap,String requestEncoding){
+        System.out.println("参数1urlstr----"+urlstr);
         HttpURLConnection httpConnection=null;
         URL url;
         int code;
