@@ -1129,7 +1129,7 @@
 	display:inline-block;
 	text-align:center;
 }
-    ul.jxxt_zhuanti_shijuan_list li .ico51,ul.jxxt_zhuanti_shijuan_list li .ico52,ul.jxxt_zhuanti_shijuan_list li .ico02{ margin:0 0 3px 3px;}
+    ul.jxxt_zhuanti_shijuan_list li .ico51,ul.jxxt_zhuanti_shijuan_list li .ico52,ul.jxxt_zhuanti_shijuan_list li .ico02,ul.jxxt_zhuanti_shijuan_list li .ico43{ margin:0 0 3px 3px;}
 	ul.jxxt_zhuanti_shijuan_list li .ico04{ margin:0 0 3px 1px;}
 	ul.jxxt_zhuanti_shijuan_list li .ico_wsp1{ margin:0 0 6px 1px;}
 	ul.jxxt_zhuanti_shijuan_list li a.kapian{width:215px;height:101px;display:block; padding-top:60px;}
@@ -1438,9 +1438,27 @@
 	color:#999;
 }
     .jxxt_float_h460{ width:100%;height:450px;overflow:auto;margin-bottom:10px;}
-	.jxxt_float_h460 .public_tab1{ margin:0 auto;}
     .jxxt_float_h480{ width:100%;height:480px;overflow:auto;margin-bottom:10px;}
-	.jxxt_float_h480 .public_tab1{ margin:-15px auto 0;}
+	.jxxt_float_h480 table.public_tab1{ margin:-15px auto 0;}
 	.jxxt_float_h560{ width:100%;height:560px;overflow:auto;margin-bottom:10px;}
-	.jxxt_float_h560 .jxxt_zhuanti_shiti_add{ margin:0 auto;}
+	.jxxt_float_h600{ width:100%;height:600px;overflow:auto;margin-bottom:10px;}
+	.jxxt_float_h630{ width:100%;height:640px;overflow:auto;margin:10px 0 10px;}
+	.jxxt_float_h630 .public_tab2{ margin:0 auto;}
 
+    .jxxt_float_w920{ width:920px;margin:10px auto 0;}
+	.jxxt_float_w920 ul.jxxt_zhuanti_shijuan_list {width:930px; margin-left:-10px;}
+	.jxxt_float_w920 ul.jxxt_zhuanti_shijuan_list li{margin:5px 0 20px 7px;}
+	.jxxt_float_w920 .nextpage{ text-align:right;}
+
+
+	.public_float caption{ text-align:left;}
+	.public_float table.public_tab1 input.w30{ text-align: center; margin-right:5px;}
+	.public_float .jxxt_zhuanti_shiti_add{ margin:0 auto;}
+	.public_float .public_tab1{ margin:0 auto;}
+	.public_tab1 span.width{ float:right;padding-left:20px; color: #3297a3;}
+	table.public_tab1 table td{ padding-top:5px;}
+	table.public_tab1 table th{ padding-top:2px; text-align:center;}
+	
+	.public_float_jxxt .jxxt_zhuanti_rw_add{ height:580px; margin:10px auto 0;}
+	.public_float .jxxt_zhuanti_rw_tongji{ margin:15px 0 20px 40px;}
+	
