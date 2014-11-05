@@ -37,7 +37,8 @@
             var jid=$("#txt_jid").val();
             var time=$("#txt_time").val();
             var userType = $("#txt_userType").val();
-            var param={schoolId:schoolId,jid:jid,time:time,userType:userType};
+            var lastAccessTime = $("#lastAccessTime").val();
+            var param={schoolId:schoolId,jid:jid,time:time,userType:userType,lastAccessTime:lastAccessTime};
             param.method=methodName;
 
             $.ajax({
@@ -70,7 +71,7 @@
         <%--String sign=paramMap.get("sign");--%>
 
 
-        <form action="../imapi1_1?m=StudyModule"  target="ifm_result" method="post">
+        <form action="../imapi1_1?m=StudyModule1_1_1"  target="ifm_result" method="post">
             <table style="width:650px;">
                 <!-- <tr>
                      <td colspan="3" align="center"><h3>getTaskPaperQuestion</h3></td>
@@ -98,11 +99,15 @@
                     <td><input type="button" value="当前时间" onclick="txt_time.value=new Date().getTime()+'';"/>
                         <span style="color:red;font-size:12px;">提示：三分钟内有效!</span></td>
                 </tr>
-
+                <tr>
+                    <td>lastAccessTime:</td>
+                    <td><input type="text" name="lastAccessTime" id="lastAccessTime" value=""/></td>
+                    <td>&nbsp;</td>
+                </tr>
                 <tr>
                     <td>sign:</td>
                     <td><input type="text" name="sign" id="txt_sign" value=""/></td>
-                    <td><input type="button" value="生成" onclick="genderSign('StudyModule')"/>
+                    <td><input type="button" value="生成" onclick="genderSign('StudyModule1_1_1')"/>
 
                     </td>
                 </tr>
