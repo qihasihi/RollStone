@@ -209,8 +209,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         map.put("schoolId",schoolid);
         map.put("time",timestamp);
         map.put("lastAccessTime",lastAccessTime);
-        String sign = UrlSigUtil.makeSigSimple("StudyModule",map,"*ETT#HONER#2014*");
-        Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
+        String sign = UrlSigUtil.makeSigSimple("StudyModule1_1_1",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("StudyModule1_1_1",map,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
             return;
