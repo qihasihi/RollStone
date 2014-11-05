@@ -1779,59 +1779,64 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                         //互动交流任务
                         if(tmpTask.getTasktype().toString().equals("2")){
                             //论题
-                           /* TpTopicInfo tt=new TpTopicInfo();
+                           TpTopicInfo tt=new TpTopicInfo();
                             tt.setCourseid(courseid);
                             tt.setTopicid(tmpTask.getTaskvalueid());
                             List<TpTopicInfo>topicInfoList=this.tpTopicManager.getList(tt,null);
                             if(topicInfoList!=null&&topicInfoList.size()>0){
                                 TpTopicInfo tmpTopic=topicInfoList.get(0);
-                                    Long nextTopicid=this.tpTopicManager.getNextId(true);
-                                    //主题
-                                    TpTopicThemeInfo themeInfo=new TpTopicThemeInfo();
-                                    themeInfo.setCourseid(tmpTopic.getCourseid());
-                                    themeInfo.setTopicid(tmpTopic.getTopicid());
-                                   /* List<TpTopicThemeInfo>themeInfoList=this.tpTopicThemeManager.getList(themeInfo,null);
-                                    if(themeInfoList!=null&&themeInfoList.size()>0){
-                                        for(TpTopicThemeInfo tmpThemeInfo :themeInfoList){
-                                            tmpThemeInfo.setQuoteid(tmpThemeInfo.getThemeid());//记录引用的ID
-                                            tmpThemeInfo.setCuserid(this.logined(request).getUserid());
-                                            tmpThemeInfo.setThemeid(this.tpTopicThemeManager.getNextId(true));
-                                            tmpThemeInfo.setTopicid(nextTopicid);
-                                            tmpThemeInfo.setCourseid(nextCourseId);
-                                            tmpThemeInfo.setStatus(2L);//引用专题下  1：显示   2：不显示
-                                            sql=new StringBuilder();
-                                            objList=this.tpTopicThemeManager.getSaveSql(tmpThemeInfo,sql);
-                                            if(sql!=null&&objList!=null){
-                                                sqlListArray.add(sql.toString());
-                                                objListArray.add(objList);
-                                            }
 
-                                            if(tmpThemeInfo.getThemecontent()!=null){
-                                                //得到theme_content的更新语句
-                                                this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
-                                                        , tmpThemeInfo.getThemecontent(), tmpThemeInfo.getThemeid().toString(),sqlListArray,objListArray);
-                                            }
-                                            if(tmpThemeInfo.getCommentcontent()!=null){
-                                                //得到comment_content的更新语句
-                                                this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
-                                                        , tmpThemeInfo.getCommentcontent(), tmpThemeInfo.getThemeid().toString(),sqlListArray,objListArray);
+                                Long nextTopicid=this.tpTopicManager.getNextId(true);
+                                //主题
+                                TpTopicThemeInfo themeInfo=new TpTopicThemeInfo();
+                                themeInfo.setCourseid(tmpTopic.getCourseid());
+                                themeInfo.setTopicid(tmpTopic.getTopicid());
+                                themeInfo.setSelectType(2);//查询内容
+                                List<TpTopicThemeInfo>themeInfoList=this.tpTopicThemeManager.getList(themeInfo,null);
+                                if(themeInfoList!=null&&themeInfoList.size()>0){
+                                    for(TpTopicThemeInfo tmpThemeInfo :themeInfoList){
+                                        tmpThemeInfo.setQuoteid(tmpThemeInfo.getThemeid());//记录引用的ID
+                                        tmpThemeInfo.setCuserid(this.logined(request).getUserid());
+                                        tmpThemeInfo.setThemeid(this.tpTopicThemeManager.getNextId(true));
+                                        tmpThemeInfo.setTopicid(nextTopicid);
+                                        tmpThemeInfo.setCourseid(nextCourseId);
+                                        tmpThemeInfo.setCloudstatus(3);// 3：通过
+                                        tmpThemeInfo.setStatus(2L);//引用专题下  1：显示   2：不显示
+                                        sql=new StringBuilder();
+                                        objList=this.tpTopicThemeManager.getSaveSql(tmpThemeInfo,sql);
+                                        if(sql!=null&&objList!=null){
+                                            sqlListArray.add(sql.toString());
+                                            objListArray.add(objList);
+                                        }
 
-                                            }
+                                        if(tmpThemeInfo.getThemecontent()!=null){
+                                            //得到theme_content的更新语句
+                                            this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "theme_content"
+                                                    , tmpThemeInfo.getThemecontent(), tmpThemeInfo.getThemeid().toString(),sqlListArray,objListArray);
+                                        }
+                                        if(tmpThemeInfo.getCommentcontent()!=null){
+                                            //得到comment_content的更新语句
+                                            this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
+                                                    , tmpThemeInfo.getCommentcontent(), tmpThemeInfo.getThemeid().toString(),sqlListArray,objListArray);
+
                                         }
                                     }
-                                    //引用的TOPIC_ID
-                                    tmpTopic.setQuoteid(tmpTopic.getTopicid());
-                                    tmpTopic.setCourseid(nextCourseId);
-                                    tmpTopic.setCuserid(this.logined(request).getUserid());
-                                    tmpTopic.setTopicid(nextTopicid);
-                                    tmpTask.setTaskvalueid(nextTopicid);
-                                    sql=new StringBuilder();
-                                    objList=this.tpTopicManager.getSaveSql(tmpTopic,sql);
-                                    if(sql!=null&&objList!=null){
-                                        sqlListArray.add(sql.toString());
-                                        objListArray.add(objList);
-                                    }
-                            }*/
+                                }
+                                //引用的TOPIC_ID
+                                tmpTopic.setQuoteid(tmpTopic.getTopicid());
+                                tmpTopic.setCourseid(nextCourseId);
+                                tmpTopic.setCuserid(this.logined(request).getUserid());
+                                tmpTopic.setTopicid(nextTopicid);
+                                sql=new StringBuilder();
+                                objList=this.tpTopicManager.getSaveSql(tmpTopic,sql);
+                                if(sql!=null&&objList!=null){
+                                    sqlListArray.add(sql.toString());
+                                    objListArray.add(objList);
+                                }
+
+                                tmpTask.setTaskvalueid(nextTopicid);
+
+                            }
                         }
 
 
