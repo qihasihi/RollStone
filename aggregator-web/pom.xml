@@ -31,16 +31,23 @@
         </profile>
 
         <profile>
-            <id>test</id>
+            <id>testA</id>
             <properties>
-                <package.target>test</package.target>
+                <package.target>testA</package.target>
             </properties>
         </profile>
 
         <profile>
-            <id>product</id>
+            <id>testDev</id>
             <properties>
-                <package.target>product</package.target>
+                <package.target>testDev</package.target>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>release</id>
+            <properties>
+                <package.target>release</package.target>
             </properties>
         </profile>
     </profiles>
@@ -66,7 +73,7 @@
                         <resource>
                             <!-- this is relative to the pom.xml directory -->
                             <directory>profiles/${package.target}/resources</directory>
-                            <targetPath>WEB-INF/classes</targetPath>
+                            <targetPath>WEB-INF/classes/properties</targetPath>
                             <filtering>true</filtering>
                         </resource>
                         <resource>
