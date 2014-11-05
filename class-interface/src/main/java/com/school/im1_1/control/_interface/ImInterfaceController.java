@@ -109,6 +109,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         this.tpStuScoreManager = this.getManager(TpStuScoreManager.class);
         this.tpCourseClassManager = this.getManager(TpCourseClassManager.class);
     }
+
     /**
      * 学习目录接口
      * @param request
@@ -118,6 +119,75 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
      */
     @RequestMapping(params="m=StudyModule",method= {RequestMethod.GET,RequestMethod.POST})
     public void getStudyModule(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        String userid = request.getParameter("jid");
+        String usertype=request.getParameter("userType");
+        String schoolid = request.getParameter("schoolId");
+        String timestamp = request.getParameter("time");
+        String sig = request.getParameter("sign");
+
+        if(!ImUtilTool.ValidateRequestParam(request)){
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> map = new HashMap();
+        map.put("jid",userid);
+        map.put("userType",usertype);
+        map.put("schoolId",schoolid);
+        map.put("time",timestamp);
+        String sign = UrlSigUtil.makeSigSimple("StudyModule",map,"*ETT#HONER#2014*");
+        Boolean b = UrlSigUtil.verifySigSimple("StudyModule",map,sig);
+        if(!b){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"验证失败，非法登录\"}");
+            return;
+        }
+        int utype=ImUtilTool.getUserType(usertype);
+        UserInfo ui = new UserInfo();
+        ui.setEttuserid(Integer.parseInt(userid));
+        List<UserInfo> userList = this.userManager.getList(ui,null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            return;
+        }
+        ImInterfaceInfo obj = new ImInterfaceInfo();
+        obj.setSchoolid(Integer.parseInt(schoolid));
+        obj.setUserid(userList.get(0).getUserid());
+        obj.setUsertype(utype);
+        List<Map<String,Object>> list = this.imInterfaceManager.getStudyModule(obj);
+        if(list!=null&&list.size()>0){
+            for(Map map1:list){
+                map1.put("SCHOOLID" ,schoolid);
+            }
+        }
+        Map m = new HashMap();
+        Map m2 = new HashMap();
+        if(list!=null&&list.size()>0){
+            m2.put("classes",list);
+            m2.put("activityNotifyNum","12");
+        }else{
+            m.put("result","0");
+            m.put("msg","当前用户没有学习目录，请联系管理员");
+        }
+        m.put("result","1");
+        m.put("msg","成功");
+        m.put("data",m2);
+        JSONObject object = JSONObject.fromObject(m);
+        response.setContentType("text/json");
+        response.getWriter().print(object.toString());
+    }
+
+    /**
+     * 学习目录接口
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=StudyModule1_1_1",method= {RequestMethod.GET,RequestMethod.POST})
+    public void getStudyModule1_1_1(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         String userid = request.getParameter("jid");
         String usertype=request.getParameter("userType");
         String schoolid = request.getParameter("schoolId");
