@@ -1931,7 +1931,9 @@ public class UtilTool implements java.io.Serializable {
         try {
             //组织参数
             StringBuffer params = new StringBuffer();
+            System.out.println(params+"cache报错，上边第一步 ----------1");
             if(paramMap!=null&&paramMap.size()>0){
+                System.out.println(params+"params里边 ----------1");
                 for (Iterator iter = paramMap.entrySet().iterator(); iter
                         .hasNext();)
                 {
@@ -1941,26 +1943,33 @@ public class UtilTool implements java.io.Serializable {
                     params.append(URLEncoder.encode(element.getValue().toString(),requestEncoding));
                     params.append("&");
                 }
+                System.out.println(params+"params里边 ----------2");
 
                 if (params.length() > 0)
                 {
                     params = params.deleteCharAt(params.length() - 1);
                 }
+                System.out.println(params+"params里边 ----------3");
             }
+            System.out.println(params+"cache报错，上边第二步 ----------2");
 
                 url = new URL(urlstr);
-
+            System.out.println(url+"cache报错，上边第三步 ----------3");
                 httpConnection = (HttpURLConnection) url.openConnection();
-
+            System.out.println(url+"cache报错，上边第四步 ----------4");
                 httpConnection.setRequestMethod("POST");
+            System.out.println(url+"cache报错，上边第五步 ----------5");
                 if(params!=null)
                     httpConnection.setRequestProperty("Content-Length",
                             String.valueOf(params.toString().length()));
+            System.out.println(url+"cache报错，上边第六步 ----------6");
                 httpConnection.setRequestProperty("Content-Type",
                         "application/x-www-form-urlencoded");
-
+            System.out.println(url+"cache报错，上边第七步 ----------7");
                 httpConnection.setDoOutput(true);
+            System.out.println(url+"cache报错，上边第八步 ----------8");
                 httpConnection.setDoInput(true);
+            System.out.println(url+"cache报错，上边第九步 ----------9");
 			/*
 			 * PrintWriter printWriter = new
 			 * PrintWriter(httpConnection.getOutputStream());
@@ -1969,16 +1978,21 @@ public class UtilTool implements java.io.Serializable {
 
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
                         httpConnection.getOutputStream(), "8859_1");
+            System.out.println(url+"cache报错，上边第十步 ----------10");
                 if(params!=null)
                     outputStreamWriter.write(params.toString());
+            System.out.println(url+"cache报错，上边第十一步 ----------11");
                 outputStreamWriter.flush();
+            System.out.println(url+"cache报错，上边第十二步 ----------12");
                 outputStreamWriter.close();
+            System.out.println(url+"cache报错，上边第十三步 ----------13");
 
                 code = httpConnection.getResponseCode();
+            System.out.println(code+"cache报错，上边第十四步 ----------14");
             } catch (Exception e) {			// 异常提示
                 System.out.println("异常错误!TOTALSCHOOL未响应!");
                 if(httpConnection!=null)httpConnection.disconnect();
-                return null;
+                return new JSONObject();
             }
             StringBuffer stringBuffer = new StringBuffer();
             if (code == HttpURLConnection.HTTP_OK) {
