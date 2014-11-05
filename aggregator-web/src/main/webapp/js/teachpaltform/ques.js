@@ -149,20 +149,26 @@ function showDetail(obj){
      </tr>
  */ 
 
-function addQuesOption(quesobj,questype){
+function addQuesOption(quesobj,questype,isDialog){
     var optionArray=$("tr").filter(function(){return this.id.indexOf('tr_quesoption_')!=-1});
     var len=optionArray.length;
     var sysid=new Date().getTime()+parseInt(1000000*Math.random());
     var htm='';
     htm+='<tr id="tr_quesoption_'+sysid+'">';
-    htm+='<th>A：&nbsp;</th>';
+    if(isDialog)
+        htm+='<td>A：&nbsp;</td>';
+    else
+        htm+='<th>A：&nbsp;</th>';
     htm+='<td>';
     if(questype=="2"){
         htm+='<input style="display:none;" name="ck_right_option" type="checkbox" value="1" id="ck_right_'+sysid+'" />';
     }else{
         htm+='<input style="display:none;" name="rdo_right_option" type="radio"  value="1" id="rdo_right_'+sysid+'" />';
     }
-    htm+='<a id="ques_option_'+sysid+'" name="ques_option_'+sysid+'" href="javascript:void(0)" onclick="ed_option(this)">请编辑选项..</a>';
+    if(isDialog)
+        htm+='<a id="ques_option_'+sysid+'" name="ques_option_'+sysid+'" href="javascript:void(0)" onclick="ed_option_dialog(this)">请编辑选项..</a>';
+    else
+        htm+='<a id="ques_option_'+sysid+'" name="ques_option_'+sysid+'" href="javascript:void(0)" onclick="ed_option(this)">请编辑选项..</a>';
     htm+='<span  id="sp_img_'+sysid+'"></span>';
     htm+='</td>';
     //htm+='<td></td>'
@@ -173,8 +179,8 @@ function addQuesOption(quesobj,questype){
     else{
         $("tr").filter(function(){return this.id.indexOf("tr_quesoption_")!=-1}).last().after(htm);
     }
-    updOptionNumber();
-    BindText();
+    updOptionNumber(isDialog);
+    BindText(isDialog);
 }
 
 
@@ -184,13 +190,13 @@ function addQuesOption(quesobj,questype){
  * @param aobj
  * @return
  */
-function delQuesOption(questype){
+function delQuesOption(questype,isDialog){
     $("tr").filter(function(){return this.id.indexOf('tr_quesoption_')!=-1}).last().remove();
  	var optionArray=$("tr").filter(function(){return this.id.indexOf('tr_quesoption_')!=-1});
  	if(optionArray.length<1)
- 		addQuesOption(questype);
+ 		addQuesOption("",questype,isDialog);
  	else{
- 		updOptionNumber();
+ 		updOptionNumber(isDialog);
     }
 }
 
@@ -200,11 +206,14 @@ function delQuesOption(questype){
  * 修改选项编号  
  * @return
  */
-function updOptionNumber(){
+function updOptionNumber(isDialog){
 	var optionObj=$("tr").filter(function(){return this.id.indexOf('tr_quesoption_')!=-1});
 	if(optionObj.length>0){
 		$.each(optionObj,function(idx,itm){
-			$(this).children("th").eq(0).html(AZarray[idx]+".");
+            if(isDialog)
+			    $(this).children("td").eq(0).html(AZarray[idx]+".");
+            else
+                $(this).children("th").eq(0).html(AZarray[idx]+".");
 		});	 	
 	}  
 } 
@@ -253,6 +262,53 @@ function changeQuesType(type){
         option_edit(type);
 	}
     BindText();
+    $("#sp_edit").html('');
+    $("#sp_right").html('');
+}
+
+
+
+function changeDialogQuesType(type){
+    if(isNaN(type)){
+        alert('系统未获取到问题类型!');
+        return;
+    }
+    $("#td_ques_operate").html('');
+    $("#tr_right_answer").show();
+
+
+    var tr_analysis=$("#tr_analysis");
+    $(tr_analysis).show();
+    var questionArray=$("tr").filter(function(){return this.id.indexOf("tr_quesoption_")!=-1});
+    if(questionArray.length>0)
+        questionArray.remove() ;
+
+    if(type==1){ //问答
+        $("#type_option").hide();
+        $("#correct_answer").show();
+        $("#fill_answer").hide();
+    }else if(type==2){ //填空
+        $("#type_option").hide();
+        $("#correct_answer").hide();
+        $("#fill_answer").show();
+    }else if(type==3){ //单选
+        $("#type_option").show();
+        $("#tr_right_answer").hide();
+        addQuesOption(undefined,1,true);
+        addQuesOption(undefined,1,true);
+        addQuesOption(undefined,1,true);
+        addQuesOption(undefined,1,true);
+        option_edit(type,true);
+    }else if(type==4){ //多选
+        $("#type_option").show();
+        $("#tr_right_answer").hide();
+        addQuesOption(undefined,2,true);
+        addQuesOption(undefined,2,true);
+        addQuesOption(undefined,2,true);
+        addQuesOption(undefined,2,true);
+        option_edit(type,true);
+    }
+    BindTextDialog();
     $("#sp_edit").html('');
     $("#sp_right").html('');
 }
@@ -308,15 +364,73 @@ function sub_option(){
         });
         $("#fill_answer").html(fillbank_answer);
     }
+
+}
+
+
+/**
+ * 保存选项
+ */
+function sub_option_dialog(){
+    var hdobj=$("#hd_id").val();
+
+    var n = hdobj.split("_");
+    if(hdobj.length<1){
+        alert('请选择编辑项!');
+        return;
+    }
+    var optionObj=$("#"+hdobj);
+    if(optionObj.length<1){
+        alert("请选择编辑项!");
+        return;
+    }
+    //optionObj.html(replaceAll(replaceAll(editor.getContent(),"<p>",""),"</p>",""));
+    optionObj.html(editor.getContent());
+    var questype=$("input[name='rdo_ques_type_dialog']:checked").val();
+    if((questype==3||questype==4)&&$(optionObj).attr("id").indexOf("ques_option_")!=-1){
+        var bo=$("input[id='ck_right']").attr("checked");
+        $(optionObj).prev().attr("checked",bo);
+        if(bo){
+            if(questype==3){
+                $("span").filter(function(){return this.id.indexOf('sp_img')!=-1}).removeClass('ico12');
+                $("#sp_img_"+n[2]).addClass("ico12");
+                // $(optionObj).next().html('<span class="ico12"></span>');
+                //fillbank_answer+=$(optionObj).parent().siblings("th").children("th").html().replace(".","");
+
+            }else if(questype==4){
+                $(optionObj).next().addClass('ico12');
+            }
+        }else{
+            $(optionObj).next().removeClass('ico12');
+        }
+    }
+    if(questype==2&&hdobj=='ques_name_dialog'){
+        $("#dv_filter").html(editor.getContent());
+        var dvobj=$("#dv_filter span[name='span']");
+        if(dvobj.length<1){
+            alert('提示：填空题未发现占位符号!');
+            return;
+        }
+        var fillbank_answer='';
+        $(dvobj).each(function(idx,itm){
+            if(fillbank_answer.length>0)
+                fillbank_answer+="|";
+            fillbank_answer+=isIE?itm.innerText:itm.textContent;
+        });
+        $("#fill_answer").html(fillbank_answer);
+    }
+
+    $('#dv_edit_ques').show();
+    $('#dv_edit_option').hide();
 }
 
 /**
  * 增加选项操作
  */
-function option_edit(type){
+function option_edit(type,isDialog){
     //var h='<a href="javascript:addQuesOption(undefined,'+type+')">添加</a>';
    // h+='<a href="javascript:void(0);" onclick="delQuesOption()">删除</a>';
-    var h='<p class="p_t_10"><a href="javascript:addQuesOption(undefined,'+type+')" title="添加选项" class="ico36"></a><a href="javascript:void(0);" onclick="delQuesOption()" title="移出选项" class="ico34"></a></p>';
+    var h='<p class="p_t_10"><a href="javascript:addQuesOption(undefined,'+type+',isDialog)" title="添加选项" class="ico36"></a><a href="javascript:void(0);" onclick="delQuesOption(isDialog)" title="移出选项" class="ico34"></a></p>';
     $("#td_ques_operate").html(h);
 }
 
@@ -346,6 +460,34 @@ function BindText(){
     });
 }
 
+
+
+/**
+ * 绑定TextArea事件
+ * @constructor
+ */
+function BindTextDialog(){
+    $(".jxpt_content_layout textarea").filter(function(){return this.id!='editor'}).each(function(idx,itm){
+        $(itm).bind("focus",function(){
+            editor.setContent($(itm).val());
+            var option=$(itm).parentsUntil("tr").siblings("td").html().replace("：","");
+            $("#sp_edit").html(option.Trim());
+            $("#hd_id").val($(itm).attr("id"));
+
+            //获取问题类型
+            $("#sp_right").html('');
+            var questype=$("input[name='rdo_ques_type_dialog']:checked").val();
+            if((questype==3||questype==4)&&itm.id.indexOf("ques_option_")!=-1){
+                $("#sp_right").html("<input type='checkbox'  id='ck_right' /><label for='ck_right'>设为正确答案</label>");
+                $("input[id='ck_right']").attr("checked",$(itm).prev().attr("checked"));
+            }else if(questype==2){
+                //$("#dv_filter").html($(itm).val());
+            }
+        })
+
+    });
+}
+
 function ed_option(itm){
     var htm=$(itm).html();
     if(htm=='请编辑选项..'||htm=='点击编辑题干……'||htm=='点击编辑答案解析……'||htm=='请编辑正确答案……')
@@ -353,6 +495,35 @@ function ed_option(itm){
     editor.setContent(htm);
     var questype=$("input[name='rdo_ques_type']:checked").val();
     var option=$(itm).parentsUntil("tr").siblings("th").html().replace("：","");
+    $("#sp_edit").html(option.Trim());
+    if(questype==2&&option.indexOf("题")!=-1)
+        $("#sp_edit").append("&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red'>点击图标<img src='images/f_icon.png' title='填空占位符'/>插入填空占位符。</span>");
+    $("#hd_id").val($(itm).attr("id"));
+
+    //获取问题类型
+    $("#sp_right").html('');
+
+    if((questype==3||questype==4)&&itm.id.indexOf("ques_option_")!=-1){
+        $("#sp_right").html("<input type='checkbox'  id='ck_right' /><label for='ck_right'>设为正确答案</label>");
+        $("input[id='ck_right']").attr("checked",$(itm).prev().attr("checked"));
+    }else if(questype==2){
+        //$("#dv_filter").html($(itm).val());
+    }
+}
+
+
+
+
+function ed_option_dialog(itm){
+    $('#dv_edit_ques').hide();
+    $('#dv_edit_option').show();
+
+    var htm=$(itm).html();
+    if(htm=='请编辑选项..'||htm=='点击编辑题干……'||htm=='点击编辑答案解析……'||htm=='请编辑正确答案……')
+        htm='';
+    editor.setContent(htm);
+    var questype=$("input[name='rdo_ques_type_dialog']:checked").val();
+    var option=$(itm).parentsUntil("tr").siblings("td").html().replace("：","");
     $("#sp_edit").html(option.Trim());
     if(questype==2&&option.indexOf("题")!=-1)
         $("#sp_edit").append("&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red'>点击图标<img src='images/f_icon.png' title='填空占位符'/>插入填空占位符。</span>");
@@ -497,6 +668,155 @@ function doAddQuestion(){
 			}
 		}
 	});
+}
+
+
+
+/**
+ * 添加试题
+ * @return
+ */
+function doAddDialogQuestion(){
+    var questype=$("input[name='rdo_ques_type_dialog']:checked").val();
+    var url='',iserror=0,param={},paramStr='?t='+new Date().getTime(),rflag=false,rightnum=0;
+    var optionArry=new Array(),isrightArray=new Array();
+    //试题
+    if(questionid.length<1){
+        alert('异常错误,系统未获取到试题标识!');
+        return;
+    }
+    param.questionid=questionid;
+    var quesoptionArray=$("a").filter(function(){return this.id.indexOf("ques_option_")!=-1});
+    var quesname=$("#ques_name_dialog").html();
+    var quesanswer=$("#ques_answer_dialog").html();
+    var correctanswer=$("#correct_answer_dialog").html();
+    param.questype=questype;
+    if(quesname.Trim().length<1||quesname.Trim()=='点击编辑题干……'){
+        alert('提示：题干不能为空!');
+        $("#ques_name_dia").focus();
+        return;
+    }
+    param.quesname=quesname;
+    if(quesanswer.Trim().length>0&&quesanswer!='点击编辑答案解析……')
+        param.quesanswer=quesanswer;
+
+    if(questype=="1"){
+        param.correctanswer =correctanswer;
+    }else if(questype=="2"){
+        var dvobj=$("#dv_filter span[name='span']");
+        if(dvobj.length<1){
+            alert('提示：填空题未发现占位符号!');
+            return;
+        }
+//        var fillbank_answer='';
+//         $(dvobj).each(function(idx,itm){
+//             if(fillbank_answer.length>0)
+//                 fillbank_answer+="|";
+//             fillbank_answer+=isIE?itm.innerText:itm.textContent;
+//         });
+        param.correctanswer= $("#fill_answer").html();
+
+        $("#dv_filter span[name='span']").after("<span name=fillbank></span>").andSelf().remove()
+        param.quesname=$("#dv_filter").html();
+    }else if(questype=="3"||questype=="4"){
+        if(quesoptionArray.length>0){
+            $.each(quesoptionArray,function(idx,itm){
+                var data=$(itm).html();
+                if(data.Trim().length>0){
+                    var _id=$(itm).attr("id").substr($(itm).attr("id").lastIndexOf('_')+1);
+                    var inptype=questype=="3"?'rdo_right':'ck_right';
+                    //是否是正确选项
+                    var is_right=$("input[id='"+inptype+"_"+_id+"']:checked");
+                    // if(paramStr.Trim().length>0)
+                    //    paramStr+='&';
+                    //paramStr+='optionArray='+data.Trim();
+                    optionArry.push(data);
+
+                    if(is_right.length>0){
+                        // paramStr+='&is_Right=1';
+                        isrightArray.push(1);
+                        rflag=true;
+                        rightnum+=1;
+                    }else{
+                        //paramStr+='&is_Right=0';
+                        isrightArray.push(0);
+                    }
+                }else{
+                    iserror=1;
+                    return;
+                }
+            });
+            if(iserror==1){
+                alert('请填写选项名称!');
+                return;
+            }
+            if(!rflag){
+                alert('您未设置正确答案!');
+                return;
+            }else if(questype=="4"&&rightnum<2){
+                alert('多选题至少两个正确答案!');
+                return;
+            }
+        }else{
+            alert('提示：选择题缺少选项!');
+            return;
+        }
+    }
+    param.courseid=courseid;
+    param.optionArray=optionArry.join("#sz#");
+    param.rightArray=isrightArray.join(",");
+
+    if(!confirm('数据验证完毕!确认提交?'))
+        return;
+   // resetBtnAttr("btn_addQues","an_small","an_gray_small","",2);
+    //开始向后台添加数据
+    $.ajax({
+        url:'question?m=doSubAddQuestion',
+        type:"post",
+        data:paramStr+'&'+$.param(param),
+        dataType:'json',
+        cache: false,
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+            //resetBtnAttr("btn_addQues","an_small","an_gray_small","doAddQuestion()",1);
+
+        },success:function(rmsg){
+            //resetBtnAttr("btn_addQues","an_small","an_gray_small","doAddQuestion()",1);
+            if(rmsg.type=="error"){
+                alert(rmsg.msg);
+            }else{
+                var questype = $("input[name='rdo_ques_type']:checked").val();
+                var returnValue=rmsg.objList[0];
+                $.ajax({
+                    url: "question?m=questionAjaxList",
+                    type: "post",
+                    data: {questype: questype, courseid: courseid, questionid: returnValue},
+                    dataType: 'json',
+                    cache: false,
+                    error: function () {
+                        alert('系统未响应，请稍候重试!');
+                    }, success: function (rmsg) {
+                        if (rmsg.type == "error") {
+                            alert(rmsg.msg);
+                        } else {
+                            var htm = '';
+                            $("#ques_name").html('');
+                            $("#ques_answer").html('');
+                            $("#td_option").hide();
+                            $("#td_option").html('');
+                            if (rmsg.objList.length && typeof returnValue != 'undeinfed' && returnValue.toString().length > 0) {
+                                $("#hd_questionid").val(rmsg.objList[0].questionid);
+                                $("#sp_ques_id").html(rmsg.objList[0].questionid);
+                                load_ques_detial(returnValue, questype);
+                            }
+                            $("#tr_ques_obj").show();
+                            $.fancybox.close();
+                        }
+                    }
+                });
+            }
+        }
+    });
 }
 
 

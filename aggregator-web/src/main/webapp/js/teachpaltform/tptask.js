@@ -115,7 +115,7 @@ function loadTaskElement(type) {
     } else if (type == 6){//微视频
         url = 'tpres?m=queryMicViewList&tasktype=' + type + '&courseid=' + courseid;
     }
-    $("#dv_content").load("1.jsp",function(){
+    $("#dv_content").load(url,function(){
         $("#dv_content").show();
         $("#a_click").click();
     });
@@ -222,6 +222,26 @@ function showDialogPage(type) {
         });
     }
 }
+
+
+
+
+function loadDialogPage(type) {
+    var url;
+    if (type == 1) {
+        url = "tpres?m=dialogUpload&operate_type=1&usertype=2&courseid=" + courseid;
+    } else if (type == 2) {
+        url = "tptopic?m=toAdmin&operate_type=1&courseid=" + courseid;
+    } else if (type == 3) {
+        var questype = $("input[name='rdo_ques_type']:checked").val();
+        url = 'question?m=toDialogAddQuestion&operate_type=1&questype=' + questype + '&courseid=' + courseid + '&flag=1';
+    }
+    $("#dv_content").load(url,function(){
+
+    });
+
+}
+
 
 
 /**
@@ -379,7 +399,7 @@ function queryPaper(courseid, trobj, type, taskvalueid, taskstatus, quesnum) {
             htm += '<th><span class="ico06"></span>选择试卷：</th>';
             htm += '<td class="font-black">';
             if (typeof taskstatus == 'undefined' && type == 4) {
-                htm += '<p><a class="font-darkblue"  href="javascript:showTaskElement(' + type + ')">>> 选择试卷</a></p>';
+                htm += '<p><a class="font-darkblue"  href="javascript:loadTaskElement(' + type + ')">>> 选择试卷</a></p>';
                 htm += '<div class="jxxt_zhuanti_add_ziyuan" id="dv_paper_name"></div>';
             } else if (type == 5) {
                 htm = '';
@@ -2056,7 +2076,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                         htm += '</tr>';
                         $.each(rmsg.objList[1], function (idx, itm) {
                             $.each(im.tpgroupstudent2, function (i, m) {
-                                if (typeof itm!='undefined'&&typeof m!='undefined'&&im.groupname== m.groupname&& m.stuno == itm.userinfo.stuNo){
+                                if (typeof itm!='undefined'&&typeof m!='undefined'&&im.groupname== m.groupname&& m.userid == itm.userinfo.userid){
                                     htm += '<tr>';
                                     if(classid==0)
                                         htm += '<td>' + itm.clsname + '</td>';
@@ -2312,7 +2332,7 @@ function loadLiveLessionPerformance(classid, tasktype, paperid, classtype) {
                         if(rmsg.objList[1].length>0){
                             $.each(rmsg.objList[1], function (idx, itm) {
                                 $.each(im.tpgroupstudent2, function (i, m) {
-                                    if (typeof(m)!='undefined'&&typeof itm!='undefined'&&m.stuno == itm.userinfo.stuNo) {
+                                    if (typeof(m)!='undefined'&&typeof itm!='undefined'&&m.userid == itm.userinfo.userid) {
                                         htm += '<tr>';
                                         if(classid==0)
                                             htm += '<td>' + itm.clsname + '</td>';

@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8">
     <title>jQuery UI Dialog - Animation</title>
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>js/1.6/themes/default/ui.all.css"/>
+   <%--<link rel="stylesheet" type="text/css" href="<%=basePath %>js/1.6/themes/default/ui.all.css"/>--%>
     <script src="<%=basePath %>js/1.6/jquery-ui-160.min.js"></script>
 
     <script>

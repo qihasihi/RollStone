@@ -7,8 +7,21 @@
     <title>${sessionScope.CURRENT_TITLE}</title>
     <style>
     </style>
+
+
+    <script type="text/javascript"
+            src="fancybox/jquery-1.6.2.min.js"></script>
+
+    <script type="text/javascript"
+            src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+    <script type="text/javascript"
+            src="fancybox/jquery.fancybox-1.3.4.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
+
     <script type="text/javascript"
             src="<%=basePath %>js/teachpaltform/tptask.js"></script>
+
     <script type="text/javascript">
         var courseid="${param.courseid}";
         var gradeid="${gradeid}";
@@ -17,6 +30,11 @@
         var questype="${param.questype}";
         var objectiveQuesCount="${objectiveQuesCount}";
         $(function(){
+            $("#a_click").fancybox({
+                'onClosed':function(){
+                    $("#dv_content").hide();
+                }
+            });
             $("#task_type").val(${param.tasktype});
             if(questype.length<1)
                 questype=3
@@ -152,11 +170,14 @@
 
         </tr>
 
+        <a id="a_click" href="#dv_content"></a>
+        <div id="dv_content"  style="display: none;"></div>
+
         <tr id="tr_ques_obj" style="display: none">
             <th><span class="ico06"></span>选择试题：</th>
             <td class="font-black">
-                <a href="javascript:showTaskElement(3)"  class="font-darkblue">>>&nbsp;选择已有试题</a>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="showDialogPage(3)" class="font-darkblue">>>&nbsp;添加试题</a>
+                <a href="javascript:loadTaskElement(3)"  class="font-darkblue">>>&nbsp;选择试题</a>
+                <%--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="showDialogPage(3)" class="font-darkblue">>>&nbsp;添加试题</a>--%>
                 <div class="jxxt_zhuanti_add_shiti"  id="tb_ques" style="overflow-y: auto;display:none;">
                     <table border="0" cellspacing="0" cellpadding="0" class="font-black">
                         <col class="w70"/>

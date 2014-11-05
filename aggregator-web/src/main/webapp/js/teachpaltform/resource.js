@@ -716,6 +716,7 @@ function doUploadResource(usertype) {
             secureuri: false,
             type: 'POST',
             success: function (data, status) {
+              //  stopProcess();
                 if (typeof(data.error) != 'undefined') {
                     if (data.error != '') {
                         alert(data.error);
@@ -810,8 +811,28 @@ function doUploadResource(usertype) {
                 alert(e);
             }
         });
+       // getProcess();
     }
 
+}
+
+
+//md5id
+//var url="${fileSystemIpPort}upload1.jsp?jsessionid=aaatCu3yQxMmN-Rru135t&res_id="+nextid;
+function getProcess(){
+    var urlpath = processUrl+"get_file_state.jsp?jsoncallback=?";
+    $.getJSON(urlpath, {res_id: nextid,path: md5id}, function (data) {
+        if (data != null && data != "") {
+            if (data.type == "success") {
+                var progress = data.progress;
+                $("#upload_process").html("上传进度:<font color='blue'>" + progress+"%</font>");
+            }
+        }
+    });
+    processT=setTimeout("getProcess()",500);
+}
+function stopProcess(){
+    clearTimeout(processT);
 }
 /*教师资源首页*/
 
@@ -868,8 +889,8 @@ function load_resource(type, pageno, isinit) {
                                     var tasktype=itm.difftype==1&&itm.haspaper>0?6:1;
                                     if(itm.difftype!=1){
                                         dvhtm += '<a  class="ico11" title="编辑" href="javascript:toUpdResource(\'' + itm.resid + '\')"></a>';
-                                        dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
                                     }
+                                    dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
                                     dvhtm += '<a  class="ico51" title="发任务" href="task?toAddTask&courseid=' + courseid + '&tasktype='+tasktype+'&taskvalueid=' + itm.resid + '"></a>';
                                 }
                                 dvhtm += '</p>';

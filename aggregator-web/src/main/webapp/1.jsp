@@ -1,6 +1,12 @@
+
 <%@ page contentType="text/html;charset=GBK" %>
 <%@ page import="java.util.*" %>
 <%
+    String ipStr=request.getServerName();
+    if(request.getServerPort()!=80){
+        ipStr+=":"+request.getServerPort();
+    }
+    String basePath = request.getScheme() + "://" + ipStr+"sz_school/";
     out.println("Your IP : "+request.getRemoteAddr()+"<br>");
 
     out.println("This host is : "+java.net.InetAddress.getLocalHost()+"<br>");
@@ -25,12 +31,11 @@
     }
 
 %>
+
+<script type="text/javascript" src="<%=basePath%>js/teachpaltform/1.js"></script>¡¡
 <script>
-    function a(){
-        alert("test");
-    }
+
 </script>
-<script type="text/javascript" src="js/teachpaltform/1.js"></script>¡¡
 <body>
-    <span onclick="b();">asdfasdfa</span>
+    <a id="sp" href="images/an01.png">asdfasdfa</a>
 </body>

@@ -859,6 +859,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         mp.put("fileSystemIpPort",request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString());
         Long nextid=this.resourceManager.getNextId(true);
         mp.put("nextid",nextid);
+        mp.put("nextMd5Id",UtilTool.getResourceMd5Directory(nextid+""));
         System.out.println("nextid:" + nextid);
         return new ModelAndView("/teachpaltform/resource/local-upload",mp);
     }
@@ -976,12 +977,15 @@ public class TpResourceController extends BaseController<TpCourseResource>{
 
 
 
+
         List<String> sqlList=new ArrayList<String>();
         List<List<Object>> listArrayList=new ArrayList<List<Object>>();
         StringBuilder sqlbuilder=new StringBuilder();
 
         //添加resoursce_base默认值
         ResourceInfo resbase=new ResourceInfo();
+        //资源共享等级使用专题共享等级
+        resbase.setSharestatus(tc.getSharetype());
         resbase.setUserid(this.logined(request).getUserid());
         resbase.setResid(Long.parseLong(resid));
         resbase.setResname(resname);

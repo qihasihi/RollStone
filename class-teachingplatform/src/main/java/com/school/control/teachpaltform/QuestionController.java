@@ -473,6 +473,43 @@ public class QuestionController extends BaseController<QuestionInfo> {
     }
 
     /**
+     * 添加试题页（模式窗体）
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toDialogAddQuestion", method = RequestMethod.GET)
+    public ModelAndView toDialogAddQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //得到该课题的试题。
+        JsonEntity je = new JsonEntity();
+        String courseid = request.getParameter("courseid");
+        if (courseid == null || courseid.trim().length() < 1) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //验证courseid
+        TpCourseInfo tpCourseInfo = new TpCourseInfo();
+        tpCourseInfo.setCourseid(Long.parseLong(courseid));
+        PageResult presult = new PageResult();
+        presult.setPageNo(1);
+        presult.setPageSize(1);
+        List<TpCourseInfo> courseList = this.tpCourseManager.getTchCourseList(tpCourseInfo, presult);
+        if(courseList==null||courseList.size()<1){
+            je.setMsg(UtilTool.msgproperty.get("ENTITY_NOT_EXISTS").toString());
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //获取问题类型
+        List<DictionaryInfo> questiontypeList = this.dictionaryManager.getDictionaryByType("TP_QUESTION_TYPE");
+        request.setAttribute("quesTypeList", questiontypeList);
+        request.setAttribute("questionid",this.questionManager.getNextId(true));
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/add-ques");
+    }
+
+
+    /**
      * 添加试题页(根据专题查询出试题列表)
      * @param request
      * @param response

@@ -221,6 +221,7 @@ public class TpCourseResource implements Serializable {
         return UtilTool.getResourceLocation(this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/001_smail.jpg";
     }
 
+    
 
     public Integer getResstatus(){
         return this.getResourceinfo().getResstatus();
@@ -342,6 +343,13 @@ public class TpCourseResource implements Serializable {
     }
     public String getPath(){
         return this.getResourceinfo().getPath();
+    }
+
+    public Integer getSharestatus(){
+        return this.getResourceinfo().getSharestatus();
+    }
+    public  void setSharestatus(Integer sharestatus){
+        this.getResourceinfo().setSharestatus(sharestatus);
     }
 
 

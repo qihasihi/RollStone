@@ -161,10 +161,10 @@
   <body>  
  <div class="subpage_head">
      <span class="back">
-         <c:if test="${!empty taskid}">
+         <c:if test="${!empty param.taskid}">
              <a href="task?toTaskList&courseid=${topic.courseid}">返回</a>
          </c:if>
-        <c:if test="${empty taskid}">
+        <c:if test="${empty param.taskid}">
          <a href="tptopic?m=index&courseid=${topic.courseid}">返回</a>
         </c:if>
          <%--<a href="javascript:history.go(-1)">返回</a>--%>

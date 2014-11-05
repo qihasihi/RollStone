@@ -45,8 +45,10 @@
     var p1,pCourse,pCourseRes;
     var courseid="${param.courseid}";
     var nextid=${nextid};
+    var md5id="${nextMd5Id}";
 
     var url="${fileSystemIpPort}upload1.jsp?jsessionid=aaatCu3yQxMmN-Rru135t&res_id="+nextid;
+    var processUrl="${fileSystemIpPort}";
     //var url="http://192.168.8.189/fileoperate/upload1.jsp?jsessionid=aaatCu3yQxMmN-Rru135t&res_id="+nextid;
     $(function(){
         lb=new LeibieControl({controlid:"lb"},true);
@@ -185,7 +187,7 @@
                  <a class="font-darkblue" href="template/IEUpload Solution.docx">使用说明</a>-->
             </p>
                 <div class="jxxt_zhuanti_zy_add" id="p_res_file">
-                    <input type="file" name="uploadfile" id="uploadfile" class="w410" /><!--<a href="1" class="an_public3">上&nbsp;传</a>-->
+                    <input type="file" name="uploadfile" id="uploadfile" class="w410" /><!--<a href="1" class="an_public3">上&nbsp;传</a>--><span id="upload_process"></span>
                     <p class="font-gray">1. 附件限一个，<2G。 <br>2. 视频限MP4格式，建议使用格式工厂等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒 </p>
                 </div>
                 <div class="jxxt_zhuanti_zy_add" id="dv_super_file" style="display: none">

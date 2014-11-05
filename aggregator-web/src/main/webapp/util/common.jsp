@@ -210,8 +210,9 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 <link rel="stylesheet" type="text/css" href="<%=basePath %>css/WdatePicker.css" />
 <!-- <link rel="stylesheet" type="text/css"	href="<%=basePath %>util/progressupload-1/css/progressupload.css" /> -->
 <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jquery.autocomplete.css"/>
-<!-- <script src="<%=basePath %>js/common/jquery-1.9.1.js"></script> -->
+ <%--<script src="<%=basePath %>js/common/jquery-1.9.1.js"></script>--%>
 <script src="<%=basePath %>util/xheditor/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
+
 <script src="<%=basePath %>js/common/common.js"></script>   
 <script src="<%=basePath %>js/common/date-extend-property.js"></script>
     

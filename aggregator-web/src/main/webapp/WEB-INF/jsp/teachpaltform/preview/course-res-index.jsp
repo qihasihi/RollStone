@@ -43,6 +43,8 @@
                 fileSystemIpPort+="/clouduploadfile/";
             else
                 fileSystemIpPort+="/uploadfile/";
+            //转换文件
+            checkConvertStatus(resid);
             var afname='<a style="color:#000000;" title="下载" href="javascript:resourceDownLoadFile(\'' + resid + '\',\'' + fname + '\',1)">'+fname+'</a>';
             $("#h1_resname").html(afname);
             //选中效果

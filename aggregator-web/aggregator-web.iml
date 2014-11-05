@@ -8,6 +8,8 @@
         </descriptors>
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
+          <root url="file://$MODULE_DIR$/profiles/dev/resources" relative="WEB-INF/classes/properties" />
+          <root url="file://$MODULE_DIR$/src/main/resources" relative="WEB-INF/classes" />
         </webroots>
         <sourceRoots>
           <root url="file://$MODULE_DIR$/src/main/java" />

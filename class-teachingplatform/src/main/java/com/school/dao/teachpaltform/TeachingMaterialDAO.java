@@ -101,7 +101,7 @@ public class TeachingMaterialDAO extends CommonDAO<TeachingMaterialInfo> impleme
                 objList.add(TeachingMaterialInfo.getType());
             } else
                 sqlbuilder.append("null,");
-            if (TeachingMaterialInfo.getGradename() != null) {
+          if (TeachingMaterialInfo.getGradename() != null) {
                 sqlbuilder.append("?,");
                 objList.add(TeachingMaterialInfo.getGradename());
             } else

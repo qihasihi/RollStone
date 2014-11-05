@@ -6,8 +6,7 @@ public class CutProc {
     private BufferedReader reader = null;
     private FileOutputStream out = null;
     private PrintWriter writer = null;
-    public CutProc(){}
-
+    public CutProc(){};
     public boolean cutProc(String path) {                //参数path为文件的绝对路径
         File file = new File(path);
         path = file.getParent();                        //获取文件所在目录
@@ -35,6 +34,8 @@ public class CutProc {
                 writer = new PrintWriter(out);
                 writer.println("DELIMITER $$");
                 writer.println("");
+
+
                 writer.println("USE `m_school`$$");
                 writer.println("");
                 writer.println("DROP PROCEDURE IF EXISTS `" + args[5] + "`$$");

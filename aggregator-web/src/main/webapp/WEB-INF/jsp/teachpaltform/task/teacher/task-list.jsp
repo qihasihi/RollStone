@@ -171,8 +171,13 @@ function getInvestReturnMethod(rps){
             }else
                 html+='<span class="ico35"></span><b style="color:gray;">'+stucount+'/'+itm.totalcount+'</b>';
 
-
-            if((itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)) && !(itm.tasktype>6&&itm.tasktype<10)){
+            /*
+            * 未开始
+            * 未结束并且对象大于1
+            * 未结束并且学生未作答
+            * 不是移动端任务
+            * */
+            if((itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)||(itm.taskstatus!="3"&&stucount<1)) && !(itm.tasktype>6&&itm.tasktype<10)){
                 html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
             }
             if(itm.taskstatus!="3")
@@ -182,7 +187,7 @@ function getInvestReturnMethod(rps){
             if(itm.tasktype==1){
                 if(typeof itm.remotetype!='undefined'){
                     var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
-                    html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
+                    html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'" target="_blank" class="font-blue">'+taskObj+'</a>';
                 }else
                     html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==2){
@@ -557,7 +562,7 @@ function showCourseList(){
         <!--<p class="f_right"><a class="ico15" target="_blank" href="tpres?m=toRecycleIdx&type=1&courseid=${courseid}" title="回收站"></a></p>-->
         <ul>
             <li name="li_nav" id="li_" class="crumb"><a href='javascript:pageGo("pList")'>已发任务</a></li>
-            <c:if test="${course_level==1||course_level==2}">
+            <c:if test="${course_level==1||course_level==2||(course_level==3 and share_type ne 3)}">
                 <li style="display: none;" id="li_task_bank" name="li_nav"><a href='javascript:pageGo("pBankList")'>未发任务</a></li>
             </c:if>
         </ul>

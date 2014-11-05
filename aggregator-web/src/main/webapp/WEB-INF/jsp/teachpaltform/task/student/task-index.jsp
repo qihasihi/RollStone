@@ -352,7 +352,7 @@
                 if(itm.tasktype==1){
                     if(typeof itm.remotetype!='undefined'){
                         var paramStr=itm.remotetype==1?"hd_res_id":"res_id";
-                        html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+itm.taskobjname+'</a>';
+                        html+='<a href="tpres?m=toRemoteResourcesDetail&'+paramStr+'='+itm.taskvalueid+'&taskid='+itm.taskid+'" target="_blank" class="font-blue">'+itm.taskobjname+'</a>';
                     }else
                         html+='<a class="font-blue" onclick="toPostURL(\'task?doAddResViewRecord\',{courseid:'+itm.courseid+',taskid:'+itm.taskid+',tasktype:'+itm.tasktype+',groupid:\'\',tpresdetailid:'+itm.taskvalueid+'},false,null)" href="javascript:void(0);">'+itm.taskobjname+'</a>';
 

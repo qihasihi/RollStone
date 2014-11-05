@@ -1,5 +1,4 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
-<%@include file="/util/common-jsp/common-jxpt.jsp" %>
 <html>
 <head>
     <title>${sessionScope.CURRENT_TITLE}</title>
@@ -142,84 +141,72 @@
                 alert('请选择'+type+'!');
                 return;
             }
-            /*if(tasktype=='1'){
-                $.ajax({
-                    url: 'tpres?m=doUpdResTypeById',
-                    type: 'post',
-                    data: {courseid: courseid,resid:dataObj.val()},
-                    dataType: 'json',
-                    cache: false,
-                    error: function () {
-                        alert('网络异常!')
-                    },
-                    success: function (rps) {
-                        if (rps.type == 'error') {
-                            alert(rps.msg);
-                        } else {
+            var questype = $("input[name='rdo_ques_type']:checked").val();
+            var returnValue=dataObj.val();
+            $.ajax({
+                url: "question?m=questionAjaxList",
+                type: "post",
+                data: {questype: questype, courseid: courseid, questionid: returnValue},
+                dataType: 'json',
+                cache: false,
+                error: function () {
+                    alert('系统未响应，请稍候重试!');
+                }, success: function (rmsg) {
+                    if (rmsg.type == "error") {
+                        alert(rmsg.msg);
+                    } else {
+                        var htm = '';
+                        $("#ques_name").html('');
+                        $("#ques_answer").html('');
+                        $("#td_option").hide();
+                        $("#td_option").html('');
+                        if (rmsg.objList.length && typeof returnValue != 'undeinfed' && returnValue.toString().length > 0) {
+                            $("#hd_questionid").val(rmsg.objList[0].questionid);
+                            $("#sp_ques_id").html(rmsg.objList[0].questionid);
+                            load_ques_detial(returnValue, questype);
                         }
+                        $("#tr_ques_obj").show();
+                        $.fancybox.close();
                     }
-                });
-            }*/
+                }
+            });
 
-            if (window.opener != undefined) {
-                //for chrome
-                window.opener.returnValue =dataObj.val();
-                //window.opener.test(tasktype);
-            }
-            else {
-                window.returnValue =dataObj.val();
-            }
-            window.close();
         }
+
     </script>
 
 
 </head>
 <body>
-<div class="subpage_head"><span class="ico55"></span><strong>添加任务&mdash;&mdash;选择${!empty param.tasktype and param.tasktype eq '1'?"资源":param.tasktype eq '2'?"论题":param.tasktype eq '3'?"试题":param.tasktype eq '4'?"试卷":""}</strong></div>
-<div class="content1">
-    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
-        <col class="w50"/>
-        <col class="w880"/>
-        <tbody id="initItemList">
+<div class="public_float public_float960">
+    <p class="float_title"><strong>试题&mdash;&mdash;选择试题</strong></p>
+    <div class="subpage_lm">
+        <ul>
+            <li class="crumb"><a href="javascript:;">选择试题</a></li>
+            <li><a href="javascript:loadDialogPage(3)">新建试题</a></li>
+        </ul>
+    </div>
+    <p class="public_input t_r w940 p_b_10">
+      <!--  <input name="textfield2" type="text" class="w240" placeholder="专题名称" />
+        <a href="1" class="an_search" title="查询"></a>-->
+        </p>
+    <div class="jxxt_float_h460">
+        <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
+            <col class="w30"/>
+            <col class="w880"/>
+            <tbody id="initItemList">
 
-        </tbody>
-        <!--试题-->
-       <!-- <tr>
-            <td><input type="radio" name="radio" id="radio3" value="radio"></td>
-            <td><p>《失踪》、《孔乙己》、《药》等小说有一个共同的主题，《失踪》、《孔乙己》、《药》等小说有一个共同的主题即使对中国的批判《药》等小说有一个共同的主题即使对中国的批判</p>
-                <p>
-                    <input type="radio" name="radio" id="radio2" value="radio">
-                    A. 民族性<br>
-                    <input type="radio" name="radio" id="radio" value="radio">
-                    B. 国民性<br>
-                    <input type="radio" name="radio" id="radio4" value="radio">
-                    C. 传统性<br>
-                    <input type="radio" name="radio" id="radio5" value="radio">
-                    D. 文化性</p></td>
-        </tr> -->
-        <!--资源
-         <tr>
-      <td><input type="radio" name="radio" id="radio3" value="radio">
-        <span class="ico_doc1"></span></td>
-      <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-        <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-        <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件</p></td>
-    </tr>
-        -->
-        <!--论题
-         <tr>
-
-    </tr>
-        -->
-
-    </table>
+            </tbody>
+        </table>
+    </div>
     <form id="pListForm" name="pListForm">
         <p class="Mt20" id="pListaddress" align="center"></p>
     </form>
-    <p class="t_c p_tb_10"><a href="javascript:sub_data()"  class="an_small">选&nbsp;择</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:window.close();"  class="an_small">取&nbsp;消</a></p>
-</div>
+    <p class="t_c p_tb_10"><a href="javascript:sub_data()"  class="an_public1">选&nbsp;择</a>
+        <!--&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:window.close();"  class="an_small">取&nbsp;消</a>-->
+    </p>
 
-<%@include file="/util/foot.jsp" %>
+
+</div>
 </body>
 </html>

@@ -95,7 +95,8 @@
         </tr>
         <tr>
             <th>题&nbsp;&nbsp;&nbsp;&nbsp;目：</th>
-            <td><div class="jxxt_zhuanti_shiti_add">
+            <td>
+                <div class="jxxt_zhuanti_shiti_add">
                 <table border="0" cellpadding="0" cellspacing="0">
                     <col class="w80"/>
                     <col class="w700"/>

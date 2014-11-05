@@ -525,7 +525,7 @@ public class PaperController extends BaseController<PaperInfo>{
         Integer courselevel=teacherCourseList.get(0).getCourselevel();
         request.setAttribute("courselevel",courselevel);
         request.setAttribute("courseid",courseid);
-        return new ModelAndView("/teachpaltform/paper/select-paper");
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/select-paper");
     }
 
 

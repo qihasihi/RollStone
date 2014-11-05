@@ -3999,6 +3999,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         // 4:³É¾í²âÊÔ  5£º×ÔÖ÷²âÊÔ
         if(tktype==4){
             request.setAttribute("paperid",tkvalueid);
+            //request.setAttribute("isViewPaper",1);
             return toStuTestDetail(request,response,mp);
         }else if(tktype==6){
 

@@ -266,7 +266,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }else if(type.equals("3")){
             return new ModelAndView("/teachpaltform/task/teacher/dialog/select-ques");
         }else
-            return new ModelAndView("/teachpaltform/task/teacher/dialog/select-ques");
+            return new ModelAndView("/teachpaltform/task/teacher/element-detail");
     }
 
     /**
@@ -894,19 +894,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
         Integer objectiveQuesCount=this.tpCourseQuestionManager.getObjectiveQuesCount(tcq);
         mp.put("objectiveQuesCount", objectiveQuesCount);   //专题下客观题数量
         return new ModelAndView("/teachpaltform/task/teacher/task-add",mp);
-    }
-
-    /**
-     * 任务，发布论题任务时，选择。
-     *      author :zhengzhou
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(params="m=toSelTopicForTask",method=RequestMethod.GET)
-    public ModelAndView toSelTopicForTask(HttpServletRequest request,HttpServletResponse response) throws Exception{
-         return  new ModelAndView("/teachpaltform/task/teacher/dialog/select-topic");
     }
 
     /**

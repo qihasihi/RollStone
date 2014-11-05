@@ -120,7 +120,11 @@
     </script>
 </head>
 <body>
-<div class="subpage_head"><span class="ico55"></span><strong>查看试卷</strong>
+<div class="subpage_head">
+    <c:if test="${!empty param.flag}">
+        <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
+    </c:if>
+    <span class="ico55"></span><strong>查看试卷</strong>
     <c:if test="${taskIsend==1&&empty stuAnswer}">
      <span style="float:right;color:red;font-weight:bold;font-size:14px;vertical-align: middle;">该任务已结束，您没有作答!&nbsp;&nbsp;&nbsp;&nbsp;</span>
     </c:if>

@@ -112,6 +112,7 @@ public class BaseInterceptor implements HandlerInterceptor {
         String publicFileSystemIpPort=new StringBuilder(basePath).append("/").toString();
         //项目
         String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
+        //String fileSystemIpPort=request.getScheme() + "://"+ ipStr+"/"+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
         if(request.getSession().getAttribute("FILE_SYSTEM_IP_PORT")==null||!request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
           request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
         // 本地的文件

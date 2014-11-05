@@ -1109,7 +1109,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                     if(type==1){
                                         String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
                                         if(liveurl!=null&&liveurl.trim().length()>0){
-                                            stucourseList.get(i).setLiveaddress(java.net.URLDecoder.decode(liveurl, "UTF-8"));
+                                            //stucourseList.get(i).setLiveaddress(java.net.URLDecoder.decode(liveurl, "UTF-8"));
+                                            stucourseList.get(i).setLiveaddress(liveurl);
                                             stucourseList.get(i).setTaskid(tmpTask.getTaskid());
                                         }
                                     }
@@ -2603,13 +2604,19 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             }
         }
 
-        //修改资源分享等级
+        /**
+         * 自建专题修改分享等级
+         * 之前已共享的资源不修改
+         * 专题条件：专题ID小于0、专题等级自建、专题为分享专题
+         * 资源条件：资源ID小于0、资源为不分享
+         */
         TpCourseResource courseResource=new TpCourseResource();
         courseResource.setCourseid(tc.getCourseid());
         List<TpCourseResource>tpCourseResourcesList=this.tpCourseResourceManager.getList(courseResource,null);
-        if(tpCourseResourcesList!=null&&tpCourseResourcesList.size()>0){
+        if(tpCourseResourcesList!=null&&tpCourseResourcesList.size()>0&&tc.getSharetype()!=3
+                &&tc.getCourseid()<1&&tc.getCourselevel()==3){
             for(TpCourseResource res :tpCourseResourcesList){
-                if(res!=null&&res.getResid()<1){
+                if(res!=null&&res.getResid()<1&&res.getSharestatus()==3){
                     ResourceInfo r=new ResourceInfo();
                     r.setResid(res.getResid());
                     r.setSharestatus(tc.getSharetype());
@@ -2925,7 +2932,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                         if(type==1){
                                             String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
                                             if(liveurl!=null&&liveurl.trim().length()>0)
-                                                tctmp.setLiveaddress(java.net.URLDecoder.decode(liveurl,"UTF-8"));
+                                                tctmp.setLiveaddress(liveurl);
                                         }
 
                                     }catch (Exception e){
