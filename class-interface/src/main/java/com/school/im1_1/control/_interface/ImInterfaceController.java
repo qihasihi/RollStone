@@ -5140,6 +5140,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 //                    }
 //                }
 //            }
+            System.out.println("jidstr---------------"+jidstr);
+            System.out.println("schoolId---------------"+schoolId);
+            System.out.println("jid---------------"+jid);
             JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolId,jid);
             if(jr!=null&&jr.size()>0){
                 for(int i = 0;i<jr.size();i++){
@@ -5791,6 +5794,7 @@ class ImUtilTool{
 
     public static JSONArray getEttPhoneAndRealNmae(String jidstr,String schoolid,String userid) throws UnsupportedEncodingException {
         String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
+        System.out.println("ettip------------------------------"+ettip);
         String url=ettip+"queryPhotoAndRealName.do";
         //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
         HashMap<String,String> signMap = new HashMap();
@@ -5802,6 +5806,7 @@ class ImUtilTool{
         String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
         signMap.put("sign",signture);
         JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+        System.out.println("jsonObject---------------"+jsonObject);
         int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
         if(type==1){
             Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
