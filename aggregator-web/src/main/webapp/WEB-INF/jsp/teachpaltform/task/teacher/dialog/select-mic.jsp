@@ -36,10 +36,10 @@
             $("#dv_micdetail_child").load("tpres?m=previewMicModel&courseid=${param.courseid}&resid="+resid+"&op_type1=1"
                     ,function(rps){
                         // $("dv_load_topic").html(rps);
-                        $(".content1:last").removeClass("content1");
-                        $(".subpage_head:last").remove();
-                        $(".foot:last").remove();
-                        $("#fade:last").remove();
+//                        $(".content1:last").removeClass("content1");
+//                        $(".subpage_head:last").remove();
+//                        $(".foot:last").remove();
+//                        $("#fade:last").remove();
                         $(".an_small").removeClass("an_small").addClass("an_public1").last().remove();
                         //$("#dv_selectMic_child").show();
                         $("#dv_selectMic").hide();

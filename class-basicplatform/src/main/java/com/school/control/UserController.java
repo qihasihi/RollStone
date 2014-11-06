@@ -7724,6 +7724,7 @@ public class UserController extends BaseController<UserInfo> {
             jo.put("result",0);
             jo.put("msg","操作失败!");
         }
+        response.getWriter().println(jo.toString());
     }
     /**
      * 云端分校管理员添加接口
