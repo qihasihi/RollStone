@@ -265,6 +265,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             return new ModelAndView("/teachpaltform/task/teacher/dialog/select-resource");
         }else if(type.equals("3")){
             return new ModelAndView("/teachpaltform/task/teacher/dialog/select-ques");
+        }else if(type.equals("2")){
+            return new ModelAndView("/teachpaltform/task/teacher/element-detail");
         }else
             return new ModelAndView("/teachpaltform/task/teacher/dialog/select-ques");
     }
