@@ -58,6 +58,7 @@ $(function () {
         http_free_operate_handler : preeDoPageSub1, //执行查询前操作的内容
         http_operate_handler : getInvestReturnMethod1, //执行成功后返回方法
         return_type : 'json', //放回的值类型
+        isShowController:false,
         page_no : 1, //当前的页数
         page_size : 5, //当前页面显示的数量
         rectotal : 0, //一共多少
@@ -90,6 +91,7 @@ $(function () {
         http_free_operate_handler : preeDoPageSub3, //执行查询前操作的内容
         http_operate_handler : getInvestReturnMethod3, //执行成功后返回方法
         return_type : 'json', //放回的值类型
+        isShowController:false,
         page_no : 1, //当前的页数
         page_size : 5, //当前页面显示的数量
         rectotal : 0, //一共多少
