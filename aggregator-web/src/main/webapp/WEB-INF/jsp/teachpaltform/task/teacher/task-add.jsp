@@ -7,24 +7,24 @@
     <title>${sessionScope.CURRENT_TITLE}</title>
     <style>
     </style>
-    <script type="text/javascript" src="<%=basePath %>js/common/uploadControl.js"></script>
-    <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery-1.9.1.js"></script>
-    <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery.json-2.4.js"></script>
-    <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery-ui-1.10.2.custom.min.js"></script>
-    <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/knockout-2.2.1.js"></script>
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" />
-    <script src="<%=basePath %>js/common/ajaxfileupload.js" type="text/javascript"></script>
+    <%--<script type="text/javascript" src="<%=basePath %>js/common/uploadControl.js"></script>--%>
+    <%--<script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery-1.9.1.js"></script>--%>
+    <%--<script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery.json-2.4.js"></script>--%>
+    <%--<script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery-ui-1.10.2.custom.min.js"></script>--%>
+    <%--<script type="text/javascript" src="<%=basePath %>util/uploadControl/js/knockout-2.2.1.js"></script>--%>
+    <%--<link rel="stylesheet" type="text/css" href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" />--%>
+    <%--<script src="<%=basePath %>js/common/ajaxfileupload.js" type="text/javascript"></script>--%>
 
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>comment/comment_star.css"/>
-    <script type="text/javascript" src="<%=basePath %>comment/commentScorePlug.js"></script>
-    <script type="text/javascript" src="js/resource/new_resbase.js"></script>
+    <%--<link rel="stylesheet" type="text/css" href="<%=basePath %>comment/comment_star.css"/>--%>
+    <%--<script type="text/javascript" src="<%=basePath %>comment/commentScorePlug.js"></script>--%>
+    <%--<script type="text/javascript" src="js/resource/new_resbase.js"></script>--%>
 
 
-    <script type="text/javascript"
-            src="<%=basePath %>js/teachpaltform/resource.js"></script>　
+    <%--<script type="text/javascript"--%>
+            <%--src="<%=basePath %>js/teachpaltform/resource.js"></script>　--%>
 
-    <script type="text/javascript"
-            src="fancybox/jquery-1.6.2.min.js"></script>
+    <%--<script type="text/javascript"--%>
+            <%--src="fancybox/jquery-1.6.2.min.js"></script>--%>
 
     <script type="text/javascript"
             src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>

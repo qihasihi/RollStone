@@ -36,13 +36,16 @@
             $("#remote_type").val("${taskInfo.remotetype}");
 			//任务
 			<c:if test="${!empty taskInfo}">
-				$("#task_type").val("${taskInfo.tasktype}");
+				$("#task_type option[value='${taskInfo.tasktype}']").attr("selected",true);
 				$("#task_name").val('${taskInfo.taskname}');
                 $("#task_remark").val('${taskInfo.taskremark}');
 				initTaskCriteria("${taskInfo.tasktype}");
 			</c:if>
 
-            <c:if test="${empty hasVideo}">
+            <c:if test="${empty taskInfo&&empty hasVideo}">
+                $("#task_type option[value=6]").remove();
+            </c:if>
+            <c:if test="${empty hasVideo&&taskInfo.tasktype!=6}">
                 $("#task_type option[value=6]").remove();
             </c:if>
 

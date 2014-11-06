@@ -67,6 +67,8 @@
                 $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
             })
 
+            showQuesNum();
+
         });
 
 
@@ -131,6 +133,16 @@
             $("#ul_xuhao>li").removeClass("blue_big").removeClass("blue").addClass("blue");
             $("#li_"+nextQIdx).removeClass("blue").addClass("blue_big");
         }
+        /**
+        *得到序列
+         */
+        function showQuesNum(){
+            var h='';
+            $("#dv_paper>table").each(function(idx,itm){
+                h+='<li class="blue" id="li_'+(idx+1)+'"><a href="javascript:;" onclick="showQues('+(idx+1)+')">'+(idx+1)+'</a></li>';
+            });
+            $("#ul_xuhao").html(h);
+        }
     </script>
 </head>
 <body>
@@ -168,10 +180,10 @@
             <c:if test="${!empty pqList}">
                 <p class="jxxt_zhuanti_rw_ceshi_an"><a href="javascript:;" onclick="next(-1)" id="a_free" class="an_test1">上一题</a><a id="a_next" href="javascript:;" onclick="next(1)" class="an_test1">下一题</a></p>
                 <ul id="ul_xuhao">
-                    <c:forEach items="${pqList}" var="pq" varStatus="idx">
-                        <li class="blue" id="li_${idx.index+1}"><a href="javascript:;" onclick="showQues(${idx.index+1})">${idx.index+1}</a></li>
-                        <%--<li class="blue_big"><a href="1">4</a></li>--%>
-                    </c:forEach>
+                    <%--<c:forEach items="${pqList}" var="pq" varStatus="idx">--%>
+                        <%--<li class="blue" id="li_${idx.index+1}"><a href="javascript:;" onclick="showQues(${idx.index+1})">${idx.index+1}</a></li>--%>
+                        <%--&lt;%&ndash;<li class="blue_big"><a href="1">4</a></li>&ndash;%&gt;--%>
+                    <%--</c:forEach>--%>
                 </ul>
                 <div class="clear"></div>
             </c:if>

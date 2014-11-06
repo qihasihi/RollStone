@@ -73,10 +73,7 @@
                     switch (tasktype){
                         case '4':{
                             if(itm.paperid>0){
-
-
-                                var url='paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid;
-                                html+='<li><a href="javascript:window.showModalDialog(\''+url+'\',\'\',\''+param+'\');">';
+                                html+='<li><a href="javascript:;" onclick="loadPaperDetail('+itm.paperid+')">';
                                 html+='<p class="one">'+itm.papername+'</p>';
                                 html+='<p class="two">';
                                 if(itm.objectivenum>0&&itm.subjectivenum>0)
@@ -94,8 +91,7 @@
                                 html+='</p>';
                                 html+='</li>';
                             }else{
-                                var url='paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid;
-                                shtml+='<li><a href="javascript:window.showModalDialog(\''+url+'\', \'\',  \''+param+'\');">';
+                                shtml+='<li><a href="javascript:;" onclick="loadPaperDetail('+itm.paperid+')">';
                                 //shtml+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
                                 shtml+='<p class="one">'+itm.papername+'</p>';
                                 shtml+='<p class="two">';
@@ -167,12 +163,41 @@
                 }
             });
         }
+
+        /**
+         *加载微视频详情页面
+         * @param resid
+         */
+        function loadPaperDetail(paperid){
+            if(typeof(paperid)=="undefined"||paperid==null){
+                alert('网络异常!参数异常!');
+                return;
+            }
+            $("#dv_paperDetail").load("paper?toPreviewPaperModel&courseid=${param.courseid}&paperid="+paperid+"&op_type1=1&dropQuesNum=1"
+                    ,function(rps){
+                        // $("dv_load_topic").html(rps);
+//                        $(".content1:last").removeClass("content1");
+//                        $(".subpage_head:last").remove();
+//                        $(".foot:last").remove();
+//                        $("#fade:last").remove();
+                        $(".an_small").removeClass("an_small").addClass("an_public1").last().remove();
+                        //$("#dv_selectMic_child").show();
+                        $("#dv_selectPaper").hide();
+                        $("#dv_paperDetail").fadeIn("slow");
+                    });
+        }
+
+        function paperDetailReturn(){
+            $("#dv_paperDetail").hide();
+            $("#dv_selectPaper").fadeIn("slow");
+        }
+
     </script>
 
 
 </head>
 <body>
-<div class="public_float public_float960">
+<div class="public_float public_float960" id="dv_selectPaper">
     <p class="float_title"><strong>成卷测试&mdash;&mdash;选择试卷</strong></p>
     <div class="subpage_lm">
         <ul>
@@ -197,6 +222,10 @@
     <form id="pListForm" name="pListForm" style="display: none;">
         <p class="Mt20" id="pListaddress" align="center"></p>
     </form>
+</div>
+<!--试卷详情-->
+<div class="public_float public_float960" id="dv_paperDetail" style="display:none">
+
 </div>
 </body>
 </html>

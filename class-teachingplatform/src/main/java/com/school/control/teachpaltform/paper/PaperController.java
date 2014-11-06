@@ -324,6 +324,158 @@ public class PaperController extends BaseController<PaperInfo>{
         return new ModelAndView("/teachpaltform/paper/preview-paper");
     }
 
+    /**
+     * 标准、关联试卷预览
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="toPreviewPaperModel",method=RequestMethod.GET)
+    public ModelAndView toPreviewPaperModel(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        //得到该课题的所有任务，任务完成情况。
+        JsonEntity je= new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String paperid=request.getParameter("paperid");
+        String mic=request.getParameter("mic");
+        if(courseid==null||courseid.trim().length()<1||paperid==null||paperid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setCourseid(Long.parseLong(courseid));
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        List tpCoursePaperList=null;
+        if(mic==null){
+            TpCoursePaper t=new TpCoursePaper();
+            t.setCourseid(Long.parseLong(courseid));
+            t.setPaperid(Long.parseLong(paperid));
+            tpCoursePaperList=this.tpCoursePaperManager.getList(t, null);
+            if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
+                je.setMsg("抱歉该试卷已不存在!");
+                je.getAlertMsgAndBack();
+                return null;
+            }
+        }else{
+            PaperInfo pp=new PaperInfo();
+            pp.setPaperid(Long.parseLong(paperid));
+            tpCoursePaperList=this.paperManager.getList(pp, null);
+            if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
+                je.setMsg("抱歉该试卷已不存在!");
+                je.getAlertMsgAndBack();
+                return null;
+            }
+        }
+
+
+        //获取提干
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(Long.parseLong(paperid));
+        PageResult p=new PageResult();
+        p.setOrderBy("u.order_idx");
+        p.setPageNo(0);
+        p.setPageSize(0);
+        List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+
+        //获取试题组下题目
+        PaperQuestion child =new PaperQuestion();
+        child.setPaperid(pq.getPaperid());
+        List<PaperQuestion>childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
+
+        //获取选项
+        QuestionOption questionOption=new QuestionOption();
+        questionOption.setPaperid(pq.getPaperid());
+        PageResult pchild = new PageResult();
+        pchild.setPageNo(0);
+        pchild.setPageSize(0);
+        pchild.setOrderBy("option_type");
+        List<QuestionOption>questionOptionList=this.questionOptionManager.getPaperQuesOptionList(questionOption, pchild);
+
+        //整合试题组与选项
+        List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+        List<QuestionOption>tmpOptionList;
+        List<PaperQuestion>questionTeam;
+        if(pqList!=null&&pqList.size()>0){
+            for(PaperQuestion paperQuestion:pqList){
+                questionTeam=new ArrayList<PaperQuestion>();
+                //试题组
+                if(childList!=null&&childList.size()>0){
+                    for (PaperQuestion childp :childList){
+                        //试题组选项
+                        if(paperQuestion.getRef().equals(childp.getRef())){
+                            if(questionOptionList!=null&&questionOptionList.size()>0){
+                                tmpOptionList=new ArrayList<QuestionOption>();
+                                for(QuestionOption qo:questionOptionList){
+                                    if(qo.getQuestionid().equals(childp.getQuestionid())){
+                                        tmpOptionList.add(qo);
+                                    }
+                                }
+                                childp.setQuestionOption(tmpOptionList);
+                                questionTeam.add(childp);
+                            }
+                        }
+                    }
+                    paperQuestion.setQuestionTeam(questionTeam);
+                }
+
+                if(questionOptionList!=null&&questionOptionList.size()>0){
+                    //普通试题选项
+                    List<QuestionOption> tmp1OptionList=new ArrayList<QuestionOption>();
+                    for(QuestionOption qo:questionOptionList){
+                        if(qo.getQuestionid().equals(paperQuestion.getQuestionid())){
+                            tmp1OptionList.add(qo);
+                        }
+                    }
+
+                    paperQuestion.setQuestionOption(tmp1OptionList);
+                }
+                tmpList.add(paperQuestion);
+            }
+        }
+
+       /* if(pqList!=null&&pqList.size()>0){
+            for (PaperQuestion ques:pqList){
+                if(ques.getQuestiontype()==3||ques.getQuestiontype()==4){
+                    QuestionOption questionOption=new QuestionOption();
+                    questionOption.setQuestionid(ques.getQuestionid());
+                    PageResult pchild = new PageResult();
+                    pchild.setPageNo(0);
+                    pchild.setPageSize(0);
+                    pchild.setOrderBy("u.option_type");
+                    List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,pchild);
+                    ques.setQuestionOption(questionOptionList);
+                }
+                tmpList.add(ques);
+            }
+        }*/
+
+
+        //得到当前的所有问题
+        List<Map<String,Object>> listMapStr=this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
+        if(listMapStr==null||listMapStr.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(je.getAlertMsgAndBack());return null;
+        }
+        Object allquesidObj=listMapStr.get(0).get("ALLQUESID");
+        if(allquesidObj==null||allquesidObj.toString().trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(je.getAlertMsgAndBack());return null;
+        }
+
+        request.setAttribute("pqList", tmpList);
+        request.setAttribute("paper", tpCoursePaperList.get(0));
+        request.setAttribute("courseid", courseid);
+        request.setAttribute("coursename",teacherCourseList.get(0).getCoursename());
+        request.setAttribute("ALLQUESID", allquesidObj);
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/preview-paper");
+    }
+
 
     /**
      * 删除、恢复试卷
