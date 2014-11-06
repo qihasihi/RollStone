@@ -2581,6 +2581,34 @@ public class TpResourceController extends BaseController<TpCourseResource>{
      * @param response
      * @throws Exception
      */
+    @RequestMapping(params="m=queryMicViewListModel",method=RequestMethod.GET)
+    public ModelAndView queryMicViewListModel(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return null;
+        }
+        PageResult p=this.getPageResultParameter(request);
+        p.setOrderBy("aa.diff_type desc,aa.res_id,ifnull(aa.operate_time ,aa.ctime) desc ");
+        TpCourseResource t= new TpCourseResource();
+        t.setCourseid(Long.parseLong(courseid));
+        t.setResstatus(1);
+        t.setTaskflag(1);//查询没有发任务的资源
+        t.setDifftype(1);//微视频类型
+        t.setHaspaper(1);//有试卷的视频
+        List<TpCourseResource>resList=this.tpCourseResourceManager.getList(t, p);
+        mp.put("resList",resList);
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/select-miclist",mp);
+    }
+
+    /**
+     * 查询微视频列表 发任务
+     * @param request
+     * @param response
+     * @throws Exception
+     */
     @RequestMapping(params="m=previewMic",method=RequestMethod.GET)
     public ModelAndView previewMic(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
@@ -2695,6 +2723,127 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         mp.put("taskid",taskid);
 
         return new ModelAndView("/teachpaltform/resource/mic-view-detail",mp);
+    }
+    /**
+     * 查询微视频列表 发任务
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=previewMicModel",method=RequestMethod.GET)
+    public ModelAndView previewMicModel(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String resid=request.getParameter("resid");
+        String taskid=request.getParameter("taskid");
+        if(courseid==null||courseid.trim().length()<1//||taskid==null||taskid.trim().length()<1
+                ){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return null;
+        }
+        ResourceInfo rtmp=new ResourceInfo();
+        rtmp.setResid(Long.parseLong(resid));
+        List<ResourceInfo> resList=this.resourceManager.getList(rtmp,null);
+        //验证微视频是否存在相关数据
+        if(resList==null||resList.size()<1||resList.get(0)==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(je.getAlertMsgAndCloseWin());return null;
+        }
+
+        //得到相关的试卷ID
+        MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
+        mvpaper.setMicvideoid(resList.get(0).getResid());
+        List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,null);
+        if(mvpaperList==null||mvpaperList.size()<1||mvpaperList.get(0)==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(je.getAlertMsgAndCloseWin());return null;
+        }
+
+        PaperInfo pp=new PaperInfo();
+        pp.setPaperid(mvpaperList.get(0).getPaperid());
+        List<PaperInfo>tpCoursePaperList=this.paperManager.getList(pp, null);
+        if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
+            je.setMsg("抱歉该试卷已不存在!");
+            je.getAlertMsgAndBack();
+            return null;
+        }
+
+        //获取提干
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(mvpaperList.get(0).getPaperid());
+        PageResult p=new PageResult();
+        p.setOrderBy("u.order_idx");
+        p.setPageNo(0);
+        p.setPageSize(0);
+        List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+
+        //获取试题组下题目
+        PaperQuestion child =new PaperQuestion();
+        child.setPaperid(pq.getPaperid());
+        List<PaperQuestion>childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
+
+        //获取选项
+        QuestionOption questionOption=new QuestionOption();
+        questionOption.setPaperid(pq.getPaperid());
+        PageResult pchild = new PageResult();
+        pchild.setPageNo(0);
+        pchild.setPageSize(0);
+        pchild.setOrderBy("option_type");
+        List<QuestionOption>questionOptionList=this.questionOptionManager.getPaperQuesOptionList(questionOption, pchild);
+
+        //整合试题组与选项
+        List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+        List<QuestionOption>tmpOptionList;
+        List<PaperQuestion>questionTeam;
+        if(pqList!=null&&pqList.size()>0){
+            for(PaperQuestion paperQuestion:pqList){
+                questionTeam=new ArrayList<PaperQuestion>();
+                //试题组
+                if(childList!=null&&childList.size()>0){
+                    for (PaperQuestion childp :childList){
+                        //试题组选项
+                        if(paperQuestion.getRef().equals(childp.getRef())){
+                            if(questionOptionList!=null&&questionOptionList.size()>0){
+                                tmpOptionList=new ArrayList<QuestionOption>();
+                                for(QuestionOption qo:questionOptionList){
+                                    if(qo.getQuestionid().equals(childp.getQuestionid())){
+                                        tmpOptionList.add(qo);
+                                    }
+                                }
+                                childp.setQuestionOption(tmpOptionList);
+                                questionTeam.add(childp);
+                            }
+                        }
+                    }
+                    paperQuestion.setQuestionTeam(questionTeam);
+                }
+
+                if(questionOptionList!=null&&questionOptionList.size()>0){
+                    //普通试题选项
+                    List<QuestionOption> tmp1OptionList=new ArrayList<QuestionOption>();
+                    for(QuestionOption qo:questionOptionList){
+                        if(qo.getQuestionid().equals(paperQuestion.getQuestionid())){
+                            tmp1OptionList.add(qo);
+                        }
+                    }
+
+                    paperQuestion.setQuestionOption(tmp1OptionList);
+                }
+                tmpList.add(paperQuestion);
+            }
+        }
+
+        request.setAttribute("pqList", tmpList);
+        request.setAttribute("paper", tpCoursePaperList.get(0));
+
+
+        mp.put("resObj", resList.get(0));
+        mp.put("paperid", mvpaperList.get(0).getPaperid().toString());
+        mp.put("courseid",courseid);
+        mp.put("taskid",taskid);
+
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/mic-view-detail",mp);
     }
 
 

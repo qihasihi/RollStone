@@ -21,9 +21,10 @@
 <div id="dv_award_jf"  class="jxxt_float_jiangli" style="display:none;z-index:9999">获得<strong>1</strong>积分</div>
 <script type="text/javascript">
     var alertMsg="${sessionScope.msg}";
-    var WinAlerts = window.alert;
+//    var WinAlerts = $(window.alert).clone();
+    window._alert = window.alert;
     window.alert = function (e) {
-        if (e != null &&e.indexOf("获得了")>-1&&(e.indexOf("蓝宝石")>-1|| e.indexOf("积分")))
+        if (e != null &&e.indexOf("获得了")>-1&&(e.indexOf("蓝宝石")>-1|| e.indexOf("积分")>-1))
         {
 
             //和谐了
@@ -42,7 +43,7 @@
         }
         else
         {
-            WinAlerts (e);
+            _alert(e);
         }
     };
     $(function(){

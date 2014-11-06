@@ -1,5 +1,8 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
+<%String optype1=request.getParameter("op_type1");
+ if(optype1==null||optype1.trim().length()<1){%>
 <%@include file="/util/common-jsp/common-jxpt.jsp" %>
+<%}%>
 <html>
 <head>
     <title>${sessionScope.CURRENT_TITLE}</title>
@@ -163,13 +166,18 @@
 
             if (window.opener != undefined) {
                 //for chrome
-                window.opener.returnValue =dataObj.val();
+                returnValue =dataObj.val();
                 //window.opener.test(tasktype);
             }
             else {
-                window.returnValue =dataObj.val();
+                returnValue =dataObj.val();
             }
-            window.close();
+            //显示相关数据
+            showTaskElementTopic(2);
+            //关闭弹出层
+            $.fancybox.close();
+
+
         }
     </script>
 

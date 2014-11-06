@@ -34,16 +34,6 @@
     <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
 
     <script type="text/javascript"
-            src="fancybox/jquery-1.6.2.min.js"></script>
-
-    <script type="text/javascript"
-            src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
-    <script type="text/javascript"
-            src="fancybox/jquery.fancybox-1.3.4.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
-
-    <script type="text/javascript"
             src="<%=basePath %>js/teachpaltform/tptask.js"></script>
 
     <script type="text/javascript">
@@ -53,18 +43,14 @@
         var materialid="${materialid}";
         var questype="${param.questype}";
         var objectiveQuesCount="${objectiveQuesCount}";
+        var fancyboxObj;
         $(function(){
-            $("#a_click").fancybox({
-                'onClosed':function(){
-                    $("#dv_content").hide();
-                }
-            });
-            $("#a_click").fancybox({
+            fancyboxObj=$("#a_click").fancybox({
                 'onClosed':function(){
                     $("#dv_content").hide();
                 }
 
-            });
+            });         
             $("#task_type").val(${param.tasktype});
             if(questype.length<1)
                 questype=3
@@ -74,13 +60,13 @@
             $("#time_rdo0").attr("checked",true);
 
             <c:if test="${empty hasVideo}">
-                $("#task_type option[value=6]").remove();
+            $("#task_type option[value=6]").remove();
             </c:if>
             <c:if test="${empty hasPaper}">
-                $("#task_type option[value=4]").remove();
+             $("#task_type option[value=4]").remove();
             </c:if>
             <c:if test="${empty hasQuestion}">
-                $("#task_type option[value=5]").remove();
+            $("#task_type option[value=5]").remove();
             </c:if>
 
 
@@ -201,16 +187,11 @@
         </tr>
 
         <a id="a_click" href="#dv_content"></a>
-        <div id="dv_content"  style="width:800px;height:600px;display: none;"></div>
-
-        <a id="a_click" href="#dv_content"></a>
         <div id="dv_content"  style="display: none;"></div>
 
         <tr id="tr_ques_obj" style="display: none">
             <th><span class="ico06"></span>选择试题：</th>
             <td class="font-black">
-                <a href="javascript:loadTaskElement(3)"  class="font-darkblue">>>&nbsp;选择试题</a>
-                <%--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="showDialogPage(3)" class="font-darkblue">>>&nbsp;添加试题</a>--%>
                 <a href="javascript:loadTaskElement(3)"  class="font-darkblue">>>&nbsp;选择试题</a>
                 <%--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="showDialogPage(3)" class="font-darkblue">>>&nbsp;添加试题</a>--%>
                 <div class="jxxt_zhuanti_add_shiti"  id="tb_ques" style="overflow-y: auto;display:none;">

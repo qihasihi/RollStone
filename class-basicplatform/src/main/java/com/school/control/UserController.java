@@ -1153,26 +1153,27 @@ public class UserController extends BaseController<UserInfo> {
         Object isajax=request.getAttribute("isajax");
 
         Long dcSchoolId=null;
-        //验证分校                            是否云端安端  1:是    2：否(分校本地安装则是2，云端代理则是1)
-        int isCloudSteup=Integer.parseInt(UtilTool.utilproperty.getProperty("IS_CLOUD_STEUP").toString());
-        if(isCloudSteup==1){
-            //验证云端安装，得到相关地址
-            String procBasePath=request.getSession().getAttribute("IP_PROC_NAME").toString();
-            SchoolInfo schoolInfo=new SchoolInfo();
-            schoolInfo.setIp(procBasePath);
-            List<SchoolInfo> schoolList=schoolManager.getList(schoolInfo,null);
-            if(schoolList==null||schoolList.size()<1){
-                je.setMsg("该域名不存在!请联系相关人员进行更新!");
-                if(isajax==null||isajax.toString().trim().length()<1||!UtilTool.isNumber(isajax.toString().trim())||Integer.parseInt(isajax.toString().trim())!=1)
-                    response.getWriter().println(je.toJSON());
-                else
-                    response.getWriter().println(je.getAlertMsgAndBack());
-                return;
-            }else
-                dcSchoolId=schoolList.get(0).getSchoolid();
+        if(UtilTool._IS_SIMPLE_RESOURCE==2){
+            //验证分校                            是否云端安端  1:是    2：否(分校本地安装则是2，云端代理则是1)
+            int isCloudSteup=Integer.parseInt(UtilTool.utilproperty.getProperty("IS_CLOUD_STEUP").toString());
+            if(isCloudSteup==1){
+                //验证云端安装，得到相关地址
+                String procBasePath=request.getSession().getAttribute("IP_PROC_NAME").toString();
+                SchoolInfo schoolInfo=new SchoolInfo();
+                schoolInfo.setIp(procBasePath);
+                List<SchoolInfo> schoolList=schoolManager.getList(schoolInfo,null);
+                if(schoolList==null||schoolList.size()<1){
+                    je.setMsg("该域名不存在!请联系相关人员进行更新!");
+                    if(isajax==null||isajax.toString().trim().length()<1||!UtilTool.isNumber(isajax.toString().trim())||Integer.parseInt(isajax.toString().trim())!=1)
+                        response.getWriter().println(je.toJSON());
+                    else
+                        response.getWriter().println(je.getAlertMsgAndBack());
+                    return;
+                }else
+                    dcSchoolId=schoolList.get(0).getSchoolid();
 
+            }
         }
-
 
         UserInfo userinfo = this.getParameter(request, UserInfo.class);
         if(request.getAttribute("username")!=null)

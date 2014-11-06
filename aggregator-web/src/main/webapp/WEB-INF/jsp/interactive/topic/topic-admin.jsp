@@ -1,5 +1,10 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%
+   String optype =request.getParameter("operate_type");
+    if(optype==null||optype.trim().length()<1){
+%>
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
+<%}%>
 <html>
 <head>
 	<script type="text/javascript" src="js/interactive/topic.js"></script>

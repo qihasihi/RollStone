@@ -1,9 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
-    if(UtilTool._IS_SIMPLE_RESOURCE==2){
-        String bUrl=request.getSession().getAttribute("IP_PROC_NAME").toString();
-        response.sendRedirect(bUrl+"user?m=simpleResLogin");return;
-    }
+
+
     String pcname=request.getHeader("x-etturl");
     if(pcname==null){
         pcname=request.getContextPath();
@@ -12,6 +10,17 @@
         pcname=pcname.substring(0,pcname.substring(1).indexOf("/")+1);
     }
     pcname=pcname.replaceAll("/","");
+    if(UtilTool._IS_SIMPLE_RESOURCE==2){
+        String ipStr1=request.getServerName();
+        if(request.getServerPort()!=80){
+            ipStr1+=":"+request.getServerPort();
+        }
+        //UtilTool.utilproperty.getProperty("PROC_NAME");
+        String bUrl = (request.getScheme() + "://"
+                + ipStr1
+                +"/"+pcname+"/");
+        response.sendRedirect(bUrl+"user?m=simpleResLogin");return;
+    }
 
 %>
 <%@ include file="/util/common.jsp" %>

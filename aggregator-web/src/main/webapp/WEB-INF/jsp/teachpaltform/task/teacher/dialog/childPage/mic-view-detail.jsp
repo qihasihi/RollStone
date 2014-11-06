@@ -5,16 +5,12 @@
   Time: 下午2:56
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%String optype1=request.getParameter("op_type1");
-
-    String fileSystemIpPort1="",basePath1="";
-    if(optype1==null||optype1.trim().length()<1){%>
-<%@include file="/util/common-jsp/common-jxpt.jsp" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" import="com.school.util.UtilTool" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="/SchoolTabFunctions" prefix="fn"%>
 <%
-        fileSystemIpPort1=fileSystemIpPort;
-        basePath1=basePath;
-    }else{
+    String fileSystemIpPort1="",basePath1="";
+
     String proc_name1=request.getHeader("x-etturl");
     if(proc_name1==null){
         proc_name1=request.getContextPath().replaceAll("/","");
@@ -38,8 +34,8 @@
     //公用的文件服务器项目链接
     String publicFileSystemIpPort1=new StringBuilder(basePath1).toString();
 //    //项目
-    fileSystemIpPort1=publicFileSystemIpPort1+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
-}%>
+    fileSystemIpPort1=publicFileSystemIpPort1+ UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
+%>
 <html>
 <head>
     <script type="text/javascript" src="js/common/videoPlayer/new/jwplayer.js"></script>
@@ -75,11 +71,66 @@
 
 
         /**
+         * 初始化进入
+         */
+        function paperDivShow(){
+            $('#dv_view').hide();
+            $('#dv_paper').show();
+//            if(typeof(currentQuesid)=="undefined"){
+//                currentQuesid=$("#dv_paper table:first").attr("data-bind");
+//                currentQIdx=$("#dv_paper table:first #sp_tbl_qidx").html();
+//            }
+            var currentQIdx=$("#dv_paper>table").filter(function(){return this.style.display!='none';}).attr("data-idx");
+            if(typeof(currentQIdx)=="undefined"||currentQIdx==null){
+                next(1);
+            }
+
+        }
+        /**
          * 加载试卷中的试题
          *
          *
          *
          */
+        function showQues(idx){
+           // $("#dv_paper table:not(data-idx='"+idx+"')").hide();
+            $("#dv_paper>table").hide();
+            $("#dv_paper>table:eq("+(idx-1)+")").fadeIn('slow');
+            //序号的样式
+            $("#ul_xuhao>li").removeClass("blue_big").removeClass("blue").addClass("blue");
+            $("#li_"+idx).removeClass("blue").addClass("blue_big");
+            //得到题号，当前的问题
+            var currentQuesid=$("#dv_paper>table:eq("+(idx-1)+")").attr("data-bind");
+            var currentQIdx=$("#dv_paper>table:eq("+(idx-1)+") #sp_tbl_qidx").html();
+
+            if(currentQIdx>=$("#ul_xuhao>li").length){
+                $("#a_next").fadeOut('fast');
+            }else
+                $("#a_next").fadeIn('fast');
+            if(currentQIdx<=1){
+                $("#a_free").fadeOut('fast');
+            }else
+                $("#a_free").fadeIn('fast');
+        }
+        /**
+        *下一题
+         */
+        function next(ty){
+//            currentQuesid=$("#dv_paper table:eq("+currentQIdx+")").attr("data-bind");
+            //当前的序号
+            var currentQIdx=$("#dv_paper>table").filter(function(){return this.style.display!='none';}).attr("data-idx");
+            if(typeof(currentQIdx)=="undefined"||currentQIdx==null){
+                currentQIdx=0;
+            }
+//            currentQIdx=$("#dv_paper table:eq("+(currentQIdx-1)+") #sp_tbl_qidx").html();
+            var nextQIdx=parseInt(currentQIdx)+1
+            if(ty<1)
+                nextQIdx=parseInt(currentQIdx)-1;
+            showQues(nextQIdx);
+            //序号的样式
+            $("#ul_xuhao>li").removeClass("blue_big").removeClass("blue").addClass("blue");
+            $("#li_"+nextQIdx).removeClass("blue").addClass("blue_big");
+        }
     </script>
 </head>
 <body>
@@ -91,9 +142,9 @@
 <div class="content1">
     <ul class="jxxt_zhuanti_rw_wkc">
         <li id="c_1" class="crumb"><a href="javascript:;" onclick="$('#dv_view').show();$('#dv_paper').hide();"><strong>微视频</strong></a></li>
-        <li id="c_2"><a href="javascript:;" onclick="$('#dv_view').hide();$('#dv_paper').show();"><strong>试卷</strong></a></li>
+        <li id="c_2"><a href="javascript:;" onclick="paperDivShow()"><strong>试卷</strong></a></li>
     </ul>
-    <div id="dv_view">
+    <div id="dv_view" class="jxxt_float_h560">
 
         <p class="font-black t_c"><strong>${resObj.resname}</strong><br>${resObj.realname}&nbsp;&nbsp;&nbsp;&nbsp;时长：<span id="videoTime"></span>
         </p>
@@ -111,10 +162,23 @@
         </div>
     </div>
 
-    <div id="dv_paper" class="jxxt_zhuanti_rw_wkc_sj font-black public_input bg" style="display: none">
+    <div id="dv_paper" class="jxxt_float_h560 " style="display: none">
+        <div class="jxxt_zhuanti_rw_ceshi">
+
+            <c:if test="${!empty pqList}">
+                <p class="jxxt_zhuanti_rw_ceshi_an"><a href="javascript:;" onclick="next(-1)" id="a_free" class="an_test1">上一题</a><a id="a_next" href="javascript:;" onclick="next(1)" class="an_test1">下一题</a></p>
+                <ul id="ul_xuhao">
+                    <c:forEach items="${pqList}" var="pq" varStatus="idx">
+                        <li class="blue" id="li_${idx.index+1}"><a href="javascript:;" onclick="showQues(${idx.index+1})">${idx.index+1}</a></li>
+                        <%--<li class="blue_big"><a href="1">4</a></li>--%>
+                    </c:forEach>
+                </ul>
+                <div class="clear"></div>
+            </c:if>
+        </div>
         <c:if test="${!empty pqList}">
             <c:forEach items="${pqList}" var="pq" varStatus="idx">
-                <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}">
+                <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input font-black" id="dv_ques_${pq.questionid}" data-bind="${pq.questionid}" data-idx="${idx.index+1}" style="display:none">
                     <col class="w30"/>
                     <col class="w880"/>
 
@@ -127,7 +191,7 @@
                                 <a href="task?loadStuMicQuesPerformance&courseid=${courseid}&taskid=${taskid}&questionid=${pq.questionid}&type=2&paperid=${paperid}" class="font-blue f_right">查看回答</a>
                             </c:if>
                         </c:if>
-                        <span class="font-blue">${idx.index+1}</span>/${fn:length(pqList)}
+                        <span class="font-blue" id="sp_tbl_qidx" style="display:none">${idx.index+1}</span>
                     </caption>
 
                     <tr>
@@ -275,8 +339,7 @@
                 </table>
             </c:forEach>
         </c:if>
-
-    </div>
+     </div>
 
 </div>
 

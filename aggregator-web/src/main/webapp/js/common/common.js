@@ -620,7 +620,7 @@ function  getValues(obj){
  *            isblank 是否打开新窗口
  * @return {TypeName} null
  */
-function toPostURL(url,params,isblank,windowName){
+function toPostURL(url,params,isblank,windowName,type){
     if(typeof(url)=="undefined"||url==null||url.Trim()=="")
         return ;
 
@@ -639,8 +639,10 @@ function toPostURL(url,params,isblank,windowName){
             }
         }
     }
+    if(typeof(type)=="undefiend"||type==null)
+    type="post";
     $("#targetToAddFrm").attr("action",url);
-    $("#targetToAddFrm").attr("method","post");
+    $("#targetToAddFrm").attr("method",type);
     if(typeof(isblank)=="undefined"||isblank==true){
 
         if(typeof(windowName)!="undefined"&&windowName!=""&&windowName!=null){
@@ -648,7 +650,7 @@ function toPostURL(url,params,isblank,windowName){
         }else{
             var datawindow=new Date().getTime();
             $("#targetToAddFrm").attr("target","window_"+datawindow);
-            window.open("about:blank","window_"+datawindow);
+           // $("#targetToAddFrm").submit();
         }
 
     }else{
@@ -659,7 +661,6 @@ function toPostURL(url,params,isblank,windowName){
 
     }
     $("#targetToAddFrm").submit();
-    $("#targetToAddFrm").remove();
 }
 
 

@@ -290,6 +290,17 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 	var fileSystemIpPort='<%=fileSystemIpPort%>';
     var viewEttUserURL='<%=viewEttUserURL%>';
     var fromType="${sessionScope.fromType}";
+    $(function(){
+        $("#loading").ajaxStart(function(){
+                var w=$(document).width()/2-parseInt($(this).css("width"))/2;
+                var h=$(document).height()/2-parseInt($(this).css("height"))/2;
+                $(this).css({"left":w+"px","top":h+"px"});
+                $(this).show();
+        });
+        $("#loading").ajaxStop(function(){
+            $(this).hide();
+        });
+    })
 </script>  
 <title><%=webTitle%></title>
 
@@ -301,4 +312,4 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 
 <script src="<%=testhost%>/js/ett/frame-bridge/jquery.top-dialog.js" charset="utf-8"></script>
 <script src="<%=testhost%>/js/ett/frame-bridge/jquery.top-bridge.js" charset="utf-8"></script>
-	
+<div id="loading" style='display:none;position: absolute;z-index:9999;width:32px;height:32px'><img src="images/loading.gif"/></div>

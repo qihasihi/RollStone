@@ -134,13 +134,13 @@
                 return;
             }
 
-            if (window.opener != undefined) {
-                //for chrome
-                window.opener.returnValue =resid;
-            }
-            else {
-                window.returnValue =resid;
-            }
+//            if (window.opener != undefined) {
+//                //for chrome
+//                window.opener.returnValue =resid;
+//            }
+//            else {
+                returnValue =resid;
+//            }
             <%if(optype1==null||optype1.trim().length()<1){%>
             window.close();
             <%}else{%>
@@ -179,7 +179,7 @@
                     <c:if test="${idx.index<=12}">
                         <li>
                     </c:if>
-                    <a href="javascript:showModalDialog('tpres?m=previewMic&courseid=${param.courseid}&resid=${r.resid}','','dialogWidth:900px;dialogHeight:700px;dialogLeft:100px;dialogTop:50px;status:no;location:no')"  class="kapian">
+                    <a href="javascript:loadMicDetail('${r.resid}')"  class="kapian">
                         <p>
                             <%--<img src="<%=fileSystemIpPort%>${r.resid>0?'clouduploadfile':'/uploadfile/'}${r.path}/001${r.filesuffixname}.pre.jpg" width="215" height="122">--%>
                             <img src="images/pic13_140704.jpg" width="215" height="122">

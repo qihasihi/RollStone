@@ -79,13 +79,14 @@
                           $("#webimopen").click();
                       });
                   }else{
-                      window.open("<%=webimUrl%>");
+                    window.open("<%=webimUrl%>");
                   }
                 }else
                     alert(rps.msg);
             }
         })
     }
+
     //乐知行
     function loadLZXWeImRight(){
         $.ajax({
@@ -110,6 +111,7 @@
             }
         })
     }
+
     function lzxLoadEttUserName(){
         $.ajax({
             url:"tpuser?loadEttUserName",
@@ -130,6 +132,9 @@
             }
         });
     }
+    $(function(){
+        $("#li_web_im a").attr("data-href","<%=webimUrl%>");
+    })
 </script>
 <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
 <div id="header">
@@ -146,7 +151,7 @@
                 <%@include file="webim.jsp"%>
           <%}else{%>
               <li class="three" id="li_web_im">
-                  <a  href="javascript:;" onclick="loadWeImRight()">爱&nbsp;学</a>
+                  <a  href="javascript:loadWeImRight();">爱&nbsp;学</a>
               </li>
           <%}%>
      </c:if>
@@ -164,7 +169,7 @@
         <%
         if(modelType==2){//||modelType==1
             %>
-        <li class="three" id="li_web_im"><a href="javascript:;" onclick="loadLZXWeImRight()">爱学</a></li>
+        <li class="three" id="li_web_im"><a href="javascript:loadLZXWeImRight();">爱学</a></li>
         <%
         }
             if(isTeacher&&!isStudent&&modelType==2){

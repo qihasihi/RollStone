@@ -46,13 +46,70 @@ function showTaskElement(type) {
     var top =100;//findDimensions().height/2-parseFloat($("#p_operate").css("height"))/2-120;
     var param = 'dialogWidth:'+paramObj.width+'px;dialogHeight:'+paramObj.height+'px;dialogLeft:'+left+'px;dialogTop:'+top+'px;status:no;location:no';
     var returnValue = window.showModalDialog(url, "", param);
-  /*  if(window.showModalDialog)
-        returnValue = window.showModalDialog(url, "", param);
-    else{
-        var win=window.open(url, "", param);
-        if(!win.closed)return;
+    /*  if(window.showModalDialog)
+     returnValue = window.showModalDialog(url, "", param);
+     else{
+     var win=window.open(url, "", param);
+     if(!win.closed)return;
+     }
+     */
+
+    if (returnValue == undefined) {
+        returnValue = window.returnValue;
     }
-    */
+    if (returnValue == null || returnValue.toString().length < 1) {
+        alert("操作取消!");
+        return;
+    }
+    if (type == 1) {//资源
+        queryResource(courseid, 'tr_task_obj', returnValue)
+    } else if (type == 2) {//论题
+        queryInteraction(courseid, 'tr_task_obj', returnValue);
+    } else if (type == 3) { //问题类型
+        var questype = $("input[name='rdo_ques_type']:checked").val();
+        $.ajax({
+            url: "question?m=questionAjaxList",
+            type: "post",
+            data: {questype: questype, courseid: courseid, questionid: returnValue},
+            dataType: 'json',
+            cache: false,
+            error: function () {
+                alert('系统未响应，请稍候重试!');
+            }, success: function (rmsg) {
+                if (rmsg.type == "error") {
+                    alert(rmsg.msg);
+                } else {
+                    var htm = '';
+                    $("#ques_name").html('');
+                    $("#ques_answer").html('');
+                    $("#td_option").hide();
+                    $("#td_option").html('');
+                    if (rmsg.objList.length && typeof returnValue != 'undeinfed' && returnValue.toString().length > 0) {
+                        $("#hd_questionid").val(rmsg.objList[0].questionid);
+                        $("#sp_ques_id").html(rmsg.objList[0].questionid);
+                        load_ques_detial(returnValue, questype);
+                    }
+                    $("#tr_ques_obj").show();
+                }
+            }
+        });
+    } else if (type == 4) {
+        queryPaper(courseid, 'tr_task_obj', 4, returnValue);
+    } else if (type == 6) {
+        queryMicView(courseid, 'tr_task_obj', 6, returnValue);
+    }
+}
+
+function showTaskElementTopic(type) {
+    var url = 'task?m=toTaskElementDetial&tasktype=' + type + '&courseid=' + courseid;
+    if (type == 3) {
+        var questype = $("input[name='rdo_ques_type']:checked").val();
+        url += '&questype=' + questype;
+    } else if (type == 4) {//成卷测试
+        url = 'paper?m=toSelTaskPaper&tasktype=' + type + '&courseid=' + courseid;
+    } else if (type == 6){//微视频
+        url = 'tpres?m=queryMicViewList&tasktype=' + type + '&courseid=' + courseid;
+    }
 
     if (returnValue == undefined) {
         returnValue = window.returnValue;
@@ -113,7 +170,10 @@ function loadTaskElement(type) {
     } else if (type == 4) {//成卷测试
         url = 'paper?m=toSelTaskPaper&tasktype=' + type + '&courseid=' + courseid;
     } else if (type == 6){//微视频
-        url = 'tpres?m=queryMicViewList&tasktype=' + type + '&courseid=' + courseid;
+        //url = 'tpres?m=queryMicViewList&tasktype=' + type + '&courseid=' + courseid;
+        url = 'task?m=toSelMicForTask&tasktype=' + type + '&courseid=' + courseid;
+    }else if(type==2){
+        url='task?m=toSelTopicForTask&courseid='+courseid+'&tasktype='+type;
     }
     $("#dv_content").load(url,function(){
         $("#dv_content").show();
@@ -468,7 +528,7 @@ function queryMicView(courseid, trobj, type, taskvalueid,taskstatus) {
             htm += '<th><span class="ico06"></span>选择微视频：</th>';
             htm += '<td class="font-black">';
             if(typeof taskstatus=='undefined')
-                htm += '<p><a class="font-darkblue"  href="javascript:showTaskElement(' + type + ')">>> 选择微视频</a></p>';
+                htm += '<p><a class="font-darkblue"  href="javascript:loadTaskElement(' + type + ')">>> 选择微视频</a></p>';
             htm += '<div class="jxxt_zhuanti_add_ziyuan" id="dv_res_name"></div>';
             htm += '<input type="hidden" id="hd_elementid"/>';
             htm += '</td>';
@@ -589,7 +649,7 @@ function queryInteraction(courseid, trobj, taskvalueid, taskstatus) {
             htm += '<th><span class="ico06"></span>选择论题：</th>';
             htm += '<td class="font-black">';
             if (typeof taskstatus == 'undefined')
-                htm += '<p><a class="font-darkblue"  href="javascript:showTaskElement(2)">>> 选择已有论题</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="font-darkblue"  href="javascript:showDialogPage(2)">>> 添加论题</a></p>';
+                htm += '<p><a class="font-darkblue"  href="javascript:loadTaskElement(2)">>> 选择论题</a></p>';
             htm += '<div class="jxxt_zhuanti_add_ziyuan" id="dv_topictitle"></div>';
             htm += '<input type="hidden" id="hd_elementid"/>';
             htm += '</td>';
