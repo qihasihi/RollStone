@@ -100,5 +100,10 @@ public class  TpCourseResourceManager extends BaseManager<TpCourseResource> impl
     public List<TpCourseResource> getLikeResource(Integer gradeid, Integer subjectid, String name, PageResult presult) {
         return this.tpcourseresourcedao.getLikeResource(gradeid,subjectid,name,presult);
     }
+
+    @Override
+    public List<TpCourseResource> getResourceUnion(TpCourseResource tpCourseResource, PageResult presult) {
+        return this.tpcourseresourcedao.getResourceUnion(tpCourseResource,presult);
+    }
 }
 

@@ -48,7 +48,7 @@ $(function () {
         $("#remoteLi").hide();
     }
     //查询的本地资源？
-    var url='tpres?toQueryLocalResourceList';
+    var url='tpres?toQueryLocalResourceListUnion';
     pList1 = new PageControl( {
         post_url : url,
         page_id : 'page1',
@@ -65,21 +65,21 @@ $(function () {
         operate_id : "mainTab1"
     });
     //查询的关联专题
-    pList2 = new PageControl( {
-        post_url : 'tpres?toQueryRelatedResourceList',
-        page_id : 'page2',
-        page_control_name : "pList2",
-        post_form : document.pListForm2,
-        gender_address_id : 'pListaddress2',
-        http_free_operate_handler : preeDoPageSub2, //执行查询前操作的内容
-        http_operate_handler : getInvestReturnMethod2, //执行成功后返回方法
-        return_type : 'json', //放回的值类型
-        page_no : 1, //当前的页数
-        page_size : 5, //当前页面显示的数量
-        rectotal : 0, //一共多少
-        pagetotal : 1,
-        operate_id : "mainTab2"
-    });
+//    pList2 = new PageControl( {
+//        post_url : 'tpres?toQueryRelatedResourceList',
+//        page_id : 'page2',
+//        page_control_name : "pList2",
+//        post_form : document.pListForm2,
+//        gender_address_id : 'pListaddress2',
+//        http_free_operate_handler : preeDoPageSub2, //执行查询前操作的内容
+//        http_operate_handler : getInvestReturnMethod2, //执行成功后返回方法
+//        return_type : 'json', //放回的值类型
+//        page_no : 1, //当前的页数
+//        page_size : 5, //当前页面显示的数量
+//        rectotal : 0, //一共多少
+//        pagetotal : 1,
+//        operate_id : "mainTab2"
+//    });
     //糢糊查询
     pList3 = new PageControl( {
         post_url : 'tpres?toQueryLikeResourceList',
@@ -97,7 +97,7 @@ $(function () {
         operate_id : "mainTab3"
     });
     pageGo('pList1');
-    pageGo('pList2');
+    //pageGo('pList2');
     // pageGo('pList3');
 });
 
@@ -556,23 +556,23 @@ function subUploadRes(usertype){
             </div>
             <h6></h6>
 
-            <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
-                <col class="w60"/>
-                <col class="w880"/>
-                <caption>关联专题资源库</caption>
-                <tbody  id="mainTab2">
+            <%--<table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">--%>
+                <%--<col class="w60"/>--%>
+                <%--<col class="w880"/>--%>
+                <%--<caption>关联专题资源库</caption>--%>
+                <%--<tbody  id="mainTab2">--%>
 
-                </tbody>
+                <%--</tbody>--%>
 
-            </table>
-            <div class="nextpage">
-                <form id="pListForm2" name="pListForm2">
-                    <span><a href="javascript:;"  onclick="pagePre('pList2');"><b class="before"></b></a></span>&nbsp;
-                    <font  id="pList2font">1/1</font>&nbsp;
-                    <span><a href="javascript:;" onclick="pageNext('pList2');"><b class="after"></b></a></span>
-                    <p class="Mt20" id="pListaddress2" align="center" style="display:none"></p>
-                </form>
-            </div>
+            <%--</table>--%>
+            <%--<div class="nextpage">--%>
+                <%--<form id="pListForm2" name="pListForm2">--%>
+                    <%--<span><a href="javascript:;"  onclick="pagePre('pList2');"><b class="before"></b></a></span>&nbsp;--%>
+                    <%--<font  id="pList2font">1/1</font>&nbsp;--%>
+                    <%--<span><a href="javascript:;" onclick="pageNext('pList2');"><b class="after"></b></a></span>--%>
+                    <%--<p class="Mt20" id="pListaddress2" align="center" style="display:none"></p>--%>
+                <%--</form>--%>
+            <%--</div>--%>
         </div>
         <div id="like" style="display: none">
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">

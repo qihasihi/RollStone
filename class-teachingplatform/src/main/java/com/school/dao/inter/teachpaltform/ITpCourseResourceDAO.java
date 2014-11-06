@@ -26,4 +26,9 @@ public interface ITpCourseResourceDAO extends ICommonDAO<TpCourseResource>{
      * 模糊查询当前年纪学科下资源，发资源任务用
      * */
     public List<TpCourseResource> getLikeResource(Integer gradeid,Integer subjectid,String name,PageResult presult);
+
+    /**
+     * 查询某个专题下资源包括关联专题资源，发资源任务用
+     * */
+    public List<TpCourseResource> getResourceUnion(TpCourseResource tpCourseResource,PageResult presult);
  }

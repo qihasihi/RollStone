@@ -2124,6 +2124,33 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     }
 
     /**
+     * 任务添加页 获取资源(union)
+     * @throws Exception
+     */
+    @RequestMapping(params="toQueryLocalResourceListUnion",method=RequestMethod.POST)
+    public void toQueryLocalResourceListUnion(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String taskflag=request.getParameter("taskflag");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        PageResult p=this.getPageResultParameter(request);
+
+        TpCourseResource t= new TpCourseResource();
+        t.setCourseid(Long.parseLong(courseid));
+        //查询没有发任务的资源
+        t.setTaskflag(1);
+        List<TpCourseResource>resList=this.tpCourseResourceManager.getList(t, p);
+        je.setPresult(p);
+        je.setObjList(resList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
      * 任务添加页 获取关联专题资源
      * @throws Exception
      */

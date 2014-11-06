@@ -301,33 +301,38 @@ function queryQuestionType(trobj, questype, boo, questionid) {
  * */
 function showResourceElementJsp(){
     var url = 'task?m=toTaskElementDetial&operate_type=1&gradeid='+gradeid+'&subjectid='+subjectid+'&tasktype=1&courseid=' + courseid;
-    var param = "dialogHeight:800px;dialogWidth:900px;status:no;location:no";
-    var returnValue = window.showModalDialog(url, "", param);
-    if (returnValue == undefined) {
-        returnValue = window.returnValue;
-    }
-    if (returnValue == null || returnValue.toString().length < 1) {
-        alert("操作取消!");
-        return;
-    }
-    var values=returnValue.split(",");
-    if(values.length>0){
-        if(values.length==2){
-            $("#hd_elementid").val(values[0]);
-            $("#resource_type").val(values[1]);
-            queryResource(courseid, 'tr_task_obj', values[0]);
-        }else if(values.length==3){
-            $("#hd_elementid").val(values[0]);
-            $("#resource_type").val(values[1]);
-            queryResource(values[2], 'tr_task_obj', values[0]);
-        }else{
-            $("#hd_elementid").val(values[0]);
-            $("#resource_type").val(values[1]);
-            $("#remote_type").val(values[2]);
-            $("#dv_res_name").html('<span class="ico_mp41"></span>'+values[3]);
-            $("#resource_name").val(values[3]);
-        }
-    }
+    $("#dv_content").load(url,function(){
+        $("#dv_content").show();
+        $("#a_click").click();
+    });
+    //var param = "dialogHeight:800px;dialogWidth:900px;status:no;location:no";
+
+//    var returnValue = window.showModalDialog(url, "", param);
+//    if (returnValue == undefined) {
+//        returnValue = window.returnValue;
+//    }
+//    if (returnValue == null || returnValue.toString().length < 1) {
+//        alert("操作取消!");
+//        return;
+//    }
+//    var values=returnValue.split(",");
+//    if(values.length>0){
+//        if(values.length==2){
+//            $("#hd_elementid").val(values[0]);
+//            $("#resource_type").val(values[1]);
+//            queryResource(courseid, 'tr_task_obj', values[0]);
+//        }else if(values.length==3){
+//            $("#hd_elementid").val(values[0]);
+//            $("#resource_type").val(values[1]);
+//            queryResource(values[2], 'tr_task_obj', values[0]);
+//        }else{
+//            $("#hd_elementid").val(values[0]);
+//            $("#resource_type").val(values[1]);
+//            $("#remote_type").val(values[2]);
+//            $("#dv_res_name").html('<span class="ico_mp41"></span>'+values[3]);
+//            $("#resource_name").val(values[3]);
+//        }
+//    }
 
 }
 

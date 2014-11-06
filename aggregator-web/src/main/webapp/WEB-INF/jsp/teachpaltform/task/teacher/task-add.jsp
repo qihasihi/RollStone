@@ -7,7 +7,31 @@
     <title>${sessionScope.CURRENT_TITLE}</title>
     <style>
     </style>
+    <script type="text/javascript" src="<%=basePath %>js/common/uploadControl.js"></script>
+    <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery.json-2.4.js"></script>
+    <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery-ui-1.10.2.custom.min.js"></script>
+    <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/knockout-2.2.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" />
+    <script src="<%=basePath %>js/common/ajaxfileupload.js" type="text/javascript"></script>
 
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>comment/comment_star.css"/>
+    <script type="text/javascript" src="<%=basePath %>comment/commentScorePlug.js"></script>
+    <script type="text/javascript" src="js/resource/new_resbase.js"></script>
+
+
+    <script type="text/javascript"
+            src="<%=basePath %>js/teachpaltform/resource.js"></script>　
+
+    <script type="text/javascript"
+            src="fancybox/jquery-1.6.2.min.js"></script>
+
+    <script type="text/javascript"
+            src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+    <script type="text/javascript"
+            src="fancybox/jquery.fancybox-1.3.4.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
 
     <script type="text/javascript"
             src="fancybox/jquery-1.6.2.min.js"></script>
@@ -34,6 +58,12 @@
                 'onClosed':function(){
                     $("#dv_content").hide();
                 }
+            });
+            $("#a_click").fancybox({
+                'onClosed':function(){
+                    $("#dv_content").hide();
+                }
+
             });
             $("#task_type").val(${param.tasktype});
             if(questype.length<1)
@@ -171,11 +201,16 @@
         </tr>
 
         <a id="a_click" href="#dv_content"></a>
+        <div id="dv_content"  style="width:800px;height:600px;display: none;"></div>
+
+        <a id="a_click" href="#dv_content"></a>
         <div id="dv_content"  style="display: none;"></div>
 
         <tr id="tr_ques_obj" style="display: none">
             <th><span class="ico06"></span>选择试题：</th>
             <td class="font-black">
+                <a href="javascript:loadTaskElement(3)"  class="font-darkblue">>>&nbsp;选择试题</a>
+                <%--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="showDialogPage(3)" class="font-darkblue">>>&nbsp;添加试题</a>--%>
                 <a href="javascript:loadTaskElement(3)"  class="font-darkblue">>>&nbsp;选择试题</a>
                 <%--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="showDialogPage(3)" class="font-darkblue">>>&nbsp;添加试题</a>--%>
                 <div class="jxxt_zhuanti_add_shiti"  id="tb_ques" style="overflow-y: auto;display:none;">
@@ -185,8 +220,8 @@
                         <tr>
                             <td valign="top"><strong>试题编号：</strong></td>
                             <td>
-                                    <span id="sp_ques_id"></span>
-                                    <input type="hidden" id="hd_questionid"/>
+                                <span id="sp_ques_id"></span>
+                                <input type="hidden" id="hd_questionid"/>
                             </td>
                         </tr>
                         <tr>
@@ -205,20 +240,20 @@
                 <c:if test="${!empty courseclassList and courseclassList[0].classid ne 0}">
                     <c:forEach var="cc" items="${courseclassList}" varStatus="idx">
 
-                               <!-- <p class="f_right w410">
-                                    <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" class="public_input w140" />~
-                                    <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly" id="e_time_${cc.classid}" type="text"class="public_input w140" />
-                                </p> -->
-                                <p class="font-black"><input name="ck_cls" data-bind="${cc.classtype}" type="checkbox"   onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
+                        <!-- <p class="f_right w410">
+                        <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" class="public_input w140" />~
+                        <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly" id="e_time_${cc.classid}" type="text"class="public_input w140" />
+                        </p> -->
+                        <p class="font-black"><input name="ck_cls" data-bind="${cc.classtype}" type="checkbox"   onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
 
 
-                           <!-- <c:if test="${idx.index!=0}">
-                                <p class="f_right w410">
-                                    <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" class="w140" />~
-                                    <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly"  id="e_time_${cc.classid}" type="text" class="w140" />
-                                </p>
-                                <p class="font-black"><input name="ck_cls" type="checkbox"  onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
-                            </c:if> -->
+                        <!-- <c:if test="${idx.index!=0}">
+                        <p class="f_right w410">
+                        <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" class="w140" />~
+                        <input onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" readonly="readonly"  id="e_time_${cc.classid}" type="text" class="w140" />
+                        </p>
+                        <p class="font-black"><input name="ck_cls" type="checkbox"  onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
+                    </c:if> -->
 
                         <ul class="public_list3" id="p_group_${cc.classid }">
                         </ul>
@@ -238,8 +273,8 @@
                 <p><input id="time_rdo0" name="time_rdo" type="radio" value="0"/>
                     所有班级一致&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <c:if test="${fn:length(courseclassList)>1}">
-                        <input id="time_rdo1"  name="time_rdo" value="1" type="radio"/>不一致</p>
-                    </c:if>
+                    <input id="time_rdo1"  name="time_rdo" value="1" type="radio"/>不一致</p>
+                </c:if>
                 <div id="all_ct" class="jxxt_zhuanti_add_time">
                     <p>
                         <span class="f_right">
