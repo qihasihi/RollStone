@@ -34,7 +34,6 @@
         <script src="demo/js/jquery-jsmartdrag.js" type="text/javascript"></script>
         <style type="text/css">
             /*body{-moz-user-select: none;color:white;font-size:1.5em;}*/
-            body{-moz-user-select: none}
             .jsmartdrag-source{cursor:pointer;}
             .jsmartdrag-source-hover{opacity:0.5;}
             .jsmartdrag-cursor-hover{opacity:0.5;}
@@ -128,22 +127,21 @@ function paperDivShow(){
 function showQues(idx){
     // $("#dv_paper table:not(data-idx='"+idx+"')").hide();
     //隐藏dv_ques
-    $("#dv_paperdetail tr[id*='tr_jiexi']").hide();
-    $("#dv_paperdetail table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").hide();
-    var cuTagName=$("#dv_paperdetail table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).attr("tagName").toUpperCase();
+    $("#dv_paperdetail table[id*='dv_ques_']").hide();
+    var cuTagName=$("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).attr("tagName").toUpperCase();
     if(cuTagName=="TR"){//如果是tr，则显示table
-        $("#dv_paperdetail table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).next("tr").fadeIn('fast');
-        $("#dv_paperdetail table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).parent().parent().fadeIn('fast');
+        $("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).next("tr").fadeIn('fast');
+        $("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).parent().parent().fadeIn('fast');
     }else{
-        $("#dv_paperdetail table[id*='questeam_']").hide();
+        $("#dv_paperdetail>table[id*='questeam_']").hide();
     }
-    $("#dv_paperdetail table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).fadeIn('slow');
+    $("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).fadeIn('slow');
     //序号的样式
     $("#ul_xuhao>li").removeClass("blue_big").removeClass("blue").addClass("blue");
     $("#li_"+idx).removeClass("blue").addClass("blue_big");
     //得到题号，当前的问题
-    var currentQuesid=$("#dv_paperdetail table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).attr("data-bind");
-    var currentQIdx=$("#dv_paperdetail table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).html();
+    var currentQuesid=$("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).attr("data-bind");
+    var currentQIdx=$("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).html();
 
     if(currentQIdx>=$("#ul_xuhao>li").length){
         $("#a_next").fadeOut('fast');
@@ -161,7 +159,7 @@ function showQues(idx){
 function next(ty){
 //            currentQuesid=$("#dv_paper table:eq("+currentQIdx+")").attr("data-bind");
     //当前的序号
-    var currentQIdx=$("#dv_paperdetail table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").filter(function(){return this.style.display!='none';}).attr("data-idx");
+    var currentQIdx=$("#dv_paperdetail table[id*='dv_ques_']").filter(function(){return this.style.display!='none';}).attr("data-idx");
     if(typeof(currentQIdx)=="undefined"||currentQIdx==null){
         currentQIdx=0;
     }
@@ -169,7 +167,7 @@ function next(ty){
     var nextQIdx=parseInt(currentQIdx)+1
     if(ty<1)
         nextQIdx=parseInt(currentQIdx)-1;
-    if(nextQIdx>$("#dv_paperdetail table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").length){
+    if(nextQIdx>$("#dv_paperdetail table[id*='dv_ques_']").length){
         nextQIdx=1;
     }else if(nextQIdx<1)
         nextQIdx=6;
@@ -185,12 +183,13 @@ function next(ty){
 function showQuesNum(){
     var h='';
     var qtlength=$("#dv_paperdetail table[id*='dv_ques_']").length;
-    $("#dv_paperdetail table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").each(function(idx,itm){
-        h+='<li class="blue quesNumli" id="li_'+(idx+1)+'"><a href="javascript:;" onclick="showQues('+(idx+1)+')">'+(idx+1)+'</a></li>';
+    $("#dv_paperdetail table[id*='dv_ques_']").each(function(idx,itm){
+        h+='<li class="blue quesNumli" id="li_'+(idx+1)+'" data-bind="'+(idx+1)+'"><a href="javascript:;" onclick="showQues('+(idx+1)+')">'+(idx+1)+'</a></li>';
 
     });
     $("#ul_xuhao").html(h);
-    <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1}">
+    <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
+         $("#dv_bf_dvpdtail").html($("#dv_paperdetail #dv_table").html());
         js = $(".quesNumli").jsmartdrag({
             target:'.quesNumli',
             afterDrag:afterDrag
@@ -206,10 +205,77 @@ function afterDrag(selected,currentObj,targetSelected){
 //        }else if(targetSelected.attr("id")==$(".quesNumli:last").attr("id")){
 //            $(currentObj).before(targetSelected);
 //        }else
-            $(targetSelected).after(currentObj);
+        var isReOrder=false;
+            var targetIdx=$(targetSelected).attr("data-bind");
+            var currentIdx=$(currentObj).attr("data-bind");
+            if(targetIdx>currentIdx){
+                $(targetSelected).after(currentObj);
+                $("#dv_bf_dvpdtail>table[data-idx='"+targetIdx+"']").after($("#dv_bf_dvpdtail>table[data-idx='"+currentIdx+"']"));
+                isReOrder=true;
+            }else if(targetIdx<currentIdx){
+                $(targetSelected).before(currentObj);
+                $("#dv_bf_dvpdtail>table[data-idx='"+targetIdx+"']").before($("#dv_bf_dvpdtail>table[data-idx='"+currentIdx+"']"));
+                isReOrder=true;
+            }
+            //重新排序
+            if(isReOrder){
+                /*********************先修改页面元素，再根据页面元素的相关值修改数据库********************/
+                //修改table题
+                $("#dv_bf_dvpdtail>table").each(function(idx,itm){
+                    $(this).attr("data-idx",idx+1);
+                });
+                //修改li
+                $("#ul_xuhao>li").each(function(idx,itm){
+                    //修改idx
+                    $(this).attr("id","li_"+(idx+1)).attr("data-bind",(idx+1));
+                    //修改事件，及html
+                    $(this).children("a").attr("onclick","").unbind("click").html((idx+1)).bind("click",function(){
+                        showQues((idx+1));
+                    });
+                });
+                //数据库请求。
+                quesNumOrder(paperid);
+            }
+
         //更新SQL
-     }else{
+     }
+}
+/**
+ * 试题问题顺序重新排序
+ * @param pid
+ */
+function quesNumOrder(pid){
+    if(typeof(pid)=="undefined"||pid==null){
+        alert("错误，参数异常!");return;
     }
+    var p={paperid:pid};
+    //得到问题的顺序(试题组当一道题处理)
+    $("#dv_bf_dvpdtail>table").each(function(idx,itm){
+        var qid=$(itm).attr("data-bind");
+        var oidx=$(itm).attr("data-idx");
+        eval("(p.qid_"+qid+"="+oidx+")");
+    });
+    //执行数据库操作
+    $.ajax({
+        url: 'paperques?m=doSaveQuesOrder',
+        type: 'post',
+        data: p,
+        dataType: 'json',
+        cache: false,
+        success: function (rps) {
+            if (rps.type == "error") {
+                //失败 状态回滚
+                $("#dv_bf_dvpdtail").html($("#dv_paperdetail #dv_table").html());
+                alert(rps.msg);
+            }else{
+                //成功，显示相关页面
+                $("#dv_paperdetail #dv_table").html($("#dv_bf_dvpdtail").html());
+                var currentQIdx=$("#ul_xuhao .blue_big").attr("data-bind");
+                showQues(currentQIdx);
+            }
+
+        }
+    });
 }
 </c:if>
 </script>
@@ -231,15 +297,13 @@ function afterDrag(selected,currentObj,targetSelected){
         </ul>
         <div class="clear"></div>
     </div>
+    <div id="dv_table">
         <c:if test="${!empty pqList}">
             <c:forEach items="${pqList}" var="pq" varStatus="pqIdx">
                 <c:set var="teamSize" value="${fn:length(pq.questionTeam)}"/>
-                <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="${!empty pq.questionTeam?"questeam_":"dv_ques_"}${pq.questionid}"
+                <table border="0" cellpadding="0" cellspacing="0" class="public_tab1" id="dv_ques_${pq.questionid}"
                        data-bind="${pq.questionid}" style="display:none"
-                       <c:if test="${empty pq.questionTeam}">
-                        data-idx="<%=++idx%>"
-                       </c:if>
-                        >
+                        data-idx="<%=++idx%>">
                     <col class="w30"/>
                     <col class="w880"/>
                     <caption>
@@ -319,7 +383,7 @@ function afterDrag(selected,currentObj,targetSelected){
 
                     <c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0 and pq.extension ne 5}">
                         <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
-                            <tr id="dv_ques_${c.questionid}" data-bind="${c.questionid}" data-idx="<%=++idx%>"  style="display:none">
+                            <tr id="dv_ques_${c.questionid}" data-bind="${c.questionid}" >
                                 <td>&nbsp;</td>
                                 <td><p><span class="width font-blue">
                                     <a><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}"
@@ -442,6 +506,12 @@ function afterDrag(selected,currentObj,targetSelected){
                 </table>
             </c:forEach>
         </c:if>
-</div>
+    </div>
+    </div>
+    <div id="dv_bf_dvpdtail" style="display: none">
+
+    </div>
+
+
 </body>
 </html>

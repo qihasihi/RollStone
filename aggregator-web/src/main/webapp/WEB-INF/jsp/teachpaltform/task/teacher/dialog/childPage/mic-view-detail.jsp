@@ -84,7 +84,7 @@
 //                currentQuesid=$("#dv_paper table:first").attr("data-bind");
 //                currentQIdx=$("#dv_paper table:first #sp_tbl_qidx").html();
 //            }
-            var currentQIdx=$("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").filter(function(){return this.style.display!='none';}).attr("data-idx");
+            var currentQIdx=$("#dv_paper table[id*='dv_ques_']").filter(function(){return this.style.display!='none';}).attr("data-idx");
             if(typeof(currentQIdx)=="undefined"||currentQIdx==null){
                 next(1);
             }
@@ -99,22 +99,21 @@
         function showQues(idx){
             // $("#dv_paper table:not(data-idx='"+idx+"')").hide();
             //隐藏dv_ques
-            $("#dv_paper tr[id*='tr_jiexi']").hide();
-            $("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").hide();
-            var cuTagName=$("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).attr("tagName").toUpperCase();
+            $("#dv_paper table[id*='dv_ques_']").hide();
+            var cuTagName=$("#dv_paper table[id*='dv_ques_']").eq((idx-1)).attr("tagName").toUpperCase();
             if(cuTagName=="TR"){//如果是tr，则显示table
-                $("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).next("tr").fadeIn('fast');
-                $("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).parent().parent().fadeIn('fast');
+                $("#dv_paper table[id*='dv_ques_']").eq((idx-1)).next("tr").fadeIn('fast');
+                $("#dv_paper table[id*='dv_ques_']").eq((idx-1)).parent().parent().fadeIn('fast');
             }else{
                 $("#dv_paper table[id*='questeam_']").hide();
             }
-            $("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).fadeIn('slow');
+            $("#dv_paper table[id*='dv_ques_']").eq((idx-1)).fadeIn('slow');
             //序号的样式
             $("#ul_xuhao>li").removeClass("blue_big").removeClass("blue").addClass("blue");
             $("#li_"+idx).removeClass("blue").addClass("blue_big");
             //得到题号，当前的问题
-            var currentQuesid=$("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).attr("data-bind");
-            var currentQIdx=$("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").eq((idx-1)).html();
+            var currentQuesid=$("#dv_paper table[id*='dv_ques_']").eq((idx-1)).attr("data-bind");
+            var currentQIdx=$("#dv_paper table[id*='dv_ques_']").eq((idx-1)).html();
 
             if(currentQIdx>=$("#ul_xuhao>li").length){
                 $("#a_next").fadeOut('fast');
@@ -132,7 +131,7 @@
         function next(ty){
 //            currentQuesid=$("#dv_paper table:eq("+currentQIdx+")").attr("data-bind");
             //当前的序号
-            var currentQIdx=$("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").filter(function(){return this.style.display!='none';}).attr("data-idx");
+            var currentQIdx=$("#dv_paper table[id*='dv_ques_']").filter(function(){return this.style.display!='none';}).attr("data-idx");
             if(typeof(currentQIdx)=="undefined"||currentQIdx==null){
                 currentQIdx=0;
             }
@@ -140,7 +139,7 @@
             var nextQIdx=parseInt(currentQIdx)+1
             if(ty<1)
                 nextQIdx=parseInt(currentQIdx)-1;
-            if(nextQIdx>$("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").length){
+            if(nextQIdx>$("#dv_paper table[id*='dv_ques_']").length){
                 nextQIdx=1;
             }else if(nextQIdx<1)
                 nextQIdx=6;
@@ -155,7 +154,7 @@
         function showQuesNum(){
             var h='';
             var qtlength=$("#dv_paper table[id*='dv_ques_']").length;
-            $("#dv_paper table[id*='dv_ques_'],#dv_paperdetail tr[id*='dv_ques_']").each(function(idx,itm){
+            $("#dv_paper table[id*='dv_ques_']").each(function(idx,itm){
                 h+='<li class="blue quesNumli" id="li_'+(idx+1)+'"><a href="javascript:;" onclick="showQues('+(idx+1)+')">'+(idx+1)+'</a></li>';
 
             });
@@ -205,11 +204,9 @@
         <c:if test="${!empty pqList}">
             <c:forEach items="${pqList}" var="pq" varStatus="idx">
                 <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input font-black"
-                       id="${!empty pq.questionTeam?"questeam_":"dv_ques_"}${pq.questionid}"
+                       id="dv_ques_${pq.questionid}"
                        data-bind="${pq.questionid}" style="display:none"
-                        <c:if test="${empty pq.questionTeam}">
                             data-idx="<%=++idx%>"
-                        </c:if>
                        style="display:none">
                     <col class="w30"/>
                     <col class="w880"/>
@@ -271,7 +268,7 @@
 
                     <c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0 and pq.extension ne 5}">
                         <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
-                            <tr id="dv_ques_${c.questionid}" data-bind="${c.questionid}" data-idx="<%=++idx%>"  style="display:none">
+                            <tr id="dv_ques_${c.questionid}" data-bind="${c.questionid}">
                                 <td>&nbsp;</td>
                                 <td><p><span data-bind="${c.questionid}"  class="font-blue">${(cidx.index+1)+(pq.orderidx-1)}</span>. ${c.content}</p>
                                     <table border="0" cellpadding="0" cellspacing="0">

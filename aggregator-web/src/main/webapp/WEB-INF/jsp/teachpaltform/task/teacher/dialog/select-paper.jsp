@@ -173,7 +173,8 @@
                 alert('网络异常!参数异常!');
                 return;
             }
-            $("#dv_paperDetail").load("paper?toPreviewPaperModel&courseid=${param.courseid}&paperid="+paperid+"&op_type1=1&dropQuesNum=1"
+            <%//参数解析 dropQuesNum:1 表示可以拖拽调整试题顺序  其它则是不提供此功能。%>
+            $("#dv_paperDetail").load("paper?toPreviewPaperModel&courseid=${param.courseid}&paperid="+paperid+"&op_type1=1&dropQuesNum=0"
                     ,function(rps){
                         // $("dv_load_topic").html(rps);
 //                        $(".content1:last").removeClass("content1");

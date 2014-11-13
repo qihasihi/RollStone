@@ -1763,7 +1763,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         entity.setResstatus(-3);//rs_status<>3的条件判断
         List<ResourceInfo> resourceList=this.resourceManager.getList(entity,presult);
         if(resourceList.size()<1){  //资源已经不存在
-            jeEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            jeEntity.setMsg("该资源已被删除!");
             response.getWriter().print(jeEntity.getAlertMsgAndBack());return null;
         }
         entity=resourceList.get(0); //得到资源相关信息
@@ -2127,6 +2127,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
 //                else
         mc.setData("我的资源 <a style=\"color:#0066CC\" href=\"resource?m=todetail&resid="+res.getResid()+"\">#ETIANTIAN_SPLIT#</a> 被管理员删除!");
         mc.setType(1);
+        sqlbuilder=new StringBuilder();
         objList=this.resourceManager.getMyInfoCloudSaveSql(mc,sqlbuilder);
         if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0&&objList!=null){
             sqlArrayList.add(sqlbuilder.toString());
@@ -2140,7 +2141,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
 
 
             }else
-                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }else{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
         }

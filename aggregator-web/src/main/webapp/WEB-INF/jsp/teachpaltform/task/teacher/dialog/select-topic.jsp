@@ -18,11 +18,11 @@
                             ,function(rps){
                                 $("#dv_loadTopic").html('<div class="jxxt_float_h480">'+rps+'</div>');
                                // $("dv_load_topic").html(rps);
-                                $(".content1:last").removeClass("content1");
-                                $(".subpage_head:last").remove();
-                                $(".foot:last").remove();
-                                $("#fade:last").remove();
-                                $(".an_small").removeClass("an_small").addClass("an_public1").last().remove();
+                                $("#dv_loadTopic .content1").removeClass("content1");
+                                $("#dv_loadTopic .subpage_head").remove();
+                                $("#dv_loadTopic .foot").remove();
+                                $("#dv_loadTopic #fade").remove();
+                                $("#dv_loadTopic .an_small").removeClass("an_small").addClass("an_public1").last().remove();
                                 $("#dv_loadTopic").show();
                     });
                 }else{      //添加论题的处理方式
@@ -33,11 +33,11 @@
                      $("#dv_loadTopic").load("tptopic?m=toAdmin&operate_type=1&courseid=${param.courseid}"
                              ,function(rps){
                                 // $("dv_load_topic").html(rps);
-                                 $(".content1:last").removeClass("content1");
-                                 $(".subpage_head").remove();
-                                 $(".foot").remove();
-                                 $("#fade:last").remove();
-                                 $(".an_small").removeClass("an_small").addClass("an_public1").last().remove();
+                                 $("#dv_loadTopic .content1").removeClass("content1");
+                                 $("#dv_loadTopic .subpage_head").remove();
+                                 $("#dv_loadTopic .foot").remove();
+//                                 $("#fade:last").remove();
+                                 $("#dv_loadTopic .an_small").removeClass("an_small").addClass("an_public1").last().remove();
                                  $("#dv_loadTopic").show();
                              });
                 }

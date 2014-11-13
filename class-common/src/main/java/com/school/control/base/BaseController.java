@@ -134,7 +134,27 @@ public class BaseController<T extends java.io.Serializable> {
         return returnVal;
     }
 
-
+    /**
+     * 验证RequestParams相关参数
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public static HashMap<String,String> getRequestParam(HttpServletRequest request) throws Exception{
+        Enumeration eObj=request.getParameterNames();
+        HashMap<String,String> returnMap=null;
+        if(eObj!=null){
+            returnMap=new HashMap<String, String>();
+            while(eObj.hasMoreElements()){
+                Object obj=eObj.nextElement();
+                if(obj==null||obj.toString().trim().length()<1||obj.toString().trim().equals("m")||obj.toString().equals(request.getQueryString()))
+                    continue;
+                Object val=request.getParameter(obj.toString());
+                returnMap.put(obj.toString(),val.toString());
+            }
+        }
+        return returnMap;
+    }
 
     /**
      * 获取分页参数的所有信息

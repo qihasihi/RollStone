@@ -3559,14 +3559,17 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
 
             //得到学生是否已经有过相关查看记录
-            StuViewMicVideoLog svm=new StuViewMicVideoLog();
-            svm.setUserid(this.logined(request).getUserid());
-            svm.setMicvideoid(resList.get(0).getResid());
-            svm.setTaskid(Long.parseLong(taskid));
-            List<StuViewMicVideoLog> stuViewMicList=this.stuViewMicVideoLogManager.getList(svm,presult);
-            if(stuViewMicList!=null&&stuViewMicList.size()>0){
+            if(taskstatus!=null&&!taskstatus.trim().equals("3")){
+                StuViewMicVideoLog svm=new StuViewMicVideoLog();
+                svm.setUserid(this.logined(request).getUserid());
+                svm.setMicvideoid(resList.get(0).getResid());
+                svm.setTaskid(Long.parseLong(taskid));
+                List<StuViewMicVideoLog> stuViewMicList=this.stuViewMicVideoLogManager.getList(svm,presult);
+                if(stuViewMicList!=null&&stuViewMicList.size()>0){
+                    mp.put("isViewVideo",1);
+                }
+            }else
                 mp.put("isViewVideo",1);
-            }
             //验证是否已经交卷
             StuPaperLogs splog=new StuPaperLogs();
             splog.setUserid(this.logined(request).getUserid());
@@ -4597,6 +4600,60 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
         }else
             jsonEntity.setType("success");
+        response.getWriter().println(jsonEntity.toJSON());
+    }
+
+    /**
+     * 保存试卷中试题的顺序
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=doSaveQuesOrder",method = RequestMethod.POST)
+    public void doSaveQuesOrder(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JsonEntity jsonEntity=new JsonEntity();
+        HashMap<String,String> paramMap=this.getRequestParam(request);
+        if(paramMap==null||paramMap.keySet().size()<1||!paramMap.containsKey("paperid")){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(jsonEntity.toJSON());return;
+        }
+        Long paperid=Long.parseLong(paramMap.get("paperid").trim());
+        //参数接收
+        StringBuilder sqlbuilder=null;
+        List<Object> objList;
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+
+        //循环参数
+        Iterator<String> iteParamKey=paramMap.keySet().iterator();
+        while(iteParamKey.hasNext()){
+            String key=iteParamKey.next();
+            if(key.indexOf("qid_")!=-1){ //题
+                Long qid=Long.parseLong(key.replace("qid_", "").trim());
+                Integer orderIdx=Integer.parseInt(paramMap.get(key).trim());
+                //得到SQL
+                PaperQuestion pqEntity=new PaperQuestion();
+                pqEntity.setQuestionid(qid);
+                pqEntity.setPaperid(paperid);
+                pqEntity.setOrderidx(orderIdx);
+                sqlbuilder=new StringBuilder();
+                objList=this.paperQuestionManager.getUpdateSql(pqEntity,sqlbuilder);
+                if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                    sqlArrayList.add(sqlbuilder.toString());
+                    objArrayList.add(objList);
+                }
+            }
+        }
+        //执行
+        if(sqlArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
+            if(this.paperQuestionManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+                jsonEntity.setType("success");
+            }else{
+                jsonEntity.setMsg("操作失败!");
+            }
+        }else{
+            jsonEntity.setMsg("异常错误，没有可执行的SQL语句!");
+        }
         response.getWriter().println(jsonEntity.toJSON());
     }
 

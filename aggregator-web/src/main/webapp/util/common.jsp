@@ -312,4 +312,7 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 
 <script src="<%=testhost%>/js/ett/frame-bridge/jquery.top-dialog.js" charset="utf-8"></script>
 <script src="<%=testhost%>/js/ett/frame-bridge/jquery.top-bridge.js" charset="utf-8"></script>
+<style type="text/css">
+    body{-moz-user-select: none}
+</style>
 <div id="loading" style='display:none;position: absolute;z-index:9999;width:32px;height:32px'><img src="images/loading.gif"/></div>
