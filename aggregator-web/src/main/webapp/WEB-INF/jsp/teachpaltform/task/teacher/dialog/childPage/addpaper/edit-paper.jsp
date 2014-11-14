@@ -413,10 +413,14 @@ function reSetScrollDiv(){
     </c:if>
     <div id="paper_detail" style="display:none">
     </div>
-    <p class="t_c"><a href="javascript:history.go(-1);" id="a_sb_taskpaper" class="an_small">提&nbsp;交</a></p>
+    <p class="t_c"><a href="javascript:doAddPaperTask();" id="a_sb_taskpaper" class="an_small">提&nbsp;交</a></p>
     <%--<p class="t_c p_tb_10"><a href="javascript:history.go(-1);" class="an_small">提&nbsp;交</a>&nbsp;&nbsp;&nbsp;&nbsp;<!--<a href="1" target="_blank" class="an_small">取&nbsp;消</a>--></p>--%>
 
 <script type="text/javascript">
+
+
+
+
     $("span").filter(function(){return this.id.indexOf('score_')!=-1}).each(function(idx,itm){
        $(itm).bind("click",function(){
            genderInput(itm,$(itm).html().Trim());

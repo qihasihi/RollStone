@@ -440,6 +440,31 @@ function queryResource(courseid,trobj,taskvalueid,taskstatus){
 
 
 /**
+ * 添加任务--成卷测试模式窗体
+ *
+ */
+function doAddPaperTask(){
+    $.ajax({
+        url: 'paper?toQueryTaskPaperList',
+        type: 'post',
+        data: {courseid: courseid, paperid: paperid, type: 4},
+        dataType: 'json',
+        error: function () {
+            alert('网络异常!');
+        },
+        success: function (json) {
+            if (json.objList.length > 0 && typeof paperid != 'undefined' && paperid.toString().length > 0) {
+                $("#tb_ques").hide();
+                $("#dv_paper_name").html(json.objList[0][0].papername);
+                $("#hd_elementid").val(json.objList[0][0].paperid);
+                $.fancybox.close();
+            }
+        }
+    });
+}
+
+
+/**
  * 获取试卷
  * @param courseid
  * @param trobj
@@ -491,8 +516,8 @@ function queryPaper(courseid, trobj, type, taskvalueid, taskstatus, quesnum) {
                 $("select[id='sel_ques_num']").attr("disabled", true);
 
             if (json.objList.length > 0 && typeof taskvalueid != 'undefined' && taskvalueid.toString().length > 0) {
-                $("#dv_paper_name").html(json.objList[0].papername);
-                $("#hd_elementid").val(json.objList[0].paperid);
+                $("#dv_paper_name").html(json.objList[0][0].papername);
+                $("#hd_elementid").val(json.objList[0][0].paperid);
             }
             if (typeof(taskvalueid) != 'undefined' && taskvalueid.toString().length > 0)
                 $("select[id='sel_resource']").val(taskvalueid);
