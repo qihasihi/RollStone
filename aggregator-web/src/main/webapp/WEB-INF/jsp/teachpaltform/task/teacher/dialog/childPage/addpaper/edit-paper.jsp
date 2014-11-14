@@ -59,6 +59,7 @@ $(function(){
 });
 
 function loadPaperQues(){
+//    $("#paper_detail").clear();
     $("#paper_detail").hide();
     $("#paper_detail").load("paper?toPreviewPaperModel&courseid=${courseid}&paperid="+paperid+"&op_type1=1&dropQuesNum=1&editQues=1"
             ,function(rps){
@@ -77,7 +78,7 @@ function loadPaperQues(){
                 //$("#dv_selectMic_child").show();
 //                $("#dv_selectPaper").hide();
 
-                $("#paper_detail").fadeIn("slow");
+                $("#paper_detail").show();
             });
 }
 

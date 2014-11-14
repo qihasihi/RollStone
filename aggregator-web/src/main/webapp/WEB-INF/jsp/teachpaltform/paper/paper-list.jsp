@@ -18,6 +18,7 @@ $(function(){
     fancyboxObj=$("#a_click").fancybox({
         'onClosed':function(){
             pageGo('pList');
+            $(".quesNumOrder").remove();
             $("#dv_content").hide();
         }
     });
@@ -202,11 +203,12 @@ function showImportPaper(pid){
     closeModel('dv_paper_name');
     $("#dv_paperDetail").hide();
     $("#dv_content_child").hide();
-    $("#dv_model_mdname").html("导入试题");
+
 //    $("#dv_content").hide();
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
     $("#dv_model_child").load("paper?m=dialogPaperModel&courseid="+courseid+"&paperid="+pid,function(){
+        $("#dv_model_mdname").html("导入试题");
         $("#dv_model_child").fadeIn('fast');
     });
 }
@@ -215,12 +217,12 @@ function showImportPaper(pid){
  */
 function showImportQues(pid){
     closeModel('dv_paper_name');
-    $("#dv_model_mdname").html("导入试题");
+
     $("#dv_content_child").hide();
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
     $("#dv_model_child").load("paper?m=dialogQuestionModel&courseid="+courseid+"&paperid="+pid,function(){
-
+        $("#dv_model_mdname").html("导入试题");
         $("#dv_model_child").fadeIn('fast');
     });
 }

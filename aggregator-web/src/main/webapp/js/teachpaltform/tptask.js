@@ -176,6 +176,7 @@ function loadTaskElement(type) {
         url='task?m=toSelTopicForTask&courseid='+courseid+'&tasktype='+type;
     }
     $("#dv_content").load(url,function(){
+        $(".quesNumli").remove();
         $("#dv_content").show();
         $("#a_click").click();
     });

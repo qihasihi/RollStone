@@ -2681,7 +2681,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 TpTaskInfo t=new TpTaskInfo();
                 t.setCourseid(taskList.get(0).getCourseid());
                 t.setUserid(this.logined(request).getUserid());
-                List<TpTaskInfo> taskStuList=this.tpTaskManager.getUnionListbyStu(t,null);
+                List<TpTaskInfo> taskStuList=this.tpTaskManager.getUnionListbyStu(t, null);
                 if(taskStuList!=null&&taskStuList.size()>0){
                     for(TpTaskInfo tmpTask:taskStuList){
                         if(tmpTask.getTaskid().equals(taskList.get(0).getTaskid())
@@ -4613,34 +4613,35 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     public void doSaveQuesOrder(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity jsonEntity=new JsonEntity();
         HashMap<String,String> paramMap=this.getRequestParam(request);
-        if(paramMap==null||paramMap.keySet().size()<1||!paramMap.containsKey("paperid")){
+        if(paramMap==null||paramMap.keySet().size()<1||!paramMap.containsKey("paperid")||!paramMap.containsKey("qidstr")){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().println(jsonEntity.toJSON());return;
         }
         Long paperid=Long.parseLong(paramMap.get("paperid").trim());
+        String qidstr=paramMap.get("qidstr");
         //参数接收
         StringBuilder sqlbuilder=null;
         List<Object> objList;
         List<String> sqlArrayList=new ArrayList<String>();
         List<List<Object>> objArrayList=new ArrayList<List<Object>>();
-
-        //循环参数
-        Iterator<String> iteParamKey=paramMap.keySet().iterator();
-        while(iteParamKey.hasNext()){
-            String key=iteParamKey.next();
-            if(key.indexOf("qid_")!=-1){ //题
-                Long qid=Long.parseLong(key.replace("qid_", "").trim());
-                Integer orderIdx=Integer.parseInt(paramMap.get(key).trim());
-                //得到SQL
-                PaperQuestion pqEntity=new PaperQuestion();
-                pqEntity.setQuestionid(qid);
-                pqEntity.setPaperid(paperid);
-                pqEntity.setOrderidx(orderIdx);
-                sqlbuilder=new StringBuilder();
-                objList=this.paperQuestionManager.getUpdateSql(pqEntity,sqlbuilder);
-                if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
-                    sqlArrayList.add(sqlbuilder.toString());
-                    objArrayList.add(objList);
+        String[] qidArray=qidstr.split(",");
+        if(qidArray!=null&&qidArray.length>0){
+            for(String qidStr:qidArray){
+                String[] qidTmpArray=qidStr.split("\\|");
+                if(qidTmpArray!=null&&qidTmpArray.length==2){
+                    Long qid=Long.parseLong(qidTmpArray[0].trim());
+                    Integer orderIdx=Integer.parseInt(qidTmpArray[1].trim());
+                    //得到SQL
+                    PaperQuestion pqEntity=new PaperQuestion();
+                    pqEntity.setQuestionid(qid);
+                    pqEntity.setPaperid(paperid);
+                    pqEntity.setOrderidx(orderIdx);
+                    sqlbuilder=new StringBuilder();
+                    objList=this.paperQuestionManager.getUpdateSql(pqEntity,sqlbuilder);
+                    if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                        sqlArrayList.add(sqlbuilder.toString());
+                        objArrayList.add(objList);
+                    }
                 }
             }
         }

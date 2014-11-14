@@ -48,6 +48,7 @@ function loadEditPaper(cid,pid){
         //关闭相关层
         closeModel('dv_paper_name');
         $("#dv_content>div").hide();
+        $("#dv_content #a_sb_taskpaper").parent().remove();
         $("#dv_content").show();
         $("#dv_content #dv_content_child").fadeIn("fast");
         $("#a_click").click();

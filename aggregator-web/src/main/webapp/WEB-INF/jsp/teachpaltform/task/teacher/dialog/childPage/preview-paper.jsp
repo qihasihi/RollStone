@@ -130,12 +130,12 @@ function showQues(idx){
     $("#dv_paperdetail table[id*='dv_ques_']").hide();
     var cuTagName=$("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).attr("tagName").toUpperCase();
     if(cuTagName=="TR"){//如果是tr，则显示table
-        $("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).next("tr").fadeIn('fast');
-        $("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).parent().parent().fadeIn('fast');
+        $("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).next("tr").show();
+        $("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).parent().parent().show();
     }else{
         $("#dv_paperdetail>table[id*='questeam_']").hide();
     }
-    $("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).fadeIn('slow');
+    $("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).show();
     //序号的样式
     $("#ul_xuhao>li").removeClass("blue_big").removeClass("blue").addClass("blue");
     $("#ul_xuhao #li_"+idx).removeClass("blue").addClass("blue_big");
@@ -144,13 +144,13 @@ function showQues(idx){
     var currentQIdx=$("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).attr("data-idx");
 
     if(currentQIdx>=$("#ul_xuhao>li").length){
-        $("#a_next").fadeOut('fast');
+        $("#a_next").hide();
     }else
-        $("#a_next").fadeIn('fast');
+        $("#a_next").show();
     if(currentQIdx<=1){
-        $("#a_free").fadeOut('fast');
+        $("#a_free").hide();
     }else
-        $("#a_free").fadeIn('fast');
+        $("#a_free").show();
 }
 
 /**
@@ -195,13 +195,13 @@ function showQuesNum(){
     $("#ul_xuhao").html(h);
     <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
          $("#dv_bf_dvpdtail").html($("#dv_paperdetail #dv_table").html());
-        js = $(".quesNumli").jsmartdrag({
-            target:'.quesNumli',
+        js = $("#dv_paperdetail .quesNumli").jsmartdrag({
+            target:'#dv_paperdetail .quesNumli',
             afterDrag:afterDrag
         });
     </c:if>
 }
-<c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1}">
+<c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
 function afterDrag(selected,currentObj,targetSelected){
     if(selected){
         // alert("将元素ID为"+currentObj.attr("id")+"移动到了元素ID为"+targetSelected.attr("id")+"上");
@@ -256,11 +256,15 @@ function quesNumOrder(pid){
     }
     var p={paperid:pid};
     //得到问题的顺序(试题组当一道题处理)
-    $("#dv_bf_dvpdtail>table").each(function(idx,itm){
-        var qid=$(itm).attr("data-bind");
-        var oidx=$(itm).attr("data-idx");
-        eval("(p.qid_"+qid+"="+oidx+")");
-    });
+    var qidstr='';
+    for(z=0;z<$("#dv_bf_dvpdtail>table").length;z++){
+        var qid=$("#dv_bf_dvpdtail>table").eq(z).attr("data-bind");
+        var oidx=$("#dv_bf_dvpdtail>table").eq(z).attr("data-idx");
+        if(qidstr.length>0)
+            qidstr+=','
+        qidstr+=qid+'|'+oidx;
+    }
+    p.qidstr=qidstr;
     //执行数据库操作
     $.ajax({
         url: 'paperques?m=doSaveQuesOrder',
@@ -279,10 +283,83 @@ function quesNumOrder(pid){
                 var currentQIdx=$("#ul_xuhao .blue_big").attr("data-bind");
                 showQues(currentQIdx);
             }
+            js = $("#dv_paperdetail .quesNumli").jsmartdrag({
+                target:'#dv_paperdetail .quesNumli',
+                afterDrag:afterDrag
+            });
 
         }
     });
 }
+//生成分数录入框
+function onClickScore(spid){
+    var txtScore=$("#"+spid+">a").html().Trim();
+    $("#"+spid).html("<input type='text' id='txt_inputScore' maxlength=4 name='txt_inputScore' style='width:25px;height:20px'/>");
+    $("#"+spid+" #txt_inputScore").val(txtScore)
+    $("#"+spid+" #txt_inputScore").select();
+    $("#"+spid+" #txt_inputScore").focus();
+    //离开事件
+    var qid=$("#"+spid).attr("data-bind").split("|")[0];
+    var qtref=$("#"+spid).attr("data-bind").split("|")[1];
+    $("input[name='txt_inputScore']").bind("blur",function(){
+        if(this.value.Trim().length<1||isNaN(this.value.Trim())){
+            this.focus();
+            this.style.borderBottomColor='red';
+            this.style.borderWidth='1px';
+            return;
+        }
+        //执行数据库操作
+        if(qtref==null||qtref.Trim().length<1||qtref.Trim()=="null")
+        qtref=undefined;
+        var scoreFen=this.value.Trim();
+        updateQuesScore(scoreFen,qid,qtref,spid);
+
+    });
+    $("input[name='txt_inputScore']").bind("keyup",function(){
+       // alert(e.keyCode);
+        this.value = this.value.replace(/[^\d\.]/g, '');
+    });
+}
+
+
+/**
+ * 修改试题分数
+ * @param score
+ * @param quesid
+ */
+function updateQuesScore(score,quesid,ref,spid){
+    if(typeof score=='undefined'||isNaN(score))
+        return;
+    var param={courseid:courseid,questionid:quesid,paperid:paperid,score:score};
+    if(typeof ref!='undefined')
+        param.ref=ref;
+    $.ajax({
+        url:"paperques?m=doUpdPaperQuesScore",
+        type:"post",
+        data:param,
+        dataType:'json',
+        cache: false,
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+        },success:function(rmsg){
+            if(rmsg.type=="error"){
+                alert(rmsg.msg);
+            }else{
+                if(rmsg.objList.length>0){
+                    $("#total_score").html(xround(rmsg.objList[0],1));
+                    if(typeof ref!='undefined')
+                        $("#group_"+ref).html(xround(rmsg.objList[1],1))
+                }
+                //将分数录入
+                $("#"+spid).html("<a href='javascript:;' onclick=\"onClickScore('"+spid+"')\">"+score+"</a>");
+            }
+        }
+    });
+}
+function xround(x, num){
+    return Math.round(x * Math.pow(10, num)) / Math.pow(10, num) ;
+}
+
 </c:if>
 </script>
 </head>
@@ -292,7 +369,7 @@ function quesNumOrder(pid){
     <c:if test="${!empty paper.subjectivenum and !empty paper.objectivenum}">
         <span class="f_right"><strong>主观题：<span class="font-blue">${paper.subjectivenum}</span></strong>
             &nbsp;&nbsp;<strong>客观题：<span class="font-blue">${paper.objectivenum}</span>
-            &nbsp;&nbsp;总分值：<span class="font-blue">${!empty paper.score?paper.score:0}&nbsp;分</span></strong></span>
+            &nbsp;&nbsp;总分值：<span class="font-blue"><span id="total_score">${!empty paper.score?paper.score:0}</span>&nbsp;分</span></strong></span>
     </c:if>
     <strong>${coursename}</strong></p>
     <div class="jxxt_float_h600" id="dv_paperdetail">
@@ -327,7 +404,23 @@ function quesNumOrder(pid){
                                 <%--<span class="font-blue"  style="cursor: pointer" data-bind="${pq.questionid}|" id="score_${pq.questionid}">--%>
                             <%--</c:if>--%>
                         </c:if>
-                     <span class="font-blue">${pq.score}</span>分</span>
+                              <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0&&!empty pq.questionTeam}">
+                                    <span class="font-blue" id="group_${pq.ref}" data-bind="${pq.questionid}|${pq.ref}">
+                                        <a href="javascript:;" onclick="onClickScore('score_${pq.questionid}')">
+                                                ${pq.score}
+                                        </a></span>
+                                </c:if>
+                                 <c:if test="${empty param.dropQuesNum||param.dropQuesNum!=1||paper.paperid>0}">
+                                    <span class="font-blue" id="group_${pq.ref}" data-bind="${pq.questionid}|${pq.ref}">
+                                                ${pq.score}
+                                    </span>
+                                </c:if>
+                                <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0&&empty pq.questionTeam}">
+                                    <span class="font-blue" id="score_${pq.questionid}" data-bind="${pq.questionid}|"><a href="javascript:;" onclick="onClickScore('score_${pq.questionid}')">
+                                        ${pq.score}
+                                    </a></span>
+                                </c:if>
+                              分</span>
                         <span class="bg">${pq.questiontypename}</span>
                     </caption>
 
@@ -385,7 +478,14 @@ function quesNumOrder(pid){
                                 <td><p><span class="width font-blue">
                                     <a><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}"
                                           name="avg_score" id="score_${c.questionid}">
-                                    ${c.score}</span></a>分</span>
+                                         <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0&&empty pq.questionTeam}">
+                                    <a href="javascript:;" onclick="onClickScore('score_${pq.questionid}')">
+                                        </c:if>
+                                    ${c.score}
+                                     <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0&&empty pq.questionTeam}">
+                                            </a>
+                                      </c:if>
+                                    </span></a>分</span>
                                     <span data-bind="${c.questionid}" >
                                           <%--<script type="text/javascript">--%>
                                               <%--var qteamSize="${fn:length(pq.questionTeam)}";--%>

@@ -197,34 +197,34 @@
                         $(".an_small").removeClass("an_small").addClass("an_public1").last().remove();
                         //$("#dv_selectMic_child").show();
                         $("#dv_selectPaper").hide();
-                        $("#dv_paperDetail").fadeIn("slow");
+                        $("#dv_paperDetail").show();
                     });
         }
 
         function paperDetailReturn(){
             $("#dv_paperDetail").hide();
-            $("#dv_selectPaper").fadeIn("slow");
+            $("#dv_selectPaper").show();
         }
 
 
         function loadDiv(type){
             $("#dv_paperDetail").hide();
-            $("#dv_selectPaper").fadeIn('fast');
+            $("#dv_selectPaper").show();
             if(type==1){
                 $("#li_1").addClass("crumb");
                 $("#li_2").removeClass("crumb");
                 $("#dv_addpaperchild").hide();
-                $("#dv_selpaperchild").fadeIn('fast');
+                $("#dv_selpaperchild").show();
             }else if(type==2){
                 $("#li_2").addClass("crumb");
                 $("#li_1").removeClass("crumb");
                 $("#dv_selpaperchild").hide();
-                $("#dv_addpaperchild").fadeIn('fast');
+                $("#dv_addpaperchild").show();
             }else if(type==3){
                 $("#dv_selectPaper").hide();
                 $("#dv_addpaperchild").hide();
                 $("#dv_model").hide();
-                $("#dv_paperDetail").fadeIn('fast');
+                $("#dv_paperDetail").show();
             }
         }
     /**
@@ -257,7 +257,7 @@
                             "paper?m=editPaperQuestionModel&courseid="+courseid+"&paperid="+paperid
                         );
                         $("#dv_selectPaper").hide();
-                        $("#dv_paperDetail").fadeIn('fast');
+                        $("#dv_paperDetail").show();
                     }
                 }
             });
@@ -272,10 +272,10 @@
             $("#dv_addpaperchild").hide();
             $("#dv_paperDetail").hide();
             $("#dv_model_mdname").html("导入试卷");
-            $("#dv_model").fadeIn('fast');
+            $("#dv_model").show();
             $("#dv_model_child").hide();
             $("#dv_model_child").load("paper?m=dialogPaperModel&courseid="+courseid+"&paperid="+pid,function(){
-                $("#dv_model_child").fadeIn('fast');
+                $("#dv_model_child").show();
             });
         }
         /**
@@ -286,10 +286,10 @@
             $("#dv_addpaperchild").hide();
             $("#dv_paperDetail").hide();
             $("#dv_model_mdname").html("导入试题");
-            $("#dv_model").fadeIn('fast');
+            $("#dv_model").show();
             $("#dv_model_child").hide();
             $("#dv_model_child").load("paper?m=dialogQuestionModel&courseid="+courseid+"&paperid="+pid,function(){
-                $("#dv_model_child").fadeIn('fast');
+                $("#dv_model_child").show();
             });
         }
         /**
@@ -300,10 +300,10 @@
             $("#dv_addpaperchild").hide();
             $("#dv_paperDetail").hide();
             $("#dv_model_mdname").html("新建试题");
-            $("#dv_model").fadeIn('fast');
+            $("#dv_model").show();
             $("#dv_model_child").hide();
             $("#dv_model_child").load("question?m=toDialogAddPaperQues&courseid="+courseid+"&paperid="+pid,function(){
-                $("#dv_model_child").fadeIn('fast');
+                $("#dv_model_child").show();
             });
         }
 
@@ -315,10 +315,10 @@
             $("#dv_addpaperchild").hide();
             $("#dv_paperDetail").hide();
             $("#dv_model_mdname").html("修改试题");
-            $("#dv_model").fadeIn('fast');
+            $("#dv_model").show();
             $("#dv_model_child").hide();
             $("#dv_model_child").load("question?m=toUpdDialogQuestion&courseid="+courseid+"&paperid="+pid+"&questionid="+qid,function(){
-                $("#dv_model_child").fadeIn('fast');
+                $("#dv_model_child").show();
             });
         }
 
