@@ -17,6 +17,7 @@ var fancyboxObj;
 $(function(){
     fancyboxObj=$("#a_click").fancybox({
         'onClosed':function(){
+            pageGo('pList');
             $("#dv_content").hide();
         }
     });
