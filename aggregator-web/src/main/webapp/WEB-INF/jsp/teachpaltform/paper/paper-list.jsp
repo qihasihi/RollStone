@@ -262,6 +262,7 @@ function showUpdQues(pid,qid){
 <body>
 <%@include file="/util/head.jsp" %>
 <%@include file="/util/nav-base.jsp" %>
+<input type="hidden" id="page_paper_list"/>
 <div id="dv_content"  style="display: none;" class="public_float public_float960">
     <div id="dv_content_child" style="display:none">
 
