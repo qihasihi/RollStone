@@ -3636,7 +3636,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 t.setCourseid(tkList.get(0).getCourseid());
                 pr.setPageSize(1);
                 // 学生任务
-                taskList=this.tpTaskManager.getListbyStu(t, pr);
+                taskList=this.tpTaskManager.getUnionListbyStu(t, pr);
                 if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
                     jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                     response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
@@ -4405,7 +4405,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     PageResult pr=new PageResult();
                     pr.setPageSize(1);
                     // 学生任务
-                    List<TpTaskInfo>taskStuList=this.tpTaskManager.getListbyStu(t, pr);
+                    List<TpTaskInfo>taskStuList=this.tpTaskManager.getUnionListbyStu(t, pr);
                     if(taskStuList==null||taskStuList.size()<1||taskStuList.get(0).getBtime()==null||taskStuList.get(0).getEtime()==null){
                         returnJo.put("msg", UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                         response.getWriter().println(returnJo.toString());return;
@@ -4552,7 +4552,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             pr.setPageSize(1);
 
             // 学生任务
-            List<TpTaskInfo>taskStuList=this.tpTaskManager.getListbyStu(t, pr);
+            List<TpTaskInfo>taskStuList=this.tpTaskManager.getUnionListbyStu(t, pr);
             if(taskStuList==null||taskStuList.size()<1||taskStuList.get(0).getBtime()==null||taskStuList.get(0).getEtime()==null){
                 returnJo.put("msg", UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                 response.getWriter().println(returnJo.toString());return;

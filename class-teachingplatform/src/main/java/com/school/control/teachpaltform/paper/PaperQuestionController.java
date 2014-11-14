@@ -374,7 +374,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         t.setCourseid(Long.parseLong(courseid));
         t.setUserid(this.logined(request).getUserid());
         // 学生任务
-        List<TpTaskInfo>taskList=this.tpTaskManager.getListbyStu(t, p);
+        List<TpTaskInfo>taskList=this.tpTaskManager.getUnionListbyStu(t, p);
         if(taskList!=null&&taskList.size()>0){
             for(TpTaskInfo task:taskList){
                 if(task.getTasktype()==3){
@@ -1936,7 +1936,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         TpTaskInfo t=new TpTaskInfo();
         t.setCourseid(Long.parseLong(courseid));
         t.setUserid(this.logined(request).getUserid());
-//		List<TpTaskInfo> taskList=this.tpTaskManager.getListbyStu(t,null);
+//		List<TpTaskInfo> taskList=this.tpTaskManager.getUnionListbyStu(t,null);
 //		if(taskList==null||taskList.size()<1){
 //			je.setMsg("提示：没有发现任务信息!");
 //			response.getWriter().print(je.getAlertMsgAndBack());
@@ -2681,7 +2681,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 TpTaskInfo t=new TpTaskInfo();
                 t.setCourseid(taskList.get(0).getCourseid());
                 t.setUserid(this.logined(request).getUserid());
-                List<TpTaskInfo> taskStuList=this.tpTaskManager.getListbyStu(t,null);
+                List<TpTaskInfo> taskStuList=this.tpTaskManager.getUnionListbyStu(t,null);
                 if(taskStuList!=null&&taskStuList.size()>0){
                     for(TpTaskInfo tmpTask:taskStuList){
                         if(tmpTask.getTaskid().equals(taskList.get(0).getTaskid())
@@ -3516,7 +3516,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             t.setTaskid(Long.parseLong(taskid));
             t.setCourseid(Long.parseLong(courseid));
             // 学生任务
-            List<TpTaskInfo>taskList=this.tpTaskManager.getListbyStu(t, presult);
+            List<TpTaskInfo>taskList=this.tpTaskManager.getUnionListbyStu(t, presult);
             if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
@@ -3654,7 +3654,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             t.setTaskid(Long.parseLong(taskid));
             t.setCourseid(Long.parseLong(courseid.trim()));
             // 学生任务
-            List<TpTaskInfo>taskList=this.tpTaskManager.getListbyStu(t, pr);
+            List<TpTaskInfo>taskList=this.tpTaskManager.getUnionListbyStu(t, pr);
             if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
@@ -4087,7 +4087,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
             pr.setPageSize(1);
             // 学生任务
-            taskList=this.tpTaskManager.getListbyStu(t, pr);
+            taskList=this.tpTaskManager.getUnionListbyStu(t, pr);
             if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
