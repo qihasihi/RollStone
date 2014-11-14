@@ -5,12 +5,21 @@
 <html>
 <head>
 <title>${sessionScope.CURRENT_TITLE}</title>
-<script type="text/javascript" src="<%=basePath %>js/teachpaltform/paper.js"></script>
+<script type="text/javascript" src="js/teachpaltform/paper.js"></script>
+<script type="text/javascript" src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script type="text/javascript"  src="fancybox/jquery.fancybox-1.3.4.js"></script>
+<link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
 <script type="text/javascript">
 var courseid="${courseid}";
 var pList,pBankList;
 var total;
+var fancyboxObj;
 $(function(){
+    fancyboxObj=$("#a_click").fancybox({
+        'onClosed':function(){
+            $("#dv_content").hide();
+        }
+    });
     pList = new PageControl( {
         post_url : 'paper?m=ajaxPaperList',
         page_id : 'page1',
@@ -56,7 +65,7 @@ function getInvestReturnMethod(rps){
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
             if(itm.paperid>0){
-                html+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                html+='<li><a href="javascript:loadEditPaper('+itm.courseid+','+itm.paperid+')">';
                 html+='<p class="one">'+itm.papername+'</p>';
                 html+='<p class="two">';
                 if(itm.objectivenum>0&&itm.subjectivenum>0)
@@ -80,10 +89,11 @@ function getInvestReturnMethod(rps){
                 if(itm.papertype==4)
                     shtml+='<a>';
                 else{
-                    if(itm.taskflag<1)
-                        shtml+='<a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
-                    else
-                        shtml+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+//                    if(itm.taskflag<1)
+//                        shtml+='<a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+//                    else
+//                        shtml+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                    shtml+='<a href="javascript:loadEditPaper('+itm.courseid+','+itm.paperid+')">';
                 }
 
                 shtml+='<p class="one">'+itm.papername+'</p>';
@@ -175,11 +185,69 @@ function showCourseList(){
             }
         });
     }
+
+function loadDiv(t){
+    if(typeof(t)!="undefined"&&t!=null){
+        if(t==3){
+            $("#dv_model").hide();
+            $("#dv_content_child").fadeIn('fast');
+        }
+    }
+}
+/**
+ *显示导入试卷
+ */
+function showImportPaper(pid){
+    closeModel('dv_paper_name');
+    $("#dv_paperDetail").hide();
+    $("#dv_content_child").hide();
+    $("#dv_model_mdname").html("导入试题");
+//    $("#dv_content").hide();
+    $("#dv_model").fadeIn('fast');
+    $("#dv_model_child").hide();
+    $("#dv_model_child").load("paper?m=dialogPaperModel&courseid="+courseid+"&paperid="+pid,function(){
+        $("#dv_model_child").fadeIn('fast');
+    });
+}
+/**
+ *显示导入试题
+ */
+function showImportQues(pid){
+    closeModel('dv_paper_name');
+    $("#dv_model_mdname").html("导入试题");
+    $("#dv_content_child").hide();
+    $("#dv_model").fadeIn('fast');
+    $("#dv_model_child").hide();
+    $("#dv_model_child").load("paper?m=dialogQuestionModel&courseid="+courseid+"&paperid="+pid,function(){
+
+        $("#dv_model_child").fadeIn('fast');
+    });
+}
+
 </script>
 </head>
 <body>
 <%@include file="/util/head.jsp" %>
 <%@include file="/util/nav-base.jsp" %>
+<div id="dv_content"  style="display: none;" class="public_float public_float960">
+    <div id="dv_content_child" style="display:none">
+
+    </div>
+    <!--试卷详情-->
+    <div class="public_float public_float960" id="dv_paperDetail" style="display:none">
+
+    </div>
+
+    <%--试卷三级目录--%>
+    <div class="public_float public_float960" id="dv_model" style="display:none">
+        <div class="public_float public_float960"  id="dv_model_child">
+
+        </div>
+    </div>
+
+</div>
+
+
 <div class="zhuanti">
     <p>${coursename }
         <c:if  test="${fn:length(courseList)>1}" >
@@ -211,7 +279,10 @@ function showCourseList(){
         <li class="crumb"><a href="javascript:void (0);">试&nbsp;&nbsp;卷</a></li>
     </ul>
 </div>
+<a id="a_click" href="#dv_content">
 
+
+</a>
 
 
 <div class="content1 font-black">
@@ -261,6 +332,7 @@ function showCourseList(){
         <p class="Mt20" id="pListaddress" align="center"></p>
     </form>
 </div>
+
 
 
 

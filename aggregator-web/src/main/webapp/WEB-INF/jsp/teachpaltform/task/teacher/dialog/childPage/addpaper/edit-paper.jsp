@@ -400,11 +400,12 @@ function reSetScrollDiv(){
 </head>
 <body>
     <p class="float_title"><a href="javascript:;" onclick="loadDiv(2);" class="ico93" title="返回"></a>新建试卷</p>
-     <div  id="p_operate" class="t_c">
-         <a href="javascript:showImportPaper(${paper.paperid})" class="an_big">导入试卷</a>
-         &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showImportQues(${paper.paperid})" class="an_big">导入试题</a>
-         &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}','',this)" class="an_big">新建试题</a></div>
-
+    <c:if test="${paper.paperid<0}">
+         <div  id="p_operate" class="t_c">
+             <a href="javascript:showImportPaper(${paper.paperid})" class="an_big">导入试卷</a>
+             &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showImportQues(${paper.paperid})" class="an_big">导入试题</a>
+             &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showDialogPage(3,'${paper.paperid}','',this)" class="an_big">新建试题</a></div>
+    </c:if>
     <div id="paper_detail" style="display:none">
     </div>
     <%--<p class="t_c p_tb_10"><a href="javascript:history.go(-1);" class="an_small">提&nbsp;交</a>&nbsp;&nbsp;&nbsp;&nbsp;<!--<a href="1" target="_blank" class="an_small">取&nbsp;消</a>--></p>--%>

@@ -20,11 +20,36 @@ function addPaper(){
             if(rmsg.type=="error"){
                 alert(rmsg.msg);
             }else{
-                alert(rmsg.msg);
-                location.href="paper?m=editPaperQuestion&courseid="+courseid+"&paperid="+rmsg.objList[0];
+               // alert(rmsg.msg);
+                // alert(rmsg.msg);
+                loadEditPaper(courseid,rmsg.objList[0]);
             }
         }
     });
+
+}
+/**
+ * 加载试卷的编辑页面
+ * @param cid
+ * @param pid
+ */
+function loadEditPaper(cid,pid){
+    if(typeof(cid)=="undefined"||typeof(pid)=="undefined"||cid==null||pid==null){
+        alert('异常错误，请刷新重试!');
+        return;
+    }
+    var u="paper?m=editPaperQuestionModel&courseid="+cid+"&paperid="+pid;
+    $("#dv_content #dv_content_child").load(u,function(){
+        $("#dv_content .float_title").html("编辑试卷");
+        //关闭相关层
+        closeModel('dv_paper_name');
+        $("#dv_content>div").hide();
+        $("#dv_content").show();
+        $("#dv_content #dv_content_child").fadeIn("fast");
+        $("#a_click").click();
+    });
+}
+
 
     function importQuesList(){
         var url="question?m="
@@ -61,5 +86,3 @@ function addPaper(){
             }
         });
     }
-
-}

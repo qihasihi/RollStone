@@ -156,7 +156,7 @@
 
 
 </head>
-<body on>
+<body>
 <input type="hidden" id="returnValue"/>
 <div class="subpage_head">
     <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>

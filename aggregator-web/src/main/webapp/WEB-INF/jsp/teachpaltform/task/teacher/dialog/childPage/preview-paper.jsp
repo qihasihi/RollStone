@@ -303,7 +303,7 @@ function quesNumOrder(pid){
         </ul>
         <div class="clear"></div>
     </div>
-    <div id="dv_table">
+    <div id="dv_table" style="width:950px;height:470px;overflow-x:auto;overflow-x: hidden">
         <c:if test="${!empty pqList}">
             <c:forEach items="${pqList}" var="pq" varStatus="pqIdx">
                 <c:set var="teamSize" value="${fn:length(pq.questionTeam)}"/>
@@ -315,7 +315,7 @@ function quesNumOrder(pid){
                     <caption>
                       <span class="f_right">
                           <%--如果editQues不等于1，则表示不需要修改铵钮--%>
-                          <c:if test="${!empty param.editQues&&param.editQues==1}">
+                          <c:if test="${!empty param.editQues&&param.editQues==1&&pq.paperid<0}">
                             <c:if test="${pq.questiontype<6}">
                                 <a   href="javascript:showDialogPage(4,'${pq.paperid}','${pq.questionid}',this)" class="ico11" title="编辑"></a>
                             </c:if>

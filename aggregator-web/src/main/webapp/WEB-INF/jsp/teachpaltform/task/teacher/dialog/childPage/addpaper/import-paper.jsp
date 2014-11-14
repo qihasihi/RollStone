@@ -37,15 +37,15 @@ var paperid="${paperid}";
 var subjectid="${subjectid}";
 var materialid="${materialid}";
 var gradeid="${gradeid}";
-var pList,pBankList;
+var pListPaper,pBankList;
 var total;
 $(function(){
-    pList = new PageControl( {
+    pListPaper = new PageControl( {
         post_url : 'paper?m=getImportPaperList',
         page_id : 'page1',
-        page_control_name : "pList",
-        post_form : document.pListForm,
-        gender_address_id : 'pListaddress',
+        page_control_name : "pListPaper",
+        post_form : document.pListForm_Paper,
+        gender_address_id : 'pListaddress_paper',
         http_free_operate_handler : preeDoPageSub, //执行查询前操作的内容
         http_operate_handler : getInvestReturnMethod, //执行成功后返回方法
         return_type : 'json', //放回的值类型
@@ -55,9 +55,9 @@ $(function(){
         pagetotal : 1,
         operate_id : "initItemList"
     });
-    var coursename=$("#txt_search");
+    var coursename=$("#txt_search_paper");
     if(coursename.val().Trim().length>0&&coursename.val()!='输入专题名称')
-        pageGo('pList');
+        pageGo('pListPaper');
 });
 
 
@@ -104,24 +104,24 @@ function getInvestReturnMethod(rps){
         html='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
         shtml='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
     }
-    $("#ul_standard").html(html);
-    $("#ul_native").html(shtml);
+    $("#ul_standard_paper").html(html);
+    $("#ul_native_paper").html(shtml);
 
 
 
 
     if(rps.objList.length>0){
-        pList.setPagetotal(rps.presult.pageTotal);
-        pList.setRectotal(rps.presult.recTotal);
-        pList.setPageSize(rps.presult.pageSize);
-        pList.setPageNo(rps.presult.pageNo);
+        pListPaper.setPagetotal(rps.presult.pageTotal);
+        pListPaper.setRectotal(rps.presult.recTotal);
+        pListPaper.setPageSize(rps.presult.pageSize);
+        pListPaper.setPageNo(rps.presult.pageNo);
     }else
     {
-        pList.setPagetotal(0);
-        pList.setRectotal(0);
-        pList.setPageNo(1);
+        pListPaper.setPagetotal(0);
+        pListPaper.setRectotal(0);
+        pListPaper.setPageNo(1);
     }
-    pList.Refresh();
+    pListPaper.Refresh();
 }
 
 function preeDoPageSub(pObj){
@@ -134,7 +134,7 @@ function preeDoPageSub(pObj){
         return;
     }
     var param={courseid:courseid,materialid:materialid,gradeid:gradeid,subjectid:subjectid};
-    var coursename=$("#txt_search");
+    var coursename=$("#txt_search_paper");
     if(coursename.val().Trim().length<1||coursename.val()=='输入专题名称'){
         return;
     }
@@ -177,11 +177,12 @@ function preeDoPageSub(pObj){
 <p class="float_title"><a href="javascript:;" class="ico93" onclick="loadDiv(3)" title="返回"></a><span id="dv_model_mdname">导入试卷</span></p>
 <div class="jxxt_float_w920 font-black">
     <p class="t_r public_input">
-        <input id="txt_search" name="textfield2" type="text" class="w240" placeholder="资源名称/专题名称" />
-        <a  href="javascript:pageGo('pList');" class="an_search" title="查询"></a>
+        <input id="txt_search_paper" name="txt_search_paper" type="text" class="w240" placeholder="资源名称/专题名称" />
+        <a  href="javascript:pageGo('pListPaper');" class="an_search" title="查询"></a>
         图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
+    <div style="width:920px;height:610px;overflow-x:hidden;overflow-y:auto;">
     <p><strong>标准试卷</strong></p>
-    <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
+    <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard_paper">
        <!-- <li><a href="1" target="_blank">
             <p class="one">中国语文高一年级高清课堂视频讲解高清课堂名</p>
             <p class="two"><span class="bg1" style="width:100%">8</span></p></a>
@@ -220,7 +221,7 @@ function preeDoPageSub(pObj){
 
     </ul>
     <p><strong>自建试卷</strong></p>
-    <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
+    <ul class="jxxt_zhuanti_shijuan_list" id="ul_native_paper">
         <c:if test="${fn:length(nativeList)<1}">
             <li><img src="images/pic06_140722.png" width="215" height="160"></li>
         </c:if>
@@ -255,11 +256,11 @@ function preeDoPageSub(pObj){
         </c:if>
 
     </ul>
-
+    </div>
 
 </div>
-<form id="pListForm" name="pListForm" style="display: none;">
-    <p class="Mt20" id="pListaddress" align="center"></p>
+<form id="pListForm_Paper" name="pListForm_Paper" style="display: none;">
+    <p class="Mt20" id="pListaddress_paper" align="center"></p>
 </form>
 </body>
 </html>
