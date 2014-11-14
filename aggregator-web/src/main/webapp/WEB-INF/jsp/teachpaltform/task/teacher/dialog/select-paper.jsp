@@ -36,6 +36,7 @@
                 operate_id : "initItemList"
             });
             pageGo('pList');
+            loadDiv(1);
         });
 
 
@@ -165,7 +166,7 @@
         }
 
         /**
-         *加载微视频详情页面
+         *加载详情页面
          * @param resid
          */
         function loadPaperDetail(paperid){
@@ -193,36 +194,147 @@
             $("#dv_selectPaper").fadeIn("slow");
         }
 
+
+        function loadDiv(type){
+            $("#dv_paperDetail").hide();
+            $("#dv_selectPaper").fadeIn('fast');
+            if(type==1){
+                $("#li_1").addClass("crumb");
+                $("#li_2").removeClass("crumb");
+                $("#dv_addpaperchild").hide();
+                $("#dv_selpaperchild").fadeIn('fast');
+            }else if(type==2){
+                $("#li_2").addClass("crumb");
+                $("#li_1").removeClass("crumb");
+                $("#dv_selpaperchild").hide();
+                $("#dv_addpaperchild").fadeIn('fast');
+            }else if(type==3){
+                $("#dv_selectPaper").hide();
+                $("#dv_addpaperchild").hide();
+                $("#dv_model").hide();
+                $("#dv_paperDetail").fadeIn('fast');
+            }
+        }
+    /**
+    * 新建试卷
+    */
+    function doSavePaper(){
+        /**
+         * 添加试卷
+         */
+            var papername=$("#papername");
+            if(papername.val().Trim().length<1){
+                alert('请输入试卷名称!');
+                papername.focus();
+                return;
+            }
+            $.ajax({
+                url:"paper?doSubAddPaper",
+                type:"post",
+                data:{courseid:courseid,papername:papername.val()},
+                dataType:'json',
+                cache: false,
+                error:function(){
+                    alert('系统未响应，请稍候重试!');
+                },success:function(rmsg){
+                    if(rmsg.type=="error"){
+                        alert(rmsg.msg);
+                    }else{
+                        paperid=rmsg.objList[0];
+                        $("#dv_paperDetail").load(
+                            "paper?m=editPaperQuestionModel&courseid="+courseid+"&paperid="+paperid
+                        );
+                        $("#dv_selectPaper").hide();
+                        $("#dv_paperDetail").fadeIn('fast');
+                    }
+                }
+            });
+
+    }
+
+        /**
+         *显示导入试卷
+         */
+        function showImportPaper(pid){
+            $("#dv_selectPaper").hide();
+            $("#dv_addpaperchild").hide();
+            $("#dv_paperDetail").hide();
+            $("#dv_model_mdname").html("导入试卷");
+            $("#dv_model").fadeIn('fast');
+            $("#dv_model_child").hide();
+            $("#dv_model_child").load("paper?m=dialogPaperModel&courseid="+courseid+"&paperid="+pid,function(){
+                $("#dv_model_child").fadeIn('fast');
+            });
+        }
+        /**
+         *显示导入试题
+         */
+        function showImportQues(pid){
+            $("#dv_selectPaper").hide();
+            $("#dv_addpaperchild").hide();
+            $("#dv_paperDetail").hide();
+            $("#dv_model_mdname").html("导入试题");
+            $("#dv_model").fadeIn('fast');
+            $("#dv_model_child").hide();
+            $("#dv_model_child").load("paper?m=dialogQuestionModel&courseid="+courseid+"&paperid="+pid,function(){
+                $("#dv_model_child").fadeIn('fast');
+            });
+        }
+
+
     </script>
 
 
 </head>
 <body>
+<%--试卷三级目录--%>
+<div class="public_float public_float960" id="dv_model" style="display:none">
+    <div class="public_float public_float960"  id="dv_model_child">
+
+    </div>
+</div>
 <div class="public_float public_float960" id="dv_selectPaper">
     <p class="float_title"><strong>成卷测试&mdash;&mdash;选择试卷</strong></p>
     <div class="subpage_lm">
         <ul>
-            <li class="crumb"><a href="javascript:;">选择试卷</a></li>
-            <li><a href="1">新建试卷</a></li>
+            <li class="crumb" id="li_1"><a href="javascript:;" onclick="loadDiv(1)">选择试卷</a></li>
+            <li  id="li_2"><a href="javascript:;" onclick="loadDiv(2)">新建试卷</a></li>
         </ul>
     </div>
-    <div class="jxxt_float_w920 font-black">
-        <p class="t_r">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
-        <c:if test="${!empty courselevel and courselevel ne 3}">
-            <p><strong>标准试卷</strong></p>
-            <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
+    <%--选择试卷--%>
+    <div  style="display:none" id="dv_selpaperchild">
+        <div class="jxxt_float_w920 font-black">
+            <p class="t_r">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
+            <c:if test="${!empty courselevel and courselevel ne 3}">
+                <p><strong>标准试卷</strong></p>
+                <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
+
+                </ul>
+            </c:if>
+            <p><strong>自建试卷</strong></p>
+            <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
 
             </ul>
-        </c:if>
-        <p><strong>自建试卷</strong></p>
-        <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
-
-        </ul>
+        </div>
+        <form id="pListForm" name="pListForm" style="display: none;">
+            <p class="Mt20" id="pListaddress" align="center"></p>
+        </form>
     </div>
-
-    <form id="pListForm" name="pListForm" style="display: none;">
-        <p class="Mt20" id="pListaddress" align="center"></p>
-    </form>
+    <%--新建试卷--%>
+    <div id="dv_addpaperchild" style="display:none">
+        <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input ">
+            <col class="w90"/>
+            <col class="w600"/>
+            <tr>
+                <th>试卷名称：</th>
+                <td><input name="papername" id="papername" type="text" class="w350"/></td>
+            </tr>
+            <tr>
+                <th>&nbsp;</th>
+                <td><a href="javascript:;" onclick="doSavePaper()" class="an_public1">下一步</a></td>
+            </tr>
+        </table>
+    </div>
 </div>
 <!--试卷详情-->
 <div class="public_float public_float960" id="dv_paperDetail" style="display:none">

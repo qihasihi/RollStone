@@ -138,10 +138,10 @@ function showQues(idx){
     $("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).fadeIn('slow');
     //序号的样式
     $("#ul_xuhao>li").removeClass("blue_big").removeClass("blue").addClass("blue");
-    $("#li_"+idx).removeClass("blue").addClass("blue_big");
+    $("#ul_xuhao #li_"+idx).removeClass("blue").addClass("blue_big");
     //得到题号，当前的问题
     var currentQuesid=$("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).attr("data-bind");
-    var currentQIdx=$("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).html();
+    var currentQIdx=$("#dv_paperdetail table[id*='dv_ques_']").eq((idx-1)).attr("data-idx");
 
     if(currentQIdx>=$("#ul_xuhao>li").length){
         $("#a_next").fadeOut('fast');
@@ -174,7 +174,7 @@ function next(ty){
     showQues(nextQIdx);
     //序号的样式
     $("#ul_xuhao>li").removeClass("blue_big").removeClass("blue").addClass("blue");
-    $("#li_"+nextQIdx).removeClass("blue").addClass("blue_big");
+    $("#ul_xuhao #li_"+nextQIdx).removeClass("blue").addClass("blue_big");
 }
 <%int idx=0;%>
 /**
@@ -183,8 +183,13 @@ function next(ty){
 function showQuesNum(){
     var h='';
     var qtlength=$("#dv_paperdetail table[id*='dv_ques_']").length;
+    if(qtlength<1){
+        $("#a_next").hide();
+        $("#a_free").hide();
+    }
     $("#dv_paperdetail table[id*='dv_ques_']").each(function(idx,itm){
-        h+='<li class="blue quesNumli" id="li_'+(idx+1)+'" data-bind="'+(idx+1)+'"><a href="javascript:;" onclick="showQues('+(idx+1)+')">'+(idx+1)+'</a></li>';
+        h+='<li class="blue quesNumli" id="li_'+(idx+1)+'" data-bind="'+(idx+1)
+                +'"><a href="javascript:;" onclick="showQues('+(idx+1)+')">'+(idx+1)+'</a></li>';
 
     });
     $("#ul_xuhao").html(h);
@@ -229,9 +234,10 @@ function afterDrag(selected,currentObj,targetSelected){
                     //修改idx
                     $(this).attr("id","li_"+(idx+1)).attr("data-bind",(idx+1));
                     //修改事件，及html
-                    $(this).children("a").attr("onclick","").unbind("click").html((idx+1)).bind("click",function(){
-                        showQues((idx+1));
-                    });
+                    $(this).children("a").attr("onclick","").unbind("click")
+                            .html((idx+1)).bind("click",function(){
+                                showQues((idx+1));
+                            });
                 });
                 //数据库请求。
                 quesNumOrder(paperid);
@@ -286,7 +292,7 @@ function quesNumOrder(pid){
     <c:if test="${!empty paper.subjectivenum and !empty paper.objectivenum}">
         <span class="f_right"><strong>主观题：<span class="font-blue">${paper.subjectivenum}</span></strong>
             &nbsp;&nbsp;<strong>客观题：<span class="font-blue">${paper.objectivenum}</span>
-            &nbsp;&nbsp;总分值：<span class="font-blue">${paper.score}&nbsp;分</span></strong></span>
+            &nbsp;&nbsp;总分值：<span class="font-blue">${!empty paper.score?paper.score:0}&nbsp;分</span></strong></span>
     </c:if>
     <strong>${coursename}</strong></p>
     <div class="jxxt_float_h600" id="dv_paperdetail">
@@ -307,30 +313,22 @@ function quesNumOrder(pid){
                     <col class="w30"/>
                     <col class="w880"/>
                     <caption>
-                        <c:if test="${empty param.mic||empty pq.questionTeam}">
-                            <%--<span class="f_right font-blue"><span  name="avg_score" id="sum_${pq.questionid}">${pq.score}</span>分</span>--%>
+                      <span class="f_right">
+                          <%--如果editQues不等于1，则表示不需要修改铵钮--%>
+                          <c:if test="${!empty param.editQues&&param.editQues==1}">
+                            <c:if test="${pq.questiontype<6}">
+                                <a   href="javascript:showDialogPage(4,'${pq.paperid}','${pq.questionid}',this)" class="ico11" title="编辑"></a>
+                            </c:if>
+                            <a href="javascript:doDelPaperQues('${pq.questionid}')" class="ico04" title="删除"></a>&nbsp;
+                            <%--<c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0}">--%>
+                                <%--<span class="font-blue"  style="cursor: pointer" data-bind="${pq.questionid}" id="group_${pq.ref}">--%>
+                            <%--</c:if>--%>
+                            <%--<c:if test="${empty pq.questionTeam and fn:length(pq.questionTeam)==0}">--%>
+                                <%--<span class="font-blue"  style="cursor: pointer" data-bind="${pq.questionid}|" id="score_${pq.questionid}">--%>
+                            <%--</c:if>--%>
                         </c:if>
+                     <span class="font-blue">${pq.score}</span>分</span>
                         <span class="bg">${pq.questiontypename}</span>
-                        <%--<caption class="font-blue"><span class="f_right">5分</span><span class="bg">单选题</span></caption>--%>
-                        </span>
-                        <%--<span  class="font-blue" id="sp_sortIdx">--%>
-                        <%--<c:if test="${!empty pq.questionTeam}">--%>
-                            <%--${pqIdx.index+1}-${fn:length(pq.questionTeam)+pqIdx.index}--%>
-                            <%--&lt;%&ndash;<script type="text/javascript">&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;var qteamSize="${fn:length(pq.questionTeam)}";&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;var qoIdx=quesOrderIdx;&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;quesOrderIdx=quesOrderIdx+parseInt(qteamSize);&ndash;%&gt;--%>
-<%--&lt;%&ndash;//                                document.write(qoIdx+"-"+(quesOrderIdx-1));&ndash;%&gt;--%>
-<%--//                            </script>--%>
-                        <%--</c:if>--%>
-                          <%--<c:if test="${empty pq.questionTeam}">--%>
-                              <%--<script type="text/javascript">--%>
-                                  <%--quesOrderIdx++;--%>
-<%--//                                  document.write(quesOrderIdx-1);--%>
-                              <%--</script>--%>
-                              <%--${pqIdx.index+1}--%>
-                          <%--</c:if>--%>
-                        <%--</span>--%>
                     </caption>
 
                     <tr>
@@ -341,7 +339,6 @@ function quesNumOrder(pid){
                             </c:if>
                         </td>
                         <td>
-
                             ${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
 
                             <c:if test="${pq.extension eq 4}">
@@ -396,6 +393,7 @@ function quesNumOrder(pid){
                                               <%--document.write(tmpIdx+${cidx.index});--%>
                                           <%--</script>--%>
                                             <%--${pqIdx.index+1-fn:length(pq.questionTeam)+cidx.index}--%>
+                                        ${cidx.index+1}
                                         </span>. ${c.content}</p>
                                     <table border="0" cellpadding="0" cellspacing="0">
                                         <col class="w30"/>

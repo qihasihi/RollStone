@@ -455,17 +455,18 @@ public class PaperController extends BaseController<PaperInfo>{
             }
         }*/
 
-
+        Object allquesidObj="";
         //得到当前的所有问题
         List<Map<String,Object>> listMapStr=this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
         if(listMapStr==null||listMapStr.size()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-            response.getWriter().println(je.getAlertMsgAndBack());return null;
-        }
-        Object allquesidObj=listMapStr.get(0).get("ALLQUESID");
-        if(allquesidObj==null||allquesidObj.toString().trim().length()<1){
-            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-            response.getWriter().println(je.getAlertMsgAndBack());return null;
+//            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+//            response.getWriter().println(je.getAlertMsgAndBack());return null;
+        }else{
+            allquesidObj=listMapStr.get(0).get("ALLQUESID");
+            if(allquesidObj==null||allquesidObj.toString().trim().length()<1){
+//                je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+//                response.getWriter().println(je.getAlertMsgAndBack());return null;
+            }
         }
 
         request.setAttribute("pqList", tmpList);
@@ -1279,7 +1280,7 @@ public class PaperController extends BaseController<PaperInfo>{
         if(pqList!=null&&pqList.size()>0){
             for(PaperQuestion paperQuestion:pqList){
                 questionTeam=new ArrayList<PaperQuestion>();
-                 //试题组
+                //试题组
                 if(childList!=null&&childList.size()>0){
                     for (PaperQuestion childp :childList){
                         //试题组选项
@@ -1342,6 +1343,142 @@ public class PaperController extends BaseController<PaperInfo>{
         request.setAttribute("paper", tpCoursePaperList.get(0));
         request.setAttribute("courseid",courseid);
         return new ModelAndView("/teachpaltform/paper/edit-paper");
+    }
+
+
+    /**
+     * 进入试卷选题、编辑页面
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=editPaperQuestionModel",method={RequestMethod.GET,RequestMethod.POST})
+    public ModelAndView toEditPaperQuestionModel(HttpServletRequest request)throws Exception{
+        JsonEntity je =new JsonEntity();//
+        String courseid=request.getParameter("courseid");
+        String paperid=request.getParameter("paperid");
+
+        if(courseid==null||courseid.trim().length()<1
+                ||paperid==null||paperid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            je.getAlertMsgAndBack();
+            return null;
+        }
+
+
+        TpCoursePaper t=new TpCoursePaper();
+        t.setCourseid(Long.parseLong(courseid));
+        t.setPaperid(Long.parseLong(paperid));
+        List<TpCoursePaper>tpCoursePaperList=this.tpCoursePaperManager.getList(t, null);
+        if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
+            je.setMsg("抱歉该试卷已不存在!");
+            je.getAlertMsgAndBack();
+            return null;
+        }
+
+        //获取提干
+        PaperQuestion pq=new PaperQuestion();
+        pq.setPaperid(Long.parseLong(paperid));
+        PageResult p=new PageResult();
+        p.setOrderBy("u.order_idx");
+        p.setPageNo(0);
+        p.setPageSize(0);
+        List<PaperQuestion>pqList=this.paperQuestionManager.getList(pq,p);
+
+        //获取试题组下题目
+        PaperQuestion child =new PaperQuestion();
+        child.setPaperid(pq.getPaperid());
+        List<PaperQuestion>childList=this.paperQuestionManager.getPaperTeamQuestionList(child,null);
+
+        //获取选项
+        QuestionOption questionOption=new QuestionOption();
+        questionOption.setPaperid(pq.getPaperid());
+        PageResult pchild = new PageResult();
+        pchild.setPageNo(0);
+        pchild.setPageSize(0);
+        pchild.setOrderBy("option_type");
+        List<QuestionOption>questionOptionList=this.questionOptionManager.getPaperQuesOptionList(questionOption, pchild);
+
+        //整合试题组与选项
+        List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+        List<QuestionOption>tmpOptionList;
+        List<PaperQuestion>questionTeam;
+        if(pqList!=null&&pqList.size()>0){
+            for(PaperQuestion paperQuestion:pqList){
+                questionTeam=new ArrayList<PaperQuestion>();
+                //试题组
+                if(childList!=null&&childList.size()>0){
+                    for (PaperQuestion childp :childList){
+                        //试题组选项
+                        if(paperQuestion.getRef().equals(childp.getRef())){
+                            if(questionOptionList!=null&&questionOptionList.size()>0){
+                                tmpOptionList=new ArrayList<QuestionOption>();
+                                for(QuestionOption qo:questionOptionList){
+                                    if(qo.getQuestionid().equals(childp.getQuestionid())){
+                                        tmpOptionList.add(qo);
+                                    }
+                                }
+                                childp.setQuestionOption(tmpOptionList);
+                                questionTeam.add(childp);
+                            }
+                        }
+                    }
+                    paperQuestion.setQuestionTeam(questionTeam);
+                }
+
+                if(questionOptionList!=null&&questionOptionList.size()>0){
+                    //普通试题选项
+                    List<QuestionOption> tmp1OptionList=new ArrayList<QuestionOption>();
+                    for(QuestionOption qo:questionOptionList){
+                        if(qo.getQuestionid().equals(paperQuestion.getQuestionid())){
+                            tmp1OptionList.add(qo);
+                        }
+                    }
+
+                    paperQuestion.setQuestionOption(tmp1OptionList);
+                }
+                tmpList.add(paperQuestion);
+            }
+        }
+
+
+    /*
+        List<PaperQuestion> tmpList=new ArrayList<PaperQuestion>();
+        if(pqList!=null&&pqList.size()>0){
+            for (PaperQuestion ques:pqList){
+                if(ques.getQuestiontype()==3||ques.getQuestiontype()==4){
+                    QuestionOption questionOption=new QuestionOption();
+                    questionOption.setQuestionid(ques.getQuestionid());
+                    PageResult pchild = new PageResult();
+                    pchild.setPageNo(0);
+                    pchild.setPageSize(0);
+                    pchild.setOrderBy("u.option_type");
+                    List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,pchild);
+                    ques.setQuestionOption(questionOptionList);
+                }
+                tmpList.add(ques);
+            }
+        }
+    */
+        Integer paperQuesSize=this.paperQuestionManager.paperQuesCount(Long.parseLong(paperid));
+        //当前试卷包含试题数（去题干）
+        request.setAttribute("pageQuesSize",paperQuesSize);
+        request.setAttribute("pqList", tmpList);
+        request.setAttribute("childList", childList);
+        /*request.setAttribute("optionList", questionOptionList);*/
+        request.setAttribute("paper", tpCoursePaperList.get(0));
+        request.setAttribute("courseid",courseid);
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/addpaper/edit-paper");
+    }
+
+    /**
+     * 弹出层，进入弹出层页面
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(params="m=toLoadAddPaperModel",method=RequestMethod.GET)
+    public ModelAndView toLoadAddPaperModel(HttpServletRequest request,HttpServletResponse response){
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/addpaper/add-paper");
     }
 
 
@@ -1418,6 +1555,77 @@ public class PaperController extends BaseController<PaperInfo>{
         request.setAttribute("gradeid", gradeid);
         return new ModelAndView("/teachpaltform/paper/add/import-paper");
     }
+    /**
+     * 模式窗体查询导入试卷
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=dialogPaperModel",method=RequestMethod.GET)
+    public ModelAndView dialogPaperModel(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je =new JsonEntity();//
+        String courseid=request.getParameter("courseid");
+        String paperid=request.getParameter("paperid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            je.getAlertMsgAndBack();
+            return null;
+        }
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setUserid(this.logined(request).getUserid());
+        tc.setCourseid(Long.parseLong(courseid));
+        tc.setLocalstatus(1);//正常
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+
+        //获取当前专题教材
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(Long.parseLong(courseid));
+        Object subjectid=request.getSession().getAttribute("session_subject");
+        Object gradeid=request.getSession().getAttribute("session_grade");
+        Object materialid=request.getSession().getAttribute("session_material");
+        if(subjectid!=null)
+            ttm.setSubjectid(Integer.parseInt(subjectid.toString()));
+        if(gradeid!=null)
+            ttm.setGradeid(Integer.parseInt(gradeid.toString()));
+        if(materialid!=null)
+            ttm.setTeachingmaterialid(Integer.parseInt(materialid.toString()));
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0){
+            subjectid=materialList.get(0).getSubjectid().toString();
+            materialid=materialList.get(0).getTeachingmaterialid().toString();
+            gradeid=materialList.get(0).getGradeid().toString();
+        }
+
+        //查询关联专题的试卷
+        TpCoursePaper sel=new TpCoursePaper();
+        sel.setCourseid(Long.parseLong(courseid));
+        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,null);
+
+        List<TpCoursePaper>standardList=new ArrayList<TpCoursePaper>();
+        List<TpCoursePaper>nativeList=new ArrayList<TpCoursePaper>();
+        if(coursePaperList!=null&&coursePaperList.size()>0){
+            for(TpCoursePaper cp:coursePaperList){
+                if(cp.getPaperid()>0){
+                    standardList.add(cp);
+                }else if(cp.getPaperid()<0){
+                    nativeList.add(cp);
+                }
+            }
+        }
+        request.setAttribute("standardList", standardList);
+        request.setAttribute("nativeList", nativeList);
+        request.setAttribute("courseid", courseid);
+        request.setAttribute("paperid", paperid);
+        request.setAttribute("subjectid", subjectid);
+        request.setAttribute("materialid", materialid);
+        request.setAttribute("gradeid", gradeid);
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/addpaper/import-paper");
+    }
 
     /**
      * 模式窗体查询导入试题
@@ -1481,6 +1689,70 @@ public class PaperController extends BaseController<PaperInfo>{
         request.setAttribute("materialid", materialid);
         request.setAttribute("gradeid", gradeid);
         return new ModelAndView("/teachpaltform/paper/add/import-ques");
+    }
+
+    /**
+     * 模式窗体查询导入试题
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=dialogQuestionModel",method=RequestMethod.GET)
+    public ModelAndView dialogQuestionModel(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je =new JsonEntity();//
+        String courseid=request.getParameter("courseid");
+        String paperid=request.getParameter("paperid");
+        if(courseid==null||courseid.trim().length()<1||
+                paperid==null||paperid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            je.getAlertMsgAndBack();
+            return null;
+        }
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setUserid(this.logined(request).getUserid());
+        tc.setCourseid(Long.parseLong(courseid));
+        tc.setLocalstatus(1);//正常
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+
+        //获取当前专题教材
+
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(Long.parseLong(courseid));
+        Object subjectid=request.getSession().getAttribute("session_subject");
+        Object gradeid=request.getSession().getAttribute("session_grade");
+        Object materialid=request.getSession().getAttribute("session_material");
+        if(subjectid!=null)
+            ttm.setSubjectid(Integer.parseInt(subjectid.toString()));
+        if(gradeid!=null)
+            ttm.setGradeid(Integer.parseInt(gradeid.toString()));
+        if(materialid!=null)
+            ttm.setTeachingmaterialid(Integer.parseInt(materialid.toString()));
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0){
+            subjectid=materialList.get(0).getSubjectid().toString();
+            materialid=materialList.get(0).getTeachingmaterialid().toString();
+            gradeid=materialList.get(0).getGradeid().toString();
+        }
+
+        //查询关联专题的试卷
+/*        TpCoursePaper sel=new TpCoursePaper();
+        sel.setCourseid(Long.parseLong(courseid));
+        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,null);
+        request.setAttribute("coursePaperList", coursePaperList);*/
+
+
+
+        request.setAttribute("courseid", courseid);
+        request.setAttribute("paperid", paperid);
+        request.setAttribute("subjectid", subjectid);
+        request.setAttribute("materialid", materialid);
+        request.setAttribute("gradeid", gradeid);
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/addpaper/import-ques");
     }
 
 
