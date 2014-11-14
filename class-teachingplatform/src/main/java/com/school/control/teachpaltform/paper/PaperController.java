@@ -554,6 +554,7 @@ public class PaperController extends BaseController<PaperInfo>{
         t.setCourseid(Long.parseLong(courseid));
         t.setLocalstatus(1);
         t.setSelecttype(Integer.parseInt(type));
+
         if(paperid!=null&&paperid.trim().length()>0)
             t.setPaperid(Long.parseLong(paperid));
         //Ñ§Ï°²Î¿¼
@@ -562,8 +563,14 @@ public class PaperController extends BaseController<PaperInfo>{
         if(taskflag!=null&&taskflag.trim().length()>0)
             t.setTaskflag(1);
         List<TpCoursePaper>paperList=this.tpCoursePaperManager.getList(t, p);
+        t.setIscloud(1);
+        List<TpCoursePaper>paperCloudList=this.tpCoursePaperManager.getList(t,null);
+//        p.setList(paperList);
         je.setPresult(p);
-        je.setObjList(paperList);
+
+        je.getObjList().add(paperList);
+        je.getObjList().add(paperCloudList);
+
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }
@@ -1592,8 +1599,8 @@ public class PaperController extends BaseController<PaperInfo>{
             ttm.setSubjectid(Integer.parseInt(subjectid.toString()));
         if(gradeid!=null)
             ttm.setGradeid(Integer.parseInt(gradeid.toString()));
-        if(materialid!=null)
-            ttm.setTeachingmaterialid(Integer.parseInt(materialid.toString()));
+/*        if(materialid!=null)
+            ttm.setTeachingmaterialid(Integer.parseInt(materialid.toString())); */
         List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
         if(materialList!=null&&materialList.size()>0){
             subjectid=materialList.get(0).getSubjectid().toString();

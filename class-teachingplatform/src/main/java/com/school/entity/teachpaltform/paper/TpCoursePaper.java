@@ -36,6 +36,15 @@ public class TpCoursePaper {
     private Integer seldatetype;    //查询用 时间条件
     private String coursepapername;
     private Long micvideoid;
+    private Integer iscloud;        //云端试卷 id>0
+
+    public Integer getIscloud() {
+        return iscloud;
+    }
+
+    public void setIscloud(Integer iscloud) {
+        this.iscloud = iscloud;
+    }
 
     public Long getMicvideoid() {
         return micvideoid;

@@ -1837,7 +1837,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                 tmpTask.setTaskvalueid(nextTopicid);
 
                             }
-                        }
+                        }else if(tmpTask.getTasktype().toString().equals("10")) //Ö±²¥¿ÎÌø¹ý
+                            continue;
 
 
 

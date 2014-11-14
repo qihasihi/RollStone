@@ -317,7 +317,7 @@ function quesNumOrder(pid){
                           <%--如果editQues不等于1，则表示不需要修改铵钮--%>
                           <c:if test="${!empty param.editQues&&param.editQues==1&&pq.paperid<0}">
                             <c:if test="${pq.questiontype<6}">
-                                <a   href="javascript:showDialogPage(4,'${pq.paperid}','${pq.questionid}',this)" class="ico11" title="编辑"></a>
+                                <a   href="javascript:showUpdQues('${pq.paperid}','${pq.questionid}')" class="ico11" title="编辑"></a>
                             </c:if>
                             <a href="javascript:doDelPaperQues('${pq.questionid}')" class="ico04" title="删除"></a>&nbsp;
                             <%--<c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0}">--%>

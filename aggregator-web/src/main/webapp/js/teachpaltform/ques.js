@@ -298,7 +298,7 @@ function changeDialogQuesType(type){
         addQuesOption(undefined,1,true);
         addQuesOption(undefined,1,true);
         addQuesOption(undefined,1,true);
-        option_edit(type,true);
+        option_edit_dialog(type);
     }else if(type==4){ //多选
         $("#type_option").show();
         $("#tr_right_answer").hide();
@@ -306,7 +306,7 @@ function changeDialogQuesType(type){
         addQuesOption(undefined,2,true);
         addQuesOption(undefined,2,true);
         addQuesOption(undefined,2,true);
-        option_edit(type,true);
+        option_edit_dialog(type);
     }
     BindTextDialog();
     $("#sp_edit").html('');
@@ -427,10 +427,17 @@ function sub_option_dialog(){
 /**
  * 增加选项操作
  */
-function option_edit(type,isDialog){
+function option_edit(type){
     //var h='<a href="javascript:addQuesOption(undefined,'+type+')">添加</a>';
    // h+='<a href="javascript:void(0);" onclick="delQuesOption()">删除</a>';
-    var h='<p class="p_t_10"><a href="javascript:addQuesOption(undefined,'+type+',isDialog)" title="添加选项" class="ico36"></a><a href="javascript:void(0);" onclick="delQuesOption(isDialog)" title="移出选项" class="ico34"></a></p>';
+    var h='<p class="p_t_10"><a href="javascript:addQuesOption(\'\','+type+')" title="添加选项" class="ico36"></a><a href="javascript:void(0);" onclick="delQuesOption()" title="移出选项" class="ico34"></a></p>';
+    $("#td_ques_operate").html(h);
+}
+
+
+function option_edit_dialog(type){
+    var h='<p class="p_t_10"><a href="javascript:void(0);"  title="添加选项" class="ico36" onclick="addQuesOption(\'\','+type+',true)"></a>';
+    h+='<a href="javascript:void(0);" onclick="delQuesOption(true)" title="移出选项" class="ico34"></a></p>';
     $("#td_ques_operate").html(h);
 }
 
@@ -517,6 +524,7 @@ function ed_option(itm){
 function ed_option_dialog(itm){
     $('#dv_edit_ques').hide();
     $('#dv_edit_option').show();
+
 
     var htm=$(itm).html();
     if(htm=='请编辑选项..'||htm=='点击编辑题干……'||htm=='点击编辑答案解析……'||htm=='请编辑正确答案……')
@@ -947,6 +955,131 @@ function doUpdQuestion(questionid){
         }
     });
 }
+
+
+
+/**
+ * 修改试题
+ * @return
+ */
+function doUpdDialogQues(questionid){
+    if(typeof questionid=='undefined'){
+        alert('系统未获取到试题标识!请刷新页面重试!');
+        return;
+    }
+    var param={};
+    var questype=$("input[name='rdo_ques_type_dialog']:checked").val();
+    var url='',iserror=0,param={},paramStr='?t='+new Date().getTime(),rflag=false;
+    var optionArry=new Array(),isrightArray=new Array();
+
+    //试题
+    var quesoptionArray=$("a").filter(function(){return this.id.indexOf("ques_option_")!=-1});
+    var quesname=$("#ques_name_dialog").html();
+    var quesanswer=$("#ques_answer_dialog").html();
+    var correctanswer=$("#correct_answer_dialog").html();
+    param.questype=questype;
+    if(quesname.Trim().length<1){
+        alert('提示：题干不能为空!');
+        $("#ques_name").focus();
+        return;
+    }
+    param.quesname=quesname;
+    if((questype!=2) && (quesanswer.Trim().length<1)){
+        alert('提示：答案解析不能为空!');
+        return;
+    }
+    param.quesanswer=quesanswer;
+    if(questype==1){
+        param.correctanswer=correctanswer;
+    }
+    if(questype=="2"){
+//        var dvobj=$("#dv_filter p > span[name='span']");
+//        if(dvobj.length<1){
+//            alert('提示：填空题未发现占位符号!');
+//            return;
+//        }
+//        var fillbank_answer='';
+//        $(dvobj).each(function(idx,itm){
+//            if(fillbank_answer.length>0)
+//                fillbank_answer+="|";
+//            fillbank_answer+=isIE?itm.innerText:itm.textContent;
+//        });
+//        param.quesanswer=fillbank_answer;
+//        $("#dv_filter p > span[name='span']").after("<span name=fillbank></span>").andSelf().remove()
+//        param.quesname=$("#dv_filter").html();
+        param.correctanswer= $("#fill_answer").html();
+
+        $("#dv_filter span[name='span']").after("<span name=fillbank></span>").andSelf().remove()
+        param.quesname=$("#dv_filter").html();
+    }else if(questype=="3"||questype=="4"){
+        if(quesoptionArray.length>0){
+            $.each(quesoptionArray,function(idx,itm){
+                var data=$(itm).html();
+                if(data.Trim().length>0){
+                    var _id=$(itm).attr("id").substr($(itm).attr("id").lastIndexOf('_')+1);
+                    var inptype=questype=="3"?'rdo_right':'ck_right';
+                    //是否是正确选项
+                    var is_right=$("input[id='"+inptype+"_"+_id+"']:checked");
+//                    if(paramStr.Trim().length>0)
+//                        paramStr+='&';
+//                    paramStr+='optionArray='+data;
+                    optionArry.push(data);
+
+                    if(is_right.length>0){
+                        // paramStr+='&is_Right=1';
+                        isrightArray.push(1);
+                        rflag=true;
+                    }else{
+                        //paramStr+='&is_Right=0';
+                        isrightArray.push(0);
+                    }
+                }else{
+                    iserror=1;
+                    return;
+                }
+            });
+            if(iserror==1){
+                alert('请填写选项名称!');
+                return;
+            }
+            if(!rflag){
+                alert('您未设置正确答案!');
+                return;
+            }
+        }else{
+            alert('提示：选择题缺少选项!');
+            return;
+        }
+    }
+    param.courseid=courseid;
+    param.questionid=questionid;
+    param.optionArray=optionArry.join("#sz#");
+    param.rightArray=isrightArray.join(",");
+    if(paperid.length>0)
+        param.paperid=paperid;
+
+    if(!confirm('数据验证完毕!确认提交?'))
+        return;
+    //开始向后台添加数据
+    $.ajax({
+        url:'question?m=doSubUpdQuestion',
+        type:"post",
+        data:paramStr+'&'+$.param(param),
+        dataType:'json',
+        cache: false,
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+        },success:function(rmsg){
+            if(rmsg.type=="error"){
+                alert(rmsg.msg);
+            }else{
+                loadPaperQues();
+                loadDiv(3);
+            }
+        }
+    });
+}
+
 
 /**
  * 删除试题

@@ -177,7 +177,7 @@ function preeDoPageSub(pObj){
 <p class="float_title"><a href="javascript:;" class="ico93" onclick="loadDiv(3)" title="返回"></a><span id="dv_model_mdname">导入试卷</span></p>
 <div class="jxxt_float_w920 font-black">
     <p class="t_r public_input">
-        <input id="txt_search_paper" name="txt_search_paper" type="text" class="w240" placeholder="资源名称/专题名称" />
+        <input id="txt_search_paper" name="txt_search_paper" type="text" class="w240" placeholder="专题名称" />
         <a  href="javascript:pageGo('pListPaper');" class="an_search" title="查询"></a>
         图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
     <div style="width:920px;height:610px;overflow-x:hidden;overflow-y:auto;">

@@ -30,7 +30,7 @@
                 http_operate_handler : getInvestReturnMethod, //执行成功后返回方法
                 return_type : 'json', //放回的值类型
                 page_no : 1, //当前的页数
-                page_size : 9999, //当前页面显示的数量
+                page_size : 8, //当前页面显示的数量
                 rectotal : 0, //一共多少
                 pagetotal : 1,
                 operate_id : "initItemList"
@@ -69,8 +69,41 @@
             var param = 'dialogWidth:'+paramObj.width+'px;dialogHeight:'+paramObj.height+'px;dialogLeft:'+left+'px;dialogTop:'+top+'px;status:no;location:no';
 
 
-            if(rps.objList!=null&&rps.objList.length>0){
-                $.each(rps.objList,function(idx,itm){
+            if(rps.objList[0]!=null&&rps.objList[0].length>0){
+                $.each(rps.objList[0],function(idx,itm){
+                    switch (tasktype){
+                        case '4':{
+                            shtml+='<li><a href="javascript:;" onclick="loadPaperDetail('+itm.paperid+')">';
+                            //shtml+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                            shtml+='<p class="one">'+itm.papername+'</p>';
+                            shtml+='<p class="two">';
+                            if(itm.objectivenum>0&&itm.subjectivenum>0)
+                                shtml+='<span class="bg1" style="width:50%">'+itm.objectivenum+'</span><span class="bg2" style="width:50%">'+itm.subjectivenum+'</span>';
+                            else if(itm.objectivenum>0)
+                                shtml+='<span class="bg1" style="width:100%">'+itm.objectivenum+'</span>';
+                            else if(itm.subjectivenum>0)
+                                shtml+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
+                            else if(typeof itm.quesnum!='undefined')
+                                shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
+                            shtml+='</p></a>';
+                            shtml+='<p class="pic">';
+                            if(itm.taskflag<1)
+                                shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico51" title="发任务"></span></b></a>';
+                            else
+                                shtml+='<b><span class="ico52" title="已发任务"></span></b>';
+                            shtml+='</p>';
+                            shtml+='</li>';
+                        }
+                    }
+                });
+            }else{
+                shtml='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
+            }
+
+
+
+            if(rps.objList[1]!=null&&rps.objList[1].length>0){
+                $.each(rps.objList[1],function(idx,itm){
                     switch (tasktype){
                         case '4':{
                             if(itm.paperid>0){
@@ -91,35 +124,14 @@
                                     html+='<b><span class="ico52" title="已发任务"></span></b>';
                                 html+='</p>';
                                 html+='</li>';
-                            }else{
-                                shtml+='<li><a href="javascript:;" onclick="loadPaperDetail('+itm.paperid+')">';
-                                //shtml+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
-                                shtml+='<p class="one">'+itm.papername+'</p>';
-                                shtml+='<p class="two">';
-                                if(itm.objectivenum>0&&itm.subjectivenum>0)
-                                    shtml+='<span class="bg1" style="width:50%">'+itm.objectivenum+'</span><span class="bg2" style="width:50%">'+itm.subjectivenum+'</span>';
-                                else if(itm.objectivenum>0)
-                                    shtml+='<span class="bg1" style="width:100%">'+itm.objectivenum+'</span>';
-                                else if(itm.subjectivenum>0)
-                                    shtml+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
-                                else if(typeof itm.quesnum!='undefined')
-                                    shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
-                                shtml+='</p></a>';
-                                shtml+='<p class="pic">';
-                                if(itm.taskflag<1)
-                                    shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico51" title="发任务"></span></b></a>';
-                                else
-                                    shtml+='<b><span class="ico52" title="已发任务"></span></b>';
-                                shtml+='</p>';
-                                shtml+='</li>';
                             }
                         }
                     }
                 });
             }else{
                 html='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
-                shtml='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
             }
+
             $("#ul_standard").html(html);
             $("#ul_native").html(shtml);
 
@@ -280,6 +292,41 @@
                 $("#dv_model_child").fadeIn('fast');
             });
         }
+        /**
+         *显示新建试题
+         */
+        function showCreateQues(pid){
+            $("#dv_selectPaper").hide();
+            $("#dv_addpaperchild").hide();
+            $("#dv_paperDetail").hide();
+            $("#dv_model_mdname").html("新建试题");
+            $("#dv_model").fadeIn('fast');
+            $("#dv_model_child").hide();
+            $("#dv_model_child").load("question?m=toDialogAddPaperQues&courseid="+courseid+"&paperid="+pid,function(){
+                $("#dv_model_child").fadeIn('fast');
+            });
+        }
+
+
+        /**
+         *显示新建试题
+         */
+        function showUpdQues(pid,qid){
+            $("#dv_selectPaper").hide();
+            $("#dv_addpaperchild").hide();
+            $("#dv_paperDetail").hide();
+            $("#dv_model_mdname").html("修改试题");
+            $("#dv_model").fadeIn('fast');
+            $("#dv_model_child").hide();
+            $("#dv_model_child").load("question?m=toUpdDialogQuestion&courseid="+courseid+"&paperid="+pid+"&questionid="+qid,function(){
+                $("#dv_model_child").fadeIn('fast');
+            });
+        }
+
+
+
+
+
 
 
     </script>
@@ -305,7 +352,7 @@
     <div  style="display:none" id="dv_selpaperchild">
         <div class="jxxt_float_w920 font-black">
             <p class="t_r">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
-            <div style="overflow-x: hidden;overflow-y:auto;width:935px;height:570px;">
+            <div style="overflow-x: hidden;overflow-y:auto;width:930px;height:530px;">
                 <c:if test="${!empty courselevel and courselevel ne 3}">
                     <p><strong>标准试卷</strong></p>
                     <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
@@ -318,7 +365,7 @@
                 </ul>
             </div>
         </div>
-        <form id="pListForm" name="pListForm" style="display: none;">
+        <form id="pListForm" name="pListForm" style="">
             <p class="Mt20" id="pListaddress" align="center"></p>
         </form>
     </div>

@@ -428,8 +428,8 @@ function getBankInvestReturnMethod(rps){
             // var taskObj=replaceAll(replaceAll(itm.taskobjname.toLowerCase(),"<p>",""),"</p>","");
             html+='<tr>';
             html+='<td>'+type+questype+'</td>';
-            html+='<td>'+status+'</td>';
-            html+='<td><p>';
+           // html+='<td>'+status+'</td>';
+            html+='<td colspan="2"><p>';
             var objName='';
             if(typeof itm.taskobjname!='undefined')
                 objName=replaceAll(itm.taskobjname.toLowerCase(),'<span name="fillbank"></span>',"_______");
@@ -593,14 +593,15 @@ function showCourseList(){
                     <option value="ques_4">试题_多选</option>
                 </select>
             </th>
-            <th>
-                <select id="sel_level" onchange=" pageGo('pBankList')">
-                    <option value="">出处</option>
-                    <option value="-1">参考</option>
-                    <option value="1">自建</option>
-                </select>
-            </th>
-            <th>关联内容</th>
+            <!-- <th>
+     <select id="sel_level" onchange=" pageGo('pBankList')">
+               <option value="">出处</option>
+               <option value="-1">参考</option>
+               <option value="1">自建</option>
+           </select>
+                关联内容
+            </th>-->
+            <th colspan="2">关联内容</th>
             <th>完成标准</th>
             <th>操作</th>
         </tr>

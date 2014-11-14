@@ -1,9 +1,10 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
     <script type="text/javascript">
         var isfirst=true;
-        var tpcid=null;
+        var tpcid= null;
         var p1,p2;
         $(function(){
             p2=new PageControl({
@@ -138,7 +139,12 @@
                     $("#dv_fanye").hide();
 
                 if(tpcid!=null&&isfirst){
-                    doGetThemeList(tpcid);
+                    <c:if test="${empty param.topicid}">
+                        doGetThemeList(tpcid);
+                    </c:if>
+                    <c:if test="${!empty param.topicid}">
+                            doGetThemeList(${param.topicid});
+                    </c:if>
                     isfirst=false;
                 }
             }

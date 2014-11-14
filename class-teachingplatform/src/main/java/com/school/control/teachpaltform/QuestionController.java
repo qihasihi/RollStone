@@ -3,14 +3,17 @@ package com.school.control.teachpaltform;
 import com.school.control.base.BaseController;
 import com.school.entity.DictionaryInfo;
 import com.school.entity.teachpaltform.*;
+import com.school.entity.teachpaltform.paper.PaperInfo;
 import com.school.entity.teachpaltform.paper.PaperQuestion;
 import com.school.manager.DictionaryManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
+import com.school.manager.inter.teachpaltform.paper.IPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
 import com.school.manager.teachpaltform.*;
 import com.school.manager.teachpaltform.interactive.TpTopicManager;
+import com.school.manager.teachpaltform.paper.PaperManager;
 import com.school.manager.teachpaltform.paper.PaperQuestionManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
@@ -43,6 +46,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
     private ITpTopicManager tpTopicManager;
     private ITpCourseTeachingMaterialManager tpCourseTeachingMaterialManager;
     private IPaperQuestionManager paperQuestionManager;
+    private IPaperManager paperManager;
 
     public QuestionController(){
         this.questionManager=this.getManager(QuestionManager.class);
@@ -54,6 +58,7 @@ public class QuestionController extends BaseController<QuestionInfo> {
         this.tpTopicManager=this.getManager(TpTopicManager.class);
         this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
         this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
+        this.paperManager=this.getManager(PaperManager.class);
     }
     /**
      * 根据课题ID，加载试题列表
@@ -240,6 +245,62 @@ public class QuestionController extends BaseController<QuestionInfo> {
 
         return new ModelAndView("/teachpaltform/question/ques-update",mp);
     }
+
+
+    /**
+     * 修改试题页--模式窗体
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toUpdDialogQuestion", method = RequestMethod.GET)
+    public ModelAndView toUpdDialogQuestion(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String questionid = request.getParameter("questionid");
+        String paperid=request.getParameter("paperid");
+        String courseid=request.getParameter("courseid");
+        if (questionid == null || questionid.trim().length() < 1
+                ||courseid==null||courseid.trim().length()<1) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //验证试题
+        QuestionInfo questionInfo = new QuestionInfo();
+        questionInfo.setQuestionid(Long.parseLong(questionid));
+        PageResult presult = new PageResult();
+        presult.setPageNo(1);
+        presult.setPageSize(1);
+        List<QuestionInfo> questionList = this.questionManager.getList(questionInfo, presult);
+        if (questionList == null || questionList.size() < 1) {
+            je.setMsg(UtilTool.msgproperty.get("ENTITY_NOT_EXISTS").toString());
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        QuestionInfo ques=questionList.get(0);
+        //单选与选择题选项
+        if(ques.getQuestiontype()==3||ques.getQuestiontype()==4){
+            QuestionOption questionOption=new QuestionOption();
+            questionOption.setQuestionid(ques.getQuestionid());
+            PageResult p = new PageResult();
+            p.setPageSize(0);
+            p.setPageNo(0);
+            p.setOrderBy("option_type");
+            List<QuestionOption>questionOptionList=this.questionOptionManager.getList(questionOption,p);
+            mp.put("quesOptionList",questionOptionList);
+        }
+
+        List<DictionaryInfo> quesTypeList = this.dictionaryManager.getDictionaryByType("TP_QUESTION_TYPE");
+        mp.put("quesTypeList",quesTypeList);
+        mp.put("question",ques);
+        mp.put("courseid",courseid);
+        mp.put("paperid",paperid);
+
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/addpaper/update-ques",mp);
+    }
+
 
     /**
      * 获取试题列表
@@ -506,6 +567,44 @@ public class QuestionController extends BaseController<QuestionInfo> {
         request.setAttribute("quesTypeList", questiontypeList);
         request.setAttribute("questionid",this.questionManager.getNextId(true));
         return new ModelAndView("/teachpaltform/task/teacher/dialog/add-ques");
+    }
+
+
+
+    /**
+     * 添加成卷测试任务  新建试题页（模式窗体）
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=toDialogAddPaperQues", method = RequestMethod.GET)
+    public ModelAndView toDialogAddPaperQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //得到该课题的试题。
+        JsonEntity je = new JsonEntity();
+        String courseid = request.getParameter("courseid");
+        if (courseid == null || courseid.trim().length() < 1) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //验证courseid
+        TpCourseInfo tpCourseInfo = new TpCourseInfo();
+        tpCourseInfo.setCourseid(Long.parseLong(courseid));
+        PageResult presult = new PageResult();
+        presult.setPageNo(1);
+        presult.setPageSize(1);
+        List<TpCourseInfo> courseList = this.tpCourseManager.getTchCourseList(tpCourseInfo, presult);
+        if(courseList==null||courseList.size()<1){
+            je.setMsg(UtilTool.msgproperty.get("ENTITY_NOT_EXISTS").toString());
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //获取问题类型
+        List<DictionaryInfo> questiontypeList = this.dictionaryManager.getDictionaryByType("TP_QUESTION_TYPE");
+        request.setAttribute("quesTypeList", questiontypeList);
+        request.setAttribute("questionid",this.questionManager.getNextId(true));
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/addpaper/add-ques");
     }
 
 
@@ -889,6 +988,240 @@ public class QuestionController extends BaseController<QuestionInfo> {
         }
         response.getWriter().print(je.toJSON());
     }
+
+
+    /**
+     * 试卷试题添加--模式窗体
+     *
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=doSubAddPaperQuestion", method = RequestMethod.POST)
+    public void doSubAddPaperQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String courseid = request.getParameter("courseid");
+        String questype = request.getParameter("questype");
+        String questionid= request.getParameter("questionid");
+        String paperid = request.getParameter("paperid");
+        if (StringUtils.isBlank(courseid)) {
+            je.setMsg("异常错误,未获取到专题标识!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if (StringUtils.isBlank(paperid)) {
+            je.setMsg("异常错误,未获取到试卷标识!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        StringBuilder sql = null;
+        List<Object> objList = null;
+        List<String> sqlListArray = new ArrayList<String>();
+        List<List<Object>> objListArray = new ArrayList<List<Object>>();
+
+        /**
+         * 查询该专题是否引用了共享专题，增加元素操作记录
+         */
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setCourseid(Long.parseLong(courseid));
+        List<TpCourseInfo>tcList=this.tpCourseManager.getList(tc, null);
+        if(tcList==null||tcList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+
+
+
+
+        String quesname = request.getParameter("quesname");
+        String correctanswer = request.getParameter("correctanswer");
+        String quesanswer = request.getParameter("quesanswer");
+        //String[] optionArray = request.getParameterValues("optionArray");
+        //String[] isrightArray = request.getParameterValues("is_Right");
+        String optionData=request.getParameter("optionArray");
+        String isrightData=request.getParameter("rightArray");
+        if (questionid==null||questionid.length()<1) {
+            je.setMsg("异常错误,未获取到问题标识!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if (StringUtils.isBlank(questype)) {
+            je.setMsg("异常错误,未获取到问题类型!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if (StringUtils.isBlank(quesname)) {
+            je.setMsg("异常错误,未获取到题干!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        PaperInfo paperInfo=new PaperInfo();
+        paperInfo.setPaperid(Long.parseLong(paperid));
+        List<PaperInfo>paperList=this.paperManager.getList(paperInfo,null);
+        if(paperList==null||paperList.size()<1){
+            je.setMsg(UtilTool.utilproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        //试题ID
+        Long nextref = Long.parseLong(questionid);
+
+        //试题与专题
+        TpCourseQuestion tpCourseQuestion=new TpCourseQuestion();
+        tpCourseQuestion.setQuestionid(nextref);
+        tpCourseQuestion.setCourseid(Long.parseLong(courseid));
+        tpCourseQuestion.setRef(this.tpCourseQuestionManager.getNextId(true));
+        sql = new StringBuilder();
+        objList = this.tpCourseQuestionManager.getSaveSql(tpCourseQuestion, sql);
+        if (objList != null && sql != null && sql.length() > 0) {
+            objListArray.add(objList);
+            sqlListArray.add(sql.toString());
+        }
+
+
+        //试卷试题关系
+        Integer papperQuesSize=this.paperQuestionManager.paperQuesCount(Long.parseLong(paperid));
+        Integer maxIdx=papperQuesSize+1;
+        PaperQuestion paperQuestion=new PaperQuestion();
+        paperQuestion.setPaperid(Long.parseLong(paperid));
+        paperQuestion.setQuestionid(nextref);
+        paperQuestion.setOrderidx(maxIdx);
+        sql = new StringBuilder();
+        objList = this.paperQuestionManager.getSaveSql(paperQuestion, sql);
+        if (objList != null && sql != null && sql.length() > 0) {
+            objListArray.add(objList);
+            sqlListArray.add(sql.toString());
+        }
+
+
+
+
+        //题干
+        QuestionInfo qb = new QuestionInfo();
+        qb.setQuestionid(nextref);
+        qb.setCuserid(this.logined(request).getRef());
+        qb.setCusername(this.logined(request).getRealname());
+        qb.setQuestiontype(Integer.parseInt(questype));
+        qb.setQuestionlevel(3);
+        if(questype.equals("2")){
+            qb.setCorrectanswer(correctanswer);
+        }
+        sql = new StringBuilder();
+        objList = this.questionManager.getSaveSql(qb, sql);
+        if (objList != null && sql != null && sql.length() > 0) {
+            objListArray.add(objList);
+            sqlListArray.add(sql.toString());
+        }
+        //修改Content，analysis
+        this.questionManager.getArrayUpdateLongText("question_info","question_id","content",quesname,nextref.toString(),sqlListArray,objListArray);
+        if(quesanswer!=null&&quesanswer.trim().length()>0)
+            this.questionManager.getArrayUpdateLongText("question_info","question_id","analysis",quesanswer,nextref.toString(),sqlListArray,objListArray);
+        if(questype.equals("1")){
+            this.questionManager.getArrayUpdateLongText("question_info","question_id","correct_answer",correctanswer,nextref.toString(),sqlListArray,objListArray);
+        }
+
+
+        //添加操作日志
+     /*   sql = new StringBuilder();
+        objList=this.questionManager.getAddOperateLog(this.logined(request).getRef(),"question_info",nextref.toString()
+                ,null,null,"ADD","添加试题:content:"+quesname,sql);
+        if (objList != null && sql != null && sql.length() > 0) {
+            objListArray.add(objList);
+            sqlListArray.add(sql.toString());
+        }*/
+
+        //如果是问答、填空则解析为正确答案
+        if (questype.equals("1") || (questype.equals("2"))) {
+
+        } else if (questype.equals("3") || questype.equals("4")) {
+            if (optionData==null || isrightData==null ||
+                    optionData.trim().length()<1||isrightData.trim().length()<1) {
+                je.setMsg("异常错误,未获取到选择题选项或答案!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            String[]optionArray=optionData.split("#sz#");
+            String[]isrightArray=isrightData.split(",");
+
+            if(optionArray!=null&&isrightArray!=null&&optionArray.length!=isrightArray.length){
+                je.setMsg("选项与答案数量不一致!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+
+            if(optionArray.length>26){
+                je.setMsg("选项过多!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+            for (int i = 0; i < optionArray.length; i++) {
+                //选择题选项
+                QuestionOption qoption = new QuestionOption();
+                qoption.setQuestionid(this.questionOptionManager.getNextId(true));
+                //题号ABCD
+                qoption.setOptiontype(UtilTool.AZ[i]);
+                qoption.setQuestionid(nextref);
+                qoption.setContent(optionArray[i]);
+                qoption.setIsright(Integer.parseInt(isrightArray[i]));
+                sql = new StringBuilder();
+                objList = this.questionOptionManager.getSaveSql(qoption, sql);
+                if (objList != null && sql != null && sql.length() > 0) {
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+
+                //添加操作日志
+             /*   sql = new StringBuilder();
+                objList=this.questionManager.getAddOperateLog(this.logined(request).getRef(),"j_question_option",nextref.toString()
+                        ,null,null,"ADD","添加试题选项:content:"+optionArray[i],sql);
+                if (objList != null && sql != null && sql.length() > 0) {
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }*/
+            }
+        }
+
+
+        TpCourseInfo tmpCourse=tcList.get(0);
+        if(tmpCourse.getQuoteid()!=null&&tmpCourse.getQuoteid().intValue()!=0){
+            TpCourseInfo quoteInfo=new TpCourseInfo();
+            quoteInfo.setCourseid(tmpCourse.getQuoteid());
+            List<TpCourseInfo>quoteList=this.tpCourseManager.getList(quoteInfo,null);
+            if(quoteList!=null&&quoteList.size()>0&&quoteList.get(0).getCourselevel()!=3){
+                //增加专题操作数据
+                TpOperateInfo to=new TpOperateInfo();
+                to.setRef(this.tpOperateManager.getNextId(true));
+                to.setCuserid(this.logined(request).getUserid());
+                to.setCourseid(tmpCourse.getQuoteid());
+                to.setTargetid(nextref);
+                to.setOperatetype(2);                                                                   //添加
+                to.setDatatype(TpOperateInfo.OPERATE_TYPE.COURSE_QUESTION.getValue());                 //专题资源
+                sql=new StringBuilder();
+                objList=this.tpOperateManager.getSaveSql(to,sql);
+                if(objList!=null&&sql!=null){
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+            }
+
+        }
+
+        if (objListArray.size() > 0 && sqlListArray.size() > 0) {
+            boolean flag = this.questionManager.doExcetueArrayProc(sqlListArray, objListArray);
+            if (flag) {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+                je.getObjList().add(nextref);
+            } else {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        } else {
+            je.setMsg("您的操作没有执行!");
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+
 
 
 

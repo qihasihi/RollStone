@@ -109,11 +109,11 @@
              });
          }
 
-        function pLoad(url,courseid){
+        function pLoad(url,courseid,desc){
             $("li[name='li_nav']").each(function(idx,itm){
                 $(itm).siblings().removeClass("crumb");
             });
-            $("li[name='li_nav']").eq(1).addClass("crumb");
+            $("li[name='li_nav']").eq(desc).addClass("crumb");
              $(window.parent.document).contents().find("#dv_course_element").load(url);
         }
 
@@ -147,6 +147,10 @@
                         case 6:
                             criteria="";
                             type="微课程学习&nbsp;&nbsp;&nbsp;&nbsp;";
+                            break;
+                        case 10:
+                            criteria="";
+                            type="直播课&nbsp;&nbsp;&nbsp;&nbsp;";
                             break;
                     }
 
@@ -190,22 +194,24 @@
                     if(itm.tasktype==1){
                         if(itm.resourcetype==1){
                             var url='teachercourse?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid;
-                            html+='<a href="javascript:pLoad(\''+url+'\','+courseid+')" class="font-blue">'+taskObj+'</a>';
+                            html+='<a href="javascript:pLoad(\''+url+'\','+courseid+',1)" class="font-blue">'+taskObj+'</a>';
                         }else{
                             if(itm.remotetype==1){
-                                html+='<a href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
+                                html+='<a target="_blank" href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
                             }else{
-                                html+='<a href="tpres?m=toRemoteResourcesDetail&res_id='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
+                                html+='<a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
                             }
                         }
                     }else if(itm.tasktype==2){
-                        html+='<a href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'" class="font-blue">'+taskObj+'</a>';
+                        var url='tptopic?m=courseDetailIdx&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'';
+                        html+='<a href="javascript:pLoad(\''+url+'\','+courseid+',2)" class="font-blue">'+taskObj+'</a>';
+                      //  html+='<a href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'" class="font-blue">'+taskObj+'</a>';
                     }else if(itm.tasktype==4){
                         html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
                     }else if(itm.tasktype==6){
                        // html+='<a href="tpres?m=previewMic&courseid='+itm.courseid+'&resid='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
                         var url='teachercourse?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid;
-                        html+='<a href="javascript:pLoad(\''+url+'\','+courseid+')" class="font-blue">'+taskObj+'</a>';
+                        html+='<a href="javascript:pLoad(\''+url+'\','+courseid+',4)" class="font-blue">'+taskObj+'</a>';
                     }else if(itm.tasktype==10){
                         html+='<a href="#" ></a>';
                     }
