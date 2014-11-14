@@ -136,10 +136,10 @@
                                         int sysid = r.nextInt(10000000);
                                     %>
                                     <tr id="tr_quesoption_<%=sysid%>">
-                                        <th>
+                                        <td>
                                             <%=UtilTool.AZ[i]+"：&nbsp;"%>
                                             <%i+=1;%>
-                                        </th>
+                                        </td>
                                         <td>
 
                                             <c:if test="${q.questiontype==3 and q.isright eq 1}">

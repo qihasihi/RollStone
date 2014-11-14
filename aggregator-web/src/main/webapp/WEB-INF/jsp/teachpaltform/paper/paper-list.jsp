@@ -191,7 +191,7 @@ function loadDiv(t){
     if(typeof(t)!="undefined"&&t!=null){
         if(t==3){
             $("#dv_model").hide();
-            $("#dv_content_child").fadeIn('fast');
+            $("#dv_content_child").show();
         }
     }
 }
@@ -220,6 +220,38 @@ function showImportQues(pid){
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
     $("#dv_model_child").load("paper?m=dialogQuestionModel&courseid="+courseid+"&paperid="+pid,function(){
+
+        $("#dv_model_child").fadeIn('fast');
+    });
+}
+
+
+
+/**
+ *显示新建试题
+ */
+function showCreateQues(pid){
+    closeModel('dv_paper_name');
+    $("#dv_model_mdname").html("新建试题");
+    $("#dv_content_child").hide();
+    $("#dv_model").fadeIn('fast');
+    $("#dv_model_child").hide();
+    $("#dv_model_child").load("question?m=toDialogAddPaperQues&courseid="+courseid+"&paperid="+pid,function(){
+
+        $("#dv_model_child").fadeIn('fast');
+    });
+}
+
+/**
+ *显示新建试题
+ */
+function showUpdQues(pid,qid){
+    closeModel('dv_paper_name');
+    $("#dv_model_mdname").html("修改试题");
+    $("#dv_content_child").hide();
+    $("#dv_model").fadeIn('fast');
+    $("#dv_model_child").hide();
+    $("#dv_model_child").load("question?m=toUpdDialogQuestion&courseid="+courseid+"&paperid="+pid+"&questionid="+qid,function(){
 
         $("#dv_model_child").fadeIn('fast');
     });

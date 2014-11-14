@@ -838,11 +838,13 @@ public class TaskController extends BaseController<TpTaskInfo>{
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }else {
-            for(TpCourseClass cc:courseclassList){
-                if(cc.getDctype()!=null&&cc.getDctype()==2){
-                    je.setMsg("当前专题班级类型为网校班级，不支持在电脑上发任务!");
-                    response.getWriter().print(je.getAlertMsgAndBack());
-                    return null;
+            if(this.logined(request).getDcschoolid()!=1){
+                for(TpCourseClass cc:courseclassList){
+                    if(cc.getDctype()!=null&&cc.getDctype()==2){
+                        je.setMsg("当前专题班级类型为网校班级，不支持在电脑上发任务!");
+                        response.getWriter().print(je.getAlertMsgAndBack());
+                        return null;
+                    }
                 }
             }
         }

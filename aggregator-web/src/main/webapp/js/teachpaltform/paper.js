@@ -28,6 +28,10 @@ function addPaper(){
     });
 
 }
+
+
+
+
 /**
  * 加载试卷的编辑页面
  * @param cid

@@ -37,7 +37,7 @@ var paperid="${paperid}";
 var subjectid="${subjectid}";
 var materialid="${materialid}";
 var gradeid="${gradeid}";
-var pListPaper,pBankList;
+var pListPaper,pBankList,pCloudPaper;
 var total;
 $(function(){
     pListPaper = new PageControl( {
@@ -50,14 +50,34 @@ $(function(){
         http_operate_handler : getInvestReturnMethod, //执行成功后返回方法
         return_type : 'json', //放回的值类型
         page_no : 1, //当前的页数
-        page_size : 9999, //当前页面显示的数量
+        page_size : 4, //当前页面显示的数量
         rectotal : 0, //一共多少
         pagetotal : 1,
         operate_id : "initItemList"
     });
+
+    pCloudPaper = new PageControl( {
+        post_url : 'paper?m=getImportCloudPaperList',
+        page_id : 'page2',
+        page_control_name : "pCloudPaper",
+        post_form : document.pListForm_CloudPaper,
+        gender_address_id : 'pListaddress_Cloudpaper',
+        http_free_operate_handler : preeDoPageSub, //执行查询前操作的内容
+        http_operate_handler : getCloudPaperList, //执行成功后返回方法
+        return_type : 'json', //放回的值类型
+        page_no : 1, //当前的页数
+        page_size : 4, //当前页面显示的数量
+        rectotal : 0, //一共多少
+        pagetotal : 1,
+        operate_id : "initItemList"
+    });
+
     var coursename=$("#txt_search_paper");
-    if(coursename.val().Trim().length>0&&coursename.val()!='输入专题名称')
+    if(coursename.val().Trim().length>0&&coursename.val()!='输入专题名称'){
         pageGo('pListPaper');
+        pageGo('pCloudPaper');
+    }
+
 });
 
 
@@ -66,22 +86,6 @@ function getInvestReturnMethod(rps){
     var html='',shtml='';
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
-            if(itm.paperid>0){
-                html+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
-                html+='<p class="one">'+itm.papername+'</p>';
-                html+='<p class="two">';
-                if(itm.objectivenum>0&&itm.subjectivenum>0)
-                    html+='<span class="bg1" style="width:50%">'+itm.objectivenum+'</span><span class="bg2" style="width:50%">'+itm.subjectivenum+'</span>';
-                else if(itm.objectivenum>0)
-                    html+='<span class="bg1" style="width:100%">'+itm.objectivenum+'</span>';
-                else if(itm.subjectivenum>0)
-                    html+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
-                html+='</p></a>';
-                html+='<p class="pic">';
-                html+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico02" title="导入"></span></b></a>';
-                html+='</p>';
-                html+='</li>';
-            }else{
                 shtml+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
                 shtml+='<p class="one">'+itm.papername+'</p>';
                 shtml+='<p class="two">';
@@ -98,17 +102,11 @@ function getInvestReturnMethod(rps){
                 shtml+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico02" title="导入"></span></b></a>';
                 shtml+='</p>';
                 shtml+='</li>';
-            }
         });
     }else{
-        html='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
         shtml='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
     }
-    $("#ul_standard_paper").html(html);
     $("#ul_native_paper").html(shtml);
-
-
-
 
     if(rps.objList.length>0){
         pListPaper.setPagetotal(rps.presult.pageTotal);
@@ -122,6 +120,50 @@ function getInvestReturnMethod(rps){
         pListPaper.setPageNo(1);
     }
     pListPaper.Refresh();
+}
+
+
+
+
+function getCloudPaperList(rps){
+    var html='',shtml='';
+    if(rps.objList!=null&&rps.objList.length>0){
+        $.each(rps.objList,function(idx,itm){
+                html+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
+                html+='<p class="one">'+itm.papername+'</p>';
+                html+='<p class="two">';
+                if(itm.objectivenum>0&&itm.subjectivenum>0)
+                    html+='<span class="bg1" style="width:50%">'+itm.objectivenum+'</span><span class="bg2" style="width:50%">'+itm.subjectivenum+'</span>';
+                else if(itm.objectivenum>0)
+                    html+='<span class="bg1" style="width:100%">'+itm.objectivenum+'</span>';
+                else if(itm.subjectivenum>0)
+                    html+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
+                html+='</p></a>';
+                html+='<p class="pic">';
+                html+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico02" title="导入"></span></b></a>';
+                html+='</p>';
+                html+='</li>';
+        });
+    }else{
+        html='<li><img src="images/pic06_140722.png" width="215" height="160"></li>';
+    }
+    $("#ul_standard_paper").html(html);
+
+
+
+
+    if(rps.objList.length>0){
+        pCloudPaper.setPagetotal(rps.presult.pageTotal);
+        pCloudPaper.setRectotal(rps.presult.recTotal);
+        pCloudPaper.setPageSize(rps.presult.pageSize);
+        pCloudPaper.setPageNo(rps.presult.pageNo);
+    }else
+    {
+        pCloudPaper.setPagetotal(0);
+        pCloudPaper.setRectotal(0);
+        pCloudPaper.setPageNo(1);
+    }
+    pCloudPaper.Refresh();
 }
 
 function preeDoPageSub(pObj){
@@ -178,7 +220,7 @@ function preeDoPageSub(pObj){
 <div class="jxxt_float_w920 font-black">
     <p class="t_r public_input">
         <input id="txt_search_paper" name="txt_search_paper" type="text" class="w240" placeholder="专题名称" />
-        <a  href="javascript:pageGo('pListPaper');" class="an_search" title="查询"></a>
+        <a  href="javascript:pageGo('pListPaper');pageGo('pCloudPaper');" class="an_search" title="查询"></a>
         图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
     <div style="width:920px;height:610px;overflow-x:hidden;overflow-y:auto;">
     <p><strong>标准试卷</strong></p>
@@ -217,9 +259,12 @@ function preeDoPageSub(pObj){
                 </c:if>
             </c:forEach>
         </c:if>
-
-
     </ul>
+        <form id="pListForm_CloudPaper" name="pListForm_CloudPaper" style="">
+            <div class="nextpage" id="pListaddress_Cloudpaper" align="center"></div>
+        </form>
+
+
     <p><strong>自建试卷</strong></p>
     <ul class="jxxt_zhuanti_shijuan_list" id="ul_native_paper">
         <c:if test="${fn:length(nativeList)<1}">
@@ -254,13 +299,12 @@ function preeDoPageSub(pObj){
                 </c:if>
             </c:forEach>
         </c:if>
-
     </ul>
+        <form id="pListForm_Paper" name="pListForm_Paper" style="">
+            <div class="nextpage" id="pListaddress_paper" align="center"></div>
+        </form>
     </div>
-
 </div>
-<form id="pListForm_Paper" name="pListForm_Paper" style="display: none;">
-    <p class="Mt20" id="pListaddress_paper" align="center"></p>
-</form>
+
 </body>
 </html>

@@ -82,6 +82,9 @@ function loadPaperQues(){
 }
 
 
+
+
+
 function showOrhide(aobj, taskid) {
     var status=$("#div_task_"+taskid);
     if(status.css("display")=="none"){

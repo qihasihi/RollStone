@@ -562,6 +562,7 @@ public class PaperController extends BaseController<PaperInfo>{
         //查询没有发任务的资源
         if(taskflag!=null&&taskflag.trim().length()>0)
             t.setTaskflag(1);
+        t.setIscloud(2);
         List<TpCoursePaper>paperList=this.tpCoursePaperManager.getList(t, p);
         t.setIscloud(1);
         List<TpCoursePaper>paperCloudList=this.tpCoursePaperManager.getList(t,null);
@@ -716,7 +717,7 @@ public class PaperController extends BaseController<PaperInfo>{
     }
 
     /**
-     * 查询导入试卷列表
+     * 查询导入试卷列表--自建
      * @throws Exception
      */
     @RequestMapping(params="m=getImportPaperList",method=RequestMethod.POST)
@@ -764,6 +765,66 @@ public class PaperController extends BaseController<PaperInfo>{
         if(subjectid!=null&&subjectid.length()>0)
             t.setSubjectid(Integer.parseInt(subjectid));
 
+        //获取自建试卷
+        t.setIscloud(2);
+        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t, p);
+        p.setList(coursePaperList);
+        je.setPresult(p);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 查询导入试卷列表--云端
+     * @throws Exception
+     */
+    @RequestMapping(params="m=getImportCloudPaperList",method=RequestMethod.POST)
+    public void getImportCloudPaperList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String gradeid=request.getParameter("gradeid");
+        String subjectid=request.getParameter("subjectid");
+        String coursename=request.getParameter("coursename");
+        if(courseid==null||courseid.trim().length()<1
+                ||coursename==null||coursename.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(Long.parseLong(courseid));
+        if(gradeid!=null&&gradeid.length()>0)
+            ttm.setGradeid(Integer.parseInt(gradeid));
+        if(subjectid!=null&&subjectid.length()>0)
+            ttm.setSubjectid(Integer.parseInt(subjectid));
+        String order=" u.c_time desc";
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0){
+            order="field(tcm.teaching_material_id";
+            for(TpCourseTeachingMaterial ctm:materialList){
+                order+=","+ctm.getTeachingmaterialid();
+            }
+            order+=") desc";
+        }
+        PageResult p=this.getPageResultParameter(request);
+        p.setOrderBy(order);
+        TpCoursePaper t=new TpCoursePaper();
+        t.setFiltercourseid(Long.parseLong(courseid));//排除当前专题
+        t.setLocalstatus(1);
+        t.setCoursename(coursename);
+
+
+        //  if(materialid!=null&&materialid.length()>0)
+        //      t.setMaterialid(Integer.parseInt(materialid));
+        if(gradeid!=null&&gradeid.length()>0)
+            t.setGradeid(Integer.parseInt(gradeid));
+        if(subjectid!=null&&subjectid.length()>0)
+            t.setSubjectid(Integer.parseInt(subjectid));
+
+        //获取云端试卷
+        t.setIscloud(1);
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t, p);
         p.setList(coursePaperList);
         je.setPresult(p);

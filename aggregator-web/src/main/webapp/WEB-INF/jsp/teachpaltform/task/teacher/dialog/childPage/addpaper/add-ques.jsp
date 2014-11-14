@@ -163,7 +163,9 @@
                         alert(rmsg.msg);
                     }else{
                         loadPaperQues();
-                        loadDiv(3);
+//                        setTimeout(function(){
+                            loadDiv(3);
+//                        },100);
                     }
                 }
             });
