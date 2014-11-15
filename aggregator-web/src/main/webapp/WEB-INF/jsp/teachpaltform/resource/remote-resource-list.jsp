@@ -316,7 +316,6 @@
             var url = "task?m=toTaskElementDetial&operate_type=1&subjectid=${param.subjectid}&tasktype=1&courseid=${param.courseid}";
             $("#dv_content").load(url,function(){
                 $("#dv_content").show();
-                $("#a_click").click();
             });
         }
 

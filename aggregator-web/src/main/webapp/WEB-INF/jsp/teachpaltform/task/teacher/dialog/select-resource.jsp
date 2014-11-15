@@ -21,7 +21,6 @@
     <script type="text/javascript">
     var courseid = "${param.courseid}";
     var pList1;
-    var pList2;
     var pList3;
     var tasktype="${param.tasktype}";
     var gradeid="${param.gradeid}";
@@ -222,7 +221,6 @@
         var url = "tpres?m=toRemoteResources&courseid=${courseid}&subjectid=${param.subjectid}";
         $("#dv_content").load(url,function(){
             $("#dv_content").show();
-            $("#a_click").click();
         });
     }
     /************************************上传资源***************************************/
@@ -447,9 +445,6 @@
             <ul class="public_float_list" id="mainUl3"></ul>
             <div class="nextpage">
                 <form id="pListForm3" name="pListForm3">
-                    <span><a href="javascript:;"  onclick="pagePre('pList3');"><b class="before"></b></a></span>&nbsp;
-                    <font id="pList3font">1/1</font>&nbsp;
-                    <span><a href="javascript:;" onclick="pageNext('pList3');"><b class="after"></b></a></span>
                     <p class="Mt20" id="pListaddress3" align="center"  style="display:none"></p>
                 </form>
             </div>
