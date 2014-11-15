@@ -169,8 +169,13 @@
                 },
                 success: function (json) {
                     if (json.objList.length > 0 && typeof paperid != 'undefined' && paperid.toString().length > 0) {
-                        $("#dv_paper_name").html(json.objList[0].papername);
-                        $("#hd_elementid").val(json.objList[0].paperid);
+                        var papername;
+                        if(json.objList[0].length>0){
+                            papername=json.objList[0][0].papername;
+                        }else if(json.objList[1].length>0)
+                            papername=json.objList[1][0].papername;
+                        $("#dv_paper_name").html(papername);
+                        $("#hd_elementid").val(paperid);
                         $.fancybox.close();
                     }
                 }

@@ -85,6 +85,8 @@
                 }
             });
 
+
+
             $("input[name='ck_group']").bind("click",function(){
                 var p=$(this).parent().parent("ul");
                 var tmpId=p.attr("id").substring(p.attr("id").lastIndexOf('_')+1);
@@ -96,7 +98,19 @@
                     $("#b_time_"+tmpId+"").val("");
                     $("#e_time_"+tmpId+"").val("");
                 }
+
+                var unLen=$('#p_group_'+tmpId+' input').length;
+                if(unLen>0)
+                    $("#p_ck_"+tmpId+"").attr("checked",len==0?false:len==unLen);
             });
+
+            $("input[name='p_ck_g']").each(function(idx,itm){
+                var clsid=$(itm).val();
+                $(itm).bind("click",function(){
+                    $("#p_group_"+clsid+" input[type='checkbox']").attr("checked",$(itm).attr("checked")=="checked"?true:false);
+                    $('input[id="ckb_'+clsid+'"]').attr("checked",false);
+                });
+            })
 		});
 		function changeTaskType(questype,taskvalueid,taskstatus,quesnum){
             $("#tr_ques_obj").hide();
@@ -209,7 +223,7 @@
 
                             <p class="font-black"><input name="ck_cls" data-bind="${cc.classtype}" type="checkbox"  onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
 
-
+                            <p class="font-black" style="margin: 15px 0;padding: 0 0 0 24px;"><input type="checkbox" value="${cc.classid}" name="p_ck_g" id="p_ck_${cc.classid}"/>选中所有小组</p>
                             <ul class="public_list3" id="p_group_${cc.classid }">
                             </ul>
                         </c:forEach>
@@ -310,7 +324,7 @@
 					<c:forEach var="tg" items="${taskgroupList}">
 
                         $("input[name='ck_group']").filter(function(){return this.value=="${tg.usertypeid}"&&this.id=="ck_group_${tg.usertypeid}"}).attr("checked",true);
-                        $("input[type='checkbox']").filter(function(){return this.value=="${tg.usertypeid}"}).attr("checked",true);
+                        $("input[type='checkbox'][name='ck_cls']").filter(function(){return this.value=="${tg.usertypeid}"}).attr("checked",true);
 
 
 
@@ -350,7 +364,9 @@
                 $("input[name='ck_cls']").each(function(idx,itm){
                     $(itm).bind("click",function(){
                         $('ul[id="p_group_'+itm.value+'"] input[name="ck_group"]').attr("checked",false);
+                        $('input[id="p_ck_'+itm.value+'"]').attr("checked",false);
                     });
+
                 });
 
                 $("input[name='ck_group']").each(function(idx,itm){

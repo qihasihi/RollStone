@@ -44,6 +44,14 @@
         var objectiveQuesCount="${objectiveQuesCount}";
         var fancyboxObj;
         $(function(){
+
+
+            <c:if test="${!empty isWXCLS}">
+                showModel('dv_show_model');
+            </c:if>
+
+
+
             fancyboxObj=$("#a_click").fancybox({
                 'onClosed':function(){
                     $("#dv_content").hide();
@@ -101,6 +109,7 @@
                 }
             });
 
+
             $("input[name='ck_group']").bind("click",function(){
                 var p=$(this).parent().parent("ul");
                 var tmpId=p.attr("id").substring(p.attr("id").lastIndexOf('_')+1);
@@ -112,7 +121,19 @@
                     $("#b_time_"+tmpId+"").val("");
                     $("#e_time_"+tmpId+"").val("");
                 }
+                var unLen=$('#p_group_'+tmpId+' input').length;
+                if(unLen>0)
+                    $("#p_ck_"+tmpId+"").attr("checked",len==0?false:len==unLen);
             });
+
+
+            $("input[name='p_ck_g']").each(function(idx,itm){
+                var clsid=$(itm).val();
+                $(itm).bind("click",function(){
+                    $("#p_group_"+clsid+" input[type='checkbox']").attr("checked",$(itm).attr("checked"));
+                    $('input[id="ckb_'+clsid+'"]').attr("checked",false);
+                });
+            })
 
         });
         function changeTaskType(type,taskvalueid){
@@ -157,6 +178,13 @@
 
 </head>
 <body>
+
+
+<div class="public_float public_float450" id="dv_show_model" style="display: none;">
+    <p class="float_title"><strong>提示</strong></p>
+    <p class="float_tishi">当前班级类型为<span class="font-red">网校班级</span>，不支持在电脑上添加任务。</p>
+</div>
+
 <input type="hidden" id="returnValue"/>
 <div class="subpage_head">
     <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
@@ -234,8 +262,9 @@
                         </p>
                         <p class="font-black"><input name="ck_cls" type="checkbox"  onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
                     </c:if> -->
-
+                        <p class="font-black" style="margin: 15px 0;padding: 0 0 0 24px;"><input type="checkbox" value="${cc.classid}" name="p_ck_g" id="p_ck_${cc.classid}"/>选中所有小组</p>
                         <ul class="public_list3" id="p_group_${cc.classid }">
+
                         </ul>
                     </c:forEach>
                     <p class="font-darkblue"><a href="group?m=toGroupManager&classid=${courseclassList[0].classid}&classtype=${courseclassList[0].classtype}&gradeid=${gradeid}&subjectid=${subjectid}"  target="_blank">&gt;&gt;&nbsp;小组管理</a></p>
@@ -336,6 +365,7 @@
     $("input[name='ck_cls']").each(function(idx,itm){
         $(itm).bind("click",function(){
             $('ul[id="p_group_'+itm.value+'"] input[name="ck_group"]').attr("checked",false);
+            $('input[id="p_ck_'+itm.value+'"]').attr("checked",false);
         });
     });
 
