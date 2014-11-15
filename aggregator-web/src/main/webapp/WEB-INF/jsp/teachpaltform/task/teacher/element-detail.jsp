@@ -123,7 +123,10 @@
                 });
             }
             $("#initItemList").html(htm);
-
+            if(htm.Trim().length>0){
+                $("#p_sel").show();
+            }else
+                $("#p_sel").hide();
             if(rps.objList.length>0){
                 pList.setPagetotal(rps.presult.pageTotal);
                 pList.setRectotal(rps.presult.recTotal);
@@ -225,7 +228,7 @@
     <form id="pListForm" name="pListForm">
         <p class="Mt20" id="pListaddress" align="center"></p>
     </form>
-    <p class="t_c p_tb_10"><a href="javascript:sub_data()"  class="an_small">选&nbsp;择</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:window.close();"  class="an_small">取&nbsp;消</a></p>
+    <p class="t_c p_tb_10" id="p_sel" style="display:none"><a href="javascript:sub_data()"  class="an_small">选&nbsp;择</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:window.close();"  class="an_small">取&nbsp;消</a></p>
 </div>
 
 <%@include file="/util/foot.jsp" %>

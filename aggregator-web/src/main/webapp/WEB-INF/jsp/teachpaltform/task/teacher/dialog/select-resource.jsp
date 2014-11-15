@@ -17,7 +17,7 @@
 <head>
     <title></title>
 
-
+    <script type="text/javascript" src="js/common/uploadControl.js"></script>
     <script type="text/javascript">
     var courseid = "${param.courseid}";
     var pList1;
@@ -550,5 +550,6 @@
     </div>
 
 </div>
+
 </body>
 </html>

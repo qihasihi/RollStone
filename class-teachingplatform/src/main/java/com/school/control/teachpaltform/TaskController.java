@@ -242,8 +242,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
         request.setAttribute("courseid",courseid);
         request.setAttribute("resType", resourceTypeList);
-        //request.setAttribute("fileSystemIpPort", request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString());
-        request.setAttribute("fileSystemIpPort", "http://localhost:8080");
+        request.setAttribute("fileSystemIpPort", request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString());
+ //       request.setAttribute("fileSystemIpPort", "http://localhost:8080");
         request.setAttribute("nextid", this.resourceManager.getNextId(true));
         if(type.equals("1")){
             //À¸Ä¿

@@ -162,7 +162,11 @@
  <div class="subpage_head">
      <span class="back">
          <c:if test="${!empty param.taskid}">
-             <a href="task?toTaskList&courseid=${topic.courseid}">返回</a>
+             <%if(isStudent){%>
+                <a href="task?toStuTaskIndex&courseid=${topic.courseid}">返回</a>
+             <%}else{%>
+                <a href="task?toTaskList&courseid=${topic.courseid}">返回</a>
+             <%}%>
          </c:if>
         <c:if test="${empty param.taskid}">
          <a href="tptopic?m=index&courseid=${topic.courseid}">返回</a>
