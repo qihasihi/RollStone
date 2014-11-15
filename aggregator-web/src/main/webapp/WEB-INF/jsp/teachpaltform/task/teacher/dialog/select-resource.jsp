@@ -7,6 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%
 
     int sgrade = Integer.parseInt(request.getSession().getAttribute("session_grade").toString());
@@ -203,6 +204,26 @@
         $("#local").hide();
         $("#like").hide();
         $("#dv_upload_local").show();
+        $("#localLi").removeClass("crumb");
+        $("#upLi").addClass("crumb");
+        $("#remoteLi").removeClass("crumb");
+    }
+
+    function showLocal(){
+        $("#local").show();
+        $("#like").hide();
+        $("#dv_upload_local").hide();
+        $("#localLi").addClass("crumb");
+        $("#upLi").removeClass("crumb");
+        $("#remoteLi").removeClass("crumb");
+    }
+
+    function showRemote(){
+        var url = "tpres?m=toRemoteResources&courseid=${courseid}&subjectid=${param.subjectid}";
+        $("#dv_content").load(url,function(){
+            $("#dv_content").show();
+            $("#a_click").click();
+        });
     }
     /************************************上传资源***************************************/
     function subUploadRes(usertype){
@@ -370,15 +391,15 @@
                                 if (rps.type == "error") {
                                     alert(rps.msg);
                                 } else {
-                                    alert(rps.msg);
-                                    if (window.opener != undefined) {
-                                        //for chrome
-                                        window.opener.returnValue =nextid+",1";
+                                    if (rps.type == "error") {
+                                        alert(rps.msg);
+                                    } else {
+                                        alert(rps.msg);
+                                        $("#hd_elementid").val(nextid);
+                                        $("#resource_type").val(1);
+                                        queryResource(courseid, 'tr_task_obj', nextid);
+                                        $.fancybox.close();
                                     }
-                                    else {
-                                        window.returnValue =nextid+",1";
-                                    }
-                                    window.close();
                                 }
                             }
                         });
@@ -397,12 +418,11 @@
     <p class="float_title"><strong>资源学习&mdash;&mdash;选择资源</strong></p>
     <div class="subpage_lm">
         <ul>
-            <li class="crumb"><a href="1">本地资源</a></li>
-            <li><a href="1">远程资源</a></li>
-            <li><a href="javascript:showUpload()">上传资源</a></li>
+            <li id="localLi" class="crumb"><a href="javascript:showLocal();">本地资源</a></li>
+            <li id="remoteLi"><a href="javascript:showRemote();">远程资源</a></li>
+            <li id="upLi"><a href="javascript:showUpload()">上传资源</a></li>
         </ul>
     </div>
-
     <div class="jxxt_zhuanti_rw_add">
         <p class="public_input t_r">
             <select name="select3" id="grade">

@@ -422,7 +422,7 @@ public class TpCourseResourceDAO extends CommonDAO<TpCourseResource> implements 
 
     public List<TpCourseResource> getResourceUnion(TpCourseResource tpcourseresource, PageResult presult) {
         StringBuilder sqlbuilder = new StringBuilder();
-        sqlbuilder.append("{CALL tp_j_course_resource_info_proc_forrelated(");
+        sqlbuilder.append("{CALL tp_j_course_resource_info_proc_union(");
         List<Object> objList=new ArrayList<Object>();
         if(tpcourseresource.getCourseid()!=null){
             sqlbuilder.append("?,");

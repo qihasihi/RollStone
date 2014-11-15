@@ -242,7 +242,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
         request.setAttribute("courseid",courseid);
         request.setAttribute("resType", resourceTypeList);
-        request.setAttribute("fileSystemIpPort", request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString());
+        //request.setAttribute("fileSystemIpPort", request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString());
+        request.setAttribute("fileSystemIpPort", "http://localhost:8080");
         request.setAttribute("nextid", this.resourceManager.getNextId(true));
         if(type.equals("1")){
             //À¸Ä¿
@@ -261,7 +262,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             }else{
                 request.setAttribute("sign",false);
             }
-            request.setAttribute("gradeList", this.gradeManager.getList(null, null));
+            List<GradeInfo> gList = this.gradeManager.getList(null, null);
+            request.setAttribute("gradeList",gList );
             return new ModelAndView("/teachpaltform/task/teacher/dialog/select-resource");
         }else if(type.equals("3")){
             return new ModelAndView("/teachpaltform/task/teacher/dialog/select-ques");
