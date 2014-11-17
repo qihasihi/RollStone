@@ -49,7 +49,7 @@
                 http_operate_handler : getInvestReturnMethodG, //执行成功后返回方法
                 return_type : 'json', //放回的值类型
                 page_no : 1, //当前的页数
-                page_size : 1, //当前页面显示的数量
+                page_size : 4, //当前页面显示的数量
                 rectotal : 0, //一共多少
                 pagetotal : 1,
                 operate_id : "gaoqing"
@@ -65,7 +65,7 @@
                 http_operate_handler : getInvestReturnMethodZ, //执行成功后返回方法
                 return_type : 'json', //放回的值类型
                 page_no : 1, //当前的页数
-                page_size : 1, //当前页面显示的数量
+                page_size : 20, //当前页面显示的数量
                 rectotal : 0, //一共多少
                 pagetotal : 1,
                 operate_id : "zhishi"
@@ -124,10 +124,10 @@
                                     return false;
                                 }
                             });
-                            htm+='<li><a class="kapian"  href="javascript:showRemoteDetail('+itm.HD_RES_ID+',0)"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+hname+'</p></a>' +
+                            htm+='<li><a class="kapian" target="_blank"  href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+hname+'</p></a>' +
                                     '<p class="pic">'+h+'</p></li>';
                         }else{
-                            htm+='<li><a class="kapian"  href="javascript:showRemoteDetail('+itm.HD_RES_ID+',0)"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+hname+'</p></a>' +
+                            htm+='<li><a class="kapian" target="_blank"  href="tpres?m=toRemoteResourcesDetail&hd_res_id='+itm.HD_RES_ID+'"><p><img width="215" height="122"  src="'+itm.IMG_URL+'"/></p><p class="text">'+itm.TEACHER_NAME+'&nbsp;&nbsp;'+hname+'</p></a>' +
                                     '<p class="pic"><a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a></p></li>';
                         }
                     });
@@ -182,9 +182,9 @@
                                     return false;
                                 }
                             });
-                            htm+='<li>'+h+'<a  href="javascript:showRemoteDetail(0,'+itm.RES_ID+')" >'+itm.RES_NAME+'</a></li>';
+                            htm+='<li>'+h+'<a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a></li>';
                         }else{
-                            htm+='<li><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a><a  href="javascript:showRemoteDetail(0,'+itm.RES_ID+')" >'+itm.RES_NAME+'</a></li>';
+                            htm+='<li><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a><a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a></li>';
                         }
                     });
                     $("#zhishi").html(htm);

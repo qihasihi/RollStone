@@ -107,7 +107,11 @@
         var htm='';
         if(rps.objList!=null&&rps.objList.length>0){
             $.each(rps.objList,function(idx,itm){
-                htm+='<li><a href="javascript:subData('+itm.resid+')"><b class="ico51" title="发任务"></b></a><a href="1" target="_blank"><span class="'+itm.suffixtype+'"></span>'+itm.resname+'</a>...</li>';
+                var resname = itm.resname;
+                if(resname.length>60){
+                    resname=resname.substring(0,60)+"...";
+                }
+                htm+='<li><a href="javascript:subData('+itm.resid+')"><b class="ico51" title="发任务"></b></a><a href="1" target="_blank"><span class="'+itm.suffixtype+'"></span>'+resname+'</a></li>';
             });
             $("#mainUl").html(htm);
             if(rps.objList.length>0){
@@ -134,7 +138,11 @@
         var htm='';
         if(rps.objList!=null&&rps.objList.length>0){
             $.each(rps.objList,function(idx,itm){
-                htm+='<li><a href="javascript:subData('+itm.resid+')"><b class="ico51" title="发任务"></b></a><a href="1" target="_blank"><span class="'+itm.suffixtype+'"></span>'+itm.resname+'</a>...</li>';
+                var resname = itm.resname;
+                if(resname.length>60){
+                    resname=resname.substring(0,60)+"...";
+                }
+                htm+='<li><a href="javascript:subData('+itm.resid+')"><b class="ico51" title="发任务"></b></a><a href="1" target="_blank"><span class="'+itm.suffixtype+'"></span>'+resname+'</a></li>';
             });
             $("#mainUl3").html(htm);
 
@@ -200,6 +208,7 @@
         pageGo('pList3');
     }
     function showUpload(){
+        $("#localSelect").hide();
         $("#local").hide();
         $("#like").hide();
         $("#dv_upload_local").show();
@@ -209,6 +218,7 @@
     }
 
     function showLocal(){
+        $("#localSelect").show();
         $("#local").show();
         $("#like").hide();
         $("#dv_upload_local").hide();
@@ -422,7 +432,7 @@
         </ul>
     </div>
     <div class="jxxt_zhuanti_rw_add">
-        <p class="public_input t_r">
+        <p class="public_input t_r" id="localSelect">
             <select name="select3" id="grade">
                 <c:if test="${!empty gradeList}">
                     <c:forEach items="${gradeList}" var="g">
