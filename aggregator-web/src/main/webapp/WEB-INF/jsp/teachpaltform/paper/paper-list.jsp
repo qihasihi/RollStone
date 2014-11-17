@@ -222,7 +222,7 @@ function showImportPaper(pid){
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
     $("#dv_model_child").load("paper?m=dialogPaperModel&courseid="+courseid+"&paperid="+pid+"&ispaper=1",function(){
-        $("#dv_model_mdname").html("导入试题");
+        $("#dv_model_mdname").html("导入试卷");
         $("#dv_model_child").fadeIn('fast');
     });
 }

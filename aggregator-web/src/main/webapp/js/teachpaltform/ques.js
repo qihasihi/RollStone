@@ -166,9 +166,9 @@ function addQuesOption(quesobj,questype,isDialog){
         htm+='<input style="display:none;" name="rdo_right_option" type="radio"  value="1" id="rdo_right_'+sysid+'" />';
     }
     if(isDialog)
-        htm+='<a id="ques_option_'+sysid+'" name="ques_option_'+sysid+'" href="javascript:void(0)" onclick="ed_option_dialog(this)">请编辑选项..</a>';
+        htm+='<a style="color: #000" id="ques_option_'+sysid+'" name="ques_option_'+sysid+'" href="javascript:void(0)" onclick="ed_option_dialog(this)">请编辑选项..</a>';
     else
-        htm+='<a id="ques_option_'+sysid+'" name="ques_option_'+sysid+'" href="javascript:void(0)" onclick="ed_option(this)">请编辑选项..</a>';
+        htm+='<a style="color: #000" id="ques_option_'+sysid+'" name="ques_option_'+sysid+'" href="javascript:void(0)" onclick="ed_option(this)">请编辑选项..</a>';
     htm+='<span  id="sp_img_'+sysid+'"></span>';
     htm+='</td>';
     //htm+='<td></td>'

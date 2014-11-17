@@ -2176,7 +2176,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                                     htm += '<tr>';
                                     if(classid==0)
                                         htm += '<td>' + itm.clsname + '</td>';
-                                    htm += '<td>' + itm.userinfo.stuNo + '</td>';
+                                    htm += '<td>' + (typeof itm.userinfo.stuNo=='undefined'?'--':itm.userinfo.stuNo) + '</td>';
                                     htm += '<td>' + itm.userinfo.stuname + '</td>';
                                     if (typeof(itm.ctimeString) != 'undefined')
                                         htm += '<td>' + itm.ctimeString + '</td>';
@@ -2256,7 +2256,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                         htm += '<tr>';
                         if(classid==0)
                             htm += '<td>' + itm.clsname + '</td>';
-                        htm += '<td>' + itm.userinfo.stuNo + '</td>';
+                        htm += '<td>' + (typeof itm.userinfo.stuNo=='undefined'?'--':itm.userinfo.stuNo) + '</td>';
                         htm += '<td>' + itm.userinfo.stuname + '</td>';
                         if (typeof(itm.ctimeString) != 'undefined')
                             htm += '<td>' + itm.ctimeString + '</td>';
@@ -2432,7 +2432,7 @@ function loadLiveLessionPerformance(classid, tasktype, paperid, classtype) {
                                         htm += '<tr>';
                                         if(classid==0)
                                             htm += '<td>' + itm.clsname + '</td>';
-                                        htm += '<td>' + itm.userinfo.stuNo + '</td>';
+                                        htm += '<td>' + (typeof itm.userinfo.stuNo=='undefined'?'--':itm.userinfo.stuNo) + '</td>';
                                         htm += '<td>' + itm.userinfo.stuname + '</td>';
                                         if (typeof(itm.ctimeString) != 'undefined')
                                             htm += '<td>' + itm.ctimeString + '</td>';
@@ -2470,7 +2470,7 @@ function loadLiveLessionPerformance(classid, tasktype, paperid, classtype) {
                         htm += '<tr>';
                         if(classid==0)
                             htm += '<td>' + itm.clsname + '</td>';
-                        htm += '<td>' + (typeof(itm.userinfo.stuNo)=='undefined'?"":itm.userinfo.stuNo) + '</td>';
+                        htm += '<td>' + (typeof(itm.userinfo.stuNo)=='undefined'?"--":itm.userinfo.stuNo) + '</td>';
                         htm += '<td>' + itm.userinfo.stuname + '</td>';
                         if (typeof(itm.ctimeString) != 'undefined')
                             htm += '<td>' + itm.ctimeString + '</td>';

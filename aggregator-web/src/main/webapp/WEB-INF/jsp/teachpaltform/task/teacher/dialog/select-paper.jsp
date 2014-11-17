@@ -30,7 +30,7 @@
                 http_operate_handler : getInvestReturnMethod, //执行成功后返回方法
                 return_type : 'json', //放回的值类型
                 page_no : 1, //当前的页数
-                page_size : 8, //当前页面显示的数量
+                page_size : 4, //当前页面显示的数量
                 rectotal : 0, //一共多少
                 pagetotal : 1,
                 operate_id : "initItemList"
@@ -366,11 +366,12 @@
                 <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
 
                 </ul>
+                <form id="pListForm" name="pListForm" style="">
+                    <div class="nextpage" id="pListaddress" align="center"></div>
+                </form>
             </div>
         </div>
-        <form id="pListForm" name="pListForm" style="">
-            <p class="Mt20" id="pListaddress" align="center"></p>
-        </form>
+
     </div>
     <%--新建试卷--%>
     <div id="dv_addpaperchild" style="display:none">
