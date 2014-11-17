@@ -102,7 +102,6 @@
             $.framebridge.handler({
                 reviceMessage: function (params) {
                     var cnt =params.msg.cnt;
-                    console.log("top handler reviceMessage",cnt);
                     if(cnt>0){
                         $("#webimcnt").html((cnt>9?'<b class="two">':'<b class="one">')+(cnt>99?"99+":cnt)+'</b>');
                     }else{

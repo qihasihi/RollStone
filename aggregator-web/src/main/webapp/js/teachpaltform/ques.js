@@ -286,11 +286,13 @@ function changeDialogQuesType(type){
     if(type==1){ //问答
         $("#type_option").hide();
         $("#correct_answer").show();
+        $("#tr_right_answer #correct_answer_dialog").show();
         $("#fill_answer").hide();
     }else if(type==2){ //填空
         $("#type_option").hide();
         $("#correct_answer").hide();
         $("#fill_answer").show();
+        $("#tr_right_answer #correct_answer_dialog").hide();
     }else if(type==3){ //单选
         $("#type_option").show();
         $("#tr_right_answer").hide();
@@ -418,6 +420,7 @@ function sub_option_dialog(){
             fillbank_answer+=isIE?itm.innerText:itm.textContent;
         });
         $("#fill_answer").html(fillbank_answer);
+
     }
 
     $('#dv_edit_ques').show();
