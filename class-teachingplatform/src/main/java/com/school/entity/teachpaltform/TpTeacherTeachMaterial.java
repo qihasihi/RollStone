@@ -17,6 +17,15 @@ public class TpTeacherTeachMaterial implements Serializable{
     private Date ctime;
     private String materialname;
     private String versionname;
+    private String gradename;
+
+    public String getGradename() {
+        return gradename;
+    }
+
+    public void setGradename(String gradename) {
+        this.gradename = gradename;
+    }
 
     public String getMaterialname() {
         return materialname;

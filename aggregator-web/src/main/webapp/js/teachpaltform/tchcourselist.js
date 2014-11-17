@@ -140,7 +140,7 @@ function getTchMaterial(){
         },success:function(rps){
             if(rps.type=="success"){
                 if(typeof(rps.objList[0])!="undefined"&&rps.objList[0]!=null){
-                    $("span[id='material_name']").html(rps.objList[0].materialname+"("+rps.objList[0].versionname+")");
+                    $("span[id='material_name']").html(rps.objList[0].gradename+rps.objList[0].materialname+"("+rps.objList[0].versionname+")");
                     $("input[id='material_id']").val(rps.objList[0].materialid);
                 }else{
                     $("input[id='material_id']").val("");
