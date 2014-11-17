@@ -75,7 +75,7 @@
                            type="radio" value="${t.dictionaryvalue}" name="rdo_ques_type_dialog"/>
                 </c:if>
 
-                <label for="rdo_type_${idx.index+1}">${t.dictionaryname}</label>
+                ${t.dictionaryname}
             </c:forEach>
         </c:if>
     </p>
