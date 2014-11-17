@@ -22,7 +22,7 @@ function addPaper(){
             }else{
                // alert(rmsg.msg);
                 // alert(rmsg.msg);
-                loadEditPaper(courseid,rmsg.objList[0]);
+                loadEditPaper(courseid,rmsg.objList[0],1);
             }
         }
     });
@@ -37,11 +37,12 @@ function addPaper(){
  * @param cid
  * @param pid
  */
-function loadEditPaper(cid,pid){
+function loadEditPaper(cid,pid,isshow){
     if(typeof(cid)=="undefined"||typeof(pid)=="undefined"||cid==null||pid==null){
         alert('异常错误，请刷新重试!');
         return;
     }
+    pid_bk=pid;
     var u="paper?m=editPaperQuestionModel&courseid="+cid+"&paperid="+pid;
     $("#dv_content #dv_content_child").load(u,function(){
         $("#dv_content .float_title").html("编辑试卷");
@@ -51,7 +52,8 @@ function loadEditPaper(cid,pid){
         $("#dv_content #a_sb_taskpaper").parent().remove();
         $("#dv_content").show();
         $("#dv_content #dv_content_child").fadeIn("fast");
-        $("#a_click").click();
+        if(typeof(isshow)!="undefined"&&isshow==1)
+            $("#a_click").click();
     });
 }
 

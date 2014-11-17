@@ -127,7 +127,7 @@ function getInvestReturnMethod(rps){
     var html='',shtml='';
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
-                shtml+='<li><a href="javascript:" onclick="loadPaperDetail('+itm.paperid+')">';
+                shtml+='<li><a href="javascript:" onclick="loadPaperDetail('+itm.paperid+','+itm.courseid+')">';
                 shtml+='<p class="one">'+itm.papername+'</p>';
                 shtml+='<p class="two">';
                 if(itm.objectivenum>0&&itm.subjectivenum>0)
@@ -168,7 +168,7 @@ function getInvestRelateReturnMethod(rps){
     var html='',shtml='';
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
-            shtml+='<li><a href="javascript:" onclick="loadPaperDetail('+itm.paperid+')">';
+            shtml+='<li><a href="javascript:" onclick="loadPaperDetail('+itm.paperid+','+itm.courseid+')">';
             shtml+='<p class="one">'+itm.papername+'</p>';
             shtml+='<p class="two">';
             if(itm.objectivenum>0&&itm.subjectivenum>0)
@@ -206,12 +206,7 @@ function getInvestRelateReturnMethod(rps){
 
 
 
-/**
-*试卷的
- */
-function paperDetailReturn(){
-    loadDiv(3,'1');
-}
+
 
 
 
@@ -219,7 +214,7 @@ function getCloudPaperList(rps){
     var html='',shtml='';
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
-                html+='<li><a href="javascript:" onclick="loadPaperDetail('+itm.paperid+')">';
+                html+='<li><a href="javascript:" onclick="loadPaperDetail('+itm.paperid+','+itm.courseid+')">';
                 html+='<p class="one">'+itm.papername+'</p>';
                 html+='<p class="two">';
                 if(itm.objectivenum>0&&itm.subjectivenum>0)
@@ -262,7 +257,7 @@ function getRelateCloudPaperList(rps){
     var html='',shtml='';
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
-            html+='<li><a href="javascript:" onclick="loadPaperDetail('+itm.paperid+')">';
+            html+='<li><a href="javascript:" onclick="loadPaperDetail('+itm.paperid+','+itm.courseid+')">';
             html+='<p class="one">'+itm.papername+'</p>';
             html+='<p class="two">';
             if(itm.objectivenum>0&&itm.subjectivenum>0)
@@ -359,7 +354,7 @@ function preDoPageSubRelate(pObj){
                 if(rmsg.type=="error"){
                     alert(rmsg.msg);
                 }else{
-                    loadPaperQues();
+//                    loadPaperQues();
                     loadDiv(3);
                 }
             }

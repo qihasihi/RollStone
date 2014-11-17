@@ -41,8 +41,8 @@
         </style>
     </c:if>
 <script type="text/javascript">
-var courseid="${courseid}";
-var paperid="${paper.paperid}";
+var tmpcourseid="${courseid}";
+var paperid_t="${paper.paperid}";
 var pBankList;
 var total;
 var allquesid="${ALLQUESID}";
@@ -240,7 +240,7 @@ function afterDrag(selected,currentObj,targetSelected){
                             });
                 });
                 //数据库请求。
-                quesNumOrder(paperid);
+                quesNumOrder(paperid_t);
             }
 
         //更新SQL
@@ -294,7 +294,7 @@ function quesNumOrder(pid){
 //生成分数录入框
 function onClickScore(spid){
     var txtScore=$("#"+spid+">a").html().Trim();
-    $("#"+spid).html("<input type='text' id='txt_inputScore' maxlength=4 name='txt_inputScore' style='width:25px;height:20px'/>");
+    $("#"+spid).html("<input type='text' id='txt_inputScore' maxlength=4 name='txt_inputScore' style='width:25px;height:15px'/>");
     $("#"+spid+" #txt_inputScore").val(txtScore)
     $("#"+spid+" #txt_inputScore").select();
     $("#"+spid+" #txt_inputScore").focus();
@@ -330,7 +330,7 @@ function onClickScore(spid){
 function updateQuesScore(score,quesid,ref,spid){
     if(typeof score=='undefined'||isNaN(score))
         return;
-    var param={courseid:courseid,questionid:quesid,paperid:paperid,score:score};
+    var param={courseid:tmpcourseid,questionid:quesid,paperid:paperid_t,score:score};
     if(typeof ref!='undefined')
         param.ref=ref;
     $.ajax({
@@ -364,7 +364,7 @@ function xround(x, num){
 </script>
 </head>
 <body>
-<p class="float_title"><a href="javascript:;" onclick="paperDetailReturn()" class="ico93" title="返回"></a>试卷详情</p>
+<p class="float_title"><a href="javascript:;" onclick="paperDetailReturn(${param.isselect})" class="ico93" title="返回"></a>试卷详情</p>
 <p class="float_text1">
     <c:if test="${!empty paper.subjectivenum and !empty paper.objectivenum}">
         <span class="f_right"><strong>主观题：<span class="font-blue">${paper.subjectivenum}</span></strong>
@@ -376,11 +376,11 @@ function xround(x, num){
 
     <div class="jxxt_zhuanti_rw_ceshi">
         <p class="jxxt_zhuanti_rw_ceshi_an"><a href="javascript:;" onclick="next(-1)" id="a_free" class="an_test1">上一题</a><a  href="javascript:;" onclick="next(1)" id="a_next" class="an_test1">下一题</a></p>
-        <ul id="ul_xuhao">
+        <ul id="ul_xuhao" style="width:700px;overflow-y:auto;height:120px;">
         </ul>
         <div class="clear"></div>
     </div>
-    <div id="dv_table" style="width:950px;height:470px;overflow-x:auto;overflow-x: hidden">
+    <div id="dv_table" style="width:950px;height:400px;overflow-y:auto;overflow-x: hidden;color:black">
         <c:if test="${!empty pqList}">
             <c:forEach items="${pqList}" var="pq" varStatus="pqIdx">
                 <c:set var="teamSize" value="${fn:length(pq.questionTeam)}"/>
@@ -478,11 +478,11 @@ function xround(x, num){
                                 <td><p><span class="width font-blue">
                                     <a><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}"
                                           name="avg_score" id="score_${c.questionid}">
-                                         <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0&&empty pq.questionTeam}">
+                                         <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
                                     <a href="javascript:;" onclick="onClickScore('score_${pq.questionid}')">
                                         </c:if>
                                     ${c.score}
-                                     <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0&&empty pq.questionTeam}">
+                                     <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
                                             </a>
                                       </c:if>
                                     </span></a>分</span>
@@ -578,7 +578,17 @@ function xround(x, num){
                             <td>&nbsp;</td>
                             <td><p><strong>正确答案及答案解析：</strong></p>
                                 <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
-                                    <p><span class="width font-blue"><span class="font-blue" name="avg_score"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}">${c.score}</span>
+                                    <p><span class="width font-blue">
+                                        <span class="font-blue" name="avg_score"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}"
+                                                                           id="score_${c.questionid}">
+                                         <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
+                                            <a href="javascript:;" onclick="onClickScore('score_${c.questionid}')">
+                                         </c:if>
+                                             ${c.score}
+                                        <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
+                                            </a>
+                                        </c:if>
+                                    </span>
                                         </span><span data-bind="${c.questionid}"  class="font-blue">
                                           <%--<script type="text/javascript">--%>
                                               <%--var qteamSize="${fn:length(pq.questionTeam)}";--%>

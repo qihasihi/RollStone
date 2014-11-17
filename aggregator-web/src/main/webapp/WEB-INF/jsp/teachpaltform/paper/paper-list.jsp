@@ -10,6 +10,7 @@
 <script type="text/javascript"  src="fancybox/jquery.fancybox-1.3.4.js"></script>
 <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
 <script type="text/javascript">
+var pid_bk=0;
 var courseid="${courseid}";
 var pList,pBankList;
 var total;
@@ -67,7 +68,7 @@ function getInvestReturnMethod(rps){
     if(rps.objList!=null&&rps.objList.length>0){
         $.each(rps.objList,function(idx,itm){
             if(itm.paperid>0){
-                html+='<li><a href="javascript:loadEditPaper('+itm.courseid+','+itm.paperid+')">';
+                html+='<li><a href="javascript:loadEditPaper('+itm.courseid+','+itm.paperid+',1)">';
                 html+='<p class="one">'+itm.papername+'</p>';
                 html+='<p class="two">';
                 if(itm.objectivenum>0&&itm.subjectivenum>0)
@@ -95,7 +96,7 @@ function getInvestReturnMethod(rps){
 //                        shtml+='<a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
 //                    else
 //                        shtml+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
-                    shtml+='<a href="javascript:loadEditPaper('+itm.courseid+','+itm.paperid+')">';
+                    shtml+='<a href="javascript:loadEditPaper('+itm.courseid+','+itm.paperid+',1)">';
                 }
 
                 shtml+='<p class="one">'+itm.papername+'</p>';
@@ -192,20 +193,15 @@ function loadDiv(t,ispaper){
     if(typeof(t)!="undefined"&&t!=null){
         if(t==3){
             if(typeof(ispaper)=="undefined"||ispaper=='undefined'||ispaper==null||ispaper==''){
-                $("#dv_model").hide();
-                $("#dv_content_child").show();
+                loadEditPaper(${courseid},pid_bk);
+//                $("#dv_model").hide();
+//                $("#dv_content_child").show();
             }else{
-                alert('1');
                 closeModel('dv_paper_name');
-                alert('2');
                 $("#dv_content_child").hide();
-                alert('3');
                 $("#dv_paperDetail_p").hide();
-                alert('4');
                 $("#dv_model").show();
-                alert('5');
                 $("#dv_model_child").show();
-                alert('6');
             }
         }
     }
@@ -215,7 +211,6 @@ function loadDiv(t,ispaper){
  */
 function showImportPaper(pid){
     closeModel('dv_paper_name');
-    $("#dv_paperDetail_p").hide();
     $("#dv_content_child").hide();
 
 //    $("#dv_content").hide();
@@ -233,7 +228,6 @@ function showImportQues(pid){
     closeModel('dv_paper_name');
 
     $("#dv_content_child").hide();
-    $("#dv_paperDetail_p").hide();
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
     $("#dv_model_child").load("paper?m=dialogQuestionModel&courseid="+courseid+"&paperid="+pid,function(){
@@ -251,7 +245,6 @@ function showCreateQues(pid){
     closeModel('dv_paper_name');
     $("#dv_model_mdname").html("新建试题");
     $("#dv_content_child").hide();
-    $("#dv_paperDetail_p").hide();
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
     $("#dv_model_child").load("question?m=toDialogAddPaperQues&courseid="+courseid+"&paperid="+pid,function(){
@@ -267,7 +260,6 @@ function showUpdQues(pid,qid){
     closeModel('dv_paper_name');
     $("#dv_model_mdname").html("修改试题");
     $("#dv_content_child").hide();
-    $("#dv_paperDetail_p").hide();
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
     $("#dv_model_child").load("question?m=toUpdDialogQuestion&courseid="+courseid+"&paperid="+pid+"&questionid="+qid,function(){
@@ -276,10 +268,16 @@ function showUpdQues(pid,qid){
     });
 }
 /**
+ *试卷的
+ */
+function paperDetailReturn(){
+    loadDiv(3,'1');
+}
+/**
  *加载详情页面
  * @param resid
  */
-function loadPaperDetail(paperid){
+function loadPaperDetail(paperid,courid){
     if(typeof(paperid)=="undefined"||paperid==null){
         alert('网络异常!参数异常!');
         return;
@@ -288,9 +286,10 @@ function loadPaperDetail(paperid){
     $("#dv_content_child").hide();
     $("#dv_model").hide();
     $("#dv_model_child").hide();
-    $("#dv_content").show();
     <%//参数解析 dropQuesNum:1 表示可以拖拽调整试题顺序  其它则是不提供此功能。%>
-    $("#dv_paperDetail_p").load("paper?toPreviewPaperModel&courseid=${param.courseid}&paperid="+paperid+"&op_type1=1&dropQuesNum=0"
+    if(typeof(courid)=="undefined")
+        courid=${param.courseid};
+    $("#dv_content_child").load("paper?toPreviewPaperModel&courseid="+courid+"&paperid="+paperid+"&op_type1=1&dropQuesNum=0"
             ,function(rps){
                 // $("dv_load_topic").html(rps);
 //                        $(".content1:last").removeClass("content1");
@@ -300,7 +299,7 @@ function loadPaperDetail(paperid){
               //  $(".an_small").removeClass("an_small").addClass("an_public1").last().remove();
                 //$("#dv_selectMic_child").show();
                // $("#dv_selectPaper").hide();
-                $("#dv_paperDetail_p").show();
+                $("#dv_content_child").show();
             });
 }
 </script>
@@ -311,10 +310,6 @@ function loadPaperDetail(paperid){
 <input type="hidden" id="page_paper_list"/>
 <div id="dv_content"  style="display: none;" class="public_float public_float960">
     <div id="dv_content_child" style="display:none">
-
-    </div>
-    <!--试卷详情-->
-    <div id="dv_paperDetail_p" style="display:none">
 
     </div>
 

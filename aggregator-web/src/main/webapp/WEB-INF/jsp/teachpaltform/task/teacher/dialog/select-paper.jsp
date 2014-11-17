@@ -10,6 +10,7 @@
         var pList;
         var tasktype="${param.tasktype}";
         var questiontype="${param.questype}";
+        var tpid;
         $(function () {
             var url='';
             switch (tasktype){
@@ -73,7 +74,7 @@
                 $.each(rps.objList[0],function(idx,itm){
                     switch (tasktype){
                         case '4':{
-                            shtml+='<li><a href="javascript:;" onclick="loadPaperDetail('+itm.paperid+')">';
+                            shtml+='<li><a href="javascript:;" onclick="loadPaperDetail('+itm.paperid+',undefined,1)">';
                             //shtml+='<li><a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
                             shtml+='<p class="one">'+itm.papername+'</p>';
                             shtml+='<p class="two">';
@@ -107,7 +108,7 @@
                     switch (tasktype){
                         case '4':{
                             if(itm.paperid>0){
-                                html+='<li><a href="javascript:;" onclick="loadPaperDetail('+itm.paperid+')">';
+                                html+='<li><a href="javascript:;" onclick="loadPaperDetail('+itm.paperid+',undefined,1)">';
                                 html+='<p class="one">'+itm.papername+'</p>';
                                 html+='<p class="two">';
                                 if(itm.objectivenum>0&&itm.subjectivenum>0)
@@ -186,13 +187,20 @@
          *加载详情页面
          * @param resid
          */
-        function loadPaperDetail(paperid){
+        function loadPaperDetail(paperid,cid,isselect){
             if(typeof(paperid)=="undefined"||paperid==null){
                 alert('网络异常!参数异常!');
                 return;
             }
+            $("#dv_model").hide();
+            $("#dv_model_child").hide();
             <%//参数解析 dropQuesNum:1 表示可以拖拽调整试题顺序  其它则是不提供此功能。%>
-            $("#dv_paperDetail").load("paper?toPreviewPaperModel&courseid=${param.courseid}&paperid="+paperid+"&op_type1=1&dropQuesNum=0"
+            if(typeof(cid)=="undefined"||cid==null)
+                cid=${param.courseid};
+            var u="paper?toPreviewPaperModel&courseid="+cid+"&paperid="+paperid+"&op_type1=1&dropQuesNum=0";
+            if(typeof(isselect)!="undefined")
+                u+="&isselect=1";
+            $("#dv_paperDetail").load(u
                     ,function(rps){
                         // $("dv_load_topic").html(rps);
 //                        $(".content1:last").removeClass("content1");
@@ -206,9 +214,14 @@
                     });
         }
 
-        function paperDetailReturn(){
+        function paperDetailReturn(isselect){
             $("#dv_paperDetail").hide();
-            $("#dv_selectPaper").show();
+            if(typeof(isselect)!="undefined"){
+                $("#dv_selectPaper").show();
+            }else{
+                $("#dv_model").show();
+                $("#dv_model_child").show();
+            }
         }
 
 
@@ -229,7 +242,14 @@
                 $("#dv_selectPaper").hide();
                 $("#dv_addpaperchild").hide();
                 $("#dv_model").hide();
-                $("#dv_paperDetail").show();
+                $("#dv_paperDetail").hide();
+                $("#dv_paperDetail").load(
+                        "paper?m=editPaperQuestionModel&courseid=${param.courseid}&paperid="+tpid
+                ,function(){
+                            $("#dv_selectPaper").hide();
+                            $("#dv_paperDetail").show();
+                        });
+
             }
         }
     /**
@@ -257,7 +277,7 @@
                     if(rmsg.type=="error"){
                         alert(rmsg.msg);
                     }else{
-                        paperid=rmsg.objList[0];
+                        paperid=tpid=rmsg.objList[0];
                         $("#dv_paperDetail").load(
                             "paper?m=editPaperQuestionModel&courseid="+courseid+"&paperid="+paperid
                         );
