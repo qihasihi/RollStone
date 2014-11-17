@@ -81,6 +81,7 @@
                 gender_address_id:'page2address',		//显示的区域
                 http_free_operate_handler:beforep2AjaxList,		//执行查询前操作的内容
                 http_operate_handler:afterp2AjaxList,	//执行成功后返回方法
+                isShowController:false,
                 return_type:'json',								//放回的值类型
                 page_no:1,					//当前的页数
                 page_size:10,				//当前页面显示的数量
