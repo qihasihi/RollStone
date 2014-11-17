@@ -16,7 +16,7 @@
                     $("#dv_loadTopic").hide();
                     $("#dv_loadTopic").load("task?m=toTaskElementDetial&tasktype=${param.tasktype}&courseid=${param.courseid}&op_type1=1"
                             ,function(rps){
-                                $("#dv_loadTopic").html('<div class="jxxt_float_h480">'+rps+'</div>');
+//                                $("#dv_loadTopic").html(''+rps+'</div>');
                                // $("dv_load_topic").html(rps);
                                 $("#dv_loadTopic .content1").removeClass("content1");
                                 $("#dv_loadTopic .subpage_head").remove();

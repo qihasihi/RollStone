@@ -1,8 +1,4 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
-<%String optype1=request.getParameter("op_type1");
- if(optype1==null||optype1.trim().length()<1){%>
-<%@include file="/util/common-jsp/common-jxpt.jsp" %>
-<%}%>
 <html>
 <head>
     <title>${sessionScope.CURRENT_TITLE}</title>
@@ -187,8 +183,7 @@
 
 </head>
 <body>
-<div class="subpage_head"><span class="ico55"></span><strong>添加任务&mdash;&mdash;选择${!empty param.tasktype and param.tasktype eq '1'?"资源":param.tasktype eq '2'?"论题":param.tasktype eq '3'?"试题":param.tasktype eq '4'?"试卷":""}</strong></div>
-<div class="content1">
+<div class="jxxt_float_h480">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
         <col class="w30"/>
         <col class="w880"/>
@@ -225,12 +220,12 @@
         -->
 
     </table>
+</div>
     <form id="pListForm" name="pListForm">
         <p class="Mt20" id="pListaddress" align="center"></p>
     </form>
     <p class="t_c p_tb_10" id="p_sel" style="display:none"><a href="javascript:sub_data()"  class="an_small">选&nbsp;择</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:window.close();"  class="an_small">取&nbsp;消</a></p>
-</div>
 
-<%@include file="/util/foot.jsp" %>
+
 </body>
 </html>

@@ -243,7 +243,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         request.setAttribute("courseid",courseid);
         request.setAttribute("resType", resourceTypeList);
         request.setAttribute("fileSystemIpPort", request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString());
- //       request.setAttribute("fileSystemIpPort", "http://localhost:8080");
+        //       request.setAttribute("fileSystemIpPort", "http://localhost:8080");
         request.setAttribute("nextid", this.resourceManager.getNextId(true));
         if(type.equals("1")){
             //栏目
@@ -268,10 +268,12 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }else if(type.equals("3")){
             return new ModelAndView("/teachpaltform/task/teacher/dialog/select-ques");
         }else if(type.equals("2")){
-            return new ModelAndView("/teachpaltform/task/teacher/element-detail");
+            return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/element-detail");
         }else
             return new ModelAndView("/teachpaltform/task/teacher/dialog/select-ques");
     }
+
+
 
     /**
      * 获取教师任务列表
