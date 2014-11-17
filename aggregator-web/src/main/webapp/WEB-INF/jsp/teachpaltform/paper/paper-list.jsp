@@ -188,11 +188,25 @@ function showCourseList(){
         });
     }
 
-function loadDiv(t){
+function loadDiv(t,ispaper){
     if(typeof(t)!="undefined"&&t!=null){
         if(t==3){
-            $("#dv_model").hide();
-            $("#dv_content_child").show();
+            if(typeof(ispaper)=="undefined"||ispaper=='undefined'||ispaper==null||ispaper==''){
+                $("#dv_model").hide();
+                $("#dv_content_child").show();
+            }else{
+                alert('1');
+                closeModel('dv_paper_name');
+                alert('2');
+                $("#dv_content_child").hide();
+                alert('3');
+                $("#dv_paperDetail_p").hide();
+                alert('4');
+                $("#dv_model").show();
+                alert('5');
+                $("#dv_model_child").show();
+                alert('6');
+            }
         }
     }
 }
@@ -201,13 +215,13 @@ function loadDiv(t){
  */
 function showImportPaper(pid){
     closeModel('dv_paper_name');
-    $("#dv_paperDetail").hide();
+    $("#dv_paperDetail_p").hide();
     $("#dv_content_child").hide();
 
 //    $("#dv_content").hide();
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
-    $("#dv_model_child").load("paper?m=dialogPaperModel&courseid="+courseid+"&paperid="+pid,function(){
+    $("#dv_model_child").load("paper?m=dialogPaperModel&courseid="+courseid+"&paperid="+pid+"&ispaper=1",function(){
         $("#dv_model_mdname").html("导入试题");
         $("#dv_model_child").fadeIn('fast');
     });
@@ -219,6 +233,7 @@ function showImportQues(pid){
     closeModel('dv_paper_name');
 
     $("#dv_content_child").hide();
+    $("#dv_paperDetail_p").hide();
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
     $("#dv_model_child").load("paper?m=dialogQuestionModel&courseid="+courseid+"&paperid="+pid,function(){
@@ -236,6 +251,7 @@ function showCreateQues(pid){
     closeModel('dv_paper_name');
     $("#dv_model_mdname").html("新建试题");
     $("#dv_content_child").hide();
+    $("#dv_paperDetail_p").hide();
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
     $("#dv_model_child").load("question?m=toDialogAddPaperQues&courseid="+courseid+"&paperid="+pid,function(){
@@ -251,6 +267,7 @@ function showUpdQues(pid,qid){
     closeModel('dv_paper_name');
     $("#dv_model_mdname").html("修改试题");
     $("#dv_content_child").hide();
+    $("#dv_paperDetail_p").hide();
     $("#dv_model").fadeIn('fast');
     $("#dv_model_child").hide();
     $("#dv_model_child").load("question?m=toUpdDialogQuestion&courseid="+courseid+"&paperid="+pid+"&questionid="+qid,function(){
@@ -258,7 +275,34 @@ function showUpdQues(pid,qid){
         $("#dv_model_child").fadeIn('fast');
     });
 }
-
+/**
+ *加载详情页面
+ * @param resid
+ */
+function loadPaperDetail(paperid){
+    if(typeof(paperid)=="undefined"||paperid==null){
+        alert('网络异常!参数异常!');
+        return;
+    }
+    closeModel('dv_paper_name');
+    $("#dv_content_child").hide();
+    $("#dv_model").hide();
+    $("#dv_model_child").hide();
+    $("#dv_content").show();
+    <%//参数解析 dropQuesNum:1 表示可以拖拽调整试题顺序  其它则是不提供此功能。%>
+    $("#dv_paperDetail_p").load("paper?toPreviewPaperModel&courseid=${param.courseid}&paperid="+paperid+"&op_type1=1&dropQuesNum=0"
+            ,function(rps){
+                // $("dv_load_topic").html(rps);
+//                        $(".content1:last").removeClass("content1");
+//                        $(".subpage_head:last").remove();
+//                        $(".foot:last").remove();
+//                        $("#fade:last").remove();
+              //  $(".an_small").removeClass("an_small").addClass("an_public1").last().remove();
+                //$("#dv_selectMic_child").show();
+               // $("#dv_selectPaper").hide();
+                $("#dv_paperDetail_p").show();
+            });
+}
 </script>
 </head>
 <body>
@@ -270,7 +314,7 @@ function showUpdQues(pid,qid){
 
     </div>
     <!--试卷详情-->
-    <div class="public_float public_float960" id="dv_paperDetail" style="display:none">
+    <div id="dv_paperDetail_p" style="display:none">
 
     </div>
 
@@ -283,6 +327,10 @@ function showUpdQues(pid,qid){
 
 </div>
 
+<%--<!--试卷详情-->--%>
+<%--<div class="public_float public_float960" id="dv_paperDetail" style="display:none">--%>
+
+<%--</div>--%>
 
 <div class="zhuanti">
     <p>${coursename }
