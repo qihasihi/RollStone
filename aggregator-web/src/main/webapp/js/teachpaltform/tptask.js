@@ -330,6 +330,7 @@ function queryQuestionType(trobj, questype, boo, questionid) {
             } else {
                 html = '<th><span class="ico06"></span>选择题型：</th><td>暂无数据!</td>';
             }
+            $('#' + trobj).show();
             $('#' + trobj).html(html);
 
             if (questype > 0 && boo) {
