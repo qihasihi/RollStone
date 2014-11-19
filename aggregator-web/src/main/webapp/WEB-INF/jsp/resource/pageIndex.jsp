@@ -25,7 +25,7 @@ $(function(){
 		gender_address_id:'pageVaddress',		//显示的区域
 		http_free_operate_handler:beforeVideoAjaxList,		//执行查询前操作的内容
 		http_operate_handler:afterVideoAjaxList,	//执行成功后返回方法
-        isShowController:false,
+//        isShowController:false,
 		return_type:'json',								//放回的值类型
 		page_no:1,					//当前的页数
 		page_size:8,				//当前页面显示的数量
@@ -41,7 +41,7 @@ $(function(){
 		gender_address_id:'pageDaddress',		//显示的区域
 		http_free_operate_handler:beforeDocAjaxList,		//执行查询前操作的内容
 		http_operate_handler:afterDocAjaxList,	//执行成功后返回方法
-        isShowController:false,
+//        isShowController:false,
 		return_type:'json',								//放回的值类型
 		page_no:1,					//当前的页数
 		page_size:8,				//当前页面显示的数量
@@ -97,7 +97,7 @@ $(function(){
 	cutoverExcellentRes(1);
     pageGo("p_myinfo");
     pageGo('p_exe_video');
-    pageGo('p_exe_doc');
+   // pageGo('p_exe_doc');
 
 	$('#acontent')
 	.xheditor(
@@ -397,7 +397,7 @@ function myInfoAjaxList1(rps){
         <div class="subpage_lm">
             <ul>
                 <li id="exe_video" class="crumb"><a href="javascript:cutoverExcellentRes(1)">视频类</a></li>
-                <li id="exe_doc"><a href="javascript:cutoverExcellentRes(2)">文档类</a></li>
+                <li id="exe_doc"><a href="javascript:cutoverExcellentRes(2);pageGo('p_exe_doc');">文档类</a></li>
             </ul>
         </div>
 
