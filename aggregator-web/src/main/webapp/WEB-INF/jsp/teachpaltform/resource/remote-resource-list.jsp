@@ -11,7 +11,7 @@
 <%
 
     int sgrade = Integer.parseInt(request.getSession().getAttribute("session_grade").toString());
-
+    String downUrl = request.getSession().getAttribute("IP_PROC_NAME").toString();
 %>
 <html>
 <head>
@@ -65,7 +65,7 @@
                 http_operate_handler : getInvestReturnMethodZ, //执行成功后返回方法
                 return_type : 'json', //放回的值类型
                 page_no : 1, //当前的页数
-                page_size : 20, //当前页面显示的数量
+                page_size : 10, //当前页面显示的数量
                 rectotal : 0, //一共多少
                 pagetotal : 1,
                 operate_id : "zhishi"
@@ -631,7 +631,7 @@
                                                            onmouseout="dv_allow_filetype.style.display='none';" class="font-darkblue">支持的文件类型</a></p>
                             <div class="jxxt_zhuanti_zy_add" id="p_res_file">
                                 <input type="file" name="uploadfile" id="uploadfile" class="w410" /><!--<a href="1" class="an_public3">上&nbsp;传</a>-->
-                                <p class="font-gray">提示： 1. 附件限一个，<2G。<br>2. 视频限MP4格式，建议使用格式工厂等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒</p>
+                                <p class="font-gray">提示： 1. 附件限一个，<2G。<br>2. 视频限MP4格式，建议使用格<a class="font-darkblue" href="<%=downUrl%>uploadfile/cqmygysdssjtwmydtsgx/20141119.zip">格式工厂</a>等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒</p>
                             </div>
                             <div class="jxxt_zhuanti_zy_add" id="dv_super_file" style="display: none">
                                 <div id="uploadcontrol_div" >

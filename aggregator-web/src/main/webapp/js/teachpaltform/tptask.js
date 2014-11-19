@@ -1783,7 +1783,10 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                         recordhtm += '>';
                         if(classid==0)
                             recordhtm += '<td>' + itm.clsname + '</td>';
-                        recordhtm += '<td>' + itm.userinfo.stuNo + '</td>';
+                        if(typeof(itm.userinfo.stuNo)=='undefined')
+                            htm += '<td>' + '--' + '</td>';
+                        else
+                            htm += '<td>' + itm.userinfo.stuNo + '</td>';
                         recordhtm += '<td>' + itm.userinfo.stuname + '</td>';
                         if (typeof(itm.ctimeString) != 'undefined')
                             recordhtm += '<td>' + itm.ctimeString + '</td>';

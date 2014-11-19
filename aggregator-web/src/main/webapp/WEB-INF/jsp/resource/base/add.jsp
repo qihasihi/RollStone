@@ -87,12 +87,12 @@
                       </span>
                     <p class="font-gray">
                     <pre>提示： 1. 附件限一个， <2G。
-       2. 视频限MP4格式，建议使用格式工厂等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒。</pre></p>
+       2. 视频限MP4格式，建议使用<a class="font-darkblue" href="<%=basePath%>uploadfile/cqmygysdssjtwmydtsgx/20141119.zip">格式工厂</a>等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒。</pre></p>
                 </div>
                 <div class="zyxt_add" id="dv_super_file" style="display:none">
                     <!-- <p><a href="1" class="an_public3">上&nbsp;传</a></p>-->
                     <div  id="dv_load_core_spfile"></div>
-                    <p><span class="font-gray">提示： 1. 附件限一个， <2G。 2. 视频限MP4格式，建议使用格式工厂等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒。</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="uploadfile/tmp/etiantian-upload.exe" target="_blank" class="font-darkblue">下载插件</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <p><span class="font-gray">提示： 1. 附件限一个， <2G。 2. 视频限MP4格式，建议使用<a class="font-darkblue" href="<%=basePath%>uploadfile/cqmygysdssjtwmydtsgx/20141119.zip">格式工厂</a>等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒。</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="uploadfile/tmp/etiantian-upload.exe" target="_blank" class="font-darkblue">下载插件</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="template/IEUpload Solution.docx" target="_blank" class="font-darkblue">使用说明</a></p>
                 </div></td>
         </tr>
