@@ -845,10 +845,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             if(this.logined(request).getDcschoolid()!=1){
                 for(TpCourseClass cc:courseclassList){
                     if(cc.getDctype()!=null&&cc.getDctype()==2){
-                        //je.setMsg("当前专题班级类型为网校班级，不支持在电脑上发任务!");
                         request.setAttribute("isWXCLS",1);
-                        //response.getWriter().print(je.toJSON());
-                        //return null;
+                        break;
                     }
                 }
             }

@@ -375,13 +375,11 @@
     <div  style="display:none" id="dv_selpaperchild">
         <div class="jxxt_float_w920 font-black">
             <p class="t_r">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
-            <div style="overflow-x: hidden;overflow-y:auto;width:930px;height:530px;">
-                <c:if test="${!empty courselevel and courselevel ne 3}">
+            <!--<div style="overflow-x: hidden;overflow-y:auto;width:930px;height:530px;">-->
                     <p><strong>标准试卷</strong></p>
                     <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
 
                     </ul>
-                </c:if>
                 <p><strong>自建试卷</strong></p>
                 <ul class="jxxt_zhuanti_shijuan_list" id="ul_native">
 
@@ -389,7 +387,6 @@
                 <form id="pListForm" name="pListForm" style="">
                     <div class="nextpage" id="pListaddress" align="center"></div>
                 </form>
-            </div>
         </div>
 
     </div>

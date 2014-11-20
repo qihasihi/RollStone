@@ -378,6 +378,16 @@
     });
 
 
+    $(function (){
+       $("ul").filter(function(){return this.id.indexOf('p_group_')!=-1}).each(function(ix,im){
+            var len=$(im).children("li").length;
+            if(len<1){
+                $(im).prev("p").remove();
+            }
+        });
+    });
+
+
 </script>
 <!--上传文件类型-->
 <div class="public_windows font-black"  id="dv_allow_filetype" name="dv_allow_filetype" style="display:none;position: absolute;z-index:99999">

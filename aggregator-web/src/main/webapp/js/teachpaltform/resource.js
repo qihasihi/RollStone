@@ -1863,7 +1863,7 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
         loadRelatePaper(resid);
 
     //学习心得
-    if(typeof tpresdetailid!='undeinfed'&& tpresdetailid.toString().length>0)
+   // if(typeof tpresdetailid!='undeinfed'&& tpresdetailid.toString().length>0)
         loadStudyNotes(1);
 }
 
@@ -3055,6 +3055,7 @@ function loadStudyNotes(usertype) {
                 } else {
                     var htm = '';
                     pageGo("p2");
+                    $("#li_studynote").show();
                     if (rps.objList[0] != null && rps.objList[1] != null && rps.objList[1]=="on") {
                         $("#div_xheditor").hide();
                         if (usertype == 1) {
@@ -3081,6 +3082,7 @@ function loadStudyNotes(usertype) {
                             generXheditor(resid, true);
                         else if(usertype == 1 && (typeof rps.objList[1]=='undefined'||rps.objList[1]==null)){
                             $("#dv_study_note").hide();
+                            $("#li_studynote").hide();
                             loadAllComment();
                             return;
                         }

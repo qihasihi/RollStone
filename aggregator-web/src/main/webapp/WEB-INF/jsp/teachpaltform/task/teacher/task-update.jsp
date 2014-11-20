@@ -413,6 +413,14 @@
                             $("#all_ct").show('fast');
                         }
                     });
+
+
+                    $("ul").filter(function(){return this.id.indexOf('p_group_')!=-1}).each(function(ix,im){
+                        var len=$(im).children("li").length;
+                        if(len<1){
+                            $(im).prev("p").remove();
+                        }
+                    });
                 });
 
 			</script>

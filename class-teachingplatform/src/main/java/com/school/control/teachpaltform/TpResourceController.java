@@ -985,7 +985,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         //添加resoursce_base默认值
         ResourceInfo resbase=new ResourceInfo();
         //资源共享等级使用专题共享等级
-        resbase.setSharestatus(tc.getSharetype());
+        resbase.setSharestatus(tcList.get(0).getSharetype());
         resbase.setUserid(this.logined(request).getUserid());
         resbase.setResid(Long.parseLong(resid));
         resbase.setResname(resname);
