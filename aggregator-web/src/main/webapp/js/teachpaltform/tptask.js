@@ -490,8 +490,9 @@ function queryPaper(courseid, trobj, type, taskvalueid, taskstatus, quesnum) {
             var htm = '';
             htm += '<th><span class="ico06"></span>选择试卷：</th>';
             htm += '<td class="font-black">';
-            if (typeof taskstatus == 'undefined' && type == 4) {
-                htm += '<p><a class="font-darkblue"  href="javascript:loadTaskElement(' + type + ')">>> 选择试卷</a></p>';
+            if (type == 4) {
+                if(typeof taskstatus == 'undefined')
+                    htm += '<p><a class="font-darkblue"  href="javascript:loadTaskElement(' + type + ')">>> 选择试卷</a></p>';
                 htm += '<div class="jxxt_zhuanti_add_ziyuan" id="dv_paper_name"></div>';
             } else if (type == 5) {
                 htm = '';
