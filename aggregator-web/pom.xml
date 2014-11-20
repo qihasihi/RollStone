@@ -68,6 +68,12 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
+
+                    <!--不强制转换编码-->
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>xml</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+
                     <webResources>
                         <!-- 按环境拷贝配置文件。结束 -->
                         <resource>
