@@ -102,6 +102,25 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
         System.out.println("jid--"+jid);
         System.out.println("type--"+type);
         System.out.println("dcschool--"+dcschool);
+        //查询班级的dc_school_id
+        ClassInfo cls=new ClassInfo();
+        cls.setClassid(classid.intValue());
+        cls.setDcschoolid(dcschool);
+        IClassManager classManager=SpringBeanUtil.getBean(ClassManager.class);
+        List<ClassInfo> clsList=classManager.getList(cls,null);
+        if(clsList==null||clsList.size()<1){
+            return false;
+        }
+        //验证是否该专题已经录入过成绩
+        ITpStuScoreManager stuScoreManager=SpringBeanUtil.getBean(TpStuScoreManager.class);
+        //爱学班级，已老师录入时为准，如果老师已经录入完毕，则代表不能再奖励加分
+        if(clsList.get(0).getDctype()!=null&&clsList.get(0).getDctype()==3){
+            Integer luruCount=stuScoreManager.getTpScoreCourseIsInput(userid.intValue(),courseid);
+            if(luruCount==null||luruCount>0){//表示录入过数据
+                System.out.println("error:The teacher or team leader was input "+userid+"'s score in this course('"+courseid+"')!");
+                return false;
+            }
+        }
 
         Boolean returnVal=false;
         List<TpStuScoreLogs> tsScoreList=null;
@@ -163,18 +182,7 @@ public class  TpStuScoreLogsManager extends BaseManager<TpStuScoreLogs> implemen
 //            }
         }
         System.out.println("award_stu_score------------------------------5");
-        //查询班级的dc_school_id
-        ClassInfo cls=new ClassInfo();
-        cls.setClassid(entity.getClassid().intValue());
-        cls.setDcschoolid(dcschool);
-        IClassManager classManager=SpringBeanUtil.getBean(ClassManager.class);
-        List<ClassInfo> clsList=classManager.getList(cls,null);
-        if(clsList==null||clsList.size()<1){
-            return returnVal;
-        }
-        ITpStuScoreManager stuScoreManager=SpringBeanUtil.getBean(TpStuScoreManager.class);
 
-        System.out.println("award_stu_score------------------------------6");
         //添加课程积分。
         TpStuScore tss=new TpStuScore();
         tss.setDcschoolid(Long.parseLong(dcschool+""));

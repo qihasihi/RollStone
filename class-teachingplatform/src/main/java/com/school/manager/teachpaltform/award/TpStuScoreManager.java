@@ -132,4 +132,13 @@ public class TpStuScoreManager extends BaseManager<TpStuScore> implements ITpStu
     public TpStuScore getOfExcel(Sheet rs, int cols, int d, String type) {
         return null;
     }
+    /**
+     * 验证TpStuScore是否在本专题内录入过分数
+     * @param userid
+     * @param courseid
+     * @return
+     */
+    public Integer getTpScoreCourseIsInput(final Integer userid,final Long courseid){
+        return tpStuScoreDAO.getTpScoreCourseIsInput(userid,courseid);
+    }
 }

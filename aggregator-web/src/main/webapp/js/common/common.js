@@ -627,7 +627,7 @@ function toPostURL(url,params,isblank,windowName,type){
     if(typeof(document.targetToAddFrm)!="undefined")
         $("#targetToAddFrm").remove();
 
-    $("body").append('<form name="targetToAddFrm" id="targetToAddFrm"></form>');
+    $("body").append('<form name="targetToAddFrm" id="targetToAddFrm" style="display: none"></form>');
 
     if(typeof(params)!="undefined"&&typeof(params)=="object"&&params!=null)	{
         var ary=getKeys(params);

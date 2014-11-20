@@ -5,6 +5,7 @@ import com.school.dao.inter.teachpaltform.award.ITpGroupScoreDAO;
 import com.school.dao.inter.teachpaltform.award.ITpStuScoreDAO;
 import com.school.entity.teachpaltform.award.TpStuScore;
 import com.school.util.PageResult;
+import com.school.util.UtilTool;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -507,8 +508,26 @@ public class TpStuScoreDAO extends CommonDAO<TpStuScore> implements ITpStuScoreD
         List<Object> objlist=new ArrayList<Object>();
         objlist.add(subjectid);
         objlist.add(classid);
-        objlist.add(sort==null?"asc":sort);
+        objlist.add(sort == null ? "asc" : sort);
         return this.executeResultListMap_PROC(sqlbuilder.toString(),objlist);
+    }
+
+    /**
+     * 验证TpStuScore是否在本专题录入过分数
+     * @param userid
+     * @param courseid
+     * @return
+     */
+    public Integer getTpScoreCourseIsInput(final Integer userid,final Long courseid){
+        if(userid==null||courseid==null)return null;
+        StringBuilder sqlbuilder=new StringBuilder("{CALL tp_stu_score_score_isluru(?,?,?)}");
+        List<Object> objlist=new ArrayList<Object>();
+        objlist.add(userid);
+        objlist.add(courseid);
+        Object obj=this.executeSacle_PROC(sqlbuilder.toString(),objlist.toArray());
+        if(obj!=null&&obj.toString().trim().length()>0&& UtilTool.isNumber(obj.toString().trim()))
+            return Integer.parseInt(obj.toString().trim());
+        return null;
     }
 
     /**
