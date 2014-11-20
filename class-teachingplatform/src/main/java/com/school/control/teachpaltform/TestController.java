@@ -37,6 +37,34 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/synTest")
 public class TestController extends BaseController<String>{
+    /**
+     * 更新专题元素
+     * @param request
+     * @param response
+     */
+    @RequestMapping(params="m=updateCourseElement",method=RequestMethod.GET)
+    public void updateCourseElement(HttpServletRequest request,HttpServletResponse response){
+        new UpdateCourse(request.getSession().getServletContext()).updateCourseElement();
+    }
+
+    /**
+     * 更新专题本身
+     * @param request
+     * @param response
+     */
+    @RequestMapping(params="m=updateCourseSelf",method=RequestMethod.GET)
+    public void updateCourseSelf(HttpServletRequest request,HttpServletResponse response){
+        new UpdateCourse(request.getSession().getServletContext()).updateCourseSelf();
+    }
+    /**
+     * 更新资源本身
+     * @param request
+     * @param response
+     */
+    @RequestMapping(params="m=updateResourceSelf",method=RequestMethod.GET)
+    public void updateResourceSelf(HttpServletRequest request,HttpServletResponse response){
+        new UpdateCourse(request.getSession().getServletContext()).updateResourceSelf();
+    }
 
     @RequestMapping(params="m=SynchroEttColumn",method=RequestMethod.GET)
     public void SynchroEttColumn(HttpServletRequest request,HttpServletResponse response){
