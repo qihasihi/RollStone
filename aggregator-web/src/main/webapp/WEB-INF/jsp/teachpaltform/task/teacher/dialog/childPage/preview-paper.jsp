@@ -375,7 +375,7 @@ function xround(x, num){
             &nbsp;&nbsp;<strong>客观题：<span class="font-blue">${paper.objectivenum}</span>
             &nbsp;&nbsp;总分值：<span class="font-blue"><span id="total_score">${!empty paper.score?paper.score:0}</span>&nbsp;分</span></strong></span>
     </c:if>
-    <strong>${coursename}</strong></p>
+    <strong>${paper.papername}</strong></p>
     <div class="jxxt_float_h600" id="dv_paperdetail">
 
     <div class="jxxt_zhuanti_rw_ceshi">
