@@ -238,9 +238,9 @@ function preeDoPageSub_ques(pObj){
 </script>
 </head>
 <body>
-<p class="float_title"><a href="javascript:;" class="ico93" onclick="loadDiv(3)" title="返回"></a><span id="dv_model_mdname">导入试卷</span></p>
+<p class="float_title"><a href="javascript:;" class="ico93" onclick="loadDiv(3)" title="返回"></a><span id="dv_model_mdname">导入试题</span></p>
 <p class="public_input t_r w940 p_t_10 p_b_20">
-    <input name="txt_search" id="txt_search" type="text" class="w240" placeholder="资源名称/专题名称" />
+    <input name="txt_search" id="txt_search" type="text" class="w240" placeholder="专题名称" />
     <a href="javascript:pageGo('pList1');" class="an_search" title="查询"></a></p>
 <div class="jxxt_float_h480">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">

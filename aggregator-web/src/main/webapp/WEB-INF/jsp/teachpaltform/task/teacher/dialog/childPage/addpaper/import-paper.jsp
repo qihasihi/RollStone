@@ -140,7 +140,7 @@ function getInvestReturnMethod(rps){
                     shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
                 shtml+='</p></a>';
                 shtml+='<p class="pic">';
-                shtml+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico02" title="导入"></span></b></a>';
+                shtml+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico43" title="导入"></span></b></a>';
                 shtml+='</p>';
                 shtml+='</li>';
         });
@@ -181,7 +181,7 @@ function getInvestRelateReturnMethod(rps){
                 shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
             shtml+='</p></a>';
             shtml+='<p class="pic">';
-            shtml+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico02" title="导入"></span></b></a>';
+            shtml+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico43" title="导入"></span></b></a>';
             shtml+='</p>';
             shtml+='</li>';
         });
@@ -225,7 +225,7 @@ function getCloudPaperList(rps){
                     html+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
                 html+='</p></a>';
                 html+='<p class="pic">';
-                html+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico02" title="导入"></span></b></a>';
+                html+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico43" title="导入"></span></b></a>';
                 html+='</p>';
                 html+='</li>';
         });
@@ -268,7 +268,7 @@ function getRelateCloudPaperList(rps){
                 html+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
             html+='</p></a>';
             html+='<p class="pic">';
-            html+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico02" title="导入"></span></b></a>';
+            html+='<a href="javascript:importPaperQues('+courseid+','+itm.paperid+')"><b><span class="ico43" title="导入"></span></b></a>';
             html+='</p>';
             html+='</li>';
         });
