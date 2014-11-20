@@ -192,7 +192,11 @@ function showQuesNum(){
                 +'"><a href="javascript:;" onclick="showQues('+(idx+1)+')">'+(idx+1)+'</a></li>';
 
     });
+
     $("#ul_xuhao").html(h);
+    if($("#ul_xuhao>li").length>10){
+        $("#ul_xuhao").css({'width':'700px','overflow-y':'auto','height':'100px'});
+    }
     <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
          $("#dv_bf_dvpdtail").html($("#dv_paperdetail #dv_table").html());
         js = $("#dv_paperdetail .quesNumli").jsmartdrag({
@@ -376,7 +380,7 @@ function xround(x, num){
 
     <div class="jxxt_zhuanti_rw_ceshi">
         <p class="jxxt_zhuanti_rw_ceshi_an"><a href="javascript:;" onclick="next(-1)" id="a_free" class="an_test1">上一题</a><a  href="javascript:;" onclick="next(1)" id="a_next" class="an_test1">下一题</a></p>
-        <ul id="ul_xuhao" style="width:700px;overflow-y:auto;height:120px;">
+        <ul id="ul_xuhao">
         </ul>
         <div class="clear"></div>
     </div>
@@ -470,23 +474,22 @@ function xround(x, num){
 
                         </td>
                     </tr>
-
                     <c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0 and pq.extension ne 5}">
                         <c:forEach items="${pq.questionTeam}" var="c" varStatus="cidx">
                             <tr id="dv_ques_${c.questionid}" data-bind="${c.questionid}" >
                                 <td>&nbsp;</td>
                                 <td><p><span class="width font-blue">
-                                    <a><span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}"
+                                    <span class="font-blue"  style="cursor: pointer" data-bind="${c.questionid}|${c.ref}"
                                           name="avg_score" id="score_${c.questionid}">
                                          <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
-                                    <a href="javascript:;" onclick="onClickScore('score_${pq.questionid}')">
+                                    <a href="javascript:;" onclick="onClickScore('score_${c.questionid}')">
                                         </c:if>
                                     ${c.score}
                                      <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
                                             </a>
                                       </c:if>
-                                    </span></a>分</span>
-                                    <span data-bind="${c.questionid}" >
+                                    </span>分</span>
+                                    <span data-bind="${c.questionid}">
                                           <%--<script type="text/javascript">--%>
                                               <%--var qteamSize="${fn:length(pq.questionTeam)}";--%>
                                               <%--var tmpIdx=quesOrderIdx-qteamSize;--%>
@@ -571,8 +574,6 @@ function xround(x, num){
                             </td>
                         </tr>
                     </c:if>
-
-
                     <c:if test="${!empty pq.questionTeam and fn:length(pq.questionTeam)>0 and pq.extension eq 5}">
                         <tr>
                             <td>&nbsp;</td>
@@ -588,7 +589,8 @@ function xround(x, num){
                                         <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
                                             </a>
                                         </c:if>
-                                    </span>
+
+                                    </span>分
                                         </span><span data-bind="${c.questionid}"  class="font-blue">
                                           <%--<script type="text/javascript">--%>
                                               <%--var qteamSize="${fn:length(pq.questionTeam)}";--%>
