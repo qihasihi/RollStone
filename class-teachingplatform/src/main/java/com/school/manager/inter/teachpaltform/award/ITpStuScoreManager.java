@@ -63,4 +63,11 @@ public interface ITpStuScoreManager extends IBaseManager<TpStuScore>{
      * @return
      */
     public boolean tpStuScoreCkAllComplateInput(final Long courseid,final Integer classid,final Integer subjectid,final Integer dcschoolid);
+    /**
+     * 验证TpStuScore是否在本专题内录入过分数
+     * @param userid
+     * @param courseid
+     * @return
+     */
+    public Integer getTpScoreCourseIsInput(final Integer userid,final Long courseid);
 }
