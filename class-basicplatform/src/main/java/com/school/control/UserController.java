@@ -7720,6 +7720,7 @@ public class UserController extends BaseController<UserInfo> {
                 jo.put("result",1);
                 jo.put("msg","操作成功!");
             }
+
         }else{
             jo.put("result",0);
             jo.put("msg","操作失败!");
