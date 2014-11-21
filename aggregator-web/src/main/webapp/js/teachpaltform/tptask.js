@@ -1733,7 +1733,10 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                                     recordhtm += '>';
                                     if(classid==0)
                                         recordhtm += '<td>' + itm.clsname + '</td>';
-                                    recordhtm += '<td>' + itm.userinfo.stuNo + '</td>';
+                                    if(typeof(itm.userinfo.stuNo)=='undefined')
+                                        recordhtm += '<td>' + '--' + '</td>';
+                                    else
+                                        recordhtm += '<td>' + itm.userinfo.stuNo + '</td>';
                                     recordhtm += '<td>' + itm.userinfo.stuname + '</td>';
                                     if (typeof(itm.ctimeString) != 'undefined')
                                         recordhtm += '<td>' + itm.ctimeString + '</td>';
@@ -2003,7 +2006,10 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
                         htm += '<tr>';
                         if(classid==0)
                             htm += '<td>' + itm.clsname + '</td>';
-                        htm += '<td>' + itm.userinfo.stuNo + '</td>';
+                        if(typeof(itm.userinfo.stuNo)=='undefined')
+                            htm += '<td>' + '--' + '</td>';
+                        else
+                            htm += '<td>' + itm.userinfo.stuNo + '</td>';
                         htm += '<td>' + itm.userinfo.stuname + '</td>';
                         if (typeof(itm.ctimeString) != 'undefined')
                             htm += '<td>' + itm.ctimeString + '</td>';
