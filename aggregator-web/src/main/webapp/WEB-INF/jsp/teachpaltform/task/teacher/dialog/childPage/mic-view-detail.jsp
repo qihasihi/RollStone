@@ -108,16 +108,16 @@
             $("#li_"+idx).removeClass("blue").addClass("blue_big");
             //得到题号，当前的问题
             var currentQuesid=$("#dv_paper table[id*='dv_ques_']").eq((idx-1)).attr("data-bind");
-            var currentQIdx=$("#dv_paper table[id*='dv_ques_']").eq((idx-1)).html();
+            var currentQIdx=$("#dv_paper table[id*='dv_ques_']").eq((idx-1)).attr("data-idx");
 
             if(currentQIdx>=$("#ul_xuhao>li").length){
-                $("#a_next").fadeOut('fast');
+                $("#a_next").hide()
             }else
-                $("#a_next").fadeIn('fast');
+                $("#a_next").show();
             if(currentQIdx<=1){
-                $("#a_free").fadeOut('fast');
+                $("#a_free").hide();
             }else
-                $("#a_free").fadeIn('fast');
+                $("#a_free").show();
         }
 
         /**
