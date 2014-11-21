@@ -114,7 +114,7 @@
                         var h="";
                         var hname = itm.HD_NAME;
                         if(hname.length>25){
-                            hname = hname.substring(0,25);
+                            hname = hname.substring(0,25)+"...";
                         }
                         h='<a class="ico51" href="javascript:dosub('+itm.HD_RES_ID+','+2+','+1+',\''+itm.HD_NAME+'\')" title="发任务"></a>';
                         if(rps.objList[1]!=null&&rps.objList[1].length>0){
@@ -174,6 +174,10 @@
                     var htm='';
                     $.each(rps.objList[0],function(idx,itm){
                         var h="";
+                        var hname = itm.RES_NAME;
+                        if(hname.length>25){
+                            hname = hname.substring(0,25)+"...";
+                        }
                         h='<a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a>';
                         if(rps.objList[1]!=null&&rps.objList[1].length>0){
                             $.each(rps.objList[1],function(ix,im){
@@ -182,9 +186,9 @@
                                     return false;
                                 }
                             });
-                            htm+='<li>'+h+'<a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a></li>';
+                            htm+='<li>'+h+'<a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+hname+'</a></li>';
                         }else{
-                            htm+='<li><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a><a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+itm.RES_NAME+'</a></li>';
+                            htm+='<li><a href="javascript:dosub('+itm.RES_ID+','+2+','+2+',\''+itm.RES_NAME+'\')"><b class="ico51" title="发任务"></b></a><a target="_blank" href="tpres?m=toRemoteResourcesDetail&res_id='+itm.RES_ID+'" >'+hname+'</a></li>';
                         }
                     });
                     $("#zhishi").html(htm);
@@ -679,7 +683,7 @@
                     </tr>
                     <tr>
                         <th>&nbsp;</th>
-                        <td><a id="a_submit" onclick="subUploadRes(2)"   class="an_small">提&nbsp;交</a><!--<a href="javascript:void(0);" onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a>--></td>
+                        <td><a id="a_submit" onclick="subUploadRes(2)"   class="an_public1">提&nbsp;交</a><!--<a href="javascript:void(0);" onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a>--></td>
                     </tr>
                 </table>
             </div>

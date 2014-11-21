@@ -111,7 +111,7 @@
                 if(resname.length>25){
                     resname=resname.substring(0,25)+"...";
                 }
-                htm+='<li><a href="javascript:subData('+itm.resid+')"><b class="ico51" title="发任务"></b></a><span class="'+itm.suffixtype+'"></span>'+resname+'</li>';
+                htm+='<li><a href="javascript:subDataLocal('+itm.resid+','+itm.courseid+')"><b class="ico51" title="发任务"></b></a><span class="'+itm.suffixtype+'"></span>'+resname+'</li>';
             });
             $("#mainUl").html(htm);
             if(rps.objList.length>0){
@@ -142,7 +142,7 @@
                 if(resname.length>25){
                     resname=resname.substring(0,25)+"...";
                 }
-                htm+='<li><a href="javascript:subData('+itm.resid+')"><b class="ico51" title="发任务"></b></a><span class="'+itm.suffixtype+'"></span>'+resname+'</li>';
+                htm+='<li><a href="javascript:subDataLocal('+itm.resid+','+itm.courseid+')"><b class="ico51" title="发任务"></b></a><span class="'+itm.suffixtype+'"></span>'+resname+'</li>';
             });
             $("#mainUl3").html(htm);
 
@@ -166,34 +166,31 @@
             $("font[id='pList3font']").html("1/1");
         }
     }
-    function subData(resid){
-//        if (window.opener != undefined) {
-//            //for chrome
-//            window.opener.returnValue =resid+",1";
-//        }
-//        else {
-//            window.returnValue =resid+",1";
-//        }
-//        window.close();
-        var values=[resid,1];
-        if(values.length>0){
-            if(values.length==2){
-                $("#hd_elementid").val(values[0]);
-                $("#resource_type").val(values[1]);
-                queryResource(courseid, 'tr_task_obj', values[0]);
-                $.fancybox.close();
-            }else if(values.length==3){
-                $("#hd_elementid").val(values[0]);
-                $("#resource_type").val(values[1]);
-                queryResource(values[2], 'tr_task_obj', values[0]);
-            }else{
-                $("#hd_elementid").val(values[0]);
-                $("#resource_type").val(values[1]);
-                $("#remote_type").val(values[2]);
-                $("#dv_res_name").html('<span class="ico_mp41"></span>'+values[3]);
-                $("#resource_name").val(values[3]);
+    function subDataLocal(resid,cid){
+        $.ajax({
+            url: 'tpres?m=addResource',
+            type: 'post',
+            data: {
+                courseid: courseid,
+                resArray: resid,
+                resourcetype: 1
+            },
+            dataType: 'json',
+            cache: false,
+            error: function () {
+                alert('网络异常!')
+            },
+            success: function (rps) {
+                if (rps.type == "error") {
+                    alert(rps.msg);
+                } else {
+                    $("#hd_elementid").val(resid);
+                    $("#resource_type").val(1);
+                    queryResource(cid, 'tr_task_obj', resid);
+                    $.fancybox.close();
+                }
             }
-        }
+        });
     }
 
     function showLike(){
@@ -554,7 +551,7 @@
             </tr>
             <tr>
                 <th>&nbsp;</th>
-                <td><a id="a_submit" onclick="subUploadRes(2)"   class="an_small">提&nbsp;交</a><!--<a href="javascript:void(0);" onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a>--></td>
+                <td><a id="a_submit" onclick="subUploadRes(2)"   class="an_public1">提&nbsp;交</a><!--<a href="javascript:void(0);" onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a>--></td>
             </tr>
         </table>
     </div>
