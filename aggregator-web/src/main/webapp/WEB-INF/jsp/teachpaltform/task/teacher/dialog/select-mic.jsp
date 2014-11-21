@@ -20,7 +20,7 @@
                                 $("#dv_selectMic_child #fade").remove();
                                 $("#dv_selectMic_child .an_small").removeClass("an_small").addClass("an_public1").last().remove();
                                 //$("#dv_selectMic_child").show();
-                                $("#dv_selectMic_child").fadeIn("slow");
+                                $("#dv_selectMic_child").show();
                     });
         }
 
@@ -43,13 +43,13 @@
                         $("#dv_micdetail_child .an_small").removeClass("an_small").addClass("an_public1").last().remove();
                         //$("#dv_selectMic_child").show();
                         $("#dv_selectMic").hide();
-                        $("#dv_micDetail").fadeIn("slow");
+                        $("#dv_micDetail").show();
                     });
         }
 
         function micDetailReturn(){
             $("#dv_micDetail").hide();
-            $("#dv_selectMic").fadeIn("slow");
+            $("#dv_selectMic").show();
         }
 	</script>
 </head>

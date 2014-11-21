@@ -187,11 +187,20 @@ function showQuesNum(){
         $("#a_next").hide();
         $("#a_free").hide();
     }
+
     $("#dv_paperdetail table[id*='dv_ques_']").each(function(idx,itm){
         h+='<li class="blue quesNumli" id="li_'+(idx+1)+'" data-bind="'+(idx+1)
                 +'"><a href="javascript:;" onclick="showQues('+(idx+1)+')">'+(idx+1)+'</a></li>';
+        var sumScore=0;
+        $("#"+itm.id+" tr[id*='dv_ques_'] span[id*='score_']").each(function(ix,im){
+          sumScore+=parseFloat($(this).html().Trim());
+        });
+        $("#"+itm.id+" span[id*='group_']").html(sumScore);
 
+        $("#"+itm.id+" tr[id*='dv_ques_']").next().show();
     });
+
+
 
     $("#ul_xuhao").html(h);
     if($("#ul_xuhao>li").length>20){

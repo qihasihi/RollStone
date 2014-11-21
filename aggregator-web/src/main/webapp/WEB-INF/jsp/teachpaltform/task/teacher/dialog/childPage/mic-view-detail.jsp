@@ -44,6 +44,7 @@
     <script type="text/javascript" src="flexpaper/swfobject/swfobject.js"></script>
     <script type="text/javascript" src="js/teachpaltform/testpaper.js"></script>
     <script type="text/javascript">
+        var playerController;
         //文件地址:在msg.property中进行编辑
         var resourcepathHead="<%=fileSystemIpPort1%>/uploadfile/";
         <c:if test="${resObj.resid>0}">
@@ -62,14 +63,8 @@
                     $(itm).addClass('crumb');
                 })
             })
-
-            jwplayer('div_show0').play();
-            jwplayer('div_show0').onTime(function(){
-                var t=jwplayer('div_show0').getDuration();
-                $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
-            })
-
             showQuesNum();
+//            playerController.play();
 
         });
 
@@ -179,9 +174,14 @@
                 <script type="text/javascript">
                     //是否显示进度条的判断
                     var isShowBar=true;
-                    loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
+                    playerController=loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
                             ,resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
                             ,${resObj.resid},769,432,isShowBar);
+                    playerController.onTime(function(){
+                        var t=playerController.getDuration();
+                        $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+                    })
+
                 </script>
             </div>
         </div>
