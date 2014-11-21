@@ -194,7 +194,7 @@ function showQuesNum(){
     });
 
     $("#ul_xuhao").html(h);
-    if($("#ul_xuhao>li").length>10){
+    if($("#ul_xuhao>li").length>20){
         $("#ul_xuhao").css({'width':'700px','overflow-y':'auto','height':'100px'});
     }
     <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0}">
