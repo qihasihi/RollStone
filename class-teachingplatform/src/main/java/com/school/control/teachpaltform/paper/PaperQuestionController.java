@@ -4574,13 +4574,21 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             tpf.setCourseid(Long.parseLong(courseid.trim()));
             tpf.setTaskid(tk.getTaskid());
             tpf.setUserid(this.logined(request).getRef());
-            tpf.setIsright(1);
             tpf.setTasktype(tk.getTasktype());
-            tpf.setCriteria(1);//如果是微视频
-             if(!this.taskPerformanceManager.doSave(tpf)){
-                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
-                 response.getWriter().println(jsonEntity.toJSON());return;
-             }
+            List<TaskPerformanceInfo> tpfList=this.taskPerformanceManager.getList(tpf,null);
+            if(tpfList==null||tpfList.size()<1){
+                tpf=new TaskPerformanceInfo();
+                tpf.setCourseid(Long.parseLong(courseid.trim()));
+                tpf.setTaskid(tk.getTaskid());
+                tpf.setUserid(this.logined(request).getRef());
+                tpf.setIsright(1);
+                tpf.setTasktype(tk.getTasktype());
+                tpf.setCriteria(1);//如果是微视频
+                 if(!this.taskPerformanceManager.doSave(tpf)){
+                     jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+                     response.getWriter().println(jsonEntity.toJSON());return;
+                 }
+            }
         }
         //添加视频浏览记录
         StuViewMicVideoLog svmvlog=new StuViewMicVideoLog();
