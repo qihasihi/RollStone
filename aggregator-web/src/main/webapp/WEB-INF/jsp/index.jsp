@@ -11,9 +11,9 @@
 %>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script type="text/javascript" src="<%=basePath %>js/setupwizard.js"></script>
-<script src="<%=basePath %>js/common/ajaxfileupload.js"></script>
+<script src="<%=basePath %>js/common/ajaxfileupload.js"> </script>
 <script src="<%=basePath %>js/common/jquery.form.pack.2.24.js"></script>
 <script src="<%=basePath %>js/common/jquery.imgareaselect.js"></script>
 <link  rel="stylesheet" type="text/css" href="css/imgareaselect-default.css"/>

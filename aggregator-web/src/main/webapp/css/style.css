@@ -491,7 +491,84 @@
 	.home_app p.two{position:absolute;bottom:60px;left:180px;}
 	.home_app p.three{position:absolute;bottom:60px;left:510px;}
 	.home_app p.four{position:absolute;bottom:60px;left:865px;}
+	
+	.home_bdyzh_float{
+	width: 363px;
+	height: 373px;
+	background:#fff url(images/bg42_131230.png) no-repeat top left;
+	padding:20px 0 0 370px;
+	position:relative;
+}
+	.home_bdyzh_float p.an a{	
+	width: 231px;
+	height: 26px;
+	background: url(images/bg40_131230.png) no-repeat -156px -437px;
+	display:inline-block;
+	font-size:14px;
+	font-weight:bold;
+	color:#fff;
+	margin:20px 0 0 2px;
+	text-align:center;
+	padding-top:4px;
+}
+	.home_bdyzh_float ul.info{
+	width: 196px;
+	height: 140px;
+	position:absolute;
+	top:123px;
+	left:60px;
+}
+	.home_bdyzh_float ul.info li{
+	width: 196px;
+	height: 25px;
+	padding-top:20px;
+}
+	.home_bdyzh_float h1{
+	height: 45px;
+	font: normal 24px/28px Microsoft YaHei;
+	color:#0e92c7;
+}
+	.home_bdyzh_float lable{ padding:0 0 10px 3px; display:block;}
+	.home_bdyzh_float lable input[type="radio"]{ margin-right:5px; vertical-align:middle;}
 
+	.home_bdyzh_float div.input{width:346px;height: 65px;}
+	.home_bdyzh_float div.input span.one{
+	width:221px;
+	height:29px;
+	background: url(images/bg40_131230.png) no-repeat -156px -402px;
+	padding:5px 4px 0 10px;
+	color:#999;
+	display:inline-block;
+	margin-right:5px;
+}
+	.home_bdyzh_float div.input span.one:hover{ background-position:-392px -402px;color:#999;}
+
+	.home_bdyzh_float div.input span.one strong{
+	width:68px;
+	display: inline-block;
+	font:bold 14px/20px Microsoft YaHei;
+	color:#999;
+	vertical-align:middle;
+}
+	.home_bdyzh_float .ico94{ margin:0;}
+	.home_bdyzh_float .ico92{ margin-right:5px;}
+	
+	.home_bdyzh_float div.input p.two{
+	width:340px;
+	padding:2px 0 0 10px;
+	color:#f00;
+	line-height:14px;
+}
+    .home_bdyzh_float div.input input{
+	width:145px;
+	height:18px;
+    background-color: transparent;
+	border:none;
+	font-size:12px;
+	line-height:18px;
+	vertical-align:middle;
+	color:#999;
+}	
     #denglu_layout {
 	width:417px;
 	height:100%;

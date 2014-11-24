@@ -223,4 +223,5 @@ public class JsonEntity {
 		JSONObject jsar = JSONObject.fromObject(obj, getJsonConfig());
 		return jsar.toString();
 	}
+
 }

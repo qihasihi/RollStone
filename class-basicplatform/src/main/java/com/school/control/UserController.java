@@ -7823,8 +7823,8 @@ public class UserController extends BaseController<UserInfo> {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(params="m=loadWebImRight",method=RequestMethod.POST)
-    public void loadWebImRight(HttpServletRequest request,HttpServletResponse response) throws Exception{
+    @RequestMapping(params="m=loadJIDRight",method=RequestMethod.POST)
+    public void loadJIDRight(HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity jsonEntity=new JsonEntity();
         //查询用户
         UserInfo user=new UserInfo();
@@ -7839,6 +7839,180 @@ public class UserController extends BaseController<UserInfo> {
         response.getWriter().println(jsonEntity.toJSON());
     }
 
+    /**
+     * 进入绑定网校Account页面
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+
+    @RequestMapping(params="m=toBindEttAccount",method=RequestMethod.GET)
+    public ModelAndView loadEttAccount(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        TermInfo t = this.termManager.getAutoTerm();
+        String tmYear = t.getYear().trim();
+        // 加载年级
+        List<String> gradeidList=new ArrayList<String>();
+            gradeidList.clear();
+            ClassUser cu = new ClassUser();
+            cu.setUserid(this.logined(request).getRef());
+            // 查询当前的年级  如果当前学期没有数据，则不存入学期
+            cu.setYear(t.getYear().trim());
+            List<ClassUser> cuList = this.classUserManager.getList(cu, null);
+            // 加载老师教授最新年级GradeId
+            // 标识是否在7.15 - 1.1号之间
+            boolean isteacher=this.validateRole(request,UtilTool._ROLE_TEACHER_ID);
+            boolean isstuflag=this.validateRole(request,UtilTool._ROLE_STU_ID);
+            boolean isshengji = false;
+            if(cuList==null||cuList.size()<1){
+                cu.setYear(null);
+                cuList = this.classUserManager
+                        .getList(cu,null);
+                // 现在的
+                Date nowd = new Date();
+                Date d = UtilTool.StringConvertToDate(UtilTool.DateConvertToString(nowd,DateType.year) + "-07-15 00:00:00");
+                if (nowd.getTime() >= d.getTime() && isstuflag)
+                    isshengji = true;
+            }
+
+            if (cuList != null && cuList.size() > 0) {
+                boolean isbiye = false;
+                for (ClassUser cuObj : cuList) {
+                    tmYear=cuObj.getYear();
+                    String clsGrade = cuObj.getClassgrade();
+                    if (clsGrade != null) {
+                        if (clsGrade.trim().equals("高三")
+                                || clsGrade.trim().equals("高中三年级")) {
+                            // 说明是毕业学生
+                            if (!cuObj.getYear().trim()
+                                    .equals(tmYear)) {
+                                isbiye = true;
+                                break;
+                            }
+                            if (!gradeidList.contains("高中三年级"))
+                                gradeidList.add("高中三年级");
+                        } else if (clsGrade.trim().equals("高二")
+                                || clsGrade.trim().equals("高中二年级")) {
+                            String currentClsCode = "高中二年级";
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode = "高中一年级";
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else
+
+                        if (clsGrade.trim().equals("高一")
+                                || clsGrade.trim().equals("高中一年级")) {
+                            String currentClsCode =  "高中一年级";
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode = "初中三年级";
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("初三")
+                                || clsGrade.trim().equals("初中三年级")) {
+                            String currentClsCode =  "初中三年级";
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode = "初中二年级";
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("初二")
+                                || clsGrade.trim().equals("初中二年级")) {
+                            String currentClsCode =  "初中二年级";
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode = "初中一年级";
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("初一")
+                                || clsGrade.trim().equals("初中一年级")) {
+                            String currentClsCode =  "初中一年级";
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode = "小学六年级";
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("小学六年级")
+                                || clsGrade.trim().equals("小六")) {
+                            String currentClsCode =  "小学六年级";
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode = "小学五年级";
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("小学五年级")
+                                || clsGrade.trim().equals("小五")) {
+                            String currentClsCode =  "小学五年级";
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode = "小学四年级";
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("小学四年级")
+                                || clsGrade.trim().equals("小四")) {
+                            String currentClsCode =  "小学四年级";
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode = "小学三年级";
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        } else if (clsGrade.trim().equals("小学三年级")
+                                || clsGrade.trim().equals("小三")) {
+                            String currentClsCode =  "小学三年级";
+                            // 如果但前年级不等于班级年级，说明未升级操作。则
+                            if (isshengji
+                                    && !cuObj.getYear().trim()
+                                    .equals(tmYear.trim()))
+                                currentClsCode = "小学二年级";
+                            if (!gradeidList.contains(currentClsCode))
+                                gradeidList.add(currentClsCode);
+                        }
+
+                        if (gradeidList != null && gradeidList.size() > 0) {
+                            if (isstuflag)
+                                break;
+                        }
+                    }
+                }
+                if (isbiye && !isteacher ) {
+                    String msg = "抱歉，您已经毕业！已无法使用该功能!";
+                    response.getWriter().print(
+                            "<script type='text/javascript'>alert('" + msg
+                                    + "');this.close();</script>");
+                    return null;
+                }
+            } else {
+                if(isteacher){
+                    gradeidList.clear();
+                    gradeidList.add("全年级");
+                }else{
+                    String msg = "您当前学期中没有班级信息，请联系相关老师进行修改!";
+                    response.getWriter().print(
+                            "<script type='text/javascript'>alert('" + msg
+                                    + "');this.close();</script>");
+                    return null;
+                }
+            }
+            request.setAttribute("gradeidList",gradeidList);
+         return new ModelAndView("/index/bindEttAccount");
+    }
 }
 
 

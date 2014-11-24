@@ -914,7 +914,7 @@ public class UpdateCourse extends TimerTask{
         String ftime=null;
         //得到上一次更新的时间
         IDictionaryManager dictionaryManager=(DictionaryManager) SpringBeanUtil.getBean("dictionaryManager");
-        List<DictionaryInfo> dicList=dictionaryManager.getDictionaryByType("UPDATE_COURELE_FTIME");
+        List<DictionaryInfo> dicList=dictionaryManager.getDictionaryByType("UPDATE_MODIFY_COURELE_FTIME");
 
         DictionaryInfo fupdateDic=null;
         if(dicList!=null&&dicList.size()>0){
@@ -959,17 +959,17 @@ public class UpdateCourse extends TimerTask{
             //得到字典表的相关数据
             if(fupdateDic==null){
                 fupdateDic=new DictionaryInfo();
-                fupdateDic.setDictionarytype("UPDATE_COURELE_FTIME");
+                fupdateDic.setDictionarytype("UPDATE_MODIFY_COURELE_FTIME");
                 fupdateDic.setDictionaryvalue(UtilTool.DateConvertToString(currentDate, UtilTool.DateType.type1));
                 fupdateDic.setDictionaryname("专题元素上次更新时间!");
-//                if(!dictionaryManager.doSave(fupdateDic)){
-//                    System.out.println("专题元素记录时间失败!");
-//                }
+                if(!dictionaryManager.doSave(fupdateDic)){
+                    System.out.println("专题元素记录时间失败!");
+                }
             }else{
                 fupdateDic.setDictionaryvalue(UtilTool.DateConvertToString(currentDate, UtilTool.DateType.type1));
-//                if(!dictionaryManager.doUpdate(fupdateDic)){
-//                    System.out.println("专题元素记录时间失败!");
-//                }
+                if(!dictionaryManager.doUpdate(fupdateDic)){
+                    System.out.println("专题元素记录时间失败!");
+                }
             }
         }
         //得到目录下的文件，进行解析
@@ -989,24 +989,26 @@ public class UpdateCourse extends TimerTask{
         int i=1,j=1;
         boolean isOver=false;
         while(true){
+            if(folder.listFiles().length<1)
+                break;
             List<String> xmlPathList=new ArrayList<String>();
-            for(;i<folderFiles.length;i++){
-                String[] nameArray=folderFiles[i].getName().split("_");
-                String currentFilePath=folderFiles[i].getParentFile().getPath()+"/"+nameArray[0]+"_"+i+".xml";
+            String[] nameArray=folderFiles[0].getName().split("_");
+            while(true){
+                String currentFilePath=folderFiles[0].getParentFile().getPath()+"/"+nameArray[0]+"_"+i+".xml";
                 if(!new File(currentFilePath).exists()){
-                    isOver=true;
-                    break;
-                }
+                    i++;    //自动加一
+                  continue;
+                }else
+                    i++;
                 xmlPathList.add(currentFilePath);
-                if(i==_getXmlLenPath_Size*j){
+                if(xmlPathList.size()%50==0||xmlPathList.size()==folder.listFiles().length)
                     break;
-                }
             }
-            if(isOver)break;
+
 
             //循环读取文件
             for(int z=0;z<xmlPathList.size();z++){
-                File tmp=new File(xmlPathList.get(i));
+                File tmp=new File(xmlPathList.get(z));
                 if(tmp!=null&&tmp.exists()){
                     //加载XML，生成SQL语句，插入
                     List<Map<String,Object>> mapList=UpdateCourseUtil.getActionMap(tmp.getPath());
@@ -1069,8 +1071,354 @@ public class UpdateCourse extends TimerTask{
                         sqlArrayList=new ArrayList<String>();
                         objArrayList=new ArrayList<List<Object>>();
                     }
+                    System.gc();
+                    tmp.delete();
                 }
 
+            }
+        }
+    }
+
+    /**
+     * 更新专题本身
+     */
+    public void updateCourseSelf(){
+        Date currentDate=new Date();//记录当前更新的时间点
+        String key=UpdateCourseUtil.getCurrentSchoolKey(request);
+        if(key==null){//记录操作日志
+            System.out.println("异常错误，得到分校KEY失败，请检测是否存在School.txt文件!");return;
+        }
+        String ftime=null;
+        //得到上一次更新的时间
+        IDictionaryManager dictionaryManager=(DictionaryManager) SpringBeanUtil.getBean("dictionaryManager");
+        List<DictionaryInfo> dicList=dictionaryManager.getDictionaryByType("MODIFY_COURELESELF_FTIME");
+
+        DictionaryInfo fupdateDic=null;
+        if(dicList!=null&&dicList.size()>0){
+            ftime=dicList.get(0).getDictionaryvalue();
+            fupdateDic=dicList.get(0);
+        }
+        String toPathFolder=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/tmp/sendfile/updateCourseSelf/";//检测是否上次更新为异常问题
+        File folderXmlF=new File(toPathFolder+_xmlDataFolder);
+        if(!folderXmlF.exists()||folderXmlF.listFiles().length<1){
+            //开始请求并返回更新资源下载地址
+            String updateFileLocaPath=null;//"http://192.168.8.96:8080/fileoperate/uploadfile//tmp/UpdateCourse/50000/firstUpdateCourse/firstUpdateCourse.zip";
+            Map<String,Object> fileLocaMap= UpdateCourseUtil.getUpdateCourseSelf(key, ftime);
+            if(fileLocaMap==null&&fileLocaMap.get("type")!=null&&!fileLocaMap.get("type").toString().trim().equals("success")){
+                //记录异常错误日志，
+                System.out.println("异常错误，原因：totalSchool生成XML失败!");
+                return;
+            }
+            updateFileLocaPath=fileLocaMap.get("objList").toString();
+            //System.out.println(updateFileLocaPath);
+            //下载文件XMLpath到对应目录下
+            String fileName=UpdateCourseUtil.getFileName(updateFileLocaPath);
+            //得到当前时间
+            if(ftime==null&&fileName.indexOf(".")!=-1)
+                currentDate=new Date(Long.parseLong(fileName.substring(0, fileName.lastIndexOf("."))));
+
+            String toPath=toPathFolder+fileName;
+            if(!UpdateCourseUtil.downLoadZipFile(updateFileLocaPath,toPath)){
+                //复制文件失败.记录至日志中。
+                System.out.println("copy "+fileName+" error");return;
+            }
+            //开始解压下载下来的文件
+            try {
+                ZipUtil.unzip(toPath,folderXmlF.getPath());//解压完成后，删除压缩包
+                System.gc();
+                new File(toPath).delete();
+            } catch (Exception e) {
+                e.printStackTrace();
+                //记录异常，解压失败 并重新开始
+                return;
+            }
+
+            //得到字典表的相关数据
+            if(fupdateDic==null){
+                fupdateDic=new DictionaryInfo();
+                fupdateDic.setDictionarytype("MODIFY_COURELESELF_FTIME");
+                fupdateDic.setDictionaryvalue(UtilTool.DateConvertToString(currentDate, UtilTool.DateType.type1));
+                fupdateDic.setDictionaryname("专题元素上次更新时间!");
+                if(!dictionaryManager.doSave(fupdateDic)){
+                    System.out.println("专题元素记录时间失败!");
+                }
+            }else{
+                fupdateDic.setDictionaryvalue(UtilTool.DateConvertToString(currentDate, UtilTool.DateType.type1));
+                if(!dictionaryManager.doUpdate(fupdateDic)){
+                    System.out.println("专题元素记录时间失败!");
+                }
+            }
+        }
+        //得到目录下的文件，进行解析
+        File folder=new File(toPathFolder+"/"+_xmlDataFolder+"/");
+        //得到下面的所有文件
+        File[] folderFiles=folder.listFiles();
+        //循环进行解析
+        if(folderFiles==null||folderFiles.length<1){
+            System.out.println("没有发现可以解析的文件，即没有资源更新，记录到数据库中");return;
+        }
+        //是否全部执行成功
+        boolean istrue=true;
+        /**
+         * i:当前文件的序列
+         * j:第几次得到文件
+         */
+        int i=1;
+        while(true){
+            if(folder.listFiles().length<1)
+                break;
+            List<String> xmlPathList=new ArrayList<String>();
+            String[] nameArray=folderFiles[0].getName().split("_");
+            while(true){
+                String currentFilePath=folderFiles[0].getParentFile().getPath()+"/"+nameArray[0]+"_"+i+".xml";
+                if(!new File(currentFilePath).exists()){
+                    i++;    //自动加一
+                    continue;
+                }else
+                    i++;
+                xmlPathList.add(currentFilePath);
+                if(xmlPathList.size()%50==0||xmlPathList.size()==folder.listFiles().length)
+                    break;
+            }
+            //循环读取文件
+            for(int z=0;z<xmlPathList.size();z++){
+                File tmp=new File(xmlPathList.get(z));
+                if(tmp!=null&&tmp.exists()){
+                    //加载XML，生成SQL语句，插入
+                    List<Map<String,Object>> mapList=UpdateCourseUtil.getActionMap(tmp.getPath());
+                    if(mapList==null||mapList.size()<1)continue;
+                    List<String> sqlArrayList=new ArrayList<String>();
+                    List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+                    StringBuilder sqlbuilder;
+                    List<Object> objList;
+                    for(Map<String,Object> mp:mapList){
+//                        <Type>3</Type>
+//                        <Status>1</Status>
+//                        <CourseId>1000031299</CourseId>
+//                        <CourseName>地球公转的地理意义</CourseName>
+                        if(mp.containsKey("CourseId")&&
+                                mp.containsKey("CourseName")&&
+                                mp.containsKey("Type")&&
+                                mp.containsKey("Status")){
+                            Object courseIdObj=mp.get("CourseId");
+                            if(courseIdObj==null||courseIdObj.toString().trim().length()<1)continue;
+                            Object courseNameObj=mp.get("CourseName");
+                            if(courseNameObj==null)continue;
+                            Object typeObj=mp.get("Type");
+                            if(typeObj==null||typeObj.toString().trim().length()<1)continue;
+                            Object statusObj=mp.get("Status");
+                            if(statusObj==null||statusObj.toString().trim().length()<1)continue;
+                            //组织数据
+                            TpCourseInfo tpCourseInfo=new TpCourseInfo();
+                            tpCourseInfo.setCourseid(Long.parseLong(courseIdObj.toString().trim()));
+                            tpCourseInfo.setCoursename(courseNameObj.toString().trim());
+                            Integer shareType=Integer.parseInt(typeObj.toString().trim());
+                            tpCourseInfo.setCourselevel(shareType==3?1:4);//1:标准  4：已删除
+//                            tpCourseInfo.setSharetype(shareType==3?3);
+                            //status:1 开启 2：关闭
+                            Integer status=Integer.parseInt(statusObj.toString().trim());
+                            tpCourseInfo.setCloudstatus(status==1?3:2);
+                            tpCourseInfo.setSharetype(shareType==3?2:3);
+
+                            sqlbuilder=new StringBuilder();
+                            objList=this.tpCourseManager.getUpdateSql(tpCourseInfo,sqlbuilder);
+                            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                                sqlArrayList.add(sqlbuilder.toString());
+                                objArrayList.add(objList);
+                            }
+                        }
+                    }
+                    //每条记录执行执行添加
+                    if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
+                        istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
+                        if(!istrue){
+                            System.out.println("更新专题失败!记录日志");
+                            break;
+                        }
+                        sqlArrayList=new ArrayList<String>();
+                        objArrayList=new ArrayList<List<Object>>();
+                    }
+                    System.gc();
+                    tmp.delete();
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 更新专题本身
+     */
+    public void updateResourceSelf(){
+        Date currentDate=new Date();//记录当前更新的时间点
+        String key=UpdateCourseUtil.getCurrentSchoolKey(request);
+        if(key==null){//记录操作日志
+            System.out.println("异常错误，得到分校KEY失败，请检测是否存在School.txt文件!");return;
+        }
+        String ftime=null;
+        //得到上一次更新的时间
+        IDictionaryManager dictionaryManager=(DictionaryManager) SpringBeanUtil.getBean("dictionaryManager");
+        List<DictionaryInfo> dicList=dictionaryManager.getDictionaryByType("MODIFY_RESOURCESELF_FTIME");
+
+        DictionaryInfo fupdateDic=null;
+        if(dicList!=null&&dicList.size()>0){
+            ftime=dicList.get(0).getDictionaryvalue();
+            fupdateDic=dicList.get(0);
+        }
+        String toPathFolder=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/tmp/sendfile/updateResourceSelf/";//检测是否上次更新为异常问题
+        File folderXmlF=new File(toPathFolder+_xmlDataFolder);
+        if(!folderXmlF.exists()||folderXmlF.listFiles().length<1){
+            //开始请求并返回更新资源下载地址
+            String updateFileLocaPath=null;//"http://192.168.8.96:8080/fileoperate/uploadfile//tmp/UpdateCourse/50000/firstUpdateCourse/firstUpdateCourse.zip";
+            Map<String,Object> fileLocaMap= UpdateCourseUtil.getUpdateResourceSelf(key, ftime);
+            if(fileLocaMap==null&&fileLocaMap.get("type")!=null&&!fileLocaMap.get("type").toString().trim().equals("success")){
+                //记录异常错误日志，
+                System.out.println("异常错误，原因：totalSchool生成XML失败!");
+                return;
+            }
+            updateFileLocaPath=fileLocaMap.get("objList").toString();
+            //System.out.println(updateFileLocaPath);
+            //下载文件XMLpath到对应目录下
+            String fileName=UpdateCourseUtil.getFileName(updateFileLocaPath);
+            //得到当前时间
+            if(ftime==null&&fileName.indexOf(".")!=-1)
+                currentDate=new Date(Long.parseLong(fileName.substring(0, fileName.lastIndexOf("."))));
+
+            String toPath=toPathFolder+fileName;
+            if(!UpdateCourseUtil.downLoadZipFile(updateFileLocaPath,toPath)){
+                //复制文件失败.记录至日志中。
+                System.out.println("copy "+fileName+" error");return;
+            }
+            //开始解压下载下来的文件
+            try {
+                ZipUtil.unzip(toPath,folderXmlF.getPath());//解压完成后，删除压缩包
+                System.gc();
+                new File(toPath).delete();
+            } catch (Exception e) {
+                e.printStackTrace();
+                //记录异常，解压失败 并重新开始
+                return;
+            }
+
+            //得到字典表的相关数据
+            if(fupdateDic==null){
+                fupdateDic=new DictionaryInfo();
+                fupdateDic.setDictionarytype("MODIFY_RESOURCESELF_FTIME");
+                fupdateDic.setDictionaryvalue(UtilTool.DateConvertToString(currentDate, UtilTool.DateType.type1));
+                fupdateDic.setDictionaryname("资源本身上次更新时间!");
+                if(!dictionaryManager.doSave(fupdateDic)){
+                    System.out.println("资源记录时间失败!");
+                }
+            }else{
+                fupdateDic.setDictionaryvalue(UtilTool.DateConvertToString(currentDate, UtilTool.DateType.type1));
+                if(!dictionaryManager.doUpdate(fupdateDic)){
+                    System.out.println("资源记录时间失败!");
+                }
+            }
+        }
+        //得到目录下的文件，进行解析
+        File folder=new File(toPathFolder+"/"+_xmlDataFolder+"/");
+        //得到下面的所有文件
+        File[] folderFiles=folder.listFiles();
+        //循环进行解析
+        if(folderFiles==null||folderFiles.length<1){
+            System.out.println("没有发现可以解析的文件，即没有资源更新，记录到数据库中");return;
+        }
+        //是否全部执行成功
+        boolean istrue=true;
+        String postFileUrl=UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION")+UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_FILE_POST_URL");
+        /**
+         * i:当前文件的序列
+         * j:第几次得到文件
+         */
+        int i=1;
+        while(true){
+            if(folder.listFiles().length<1)
+                break;
+            List<String> xmlPathList=new ArrayList<String>();
+            String[] nameArray=folderFiles[0].getName().split("_");
+            while(true){
+                String currentFilePath=folderFiles[0].getParentFile().getPath()+"/"+nameArray[0]+"_"+i+".xml";
+                if(!new File(currentFilePath).exists()){
+                    i++;    //自动加一
+                    continue;
+                }else
+                    i++;
+                xmlPathList.add(currentFilePath);
+                if(xmlPathList.size()%50==0||xmlPathList.size()==folder.listFiles().length)
+                    break;
+            }
+            //循环读取文件
+            for(int z=0;z<xmlPathList.size();z++){
+                File tmp=new File(xmlPathList.get(z));
+                if(tmp!=null&&tmp.exists()){
+                    //加载XML，生成SQL语句，插入
+                    List<Map<String,Object>> mapList=UpdateCourseUtil.getActionMap(tmp.getPath());
+                    if(mapList==null||mapList.size()<1)continue;
+                    List<String> sqlArrayList=new ArrayList<String>();
+                    List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+                    StringBuilder sqlbuilder;
+                    List<Object> objList;
+                    for(Map<String,Object> mp:mapList){
+//                        <Type>3</Type>
+//                        <Resid>0</Resid>
+//                        <Resname>宇宙中的元素丰度为什么差别巨大(暑期3)</Resname>
+                        if(mp.containsKey("Type")&&
+                                mp.containsKey("Resid")&&
+                                mp.containsKey("Resname")){
+                            Object resObj=mp.get("Resid");
+                            if(resObj==null||resObj.toString().trim().length()<1)continue;
+                            Object resnameObj=mp.get("Resname");
+                            if(resnameObj==null)continue;
+                            Object typeObj=mp.get("Type");
+                            if(typeObj==null||typeObj.toString().trim().length()<1)continue;
+                            ResourceInfo rs=new ResourceInfo();
+                            rs.setResid(Long.parseLong(resObj.toString().trim()));
+                            List<ResourceInfo> rsList=this.resourceManager.getList(rs,null);
+                            if(rsList!=null&&rsList.size()>0){
+                                //如果存在数据，则更新
+                                ResourceInfo res=new ResourceInfo();
+                                res.setResid(Long.parseLong(resObj.toString().trim()));
+                                res.setResname(resnameObj.toString());
+                                Integer type=Integer.parseInt(typeObj.toString().trim());
+                                res.setResdegree(type==3?1:4);// type=3=标准  如果是type==3  则szschool  resdegree=1 否则是4（已删除）
+                                res.setSharestatus(type==3?2:3);// type=3=标准  如果是type==3  则szschool  sharetype=2(云端共享) 否则是3：不共享
+                                //组织数据
+                                sqlbuilder=new StringBuilder();
+                                objList=resourceManager.getUpdateSql(res,sqlbuilder);
+                                if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                                    sqlArrayList.add(sqlbuilder.toString());
+                                    objArrayList.add(objList);
+                                }
+                             //得到附件
+                               String topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString());
+                                System.out.println("资源文件"+topath);
+                                Integer resType=1;
+                                //说明是微视频，
+                                if(rsList.get(0).getDifftype()==1){
+                                    resType=-1;
+                                }
+                                //强制下载文件
+                                if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,res.getResid().toString(),key,resType,topath,rsList.get(0).getFilename(),null,true)){
+                                    //文件失败
+                                    System.out.println("资源文件下载失败!");//istrue=false;break;
+                                }
+                            }
+                        }
+                    }
+                    //每条记录执行执行添加
+                    if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
+                        istrue=resourceManager.doExcetueArrayProc(sqlArrayList,objArrayList);
+                        if(!istrue){
+                            System.out.println("更新资源本身失败!记录日志");
+                            break;
+                        }
+                        sqlArrayList=new ArrayList<String>();
+                        objArrayList=new ArrayList<List<Object>>();
+                    }
+                    System.gc();
+                    tmp.delete();
+                }
             }
         }
     }
@@ -1371,8 +1719,9 @@ public class UpdateCourse extends TimerTask{
                                 //查询该专题下是否存在相关试卷
                                 TpCoursePaper cp=new TpCoursePaper();
                                 cp.setCourseid(courseid);
-                                cp.setPapertype(paperType.equals("A")?1:2);
+                                cp.setPapertype(paperType.toUpperCase().equals("A")?1:2);
                                 List<TpCoursePaper> tpCoursePaperList=this.tpCoursePaperManager.getList(cp,null);
+                                //如果存在，则，不用添写CoursePaper，如果不存在，则添写CoursePaper
                                 if(tpCoursePaperList!=null&&tpCoursePaperList.size()>0){
                                     TpCoursePaper tmpcp=tpCoursePaperList.get(0);
                                     //添加题
@@ -1588,7 +1937,9 @@ public class UpdateCourse extends TimerTask{
             case 4://学习目录与微视频关系
                 //添加微视频资源
                 List<ResourceInfo> tmpResList=UpdateCourseUtil.getActionResource(mp);
-                if(tmpResList!=null&&tmpResList.size()>0){//执行
+                if(tmpResList==null||tmpResList.size()<1){//执行
+                    break;
+                }
                     for(ResourceInfo rsEntity:tmpResList){
                         sqlbuilder=new StringBuilder();
                         //得到资源的同步语句
@@ -1606,7 +1957,7 @@ public class UpdateCourse extends TimerTask{
                             System.out.println("资源文件下载失败!");
                         }
                     }
-                }
+
                 //添加微视频试卷
                 MicVideoPaperInfo mvp1=new MicVideoPaperInfo();
                 mvp1.setMicvideoid(tmpResList.get(0).getResid());
@@ -1713,7 +2064,9 @@ public class UpdateCourse extends TimerTask{
             case 3://学习目录与资源关系
                 //添加资源
                 List<ResourceInfo> resList=UpdateCourseUtil.getActionResource(mp);
-                if(resList!=null&&resList.size()>0){//执行
+                if(resList!=null||resList.size()<1){//执行
+                    break;
+                }
                     for(ResourceInfo rsEntity:resList){
                         sqlbuilder=new StringBuilder();
                         //得到资源的同步语句
@@ -1723,7 +2076,7 @@ public class UpdateCourse extends TimerTask{
                             sqlArrayList.add(sqlbuilder.toString());
                         }
                     }
-                }
+
                 //添加资源与专题的关系数据
                 TpCourseResource cr=new TpCourseResource();
                 cr.setCourseid(courseid);
@@ -2295,6 +2648,103 @@ class UpdateCourseUtil{
         //查看topath是否存在
         File topathF=new File(topath+"/");
         if(topathF.exists()){
+            System.out.println(topath+"存在文件目录，不用下载");
+            return true; //存在文件，不用下载
+        }
+        //开始组织链接
+        String[] urlArray=locapath.split("\\?");
+        StringBuilder postURL=new StringBuilder(urlArray[0]);
+        StringBuilder params=new StringBuilder(urlArray[1]).append("&id=").append(id);
+        params.append("&key=").append(key);
+        params.append("&type=").append(type);
+        if(type==2&&sourceType!=null)
+            params.append("&sourcetype=").append(sourceType);
+        System.out.println(postURL+"   "+params.toString());
+        Map<String,Object> map=sendPostURL(postURL.toString(),params.toString());
+        if(map==null||map.get("type")==null||!map.get("type").toString().trim().equals("success")
+                ||!map.containsKey("objList")||map.get("objList")==null){
+            //请求失败!
+            System.out.println("请求得到文件失败!原因：未知!");
+            return false;
+        }
+        //得到链接地址
+        String fileUrl=map.get("objList").toString();
+        if(fileUrl==null||fileUrl.trim().length()<1)//文件包不存在
+            return false;
+
+        //复制文件
+        //得到文件后缀名
+        String lastName="";
+        String fileName="001";
+        //默认为001.后缀
+        String[] filepatharray={fileUrl};
+        if(fileUrl.indexOf("|")!=-1){
+            String[] fileUrlArray=fileUrl.split("\\|");
+            filepatharray=fileUrlArray;
+        }
+        for(String tfirurl:filepatharray){
+            if(tfirurl==null||tfirurl.trim().length()<1)
+                break;
+            String tmp=tfirurl.substring(tfirurl.lastIndexOf("/"));
+            if(tmp.indexOf(".")!=-1)
+                lastName=tmp.substring(tmp.lastIndexOf("."));
+            String downPath=topath+"/001"+lastName;
+            String unzipPath=topath+"/";
+            if(lastName.trim().length()<1){
+                lastName=".zip";
+                fileName=topath.substring(topath.lastIndexOf("/")+1);
+                downPath =topath+"/../"+fileName+lastName;
+                unzipPath+="/";
+            }
+            if(!topathF.exists()){
+                //没有目录则创建
+                topathF.mkdirs();
+            }
+            if(downLoadZipFile(tfirurl,downPath)){
+                //异常错误，原因：无法下载+fileUrl的文件
+                //    System.out.println("异常错误，原因：无法下载"+fileUrl+"的文件");
+                //文件名称
+                fileName+=lastName;
+                //更名
+                //  new File(topath+"/001").renameTo(new File(topath+"/",fileName));
+                //如果是ZIP就解压
+                if(lastName!=null&&lastName.trim().length()>0&&lastName.trim().toUpperCase().equals(".ZIP")){
+                    try {
+                        ZipUtil.unzip(downPath,unzipPath);
+                        //改名
+                        if(fname!=null){
+                            new File(topath+"/"+fname).renameTo(new File(topath+"/"+"001"+fname.substring(fname.lastIndexOf("."))));
+                        }
+                        //删除压缩包
+                        System.gc();
+                        FileUtils.delete(new File(downPath));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                    //解压后，将文件复制出来
+
+                }
+            }
+        }
+        return true;
+    }
+    /**
+     * 从服务器得到相关附件，资源地址，然后下载到指定目录下
+     * @param locapath
+     * @param id
+     * @param key
+     * @param type
+     * @param topath
+     * @return
+     */
+    public static boolean copyResourceToPath(String locapath,String id,String key,Integer type,String topath,String fname,Integer sourceType,boolean isWrite){
+        if(locapath==null||id==null||key==null||topath==null)return false;
+        if(type==null)type=2;  //1：资源文件   2：附件   3:微视频文件
+
+        //查看topath是否存在
+        File topathF=new File(topath+"/");
+        if((!isWrite)&&topathF.exists()){
             System.out.println(topath+"存在文件目录，不用下载");
             return true; //存在文件，不用下载
         }
@@ -3656,6 +4106,52 @@ class UpdateCourseUtil{
             params.append("&ftime=");
             params.append(ftime);
         }
+        System.out.println(totalSchoolUrl+"?"+params.toString());
+        return sendPostURL(totalSchoolUrl.toString(),params.toString());
+    }
+
+    /**
+     * fasong ziyuan
+     * @param key school.txt中记录的字符串
+     * @param ftime 上一次更新的时间
+     * @return  生成数据文件的远程地址
+     */
+    public static Map<String,Object> getUpdateCourseSelf(String key,String ftime){
+        if(key==null||key.trim().length()<1)return null;
+        //组织生成的数据文件地址
+        String[] urlArray=UtilTool.utilproperty.getProperty("TOTAL_UPDATE_COURSE_SELF").toString().split("\\?");
+        StringBuilder totalSchoolUrl=new StringBuilder();
+        totalSchoolUrl.append(
+                UtilTool.utilproperty.get("TOTAL_SCHOOL_LOCATION")).append(urlArray[0]);
+        StringBuilder params=new StringBuilder(urlArray[1]).append("&key=").append(key);
+        if(ftime==null){
+            ftime="2000-01-01";//默认
+        }
+        params.append("&ftime=");
+        params.append(ftime);
+        System.out.println(totalSchoolUrl+"?"+params.toString());
+        return sendPostURL(totalSchoolUrl.toString(),params.toString());
+    }
+
+    /**
+     * fasong ziyuan
+     * @param key school.txt中记录的字符串
+     * @param ftime 上一次更新的时间
+     * @return  生成数据文件的远程地址
+     */
+    public static Map<String,Object> getUpdateResourceSelf(String key,String ftime){
+        if(key==null||key.trim().length()<1)return null;
+        //组织生成的数据文件地址
+        String[] urlArray=UtilTool.utilproperty.getProperty("TOTAL_UPDATE_RESOURCE_SELF").toString().split("\\?");
+        StringBuilder totalSchoolUrl=new StringBuilder();
+        totalSchoolUrl.append(
+                UtilTool.utilproperty.get("TOTAL_SCHOOL_LOCATION")).append(urlArray[0]);
+        StringBuilder params=new StringBuilder(urlArray[1]).append("&key=").append(key);
+        if(ftime==null){
+            ftime="2010-01-01";//默认
+        }
+        params.append("&ftime=");
+        params.append(ftime);
         System.out.println(totalSchoolUrl+"?"+params.toString());
         return sendPostURL(totalSchoolUrl.toString(),params.toString());
     }

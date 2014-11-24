@@ -1912,6 +1912,14 @@ public class UtilTool implements java.io.Serializable {
         //转换成JSON
         System.out.println(returnContent);
         if(returnContent!=null&&returnContent.length()>0){
+            if(!UtilTool.isJsonFormat(returnContent)){
+                try{
+                    returnContent=java.net.URLDecoder.decode(returnContent,requestEncoding);
+                }catch(Exception e){
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                }
+            }
             JSONObject jb=JSONObject.fromObject(returnContent);
             return jb;
         }
@@ -2080,5 +2088,13 @@ public class UtilTool implements java.io.Serializable {
             }
         }
         return returnVal;
+    }
+
+    /**
+     * 验证字符串是否是json格式
+     * @param jsonStr
+     */
+    public static boolean isJsonFormat(String jsonStr){
+        return new JsonValidator().validate(jsonStr);
     }
 }
