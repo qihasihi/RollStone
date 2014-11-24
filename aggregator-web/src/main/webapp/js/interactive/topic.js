@@ -393,7 +393,7 @@ function deleteTopic(id){
 						htm+='><td><p>';
 					
 							//if(itm.state==1)
-						htm+='<a target="_blank" href="tptopictheme?m=toTopicThemeDetail&themeid='+itm.themeid+'">';
+						htm+='<a href="tptopictheme?m=toTopicThemeDetail&themeid='+itm.themeid+'">';
 						
 						var title=itm.commenttitle25word;
 						if(title.Trim().length<1)
