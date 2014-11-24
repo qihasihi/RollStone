@@ -446,6 +446,7 @@
         <p class="font-black">未分配人员</p>
         <p><input id="stu_name" type="text" value="" class="w120"/><a href="javascript:filterResult();" class="ico57" title="查询"></a></p><br/>
         <select id="no_gs" size="10" style="height: 200px;width: 150px;overflow-y:auto;"  multiple="multiple"></select>
+        <p>提示：按住Ctrl键实现多选</p>
     </div>
 
 </div>

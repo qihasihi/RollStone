@@ -35,6 +35,15 @@ public class ClassUser  implements java.io.Serializable{
     private Integer uid;
     private Object completenum; //任务完成率
     private Object stucount;
+    private Integer isleader;
+
+    public Integer getIsleader() {
+        return isleader;
+    }
+
+    public void setIsleader(Integer isleader) {
+        this.isleader = isleader;
+    }
 
     public Integer getDctype(){
         return this.getClassinfo().getDctype();

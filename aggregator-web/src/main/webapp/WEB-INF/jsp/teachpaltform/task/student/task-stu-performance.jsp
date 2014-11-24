@@ -324,7 +324,7 @@
     </table>
     </div>
         <div id="classstu" style="display:none;">
-            <%--
+            <%-- 0 0000000000000
             <p class="font-black"><strong>科代表</strong>：----&nbsp;&nbsp;----&nbsp;&nbsp;----</p>
             <p>（科代表权限： 1. 删除恶意资源评论   2. 删除不符合要求的主帖  3. 删除主帖中的恶意评论  4. 主帖加精、置顶）</p>
             --%>
@@ -337,7 +337,11 @@
                 </tr>
                 <c:forEach var="stu" items="${students }" varStatus="idx">
                 <tr ${(idx.index%2==1)?'class="trbg1"':''}>
-                    <td>${stu.realname}</td>
+                    <td>${stu.realname}
+                        <c:if test="${stu.isleader==1}">
+                            (组长)
+                        </c:if>
+                    </td>
                     <td><a href="javascript:void(0);" class="font-blue">${stu.completenum}%</a></td>
                 <tr>
                     </c:forEach>
@@ -360,7 +364,11 @@
                         <c:if test="${!empty gs.tpgroupstudent}">
                         <c:forEach var="cgs" items="${gs.tpgroupstudent }"  varStatus="ix">
                         <tr ${(ix.index%2==1)?'class="trbg1"':''}>
-                            <td>${cgs.stuname}</td>
+                            <td>${cgs.stuname}
+                                <c:if test="${cgs.isleader==1}">
+                                    (组长)
+                                </c:if>
+                            </td>
                             <td><a href="javascript:void(0);" class="font-blue">${cgs.completenum}%</a></td>
                         <tr>
                             </c:forEach>
