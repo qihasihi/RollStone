@@ -16,7 +16,7 @@
             +"/"+proc_name + "/";
     session.setAttribute("IP_PROC_NAME",basePath);
 %>
-<!-- 上传控件 -->
+<!-- 上传控件
 <script type="text/javascript" src="<%=basePath %>js/common/uploadControl.js"></script>
 <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery-1.9.1.js"></script>
 <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery.json-2.4.js"></script>
@@ -24,7 +24,7 @@
 
 <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery-ui-1.10.2.custom.min.js"></script>
 <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/knockout-2.2.1.js"></script>
-<link rel="stylesheet" type="text/css" href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" />
+<link rel="stylesheet" type="text/css" href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" /> -->
 <script src="<%=basePath %>js/common/ajaxfileupload.js" type="text/javascript"></script>
 <style type="text/css">
     .yixuan {
@@ -412,7 +412,7 @@
 
 
 <!--上传须知与文件类型-->
-<div class="public_windows font-black" id="dv_allow_filetype" name="dv_allow_filetype" style="display:none;position: absolute;background-color:white;padding: 10px 40px 40px 30px;">
+<div class="public_windows font-black" id="dv_allow_filetype" name="dv_allow_filetype" style="z-index: 5;display:none;position: absolute;background-color:white;padding: 10px 40px 40px 30px;">
     <h3><!--<a href="1" target="_blank" title="关闭"></a>-->上传文件类型</h3>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>您可以上传以下文件格式：</strong></p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;文档<span class="ico_doc1"></span>doc/docx<span class="ico_pdf1"></span>pdf<span class="ico_xls1"></span>xls/xlsx<span class="ico_txt1"></span>txt<span class="ico_wps1"></span>wps<span class="ico_vsd1"></span>vsd<span class="ico_rtf1"></span>rtf<br>

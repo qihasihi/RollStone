@@ -577,6 +577,47 @@ public class PaperController extends BaseController<PaperInfo>{
     }
 
 
+    /**
+     * 添加关联试卷 获取试卷
+     * @throws Exception
+     */
+    @RequestMapping(params="toQueryMicRelatePaper",method=RequestMethod.POST)
+    public void toQueryMicRelatePaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        String type=request.getParameter("type");
+
+        if(courseid==null||courseid.trim().length()<1||
+                type==null||type.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        PageResult p=this.getPageResultParameter(request);
+        p.setOrderBy(" p.paper_type,u.c_time desc,u.paper_id desc ");
+        TpCoursePaper t= new TpCoursePaper();
+        t.setCourseid(Long.parseLong(courseid));
+        t.setLocalstatus(1);
+        t.setSelecttype(Integer.parseInt(type));
+
+        //查询没有发任务的资源
+        t.setTaskflag(1);
+        t.setIscloud(2);
+        List<TpCoursePaper>paperList=this.tpCoursePaperManager.getSelRelatePaPerList(t, p);
+        t.setIscloud(1);
+        List<TpCoursePaper>paperCloudList=this.tpCoursePaperManager.getSelRelatePaPerList(t,null);
+        je.setPresult(p);
+
+        je.getObjList().add(paperList);
+        je.getObjList().add(paperCloudList);
+
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+
 
     /**
      * 获取学生任务列表
@@ -689,6 +730,37 @@ public class PaperController extends BaseController<PaperInfo>{
         return new ModelAndView("/teachpaltform/task/teacher/dialog/select-paper");
     }
 
+    /**
+     * 添加关联试卷--选择试卷
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=toSelRelatePaper",method=RequestMethod.GET)
+    public ModelAndView toSelRelatePaper(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setCourseid(Long.parseLong(courseid));
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //专题等级
+        Integer courselevel=teacherCourseList.get(0).getCourselevel();
+        request.setAttribute("courselevel",courselevel);
+        request.setAttribute("courseid",courseid);
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/select-relate-paper");
+    }
+
 
     /**
      * 获取试卷列表
@@ -728,6 +800,7 @@ public class PaperController extends BaseController<PaperInfo>{
         String gradeid=request.getParameter("gradeid");
         String subjectid=request.getParameter("subjectid");
         String coursename=request.getParameter("coursename");
+        String isrelate=request.getParameter("isrelate");
         if(courseid==null||courseid.trim().length()<1
                 ||coursename==null||coursename.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -769,7 +842,11 @@ public class PaperController extends BaseController<PaperInfo>{
 
         //获取自建试卷
         t.setIscloud(2);
-        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t, p);
+        List<TpCoursePaper>coursePaperList=null;
+        if(isrelate!=null&&isrelate.equals("1"))
+            coursePaperList=this.tpCoursePaperManager.getSelRelatePaPerList(t, p);
+        else
+            coursePaperList=this.tpCoursePaperManager.getList(t, p);
         p.setList(coursePaperList);
         je.setPresult(p);
         je.setType("success");
@@ -788,6 +865,7 @@ public class PaperController extends BaseController<PaperInfo>{
         String gradeid=request.getParameter("gradeid");
         String subjectid=request.getParameter("subjectid");
         String coursename=request.getParameter("coursename");
+        String isrelate=request.getParameter("isrelate");
         if(courseid==null||courseid.trim().length()<1
                 ||coursename==null||coursename.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
@@ -829,7 +907,11 @@ public class PaperController extends BaseController<PaperInfo>{
 
         //获取云端试卷
         t.setIscloud(1);
-        List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getList(t, p);
+        List<TpCoursePaper>coursePaperList=null;
+        if(isrelate!=null&&isrelate.equals("1"))
+            coursePaperList=this.tpCoursePaperManager.getSelRelatePaPerList(t, p);
+        else
+            coursePaperList=this.tpCoursePaperManager.getList(t, p);
         p.setList(coursePaperList);
         je.setPresult(p);
         je.setType("success");
@@ -1710,6 +1792,7 @@ public class PaperController extends BaseController<PaperInfo>{
     public void showImpCustomPaperModel(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je =new JsonEntity();//
         String courseid=request.getParameter("courseid");
+        String isrelate=request.getParameter("isrelate");
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             je.getAlertMsgAndBack();
@@ -1749,6 +1832,8 @@ public class PaperController extends BaseController<PaperInfo>{
         TpCoursePaper sel=new TpCoursePaper();
         sel.setCourseid(Long.parseLong(courseid));
         sel.setIscloud(2);
+        if(isrelate!=null&&isrelate.equals("1"))
+            sel.setIsrelate(1);
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,p);
         p.setList(coursePaperList);
         je.setPresult(p);
@@ -1769,6 +1854,7 @@ public class PaperController extends BaseController<PaperInfo>{
     public void showImpStandardPaperModel(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je =new JsonEntity();//
         String courseid=request.getParameter("courseid");
+        String isrelate=request.getParameter("isrelate");
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             je.getAlertMsgAndBack();
@@ -1808,6 +1894,8 @@ public class PaperController extends BaseController<PaperInfo>{
         TpCoursePaper sel=new TpCoursePaper();
         sel.setCourseid(Long.parseLong(courseid));
         sel.setIscloud(1);
+        if(isrelate!=null&&isrelate.equals("1"))
+            sel.setIsrelate(1);
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,p);
         p.setList(coursePaperList);
         je.setPresult(p);

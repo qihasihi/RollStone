@@ -22,6 +22,24 @@ public class TpGroupInfo  implements java.io.Serializable{
     private Object groupnum;
     private int completenum;
     private int totalnum;
+    private Long taskid;
+    private Object ishas;   //当前小组下是否有学生做了任务
+
+    public Object getIshas() {
+        return ishas;
+    }
+
+    public void setIshas(Object ishas) {
+        this.ishas = ishas;
+    }
+
+    public Long getTaskid() {
+        return taskid;
+    }
+
+    public void setTaskid(Long taskid) {
+        this.taskid = taskid;
+    }
 
     public int getCompletenum() {
         return completenum;

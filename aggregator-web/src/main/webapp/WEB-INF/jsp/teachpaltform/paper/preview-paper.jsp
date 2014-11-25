@@ -17,7 +17,7 @@ var paperSumScore="${paper.score}" || 0;
 var papertype=${paper.papertype};
 var quesOrderIdx=1;childOrderIdx=1;
 $(function(){
-    pList = new PageControl( {
+ /*   pList = new PageControl( {
         post_url : 'paperques?m=ajaxPaperQuestionList',
         page_id : 'page1',
         page_control_name : "pList",
@@ -31,7 +31,7 @@ $(function(){
         rectotal : 0, //一共多少
         pagetotal : 1,
         operate_id : "initItemList"
-    });
+    }); */
    // pageGo('pList');
 
 

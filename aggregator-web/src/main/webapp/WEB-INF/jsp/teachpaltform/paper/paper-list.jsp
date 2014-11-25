@@ -81,7 +81,7 @@ function getInvestReturnMethod(rps){
                 html+='<p class="pic">';
                 if(itm.papertype==5)
                     html+='<a class="ico_wsp1" title="微视频"></a>';
-                if(itm.taskflag<1)
+                if(itm.taskflag<1&&itm.micflag<1)
                     html+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=4&taskvalueid='+itm.paperid+'""><b><span class="ico51" title="发任务"></span></b></a>';
                 else
                     html+='<b><span class="ico52" title="已发任务"></span></b>';
@@ -96,7 +96,12 @@ function getInvestReturnMethod(rps){
 //                        shtml+='<a href="paper?m=editPaperQuestion&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
 //                    else
 //                        shtml+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.paperid+'">';
-                    shtml+='<a href="javascript:loadEditPaper('+itm.courseid+','+itm.paperid+',1)">';
+
+                      if(itm.taskflag<1&&itm.micflag<1)
+                          shtml+='<a href="javascript:loadEditPaper('+itm.courseid+','+itm.paperid+',1)">';
+                      else
+                          shtml+='<a href="javascript:loadEditPaper('+itm.courseid+','+itm.paperid+',1,true)">';
+
                 }
 
                 shtml+='<p class="one">'+itm.papername+'</p>';
@@ -113,7 +118,7 @@ function getInvestReturnMethod(rps){
                 shtml+='<p class="pic">';
                 if(itm.papertype==5)
                     shtml+='<a class="ico_wsp1" title="微视频"></a>';
-                if(itm.taskflag<1){
+                if(itm.taskflag<1&&itm.micflag<1){
                     shtml+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=4&taskvalueid='+itm.paperid+'""><b><span class="ico51" title="发任务"></span></b></a>';
                     shtml+='<a  href="javascript:doDelPaper('+itm.ref+')"><b><span class="ico04" title="删除"></span></b></a>';
                 }else{

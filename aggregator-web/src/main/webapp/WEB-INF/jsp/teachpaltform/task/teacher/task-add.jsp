@@ -47,7 +47,7 @@
 
 
             <c:if test="${!empty isWXCLS}">
-                showModel('dv_show_model');
+                //showModel('dv_show_model');
             </c:if>
 
 

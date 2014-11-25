@@ -98,6 +98,11 @@ public class TpGroupDAO extends CommonDAO<TpGroupInfo> implements ITpGroupDAO {
             objList.add(tpgroupinfo.getSubjectid());
         } else
             sqlbuilder.append("null,");
+        if (tpgroupinfo.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpgroupinfo.getTaskid());
+        } else
+            sqlbuilder.append("null,");
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objList.add(presult.getPageNo());

@@ -17,4 +17,12 @@ public interface ITpCoursePaperDAO extends ICommonDAO<TpCoursePaper>{
      * @return
      */
     public List<TpCoursePaper> getABSynchroList(TpCoursePaper tpCoursePaper,PageResult presult);
+
+    /**
+     * Ìí¼Ó¹ØÁªÊÔ¾í
+     * @param tpcoursepaper
+     * @param presult
+     * @return
+     */
+    List<TpCoursePaper> getSelRelatePaPerList(TpCoursePaper tpcoursepaper, PageResult presult);
 }

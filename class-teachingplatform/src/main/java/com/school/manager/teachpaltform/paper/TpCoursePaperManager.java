@@ -72,7 +72,20 @@ public class  TpCoursePaperManager extends BaseManager<TpCoursePaper> implements
     public List<TpCoursePaper> getABSynchroList(TpCoursePaper tpCoursePaper,PageResult presult){
         return this.tpcoursepaperdao.getABSynchroList(tpCoursePaper,presult);
     }
-	@Override
+
+    /**
+     * 获取添加视频关联试卷
+     * 过滤掉试题组
+     * @param tpcoursepaper
+     * @param presult
+     * @return
+     */
+    @Override
+    public List<TpCoursePaper> getSelRelatePaPerList(TpCoursePaper tpcoursepaper, PageResult presult) {
+        return this.tpcoursepaperdao.getSelRelatePaPerList(tpcoursepaper,presult);
+    }
+
+    @Override
 	protected ICommonDAO<TpCoursePaper> getBaseDAO() {
 		// TODO Auto-generated method stub
 		return tpcoursepaperdao;

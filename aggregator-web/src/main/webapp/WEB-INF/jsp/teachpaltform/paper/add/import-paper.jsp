@@ -15,6 +15,7 @@ var materialid="${materialid}";
 var gradeid="${gradeid}";
 var pList,pBankList;
 var total;
+
 $(function(){
     pList = new PageControl( {
         post_url : 'paper?m=getImportPaperList',
@@ -115,6 +116,8 @@ function preeDoPageSub(pObj){
         return;
     }
     param.coursename=coursename.val();
+    if(isrelate.length>0)
+        param.isrelate=isrelate;
     pObj.setPostParams(param);
 }
 

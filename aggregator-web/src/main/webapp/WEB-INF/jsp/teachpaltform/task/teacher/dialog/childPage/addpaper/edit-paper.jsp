@@ -35,7 +35,11 @@ var courseid="${courseid}";
 var paperid="${paper.paperid}";
 var pList,pBankList;
 var total;
+var isrelate="${param.isrelate}";
 $(function(){
+    <c:if test="${!empty param.isrelate}">
+        $("#a_sb_taskpaper").attr("href","javascript:sub_data("+paperid+");");
+    </c:if>
 //    pList = new PageControl( {
 //        post_url : 'paperques?m=ajaxPaperQuestionList',
 //        page_id : 'page1',
@@ -60,8 +64,20 @@ $(function(){
 
 function loadPaperQues(){
 //    $("#paper_detail").clear();
+    var url="paper?toPreviewPaperModel&courseid=${courseid}&paperid="+paperid+"";
+    <c:if test="${!empty param.editQues&&param.editQues==0}">
+    url+="&dropQuesNum=0&editQues=0&op_type1=0";
+    </c:if>
+    <c:if test="${empty param.editQues||param.editQues==1}">
+    url+="&dropQuesNum=1&editQues=1&op_type1=1";
+    </c:if>
+
+    <c:if test="${!empty param.isrelate}">
+        url+="&isrelate=1";
+    </c:if>
+
     $("#paper_detail").hide();
-    $("#paper_detail").load("paper?toPreviewPaperModel&courseid=${courseid}&paperid="+paperid+"&op_type1=1&dropQuesNum=1&editQues=1"
+    $("#paper_detail").load(url
             ,function(rps){
                 // $("dv_load_topic").html(rps);
 //                        $(".content1:last").removeClass("content1");
@@ -409,7 +425,7 @@ function reSetScrollDiv(){
 </head>
 <body>
     <p class="float_title"><a href="javascript:;" onclick="loadDiv(2);" class="ico93" title="返回"></a>新建试卷</p>
-    <c:if test="${paper.paperid<0}">
+    <c:if test="${paper.paperid<0 and (empty param.editQues||param.editQues==1) }">
          <div  id="p_operate" class="t_c">
              <a href="javascript:showImportPaper(${paper.paperid})" class="an_big">导入试卷</a>
              &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showImportQues(${paper.paperid})" class="an_big">导入试题</a>

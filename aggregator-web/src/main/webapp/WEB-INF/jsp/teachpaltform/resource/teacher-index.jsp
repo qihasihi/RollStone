@@ -2,11 +2,18 @@
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 <html>
 <head>
+    <script type="text/javascript"
+    src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script type="text/javascript"
+        src="fancybox/jquery.fancybox-1.3.4.js"></script>
+<link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
+
 
 </head>
 <body>
 <%@include file="/util/head.jsp" %>
 <%@include file="/util/nav-base.jsp" %>
+
 <div class="zhuanti">
     <p>${coursename }
         <c:if  test="${fn:length(courseList)>1}" >
@@ -36,6 +43,26 @@
         <li><a href="paper?toPaperList&courseid=${courseid}">试&nbsp;&nbsp;卷</a></li>
     </ul>
 </div>
+
+
+<a id="a_click" href="#dv_content"></a>
+<div id="dv_content"  style="display: none;"></div>
+
+<a id="aa_click" href="#dv_paper_content"></a>
+<div id="dv_paper_content"  style="display: none;" class="public_float public_float960">
+    <div id="dv_paper_content_child" style="display:none">
+
+    </div>
+
+    <%--试卷三级目录--%>
+    <div class="public_float public_float960" id="dv_paper_model" style="display:none">
+        <div class="public_float public_float960"  id="dv_paper_model_child">
+
+        </div>
+    </div>
+
+</div>
+
 
 <div class="content2">
     <div class="jxxt_zhuanti_zy_layout">　　　
@@ -157,6 +184,7 @@
     var checkFlag="${param.ckflag}";
     var pList,p2,editor,child_editor;
     var tpresdetailid="${param.tpresdetailid}";
+    var fancy,fancyPaper;
     $(function(){
         load_resource(1,"${pageno}",true);
         pList = new PageControl( {
@@ -189,7 +217,29 @@
             pagetotal : 1,
             operate_id : "initItemList1"
         });
+
+
+        fancy=$("#a_click").fancybox({
+            'onClosed':function(){
+                $("#dv_content").hide();
+            }
+        });
+
+        fancyPaper=$("#aa_click").fancybox({
+            'onClosed':function(){
+                $("#dv_paper_content").hide();
+            }
+        });
     });
+
+
+    function loadRelatePage(){
+        var url = 'paper?m=toSelRelatePaper&courseid=' + courseid;
+        $("#dv_content").load(url,function(){
+            $("#dv_content").show();
+            $("#a_click").click();
+        });
+    }
 
     /**
      * 资源评论
@@ -274,6 +324,72 @@
         else{
             ulobj.hide();
         }
+    }
+
+
+
+    /**
+     * 加载试卷的编辑页面
+     * @param cid
+     * @param pid
+     */
+    function loadEditPaperRes(cid,pid,isshow,isview){
+        if(typeof(cid)=="undefined"||typeof(pid)=="undefined"||cid==null||pid==null){
+            alert('异常错误，请刷新重试!');
+            return;
+        }
+        var u="paper?m=editPaperQuestionModel&courseid="+cid+"&paperid="+pid;
+        if(isview)
+            u+='&editQues=0';
+        $("#dv_paper_content #dv_paper_content_child").load(u,function(){
+            $("#dv_paper_content .float_title").html("编辑试卷");
+            //关闭相关层
+            closeModel('dv_paper_name');
+            $("#dv_paper_content>div").hide();
+            $("#dv_paper_content #a_sb_taskpaper").parent().remove();
+            $("#dv_paper_content").show();
+            $("#dv_paper_content #dv_paper_content_child").fadeIn("fast");
+            if(typeof(isshow)!="undefined"&&isshow==1)
+                $("#aa_click").click();
+        });
+    }
+
+
+
+
+    function doCancelVideoPaper(paperid){
+        if(typeof paperid=='undefined'||isNaN(paperid)){
+            alert('试卷标识错误!请刷新页面重试!');
+            return;
+        }
+        if (typeof(courseid) == 'undefined' || courseid.length < 1) {
+            alert('异常错误，系统未获取到课题标识!');
+            return;
+        }
+        var resid=$("#hd_resdetailid").val();
+        if(resid.length<1){
+            alert('系统未获取到资源标识!');
+            return;
+        }
+        if(!confirm("确认取消关联该试卷?"))return;
+
+        $.ajax({
+            url: 'tpres?doCancelVideoPaper',
+            type: 'post',
+            data: {courseid: courseid, paperid: paperid,resid:resid},
+            dataType: 'json',
+            error: function () {
+                alert('网络异常!');
+            },
+            success: function (json) {
+                if(json.type=='success'){
+                    load_resource(1,1,true);
+                   // $.fancybox.close();
+                }else{
+                    alert(json.msg);
+                }
+            }
+        });
     }
 </script>
 </body>

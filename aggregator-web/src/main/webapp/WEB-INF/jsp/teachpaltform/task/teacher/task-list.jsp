@@ -177,7 +177,8 @@ function getInvestReturnMethod(rps){
             * 未结束并且学生未作答
             * 不是移动端任务
             * */
-            if((itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)||(itm.taskstatus!="3"&&stucount<1)) && !(itm.tasktype>6&&itm.tasktype<10)){
+           // if((itm.taskstatus=="1"||(itm.taskstatus!="3"&&itm.flag>1)||(itm.taskstatus!="3"&&stucount<1)) && !(itm.tasktype>6&&itm.tasktype<10)){
+            if(!(itm.tasktype>6&&itm.tasktype<10)){
                 html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
             }
             if(itm.taskstatus!="3")

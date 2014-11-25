@@ -845,8 +845,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
             if(this.logined(request).getDcschoolid()!=1){
                 for(TpCourseClass cc:courseclassList){
                     if(cc.getDctype()!=null&&cc.getDctype()==2){
-                        request.setAttribute("isWXCLS",1);
-                        break;
+                        //request.setAttribute("isWXCLS",1);
+                        je.setMsg("当前班级类型为网校班级，不支持在电脑上添加任务!");
+                        response.getWriter().print(je.getAlertMsgAndBack());
+                        return null;
                     }
                 }
             }
@@ -1448,6 +1450,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         //g.setCuserid(this.logined(request).getUserid());
         g.setSubjectid(Integer.parseInt(subjectid));
         g.setTermid(courseclassList.get(0).getTermid());
+        g.setTaskid(Long.parseLong(taskid));
         List<TpGroupInfo>groupList=this.tpGroupManager.getList(g, null);
 		request.setAttribute("tasktypeList", tasktypeList);
 		request.setAttribute("courseclassList", courseclassList);

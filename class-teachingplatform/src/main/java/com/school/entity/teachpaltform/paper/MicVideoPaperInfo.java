@@ -9,6 +9,24 @@ public class MicVideoPaperInfo {
     private java.lang.Integer ref;
     private java.sql.Timestamp ctime;
     private String papername;
+    private Integer status;      //1：云端关联试卷 2：本地
+    private Integer taskflag;
+
+    public Integer getTaskflag() {
+        return taskflag;
+    }
+
+    public void setTaskflag(Integer taskflag) {
+        this.taskflag = taskflag;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public String getPapername() {
         return papername;

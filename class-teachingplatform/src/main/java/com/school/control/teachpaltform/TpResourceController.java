@@ -3742,6 +3742,135 @@ public class TpResourceController extends BaseController<TpCourseResource>{
 //    }
 
     /**
+     * 自定义微视频
+     * 给视频添加关联试卷
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="doAddVideoPaper",method={RequestMethod.POST,RequestMethod.GET})
+    public void doAddVideoPaper(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String resid=request.getParameter("resid");
+        String paperid=request.getParameter("paperid");
+        if(resid==null||resid.trim().length()<1
+                ||paperid==null||paperid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        MicVideoPaperInfo mvp=new MicVideoPaperInfo();
+        mvp.setMicvideoid(Long.parseLong(resid));
+        mvp.setPaperid(Long.parseLong(paperid));
+        List<MicVideoPaperInfo>mvpList=this.micVideoPaperManager.getList(mvp,null);
+        if(mvpList!=null&&mvpList.size()>0){
+            je.setMsg(UtilTool.msgproperty.getProperty("DATA_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<String>sqlList=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+
+        //修改微视频DiffType
+        ResourceInfo res=new ResourceInfo();
+        res.setResid(mvp.getMicvideoid());
+        res.setDifftype(1);
+        sql=new StringBuilder();
+        objList=this.resourceManager.getUpdateSql(res,sql);
+        if(objList!=null&&sql!=null){
+            objListArray.add(objList);
+            sqlList.add(sql.toString());
+        }
+
+        //添加视频试卷关系
+        sql=new StringBuilder();
+        objList=this.micVideoPaperManager.getSaveSql(mvp,sql);
+        if(objList!=null&&sql!=null){
+            objListArray.add(objList);
+            sqlList.add(sql.toString());
+        }
+
+        //修改试卷类型
+
+        if(sqlList.size()>0&&objListArray.size()>0&&sqlList.size()==objListArray.size()){
+            if(this.resourceManager.doExcetueArrayProc(sqlList,objListArray)){
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+            }else
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+
+    /**
+     * 自定义微视频
+     * 解除视频与关联试卷
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="doCancelVideoPaper",method={RequestMethod.POST,RequestMethod.GET})
+    public void doCancelVideoPaper(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String resid=request.getParameter("resid");
+        String paperid=request.getParameter("paperid");
+        if(resid==null||resid.trim().length()<1
+                ||paperid==null||paperid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        MicVideoPaperInfo mvp=new MicVideoPaperInfo();
+        mvp.setMicvideoid(Long.parseLong(resid));
+        mvp.setPaperid(Long.parseLong(paperid));
+        List<MicVideoPaperInfo>mvpList=this.micVideoPaperManager.getList(mvp,null);
+        if(mvpList==null||mvpList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<String>sqlList=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+
+        //修改微视频DiffType
+        ResourceInfo res=new ResourceInfo();
+        res.setResid(mvp.getMicvideoid());
+        res.setDifftype(0);
+        sql=new StringBuilder();
+        objList=this.resourceManager.getUpdateSql(res,sql);
+        if(objList!=null&&sql!=null){
+            objListArray.add(objList);
+            sqlList.add(sql.toString());
+        }
+
+        //删除视频试卷关系
+        sql=new StringBuilder();
+        objList=this.micVideoPaperManager.getDeleteSql(mvp,sql);
+        if(objList!=null&&sql!=null){
+            objListArray.add(objList);
+            sqlList.add(sql.toString());
+        }
+
+        if(sqlList.size()>0&&objListArray.size()>0&&sqlList.size()==objListArray.size()){
+            if(this.resourceManager.doExcetueArrayProc(sqlList,objListArray)){
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+            }else
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
      *后台调用接口
      * @param urlstr
      * @return
@@ -3834,5 +3963,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
 
         return returnContent;
     }
+
+
+
+
 }
 

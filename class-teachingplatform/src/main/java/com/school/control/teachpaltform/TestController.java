@@ -54,7 +54,7 @@ public class TestController extends BaseController<String>{
      */
     @RequestMapping(params="m=updateCourseSelf",method=RequestMethod.GET)
     public void updateCourseSelf(HttpServletRequest request,HttpServletResponse response){
-        new UpdateCourse(request.getSession().getServletContext()).updateCourseSelf();
+        //new UpdateCourse(request.getSession().getServletContext()).updateCourseSelf();
     }
     /**
      * 更新资源本身
@@ -63,7 +63,7 @@ public class TestController extends BaseController<String>{
      */
     @RequestMapping(params="m=updateResourceSelf",method=RequestMethod.GET)
     public void updateResourceSelf(HttpServletRequest request,HttpServletResponse response){
-        new UpdateCourse(request.getSession().getServletContext()).updateResourceSelf();
+        //new UpdateCourse(request.getSession().getServletContext()).updateResourceSelf();
     }
 
     @RequestMapping(params="m=SynchroEttColumn",method=RequestMethod.GET)

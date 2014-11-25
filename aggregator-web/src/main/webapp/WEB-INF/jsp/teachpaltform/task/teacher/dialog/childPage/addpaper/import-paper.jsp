@@ -40,6 +40,7 @@ var gradeid="${gradeid}";
 var pListPaper,pBankList,pCloudPaper;
 var pRelatePaper,pRelateClundPaper;
 var total;
+var isrelate="${param.isrelate}";
 $(function(){
     pListPaper = new PageControl( {
         post_url : 'paper?m=getImportPaperList',
@@ -311,6 +312,8 @@ function preeDoPageSub(pObj){
     if(coursename.val().Trim().length<1||coursename.val()=='输入专题名称'){
         return;
     }
+    if(isrelate.length>0)
+        param.isrelate=isrelate;
     param.coursename=coursename.val();
     pObj.setPostParams(param);
 }
@@ -328,6 +331,8 @@ function preDoPageSubRelate(pObj){
     var param={courseid:courseid,materialid:materialid,gradeid:gradeid,subjectid:subjectid};
    // $("#pListaddress_Cloudpaper").hide();
    // $("#pListForm_Paper").hide();
+    if(isrelate.length>0)
+        param.isrelate=isrelate;
     pObj.setPostParams(param);
 }
 

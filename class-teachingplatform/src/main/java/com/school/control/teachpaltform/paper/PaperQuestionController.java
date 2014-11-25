@@ -3467,16 +3467,16 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
         mvpaper.setMicvideoid(Long.parseLong(resid));
         List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,null);
-        if(mvpaperList!=null&&mvpaperList.size()>0){
-            jsonEntity.getObjList().add(mvpaperList.get(0));
-        }
-        jsonEntity.setType("success");
-        response.getWriter().println(jsonEntity.toJSON());
-    }
+     if(mvpaperList!=null&&mvpaperList.size()>0){
+     jsonEntity.getObjList().add(mvpaperList.get(0));
+     }
+     jsonEntity.setType("success");
+     response.getWriter().println(jsonEntity.toJSON());
+     }
 
 
 
-    /**
+     /**
      * Ω¯»Î≤‚ ‘“≥√Ê
      * @param request
      * @param response

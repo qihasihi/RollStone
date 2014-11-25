@@ -878,7 +878,10 @@ function load_resource(type, pageno, isinit) {
                                 dvhtm += '<a  class="ico11" title="编辑" href="javascript:toUpdResource(\'' + itm.resid + '\')"></a>';
                                 if (itm.taskflag < 1) {
                                     dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
-                                    dvhtm += '<a  class="ico51" title="发任务" href="task?toAddTask&courseid=' + courseid + '&tasktype=1&taskvalueid=' + itm.resid + '"></a>';
+                                    if(typeof itm.difftype!='undefined'&&itm.difftype==1&&itm.haspaper>0)
+                                        dvhtm += '<a  class="ico51" title="发任务" href="task?toAddTask&courseid=' + courseid + '&tasktype=6&taskvalueid=' + itm.resid + '"></a>';
+                                    else
+                                        dvhtm += '<a  class="ico51" title="发任务" href="task?toAddTask&courseid=' + courseid + '&tasktype=1&taskvalueid=' + itm.resid + '"></a>';
                                 }
                                 dvhtm += '</p>';
                                 if (itm.usertype == 1)
@@ -891,7 +894,10 @@ function load_resource(type, pageno, isinit) {
                                         dvhtm += '<a  class="ico11" title="编辑" href="javascript:toUpdResource(\'' + itm.resid + '\')"></a>';
                                     }
                                     dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
-                                    dvhtm += '<a  class="ico51" title="发任务" href="task?toAddTask&courseid=' + courseid + '&tasktype='+tasktype+'&taskvalueid=' + itm.resid + '"></a>';
+                                    if(typeof itm.difftype!='undefined'&&itm.difftype==1&&itm.haspaper>0)
+                                        dvhtm += '<a  class="ico51" title="发任务" href="task?toAddTask&courseid=' + courseid + '&tasktype=6&taskvalueid=' + itm.resid + '"></a>';
+                                    else
+                                        dvhtm += '<a  class="ico51" title="发任务" href="task?toAddTask&courseid=' + courseid + '&tasktype='+tasktype+'&taskvalueid=' + itm.resid + '"></a>';
                                 }
                                 dvhtm += '</p>';
                                 dvhtm += '<p class="b"><span class="ico44" title="参考"></span></p>';
@@ -1884,9 +1890,26 @@ function loadRelatePaper(resid){
             }else{
                 var h='';
                 if(rps.objList.length>0){
-                    h='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>关联试卷</a>';
+                    var status=rps.objList[0].status;
+                    var papername=rps.objList[0].papername.length>10?rps.objList[0].papername.substring(0,10)+'...':rps.objList[0].papername;
+                    if(status==1){
+                        h='<a class="font-blue" href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true)"><span class="ico83"></span>网校关联试卷</a>';
+                    }else
+                        h='<a  href="javascript:doCancelVideoPaper('+rps.objList[0].paperid+');" style="display: none;" class="ico34 f_right" title="取消关联"></a><a id="a_relate_href" class="font-blue"  href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true)"><span class="ico83"></span>'+papername+'</a>';
+                }else{
+                    h='<a id="a_relate_href" class="font-blue" href="javascript:loadRelatePage()"><span class="ico83"></span>关联试卷</a>';
                 }
                 $("#relate_paper").html(h);
+
+                if(rps.objList.length>0&&rps.objList[0].status!=1&&rps.objList[0].taskflag<1){
+                    $("#a_relate_href").hover(
+                        function(){
+                            $(this).prev('a').show();
+                        },
+                        function(){
+                        }
+                    )
+                }
             }
         }
     });

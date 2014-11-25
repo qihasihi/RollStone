@@ -107,7 +107,7 @@
             $("input[name='p_ck_g']").each(function(idx,itm){
                 var clsid=$(itm).val();
                 $(itm).bind("click",function(){
-                    $("#p_group_"+clsid+" input[type='checkbox']").attr("checked",$(itm).attr("checked")=="checked"?true:false);
+                    $("#p_group_"+clsid+" input[type='checkbox']:not([data-bind='1'])").attr("checked",$(itm).attr("checked")=="checked"?true:false);
                     $('input[id="ckb_'+clsid+'"]').attr("checked",false);
                 });
             })
@@ -255,9 +255,9 @@
                         </c:forEach>
 
                         <%if(dctype==3){%>
-                            <input placeholder="设置开始时间" class="w140"  onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'all_class_etime\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="all_class_btime"  name="all_classtime" type="text" /> - <input placeholder="设置结束时间" class="w140" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'all_class_btime\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${courseclassList[0].begintimeString}'})" readonly="readonly" id="all_class_etime"  name="all_classtime" type="text" />
+                            <input placeholder="设置开始时间" class="w140"  onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'all_class_etime\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="all_class_btime"  name="all_classtime" type="text" /> - <input placeholder="设置结束时间" class="w140" onfocus="WdatePicker({maxDate:'${courseclassList[0].endtimeString}',minDate:'#F{$dp.$D(\'all_class_btime\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${courseclassList[0].begintimeString}'})" readonly="readonly" id="all_class_etime"  name="all_classtime" type="text" />
                         <%}else{%>
-                            <input placeholder="设置开始时间" class="w140"  onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'all_class_etime\',{H:-1})}',startDate:'${courseclassList[0].begintimeString}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="all_class_btime"  name="all_classtime" type="text" /> - <input placeholder="设置结束时间" class="w140" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'all_class_btime\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${courseclassList[0].begintimeString}'})" readonly="readonly" id="all_class_etime"  name="all_classtime" type="text" />
+                            <input placeholder="设置开始时间" class="w140"  onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'all_class_etime\',{H:-1})}',startDate:'${courseclassList[0].begintimeString}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="all_class_btime"  name="all_classtime" type="text" /> - <input placeholder="设置结束时间" class="w140" onfocus="WdatePicker({maxDate:'${courseclassList[0].endtimeString}',minDate:'#F{$dp.$D(\'all_class_btime\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${courseclassList[0].begintimeString}'})" readonly="readonly" id="all_class_etime"  name="all_classtime" type="text" />
                         <%}%>
 
                         </span>&nbsp;&nbsp;&nbsp;所有班级：
@@ -268,11 +268,11 @@
                             <p id="p_${cc.classid}"  style="display:none">
 
                             <c:if test="${cc.dctype eq 3}">
-                                <span class="f_right"><input placeholder="设置开始时间" class="w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" /> - <input placeholder="设置结束时间" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="w140" />
+                                <span class="f_right"><input placeholder="设置开始时间" class="w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" /> - <input placeholder="设置结束时间" onfocus="WdatePicker({maxDate:'${cc.endtimeString}',minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="w140" />
                             </c:if>
 
                             <c:if test="${cc.dctype ne 3}">
-                                <span class="f_right"><input placeholder="设置开始时间" class="w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" /> - <input placeholder="设置结束时间" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="w140" />
+                                <span class="f_right"><input placeholder="设置开始时间" class="w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" /> - <input placeholder="设置结束时间" onfocus="WdatePicker({maxDate:'${cc.endtimeString}',minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{H:1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="w140" />
                             </c:if>
                             </span>&nbsp;&nbsp;&nbsp;${cc.classgrade}${cc.classname}：
                             </p>
@@ -315,7 +315,11 @@
 							//$("input[type='checkbox']").filter(function(){return this.value=="${c.classid}"}).attr("checked",true);
 							trobj.append('<li><input id="ck_group_${c.groupid}"  type="checkbox" name="ck_group" value="${c.groupid}" />'
 									+'<label for="ck_group_${c.groupid}">${c.groupname}&nbsp;(${c.groupnum})</label></li>');
-						}  
+						}
+                        <c:if test="${c.ishas eq '1'}">
+                            $("#ck_group_${c.groupid}").attr("disabled",true);
+                            $("#ck_group_${c.groupid}").attr("data-bind",1);
+                        </c:if>
 					</c:forEach> 
 				</c:if>
 
@@ -324,6 +328,7 @@
 					<c:forEach var="tg" items="${taskgroupList}">
 
                         $("input[name='ck_group']").filter(function(){return this.value=="${tg.usertypeid}"&&this.id=="ck_group_${tg.usertypeid}"}).attr("checked",true);
+
                         $("input[type='checkbox'][name='ck_cls']").filter(function(){return this.value=="${tg.usertypeid}"}).attr("checked",true);
 
 
@@ -336,7 +341,7 @@
 
                             <c:if test="${tg.taskstatus ne '1'}">
                                 $("#b_time_${tg.usertypeid}").attr("disabled",true);
-                                $("#e_time_${tg.usertypeid}").attr("disabled",true);
+                              //  $("#e_time_${tg.usertypeid}").attr("disabled",true);
                                 $("input[type='checkbox']").filter(function(){return this.value=="${tg.usertypeid}"}).attr("disabled",true);
                                 $("#p_group_${tg.usertypeid} input").attr("disabled",true);
                             </c:if>
@@ -348,10 +353,12 @@
                             $('#b_time_'+p+'').val("${tg.btimeString}").parent().parent('p').show();
                             $('#e_time_'+p+'').val("${tg.etimeString}").parent().parent('p').show();
 
+
+
                             <c:if test="${tg.taskstatus ne '1'}">
                                  $('#b_time_'+p+'').attr("disabled",true);
-                                 $('#e_time_'+p+'').attr("disabled",true);
-                                 $("input[name='ck_group']").filter(function(){return this.value=="${tg.usertypeid}"&&this.id=="ck_group_${tg.usertypeid}"}).attr("disabled",true);
+                                // $('#e_time_'+p+'').attr("disabled",true);
+                                  //$("input[name='ck_group']").filter(function(){return this.value=="${tg.usertypeid}"&&this.id=="ck_group_${tg.usertypeid}"}).attr("disabled",true);
                                  $("#ckb_"+p).attr("disabled",true);
                             </c:if>
                         </c:if>
