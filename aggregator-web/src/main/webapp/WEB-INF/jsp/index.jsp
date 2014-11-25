@@ -18,408 +18,6 @@
 <script src="<%=basePath %>js/common/jquery.imgareaselect.js"></script>
 <link  rel="stylesheet" type="text/css" href="css/imgareaselect-default.css"/>
 <title>数字化校园</title>
-<script type="text/javascript">
-//设置logo设置用的三个变量
-var basePath = "<%=basePath %>";
-var imgwidth = 0;
-var imgheight = 0;
-var imgareaselectObj;
-$(function(){
-    if($("ul li a[href='notice?m=list']").length>0){
-        $("ul li a[href='notice?m=list']").parent().remove();
-        $("#a_adNotice").show();
-    }
-    <c:if test="${empty initObj}">
-            showSetupWizard("dv_zhong");
-    </c:if>
-    <c:if test="${!empty initObj and initObj.success==1}">
-            showSetupWizard("dv_zhong");
-    $("#div1").hide();
-    next("div"+${initObj.currentStep},"div"+${initObj.currentStep+1})
-    </c:if>
-
-    <c:if test="${!empty ismodify and ismodify==0}">
-        //showSetupWizard('dv_user_name')
-            </c:if>
-    //查询多个部门下的组织
-    <%if(!isStudent){ %>    //如果是教师，则加载部门，
-    loadDeptByType();
-    <%}else{%>              //如果是学生，则加载班级学生
-    loadStudentByClsid();
-    <%}%>
-});
-/**
- *查询多个部门下的组织
- */
-function loadStudentByClsid(){
-<c:if test="${!empty teachClass}">
-            <c:forEach items="${teachClass}" var="tcs">
-    var tmpStr="p${tcs.classid} = new PageControl({";
-    tmpStr+="post_url:'cls?m=getClsUserByClsId&classid=${tcs.classid}',";
-    tmpStr+="page_id:'page${tcs.classid}',";
-    tmpStr+="page_control_name:'p${tcs.classid}',";
-    tmpStr+="post_form:document.page${tcs.classid}form,";
-    tmpStr+="gender_address_id:'page${tcs.classid}address',";
-    tmpStr+="http_operate_handler:clsListReturn,";
-    tmpStr+="isShowController:false,";
-    tmpStr+="return_type:'json',page_no:1,page_size:9,rectotal:0,pagetotal:1,";
-    tmpStr+="operate_id:'ul_dept_${tcs.classid}'})";
-    eval("("+tmpStr+")");
-    pageGo("p${tcs.classid}");
-</c:forEach>
-    </c:if>
-}
-
-function clsListReturn(rps){
-    if(rps.type=='error'){
-        if (typeof(eval("(p"+rps.objList[1]+")")) != "undefined" && typeof(eval("(p"+rps.objList[1]+")")) == "object") {
-            // 设置空间不可用
-            eval("(p"+rps.objList[1]+").setPagetotal(1)");
-            eval("(p"+rps.objList[1]+").setRectotal(0)");
-            eval("(p"+rps.objList[1]+").Refresh()");
-            alert(rps.msg);return;
-        }
-    }else{
-        var htm='<li>暂无</li>';
-        if(rps.objList[0]!=null&&rps.objList[0].length>0){
-            htm='';
-            $.each(rps.objList[0],function(idx,itm){
-                var headimage='images/pic02_121214.png';
-                if(typeof(itm.headimage)!="undefined"&&itm.headimage.Trim().length>0)
-                    headimage=itm.headimage;
-                htm+='<li><img width="38" height="38" src="'+headimage+'"  onerror="this.src=\'images/pic02_121214.png\'"/><br/>'+itm.realname+'</li>';
-                //   zuzhiname=itm.deptname;
-            });
-        }else{
-            $("h2[group='group_stu"+rps.objList[1]+"']").hide();
-            $("ul[group='group_stu"+rps.objList[1]+"']").hide();
-            $("div[group='group_stu"+rps.objList[1]+"']").hide();
-        }
-        $("#ul_stu_"+rps.objList[1]).html(htm);
-        // $("#p_dept_type_"+rps.objList[1]+" span").html(zuzhiname);
-        //翻页信息
-        if (typeof(eval("(p"+rps.objList[1]+")")) != "undefined" && typeof(eval("(p"+rps.objList[1]+")")) == "object") {
-            eval("(p"+rps.objList[1]+".setPagetotal("+rps.presult.pageTotal+"))");
-            eval("(p"+rps.objList[1]+".setRectotal("+rps.presult.recTotal+"))");
-            eval("(p"+rps.objList[1]+".setPageSize("+rps.presult.pageSize+"))");
-            eval("(p"+rps.objList[1]+".setPageNo("+rps.presult.pageNo+"))");
-            eval("(p"+rps.objList[1]+").Refresh()");
-            $('font[id="sp_currentstate'+rps.objList[1]+'"]').html($("form[name='page"+rps.objList[1]+"form'] span[id='bilipage"+rps.objList[1]+"']").html());
-            //$('span[id="sp_sumState'+rps.objList[1]+'"]').html($("form[name='page"+rps.objList[1]+"form'] span[id='bilipage"+rps.objList[1]+"']").html());
-        }
-    }
-}
-
-
-/**
- pop.show();
- }
- /**
- *查询多个部门下的组织
- */
-function loadDeptByType(){
-<c:if test="${!empty deptType}">
-            <c:forEach items="${deptType}" var="dt1">
-    var tmpStr="p${dt1.deptid} = new PageControl({";
-    tmpStr+="post_url:'deptuser?m=indexGetListPage&depttypeid=${dt1.deptid}',";
-    tmpStr+="page_id:'page${dt1.deptid}',";
-    tmpStr+="page_control_name:'p${dt1.deptid}',";
-    tmpStr+="post_form:document.page${dt1.deptid}form,";
-    tmpStr+="gender_address_id:'page${dt1.deptid}address',";
-    tmpStr+="http_operate_handler:deptListReturn,";
-    tmpStr+="isShowController:false,";
-    tmpStr+="return_type:'json',page_no:1,page_size:9,rectotal:0,pagetotal:1,";
-    tmpStr+="operate_id:'ul_dept_${dt1.deptid}'})";
-    eval("("+tmpStr+")");
-    pageGo("p${dt1.deptid}");
-</c:forEach>
-    </c:if>
-}
-/*返回*/
-function deptListReturn(rps){
-    if(rps.type=='error'){
-        if (typeof(eval("(p"+rps.objList[1]+")")) != "undefined" && typeof(eval("(p"+rps.objList[1]+")")) == "object") {
-            // 设置空间不可用
-            eval("(p"+rps.objList[1]+").setPagetotal(1)");
-            eval("(p"+rps.objList[1]+").setRectotal(0)");
-            eval("(p"+rps.objList[1]+").Refresh()");
-            alert(rps.msg);return;
-        }
-    }
-    var zuzhiname='';
-    var htm='<li>暂无</li>';
-    if(rps.objList[0]!=null&&rps.objList[0].length>0){
-        htm='';
-        $.each(rps.objList[0],function(idx,itm){
-            var headimage='images/pic02_121214.png';
-            if(typeof(itm.headimage)!="undefined"&&itm.headimage.Trim().length>0)
-                headimage=itm.headimage;
-            htm+='<li><img width="38" height="38" src="'+headimage+'"  onerror="this.src=\'images/pic02_121214.png\'"/><br/>'+itm.realname+'</li>';
-            zuzhiname=itm.deptname;
-        });
-    }else{
-        $("h2[group='group"+rps.objList[1]+"']").hide();
-        $("ul[group='group"+rps.objList[1]+"']").hide();
-        $("div[group='group"+rps.objList[1]+"']").hide();
-    }
-    $("#ul_dept_"+rps.objList[1]).html(htm);
-    $("#p_dept_type_"+rps.objList[1]+" span").html(zuzhiname);
-    //翻页信息
-    if (typeof(eval("(p"+rps.objList[1]+")")) != "undefined" && typeof(eval("(p"+rps.objList[1]+")")) == "object") {
-        eval("(p"+rps.objList[1]+".setPagetotal("+rps.presult.pageTotal+"))");
-        eval("(p"+rps.objList[1]+".setRectotal("+rps.presult.recTotal+"))");
-        eval("(p"+rps.objList[1]+".setPageSize("+rps.presult.pageSize+"))");
-        eval("(p"+rps.objList[1]+".setPageNo("+rps.presult.pageNo+"))");
-        eval("(p"+rps.objList[1]+").Refresh()");
-        $('font[id="sp_currentstate'+rps.objList[1]+'"]').html($("form[name='page"+rps.objList[1]+"form'] span[id='bilipage"+rps.objList[1]+"']").html());
-        //$('span[id="sp_sumState'+rps.objList[1]+'"]').html($("form[name='page"+rps.objList[1]+"form'] span[id='bilipage"+rps.objList[1]+"']").html());
-    }
-}
-/**
- *公告变换
- */
-function noticeShowType(type){
-    if(typeof(type)=="undefined"||type==1){
-        $("#internetNotice_dv").hide();
-        $("#li_notice_1").attr("class","crumb");
-        $("#li_notice_2").removeAttr("class");
-        $("#notice_dv").show();
-    }else{
-        $("#notice_dv").hide();
-        $("#li_notice_2").attr("class","crumb");
-        $("#li_notice_1").removeAttr("class");
-        $("#internetNotice_dv").show();
-    }
-}
-/*****************************编辑用户头像和修改密码**********************************/
-function showEditUser(){
-    showModel('editUserDiv');
-}
-var headimgwidth = 0;
-var headimgheight = 0;
-var headimgareaselectObj;
-//显示上传后的图片，也就是要切割的图片
-function headPreview(img, selection) {
-    if (!selection.width || !selection.height)
-        return;
-
-    var scaleX = 135 / selection.width;
-    var scaleY = 135 / selection.height;
-
-    $('#headpreviewimg').css({
-        width : Math.round(scaleX * headimgwidth),
-        height : Math.round(scaleY * headimgheight),
-        marginLeft : -Math.round(scaleX * selection.x1),
-        marginTop : -Math.round(scaleY * selection.y1)
-    });
-    // alert('<%=basePath%>');
-    $('input[name="headsrc"]').val(
-            $(img).attr("src").replace(basePath,''));
-    $('input[name="headx1"]').val(selection.x1);
-    $('input[name="heady1"]').val(selection.y1);
-    $('input[name="headx2"]').val(selection.x2);
-    $('input[name="heady2"]').val(selection.y2);
-
-}
-//提交上传图片
-function uploadHeadImg(){
-    var t=document.getElementById('headupload');
-    if(t.value.Trim().length<1){
-        alert('您尚未选择图片，请选择！');
-        return;
-    }
-    var lastname=t.value.Trim().substring(t.value.Trim().lastIndexOf('.')).toLowerCase();;
-    if(lastname!='.jpg'&&lastname!='.png'&&lastname!='.gif'&&lastname!='.bmp'){
-        alert('您选择的图片不正确，目前只支持jpg,gif,png,bmp图片!');
-        return;
-    }
-    var filePath = $("#headupload").val();
-    $.ajaxFileUpload({
-        url:"user?m=saveheadsrcfile",
-        fileElementId:'headupload',
-        dataType: 'json',
-        type:'POST',
-        success: function (data, status)
-        {
-            if(typeof(data.error) != 'undefined')
-            {
-                if(data.error != '')
-                {
-                    alert(data.error);
-                }else
-                {
-                    alert(data.msg);
-                }
-            }else{
-                //初始化组件
-                //showModel('cuthear_div',false);
-                darray=data.success.split("|");
-                $("#beijing").css({"background-color":"gray","width":303,"height":303});
-                $("#headmyimage").attr("src",darray[0]);
-                $("#headpreviewimg").attr("src",darray[0]);
-                headimgwidth=darray[1];
-                headimgheight=darray[2];
-                //显示出来
-                $("#headcurrent_photo").attr("src",darray[0]);
-                $("#headcuthear_div").show('fast');
-                headimgareaselectObj=$('#headmyimage').imgAreaSelect({
-                    aspectRatio: '1:1',
-                    handles: true,
-                    instance:true,
-                    fadeSpeed: 200,
-                    onSelectChange: headPreview
-                });
-
-            }
-        },
-        error: function (data, status, e)
-        {
-            alert(e);
-        }
-    });
-
-}
-//提交切割图片
-
-function submitHeadCut(){
-    var src=$('input[name="headsrc"]').val();
-    var x1=$('input[name="headx1"]').val();
-    var y1=$('input[name="heady1"]').val();
-    var x2=$('input[name="headx2"]').val();
-    var y2=$('input[name="heady2"]').val();
-
-    //参数是否正确
-    if(src.length<1
-            ||x1.Trim().length<1||isNaN(x1.Trim())
-            ||x2.Trim().length<1||isNaN(x2.Trim())
-            ||y1.Trim().length<1||isNaN(y1.Trim())
-            ||y2.Trim().length<1||isNaN(y2.Trim())
-            ){
-        if(!confirm('请选择截图区域，默认将按全图比例缩放！'))
-            return;
-
-    }
-    if(src.length<1){
-        src=$("#headpreviewimg").attr("src").replace(basePath,'');
-    }
-    $.ajax({
-        url:"user?m=docuthead",
-        type:"post",
-        dataType:'json',
-        cache: false,
-        data:{src:src,x1:x1,y1:y1,x2:x2,y2:y2},
-        error:function(){
-            alert('系统未响应，请稍候重试!');
-        },
-        success:function(json){
-            if(json.type == "error"){
-                alert(json.msg);
-            }else{
-                alert("设置成功");
-                // closeModel('editUserDiv');
-                $("#headcurrent_photo").attr("src",json.objList[0]);
-                imgareaselectObj.setOptions({remove:true,hide:true});
-            }
-        }
-    });
-}
-function updatePass(){
-   var type=$("#pwd_type").val();
-   var newPwd=$("#newHeadPass").get(0);
-   var oldPwd=$("#oldHeadPass").get(0);
-   if(!(validateNewPass(newPwd)&&validateOldPass(oldPwd)))
-        return;
-   var pass=$("#newHeadPass").val();
-
-    if(type==1){
-        $.ajax({
-            url:'user?m=changepassword',
-            dataType:'json',
-            type:'POST',
-            data:{new_password:pass
-            },
-            cache: false,
-            error:function(){
-                alert('异常错误!系统未响应!');
-            },success:function(rps){
-                if(rps.type=='success'){
-                    $("#oldpass").val($("#newHeadPass").val());
-                    alert("修改成功!");
-                    //$("#newHeadPass");
-                }else
-                    alert(rps.msg);
-            }
-        });
-    }else{
-        //修改云账号
-        checkEttUserName($("#txt_username").get(0),true);
-    }
-}
-function validateOldPass(obj){
-    var type=$("#pwd_type").val();
-    var pass=obj.value;
-    if(type==1){
-        var oldpass=$("#oldpass").val();
-        if(pass!=oldpass){
-            $("#oldPassMsg").html('输入的原密码不对');
-            return false;
-        }else{
-            $("#oldPassMsg").html('');
-        }
-        if(pass.Trim().length<6||pass.Trim().length>12){
-            $("#oldPassMsg").html('密码为6-12个字符');
-            return false;
-        }else
-            $("#oldPassMsg").html('');
-    }else{
-        if(pass.Trim().length<6||pass.Trim().length>12){
-            $("#oldPassMsg").html('密码为6-12个字符');
-            return false;
-        }else
-            $("#oldPassMsg").html('');
-    }
-    return true;
-}
-function validateNewPass(obj){
-    var pass = obj.value;
-    if(pass.Trim().length<1){
-        $("#newPassMsg").html("请输入密码");
-        return false;
-    }else{
-        $("#newPassMsg").html('');
-    }
-    if(pass.Trim().length<6||pass.Trim().length>12){
-        $("#newPassMsg").html("请输入6-12个字符的密码长度");
-        return false;
-    }else{
-        $("#newPassMsg").html('');
-    }
-    return true;
-}
-
-function validateMorePass(obj){
-    var pass = $("#newHeadPass").val();
-    var pass2 = obj.value;
-    if(pass2.Trim().length<1){
-        $("#morePassMsg").html("请再次输入密码");
-        return;
-    }else{
-        $("#morePassMsg").html('');
-    }
-    if(pass!=pass2){
-        $("#morePassMsg").html("两次输入密码不一致，请重新输入");
-        return;
-    }else{
-        $("#morePassMsg").html('');
-    }
-}
-function closeEditUser(){
-    closeModel('editUserDiv');
-    //headimgareaselectObj.setOptions({remove:true,hide:true});
-    this.reload();
-}
-</script>
-
 </head>
 <body>
 
@@ -1119,4 +717,406 @@ function closeEditUser(){
 
 <%@include file="/util/foot.jsp"%>
 </body>
+
+<script type="text/javascript">
+//设置logo设置用的三个变量
+var basePath = "<%=basePath %>";
+var imgwidth = 0;
+var imgheight = 0;
+var imgareaselectObj;
+$(function(){
+    if($("ul li a[href='notice?m=list']").length>0){
+        $("ul li a[href='notice?m=list']").parent().remove();
+        $("#a_adNotice").show();
+    }
+    <c:if test="${empty initObj}">
+    showSetupWizard("dv_zhong");
+    </c:if>
+    <c:if test="${!empty initObj and initObj.success==1}">
+    showSetupWizard("dv_zhong");
+    $("#div1").hide();
+    next("div"+${initObj.currentStep},"div"+${initObj.currentStep+1})
+    </c:if>
+
+    <c:if test="${!empty ismodify and ismodify==0}">
+    //showSetupWizard('dv_user_name')
+    </c:if>
+    //查询多个部门下的组织
+    <%if(!isStudent){ %>    //如果是教师，则加载部门，
+    loadDeptByType();
+    <%}else{%>              //如果是学生，则加载班级学生
+    loadStudentByClsid();
+    <%}%>
+});
+/**
+ *查询多个部门下的组织
+ */
+function loadStudentByClsid(){
+    <c:if test="${!empty teachClass}">
+    <c:forEach items="${teachClass}" var="tcs">
+    var tmpStr="p${tcs.classid} = new PageControl({";
+    tmpStr+="post_url:'cls?m=getClsUserByClsId&classid=${tcs.classid}',";
+    tmpStr+="page_id:'page${tcs.classid}',";
+    tmpStr+="page_control_name:'p${tcs.classid}',";
+    tmpStr+="post_form:document.page${tcs.classid}form,";
+    tmpStr+="gender_address_id:'page${tcs.classid}address',";
+    tmpStr+="http_operate_handler:clsListReturn,";
+    tmpStr+="isShowController:false,";
+    tmpStr+="return_type:'json',page_no:1,page_size:9,rectotal:0,pagetotal:1,";
+    tmpStr+="operate_id:'ul_dept_${tcs.classid}'})";
+    eval("("+tmpStr+")");
+    pageGo("p${tcs.classid}");
+    </c:forEach>
+    </c:if>
+}
+
+function clsListReturn(rps){
+    if(rps.type=='error'){
+        if (typeof(eval("(p"+rps.objList[1]+")")) != "undefined" && typeof(eval("(p"+rps.objList[1]+")")) == "object") {
+            // 设置空间不可用
+            eval("(p"+rps.objList[1]+").setPagetotal(1)");
+            eval("(p"+rps.objList[1]+").setRectotal(0)");
+            eval("(p"+rps.objList[1]+").Refresh()");
+            alert(rps.msg);return;
+        }
+    }else{
+        var htm='<li>暂无</li>';
+        if(rps.objList[0]!=null&&rps.objList[0].length>0){
+            htm='';
+            $.each(rps.objList[0],function(idx,itm){
+                var headimage='images/pic02_121214.png';
+                if(typeof(itm.headimage)!="undefined"&&itm.headimage.Trim().length>0)
+                    headimage=itm.headimage;
+                htm+='<li><img width="38" height="38" src="'+headimage+'"  onerror="this.src=\'images/pic02_121214.png\'"/><br/>'+itm.realname+'</li>';
+                //   zuzhiname=itm.deptname;
+            });
+        }else{
+            $("h2[group='group_stu"+rps.objList[1]+"']").hide();
+            $("ul[group='group_stu"+rps.objList[1]+"']").hide();
+            $("div[group='group_stu"+rps.objList[1]+"']").hide();
+        }
+        $("#ul_stu_"+rps.objList[1]).html(htm);
+        // $("#p_dept_type_"+rps.objList[1]+" span").html(zuzhiname);
+        //翻页信息
+        if (typeof(eval("(p"+rps.objList[1]+")")) != "undefined" && typeof(eval("(p"+rps.objList[1]+")")) == "object") {
+            eval("(p"+rps.objList[1]+".setPagetotal("+rps.presult.pageTotal+"))");
+            eval("(p"+rps.objList[1]+".setRectotal("+rps.presult.recTotal+"))");
+            eval("(p"+rps.objList[1]+".setPageSize("+rps.presult.pageSize+"))");
+            eval("(p"+rps.objList[1]+".setPageNo("+rps.presult.pageNo+"))");
+            eval("(p"+rps.objList[1]+").Refresh()");
+            $('font[id="sp_currentstate'+rps.objList[1]+'"]').html($("form[name='page"+rps.objList[1]+"form'] span[id='bilipage"+rps.objList[1]+"']").html());
+            //$('span[id="sp_sumState'+rps.objList[1]+'"]').html($("form[name='page"+rps.objList[1]+"form'] span[id='bilipage"+rps.objList[1]+"']").html());
+        }
+    }
+}
+
+
+/**
+ pop.show();
+ }
+ /**
+ *查询多个部门下的组织
+ */
+function loadDeptByType(){
+    <c:if test="${!empty deptType}">
+    <c:forEach items="${deptType}" var="dt1">
+    var tmpStr="p${dt1.deptid} = new PageControl({";
+    tmpStr+="post_url:'deptuser?m=indexGetListPage&depttypeid=${dt1.deptid}',";
+    tmpStr+="page_id:'page${dt1.deptid}',";
+    tmpStr+="page_control_name:'p${dt1.deptid}',";
+    tmpStr+="post_form:document.page${dt1.deptid}form,";
+    tmpStr+="gender_address_id:'page${dt1.deptid}address',";
+    tmpStr+="http_operate_handler:deptListReturn,";
+    tmpStr+="isShowController:false,";
+    tmpStr+="return_type:'json',page_no:1,page_size:9,rectotal:0,pagetotal:1,";
+    tmpStr+="operate_id:'ul_dept_${dt1.deptid}'})";
+    eval("("+tmpStr+")");
+    pageGo("p${dt1.deptid}");
+    </c:forEach>
+    </c:if>
+}
+/*返回*/
+function deptListReturn(rps){
+    if(rps.type=='error'){
+        if (typeof(eval("(p"+rps.objList[1]+")")) != "undefined" && typeof(eval("(p"+rps.objList[1]+")")) == "object") {
+            // 设置空间不可用
+            eval("(p"+rps.objList[1]+").setPagetotal(1)");
+            eval("(p"+rps.objList[1]+").setRectotal(0)");
+            eval("(p"+rps.objList[1]+").Refresh()");
+            alert(rps.msg);return;
+        }
+    }
+    var zuzhiname='';
+    var htm='<li>暂无</li>';
+    if(rps.objList[0]!=null&&rps.objList[0].length>0){
+        htm='';
+        $.each(rps.objList[0],function(idx,itm){
+            var headimage='images/pic02_121214.png';
+            if(typeof(itm.headimage)!="undefined"&&itm.headimage.Trim().length>0)
+                headimage=itm.headimage;
+            htm+='<li><img width="38" height="38" src="'+headimage+'"  onerror="this.src=\'images/pic02_121214.png\'"/><br/>'+itm.realname+'</li>';
+            zuzhiname=itm.deptname;
+        });
+    }else{
+        $("h2[group='group"+rps.objList[1]+"']").hide();
+        $("ul[group='group"+rps.objList[1]+"']").hide();
+        $("div[group='group"+rps.objList[1]+"']").hide();
+    }
+    $("#ul_dept_"+rps.objList[1]).html(htm);
+    $("#p_dept_type_"+rps.objList[1]+" span").html(zuzhiname);
+    //翻页信息
+    if (typeof(eval("(p"+rps.objList[1]+")")) != "undefined" && typeof(eval("(p"+rps.objList[1]+")")) == "object") {
+        eval("(p"+rps.objList[1]+".setPagetotal("+rps.presult.pageTotal+"))");
+        eval("(p"+rps.objList[1]+".setRectotal("+rps.presult.recTotal+"))");
+        eval("(p"+rps.objList[1]+".setPageSize("+rps.presult.pageSize+"))");
+        eval("(p"+rps.objList[1]+".setPageNo("+rps.presult.pageNo+"))");
+        eval("(p"+rps.objList[1]+").Refresh()");
+        $('font[id="sp_currentstate'+rps.objList[1]+'"]').html($("form[name='page"+rps.objList[1]+"form'] span[id='bilipage"+rps.objList[1]+"']").html());
+        //$('span[id="sp_sumState'+rps.objList[1]+'"]').html($("form[name='page"+rps.objList[1]+"form'] span[id='bilipage"+rps.objList[1]+"']").html());
+    }
+}
+/**
+ *公告变换
+ */
+function noticeShowType(type){
+    if(typeof(type)=="undefined"||type==1){
+        $("#internetNotice_dv").hide();
+        $("#li_notice_1").attr("class","crumb");
+        $("#li_notice_2").removeAttr("class");
+        $("#notice_dv").show();
+    }else{
+        $("#notice_dv").hide();
+        $("#li_notice_2").attr("class","crumb");
+        $("#li_notice_1").removeAttr("class");
+        $("#internetNotice_dv").show();
+    }
+}
+/*****************************编辑用户头像和修改密码**********************************/
+function showEditUser(){
+    showModel('editUserDiv');
+}
+var headimgwidth = 0;
+var headimgheight = 0;
+var headimgareaselectObj;
+//显示上传后的图片，也就是要切割的图片
+function headPreview(img, selection) {
+    if (!selection.width || !selection.height)
+        return;
+
+    var scaleX = 135 / selection.width;
+    var scaleY = 135 / selection.height;
+
+    $('#headpreviewimg').css({
+        width : Math.round(scaleX * headimgwidth),
+        height : Math.round(scaleY * headimgheight),
+        marginLeft : -Math.round(scaleX * selection.x1),
+        marginTop : -Math.round(scaleY * selection.y1)
+    });
+    // alert('<%=basePath%>');
+    $('input[name="headsrc"]').val(
+            $(img).attr("src").replace(basePath,''));
+    $('input[name="headx1"]').val(selection.x1);
+    $('input[name="heady1"]').val(selection.y1);
+    $('input[name="headx2"]').val(selection.x2);
+    $('input[name="heady2"]').val(selection.y2);
+
+}
+//提交上传图片
+function uploadHeadImg(){
+    var t=document.getElementById('headupload');
+    if(t.value.Trim().length<1){
+        alert('您尚未选择图片，请选择！');
+        return;
+    }
+    var lastname=t.value.Trim().substring(t.value.Trim().lastIndexOf('.')).toLowerCase();;
+    if(lastname!='.jpg'&&lastname!='.png'&&lastname!='.gif'&&lastname!='.bmp'){
+        alert('您选择的图片不正确，目前只支持jpg,gif,png,bmp图片!');
+        return;
+    }
+    var filePath = $("#headupload").val();
+    $.ajaxFileUpload({
+        url:"user?m=saveheadsrcfile",
+        fileElementId:'headupload',
+        dataType: 'json',
+        type:'POST',
+        success: function (data, status)
+        {
+            if(typeof(data.error) != 'undefined')
+            {
+                if(data.error != '')
+                {
+                    alert(data.error);
+                }else
+                {
+                    alert(data.msg);
+                }
+            }else{
+                //初始化组件
+                //showModel('cuthear_div',false);
+                darray=data.success.split("|");
+                $("#beijing").css({"background-color":"gray","width":303,"height":303});
+                $("#headmyimage").attr("src",darray[0]);
+                $("#headpreviewimg").attr("src",darray[0]);
+                headimgwidth=darray[1];
+                headimgheight=darray[2];
+                //显示出来
+                $("#headcurrent_photo").attr("src",darray[0]);
+                $("#headcuthear_div").show('fast');
+                headimgareaselectObj=$('#headmyimage').imgAreaSelect({
+                    aspectRatio: '1:1',
+                    handles: true,
+                    instance:true,
+                    fadeSpeed: 200,
+                    onSelectChange: headPreview
+                });
+
+            }
+        },
+        error: function (data, status, e)
+        {
+            alert(e);
+        }
+    });
+
+}
+//提交切割图片
+
+function submitHeadCut(){
+    var src=$('input[name="headsrc"]').val();
+    var x1=$('input[name="headx1"]').val();
+    var y1=$('input[name="heady1"]').val();
+    var x2=$('input[name="headx2"]').val();
+    var y2=$('input[name="heady2"]').val();
+
+    //参数是否正确
+    if(src.length<1
+            ||x1.Trim().length<1||isNaN(x1.Trim())
+            ||x2.Trim().length<1||isNaN(x2.Trim())
+            ||y1.Trim().length<1||isNaN(y1.Trim())
+            ||y2.Trim().length<1||isNaN(y2.Trim())
+            ){
+        if(!confirm('请选择截图区域，默认将按全图比例缩放！'))
+            return;
+
+    }
+    if(src.length<1){
+        src=$("#headpreviewimg").attr("src").replace(basePath,'');
+    }
+    $.ajax({
+        url:"user?m=docuthead",
+        type:"post",
+        dataType:'json',
+        cache: false,
+        data:{src:src,x1:x1,y1:y1,x2:x2,y2:y2},
+        error:function(){
+            alert('系统未响应，请稍候重试!');
+        },
+        success:function(json){
+            if(json.type == "error"){
+                alert(json.msg);
+            }else{
+                alert("设置成功");
+                // closeModel('editUserDiv');
+                $("#headcurrent_photo").attr("src",json.objList[0]);
+                imgareaselectObj.setOptions({remove:true,hide:true});
+            }
+        }
+    });
+}
+function updatePass(){
+    var type=$("#pwd_type").val();
+    var newPwd=$("#newHeadPass").get(0);
+    var oldPwd=$("#oldHeadPass").get(0);
+    if(!(validateNewPass(newPwd)&&validateOldPass(oldPwd)))
+        return;
+    var pass=$("#newHeadPass").val();
+
+    if(type==1){
+        $.ajax({
+            url:'user?m=changepassword',
+            dataType:'json',
+            type:'POST',
+            data:{new_password:pass
+            },
+            cache: false,
+            error:function(){
+                alert('异常错误!系统未响应!');
+            },success:function(rps){
+                if(rps.type=='success'){
+                    $("#oldpass").val($("#newHeadPass").val());
+                    alert("修改成功!");
+                    //$("#newHeadPass");
+                }else
+                    alert(rps.msg);
+            }
+        });
+    }else{
+        //修改云账号
+        checkEttUserName($("#txt_username").get(0),true);
+    }
+}
+function validateOldPass(obj){
+    var type=$("#pwd_type").val();
+    var pass=obj.value;
+    if(type==1){
+        var oldpass=$("#oldpass").val();
+        if(pass!=oldpass){
+            $("#oldPassMsg").html('输入的原密码不对');
+            return false;
+        }else{
+            $("#oldPassMsg").html('');
+        }
+        if(pass.Trim().length<6||pass.Trim().length>12){
+            $("#oldPassMsg").html('密码为6-12个字符');
+            return false;
+        }else
+            $("#oldPassMsg").html('');
+    }else{
+        if(pass.Trim().length<6||pass.Trim().length>12){
+            $("#oldPassMsg").html('密码为6-12个字符');
+            return false;
+        }else
+            $("#oldPassMsg").html('');
+    }
+    return true;
+}
+function validateNewPass(obj){
+    var pass = obj.value;
+    if(pass.Trim().length<1){
+        $("#newPassMsg").html("请输入密码");
+        return false;
+    }else{
+        $("#newPassMsg").html('');
+    }
+    if(pass.Trim().length<6||pass.Trim().length>12){
+        $("#newPassMsg").html("请输入6-12个字符的密码长度");
+        return false;
+    }else{
+        $("#newPassMsg").html('');
+    }
+    return true;
+}
+
+function validateMorePass(obj){
+    var pass = $("#newHeadPass").val();
+    var pass2 = obj.value;
+    if(pass2.Trim().length<1){
+        $("#morePassMsg").html("请再次输入密码");
+        return;
+    }else{
+        $("#morePassMsg").html('');
+    }
+    if(pass!=pass2){
+        $("#morePassMsg").html("两次输入密码不一致，请重新输入");
+        return;
+    }else{
+        $("#morePassMsg").html('');
+    }
+}
+function closeEditUser(){
+    closeModel('editUserDiv');
+    //headimgareaselectObj.setOptions({remove:true,hide:true});
+    this.reload();
+}
+</script>
 </html>

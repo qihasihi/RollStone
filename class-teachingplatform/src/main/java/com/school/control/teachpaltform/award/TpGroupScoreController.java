@@ -42,10 +42,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 课堂表现控制器
@@ -226,6 +223,19 @@ public class TpGroupScoreController extends BaseController<TpStuScore>{
         mp.put("classtype",typeid);
         mp.put("courseid",courseid);
         mp.put("subjectid",subjectid);
+        int isBegin=0;
+        //得到该专题，该班级的专题是否已经开始
+        TpCourseClass tmpCourseCls=new TpCourseClass();
+        tmpCourseCls.setCourseid(Long.parseLong(courseid.trim()));
+        tmpCourseCls.setClassid(Integer.parseInt(clsid));
+        List<TpCourseClass> tpCClsList=this.tpCourseClassManager.getList(tmpCourseCls,null);
+        if(tpCClsList!=null&&tpCClsList.size()>0)
+            if(tpCClsList.get(0).getBegintime()!=null
+                    &&tpCClsList.get(0).getBegintime().getTime()<System.currentTimeMillis())
+                isBegin=1;
+
+        mp.put("courseIsBegin",isBegin);
+
         return new ModelAndView("/teachpaltform/classPerformanceAward/clsPerformanceAwardIndex",mp);
     }
 

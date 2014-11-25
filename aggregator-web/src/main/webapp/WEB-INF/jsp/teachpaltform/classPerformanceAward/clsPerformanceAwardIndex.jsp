@@ -175,11 +175,12 @@ if(!isShowTbl){%>
             </c:if>
         </tr>
         <tbody id="d_body">
-
         </tbody>
-
     </table>
-    <p class="t_r p_b_10" id="p_btnSub"><a href="javascript:;" onclick="doSub()" class="an_small">提交</a></p>
+    <%--爱学班级，有网下表现得分，如果该专题任务没有开始，则不显示提交按钮--%>
+    <c:if test="${!empty clsDcType&&clsDcType==3&&courseIsBegin==1}">
+        <p class="t_r p_b_10" id="p_btnSub"><a href="javascript:;" onclick="doSub()" class="an_small">提交</a></p>
+    </c:if>
     <script type="text/javascript">
         var courseid=${courseid};
         var classid=${classid};

@@ -161,10 +161,10 @@
         if(ettColumnInfos1!=null&&ettColumnInfos1.size()>0){
             for (EttColumnInfo ectmp1:ettColumnInfos1){
                 if(ectmp1!=null&&ectmp1.getIsShow()==0){
-    //                if(ectmp1.getStatus()==0){
-                        writeHtml.append("<li><a target='_blank' href='"+ectmp1.getEttcolumnurl()+"&isVip="+ectmp1.getStatus()+"'><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
-    //                }else
-    //                    writeHtml.append("<li><a  href=\"javascript:alert('权限不足!');\"><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
+                    //                if(ectmp1.getStatus()==0){
+                    writeHtml.append("<li><a href='javascript:;' onclick=\"loadEttModelJID('"+ectmp1.getEttcolumnurl()+"&isVip="+ectmp1.getStatus()+"')\"><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
+                    //                }else
+                    //                    writeHtml.append("<li><a  href=\"javascript:alert('权限不足!');\"><span class='"+ectmp1.getStyle()+"'></span>"+ectmp1.getEttcolumnname()+"</a></li>");
                 }
             }
         }

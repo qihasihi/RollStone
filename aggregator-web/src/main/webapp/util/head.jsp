@@ -47,6 +47,12 @@
         webimUrl.append("&isVip=0");
     }
   %>
+<%--如果Ett网校帐号未绑定进入，则要加载fancybox--%>
+<c:if test="${empty sessionScope.CURRENT_USER.ettuserid}">
+    <script type="text/javascript" src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+    <script type="text/javascript" src="fancybox/jquery.fancybox-1.3.4.js"></script>
+    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
+</c:if>
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
     <%if(modelType==2){%>
     <div class="jxxt_lzx_header">
@@ -65,11 +71,13 @@
 <script type="text/javascript">
 
     function loadWeImRight(){
+
         $.ajax({
-            url:"user?m=loadWebImRight",
+            url:"user?m=loadJIDRight",
             dataType:'json',
             type:'post',
             cache: false,
+            async:false,
             error:function(){
                 alert('当前网络不稳定，请重试!');
             },success:function(rps){
@@ -78,8 +86,18 @@
                       $("#li_web_im").load("util/webim.jsp",function(){
                           $("#webimopen").click();
                       });
-                  }else{
-                    window.open("<%=webimUrl%>");
+                  }else if(rps.objList[0]==1){
+                      <%--$("#a_open_toUrl").unbind("click");--%>
+                      <%--$("#a_open_toUrl").bind("click",function(){--%>
+                          <%--window.open("<%=webimUrl%>");--%>
+                      <%--});--%>
+                      <%--$("#a_open_toUrl").click();--%>
+                      $("#dv_ettModelRegisterAccount").load("user?m=toBindEttAccount",function(){
+                          $("#dv_ettModelRegisterAccount").show();
+                          //如果是WEBIM.则根据此次判断
+                          $("#dv_ettModelRegisterAccount input[name='toUrl']").val("WEBIM");
+                          $("#a_ettmodel").click();
+                      });
                   }
                 }else
                     alert(rps.msg);
@@ -90,7 +108,7 @@
     //乐知行
     function loadLZXWeImRight(){
         $.ajax({
-            url:"user?m=loadWebImRight",
+            url:"user?m=loadJIDRight",
             dataType:'json',
             type:'post',
             cache: false,
@@ -132,8 +150,56 @@
             }
         });
     }
+    //验证当前帐号是否已经绑定了帐号
+    //乐知行
+    function loadEttModelJID(etUrl){
+        var toEttUrl=etUrl;
+        $.ajax({
+            url:"user?m=loadJIDRight",
+            dataType:'json',
+            type:'post',
+            cache: false,
+            async:false,
+            error:function(){
+                alert('当前网络不稳定，请重试!');
+            },success:function(rps){
+                if(rps.type=="success"){
+                    if(rps.objList[0]==0){
+                        //如果是0，表示有存在的
+                        $("#a_open_toUrl").unbind("click");
+                        $("#a_open_toUrl").bind("click",function(){
+                            window.open(toEttUrl);
+                        });
+                        $("#a_open_toUrl").click();
+                    }else{
+//                        showModel("dv_register_ettAccount",false);
+                          //如果没有绑定，则加载fancybox.mousewheel和fancybox js,完后再加载相关页面,
+                            //显示
+                          $("#dv_ettModelRegisterAccount").load("user?m=toBindEttAccount",function(){
+                              $("#dv_ettModelRegisterAccount").show();
+                              //如果是WEBIM.则根据此次判断
+                              $("#dv_ettModelRegisterAccount input[name='toUrl']").val(toEttUrl);
+                              $("#a_ettmodel").click();
+                          });
+
+                    }
+                }else
+                    alert(rps.msg);
+            }
+        })
+    }
+
+
     $(function(){
         $("#li_web_im a").attr("data-href","<%=webimUrl%>");
+        //定义fancybox
+        <c:if test="${empty sessionScope.CURRENT_USER.ettuserid}">
+            v_fancyboxObj=$("#a_ettmodel").fancybox({
+                'onClosed':function(){
+                    $("#dv_ettModelRegisterAccount").hide();
+                }
+            });
+        </c:if>
     })
 </script>
 <c:if test="${empty sessionScope.fromType||(sessionScope.fromType!='lzx'&&sessionScope.fromType!='ett')}">
@@ -191,11 +257,11 @@
                         }
                         if(cls!=null&&cls.trim().equals("two")){
                             %>
-                            <li class="<%=cls%>" style="background-position: -150px -50px;" ><a href="<%=ectmp.getEttcolumnurl()%>&isVip=<%=ectmp.getStatus()%>" target="_blank"><%=ectmp.getEttcolumnname()%></a></li>
+                            <li class="<%=cls%>" style="background-position: -150px -50px;" ><a href="javascript:;" onclick="loadEttModelJID('<%=ectmp.getEttcolumnurl()%>&isVip=<%=ectmp.getStatus()%>')"><%=ectmp.getEttcolumnname()%></a></li>
                         <%
                            }else{
                         %>
-                        <li class="<%=cls%>" style="background-position:0px -50px;"><a href="<%=ectmp.getEttcolumnurl()%>&isVip=<%=ectmp.getStatus()%>" target="_blank"><%=ectmp.getEttcolumnname()%></a></li>
+                        <li class="<%=cls%>" style="background-position:0px -50px;"><a href="javascript:;" onclick="loadEttModelJID('<%=ectmp.getEttcolumnurl()%>&isVip=<%=ectmp.getStatus()%>')"><%=ectmp.getEttcolumnname()%></a></li>
                      <%
                            }
                         }
@@ -226,6 +292,11 @@
     <%}%>
 </c:if>
 </div>
+<div style="display:none" id="dv_ettModelRegisterAccount">
+</div>
+<a id="a_ettmodel" href="#dv_ettModelRegisterAccount"></a>
+<a id="a_open_toUrl" href="javascript:;"></a>
+
 <c:if test="${!empty sessionScope.fromType&&sessionScope.fromType=='lzx'}">
     <div style="display:none" id="dv_modify_ettAccount">
         <div class="jxxt_lzx_float">
@@ -255,6 +326,8 @@
         </div>
 
     </div>
+
+
 
 
     <div style="display: none" id="dv_register_ettAccount">
@@ -296,6 +369,7 @@
     </div>
     <!--注删-->
     <script type="text/javascript">
+        <%--网校WEBIm使用方法--%>
         //修改相关信息
         function doModifyEttAccount(){
             var uNameValidateBo=isStudent?validateUName('u_userName','p_m_uname_msg','sp_m_uname_isright',false):true;
@@ -335,9 +409,6 @@
                 }
             }
         }
-
-
-
         //注册
         function doRegister(){
             var uNameValidateBo=validateUName('userName','p_uname_msg','sp_uname_isright',false);
@@ -371,15 +442,50 @@
                 }
             }
         }
+
+
         /**
-        *   密码框可见
-        * @param idController
+         *验证用户名是否存在
+         * @param cdataController
+         * @param pmsgid
+         * @param spisrightid
+         */
+        function validteHasUName(cdataController,pmsgid,spisrightid){
+            var oldUName=$("#oldUserName").val();
+            var odUName=(typeof(oldUName)=="undefined"?"":oldUName.Trim());
+            var p={userName:cdataController.val().Trim()};
+            if(odUName.length>0)
+                p.oldUserName=odUName;
+            //验证是否有重名
+            $.ajax({
+                type: "POST",
+                dataType:"json",
+                url: "operateEtt?m=validateUserName",
+                data:p,
+                error:function(){
+                    $("#"+spisrightid).html("6-12字符/6个汉字");
+                    $("#"+pmsgid).html("网络不通畅!");
+                },
+                success: function(rps){     //根据后台返回的result判断是否成功!
+                    if(rps.type=="success"){
+                        $("#"+pmsgid).html("");
+                        $("#"+spisrightid).html('<a href="javascript:;" class="ico12" title="正确"></a>');
+                    }else{
+                        $("#"+pmsgid).html(rps.msg);
+                        $("#"+spisrightid).html("6-12字符/6个汉字");
+                    }
+                }
+            });
+        }
+        /**
+         *   密码框可见
+         * @param idController
          */
         function changePassType(idController,msgid,pisrightid){
             var controlObj=$("#"+idController);
             var ty=$("#"+idController).attr("type");
             var val=$("#"+idController).val();
-                //$("#"+idController).replaceWith();
+            //$("#"+idController).replaceWith();
             controlObj.replaceWith('<input value="'+val+'" type="'+(ty=='password'?'text':'password')+'" maxlength="12" onblur="validatePass(\''+controlObj.attr("id")+'\',\''+msgid+'\',\''+pisrightid+'\')" name="'+controlObj.attr("name")+'" id="'+controlObj.attr('id')+'" />').clone().insertAfter().remove();
         }
         function validateEmail(controlid,pmsgid,spisrightid){
@@ -462,48 +568,18 @@
             if(!reg.test(cdataController.val().Trim())){
                 $("#"+pmsgid).html("用户名不符合要求!请更改");
                 $("#"+spisrightid).html("6-12字符/6个汉字");
-               return false;
+                return false;
             }
 
             if(typeof(isValidateHas)=="undefined"||isValidateHas==true){
                 $("#"+spisrightid).html("<img src='images/loading_smail.gif'/>");
-                 validteHasUName(cdataController,pmsgid,spisrightid);
+                validteHasUName(cdataController,pmsgid,spisrightid);
+
+            }else{
+                $("#"+pmsgid).html("");
+                $("#"+spisrightid).html('<a href="javascript:;" class="ico12" title="正确"></a>');
             }
             return true;
-        }
-
-        /**
-        *验证用户名是否存在
-        * @param cdataController
-        * @param pmsgid
-        * @param spisrightid
-         */
-        function validteHasUName(cdataController,pmsgid,spisrightid){
-
-            var odUName=$("#oldUserName").val().Trim();
-            var p={userName:cdataController.val().Trim()};
-            if(odUName.length>0)
-                p.oldUserName=odUName;
-            //验证是否有重名
-            $.ajax({
-                type: "POST",
-                dataType:"json",
-                url: "operateEtt?m=validateUserName",
-                data:p,
-                error:function(){
-                    $("#"+spisrightid).html("6-12字符/6个汉字");
-                    $("#"+pmsgid).html("网络不通畅!");
-                },
-                success: function(rps){     //根据后台返回的result判断是否成功!
-                    if(rps.type=="success"){
-                        $("#"+pmsgid).html("");
-                        $("#"+spisrightid).html('<a href="javascript:;" class="ico12" title="正确"></a>');
-                    }else{
-                        $("#"+pmsgid).html(rps.msg);
-                        $("#"+spisrightid).html("6-12字符/6个汉字");
-                    }
-                }
-            });
         }
     </script>
 </c:if>
