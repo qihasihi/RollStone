@@ -22,7 +22,8 @@
             var userType = $("#userType").val();
             var classType = $("#classType").val();
             var isVirtual = $("#isVirtual").val();
-            var param={schoolId:schoolId,jid:jid,classId:classId,time:time,taskId:taskId,classType:classType,userType:userType,isVirtual:isVirtual};
+            var system = $("#system").val();
+            var param={schoolId:schoolId,jid:jid,classId:classId,time:time,taskId:taskId,classType:classType,userType:userType,isVirtual:isVirtual,system:system};
 
             param.method=methodName;
 
@@ -68,6 +69,10 @@
         <tr>
             <td>分校id</td>
             <td><input type="text" name="schoolId" id="schoolId" value="50000"/> </td>
+        </tr>
+        <tr>
+            <td>System</td>
+            <td><input type="text" name="system" id="system" value="A"/> </td>
         </tr>
         <tr>
             <td>时间戳</td>

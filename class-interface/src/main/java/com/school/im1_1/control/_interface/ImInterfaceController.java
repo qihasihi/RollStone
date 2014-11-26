@@ -4149,6 +4149,36 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         }
                     }
                 }
+                if(taskList.get(0).getRemotetype()!=null&&taskList.get(0).getRemotetype()==2){// 知识导学
+                    String url = ettip+"getResourceZSDX.do";
+                    Long time = System.currentTimeMillis();
+                    HashMap<String,String> param = new HashMap<String, String>();
+                    param.put("resourceId",resid.toString());
+                    param.put("timestamp",time.toString());
+                    String signure =  UrlSigUtil.makeSigSimple("getResourceZSDX.do",param,"*ETT#HONER#2014*");
+                    param.put("sign",signure);
+                    JSONObject returnval = UtilTool.sendPostUrl(url,param,"utf-8");
+                    String data=returnval.containsKey("data")?returnval.getString("data"):"";
+                    int result = returnval.containsKey("result")?returnval.getInt("result"):0;
+                    if(result==1){
+                        request.setAttribute("remoteUrl",data);
+                    }
+                }else{//高清课堂
+                    String url = ettip+"playVideoUrl.do";
+                    Long time = System.currentTimeMillis();
+                    HashMap<String,String> param = new HashMap<String, String>();
+                    param.put("resourceId",resid.toString());
+                    param.put("system",system);
+                    param.put("timestamp",time.toString());
+                    String signure =  UrlSigUtil.makeSigSimple("playVideoUrl.do",param,"*ETT#HONER#2014*");
+                    param.put("sign",signure);
+                    JSONObject returnval = UtilTool.sendPostUrl(url,param,"utf-8");
+                    String data=returnval.containsKey("data")?returnval.getString("data"):"";
+                    int result = returnval.containsKey("result")?returnval.getInt("result"):0;
+                    if(result==1){
+                        request.setAttribute("remoteUrl",data);
+                    }
+                }
                 request.setAttribute("userRecord",returnUserRecord);
                 return new ModelAndView("/imjsp-1.1/remote-resource-detail");
             }else{
@@ -4263,6 +4293,36 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
 //                            }
 //                        }
 //                    }
+                }
+                if(taskList.get(0).getRemotetype()!=null&&taskList.get(0).getRemotetype()==2){// 知识导学
+                    String url = ettip+"getResourceZSDX.do";
+                    Long time = System.currentTimeMillis();
+                    HashMap<String,String> param = new HashMap<String, String>();
+                    param.put("resourceId",resid.toString());
+                    param.put("timestamp",time.toString());
+                    String signure =  UrlSigUtil.makeSigSimple("getResourceZSDX.do",param,"*ETT#HONER#2014*");
+                    param.put("sign",signure);
+                    JSONObject returnval = UtilTool.sendPostUrl(url,param,"utf-8");
+                    String data=returnval.containsKey("data")?returnval.getString("data"):"";
+                    int result = returnval.containsKey("result")?returnval.getInt("result"):0;
+                    if(result==1){
+                        request.setAttribute("remoteUrl",data);
+                    }
+                }else{//高清课堂
+                    String url = ettip+"playVideoUrl.do";
+                    Long time = System.currentTimeMillis();
+                    HashMap<String,String> param = new HashMap<String, String>();
+                    param.put("resourceId",resid.toString());
+                    param.put("system",system);
+                    param.put("timestamp",time.toString());
+                    String signure =  UrlSigUtil.makeSigSimple("playVideoUrl.do",param,"*ETT#HONER#2014*");
+                    param.put("sign",signure);
+                    JSONObject returnval = UtilTool.sendPostUrl(url,param,"utf-8");
+                    String data=returnval.containsKey("data")?returnval.getString("data"):"";
+                    int result = returnval.containsKey("result")?returnval.getInt("result"):0;
+                    if(result==1){
+                        request.setAttribute("remoteUrl",data);
+                    }
                 }
                 request.setAttribute("resname",taskList.get(0).getResourcename());
                 request.setAttribute("userRecord",returnUserRecord);

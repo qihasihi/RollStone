@@ -43,7 +43,7 @@
     System.out.println("当前页面"+"------------"+"remote-resource-detail.jsp"+"         当前位置------------进入jsp      当前时间------"+currentDay);
 %>
 <div class="zsdx">
-    <div class="timu">${resname} </div>
+    <div class="timu"><a href="${remoteUrl}" target="_blank">${resname} </a></div>
     <c:if test="${!empty userRecord}">
         <c:forEach var="itm" items="${userRecord}">
             <div class="over">
