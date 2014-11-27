@@ -370,7 +370,9 @@ function loadPaperDetail(paperid,courid){
 
 
 <div class="content1 font-black">
-    <p class="jxxt_zhuanti_shijuan_text">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题<a class="ico15" href="tpres?m=toRecycleIdx&type=5&courseid=${courseid}" title="回收站"></a></p>
+    <p class="jxxt_zhuanti_shijuan_text">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题
+        <%--<a class="ico15" href="tpres?m=toRecycleIdx&type=5&courseid=${courseid}" title="回收站"></a>--%>
+    </p>
     <c:if test="${!empty courselevel and courselevel ne 3}">
         <p><strong>标准试卷</strong></p>
         <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">

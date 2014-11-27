@@ -89,7 +89,7 @@
 <div class="content2">
  <c:if test="${!empty roleStr&&roleStr eq 'TEACHER'}">
   <div class="jxxt_zhuanti_hdkj_add">
-  <p class="f_right"><a class="ico15" href="tpres?m=toRecycleIdx&type=4&courseid=${courseid}" title="回收站"></a></p>
+  <%--<p class="f_right"><a class="ico15" href="tpres?m=toRecycleIdx&type=4&courseid=${courseid}" title="回收站"></a></p>--%>
   <p class="font-darkblue"><a href="tptopic?m=toAdmin&courseid=${courseid }"><span class="ico26"></span>新建论题</a></p>
   </div>
 </c:if>

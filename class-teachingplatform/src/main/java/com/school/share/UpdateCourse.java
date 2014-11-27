@@ -892,9 +892,12 @@ public class UpdateCourse extends TimerTask{
 
 
             //专题更新成功后，开始更新元素。
+            //更新修改专题信息
+//            updateCourseSelf();
+            //更新修改专题元素信息
 //            updateCourseElement();
-
-
+            //修改资源本身信息
+//            updateResourceSelf();
 
         }else{
             System.out.println("更新专题失败!记录日志");
