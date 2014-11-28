@@ -1003,9 +1003,10 @@ function listReturn(rps){
                         }
                         if(itm.isPublishTask==0)
                             h+='<a href="tptopic?m=toAdmin&topicid='+itm.topicid+'&courseid='+itm.courseid+'" class="ico11" title="编辑"></a>';
-                        if(itm.isPublishTask==0)
-                        h+='<a href="javascript:;" onclick="if(confirm(\'您确定要删除此论题吗?\\n\\n提示：删除该论题后可在回收站里恢复!\')){updateTopicStatus('+itm.topicid+',3);}" class="ico04" title="删除"></a>';
-                        else
+                        if(itm.isPublishTask==0){
+//                        h+='<a href="javascript:;" onclick="if(confirm(\'您确定要删除此论题吗?\\n\\n提示：删除该论题后可在回收站里恢复!\')){updateTopicStatus('+itm.topicid+',3);}" class="ico04" title="删除"></a>';
+                            h+='<a href="javascript:;" onclick="if(confirm(\'您确定要删除此论题吗?\')){updateTopicStatus('+itm.topicid+',3);}" class="ico04" title="删除"></a>';
+                        }else
                             h+='<span class="ico03"  title="不可删除"></a>';
                     }
                     h+='</p>';
@@ -1121,7 +1122,7 @@ function updateTopicStatus(id,val){
 					
 				}else{
 					pageGo('p1');
-					alert("删除成功!\n\n删除的论题会进入回收站，可进入回收站恢复!");
+					alert("删除成功!");
 				}
 				
 			}
