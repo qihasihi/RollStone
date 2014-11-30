@@ -2,6 +2,7 @@ package com.school.manager;
 
 import java.util.List;
 
+import com.school.dao.base.ICommonDAO;
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import com.school.util.PageResult;
 
 
 @Service
-public class SubjectManager extends CommonDAO<SubjectInfo> implements ISubjectManager{
+public class SubjectManager extends BaseManager<SubjectInfo> implements ISubjectManager{
 
 
 	private ISubjectDAO subjectDAO;
@@ -34,7 +35,12 @@ public class SubjectManager extends CommonDAO<SubjectInfo> implements ISubjectMa
 	}
 
 
-	public Boolean doSave(SubjectInfo obj) {
+    @Override
+    protected ICommonDAO<SubjectInfo> getBaseDAO() {
+        return subjectDAO;
+    }
+
+    public Boolean doSave(SubjectInfo obj) {
 		// TODO Auto-generated method stub
 		return subjectDAO.doSave(obj);
 	}

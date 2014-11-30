@@ -574,6 +574,7 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
         //得到专题的状态是否是引用的
         TpCourseInfo tc=new TpCourseInfo();
         tc.setCourseid(topic.getCourseid());
+//        tc.setDcschoolid(this.logined(request).getDcschoolid());
         List<TpCourseInfo> tcList=this.tpCourseManager.getList(tc,null);
         if(tcList==null||tcList.size()<1){
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ACTIVE_COLUMNS_NO_DATA"));

@@ -18,8 +18,8 @@ public interface ICommonDAO<T> {
 	 * com.bhsf.oa.dao.impl.ICommonDAO#getParedStatement(java.sql.Connection,
 	 * java.sql.PreparedStatement, java.lang.String, java.lang.Object)
 	 */
-	public abstract PreparedStatement getParedStatement(Connection conn,
-			PreparedStatement pstatement, String sql, Object... paraValue);
+//	public abstract PreparedStatement getParedStatement(Connection conn,
+//			PreparedStatement pstatement, String sql, Object... paraValue);
 
 	/*
 	 * (non-Javadoc)
@@ -120,7 +120,7 @@ public interface ICommonDAO<T> {
 	public List<List<String>> executeResultProcedure(String sql, List paraV) ;
 	/**
 	 * ÊµÌå×ª»»
-	 * 
+	 *
 	 * @param rs
 	 * @param clazz
 	 * @return

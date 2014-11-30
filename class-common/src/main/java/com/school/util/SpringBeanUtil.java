@@ -3,6 +3,7 @@ package com.school.util;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by zhengzhou on 13-12-31.
@@ -37,6 +38,7 @@ public class SpringBeanUtil implements ApplicationContextAware {
     public static <T> T getBean(String beanName, Class<T> clazz) {
         if(applicationContext==null)return null;
         String springBeanName=null;
+        Object obj=null;
         String[] beanNameArray=applicationContext.getBeanNamesForType(clazz);
         if(beanNameArray!=null&&beanNameArray.length>0){
             for (String bname:beanNameArray){
@@ -47,13 +49,14 @@ public class SpringBeanUtil implements ApplicationContextAware {
                     }
                 }
             }
+            obj=getBean(springBeanName);
         }
-        Object obj=getBean(springBeanName);
         if(obj!=null)
             return clazz.cast(obj);
         return null;
     }
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext)
+            throws BeansException {
         SpringBeanUtil.applicationContext = applicationContext;
     }
 }

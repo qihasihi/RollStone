@@ -2858,6 +2858,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                                 //查询得到班级类型
                                 ClassInfo cls=new ClassInfo();
                                 cls.setClassid(Integer.parseInt(clsid.trim()));
+                                cls.setDcschoolid(this.logined(request).getDcschoolid());
                                 List<ClassInfo> clsList=this.classManager.getList(cls,null);
                                 if(clsList==null||clsList.size()<1){
                                     if(tctmp.getCourseScoreIsOverStr()==null||tctmp.getCourseScoreIsOverStr().trim().length()<1)

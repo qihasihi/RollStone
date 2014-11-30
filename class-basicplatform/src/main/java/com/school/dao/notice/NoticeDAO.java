@@ -117,10 +117,12 @@ public class NoticeDAO extends CommonDAO<NoticeInfo> implements INoticeDAO {
 		}else{
 			sqlbuilder.append("NULL,");
 		}
-
-        sqlbuilder.append("?,");
-        objlist.add(obj.getDcschoolid() );
-
+        if(obj.getDcschoolid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getDcschoolid() );
+        }else{
+            sqlbuilder.append("NULL,");
+        }
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objlist.add(presult.getPageNo());
@@ -353,14 +355,18 @@ public class NoticeDAO extends CommonDAO<NoticeInfo> implements INoticeDAO {
 		}else{
 			sqlbuilder.append("NULL,");
 		}
-		if(obj.getNoticetype()!=null){
-			sqlbuilder.append("?,");
-			objlist.add(obj.getNoticetype());
-		}else{
-			sqlbuilder.append("NULL,");
-		}
-        sqlbuilder.append("?,");
-        objlist.add(obj.getDcschoolid());
+        if(obj.getNoticetype()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getNoticetype());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(obj.getDcschoolid()!=null){
+            sqlbuilder.append("?,");
+            objlist.add(obj.getDcschoolid());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
 		if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");
 			objlist.add(presult.getPageNo());

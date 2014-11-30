@@ -347,6 +347,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         NoticeInfo notic=new NoticeInfo();
         notic.setCuserid(this.logined(request).getRef());
         notic.setNoticetype("3");  //通知公告
+        notic.setDcschoolid(this.logined(request).getDcschoolid());
         PageResult presult=new PageResult();
         presult.setPageNo(1);
         presult.setPageSize(5);

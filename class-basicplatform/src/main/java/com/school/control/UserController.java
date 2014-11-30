@@ -5,9 +5,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
+import javax.annotation.Resource;
+import javax.naming.InitialContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.TransactionManager;
 
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.entity.*;
@@ -22,7 +25,15 @@ import com.school.utils.*;
 import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +48,7 @@ import com.school.util.sendfile.SendFile;
 @Controller
 @RequestMapping(value = "/user")
 public class UserController extends BaseController<UserInfo> {
+
     protected IUserManager userManager;
     protected IClassYearManager classYearManager;
     protected IIdentityManager identityManager;
@@ -1373,6 +1385,7 @@ public class UserController extends BaseController<UserInfo> {
      * @throws Exception
      */
     @RequestMapping(params = "m=edit_base", method = RequestMethod.POST)
+    @Transactional
     public void edit_base(HttpServletRequest request,
                           HttpServletResponse response, ModelMap mp) throws Exception {
         JsonEntity je=new JsonEntity();
@@ -1450,6 +1463,9 @@ public class UserController extends BaseController<UserInfo> {
                     System.out.println("用户信息同步至网校成功!更新");
                 }else{
                     System.out.println("用户信息同步至网校失败!更新");
+                    je.setType("error");
+                    je.setMsg("用户信息同步至网校失败!更新");
+                    transactionRollback();
                 }
             }else
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -1503,6 +1519,7 @@ public class UserController extends BaseController<UserInfo> {
      */
 
     @RequestMapping(params = "m=edit_role", method = RequestMethod.POST)
+    @Transactional
     public void edit_role(HttpServletRequest request,
                           HttpServletResponse response, ModelMap mp) throws Exception {
         JsonEntity je=new JsonEntity();
@@ -2002,8 +2019,12 @@ public class UserController extends BaseController<UserInfo> {
                 if(operateCls.size()>0){
                     if(updateToEttClassUser(operateCls,this.logined(request).getDcschoolid())){
                         System.out.println("班主任提交网校成功!");
-                    }else
+                    }else{
                         System.out.println("班主任提交网校失败!");
+                        je.setType("error");
+                        je.setMsg("同步用户班级数据错误，请重试!");
+                        transactionRollback();
+                    }
                 }
 
             }else
@@ -2022,6 +2043,7 @@ public class UserController extends BaseController<UserInfo> {
      */
 
     @RequestMapping(params = "m=edit_info", method = RequestMethod.POST)
+    @Transactional(propagation= Propagation.REQUIRED)
     public void edit_info(HttpServletRequest request,
                           HttpServletResponse response, ModelMap mp) throws Exception {
         JsonEntity je=new JsonEntity();
@@ -2255,16 +2277,6 @@ public class UserController extends BaseController<UserInfo> {
         if(objListArray.size()>0&&sqllist.size()>0){
             boolean flag=this.userManager.doExcetueArrayProc(sqllist, objListArray);
             if(flag){
-                UserInfo utmp=new UserInfo();
-                utmp.setRef(ref);
-                UserInfo u=userManager.getUserInfo(utmp);
-                if(u!=null){
-                    if(updateToEttClassUser(operateCls,u.getDcschoolid())){
-                        System.out.println("更新classuser到网校成功！");
-                    }else{
-                        System.out.println("更新classuser到网校失败！");
-                    }
-                }
 
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                 je.setType("success");
@@ -2312,6 +2324,20 @@ public class UserController extends BaseController<UserInfo> {
                     je.getObjList().add(stuList.get(0));
                     je.getObjList().add(stuClsList);
                     je.getObjList().add(stuHistoryClsList);
+                }
+                UserInfo utmp=new UserInfo();
+                utmp.setRef(ref);
+                UserInfo u=userManager.getUserInfo(utmp);
+                if(u!=null){
+                    if(updateToEttClassUser(operateCls,u.getDcschoolid())){
+                        System.out.println("更新classuser到网校成功！");
+                    }else{
+                        System.out.println("更新classuser到网校失败！");
+                        //事务回滚,抛出异常
+                        je.setMsg("异常错误，同步数据失败!");
+                        je.setType("error");
+                        transactionRollback();
+                    }
                 }
 
             }else
@@ -3568,6 +3594,9 @@ public class UserController extends BaseController<UserInfo> {
                 je.getObjList().add(userNextRef);
                 if(!addToEttUser(userNextRef)){
                     System.out.println("同步网校失败！原因：未知");
+                    je.setType("error");
+                    je.setMsg("同步网校失败!");
+                    transactionRollback();
                 }
             } else {
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -6387,6 +6416,7 @@ public class UserController extends BaseController<UserInfo> {
      */
 
     @RequestMapping(params = "m=receiveLZXUserM", method = {RequestMethod.POST,RequestMethod.GET})
+    @Transactional
     public void m_receiveLZXUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolid");
@@ -6677,10 +6707,15 @@ public class UserController extends BaseController<UserInfo> {
                             bindUserList.add(uList.get(0));
                     }
 
-                    if(!EttInterfaceUserUtil.addUserBase(bindUserList))
+                    if(!EttInterfaceUserUtil.addUserBase(bindUserList)){
                         System.out.println("Add lzx-ett user error!");
-                    else
+                        je.setType("error");
+                        je.setMsg("添加乐知行用户失败!");
+                        transactionRollback();
+                    }else{
                         System.out.println("Add lzx-ett user success!");
+
+                    }
                 }
             }
 
@@ -6700,6 +6735,7 @@ public class UserController extends BaseController<UserInfo> {
      */
 
     @RequestMapping(params = "m=modifyLZXUserM",  method = {RequestMethod.POST,RequestMethod.GET})
+    @Transactional
     public void m_modifyLZXUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolid");
@@ -6858,9 +6894,12 @@ public class UserController extends BaseController<UserInfo> {
                             bindUserList.add(uList.get(0));
                     }
 
-                    if(!EttInterfaceUserUtil.updateUserBase(bindUserList))
+                    if(!EttInterfaceUserUtil.updateUserBase(bindUserList)){
                         System.out.println("Update lzx-ett user error!");
-                    else
+                        je.setType("error");
+                        je.setMsg("添加乐知行用户失败!");
+                        transactionRollback();
+                    }else
                         System.out.println("Update lzx-ett user success!");
                 }
             }
@@ -6878,6 +6917,7 @@ public class UserController extends BaseController<UserInfo> {
      */
 
     @RequestMapping(params = "m=deleteLZXUserM",  method = {RequestMethod.POST,RequestMethod.GET})
+    @Transactional
     public void m_deleteLZXUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolid");
@@ -6985,9 +7025,12 @@ public class UserController extends BaseController<UserInfo> {
                             bindUserList.add(uList.get(0));
                     }
 
-                    if(!EttInterfaceUserUtil.delUserBase(bindUserList))
+                    if(!EttInterfaceUserUtil.delUserBase(bindUserList)){
                         System.out.println("Delete lzx-ett user error!");
-                    else
+                        je.setType("error");
+                        je.setMsg("添加乐知行用户失败!");
+                        transactionRollback();
+                    }else
                         System.out.println("Delete lzx-ett user success!");
                 }
             }
@@ -7005,6 +7048,7 @@ public class UserController extends BaseController<UserInfo> {
      */
 
     @RequestMapping(params = "m=receiveLZXClsUserM",  method = {RequestMethod.POST,RequestMethod.GET})
+    @Transactional
     public void m_receiveLZXClsUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolid");
@@ -7158,9 +7202,12 @@ public class UserController extends BaseController<UserInfo> {
                 if(clsIdList.size()>0){
                     for(Integer classid:clsIdList){
                         List<Map<String,Object>>mapList=getClassUserMap("学生", classid);
-                        if(!EttInterfaceUserUtil.OperateClassUser(mapList,classid,Integer.parseInt(dcschoolid)))
+                        if(!EttInterfaceUserUtil.OperateClassUser(mapList,classid,Integer.parseInt(dcschoolid))){
                             System.out.println("Add lzx-ett clsuser error!");
-                        else
+                            je.setType("error");
+                            je.setMsg("添加乐知行用户失败!");
+                            transactionRollback();
+                        }else
                             System.out.println("Add lzx-ett clsuser success!");
                     }
                 }
@@ -7177,6 +7224,7 @@ public class UserController extends BaseController<UserInfo> {
      * @throws Exception
      */
     @RequestMapping(params = "m=deleteLZXClsUserM",  method = {RequestMethod.POST,RequestMethod.GET})
+    @Transactional
     public void m_deleteLZXClsUser(HttpServletRequest request,HttpServletResponse response) throws Exception {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolid");
@@ -7294,9 +7342,12 @@ public class UserController extends BaseController<UserInfo> {
                 if(clsIdList.size()>0){
                     for(Integer classid:clsIdList){
                         List<Map<String,Object>>mapList=getClassUserMap("学生", classid);
-                        if(!EttInterfaceUserUtil.OperateClassUser(mapList,classid,Integer.parseInt(dcschoolid)))
+                        if(!EttInterfaceUserUtil.OperateClassUser(mapList,classid,Integer.parseInt(dcschoolid))){
                             System.out.println("Delete lzx-ett clsuser error!");
-                        else
+                            je.setType("error");
+                            je.setMsg("添加乐知行用户失败!");
+                            transactionRollback();
+                        }else
                             System.out.println("Delete lzx-ett clsuser success!");
                     }
                 }
@@ -7546,12 +7597,15 @@ public class UserController extends BaseController<UserInfo> {
                 System.out.println("用户信息同步至网校成功!");
             }else{
                 System.out.println("用户信息同步至网校失败!");
+
                 return false;
             }
             if(updateToEttClassUser(userNextRef,tmpUList.get(0).getDcschoolid()))
                 System.out.println("classUser同步至网校成功!");
-            else
+            else{
                 System.out.println("classUser同步至网校失败!");
+
+            }
 
         }
         return true;

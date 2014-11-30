@@ -107,9 +107,11 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
                 objList.add(obj.getLzxclassid());
             }else
                 sqlbuilder.append("NULL,");
-
-            sqlbuilder.append("?,");
-            objList.add(obj.getDcschoolid());
+            if(obj.getDcschoolid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getDcschoolid());
+            }else
+                sqlbuilder.append("NULL,");
 
 			if(obj.getClassname()!=null){ 
 				sqlbuilder.append("?,");
@@ -509,7 +511,9 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         sb.append("',");
         sb.append(from);
         sb.append(",?)}");
-        total = (Integer)this.executeFunction(sb.toString(),null);
+        Object objTotal=this.executeSacle_PROC(sb.toString(),null);
+        if(objTotal!=null)
+            total=Integer.parseInt(objTotal.toString());
         return total;
     }
 }

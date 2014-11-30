@@ -8,6 +8,8 @@ import com.school.entity.UserInfo;
 
 import com.school.manager.base.IBaseManager;
 import com.school.util.PageResult;
+import org.springframework.stereotype.Component;
+
 
 public interface IUserManager extends IBaseManager<UserInfo> {
 

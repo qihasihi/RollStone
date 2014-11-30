@@ -12,6 +12,7 @@ import com.school.util.UtilTool;
 import com.school.utils.EttInterfaceUserUtil;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -394,6 +395,7 @@ public class ClassController extends BaseController<ClassInfo>{
      * @throws Exception
      */
     @RequestMapping(params="m=ajaxsave",method=RequestMethod.POST)
+    @Transactional
     public void doSubmitAddClassyear(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
 
@@ -432,6 +434,9 @@ public class ClassController extends BaseController<ClassInfo>{
             if(classList!=null&&classList.size()>0){
                   if(!EttInterfaceUserUtil.addClassBase(classList.get(0))){
                       System.out.println("同步添加班级失败!");
+                      je.setType("error");
+                      je.setMsg("同步添加班级失败!");
+                      transactionRollback();
                   }else
                       System.out.println("同步添加班级成功!");
             }
@@ -449,6 +454,7 @@ public class ClassController extends BaseController<ClassInfo>{
      * @throws Exception
      */
     @RequestMapping(params="m=modify",method=RequestMethod.POST)
+    @Transactional
     public void doSubmitUpdateRole(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
         ClassInfo classinfo = this.getParameter(request, ClassInfo.class);
@@ -494,6 +500,9 @@ public class ClassController extends BaseController<ClassInfo>{
             if(clsList!=null&&clsList.size()>0){
                 if(!EttInterfaceUserUtil.updateClassBase(clsList.get(0))){
                     System.out.println("修改班级，同步数据失败!");
+                    je.setType("error");
+                    je.setMsg("同步数据失败!");
+                    transactionRollback();
                 }else{
                     System.out.println("修改班级，同步数据成功!");
                 }
@@ -510,6 +519,7 @@ public class ClassController extends BaseController<ClassInfo>{
      * @throws Exception
      */
     @RequestMapping(params="m=del",method=RequestMethod.POST)
+    @Transactional
     public void doDeleteRole(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
         ClassInfo classinfo = this.getParameter(request, ClassInfo.class);
@@ -540,10 +550,17 @@ public class ClassController extends BaseController<ClassInfo>{
                 System.out.println("班级人员删除同步至网校信息成功!");
                 if(!EttInterfaceUserUtil.delClassBase(clsList.get(0))){
                     System.out.println("班级删除同步至网校信息失败!");
+                    je.setType("error");
+                    je.setMsg("班级删除同步至网校信息失败!");
+                    transactionRollback();
                 }else
                     System.out.println("班级删除同步至网校信息成功!");
-            }else
+            }else{
                 System.out.println("班级人员删除同步至网校信息失败!");
+                je.setType("error");
+                je.setMsg("班级人员删除同步至网校信息失败!");
+                transactionRollback();
+            }
 
         }else{
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -755,6 +772,9 @@ public class ClassController extends BaseController<ClassInfo>{
                             //更新人员
                             if(!updateEttClassUser(clsidInte)){
                                 logger.info("后台调班:"+clsidInte+"向ett更新人员失败!");
+                                jeEntity.setType("error");
+                                jeEntity.setMsg("向ett更新人员失败!");
+                                transactionRollback();
                             }else{
                                 logger.info("后台调班:"+clsidInte+"向ett更新人员成功!");
                             }
@@ -847,7 +867,11 @@ public class ClassController extends BaseController<ClassInfo>{
             jeEntity.setMsg("自动升级成功!请刷新页面!");
             jeEntity.setType("success");
             //自动升级调用ETT接口，升级
-            levelUpSendToEtt(year);
+            if(!levelUpSendToEtt(year)){
+                jeEntity.setType("error");
+                jeEntity.setMsg("操作失败，同步至网校信息失败!");
+                transactionRollback();
+            }
         }else
             jeEntity.setMsg("升级失败!原因：未知!");
         response.getWriter().print(jeEntity.toJSON());
@@ -856,6 +880,7 @@ public class ClassController extends BaseController<ClassInfo>{
 
 
     @RequestMapping(params ="m=lzxUpdateM",method=RequestMethod.POST)
+    @Transactional
     public void lzxUpdateM(HttpServletRequest request,HttpServletResponse response) throws Exception{
         Object timeStr=request.getParameter("timestamp");
         Object schoolid=request.getParameter("lzx_school_id");
@@ -1024,13 +1049,19 @@ public class ClassController extends BaseController<ClassInfo>{
                                 if(optype==1){
                                    if(EttInterfaceUserUtil.addClassBase(cList.get(0))){
                                        logger.error(cList.get(0).getClassid()+"更新班级成功!");
-                                   }else
-                                       logger.error(cList.get(0).getClassid()+"更新班级失败!");
+                                   }else{
+                                       logger.error(cList.get(0).getClassid() + "更新班级失败!");
+                                       transactionRollback();
+                                       response.getWriter().println("{\"type\":\"error\",\"msg\":\""+cList.get(0).getClassid()+"更新班级失败!\"}");return;
+                                   }
                                 }else{
                                     if(EttInterfaceUserUtil.updateClassBase(cList.get(0))){
                                         logger.error(cList.get(0).getClassid()+"更新班级成功!");
-                                    }else
+                                    }else{
                                         logger.error(cList.get(0).getClassid()+"更新班级失败!");
+                                        transactionRollback();
+                                        response.getWriter().println("{\"type\":\"error\",\"msg\":\""+cList.get(0).getClassid()+"更新班级失败!\"}");return;
+                                    }
                                 }
                             }
                     }
@@ -1194,6 +1225,7 @@ public class ClassController extends BaseController<ClassInfo>{
      * @param response
      */
     @RequestMapping(params="m=lzxDelM",method=RequestMethod.POST)
+    @Transactional
     public void lzxDelM(HttpServletRequest request,HttpServletResponse response) throws Exception{
         Object timeStr=request.getParameter("timestamp");
         Object schoolid=request.getParameter("lzx_school_id");
@@ -1299,8 +1331,12 @@ public class ClassController extends BaseController<ClassInfo>{
                         if(cList!=null&&cList.size()>0){
                                 if(EttInterfaceUserUtil.delClassBase(cList.get(0))){
                                     logger.error(cList.get(0).getClassid()+"删除Ett班级成功!");
-                                }else
+                                }else{
                                     logger.error(cList.get(0).getClassid()+"删除Ett班级失败!");
+                                    transactionRollback();
+                                    response.getWriter().println("{\"type\":\"success\",\"msg\":\"删除Ett班级失败!\"}");
+                                    return;
+                                }
                         }
                     }
                 }

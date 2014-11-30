@@ -18,6 +18,7 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -46,7 +47,12 @@ public class BaseController<T extends java.io.Serializable> {
     //记录Log4J
     public Logger logger = Logger.getLogger(BaseController.class);
 
-
+    /**
+     * 回滚当前事务
+     */
+    public void transactionRollback(){
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+    }
 
     /**
      * 得到Manager  以Class为例  getManager(ClassManager.getClass());
@@ -58,7 +64,9 @@ public class BaseController<T extends java.io.Serializable> {
     public <T> T getManager(Class<T> cls){
         return  SpringBeanUtil.getBean(cls.getSimpleName(), cls);
     }
-    public BaseController(){};
+    public BaseController(){
+        int i=0;
+    };
 
 
     /******************************** 公共方法区域 ***********************************/
