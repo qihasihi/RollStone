@@ -495,8 +495,8 @@ public class PaperController extends BaseController<PaperInfo>{
         }
         TpCoursePaper cp=new TpCoursePaper();
         cp.setRef(Integer.parseInt(ref));
-        cp.setLocalstatus(Integer.parseInt(flag));
-        if(this.tpCoursePaperManager.doUpdate(cp)){
+        //cp.setLocalstatus(Integer.parseInt(flag));
+        if(this.tpCoursePaperManager.doDelete(cp)){
             je.setType("success");
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
         }else
@@ -599,9 +599,6 @@ public class PaperController extends BaseController<PaperInfo>{
         t.setCourseid(Long.parseLong(courseid));
         t.setLocalstatus(1);
         t.setSelecttype(Integer.parseInt(type));
-
-        //查询没有发任务的资源
-        t.setTaskflag(1);
         t.setIscloud(2);
         List<TpCoursePaper>paperList=this.tpCoursePaperManager.getSelRelatePaPerList(t, p);
         t.setIscloud(1);

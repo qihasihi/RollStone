@@ -704,13 +704,14 @@ public class TpCourseResource implements Serializable {
      */
 
     public String getSuffixtype(){
-        if(this.getResourseType()=="jpeg"){
+        if(this.getResourseType().equals("jpeg")){
             return "ico_jpg1";
-        }else if(this.getResourseType()=="video"&&(this.getDifftype()==null||this.getDifftype()!=1)){
+        }else if(this.getResourseType().equals("video")&&
+                ((this.getDifftype()!=null&&this.getDifftype().toString().equals("0"))||(this.getDifftype()==1&&this.getResid()<1))){
             return "ico_mp41";
-        }else if(this.getResourseType()=="mp3"){
+        }else if(this.getResourseType().equals("mp3")){
             return "ico_mp31";
-        }else if(this.getResourseType()=="doc"){
+        }else if(this.getResourseType().equals("doc")){
             String suffix=this.getResourceinfo().getFilesuffixname();
             if(suffix.indexOf("xls")!=-1)
                 return "ico_xls1";
@@ -729,9 +730,9 @@ public class TpCourseResource implements Serializable {
             else if(suffix.indexOf("vsd")!=-1)
                 return "ico_vsd1";
             return "ico_wps1";
-        }else if(this.getResourseType()=="swf"){
+        }else if(this.getResourseType().equals("swf")){
             return "ico_swf1";
-        }else if(this.getDifftype()!=null&&this.getDifftype()==1){
+        }else if(this.getDifftype()!=null&&this.getDifftype()==1&&this.getResid()>0){
             return "ico_wsp1";
         }else{
             return "ico_other1";

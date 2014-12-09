@@ -95,7 +95,7 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 		StringBuilder sqlbuilder=new StringBuilder("{CALL class_info_proc_split(");
 		List<Object> objList=new ArrayList<Object>(); 
 		if(obj==null)  
-			sqlbuilder.append("null,null,null,null,null,null,null,null,null,null,0,null,null,null,null,");
+			sqlbuilder.append("null,null,null,null,null,null,null,null,null,null,0,null,null,null,null,null,");
 		else{
             if(obj.getClassid()!=null){
                 sqlbuilder.append("?,");
@@ -173,9 +173,9 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
                 objList.add(obj.getInvitecode());
             }else
                 sqlbuilder.append("NULL,");
-            if(obj.getImvalidatecode()!=null){
+            if(obj.getImvaldatecode()!=null){
                 sqlbuilder.append("?,");
-                objList.add(obj.getImvalidatecode());
+                objList.add(obj.getImvaldatecode());
             }else
                 sqlbuilder.append("NULL,");
 		}

@@ -28,14 +28,14 @@ public class ClassInfo implements java.io.Serializable {
     private Integer gradeid;
     private String subjectstr;
     private String invitecode;
-    private String imvalidatecode;
+    private String imvaldatecode;
 
-    public String getImvalidatecode() {
-        return imvalidatecode;
+    public String getImvaldatecode() {
+        return imvaldatecode;
     }
 
-    public void setImvalidatecode(String imvalidatecode) {
-        this.imvalidatecode = imvalidatecode;
+    public void setImvaldatecode(String imvaldatecode) {
+        this.imvaldatecode = imvaldatecode;
     }
 
     public String getInvitecode() {

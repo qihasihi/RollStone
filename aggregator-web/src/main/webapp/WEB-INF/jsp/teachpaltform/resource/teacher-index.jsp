@@ -342,7 +342,7 @@
         if(isview)
             u+='&editQues=0';
         $("#dv_paper_content #dv_paper_content_child").load(u,function(){
-            $("#dv_paper_content .float_title").html("编辑试卷");
+            $("#dv_paper_content .float_title").html("查看试卷");
             //关闭相关层
             closeModel('dv_paper_name');
             $("#dv_paper_content>div").hide();

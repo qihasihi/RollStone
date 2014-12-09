@@ -286,6 +286,11 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
             objList.add(obj.getHeadimage());
         }else
             sqlbuilder.append("NULL,");
+        if(obj.getIsactivity()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getIsactivity());
+        }else
+            sqlbuilder.append("NULL,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}

@@ -363,7 +363,7 @@ public class UserController extends BaseController<UserInfo> {
         clspage.setPageNo(0);
         clspage.setPageSize(0);
         clspage.setOrderBy("YEAR,CASE class_grade	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END,CLASS_NAME ");
-        List<ClassInfo> classList = this.classManager.getList(null, clspage);
+      //  List<ClassInfo> classList = this.classManager.getList(null, clspage);
         RoleInfo job = new RoleInfo();
         job.setFlag(0);
         List<RoleInfo> roleList = this.roleManager.getList(job, null);
@@ -375,7 +375,7 @@ public class UserController extends BaseController<UserInfo> {
         clspage.setOrderBy("CASE grade_value	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END");
         List<GradeInfo>gradeList=this.gradeManager.getList(null,clspage);
 
-        request.setAttribute("clsList", classList);
+        //request.setAttribute("clsList", classList);
         request.setAttribute("clsyearList", clsyearList);
         request.setAttribute("gradeList", gradeList);
         request.setAttribute("rolelist", roleList);

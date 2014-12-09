@@ -43,7 +43,7 @@
             }
             var param={courseid:courseid};
             param.type=4;
-            param.taskflag=1;
+            //param.taskflag=1;
             pObj.setPostParams(param);
         }
 

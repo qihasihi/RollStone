@@ -39,6 +39,15 @@ public class UserInfo implements java.io.Serializable {
     private String lzxuserid;   //乐知行用户ID
     private String schoolid;
     private Integer ettuserid;//网校用户id
+    private Integer isactivity;
+
+    public Integer getIsactivity() {
+        return isactivity;
+    }
+
+    public void setIsactivity(Integer isactivity) {
+        this.isactivity = isactivity;
+    }
 
     /**
      * 用户类型:  2=任课教师   3=学生

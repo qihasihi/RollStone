@@ -182,6 +182,8 @@ function doAddClsStudent(clsid){
 
 
     if(!confirm(msg))return;
+    resetBtnAttr("a_sub_student","an_public1","an_gray_public1","",2);
+
     $.ajax({
         url: 'tpuser?doAddClsStudent',
         type: 'post',
@@ -190,8 +192,10 @@ function doAddClsStudent(clsid){
         cache: false,
         error: function () {
             alert('网络异常!')
+            resetBtnAttr("a_sub_student","an_public1","an_gray_public1","doAddClsStudent(\''+clsid+'\')",1);
         },
         success: function (rps) {
+            resetBtnAttr("a_sub_student","an_public1","an_gray_public1","doAddClsStudent(\''+clsid+'\')",1);
             if (rps.type == "error") {
                 alert(rps.msg);
             } else {
