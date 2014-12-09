@@ -61,7 +61,9 @@ $(function(){
     if(papertype==1||papertype==2){
         var allqueslength=allquesid.split(",").length;
         var avgScore=parseInt(paperSumScore/allqueslength);
+//        alert($("span[name='avg_score']").length+"   "+avgScore)
         $("span[name='avg_score']").html(avgScore);
+//        $("#group_628772").html(10);
         if(paperSumScore%allqueslength>0){
             //// 使用数组翻转函数
             var yuScore=paperSumScore%allqueslength;
@@ -187,19 +189,24 @@ function showQuesNum(){
         $("#a_next").hide();
         $("#a_free").hide();
     }
+    //得到平均分
+    var allqueslength=allquesid.split(",").length;
+    var avgScore=parseInt(paperSumScore/allqueslength);
 
-    $("#dv_paperdetail table[id*='dv_ques_']").each(function(idx,itm){
-        h+='<li class="blue quesNumli" id="li_'+(idx+1)+'" data-bind="'+(idx+1)
-                +'"><a href="javascript:;" onclick="showQues('+(idx+1)+')">'+(idx+1)+'</a></li>';
-        var sumScore=0;
-        $("#"+itm.id+" tr[id*='dv_ques_'] span[id*='score_']").each(function(ix,im){
-          sumScore+=parseFloat($(this).html().Trim());
+        $("#dv_paperdetail table[id*='dv_ques_']").each(function(idx,itm){
+            h+='<li class="blue quesNumli" id="li_'+(idx+1)+'" data-bind="'+(idx+1)
+                    +'"><a href="javascript:;" onclick="showQues('+(idx+1)+')">'+(idx+1)+'</a></li>';
+
+            var sumScore=0;
+            $("#"+itm.id+" tr[id*='dv_ques_'] span[id*='score_']").each(function(ix,im){
+              sumScore+=parseFloat($(this).html().Trim());
+            });
+            if(sumScore==0){
+                sumScore=avgScore;
+            }
+            $("#"+itm.id+" span[id*='group_']").html(sumScore);
+            $("#"+itm.id+" tr[id*='dv_ques_']").next().show();
         });
-        $("#"+itm.id+" span[id*='group_']").html(sumScore);
-
-        $("#"+itm.id+" tr[id*='dv_ques_']").next().show();
-    });
-
 
 
     $("#ul_xuhao").html(h);
@@ -418,18 +425,18 @@ function xround(x, num){
                             <%--</c:if>--%>
                         </c:if>
                               <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0&&!empty pq.questionTeam}">
-                                    <span class="font-blue" id="group_${pq.ref}" data-bind="${pq.questionid}|${pq.ref}">
+                                    <span class="font-blue" id="group_${pq.ref}" name="avg_score" data-bind="${pq.questionid}|${pq.ref}">
                                         <a href="javascript:;" onclick="onClickScore('score_${pq.questionid}')">
                                                 ${pq.score}
                                         </a></span>
                                 </c:if>
                                  <c:if test="${empty param.dropQuesNum||param.dropQuesNum!=1||paper.paperid>0}">
-                                    <span class="font-blue" id="group_${pq.ref}" data-bind="${pq.questionid}|${pq.ref}">
+                                    <span class="font-blue" id="group_${pq.ref}" name="avg_score" data-bind="${pq.questionid}|${pq.ref}">
                                                 ${pq.score}
                                     </span>
                                 </c:if>
                                 <c:if test="${!empty param.dropQuesNum&&param.dropQuesNum==1&&paper.paperid<0&&empty pq.questionTeam}">
-                                    <span class="font-blue" id="score_${pq.questionid}" data-bind="${pq.questionid}|"><a href="javascript:;" onclick="onClickScore('score_${pq.questionid}')">
+                                    <span class="font-blue" id="score_${pq.questionid}" name="avg_score" data-bind="${pq.questionid}|"><a href="javascript:;" onclick="onClickScore('score_${pq.questionid}')">
                                         ${pq.score}
                                     </a></span>
                                 </c:if>
