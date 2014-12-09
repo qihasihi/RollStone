@@ -170,7 +170,10 @@
             <h2><span class="ico07"></span>任务<strong>${fn:length(stuTkList)}</strong></h2>
             <ul>
                 <c:forEach items="${stuTkList}" var="stk">
-                    <li>在${stk.COURSE_NAME}专题中，你尚有<span style="color:red">${stk.TKCOUNT}</span>个任务未完成</li>
+                    <li>在${stk.COURSE_NAME}专题中，你尚有
+                        <a href="task?toStuTaskIndex&courseid=${stk.COURSE_ID}&classid=${stk.CLASS_ID}">
+                            <span style="color:red">${stk.TKCOUNT}</span>
+                        </a>个任务未完成!</li>
                 </c:forEach>
             </ul>
         </div>
