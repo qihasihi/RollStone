@@ -2178,7 +2178,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                         if(tasktype!=6)
                             htm += '<th>得分</th>';
                         if (tasktype == 4)
-                            htm += '<th>排名<a href="javascript:void(0);"  onclick="DataSort(\'t.rank\',this)"  class="' + css + '"></a></th>';
+                            htm += '<th>排名<a href="javascript:void(0);"  onclick="DataSort(\'t.rank+0\',this)"  class="' + css + '"></a></th>';
                         htm += '<th>查看试卷</th>';
                         htm += '</tr>';
                         $.each(rmsg.objList[1], function (idx, itm) {
@@ -2260,7 +2260,7 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                     if(tasktype!=6)
                         htm += '<th>得分</th>';
                     if (tasktype == 4)
-                        htm += '<th>排名<a href="javascript:void(0);"  onclick="DataSort(\'t.rank\',this)"  class="' + css + '"></a></th>';
+                        htm += '<th>排名<a href="javascript:void(0);"  onclick="DataSort(\'t.rank+0\',this)"  class="' + css + '"></a></th>';
                     htm += '<th>查看试卷</th>';
                     htm += '</tr>';
                     $.each(rmsg.objList[1], function (idx, itm) {

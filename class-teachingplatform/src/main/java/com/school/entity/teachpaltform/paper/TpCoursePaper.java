@@ -39,6 +39,15 @@ public class TpCoursePaper {
     private Integer iscloud;        //云端试卷 id>0
     private Integer isrelate;    //添加关联试卷 查询条件
     private Object micflag; //当前试卷关联微视频是否发任务
+    private Object isvideopaper; //当前试卷关联了微视频
+
+    public Object getIsvideopaper() {
+        return isvideopaper;
+    }
+
+    public void setIsvideopaper(Object isvideopaper) {
+        this.isvideopaper = isvideopaper;
+    }
 
     public Object getMicflag() {
         return micflag;
