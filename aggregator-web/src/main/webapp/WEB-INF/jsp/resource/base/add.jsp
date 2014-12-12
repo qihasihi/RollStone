@@ -161,7 +161,9 @@
                                         $("#a_dosub").show();
                                     }else{
                                         alert(rps.msg);
-                                        if(typeof(window.opener.pmyRes)!="undefined"&&window.opener.pmyRes!=null){
+                                        $("#sp_rs_log").html('');
+                                        $("#loading").hide();
+                                        if(window.opener!=null&&typeof(window.opener.pmyRes)!="undefined"&&window.opener.pmyRes!=null){
                                             window.opener.pmyRes.pageGo();
                                             window.close();
                                         }else
