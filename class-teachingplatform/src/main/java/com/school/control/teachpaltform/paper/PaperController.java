@@ -473,7 +473,7 @@ public class PaperController extends BaseController<PaperInfo>{
         request.setAttribute("paper", tpCoursePaperList.get(0));
         request.setAttribute("courseid", courseid);
         request.setAttribute("coursename",teacherCourseList.get(0).getCoursename());
-        request.setAttribute("ALLQUESID", allquesidObj);
+        request.setAttribute("allquesid", allquesidObj);
         return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/preview-paper");
     }
 
