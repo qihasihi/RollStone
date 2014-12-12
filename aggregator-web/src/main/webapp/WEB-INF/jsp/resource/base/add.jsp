@@ -5,32 +5,186 @@
 %>
 <html>
 <head>
-
+    <!-- 上传控件
     <script type="text/javascript" src="<%=basePath %>js/common/uploadControl.js"></script>
-    <!-- 上传控件 -->
     <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery-1.9.1.js"></script>
-    <!-- <script type="text/javascript" src="util/uploadControl/js/jquery-migrate-1.1.1.min.js"></script> -->
+    <script type="text/javascript" src="util/uploadControl/js/jquery-migrate-1.1.1.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery.json-2.4.js"></script>
     <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/jquery-ui-1.10.2.custom.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>util/uploadControl/js/knockout-2.2.1.js"></script>
     <script type="text/javascript" src="<%=basePath %>js/videoPlayer/swfobject.js"></script>
     <script src="<%=basePath %>js/common/ajaxfileupload.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" />-->
+
+    <script src="<%=basePath %>js/videoPlayer/swfobject.js" type="text/javascript"></script>
+    <script src="<%=basePath %>uploadify/jquery.uploadify.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="<%=basePath %>uploadify/uploadify.css"/>
     <script type="text/javascript" src="<%=basePath %>js/resource/resbase.js"></script>
-    <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" />
+
 
     <script type="text/javascript">
         var url='';
+        var nextid="${nextId}";
         $(function(){
             url="<%=fileSystemIpPort%>upload1.jsp?jsessionid=aaatCu3yQxMmN-Rru135t&res_id=${nextId}";
             // InitUpload(url,false);
             //   UploadInit_NOLoadClick(url,false);
             //	var uuidObj = new UUID();
+
+
+            //uploadify
+            $("#uploadfile").uploadify({
+                'buttonClass' : 'an_public1',
+                'fileObjName' : 'uploadfile',
+                swf           : 'uploadify/uploadify.swf',
+                uploader      : 'uploadify/uploadFile.jsp',
+                // uploader      : 'tpres?doUploadResource',
+                buttonText    : '选择文件',
+                width         : '100',
+                height        : '20',
+                auto          : false,
+                multi         : false,
+                fileSizeLimit :'1GB',
+                //'progressData' : 'speed',
+                itemTemplate  : '<div id="\\${fileID}" class="uploadify-queue-item">\
+                    <div class="cancel">\
+                        <a href="javascript:$(\'#\\${instanceID}\').uploadify(\'cancel\', \'\\${fileID}\')">X</a>\
+                    </div>\
+                    <span class="fileName">\\${fileName} (\\${fileSize})</span><span class="data"></span>\
+                </div>',
+                onSelect:function(file){
+                    $("#hd_filename").val(file.name);
+                },
+                'onSelectError':function(file, errorCode, errorMsg){
+                    switch(errorCode) {
+                        //case -100:     alert("上传的文件数量已经超出系统限制的"+$('#uploadfile').uploadify('settings','queueSizeLimit')+"个文件！");  break;
+                        case -110:     alert("文件 ["+file.name+"] 大小超出系统限制的"+$('#uploadfile').uploadify('settings','fileSizeLimit')+"大小!");break;
+                        case -120:     alert("文件 ["+file.name+"] 大小异常!"); break;
+                        case -130:     alert("文件 ["+file.name+"] 类型不正确!");break;
+                    }
+                },
+                'onFallback':function(){
+                    alert("您未安装FLASH控件，无法上传图片!请安装FLASH控件后再试!");
+                },
+                'onUploadStart':function(file){
+                    var param={};
+                    param.resid=nextid;
+                    $("#uploadfile").uploadify("settings", "formData",param);
+                },
+                'onUploadSuccess':function(file){
+                        var param={};
+                        var residObj=$("#resid").val().Trim();
+                        if(residObj.length<1){
+                            alert('异常错误，资源ID没有正常生成，请重新刷新页面后，选择加载!');return;
+                        }
+                        param.resid=residObj;
+                        var resnameObj=$("#res_name");
+                        if(resnameObj.val().Trim().length<1){
+                            alert('错误，资源名称您尚未输入，请输入!');
+                            resnameObj.focus();return;
+                        }
+                        param.resname=resnameObj.val().Trim();
+                        //资源类型
+                        var restypeObj=$("input[name='rdo_restype']:checked");
+                        if(restypeObj.length<1){
+                            alert('错误，您尚未选择资源类型，请选择!');
+                            return;
+                        }
+                        //资源类型值
+                        var restype=restypeObj.val().Trim();
+                        if(restype.length<1){
+                            alert('系统错误，未发现您选择的资源类型值!请反馈给网校，进行维护处理!');
+                            return;
+                        }
+                        param.restype=restype;
+                        //分享等级
+                        var reslevelObj=$("input[name='rdo_reslevel']:checked");
+                        if(reslevelObj.length<1){
+                            alert('错误，您尚未选择资源分享等级，请选择!');
+                            return;
+                        }
+                        //分享等级值
+                        var reslevel=reslevelObj.val().Trim()
+                        if(reslevel.length<1){
+                            alert('系统错误，未发现您选择的资源分享等级值!请反馈给网校，进行维护处理!');
+                            return;
+                        }
+                        param.sharestatus=reslevel;//分享类型
+                        //简介
+                        var resremark=$("#res_remark").val().Trim();
+                        if(resremark.length>3000){
+                            alert('异常错误，资源简介字数过长，请尽量保持在3000字符以内!');
+                            resremark.focus();return;
+                        }
+                        if(resremark.length>0){
+                            param.resintroduce=resremark;
+                        }
+                        //判断是什么类型的上传，小文件还是大文件
+                        var fileuptype=$("#file_uptype").val().Trim();
+                        var filename=null;
+                        if(fileuptype==1){//小文件
+                            filename=$("#hd_filename").val();
+                            if(filename.length<1){
+                                //alert("错误，您选择的文件正在上传，尚未上传完毕，请耐心等候，上传完毕后再进行提交!");return;
+                                alert("请选择文件!");return;
+                            }
+                        }
+                        param.filename=filename;
+                        param.uptype=fileuptype;//上传文件的大小
+                        //提示：您确定提交‘"+param.resname+"’的资源吗?
+
+
+                        if(!confirm("您确定提交‘"+param.resname+"’的资源吗?"))return;
+                        if(fileuptype==1){
+                            var rsval=$("#hd_filename").val();
+                            if(rsval.Trim().length<1){
+                                return;
+                            }
+                            $("#a_dosub").hide();
+                            $("#sp_rs_log").html("正在上传……");
+                            var lastName=rsval.substring(rsval.lastIndexOf("."));
+                            url+="&lastname="+lastName;
+                            var resfile="uploadfile";
+
+                            $("#sp_rs_log").html("上传资源完毕…正在更新记录…");
+                            //执行提交
+                            $.ajax({
+                                url:'resource?m=doadd',
+                                data:param,
+                                type:'post',
+                                dataType:'json',
+                                error:function(){
+                                    alert('异常错误，网络异常!无法连接报务器!');
+                                },success:function(rps){
+                                    if(rps.type=="error"){
+                                        alert(rps.msg);
+                                        $("#a_dosub").show();
+                                    }else{
+                                        alert(rps.msg);
+                                        if(typeof(window.opener.pmyRes)!="undefined"&&window.opener.pmyRes!=null){
+                                            window.opener.pmyRes.pageGo();
+                                            window.close();
+                                        }else
+                                            location.href="resource?m=toMyResList";
+                                    }
+                                }
+                            });
+                        }
+                },
+                'onUploadError' : function(file, errorCode, errorMsg, errorString) {
+                    alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+                }
+            });
+
+
         });
 
     </script>
 </head>
 <body>
 <input type="hidden" name="resid" id="resid" value="${nextId}"/>
+<input type="hidden" name="hd_filename" id="hd_filename">
+
 <div class="subpage_head"><span class="ico26"></span><strong>上传资源</strong></div>
 <div class="content1">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">

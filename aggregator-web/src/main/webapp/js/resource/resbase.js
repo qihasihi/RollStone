@@ -101,10 +101,12 @@ function doCreateRes(){
     var fileuptype=$("#file_uptype").val().Trim();
     var filename=null;
     if(fileuptype==1){//小文件
-        filename=$("#uploadfile").val();
+        filename=$("#hd_filename").val();
         if(filename.length<1){
-            alert("错误，您选择的文件正在上传，尚未上传完毕，请耐心等候，上传完毕后再进行提交!");return;
+            //alert("错误，您选择的文件正在上传，尚未上传完毕，请耐心等候，上传完毕后再进行提交!");return;
+            alert("请选择文件!");return;
         }
+        $('#uploadfile').uploadify('upload','*')
 
 
     }else if(fileuptype==2){//大文件

@@ -861,7 +861,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         mp.put("nextid",nextid);
         mp.put("nextMd5Id",UtilTool.getResourceMd5Directory(nextid+""));
         System.out.println("nextid:" + nextid);
-        return new ModelAndView("/teachpaltform/resource/local-upload",mp);
+        return new ModelAndView("/teachpaltform/resource/local-upload-new",mp);
     }
 
 
@@ -1331,6 +1331,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         }
         response.getWriter().print(je.toJSON());
     }
+
 
     /**
      * 跳转到上传本地资源页（通用）

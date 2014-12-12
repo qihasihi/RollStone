@@ -607,6 +607,7 @@ function doUploadResource(usertype) {
     }
 
     var fname = '';
+    //if (uploadfile.val().length < 1) {
     if(uploadfile.length<1){
         if (typeof(uploadControl.fileAttribute) == 'undefined' || uploadControl.fileAttribute.length < 1) {
             alert('请添加上传文件!');
@@ -703,12 +704,117 @@ function doUploadResource(usertype) {
             }
         });
     } else {
-        var fname=$("#hd_filename").val();
-        if (fname.Trim().length < 1) {
+        //fname = uploadfile.val();
+        fname= $('#uploadfile').uploadify('settings','fileName');
+        var t = document.getElementById('uploadfile');
+        if (t.value.Trim().length < 1) {
             alert('您尚未选择文件，请选择！');
             return;
         }
-        $('#uploadfile').uploadify('upload','*')
+        var lastname = t.value.substring(t.value.lastIndexOf("."));
+        $.ajaxFileUpload({
+            url: url + "&lastname=" + lastname,
+            fileElementId: 'uploadfile',
+            dataType: 'json',
+            secureuri: false,
+            type: 'POST',
+            success: function (data, status) {
+              //  stopProcess();
+                if (typeof(data.error) != 'undefined') {
+                    if (data.error != '') {
+                        alert(data.error);
+                    } else {
+                        alert(data.msg);
+                    }
+                } else {
+                    var param = {
+                        resid: resid,
+                        resname: resname.val(),
+                        restype: restype.val(),
+                        resourcetype: crestype,
+                        resintroduce: resintroduce.val(),
+                        courseid: courseid,
+                        usertype: usertype,
+                        filename: fname
+                    };
+
+
+                    var allowTypeArray=allowTypes.split(",");
+                    var returnVal=false;
+                    for(var n=0;n<allowTypeArray.length;n++){
+                        var altype=allowTypeArray[n];
+                        if(altype.length>0){
+                            if(lastname.toLowerCase()==altype.toLowerCase()){
+                                returnVal=true;
+                            }
+                        }
+                    }
+                    if(returnVal){
+                        msg+='\n\n提示：当前文件需要转换请等待!';
+                        isConvert=true;
+                    }
+
+                    if (!confirm(msg)) {
+                        return;
+                    }else{
+                        if(isConvert){
+                            showModel('dv_loading','',200);
+                        }
+                    }
+
+
+
+                  /*  if(!isTishi){
+                        $("#s_tishi").html('');
+                        if(isConvert)
+                            $("#s_tishi").html("提示：当前文件需要转换请等待!");
+                        showModel('dv_tishi');
+                        isTishi=true;
+                        return;
+                    } */
+
+
+                    /*提交按钮不可用*/
+                    resetBtnAttr("a_submit","an_small","an_gray_small","",2);
+                    $.ajax({
+                        url: 'tpres?doUploadResource',
+                        type: 'post',
+                        data: param,
+                        dataType: 'json',
+                        cache: false,
+                        error: function () {
+                            alert('网络异常!')
+                        },
+                        success: function (rps) {
+                            if (rps.type == "error") {
+                                alert(rps.msg);
+                            } else {
+                                closeModel('dv_loading');
+                                alert(rps.msg);
+                                resetBtnAttr("a_submit","an_small","an_gray_small","doUploadResource("+usertype+")",1);
+                                if (operate_type.length) {
+                                    if (window.opener != undefined) {
+                                        //for chrome
+                                        window.opener.returnValue =nextid;
+                                    }
+                                    else {
+                                        window.returnValue =nextid;
+                                    }
+                                    window.close();
+                                }
+                                $("#dv_obj").html('');
+                                usertype == 2 ? load_resource(crestype, 1,true) : loadStuResourcePage(courseid);//load_stu_resource(1, 1)
+                                // nextid=rps.objList[0];
+                            }
+                        }
+                    });
+                }
+            },
+            error: function (data, status, e) {
+                alert(e);
+            }
+        });
+       // getProcess();
     }
 
 }
@@ -1762,10 +1868,8 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     loadAllComment();
     checkStudyNotes(resid);
     //关联试卷
-    if(!isStudent&&fname.indexOf('.mp4')!=-1)
+    if(!isStudent)
         loadRelatePaper(resid);
-    else
-        $("#relate_paper").html('');
 
     //学习心得
    // if(typeof tpresdetailid!='undeinfed'&& tpresdetailid.toString().length>0)

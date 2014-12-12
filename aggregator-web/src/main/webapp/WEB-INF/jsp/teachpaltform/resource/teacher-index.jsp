@@ -186,6 +186,7 @@
     var tpresdetailid="${param.tpresdetailid}";
     var fancy,fancyPaper;
     $(function(){
+        //alert("${pageContext.request.contextPath}/tpres?doUploadResourceFile");
         load_resource(1,"${pageno}",true);
         pList = new PageControl( {
             post_url : 'commoncomment?m=getCommentList',
