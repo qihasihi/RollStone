@@ -57,7 +57,7 @@
         case 3:
             gradename='高一';
             break;
-        case 41:
+        case 4:
             gradename='初三';
             break;
         case 5:

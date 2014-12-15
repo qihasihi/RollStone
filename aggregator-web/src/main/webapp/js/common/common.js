@@ -905,7 +905,7 @@ function clearSpecialCharacter(){
         switch(keyCode){
             case 37:	//%
             case 39:	//'
-            case 44:    //<
+            //case 44:    //,
             //case 46:	//>
             case 34:	//"
                 returnFlag=false;

@@ -42,7 +42,7 @@
             +"/"+proc_name + "/");
     if(session.getAttribute("IP_PROC_NAME")==null||!session.getAttribute("IP_PROC_NAME").toString().equals(basePath))
         session.setAttribute("IP_PROC_NAME",basePath);
-			
+    UtilTool.setProjectValidate(request);
 	String fileSystemIpPort=request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString();
     //"http://202.99.47.77:80/";//request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort()+"/";;
 
