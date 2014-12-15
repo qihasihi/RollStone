@@ -242,7 +242,7 @@
                       <span id="sp_rs_log">
                       </span>
                     <p class="font-gray">
-                    <pre>提示： 1. 附件限一个， <2G。
+                    <pre>提示： 1. 附件限一个， <1G。
        2. 视频限MP4格式，建议使用<a class="font-darkblue" href="<%=basePath%>uploadfile/cqmygysdssjtwmydtsgx/20141119.zip">格式工厂</a>等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒。</pre></p>
                 </div>
                 <div class="zyxt_add" id="dv_super_file" style="display:none">
