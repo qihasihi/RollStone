@@ -64,7 +64,7 @@ public class OperateEttController extends BaseController<String>{
         String password=request.getParameter("password");
         String email=request.getParameter("email");
         JsonEntity jsonEntity=new JsonEntity();
-        String msg=OperateEttControllerUtil.validateRegisterParam(request);
+        String msg=OperateEttControllerUtil.validateRegisterParam(request,true);
         if(msg!=null&&msg.trim().length()>0){
             if(!msg.trim().equals("TRUE")){
                 jsonEntity.setMsg(msg);
@@ -186,7 +186,7 @@ public class OperateEttController extends BaseController<String>{
         String password=request.getParameter("password");
         String email=request.getParameter("email");
         JsonEntity jsonEntity=new JsonEntity();
-        String msg=OperateEttControllerUtil.validateRegisterParam(request);
+        String msg=OperateEttControllerUtil.validateRegisterParam(request,true);
         if(msg!=null&&msg.trim().length()>0){
             if(!msg.trim().equals("TRUE")){
                 jsonEntity.setMsg(msg);
@@ -320,7 +320,7 @@ public class OperateEttController extends BaseController<String>{
         String userName=request.getParameter("userName");
         String password=request.getParameter("password");
         JsonEntity jsonEntity=new JsonEntity();
-        String msg=OperateEttControllerUtil.validateRegisterParam(request);
+        String msg=OperateEttControllerUtil.validateRegisterParam(request,false);
         if(msg!=null&&msg.trim().length()>0){
             if(!msg.trim().equals("TRUE")){
                 jsonEntity.setMsg(msg);
@@ -578,7 +578,7 @@ class OperateEttControllerUtil{
      * @return
      * @throws Exception
      */
-    public static String validateRegisterParam(HttpServletRequest request) throws Exception{
+    public static String validateRegisterParam(HttpServletRequest request,boolean isvalidateUnameFormat) throws Exception{
         if(!ValidateRequestParam(request)){
             return "参数不能为空!请输入数据后，重新点击!";
         }
@@ -590,27 +590,32 @@ class OperateEttControllerUtil{
         ///////////////////验证用户名
         //位数6--12字符（1个汉字算2个字符）
         int uNameSize=checkWordSize(paramMap.get("userName").toString().trim());
-        //用户名少于6个字或多于12个字
-        if(uNameSize<6||uNameSize>12)
-            return "用户名不能少于6个字或多于12个字!请更改";
-        //用户名只含数字、字母（大小写）、下划线、汉字字符!
-        // 不能有空格
-        if(!UtilTool.matchingText("[a-zA-Z0-9_\\u4e00-\\u9fa5]+",paramMap.get("userName")))
-            return "用户名只含数字、字母（大小写）、下划线、汉字字符!请更改";
+
+        if(isvalidateUnameFormat){
+            //用户名少于6个字或多于12个字
+            if(uNameSize<6||uNameSize>12)
+                return "用户名不能少于6个字或多于12个字!请更改";
+            //用户名只含数字、字母（大小写）、下划线、汉字字符!
+            // 不能有空格
+            if(!UtilTool.matchingText("[a-zA-Z0-9_\\u4e00-\\u9fa5]+",paramMap.get("userName")))
+                return "用户名只含数字、字母（大小写）、下划线、汉字字符!请更改";
+        }
         //////////////////验证密码
         //位数6--12字符
-        int passSize=paramMap.get("password").trim().length();
-        if(passSize<6||passSize>12)
-            return "密码不能少于6个字或多于12个字!请更改";
-        //只含数字、字母（大小写）、下划线，且必须同时有数字和字母
-        if(!UtilTool.matchingText("[a-zA-Z0-9_]+",paramMap.get("password")))
-            return "密码只含数字、字母（大小写）、下划线，且必须同时有数字和字母!请更改";
-        //验证是否存在数字
-        if(!UtilTool.matchingText("[\\w[0-9]]+",paramMap.get("password")))
-            return "密码必须同时有数字和字母!请更改";
-        //验证是否存在字符
-        if(!UtilTool.matchingText("[\\w[a-zA-Z_]]+",paramMap.get("password")))
-            return "密码必须同时有数字和字母!请更改";
+        if(isvalidateUnameFormat){
+            int passSize=paramMap.get("password").trim().length();
+            if(passSize<6||passSize>12)
+                return "密码不能少于6个字或多于12个字!请更改";
+            //只含数字、字母（大小写）、下划线，且必须同时有数字和字母
+            if(!UtilTool.matchingText("[a-zA-Z0-9_]+",paramMap.get("password")))
+                return "密码只含数字、字母（大小写）、下划线，且必须同时有数字和字母!请更改";
+            //验证是否存在数字
+            if(!UtilTool.matchingText("[\\w[0-9]]+",paramMap.get("password")))
+                return "密码必须同时有数字和字母!请更改";
+            //验证是否存在字符
+            if(!UtilTool.matchingText("[\\w[a-zA-Z_]]+",paramMap.get("password")))
+                return "密码必须同时有数字和字母!请更改";
+        }
         if(paramMap.containsKey("email")){
             //验证邮箱
             String email=paramMap.get("email");

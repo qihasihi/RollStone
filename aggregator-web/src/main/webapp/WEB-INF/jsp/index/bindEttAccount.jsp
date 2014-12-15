@@ -197,11 +197,12 @@
 
     //注册网校帐号
     function doBindEttAccount(){
-        var uNameValidateBo=validateEttUName('up_ettUserName','p_up_msg_ettUserName','sp_up_ettUserName_isRight',false)
-        var passValidateBo=validateEttPass('up_ettPass','p_up_msg_ettPass','sp_up_ettPass_isRight');
+      //  var uNameValidateBo=validateEttUName('up_ettUserName','p_up_msg_ettUserName','sp_up_ettUserName_isRight',false)
+        var passValidateBo=$("#sp_up_ettUserName_isRight .ico12").length>0?true:false;
 //        var emailValidateBo=validateEttEmail('add_ettEmail','p_add_msg_ettEmail','sp_add_ettEmail_isRight');
         //用户名通过
-        if(uNameValidateBo&&$("#sp_up_ettUserName_isRight .ico12").length>0){
+        //uNameValidateBo&&
+        if($("#sp_up_ettUserName_isRight .ico12").length>0){
             //密码通过,邮箱通过
             if(passValidateBo){
                 $.ajax({
@@ -284,15 +285,32 @@
       <div id="dv_hasEttAccount" style="display:none">
         <div class="input">
          <span class="one"><strong>用&nbsp;户&nbsp;名</strong>
-          <input type="text" name="up_ettUserName" id="up_ettUserName" onblur="validateEttUName('up_ettUserName','p_up_msg_ettUserName','sp_up_ettUserName_isRight',false)" maxlength="12" />
+          <input type="text" name="up_ettUserName" id="up_ettUserName"
+                 onblur="
+                 if(this.value.length<1){
+                    p_up_msg_ettUserName.innerHTML='用户名不符合要求!请更改';
+                    sp_up_ettUserName_isRight.innerHTML='6-12字符/6个汉字';
+                 }else{
+                     sp_up_ettUserName_isRight.innerHTML='<a href=\'javascript:;\' class=\'ico12\' title=\'正确\'></a>';
+                     p_up_msg_ettUserName.innerHTML='';
+                  }"
+                 maxlength="12" />
           </span><span id="sp_up_ettUserName_isRight">6-12字符/6个汉字</span>
                 <p class="two" id="p_up_msg_ettUserName"></p>
             </div>
             <div class="input">
           <span class="one"><strong>密&nbsp;&nbsp;&nbsp;&nbsp;码</strong>
-          <input type="password" name="up_ettPass" onblur="validateEttPass('up_ettPass','p_up_msg_ettPass','sp_up_ettPass_isRight')" id="up_ettPass" />
+          <input type="password" name="up_ettPass" onblur="
+            if(this.value.length<1){
+                    p_up_msg_ettPass.innerHTML='密码不符合要求!请更改';
+                    sp_up_ettPass_isRight.innerHTML='';
+                 }else{
+                     sp_up_ettUserName_isRight.innerHTML='<a href=\'javascript:;\' class=\'ico12\' title=\'正确\'></a>';
+                     p_up_msg_ettPass.innerHTML='';
+                  }
+          " id="up_ettPass" />
           </span><a href="javascript:;" onclick="changeEttPassType('up_ettPass','p_up_msg_ettPass','sp_up_ettPass_isRight')" class="ico92" title="显示密码"></a>
-                <span id="sp_up_ettPass_isRight">6-12字符</span>
+                <span id="sp_up_ettPass_isRight"></span>
                 <p class="two" id="p_up_msg_ettPass"></p>
             </div>
             <p class="an"><a href="javascript:;" onclick="doBindEttAccount()">绑定并登录</a></p>
@@ -310,7 +328,7 @@
           <input type="password" name="add_ettPass" id="add_ettPass"  onblur="validateEttPass('add_ettPass','p_add_msg_ettPass','sp_add_ettPass_isRight')"  />
           </span><a href="javascript:;" class="ico92" title="显示密码"
                     onclick="changeEttPassType('add_ettPass','p_add_msg_ettPass','sp_add_ettPass_isRight')"></a>
-                <span id="sp_add_ettPass_isRight">6-12字符</span>
+                <span id="sp_add_ettPass_isRight"></span>
                 <p class="two" id="p_add_msg_ettPass"></p>
             </div>
             <div class="input">

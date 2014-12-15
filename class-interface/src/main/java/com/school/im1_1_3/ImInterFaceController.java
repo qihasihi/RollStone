@@ -2254,7 +2254,7 @@ public class ImInterFaceController extends BaseController {
             String code= UtilTool.getFixLenthString(size);
             ClassInfo cls=new ClassInfo();
             cls.setImvaldatecode(code);
-            List<ClassInfo>clsList=this.classManager.getList(cls,null);
+            List<ClassInfo> clsList=this.classManager.getList(cls,null);
             if(clsList==null||clsList.size()<1){
                 return code;
             }
