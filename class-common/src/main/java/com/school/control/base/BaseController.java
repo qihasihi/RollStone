@@ -198,10 +198,10 @@ public class BaseController<T extends java.io.Serializable> {
         return pageresult;
     }
 
-    public static void main(String[] args) {
-        // TODO Auto-generated method stub
-        System.out.println(UtilTool.gender_MD5("1123一五六数学课堂（王秋嬛）.mp4"));
-    }
+//    public static void main(String[] args) {
+//        // TODO Auto-generated method stub
+//        System.out.println(UtilTool.gender_MD5("1123一五六数学课堂（王秋嬛）.mp4"));
+//    }
     /**
      * 文件上传用
      */
@@ -263,8 +263,8 @@ public class BaseController<T extends java.io.Serializable> {
             }
             String filename = this.getFname();
             File imageFile = new File(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+ filename);
-           // if(myFile==null)
-                myFile=this.getUpload(request)[0];
+            // if(myFile==null)
+            myFile=this.getUpload(request)[0];
             copy(myFile.getInputStream(),imageFile);
             myFile=null;
         } catch (Exception e) {
@@ -634,7 +634,7 @@ public class BaseController<T extends java.io.Serializable> {
         String fname=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH").toString()+"/tmp/imgCache/"+srcFile.getParentFile().getName()+"/";
         File parF=new File(fname);
         if(!parF.exists())
-              parF.mkdirs();
+            parF.mkdirs();
         fname+=srcFile.getName()+((w+h)/100)+"."+fileSuffix;
         File  destFile=new File(fname);
         System.out.println("cut-image-path:"+path);
