@@ -66,6 +66,27 @@
         case 6:
             gradename='初一';
             break;
+        case 7:
+            gradename='小学六年级';
+            break;
+        case 8:
+            gradename='小学五年级';
+            break;
+        case 9:
+            gradename='小学四年级';
+            break;
+        case 10:
+            gradename='小学三年级';
+            break;
+        case 11:
+            gradename='小学二年级';
+            break;
+        case 12:
+            gradename='小学一年级';
+            break;
+        case 0:
+            gradename='其它';
+            break;
     }
     var grade_name=gradename+subjectname;
     $(function(){

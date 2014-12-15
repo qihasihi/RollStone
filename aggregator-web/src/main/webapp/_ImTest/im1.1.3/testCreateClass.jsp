@@ -99,7 +99,8 @@
                     <td>
                         <input type="text" name="gradeId" id="txt_gradeId" value="2"/>
                     </td>
-                    <td>数字：1:高三 2:高二 3:高一 4：初三 5:初二 6:初一</td>
+                    <td>数字：1:高三 2:高二 3:高一 4：初三 5:初二 6:初一<br/>
+                        7:小六 7:小五 7:小四 7:小三 7:小二 7:小一 0:其他 </td>
                 </tr>
                 <tr>
                     <td>className:</td>

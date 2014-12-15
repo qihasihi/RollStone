@@ -222,12 +222,12 @@
             <th>&nbsp;&nbsp;班级限额：</th>
             <td><input  id="num" type="text" class="w100" /></td>
         </tr>
-        <c:if test="${!empty dcschoolid and dcschoolid eq 1}">
+       <!-- <c:if test="${!empty dcschoolid and dcschoolid eq 1}">
             <tr id="tr_invite" style="display: none;">
                 <td colspan="4">&nbsp;&nbsp;公共家长邀请码：<input readonly="readonly" class="w120" id="invite_code"  type="text" /> &nbsp;&nbsp;<a id="btn_invitecode" href="javascript:genderInviteCode('dv_add');" style="color: #0000ff">生成邀请码</a>
                 </td>
             </tr>
-        </c:if>
+        </c:if>-->
 
         <!--<tr>
             <th>允许学生加入：</th>
@@ -311,7 +311,7 @@
 
         <c:if test="${!empty dcschoolid and dcschoolid eq 1}">
             <tr id="tr_invite" style="display: none;">
-                <td colspan="4">&nbsp;&nbsp;公共家长邀请码：<input readonly="readonly" class="w120" id="invite_code"  type="text" /> &nbsp;&nbsp;<a id="btn_invitecode" href="javascript:genderInviteCode('dv_edit');" style="color: #0000ff">生成邀请码</a>
+                <td colspan="4">&nbsp;&nbsp;&nbsp;班级邀请码：&nbsp;&nbsp;&nbsp;<span id="invite_code"></span>
                 </td>
             </tr>
         </c:if>

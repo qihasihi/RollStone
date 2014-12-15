@@ -532,22 +532,15 @@ function toUpdClass(clsid){
                         $("#dv_edit input[name='rdo'][value='"+rps.objList[0].allowjoin+"']").attr("checked",true);
                     $("#dv_edit input[id='invite_code']").next("span").remove();
                     if(rps.objList[0].dctype==2&&schoolid=="1"){
-                        $("#dv_edit tr[id='tr_invite']").show();
-                        if(typeof rps.objList[0].invitecode !='undefined'&&rps.objList[0].invitecode.toString().length>0){
-                            $("#dv_edit input[id='invite_code']").after('<span>'+rps.objList[0].invitecode+'</span>');
-                            $("#dv_edit a[id='btn_invitecode']").hide();
-                            $("#dv_edit input[id='invite_code']").hide();
+                        if(typeof rps.objList[0].imvaldatecode !='undefined'&&rps.objList[0].imvaldatecode.toString().length>0){
+                            $("#dv_edit span[id='invite_code']").html(rps.objList[0].imvaldatecode);
+                            $("#dv_edit tr[id='tr_invite']").show();
                         }else{
-                            $("#dv_edit a[id='btn_invitecode']").show();
-                            $("#dv_edit input[id='invite_code']").empty();
-                            $("#dv_edit input[id='invite_code']").show();
+                            $("#dv_edit span[id='invite_code']").html('');
+                            $("#dv_edit tr[id='tr_invite']").hide();
                         }
-                    }else{
-                        $("#dv_edit a[id='btn_invitecode']").show();
-                        $("#dv_edit input[id='invite_code']").empty();
-                        $("#dv_edit tr[id='tr_invite']").hide();
-                    }
 
+                    }
 
                     //添加确认Click
                     $("#a_sub_upd").attr("href","javascript:sub_cls("+rps.objList[0].classid+")");
@@ -574,7 +567,7 @@ function sub_cls(clsid){
     var year=$("#"+dvObj+" select[id='year']");
     var grade=$("#"+dvObj+" select[id='grade']");
     var allowJoin=$("#"+dvObj+" input[name='rdo']:checked");
-    var invitecode=$("#"+dvObj+" input[id='invite_code']");
+    //var invitecode=$("#"+dvObj+" input[id='invite_code']");
 
     if(clsname.val().Trim().length<1){
         alert('请输入班级名称!');
@@ -603,8 +596,8 @@ function sub_cls(clsid){
         param.allowJoin=allowJoin.val();
     if(num.val().length>0)
         param.num=num.val();
-    if(schoolid=="1"&&invitecode.val().length>0)
-        param.invitecode=invitecode.val().Trim();
+//    if(schoolid=="1"&&invitecode.val().length>0)
+//        param.invitecode=invitecode.val().Trim();
 
 
     if(typeof clsid=='undefined')

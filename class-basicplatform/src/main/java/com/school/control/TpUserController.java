@@ -361,7 +361,7 @@ public class TpUserController extends UserController {
         String allowJoin=request.getParameter("allowJoin");
         String num=request.getParameter("num");
         String realname=request.getParameter("realname");
-        String invitecode=request.getParameter("invitecode");
+        //String invitecode=request.getParameter("invitecode");
 
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
@@ -380,6 +380,7 @@ public class TpUserController extends UserController {
         c.setYear(year);
         c.setPattern("行政班");
         c.setType("NORMAL");
+        c.setCuserid(this.logined(request).getUserid());
         if(verifyTime!=null&&verifyTime.length()>0)
             c.setVerifytime(UtilTool.StringConvertToDate(verifyTime));
         if(allowJoin!=null&&allowJoin.length()>0)
@@ -387,9 +388,10 @@ public class TpUserController extends UserController {
         if(num!=null&&num.length()>0)
             c.setClsnum(Integer.parseInt(num));
         //公共家长邀请码
-        if(this.logined(request).getDcschoolid().intValue()==1&&
-                invitecode!=null&&invitecode.trim().length()>0&&c.getDctype()==2)
-            c.setInvitecode(invitecode);
+        if(c.getDctype()==2){
+            String invitecode=this.genderInviteCode();
+            c.setImvaldatecode(invitecode);
+        }
         if(this.classManager.doSave(c)){
             List<ClassInfo>clsList=this.classManager.getList(c,null);
             if(clsList==null||clsList.size()<1){
@@ -633,7 +635,7 @@ public class TpUserController extends UserController {
         String verifyTime=request.getParameter("verifyTime");
         String allowJoin=request.getParameter("allowJoin");
         String num=request.getParameter("num");
-        String invitecode=request.getParameter("invitecode");
+       // String invitecode=request.getParameter("invitecode");
         String realname=request.getParameter("realname");
 
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
@@ -668,9 +670,9 @@ public class TpUserController extends UserController {
         if(num!=null&&num.length()>0)
             c.setClsnum(Integer.parseInt(num));
         //公共家长邀请码
-        if(this.logined(request).getDcschoolid().intValue()==1&&invitecode!=null&&invitecode.trim().length()>0&&
+        /*if(this.logined(request).getDcschoolid().intValue()==1&&invitecode!=null&&invitecode.trim().length()>0&&
                 c.getDctype()==2)
-            c.setInvitecode(invitecode);
+            c.setInvitecode(invitecode);*/
         sql=new StringBuilder();
         objList=this.classManager.getUpdateSql(c,sql);
         if (objList != null && sql != null) {
@@ -2397,9 +2399,9 @@ public class TpUserController extends UserController {
      */
     private  String genderInviteCode(){
         while (true){
-            String code=UtilTool.getFixLenthString(4);
+            String code=UtilTool.getFixLenthString(6);
             ClassInfo cls=new ClassInfo();
-            cls.setInvitecode(code);
+            cls.setImvaldatecode(code);
             List<ClassInfo>clsList=this.classManager.getList(cls,null);
             if(clsList==null||clsList.size()<1){
                 return code;

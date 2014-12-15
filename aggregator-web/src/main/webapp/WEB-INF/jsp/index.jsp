@@ -506,7 +506,7 @@
             <input type="hidden" value="" id="oldname"/>
             <caption>
                 <a href="javascript:;" onclick="changeOption(this,1)" class="crumb">校园账号</a>
-                <%if(u.getEttuserid()!=null&&u.getDcschoolid()!=null){%>
+                <%if(u.getEttuserid()!=null&&u.getDcschoolid()!=null&&u.getIsactivity().toString().equals("0")){%>
                     ｜<a href="javascript:;" onclick="changeOption(this,2)" >云账号</a>
                 <%}%>
             </caption>
