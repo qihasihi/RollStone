@@ -2411,6 +2411,9 @@ class UpdateCourseUtil{
                                 if(map.containsKey("Filename")&&map.get("Filename")!=null&&!map.get("Filename").toString().trim().toUpperCase().equals("NULL")){
                                     res.setFilename(map.get("Filename").toString());
                                 }
+                                if(map.containsKey("Ismicopiece")&&map.get("Ismicopiece")!=null&&!map.get("Ismicopiece").toString().trim().toUpperCase().equals("NULL")){
+                                    res.setIsmicopiece(map.get("Ismicopiece").toString());
+                                }
                                 if(map.containsKey("Schoolname")&&map.get("Schoolname")!=null&&!map.get("Schoolname").toString().trim().toUpperCase().equals("NULL")){
                                     res.setSchoolname(map.get("Schoolname").toString().replaceAll("\\\\", "\\\\\\\\"));
                                 }
@@ -2888,6 +2891,9 @@ class UpdateCourseUtil{
                                 }
                                 if(map.containsKey("Filesize")&&map.get("Filesize")!=null&&!map.get("Filesize").toString().trim().toUpperCase().equals("NULL")){
                                     res.setFilesize(Long.parseLong(map.get("Filesize").toString()));
+                                }
+                                if(map.containsKey("Ismicopiece")&&map.get("Ismicopiece")!=null&&!map.get("Ismicopiece").toString().trim().toUpperCase().equals("NULL")){
+                                    res.setIsmicopiece(map.get("Ismicopiece").toString());
                                 }
                                 if(map.containsKey("Filesuffix")&&map.get("Filesuffix")!=null&&!map.get("Filesuffix").toString().trim().toUpperCase().equals("NULL")){
                                     res.setFilesuffixname(map.get("Filesuffix").toString());

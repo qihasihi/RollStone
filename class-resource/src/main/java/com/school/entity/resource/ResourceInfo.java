@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 public class ResourceInfo implements java.io.Serializable {
 //    private List<ResourceFileInfo> resourceFileList;
     private String filename;
+    private String ismicopiece;
 
 //    public List<ResourceFileInfo> getResourceFileList() {
 //        return (resourceFileList = (resourceFileList == null ? new ArrayList<ResourceFileInfo>() : resourceFileList));
@@ -799,5 +800,13 @@ public class ResourceInfo implements java.io.Serializable {
 
     public void setCurrentClicks(Object currentClicks) {
         this.currentClicks = currentClicks;
+    }
+
+    public void setIsmicopiece(String ismicopiece) {
+        this.ismicopiece = ismicopiece;
+    }
+
+    public String getIsmicopiece() {
+        return ismicopiece;
     }
 }
