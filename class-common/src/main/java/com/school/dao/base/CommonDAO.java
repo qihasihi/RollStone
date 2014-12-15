@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class CommonDAO<T> implements ICommonDAO<T> {
     @Resource(name = "jdbcTemplate")
     protected JdbcTemplate jdbcTemplate;
-	protected final Log log = LogFactory.getLog(getClass());
+    protected final Log log = LogFactory.getLog(getClass());
 
 
 
@@ -51,85 +51,104 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
 
 
 
-	/*
-	 * (non-Javadoc)
-	 * 执行SQL语句 返回一个参数
-	 * @see com.school.dao.base.ICommonDAO#executeSalar_SQL(java.lang.String,
-	 * java.lang.Object[])
-	 */
-	public Object executeSalar_SQL(String sql, Object[] paraValue) {
-		// TODO Auto-generated method stub
+    /*
+     * (non-Javadoc)
+     * 执行SQL语句 返回一个参数
+     * @see com.school.dao.base.ICommonDAO#executeSalar_SQL(java.lang.String,
+     * java.lang.Object[])
+     */
+    public Object executeSalar_SQL(String sql, Object[] paraValue) {
+        // TODO Auto-generated method stub
         return jdbcTemplate.queryForObject(sql,paraValue,java.lang.String.class);
 
-	}
+    }
 
 
-	/*
-	 * (non-Javadoc)
-	 * 执行返回一个参数的存储过程
-	 * @see com.school.dao.base.ICommonDAO#executeSacle_PROC(java.lang.String,
-	 * java.lang.Object)
-	 */
-	public Object executeSacle_PROC(String sql, Object... paraValue) {
+    /*
+     * (non-Javadoc)
+     * 执行返回一个参数的存储过程
+     * @see com.school.dao.base.ICommonDAO#executeSacle_PROC(java.lang.String,
+     * java.lang.Object)
+     */
+    public Object executeSacle_PROC(String sql, Object... paraValue) {
         //return jdbcTemplate.c(sql,paraValue,java.lang.String.class);
-        return jdbcTemplate.execute(new SchoolCallableStatementCreator(sql.toString(),paraValue),
+        return jdbcTemplate.execute(new SchoolCallableStatementCreator(true,sql.toString(),paraValue),
                 new SchoolCallableStatementCallback(false,paraValue==null?0:paraValue.length));
     }
 
 
 
-	
-	/**
-	 * 执行得到相对应的返回值 
-	 * @param returnType
-	 * @param sql
-	 * @param paraValue
-	 * @return
-	 */
-	public Object executeSacle_PROC(Integer returnType,String sql, Object... paraValue) {
+
+    /**
+     * 执行得到相对应的返回值
+     * @param returnType
+     * @param sql
+     * @param paraValue
+     * @return
+     */
+    public Object executeSacle_PROC(Integer returnType,String sql, Object... paraValue) {
         return jdbcTemplate.execute(new SchoolCallableStatementCreator(sql.toString(),paraValue),
                 new SchoolCallableStatementCallback(false,paraValue==null?0:paraValue.length));
-	}
+    }
 
 
-	/*
-	 * (non-Javadoc)
-	 * 执行不带返回参数的存储过程
-	 * @see com.school.dao.base.ICommonDAO#executeQuery_PROC(java.lang.String,
-	 * java.lang.Object)
-	 */
-	public boolean executeQuery_PROC(String sql, Object... paraValue) {
+    /*
+     * (non-Javadoc)
+     * 执行不带返回参数的存储过程
+     * @see com.school.dao.base.ICommonDAO#executeQuery_PROC(java.lang.String,
+     * java.lang.Object)
+     */
+    public boolean executeQuery_PROC(String sql, Object... paraValue) {
         jdbcTemplate.update(sql,paraValue);
         return true;
-	}
+    }
 
 
-	/*
-	 * (non-Javadoc)
-	 * 执行多个存储过程。
-	 * @see
-	 * com.school.dao.base.ICommonDAO#executeArrayQuery_PROC(java.util.List,
-	 * java.util.List)
-	 */
+    /*
+     * (non-Javadoc)
+     * 执行多个存储过程。
+     * @see
+     * com.school.dao.base.ICommonDAO#executeArrayQuery_PROC(java.util.List,
+     * java.util.List)
+     */
     @Transactional
-	public boolean executeArrayQuery_PROC(List sqlbuilder, List paraV) {
+    public boolean executeArrayQuery_PROC(List sqlbuilder, List paraV) {
         boolean returnVal=true;
-			for (int i = 0; i < sqlbuilder.size(); i++) {
-				Object sql= sqlbuilder.get(i);
-				if (sql != null && !sql.toString().equals("")) {
-                    List p=(List)paraV.get(i);
-                    Object afficeRows=jdbcTemplate.execute(new SchoolCallableStatementCreator(sql.toString(),p==null?null:p.toArray()),
-                           new SchoolCallableStatementCallback(false,p==null?0:p.size()));
+        for (int i = 0; i < sqlbuilder.size(); i++) {
+            Object sql= sqlbuilder.get(i);
+            if (sql != null && !sql.toString().equals("")) {
+                List p=(List)paraV.get(i);
+                Object afficeRows=jdbcTemplate.execute(new SchoolCallableStatementCreator(sql.toString(),p==null?null:p.toArray()),
+                        new SchoolCallableStatementCallback(false,p==null?0:p.size()));
 //                    IN=jdbcTemplate.update(sql.toString(),p==null?null:p.toArray());
-					if(afficeRows==null||!UtilTool.isNumber(afficeRows.toString())
-                           ||Integer.parseInt(afficeRows.toString().trim())<1){
-                        returnVal=false;
-                        break;
-                    }
-				}
-			}
+                if(afficeRows==null||!UtilTool.isNumber(afficeRows.toString())
+                        ||Integer.parseInt(afficeRows.toString().trim())<1){
+                    returnVal=false;
+                    break;
+                }
+            }
+        }
         return returnVal;
-	}
+    }
+
+    public boolean executeArrayQueryNoTran_PROC(List sqlbuilder, List paraV) {
+        boolean returnVal=true;
+        for (int i = 0; i < sqlbuilder.size(); i++) {
+            Object sql= sqlbuilder.get(i);
+            if (sql != null && !sql.toString().equals("")) {
+                List p=(List)paraV.get(i);
+                Object afficeRows=jdbcTemplate.execute(new SchoolCallableStatementCreator(sql.toString(),p==null?null:p.toArray()),
+                        new SchoolCallableStatementCallback(false,p==null?0:p.size()));
+//                    IN=jdbcTemplate.update(sql.toString(),p==null?null:p.toArray());
+                if(afficeRows==null||!UtilTool.isNumber(afficeRows.toString())
+                        ||Integer.parseInt(afficeRows.toString().trim())<1){
+                    returnVal=false;
+                    break;
+                }
+            }
+        }
+        return returnVal;
+    }
 
 //    protected  void lockTable(Connection conn,String tableName){
 //        String sql = "lock tables "+tableName+" write";
@@ -182,40 +201,40 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
 
 
 
-	/*
-	 * (non-Javadoc)
-	 * 执行SQL语句,返回List<Map<String,Object>>
-	 * @see com.school.dao.base.ICommonDAO#queryListMap_SQL(java.lang.String,
-	 * java.util.List)
-	 */
-	public List<Map<String, Object>> queryListMap_SQL(String sql,
-			List<Object> objPara) {
+    /*
+     * (non-Javadoc)
+     * 执行SQL语句,返回List<Map<String,Object>>
+     * @see com.school.dao.base.ICommonDAO#queryListMap_SQL(java.lang.String,
+     * java.util.List)
+     */
+    public List<Map<String, Object>> queryListMap_SQL(String sql,
+                                                      List<Object> objPara) {
         return (List)jdbcTemplate.execute(new SchoolCallableStatementCreator(false,sql,objPara==null?null:objPara.toArray()),
                 new SchoolCallableStatementCallback(null,objPara.size(),Map.class)
         );
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 执行SQL语句，返回实体List
-	 * @sql      SQL语句
-	 * @objPara  参数集合
-	 * @cls  实体对象（例：User.class）
-	 * @see com.school.dao.base.ICommonDAO#queryEntity_SQL(java.lang.String,
-	 * java.util.List, java.lang.Class)
-	 */
-	public List queryEntity_SQL(String sql, List<Object> objPara,
-			Class<? extends Object> cls) {
-		return jdbcTemplate.queryForList(sql,objPara,cls);
-	}
+    /*
+     * (non-Javadoc)
+     * 执行SQL语句，返回实体List
+     * @sql      SQL语句
+     * @objPara  参数集合
+     * @cls  实体对象（例：User.class）
+     * @see com.school.dao.base.ICommonDAO#queryEntity_SQL(java.lang.String,
+     * java.util.List, java.lang.Class)
+     */
+    public List queryEntity_SQL(String sql, List<Object> objPara,
+                                Class<? extends Object> cls) {
+        return jdbcTemplate.queryForList(sql,objPara,cls);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 批量执行SQL语句(更新，添加，删除等批量操作)
-	 * @see com.school.dao.base.ICommonDAO#executeArray_SQL(java.util.List,
-	 * java.util.List)
-	 */
-	public boolean executeArray_SQL(List sqlbuilder, List paraV) {
+    /*
+     * (non-Javadoc)
+     * 批量执行SQL语句(更新，添加，删除等批量操作)
+     * @see com.school.dao.base.ICommonDAO#executeArray_SQL(java.util.List,
+     * java.util.List)
+     */
+    public boolean executeArray_SQL(List sqlbuilder, List paraV) {
         boolean returnVal=true;
         for (int i = 0; i < sqlbuilder.size(); i++) {
             Object sql= sqlbuilder.get(i);
@@ -227,69 +246,69 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
             }
         }
         return returnVal;
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 执行SQL查询，返回List<map<String,Object>>
-	 * @see
-	 * com.school.dao.base.ICommonDAO#executeResultListMap_PROC(java.lang.String
-	 * , java.util.List)
-	 */
-	public List<Map<String, Object>> executeResultListMap_PROC(String sql,
-			List<Object> paraV) {
+    /*
+     * (non-Javadoc)
+     * 执行SQL查询，返回List<map<String,Object>>
+     * @see
+     * com.school.dao.base.ICommonDAO#executeResultListMap_PROC(java.lang.String
+     * , java.util.List)
+     */
+    public List<Map<String, Object>> executeResultListMap_PROC(String sql,
+                                                               List<Object> paraV) {
         return (List)jdbcTemplate.execute(new SchoolCallableStatementCreator(false,sql,paraV==null?null:paraV.toArray()),
                 new SchoolCallableStatementCallback(null,paraV.size(),Map.class)
         );
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 执行存储过程，返回List<实体>集合
-	 * @sql SQL语句
-	 * @paraV  参数集合
-	 * @oracleType  返回参数类型(一般是INT，CURSOR两种)
-	 * @clazz  实体对象集合
-	 * @reObj  返回的reObj值
-	 * @see com.school.dao.base.ICommonDAO#executeResult_PROC(java.lang.String,
-	 * java.util.List, java.util.List, java.lang.Class, java.lang.Object[])
-	 */
-	public List executeResult_PROC(String sql, List paraV,
-			List<Integer> oracleType, Class<? extends Object> clazz,
-			Object[] reObj) {
+    /*
+     * (non-Javadoc)
+     * 执行存储过程，返回List<实体>集合
+     * @sql SQL语句
+     * @paraV  参数集合
+     * @oracleType  返回参数类型(一般是INT，CURSOR两种)
+     * @clazz  实体对象集合
+     * @reObj  返回的reObj值
+     * @see com.school.dao.base.ICommonDAO#executeResult_PROC(java.lang.String,
+     * java.util.List, java.util.List, java.lang.Class, java.lang.Object[])
+     */
+    public List executeResult_PROC(String sql, List paraV,
+                                   List<Integer> oracleType, Class<? extends Object> clazz,
+                                   Object[] reObj) {
         boolean hasPage=true;
         if(reObj==null||reObj.length<1||oracleType==null)
             hasPage=false;
 
-		return (List)jdbcTemplate.execute(new SchoolCallableStatementCreator(hasPage,sql,paraV==null?null:paraV.toArray()),
+        return (List)jdbcTemplate.execute(new SchoolCallableStatementCreator(hasPage,sql,paraV==null?null:paraV.toArray()),
                 new SchoolCallableStatementCallback(reObj,paraV==null?0:paraV.size(),clazz)
-               );
-	}
+        );
+    }
 
 
-	/*
-	 * (non-Javadoc)AUTHOR:郑舟
-	 * 执行SQL语句,返回List<List<String>>
-	 * @see com.school.dao.base.ICommonDAO#executeList_SQL(java.lang.String,
-	 * java.lang.Object[])
-	 */
-	public List<List<String>> executeList_SQL(String sql, Object[] paraValue) {
+    /*
+     * (non-Javadoc)AUTHOR:郑舟
+     * 执行SQL语句,返回List<List<String>>
+     * @see com.school.dao.base.ICommonDAO#executeList_SQL(java.lang.String,
+     * java.lang.Object[])
+     */
+    public List<List<String>> executeList_SQL(String sql, Object[] paraValue) {
 
 
         return (List)jdbcTemplate.execute(new SchoolCallableStatementCreator(sql,paraValue),
                 new SchoolCallableStatementCallback()
         );
-	}
+    }
 
 
 
-	/**
-	 * 执行数据库的FUNCTION 返回Object
-	 * @param sql
-	 * @param paraV
-	 * @return Object
-	 */
-	public Object executeFunction(String sql, List paraV) {
+    /**
+     * 执行数据库的FUNCTION 返回Object
+     * @param sql
+     * @param paraV
+     * @return Object
+     */
+    public Object executeFunction(String sql, List paraV) {
         return jdbcTemplate.execute(new SchoolCallableStatementCreator(sql,paraV),
                 new CallableStatementCallback<Object>() {
                     @Override
@@ -300,38 +319,38 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
                     }
                 }
         );
-	}
+    }
 
-	/*
-	 * (non-Javadoc) 执行存储过程，并返回结果集List<List<String>>
-	 * 
-	 * @see
-	 * com.bhsf.oa.dao.impl.ICommonDAO#executeArratProcedure(java.util.List,
-	 * java.util.List)
-	 */
-	public List<List<String>> executeResultProcedure(String sql, List paraV) {
-		// 配置
-        return (List<List<String>>)jdbcTemplate.execute(new SchoolCallableStatementCreator(sql,paraV),
+    /*
+     * (non-Javadoc) 执行存储过程，并返回结果集List<List<String>>
+     *
+     * @see
+     * com.bhsf.oa.dao.impl.ICommonDAO#executeArratProcedure(java.util.List,
+     * java.util.List)
+     */
+    public List<List<String>> executeResultProcedure(String sql, List paraV) {
+        // 配置
+        return (List<List<String>>)jdbcTemplate.execute(new SchoolCallableStatementCreator(sql,paraV==null?null:paraV.toArray()),
                 new SchoolCallableStatementCallback());
-	}
+    }
 
     /**
      * 执行FUNCTION nextval，得到下一个ID
      * @param seqname
      * @return
      */
-	public Integer getBaseNextId(String seqname) {
-		if (seqname == null || seqname.length() < 1)
-			return null;
-		StringBuilder sqlbuilder = new StringBuilder("{call ?=nextval(?)}");
-		List<Object> objList = new ArrayList<Object>();
-		objList.add(seqname);
-		Object object = this.executeFunction(sqlbuilder.toString(), objList);
-		if (object != null && object.toString().trim().length() > 0)
-			return Integer.parseInt(object.toString().trim());
-		return null;
+    public Integer getBaseNextId(String seqname) {
+        if (seqname == null || seqname.length() < 1)
+            return null;
+        StringBuilder sqlbuilder = new StringBuilder("{call ?=nextval(?)}");
+        List<Object> objList = new ArrayList<Object>();
+        objList.add(seqname);
+        Object object = this.executeFunction(sqlbuilder.toString(), objList);
+        if (object != null && object.toString().trim().length() > 0)
+            return Integer.parseInt(object.toString().trim());
+        return null;
 
-	}
+    }
 
     /**
      * 批量执行PROCEDURE
@@ -339,230 +358,240 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
      * @param objArrayList List<List<Object>>对象
      * @return
      */
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
-			List<List<Object>> objArrayList) {
-		return this.executeArrayQuery_PROC(sqlArrayList, objArrayList);
-	}
+    public Boolean doExcetueArrayProc(List<String> sqlArrayList,
+                                      List<List<Object>> objArrayList) {
+        return this.executeArrayQuery_PROC(sqlArrayList, objArrayList);
+    }
+    /**
+     * 批量执行PROCEDURE
+     * @param sqlArrayList List<String>对象
+     * @param objArrayList List<List<Object>>对象
+     * @return
+     */
+    public Boolean doExcetueArrayNoTranProc(List<String> sqlArrayList,
+                                            List<List<Object>> objArrayList) {
+        return this.executeArrayQueryNoTran_PROC(sqlArrayList, objArrayList);
+    }
 
     /**
      * 得到下一个UUID
      * @return
      */
-	public String getNextId() {
-		return UUID.randomUUID().toString();
-	}
+    public String getNextId() {
+        return UUID.randomUUID().toString();
+    }
 
-	/**
-	 * 更新长字段(clob,text,blob等)
-	 * @param tblname 表名
+    /**
+     * 更新长字段(clob,text,blob等)
+     * @param tblname 表名
      * @param refName  主键列称
-	 * @param columnsName 更新的列名
-	 * @param value      对应的值
-	 * @param ref   主键值
-	 * @param sqlList
-	 * @param objListArray
-	 */
-	public void getArrayUpdateLongText(String tblname, String refName,
-			String columnsName, String value, String ref,
-			List<String> sqlList, List<List<Object>> objListArray) {
-		int beishu = 1;
-		if (value == null)
-			return;
-		if (value != null && value.trim().length() > 2000)
-			beishu = value.trim().length() / 2000
-					+ (value.trim().length() % 2000 > 0 ? 1 : 0);
-		StringBuilder sqlbuilder = new StringBuilder();
+     * @param columnsName 更新的列名
+     * @param value      对应的值
+     * @param ref   主键值
+     * @param sqlList
+     * @param objListArray
+     */
+    public void getArrayUpdateLongText(String tblname, String refName,
+                                       String columnsName, String value, String ref,
+                                       List<String> sqlList, List<List<Object>> objListArray) {
+        int beishu = 1;
+        if (value == null)
+            return;
+        if (value != null && value.trim().length() > 2000)
+            beishu = value.trim().length() / 2000
+                    + (value.trim().length() % 2000 > 0 ? 1 : 0);
+        StringBuilder sqlbuilder = new StringBuilder();
 
-		for (int i = 0; i < beishu; i++) {
-			sqlbuilder = new StringBuilder();
-			String tmpVal = value.trim().substring(i * 2000);
-			if (i != beishu - 1)
-				tmpVal = value.trim().substring(i * 2000, i * 2000 + 2000);
-			List<Object> objList = getUpdateLongText(tblname, refName,
-					columnsName, tmpVal, ref, sqlbuilder);
-			if (sqlbuilder != null && sqlbuilder.toString().trim().length() > 0) {
-				sqlList.add(sqlbuilder.toString());
-				objListArray.add(objList);
-			}
-		}
-	}
+        for (int i = 0; i < beishu; i++) {
+            sqlbuilder = new StringBuilder();
+            String tmpVal = value.trim().substring(i * 2000);
+            if (i != beishu - 1)
+                tmpVal = value.trim().substring(i * 2000, i * 2000 + 2000);
+            List<Object> objList = getUpdateLongText(tblname, refName,
+                    columnsName, tmpVal, ref, sqlbuilder);
+            if (sqlbuilder != null && sqlbuilder.toString().trim().length() > 0) {
+                sqlList.add(sqlbuilder.toString());
+                objListArray.add(objList);
+            }
+        }
+    }
 
-	public List<Object> getUpdateLongText(String tblname, String refName,
-			String columnsName, String value, String topicid,
-			StringBuilder sqlbuilder) {
-		sqlbuilder
-				.append("{CALL update_long_content_pro(?,?,?,?,?,?)}");
-		List<Object> objList = new ArrayList<Object>();
-		objList.add(tblname);
-		objList.add(refName);
-		objList.add(topicid);
-		objList.add(columnsName);
-		objList.add(value.replaceAll("'","\\\""));
-		return objList;
-	}
-	/**
-	 * 数量累计
-	 * @param tblname
-	 * @param refname
-	 * @param columnName
-	 * @param topicid
-	 * @param sqlbuilder
-	 * @return
-	 */
-	public List<Object> getUpdateNumAdd(String tblname,String refname,
-			String columnName,String topicid,Integer type,StringBuilder sqlbuilder){
-		sqlbuilder.append("{CALL update_number_pro(?,?,?,?,?,?)}");
-		List<Object> objList = new ArrayList<Object>();
-		objList.add(tblname);
-		objList.add(refname);
-		objList.add(topicid);
-		objList.add(columnName);
-		objList.add(type);
-		return objList;
-	}
+    public List<Object> getUpdateLongText(String tblname, String refName,
+                                          String columnsName, String value, String topicid,
+                                          StringBuilder sqlbuilder) {
+        sqlbuilder
+                .append("{CALL update_long_content_pro(?,?,?,?,?,?)}");
+        List<Object> objList = new ArrayList<Object>();
+        objList.add(tblname);
+        objList.add(refName);
+        objList.add(topicid);
+        objList.add(columnsName);
+        objList.add(value.replaceAll("'","\\\""));
+        return objList;
+    }
+    /**
+     * 数量累计
+     * @param tblname
+     * @param refname
+     * @param columnName
+     * @param topicid
+     * @param sqlbuilder
+     * @return
+     */
+    public List<Object> getUpdateNumAdd(String tblname,String refname,
+                                        String columnName,String topicid,Integer type,StringBuilder sqlbuilder){
+        sqlbuilder.append("{CALL update_number_pro(?,?,?,?,?,?)}");
+        List<Object> objList = new ArrayList<Object>();
+        objList.add(tblname);
+        objList.add(refname);
+        objList.add(topicid);
+        objList.add(columnName);
+        objList.add(type);
+        return objList;
+    }
 
-	/**
-	 * 执行添加Log
-	 * 
-	 * @param operateUserref
-	 *            操作人
-	 * @param table
-	 *            操作的表
-	 * @param rowsid
-	 *            操作的主键ID
-	 * @param freevalue
-	 *            操作之前的值是什么
-	 * @param currentVal
-	 *            操作之后的值是什么
-	 * @param operateType
-	 *            操作类型： add:添加 update:修改 delete:删除
-	 * @param remark
-	 *            备注
-	 * @return
-	 */
-	public Boolean executeAddOperateLog(String operateUserref, String table,
-			String rowsid, String freevalue, String currentVal,
-			String operateType, String remark) {
-		StringBuilder sql = new StringBuilder();
-		List<Object> objList = this.getAddOperateLog(operateUserref,table,rowsid,freevalue,currentVal,operateType,remark,sql);
-		Object obj= this.executeSacle_PROC(sql.toString(), objList.toArray());
-		if(obj==null||obj.toString().trim().length()<1||Integer.parseInt(obj.toString().trim())<1)
-			return false;
-		return true;
-	}
+    /**
+     * 执行添加Log
+     *
+     * @param operateUserref
+     *            操作人
+     * @param table
+     *            操作的表
+     * @param rowsid
+     *            操作的主键ID
+     * @param freevalue
+     *            操作之前的值是什么
+     * @param currentVal
+     *            操作之后的值是什么
+     * @param operateType
+     *            操作类型： add:添加 update:修改 delete:删除
+     * @param remark
+     *            备注
+     * @return
+     */
+    public Boolean executeAddOperateLog(String operateUserref, String table,
+                                        String rowsid, String freevalue, String currentVal,
+                                        String operateType, String remark) {
+        StringBuilder sql = new StringBuilder();
+        List<Object> objList = this.getAddOperateLog(operateUserref,table,rowsid,freevalue,currentVal,operateType,remark,sql);
+        Object obj= this.executeSacle_PROC(sql.toString(), objList.toArray());
+        if(obj==null||obj.toString().trim().length()<1||Integer.parseInt(obj.toString().trim())<1)
+            return false;
+        return true;
+    }
 
-	/**
-	 * 得到添加Log
-	 * 
-	 * @param operateUserref
-	 *            操作人
-	 * @param table
-	 *            操作的表
-	 * @param rowsid
-	 *            操作的主键ID
-	 * @param freevalue
-	 *            操作之前的值是什么
-	 * @param currentVal
-	 *            操作之后的值是什么
-	 * @param operateType
-	 *            操作类型： add:添加 update:修改 delete:删除
-	 * @param remark
-	 *            备注
-	 * @return
-	 */
-	public List<Object> getAddOperateLog(String operateUserref, String table,
-			String rowsid, String freevalue, String currentVal,
-			String operateType, String remark,StringBuilder sqlbuilder) {
-		if(sqlbuilder==null)
-			return null;
-		sqlbuilder.append("{CALL operate_log_info_add(");
-		List<Object> objList = new ArrayList<Object>();
-		if(operateUserref!=null){
-			objList.add(operateUserref);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");
-		if(table!=null){
-			objList.add(table);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");
-		if(rowsid!=null){
-			objList.add(rowsid);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");
-		if(freevalue!=null){
-			objList.add(freevalue);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");
-		if(currentVal!=null){
-			objList.add(currentVal);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");
-		if(operateType!=null){
-			objList.add(operateType);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");
-		if(remark!=null){
-			objList.add(remark);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");		
-		sqlbuilder.append("?)}");
+    /**
+     * 得到添加Log
+     *
+     * @param operateUserref
+     *            操作人
+     * @param table
+     *            操作的表
+     * @param rowsid
+     *            操作的主键ID
+     * @param freevalue
+     *            操作之前的值是什么
+     * @param currentVal
+     *            操作之后的值是什么
+     * @param operateType
+     *            操作类型： add:添加 update:修改 delete:删除
+     * @param remark
+     *            备注
+     * @return
+     */
+    public List<Object> getAddOperateLog(String operateUserref, String table,
+                                         String rowsid, String freevalue, String currentVal,
+                                         String operateType, String remark,StringBuilder sqlbuilder) {
+        if(sqlbuilder==null)
+            return null;
+        sqlbuilder.append("{CALL operate_log_info_add(");
+        List<Object> objList = new ArrayList<Object>();
+        if(operateUserref!=null){
+            objList.add(operateUserref);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(table!=null){
+            objList.add(table);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(rowsid!=null){
+            objList.add(rowsid);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(freevalue!=null){
+            objList.add(freevalue);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(currentVal!=null){
+            objList.add(currentVal);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(operateType!=null){
+            objList.add(operateType);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(remark!=null){
+            objList.add(remark);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        sqlbuilder.append("?)}");
 
 
-		return objList;
-	} 
-	
-	/**
-	 * 得到添加Log
-	 * 
-	 * @param operateUserref
-	 *            操作人
-	 * @param table
-	 *            操作的表
-	 * @param rowsid
-	 *            操作的主键ID	
-	 * @param operateType
-	 *            操作类型： add:添加 update:修改 delete:删除	
-	 * @return
-	 */
-	public List<Object> getDelOperateLog(String operateUserref, String table,
-			String rowsid,
-			String operateType,StringBuilder sqlbuilder) {
-		if(sqlbuilder==null)
-			return null;
-		sqlbuilder.append("{CALL operate_log_info_delete(");
-		List<Object> objList = new ArrayList<Object>();
-		if(operateUserref!=null){
-			objList.add(operateUserref);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");
-		if(table!=null){
-			objList.add(table);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");
-		if(rowsid!=null){
-			objList.add(rowsid);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");
-		
-		if(operateType!=null){
-			objList.add(operateType);
-			sqlbuilder.append("?,");
-		}else
-			sqlbuilder.append("NULL,");
-		
-		sqlbuilder.append("?)}");
-		return objList;
-	}
+        return objList;
+    }
+
+    /**
+     * 得到添加Log
+     *
+     * @param operateUserref
+     *            操作人
+     * @param table
+     *            操作的表
+     * @param rowsid
+     *            操作的主键ID
+     * @param operateType
+     *            操作类型： add:添加 update:修改 delete:删除
+     * @return
+     */
+    public List<Object> getDelOperateLog(String operateUserref, String table,
+                                         String rowsid,
+                                         String operateType,StringBuilder sqlbuilder) {
+        if(sqlbuilder==null)
+            return null;
+        sqlbuilder.append("{CALL operate_log_info_delete(");
+        List<Object> objList = new ArrayList<Object>();
+        if(operateUserref!=null){
+            objList.add(operateUserref);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(table!=null){
+            objList.add(table);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+        if(rowsid!=null){
+            objList.add(rowsid);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+
+        if(operateType!=null){
+            objList.add(operateType);
+            sqlbuilder.append("?,");
+        }else
+            sqlbuilder.append("NULL,");
+
+        sqlbuilder.append("?)}");
+        return objList;
+    }
 
 
     private static String getFixLenthString(int strLength) {
@@ -727,23 +756,23 @@ class SchoolCallableStatementCreator implements CallableStatementCreator{
      * @throws Exception
      */
     private static CallableStatement setStateParameter(CallableStatement pstatement,
-                                                Object... paraValue) throws SQLException{
+                                                       Object... paraValue) throws SQLException{
         if (paraValue == null || paraValue.length < 1) {
             return pstatement;
         }
-            for (int i = 0; i < paraValue.length; i++) { // 赋参
-                if(paraValue[i]==null)continue;
-                if (paraValue[i].getClass().getSimpleName().equals("String")) {
-                    pstatement.setString(i + 1, paraValue[i].toString());
-                } else if (paraValue[i].getClass().getSimpleName().equals(
-                        "Blob")) {
-                    pstatement.setBlob(i + 1, (Blob) paraValue[i]);
-                } else {
-                    pstatement.setObject(i + 1, paraValue[i]);
-                }
+        for (int i = 0; i < paraValue.length; i++) { // 赋参
+            if(paraValue[i]==null)continue;
+            if (paraValue[i].getClass().getSimpleName().equals("String")) {
+                pstatement.setString(i + 1, paraValue[i].toString());
+            } else if (paraValue[i].getClass().getSimpleName().equals(
+                    "Blob")) {
+                pstatement.setBlob(i + 1, (Blob) paraValue[i]);
+            } else {
+                pstatement.setObject(i + 1, paraValue[i]);
             }
+        }
 
-            return pstatement;
+        return pstatement;
     }
     /*
          * (non-Javadoc)
@@ -758,7 +787,7 @@ class SchoolCallableStatementCreator implements CallableStatementCreator{
         if (paraValue != null)
             setStateParameter(pstatement, paraValue);
         if(hasPageReturn)
-             pstatement.registerOutParameter(paraValue.length+1,Types.INTEGER);
+            pstatement.registerOutParameter(paraValue==null?1:paraValue.length+1,Types.INTEGER);
         return pstatement;
     }
 }
@@ -769,16 +798,16 @@ class SchoolCallableStatementCreator implements CallableStatementCreator{
 class  SchoolCallableStatementCallback implements  CallableStatementCallback<Object> {
     private Object[] pageObj=null;
     private Class<? extends  Object> clzz=null;
-    private int pageSize=-1;
+    private int hasReturnObj=-1;
     private boolean isSearch=true;
-    public SchoolCallableStatementCallback(Object[] pageObj,int pageSize,Class<? extends  Object> clzz){
+    public SchoolCallableStatementCallback(Object[] pageObj,int hasReturnObj,Class<? extends  Object> clzz){
         this.pageObj=pageObj;
         this.clzz=clzz;
-        this.pageSize=pageSize;
+        this.hasReturnObj=hasReturnObj;
     }
-    public SchoolCallableStatementCallback(boolean isSearch,int pageSize){
+    public SchoolCallableStatementCallback(boolean isSearch,int hasReturnObj){
         this.isSearch=isSearch;
-        this.pageSize=pageSize;
+        this.hasReturnObj=hasReturnObj;
     }
     public SchoolCallableStatementCallback(Class<? extends  Object> clzz){
         this.clzz=clzz;
@@ -790,8 +819,8 @@ class  SchoolCallableStatementCallback implements  CallableStatementCallback<Obj
         if(isSearch){
             ResultSet rs=cs.executeQuery();//执行
             //得到页码
-            if(pageSize>-1&&pageObj!=null&&pageObj.length>0)//大于0表示有返回参数
-                pageObj[0]=cs.getObject(pageSize+1);
+            if(hasReturnObj>-1&&pageObj!=null&&pageObj.length>0)//大于0表示有返回参数
+                pageObj[0]=cs.getObject(hasReturnObj+1);
             List returnList=null;
             try {
                 if(clzz==Map.class){
@@ -815,7 +844,7 @@ class  SchoolCallableStatementCallback implements  CallableStatementCallback<Obj
                                             .getTimestamp(j + 1),
                                             com.school.util.UtilTool.DateType.type1);
                                 else
-                                    valObj = rs.getObject(j + 1);
+                                    valObj = rs.getString(j + 1);
 
                                 tmpMap.put(columnStr.toUpperCase(), valObj);
                             }
@@ -862,8 +891,8 @@ class  SchoolCallableStatementCallback implements  CallableStatementCallback<Obj
             cs.execute();
             Object returnVal=null;
             //得到页码
-            if(pageSize>-1)//大于0表示有返回参数
-                returnVal=cs.getObject(pageSize+1);
+            if(hasReturnObj>-1)//大于0表示有返回参数
+                returnVal=cs.getObject(hasReturnObj+1);
             return returnVal;
         }
     }

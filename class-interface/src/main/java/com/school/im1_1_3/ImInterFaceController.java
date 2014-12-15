@@ -89,19 +89,19 @@ public class ImInterFaceController extends BaseController {
                 ||!paramMap.containsKey("schoolId")||paramMap.get("schoolId")==null||paramMap.get("schoolId").trim().length()<1
                 ||!paramMap.containsKey("classId")||paramMap.get("classId")==null||paramMap.get("classId").trim().length()<1
                 ||(!paramMap.containsKey("subjectId")&&!paramMap.containsKey("isAdmin")
-                    ||(
-                        (paramMap.get("subjectId")==null||paramMap.get("subjectId").trim().length()<1)
+                ||(
+                (paramMap.get("subjectId")==null||paramMap.get("subjectId").trim().length()<1)
                         &&
                         (paramMap.get("isAdmin")==null||paramMap.get("isAdmin").trim().length()<1
                                 ||Integer.parseInt(paramMap.get("isAdmin"))==0)
-                      )
-                   )
+        )
+        )
                 ||(
-                    paramMap.get("subjectId")==null||(
+                paramMap.get("subjectId")==null||(
                         paramMap.get("subjectId").trim().length()<1
-                            &&Integer.parseInt(paramMap.get("isAdmin").trim())==0
-                    )
-                 )
+                                &&Integer.parseInt(paramMap.get("isAdmin").trim())==0
+                )
+        )
                 ||!paramMap.containsKey("time")
                 ||!paramMap.containsKey("sign")){
             returnJo.put("msg","参数异常，参数有空值!");
@@ -205,47 +205,47 @@ public class ImInterFaceController extends BaseController {
         //添加
         //如果存在subjectid,说明是老师
 
-         if(paramMap.get("subjectId")!=null&&paramMap.get("subjectId").trim().length()>0){
-             String[] subArray=paramMap.get("subjectId").split(",");
-             for(String sub:subArray){
-                 if(sub!=null&&sub.trim().length()>0){
-                     ClassUser saveCu=new ClassUser();
-                     //UUID,生成
-                     saveCu.setRef(UUID.randomUUID().toString());
-                     saveCu.setClassid(cls.getClassid());
-                     saveCu.setUserid(targetu.getRef());
-                     saveCu.setUid(activeUser.getUserid());
-                     saveCu.setRelationtype("任课老师");
-                     saveCu.setSubjectid(Integer.parseInt(sub.trim()));
-                     if(!this.classUserManager.doSave(saveCu)){
-                         transactionRollback();
-                            returnJo.put("msg","修改班级人员失败!");
-                            response.getWriter().println(returnJo.toString());
-                            return;
-                     }
+        if(paramMap.get("subjectId")!=null&&paramMap.get("subjectId").trim().length()>0){
+            String[] subArray=paramMap.get("subjectId").split(",");
+            for(String sub:subArray){
+                if(sub!=null&&sub.trim().length()>0){
+                    ClassUser saveCu=new ClassUser();
+                    //UUID,生成
+                    saveCu.setRef(UUID.randomUUID().toString());
+                    saveCu.setClassid(cls.getClassid());
+                    saveCu.setUserid(targetu.getRef());
+                    saveCu.setUid(activeUser.getUserid());
+                    saveCu.setRelationtype("任课老师");
+                    saveCu.setSubjectid(Integer.parseInt(sub.trim()));
+                    if(!this.classUserManager.doSave(saveCu)){
+                        transactionRollback();
+                        returnJo.put("msg","修改班级人员失败!");
+                        response.getWriter().println(returnJo.toString());
+                        return;
+                    }
                 }
-             }
-         }else{
-             if(!isAdminTrue){
-                 returnJo.put("msg","修改信息失败!"+returnJo.get("msg"));
-                 returnJo.put("result",0);
-                 transactionRollback();
-                 response.getWriter().println(returnJo.toString());
-                 return;
-             }
-         }
-            //查询该班级人员，向ETT进行同步
+            }
+        }else{
+            if(!isAdminTrue){
+                returnJo.put("msg","修改信息失败!"+returnJo.get("msg"));
+                returnJo.put("result",0);
+                transactionRollback();
+                response.getWriter().println(returnJo.toString());
+                return;
+            }
+        }
+        //查询该班级人员，向ETT进行同步
 
         ClassUser searchCu=new ClassUser();
         searchCu.setClassid(cls.getClassid());
         List<ClassUser> searchCuList=this.classUserManager.getList(cu,null);
         if(!updateEttClassUser(searchCuList,cls.getClassid(),u.getDcschoolid())){
-                //回滚事物
-             transactionRollback();
-             returnJo.put("msg","向网校添加班级人员信息失败!");
-             response.getWriter().println(returnJo.toString());
-             return;
-         }
+            //回滚事物
+            transactionRollback();
+            returnJo.put("msg","向网校添加班级人员信息失败!");
+            response.getWriter().println(returnJo.toString());
+            return;
+        }
         returnJo.put("msg","信息修改成功!"+returnJo.get("msg"));
         returnJo.put("result",1);
 
@@ -265,7 +265,7 @@ public class ImInterFaceController extends BaseController {
         returnJo.put("result",0);
         //是否有参数是空传入
         HashMap<String,String> paramMap=ImInterFaceUtil.getRequestParam(request);
-       //验证必填参数
+        //验证必填参数
         if(!paramMap.containsKey("jid")
                 ||!paramMap.containsKey("schoolId")
                 ||!paramMap.containsKey("gradeId")
@@ -274,9 +274,9 @@ public class ImInterFaceController extends BaseController {
                 ||!paramMap.containsKey("isAdmin")
                 ||paramMap.get("isAdmin").trim().length()<1
                 ||(
-                    (paramMap.get("subjectId")==null||paramMap.get("subjectId").trim().length()<1)
+                (paramMap.get("subjectId")==null||paramMap.get("subjectId").trim().length()<1)
                         &&Integer.parseInt(paramMap.get("isAdmin").trim())==0
-                 )
+        )
                 ||!paramMap.containsKey("time")
                 ||!paramMap.containsKey("sign")){
             returnJo.put("msg","参数异常，参数有空值!");
@@ -326,7 +326,7 @@ public class ImInterFaceController extends BaseController {
 
         //验证该班级的数量是否已达上限
         if (activeUser.getDcschoolid() >= 50000) {
-             int  existClassCount = this.classManager.getTotalClass(activeUser.getDcschoolid(), termYear, 1);
+            int  existClassCount = this.classManager.getTotalClass(activeUser.getDcschoolid(), termYear, 1);
             HashMap<String,String> inteMap=new HashMap<String,String>();
             inteMap.put("time",System.currentTimeMillis()+"");
             inteMap.put("schoolId",activeUser.getDcschoolid().toString());
@@ -339,7 +339,7 @@ public class ImInterFaceController extends BaseController {
             url +="franchisedSchool?m=getTC";
             net.sf.json.JSONObject jo=sendPostUrl(url, inteMap, "UTF-8");
             if(jo!=null&&jo.containsKey("result")){
-               int  maxClass = Integer.valueOf(jo.get("result").toString());
+                int  maxClass = Integer.valueOf(jo.get("result").toString());
                 if(existClassCount>=maxClass){
                     returnJo.put("msg","该分校允许的班级数量已达上限!无法再创建班级!");
                     response.getWriter().println(returnJo.toString());return;
@@ -349,7 +349,7 @@ public class ImInterFaceController extends BaseController {
                 response.getWriter().println(returnJo.toString());return;
             }
         }
-            //组织数据，准备添加
+        //组织数据，准备添加
         int newClsId=genderIdCode(6);
         //难道当前学年的当前年级是否存在该班级名称
         ClassInfo cls=new ClassInfo();
@@ -416,28 +416,28 @@ public class ImInterFaceController extends BaseController {
             tmpCuList.add(saveCu);
         }
 
-            if(paramMap.get("subjectId")!=null&&paramMap.get("subjectId").trim().length()>0){
-                String[] subArray=paramMap.get("subjectId").split(",");
-                for(String sub:subArray){
-                    if(sub!=null&&sub.trim().length()>0){
-                        ClassUser saveCu=new ClassUser();
-                        //UUID,生成
-                        saveCu.setRef(UUID.randomUUID().toString());
-                        saveCu.setClassid(newClsId);
-                        saveCu.setUserid(activeUser.getRef());
-                        saveCu.setUid(activeUser.getUserid());
-                        saveCu.setRelationtype("任课老师");
-                        saveCu.setSubjectid(Integer.parseInt(sub.trim()));
-                        if(!this.classUserManager.doSave(saveCu)){
-                            returnJo.put("msg","添加班级人员失败!");
-                            response.getWriter().println(returnJo.toString());
-                            transactionRollback();
-                            return;
-                        }
-                        tmpCuList.add(saveCu);
+        if(paramMap.get("subjectId")!=null&&paramMap.get("subjectId").trim().length()>0){
+            String[] subArray=paramMap.get("subjectId").split(",");
+            for(String sub:subArray){
+                if(sub!=null&&sub.trim().length()>0){
+                    ClassUser saveCu=new ClassUser();
+                    //UUID,生成
+                    saveCu.setRef(UUID.randomUUID().toString());
+                    saveCu.setClassid(newClsId);
+                    saveCu.setUserid(activeUser.getRef());
+                    saveCu.setUid(activeUser.getUserid());
+                    saveCu.setRelationtype("任课老师");
+                    saveCu.setSubjectid(Integer.parseInt(sub.trim()));
+                    if(!this.classUserManager.doSave(saveCu)){
+                        returnJo.put("msg","添加班级人员失败!");
+                        response.getWriter().println(returnJo.toString());
+                        transactionRollback();
+                        return;
                     }
+                    tmpCuList.add(saveCu);
                 }
             }
+        }
 
         //学生加入班级动态
         MyInfoUserInfo info=new MyInfoUserInfo();
@@ -463,13 +463,13 @@ public class ImInterFaceController extends BaseController {
         }
         //如果成功，则传入人员数据
         if(tmpCuList!=null&&tmpCuList.size()>0){
-             if(!updateEttClassUser(tmpCuList,cls.getClassid(),u.getDcschoolid())){
+            if(!updateEttClassUser(tmpCuList,cls.getClassid(),u.getDcschoolid())){
                 //回滚事物
                 transactionRollback();
                 returnJo.put("msg","添加班级人员信息失败!");
                 response.getWriter().println(returnJo.toString());
                 return;
-             }
+            }
         }
         returnJo.put("result",1);
         returnJo.put("msg","添加班级相关信息成功!");
@@ -1011,8 +1011,8 @@ public class ImInterFaceController extends BaseController {
                     }
                     returnMap.put("time",tmpMyInfo.getCtimeImString());
                     returnMap.put("message",
-                        //         (tmpMyInfo.getRealname() + " 加入了 " + cls.getClassname() + "!", "UTF-8")
-                        (tmpMyInfo.getDynamicString())
+                            //         (tmpMyInfo.getRealname() + " 加入了 " + cls.getClassname() + "!", "UTF-8")
+                            (tmpMyInfo.getDynamicString())
                     );
                     returnMap.put("photo", "http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
                     returnUserRecord.add(returnMap);
@@ -1173,7 +1173,7 @@ public class ImInterFaceController extends BaseController {
             returnJo.put("msg","该用户已经被禁止加入当前班级中!");
             return returnJo.toString();
         }
-        boolean ishasBan=false;
+
         if(userType==2){
             //验证是否是班主任
             if(isAdmin!=null&&Integer.parseInt(isAdmin)==1){
@@ -1185,7 +1185,6 @@ public class ImInterFaceController extends BaseController {
                 if(cuList!=null&&cuList.size()>0){
                     returnJo.put("msg","本班已存在班主任，不能担任班主任!");
                     //return returnJo.toString();
-                    ishasBan=true;
                 }else{
                     cu.setUserid(activeUser.getRef());
                     cu.setRef(this.classUserManager.getNextId());
@@ -1220,21 +1219,7 @@ public class ImInterFaceController extends BaseController {
                         }
                     }
                 }
-
             }
-            if(isbreak){
-                transactionRollback();
-                returnJo.put("msg","加入班级失败!");
-                returnJo.put("result",0);
-                return returnJo.toString();
-            }else{
-                if(subjectId!=null&&subjectId.trim().length()>0){
-                    returnJo.put("msg","加入班级成功!"+returnJo.get("msg"));
-                    returnJo.put("result",1);
-                }else if(isAdmin==null||Integer.parseInt(isAdmin)!=1){
-                    returnJo.put("msg","加入班级失败!"+returnJo.get("msg"));
-                    returnJo.put("result",0);
-                    transactionRollback();
             if(isbreak){
                 transactionRollback();
                 return returnJo.toString();
@@ -1243,18 +1228,11 @@ public class ImInterFaceController extends BaseController {
                     returnJo.put("msg","加入班级成功!"+returnJo.get("msg"));
                     returnJo.put("result",1);
                 }else{
-                    if(ishasBan){
-                        returnJo.put("msg",returnJo.get("msg"));
-                        returnJo.put("result", 0);
-                        transactionRollback();
-                    }else{
-                        returnJo.put("msg","加入班级成功!"+returnJo.get("msg"));
-                        returnJo.put("result", 1);
-                    }
                     returnJo.put("msg","加入班级失败!"+returnJo.get("msg"));
                     transactionRollback();
                 }
             }
+
         }else if(userType==1){//如果是学生，则直接判断是否存在，添加
             ClassUser cu=new ClassUser();
             cu.setClassid(cls.getClassid());
@@ -1325,7 +1303,7 @@ public class ImInterFaceController extends BaseController {
      * @param cuTmpList 班级人员信息ClassUser  注意给对象赋ClassUser.Uid
      * @param dcschoolid  分校ID
      * @return
-       */
+     */
     @Transactional
     private boolean updateEttClassUser(List<ClassUser> cuTmpList,Integer classid,Integer dcschoolid){
         List<Map<String,Object>> mapList=null;
@@ -1626,7 +1604,7 @@ public class ImInterFaceController extends BaseController {
         //获取班级信息
         ClassInfo classInfo=new ClassInfo();
         classInfo.setImvaldatecode(classCode);
-         List<ClassInfo>clsList=this.classManager.getList(classInfo,null);
+        List<ClassInfo>clsList=this.classManager.getList(classInfo,null);
         if(clsList==null||clsList.size()<1){
             jsonObj.put("msg","当前班级不存在!");
             jsonObj.put("result", 0);
@@ -1853,7 +1831,7 @@ public class ImInterFaceController extends BaseController {
         ClassInfo classInfo=new ClassInfo();
         classInfo.setImvaldatecode(classCode);
         classInfo.setDcschoolid(Integer.parseInt(schoolId));
-       // classInfo.setSearchUid(tea.getUserid());
+        // classInfo.setSearchUid(tea.getUserid());
         List<ClassInfo>clsList=this.classManager.getList(classInfo,null);
         if(clsList==null||clsList.size()<1){
             jsonObj.put("msg","当前班级不存在!");
@@ -1867,7 +1845,7 @@ public class ImInterFaceController extends BaseController {
         List<UserInfo>uList=this.userManager.getList(tea,null);
         if(uList!=null&&uList.size()>0)
             teacherName=uList.get(0).getRealname();
-        
+
         String msg="确认加入";
         if(teacherName!=null&&teacherName.length()>0)
             msg+=teacherName+"老师创建的";
@@ -1985,7 +1963,7 @@ public class ImInterFaceController extends BaseController {
             return "密码不能少于6个字或多于12个字!";
         //只含数字、字母（大小写）、下划线，且必须同时有数字和字母
         //if(!UtilTool.matchingText("[a-zA-Z0-9_]+",paramMap.get("password")))
-     //            return "密码只含数字、字母（大小写）、下划线，且必须同时有数字和字母!";
+        //            return "密码只含数字、字母（大小写）、下划线，且必须同时有数字和字母!";
         //验证是否存在数字
         if(!UtilTool.matchingText("[\\w[0-9]]+",paramMap.get("password")))
             return "密码必须同时有数字和字母!";
@@ -2159,7 +2137,7 @@ public class ImInterFaceController extends BaseController {
         paraMap.put("time",System.currentTimeMillis()+"isActiveSchool.do");
         paraMap.put("sign",UrlSigUtil.makeSigSimple("isActiveSchool.do",paraMap));
         String totalSchoolUrl=UtilTool.utilproperty.getProperty("TOTAL_SCHOOL_LOCATION");
-       // String totalSchoolUrl="http://192.168.10.41/totalSchool/";
+        // String totalSchoolUrl="http://192.168.10.41/totalSchool/";
         String url=totalSchoolUrl+"/franchisedSchool?m=isActiveSchool.do";
         JSONObject jo=sendPostUrl(url, paraMap, "UTF-8");
         Integer returnVal=0;
@@ -2416,9 +2394,9 @@ class  ImInterFaceUtil{
             if(tmpCu!=null){
                 Map<String,Object> returnMap=new HashMap<String, Object>();
                 if(tmpCu.getEttuserid()!=null){
-    //                    JSONObject tmpJo=new JSONObject();
-    //                    tmpJo.put("jid",tmpCu.getEttuserid()==null?"":tmpCu.getEttuserid());
-    //                    tmpJo.put("")
+                    //                    JSONObject tmpJo=new JSONObject();
+                    //                    tmpJo.put("jid",tmpCu.getEttuserid()==null?"":tmpCu.getEttuserid());
+                    //                    tmpJo.put("")
                     jids.append("{\"jid\":"+tmpCu.getEttuserid()+"},");
                     returnMap.put("jid",tmpCu.getEttuserid());
                 }else{
@@ -2431,7 +2409,7 @@ class  ImInterFaceUtil{
                     subjName=tmpCu.getSubjectname();
 
                 returnMap.put("subject",subjName);
-                returnMap.put("userType",userType==1?3:1); 
+                returnMap.put("userType",userType==1?3:1);
                 returnMap.put("showName",tmpCu.getRealname());
                 returnMap.put("photo","http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
                 returnUserRecord.add(returnMap);

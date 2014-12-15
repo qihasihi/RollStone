@@ -16,79 +16,79 @@ import java.util.List;
 
 @Service
 public class  ClassManager extends BaseManager<ClassInfo> implements IClassManager  {
-	private IClassDAO classdao ;
-	 
-	@Autowired
-	@Qualifier("classDAO")	
-	
-	public void setClassdao(IClassDAO classdao) {
-		this.classdao = classdao;
-	}
+    private IClassDAO classdao ;
 
-	@Override
-	public Boolean doDelete(ClassInfo obj) {
-		return this.classdao.doDelete(obj);
-	}
+    @Autowired
+    @Qualifier("classDAO")
 
-	@Override
-	public Boolean doSave(ClassInfo obj) {
-		return this.classdao.doSave(obj);
-	}
+    public void setClassdao(IClassDAO classdao) {
+        this.classdao = classdao;
+    }
 
-	@Override
-	public Boolean doUpdate(ClassInfo obj) {
-		return this.classdao.doUpdate(obj);
-	}
+    @Override
+    public Boolean doDelete(ClassInfo obj) {
+        return this.classdao.doDelete(obj);
+    }
 
-	@Override
-	protected ICommonDAO<ClassInfo> getBaseDAO() {
-		return classdao;
-	}
+    @Override
+    public Boolean doSave(ClassInfo obj) {
+        return this.classdao.doSave(obj);
+    }
 
-	@Override
-	public List<ClassInfo> getList(ClassInfo obj, PageResult presult) {
+    @Override
+    public Boolean doUpdate(ClassInfo obj) {
+        return this.classdao.doUpdate(obj);
+    }
+
+    @Override
+    protected ICommonDAO<ClassInfo> getBaseDAO() {
+        return classdao;
+    }
+
+    @Override
+    public List<ClassInfo> getList(ClassInfo obj, PageResult presult) {
         return this.classdao.getList(obj, presult);
-	}
+    }
 
 
-	@Override
-	public String getNextId() {
-		// TODO Auto-generated method stub
-		return this.classdao.getNextId();
-	}
-	public List<Object> getDeleteSql(ClassInfo obj, StringBuilder sqlbuilder) {
-		return this.classdao.getDeleteSql(obj, sqlbuilder);
-	}
+    @Override
+    public String getNextId() {
+        // TODO Auto-generated method stub
+        return this.classdao.getNextId();
+    }
+    public List<Object> getDeleteSql(ClassInfo obj, StringBuilder sqlbuilder) {
+        return this.classdao.getDeleteSql(obj, sqlbuilder);
+    }
 
-	public List<Object> getSaveSql(ClassInfo obj, StringBuilder sqlbuilder) { 
-		return this.classdao.getSaveSql(obj, sqlbuilder);
-	} 
+    public List<Object> getSaveSql(ClassInfo obj, StringBuilder sqlbuilder) {
+        return this.classdao.getSaveSql(obj, sqlbuilder);
+    }
 
-	public List<Object> getUpdateSql(ClassInfo obj, StringBuilder sqlbuilder) {
-		return this.classdao.getUpdateSql(obj, sqlbuilder);  
-	}
-	/**
-	 * 根据UserRef,YEAR,PAttern得到班级
-	 * @param userref
-	 * @param year
-	 * @param pattern
-	 * @return
-	 */
-	public List<ClassInfo> getClassByUserYearPattern(String userref,String year,String pattern){
-		return this.classdao.getClassByUserYearPattern(userref, year, pattern);
-	}
-	public ClassInfo getOfExcel(Sheet rs, int cols, int d, String type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	/**
-	 * 升级操作
-	 * @param year
-	 * @return
-	 */
-	public Boolean doClassLevelUp(String year,Integer dcschoolid){
-		return this.classdao.doClassLevelUp(year,dcschoolid);
-	}
+    public List<Object> getUpdateSql(ClassInfo obj, StringBuilder sqlbuilder) {
+        return this.classdao.getUpdateSql(obj, sqlbuilder);
+    }
+    /**
+     * 根据UserRef,YEAR,PAttern得到班级
+     * @param userref
+     * @param year
+     * @param pattern
+     * @return
+     */
+    public List<ClassInfo> getClassByUserYearPattern(String userref,String year,String pattern){
+        return this.classdao.getClassByUserYearPattern(userref, year, pattern);
+    }
+    public ClassInfo getOfExcel(Sheet rs, int cols, int d, String type) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    /**
+     * 升级操作
+     * @param year
+     * @return
+     */
+    public Boolean doClassLevelUp(String year,Integer dcschoolid){
+        return this.classdao.doClassLevelUp(year,dcschoolid);
+    }
     /**
      * 得到更新或添加的SQL
      * @param obj;
@@ -108,6 +108,9 @@ public class  ClassManager extends BaseManager<ClassInfo> implements IClassManag
     public int getTotalClass(int schoolId, String year, int from) {
         return this.classdao.getTotalClass(schoolId, year, from);
     }
-	
+    public List<ClassInfo> getIm113List(ClassInfo cls, PageResult presult){
+        return this.classdao.getIm113List(cls,presult);
+    }
+
 }
 

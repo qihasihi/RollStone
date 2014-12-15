@@ -1,51 +1,52 @@
 package com.school.util;
 
-        import java.awt.*;
-        import java.awt.image.BufferedImage;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
-        import java.io.*;
-        import java.lang.Exception;
-        import java.lang.reflect.Method;
-        import java.math.BigDecimal;
-        import java.net.HttpURLConnection;
-        import java.net.URL;
-        import java.net.URLEncoder;
-        import java.security.MessageDigest;
-        import java.sql.Blob;
-        import java.sql.Clob;
-        import java.sql.SQLException;
-        import java.text.ParseException;
-        import java.text.SimpleDateFormat;
-        import java.util.*;
-        import java.util.List;
-        import java.util.concurrent.TimeUnit;
-        import java.util.regex.Matcher;
-        import java.util.regex.Pattern;
+import java.io.*;
+import java.lang.Exception;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-        import javax.imageio.ImageIO;
-        import javax.imageio.ImageReadParam;
-        import javax.imageio.ImageReader;
-        import javax.imageio.stream.ImageInputStream;
-        import javax.servlet.ServletContext;
-        import javax.servlet.ServletOutputStream;
-        import javax.servlet.http.HttpServletRequest;
-        import javax.servlet.http.HttpServletResponse;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-        import com.school.entity.RightUser;
-        import com.school.entity.UserInfo;
-        import com.school.util.Pdf2Swf.Office2Pdf;
-        import com.school.util.Pdf2Swf.Pdf2Swf;
-        import com.school.util.sendfile.SendFile;
-        import com.sun.image.codec.jpeg.JPEGCodec;
-        import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import com.school.entity.RightUser;
+import com.school.entity.UserInfo;
+import com.school.util.Pdf2Swf.Office2Pdf;
+import com.school.util.Pdf2Swf.Pdf2Swf;
+import com.school.util.sendfile.SendFile;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
-        import net.sf.json.JSONArray;
-        import net.sf.json.JSONObject;
-        import org.apache.commons.lang.math.RandomUtils;
-        import org.springframework.web.context.request.RequestContextHolder;
-        import org.springframework.web.context.request.ServletRequestAttributes;
-        import org.w3c.dom.Element;
-        import org.w3c.dom.NodeList;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.math.RandomUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class UtilTool implements java.io.Serializable {
     /************************** 全局 常量********************** */
@@ -70,6 +71,7 @@ public class UtilTool implements java.io.Serializable {
     private final static String _YEAR = "yyyy";
     private final static String _YEARANDMONTH = "yyyy-MM";
     private final static String _SMOLLDATE = "yyyy-MM-dd";
+    private final static String _MONTH_DAY = "MM-dd";
     private final static String _FULL_DATE_CHINA = "yyyy年MM月dd日 HH时mm分ss秒";
     private final static String _DATE_GMT="EEE MMM dd hh:mm:ss z yyyy";
 
@@ -80,7 +82,7 @@ public class UtilTool implements java.io.Serializable {
     /**
      * Spring配置文件  (取消重新读取的方式，改为利用SpringBeanutil.getBean("userManager")的方式)
      */
-   // public static ApplicationContext _springApplicatioinContext=SpringProperty.getInstance();
+    // public static ApplicationContext _springApplicatioinContext=SpringProperty.getInstance();
     /**
      * 精简版资源系统配置文件
      */
@@ -234,6 +236,24 @@ public class UtilTool implements java.io.Serializable {
     public static  String _PDF_SUFFIX_TYPE_REGULAR ="(.pdf)$";
 
 
+    public static String ecode(String msg){
+        try{
+            return java.net.URLEncoder.encode(msg,"utf-8");
+        }catch(Exception e){
+
+        }
+        return "";
+    }
+    public static String decode(String msg){
+        try{
+            return URLDecoder.decode(msg,"utf-8");
+        }catch(Exception e){
+
+        }
+        return "";
+    }
+
+
 
 
 
@@ -312,12 +332,12 @@ public class UtilTool implements java.io.Serializable {
     public static Date StringConvertToDate(String str,DateType dt){
         if (str == null || str.trim() == "")
             return null;
-       if(dt==null){
+        if(dt==null){
             if(str.indexOf("GMT")!=-1)
                 dt=DateType.GMT;
-           else
+            else
                 dt=DateType.type1;
-       }
+        }
         if (str.indexOf("年") != -1 || str.indexOf("月") != -1
                 || str.indexOf("日") != -1 || str.indexOf("时") != -1
                 || str.indexOf("分") != -1 || str.indexOf("秒") != -1)
@@ -399,12 +419,12 @@ public class UtilTool implements java.io.Serializable {
             daformat = new SimpleDateFormat(_SMOLLDATE);
         } else if (DateType.YearForChina == dt) {
             daformat = new SimpleDateFormat(_FULL_DATE_CHINA);
+        }else if (DateType.MonthAndDay == dt) {
+            daformat = new SimpleDateFormat(_MONTH_DAY);
         }else if(DateType.GMT==dt){
             daformat=new SimpleDateFormat(_DATE_GMT,Locale.ENGLISH);
         }
-        String d = null;
-        d = daformat.format(da);
-        return d;
+        return daformat.format(da);
     }
 
     public static enum DateType {
@@ -439,7 +459,7 @@ public class UtilTool implements java.io.Serializable {
         /**
          * yyyy-MM-dd
          */
-        smollDATE, YearForChina,GMT
+        smollDATE, YearForChina,GMT,MonthAndDay
     }
 
     public static Clob oracleStr2Clob(String str) throws Exception {
@@ -722,9 +742,9 @@ public class UtilTool implements java.io.Serializable {
         if(!tmpf.exists()||tmpf.isFile())
             tmpf.mkdirs();
         tmpf=new File(directorypath+"/"+fname);
-       if(!tmpf.exists()||tmpf.isDirectory()){
+        if(!tmpf.exists()||tmpf.isDirectory()){
             try{
-            tmpf.createNewFile();
+                tmpf.createNewFile();
             }catch(Exception e){e.printStackTrace();}
         }
 
@@ -1245,7 +1265,7 @@ public class UtilTool implements java.io.Serializable {
             if(f.exists()&&f.length()>2097152){
                 System.out.println("file > 2M wait....... ");
                 try{
-                   // Thread.sleep(TimeUnit.MINUTES.toMillis(5));
+                    // Thread.sleep(TimeUnit.MINUTES.toMillis(5));
                 }catch (Exception e){
 
                 }
@@ -1820,7 +1840,7 @@ public class UtilTool implements java.io.Serializable {
      * @param  requestEncoding 参数编码
      */
     public static JSONObject sendPostUrlNotEncoding(String urlstr,Map<String,String> paramMap,String requestEncoding){
-            HttpURLConnection httpConnection=null;
+        HttpURLConnection httpConnection=null;
         URL url;
         int code;
         try {
@@ -1940,109 +1960,95 @@ public class UtilTool implements java.io.Serializable {
         try {
             //组织参数
             StringBuffer params = new StringBuffer();
-            System.out.println(params+"cache报错，上边第一步 ----------1");
+//            System.out.println(params+"cache报错，上边第一步 ----------1");
             if(paramMap!=null&&paramMap.size()>0){
-                System.out.println(params+"params里边 ----------1");
+//                System.out.println(params+"params里边 ----------1");
                 for (Iterator iter = paramMap.entrySet().iterator(); iter
                         .hasNext();)
                 {
                     Map.Entry element = (Map.Entry) iter.next();
+                    System.out.println(element.getKey().toString()+":"+element.getValue().toString());
                     params.append(element.getKey().toString());
                     params.append("=");
                     params.append(URLEncoder.encode(element.getValue().toString(),requestEncoding));
                     params.append("&");
                 }
-                System.out.println(params+"params里边 ----------2");
 
                 if (params.length() > 0)
                 {
                     params = params.deleteCharAt(params.length() - 1);
                 }
-                System.out.println(params+"params里边 ----------3");
             }
-            System.out.println(params+"cache报错，上边第二步 ----------2");
-
-                url = new URL(urlstr);
-            System.out.println(url+"cache报错，上边第三步 ----------3");
-                httpConnection = (HttpURLConnection) url.openConnection();
-            System.out.println(url+"cache报错，上边第四步 ----------4");
-                httpConnection.setRequestMethod("POST");
-            System.out.println(url+"cache报错，上边第五步 ----------5");
-                if(params!=null)
-                    httpConnection.setRequestProperty("Content-Length",
-                            String.valueOf(params.toString().length()));
-            System.out.println(url+"cache报错，上边第六步 ----------6");
-                httpConnection.setRequestProperty("Content-Type",
-                        "application/x-www-form-urlencoded");
-            System.out.println(url+"cache报错，上边第七步 ----------7");
-                httpConnection.setDoOutput(true);
-            System.out.println(url+"cache报错，上边第八步 ----------8");
-                httpConnection.setDoInput(true);
-            System.out.println(url+"cache报错，上边第九步 ----------9");
+            System.out.println(urlstr);
+            url = new URL(urlstr);
+            httpConnection = (HttpURLConnection) url.openConnection();
+            httpConnection.setRequestMethod("POST");
+            if(params!=null)
+                httpConnection.setRequestProperty("Content-Length",
+                        String.valueOf(params.toString().length()));
+            httpConnection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+            httpConnection.setDoOutput(true);
+            httpConnection.setDoInput(true);
 			/*
 			 * PrintWriter printWriter = new
 			 * PrintWriter(httpConnection.getOutputStream());
 			 * printWriter.print(parameters); printWriter.close();
 			 */
 
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-                        httpConnection.getOutputStream(), "8859_1");
-            System.out.println(url+"cache报错，上边第十步 ----------10");
-                if(params!=null)
-                    outputStreamWriter.write(params.toString());
-            System.out.println(url+"cache报错，上边第十一步 ----------11");
-                outputStreamWriter.flush();
-            System.out.println(url+"cache报错，上边第十二步 ----------12");
-                outputStreamWriter.close();
-            System.out.println(url+"cache报错，上边第十三步 ----------13");
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                    httpConnection.getOutputStream(), "8859_1");
+            if(params!=null)
+                outputStreamWriter.write(params.toString());
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
 
-                code = httpConnection.getResponseCode();
-            System.out.println(code+"cache报错，上边第十四步 ----------14");
-            } catch (Exception e) {			// 异常提示
-                System.out.println("异常错误!TOTALSCHOOL未响应!");
-                if(httpConnection!=null)httpConnection.disconnect();
-                return new JSONObject();
-            }
-            StringBuffer stringBuffer = new StringBuffer();
-            if (code == HttpURLConnection.HTTP_OK) {
-                try {
-                    String strCurrentLine;
-                    BufferedReader reader = new BufferedReader(
-                            new InputStreamReader(httpConnection.getInputStream()));
-                    while ((strCurrentLine = reader.readLine()) != null) {
-                        stringBuffer.append(strCurrentLine).append("\n");
-                    }
-                    reader.close();
-                    if(httpConnection!=null)httpConnection.disconnect();
-                } catch (IOException e) {
-                    System.out.println("异常错误!");
-                    if(httpConnection!=null)httpConnection.disconnect();
-                    return null;
-                }
-            }else if(code==404){
-                if(httpConnection!=null)httpConnection.disconnect();
-                // 提示 返回
-                System.out.println("异常错误!404错误，请联系管理人员!");
-                return null;
-            }else if(code==500){
-                if(httpConnection!=null)httpConnection.disconnect();
-                System.out.println("异常错误!500错误，请联系管理人员!");
-                return null;
-            }
-            String returnContent=null;
-            try {
-                returnContent=new String(stringBuffer.toString().getBytes("gbk"),requestEncoding);
-            } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            //转换成JSON
-            System.out.println(returnContent);
-            if(returnContent!=null&&returnContent.length()>0){
-                JSONObject jb=JSONObject.fromObject(returnContent);
-                return jb;
-            }
+            code = httpConnection.getResponseCode();
+        } catch (Exception e) {			// 异常提示
+            System.out.println("异常错误!TOTALSCHOOL未响应!");
+            if(httpConnection!=null)httpConnection.disconnect();
             return new JSONObject();
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        if (code == HttpURLConnection.HTTP_OK) {
+            try {
+                String strCurrentLine;
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(httpConnection.getInputStream()));
+                while ((strCurrentLine = reader.readLine()) != null) {
+                    stringBuffer.append(strCurrentLine).append("\n");
+                }
+                reader.close();
+                if(httpConnection!=null)httpConnection.disconnect();
+            } catch (IOException e) {
+                System.out.println("异常错误!");
+                if(httpConnection!=null)httpConnection.disconnect();
+                return null;
+            }
+        }else if(code==404){
+            if(httpConnection!=null)httpConnection.disconnect();
+            // 提示 返回
+            System.out.println("异常错误!404错误，请联系管理人员!");
+            return null;
+        }else if(code==500){
+            if(httpConnection!=null)httpConnection.disconnect();
+            System.out.println("异常错误!500错误，请联系管理人员!");
+            return null;
+        }
+        String returnContent=null;
+        try {
+            returnContent=new String(stringBuffer.toString().getBytes("gbk"),requestEncoding);
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //转换成JSON
+        System.out.println(returnContent);
+        if(returnContent!=null&&returnContent.length()>0){
+            JSONObject jb=JSONObject.fromObject(returnContent);
+            return jb;
+        }
+        return new JSONObject();
     }
 
     /**
@@ -2096,5 +2102,48 @@ public class UtilTool implements java.io.Serializable {
      */
     public static boolean isJsonFormat(String jsonStr){
         return new JsonValidator().validate(jsonStr);
+    }
+
+
+    /**
+     * 设置项目动态变量
+     * @param request
+     */
+    public static void setProjectValidate(HttpServletRequest request){
+        String ipStr=request.getServerName();
+        if(request.getServerPort()!=80){
+            ipStr+=":"+request.getServerPort();
+        }
+        String proc_name=request.getHeader("x-etturl");
+        if(proc_name==null){
+            proc_name=request.getContextPath().replaceAll("/","");
+        }else{
+            if(proc_name.indexOf("/")!=-1)
+                proc_name+="/";
+            ///group1/1.jsp
+            proc_name=proc_name.substring(0,proc_name.substring(1).indexOf("/")+1).replaceAll("/","");
+        }
+        //UtilTool.utilproperty.getProperty("PROC_NAME");
+        String basePath = request.getScheme() + "://"
+                + ipStr
+                +"/"+proc_name + "/";
+        if(request.getSession().getAttribute("IP_PROC_NAME")==null||!request.getSession().getAttribute("IP_PROC_NAME").toString().equals(basePath))
+            request.getSession().setAttribute("IP_PROC_NAME", basePath);
+
+        //公用的文件服务器项目链接
+        String publicFileSystemIpPort=new StringBuilder(basePath).append("/").toString();
+        //项目
+        String fileSystemIpPort=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
+        //String fileSystemIpPort=request.getScheme() + "://"+ ipStr+"/"+UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"/";
+        if(request.getSession().getAttribute("FILE_SYSTEM_IP_PORT")==null||!request.getSession().getAttribute("FILE_SYSTEM_IP_PORT").toString().equals(fileSystemIpPort))
+            request.getSession().setAttribute("FILE_SYSTEM_IP_PORT", fileSystemIpPort);
+        // 本地的文件
+        String fileSystemUpload=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_FILE_PATH_HEAD")+"/";
+        if(request.getSession().getAttribute("RESOURCE_FILE_PATH_HEAD")==null||!request.getSession().getAttribute("RESOURCE_FILE_PATH_HEAD").toString().equals(fileSystemUpload))
+            request.getSession().setAttribute("RESOURCE_FILE_PATH_HEAD", fileSystemUpload);
+        // 云端的文件
+        String fileSystemCloudUpload=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD")+"/";
+        if(request.getSession().getAttribute("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD")==null||!request.getSession().getAttribute("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD").toString().equals(fileSystemCloudUpload))
+            request.getSession().setAttribute("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD", fileSystemCloudUpload);
     }
 }
