@@ -678,7 +678,7 @@ function delTrusteeShip(ref){
     });
 }
 
-function addTeacherCourse(type){
+function addTeacherCourse(type){alert(tea_gradeid);
     if(!confirm("确认添加？"))
         return;
     var courseids=new Array();
@@ -712,7 +712,7 @@ function addTeacherCourse(type){
         data:{
             termid:term,
             subjectid:subjectid,
-            gradeid:gradeid,
+            gradeid:tea_gradeid,
             courseids:courseids.join(',')
         },
         type:'POST',
