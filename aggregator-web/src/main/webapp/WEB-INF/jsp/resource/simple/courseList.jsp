@@ -59,7 +59,7 @@
                 param.subjectvalues=$("#subjectid").val().Trim();
             if(selVersionId.Trim().length>0)
                 param.versionvalues=selVersionId;<%//精简版只允许查的教材信息%>
-            param.courselevel=-2;
+            param.courselevel=-4;  //精简版，只查云端的标准，共享，并且course_id>0
             p.setPostParams(param);
         }
 
@@ -164,7 +164,6 @@
     </form>
     <div class="clear"></div>
 </div>
-啊啊啊啊啊啊
 <%@include file="/util/foot.jsp" %>
 </body>
 </html>
