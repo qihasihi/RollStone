@@ -157,7 +157,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         JsonEntity je =new JsonEntity();
         PageResult pageResult=this.getPageResultParameter(request);
         //pageResult.setOrderBy(" aa.diff_type desc, aa.ctime desc,aa.operate_time desc ");
-        pageResult.setOrderBy(" aa.diff_type desc,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id");
+        pageResult.setOrderBy(" aa.diff_type desc,aa.is_mic_copiece,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id");
         TpCourseResource tr=this.getParameter(request,TpCourseResource.class);
         String courseid=request.getParameter("courseid");
         String currentcourseid=request.getParameter("currentcourseid");
@@ -168,7 +168,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         if(currentcourseid!=null&&currentcourseid.trim().length()>0){
             tr.setCurrentcourseid(Long.parseLong(currentcourseid));
             //pageResult.setOrderBy(" aa.diff_type desc,aa.ctime desc,aa.operate_time desc,aa.res_flag ");
-            pageResult.setOrderBy(" aa.diff_type desc,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id,aa.res_flag ");
+            pageResult.setOrderBy(" aa.diff_type desc,aa.is_mic_copiece,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id,aa.res_flag ");
         }
 
 
@@ -776,7 +776,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             PageResult pageResult=new PageResult();
             pageResult.setPageNo(0);
             pageResult.setPageSize(0);
-            pageResult.setOrderBy(" aa.diff_type desc,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id");
+            pageResult.setOrderBy(" aa.diff_type desc,aa.is_mic_copiece,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
                 for(int i=0;i<resourceList.size();i++){
@@ -1462,7 +1462,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             PageResult pageResult=new PageResult();
             pageResult.setPageNo(0);
             pageResult.setPageSize(0);
-            pageResult.setOrderBy(" aa.diff_type desc,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id");
+            pageResult.setOrderBy(" aa.diff_type desc,aa.is_mic_copiece,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id");
             List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
             if(resourceList!=null&&resourceList.size()>0){
                 for(int i=0;i<resourceList.size();i++){
@@ -2384,7 +2384,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                 }
             }
             PageResult p=this.getPageResultParameter(request);
-            p.setOrderBy("aa.diff_type desc,aa.resource_type,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id ");
+            p.setOrderBy("aa.diff_type desc,aa.is_mic_copiece,aa.resource_type,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id ");
             TpCourseResource t= new TpCourseResource();
             t.setCourseids(sb.toString());
             t.setResstatus(1);
@@ -2769,7 +2769,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             return null;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("aa.diff_type desc,aa.res_id,ifnull(aa.operate_time ,aa.ctime) desc ");
+        p.setOrderBy("aa.diff_type desc,aa.is_mic_copiece,aa.res_id,ifnull(aa.operate_time ,aa.ctime) desc ");
         TpCourseResource t= new TpCourseResource();
         t.setCourseid(Long.parseLong(courseid));
         t.setResstatus(1);
@@ -2797,7 +2797,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             return null;
         }
         PageResult p=this.getPageResultParameter(request);
-        p.setOrderBy("aa.diff_type desc,aa.res_id,ifnull(aa.operate_time ,aa.ctime) desc ");
+        p.setOrderBy("aa.diff_type desc,aa.is_mic_copiece,aa.res_id,ifnull(aa.operate_time ,aa.ctime) desc ");
         TpCourseResource t= new TpCourseResource();
         t.setCourseid(Long.parseLong(courseid));
         t.setResstatus(1);

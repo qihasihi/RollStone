@@ -119,6 +119,13 @@ public class TpCourseResource implements Serializable {
     public void setRestype(Integer restype){
         this.getResourceinfo().setRestype(restype);
     }
+    public void setIsmicopiece(String ismicopiece){
+        this.getResourceinfo().setIsmicopiece(ismicopiece);
+    }
+
+    public String getIsmicopiece() {
+        return this.getResourceinfo().getIsmicopiece();
+    }
 
     public Object getAvgscore() {
         return avgscore;
@@ -221,7 +228,7 @@ public class TpCourseResource implements Serializable {
         return UtilTool.getResourceLocation(this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/001_smail.jpg";
     }
 
-    
+
 
     public Integer getResstatus(){
         return this.getResourceinfo().getResstatus();
@@ -707,7 +714,10 @@ public class TpCourseResource implements Serializable {
         if(this.getResourseType().equals("jpeg")){
             return "ico_jpg1";
         }else if(this.getResourseType().equals("video")&&
-                ((this.getDifftype()!=null&&this.getDifftype().toString().equals("0"))||(this.getDifftype()==1&&this.getResid()<1))){
+                ((this.getDifftype()!=null&&this.getDifftype().toString().equals("0"))||
+                        (this.getDifftype()!=null&&this.getDifftype()==1&&this.getResid()<1)||
+                        (this.getDifftype()!=null&&this.getDifftype()==1&&this.getResid()>0&&Integer.parseInt(this.haspaper.toString())<1)
+                )){
             return "ico_mp41";
         }else if(this.getResourseType().equals("mp3")){
             return "ico_mp31";
@@ -732,7 +742,9 @@ public class TpCourseResource implements Serializable {
             return "ico_wps1";
         }else if(this.getResourseType().equals("swf")){
             return "ico_swf1";
-        }else if(this.getDifftype()!=null&&this.getDifftype()==1&&this.getResid()>0){
+        }else if(this.getDifftype()!=null&&this.getDifftype()==1
+                &&this.getResid()>0
+                &&Integer.parseInt(this.haspaper.toString())>0){
             return "ico_wsp1";
         }else{
             return "ico_other1";
