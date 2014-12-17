@@ -99,7 +99,12 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
      * java.lang.Object)
      */
     public boolean executeQuery_PROC(String sql, Object... paraValue) {
-        jdbcTemplate.update(sql,paraValue);
+        Object afficeRows=jdbcTemplate.execute(new SchoolCallableStatementCreator(sql.toString(),paraValue),
+                new SchoolCallableStatementCallback(false,paraValue==null?0:paraValue.length));
+//                    IN=jdbcTemplate.update(sql.toString(),p==null?null:p.toArray());
+        if(afficeRows==null||!UtilTool.isNumber(afficeRows.toString())
+                ||Integer.parseInt(afficeRows.toString().trim())<1)
+          return false;
         return true;
     }
 
