@@ -2089,6 +2089,315 @@ function zgloadStuPerformance(classid, tasktype, questionid, classtype) {
     });
 }
 
+/**
+ * 查询学生完成情况----主观题
+ * @return
+ */
+function cjloadStuPerformance(classid, classtype) {
+    $("#a_class_" + classid).parent("li").siblings().removeClass("crumb").end().addClass("crumb");
+
+    if (typeof(classid) == 'undefined' || isNaN(classid)) {
+        alert('异常错误，参数错误!111');
+        return;
+    }
+    if (typeof(taskid) == 'undefined' || taskid.length < 1) {
+        alert('异常错误，参数错误!222');
+        return;
+    }
+    var param = {};
+    param.subjectid=g_subjectid;
+    param.taskid = taskid;
+    if (classid != null && classid.toString().length > 0) {
+        param.classid = classid;
+        param.classtype = classtype;
+    } else {
+        param.classid = 0;
+        classid=0;
+        param.classtype = 0;
+    }
+    $.ajax({
+        url: 'task?cjloadStuPerformance',
+        type: "post",
+        data: param,
+        dataType: 'json',
+        cache: false,
+        error: function () {
+            alert('系统未响应，请稍候重试!');
+        }, success: function (rmsg) {
+            if (rmsg.objList[0] != null && rmsg.objList[0].length > 0) {
+                var totalnum = 0;
+                var rightnum = 0;
+                var finishnum = 0;
+                $.each(rmsg.objList[0], function (idx, itm) {
+                    totalnum += parseInt(itm.TOTALNUM);
+                    rightnum += parseInt(itm.RIGHTNUM);
+                    finishnum += parseInt(itm.FINISHNUM);
+
+                });
+                var fn = parseFloat(parseInt(finishnum)) / parseInt(totalnum) * 100;
+                var finishhtml = fn.toFixed(2);
+                finishhtml += "%";
+                $("#finishnum").html(finishhtml);
+            } else {
+                $("#finishnum").html("0");
+            }
+            var htm = '';
+            var quesCol = '';
+            var quesNum = 0;
+            if(rmsg.objList[4]!=null){
+                $.each(rmsg.objList[4], function (ix, im) {
+                    quesCol+='<th>'+(ix+1)+'</th>';
+                    quesNum++;
+                });
+            }
+            if (rmsg.objList[1] != null && typeof rmsg.objList[1] != 'undefined' && rmsg.objList[1].length > 0) {
+                if (rmsg.objList[2] != null && rmsg.objList[2].length > 0) {
+                    $.each(rmsg.objList[2], function (ix, im) {
+                        htm+='<p><strong>'+im.groupname+'</strong></p><div class="jxxt_zhuanti_rw_tongji_chengjuan">';
+                        htm += '<table border="0" id="recordList_'+im.groupid+'" cellpadding="0" cellspacing="0" class="public_tab2"';
+                        if (classid != null && classid.toString().length > 0) {
+                           htm+=' style="width:'+(330+(quesNum*50))+'px"';
+                        } else {
+                            htm+=' style="width:'+(430+(quesNum*50))+'px"';
+                        }
+                        htm+='>';
+                        if(classid==0)
+                            htm+='<colgroup class="w100"></colgroup>';
+                        htm += '<colgroup class="w80"></colgroup>';
+                        htm += '<colgroup class="w120"></colgroup>';
+                        htm += '<colgroup span="'+(1+quesNum)+'" class="w50"></colgroup>';
+                        htm += '<colgroup class="w80"></colgroup>';
+                        htm += '<tr>';
+                        if(classid==0)
+                            htm += '<th>班级</th>';
+                        htm += '<th>姓名</th>';
+                        htm += '<th>学习时间</th>';
+                        htm += '<th>得分</th>';
+                        htm += quesCol;
+                        htm += '<th>查看试卷</th>';
+                        htm += '</tr>';
+                        var signnature = 0;
+                        $.each(rmsg.objList[1], function (idx, itm) {
+                            $.each(im.tpgroupstudent2, function (i, m) {
+                                if (m.userid == itm[1]) {signnature++;
+                                    if(idx%2==0)
+                                        htm+='<tr class="trbg1">';
+                                    else
+                                        htm += '<tr>';
+                                    if(classid==0)
+                                        htm += '<td>' + itm[4] + '</td>';
+                                    htm += '<td>' + itm[0] + '</td>';
+                                    var studytime = itm[2];
+                                    studytime=studytime.substring(0,16);
+                                    htm += '<td>'+studytime+'</td>';
+                                    htm += '<td id="td_0">'+itm[3]+'</td>';
+                                    $.each(rmsg.objList[4], function (quesnum, ques) {
+                                        var answer='';
+                                        if(classid==0){
+                                            answer = itm[quesnum+5];
+                                        }else{
+                                            answer = itm[quesnum+4];
+                                        }
+                                        var answers = answer.split("|");
+                                        if(answers[2]==1){
+                                            if(answers[1]==1){
+                                                htm+='<td id="td_'+(quesnum+1)+'">&radic;';
+                                                htm+='<input type="hidden" value="1"/>';
+                                                htm+='</td>';
+                                            }else{
+                                                htm+='<td id="td_'+(quesnum+1)+'"><span class="font-red">&times;</span>';
+                                                htm+='<input type="hidden" value="1"/>';
+                                                htm+='</td>';
+                                            }
+                                        }else{
+                                            htm+='<td id="td_'+(quesnum+1)+'">'+answers[0];
+                                            htm+='<input type="hidden" value="2"/>';
+                                            htm+='</td>';
+                                        }
+                                    });
+                                    htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">查看卷面</a></td>';
+                                    htm += '</tr>';
+                                }
+
+                            });
+                        });
+                        if(signnature==0){
+                            htm+='<tr><td colspan="15">暂无数据!</td></tr>';
+                        }
+                        htm += '</table>';
+                        htm +='</div>';
+                    });
+                } else {
+                    htm+='<div class="jxxt_zhuanti_rw_tongji_chengjuan">';
+                    htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2"';
+                    if (classid != null && classid.toString().length > 0) {
+                        htm+=' style="width:'+(330+(quesNum*50))+'px"';
+                    } else {
+                        htm+=' style="width:'+(430+(quesNum*50))+'px"';
+                    }
+                    htm+='>';
+                    if(classid==0)
+                        htm+='<colgroup class="w100"></colgroup>';
+                    htm += '<colgroup class="w80"></colgroup>';
+                    htm += '<colgroup class="w120"></colgroup>';
+                    htm += '<colgroup span="'+(1+quesNum)+'" class="w50"></colgroup>';
+                    htm += '<colgroup class="w80"></colgroup>';
+                    htm += '<tr>';
+                    if(classid==0)
+                        htm += '<th>班级</th>';
+                    htm += '<th>姓名</th>';
+                    htm += '<th>学习时间</th>';
+                    htm += '<th>得分</th>';
+                    htm += quesCol;
+                    htm += '<th>查看试卷</th>';
+                    htm += '</tr>';
+                    $.each(rmsg.objList[1], function (idx, itm) {
+                        if(idx%2==0)
+                            htm+='<tr class="trbg1">';
+                        else
+                            htm += '<tr>';
+                        if(classid==0)
+                            htm += '<td>' + itm[4] + '</td>';
+                        htm += '<td>' + itm[0] + '</td>';
+                        var studytime = itm[2];
+                        studytime=studytime.substring(0,16);
+                        htm += '<td>'+studytime+'</td>';
+                        htm += '<td id="td_0">'+itm[3]+'</td>';
+                        $.each(rmsg.objList[4], function (quesnum, ques) {
+                            var answer='';
+                            if(classid==0){
+                                answer = itm[quesnum+5];
+                            }else{
+                                answer = itm[quesnum+4];
+                            }
+                            var answers = answer.split("|");
+                            if(answers[2]=="1"){
+                                if(answers[1]=="1"){
+                                    htm+='<td id="td_'+(quesnum+1)+'">&radic;';
+                                    htm+='<input type="hidden" value="1"/>';
+                                    htm+='</td>';
+                                }else{
+                                    htm+='<td id="td_'+(quesnum+1)+'"><span class="font-red">&times;</span>';
+                                    htm+='<input type="hidden" value="1"/>';
+                                    htm+='</td>';
+                                }
+                            }else{
+                                htm+='<td id="td_'+(quesnum+1)+'">'+answers[0];
+                                htm+='<input type="hidden" value="2"/>';
+                                htm+='</td>';
+                            }
+                        });
+                        htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">查看卷面</a></td>';
+                        htm += '</tr>';
+                    });
+                    htm += '</table>';
+                    htm +='</div>';
+                }
+            } else {
+                htm+='<div class="jxxt_zhuanti_rw_tongji_chengjuan">';
+                htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2"';
+                if (classid != null && classid.toString().length > 0) {
+                    htm+=' style="width:'+(330+(quesNum*50))+'px"';
+                } else {
+                    htm+=' style="width:'+(430+(quesNum*50))+'px"';
+                }
+                htm+='>';
+                if(classid==0)
+                    htm+='<colgroup class="w100"></colgroup>';
+                htm += '<colgroup class="w80"></colgroup>';
+                htm += '<colgroup class="w120"></colgroup>';
+                htm += '<colgroup span="'+(1+quesNum)+'" class="w50"></colgroup>';
+                htm += '<colgroup class="w80"></colgroup>';
+                htm += '<tr>';
+                if(classid==0)
+                    htm += '<th>班级</th>';
+                htm += '<th>姓名</th>';
+                htm += '<th>学习时间</th>';
+                htm += '<th>得分</th>';
+                htm += quesCol;
+                htm += '<th>查看试卷</th>';
+                htm += '</tr>';
+                htm+='<tr><td colspan="15">暂无数据!</td></tr></table></div>';
+            }
+            if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
+                $("#dv_nocomplete_data").html('');
+                $.each(rmsg.objList[3], function (idx, itm) {
+                    if ($('p[id="p_stu_' + itm.classid + '"]').length > 0)
+                        if ($('ul[id="ul_stu_' + itm.classid + '"]').length > 0)
+                            $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                        else {
+                            $("#dv_nocomplete_data").append('<ul id="ul_stu_' + itm.classid + '"></ul>');
+                            $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                        }
+                    else {
+                        $("#dv_nocomplete_data").append('<p id="p_stu_' + itm.classid + '"><strong>' + itm.taskobjname + '</strong><span class="font-red"></span></p>');
+                        $("#dv_nocomplete_data").append('<ul id="ul_stu_' + itm.classid + '"></ul>');
+                        $('ul[id="ul_stu_' + itm.classid + '"]').append('<li><input type="hidden" name="hd_uid" value="' + itm.userid + '" />' + itm.realname + '</li>');
+                    }
+
+                });
+            }
+            $("#notcomplete").html(rmsg.objList[3].length)
+            if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
+                //$("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
+
+            }
+            $("#mainTbl").hide();
+            $("#mainTbl").html(htm);
+            $("#mainTbl").show();
+
+
+
+            writeUnderTr(classid,rmsg.objList[4]);
+        }
+    });
+}
+
+function writeUnderTr(classid,quesArray){
+    $("table").each(function(i,tab){
+        var htm='';
+        htm += '<tr>';
+        if(classid==0){
+            htm+='<td colspan="3">正确率（平均分）</td>';
+        }else{
+            htm+='<td colspan="2">正确率（平均分）</td>';
+        }
+
+        var scoreTdArray= $("#"+tab.id+" td[id='td_0']");
+        var totalScore = 0;
+        $.each(scoreTdArray,function(idx,itm){
+            if($(itm).text()!='--')
+                totalScore+=parseFloat($(itm).text());
+        });
+        var totalNum = $(tab).find("tr").length-1;
+        htm+='<td>'+(totalScore/totalNum).toFixed(2)+'</td>';
+        $.each(quesArray,function(idx,itm){
+            var scoreTdArray2= $("#"+tab.id+" td[id='td_"+(idx+1)+"']");
+            var totalScore2 = 0;
+            var rightNum = 0;
+            var type = 0;
+            $.each(scoreTdArray2,function(ix,im){
+                type = $("#"+im.id+" input[type='hidden']").val();
+                if(type=="1"){
+                    if($(im).text().Trim()=="&radic;"||$(im).text().Trim()=="√"){
+                        rightNum+=1;
+                    }
+                }else{
+                    if($(im).text()!='--')
+                        totalScore2+=parseFloat($(im).text());
+                }
+            });
+            if(type=="1"){
+                htm+='<td>'+(rightNum/totalNum*100).toFixed(2)+'%</td>';
+            }else{
+                htm+='<td>'+(totalScore2/totalNum).toFixed(2)+'</td>';
+            }
+        });
+        htm+='<td></td>';
+        htm+='</tr>';
+        $(tab).append(htm);
+    });
+}
 
 /**
  * 查询学生试卷完成情况

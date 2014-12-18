@@ -3780,6 +3780,205 @@ public class TaskController extends BaseController<TpTaskInfo>{
     }
 
     /**
+     * 任务完成情况统计
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="toCjTaskPerformance",method=RequestMethod.GET)
+    public ModelAndView toCjTaskPerformanceInfo(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String taskid=request.getParameter("taskid");
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //获取任务对象
+        TpTaskInfo ti = new TpTaskInfo();
+        ti.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo> tiList = this.tpTaskManager.getList(ti,null);
+        request.setAttribute("taskInfo",tiList.get(0));
+        //获取任务相关的班级
+        TpTaskAllotInfo ta = new TpTaskAllotInfo();
+        ta.setTaskid(Long.parseLong(taskid));
+        List<TpTaskAllotInfo> taList = this.tpTaskAllotManager.getList(ta,null);
+
+        List<Map> classList = new ArrayList<Map>();
+        for(TpTaskAllotInfo o:taList){
+            if(o.getUsertype()==0){
+                ClassInfo ci = new ClassInfo();
+                ci.setClassid(Integer.parseInt(o.getUsertypeid().toString()));
+                List<ClassInfo> ciList = this.classManager.getList(ci,null);
+                Map map = new HashMap();
+                map.put("classid",ciList.get(0).getClassid());
+                map.put("classname",ciList.get(0).getClassname());
+                map.put("classtype",1);
+                classList.add(map);
+            }else if(o.getUsertype()==1){
+                TpVirtualClassInfo vci = new TpVirtualClassInfo();
+                vci.setVirtualclassid(Integer.parseInt(o.getUsertypeid().toString()));
+                List<TpVirtualClassInfo> vciList = this.tpVirtualClassManager.getList(vci,null);
+                Map map = new HashMap();
+                map.put("classid",vciList.get(0).getVirtualclassid());
+                map.put("classname",vciList.get(0).getVirtualclassname());
+                map.put("classtype",2);
+                classList.add(map);
+            }else if(o.getUsertype()==2){
+                TpGroupInfo tg = new TpGroupInfo();
+                tg.setGroupid(o.getUsertypeid());
+                List<TpGroupInfo> tgList = this.tpGroupManager.getList(tg,null);
+                Integer classid=tgList.get(0).getClassid();
+                if(tgList.get(0).getClasstype()==1){
+                    ClassInfo ci = new ClassInfo();
+                    ci.setClassid(classid);
+                    List<ClassInfo> objList = this.classManager.getList(ci,null);
+                    Map map = new HashMap();
+                    map.put("classid",objList.get(0).getClassid());
+                    map.put("classname",objList.get(0).getClassname());
+                    map.put("classtype",8);
+                    if(classList.size()>0){
+                        Boolean b = false;
+                        for(Map m:classList){
+                            if(Integer.parseInt(m.get("classid").toString())==Integer.parseInt(map.get("classid").toString())){
+                                b=true;
+                            }
+                        }
+                        if(b==false)
+                            classList.add(map);
+                    }else{
+                        classList.add(map);
+                    }
+                }else{
+                    TpVirtualClassInfo vc = new TpVirtualClassInfo();
+                    vc.setVirtualclassid(classid);
+                    List<TpVirtualClassInfo> objList = this.tpVirtualClassManager.getList(vc,null);
+                    Map map = new HashMap();
+                    map.put("classid",objList.get(0).getVirtualclassid());
+                    map.put("classname",objList.get(0).getVirtualclassname());
+                    map.put("classtype",9);
+                    if(classList.size()>0){
+                        Boolean b = false;
+                        for(Map m:classList){
+                            if(Integer.parseInt(m.get("classid").toString())==Integer.parseInt(map.get("classid").toString())){
+                                b=true;
+                            }
+                        }
+                        if(b==false)
+                            classList.add(map);
+                    }else{
+                        classList.add(map);
+                    }
+                }
+
+
+            }
+        }
+        request.setAttribute("courseid",taList.get(0).getCourseid());
+        request.setAttribute("taskid",taskid);
+        request.setAttribute("classList",classList);
+        return new ModelAndView("/teachpaltform/task/teacher/task-performance-cj");
+    }
+
+    /**
+     * 查询学生任务完成情况
+     * @throws Exception
+     */
+    @RequestMapping(params="cjloadStuPerformance",method=RequestMethod.POST)
+    public void cjloadStuPerformance(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String classid=request.getParameter("classid");
+        String taskid=request.getParameter("taskid");
+        String questype = request.getParameter("questype");
+        String type=request.getParameter("classtype");
+        String subjectid = request.getParameter("subjectid");
+        if(classid==null||classid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TaskPerformanceInfo t=new TaskPerformanceInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        Long clsid=null;
+        if(classid!=null&&classid.length()>0&&!classid.equals("null")){
+            clsid=Long.parseLong(classid);
+        }else{
+            clsid=Long.parseLong("0");
+        }
+        //任务记录
+        List<List<String>>tList=this.taskPerformanceManager.getCjTaskPerformance(Long.parseLong(taskid),Integer.parseInt(classid),Integer.parseInt(type));
+        //数量统计
+        List<Map<String,Object>> numList = new ArrayList<Map<String, Object>>();
+        List<TpGroupInfo> tiList=new ArrayList<TpGroupInfo>();
+        List<TpGroupInfo>tmpGroupList=new ArrayList<TpGroupInfo>();
+        if(Integer.parseInt(type)==8||Integer.parseInt(type)==9){
+            numList=this.taskPerformanceManager.getPerformanceNum2(Long.parseLong(taskid),clsid);
+            TpGroupStudent tgsinfo = new TpGroupStudent();
+            tgsinfo.setClassid(Integer.parseInt(classid));
+            tgsinfo.setSubjectid(Integer.parseInt(subjectid));
+            List<TpGroupStudent> tgsList = this.tpGroupStudentManager.getGroupStudentByClass(tgsinfo,null);
+            TpGroupInfo ti = new TpGroupInfo();
+            ti.setClassid(Integer.parseInt(classid));
+            ti.setSubjectid(Integer.parseInt(subjectid));
+            tiList = this.tpGroupManager.getList(ti,null);
+            //过滤没用的小组
+            TpTaskAllotInfo ta=new TpTaskAllotInfo();
+            ta.setTaskid(Long.parseLong(taskid));
+            ta.setUsertype(2);
+            List<TpTaskAllotInfo> taskAllotInfoList=this.tpTaskAllotManager.getList(ta,null);
+            if(taskAllotInfoList!=null&&taskAllotInfoList.size()>0&&tiList!=null){
+                for(TpTaskAllotInfo allotInfo:taskAllotInfoList){
+                    for(TpGroupInfo groupInfo:tiList){
+                        if(allotInfo.getUsertypeid().equals(groupInfo.getGroupid()))
+                            tmpGroupList.add(groupInfo);
+                    }
+                }
+            }
+            //添加小组人员到小组中
+            for(int i = 0;i<tmpGroupList.size();i++){
+                TpGroupStudent ts = new TpGroupStudent();
+                for(int j = 0;j<tgsList.size();j++){
+                    if(tmpGroupList.get(i).getGroupid().toString().equals(tgsList.get(j).getGroupid().toString())){
+                        tmpGroupList.get(i).setTpgroupstudent2(tgsList.get(j));
+                    }
+                }
+            }
+        }else{
+            numList=this.taskPerformanceManager.getPerformanceNum(Long.parseLong(taskid),clsid,Integer.parseInt(type));
+        }
+        //未完成人数
+        TpTaskInfo task=new TpTaskInfo();
+        task.setTaskid(Long.parseLong(taskid));
+        Integer cid=null;
+        if(classid!=null&&!classid.equals("0"))
+            cid=Integer.parseInt(classid);
+
+        List<UserInfo>notCompleteList=this.userManager.getUserNotCompleteTask(task.getTaskid(),null,cid,"1");
+        //查询试卷中全部的试题id
+        //获取任务对象
+        TpTaskInfo ti = new TpTaskInfo();
+        ti.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo> taskList = this.tpTaskManager.getList(ti,null);
+        List<Map<String,Object>> allquesid = this.paperQuestionManager.getPaperQuesAllId(taskList.get(0).getTaskvalueid());
+        String[] quesids = allquesid.get(0).get("ALLQUESID").toString().split(",");
+        List quesidList = new ArrayList();
+        for(int i = 0;i<quesids.length;i++){
+            quesidList.add(quesids[i]);
+        }
+        je.getObjList().add(numList);
+        je.getObjList().add(tList);
+        je.getObjList().add(tmpGroupList);
+        je.getObjList().add(notCompleteList);
+        je.getObjList().add(quesidList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
      * 微视频试卷 查看回答
      * @param request
      * @param response

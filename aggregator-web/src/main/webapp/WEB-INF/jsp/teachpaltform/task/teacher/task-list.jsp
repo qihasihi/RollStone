@@ -167,7 +167,11 @@ function getInvestReturnMethod(rps){
                     qtype=-2;
                 else if (itm.tasktype==1)
                     qtype=undefined;
-                html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'&subjectid=${param.subjectid}"><span class="ico35"></span><b>'+stucount+'/'+itm.totalcount+'</b></a>';
+                if(itm.tasktype==4){
+                    html+='<a title="查看统计" href="task?toCjTaskPerformance&taskid='+itm.taskid+'&subjectid=${param.subjectid}"><span class="ico35"></span><b>'+stucount+'/'+itm.totalcount+'</b></a>';
+                }else{
+                    html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'&subjectid=${param.subjectid}"><span class="ico35"></span><b>'+stucount+'/'+itm.totalcount+'</b></a>';
+                }
             }else
                 html+='<span class="ico35"></span><b style="color:gray;">'+stucount+'/'+itm.totalcount+'</b>';
 

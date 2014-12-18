@@ -70,4 +70,9 @@ public interface ITaskPerformanceManager  extends IBaseManager<TaskPerformanceIn
      * 获取学生任务统计列表完成率
      * */
     public List<Map<String,Object>> getStuSelfPerformanceNum(Integer userid,String courseids,Integer group,String termid,Integer subjectid);
+
+    /**
+     * 教师查询学生成卷测试任务统计
+     * */
+    public List<List<String>> getCjTaskPerformance(Long taskid,Integer classid,Integer classtype);
 } 

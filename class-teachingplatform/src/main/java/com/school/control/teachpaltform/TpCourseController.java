@@ -1744,7 +1744,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             cc.setClassid(0);
             cc.setCourseid(tc.getCourseid());
             cc.setSubjectid(Integer.parseInt(subjectid));
-            cc.setGradeid(currGradeid);
+            cc.setGradeid(Integer.parseInt(gradeid));
             cc.setTermid(termid);
             //沿用专题，开始时间获取当前时间
             Date d = new Date();
@@ -2796,7 +2796,9 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 &&termid!=null&&termid.length()>0){
             TpTeacherTeachMaterial tentity=new TpTeacherTeachMaterial();
             tentity.setUserid(this.logined(request).getUserid());
-           // tentity.setGradeid(Integer.parseInt(gradeid));
+            System.out.println("**********************************************************************查询前，赋值gradeid====="+gradeid);
+            tentity.setGradeid(Integer.parseInt(gradeid));
+            System.out.println("**********************************************************************查询前，赋值gradeid后====="+gradeid);
             tentity.setSubjectid(Integer.parseInt(subjectid));
             tentity.setTermid(termid);
             entityList=this.tpTeacherTeachMaterialManager.getList(tentity,null);

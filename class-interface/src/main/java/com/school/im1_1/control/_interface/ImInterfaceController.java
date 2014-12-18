@@ -47,6 +47,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1237,6 +1238,20 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                         String endtime=jsonObject.containsKey("endTime")?jsonObject.getString("endTime"):"";
                         if(classid.equals(0)||classtype<0||starttime==null||starttime.length()<1||endtime==null||endtime.length()<1){
                             response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"发送任务对象参数丢失\"}\"");
+                            return;
+                        }
+                        Calendar start = Calendar.getInstance();
+                        try {
+                            start.setTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(starttime));
+                        } catch (Exception e) {
+                        }
+                        Calendar end = Calendar.getInstance();
+                        try {
+                            end.setTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endtime));
+                        } catch (Exception e) {
+                        }
+                        if(end.getTimeInMillis()<start.getTimeInMillis()){
+                            response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"任务开始时间不能晚于结束时间\"}\"");
                             return;
                         }
                         TpTaskAllotInfo tpTaskAllotInfo = new TpTaskAllotInfo();

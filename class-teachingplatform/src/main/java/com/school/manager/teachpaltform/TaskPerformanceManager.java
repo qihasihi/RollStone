@@ -129,5 +129,10 @@ public class  TaskPerformanceManager extends BaseManager<TaskPerformanceInfo> im
     public List<Map<String, Object>> getStuSelfPerformanceNum(Integer userid, String courseids, Integer group, String termid, Integer subjectid) {
         return this.taskperformancedao.getStuSelfPerformanceNum(userid,courseids,group,termid,subjectid);
     }
+
+    @Override
+    public List<List<String>> getCjTaskPerformance(Long taskid, Integer classid, Integer classtype) {
+        return this.taskperformancedao.getCjTaskPerformance(taskid,classid,classtype);
+    }
 }
 

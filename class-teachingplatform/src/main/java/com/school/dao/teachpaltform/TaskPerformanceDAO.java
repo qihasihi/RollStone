@@ -494,4 +494,33 @@ public class TaskPerformanceDAO extends CommonDAO<TaskPerformanceInfo> implement
         return performanceList;
     }
 
+    public List<List<String>> getCjTaskPerformance(Long taskid,Integer classid,Integer classtype) {
+        if(taskid==null)
+            return null;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_qry_task_cj_performance(");
+        List<Object> objList=new ArrayList<Object>();
+        if(taskid!=null){
+            sqlbuilder.append("?,");
+            objList.add(taskid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?,");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(classtype!=null){
+            sqlbuilder.append("?");
+            objList.add(classtype);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<List<String>> performanceList = this.executeResultProcedure(sqlbuilder.toString(),objList);
+        return performanceList;
+    }
+
 }

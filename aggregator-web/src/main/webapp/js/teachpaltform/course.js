@@ -80,6 +80,86 @@ $(function(){
     });
 });
 
+//专题开始时间选择后，结束时间默认显示一周后的时间
+function changgeAllStartTime(itm){
+   // var endtype = $("input[name='classEndTimeType'][checked]").val();
+    var stime = $(itm).val();
+    var starttime = new Date(stime.replace(/-/g,"/"));
+    var sevenDayMiller = 1000*60*60*24*7;
+    var newTime = new Date(starttime.getTime() + sevenDayMiller);
+    var sNewTime = ChangeTimeToString(newTime);
+    sNewTime = sNewTime+" "+stime.split(" ")[1];
+   // if(endtype==0){
+        $("#all_classEndTime").val(sNewTime);
+   // }else{
+        $("input[name='classEndTime']").each(function(idx,itm){
+            $(itm).val(sNewTime);
+        });
+   // }
+}
+//不一致的时候
+function changeOneStartTime(itm,classid){
+    var stime = $(itm).val();
+    var starttime = new Date(stime.replace(/-/g,"/"));
+    var sevenDayMiller = 1000*60*60*24*7;
+    var newTime = new Date(starttime.getTime() + sevenDayMiller);
+    var sNewTime = ChangeTimeToString(newTime);
+    sNewTime = sNewTime+" "+stime.split(" ")[1];
+    // if(endtype==0){
+    $("#all_classEndTime").val(sNewTime);
+    // }else{
+    $("#"+classid+"_classEndTime").val(sNewTime);
+    // }
+}
+
+// 将日期类型转换成字符串型格式 yyyy-MM-dd hh:mm
+function ChangeTimeToString ( DateIn )
+{
+
+    var Year = 0 ;
+
+    var Month = 0 ;
+
+    var Day = 0 ;
+
+    var Hour = 0 ;
+
+    var Minute = 0 ;
+
+    var CurrentDate = "" ;
+
+    // 初始化时间
+
+    Year       = DateIn . getFullYear ();
+
+    Month      = DateIn . getMonth ()+ 1 ;
+
+    Day        = DateIn . getDate ();
+
+    Hour       = DateIn . getHours ();
+
+    Minute     = DateIn . getMinutes ();
+    CurrentDate = Year + "-" ;
+    if ( Month >= 10 )
+    {
+        CurrentDate = CurrentDate + Month + "-" ;
+    }
+    else
+    {
+        CurrentDate = CurrentDate + "0" + Month + "-" ;
+    }
+    if ( Day >= 10 )
+    {
+        CurrentDate = CurrentDate + Day ;
+    }
+    else
+    {
+        CurrentDate = CurrentDate + "0" + Day ;
+    }
+    return CurrentDate ;
+
+}
+
 function addTeacherCourse(){
     $("#addButton").attr("href","");
     var term=$("#termid");
