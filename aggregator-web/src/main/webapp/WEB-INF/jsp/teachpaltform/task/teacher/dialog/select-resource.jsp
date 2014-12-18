@@ -18,6 +18,11 @@
     <title></title>
 
     <script type="text/javascript" src="js/common/uploadControl.js"></script>
+    <script src="js/common/ajaxfileupload.js" type="text/javascript"></script>
+    <script src="js/videoPlayer/swfobject.js" type="text/javascript"></script>
+    <script src="uploadify/jquery.uploadify.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="uploadify/uploadify.css"/>
+
     <script type="text/javascript">
     var courseid = "${param.courseid}";
     var pList1;
@@ -71,6 +76,119 @@
         });
         pageGo('pList1');
         // pageGo('pList3');
+        $("#uploadfile").uploadify({
+            'buttonClass' : 'an_public1',
+            //'buttonImage' : 'uploadify/browseBtn.png',
+            'fileObjName' : 'uploadfile',
+            swf           : 'uploadify/uploadify.swf',
+            uploader      : 'uploadify/uploadFile.jsp',
+            // uploader      : 'tpres?doUploadResource',
+            buttonText    : '选择文件',
+            width         : '100',
+            height        : '20',
+            auto          : false,
+            multi         : false,
+            fileSizeLimit :'1GB',
+            //'progressData' : 'speed',
+            itemTemplate  : '<div id="\\${fileID}" class="uploadify-queue-item">\
+                    <div class="cancel">\
+                        <a href="javascript:$(\'#\\${instanceID}\').uploadify(\'cancel\', \'\\${fileID}\')">X</a>\
+                    </div>\
+                    <span class="fileName">\\${fileName} (\\${fileSize})</span><span class="data"></span>\
+                </div>',
+            onSelect:function(file){
+                $("#hd_filename").val(file.name);
+            },
+            'onSelectError':function(file, errorCode, errorMsg){
+                switch(errorCode) {
+                    //case -100:     alert("上传的文件数量已经超出系统限制的"+$('#uploadfile').uploadify('settings','queueSizeLimit')+"个文件！");  break;
+                    case -110:     alert("文件 ["+file.name+"] 大小超出系统限制的"+$('#uploadfile').uploadify('settings','fileSizeLimit')+"大小!");break;
+                    case -120:     alert("文件 ["+file.name+"] 大小异常!"); break;
+                    case -130:     alert("文件 ["+file.name+"] 类型不正确!");break;
+                }
+            },
+            'onFallback':function(){
+                alert("您未安装FLASH控件，无法上传图片!请安装FLASH控件后再试!");
+            },
+            'onUploadStart':function(file){
+                var param={};
+                param.resid=nextid;
+                $("#uploadfile").uploadify("settings", "formData",param);
+            },
+            'onUploadSuccess':function(file){
+                var fname=file.name;
+                var lastname = fname.substring(fname.lastIndexOf("."));
+                var resname = $("#res_name");
+                var restype = $("input[name='res_type']:checked");
+                var crestype = $("input[name='tp_res_type']:checked").val();
+                var resintroduce = $("#res_remark");
+                var resid = nextid;
+                var isConvert=false;
+                var allowTypes='.xls,.xlsx,.doc,.docx,.ppt,.pptx,.xml,.pdf,.txt,.vsd,.rtf',msg='数据验证完毕!确认提交?';
+                var param = {
+                    resid: resid,
+                    resname: resname.val(),
+                    restype: restype.val(),
+                    resourcetype: crestype,
+                    resintroduce: resintroduce.val(),
+                    courseid: courseid,
+                    usertype: 2,
+                    filename: fname
+                };
+
+
+                var allowTypeArray=allowTypes.split(",");
+                var returnVal=false;
+                for(var n=0;n<allowTypeArray.length;n++){
+                    var altype=allowTypeArray[n];
+                    if(altype.length>0){
+                        if(lastname.toLowerCase()==altype.toLowerCase()){
+                            returnVal=true;
+                        }
+                    }
+                }
+                if(returnVal){
+                    msg+='\n\n提示：当前文件需要转换请等待!';
+                    isConvert=true;
+                }
+
+                if (!confirm(msg))
+                    return;
+                else{
+                    if(isConvert)
+                        showModel('dv_loading','',200);
+                }
+
+                /*提交按钮不可用*/
+                resetBtnAttr("a_submit","an_small","an_gray_small","",2);
+                $.ajax({
+                    url: 'tpres?doUploadResource',
+                    type: 'post',
+                    data: param,
+                    dataType: 'json',
+                    cache: false,
+                    error: function () {
+                        alert('网络异常!')
+                    },
+                    success: function (rps) {
+                        if (rps.type == "error") {
+                            alert(rps.msg);
+                        } else {
+                            $("#hd_elementid").val(nextid);
+                            $("#resource_type").val(1);
+                            queryResource(courseid, 'tr_task_obj', nextid);
+                            $.fancybox.close();
+                        }
+                    }
+                });
+
+            },
+            'onUploadError' : function(file, errorCode, errorMsg, errorString) {
+                alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+            }
+        });
+
+
     });
 
     function preeDoPageSub1(pObj){
@@ -236,7 +354,8 @@
         var restype = $("input[name='res_type']:checked");
         var crestype = $("input[name='tp_res_type']:checked").val();
         var resintroduce = $("#res_remark");
-        var uploadfile = $("#uploadfile");
+        //var uploadfile = $("#uploadfile");
+        var uploadfile=$("#uploadfile-queue .uploadify-queue-item")
         var resid = nextid;
         var allowTypes='.xls,.xlsx,.doc,.docx,.ppt,.pptx,.xml,.pdf,.txt,.vsd,.rtf',msg='数据验证完毕!确认提交?';
 
@@ -265,7 +384,7 @@
         }
 
         var fname = '';
-        if (uploadfile.val().length < 1) {
+        if(uploadfile.length<1){
             if (typeof(uploadControl.fileAttribute) == 'undefined' || uploadControl.fileAttribute.length < 1) {
                 alert('请添加上传文件!');
                 return;
@@ -331,94 +450,18 @@
                 }
             });
         } else {
-            fname = uploadfile.val();
-            var t = document.getElementById('uploadfile');
-            if (t.value.Trim().length < 1) {
+            var fname=$("#hd_filename").val();
+            if (fname.Trim().length < 1) {
                 alert('您尚未选择文件，请选择！');
                 return;
             }
-            var lastname = t.value.substring(t.value.lastIndexOf("."));
-            $.ajaxFileUpload({
-                url: url + "&lastname=" + lastname,
-                fileElementId: 'uploadfile',
-                dataType: 'json',
-                secureuri: false,
-                type: 'POST',
-                success: function (data, status) {
-                    if (typeof(data.error) != 'undefined') {
-                        if (data.error != '') {
-                            alert(data.error);
-                        } else {
-                            alert(data.msg);
-                        }
-                    } else {
-                        var param = {
-                            resid: resid,
-                            resname: resname.val(),
-                            restype: restype.val(),
-                            resourcetype: crestype,
-                            resintroduce: resintroduce.val(),
-                            courseid: courseid,
-                            usertype: usertype,
-                            filename: fname
-                        };
-
-
-                        var allowTypeArray=allowTypes.split(",");
-                        var returnVal=false;
-                        for(var n=0;n<allowTypeArray.length;n++){
-                            var altype=allowTypeArray[n];
-                            if(altype.length>0){
-                                if(lastname.toLowerCase()==altype.toLowerCase()){
-                                    returnVal=true;
-                                }
-                            }
-                        }
-                        if(returnVal){
-                            msg+='\n\n提示：当前文件需要转换请等待!';
-                        }
-
-                        if (!confirm(msg)) {
-                            return;
-                        }
-                        /*提交按钮不可用*/
-                        $("#a_submit").remove();
-                        $.ajax({
-                            url: 'tpres?doUploadResource',
-                            type: 'post',
-                            data: param,
-                            dataType: 'json',
-                            cache: false,
-                            error: function () {
-                                alert('网络异常!')
-                            },
-                            success: function (rps) {
-                                if (rps.type == "error") {
-                                    alert(rps.msg);
-                                } else {
-                                    if (rps.type == "error") {
-                                        alert(rps.msg);
-                                    } else {
-                                        alert(rps.msg);
-                                        $("#hd_elementid").val(nextid);
-                                        $("#resource_type").val(1);
-                                        queryResource(courseid, 'tr_task_obj', nextid);
-                                        $.fancybox.close();
-                                    }
-                                }
-                            }
-                        });
-                    }
-                },
-                error: function (data, status, e) {
-                    alert(e);
-                }
-            });
+            $('#uploadfile').uploadify('upload','*')
         }
     }
     </script>
 </head>
 <body>
+<input type="hidden" id="hd_filename" name="hd_filename">
 <div class="public_float public_float960">
     <p class="float_title"><strong>资源学习&mdash;&mdash;选择资源</strong></p>
     <div class="subpage_lm">

@@ -65,10 +65,7 @@
                         shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
                     shtml+='</p></a>';
                     shtml+='<p class="pic">';
-                    if(itm.taskflag<1)
-                        shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
-                    else
-                        shtml+='<b><span class="ico52" title="已发任务"></span></b>';
+                    shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
                     shtml+='</p>';
                     shtml+='</li>';
                 });
@@ -92,10 +89,7 @@
                             html+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
                         html+='</p></a>';
                         html+='<p class="pic">';
-                        if(itm.taskflag<1)
-                            html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
-                        else
-                            html+='<b><span class="ico52" title="已发任务"></span></b>';
+                        html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
                         html+='</p>';
                         html+='</li>';
                     }
