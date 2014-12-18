@@ -1215,7 +1215,13 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             resbase.setFilesize(Long.parseLong(filename.split("\\*")[1]));
         }else{
             String suffix=filename.substring(filename.lastIndexOf("."));
-            if(suffix!=null&&UtilTool.matchingText(UtilTool._VIEW_SUFFIX_TYPE_REGULAR,suffix.toLowerCase()))
+            if(suffix!=null&&UtilTool.matchingText(UtilTool._VIEW_SUFFIX_TYPE_REGULAR,suffix.toLowerCase())){
+                if(!suffix.toLowerCase().equals(".mp4")){
+                    je.setMsg("仅限MP4格式的视频，请转换后再上传!");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+            }
                 suffix=".mp4";
             String fileurl=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/"+UtilTool.getResourceUrl(resid,suffix);
             File tmp=new File(fileurl);
