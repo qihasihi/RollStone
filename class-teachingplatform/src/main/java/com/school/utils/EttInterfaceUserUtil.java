@@ -185,8 +185,7 @@ public class EttInterfaceUserUtil {
         tmpMap.put("gradeName",classGrade);
         tmpMap.put("academicYear",entity.getYear());
         tmpMap.put("subjectId",entity.getSubjectid()==null?-1:entity.getSubjectid());
-        if(entity.getDcschoolid().intValue()==1&&entity.getDctype()==2&&
-                entity.getInvitecode()!=null&&entity.getInvitecode().length()>0)
+        if(entity.getInvitecode()!=null&&entity.getInvitecode().length()>0)
             tmpMap.put("parentKey",entity.getInvitecode());
 
         JSONObject jsonObject=JSONObject.fromObject(tmpMap);
