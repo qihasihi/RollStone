@@ -1372,6 +1372,8 @@ function doStuSubmitQues(tasktype, taskid, quesid, groupid, questype) {
     if (!confirm('数据验证完毕!确认提交?'))
         return;
 
+    $("#a_task_"+taskid).hide();
+
     var isTishiAnnex=false;
     //附件上传
     var annexObj=$("#txt_f_"+taskid);
@@ -1395,11 +1397,14 @@ function doStuSubmitQues(tasktype, taskid, quesid, groupid, questype) {
                 if(rps.type=="success"){
                     alert(rps.msg);
                     pageGo('pList');
-                }else
+                }else{
+                    $("#a_task_"+taskid).show();
                     alert(rps.msg);
+                }
             },
             error: function (data, status, e) {
                 alert(e);
+                $("#a_task_"+taskid).show();
             }
         });
     }else{
@@ -1415,6 +1420,7 @@ function doStuSubmitQues(tasktype, taskid, quesid, groupid, questype) {
             }, success: function (rmsg) {
                 if (rmsg.type == "error") {
                     alert(rmsg.msg);
+                    $("#a_task_"+taskid).show();
                 } else {
                     alert(rmsg.msg);
                     pageGo('pList');

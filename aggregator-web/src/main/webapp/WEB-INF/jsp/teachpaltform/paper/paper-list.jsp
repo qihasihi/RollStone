@@ -112,7 +112,7 @@ function getInvestReturnMethod(rps){
                     shtml+='<span class="bg1" style="width:100%">'+itm.objectivenum+'</span>';
                 else if(itm.subjectivenum>0)
                     shtml+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
-                else if(typeof itm.quesnum!='undefined')
+                else if(typeof itm.quesnum!='undefined'&&itm.papertype==4)
                     shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
                 shtml+='</p></a>';
                 shtml+='<p class="pic">';

@@ -298,7 +298,7 @@
                             }
                             queshtm+='<tr>';
                             queshtm+='<td>&nbsp;</td>';
-                            queshtm+='<td><a class="an_public3" href="javascript:doStuSubmitQues('+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+',\'\','+itm.questiontype+')">保&nbsp;存</a></td>';
+                            queshtm+='<td><a id="a_task_'+itm.taskid+'" class="an_public3" href="javascript:doStuSubmitQues('+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+',\'\','+itm.questiontype+')">保&nbsp;存</a></td>';
                             queshtm+='</tr>';
                         }
                     }else if(itm.tasktype==1&&itm.taskPerformanceList[0]!=null){
@@ -314,7 +314,7 @@
                         queshtm+='</tr>';
                         queshtm+='<tr>';
                         queshtm+='<td>&nbsp;</td>';
-                        queshtm+='<td ><a  class="an_public3" href="javascript:doStuSubmitQues('+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+',\'\','+itm.questiontype+')">保&nbsp;存</a></td>';
+                        queshtm+='<td ><a id="a_task_'+itm.taskid+'"  class="an_public3" href="javascript:doStuSubmitQues('+itm.tasktype+','+itm.taskid+','+itm.taskvalueid+',\'\','+itm.questiontype+')">保&nbsp;存</a></td>';
                         queshtm+='</tr>';
                         ueditorArray.push(itm.taskid);
                     }else if(itm.tasktype==2&&itm.taskPerformanceList[0]!=null){

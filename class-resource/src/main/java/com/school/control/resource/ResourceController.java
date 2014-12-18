@@ -1101,8 +1101,14 @@ public class ResourceController extends BaseController<ResourceInfo> {
 
         String suffix=filename.substring(filename.lastIndexOf("."));
         if(suffix!=null&&suffix.trim().length()>0){
-            if(UtilTool._VIEW_SUFFIX_TYPE_REGULAR.indexOf(suffix)!=-1)
-                suffix=".mp4";
+            if(UtilTool._VIEW_SUFFIX_TYPE_REGULAR.indexOf(suffix)!=-1){
+                if(!suffix.toLowerCase().equals(".mp4")){
+                    jeEntity.setMsg("仅限MP4格式的视频，请转换后再上传!");
+                    response.getWriter().print(jeEntity.toJSON());
+                    return;
+                }
+            }
+
         }
         String uptype=request.getParameter("uptype"); //1:
         if(Integer.parseInt(uptype)==1||resInfo.getFilesize()==null){//小文件

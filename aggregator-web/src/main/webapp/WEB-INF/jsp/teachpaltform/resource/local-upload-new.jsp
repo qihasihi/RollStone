@@ -41,6 +41,15 @@
         width: 910px;
     }
 
+ /*    .uploadify-button {
+          background-color: transparent;
+          border: none;
+          padding: 0;
+      }
+    .uploadify:hover .uploadify-button {
+        background-color: transparent;
+    } */
+
 
 </style>
 
@@ -59,6 +68,7 @@
     $(function(){
         $("#uploadfile").uploadify({
             'buttonClass' : 'an_public1',
+            //'buttonImage' : 'uploadify/browseBtn.png',
             'fileObjName' : 'uploadfile',
             swf           : 'uploadify/uploadify.swf',
             uploader      : 'uploadify/uploadFile.jsp',
@@ -226,7 +236,48 @@
 
     });
 
+    var allowViewDoc=true;
+    function timer(){
+        setTimeout(function(){
+            allowViewDoc=true;
+        },1000);
+    }
+    /**
+     *显示预览
+     * @param loc
+     * @param path
+     * @param imgd
+     *
+     */
+    function showDocView(resid,loc,path){
+        if(typeof(resid)=="undefined"||resid==null)
+            return;
+        if(!allowViewDoc){
+            alert("别着急!休息一会再点!");
+            return;
+        }
+        allowViewDoc=false;
+        timer();
+        $.ajax({
+            url:"resource?m=ajx_mkDocFile",
+            data:{resid:resid},
+            dataType:'json',
+            error:function(){
+                alert('异常错误!系统未响应!');
+            },success:function(rps){
+                if(rps.type=="error"){
+                    alert(rps.msg);
+                    return;
+                }
+                var p=loc+"/"+path+"/001.swf";
+                //验证是否存在
 
+                loadSwfReview(p,'dv_show_doc_view',980,800);
+                showModel('dv_doc_prview');
+            },
+            type:"POST"
+        });
+    }
 
 
 
@@ -543,6 +594,20 @@
     <p class="p_tb_10">&nbsp;&nbsp;&nbsp;&nbsp;视频<span class="ico_mp41"></span>mp4<!--wmv  rmvb  mpeg  mp4  avi  flv--></p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;动画<span class="ico_swf1"></span>swf</p>
 </div>
+
+
+<!--doc预览-->
+<div class="public_windows" style="width:600px;height:510px;display:none"   id="dv_doc_prview">
+    <h3 style="float:right;"><a href="javascript:;" onclick="document.getElementById('fade').style.display='none';dv_doc_prview.style.display='none';"  title="关闭"></a></h3>
+    <div class="zyxt_float_fxzy public_input" id="dv_show_doc_view">
+
+    </div>
+</div>
+<!--遮照层-->
+<div id="fade" class="black_overlay" style="background:black; filter: alpha(opacity=50); opacity: 0.5; -moz-opacity:0.5;"></div>
+<div id="loading" style='display:none;position: absolute;z-index:1005;'><img src="images/loading.gif"/></div>
+
+
 
 <script type="text/javascript">
     <c:if test="${!empty materialInfo}">

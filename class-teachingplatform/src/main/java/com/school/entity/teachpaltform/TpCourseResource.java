@@ -34,6 +34,8 @@ public class TpCourseResource implements Serializable {
     private Long taskCourseid;//在这个专题下是否发过任务
     private Object haspaper;//是否有关联试卷
 
+
+
     public Object getHaspaper() {
         return haspaper;
     }

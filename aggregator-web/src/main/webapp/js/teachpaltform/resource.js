@@ -52,7 +52,43 @@ function afterAjaxCourseList(rps) {
             else
                 html+='<input type="checkbox"  name="ck_course_resource" value=' + itm.resid + '>';
             html += '<span class="' + itm.suffixtype + '"></span></td>';
-            html += '<td><p><a href="resource?m=todetail&resid=' + itm.resid + '" target="_blank">' + itm.resname + '</a></p>';
+            html += '<td>';
+
+
+            if (itm.resourseType == "other") {
+                html += '<p><a href="resource?m=todetail&resid=' + itm.resid + '" target="_blank">' + itm.resname + '</a>&nbsp;';
+            }else
+                html += '<p><a href="javascript:;" >' + itm.resname + '</a>&nbsp;';
+
+            var filename = itm.resname + itm.filesuffixname;
+
+            if (itm.resourseType == "other") {
+                // html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)"></a>';
+            }
+            if (itm.resourseType == "doc") {
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)"></a>';
+
+            }
+            if (itm.resourseType == "jpeg") {
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+
+            }
+            if (itm.resourseType == "video") {
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+
+            }
+            if (itm.resourseType == "swf") {
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+
+            }
+            if (itm.resourseType == "mp3") {
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+
+            }
+
+
+            //html += '<a href="resource?m=todetail&resid=' + itm.resid + '" target="_blank">' + itm.resname + '</a>';
+            html += '</p>';
             html += '<p>' + (itm.resintroduce == null ? "" : itm.resintroduce) + '</p>';
             html += '<p class="jxxt_zhuanti_zy_add_text">' + (typeof itm.username == 'undefined' ? "" : itm.username) + '&nbsp;&nbsp;&nbsp;' + itm.restypename + '、' + itm.filetypename + '&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>' + itm.clicks + '</b><span class="ico59" title="下载"></span><b>' + itm.downloadnum + '</b><span class="ico41" title="赞"></span><b>' + itm.praisenum + '</b></p></td>';
             html += '</tr>';
@@ -268,7 +304,39 @@ function afterAjaxCourseResList(rps) {
                 html+='<input type="checkbox"  name="ck_course_resource" value=' + itm.resid + '>';
             html+='<span class="' + itm.suffixtype + '"></span></td>';
             html += '<td>';
-            html += '<p><a href="resource?m=todetail&resid=' + itm.resid + '" target="_blank">' + itm.resname + '</a></p>';
+
+            if (itm.resourseType == "other") {
+                html += '<p><a href="resource?m=todetail&resid=' + itm.resid + '" target="_blank">' + itm.resname + '</a>&nbsp;';
+            }else
+                html += '<p><a href="javascript:;" >' + itm.resname + '</a>&nbsp;';
+
+            var filename = itm.resname + itm.filesuffixname;
+
+            if (itm.resourseType == "other") {
+               // html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)"></a>';
+            }
+            if (itm.resourseType == "doc") {
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)"></a>';
+
+            }
+            if (itm.resourseType == "jpeg") {
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+
+            }
+            if (itm.resourseType == "video") {
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+
+            }
+            if (itm.resourseType == "swf") {
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+
+            }
+            if (itm.resourseType == "mp3") {
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+
+            }
+
+            html += '</p>';
             html += '<p>' + (itm.resintroduce == null ? "" : itm.resintroduce) + '</p>';
             html += '<p class="jxxt_zhuanti_zy_add_text">' + (typeof itm.username == 'undefined' ? "--" : itm.username) + '&nbsp;&nbsp;&nbsp;' + itm.restypename + ',' + itm.filetypename + '&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>' + itm.clicks + '</b><span class="ico59" title="下载"></span><b>' + itm.downloadnum + '</b><span class="ico41" title="赞"></span><b>' + itm.praisenum + '</b></p></td>';
             html += '</tr>';
@@ -1772,6 +1840,96 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
         loadStudyNotes(1);
 }
 
+
+
+
+/**
+ * 显示资源
+ *
+ * @param divid
+ *            所在DIV
+ * @param type
+ *            类型
+ * @param preimg
+ *            预览图
+ * @param docmd5
+ * @return
+ */
+function showPreviewResource(md5id, fname, divid, type, preimg, md5name, size, resid, resdetailid, swfpath, liobj) {
+    var divid='dv_show_doc_view';
+    //获取文件路径
+    fileSystemIpPort=fileSystemIpPort.substring(0,fileSystemIpPort.indexOf("fileoperate"))+"fileoperate/";
+    if(resid>0)
+        fileSystemIpPort+="/clouduploadfile/";
+    else
+        fileSystemIpPort+="/uploadfile/";
+    //转换文件
+    checkConvertStatus(resid);
+
+    if (typeof(tarray[1]) != "undefined")
+        clearTimeout(tarray[1]);
+    var htm = '';
+    //删除播放器
+    if (typeof ($("object[name='player1']")) != "undefined")
+        $("object[name='player1']").after(
+            '<div class="zyxt_float_fxzy public_input" id="dv_show_doc_view"></div>');
+    $("object[name='player1']").remove();
+
+
+    if (typeof ($("div[id='dv_show_doc_view_wrapper']")) != "undefined")
+        $("div[id='dv_show_doc_view_wrapper']").after('<div class="zyxt_float_fxzy public_input" id="dv_show_doc_view"></div>');
+    $("div[id='dv_show_doc_view_wrapper']").remove();
+
+    //删除音频
+    if (typeof($("object[id='b_sound']")))
+        $("object[name='player1']").after(
+            '<div class="zyxt_float_fxzy public_input" id="dv_show_doc_view"></div>');
+    $("object[id='b_sound']").remove();
+    //删除SWF
+    if (typeof($("object[id='FlexPaperViewer']")))
+        $("object[id='FlexPaperViewer']").after(
+            '<div class="zyxt_float_fxzy public_input" id="dv_show_doc_view"></div>');
+    $("object[id='FlexPaperViewer']").remove();
+
+
+    var lastname = "";
+    if (typeof(fname) != 'undefined' && fname.Trim().length > 0 && fname.indexOf(".") != -1)
+        lastname = fname.substring(fname.lastIndexOf(".")).toLowerCase();
+
+    if (type == 1) {
+        htm = "<img src='" + preimg + "' width='560' height='370'  title='" + fname + "' id='img_res'  />";
+    } else if (type == 2) {
+        // htm += "<div style='color:gray;font-size:10px' id='progress_1'>";
+        //htm += "</div>";
+        videoConvertProgress(resid, fname, md5name, 1, md5id, fileSystemIpPort,'','dv_show_doc_view');
+    } else if (type == 4) {
+        loadSwfReview(swfpath, divid, 560, 500);
+    } else if (type == 3) {
+        //showMp3Resource('div_show', 0, md5name, md5id,fileSystemIpPort);
+        var priviewimg='';
+        loadSWFPlayer(md5id, md5name, divid, false, lastname, 'mp3','images/mp3.jpg',resid);
+    } else if (type == 0) {
+        // htm += '<p>' + fname + '</p>';
+    } else if (type == 5) {
+        //showMp3Resource('div_show', 0, md5name, md5id,fileSystemIpPort);
+        swfobjPlayer(md5id, md5name, divid, false, lastname, 'swf','',resid);
+        //var path=fileSystemIpPort+"uploadfile/" + md5id + "/"+ md5name;
+        //loadSwfReview(path,'div_show',560,370);
+    }
+    if (type != 3) {
+        $("#" + divid).html(htm);
+        $("#" + divid).hide();
+    }
+    if (type == 1) {
+        var imgobj = $("#img_res").get(0);
+        resizeimg(imgobj, 560, 500);
+    }
+    if (type != 3)
+        $("#" + divid).show('slow');
+    showModel('dv_doc_prview');
+}
+
+
 function loadRelatePaper(resid){
     if(isNaN(resid))
         return;
@@ -1897,7 +2055,7 @@ var tarray = new Array();
  * @param idxstate    第几个视频资源
  * @return
  */
-function videoConvertProgress(resid, fname, md5fname, idxstate, path, baseIpPort, imgpath) {
+function videoConvertProgress(resid, fname, md5fname, idxstate, path, baseIpPort, imgpath,divid) {
     tarray[idxstate] = null;
     if (typeof(resid) != "undefined" && resid != null &&
         typeof(fname) != "undefined" && fname != null) {
@@ -1909,7 +2067,9 @@ function videoConvertProgress(resid, fname, md5fname, idxstate, path, baseIpPort
         var lastname = "";
         if (typeof(fname) != 'undefined' && fname.Trim().length > 0 && fname.indexOf(".") != -1)
             lastname = fname.substring(fname.lastIndexOf(".")).toLowerCase();
-        loadSWFPlayer(path, md5fname, 'div_show', false, lastname,'mp4','',resid);
+        if(typeof divid=='undefined')
+            divid='div_show';
+        loadSWFPlayer(path, md5fname, divid, false, lastname,'mp4','',resid);
         return;
         //var urlpath="http://localhost:1990/fileoperate/getvideostate.jsp?res_id="+resid+"&filename="+encodeURI(fname);
         $.getJSON(urlpath, {res_id: resid, file_name_md5: md5fname + lastname, path: path}, function (data) {

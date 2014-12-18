@@ -72,7 +72,11 @@
 			// 扩展名格式：
 			if (name.lastIndexOf(".") >= 0) {
 				extName = name.substring(name.lastIndexOf("."));
-			}
+                if(extName!=null&&UtilTool.matchingText(UtilTool._VIEW_SUFFIX_TYPE_REGULAR,extName.toLowerCase()))
+                    extName=".mp4";
+			}else
+                return;
+
 			savepath = savepath +"/"+ path + "/";
 			File f1 = new File(savepath);
 			if (!f1.exists()) {
