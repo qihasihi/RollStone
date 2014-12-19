@@ -1013,6 +1013,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             if(suffix!=null&&UtilTool.matchingText(UtilTool._VIEW_SUFFIX_TYPE_REGULAR,suffix.toLowerCase()))
                 suffix=".mp4";
             String fileurl=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/"+UtilTool.getResourceUrl(resid,suffix);
+              System.out.println("fileurl:" + fileurl+"");
             File tmp=new File(fileurl);
          //   System.out.println("fileurl:" + fileurl + "   " + tmp.exists() + " " + request.getSession().getServletContext().getRealPath("/"));
             if(!tmp.exists()){  //
@@ -4072,7 +4073,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         }
 
         if(sqlList.size()>0&&objListArray.size()>0&&sqlList.size()==objListArray.size()){
-            if(this.resourceManager.doExcetueArrayProc(sqlList,objListArray)){
+            if(this.tpCourseResourceManager.doExcetueArrayProc(sqlList,objListArray)){
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                 je.setType("success");
             }else

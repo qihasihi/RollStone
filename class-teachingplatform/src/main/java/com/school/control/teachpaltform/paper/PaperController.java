@@ -1503,7 +1503,7 @@ public class PaperController extends BaseController<PaperInfo>{
      * @throws Exception
      */
     @RequestMapping(params="m=editPaperQuestionModel",method={RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView toEditPaperQuestionModel(HttpServletRequest request)throws Exception{
+    public ModelAndView toEditPaperQuestionModel(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je =new JsonEntity();//
         String courseid=request.getParameter("courseid");
         String paperid=request.getParameter("paperid");
@@ -1516,13 +1516,13 @@ public class PaperController extends BaseController<PaperInfo>{
         }
 
 
-        TpCoursePaper t=new TpCoursePaper();
+      TpCoursePaper t=new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
         t.setPaperid(Long.parseLong(paperid));
         List<TpCoursePaper>tpCoursePaperList=this.tpCoursePaperManager.getList(t, null);
         if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
             je.setMsg("抱歉该试卷已不存在!");
-            je.getAlertMsgAndBack();
+            response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
 

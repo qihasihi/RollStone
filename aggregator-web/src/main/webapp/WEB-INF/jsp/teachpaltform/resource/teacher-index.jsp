@@ -334,7 +334,7 @@
      * @param cid
      * @param pid
      */
-    function loadEditPaperRes(cid,pid,isshow,isview){
+    function loadEditPaperRes(cid,pid,isshow,isview,ismic){
         if(typeof(cid)=="undefined"||typeof(pid)=="undefined"||cid==null||pid==null){
             alert('异常错误，请刷新重试!');
             return;
@@ -342,6 +342,8 @@
         var u="paper?m=editPaperQuestionModel&courseid="+cid+"&paperid="+pid;
         if(isview)
             u+='&editQues=0';
+        if(ismic)
+            u="paper?toPreviewPaperModel&courseid="+cid+"&paperid="+pid+"&mic=1";
         $("#dv_paper_content #dv_paper_content_child").load(u,function(){
             $("#dv_paper_content .float_title").html("查看试卷");
             //关闭相关层

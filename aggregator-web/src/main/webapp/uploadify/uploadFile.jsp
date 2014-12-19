@@ -34,7 +34,7 @@
 	response.setCharacterEncoding("utf-8");
 	JsonEntity je = new JsonEntity();
 
-	String savepath = UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE");
+	String savepath = UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH");
 	DiskFileItemFactory fac = new DiskFileItemFactory();
 	ServletFileUpload upload = new ServletFileUpload(fac);
 	upload.setHeaderEncoding("utf-8");
