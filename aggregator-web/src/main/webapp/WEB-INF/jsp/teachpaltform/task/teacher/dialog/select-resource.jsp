@@ -89,6 +89,7 @@
             auto          : false,
             multi         : false,
             fileSizeLimit :'1GB',
+            queueSizeLimit : 1,
             //'progressData' : 'speed',
             itemTemplate  : '<div id="\\${fileID}" class="uploadify-queue-item">\
                     <div class="cancel">\
@@ -101,7 +102,7 @@
             },
             'onSelectError':function(file, errorCode, errorMsg){
                 switch(errorCode) {
-                    //case -100:     alert("上传的文件数量已经超出系统限制的"+$('#uploadfile').uploadify('settings','queueSizeLimit')+"个文件！");  break;
+                    case -100:     alert("上传的文件数量已经超出系统限制的"+$('#uploadfile').uploadify('settings','queueSizeLimit')+"个文件！");  break;
                     case -110:     alert("文件 ["+file.name+"] 大小超出系统限制的"+$('#uploadfile').uploadify('settings','fileSizeLimit')+"大小!");break;
                     case -120:     alert("文件 ["+file.name+"] 大小异常!"); break;
                     case -130:     alert("文件 ["+file.name+"] 类型不正确!");break;
@@ -546,7 +547,7 @@
                                                    onmouseout="dv_allow_filetype.style.display='none';" class="font-darkblue">支持的文件类型</a></p>
                     <div class="jxxt_zhuanti_zy_add" id="p_res_file">
                         <input type="file" name="uploadfile" id="uploadfile" class="w410" /><!--<a href="1" class="an_public3">上&nbsp;传</a>-->
-                        <p class="font-gray">提示： 1. 附件限一个，<2G。<br>2. 视频限MP4格式，建议使用<a class="font-darkblue" href="<%=downUrl%>uploadfile/cqmygysdssjtwmydtsgx/20141119.zip">格式工厂</a>等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒</p>
+                        <p >提示： 1. 附件限一个，<1G。<br>2. 视频限MP4格式，建议使用<a class="font-darkblue" href="<%=downUrl%>uploadfile/cqmygysdssjtwmydtsgx/20141119.zip">格式工厂</a>等软件转换，视频编码为：AVC（H264），比特率为：300-500KB/秒</p>
                     </div>
                     <div class="jxxt_zhuanti_zy_add" id="dv_super_file" style="display: none">
                         <div id="uploadcontrol_div" >
