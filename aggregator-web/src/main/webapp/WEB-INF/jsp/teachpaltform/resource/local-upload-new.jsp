@@ -88,6 +88,14 @@
                     <span class="fileName">\\${fileName} (\\${fileSize})</span><span class="data"></span>\
                 </div>',
             onSelect:function(file){
+                var zzSuffix='<%=UtilTool._VIEW_SUFFIX_TYPE_REGULAR%>';
+                if(file.type.length>0&&zzSuffix.indexOf(file.type.toLowerCase())>-1){
+                    if(file.type.toLowerCase()!='.mp4'){
+                        $('#uploadfile').uploadify('cancel', '*');
+                        alert("仅限MP4格式的视频，请转换后再上传!");
+                        return;
+                    }
+                }
                 $("#hd_filename").val(file.name);
             },
             'onSelectError':function(file, errorCode, errorMsg){
@@ -176,7 +184,7 @@
 
             },
             'onUploadError' : function(file, errorCode, errorMsg, errorString) {
-                alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+                alert('文件： ' + file.name + ' 未上传，原因： ' + errorString);
             }
         });
 

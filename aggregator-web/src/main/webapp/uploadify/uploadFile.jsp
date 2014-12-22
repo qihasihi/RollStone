@@ -73,13 +73,14 @@
 			if (name.lastIndexOf(".") >= 0) {
 				extName = name.substring(name.lastIndexOf("."));
                 if(extName!=null&&UtilTool.matchingText(UtilTool._VIEW_SUFFIX_TYPE_REGULAR,extName.toLowerCase())){
-                    if(!extName.trim().toLowerCase().equals(".mp4"))
-                       return;
-                    extName=".mp4";
+                    if(!extName.toLowerCase().equals(".mp4")){
+                        je.setMsg("仅限MP4格式的视频，请转换后再上传!");
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }
                 }
 			}else
                 return;
-
 			savepath = savepath +"/"+ path + "/";
 			File f1 = new File(savepath);
 			if (!f1.exists()) {
