@@ -46,6 +46,7 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -3883,6 +3884,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
      * 查询学生任务完成情况
      * @throws Exception
      */
+    @Transactional
     @RequestMapping(params="cjloadStuPerformance",method=RequestMethod.POST)
     public void cjloadStuPerformance(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je=new JsonEntity();
@@ -3908,6 +3910,12 @@ public class TaskController extends BaseController<TpTaskInfo>{
             clsid=Long.parseLong(classid);
         }else{
             clsid=Long.parseLong("0");
+        }
+        //首先处理因主观题没做导致的0分
+        Boolean transign = this.taskPerformanceManager.getCjTaskPerformanceBefor(Long.parseLong(taskid));
+        if(!transign){
+            transactionRollback();
+            return;
         }
         //任务记录
         List<List<String>>tList=this.taskPerformanceManager.getCjTaskPerformance(Long.parseLong(taskid),Integer.parseInt(classid),Integer.parseInt(type));

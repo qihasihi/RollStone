@@ -134,5 +134,10 @@ public class  TaskPerformanceManager extends BaseManager<TaskPerformanceInfo> im
     public List<List<String>> getCjTaskPerformance(Long taskid, Integer classid, Integer classtype) {
         return this.taskperformancedao.getCjTaskPerformance(taskid,classid,classtype);
     }
+
+    @Override
+    public Boolean getCjTaskPerformanceBefor(Long taskid) {
+        return this.taskperformancedao.getCjTaskPerformanceBefor(taskid);
+    }
 }
 

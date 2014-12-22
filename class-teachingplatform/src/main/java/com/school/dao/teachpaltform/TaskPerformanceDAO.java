@@ -523,4 +523,25 @@ public class TaskPerformanceDAO extends CommonDAO<TaskPerformanceInfo> implement
         return performanceList;
     }
 
+    @Override
+    public Boolean getCjTaskPerformanceBefor(Long taskid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        List<Object> objList=new ArrayList<Object>();
+        sqlbuilder.append("{CALL tp_qry_task_cj_performance_before(");
+        if(taskid!=null){
+            sqlbuilder.append("?,");
+            objList.add(taskid);
+        }else{
+            return false;
+        }
+        sqlbuilder.append("?)}");
+        Object afficeObj = this.executeSacle_PROC(sqlbuilder.toString(),
+                objList.toArray());
+        if (afficeObj != null && afficeObj.toString().trim().length() > 0
+                && Integer.parseInt(afficeObj.toString()) > 0) {
+            return true;
+        }
+        return false;
+    }
+
 }
