@@ -57,7 +57,7 @@
                     var zzSuffix='<%=UtilTool._VIEW_SUFFIX_TYPE_REGULAR%>';
                     if(file.type.length>0&&zzSuffix.indexOf(file.type.toLowerCase())>-1){
                         if(file.type.toLowerCase()!='.mp4'){
-                            $('#uploadfile').uploadify('cancel', '*');
+                            $('#uploadfile').uploadify('cancel', file.id);
                             alert("仅限MP4格式的视频，请转换后再上传!");
                             return;
                         }
