@@ -104,6 +104,7 @@
                     if(file.type.toLowerCase()!='.mp4'){
                         $('#uploadfile').uploadify('cancel', '*');
                         alert("仅限MP4格式的视频，请转换后再上传!");
+                        return;
                     }
                 }
                 $("#hd_filename").val(file.name);
