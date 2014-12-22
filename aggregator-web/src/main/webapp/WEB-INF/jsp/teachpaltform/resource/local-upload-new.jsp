@@ -74,7 +74,7 @@
             uploader      : 'uploadify/uploadFile.jsp',
            // uploader      : 'tpres?doUploadResource',
             buttonText    : '选择文件',
-            width         : '100',
+            width         : '90',
             height        : '20',
             auto          : false,
             multi         : false,
@@ -184,7 +184,7 @@
 
             },
             'onUploadError' : function(file, errorCode, errorMsg, errorString) {
-                alert('文件： ' + file.name + ' 未上传，原因： ' + errorString);
+                //alert('文件： ' + file.name + ' 未上传，原因： ' + errorString);
             }
         });
 

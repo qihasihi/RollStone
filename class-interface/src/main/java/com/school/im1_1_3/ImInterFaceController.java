@@ -2199,7 +2199,7 @@ public class ImInterFaceController extends BaseController {
 
             code = httpConnection.getResponseCode();
         } catch (Exception e) {			// 异常提示
-            System.out.println("异常错误!TOTALSCHOOL未响应!");
+            System.out.println("异常错误!接口连接："+urlstr+"未响应!");
             if(httpConnection!=null)httpConnection.disconnect();
             return null;
         }
@@ -2226,7 +2226,7 @@ public class ImInterFaceController extends BaseController {
             return null;
         }else if(code==500){
             if(httpConnection!=null)httpConnection.disconnect();
-            System.out.println("异常错误!500错误，请联系管理人员!");
+            System.out.println("异常错误!500错误，请联系管理人员!连接："+urlstr+"");
             return null;
         }
         String returnContent=null;

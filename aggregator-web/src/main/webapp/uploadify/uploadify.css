@@ -9,25 +9,25 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	margin-bottom: 1em;
 }
 .uploadify-button {
-	background-color: #505050;
-	background-image: linear-gradient(bottom, #505050 0%, #707070 100%);
-	background-image: -o-linear-gradient(bottom, #505050 0%, #707070 100%);
-	background-image: -moz-linear-gradient(bottom, #505050 0%, #707070 100%);
-	background-image: -webkit-linear-gradient(bottom, #505050 0%, #707070 100%);
-	background-image: -ms-linear-gradient(bottom, #505050 0%, #707070 100%);
+	background-color: #7ebdd3;
+	background-image: linear-gradient(bottom, #7ebdd3 0%, #8cc8dd 100%);
+	background-image: -o-linear-gradient(bottom, #7ebdd3 0%, #8cc8dd 100%);
+	background-image: -moz-linear-gradient(bottom, #7ebdd3 0%, #8cc8dd 100%);
+	background-image: -webkit-linear-gradient(bottom, #7ebdd3 0%, #8cc8dd 100%);
+	background-image: -ms-linear-gradient(bottom, #7ebdd3 0%, #8cc8dd 100%);
 	background-image: -webkit-gradient(
 		linear,
 		left bottom,
 		left top,
-		color-stop(0, #505050),
-		color-stop(1, #707070)
+		color-stop(0, #7ebdd3),
+		color-stop(1, #8cc8dd)
 	);
 	background-position: center top;
 	background-repeat: no-repeat;
-	-webkit-border-radius: 30px;
-	-moz-border-radius: 30px;
-	border-radius: 30px;
-	border: 2px solid #808080;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	border: 1px solid #19a0ca;
 	color: #FFF;
 	font: bold 12px Arial, Helvetica, sans-serif;
 	text-align: center;
@@ -35,18 +35,18 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	width: 100%;
 }
 .uploadify:hover .uploadify-button {
-	background-color: #606060;
-	background-image: linear-gradient(top, #606060 0%, #808080 100%);
-	background-image: -o-linear-gradient(top, #606060 0%, #808080 100%);
-	background-image: -moz-linear-gradient(top, #606060 0%, #808080 100%);
-	background-image: -webkit-linear-gradient(top, #606060 0%, #808080 100%);
-	background-image: -ms-linear-gradient(top, #606060 0%, #808080 100%);
+	background-color: #8cc8dd;
+	background-image: linear-gradient(top, #8cc8dd 0%, #7ebdd3 100%);
+	background-image: -o-linear-gradient(top, #8cc8dd 0%, #7ebdd3 100%);
+	background-image: -moz-linear-gradient(top, #8cc8dd 0%, #7ebdd3 100%);
+	background-image: -webkit-linear-gradient(top, #8cc8dd 0%, #7ebdd3 100%);
+	background-image: -ms-linear-gradient(top, #8cc8dd 0%, #7ebdd3 100%);
 	background-image: -webkit-gradient(
 		linear,
 		left bottom,
 		left top,
-		color-stop(0, #606060),
-		color-stop(1, #808080)
+		color-stop(0, #8cc8dd),
+		color-stop(1, #7ebdd3)
 	);
 	background-position: center bottom;
 }

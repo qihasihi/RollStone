@@ -2032,7 +2032,7 @@ public class UtilTool implements java.io.Serializable {
             return null;
         }else if(code==500){
             if(httpConnection!=null)httpConnection.disconnect();
-            System.out.println("异常错误!500错误，请联系管理人员!");
+            System.out.println("异常错误!500错误，请联系管理人员!Util url:"+urlstr+"");
             return null;
         }
         String returnContent=null;
