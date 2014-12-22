@@ -1,4 +1,7 @@
 package com.school.util.taglib;
+
+import com.school.util.UtilTool;
+
 /**
  * Created by zhengzhou on 14-10-13.
  */
@@ -24,6 +27,19 @@ public class SchoolTab{
     public static String replaceAll(String text,String findCodeReg,String replaceCode){
         if(text==null)return "";
         return text.replaceAll(findCodeReg,replaceCode);
+    }
+
+    /**
+     * 后台验证正则表达式,第二个参数全部匹配第一个参数(是否存在)
+     * @param validateStr
+     * @param reg
+     * @return
+     */
+    public static boolean doExecReg(String validateStr,String reg){
+        boolean returnBo=false;
+        if(validateStr!=null&&reg!=null&&reg.trim().length()>0)
+            return UtilTool.matchingText(reg,validateStr.toLowerCase());
+        return returnBo;
     }
 
 }

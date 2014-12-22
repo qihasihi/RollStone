@@ -8,6 +8,7 @@
     //String pass=request.getAttribute("pass").toString();
     String pass=user.getPassword();
     request.setAttribute("pageType","index" );
+
 %>
 <html>
 <head>

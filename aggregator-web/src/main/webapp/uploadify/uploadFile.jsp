@@ -72,8 +72,11 @@
 			// 扩展名格式：
 			if (name.lastIndexOf(".") >= 0) {
 				extName = name.substring(name.lastIndexOf("."));
-                if(extName!=null&&UtilTool.matchingText(UtilTool._VIEW_SUFFIX_TYPE_REGULAR,extName.toLowerCase()))
+                if(extName!=null&&UtilTool.matchingText(UtilTool._VIEW_SUFFIX_TYPE_REGULAR,extName.toLowerCase())){
+                    if(!extName.trim().toLowerCase().equals(".mp4"))
+                       return;
                     extName=".mp4";
+                }
 			}else
                 return;
 

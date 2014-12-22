@@ -4513,6 +4513,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             if(questype==4||questype==3||questype==7||questype==8){
                 stpq.setIsright(score>0?1:2);
                 stpq.setIsmarking(0);
+            }else{
+                stpq.setIsmarking(1);
+                stpq.setIsright(2);
             }
             //如果存在，则修改
             if(spqlogList!=null&&spqlogList.size()>0){

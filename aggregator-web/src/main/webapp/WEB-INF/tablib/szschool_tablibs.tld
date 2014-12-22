@@ -32,8 +32,17 @@
             ${fn:replaceAll(name, "-","aa")}
         </example>
     </function>
-
-
+    <function>
+        <description>
+                后台验证正则表达式,第二个参数全部匹配第一个参数(是否存在)
+        </description>
+        <name>doExecReg</name>
+        <function-class>com.school.util.taglib.SchoolTab</function-class>
+        <function-signature>boolean doExecReg(java.lang.String,java.lang.String)</function-signature>
+        <example>
+            ${fn:doExecReg(String,String)}
+        </example>
+    </function>
 
     <!--系统原fn标签声明-->
     <function>
