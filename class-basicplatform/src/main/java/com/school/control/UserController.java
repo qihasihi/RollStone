@@ -1165,7 +1165,7 @@ public class UserController extends BaseController<UserInfo> {
         Object isajax=request.getAttribute("isajax");
 
         Long dcSchoolId=null;
-        if(UtilTool._IS_SIMPLE_RESOURCE==2){
+//        if(UtilTool._IS_SIMPLE_RESOURCE==2){
             //验证分校                            是否云端安端  1:是    2：否(分校本地安装则是2，云端代理则是1)
             int isCloudSteup=Integer.parseInt(UtilTool.utilproperty.getProperty("IS_CLOUD_STEUP").toString());
             if(isCloudSteup==1){
@@ -1185,7 +1185,7 @@ public class UserController extends BaseController<UserInfo> {
                     dcSchoolId=schoolList.get(0).getSchoolid();
 
             }
-        }
+//        }
 
         UserInfo userinfo = this.getParameter(request, UserInfo.class);
         if(request.getAttribute("username")!=null)
