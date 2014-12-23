@@ -1031,11 +1031,12 @@ public class UserController extends BaseController<UserInfo> {
                         .getProperty("USER_LOGIN_USERNAME_UNEXISTS"));
                 je.setType("error");
             } else {
-                userinfo= userManager.doLogin(userinfo);
-                if (userinfo == null) {
-                    userinfo = new UserInfo();
-                    userinfo.setUsername(userinfo.getUsername());
-                    userinfo = userManager.getUserInfo(userinfo);
+                UserInfo tmpU= this.userManager.doLogin(userinfo);
+                if (tmpU == null) {
+                    tmpU = new UserInfo();
+                    tmpU.setDcschoolid(userinfo.getDcschoolid());
+                    tmpU.setUsername(userinfo.getUsername());
+                    userinfo = userManager.getUserInfo(tmpU);
                     Date date = new Date();
                     String p_safetime=(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(date);
                     if(userinfo == null || !MD5.getJDKMD5(userinfo.getPassword() + p_safetime.substring(0, p_safetime.indexOf(":")))
@@ -1183,7 +1184,6 @@ public class UserController extends BaseController<UserInfo> {
                     return;
                 }else
                     dcSchoolId=schoolList.get(0).getSchoolid();
-
             }
 //        }
 

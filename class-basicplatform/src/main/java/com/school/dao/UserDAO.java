@@ -419,10 +419,10 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
 	public UserInfo getUser(UserInfo u) {
 		// TODO Auto-generated method stub
 		if(u==null 
-				&& u.getRef()==null
+				|| (u.getRef()==null
 				&& u.getUserid()==null
 				&& u.getUsername()==null
-				&& u.getStateid()==null)
+				&& u.getStateid()==null))
 			return null;
 		
 		UserInfo user = new UserInfo();
