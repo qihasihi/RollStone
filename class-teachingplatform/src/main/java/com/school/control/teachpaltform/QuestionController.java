@@ -1212,6 +1212,19 @@ public class QuestionController extends BaseController<QuestionInfo> {
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                 je.setType("success");
                 je.getObjList().add(nextref);
+                if(paperid!=null&&paperid.trim().length()>0){
+                    PaperQuestion p=new PaperQuestion();
+                    p.setPaperid(Long.parseLong(paperid));
+                    PaperQuestion pq=new PaperQuestion();
+                    pq.setPaperid(p.getPaperid());
+                    Float sumScore=this.paperQuestionManager.getSumScore(pq);
+                    if(sumScore!=null){
+                        PaperInfo paper=new PaperInfo();
+                        paper.setPaperid(pq.getPaperid());
+                        paper.setScore(sumScore);
+                        this.paperManager.doUpdate(paper);
+                    }
+                }
             } else {
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
