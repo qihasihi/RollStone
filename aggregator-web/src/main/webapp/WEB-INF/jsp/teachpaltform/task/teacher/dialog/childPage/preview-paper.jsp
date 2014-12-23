@@ -77,19 +77,25 @@ $(function(){
                 yuScore-=1;
             });
         }
-        var quesArray=$("table").filter(function(){return this.id.indexOf('dv_ques_')!=-1});
-        $.each(quesArray,function(ix,im){
-            var score=$("#sum_"+$(im).data().bind+"").html();
-            var childArray=$(im).find("span[name='avg_score<%=random%>'][id^='score_']");
-            if(childArray.length>0){
-                score=0;
-                $.each(childArray,function(i,m){
-                    score+=parseFloat($(m).html());
-                })
-            }
-            $("#sum_"+$(im).data().bind+"").html(score);
-        });
     }
+    var quesArray=$("table").filter(function(){return this.id.indexOf('dv_ques_')!=-1});
+    $.each(quesArray,function(ix,im){
+//        alert(1);
+        var score= $("#group_"+$(im).find("span[id*='group_']")).html();
+//        alert(2);
+        var childArray=$(im).find("span[name='avg_score<%=random%>'][id^='score_']");
+//        alert(3);
+        if(childArray.length>0){
+            score=0;
+            $.each(childArray,function(i,m){
+                score+=parseFloat($(m).html());
+            })
+        }
+//        alert(score);
+//        $("#group_"+$(im).find("span[id*='group_']")).html(score);
+//        alert(5);
+    });
+
     showQues<%=random%>Num<%=random%>();
     paperDivShow<%=random%>();
 });
@@ -201,14 +207,14 @@ function showQues<%=random%>Num<%=random%>(){
                     +'"><a href="javascript:;" onclick="showQues<%=random%>('+(idx+1)+')">'+(idx+1)+'</a></li>';
 
             var sumScore=0;
-            $("#"+itm.id+" tr[id*='dv_ques_'] span[id*='score_']").each(function(ix,im){
-              sumScore+=parseFloat($(this).html().Trim());
+            $("#dv_paperdetail<%=random%> #"+itm.id+" tr[id*='dv_ques_'] span[id*='score_']").each(function(ix,im){
+              sumScore+=parseFloat(($(this).text().Trim().length>0?$(this).text().Trim():0));
             });
             if(sumScore==0){
                 sumScore=avgScore;
             }
-            $("#"+itm.id+" span[id*='group_']").html(sumScore);
-            $("#"+itm.id+" tr[id*='dv_ques_']").next().show();
+            $("#dv_paperdetail<%=random%> #"+itm.id+" span[id*='group_']").html(sumScore);
+            $("#dv_paperdetail<%=random%> #"+itm.id+" tr[id*='dv_ques_']").next().show();
         });
 
 
