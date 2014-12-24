@@ -1496,6 +1496,8 @@ public class ResourceController extends BaseController<ResourceInfo> {
             resourceinfo.setIsunion(1);
         else if(resourceinfo.getIsunion()==0)
             resourceinfo.setIsunion(null);
+        //ÒÑÔÞÎ´ÔÞ
+        resourceinfo.setVoteuid(this.logined(request).getUserid());
         StringBuilder resStrBuilder=new StringBuilder();
         List<ResourceInfo> extList = this.resourceManager.getListByExtendValue(resourceinfo , presult);
         if(extList!=null&&extList.size()>0){

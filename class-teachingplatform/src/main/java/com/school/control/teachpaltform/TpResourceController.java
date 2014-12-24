@@ -171,8 +171,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             pageResult.setOrderBy(" aa.diff_type desc,aa.is_mic_copiece,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id,aa.res_flag ");
         }
 
-
-
+        //当前资源是否赞
+        tr.setVoteuid(this.logined(request).getUserid());
         List<TpCourseResource>resourceList=this.tpCourseResourceManager.getList(tr,pageResult);
         pageResult.setList(resourceList);
         je.setPresult(pageResult);

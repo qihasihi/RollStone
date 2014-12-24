@@ -116,16 +116,16 @@ LeibieControl.prototype={
             trHtml+='<input id="filetypevalues_title" type="hidden" value="文件类型">';
             trHtml+='<input id="timerange_title" type="hidden" value="发布时间">';
             trHtml+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1" style="float: left;width:100%">';
-            trHtml+='<tr id="extend_sharestatusvalues"><th>共享类型：</th><td id="ev_area_sharestatusvalues"></td></tr>';
-            trHtml+='<tr id="extend_subjectvalues"><th>学&nbsp;&nbsp;&nbsp;&nbsp;科：</th>';
+            trHtml+='<tr id="extend_sharestatusvalues"><th style="width: 77px;">共享类型：</th><td id="ev_area_sharestatusvalues"></td></tr>';
+            trHtml+='<tr id="extend_subjectvalues"><th style="width: 77px;">学&nbsp;&nbsp;&nbsp;&nbsp;科：</th>';
             trHtml+='<td id="ev_area_subjectvalues">&nbsp;</td></tr>';
-            trHtml+='<tr id="extend_gradevalues"><th>年&nbsp;&nbsp;&nbsp;&nbsp;级：</th>';
+            trHtml+='<tr id="extend_gradevalues"><th style="width: 77px;">年&nbsp;&nbsp;&nbsp;&nbsp;级：</th>';
             trHtml+='<td id="ev_area_gradevalues">&nbsp;</td></tr>';
-            trHtml+='<tr id="extend_restypevalues"><th>资源类型：</th>';
+            trHtml+='<tr id="extend_restypevalues"><th style="width: 77px;">资源类型：</th>';
             trHtml+='<td id="ev_area_restypevalues">&nbsp;</td></tr>';
-            trHtml+='<tr id="extend_filetypevalues"><th>文件类型：</th>';
+            trHtml+='<tr id="extend_filetypevalues"><th style="width: 77px;">文件类型：</th>';
             trHtml+='<td id="ev_area_filetypevalues">&nbsp;</td></tr>';
-            trHtml+='<tr id="extend_timerange"><th>发布时间：</th><td id="ev_area_timerange"><ul id="val_ls_timerange">';
+            trHtml+='<tr id="extend_timerange"><th style="width: 77px;">发布时间：</th><td id="ev_area_timerange"><ul id="val_ls_timerange">';
             trHtml+="<li id='value_timerange_day'><a href="+"javascript:"+controlobj.settings["controlid"]
                 +".clickedProperty('timerange','day','今天',true)"+">今天</a></li>";
             trHtml+="<li id='value_timerange_week'><a href="+"javascript:"+controlobj.settings["controlid"]

@@ -55,10 +55,7 @@ function afterAjaxCourseList(rps) {
             html += '<td>';
 
 
-            if (itm.resourseType == "other") {
-                html += '<p><a href="resource?m=todetail&resid=' + itm.resid + '" target="_blank">' + itm.resname + '</a>&nbsp;';
-            }else
-                html += '<p><a href="javascript:;" >' + itm.resname + '</a>&nbsp;';
+            html += '<p>' + itm.resname + '&nbsp;';
 
             var filename = itm.resname + itm.filesuffixname;
 
@@ -66,31 +63,38 @@ function afterAjaxCourseList(rps) {
                 // html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)"></a>';
             }
             if (itm.resourseType == "doc") {
-                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)"></a>';
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.path + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)"></a>';
 
             }
             if (itm.resourseType == "jpeg") {
-                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.path + '\',\'' + filename + '\',\'div_show\',1,\'' + itm.imgpath + '\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
 
             }
             if (itm.resourseType == "video") {
-                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.path + '\',\'' + filename + '\',\'div_show\',2,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
 
             }
             if (itm.resourseType == "swf") {
-                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.path + '\',\'' + filename + '\',\'div_show\',5,\'\',\'001\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
 
             }
             if (itm.resourseType == "mp3") {
-                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
+                html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.path + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
 
             }
 
+            //<a href="javascript:;" onclick="resourceDownLoadFile('${resObj.resid }','${resObj.filesuffixname}');sp_downnum.innerHTML=parseInt(sp_downnum.innerHTML)+1"><span class="ico59" title="下载"></span><span id="sp_downnum">${resObj.downloadnum}</span></a>
 
             //html += '<a href="resource?m=todetail&resid=' + itm.resid + '" target="_blank">' + itm.resname + '</a>';
             html += '</p>';
             html += '<p>' + (itm.resintroduce == null ? "" : itm.resintroduce) + '</p>';
-            html += '<p class="jxxt_zhuanti_zy_add_text">' + (typeof itm.username == 'undefined' ? "" : itm.username) + '&nbsp;&nbsp;&nbsp;' + itm.restypename + '、' + itm.filetypename + '&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>' + itm.clicks + '</b><span class="ico59" title="下载"></span><b>' + itm.downloadnum + '</b><span class="ico41" title="赞"></span><b>' + itm.praisenum + '</b></p></td>';
+            html += '<p class="jxxt_zhuanti_zy_add_text">' + (typeof itm.username == 'undefined' ? "" : itm.username) + '&nbsp;&nbsp;&nbsp;' + itm.restypename + '、' + itm.filetypename + '&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>' + itm.clicks + '</b>';
+            html += '<a href="javascript:;" onclick="resourceDownLoadFile(\''+itm.resid+'\',\''+itm.filesuffixname+'\');sp_downnum_'+itm.resid+'.innerHTML=parseInt(sp_downnum_'+itm.resid+'.innerHTML)+1"><span class="ico59" title="下载"></span></a><b id="sp_downnum_'+itm.resid+'">' + itm.downloadnum + '</b>';
+            if(itm.voteflag>0)
+                html += '<span class="ico41" title="已赞" ></span><b>' + itm.praisenum + '</b>';
+            else
+                html += '<a href="javascript:;"  onclick="operatePraise(\''+itm.resid+'\')"><span id="praise_status_'+itm.resid+'" class="ico41" title="赞"></span></a><b>' + itm.praisenum + '</b>';
+            html += '</p></td>';
             html += '</tr>';
         });
     } else {
@@ -106,6 +110,37 @@ function afterAjaxCourseList(rps) {
     p1.Refresh();
     $("#resData").html(html);
 }
+
+
+function operatePraise(resid,flag){
+    if(typeof(resid)=="undefined"||resid==null||resid.Trim().length<1){
+        alert("异常错误，请刷新页面后重试! 原因：resid is empty!");return;
+    }
+    $.ajax({
+        url:'operaterecord?m=praiseres',
+        type:'POST',
+        data:{resid:resid},
+        dataType:'json',
+        error:function(){alert("网络异常")},
+        success:function(rps){
+            if(rps.type=="error"){
+                alert(rps.msg);
+                return;
+            }
+            var tid=typeof flag!='undefined'?$("#praisestatus_"+resid+""):$("#praise_status_"+resid+"");
+
+            var t=tid.parent().next('b').html();
+            if(!isNaN(t))
+                tid.parent().next('b').html(parseInt(tid.parent().next('b').html())+1);
+            var h='<a style="cursor: default"><span class="ico41" title="已赞"></span></a>';
+
+            tid.parent().after(h).andSelf().remove();
+        }
+    });
+}
+
+
+
 
 
 /**
@@ -305,10 +340,7 @@ function afterAjaxCourseResList(rps) {
             html+='<span class="' + itm.suffixtype + '"></span></td>';
             html += '<td>';
 
-            if (itm.resourseType == "other") {
-                html += '<p><a href="resource?m=todetail&resid=' + itm.resid + '" target="_blank">' + itm.resname + '</a>&nbsp;';
-            }else
-                html += '<p><a href="javascript:;" >' + itm.resname + '</a>&nbsp;';
+            html += '<p>' + itm.resname + '&nbsp;';
 
             var filename = itm.resname + itm.filesuffixname;
 
@@ -335,10 +367,28 @@ function afterAjaxCourseResList(rps) {
                 html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',3,\'\',\'001\',\'\',\'' + itm.resid + '\',\'\',\'\',this)"></a>';
 
             }
+            /*
+             html += '</p>';
+             html += '<p>' + (itm.resintroduce == null ? "" : itm.resintroduce) + '</p>';
+             html += '<p class="jxxt_zhuanti_zy_add_text">' + (typeof itm.username == 'undefined' ? "" : itm.username) + '&nbsp;&nbsp;&nbsp;' + itm.restypename + '、' + itm.filetypename + '&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>' + itm.clicks + '</b>';
+             html += '<a href="javascript:;" onclick="resourceDownLoadFile(\''+itm.resid+'\',\''+itm.filesuffixname+'\');sp_downnum_'+itm.resid+'.innerHTML=parseInt(sp_downnum_'+itm.resid+'.innerHTML)+1"><span class="ico59" title="下载"></span></a><b id="sp_downnum_'+itm.resid+'">' + itm.downloadnum + '</b>';
+             if(itm.voteflag>0)
+             html += '<span class="ico41" title="已赞" ></span><b>' + itm.praisenum + '</b>';
+             else
+             html += '<a href="javascript:;"  onclick="operatePraise(\''+itm.resid+'\')"><span id="praise_status_'+itm.resid+'" class="ico41" title="赞"></span></a><b>' + itm.praisenum + '</b>';
+             html += '</p></td>';
+             html += '</tr>';
+             */
 
             html += '</p>';
             html += '<p>' + (itm.resintroduce == null ? "" : itm.resintroduce) + '</p>';
-            html += '<p class="jxxt_zhuanti_zy_add_text">' + (typeof itm.username == 'undefined' ? "--" : itm.username) + '&nbsp;&nbsp;&nbsp;' + itm.restypename + ',' + itm.filetypename + '&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>' + itm.clicks + '</b><span class="ico59" title="下载"></span><b>' + itm.downloadnum + '</b><span class="ico41" title="赞"></span><b>' + itm.praisenum + '</b></p></td>';
+            html += '<p class="jxxt_zhuanti_zy_add_text">' + (typeof itm.username == 'undefined' ? "--" : itm.username) + '&nbsp;&nbsp;&nbsp;' + itm.restypename + ',' + itm.filetypename + '&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>' + itm.clicks + '</b>';
+            html += '<a href="javascript:;" onclick="resourceDownLoadFile(\''+itm.resid+'\',\''+itm.filesuffixname+'\');document.getElementById(\'sp_dnum_'+itm.resid+'\').innerHTML=parseInt(document.getElementById(\'sp_dnum_'+itm.resid+'\').innerHTML)+1"><span class="ico59" title="下载"></span></a><b id="sp_dnum_'+itm.resid+'">' + itm.downloadnum + '</b>';
+            if(itm.voteflag>0)
+                html += '<span class="ico41" title="已赞" ></span><b>' + itm.praisenum + '</b>';
+            else
+                html += '<a href="javascript:;"  onclick="operatePraise(\''+itm.resid+'\',1)"><span id="praisestatus_'+itm.resid+'" class="ico41" title="赞"></span></a><b>' + itm.praisenum + '</b>';
+            html += '</p></td>';
             html += '</tr>';
         });
     } else {

@@ -123,6 +123,11 @@ public class TpCourseResourceDAO extends CommonDAO<TpCourseResource> implements 
             objList.add(tpcourseresource.getHaspaper());
         } else
             sqlbuilder.append("null,");
+        if (tpcourseresource.getVoteuid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getVoteuid());
+        } else
+            sqlbuilder.append("null,");
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
 			sqlbuilder.append("?,?,");

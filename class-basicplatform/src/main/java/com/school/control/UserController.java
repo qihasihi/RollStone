@@ -372,7 +372,8 @@ public class UserController extends BaseController<UserInfo> {
         List<RoleInfo> jobList = this.roleManager.getList(job, null);
         List<ClassYearInfo>clsyearList=this.classYearManager.getCurrentYearList("more");
 
-//        clspage.setOrderBy("CASE grade_value	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END");
+        //clspage.setOrderBy("CASE grade_value	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END");
+        //clspage.setOrderBy(" grade_id ");
         List<GradeInfo>gradeList=this.gradeManager.getList(null,null);
 
         //request.setAttribute("clsList", classList);

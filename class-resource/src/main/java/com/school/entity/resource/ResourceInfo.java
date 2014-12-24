@@ -166,6 +166,24 @@ public class ResourceInfo implements java.io.Serializable {
     private Long courseid;
     private Long currentcourseid;
     private Object resflag;
+    private Object voteflag;
+    private Integer voteuid;
+
+    public Integer getVoteuid() {
+        return voteuid;
+    }
+
+    public void setVoteuid(Integer voteuid) {
+        this.voteuid = voteuid;
+    }
+
+    public Object getVoteflag() {
+        return voteflag;
+    }
+
+    public void setVoteflag(Object voteflag) {
+        this.voteflag = voteflag;
+    }
 
     public Object getResflag() {
         return resflag;

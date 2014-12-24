@@ -606,7 +606,7 @@
 
 
 <!--doc预览-->
-<div class="public_windows" style="width:600px;height:510px;display:none"   id="dv_doc_prview">
+<div class="public_windows" style="width:575px;height:490px;display:none"   id="dv_doc_prview">
     <h3 style="float:right;"><a href="javascript:;" onclick="document.getElementById('fade').style.display='none';dv_doc_prview.style.display='none';"  title="关闭"></a></h3>
     <div class="zyxt_float_fxzy public_input" id="dv_show_doc_view">
 

@@ -33,8 +33,24 @@ public class TpCourseResource implements Serializable {
     private String courseids;//查询多个专题下资源用的
     private Long taskCourseid;//在这个专题下是否发过任务
     private Object haspaper;//是否有关联试卷
+    private Object voteflag; //是否赞
+    private Integer voteuid;
 
+    public Object getVoteflag() {
+        return voteflag;
+    }
 
+    public void setVoteflag(Object voteflag) {
+        this.voteflag = voteflag;
+    }
+
+    public Integer getVoteuid() {
+        return voteuid;
+    }
+
+    public void setVoteuid(Integer voteuid) {
+        this.voteuid = voteuid;
+    }
 
     public Object getHaspaper() {
         return haspaper;

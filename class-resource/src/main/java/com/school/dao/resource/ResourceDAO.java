@@ -958,6 +958,11 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
             sqlbuilder.append("null,");
         sqlbuilder.append("?,");
         objList.add(resourceinfo.getDcschoolid());
+        if(resourceinfo.getVoteuid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getVoteuid());
+        } else
+            sqlbuilder.append("null,");
         if (presult != null && presult.getPageNo() > 0
                 && presult.getPageSize() > 0) {
             sqlbuilder.append("?,?,");
