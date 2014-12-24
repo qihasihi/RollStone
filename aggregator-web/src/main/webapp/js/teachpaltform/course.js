@@ -89,6 +89,8 @@ function changgeAllStartTime(itm){
     var newTime = new Date(starttime.getTime() + sevenDayMiller);
     var sNewTime = ChangeTimeToString(newTime);
     sNewTime = sNewTime+" "+stime.split(" ")[1];
+    if(!validateTwoDate(sNewTime,termendtime))
+        sNewTime=termendtime;
    // if(endtype==0){
         $("#all_classEndTime").val(sNewTime);
    // }else{

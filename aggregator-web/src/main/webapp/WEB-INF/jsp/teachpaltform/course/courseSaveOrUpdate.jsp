@@ -14,6 +14,7 @@
 <script type="text/javascript">
     var materialid="${materialid}";
     var selectedCourseids='';
+    var termendtime='${term.semesterenddatestring}';
     $(function(){
         inputThinking();
         $("#material_id").val(materialid);
@@ -127,7 +128,7 @@
                         <input id="classtimeType" name="classtimeType" type="radio" value="1" checked="true" />不一致</p>
                     <div id="all_ct">
                         <p><span>全部班级:</span><input onchange="changgeAllStartTime(this)"  class="w140" placeholder="设置开始时间"
-                                                    onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'all_classEndTime\',{H:-1})}',minDate:'%y-%M-{%d+0}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" id="all_classtime"  name="all_classtime" type="text" /></p>
+                                                    onfocus="WdatePicker({maxDate:'${term.semesterenddatestring}',minDate:'%y-%M-{%d+0}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" id="all_classtime"  name="all_classtime" type="text" /></p>
                     </div>
                     <div id="list_ct" style="display:none">
                         <c:forEach var="cl" items="${ cuList}">
@@ -162,12 +163,12 @@
                     <p><input id="classEndTimeType0" name="classEndTimeType" type="radio" value="0"/>所有班级一致&nbsp;&nbsp;
                         <input id="classEndTimeType1" name="classEndTimeType" type="radio" value="1" checked="true" />不一致</p>
                     <div id="all_ct_end">
-                        <p><span>全部班级:</span><input class="w140" placeholder="设置结束时间" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'all_classtime\',{H:1})}',maxDate:'${term.semesterenddatestring}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" id="all_classEndTime"  name="all_classEndTime" type="text" /></p>
+                        <p><span>全部班级:</span><input class="w140" placeholder="设置结束时间" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'all_classtime\',{H:-1})}',maxDate:'${term.semesterenddatestring}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" id="all_classEndTime"  name="all_classEndTime" type="text" /></p>
                     </div>
                     <div id="list_ct_end" style="display:none">
                         <c:forEach var="cl" items="${ cuList}">
                             <p id="p_end_${cl.classid}"  style="display:none"><span>${cl.classname}:</span>&nbsp;
-                                <input class="public_input w220" placeholder="设置结束时间" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'${cl.classid}_classtime\',{H:1})}',maxDate:'${term.semesterenddatestring}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="${cl.classid}_classEndTime"  name="classEndTime" type="text" /></p>
+                                <input class="public_input w220" placeholder="设置结束时间" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'${cl.classid}_classtime\',{H:-1})}',maxDate:'${term.semesterenddatestring}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="${cl.classid}_classEndTime"  name="classEndTime" type="text" /></p>
                         </c:forEach>
                         <c:forEach var="ts" items="${ tsList}">
                             <c:if test="${ts.CLASS_TYPE==1}">
