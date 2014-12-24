@@ -1044,7 +1044,8 @@ public class UserController extends BaseController<UserInfo> {
                         userinfo = null;
                     }
                     je.setMsg(UtilTool.msgproperty.getProperty("USER_LOGIN_PASSWORD_ERROR"));
-                }
+                }else
+                    userinfo=tmpU;
                 if (userinfo != null) {
                     if (userinfo.getPassword().trim().equals("201212181540")
                             && request.getSession()
