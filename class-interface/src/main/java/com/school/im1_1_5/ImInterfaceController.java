@@ -6,6 +6,7 @@ import com.school.entity.UserInfo;
 import com.school.im1_1.entity._interface.ImInterfaceInfo;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -569,5 +572,156 @@ public class ImInterfaceController extends BaseController {
         m.put("data",m2);
         JSONObject object = JSONObject.fromObject(m);
         response.getWriter().print(object.toString());
+    }
+}
+
+/**
+ * 工具类
+ */
+class ImUtilTool{
+    /**
+     * 验证RequestParams相关参数
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public static Boolean ValidateRequestParam(HttpServletRequest request) throws Exception{
+        Enumeration eObj=request.getParameterNames();
+        boolean returnBo=true;
+        if(eObj!=null){
+            while(eObj.hasMoreElements()){
+                Object obj=eObj.nextElement();
+                if(obj==null||obj.toString().trim().length()<1||request.getQueryString().toString().equals(obj))
+                    continue;
+
+                Object val=request.getParameter(obj.toString());
+                if(val==null||val.toString().trim().length()<1){
+                    returnBo=!returnBo;
+                    break;
+                }
+            }
+        }
+
+        return returnBo;
+    }
+    /**
+     * 验证RequestParams相关参数
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public static HashMap<String,String> getRequestParam(HttpServletRequest request) throws Exception{
+        Enumeration eObj=request.getParameterNames();
+        HashMap<String,String> returnMap=null;
+        if(eObj!=null){
+            returnMap=new HashMap<String, String>();
+            while(eObj.hasMoreElements()){
+                Object obj=eObj.nextElement();
+                if(obj==null||obj.toString().trim().length()<1||obj.toString().trim().equals("m")||obj.toString().equals(request.getQueryString()))
+                    continue;
+                Object val=request.getParameter(obj.toString());
+                returnMap.put(obj.toString(),val.toString());
+            }
+        }
+        return returnMap;
+    }
+
+    /**
+     * 转换usertype
+     * @param usertype 1:学生  2：老师  3：家长
+     * return usertype
+     * */
+    public static Integer getUserType(String usertype){
+        if(usertype==null||usertype.length()<1){
+            return 0;
+        }
+        int type = 0;
+        if(usertype.equals("1")||usertype.equals("2")){
+            type=2;
+        }else if(usertype.equals("3")||usertype.equals("4")){
+            type=1;
+        }else if(usertype.equals("6")){
+            type=3;
+        }
+        return type;
+    }
+
+    public static JSONArray getEttPhoneAndRealNmae(String jidstr,String schoolid,String userid) throws UnsupportedEncodingException {
+        String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
+        System.out.println("ettip------------------------------"+ettip);
+        String url=ettip+"queryPhotoAndRealName.do";
+        //String url = "http://wangjie.etiantian.com:8080/queryPhotoAndRealName.do";
+        HashMap<String,String> signMap = new HashMap();
+        signMap.put("userList",jidstr);
+        signMap.put("schoolId",schoolid);
+        signMap.put("srcJid",userid);
+        signMap.put("userType","3");
+        signMap.put("timestamp",""+System.currentTimeMillis());
+        String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
+        signMap.put("sign",signture);
+        JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+        System.out.println("jsonObject---------------"+jsonObject);
+        int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+        if(type==1){
+            Object obj = jsonObject.containsKey("data")?jsonObject.get("data"):null;
+            obj = URLDecoder.decode(obj.toString(), "utf-8");
+            JSONArray jr = JSONArray.fromObject(obj);
+            if(jr!=null)
+                return jr;
+            else
+                return null;
+        }else{
+            return null;
+        }
+    }
+
+    public static void main(String[] args){
+        String leftime = ImUtilTool.getTaskOvertime("705780");
+        System.out.println(leftime+"=========================");
+    }
+
+    public static String getTaskOvertime(String tasktime){
+        String leftTime = "";
+        int time =Integer.parseInt(tasktime);
+        int days = 0;
+        int hours =0;
+        int mins = 0;
+        int seconds = 0;
+        if(time>0){
+            seconds = time%60;
+            if(seconds>0||time>=60){
+                mins = time/60;
+            }else{
+                seconds = seconds*60;
+            }
+            if(mins>0){
+                hours = mins/60;
+            }
+            if(hours>0){
+                days= hours/24;
+            }
+
+            if(days>0){
+                leftTime=days+"天";
+            }else{
+                if(hours>0){
+                    leftTime=hours+"小时";
+                }else{
+                    if(mins>0){
+                        leftTime=mins+"分钟";
+                    }else{
+                        if(seconds>0){
+                            leftTime=seconds+"秒";
+                        }
+                    }
+                }
+            }
+            if(leftTime.indexOf("天")==-1&&leftTime.indexOf("小时")==-1&&leftTime.indexOf("分钟")==-1&&leftTime.indexOf("秒")==-1){
+                System.out.println("***********************************************************************************************");
+                System.out.println("班级任务结束时间出错啦------------------------------------------------------------------------"+leftTime+"*******"+time);
+                System.out.println("***********************************************************************************************");
+            }
+        }
+        return leftTime;
     }
 }
