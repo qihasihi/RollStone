@@ -401,7 +401,7 @@ function xround(x, num){
             &nbsp;&nbsp;总分值：<span class="font-blue"><span id="total<%=random%>_score">${!empty paper.score?paper.score:0}</span>&nbsp;分</span></strong></span>
     </c:if>
     <strong>${paper.papername}</strong></p>
-    <div class="jxxt_float_h600" id="dv_paperdetail<%=random%>" style="height:550px">
+    <div class="jxxt_float_h600" id="dv_paperdetail<%=random%>" style="height:530px">
 
     <div class="jxxt_zhuanti_rw_ceshi">
         <p class="jxxt_zhuanti_rw_ceshi_an"><a href="javascript:;" onclick="next<%=random%>(-1)" id="a_free<%=random%>" class="an_test1">上一题</a><a  href="javascript:;" onclick="next<%=random%>(1)" id="a_next<%=random%><%=random%>" class="an_test1">下一题</a></p>
@@ -409,7 +409,7 @@ function xround(x, num){
         </ul>
         <div class="clear"></div>
     </div>
-    <div id="dv_table<%=random%>" style="width:950px;height:400px;overflow-y:auto;overflow-x: hidden;color:black">
+    <div id="dv_table<%=random%>" style="width:950px;height:395px;overflow-y:auto;overflow-x: hidden;color:black">
         <c:if test="${!empty pqList}">
             <c:forEach items="${pqList}" var="pq" varStatus="pqIdx">
                 <c:set var="teamSize" value="${fn:length(pq.questionTeam)}"/>

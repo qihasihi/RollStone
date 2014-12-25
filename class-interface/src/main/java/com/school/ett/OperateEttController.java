@@ -15,11 +15,13 @@ import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -459,6 +461,186 @@ public class OperateEttController extends BaseController<String>{
     public void checkEttUserName(HttpServletRequest request,HttpServletResponse response) throws Exception{
         response.getWriter().println(OperateEttControllerUtil.ettColumnCheckUName(request, this.validateRole(request, UtilTool._ROLE_STU_ID)).toJSON());
     }
+
+
+
+    /**
+     * ETT 检查用户名是否存在
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=checkUserName.do")
+    @Transactional
+    public void checkUserName(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JSONObject jsonObj=new JSONObject();
+        if(!OperateEttControllerUtil.ValidateRequestParam(request)){
+            jsonObj.put("msg", UtilTool.ecode("参数数据有空值!"));
+            jsonObj.put("result",0);
+            response.getWriter().print(jsonObj.toString());return;
+        }
+        HashMap<String,String>paramMap=OperateEttControllerUtil.getRequestParam(request);
+        String userName=paramMap.get("userName");
+        String jid=paramMap.get("jid");
+        String sign=paramMap.get("sign");
+        String time=paramMap.get("timestamp");
+        if(userName==null||jid==null||sign==null||time==null){
+            jsonObj.put("msg",UtilTool.ecode("参数不全!"));
+            jsonObj.put("result", 0);
+            response.getWriter().print(jsonObj.toString());return;
+        }
+        userName= URLDecoder.decode(userName, "utf-8");
+        paramMap.remove("sign");
+        if(!UrlSigUtil.verifySigSimple("checkUserName.do",paramMap,sign)){
+            jsonObj.put("msg",UtilTool.ecode("参数验证失败!"));
+            jsonObj.put("result", 0);
+            response.getWriter().print(jsonObj.toString());return;
+        }
+
+        //验证用户唯一性
+        List<UserInfo>userList=null;
+        UserInfo u=new UserInfo();
+        u.setEttuserid(Integer.parseInt(jid));
+        userList=this.userManager.getList(u,null);
+        if(userList==null||userList.size()<1){
+            jsonObj.put("msg",UtilTool.ecode("用户不存在!"));
+            jsonObj.put("result", 0);
+            response.getWriter().print(jsonObj.toString());return;
+        }
+        UserInfo before=userList.get(0);
+
+        u=new UserInfo();
+        //u.setDcschoolid(userList.get(0).getDcschoolid());
+        u.setUsername(userName);
+        userList=this.userManager.getList(u,null);
+        if(userList!=null&&userList.size()>1){
+            jsonObj.put("msg",UtilTool.ecode("用户名已存在!"));
+            jsonObj.put("result", 0);
+            response.getWriter().print(jsonObj.toString());return;
+
+        }else if(userList!=null&&userList.size()==1){
+            UserInfo after=userList.get(0);
+            if(after.getEttuserid()==null||!after.getEttuserid().toString().equals(before.getEttuserid().toString())){
+                jsonObj.put("msg",UtilTool.ecode("用户名已存在!"));
+                jsonObj.put("result", 0);
+                response.getWriter().print(jsonObj.toString());return;
+            }
+        }
+        jsonObj.put("result",1);
+        jsonObj.put("msg", "success!");
+        response.getWriter().print(jsonObj.toString());
+    }
+
+    /**
+     * ETT 修改用户信息
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=updateUser.do")
+    @Transactional
+    public void updateEttUser(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JSONObject jsonObj=new JSONObject();
+        if(!OperateEttControllerUtil.ValidateRequestParam(request)){
+            jsonObj.put("msg", UtilTool.ecode("参数错误!"));
+            jsonObj.put("result",0);
+            response.getWriter().print(jsonObj.toString());return;
+        }
+        HashMap<String,String>paramMap=OperateEttControllerUtil.getRequestParam(request);
+        String dcSchoolId=paramMap.get("dcSchoolId");
+        String jid=paramMap.get("jid");
+        String userName=paramMap.get("userName");
+        String password=paramMap.get("password");
+        String email=paramMap.get("email");
+        String identity=paramMap.get("identity");
+        String sign=paramMap.get("sign");
+        String time=paramMap.get("timestamp");
+        if(userName==null||password==null||sign==null||time==null||dcSchoolId==null||jid==null||identity==null||email==null){
+            jsonObj.put("msg",UtilTool.ecode("参数错误!"));
+            jsonObj.put("result", 0);
+            response.getWriter().print(jsonObj.toString());return;
+        }
+        userName=URLDecoder.decode(userName,"utf-8");
+        if(!UtilTool.matchingText("^\\s*\\w+(?:\\.{0,1}[\\w-]+)*@[a-zA-Z0-9]+(?:[-.][a-zA-Z0-9]+)*\\.[a-zA-Z]+\\s*$",email)){
+            jsonObj.put("msg",UtilTool.ecode("邮箱格式不正确!"));
+            jsonObj.put("result", 0);
+            response.getWriter().print(jsonObj.toString());return;
+        }
+        List<UserInfo>userList=null;
+        UserInfo sel=new UserInfo();
+        sel.setEttuserid(Integer.parseInt(jid));
+        userList=this.userManager.getList(sel,null);
+        if(userList==null||userList.size()<1){
+            jsonObj.put("msg",UtilTool.ecode("用户不存在!"));
+            jsonObj.put("result", 0);
+            response.getWriter().print(jsonObj.toString());return;
+        }
+        sel=userList.get(0);
+        //验证参数格式
+        //验证用户邮箱唯一性
+
+        UserInfo u=new UserInfo();
+        u.setUsername(userName);
+        // u.setDcschoolid(Integer.parseInt(dcSchoolId));
+        userList=this.userManager.getList(u,null);
+        if(userList!=null&&userList.size()>1){
+            jsonObj.put("msg",UtilTool.ecode("用户名已存在!"));
+            jsonObj.put("result", 0);
+            response.getWriter().print(jsonObj.toString());return;
+        }else  if(userList!=null&&userList.size()==1){
+            UserInfo after=userList.get(0);
+            if(after.getEttuserid()==null||!after.getEttuserid().toString().equals(sel.getEttuserid().toString())){
+                jsonObj.put("msg",UtilTool.ecode("用户名已存在!"));
+                jsonObj.put("result", 0);
+                response.getWriter().print(jsonObj.toString());return;
+            }
+        }
+        u=new UserInfo();
+        u.setMailaddress(email);
+        if(userList!=null&&userList.size()>1){
+            jsonObj.put("msg",UtilTool.ecode("邮箱已存在!"));
+            jsonObj.put("result", 0);
+            response.getWriter().print(jsonObj.toString());return;
+        }else if(userList!=null&&userList.size()==1){
+            UserInfo after=userList.get(0);
+            if(after.getEttuserid()==null||!after.getEttuserid().toString().equals(sel.getEttuserid().toString())){
+                jsonObj.put("msg",UtilTool.ecode("邮箱已存在!"));
+                jsonObj.put("result", 0);
+                response.getWriter().print(jsonObj.toString());return;
+            }
+        }
+
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+
+
+        u.setPassword(password);
+        u.setUsername(userName);
+        u.setEttuserid(Integer.parseInt(jid));
+        u.setDcschoolid(Integer.parseInt(dcSchoolId));
+        u.setMailaddress(email);
+        u.setRef(sel.getRef());
+        sql = new StringBuilder();
+        objList = this.userManager.getUpdateSql(u, sql);
+        if (objList != null && sql != null) {
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+        }
+
+        if(sqlListArray.size()>0&&objListArray.size()>0){
+            if(!this.userManager.doExcetueArrayNoTranProc(sqlListArray, objListArray)){
+                jsonObj.put("result",0);
+                jsonObj.put("msg", UtilTool.ecode("操作失败!"));
+                response.getWriter().print(jsonObj.toString());return;
+            }
+        }
+        jsonObj.put("result",1);
+        jsonObj.put("msg",UtilTool.ecode("操作成功!"));
+        response.getWriter().print(jsonObj.toString());
+    }
+
 
 
     /**

@@ -9,7 +9,11 @@
 		<title>${sessionScope.CURRENT_TITLE}</title>
 	<style>
 </style>
-
+        <script type="text/javascript"
+                src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+        <script type="text/javascript"
+                src="fancybox/jquery.fancybox-1.3.4.js"></script>
+        <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
 		<script type="text/javascript">
 		var courseid="${courseid}";
 		var termid="${termid}";  
@@ -17,8 +21,14 @@
         var usertype=2;
 		var pList,p2,editor,child_editor;
         var tpresdetailid="${param.tpresdetailid}";
+        var fancyPaper;
 		$(function(){
             load_resource(1,1,true);
+            fancyPaper=$("#aa_click").fancybox({
+                'onClosed':function(){
+                    $("#dv_paper_content").hide();
+                }
+            });
 		});
 
 
@@ -118,7 +128,10 @@
             $("#sp_download").html('<a class="ico59" title="下载" href="javascript:resourceDownLoadFile(\'' + resid + '\',\'' + fname + '\',1)"></a>');
             //资源详情
             load_resdetail(resid);
-            loadRelatePaper(resid);
+            if(fname.indexOf('.mp4')!=-1)
+                loadRelatePaper(resid);
+            else
+                $("#relate_paper").html('');
 
         }
 
@@ -322,6 +335,7 @@
         function loadRelatePaper(resid){
             if(isNaN(resid))
                 return;
+
             $.ajax({
                 url:'paperques?m=loadRelatePaper',
                 type:'POST',
@@ -329,17 +343,48 @@
                 dataType:'json',
                 error:function(){alert("网络异常")},
                 success:function(rps){
+                    $("#relate_paper").html('');
                     if(rps.type=="error"){
                         alert(rps.msg);
                     }else{
                         var h='';
-                        if(rps.objList[0]!=null)
-                            h+='<a class="font-blue" href="paper?toPreviewPaper&mic=1&courseid='+courseid+'&paperid='+rps.objList[0].paperid+'"><span class="ico83"></span>关联试卷</a>';
+                        if(rps.objList.length>0){
+                            var status=rps.objList[0].status;
+                            var papername=rps.objList[0].papername.length>8?rps.objList[0].papername.substring(0,8)+'...':rps.objList[0].papername;
+                            h='<a class="font-blue" href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true,true)"><span class="ico83"></span>关联试卷</a>';
+                        }
                         $("#relate_paper").html(h);
                     }
                 }
             });
         }
+
+
+
+        function loadEditPaperRes(cid,pid,isshow,isview,ismic){
+            if(typeof(cid)=="undefined"||typeof(pid)=="undefined"||cid==null||pid==null){
+                alert('异常错误，请刷新重试!');
+                return;
+            }
+            var u="paper?m=editPaperQuestionModel&courseid="+cid+"&paperid="+pid;
+            if(isview)
+                u+='&editQues=0';
+            if(ismic)
+                u="paper?toPreviewPaperModel&courseid="+cid+"&paperid="+pid+"&mic=1";
+            $("#dv_paper_content #dv_paper_content_child").load(u,function(){
+                $("#dv_paper_content .float_title").html("查看试卷");
+                //关闭相关层
+                closeModel('dv_paper_name');
+                $("#dv_paper_content>div").hide();
+                $("#dv_paper_content #a_sb_taskpaper").parent().remove();
+                $("#dv_paper_content").show();
+                $("#dv_paper_content #dv_paper_content_child").fadeIn("fast");
+                if(typeof(isshow)!="undefined"&&isshow==1)
+                    $("#aa_click").click();
+            });
+        }
+
+
 
         </script>
 	</head>
@@ -405,4 +450,25 @@
 
             </div>
         </div>
+
+
+
+
+    <a id="a_click" href="#dv_content"></a>
+    <div id="dv_content"  style="display: none;"></div>
+
+    <a id="aa_click" href="#dv_paper_content"></a>
+    <div id="dv_paper_content"  style="display: none;" class="public_float public_float960">
+        <div id="dv_paper_content_child" style="display:none">
+
+        </div>
+
+        <%--试卷三级目录--%>
+        <div class="public_float public_float960" id="dv_paper_model" style="display:none">
+            <div class="public_float public_float960"  id="dv_paper_model_child">
+
+            </div>
+        </div>
+
+    </div>
 </html>

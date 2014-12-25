@@ -297,6 +297,31 @@ public class EttInterfaceUserUtil {
         return false;
 
     }
+
+    public static boolean ModifyUser(UserInfo u,String identity){
+        if(u==null||identity==null)
+            return false;
+        String ettUrl=UtilTool.utilproperty.get("ETT_INTER_IP").toString()+"modifyUser.do";
+        //String ettUrl="http://192.168.10.59/study-im-service-1.0/modifyUser.do";
+        if(ettUrl==null)return false;
+        HashMap<String,String> tmpMap=new HashMap<String, String>();
+        tmpMap.put("timestamp",new Date().getTime()+"");
+        tmpMap.put("dcSchoolId",u.getDcschoolid().toString());
+        tmpMap.put("jid",u.getEttuserid().toString());
+        tmpMap.put("dcUserId",u.getUserid().toString());
+        tmpMap.put("userName",u.getUsername());
+        tmpMap.put("password",u.getPassword());
+        tmpMap.put("email",u.getMailaddress());
+        tmpMap.put("identity",identity);
+        String sign=UrlSigUtil.makeSigSimple("modifyUser.do",tmpMap);
+        tmpMap.put("sign",sign);
+        JSONObject jo=UtilTool.sendPostUrl(ettUrl,tmpMap,"UTF-8");
+        System.out.println(UtilTool.decode(jo.get("msg").toString()));
+        if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1")){
+            return true;
+        }
+        return false;
+    }
     //main·½·¨
     public static void main(String[] args){
 

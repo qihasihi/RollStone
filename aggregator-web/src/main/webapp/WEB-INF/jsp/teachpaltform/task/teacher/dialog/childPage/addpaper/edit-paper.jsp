@@ -78,16 +78,17 @@ function loadPaperQues(){
 
     $("#paper_detail").hide();
     $("#paper_detail").load(url
-            ,function(rps){
+            ,function(){
                 // $("dv_load_topic").html(rps);
 //                        $(".content1:last").removeClass("content1");
 //                        $(".subpage_head:last").remove();
 //                        $(".foot:last").remove();
 //                        $("#fade:last").remove();
+
                 $("#paper_detail .float_title").remove();
                 $("#paper_detail #dv_paperdetail").removeClass("jxxt_float_h600");
                 $(".an_small").removeClass("an_small").addClass("an_public1");
-                if($("#dv_table>table").length<1){
+                if($('div').filter(function(){return this.id.indexOf('dv_table')!=-1}).length<1){
                     $("#a_sb_taskpaper").hide();
                 }else
                     $("#a_sb_taskpaper").show();

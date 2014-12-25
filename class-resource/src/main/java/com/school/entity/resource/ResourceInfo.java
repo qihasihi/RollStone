@@ -566,6 +566,17 @@ public class ResourceInfo implements java.io.Serializable {
             return this.getResname().substring(0,13)+"...";
         return this.getResname();
     }
+
+    public String getSwfpath(){
+        if(this.getResid()==null||this.getFilesuffixname()==null)
+            return "";
+        //String file=UtilTool.gender_MD5(this.getFilename().replaceAll("'"," ").replaceAll(","," ").trim());
+        String file="001";
+        // return UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"uploadfile/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
+
+        return UtilTool.getResourceLocation(this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
+    }
+
     /**
      * 得到文件夹名称
      * @return
