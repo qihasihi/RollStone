@@ -42,7 +42,6 @@
 
 
 <div class="content2">
-
     <div class="jxxt_zhuanti_zy_layout">
         <div class="jxxt_zhuanti_zy_layoutR">
             <div id="dv_obj"></div>

@@ -1,6 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
-<html>
+
 <head>
     <script type="text/javascript"
     src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
@@ -65,8 +65,8 @@
 
 
 <div class="content2">
-    <div class="jxxt_zhuanti_zy_layout">　　　
-        <div class="jxxt_zhuanti_zy_layoutR" >　
+    <div class="jxxt_zhuanti_zy_layout">
+        <div class="jxxt_zhuanti_zy_layoutR">
             <div id="dv_obj"></div>
             <div id="dv_init">
                 <h2 id="relate_paper"><!--<a href="1" class="font-blue"><span class="ico83"></span>关联试卷</a>--></h2>
@@ -101,9 +101,7 @@
                     <div class="fabiao" id="div_xheditor">
 
                     </div>
-                    <div id="div_comment_htm">
-
-                    </div>
+                    <div id="div_comment_htm"></div>
 
                     <form id="pListForm" name="pListForm">
                         <p class="Mt20" id="pListaddress" name="pListaddress" align="center"></p>
@@ -111,8 +109,6 @@
                 </div>
             </div>
         </div>
-
-
         <div class="jxxt_zhuanti_zy_layoutL">
             <p class="t_c p_b_10"><a  href="javascript:showUploadDiv(2)" class="an_big">添加资源</a><a href="javascript:loadCheckPage()" class="an_big">审核资源</a></p>
             <%--<p class="f_right"><a href="tpres?m=toRecycleIdx&type=2&courseid=${courseid}"  class="ico15" title="回收站"></a></p>--%>
@@ -120,15 +116,10 @@
                 <li class="crumb" id="li_nav_1"><a  onclick="load_resource(1,1)">学习资源</a></li>
                 <li id="li_nav_2"><a onclick="load_resource(2,1)">教学参考</a></li>
             </ul>
-            <ul class="two" id="ul_resource" >
-
-            </ul>
-            <div class="nextpage" id="p_xnrj_page">
-
-            </div>
+            <ul class="two" id="ul_resource" ></ul>
+            <div class="nextpage" id="p_xnrj_page"></div>
         </div>
         <div class="clear"></div>
-
     </div>
 </div>
 
