@@ -230,7 +230,7 @@ public class SystemManagerController extends BaseController<TermInfo>{
 			File oldfile = new File(newnamerealpath);
 			if (oldfile.exists()) { 				//文件存在时                
 				InputStream inStream = new FileInputStream(newnamerealpath); 				//读入原文件                
-				FileOutputStream fs = new FileOutputStream(request.getRealPath("/")+"images/logo"+this.logined(request).getDcschoolid()+lastname);
+				FileOutputStream fs = new FileOutputStream(UtilTool.utilproperty.get("RESOURCE_SERVER_PATH")+"/imagesSchoolLogo/logo"+this.logined(request).getDcschoolid()+lastname);
 				byte[] buffer = new byte[1444];                
 				int length;                
 				while ( (byteread = inStream.read(buffer)) != -1) {                    
@@ -241,7 +241,7 @@ public class SystemManagerController extends BaseController<TermInfo>{
                 //插入数据库
                 SchoolLogoInfo schoolLogoInfo = new SchoolLogoInfo();
                 schoolLogoInfo.setSchoolid(this.logined(request).getDcschoolid());
-                schoolLogoInfo.setLogosrc("images/logo"+this.logined(request).getDcschoolid()+lastname);
+                schoolLogoInfo.setLogosrc("imagesSchoolLogo/logo"+this.logined(request).getDcschoolid()+lastname);
                 //首先删除旧的logo
                 this.schoolLogoManager.doDelete(schoolLogoInfo);
                 this.schoolLogoManager.doSave(schoolLogoInfo);
@@ -252,22 +252,24 @@ public class SystemManagerController extends BaseController<TermInfo>{
                 }
 			}
 		}        
-		catch (Exception e) {            
+		catch (Exception e) {
+            je.setType("error");
+            je.setMsg("找不到系统路径"+UtilTool.utilproperty.get("RESOURCE_SERVER_PATH")+"/imagesSchoolLogo");
 			System.out.println("复制单个文件操作出错");            
 			e.printStackTrace();        
 		}
-		if (true) {
-			je.getObjList().add(newname);
-			je.setType("success");
-			WriteProperties.writeProperties(request.getRealPath("/")
-					+ "/WEB-INF/classes/properties/util.properties",
-					"LOGO_SRC", "logo"+lastname.toLowerCase());
-			UtilTool.utilproperty.setProperty("LOGO_SRC",
-					"logo"+lastname.toLowerCase());
-		} else {
-			je.getObjList().add(newname);
-			je.setType("error");
-		}
+//		if (true) {
+//			je.getObjList().add(newname);
+//			je.setType("success");
+//			WriteProperties.writeProperties(request.getRealPath("/")
+//					+ "/WEB-INF/classes/properties/util.properties",
+//					"LOGO_SRC", "logo"+lastname.toLowerCase());
+//			UtilTool.utilproperty.setProperty("LOGO_SRC",
+//					"logo"+lastname.toLowerCase());
+//		} else {
+//			je.getObjList().add(newname);
+//			je.setType("error");
+//		}
 		response.getWriter().print(je.toJSON());
 	}
 }
