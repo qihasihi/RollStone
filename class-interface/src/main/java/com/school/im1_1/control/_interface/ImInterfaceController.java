@@ -5235,7 +5235,9 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             returnJo.put("data",m);
             returnJo.put("result","1");
         }else{
-            returnJo.put("data",null);
+            Map m = new HashMap();
+            returnJo.put("msg","当前任务没有未完成学生");
+            returnJo.put("data",m);
         }
         response.getWriter().print(returnJo.toString());
     }
