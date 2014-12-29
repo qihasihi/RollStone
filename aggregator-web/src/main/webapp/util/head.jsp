@@ -35,7 +35,7 @@
 
     String logosrc = null;
     if(logoObj!=null){
-        logosrc=logoObj.getLogosrc();
+        logosrc=UtilTool.utilproperty.get("RESOURCE_FILE_PATH_HEAD")+"/"+logoObj.getLogosrc();
     }
 
 

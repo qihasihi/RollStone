@@ -20,7 +20,7 @@
     <a href="testGetClassStatics.jsp">获取班级统计</a><br>
     <a href="testGetPaperQuestion.jsp">获取试卷试题</a><br>
     <a href="testGetUnCompleteStu.jsp">获取未完成任务学生</a><br>
-    <a href="testImSaveUserScore.jsp">添加积分道具</a><br>
+   <a href="testImSaveUserScore.jsp">添加积分道具</a><br>
     <a href="testLiveAddress.jsp">获取直播课地址</a><br>
     <a href="testPaperTest.jsp">试卷测试</a><br>
     <a href="testReplyTask.jsp">回答任务</a><br>
