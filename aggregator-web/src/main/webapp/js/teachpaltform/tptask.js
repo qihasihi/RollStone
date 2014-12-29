@@ -1167,6 +1167,7 @@ function doSubManageTask(taskid) {
              return;
          }
          param.taskname=taskname.val();
+         param.taskvalueid = 1;
     }
 
 

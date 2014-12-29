@@ -5751,6 +5751,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         //验证任务 是否存在
         TpTaskInfo tk=new TpTaskInfo();
         tk.setTaskid(Long.parseLong(taskid));
+        tk.setTasktype(10);
         PageResult presult=new PageResult();
         presult.setPageSize(1);
         List<TpTaskInfo> tpTaskList=this.tpTaskManager.getList(tk,presult);

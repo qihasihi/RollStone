@@ -341,7 +341,6 @@ public class TpUserController extends UserController {
         return null;
     }
 
-
     @RequestMapping(params = "m=doAddCls", method = {RequestMethod.POST})
     public void doAddCls(HttpServletRequest request,
                                    HttpServletResponse response) throws Exception {

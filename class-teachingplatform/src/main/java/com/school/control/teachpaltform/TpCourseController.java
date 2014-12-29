@@ -1091,7 +1091,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                     List<TpTaskInfo>taskList=this.tpTaskManager.getListbyStu(t, p);
                     if(taskList!=null&&taskList.size()>0){
                         for(TpTaskInfo tmpTask:taskList){
-                            if(tmpTask.getTaskstatus()!="3"&&tmpTask.getTaskstatus()!="1"){
+                            if(tmpTask.getTasktype()==10&&tmpTask.getTaskstatus()!="3"&&tmpTask.getTaskstatus()!="1"){
                                 String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
                                 HashMap<String,String> signMap = new HashMap();
                                 signMap.put("courseName",tmpTask.getCoursename());
@@ -2917,10 +2917,15 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
                     //Ö±²¥¿ÎÁ¬½Ó
                     if(tctmp.getIslive()!=null&&Integer.parseInt(tctmp.getIslive().toString())>0){
+                        PageResult pageResult=new PageResult();
+                        pageResult.setOrderBy("u.order_idx,u.c_time ");
                         TpTaskInfo liveTask=new TpTaskInfo();
                         liveTask.setCourseid(tctmp.getCourseid());
                         liveTask.setTasktype(10);
-                        List<TpTaskInfo>liveTaskList=this.tpTaskManager.getTaskReleaseList(liveTask,null);
+                        liveTask.setSelecttype(1);
+                        liveTask.setLoginuserid(this.logined(request).getUserid());
+                        liveTask.setStatus(1);
+                        List<TpTaskInfo>liveTaskList=this.tpTaskManager.getTaskReleaseList(liveTask,pageResult);
                         if(liveTaskList!=null&&liveTaskList.size()>0){
                             for(TpTaskInfo tmpTask:liveTaskList){
                                 if(tmpTask.getTaskstatus()!="3"&&tmpTask.getTaskstatus()!="1"){
