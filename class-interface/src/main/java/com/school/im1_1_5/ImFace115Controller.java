@@ -3,6 +3,8 @@ package com.school.im1_1_5;
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
+import com.school.entity.TeacherInfo;
+import com.school.entity.TermInfo;
 import com.school.entity.UserInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.paper.PaperInfo;
@@ -13,6 +15,7 @@ import com.school.im1_1.entity._interface.ImInterfaceInfo;
 import com.school.im1_1.manager._interface.ImInterfaceManager;
 import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.ITeacherManager;
+import com.school.manager.inter.ITermManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
@@ -75,6 +78,10 @@ public class ImFace115Controller extends BaseController {
     protected IStuPaperQuesLogsManager stuPaperQuesLogsManager;
     @Resource(name="tpStuScoreLogsManager")
     protected ITpStuScoreLogsManager tpStuScoreLogsManager;
+    @Resource(name="termManager")
+    protected ITermManager termManager;
+    @Resource(name = "tpCourseManager")
+    protected ITpCourseManager tpCourseManager;
     /**
      * 学生班级班级课表接口
      * @param request
@@ -1140,8 +1147,562 @@ public class ImFace115Controller extends BaseController {
     }
 
 
+    /**
+     * 添加专题
+     */
+    @RequestMapping(params = "m=addCourse", method = RequestMethod.POST)
+    public void doAddCourse(HttpServletRequest request,
+                            HttpServletResponse response) throws Exception {
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result","0");//默认失败
+        if(!ImFace115Util.ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> paramMap=ImFace115Util.getRequestParam(request);
+        //获取参数
+        String courseName=paramMap.get("courseName");
+        String shareType=paramMap.get("shareType");
+        String subjectId=paramMap.get("subjectId");
+        String gradeId=paramMap.get("gradeId");
+        String taskId=paramMap.get("taskId");
+        String jid=paramMap.get("jid");
+        String classId=paramMap.get("classId");
+        String schoolId=paramMap.get("schoolId");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        TermInfo termInfo=this.termManager.getMaxIdTerm(true);
+        if(taskId==null||time==null||sign==null||jid==null||classId==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //去除sign
+        paramMap.remove("sign");
+        //验证Md5
+        Boolean b = UrlSigUtil.verifySigSimple("saveUserScore",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        String classstr = request.getParameter("classidstr");
+        String classtimestr = request.getParameter("classTimeArray");
+        String classEndTimeStr = request.getParameter("classEndTimeArray");
+
+        List<String> sqlListArray = new ArrayList<String>();
+        List<List<Object>> objListArray = new ArrayList<List<Object>>();
+        List<Object> objList = null;
+        StringBuilder sql = null;
+
+        ////////////////////////// 添加专题，配置相关参数
+        TpCourseInfo tc=new TpCourseInfo();
+        Long courseid = this.tpCourseManager.getNextId(true);
+        tc.setCourseid(courseid);
+        tc.setCuserid(this.logined(request).getUserid());
+
+        TeacherInfo t = new TeacherInfo();
+        t.setUserid(this.logined(request).getRef());
+        List<TeacherInfo> tl = this.teacherManager.getList(t, null);
+        if (tl == null || tl.size() == 0) {
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg", "教师不存在!");
+            jo.put("data", "");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        tc.setTeachername(tl.get(0).getTeachername());
+
+        sql = new StringBuilder();
+        objList = this.tpCourseManager.getSaveSql(tc, sql);
+        if (sql == null || objList == null) {
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg", "添加专题失败!");
+            jo.put("data", "");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        sqlListArray.add(sql.toString());
+        objListArray.add(objList);
+
+        // 添加专题教材关联
+       /* if (tc.getMaterialidvalues() != null && tc.getMaterialidvalues().split(",").length>0) {
+            String[] materialidvalues = tc.getMaterialidvalues().split(",");
+            for (int i = 0; i < materialidvalues.length; i++) {
+                TpCourseTeachingMaterial tctm = new TpCourseTeachingMaterial();
+                tctm.setCourseid(tc.getCourseid());
+                tctm.setTeachingmaterialid(Integer.parseInt(materialidvalues[i]));
+                sql = new StringBuilder();
+                objList = this.tpCourseTeachingMaterialManager.getSaveSql(tctm, sql);
+                if (sql == null || objList == null) {
+                    je.setMsg("专题教材数据写入出错！");// 异常错误，参数不齐，无法正常访问!
+                    je.setType("error");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+
+        }else{
+            je.setMsg("获取教材参数错误，请重试！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        // 添加关联班级
+        if (classstr != null && classtimestr != null&& classEndTimeStr != null
+                && classstr.trim().length() > 0 && classtimestr.trim().length() > 0 && classEndTimeStr.trim().length() > 0
+                ) {
+            String[] classArray = classstr.split(",");
+            String[] classtimeArray = classtimestr.split(",");
+            String[] classEndtimeArray = classEndTimeStr.split(",");
+            //教学班级
+            for (int i = 0; i < classArray.length; i++) {
+                TpCourseClass cc = new TpCourseClass();
+                cc.setClassid(Integer.parseInt(classArray[i]));
+                cc.setCourseid(courseid);
+                cc.setSubjectid(Integer.parseInt(subjectid));
+                cc.setGradeid(Integer.parseInt(gradeid));
+                cc.setTermid(termid);
+                cc.setBegintime(UtilTool.StringConvertToDate(classtimeArray[i]));
+                if(!classEndtimeArray[i].toString().equals("0"))
+                    cc.setEndtime(UtilTool.StringConvertToDate(classEndtimeArray[i]));
+                cc.setClasstype(1);
+                cc.setUserid(tc.getCuserid());
+                sql = new StringBuilder();
+                objList = this.tpCourseClassManager.getSaveSql(cc, sql);
+                if (sql == null || objList == null) {
+                    je.setMsg("专题班级数据写入出错！");// 异常错误，参数不齐，无法正常访问!
+                    je.setType("error");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
 
 
+        //虚拟班级
+        if (vclassstr != null && vclasstimestr != null &&  vclassEndTimeStr != null
+                && vclassstr.trim().length() > 0 && vclasstimestr.trim().length() > 0 && vclassEndTimeStr.trim().length()>0) {
+            String[] vclassArray = vclassstr.split(",");
+            String[] vclasstimeArray = vclasstimestr.split(",");
+            String[] vclassEndtimeArray = vclassEndTimeStr.split(",");
+            for (int i = 0; i < vclassArray.length; i++) {
+                TpCourseClass cc = new TpCourseClass();
+                cc.setClassid(Integer.parseInt(vclassArray[i]));
+                cc.setCourseid(courseid);
+                cc.setSubjectid(Integer.parseInt(subjectid));
+                cc.setGradeid(Integer.parseInt(gradeid));
+                cc.setTermid(termid);
+                cc.setBegintime(UtilTool.StringConvertToDate(vclasstimeArray[i]));
+                if(!vclassEndtimeArray[i].equals("0"))
+                    cc.setEndtime(UtilTool.StringConvertToDate(vclassEndtimeArray[i]));
+                cc.setClasstype(2);
+                cc.setUserid(tc.getCuserid());
+                sql = new StringBuilder();
+                objList = this.tpCourseClassManager.getSaveSql(cc, sql);
+                if (sql == null || objList == null) {
+                    je.setMsg("专题班级数据写入出错！");// 异常错误，参数不齐，无法正常访问!
+                    je.setType("error");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+
+        //关联专题
+        String selectedCourseid=request.getParameter("selectcourseid");
+        if(selectedCourseid.length()>0){
+            String[] courseids = selectedCourseid.split("\\|");
+            int length = courseids.length;
+            for(int i = 0;i<length;i++){
+                TpCourseRelatedInfo obj = new TpCourseRelatedInfo();
+                obj.setCourseid(courseid);
+                obj.setRelatedcourseid(Long.parseLong(courseids[i]));
+                sql = new StringBuilder();
+                objList = this.tpCourseRelatedManager.getSaveSql(obj, sql);
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+        if (sqlListArray.size() > 0 && objListArray.size() > 0) {
+            boolean bo = this.tpCourseManager.doExcetueArrayProc(
+                    sqlListArray, objListArray);
+            if (bo) {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+            } else {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        } else {
+            je.setMsg(UtilTool.msgproperty
+                    .getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
+        }
+        response.getWriter().print(je.toJSON());
+        */
+    }
+
+    /**
+     * 修改专题
+     * @param request
+     * @param response
+     * @return
+
+    @RequestMapping(params = "m=updateCourse", method = RequestMethod.POST)
+    public void doUpdateCourse(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        if (tc.getCourseid() == null) {
+            je.setMsg("专题编号错误！！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if (tc.getCoursename() == null || tc.getCoursename().length() < 1) {
+            je.setMsg("没有专题名称参数！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+//        if (tc.getMaterialidvalues() == null || tc.getMaterialidvalues().trim().length() < 1) {
+//            je.setMsg("没有专题教材编号参数！");// 异常错误，参数不齐，无法正常访问!
+//            je.setType("error");
+//            response.getWriter().print(je.toJSON());
+//            return;
+//        }
+        if (tc.getSharetype() == null || tc.getSharetype() < 1) {
+            je.setMsg("没有获得分享类型参数！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String subjectid = request.getParameter("subjectid");
+        if (subjectid == null || subjectid.length() < 1) {
+            je.setMsg("没有获取学科参数！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String gradeid = request.getParameter("gradeid");
+        if (gradeid == null || gradeid.length() < 1) {
+            je.setMsg("没有获取年级参数！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String termid = request.getParameter("termid");
+        if (termid == null || termid.length() < 1) {
+            je.setMsg("没有获取学期参数！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String classstr = request.getParameter("classidstr");
+        String vclassstr = request.getParameter("vclassidstr");
+        if (classstr == null && vclassstr == null) {
+            je.setMsg("没有获取关联班级参数！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if (classstr.trim().length() < 1 && vclassstr.trim().length() < 1) {
+            je.setMsg("没有获取关联班级参数！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String classtimestr = request.getParameter("classTimeArray");
+        String vclasstimestr = request.getParameter("vclassTimeArray");
+        if (classtimestr == null && vclasstimestr == null) {
+            je.setMsg("没有获取关联班级开课时间参数！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if (classtimestr.trim().length() == 0 && vclasstimestr.trim().length() == 0) {
+            je.setMsg("没有获取关联班级开课时间参数！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        String classEndTimeStr = request.getParameter("classEndTimeArray");
+        String vclassEndTimeStr = request.getParameter("vclassEndTimeArray");
+
+
+        List<String> sqlListArray = new ArrayList<String>();
+        List<List<Object>> objListArray = new ArrayList<List<Object>>();
+        List<Object> objList = null;
+        StringBuilder sql = null;
+
+        ////////////////////////// 添加专题，配置相关参数
+        tc.setCuserid(this.logined(request).getUserid());
+        TeacherInfo t = new TeacherInfo();
+        t.setUserid(this.logined(request).getRef());
+        List<TeacherInfo> tl = this.teacherManager.getList(t, null);
+        if (tl == null || tl.size() == 0) {
+            je.setMsg("教师信息获取失败，请确认身份或者联系管理员！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpCourseInfo tcSel=new TpCourseInfo();
+        tcSel.setCourseid(tc.getCourseid());
+        List<TpCourseInfo> tpCourseInfos=this.tpCourseManager.getList(tcSel,null);
+        if(tpCourseInfos==null||tpCourseInfos.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        //沿用专题等级
+        tc.setCourselevel(tpCourseInfos.get(0).getCourselevel());
+        tc.setTeachername(tl.get(0).getTeachername());
+        sql = new StringBuilder();
+        objList = this.tpCourseManager.getUpdateSql(tc, sql);
+        if (sql == null || objList == null) {
+            je.setMsg("专题数据写入出错！");// 异常错误，参数不齐，无法正常访问!
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        sqlListArray.add(sql.toString());
+        objListArray.add(objList);
+
+
+//        // 删除旧的专题教材关联记录
+//        TpCourseTeachingMaterial tctm = new TpCourseTeachingMaterial();
+//        tctm.setCourseid(tc.getCourseid());
+//        sql = new StringBuilder();
+//        objList = this.tpCourseTeachingMaterialManager.getDeleteSql(tctm, sql);
+//        sqlListArray.add(sql.toString());
+//        objListArray.add(objList);
+//        // 添加专题教材关联
+//        if (tc.getMaterialidvalues() != null && tc.getMaterialidvalues().split(",").length>0) {
+//            String[] materialidvalues = tc.getMaterialidvalues().split(",");
+//            for (int i = 0; i < materialidvalues.length; i++) {
+//                tctm = new TpCourseTeachingMaterial();
+//                tctm.setCourseid(tc.getCourseid());
+//                tctm.setTeachingmaterialid(Integer.parseInt(materialidvalues[i]));
+//                sql = new StringBuilder();
+//                objList = this.tpCourseTeachingMaterialManager.getSaveSql(tctm, sql);
+//                if (sql == null || objList == null) {
+//                    je.setMsg("专题教材数据写入出错！");// 异常错误，参数不齐，无法正常访问!
+//                    je.setType("error");
+//                    response.getWriter().print(je.toJSON());
+//                    return;
+//                }
+//                sqlListArray.add(sql.toString());
+//                objListArray.add(objList);
+//            }
+//
+//        }else{
+//            je.setMsg("获取教材参数错误，请重试！");// 异常错误，参数不齐，无法正常访问!
+//            je.setType("error");
+//            response.getWriter().print(je.toJSON());
+//            return;
+//        }
+
+        // 添加关联班级
+        //删除旧的班级专题关联记录
+        TpCourseClass cc = new TpCourseClass();
+        cc.setCourseid(tc.getCourseid());
+        cc.setTermid(termid);
+        cc.setUserid(tc.getCuserid());
+        sql = new StringBuilder();
+        objList = this.tpCourseClassManager.getDeleteSql(cc, sql);
+        sqlListArray.add(sql.toString());
+        objListArray.add(objList);
+        //添加新的专题班级关联记录
+        // 添加关联班级
+        if (classstr != null && classtimestr != null&& classEndTimeStr != null
+                && classstr.trim().length() > 0 && classtimestr.trim().length() > 0 && classEndTimeStr.trim().length() > 0
+                ) {
+            String[] classArray = classstr.split(",");
+            String[] classtimeArray = classtimestr.split(",");
+            String[] classEndtimeArray = classEndTimeStr.split(",");
+            //教学班级
+            for (int i = 0; i < classArray.length; i++) {
+                cc = new TpCourseClass();
+                cc.setClassid(Integer.parseInt(classArray[i]));
+                cc.setCourseid(tc.getCourseid());
+                cc.setSubjectid(Integer.parseInt(subjectid));
+                cc.setGradeid(Integer.parseInt(gradeid));
+                cc.setTermid(termid);
+                cc.setBegintime(UtilTool.StringConvertToDate(classtimeArray[i]));
+                if(!classEndtimeArray[i].toString().equals("0"))
+                    cc.setEndtime(UtilTool.StringConvertToDate(classEndtimeArray[i]));
+                cc.setClasstype(1);
+                cc.setUserid(tc.getCuserid());
+                sql = new StringBuilder();
+                objList = this.tpCourseClassManager.getSaveSql(cc, sql);
+                if (sql == null || objList == null) {
+                    je.setMsg("专题班级数据写入出错！");// 异常错误，参数不齐，无法正常访问!
+                    je.setType("error");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+        //虚拟班级
+        if (vclassstr != null && vclasstimestr != null &&  vclassEndTimeStr != null
+                && vclassstr.trim().length() > 0 && vclasstimestr.trim().length() > 0 && vclassEndTimeStr.trim().length()>0) {
+            String[] vclassArray = vclassstr.split(",");
+            String[] vclasstimeArray = vclasstimestr.split(",");
+            String[] vclassEndtimeArray = vclassEndTimeStr.split(",");
+            for (int i = 0; i < vclassArray.length; i++) {
+                cc = new TpCourseClass();
+                cc.setClassid(Integer.parseInt(vclassArray[i]));
+                cc.setCourseid(tc.getCourseid());
+                cc.setSubjectid(Integer.parseInt(subjectid));
+                cc.setGradeid(Integer.parseInt(gradeid));
+                cc.setTermid(termid);
+                cc.setBegintime(UtilTool.StringConvertToDate(vclasstimeArray[i]));
+                if(!vclassEndtimeArray[i].toString().equals("0"))
+                    cc.setEndtime(UtilTool.StringConvertToDate(vclassEndtimeArray[i]));
+                cc.setClasstype(2);
+                cc.setUserid(tc.getCuserid());
+                sql = new StringBuilder();
+                objList = this.tpCourseClassManager.getSaveSql(cc, sql);
+                if (sql == null || objList == null) {
+                    je.setMsg("专题班级数据写入出错！");// 异常错误，参数不齐，无法正常访问!
+                    je.setType("error");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+
+        /**
+         * 自建专题修改分享等级
+         * 之前已共享的资源不修改
+         * 专题条件：专题ID小于0、专题等级自建、专题为分享专题
+         * 资源条件：资源ID小于0、资源为不分享
+
+        TpCourseResource courseResource=new TpCourseResource();
+        courseResource.setCourseid(tc.getCourseid());
+        List<TpCourseResource>tpCourseResourcesList=this.tpCourseResourceManager.getList(courseResource,null);
+        if(tpCourseResourcesList!=null&&tpCourseResourcesList.size()>0&&tc.getSharetype()!=3
+                &&tc.getCourseid()<1&&tc.getCourselevel()==3){
+            for(TpCourseResource res :tpCourseResourcesList){
+                if(res!=null&&res.getResid()<1&&res.getSharestatus()==3){
+                    ResourceInfo r=new ResourceInfo();
+                    r.setResid(res.getResid());
+                    r.setSharestatus(tc.getSharetype());
+                    sql=new StringBuilder();
+                    objList=this.resourceManager.getUpdateSql(r,sql);
+                    sqlListArray.add(sql.toString());
+                    objListArray.add(objList);
+                }
+            }
+        }
+
+        //关联专题
+        String selectedCourseid=request.getParameter("selectcourseid");
+        if(selectedCourseid.length()>0){
+            //  首先删除旧的关系
+            TpCourseRelatedInfo o = new TpCourseRelatedInfo();
+            o.setCourseid(tc.getCourseid());
+            sql = new StringBuilder();
+            objList = this.tpCourseRelatedManager.getDeleteSql(o,sql);
+            sqlListArray.add(sql.toString());
+            objListArray.add(objList);
+            //添加新的关系
+            String[] courseids = selectedCourseid.split("\\|");
+            int length = courseids.length;
+            for(int i = 0;i<length;i++){
+                TpCourseRelatedInfo obj = new TpCourseRelatedInfo();
+                obj.setCourseid(tc.getCourseid());
+                obj.setRelatedcourseid(Long.parseLong(courseids[i]));
+                sql = new StringBuilder();
+                objList = this.tpCourseRelatedManager.getSaveSql(obj, sql);
+                sqlListArray.add(sql.toString());
+                objListArray.add(objList);
+            }
+        }
+
+        if (sqlListArray.size() > 0 && objListArray.size() > 0) {
+            boolean bo = this.tpCourseManager.doExcetueArrayProc(
+                    sqlListArray, objListArray);
+            if (bo) {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+            } else {
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        } else {
+            je.setMsg(UtilTool.msgproperty
+                    .getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
+        }
+        response.getWriter().print(je.toJSON());
+    }  */
+
+
+
+
+    /**
+     * 添加专题
+     */
+    @RequestMapping(params = "m=delCourse", method = RequestMethod.POST)
+    public void doDelCourse(HttpServletRequest request,
+                            HttpServletResponse response) throws Exception {
+        JSONObject returnJo=new JSONObject();
+        returnJo.put("result","0");//默认失败
+        if(!ImFace115Util.ValidateRequestParam(request)){  //验证参数
+            JSONObject jo=new JSONObject();
+            jo.put("result","0");
+            jo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR").toString());
+            jo.put("data","");
+            response.getWriter().print(jo.toString());
+            return;
+        }
+        HashMap<String,String> paramMap=ImFace115Util.getRequestParam(request);
+        //获取参数
+        String courseId=paramMap.get("courseId");
+        String time=paramMap.get("time");
+        String sign=paramMap.get("sign");
+        TermInfo termInfo=this.termManager.getMaxIdTerm(true);
+        if(courseId==null||time==null||sign==null){
+            returnJo.put("msg",UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().println(returnJo.toString());return;
+        }
+        //去除sign
+        paramMap.remove("sign");
+        //验证Md5
+        Boolean b = UrlSigUtil.verifySigSimple("saveUserScore",paramMap,sign);
+        if(!b){
+            returnJo.put("msg","验证失败，非法登录!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        TpCourseInfo del=new TpCourseInfo();
+        del.setCourseid(Long.parseLong(courseId));
+        if(this.tpCourseManager.doDelete(del)){
+            returnJo.put("msg", "恭喜您,获得了1积分和1蓝宝石");
+            returnJo.put("result","1");
+        }else{
+            returnJo.put("msg", UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            returnJo.put("result","0");
+        }
+
+
+
+        response.getWriter().print(returnJo.toString());
+    }
 
     /**
      * 根据classId得到dcSchoolId
