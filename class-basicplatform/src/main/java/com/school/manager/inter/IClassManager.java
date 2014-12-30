@@ -40,4 +40,8 @@ public interface IClassManager  extends IBaseManager<ClassInfo> {
     public int getTotalClass(int schoolId, String year, int from) ;
 
     public List<ClassInfo> getIm113List(ClassInfo cls, PageResult presult);
+
+    public List<ClassInfo> getClassByGradeTerm(int gradeId,int termId);
+
+    public List<Integer> getAllTerm();
 }

@@ -1,10 +1,9 @@
 package com.school.entity;
-import java.util.Date;
-
 import com.school.util.UtilTool;
 import com.school.util.UtilTool.DateType;
 
 import javax.persistence.Entity;
+import java.util.Date;
 
 @Entity
 public class ClassInfo implements java.io.Serializable {
@@ -33,6 +32,25 @@ public class ClassInfo implements java.io.Serializable {
     private Integer dynamicCount;
 
     private Integer searchUid;  //¸ù¾Ýc_user_id²éÑ¯
+
+    private Integer activitytype;
+    private Integer termid;
+
+    public Integer getActivitytype() {
+        return activitytype;
+    }
+
+    public void setActivitytype(Integer activitytype) {
+        this.activitytype = activitytype;
+    }
+
+    public Integer getTermid() {
+        return termid;
+    }
+
+    public void setTermid(Integer termid) {
+        this.termid = termid;
+    }
 
     public Integer getSearchUid() {
         return searchUid;

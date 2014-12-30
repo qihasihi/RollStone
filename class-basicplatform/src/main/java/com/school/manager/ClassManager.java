@@ -112,5 +112,12 @@ public class  ClassManager extends BaseManager<ClassInfo> implements IClassManag
         return this.classdao.getIm113List(cls,presult);
     }
 
+    public List<ClassInfo> getClassByGradeTerm(int gradeId,int termId) {
+        return this.classdao.getClassByGradeTerm(gradeId,termId);
+    }
+
+    public List<Integer> getAllTerm() {
+        return this.classdao.getAllTerm();
+    }
 }
 

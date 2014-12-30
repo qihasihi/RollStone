@@ -379,6 +379,16 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
             objList.add(obj.getClassid());
         }else
             sqlbuilder.append("NULL,");
+        if(obj.getActivitytype()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getActivitytype());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getTermid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getTermid());
+        }else
+            sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
         return objList;
     }
@@ -455,6 +465,16 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         if(obj.getInvitecode()!=null){
             sqlbuilder.append("?,");
             objList.add(obj.getInvitecode());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getActivitytype()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getActivitytype());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getTermid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getTermid());
         }else
             sqlbuilder.append("NULL,");
         sqlbuilder.append("?)}");
@@ -596,5 +616,27 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         if(objTotal!=null)
             total=Integer.parseInt(objTotal.toString());
         return total;
+    }
+
+    public List<ClassInfo> getClassByGradeTerm(int gradeId,int termId) {
+        List<ClassInfo> list = null;
+
+        StringBuilder sb = new StringBuilder("{call class_info_proc_list_elite_class(");
+        sb.append(gradeId);
+        sb.append(",");
+        sb.append(termId);
+        sb.append(")}");
+
+        list=this.executeResult_PROC(sb.toString(), null, null, ClassInfo.class, null);
+        return list;
+    }
+
+    public List<Integer>getAllTerm() {
+        List<Integer> list = null;
+
+        StringBuilder sb = new StringBuilder("{call class_info_proc_list_term()}");
+
+        list=this.executeResult_PROC(sb.toString(), null, null, Integer.class, null);
+        return list;
     }
 }
