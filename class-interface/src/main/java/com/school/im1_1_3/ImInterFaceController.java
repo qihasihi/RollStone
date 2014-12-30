@@ -1215,7 +1215,6 @@ public class ImInterFaceController extends BaseController {
                                 returnJo.put("msg","加入班级失败!");
                                 break;
                             }
-
                         }
                     }
                 }
@@ -1228,8 +1227,12 @@ public class ImInterFaceController extends BaseController {
                     returnJo.put("msg","加入班级成功!"+returnJo.get("msg"));
                     returnJo.put("result",1);
                 }else{
-                    returnJo.put("msg","加入班级失败!"+returnJo.get("msg"));
-                    transactionRollback();
+                    if(returnJo.get("result").toString().trim().equals("1")){
+                        returnJo.put("msg","加入班级成功!");
+                    }else{
+                        returnJo.put("msg","加入班级失败!"+returnJo.get("msg"));
+                        transactionRollback();
+                    }
                 }
             }
 
