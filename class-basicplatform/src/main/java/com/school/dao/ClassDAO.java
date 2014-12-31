@@ -178,6 +178,16 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
                 objList.add(obj.getImvaldatecode());
             }else
                 sqlbuilder.append("NULL,");
+            if(obj.getTermid()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getTermid());
+            }else
+                sqlbuilder.append("NULL,");
+            if(obj.getActivitytype()!=null){
+                sqlbuilder.append("?,");
+                objList.add(obj.getActivitytype());
+            }else
+                sqlbuilder.append("NULL,");
         }
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
             sqlbuilder.append("?,?,");
