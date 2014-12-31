@@ -22,7 +22,7 @@
 	.jxxt_xueqi ul li:hover{background-color:#d0f2fe;}
 
 	.jxxt_xueqi div.njxk{
-	width:120px;
+	width:160px;
 	text-align:right;
 	position: absolute;
 	top:-24px;
@@ -30,7 +30,7 @@
 	color:#000;
 }
 	.jxxt_xueqi div.njxk ul{
-	width:100px;
+	width:140px;
 	right:4px;
 	top:20px;
 	text-align:left;
