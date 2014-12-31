@@ -97,7 +97,8 @@ public class TimerTaskListener implements ServletContextListener {
 
 
 
-	private Timer schoolTimer = null,teachMaterialTimer=null,vsTimer=null,upCourseTimer=null,ucTimer=null,dcTimer=null,rsRankTimer=null,upEttColumn=null,upSchoolTmr=null;
+	private Timer taskRemindTimer=null,taskLoopRemindTimer=null,schoolTimer = null,teachMaterialTimer=null,vsTimer=null,upCourseTimer=null,ucTimer=null,dcTimer=null,rsRankTimer=null,upEttColumn=null,upSchoolTmr=null;
+
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub
         if(schoolTimer!=null)
@@ -117,10 +118,16 @@ public class TimerTaskListener implements ServletContextListener {
         if(upEttColumn!=null)
             upEttColumn.cancel();
         if(upSchoolTmr!=null)
-            upSchoolTmr.cancel();;
+            upSchoolTmr.cancel();
+        if(taskLoopRemindTimer!=null)
+            taskLoopRemindTimer.cancel();
+        if(taskRemindTimer!=null)
+            taskRemindTimer.cancel();
 	}
     //时间间隔(一天)
     private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
+    private static final long PERIOD_HOUR = 60 * 60 * 1000;
+    private static final long PERIOD_15MIN = 15 * 60 * 1000;
     public void contextInitialized(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub
         //启动配置分校信息
@@ -220,6 +227,40 @@ public class TimerTaskListener implements ServletContextListener {
             uedate = this.addDay(uedate, 1);
         }
         upEttColumn.schedule(new SynchroEttColumns(),uedate,PERIOD_DAY);
+
+
+
+        /**************************每天早上8点20~晚上22点每隔20分钟发送任务提醒***********************************/
+        //	每天早上8：20开始执行
+        taskLoopRemindTimer=new Timer();
+        Calendar calremind = Calendar.getInstance();
+        //每天定点执行
+        calremind.set(Calendar.HOUR_OF_DAY,12);
+        calremind.set(Calendar.MINUTE,0);
+        calremind.set(Calendar.SECOND,0);
+        Date remindLoopDate=calremind.getTime(); //第一次执行定时任务的时间
+        //如果第一次执行定时任务的时间 小于当前的时间
+        //此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行。
+        if (remindLoopDate.before(new Date())) {
+            remindLoopDate = this.addDay(remindLoopDate, 1);
+        }
+       // taskLoopRemindTimer.schedule(new TaskLoopRemind(arg0.getServletContext()),10000,PERIOD_15MIN);
+
+        /**************************每天早上7:50发送昨天晚上10点到今天早上8点开始的任务提醒***********************************/
+        //	每天早上7:50开始执行
+        taskRemindTimer=new Timer(true);
+        Calendar remind = Calendar.getInstance();
+        //每天定点执行
+        remind.set(Calendar.HOUR_OF_DAY,7);
+        remind.set(Calendar.MINUTE,50);
+        remind.set(Calendar.SECOND,0);
+        Date remindDate=remind.getTime(); //第一次执行定时任务的时间
+        //如果第一次执行定时任务的时间 小于当前的时间
+        //此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行。
+        if (remindDate.before(new Date())) {
+            remindDate = this.addDay(remindDate, 1);
+        }
+       // taskRemindTimer.schedule(new TaskRemind(arg0.getServletContext()),remindDate,PERIOD_DAY);
 	}
 
     // 增加或减少天数
