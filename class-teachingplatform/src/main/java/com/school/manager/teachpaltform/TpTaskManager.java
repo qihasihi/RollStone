@@ -4,6 +4,7 @@ package  com.school.manager.teachpaltform;
 import java.util.List;
 import java.util.UUID;
 
+import com.school.entity.teachpaltform.TpTaskAllotInfo;
 import com.school.util.UtilTool;
 import jxl.Sheet;
 
@@ -114,6 +115,11 @@ public class  TpTaskManager extends BaseManager<TpTaskInfo> implements ITpTaskMa
      */
     public List<Object> getDelTpStuTaskScore(final Long taskid, StringBuilder sqlbuilder){
         return this.tptaskdao.getDelTpStuTaskScore(taskid,sqlbuilder);
+    }
+
+    @Override
+    public List<TpTaskInfo> getTaskRemindList(TpTaskInfo t, PageResult presult) {
+        return this.tptaskdao.getTaskRemindList(t,presult);
     }
 }
 

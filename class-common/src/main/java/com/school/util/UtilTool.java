@@ -1960,9 +1960,7 @@ public class UtilTool implements java.io.Serializable {
         try {
             //组织参数
             StringBuffer params = new StringBuffer();
-//            System.out.println(params+"cache报错，上边第一步 ----------1");
             if(paramMap!=null&&paramMap.size()>0){
-//                System.out.println(params+"params里边 ----------1");
                 for (Iterator iter = paramMap.entrySet().iterator(); iter
                         .hasNext();)
                 {

@@ -60,6 +60,8 @@ import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import com.school.control.base.BaseController;
 
+import static com.school.share.TaskLoopRemindUtil.sendTaskRemindObj;
+
 @Controller
 @RequestMapping(value="/task")
 public class TaskController extends BaseController<TpTaskInfo>{
@@ -974,20 +976,25 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String[]bClsArray=request.getParameterValues("btimeClsArray");
         String[]eClsArray=request.getParameterValues("etimeClsArray");
 
+        if(bClsArray==null||eClsArray==null){
+            je.setMsg("未获取到任务时间!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
 
         if(StringUtils.isBlank(courseid)){
-            je.setMsg("错误,未获取到课题标识!");
+            je.setMsg("未获取到课题标识!");
             response.getWriter().print(je.toJSON());
             return;
         }
         if((groupArray==null||groupArray.length<1)
                 &&(clsArray==null||clsArray.length<1)){
-            je.setMsg("错误,未获取到任务对象!");
+            je.setMsg("未获取到任务对象!");
             response.getWriter().print(je.toJSON());
             return;
         }
         if(!(StringUtils.isNotBlank(questype)&&questype.equals("5"))&&criteriaArray.length<1){
-            je.setMsg("错误,未获取到任务完成标准!");
+            je.setMsg("未获取到任务完成标准!");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1160,6 +1167,22 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 response.getWriter().print(je.toJSON());
                 return;
             }
+
+
+            for(int i=0;i<bClsArray.length;i++){
+                TpTaskAllotInfo liveAllot=new TpTaskAllotInfo();
+                liveAllot.setCourseid(Long.parseLong(courseid));
+                liveAllot.setBtime(UtilTool.StringConvertToDate(bClsArray[i]));
+                liveAllot.setEtime(UtilTool.StringConvertToDate(eClsArray[i]));
+                liveAllot.setTasktype(10);
+                List<TpTaskAllotInfo>allotInfoList=this.tpTaskAllotManager.getTaskRemindObjList(liveAllot,null);
+                if(allotInfoList!=null&&allotInfoList.size()>0){
+                    je.setMsg("提示：您设置的时间内已有直播课任务，请调整时间! \n\n时间："+bClsArray[i]+"~"+eClsArray[i]+"");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+            }
+
             ta.setTaskvalueid(Long.valueOf(1));
             ta.setTaskname(taskname);
         }
@@ -1376,6 +1399,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
             if(flag){
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                 je.setType("success");
+                objListArray=new ArrayList<List<Object>>();
+                sqlListArray=new ArrayList<String>();
                 //添加任务消息提醒
               /*  List<UserInfo>taskUserList=this.userManager.getUserNotCompleteTask(ta,null);
                 if(taskUserList!=null&&taskUserList.size()>0){
@@ -1392,6 +1417,10 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 }else{
                     System.out.println("添加任务动态失败!原因：未获取到学生列表!");
                 }*/
+                if(!sendRemind(tasknextid))
+                    System.out.println("添加taskRemind失败!");
+                else
+                    System.out.println("添加taskRemind成功!");
 
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -1402,6 +1431,105 @@ public class TaskController extends BaseController<TpTaskInfo>{
         response.getWriter().print(je.toJSON());
     }
 
+    public boolean sendRemind(Long tasknextid){
+
+        StringBuilder sql=null;
+        List<Object>objList=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+
+        TpTaskInfo taskInfo=new TpTaskInfo();
+        taskInfo.setSelecttype(TpTaskInfo.QUERY_TYPE.立即开始.getValue());
+        taskInfo.setTaskid(tasknextid);
+        List<TpTaskInfo>taskRemindList=this.tpTaskManager.getTaskRemindList(taskInfo,null);
+        if(taskRemindList!=null&&taskRemindList.size()>0){
+            //信息Map
+            List<Map<String,Object>>mapList=new ArrayList<Map<String, Object>>();
+
+            //获取任务对象
+            for(TpTaskInfo task:taskRemindList){
+                TpTaskAllotInfo allotInfo=new TpTaskAllotInfo();
+                allotInfo.setTaskid(task.getTaskid());
+                List<TpTaskAllotInfo>taskAllotList=this.tpTaskAllotManager.getList(allotInfo,null);
+
+                if(taskAllotList!=null&&taskAllotList.size()>0){
+                    for(TpTaskAllotInfo tt:taskAllotList){
+                        Map<String,Object>map=new HashMap<String, Object>();
+                        map.put("taskId",task.getTaskid());
+                        Object taskObjName=task.getTaskobjnameremind()==null?"":task.getTaskobjnameremind();
+                        map.put("content",UtilTool.ecode("提醒你完成任务[任务 "+task.getOrderidx()+" "+taskObjName+"]，快去完成它吧！"));
+                        map.put("classId",tt.getAllotid());
+                        map.put("taskType",task.getTasktype());
+                        map.put("isVirtual","0");
+                        map.put("classType",tt.getClasstype());
+                        map.put("cUserId",task.getUserid());
+                        if(tt.getDcschoolid()==null||tt.getDcschoolid().toString().length()<1)
+                            continue;
+                        map.put("schoolId",tt.getDcschoolid());
+                        map.put("userType","3");
+                        String userId="";
+                        if(tt.getUsertype()==0){
+                            ClassUser cu=new ClassUser();
+                            cu.setClassid(Integer.parseInt(tt.getUsertypeid()+""));
+                            cu.setRelationtype("学生");
+                            List<ClassUser>userList=this.classUserManager.getList(cu,null);
+                            if(userList!=null&&userList.size()>0){
+                                for(ClassUser classUser:userList){
+                                    if(userId.length()>0)
+                                        userId+=",";
+                                    if(classUser.getEttuserid()!=null&&classUser.getEttuserid()>0)
+                                        userId+=classUser.getEttuserid();
+                                }
+                            }
+                        }else if(tt.getUsertype()==2){
+                            TpGroupStudent gs=new TpGroupStudent();
+                            gs.setGroupid(tt.getUsertypeid());
+                            List<TpGroupStudent>gsList=this.tpGroupStudentManager.getList(gs,null);
+                            if(gsList!=null&&gsList.size()>0){
+                                for(TpGroupStudent groupStudent:gsList){
+                                    if(userId.length()>0)
+                                        userId+=",";
+                                    if(groupStudent.getEttuserid()!=null&&groupStudent.getEttuserid()>0)
+                                        userId+=groupStudent.getEttuserid();
+                                }
+                            }
+                        }
+                        if(userId==null||userId.trim().length()<1)
+                            continue;
+                        map.put("userIds",userId);
+                        mapList.add(map);
+
+
+                        TpTaskAllotInfo upd=new TpTaskAllotInfo();
+                        upd.setRef(tt.getRef());
+                        upd.setRemindstatus(1);
+                        sql=new StringBuilder();
+                        objList=this.tpTaskAllotManager.getUpdateSql(upd,sql);
+                        if(objList!=null&&sql!=null){
+                            objListArray.add(objList);
+                            sqlListArray.add(sql.toString());
+                        }
+                    }
+
+                }
+            }
+
+            //向网校发送数据
+            if(!sendTaskRemindObj(mapList)){
+                System.out.println("TaskController sendTaskRemind: error!");
+                return false;
+            }else{
+                if(objListArray.size()>0&&sqlListArray.size()>0){
+                    if(this.tpTaskManager.doExcetueArrayProc(sqlListArray,objListArray)){
+                        System.out.println("TaskController sendTaskRemind修改任务提醒状态成功!");
+                        return true;
+                    }else
+                        System.out.println("TaskController sendTaskRemind修改任务提醒状态失败!");
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * 进入任务修改页
@@ -1523,7 +1651,11 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String[]bClsArray=request.getParameterValues("btimeClsArray");
         String[]eClsArray=request.getParameterValues("etimeClsArray");
 
-
+        if(bClsArray==null||eClsArray==null){
+            je.setMsg("错误,未获取到任务时间!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
         if(StringUtils.isBlank(courseid)){
             je.setMsg("错误,未获取到课题标识!");
             response.getWriter().print(je.toJSON());
@@ -1687,6 +1819,21 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 response.getWriter().print(je.toJSON());
                 return;
             }
+
+            for(int i=0;i<bClsArray.length;i++){
+                TpTaskAllotInfo liveAllot=new TpTaskAllotInfo();
+                liveAllot.setCourseid(Long.parseLong(courseid));
+                liveAllot.setBtime(UtilTool.StringConvertToDate(bClsArray[i]));
+                liveAllot.setEtime(UtilTool.StringConvertToDate(eClsArray[i]));
+                liveAllot.setTasktype(10);
+                List<TpTaskAllotInfo>allotInfoList=this.tpTaskAllotManager.getTaskRemindObjList(liveAllot,null);
+                if(allotInfoList!=null&&allotInfoList.size()>0){
+                    je.setMsg("提示：您设置的时间内已有直播课任务，请调整时间! \n\n时间："+bClsArray[i]+"~"+eClsArray[i]+"");
+                    response.getWriter().print(je.toJSON());
+                    return;
+                }
+            }
+
             ta.setTaskname(taskname);
             ta.setTaskvalueid(Long.valueOf(1));
         }
@@ -1933,6 +2080,11 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 je.setType("success");
                 //添加任务消息提醒
                 //this.tpTaskManager.doSaveTaskMsg(ta);
+                if(!sendRemind(tasknextid))
+                    System.out.println("doSubUpdTask 添加taskRemind失败!");
+                else
+                    System.out.println("doSubUpdTask 添加taskRemind成功!");
+
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }

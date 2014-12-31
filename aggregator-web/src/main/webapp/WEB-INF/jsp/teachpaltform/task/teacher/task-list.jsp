@@ -185,10 +185,10 @@ function getInvestReturnMethod(rps){
             if(!(itm.tasktype>6&&itm.tasktype<10)){
                 html+='<a class="ico11" title="修改" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'"></a>';
             }
-            if(itm.taskstatus!="3")
+            //if(itm.taskstatus!="3")
                 html+='<a title="删除" class="ico04" href="javascript:doDelTask('+itm.taskid+','+stucount+')"></a>';
             html+='</p>';
-            html+='<p><a class="ico49b"  id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务</a><span data-bind="'+itm.taskid+'" id="order_'+itm.taskid+'" class="m_lr_10">'+itm.orderidx+'</span>：'+type+'';
+            html+='<p><a class="ico49b"  id="a_show_'+itm.taskid+'" href="javascript:void(0);" onclick="showOrhide(this,\''+itm.taskid+'\')"></a><a href="javascript:void(0);" onclick="$(this).prev().click();">任务</a><span style="cursor:pointer" title="点击调序" data-bind="'+itm.taskid+'" id="order_'+itm.taskid+'" class="m_lr_10">'+itm.orderidx+'</span>：'+type+'';
             if(itm.tasktype==1){
                 if(typeof itm.remotetype!='undefined'){
                     var paramStr=itm.remotetype==1?"hd_res_id":"res_id";

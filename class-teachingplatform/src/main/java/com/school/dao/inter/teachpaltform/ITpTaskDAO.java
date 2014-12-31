@@ -53,4 +53,11 @@ public interface ITpTaskDAO extends ICommonDAO<TpTaskInfo>{
      * @return
      */
     public List<Object> getDelTpStuTaskScore(final Long taskid, StringBuilder sqlbuilder);
+
+
+    /**
+     * 获取需要发提醒的任务
+     * @return
+     */
+    public List<TpTaskInfo> getTaskRemindList(TpTaskInfo t,PageResult presult);
 }

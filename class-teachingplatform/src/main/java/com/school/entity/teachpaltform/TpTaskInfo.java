@@ -281,6 +281,25 @@ public class TpTaskInfo implements Serializable {
         this.criteria = criteria;
     }
 
+    public Object getTaskobjnameremind() {
+        if(taskobjname==null)return null;
+        String content=taskobjname.toString();
+        if(content!=null&&content.trim().length()>0){
+//            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//            String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
+//            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getTaskvalueid()+"/";
+//            while(content.indexOf("_QUESTIONPIC+")!=-1)
+//                content=content.replaceAll("_QUESTIONPIC\\+",t);
+            while (content.indexOf("\n")!=-1||content.indexOf("\n\r")!=-1||content.indexOf("\t")!=-1){
+                content=content.replace("\n\r", "<br>&nbsp;&nbsp;");
+                content=content.replace("\n", "<br>");
+                content=content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                //content=content.replace(" ", "&nbsp;");
+                //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
+            }
+        }
+        return content;
+    }
     public Object getTaskobjname() {
         if(taskobjname==null)return null;
         String content=taskobjname.toString();
@@ -557,5 +576,15 @@ public class TpTaskInfo implements Serializable {
         this.tpTopicThemeInfoList = tpTopicThemeInfoList;
     }
 
+
+    public static enum QUERY_TYPE{
+        HOUR{public Integer getValue(){return 1;}},
+
+        晚22至早8{public Integer getValue(){return 2;}},
+
+        立即开始{public Integer getValue(){return 3;}};
+
+        public abstract Integer getValue();
+    }
 
 }

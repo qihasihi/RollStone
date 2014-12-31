@@ -295,7 +295,47 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
         return objList;
     }
 
-	public List<Object> getUpdateSql(TpTaskInfo tptaskinfo, StringBuilder sqlbuilder) {
+    @Override
+    public List<TpTaskInfo> getTaskRemindList(TpTaskInfo t, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_task_info_remind_proc_split(");
+        List<Object> objList=new ArrayList<Object>();
+
+        if (t.getSelecttype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getSelecttype());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getTaskid());
+        } else
+            sqlbuilder.append("null,");
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<TpTaskInfo> tptaskinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpTaskInfo.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return tptaskinfoList;
+    }
+
+
+    public List<Object> getUpdateSql(TpTaskInfo tptaskinfo, StringBuilder sqlbuilder) {
 		if(tptaskinfo==null||sqlbuilder==null)
 			return null;
 		sqlbuilder.append("{CALL tp_task_info_proc_update(");

@@ -1,6 +1,7 @@
 
 package  com.school.manager.inter.teachpaltform;
 
+import com.school.entity.teachpaltform.TpTaskAllotInfo;
 import com.school.entity.teachpaltform.TpTaskInfo;
 import com.school.manager.base.IBaseManager;
 import com.school.util.PageResult;
@@ -50,5 +51,11 @@ public interface ITpTaskManager  extends IBaseManager<TpTaskInfo> {
      * @return
      */
     public List<Object> getDelTpStuTaskScore(final Long taskid, StringBuilder sqlbuilder);
+
+    /**
+     * 获取需要发提醒的任务
+     * @return
+     */
+    public List<TpTaskInfo> getTaskRemindList(TpTaskInfo t,PageResult presult);
 
 } 
