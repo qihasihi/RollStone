@@ -2,6 +2,12 @@
 <%@ include file="/util/common-jsp/common-jxpt.jsp"%>
 <html>
 <head>
+    <script type="text/javascript"
+            src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+    <script type="text/javascript"
+            src="fancybox/jquery.fancybox-1.3.4.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
     <script type="text/javascript" src="js/teachpaltform/tchcourselist.js"></script>
     <script type="text/javascript">
         var currtenTab=1; //当前学科导航栏页数
@@ -19,7 +25,15 @@
         var materialid="${param.materialid}";
         var currentSubjectid = "${param.subjectid}";
         var currentGradeid="${param.gradeid}";
+        var fancyboxObj;
         $(function(){
+            fancyboxObj=$("#a_click").fancybox({
+                'onClosed':function(){
+                    $("#dv_content").hide();
+                    $("#teaching_materia_div").hide();
+                }
+
+            });
             //给回收站连接
             $("#recylebin").attr("href","teachercourse?m=toTeacherCourseRecycle&termid="+termid+"&subjectid="+global_subjectid+"&gradeid="+global_gradeid);
             if(materialid.length>0){
@@ -270,18 +284,14 @@
             <a href="javascript:closeModel('followCourse_div');" class="an_public1">取&nbsp;消</a></p>
     </div>
 </div>
+<a id="a_click" href="#teaching_materia_div"></a>
+<div id="teaching_materia_div" class="public_float jxxt_float_jcbb" style="display:none;">
+    <p class="float_title"><strong>选教材版本</strong></p>
+    <p class="font-black">请选择本学科授课的教材版本，选择后搜索资源时会优先推荐该版本。</p>
+    <ul id="teaching_materia">
+    </ul>
 
-<div id="teaching_materia_div" class="public_windows" style="display:none;height: 400px;overflow-y: scroll;overflow-x: hidden">
-    <h3><a href="javascript:closeModel('teaching_materia_div');" title="关闭"></a>选教材版本</h3>
-    <div class="jxxt_float_jcbb">
-        <p class="font-black">请选择本学科授课的教材版本，选择后搜索资源时会优先推荐该版本。</p>
-        <ul id="teaching_materia">
-        </ul>
-
-        <p class="t_c " id="">
-            <a id="addReportBtn" class="an_public1"  href="javascript:selectMaterial();" onclick="">确定</a>
-        </p>
-    </div>
+        <p class="t_c"><a id="addReportBtn" class="an_public1"  href="javascript:selectMaterial();" onclick="">确定</a></p>
 </div>
 
 <div class="public_windows" id="shareWindow" style="display: none;">

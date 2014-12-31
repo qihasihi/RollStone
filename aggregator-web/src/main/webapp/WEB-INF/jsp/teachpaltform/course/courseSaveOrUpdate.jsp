@@ -236,9 +236,9 @@
 </body>
 </html>
 
-<div id="teaching_materia_div" class="public_windows" style="display:none;">
-    <h3><a href="javascript:closeModel('teaching_materia_div');" title="关闭"></a>选教材版本</h3>
-    <div class="jxxt_float_jcbb">
+<div id="teaching_materia_div" class="public_float jxxt_float_jcbb" style="display:none;">
+    <%--<h3><a href="javascript:closeModel('teaching_materia_div');" title="关闭"></a>选教材版本</h3>--%>
+        <p class="float_title"><strong>选教材版本</strong></p>
         <p class="font-black">请选择本学科授课的教材版本，选择后搜索资源时会优先推荐该版本。</p>
         <ul id="teaching_materia">
         </ul>
@@ -252,7 +252,6 @@
                 <a id="addReportBtn" class="an_public1"  href="javascript:void(0);" onclick="addTeacherCourse();">确定</a>
             </c:if>
         </p>
-    </div>
 </div>
 
 <c:if test="${!empty tc}">

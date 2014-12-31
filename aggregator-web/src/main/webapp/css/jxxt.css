@@ -229,24 +229,17 @@
 	.jxxt_float_fxzt ul li{padding:0 15px 3px; width:75px; float:left; }
 	.jxxt_float_fxzt ul li a.ico34{float:right;}
 
-	.jxxt_float_jcbb{padding:10px;}	
+	.jxxt_float_jcbb{ width:550px; height:460px;}	
 	.jxxt_float_jcbb ul{
-	width:450px;
-	min-height:100px;
-	margin:10px 0;
+	width:548px;
+	height:332px;
+	overflow:auto;
+	margin:10px 0 10px;
 }	
-	.jxxt_float_jcbb .t_c{padding-top:15px; clear:both;}
-	.jxxt_float_jcbb ul li{float:left; width:225px;}
-	.jxxt_float_jcbb ul li input[type=text]{
-	height:16px;
-	padding: 3px 4px 2px;
-	font-size:12px;
-	line-height:16px;
-	border:none;
-	border-bottom: 1px double #9c9c9c;
-	color:#8d8c8c;
-	width:150px;
-}
+	.jxxt_float_jcbb .font-black{padding-left: 20px;}
+	.jxxt_float_jcbb ul li{ width:490px; padding-left:40px; position:relative;}
+	.jxxt_float_jcbb ul li input[type=radio]{ position:absolute;top:3px; left:20px;}
+
 	.jxxt_float_bjgl {
 	width:188px;
 	height:275px;

@@ -2163,9 +2163,9 @@ function cjloadStuPerformance(classid, classtype) {
                         htm+='<p><strong>'+im.groupname+'</strong></p><div class="jxxt_zhuanti_rw_tongji_chengjuan">';
                         htm += '<table border="0" id="recordList_'+im.groupid+'" cellpadding="0" cellspacing="0" class="public_tab2"';
                         if (classid != null && classid.toString().length > 0) {
-                           htm+=' style="width:'+(330+(quesNum*50))+'px"';
+                           htm+=' style="width:'+(250+(quesNum*50))+'px"';
                         } else {
-                            htm+=' style="width:'+(430+(quesNum*50))+'px"';
+                            htm+=' style="width:'+(350+(quesNum*50))+'px"';
                         }
                         htm+='>';
                         if(classid==0)
@@ -2173,15 +2173,15 @@ function cjloadStuPerformance(classid, classtype) {
                         htm += '<colgroup class="w80"></colgroup>';
                         htm += '<colgroup class="w120"></colgroup>';
                         htm += '<colgroup span="'+(1+quesNum)+'" class="w50"></colgroup>';
-                        htm += '<colgroup class="w80"></colgroup>';
+                        //htm += '<colgroup class="w80"></colgroup>';
                         htm += '<tr>';
                         if(classid==0)
                             htm += '<th>班级</th>';
                         htm += '<th>姓名</th>';
                         htm += '<th>学习时间</th>';
-                        htm += '<th>得分</th>';
+                        htm += '<th>总分</th>';
                         htm += quesCol;
-                        htm += '<th>查看试卷</th>';
+                        //htm += '<th>查看试卷</th>';
                         htm += '</tr>';
                         var signnature = 0;
                         $.each(rmsg.objList[1], function (idx, itm) {
@@ -2197,8 +2197,8 @@ function cjloadStuPerformance(classid, classtype) {
                                     var studytime = itm[2];
                                     studytime=studytime.substring(0,16);
                                     htm += '<td>'+studytime+'</td>';
-                                    htm += '<td id="td_0">'+itm[3]+'</td>';
-                                    $.each(rmsg.objList[4], function (quesnum, ques) {
+                                    htm += '<td id="td_0"><a class="font-darkblue" href="paperques?m=&taskid='+taskid+'&userid='+itm[1]+'&flag=1">'+itm[3]+'</a></td>';
+                                    $.each(rmsg.objList[4], function (quesnum, ques) {teaViewStuPaper
                                         var answer='';
                                         if(classid==0){
                                             answer = itm[quesnum+5];
@@ -2222,7 +2222,7 @@ function cjloadStuPerformance(classid, classtype) {
                                             htm+='</td>';
                                         }
                                     });
-                                    htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">查看卷面</a></td>';
+                                    //htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">查看卷面</a></td>';
                                     htm += '</tr>';
                                 }
 
@@ -2238,9 +2238,9 @@ function cjloadStuPerformance(classid, classtype) {
                     htm+='<div class="jxxt_zhuanti_rw_tongji_chengjuan">';
                     htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2"';
                     if (classid != null && classid.toString().length > 0) {
-                        htm+=' style="width:'+(330+(quesNum*50))+'px"';
+                        htm+=' style="width:'+(250+(quesNum*50))+'px"';
                     } else {
-                        htm+=' style="width:'+(430+(quesNum*50))+'px"';
+                        htm+=' style="width:'+(350+(quesNum*50))+'px"';
                     }
                     htm+='>';
                     if(classid==0)
@@ -2248,15 +2248,15 @@ function cjloadStuPerformance(classid, classtype) {
                     htm += '<colgroup class="w80"></colgroup>';
                     htm += '<colgroup class="w120"></colgroup>';
                     htm += '<colgroup span="'+(1+quesNum)+'" class="w50"></colgroup>';
-                    htm += '<colgroup class="w80"></colgroup>';
+                    //htm += '<colgroup class="w80"></colgroup>';
                     htm += '<tr>';
                     if(classid==0)
                         htm += '<th>班级</th>';
                     htm += '<th>姓名</th>';
                     htm += '<th>学习时间</th>';
-                    htm += '<th>得分</th>';
+                    htm += '<th>总分</th>';
                     htm += quesCol;
-                    htm += '<th>查看试卷</th>';
+                    //htm += '<th>查看试卷</th>';
                     htm += '</tr>';
                     $.each(rmsg.objList[1], function (idx, itm) {
                         if(idx%2==0)
@@ -2269,7 +2269,7 @@ function cjloadStuPerformance(classid, classtype) {
                         var studytime = itm[2];
                         studytime=studytime.substring(0,16);
                         htm += '<td>'+studytime+'</td>';
-                        htm += '<td id="td_0">'+itm[3]+'</td>';
+                        htm += '<td id="td_0"><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">'+itm[3]+'</a></td>';
                         $.each(rmsg.objList[4], function (quesnum, ques) {
                             var answer='';
                             if(classid==0){
@@ -2294,7 +2294,7 @@ function cjloadStuPerformance(classid, classtype) {
                                 htm+='</td>';
                             }
                         });
-                        htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">查看卷面</a></td>';
+                        //htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">查看卷面</a></td>';
                         htm += '</tr>';
                     });
                     htm += '</table>';
@@ -2304,9 +2304,9 @@ function cjloadStuPerformance(classid, classtype) {
                 htm+='<div class="jxxt_zhuanti_rw_tongji_chengjuan">';
                 htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2"';
                 if (classid != null && classid.toString().length > 0) {
-                    htm+=' style="width:'+(330+(quesNum*50))+'px"';
+                    htm+=' style="width:'+(250+(quesNum*50))+'px"';
                 } else {
-                    htm+=' style="width:'+(430+(quesNum*50))+'px"';
+                    htm+=' style="width:'+(350+(quesNum*50))+'px"';
                 }
                 htm+='>';
                 if(classid==0)
@@ -2314,15 +2314,15 @@ function cjloadStuPerformance(classid, classtype) {
                 htm += '<colgroup class="w80"></colgroup>';
                 htm += '<colgroup class="w120"></colgroup>';
                 htm += '<colgroup span="'+(1+quesNum)+'" class="w50"></colgroup>';
-                htm += '<colgroup class="w80"></colgroup>';
+                //htm += '<colgroup class="w80"></colgroup>';
                 htm += '<tr>';
                 if(classid==0)
                     htm += '<th>班级</th>';
                 htm += '<th>姓名</th>';
                 htm += '<th>学习时间</th>';
-                htm += '<th>得分</th>';
+                htm += '<th>总分</th>';
                 htm += quesCol;
-                htm += '<th>查看试卷</th>';
+                //htm += '<th>查看试卷</th>';
                 htm += '</tr>';
                 htm+='<tr><td colspan="15">暂无数据!</td></tr></table></div>';
             }

@@ -558,12 +558,14 @@ function getTchingMaterial(){
                             "<label for=\"rdo_matid_"+itm.materialid+"\">"+materialName+"</span></td>";
                     });
                     $("#teaching_materia").html(html);
-                    showModel("teaching_materia_div");
+                    //showModel("teaching_materia_div");
                     $("#materia_button").show();
                 }else{
                     alert("无法找到学科和年级关联的教材，请联系管理添加。");
                 }
             },"json");
+        $("#teaching_materia_div").show();
+        $("#a_click").click();
     }else{
         addTeacherCourse();
     }

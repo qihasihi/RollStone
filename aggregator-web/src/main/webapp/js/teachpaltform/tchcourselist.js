@@ -757,7 +757,7 @@ function getTchingMaterial(isinit){
                     var materialName=gradename+itm.materialname+"("+itm.versionname+")";
                     if(itm.materialname=='其它')
                         materialName=gradename+'其它';
-                    html+="<li style=\"width:450px;\"><input id='rdo_matid_"+itm.materialid+"' name='materialid' value='"+itm.materialid+"' type='radio' title='"+materialName;
+                    html+="<li><input id='rdo_matid_"+itm.materialid+"' name='materialid' value='"+itm.materialid+"' type='radio' title='"+materialName;
                     if(material_id!="undefind"&&material_id.length>0){
                         if(material_id==itm.materialid){
                             html+="' checked='checked";
@@ -766,7 +766,7 @@ function getTchingMaterial(isinit){
                     html+="' /><label for=\"rdo_matid_"+itm.materialid+"\">"+materialName+"</label></li>";
                 });
                 $("#teaching_materia").html(html);
-                showModel("teaching_materia_div");
+                //showModel("teaching_materia_div");
                 $("#materia_button").show();
                 if(isinit){
                     $("#addReportBtn").attr("href","javascript:selectMaterial(true)");
@@ -775,6 +775,8 @@ function getTchingMaterial(isinit){
                 alert("无法找到学科和年级关联的教材，请联系管理添加。");
             }
         },"json");
+    $("#teaching_materia_div").show();
+    $("#a_click").click();
 }
 
 function selectMaterial(isinit){
@@ -822,6 +824,7 @@ function selectMaterial(isinit){
             }
         }
     });
+    $.fancybox.close();
 }
 
 function displayObj(id,type){
