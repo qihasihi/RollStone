@@ -569,11 +569,11 @@ function getFollowCourseList(gradeid,subjectid){
 }
 
 function toSaveCoursePage(){
-    if(global_gradeid<1){
+    if(global_gradeid<0){
         alert("没有获取到年级参数！");
         return;
     }
-    if(global_subjectid<1){
+    if(global_subjectid<0){
         alert("没有获取到学科参数！");
         return;
     }
@@ -735,11 +735,11 @@ function addTeacherCourse(type){alert(tea_gradeid);
  * @param isinit 是否是第一次添加
  */
 function getTchingMaterial(isinit){
-    if(global_gradeid<1){
+    if(global_gradeid<0){
         alert("没有获取到年级参数！");
         return;
     }
-    if(global_subjectid<1){
+    if(global_subjectid<0){
         alert("没有获取到学科参数！");
         return;
     }
@@ -784,11 +784,11 @@ function selectMaterial(isinit){
         alert("教材参数错误！");
         return ;
     }
-    if(global_gradeid<1){
+    if(global_gradeid<0){
         alert("没有获取到年级参数！");
         return;
     }
-    if(global_subjectid<1){
+    if(global_subjectid<0){
         alert("没有获取到学科参数！");
         return;
     }
