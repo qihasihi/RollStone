@@ -37,7 +37,7 @@ function addPaper(){
  * @param cid
  * @param pid
  */
-function loadEditPaper(cid,pid,isshow,isview){
+function loadEditPaper(cid,pid,isshow,isview,qid){
     if(typeof(cid)=="undefined"||typeof(pid)=="undefined"||cid==null||pid==null){
         alert('异常错误，请刷新重试!');
         return;
@@ -46,6 +46,9 @@ function loadEditPaper(cid,pid,isshow,isview){
     var u="paper?m=editPaperQuestionModel&courseid="+cid+"&paperid="+pid;
     if(isview)
         u+='&editQues=0';
+    if(typeof(qid)!="undefined"&&(qid+"").length>0){
+        u+="&qid="+qid;
+    }
     $("#dv_content #dv_content_child").load(u,function(){
         $("#dv_content .float_title").html("编辑试卷");
         //关闭相关层

@@ -74,7 +74,7 @@
 
 
 <div class="public_float public_float960" id="dv_edit_ques">
-    <p id="p_create_ques" class="float_title"><a href="javascript:;" class="ico93" onclick="loadDiv(3)" title="返回"></a><span id="dv_model_mdname">编辑试题</span></p>
+    <p id="p_create_ques" class="float_title"><a href="javascript:;" class="ico93" onclick="loadDiv(3,undefined,${question.questionid})" title="返回"></a><span id="dv_model_mdname">编辑试题</span></p>
     <p class="float_text public_input w820">
         <c:if test="${!empty quesTypeList}">
             <c:forEach items="${quesTypeList}" var="t" varStatus="idx">

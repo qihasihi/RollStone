@@ -59,10 +59,16 @@ $(function(){
   //  $("#p_operate").css("left",(findDimensions().width/2-parseFloat($("#p_operate").css("width"))/2)+"px");
   reSetScrollDiv();
   //加载试卷
-  loadPaperQues();
+    <c:if test="${!empty param.qid}">
+        loadPaperQues(${param.qid});
+    </c:if>
+    <c:if test="${empty param.qid}">
+        loadPaperQues();
+    </c:if>
+
 });
 
-function loadPaperQues(){
+function loadPaperQues(qid){
 //    $("#paper_detail").clear();
     var url="paper?toPreviewPaperModel&courseid=${courseid}&paperid="+paperid+"";
     <c:if test="${!empty param.editQues&&param.editQues==0}">
@@ -75,6 +81,9 @@ function loadPaperQues(){
     <c:if test="${!empty param.isrelate}">
         url+="&isrelate=1";
     </c:if>
+    if(typeof(qid)!="undefined"&&(qid+"").length>0){
+        url+="&qid="+qid;
+    }
 
     $("#paper_detail").hide();
     $("#paper_detail").load(url
@@ -395,7 +404,17 @@ function doDelPaperQues(quesid){
                 alert(rmsg.msg);
             }else{
                 alert(rmsg.msg);
-                loadPaperQues();
+                //得到下一题的
+                var nextQuesTbl=$("div[id*='dv_table'] #dv_ques_"+quesid);
+                var nextQuesId=undefined;
+                if(nextQuesTbl.next().length>0)
+                    nextQuesId=nextQuesTbl.next().attr("data-bind");
+                else{
+                    if(nextQuesTbl.prev().length>0){
+                        nextQuesId=nextQuesTbl.prev().attr("data-bind");
+                    }
+                }
+                loadPaperQues(nextQuesId);
             }
         }
     });

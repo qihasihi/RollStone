@@ -1076,8 +1076,8 @@ function doUpdDialogQues(questionid){
             if(rmsg.type=="error"){
                 alert(rmsg.msg);
             }else{
-                loadPaperQues();
-                loadDiv(3);
+                //loadPaperQues(questionid);
+                loadDiv(3,undefined,questionid);
             }
         }
     });

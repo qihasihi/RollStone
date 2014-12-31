@@ -125,7 +125,15 @@ function paperDivShow<%=random%>(){
 //            }
     var currentQIdx=$("#dv_paperdetail<%=random%>>table").filter(function(){return this.style.display!='none';}).attr("data-idx");
     if(typeof(currentQIdx)=="undefined"||currentQIdx==null){
-        next<%=random%>(1);
+        <c:if test="${!empty param.qid}">
+            //得到qid对应下的idx
+            var dataIdx=$("#dv_ques_${param.qid}").attr("data-idx");
+            showQues<%=random%>(dataIdx);
+        </c:if>
+        <c:if test="${empty param.qid}">
+            showQues<%=random%>(1);
+        </c:if>
+
     }
 
 }

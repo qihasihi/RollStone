@@ -194,11 +194,11 @@ function showCourseList(){
         });
     }
 
-function loadDiv(t,ispaper){
+function loadDiv(t,ispaper,qid){
     if(typeof(t)!="undefined"&&t!=null){
         if(t==3){
             if(typeof(ispaper)=="undefined"||ispaper=='undefined'||ispaper==null||ispaper==''){
-                loadEditPaper(${courseid},pid_bk);
+                loadEditPaper(${courseid},pid_bk,undefined,undefined,qid);
 //                $("#dv_model").hide();
 //                $("#dv_content_child").show();
             }else{
