@@ -306,7 +306,7 @@ public class TpTaskInfo implements Serializable {
         if(content!=null&&content.trim().length()>0){
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
-            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getTaskvalueid()+"/";
+            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getTaskvalueid()+"/";
             while(content.indexOf("_QUESTIONPIC+")!=-1)
                 content=content.replaceAll("_QUESTIONPIC\\+",t);
             while (content.indexOf("\n")!=-1||content.indexOf("\n\r")!=-1||content.indexOf("\t")!=-1){

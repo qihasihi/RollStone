@@ -37,7 +37,6 @@
 
     <!-- 导入引用包 -->
     <import resource="classpath:spring/spring-config-*.xml" />
-
     <!-- 启动包扫描功能，以便注册带有@Controller、@Service、@repository、@Component等注解的类成为spring的bean -->
     <context:component-scan base-package="com.school" />
     <!-- <context:component-scan base-package="com.springmvc.hibernate.demo.service" />

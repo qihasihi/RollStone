@@ -124,7 +124,7 @@ public class QuestionInfo implements java.io.Serializable {
         if(correctanswer!=null&&correctanswer.trim().length()>0){
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
-            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(correctanswer.indexOf("_QUESTIONPIC+")!=-1)
                 correctanswer=correctanswer.replaceAll("_QUESTIONPIC\\+",t);
             while (correctanswer.indexOf("\r\n\t")!=-1||
@@ -172,7 +172,8 @@ public class QuestionInfo implements java.io.Serializable {
             if(content.trim().equals("Пе"))content="";
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
-            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+            //String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
            // String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
             while(content.indexOf("_QUESTIONPIC+")!=-1)
                 content=content.replaceAll("_QUESTIONPIC\\+", t);
@@ -315,7 +316,7 @@ public class QuestionInfo implements java.io.Serializable {
             analysis=analysis.trim();
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
-            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
 
             while(analysis.indexOf("_QUESTIONPIC+")!=-1)
                 analysis=analysis.replaceAll("_QUESTIONPIC\\+", t);

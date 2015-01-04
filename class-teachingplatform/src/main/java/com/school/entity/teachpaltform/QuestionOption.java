@@ -49,7 +49,7 @@ public class QuestionOption implements Serializable{
             content=content.trim();
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
-            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
+            String t=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getQuestionid()+"/";
 
             while(content.indexOf("_QUESTIONPIC+")!=-1)
                 content=content.replaceAll("_QUESTIONPIC\\+", t);

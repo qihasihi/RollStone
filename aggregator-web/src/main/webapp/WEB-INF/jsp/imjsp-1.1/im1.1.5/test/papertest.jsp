@@ -24,7 +24,7 @@
         var scoreArray=[];
         var papertype="${paperObj.papertype}";
         var userType="${userType}";
-        var _QUES_IMG_URL="<%=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
+        var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         var tqControler=null;
         var loadingCount=0;
         $(function(){

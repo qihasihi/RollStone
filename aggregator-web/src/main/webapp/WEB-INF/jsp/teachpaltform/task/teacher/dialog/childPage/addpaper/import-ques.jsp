@@ -100,7 +100,7 @@ function getInvestReturnMethod_ques(rps){
             if(itm.extension=='4'){
                 shtml+='<div  class="p_t_10" id="sp_mp3_'+itm.questionid+'" ></div>'
                 shtml+='<script type="text/javascript">';
-                shtml+='playSound(\'play\',\'<%=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/'+itm.questionid+'/001.mp3\',270,22,\'sp_mp3_'+itm.questionid+'\',false)';
+                shtml+='playSound(\'play\',\'<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/'+itm.questionid+'/001.mp3\',270,22,\'sp_mp3_'+itm.questionid+'\',false)';
                 shtml+='<\/script>';
             }
             if(itm.extension!='4'){

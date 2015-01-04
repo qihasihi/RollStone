@@ -8,7 +8,7 @@ Created by IntelliJ IDEA.
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="/util/common-jsp/common-jxpt.jsp"%>
 <%
-    String quesImgPath=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH");
+    String quesImgPath=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH");
     Object quesid=request.getAttribute("quesid");
     if(quesid!=null||quesid.toString().length()>0)
     pageContext.setAttribute("quesImgpath",quesImgPath+"/"+quesid+"/");
@@ -17,7 +17,7 @@ Created by IntelliJ IDEA.
 <head>
     <title></title>
     <script type="text/javascript">
-         var _QUES_IMG_URL="<%=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
+         var _QUES_IMG_URL="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>";
         var questiontype = "${detail.QUESTION_TYPE2!=null?detail.QUESTION_TYPE2:detail.QUESTION_TYPE}";
         var extension = "${detail.EXTENSION2!=null?detail.EXTENSION2:detail.EXTENSION}";
         var tabidx = "${param.tabidx}";

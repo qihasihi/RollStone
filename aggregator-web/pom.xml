@@ -50,6 +50,12 @@
                 <package.target>release</package.target>
             </properties>
         </profile>
+        <profile>
+            <id>releaseTask</id>
+            <properties>
+                <package.target>releaseTask</package.target>
+            </properties>
+        </profile>
     </profiles>
 
 

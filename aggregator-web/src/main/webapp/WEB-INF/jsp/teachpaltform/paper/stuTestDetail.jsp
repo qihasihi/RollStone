@@ -179,7 +179,7 @@
                 //document.write(h);
                 $("#dv_question").append(h);
                 if(pextension==4){
-                    var mp3url="<%=basePath+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/${q.parentQues.questionid}/001.mp3";
+                    var mp3url="<%=UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")%>/${q.parentQues.questionid}/001.mp3";
                     playSound('play',mp3url,300,35,'sp_mp3_${q.parentQues.questionid}',false);
                 }
             }

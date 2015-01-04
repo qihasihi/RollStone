@@ -132,6 +132,9 @@ public class TimerTaskListener implements ServletContextListener {
 		// TODO Auto-generated method stub
         //启动配置分校信息
         configSchool(arg0.getServletContext());
+        String timerSwitch=UtilTool.utilproperty.getProperty("IS_TASK_PROJECT");
+        if(timerSwitch==null||timerSwitch.length()<1||timerSwitch.equals("0"))
+            return;
 
     /**************************每天凌晨1点开始执行分校信息更新***********************************/
 	//	每天晚上1点开始执行
