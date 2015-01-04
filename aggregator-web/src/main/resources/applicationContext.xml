@@ -35,12 +35,41 @@
     <!-- 事务控制   -->
     <tx:annotation-driven transaction-manager="transactionManager"  />
 
-
     <!-- 导入引用包 -->
-    <import resource="classpath:spring-config-*.xml" />
+    <import resource="classpath:spring/spring-config-*.xml" />
+
     <!-- 启动包扫描功能，以便注册带有@Controller、@Service、@repository、@Component等注解的类成为spring的bean -->
     <context:component-scan base-package="com.school" />
     <!-- <context:component-scan base-package="com.springmvc.hibernate.demo.service" />
      <context:component-scan base-package="com.springmvc.hibernate.demo.dao" />     -->
     <context:annotation-config/>
+    <!-- 对静态资源文件的访问 (公 共)-->
+
+    <mvc:resources mapping="/images/**" location="/images/" />
+    <mvc:resources mapping="/img/**" location="/img/" />
+    <mvc:resources mapping="/css/images/**" location="/css/images/**" />
+    <mvc:resources mapping="/css/images/**" location="/css/images/**" />
+
+    <mvc:resources mapping="/css/**" location="/css/" />
+    <mvc:resources mapping="/js/common/**" location="/js/common/" />
+    <!-- 定义ajaxUpload文件的上传 js  css定义 -->
+    <mvc:resources mapping="/util/progressupload-1/css/**" location="/util/progressupload-1/css/" />
+    <mvc:resources mapping="/util/progressupload-1/**" location="/util/progressupload-1/" />
+    <!-- xheditor  css   js option -->
+    <mvc:resources mapping="/util/xheditor/xheditor_emot/default/**" location="/util/xheditor/xheditor_emot/default/" />
+    <mvc:resources mapping="/util/xheditor/xheditor_emot/ipb/**" location="/util/xheditor/xheditor_emot/ipb/" />
+    <mvc:resources mapping="/util/xheditor/xheditor_emot/msn/**" location="/util/xheditor/xheditor_emot/msn/" />
+    <mvc:resources mapping="/util/xheditor/xheditor_emot/pidgin/**" location="/util/xheditor/xheditor_emot/pidgin/" />
+    <mvc:resources mapping="/util/xheditor/jquery/**" location="/util/xheditor/jquery/"/>
+    <!--ckeditor-->
+    <mvc:resources mapping="/ueditor/**" location="/ueditor/" />
+    <mvc:resources mapping="/ckfinder/ckfinder/**" location="/ckfinder/ckfinder/" />
+    <mvc:resources mapping="/ueditor/themes/default/css/**" location="/ueditor/themes/default/css/" />
+
+
+
+    <mvc:resources mapping="/userUploadFile/**" location="/userUploadFile/" />
+    <mvc:resources mapping="/uploadfile/**" location="/uploadfile/" />
+    <mvc:resources mapping="/js/**" location="/js/" />
+
 </beans>
