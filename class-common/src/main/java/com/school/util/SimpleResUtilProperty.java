@@ -1,6 +1,8 @@
 package com.school.util;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 解析msg.properties属性文件
@@ -33,16 +35,20 @@ public class SimpleResUtilProperty {
 		return instance;
 	}
 
-	/**
-	 * 加载配置文件
-	 */
-	public void getProperties() {
-		prop = new java.util.Properties(); // 创建一个Properties 类的引用
-		try {
-			prop.load(SimpleResUtilProperty.class
-					.getResourceAsStream("/properties/SimpleResUtil.properties")); // 加载配置文件
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+
+    /**
+     * 加载配置文件
+     */
+    public void getProperties() {
+        prop = new java.util.Properties(); // 创建一个Properties 类的引用
+        try {
+
+            InputStream is = SimpleResUtilProperty.class.getResourceAsStream("/properties/SimpleResUtil.properties"); // 加载配置文件
+            if(is==null)  //测试
+                is=new FileInputStream(PropertiesFileConfig.getPropertiesConfigPath(2));
+            prop.load(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
