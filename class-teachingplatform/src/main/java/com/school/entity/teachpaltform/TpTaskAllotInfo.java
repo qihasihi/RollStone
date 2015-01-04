@@ -24,7 +24,53 @@ public class TpTaskAllotInfo implements Serializable {
     private String allotobj; //任务对象
     private Object allotid;
     private Object allotname;
+    private Object classtype;
+    private Object dcschoolid;
+    private Integer tasktype;
+
+    public Integer getTasktype() {
+        return tasktype;
+    }
+
+    public void setTasktype(Integer tasktype) {
+        this.tasktype = tasktype;
+    }
+
+    public Object getDcschoolid() {
+        return dcschoolid;
+    }
+
+    public void setDcschoolid(Object dcschoolid) {
+        this.dcschoolid = dcschoolid;
+    }
+
+    public Object getClasstype() {
+        return classtype;
+    }
+
+    public void setClasstype(Object classtype) {
+        this.classtype = classtype;
+    }
+
+    public Integer getRemindstatus() {
+        return remindstatus;
+    }
+
+    public void setRemindstatus(Integer remindstatus) {
+        this.remindstatus = remindstatus;
+    }
+
     private Long courseid;
+    private Integer seltype;
+    private Integer remindstatus;
+
+    public Integer getSeltype() {
+        return seltype;
+    }
+
+    public void setSeltype(Integer seltype) {
+        this.seltype = seltype;
+    }
 
     public Object getAllotid() {
         return allotid;
@@ -158,5 +204,9 @@ public class TpTaskAllotInfo implements Serializable {
         return UtilTool.DateConvertToString(etime, UtilTool.DateType.type1);
     }
   
-
+    public static enum QUERY_TYPE{
+        Hour{public Integer getValue(){return 1;}},
+        晚22至早8{public Integer getValue(){return 2;}};
+        public abstract Integer getValue();
+    }
 }
