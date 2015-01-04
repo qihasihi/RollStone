@@ -22,6 +22,7 @@
         <module>web-chanpin</module>
         <module>aggregator-web</module>
 
+
     </modules>
 
     <!--distributionManagement>
@@ -42,7 +43,19 @@
             <artifactId>utils</artifactId>
             <version>1.1.1-SNAPSHOT</version>
         </dependency>
-
+        <!--junit测试-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <!--<scope>test</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.test</artifactId>
+            <version>${spring.version}</version>
+            <!--<scope>test</scope>-->
+        </dependency>
     </dependencies>
 
 
@@ -247,6 +260,18 @@
                 <artifactId>jta</artifactId>
                 <version>1.1</version>
             </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <!--<scope>test</scope>-->
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>org.springframework.test</artifactId>
+                <version>${spring.version}</version>
+                <!--<scope>test</scope>-->
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
@@ -287,5 +312,15 @@
 
             </plugins>
         </pluginManagement>
+
+        <!--测试资源配置地址-->
+        <testResources>
+            <testResource>
+               <directory>aggregator-class/src/main/resources/</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
     </build>
+
+
 </project>
