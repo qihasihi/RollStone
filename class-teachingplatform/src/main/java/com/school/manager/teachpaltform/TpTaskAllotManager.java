@@ -113,5 +113,10 @@ public class  TpTaskAllotManager extends BaseManager<TpTaskAllotInfo> implements
     public List<Map<String,Object>> getTaskAllotBLClassId(final Long taskid,final Integer userid){
         return this.tptaskallotdao.getTaskAllotBLClassId(taskid,userid);
     }
+
+    @Override
+    public List<TpTaskAllotInfo> getTaskRemindObjList(TpTaskAllotInfo tallot, PageResult pageResult) {
+        return this.tptaskallotdao.getTaskRemindObjList(tallot,pageResult);
+    }
 }
 

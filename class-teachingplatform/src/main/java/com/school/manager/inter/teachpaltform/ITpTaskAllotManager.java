@@ -3,6 +3,7 @@ package  com.school.manager.inter.teachpaltform;
 
 import com.school.entity.teachpaltform.TpTaskAllotInfo;
 import com.school.manager.base.IBaseManager;
+import com.school.util.PageResult;
 
 import java.util.List;
 import java.util.Map;
@@ -31,4 +32,12 @@ public interface ITpTaskAllotManager  extends IBaseManager<TpTaskAllotInfo> {
      * @return
      */
     public List<Map<String,Object>> getTaskAllotBLClassId(final Long taskid,final Integer userid);
+
+    /**
+     * 获取任务提醒对象
+     * @param tallot
+     * @param pageResult
+     * @return
+     */
+    public List<TpTaskAllotInfo>getTaskRemindObjList(TpTaskAllotInfo tallot,PageResult pageResult);
 }
