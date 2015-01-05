@@ -5,26 +5,21 @@ import com.school.entity.DictionaryInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.paper.PaperInfo;
 import com.school.entity.teachpaltform.paper.PaperQuestion;
-import com.school.manager.DictionaryManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
-import com.school.manager.teachpaltform.*;
-import com.school.manager.teachpaltform.interactive.TpTopicManager;
-import com.school.manager.teachpaltform.paper.PaperManager;
-import com.school.manager.teachpaltform.paper.PaperQuestionManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,29 +32,28 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/question")
 public class QuestionController extends BaseController<QuestionInfo> {
+    @Autowired
     private IQuestionManager questionManager;
+    @Autowired
     private ITpCourseManager tpCourseManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private IQuestionOptionManager questionOptionManager;
+    @Autowired
     private ITpCourseQuestionManager tpCourseQuestionManager;
+    @Autowired
     private ITpOperateManager tpOperateManager;
+    @Autowired
     private ITpTopicManager tpTopicManager;
+    @Autowired
     private ITpCourseTeachingMaterialManager tpCourseTeachingMaterialManager;
+    @Autowired
     private IPaperQuestionManager paperQuestionManager;
+    @Autowired
     private IPaperManager paperManager;
 
-    public QuestionController(){
-        this.questionManager=this.getManager(QuestionManager.class);
-        this.tpCourseManager=this.getManager(TpCourseManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-        this.questionOptionManager=this.getManager(QuestionOptionManager.class);
-        this.tpCourseQuestionManager=this.getManager(TpCourseQuestionManager.class);
-        this.tpOperateManager=this.getManager(TpOperateManager.class);
-        this.tpTopicManager=this.getManager(TpTopicManager.class);
-        this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
-        this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
-        this.paperManager=this.getManager(PaperManager.class);
-    }
+
     /**
      * 根据课题ID，加载试题列表
      *

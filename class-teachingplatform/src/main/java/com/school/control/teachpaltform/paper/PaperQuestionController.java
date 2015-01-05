@@ -10,10 +10,6 @@ import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.entity.teachpaltform.paper.*;
-import com.school.manager.ClassManager;
-import com.school.manager.DictionaryManager;
-import com.school.manager.SmsManager;
-import com.school.manager.UserManager;
 import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.ISmsManager;
@@ -24,12 +20,6 @@ import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.*;
-import com.school.manager.resource.ResourceManager;
-import com.school.manager.teachpaltform.*;
-import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
-import com.school.manager.teachpaltform.interactive.TpTopicManager;
-import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
-import com.school.manager.teachpaltform.paper.*;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -3670,6 +3660,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         splog.setUserid(uid);
         splog.setPaperid(Long.parseLong(paperid));
         splog.setIsinpaper(2);
+        if(taskid!=null)
+            splog.setTaskid(Long.parseLong(taskid));
 
         String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
         List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,pr);
