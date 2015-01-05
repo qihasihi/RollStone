@@ -128,6 +128,7 @@
                                 $("#div_exam strong[id*='you_score']").parent().hide();
                                 $("#div_exam>div>table").removeClass("w940");
                                 $("#div_exam>div>table").addClass("w910");
+                                $("#div_exam .title").remove();
                             }
                     );
                 </c:if>
