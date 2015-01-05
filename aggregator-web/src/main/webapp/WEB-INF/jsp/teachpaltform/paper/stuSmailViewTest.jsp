@@ -153,6 +153,8 @@
                         //加载
                         loadQuesNumberTool(quesSize);
                         nextNum(0);
+
+                        $("#div_exam .title").remove();
                     });
                 </c:if>
            }
