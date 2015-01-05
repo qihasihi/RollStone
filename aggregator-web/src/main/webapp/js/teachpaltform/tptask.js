@@ -1795,9 +1795,9 @@ function xzloadStuPerformance(classid, tasktype, questionid, classtype) {
                         if(classid==0)
                             recordhtm += '<td>' + itm.clsname + '</td>';
                         if(typeof(itm.userinfo.stuNo)=='undefined')
-                            htm += '<td>' + '--' + '</td>';
+                            recordhtm += '<td>' + '--' + '</td>';
                         else
-                            htm += '<td>' + itm.userinfo.stuNo + '</td>';
+                            recordhtm += '<td>' + itm.userinfo.stuNo + '</td>';
                         recordhtm += '<td>' + itm.userinfo.stuname + '</td>';
                         if (typeof(itm.ctimeString) != 'undefined')
                             recordhtm += '<td>' + itm.ctimeString + '</td>';
@@ -2198,7 +2198,7 @@ function cjloadStuPerformance(classid, classtype) {
                                     studytime=studytime.substring(0,16);
                                     htm += '<td>'+studytime+'</td>';
                                     htm += '<td id="td_0"><a class="font-darkblue" href="paperques?m=&taskid='+taskid+'&userid='+itm[1]+'&flag=1">'+itm[3]+'</a></td>';
-                                    $.each(rmsg.objList[4], function (quesnum, ques) {teaViewStuPaper
+                                    $.each(rmsg.objList[4], function (quesnum, ques) {
                                         var answer='';
                                         if(classid==0){
                                             answer = itm[quesnum+5];
