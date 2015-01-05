@@ -209,7 +209,7 @@
 
         </div>
      </div>
-       <a href="javascript:;" onclick="jwplayEnd()">看完了（测试）</a>
+       <%//<a href="javascript:;" onclick="jwplayEnd()">看完了（测试）</a>%>
    </div>
     <div id="div_exam" style="display:none">
     </div>
