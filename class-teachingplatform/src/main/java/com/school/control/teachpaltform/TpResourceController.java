@@ -1,108 +1,104 @@
 package com.school.control.teachpaltform;
 
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.dao.inter.resource.IAccessDAO;
+import com.school.control.base.BaseController;
 import com.school.entity.*;
 import com.school.entity.resource.AccessInfo;
+import com.school.entity.resource.ResourceInfo;
 import com.school.entity.resource.StoreInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.paper.MicVideoPaperInfo;
 import com.school.entity.teachpaltform.paper.PaperInfo;
 import com.school.entity.teachpaltform.paper.PaperQuestion;
-import com.school.entity.teachpaltform.paper.TpCoursePaper;
-import com.school.manager.*;
+import com.school.manager.ColumnManager;
 import com.school.manager.inter.*;
 import com.school.manager.inter.resource.IAccessManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.resource.IStoreManager;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.paper.IMicVideoPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperManager;
 import com.school.manager.inter.teachpaltform.paper.IPaperQuestionManager;
-import com.school.manager.resource.AccessManager;
-import com.school.manager.resource.ResourceManager;
-import com.school.manager.resource.StoreManager;
-import com.school.manager.teachpaltform.*;
-import com.school.manager.teachpaltform.paper.MicVideoPaperManager;
-import com.school.manager.teachpaltform.paper.PaperManager;
-import com.school.manager.teachpaltform.paper.PaperQuestionManager;
+import com.school.util.JsonEntity;
 import com.school.util.MD5_NEW;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-
-import com.school.control.base.BaseController;
-import com.school.entity.resource.ResourceInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value="/tpres")
 public class TpResourceController extends BaseController<TpCourseResource>{
+    @Autowired
     private ITpCourseManager tpCourseManager;
+    @Autowired
     private ITpOperateManager tpOperateManager;
+    @Autowired
     private IResourceManager resourceManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private ITeachingMaterialManager teachingMaterialManager;
+    @Autowired
     private ITpCourseTeachingMaterialManager tpCourseTeachingMaterialManager;
+    @Autowired
     private ITpCourseResourceManager tpCourseResourceManager;
+    @Autowired
     private IStudentManager studentManager;
+    @Autowired
     private ITpResourceCollectManager tpResourceCollectManager;
+    @Autowired
     private ITpResourceViewManager tpResourceViewManager;
+    @Autowired
     private IQuestionAnswerManager questionAnswerManager;
+    @Autowired
     private ITpTaskManager tpTaskManager;
+    @Autowired
     private IUserManager userManager;
+    @Autowired
     private ITpCourseQuestionManager tpCourseQuestionManager;
+    @Autowired
     private IAccessManager accessManager;
+    @Autowired
     private IStoreManager storeManager;
+    @Autowired
     private ITpCourseRelatedManager tpCourseRelatedManager;
+    @Autowired
     private IMicVideoPaperManager micVideoPaperManager;
+    @Autowired
     private IPaperQuestionManager paperQuestionManager;
+    @Autowired
     private IPaperManager paperManager;
+    @Autowired
     private IQuestionOptionManager questionOptionManager;
+    @Autowired
     private ITaskPerformanceManager taskPerformanceManager;
-    public TpResourceController(){
-        this.taskPerformanceManager=this.getManager(TaskPerformanceManager.class);
-        this.tpCourseManager=this.getManager(TpCourseManager.class);
-        this.tpOperateManager=this.getManager(TpOperateManager.class);
-        this.resourceManager=this.getManager(ResourceManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.teachingMaterialManager=this.getManager(TeachingMaterialManager.class);
-        this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
-        this.tpCourseResourceManager=this.getManager(TpCourseResourceManager.class);
-        this.studentManager=this.getManager(StudentManager.class);
-        this.tpResourceCollectManager=this.getManager(TpResourceCollectManager.class);
-        this.tpResourceViewManager=this.getManager(TpResourceViewManager.class);
-        this.questionAnswerManager=this.getManager(QuestionAnswerManager.class);
-        this.tpTaskManager=this.getManager(TpTaskManager.class);
-        this.userManager=this.getManager(UserManager.class);
-        this.tpCourseQuestionManager=this.getManager(TpCourseQuestionManager.class);
-        this.accessManager=this.getManager(AccessManager.class);
-        this.storeManager=this.getManager(StoreManager.class);
-        this.tpCourseRelatedManager=this.getManager(TpCourseRelatedManager.class);
-        this.micVideoPaperManager=this.getManager(MicVideoPaperManager.class);
-        this.paperManager=this.getManager(PaperManager.class);
-        this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
-        this.questionOptionManager=this.getManager(QuestionOptionManager.class);
-    }
+    @Autowired
+    private ITpStuScoreLogsManager tpStuScoreLogsManager;
+    @Autowired
+    private ITpTaskAllotManager tpTaskAllotManager;
+
+
 
     /**
      * 获取专题列表
@@ -506,8 +502,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                 if(this.tpCourseResourceManager.doExcetueArrayProc(sqlList,objListArray)){
                     je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                     je.setType("success");
-                    String src=UtilTool.getResourceLocation(Long.parseLong(resid),2)+"/"+UtilTool.getResourceMd5Directory(resid);
-                    String dest=UtilTool.getResourceLocation(nextResourceId,2)+"/"+UtilTool.getResourceMd5Directory(nextResourceId.toString());
+                    String src=UtilTool.getResourceLocation(request,Long.parseLong(resid),2)+"/"+UtilTool.getResourceMd5Directory(resid);
+                    String dest=UtilTool.getResourceLocation(request,nextResourceId,2)+"/"+UtilTool.getResourceMd5Directory(nextResourceId.toString());
                     UtilTool.copyDirectiory(src,dest);
                 }else
                     je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -2872,7 +2868,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             response.getWriter().print(je.toJSON());
             return;
         }
-        je.getObjList().add(UtilTool.getResourceLocation(Long.parseLong(resid),1));
+        je.getObjList().add(UtilTool.getResourceLocation(request,Long.parseLong(resid),1));
         response.getWriter().print(je.toJSON());
     }
 
@@ -2903,7 +2899,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             String filetype=UtilTool.getConvertResourseType(r.getResname()+r.getFilesuffixname());
             if(filetype!=null&&filetype.equals("doc")){
                 //String destPath=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
-                String destPath=UtilTool.getResourceLocation(r.getResid(),2)+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
+                String destPath=UtilTool.getResourceLocation(request,r.getResid(),2)+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
                 System.out.println("checkConvertStatus destpath:"+destPath);
                 if(!new File(destPath).exists()){
                     je.setMsg("当前资源不可预览，请等待转换完成后预览!");
@@ -2941,9 +2937,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             String filetype=UtilTool.getConvertResourseType(r.getResname()+r.getFilesuffixname());
             if(filetype!=null&&filetype.equals("doc")){
                 boolean flag=false;
-                String destPath=UtilTool.getResourceLocation(r.getResid(),2)+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
+                String destPath=UtilTool.getResourceLocation(request,r.getResid(),2)+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
                 System.out.println("convertDoc destPath:"+destPath);
-                String file=UtilTool.getResourceLocation(r.getResid(),2)+"/"+UtilTool.getResourceFileUrl(r.getResid().toString(),r.getFilesuffixname());
+                String file=UtilTool.getResourceLocation(request,r.getResid(),2)+"/"+UtilTool.getResourceFileUrl(r.getResid().toString(),r.getFilesuffixname());
                 System.out.println("convertDoc srcPath:"+file);
                 if(!new File(file).exists()){
                     System.out.println("RES_ID:"+r.getResid()+"path:"+file);
@@ -2996,8 +2992,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                     String filetype=UtilTool.getConvertResourseType(resinfo.getFilename());
                     if(filetype!=null&&filetype.equals("doc")){
                         boolean flag=false;
-                        String destPath=UtilTool.getResourceLocation(resinfo.getResid(),2)+"/"+UtilTool.getConvertPath(resinfo.getResid().toString(),resinfo.getFilesuffixname());
-                        String file=UtilTool.getResourceLocation(resinfo.getResid(),2)+"/"+UtilTool.getResourceFileUrl(resinfo.getResid().toString(),resinfo.getFilesuffixname());
+                        String destPath=UtilTool.getResourceLocation(request,resinfo.getResid(),2)+"/"+UtilTool.getConvertPath(resinfo.getResid().toString(),resinfo.getFilesuffixname());
+                        String file=UtilTool.getResourceLocation(request,resinfo.getResid(),2)+"/"+UtilTool.getResourceFileUrl(resinfo.getResid().toString(),resinfo.getFilesuffixname());
                         if(!new File(file).exists()){
                             System.out.println("RES_ID:"+resinfo.getResid()+"PATH:"+file);
                             continue;
@@ -3082,6 +3078,62 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                     if(tList==null||tList.size()<1){
                         if(this.taskPerformanceManager.doSave(tp)){
                             System.out.println("添加资源查看记录成功...");
+                            //添加积分
+                            try{
+                                //添加奖励
+                 /*奖励加分*/
+                                UserInfo loginU=this.logined(request);
+                                Integer userid=loginU.getUserid();
+                                //得到班级ID
+                                TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                                tallot.setTaskid(Long.parseLong(taskid));
+
+                                tallot.getUserinfo().setUserid(userid);
+                                List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                                if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                                        ||clsMapList.get(0).get("CLASS_ID")==null){
+                                    System.out.println(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                                }else{
+
+                                    //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                                    //规则转换:    6             7         8
+                                    Integer type=0;
+                                    switch(task.getTasktype()){
+                                        case 3:     //试题
+                                            type=1;break;
+                                        case 1:     //资源学习
+                                            type=2;break;
+                                        case 2:
+                                            type=4;
+                                            break;
+                                        case 4:
+                                            type=6;
+                                            break;
+                                        case 5:
+                                            type=7;
+                                            break;
+                                        case 6:
+                                            type=8;
+                                            break;
+                                    }
+
+
+                                    String msg=null;
+                                    /*奖励加分通过*/
+                                    if(this.tpStuScoreLogsManager.awardStuScore(task.getCourseid()
+                                            , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                                            , task.getTaskid()
+                                            , Long.parseLong(userid + ""),loginU.getEttuserid()+"", type,loginU.getDcschoolid())){
+                                        msg="恭喜您,获得了1积分和1蓝宝石!";
+                                        request.getSession().setAttribute("msg",msg);
+                                        System.out.println(msg);
+                                    }
+                                }
+                            }catch(Exception e){
+                                System.out.println(e.getMessage());
+                            }
+
+
                         }else{
                             je.setMsg("错误!添加查看记录失败!请重试!");
                             response.getWriter().print(je.toJSON());
