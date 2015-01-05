@@ -40,6 +40,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,74 +58,73 @@ import java.util.*;
 @Controller
 @RequestMapping(value="/paperques")
 public class PaperQuestionController extends BaseController<PaperQuestion>{
+    @Autowired
     private ITpTaskManager tpTaskManager;
+    @Autowired
     private ITpTaskAllotManager tpTaskAllotManager;
+    @Autowired
     private IQuestionOptionManager questionOptionManager;
+    @Autowired
     private ITpCourseManager tpCourseManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private ITpTopicThemeManager  tpTopicThemeManager;
+    @Autowired
     private IQuestionAnswerManager questionAnswerManager;
+    @Autowired
     private IQuestionManager questionManager;
+    @Autowired
     private ITaskPerformanceManager taskPerformanceManager;
+    @Autowired
     private IUserManager userManager;
+    @Autowired
     private ITpOperateManager tpOperateManager;
+    @Autowired
     private ITpCourseClassManager tpCourseClassManager;
+    @Autowired
     private ITpGroupManager tpGroupManager;
+    @Autowired
     private ITpGroupStudentManager tpGroupStudentManager;
+    @Autowired
     private ITpTopicManager tpTopicManager;
+    @Autowired
     private ITpCourseQuestionManager tpCourseQuestionManager;
+    @Autowired
     private ITpCourseResourceManager tpCourseResourceManager;
+    @Autowired
     private IClassManager classManager;
+    @Autowired
     private ITpVirtualClassManager tpVirtualClassManager;
+    @Autowired
     private ITaskSuggestManager taskSuggestManager;
+    @Autowired
     private ITpCourseTeachingMaterialManager tpCourseTeachingMaterialManager;
+    @Autowired
     private ISmsManager smsManager;
+    @Autowired
     private IPaperQuestionManager paperQuestionManager;
+    @Autowired
     private IPaperManager paperManager;
+    @Autowired
     private ITpCoursePaperManager tpCoursePaperManager;
+    @Autowired
     private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
+    @Autowired
     private IStuPaperLogsManager stuPaperLogsManager;
+    @Autowired
     private IResourceManager resourceManager;
+    @Autowired
     private IMicVideoPaperManager micVideoPaperManager;
+    @Autowired
     private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
+    @Autowired
     private IQuesTeamRelaManager quesTeamRelaManager;
+    @Autowired
     private IPaperQuesTeamScoreManager paperQuesTeamScoreManager;
+    @Autowired
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
-    public PaperQuestionController(){
-        this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
-        this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
-        this.tpTaskManager=this.getManager(TpTaskManager.class);
-        this.tpTaskAllotManager=this.getManager(TpTaskAllotManager.class);
-        this.questionOptionManager=this.getManager(QuestionOptionManager.class);
-        this.tpCourseManager=this.getManager(TpCourseManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-        this.tpTopicThemeManager=this.getManager(TpTopicThemeManager.class);
-        this.questionAnswerManager=this.getManager(QuestionAnswerManager.class);
-        this.questionManager=this.getManager(QuestionManager.class);
-        this.taskPerformanceManager=this.getManager(TaskPerformanceManager.class);
-        this.userManager=this.getManager(UserManager.class);
-        this.tpOperateManager=this.getManager(TpOperateManager.class);
-        this.tpCourseClassManager=this.getManager(TpCourseClassManager.class);
-        this.tpGroupManager=this.getManager(TpGroupManager.class);
-        this.tpGroupStudentManager = this.getManager(TpGroupStudentManager.class);
-        this.tpTopicManager=this.getManager(TpTopicManager.class);
-        this.tpCourseQuestionManager=this.getManager(TpCourseQuestionManager.class);
-        this.tpCourseResourceManager=this.getManager(TpCourseResourceManager.class);
-        this.classManager=this.getManager(ClassManager.class);
-        this.tpVirtualClassManager=this.getManager(TpVirtualClassManager.class);
-        this.taskSuggestManager=this.getManager(TaskSuggestManager.class);
-        this.smsManager=this.getManager(SmsManager.class);
-        this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
-        this.paperManager=this.getManager(PaperManager.class);
-        this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
-        this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
-        this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
-        this.resourceManager=this.getManager(ResourceManager.class);
-        this.micVideoPaperManager=this.getManager(MicVideoPaperManager.class);
-        this.stuViewMicVideoLogManager=this.getManager(StuViewMicVideoLogManager.class);
-        this.quesTeamRelaManager=this.getManager(QuesTeamRelaManager.class);
-        this.paperQuesTeamScoreManager=this.getManager(PaperQuesTeamScoreManager.class);
-    }
+
     /**
      * 根据课题ID，加载试卷列表
      * @return
@@ -3574,6 +3574,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             StuPaperLogs splog=new StuPaperLogs();
             splog.setUserid(this.logined(request).getUserid());
             splog.setPaperid(Long.parseLong(paperid));
+            if(taskid!=null&&taskid.trim().length()>0)
+                splog.setTaskid(Long.parseLong(taskid.trim()));
             splog.setIsinpaper(2);
             PageResult pr=new PageResult();
             pr.setPageSize(1);
