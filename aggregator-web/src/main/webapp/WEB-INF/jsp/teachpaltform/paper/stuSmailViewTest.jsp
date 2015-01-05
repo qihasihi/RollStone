@@ -227,7 +227,7 @@
         isShowBar=true;
         </c:if>
         loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
-                ,resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
+                ,resourcepathHead+'${resObj.path}/001.jpg'
                 ,${resObj.resid},769,432,isShowBar,jwplayEnd);
 </script>
 </c:if>
