@@ -1,14 +1,12 @@
 package com.school.control;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.*;
+import com.school.control.base.BaseController;
+import com.school.entity.*;
 import com.school.manager.inter.*;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,39 +14,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController; 
-import com.school.entity.ClassYearInfo;
-import com.school.entity.DeptInfo; 
-import com.school.entity.GradeInfo;
-import com.school.entity.JobInfo;
-import com.school.entity.RoleInfo;
-import com.school.entity.RoleUser; 
-import com.school.entity.SubjectInfo;
-import com.school.entity.UserInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Controller
 @Scope("prototype")
 @RequestMapping(value="/roleuser")
 public class RoleUserController extends BaseController<RoleUser> {
+    @Autowired
     private IClassYearManager classYearManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private ISubjectManager subjectManager;
+    @Autowired
     private IDeptManager deptManager;
+    @Autowired
     private IRoleManager roleManager;
+    @Autowired
     private IUserManager userManager;
+    @Autowired
     private IRoleUserManager roleUserManager;
-    public RoleUserController(){
-        this.classYearManager=this.getManager(ClassYearManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.subjectManager=this.getManager(SubjectManager.class);
-        this.deptManager=this.getManager(DeptManager.class);
-        this.roleManager=this.getManager(RoleManager.class);
-        this.userManager=this.getManager(UserManager.class);
-        this.roleUserManager=this.getManager(RoleUserManager.class);
-    }
+
 
 	/**
 	 * 获取给角色分配用户模式窗体

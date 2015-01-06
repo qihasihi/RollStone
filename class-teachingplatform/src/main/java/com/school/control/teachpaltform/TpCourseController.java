@@ -27,6 +27,7 @@ import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,66 +44,65 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "teachercourse")
 public class TpCourseController extends BaseController<TpCourseInfo> {
-    public TpCourseController(){
-        this.tpTaskManager=this.getManager(TpTaskManager.class);
-        this.tpCourseManager=this.getManager(TpCourseManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-        this.tpTopicThemeManager=this.getManager(TpTopicThemeManager.class);
-        this.taskPerformanceManager=this.getManager(TaskPerformanceManager.class);
-        this.tpCourseClassManager=this.getManager(TpCourseClassManager.class);
-        this.tpGroupManager=this.getManager(TpGroupManager.class);
-        this.tpTopicManager=this.getManager(TpTopicManager.class);
-        this.tpCourseQuestionManager=this.getManager(TpCourseQuestionManager.class);
-        this.tpCourseResourceManager=this.getManager(TpCourseResourceManager.class);
-        this.tpVirtualClassManager=this.getManager(TpVirtualClassManager.class);
-        this.termManager=this.getManager(TermManager.class);
-        this.teachingMaterialManager=this.getManager(TeachingMaterialManager.class);
-        this.trusteeShipClassManager=this.getManager(TrusteeShipClassManager.class);
-        this.tpCourseTeachingMaterialManager=this.getManager(TpCourseTeachingMaterialManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.subjectUserManager=this.getManager(SubjectUserManager.class);
-        this.subjectManager=this.getManager(SubjectManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.tpVirtualClassStudentManager=this.getManager(TpVirtualClassStudentManager.class);
-        this.tpGroupStudentManager=this.getManager(TpGroupStudentManager.class);
-        this.teacherManager=this.getManager(TeacherManager.class);
-        this.commentManager=this.getManager(CommentManager.class);
-        this.tpTeacherTeachMaterialManager=this.getManager(TpTeacherTeachMaterialManager.class);
-        this.schoolManager=this.getManager(SchoolManager.class);
-        this.resourceManager=this.getManager(ResourceManager.class);
-        this.tpCourseRelatedManager=this.getManager(TpCourseRelatedManager.class);
-        this.tpCoursePaperManager=this.getManager(TpCoursePaperManager.class);
-        this.classManager=this.getManager(ClassManager.class);
-    }
+    @Autowired
     private IClassManager classManager;
+    @Autowired
     private ITpCoursePaperManager tpCoursePaperManager;
+    @Autowired
     private ITpTaskManager tpTaskManager;
+    @Autowired
     private ITpCourseManager tpCourseManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private ITpTopicThemeManager tpTopicThemeManager;
+    @Autowired
     private ITaskPerformanceManager taskPerformanceManager;
+    @Autowired
     private ITpCourseClassManager tpCourseClassManager;
+    @Autowired
     private ITpGroupManager tpGroupManager;
+    @Autowired
     private ITpTopicManager tpTopicManager;
+    @Autowired
    private ITpCourseQuestionManager tpCourseQuestionManager;
+    @Autowired
     private ITpCourseResourceManager tpCourseResourceManager;
+    @Autowired
     private ITpVirtualClassManager tpVirtualClassManager;
+    @Autowired
     private ITermManager termManager;
+    @Autowired
     private ITeachingMaterialManager teachingMaterialManager;
+    @Autowired
     private ITrusteeShipClassManager trusteeShipClassManager;
+    @Autowired
     private ITpCourseTeachingMaterialManager tpCourseTeachingMaterialManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private ISubjectUserManager subjectUserManager;
+    @Autowired
     private ISubjectManager subjectManager;
+    @Autowired
     private IClassUserManager classUserManager;
+    @Autowired
     private ITpVirtualClassStudentManager tpVirtualClassStudentManager;
+    @Autowired
     private ITpGroupStudentManager tpGroupStudentManager;
+    @Autowired
     private ITeacherManager teacherManager;
+    @Autowired
     private ICommentManager commentManager;
+    @Autowired
     private ITpTeacherTeachMaterialManager tpTeacherTeachMaterialManager;
+    @Autowired
     private ISchoolManager schoolManager;
+    @Autowired
     private IResourceManager resourceManager;
+    @Autowired
     private ITpCourseRelatedManager tpCourseRelatedManager;
+
     /**
      * 进入教师课题页
      * @param request

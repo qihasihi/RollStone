@@ -1,40 +1,32 @@
 package com.school.control.peer;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.school.control.base.BaseController;
+import com.school.entity.DeptInfo;
+import com.school.entity.DeptUser;
+import com.school.entity.peer.PjPeerBaseInfo;
+import com.school.entity.peer.PjPeerItemInfo;
+import com.school.entity.peer.PjPeerLogInfo;
+import com.school.entity.peer.PjPeerUserInfo;
 import com.school.manager.inter.peer.IPjPeerBaseManager;
 import com.school.manager.inter.peer.IPjPeerItemManager;
 import com.school.manager.inter.peer.IPjPeerLogManager;
 import com.school.manager.inter.peer.IPjPeerUserManager;
-import com.school.manager.peer.PjPeerBaseManager;
-import com.school.manager.peer.PjPeerItemManager;
-import com.school.manager.peer.PjPeerLogManager;
-import com.school.manager.peer.PjPeerUserManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.DeptInfo;
-import com.school.entity.DeptUser;
-import com.school.entity.RoleUser;
-import com.school.entity.peer.PjPeerBaseInfo;
-import com.school.entity.peer.PjPeerItemInfo;
-import com.school.entity.peer.PjPeerLogInfo;
-import com.school.entity.peer.PjPeerUserInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
-import com.school.util.UtilTool.DateType;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 /**
  * @author 岳春阳
  * @description 同行评价评价项设置controller
@@ -42,17 +34,15 @@ import com.school.util.UtilTool.DateType;
 @Controller
 @RequestMapping(value="/peerlog")
 public class PjPeerLogController extends BaseController<PjPeerLogInfo> {
+    @Autowired
     private IPjPeerBaseManager pjPeerBaseManager;
+    @Autowired
     private IPjPeerUserManager pjPeerUserManager;
+    @Autowired
     private IPjPeerItemManager pjPeerItemManager;
+    @Autowired
     private IPjPeerLogManager pjPeerLogManager;
 
-    public PjPeerLogController() {
-        this.pjPeerBaseManager = this.getManager(PjPeerBaseManager.class);
-        this.pjPeerUserManager = this.getManager(PjPeerUserManager.class);
-        this.pjPeerItemManager = this.getManager(PjPeerItemManager.class);
-        this.pjPeerLogManager = this.getManager(PjPeerLogManager.class);
-    }
 
     /**
 	 * @author 岳春阳

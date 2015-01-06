@@ -11,6 +11,7 @@ import com.school.utils.EttInterfaceUserUtil;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,28 +25,27 @@ import java.util.*;
 @Controller
 @RequestMapping(value="/group")
 public class GroupController extends BaseController<TpGroupInfo>{
+    @Autowired
     private ITermManager termManager;
+    @Autowired
     private ITpGroupManager tpGroupManager;
+    @Autowired
     private IClassUserManager classUserManager;
+    @Autowired
     private ITpVirtualClassManager tpVirtualClassManager;
+    @Autowired
     private ITrusteeShipClassManager trusteeShipClassManager;
+    @Autowired
     private ITpGroupStudentManager tpGroupStudentManager;
+    @Autowired
     private ITpTaskAllotManager tpTaskAllotManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private IClassManager classManager;
+    @Autowired
     private ISubjectManager subjectManager;
-    public GroupController(){
-        this.termManager=this.getManager(TermManager.class);
-        this.tpGroupManager=this.getManager(TpGroupManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.tpVirtualClassManager=this.getManager(TpVirtualClassManager.class);
-        this.trusteeShipClassManager=this.getManager(TrusteeShipClassManager.class);
-        this.tpGroupStudentManager=this.getManager(TpGroupStudentManager.class);
-        this.tpTaskAllotManager=this.getManager(TpTaskAllotManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.classManager=this.getManager(ClassManager.class);
-        this.subjectManager=this.getManager(SubjectManager.class);
-    }
+
 
 	/**
 	 * 进入小组管理页面

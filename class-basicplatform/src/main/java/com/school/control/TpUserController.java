@@ -16,6 +16,7 @@ import com.school.util.UtilTool;
 import com.school.utils.EttInterfaceUserUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,14 +37,13 @@ import java.util.List;
 @RequestMapping(value = "/tpuser")
 public class TpUserController extends UserController {
 
+    @Autowired
     private ISchoolManager schoolManager;
+    @Autowired
     private ITpGroupManager groupManager;
+    @Autowired
     private ITpGroupStudentManager groupStudentManager;
-    public TpUserController(){
-        this.schoolManager=this.getManager(SchoolManager.class);
-        this.groupManager=this.getManager(TpGroupManager.class);
-        this.groupStudentManager=this.getManager(TpGroupStudentManager.class);
-    }
+
 
     /**
      * 网校教务进入班级管理

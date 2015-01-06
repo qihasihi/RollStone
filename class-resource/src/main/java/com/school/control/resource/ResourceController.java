@@ -35,6 +35,7 @@ import com.school.util.UtilTool;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.omg.CORBA.INTERNAL;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,63 +55,61 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/resource")
 public class ResourceController extends BaseController<ResourceInfo> {
-    public ResourceController(){
-        this.resourceFileManager=this.getManager(ResourceFileManager.class);
-        this.extendManager=this.getManager(ExtendManager.class);
-        this.extendResourceManager=this.getManager(ExtendResourceManager.class);
-        this.resourceRightManager=this.getManager(ResourceRightManager.class);
-        this.tpCourseResourceManager=this.getManager(TpCourseResourceManager.class);
-        this.commentManager=this.getManager(CommentManager.class);
-        this.accessManager=this.getManager(AccessManager.class);
-        this.tpTopicThemeManager=this.getManager(TpTopicThemeManager.class);
-        this.operateRecordManager=this.getManager(OperateRecordManager.class);
-        this.storeManager=this.getManager(StoreManager.class);
-        this.resourceReportManager=this.getManager(ResourceReportManager.class);
-        this.subjectUserManager=this.getManager(SubjectUserManager.class);
-        this.subjectManager=this.getManager(SubjectManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.resourceManager=this.getManager(ResourceManager.class);
-        this.tpCourseManager=this.getManager(TpCourseManager.class);
-        this.teachingMaterialManager=this.getManager(TeachingMaterialManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-        this.roleManager=this.getManager(RoleManager.class);
-        this.noticeManager=this.getManager(NoticeManager.class);
-        this.guideManager=this.getManager(GuideManager.class);
-        this.schoolManager=this.getManager(SchoolManager.class);
-        this.deptManager=this.getManager(DeptManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.userModelTotalScoreManager=this.getManager(UserModelTotalScoreManager.class);
-        this.userScoreRankManager=this.getManager(UserScoreRankManager.class);
-        this.schoolScoreRankManager=this.getManager(SchoolScoreRankManager.class);
-    }
+    @Autowired
     private IResourceFileManager resourceFileManager;
+    @Autowired
     private IExtendManager extendManager;
+    @Autowired
     private IExtendResourceManager extendResourceManager;
+    @Autowired
     private IResourceRightManager resourceRightManager;
-
+    @Autowired
     private TpCourseResourceManager tpCourseResourceManager;
+    @Autowired
     private ICommentManager commentManager;
+    @Autowired
     private IAccessManager accessManager;
+    @Autowired
     private ITpTopicThemeManager tpTopicThemeManager;
+    @Autowired
     private IOperateRecordManager operateRecordManager;
+    @Autowired
     private IResourceReportManager resourceReportManager;
+    @Autowired
     private IStoreManager storeManager;
+    @Autowired
     private ISubjectUserManager subjectUserManager;
+    @Autowired
     private ISubjectManager subjectManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private IResourceManager resourceManager;
+    @Autowired
     private ITpCourseManager tpCourseManager;
+    @Autowired
     private ITeachingMaterialManager teachingMaterialManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private IRoleManager roleManager;
+    @Autowired
     private INoticeManager noticeManager;
+    @Autowired
     private IGuideManager guideManager;
+    @Autowired
     private IClassUserManager classUserManager;
+    @Autowired
     private ISchoolManager schoolManager;
+    @Autowired
     private IDeptManager deptManager;
+    @Autowired
     private IUserModelTotalScoreManager userModelTotalScoreManager;
+    @Autowired
     private IUserScoreRankManager userScoreRankManager;
+    @Autowired
     private ISchoolScoreRankManager schoolScoreRankManager;
+
 
 
     @RequestMapping(params = "m=list", method = RequestMethod.GET)
@@ -1112,7 +1111,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         }
         String uptype=request.getParameter("uptype"); //1:
         if(Integer.parseInt(uptype)==1||resInfo.getFilesize()==null){//小文件
-            String fileurl=UtilTool.getResourceLocation(resInfo.getResid(),2)+"/"+UtilTool.getResourceUrl(resInfo.getResid().toString() ,suffix);
+            String fileurl=UtilTool.getResourceLocation(request,resInfo.getResid(),2)+"/"+UtilTool.getResourceUrl(resInfo.getResid().toString() ,suffix);
             File tmp=new File(fileurl);
             if(!tmp.exists()){
                 jeEntity.setMsg("文件不存在!");
@@ -2544,8 +2543,8 @@ public class ResourceController extends BaseController<ResourceInfo> {
         String filetype=UtilTool.getConvertResourseType(filepath);
         if(filetype!=null&&filetype.equals("doc")){
             //如果是
-            String destPath=UtilTool.getResourceLocation(Long.parseLong(resid),2)+"/"+UtilTool.getConvertPath(resid, resObj.getFilesuffixname());
-            String sourcepath=UtilTool.getResourceLocation(Long.parseLong(resid),2)+"/"+UtilTool.getResourceFileUrl(resid,resObj.getFilesuffixname());
+            String destPath=UtilTool.getResourceLocation(request,Long.parseLong(resid),2)+"/"+UtilTool.getConvertPath(resid, resObj.getFilesuffixname());
+            String sourcepath=UtilTool.getResourceLocation(request,Long.parseLong(resid),2)+"/"+UtilTool.getResourceFileUrl(resid,resObj.getFilesuffixname());
             //如果文件存在或者转换过的存在
             if(new File(sourcepath).exists()){
                 if(!new File(destPath).exists()){

@@ -42,19 +42,19 @@
     <col class="w120"/>
     <col class="w700"/>
     <tr>
-      <th><span class="ico06"></span>论题标题：</th>
+      <th><span class="ico06"></span>&nbsp;&nbsp;&nbsp;标题：</th>
       <td><input value="${tpc.topictitle }" maxlength="30" name="topictitle" id="topictitle" type="text" class="w350" />
       （最多30字）</td>
     </tr>
     <tr>
-      <th><span class="ico06"></span>论题说明：</th>
+      <th><span class="ico06"></span>&nbsp;&nbsp;&nbsp;内容：</th>
       <td><textarea id="topiccontent" name="topiccontent" class="h90 w600">${tpc.topiccontent }</textarea>
         <br>（最多500字）</td>
     </tr>
     <tr>
-      <th><span class="ico06"></span>论题状态：
+      <th style="display:none"><span class="ico06"></span>论题状态：
 </th>
-      <td class="font-black">
+      <td class="font-black" style="display:none">
         <c:if test="${!empty topicState}">
                 <c:forEach items="${topicState}" var="tstate" varStatus="ts_idx">
                     <input type="radio" value="${tstate.dictionaryvalue}" ${ts_idx.index==0?"checked=true":""} name="rdo_tpc_state" id="rdo_tpc_state${tstate.dictionaryvalue}"/>

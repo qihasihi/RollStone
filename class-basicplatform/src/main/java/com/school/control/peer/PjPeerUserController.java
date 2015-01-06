@@ -1,26 +1,22 @@
 package com.school.control.peer;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.DeptManager;
+import com.school.control.base.BaseController;
+import com.school.entity.DeptInfo;
+import com.school.entity.peer.PjPeerUserInfo;
 import com.school.manager.inter.IDeptManager;
 import com.school.manager.inter.peer.IPjPeerUserManager;
-import com.school.manager.peer.PjPeerUserManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.DeptInfo;
-import com.school.entity.TermInfo;
-import com.school.entity.peer.PjPeerUserInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 /**
  * @author 岳春阳
  * @description 同行评价参评用户controller
@@ -28,12 +24,11 @@ import com.school.util.UtilTool;
 @Controller
 @RequestMapping(value="/peeruser") 
 public class PjPeerUserController extends BaseController<PjPeerUserInfo> {
+    @Autowired
     private IDeptManager deptManager;
+    @Autowired
     private IPjPeerUserManager pjPeerUserManager;
-    public PjPeerUserController(){
-        this.deptManager=this.getManager(DeptManager.class);
-        this.pjPeerUserManager=this.getManager(PjPeerUserManager.class);
-    }
+
 	/**
 	 * @author 岳春阳
 	 * @description 同行评价参评用户调整列表页面

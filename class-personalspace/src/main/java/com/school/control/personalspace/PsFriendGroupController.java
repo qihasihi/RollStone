@@ -3,14 +3,12 @@ package com.school.control.personalspace;
 import com.school.control.base.BaseController;
 import com.school.entity.personalspace.PsFriendGroupInfo;
 import com.school.manager.inter.personalspace.IPsFriendGroupManager;
-import com.school.manager.personalspace.PsFriendGroupManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,11 +20,9 @@ import java.util.List;
 @Controller
 @RequestMapping(value="/friendgroup")
 public class PsFriendGroupController extends BaseController<PsFriendGroupInfo> {
+    @Autowired
     private IPsFriendGroupManager psFriendGroupManager;
 
-    public PsFriendGroupController(){
-        this.psFriendGroupManager=this.getManager(PsFriendGroupManager.class);
-    }
 
     /**
      * ajax获取好友分组

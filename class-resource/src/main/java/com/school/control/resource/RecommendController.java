@@ -1,32 +1,23 @@
 package com.school.control.resource;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.school.control.base.BaseController;
+import com.school.entity.resource.ResourceRecommend;
 import com.school.manager.inter.resource.IResourceRecommendManager;
-import com.school.manager.resource.ResourceRecommendManager;
+import com.school.util.JsonEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.resource.ResourceInfo;
-import com.school.entity.resource.ResourceRecommend;
-import com.school.entity.resource.StoreInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value="/resrecommend") 
 public class RecommendController extends BaseController<ResourceRecommend>{
+    @Autowired
     private IResourceRecommendManager resourceRecommendManager;
-    public RecommendController(){
-        this.resourceRecommendManager=this.getManager(ResourceRecommendManager.class);
-    }
 
 	/**
 	 * Ìí¼Ó

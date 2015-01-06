@@ -1,31 +1,28 @@
 package com.school.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.JobUserManager;
+import com.school.control.base.BaseController;
+import com.school.entity.JobUser;
 import com.school.manager.inter.IJobUserManager;
+import com.school.util.JsonEntity;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.school.control.base.BaseController;
-import com.school.entity.JobUser;
-import com.school.util.JsonEntity;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @Scope("prototype")
 @RequestMapping(value="/jobuser")
 public class JobUserController extends BaseController<JobUser>{
+    @Autowired
 	private IJobUserManager jobUserManager;
-    public JobUserController(){
-        this.jobUserManager=this.getManager(JobUserManager.class);
-    }
+
 	/**
 	 * 设置用户职务
 	 * @param request 

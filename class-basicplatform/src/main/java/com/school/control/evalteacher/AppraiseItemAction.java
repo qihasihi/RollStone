@@ -1,31 +1,25 @@
 package com.school.control.evalteacher;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.ClassYearManager;
-import com.school.manager.evalteacher.AppraiseItemManager;
-import com.school.manager.evalteacher.TimeStepManager;
+import com.school.control.base.BaseController;
+import com.school.entity.ClassYearInfo;
+import com.school.entity.evalteacher.AppraiseItemInfo;
+import com.school.entity.evalteacher.TimeStepInfo;
 import com.school.manager.inter.IClassYearManager;
 import com.school.manager.inter.evalteacher.IAppraiseItemManager;
 import com.school.manager.inter.evalteacher.ITimeStepManager;
+import com.school.util.JsonEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ClassYearInfo;
-import com.school.entity.evalteacher.AppraiseItemInfo;
-import com.school.entity.evalteacher.TimeStepInfo;
-
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 评教系统(评价项)
@@ -36,14 +30,13 @@ import com.school.util.PageResult;
 @Controller
 @RequestMapping(value = "/appraiseitem")
 public class AppraiseItemAction extends BaseController<AppraiseItemInfo> {
+    @Autowired
     private IClassYearManager classYearManager;
+    @Autowired
     private IAppraiseItemManager appraiseItemManager;
+    @Autowired
     private ITimeStepManager timeStepManager;
-    public AppraiseItemAction(){
-        this.classYearManager=this.getManager(ClassYearManager.class);
-        this.appraiseItemManager=this.getManager(AppraiseItemManager.class);
-        this.timeStepManager=this.getManager(TimeStepManager.class);
-    }
+
 	/**
 	 * 进入设置评价相管理
 	 * 

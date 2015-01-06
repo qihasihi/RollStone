@@ -11,6 +11,7 @@ import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import com.school.utils.EttInterfaceUserUtil;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -28,24 +29,23 @@ import java.util.*;
 public class ClassController extends BaseController<ClassInfo>{
     //¼ÇÂ¼Log4J
     private Logger logger = Logger.getLogger(this.getClass());
+    @Autowired
     private IClassManager classManager;
+    @Autowired
     private IClassYearManager classYearManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private ISubjectManager subjectManager;
+    @Autowired
     private ITermManager termManager;
+    @Autowired
     private IClassUserManager classUserManager;
+    @Autowired
     private IOperateExcelManager operaterexcelmanager;
+    @Autowired
     private IUserManager userManager;
-    public ClassController(){
-        this.classManager=this.getManager(ClassManager.class);
-        this.classYearManager=this.getManager(ClassYearManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.subjectManager=this.getManager(SubjectManager.class);
-        this.termManager=this.getManager(TermManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.userManager=this.getManager(UserManager.class);
-        this.operaterexcelmanager=this.getManager(OperateExcelManager.class);
-    }
+
 
     @RequestMapping(params="m=list",method=RequestMethod.GET)
     public ModelAndView toClassList(HttpServletRequest request,ModelMap mp )throws Exception{

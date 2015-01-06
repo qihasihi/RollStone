@@ -10,6 +10,7 @@ import com.school.manager.ScoreManager;
 import com.school.manager.inter.IScoreManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.resource.ResourceManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,12 +28,11 @@ import com.school.util.UtilTool;
 @Controller
 @RequestMapping(value = "/score")
 public class ScoreController extends BaseController<ScoreInfo> {
+    @Autowired
     private IScoreManager scoreManager;
+    @Autowired
     private IResourceManager resourceManager;
-    public ScoreController(){
-        this.scoreManager=this.getManager(ScoreManager.class);
-        this.resourceManager=this.getManager(ResourceManager.class);
-    }
+
 	/**
 	 * Ìí¼Ó
 	 * 

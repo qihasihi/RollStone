@@ -146,11 +146,11 @@
         }
 
         function toRecyleBin(){
-            if(global_gradeid<1){
+            if(global_gradeid<0){
                 alert("没有获取到年级参数！");
                 return;
             }
-            if(global_subjectid<1){
+            if(global_subjectid<0){
                 alert("没有获取到学科参数！");
                 return;
             }

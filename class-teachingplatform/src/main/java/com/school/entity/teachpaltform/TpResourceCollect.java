@@ -62,10 +62,10 @@ public class TpResourceCollect  implements java.io.Serializable{
             return "";
         //String file=UtilTool.gender_MD5(this.getFilename().replaceAll("'"," ").replaceAll(","," ").trim());
         String file="001";
-        return UtilTool.getResourceLocation(this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
+        return UtilTool.getResourceLocation(null,this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
     }
     public String getImgpath(){
-        return UtilTool.getResourceLocation(this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/001_smail.jpg";
+        return UtilTool.getResourceLocation(null,this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/001_smail.jpg";
     }
      
     public Object getViewcount() {

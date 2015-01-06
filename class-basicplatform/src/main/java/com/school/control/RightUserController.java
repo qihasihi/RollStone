@@ -1,38 +1,32 @@
 package com.school.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.RightUserManager;
-import com.school.manager.RoleUserManager;
-import com.school.manager.inter.IRightUserManager;
-import com.school.manager.inter.IRoleUserManager;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.school.control.base.BaseController;
 import com.school.entity.RightUser;
 import com.school.entity.RoleUser;
+import com.school.manager.inter.IRightUserManager;
+import com.school.manager.inter.IRoleUserManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value="/rightuser") 
 @Scope("prototype") 
 public class RightUserController extends BaseController<RightUser> {
+    @Autowired
 	private IRoleUserManager roleUserManager;
+    @Autowired
     private IRightUserManager rightUserManager;
-    public RightUserController(){
-        this.roleUserManager=this.getManager(RoleUserManager.class);
-        this.rightUserManager=this.getManager(RightUserManager.class);
-    }
+
 	
 	
 	/**

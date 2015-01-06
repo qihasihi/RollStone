@@ -1,52 +1,40 @@
 package com.school.control.notice;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.DictionaryManager;
-import com.school.manager.GradeManager;
-import com.school.manager.RoleManager;
+import com.school.control.base.BaseController;
+import com.school.entity.DictionaryInfo;
+import com.school.entity.RoleInfo;
+import com.school.entity.notice.NoticeInfo;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.IGradeManager;
 import com.school.manager.inter.IRoleManager;
 import com.school.manager.inter.notice.INoticeManager;
-import com.school.manager.notice.NoticeManager;
-import org.springframework.ejb.config.JeeNamespaceHandler;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ClassYearInfo;
-import com.school.entity.DictionaryInfo;
-import com.school.entity.GradeInfo;
-import com.school.entity.RoleInfo;
-import com.school.entity.activity.ActivityInfo;
-import com.school.entity.activity.SiteInfo;
-import com.school.entity.notice.NoticeInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 @Controller
 @RequestMapping(value="/notice")
 public class NoticeController extends BaseController<NoticeInfo> {
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private INoticeManager noticeManager;
+    @Autowired
     private IRoleManager roleManager;
-    public NoticeController(){
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-        this.noticeManager=this.getManager(NoticeManager.class);
-        this.roleManager=this.getManager(RoleManager.class);
-    }
 
     /**
      * 跳转到管理员公告列表

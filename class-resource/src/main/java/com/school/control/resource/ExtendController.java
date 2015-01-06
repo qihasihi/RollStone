@@ -1,39 +1,31 @@
 package com.school.control.resource;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;//
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.school.control.base.BaseController;
+import com.school.entity.resource.ExtendInfo;
+import com.school.entity.resource.ExtendValueInfo;
 import com.school.manager.inter.resource.IExtendManager;
 import com.school.manager.inter.resource.IExtendValueManager;
-import com.school.manager.resource.ExtendManager;
-import com.school.manager.resource.ExtendValueManager;
+import com.school.util.JsonEntity;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ClassInfo;
-import com.school.entity.SmsInfo;
-import com.school.entity.resource.ExtendInfo;
-import com.school.entity.resource.ExtendValueInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/extend")
 public class ExtendController extends BaseController<ExtendInfo> {
+    @Autowired
     private IExtendManager extendManager;
+    @Autowired
     private IExtendValueManager extendValueManager;
-    public ExtendController(){
-        this.extendManager=this.getManager(ExtendManager.class);
-        this.extendValueManager=this.getManager(ExtendValueManager.class);
-    }
+
 
 	@RequestMapping(params = "m=list", method = RequestMethod.GET)
 	public ModelAndView toExtendList(HttpServletRequest request, ModelAndView mp)

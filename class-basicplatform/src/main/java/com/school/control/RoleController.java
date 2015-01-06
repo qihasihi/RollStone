@@ -1,49 +1,40 @@
 package com.school.control;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.*;
-import com.school.manager.inter.*;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.school.control.base.BaseController;
-import com.school.entity.ColumnInfo;
-import com.school.entity.DictionaryInfo;
-import com.school.entity.IdentityInfo;
-import com.school.entity.RoleColumnRightInfo;
-import com.school.entity.RoleInfo;
+import com.school.entity.*;
+import com.school.manager.inter.*;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
 @RequestMapping(value="/role")
 public class RoleController extends BaseController<RoleInfo>{
+    @Autowired
 	private IRoleManager roleManager;
+    @Autowired
     private IColumnManager columnManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private IRoleColumnRightManager roleColumnRightManager;
+    @Autowired
     private IIdentityManager identityManager;
-    public RoleController(){
-        this.roleManager=this.getManager(RoleManager.class);
-        this.columnManager=this.getManager(ColumnManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-        this.roleColumnRightManager=this.getManager(RoleColumnRightManager.class);
-        this.identityManager=this.getManager(IdentityManager.class);
-    }
+
 	@RequestMapping(params="m=list",method=RequestMethod.GET) 
 	public ModelAndView toRoleList(HttpServletRequest request,ModelMap mp )throws Exception{
 		List<RoleInfo> roleList = roleManager.getList(new RoleInfo(), null);

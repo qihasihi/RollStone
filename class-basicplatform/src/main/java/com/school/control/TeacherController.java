@@ -1,30 +1,27 @@
 package com.school.control;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.ClassUserManager;
-import com.school.manager.DictionaryManager;
-import com.school.manager.GradeManager;
-import com.school.manager.TeacherManager;
-import com.school.manager.inter.*;
+import com.school.control.base.BaseController;
+import com.school.entity.ClassUser;
+import com.school.entity.DictionaryInfo;
+import com.school.entity.GradeInfo;
+import com.school.entity.TeacherInfo;
+import com.school.manager.inter.IClassUserManager;
+import com.school.manager.inter.IDictionaryManager;
+import com.school.manager.inter.IGradeManager;
+import com.school.manager.inter.ITeacherManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ClassInfo;
-import com.school.entity.ClassUser;
-import com.school.entity.DictionaryInfo;
-import com.school.entity.GradeInfo;
-import com.school.entity.TeacherInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @Scope("prototype") 
@@ -32,16 +29,15 @@ import com.school.util.UtilTool;
 public class TeacherController extends BaseController<TeacherInfo>{
 //    private ISubjectManager subjectManager;
 //    private ITermManager termManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private ITeacherManager teacherManager;
+    @Autowired
     private IClassUserManager classUserManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
-    public TeacherController(){
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.teacherManager=this.getManager(TeacherManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-    }
+
 	/**
 	 * 打开查询教师模式窗体
 	 * @param request

@@ -1,31 +1,28 @@
 package com.school.control;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.ClassYearManager;
+import com.school.control.base.BaseController;
+import com.school.entity.ClassYearInfo;
 import com.school.manager.inter.IClassYearManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ClassYearInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @Controller
 @RequestMapping(value="/classyear")
 public class ClassYearController extends BaseController<ClassYearInfo> {
+   @Autowired
     private IClassYearManager classYearManager;
-    public ClassYearController(){
-        this.classYearManager=this.getManager(ClassYearManager.class);
-    }
+
 	
 	@RequestMapping(params="m=list",method=RequestMethod.GET) 
 	public ModelAndView toClassyearList(HttpServletRequest request,ModelAndView mp )throws Exception{

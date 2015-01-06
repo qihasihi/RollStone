@@ -28,6 +28,7 @@ import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,24 +45,23 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/commoncomment")
 public class CommentController extends BaseController<CommentInfo> {
+    @Autowired
     private ICommentManager commentManager;
+    @Autowired
     private IResourceManager resourceManager;
+    @Autowired
     private ITpCourseManager tpCourseManager;
+    @Autowired
     private IScoreManager scoreManager;
+    @Autowired
     private IUserManager userManager;
+    @Autowired
     private ITpCourseClassManager tpCourseClassManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
-    public CommentController(){
-        tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
-        this.commentManager=this.getManager(CommentManager.class);
-        this.resourceManager=this.getManager(ResourceManager.class);
-        this.tpCourseManager=this.getManager(TpCourseManager.class);
-        this.scoreManager=this.getManager(ScoreManager.class);
-        this.userManager=this.getManager(UserManager.class);
-        this.tpCourseClassManager=this.getManager(TpCourseClassManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-    }
+
 	/**
 	 * ªÒ»°List
 	 * 

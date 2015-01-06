@@ -7,10 +7,6 @@ import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.entity.teachpaltform.paper.*;
-import com.school.manager.ClassManager;
-import com.school.manager.DictionaryManager;
-import com.school.manager.SmsManager;
-import com.school.manager.UserManager;
 import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.ISmsManager;
@@ -19,10 +15,6 @@ import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.*;
-import com.school.manager.teachpaltform.*;
-import com.school.manager.teachpaltform.interactive.TpTopicManager;
-import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
-import com.school.manager.teachpaltform.paper.*;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -41,7 +33,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.geom.FlatteningPathIterator;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
@@ -4333,6 +4324,8 @@ public class PaperController extends BaseController<PaperInfo>{
         String ref = request.getParameter("ref");
         String score = request.getParameter("score");
         String userid = request.getParameter("userid");
+        String markComment=request.getParameter("markComment");
+        String isShowComment=request.getParameter("isShowComment");
         JsonEntity je = new JsonEntity();
         if(ref==null||ref.length()<1||score==null||score.length()<1){
             je.setMsg("错误，请刷新页面重试");
@@ -4350,6 +4343,8 @@ public class PaperController extends BaseController<PaperInfo>{
         List<StuPaperQuesLogs> quesLogs = this.stuPaperQuesLogsManager.getList(sp,null);
         sql=new StringBuilder();
         sp.setIsmarking(0);
+        if(markComment!=null&&markComment.trim().length()>0)
+            sp.setMarkComment(markComment);
         objList = this.stuPaperQuesLogsManager.getUpdateSql(sp,sql);
         objListArray.add(objList);
         sqlStrList.add(sql.toString());
@@ -4366,7 +4361,7 @@ public class PaperController extends BaseController<PaperInfo>{
         if(b){
             je.setType("success");
             //判断试卷是否批改完毕，首先得到试卷的试题数量
-
+            request.getSession().setAttribute("isShowComment",isShowComment==null?1:isShowComment);
 //            PaperQuestion paperQuestion = new PaperQuestion();
 //            paperQuestion.setPaperid(quesLogs.get(0).getPaperid());
 //            List<PaperQuestion> paperQuestionList = this.paperQuestionManager.getList(paperQuestion,null);

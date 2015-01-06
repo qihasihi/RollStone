@@ -5,10 +5,6 @@ import com.school.entity.InitWizardInfo;
 import com.school.entity.SubjectInfo;
 import com.school.entity.TermInfo;
 import com.school.entity.UserInfo;
-import com.school.manager.InitWizardManager;
-import com.school.manager.SubjectManager;
-import com.school.manager.TermManager;
-import com.school.manager.UserManager;
 import com.school.manager.inter.IInitWizardManager;
 import com.school.manager.inter.ISubjectManager;
 import com.school.manager.inter.ITermManager;
@@ -16,6 +12,7 @@ import com.school.manager.inter.IUserManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
 import com.school.util.WriteProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,16 +29,15 @@ import java.util.List;
 @Controller
 @RequestMapping(value="/init")
 public class InitWizardController extends BaseController<InitWizardInfo> {
+    @Autowired
     private IUserManager userManager;
+    @Autowired
     private IInitWizardManager initWizardManager;
+    @Autowired
     private ITermManager termManager;
+    @Autowired
     private ISubjectManager subjectManager;
-    public InitWizardController(){
-        this.userManager=this.getManager(UserManager.class);
-        this.initWizardManager=this.getManager(InitWizardManager.class);
-        this.termManager=this.getManager(TermManager.class);
-        this.subjectManager=this.getManager(SubjectManager.class);
-    }
+
     /**
      * 初始化向导修改密码
      * @param request

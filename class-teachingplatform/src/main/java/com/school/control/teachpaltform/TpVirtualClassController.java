@@ -16,6 +16,7 @@ import com.school.manager.inter.teachpaltform.ITpVirtualClassManager;
 import com.school.manager.teachpaltform.TpVirtualClassManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,19 +30,18 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "virtualclass")
 public class TpVirtualClassController extends BaseController<TpVirtualClassInfo> {
+    @Autowired
     private ITpVirtualClassManager tpVirtualClassManager;
+    @Autowired
     private ITermManager termManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private IClassManager classManager;
+    @Autowired
     private IClassUserManager classUserManager;
 
-    public TpVirtualClassController(){
-        this.tpVirtualClassManager=this.getManager(TpVirtualClassManager.class);
-        this.termManager=this.getManager(TermManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.classManager=this.getManager(ClassManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-    }
+
     /**
      * 进入教师课题页
      * @param request

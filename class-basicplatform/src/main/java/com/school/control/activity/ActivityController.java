@@ -2,43 +2,34 @@ package com.school.control.activity;
 
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.GradeManager;
-import com.school.manager.RoleManager;
-import com.school.manager.SubjectManager;
-import com.school.manager.UserManager;
-import com.school.manager.impl.activity.ActivityManager;
-import com.school.manager.impl.activity.ActivitySiteManager;
-import com.school.manager.impl.activity.ActivityUserManager;
-import com.school.manager.impl.activity.SiteManager;
-import com.school.manager.inter.IUserManager;
-import com.school.manager.inter.activity.IActivityManager;
-import com.school.manager.inter.activity.IActivitySiteManager;
-import com.school.manager.inter.activity.IActivityUserManager;
-import com.school.manager.inter.activity.ISiteManager;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.school.control.base.BaseController;
-import com.school.entity.ClassYearInfo;
-import com.school.entity.GradeInfo;
 import com.school.entity.UserInfo;
 import com.school.entity.activity.ActivityInfo;
 import com.school.entity.activity.ActivitySiteInfo;
 import com.school.entity.activity.ActivityUserInfo;
 import com.school.entity.activity.SiteInfo;
+import com.school.manager.GradeManager;
+import com.school.manager.RoleManager;
+import com.school.manager.SubjectManager;
+import com.school.manager.inter.IUserManager;
+import com.school.manager.inter.activity.IActivityManager;
+import com.school.manager.inter.activity.IActivitySiteManager;
+import com.school.manager.inter.activity.IActivityUserManager;
+import com.school.manager.inter.activity.ISiteManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 /**
  * @author ‘¿¥∫—Ù
  * @date 2013-03-27
@@ -47,19 +38,18 @@ import com.school.util.UtilTool;
 @Controller
 @RequestMapping(value="/activity")
 public class ActivityController extends BaseController<ActivityInfo>{
-	private ISiteManager siteManager;
+    @Autowired
+    private ISiteManager siteManager;
+    @Autowired
     private IActivityManager activityManager;
+    @Autowired
     private IActivityUserManager activityUserManager;
+    @Autowired
     private IActivitySiteManager activitySiteManager;
+    @Autowired
     private IUserManager userManager;
 
-    public ActivityController(){
-        this.userManager=this.getManager(UserManager.class);
-        this.siteManager=this.getManager(SiteManager.class);
-        this.activityManager=this.getManager(ActivityManager.class);
-        this.activityUserManager=this.getManager(ActivityUserManager.class);
-        this.activitySiteManager=this.getManager(ActivitySiteManager.class);
-    }
+
 	/**
 	 * @author ‘¿¥∫—Ù
 	 * @date 2013-03-27

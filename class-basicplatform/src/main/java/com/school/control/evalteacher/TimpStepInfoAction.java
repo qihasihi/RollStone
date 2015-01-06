@@ -1,37 +1,31 @@
 package com.school.control.evalteacher;
 
 import com.school.control.base.BaseController;
-import com.school.entity.ClassInfo;
 import com.school.entity.ClassYearInfo;
 import com.school.entity.evalteacher.TimeStepInfo;
-import com.school.manager.ClassYearManager;
-import com.school.manager.evalteacher.TimeStepManager;
 import com.school.manager.inter.IClassYearManager;
 import com.school.manager.inter.evalteacher.ITimeStepManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
-import com.school.util.UtilTool;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
 @Controller
 @RequestMapping(value="/timestep") 
 public class TimpStepInfoAction extends BaseController<TimeStepInfo> {
+    @Autowired
     private IClassYearManager classYearManager;
+    @Autowired
     private ITimeStepManager timeStepManager;
-    public TimpStepInfoAction(){
-        this.classYearManager=this.getManager(ClassYearManager.class);
-        this.timeStepManager=this.getManager(TimeStepManager.class);
-    }
+
 
 	@RequestMapping(params="m=list",method=RequestMethod.GET)  
 	public ModelAndView toQueryList(HttpServletRequest request,ModelMap mp ) throws Exception{

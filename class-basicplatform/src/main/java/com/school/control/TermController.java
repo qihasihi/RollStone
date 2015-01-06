@@ -1,34 +1,35 @@
 package com.school.control;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.ClassYearManager;
-import com.school.manager.TermManager;
+import com.school.control.base.BaseController;
+import com.school.entity.ClassYearInfo;
+import com.school.entity.TermInfo;
 import com.school.manager.inter.IClassYearManager;
 import com.school.manager.inter.ITermManager;
-import com.school.util.*;
+import com.school.util.JsonEntity;
+import com.school.util.MD5_NEW;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ClassYearInfo;
-import com.school.entity.TermInfo;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping(value="/term")
 public class TermController extends BaseController<TermInfo> {
-	private IClassYearManager classYearManager;
+    @Autowired
+    private IClassYearManager classYearManager;
+    @Autowired
     private ITermManager termManager;
-    public TermController(){
-        this.classYearManager=this.getManager(ClassYearManager.class);
-        this.termManager=this.getManager(TermManager.class);
-    }
+
 
 	/**
 	 * 进入学期管理

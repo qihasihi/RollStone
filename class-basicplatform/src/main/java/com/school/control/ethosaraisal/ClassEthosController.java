@@ -1,32 +1,30 @@
 package com.school.control.ethosaraisal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.*;
-import com.school.manager.ethosaraisal.ClassEthosManager;
-import com.school.manager.ethosaraisal.WeekManager;
-import com.school.manager.inter.*;
+import com.school.control.base.BaseController;
+import com.school.entity.ClassInfo;
+import com.school.entity.GradeInfo;
+import com.school.entity.TermInfo;
+import com.school.entity.ethosaraisal.ClassEthosInfo;
+import com.school.entity.ethosaraisal.WeekInfo;
+import com.school.manager.inter.IClassManager;
+import com.school.manager.inter.IGradeManager;
+import com.school.manager.inter.IOperateExcelManager;
+import com.school.manager.inter.ITermManager;
 import com.school.manager.inter.ethosaraisal.IClassEthosManager;
 import com.school.manager.inter.ethosaraisal.IWeekManager;
+import com.school.util.JsonEntity;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ClassInfo;
-import com.school.entity.GradeInfo;
-import com.school.entity.StudentInfo;
-import com.school.entity.TermInfo;
-import com.school.entity.ethosaraisal.ClassEthosInfo;
-import com.school.entity.ethosaraisal.WeekInfo;
-import com.school.util.JsonEntity;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 /**
  * @author 岳春阳
  * @date 2013-05-08
@@ -35,20 +33,19 @@ import com.school.util.UtilTool;
 @Controller
 @RequestMapping(value="/classethos")
 public class ClassEthosController extends BaseController<ClassEthosInfo>{
-    public ClassEthosController(){
-       this.termManager=this.getManager(TermManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.classEthosManager=this.getManager(ClassEthosManager.class);
-        this.weekManager=this.getManager(WeekManager.class);
-        this.operaterexcelmanager=this.getManager(OperateExcelManager.class);
-        this.classManager=this.getManager(ClassManager.class);
-    }
+
     //学生校风定义区域
+    @Autowired
     private ITermManager termManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private IClassEthosManager classEthosManager;
+    @Autowired
     private IWeekManager weekManager;
+    @Autowired
     private IOperateExcelManager operaterexcelmanager;
+    @Autowired
     private IClassManager classManager;
 	/**
 	 * @author 岳春阳

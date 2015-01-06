@@ -16,6 +16,7 @@ import com.school.manager.inter.teachpaltform.ITpVirtualClassStudentManager;
 import com.school.manager.teachpaltform.TpVirtualClassStudentManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,12 +32,10 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "virtualclassstudent")
 public class TpVirtualClassStudentController extends BaseController<TpVirtualClassStudent> {
+    @Autowired
     private ITermManager termManager;
+    @Autowired
     private ITpVirtualClassStudentManager tpVirtualClassStudentManager;
-    public TpVirtualClassStudentController(){
-        this.termManager=this.getManager(TermManager.class);
-        this.tpVirtualClassStudentManager=this.getManager(TpVirtualClassStudentManager.class);
-    }
 
     //  ajax 获取虚拟班级学生列表
     @RequestMapping(params = "m=searchStudentList", method = RequestMethod.POST)

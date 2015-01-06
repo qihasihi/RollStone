@@ -1,45 +1,38 @@
 package com.school.control.teachpaltform;
 
 import com.school.control.base.BaseController;
-import com.school.entity.DictionaryInfo;
-import com.school.entity.teachpaltform.*;
-import com.school.entity.teachpaltform.interactive.TpTopicInfo;
+import com.school.entity.teachpaltform.QuestionInfo;
+import com.school.entity.teachpaltform.QuestionOption;
+import com.school.entity.teachpaltform.TpTaskAllotInfo;
+import com.school.entity.teachpaltform.TpTaskInfo;
 import com.school.manager.inter.teachpaltform.IQuestionManager;
 import com.school.manager.inter.teachpaltform.IQuestionOptionManager;
 import com.school.manager.inter.teachpaltform.ITpTaskAllotManager;
 import com.school.manager.inter.teachpaltform.ITpTaskManager;
-import com.school.manager.teachpaltform.QuestionManager;
-import com.school.manager.teachpaltform.QuestionOptionManager;
-import com.school.manager.teachpaltform.TpTaskAllotManager;
-import com.school.manager.teachpaltform.TpTaskManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
-import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping(value="/taskallot")
 public class TaskAllotController extends BaseController<TpTaskAllotInfo>{
+    @Autowired
     private ITpTaskManager tpTaskManager;
+    @Autowired
     private ITpTaskAllotManager tpTaskAllotManager;
+    @Autowired
     private IQuestionManager questionManager;
+    @Autowired
     private IQuestionOptionManager questionOptionManager;
-    public TaskAllotController(){
-        this.tpTaskManager=this.getManager(TpTaskManager.class);
-        this.tpTaskAllotManager=this.getManager(TpTaskAllotManager.class);
-        this.questionManager=this.getManager(QuestionManager.class);
-        this.questionOptionManager=this.getManager(QuestionOptionManager.class);
-    }
+
     /**
      * 获取任务对象详情
      * @throws Exception

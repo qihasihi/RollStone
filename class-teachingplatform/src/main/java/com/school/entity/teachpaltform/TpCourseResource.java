@@ -240,10 +240,10 @@ public class TpCourseResource implements Serializable {
         String file="001";
        // return UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"uploadfile/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
 
-        return UtilTool.getResourceLocation(this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
+        return UtilTool.getResourceLocation(null,this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
     }
     public String getImgpath(){
-        return UtilTool.getResourceLocation(this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/001.jpg";
+        return UtilTool.getResourceLocation(null,this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/001.jpg";
     }
 
 

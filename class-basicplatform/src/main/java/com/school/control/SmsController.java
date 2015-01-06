@@ -1,44 +1,39 @@
 package com.school.control;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.SmsManager;
-import com.school.manager.SmsReceiverManager;
-import com.school.manager.UserManager;
+import com.school.control.base.BaseController;
+import com.school.entity.SmsInfo;
+import com.school.entity.SmsReceiver;
+import com.school.entity.UserInfo;
 import com.school.manager.inter.ISmsManager;
 import com.school.manager.inter.ISmsReceiverManager;
 import com.school.manager.inter.IUserManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.SmsInfo;
-import com.school.entity.SmsReceiver;
-import com.school.entity.UserInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value="/sms")
 public class SmsController extends BaseController<SmsInfo> {
+    @Autowired
     private ISmsReceiverManager smsReceiverManager;
+    @Autowired
     private ISmsManager smsManager;
+    @Autowired
     private IUserManager userManager;
-    public SmsController(){
-        this.smsReceiverManager=this.getManager(SmsReceiverManager.class);
-        this.smsManager=this.getManager(SmsManager.class);
-        this.userManager=this.getManager(UserManager.class);
-    }
+
 
 	
 	@RequestMapping(params="m=inbox",method=RequestMethod.GET)

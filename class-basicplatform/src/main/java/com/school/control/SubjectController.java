@@ -1,36 +1,33 @@
 package com.school.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.DictionaryManager;
-import com.school.manager.SubjectManager;
+import com.school.control.base.BaseController;
+import com.school.entity.DictionaryInfo;
+import com.school.entity.SubjectInfo;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.ISubjectManager;
-import com.school.util.*;
+import com.school.util.JsonEntity;
+import com.school.util.MD5_NEW;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.DictionaryInfo;
-import com.school.entity.JobInfo;
-import com.school.entity.SubjectInfo;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value="/subject")
 public class SubjectController extends BaseController<SubjectInfo>{
+    @Autowired
     private ISubjectManager subjectManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
-    public SubjectController(){
-        this.subjectManager=this.getManager(SubjectManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-    }
+
 
 	@RequestMapping(params="m=list",method=RequestMethod.GET)
 	protected ModelAndView getListBy(HttpServletRequest request,ModelMap mp) throws Exception{	

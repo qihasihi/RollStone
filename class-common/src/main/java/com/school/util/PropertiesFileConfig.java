@@ -7,6 +7,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * junit”√µΩ
  * Created by zhengzhou on 14-12-26.
  */
 public class PropertiesFileConfig {
@@ -21,7 +22,7 @@ public class PropertiesFileConfig {
     public static String getPropertiesConfigPath(int i){
         ServletRequestAttributes srabutes =(ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
         HttpServletRequest request =null;
-        if(srabutes==null){
+        if(srabutes==null){//
             request=new MockHttpServletRequest();
         }else
             request=((ServletRequestAttributes)srabutes).getRequest();

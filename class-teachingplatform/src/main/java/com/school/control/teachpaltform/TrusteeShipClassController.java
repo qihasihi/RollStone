@@ -10,6 +10,7 @@ import com.school.manager.inter.teachpaltform.ITrusteeShipClassManager;
 import com.school.manager.teachpaltform.TrusteeShipClassManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,13 +24,11 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "trusteeship")
 public class TrusteeShipClassController extends BaseController<TrusteeShipClass> {
+    @Autowired
     private ITrusteeShipClassManager trusteeShipClassManager;
+    @Autowired
     private ITermManager termManager;
 
-    public TrusteeShipClassController(){
-        this.trusteeShipClassManager=this.getManager(TrusteeShipClassManager.class);
-        this.termManager=this.getManager(TermManager.class);
-    }
     /**
      * 查询可以进行托管的老师
      * @param request

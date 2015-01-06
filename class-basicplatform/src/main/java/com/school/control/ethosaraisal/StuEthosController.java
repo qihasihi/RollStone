@@ -1,34 +1,26 @@
 package com.school.control.ethosaraisal;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.*;
-import com.school.manager.ethosaraisal.StuEthosManager;
+import com.school.control.base.BaseController;
+import com.school.entity.ClassInfo;
+import com.school.entity.GradeInfo;
+import com.school.entity.StudentInfo;
+import com.school.entity.TermInfo;
+import com.school.entity.ethosaraisal.StuEthosInfo;
 import com.school.manager.inter.*;
 import com.school.manager.inter.ethosaraisal.IStuEthosManager;
+import com.school.util.JsonEntity;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-
-import com.school.control.base.BaseController;
-import com.school.entity.ClassUser;
-import com.school.entity.GradeInfo;
-import com.school.entity.StudentInfo;
-import com.school.entity.TermInfo;
-import com.school.entity.ClassInfo;
-import com.school.entity.ethosaraisal.StuEthosInfo;
-import com.school.util.JsonEntity;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 /**
  * @author 岳春阳
  * @date 2013-04-28
@@ -37,20 +29,19 @@ import com.school.util.UtilTool;
 @Controller
 @RequestMapping(value="/stuethos")
 public class StuEthosController extends BaseController<StuEthosInfo> {
-    public StuEthosController(){
-        this.stuEthosManager=this.getManager(StuEthosManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.termManager=this.getManager(TermManager.class);
-        this.classManager=this.getManager(ClassManager.class);
-        this.studentManager=this.getManager(StudentManager.class);
-        this.operaterexcelmanager=this.getManager(OperateExcelManager.class);
-    }
+
     //学生校风定义区域
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private IStuEthosManager stuEthosManager;
+    @Autowired
     private ITermManager termManager;
+    @Autowired
     private IClassManager classManager;
+    @Autowired
     private IStudentManager studentManager;
+    @Autowired
     private IOperateExcelManager operaterexcelmanager;
 
 	/**

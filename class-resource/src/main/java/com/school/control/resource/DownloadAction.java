@@ -1,38 +1,31 @@
 package com.school.control.resource;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.school.control.base.BaseController;
+import com.school.entity.resource.DownloadInfo;
+import com.school.entity.resource.ResourceInfo;
 import com.school.manager.inter.resource.IDownloadManager;
 import com.school.manager.inter.resource.IResourceManager;
-import com.school.manager.resource.DownloadManager;
-import com.school.manager.resource.ResourceManager;
+import com.school.util.JsonEntity;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.school.control.base.BaseController;
-import com.school.entity.SubjectUser;
-import com.school.entity.resource.DownloadInfo;
-import com.school.entity.resource.ResourceFileInfo;
-import com.school.entity.resource.ResourceInfo;
-import com.school.entity.resource.ResourceRightInfo;
-import com.school.util.JsonEntity;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value="/resdown")
 public class DownloadAction extends BaseController<DownloadInfo>{
+    @Autowired
     private IDownloadManager downloadManager;
+    @Autowired
     private IResourceManager resourceManager;
-    public DownloadAction(){
-        this.downloadManager=this.getManager(DownloadManager.class);
-        this.resourceManager=this.getManager(ResourceManager.class);
-    }
+
 
 	/**
 	 * 执行添加
@@ -92,11 +85,11 @@ public class DownloadAction extends BaseController<DownloadInfo>{
 			//String downPath=UtilTool.getResourceUrl(downTmp.getResid().toString(), filename,resourceFileList.get(0).getPath());
             String lastname=filename.substring(filename.lastIndexOf("."));
             if(UtilTool.matchingText(UtilTool._VIEW_SUFFIX_TYPE_REGULAR, lastname)&&
-                    new File(UtilTool.getResourceLocation(downTmp.getResid(),2)+"/"+UtilTool.getResourceFileUrl(downTmp.getResid().toString(), lastname)+".mp4").exists()){
+                    new File(UtilTool.getResourceLocation(request,downTmp.getResid(),2)+"/"+UtilTool.getResourceFileUrl(downTmp.getResid().toString(), lastname)+".mp4").exists()){
                 lastname+=".mp4";
 
             }
-            System.out.println("mp4path:"+UtilTool.getResourceLocation(downTmp.getResid(),2)+"/"+UtilTool.getResourceFileUrl(downTmp.getResid().toString(), lastname)+".mp4");
+            System.out.println("mp4path:"+UtilTool.getResourceLocation(request,downTmp.getResid(),2)+"/"+UtilTool.getResourceFileUrl(downTmp.getResid().toString(), lastname)+".mp4");
 
 
 
@@ -104,7 +97,7 @@ public class DownloadAction extends BaseController<DownloadInfo>{
 			if(downPath==null)
 				jEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
 			else{
-				downPath=UtilTool.getResourceLocation(downTmp.getResid(),1)+downPath; //文件下载地址
+				downPath=UtilTool.getResourceLocation(request,downTmp.getResid(),1)+downPath; //文件下载地址
 				jEntity.getObjList().add(downPath);
 				jEntity.setType("success");
 			}	

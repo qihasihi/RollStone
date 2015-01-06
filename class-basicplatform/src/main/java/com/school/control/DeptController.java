@@ -1,49 +1,45 @@
 package com.school.control;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.school.control.base.BaseController;
 import com.school.entity.*;
-import com.school.manager.*;
 import com.school.manager.inter.*;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult; 
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value="/dept")
 public class DeptController extends BaseController<DeptInfo> {
+    @Autowired
     private IDeptManager deptManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private ISubjectManager subjectManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private IDeptUserManager deptUserManager;
+    @Autowired
     private IRoleManager roleManager;
+    @Autowired
     private IRoleUserManager roleUserManager;
+    @Autowired
     private ITeacherManager teacherManager;
+    @Autowired
     private IUserManager userManager;
 
-    public DeptController(){
-        this.deptManager=this.getManager(DeptManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.subjectManager=this.getManager(SubjectManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-        this.deptUserManager=this.getManager(DeptUserManager.class);
-        this.roleManager=this.getManager(RoleManager.class);
-        this.roleUserManager=this.getManager(RoleUserManager.class);
-        this.teacherManager=this.getManager(TeacherManager.class);
-        this.userManager=this.getManager(UserManager.class);
-    }
+
 
 	@RequestMapping(params="m=list",method=RequestMethod.GET) 
 	public ModelAndView toDeptList(HttpServletRequest request,ModelAndView mp )throws Exception{

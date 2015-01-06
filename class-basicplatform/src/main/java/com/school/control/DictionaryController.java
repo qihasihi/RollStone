@@ -1,31 +1,28 @@
 package com.school.control;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.DictionaryManager;
+import com.school.control.base.BaseController;
+import com.school.entity.DictionaryInfo;
 import com.school.manager.inter.IDictionaryManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.DictionaryInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @Controller
 @RequestMapping(value="/dictionary")
 public class DictionaryController extends BaseController<DictionaryInfo>{
-	private IDictionaryManager dictionaryManager;
-    public DictionaryController(){
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-    }
+    @Autowired
+    private IDictionaryManager dictionaryManager;
+
 	
 	@RequestMapping(params="m=list",method=RequestMethod.GET) 
 	public ModelAndView toDictionaryList(HttpServletRequest request,ModelAndView mp )throws Exception{

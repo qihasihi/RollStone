@@ -37,6 +37,7 @@ import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,58 +59,57 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping(value="/imapi1_1")
 public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
+    @Autowired
     private ImInterfaceManager imInterfaceManager;
+    @Autowired
     private ITpCourseManager tpCourseManager;
+    @Autowired
     private ITpTaskManager tpTaskManager;
+    @Autowired
     private ITpTaskAllotManager tpTaskAllotManager;
+    @Autowired
     private IResourceManager resourceManager;
+    @Autowired
     private IQuestionManager questionManager;
+    @Autowired
     private IQuestionOptionManager questionOptionManager;
+    @Autowired
     private IUserManager userManager;
+    @Autowired
     private IQuestionAnswerManager questionAnswerManager;
+    @Autowired
     private ITaskPerformanceManager taskPerformanceManager;
+    @Autowired
     private ITpRecordManager tpRecordManager;
+    @Autowired
     private IPaperQuestionManager paperQuestionManager;
+    @Autowired
     private IPaperManager paperManager;
+    @Autowired
     private ITpTopicManager tpTopicManager;
+    @Autowired
     private ITpTopicThemeManager tpTopicThemeManager;
+    @Autowired
     private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
+    @Autowired
     private IMicVideoPaperManager micVideoPaperManager;
+    @Autowired
     private IStuPaperLogsManager stuPaperLogsManager;
+    @Autowired
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
+    @Autowired
     private IStuViewMicVideoLogManager stuViewMicVideoLogManager;
+    @Autowired
     private ITpStuScoreManager tpStuScoreManager;
+    @Autowired
     private ITpCourseClassManager tpCourseClassManager;
+    @Autowired
     private ITpGroupManager tpGroupManager;
+    @Autowired
     private IClassManager classManager;
+    @Autowired
     private IClassUserManager classUserManager;
-    public ImInterfaceController(){
-        this.classManager = this.getManager(ClassManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.tpGroupManager=this.getManager(TpGroupManager.class);
-        this.tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
-        this.stuPaperLogsManager=this.getManager(StuPaperLogsManager.class);
-        this.stuPaperQuesLogsManager=this.getManager(StuPaperQuesLogsManager.class);
-        this.paperManager=this.getManager(PaperManager.class);
-        this.imInterfaceManager=this.getManager(ImInterfaceManager.class);
-        this.tpCourseManager = this.getManager(TpCourseManager.class);
-        this.tpTaskManager = this.getManager(TpTaskManager.class);
-        this.tpTaskAllotManager = this.getManager(TpTaskAllotManager.class);
-        this.resourceManager = this.getManager(ResourceManager.class);
-        this.questionManager = this.getManager(QuestionManager.class);
-        this.questionOptionManager = this.getManager(QuestionOptionManager.class);
-        this.userManager = this.getManager(UserManager.class);
-        this.questionAnswerManager = this.getManager(QuestionAnswerManager.class);
-        this.taskPerformanceManager = this.getManager(TaskPerformanceManager.class);
-        this.tpRecordManager=this.getManager(TpRecordManager.class);
-        this.paperQuestionManager=this.getManager(PaperQuestionManager.class);
-        this.tpTopicManager=this.getManager(TpTopicManager.class);
-        this.tpTopicThemeManager=this.getManager(TpTopicThemeManager.class);
-        this.micVideoPaperManager=this.getManager(MicVideoPaperManager.class);
-        this.stuViewMicVideoLogManager=this.getManager(StuViewMicVideoLogManager.class);
-        this.tpStuScoreManager = this.getManager(TpStuScoreManager.class);
-        this.tpCourseClassManager = this.getManager(TpCourseClassManager.class);
-    }
+
 
     /**
      * 学习目录接口
@@ -1413,7 +1413,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             ResourceInfo rs = new ResourceInfo();
             rs.setResid(taskList.get(0).getTaskvalueid());
             List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
-            String attchStr = UtilTool.getResourceLocation(rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+            String attchStr = UtilTool.getResourceLocation(request,rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
             Map att = new HashMap();
             att.put("attach",attchStr);
             List attList = new ArrayList();
@@ -1461,7 +1461,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             ResourceInfo rs = new ResourceInfo();
             rs.setResid(taskList.get(0).getTaskvalueid());
             List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
-            String attchStr = UtilTool.getResourceLocation(rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+            String attchStr = UtilTool.getResourceLocation(request,rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
             Map att = new HashMap();
             att.put("attach",attchStr);
             List attList = new ArrayList();
@@ -5582,7 +5582,7 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                     ResourceInfo rs = new ResourceInfo();
                     rs.setResid(tpTaskList.get(0).getTaskvalueid());
                     List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
-                    String attchStr = UtilTool.getResourceLocation(rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+                    String attchStr = UtilTool.getResourceLocation(request,rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
                     Map att = new HashMap();
                     att.put("attach",attchStr);
                     List attList = new ArrayList();

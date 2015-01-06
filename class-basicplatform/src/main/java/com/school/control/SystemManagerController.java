@@ -1,52 +1,41 @@
 package com.school.control;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.school.control.base.BaseController;
 import com.school.entity.SchoolLogoInfo;
+import com.school.entity.SubjectInfo;
 import com.school.entity.TermInfo;
-import com.school.manager.SchoolLogoManager;
-import com.school.manager.SubjectManager;
-import com.school.manager.TermManager;
 import com.school.manager.inter.ISchoolLogoManager;
 import com.school.manager.inter.ISubjectManager;
 import com.school.manager.inter.ITermManager;
+import com.school.util.JsonEntity;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.SubjectInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
-import com.school.util.WriteProperties;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/sysm")
 public class SystemManagerController extends BaseController<TermInfo>{
+    @Autowired
 	private ISubjectManager subjectManager;
+    @Autowired
     private ITermManager termManager;
+    @Autowired
     private ISchoolLogoManager schoolLogoManager;
-    public SystemManagerController(){
-        this.subjectManager=this.getManager(SubjectManager.class);
-        this.termManager=this.getManager(TermManager.class);
-        this.schoolLogoManager = this.getManager(SchoolLogoManager.class);
-    }
+
 	@RequestMapping(params="m=logoconfig",method=RequestMethod.GET)
 	public ModelAndView toLogoConfig(HttpServletRequest request,ModelAndView mp )throws Exception{
 		return new ModelAndView("/systemmanager/logoconfig");  

@@ -225,7 +225,9 @@
                 if(questype==2){
                     h1+='</td></tr><tr><td><p  style="display:none"><strong>附件：</strong><span class="font-blue" id="fujian${q.questionid}"></span></p>';
                     h1+='<p><strong>正确答案：</strong>${q.correctanswer}</p>';
-                    h1+='<p><strong>答案解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p></td></tr>';
+                    h1+='<p><strong>答案解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>';
+                    h1+='<p  id="p_dv_mkcomment${q.questionid}" style="display:none"><strong>教师评语：</strong><span id="dv_mkcomment${q.questionid}"></span></p>';
+                    h1+='</td></tr>';
                 }else if(questype==1){
                     h1+='</td></tr><tr><td><p><strong>学生答案：</strong><span id="dv_you_as${q.questionid}"></span></p>';
                     h1+='<p style="display:none"><strong>附件：</strong><span  class="font-blue" id="fujian${q.questionid}"></span></p>';
@@ -239,6 +241,7 @@
                     </c:if>
                     h1+='<p><strong>正确答案：</strong>'+rightAnswer+'</p>';
                     h1+='<p><strong>答案解析：</strong><span id="dv_right_as${q.questionid}">${q.analysis}</span></p>';
+                    h1+='<p id="p_dv_mkcomment${q.questionid}" style="display:none"><strong>教师评语：</strong><span id="dv_mkcomment${q.questionid}"</span></p>';
                     h1+='</td></tr>';
                 }
             </c:if>
@@ -393,6 +396,10 @@
                         $("#fujian${sa.quesid}").append("<a target='_blank' href='"+ax+"'>"+ax.substring(ax.lastIndexOf("/")+1)+"</a>&nbsp;");
                     </c:forEach>
                     $("#fujian${sa.quesid}").parent().show();
+                    </c:if>
+                    <c:if test="${!empty sa.markComment}">
+                        $("#dv_mkcomment${sa.quesid}").html('${sa.markComment}');
+                        $("#p_dv_mkcomment${sa.quesid}").show();
                     </c:if>
                 </c:forEach>
             </c:if>

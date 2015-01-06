@@ -14,6 +14,7 @@ import com.school.manager.inter.IUserManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,14 +34,13 @@ import java.util.regex.Pattern;
 @Controller
 @RequestMapping(value="/operateEtt")
 public class OperateEttController extends BaseController<String>{
+    @Autowired
     private IUserManager userManager;
+    @Autowired
     private IClassUserManager classUserManager;
+    @Autowired
     private ITermManager termManager;
-    public OperateEttController(){
-        this.userManager=this.getManager(UserManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.termManager=this.getManager(TermManager.class);
-    }
+
     /**begin:*******************************网校WebIM使用方法***************************************************/
     /**
      * 验证用户名(1、非空验证  2、是否重复)

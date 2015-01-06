@@ -37,6 +37,19 @@ public class StuPaperQuesLogs implements  Serializable {
     private String ettHeadImgSrc;
     private String ettName;
 
+    private String markComment;
+
+    public String getMarkComment() {
+        String returnVal=this.markComment;
+        if(returnVal!=null)
+            returnVal=returnVal.replaceAll("\\n","<br/>").replaceAll("\\\\r\\\\n","</br>");
+        return returnVal;
+    }
+
+    public void setMarkComment(String markComment) {
+        this.markComment = markComment;
+    }
+
     public Integer getAttachType() {
         return attachType;
     }

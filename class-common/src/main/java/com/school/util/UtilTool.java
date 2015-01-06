@@ -1,10 +1,26 @@
 package com.school.util;
 
+import com.school.entity.RightUser;
+import com.school.entity.UserInfo;
+import com.school.util.Pdf2Swf.Office2Pdf;
+import com.school.util.Pdf2Swf.Pdf2Swf;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import net.sf.json.JSONObject;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
 import java.io.*;
-import java.lang.Exception;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -19,34 +35,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReadParam;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.entity.RightUser;
-import com.school.entity.UserInfo;
-import com.school.util.Pdf2Swf.Office2Pdf;
-import com.school.util.Pdf2Swf.Pdf2Swf;
-import com.school.util.sendfile.SendFile;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.math.RandomUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class UtilTool implements java.io.Serializable {
     /************************** 全局 常量********************** */
@@ -1241,23 +1231,23 @@ public class UtilTool implements java.io.Serializable {
         String lastname=suffix.toLowerCase();
         String firstname="001";
         //String destPath=utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/"+getConvertPath(resid,suffix);
-        String destPath=getResourceLocation(Long.parseLong(resid),2)+"/"+getConvertPath(resid,suffix);
+        String destPath=getResourceLocation(request,Long.parseLong(resid),2)+"/"+getConvertPath(resid,suffix);
         String filename="";
         //TXT文件要拷贝成ODT文件后转换，否则出现乱码
         if(UtilTool.matchingText(UtilTool._TXT_SUFFIX_TYPE_REGULAR, lastname)){
             filename=firstname+".odt";
         }
         if(UtilTool.matchingText(UtilTool._PDF_SUFFIX_TYPE_REGULAR, lastname)){
-            Pdf2Swf.PDF2SWF(request,getResourceLocation(Long.parseLong(resid),2)+"/"+getResourceUrl(resid,suffix), destPath);
+            Pdf2Swf.PDF2SWF(request,getResourceLocation(request,Long.parseLong(resid),2)+"/"+getResourceUrl(resid,suffix), destPath);
             return true;
         }
-        System.out.println("filepath:"+getResourceLocation(Long.parseLong(resid),2)+"/"+getResourceUrl(resid,suffix));
-        File f=new File(getResourceLocation(Long.parseLong(resid),2)+"/"+getResourceUrl(resid,suffix));
+        System.out.println("filepath:"+getResourceLocation(request,Long.parseLong(resid),2)+"/"+getResourceUrl(resid,suffix));
+        File f=new File(getResourceLocation(request,Long.parseLong(resid),2)+"/"+getResourceUrl(resid,suffix));
 
-        String pdfpath=getResourceLocation(Long.parseLong(resid),2)+"/"+getResourceUrl(resid,".pdf");
+        String pdfpath=getResourceLocation(request,Long.parseLong(resid),2)+"/"+getResourceUrl(resid,".pdf");
         if(!new File(pdfpath).exists()){
             Office2Pdf office2pdf=new Office2Pdf();
-            pdfpath=office2pdf.office2pdf(request,getResourceLocation(Long.parseLong(resid),2)+"/"+getResourceUrl(resid,suffix), null);
+            pdfpath=office2pdf.office2pdf(request,getResourceLocation(request,Long.parseLong(resid),2)+"/"+getResourceUrl(resid,suffix), null);
         }
 
         System.out.println("pdfpath:"+pdfpath);
@@ -1417,8 +1407,9 @@ public class UtilTool implements java.io.Serializable {
      * @param type   1:域名路径   2:真实路径
      * @return
      */
-    public static String getResourceLocation(Long resid,Integer type){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+    public static String getResourceLocation(HttpServletRequest request,Long resid,Integer type){
+        if(request==null)
+            request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String returnVal=null;
         if(resid>0){
             if(type==null||type==1)     //云端
@@ -1463,7 +1454,7 @@ public class UtilTool implements java.io.Serializable {
         String file=gender_MD5(filename.replaceAll("'"," ").replaceAll(","," ").trim());
         //return UtilTool.utilproperty.getProperty("RESOURCE_FILE_PATH_HEAD")+residfilename+"/"+file+".swf";
         //String returnPath=UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"uploadfile/"+residfilename+"/"; //"http://"+request.getServerName()+":"+request.getLocalPort()+"/fileoperate/" +
-        String returnPath=UtilTool.getResourceLocation(Long.parseLong(resid),1)+"/"+residfilename+"/"; //"http://"+request.getServerName()+":"+request.getLocalPort()+"/fileoperate/" +
+        String returnPath=UtilTool.getResourceLocation(request,Long.parseLong(resid),1)+"/"+residfilename+"/"; //"http://"+request.getServerName()+":"+request.getLocalPort()+"/fileoperate/" +
         String filetype=getResourseType(filename);
         if(filetype.equals("doc"))
             returnPath+=file+".swf";

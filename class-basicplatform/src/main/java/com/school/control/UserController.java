@@ -5,12 +5,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
-import javax.annotation.Resource;
-import javax.naming.InitialContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.TransactionManager;
 
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.entity.*;
@@ -25,6 +22,7 @@ import com.school.utils.*;
 import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionDefinition;
@@ -49,31 +47,57 @@ import com.school.util.sendfile.SendFile;
 @RequestMapping(value = "/user")
 public class UserController extends BaseController<UserInfo> {
 
+    @Autowired
     protected IUserManager userManager;
+    @Autowired
     protected IClassYearManager classYearManager;
+    @Autowired
     protected IIdentityManager identityManager;
+    @Autowired
     protected IDictionaryManager dictionaryManager;
+    @Autowired
     protected IRoleManager roleManager;
+    @Autowired
     protected ISubjectManager subjectManager;
+    @Autowired
     protected IGradeManager gradeManager;
+    @Autowired
     protected IClassManager classManager;
+    @Autowired
     protected ISubjectUserManager subjectUserManager;
+    @Autowired
     protected IDeptUserManager deptUserManager;
+    @Autowired
     protected ITeacherManager teacherManager;
+    @Autowired
     protected IStudentManager studentManager;
+    @Autowired
     protected IClassUserManager classUserManager;
+    @Autowired
     protected IJobUserManager jobUserManager;
+    @Autowired
     protected IRoleUserManager roleUserManager;
+    @Autowired
     protected IParentManager parentManager;
+    @Autowired
     protected IUserColumnRightManager userColumnRightManager;
+    @Autowired
     protected IRoleColumnRightManager roleColumnRightManager;
+    @Autowired
     protected IDeptManager deptManager;
+    @Autowired
     protected ITermManager termManager;
+    @Autowired
     protected IUserIdentityManager userIdentityManager;
+    @Autowired
     protected INoticeManager noticeManager;
+    @Autowired
     protected IActivityManager activityManager;
+    @Autowired
     protected IMyInfoUserManager myInfoUserManager;
+    @Autowired
     protected IInitWizardManager initWizardManager;
+    @Autowired
     protected ISchoolManager schoolManager;
 
     public  List<Map<String,Object>> getClassUserMap(String relationtype,Integer classid){
@@ -97,35 +121,7 @@ public class UserController extends BaseController<UserInfo> {
     }
 
 
-    public UserController(){
-        this.schoolManager=this.getManager(SchoolManager.class);
-        this.userManager=this.getManager(UserManager.class);
-        this.classYearManager=this.getManager(ClassYearManager.class);
-        this.identityManager=this.getManager(IdentityManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-        this.roleManager=this.getManager(RoleManager.class);
-        this.subjectManager=this.getManager(SubjectManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.classManager=this.getManager(ClassManager.class);
-        this.subjectUserManager=this.getManager(SubjectUserManager.class);
-        this.deptUserManager=this.getManager(DeptUserManager.class);
-        this.teacherManager=this.getManager(TeacherManager.class);
-        this.studentManager=this.getManager(StudentManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.jobUserManager=this.getManager(JobUserManager.class);
-        this.roleUserManager=this.getManager(RoleUserManager.class);
-        this.parentManager=this.getManager(ParentManager.class);
-        this.userColumnRightManager=this.getManager(UserColumnRightManager.class);
-        this.roleColumnRightManager=this.getManager(RoleColumnRightManager.class);
-        this.deptManager=this.getManager(DeptManager.class);
-        this.termManager=this.getManager(TermManager.class);
-        this.userIdentityManager=this.getManager(UserIdentityManager.class);
-        this.noticeManager=this.getManager(NoticeManager.class);
-        this.activityManager=this.getManager(ActivityManager.class);
-        this.myInfoUserManager=this.getManager(MyInfoUserManager.class);
-        this.initWizardManager=this.getManager(InitWizardManager.class);
 
-    }
 //
 //    /**
 //     * ≤‚ ‘£¨Õ¨≤Ω∞Ê±æ

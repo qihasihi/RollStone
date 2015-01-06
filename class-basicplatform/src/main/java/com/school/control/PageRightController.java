@@ -1,41 +1,35 @@
 package com.school.control;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.ColumnManager;
-import com.school.manager.PageRightManager;
-import com.school.manager.RightUserManager;
+import com.school.control.base.BaseController;
+import com.school.entity.ColumnInfo;
+import com.school.entity.PageRightInfo;
+import com.school.entity.RightUser;
 import com.school.manager.inter.IColumnManager;
 import com.school.manager.inter.IPageRightManager;
 import com.school.manager.inter.IRightUserManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ColumnInfo;
-import com.school.entity.PageRightInfo;
-import com.school.entity.RightUser;
-import com.school.entity.RoleUser;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 @Controller
 @RequestMapping(value="/pageright")
 public class PageRightController extends BaseController<PageRightInfo>{
+    @Autowired
 	private IColumnManager columnManager;
+    @Autowired
     private IPageRightManager pageRightManager;
+    @Autowired
     private IRightUserManager rightUserManager;
-    public PageRightController(){
-        this.columnManager=this.getManager(ColumnManager.class);
-        this.pageRightManager=this.getManager(PageRightManager.class);
-        this.rightUserManager=this.getManager(RightUserManager.class);
-    }
+
 	
 	@RequestMapping(params="m=list",method=RequestMethod.GET)
 	public ModelAndView getListBy(HttpServletRequest request,ModelMap mp) throws Exception{

@@ -1,34 +1,22 @@
 package com.school.dao.base;
 
-import java.lang.reflect.Method;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.*;
-
-import javax.annotation.Resource;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
+import com.school.util.UtilTool;
+import com.school.util.UtilTool.DateType;
 import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.logging.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.CallableStatementCreator;
-import org.springframework.jdbc.core.CallableStatementCreatorFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import com.school.util.UtilTool;
-import com.school.util.UtilTool.DateType;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.lang.reflect.Method;
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
 
 /**
  * CopyRright (c)2003-2010 项目名称: oa 文件名称: CommonDAO.java 描述: 使用的JDK版本: JDK1.6

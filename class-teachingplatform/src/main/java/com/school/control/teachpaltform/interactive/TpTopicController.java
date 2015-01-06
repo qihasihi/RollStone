@@ -2,26 +2,20 @@ package com.school.control.teachpaltform.interactive;
 
 import com.school.control.base.BaseController;
 import com.school.entity.DictionaryInfo;
-import com.school.entity.teachpaltform.TpCourseClass;
 import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.entity.teachpaltform.TpCourseTeachingMaterial;
 import com.school.entity.teachpaltform.TpOperateInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
-import com.school.manager.DictionaryManager;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
 import com.school.manager.inter.teachpaltform.ITpCourseTeachingMaterialManager;
 import com.school.manager.inter.teachpaltform.ITpOperateManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
-import com.school.manager.teachpaltform.TpCourseManager;
-import com.school.manager.teachpaltform.TpCourseTeachingMaterialManager;
-import com.school.manager.teachpaltform.TpOperateManager;
-import com.school.manager.teachpaltform.interactive.TpTopicManager;
-import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,19 +34,17 @@ import java.util.Map;
 @Controller
 @RequestMapping(value="/tptopic")
 public class TpTopicController extends BaseController<TpTopicInfo>{
-    public TpTopicController(){
-        this.tpTopicManager=this.getManager(TpTopicManager.class);
-        this.dictionaryManager=getManager(DictionaryManager.class);
-        this.tpCourseManager=getManager(TpCourseManager.class);
-        this.tpOperateManager=getManager(TpOperateManager.class);
-        this.tpTopicThemeManager=getManager(TpTopicThemeManager.class);
-        this.tpCourseTeachingMaterialManager=getManager(TpCourseTeachingMaterialManager.class);
-    }
+    @Autowired
     private ITpCourseTeachingMaterialManager tpCourseTeachingMaterialManager;
+    @Autowired
     private ITpTopicThemeManager tpTopicThemeManager;
+    @Autowired
     private ITpTopicManager tpTopicManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private ITpCourseManager tpCourseManager;
+    @Autowired
     private ITpOperateManager tpOperateManager;
     /**
      * 进入主页，分角色
@@ -79,10 +71,12 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
             jsonEntity.setMsg(UtilTool.msgproperty.get("ENTITY_NOT_EXISTS").toString());
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+
         TpCourseInfo course=courseList.get(0);
         mp.put("locastatus", course.getLocalstatus());  //得到专题的状态 并保存
 
         mp.put("courseid", topicInfo.getCourseid());
+        mp.put("coruseName",course.getCoursename());
         //身份验证
         String roleStr="TEACHER";
         Integer roleInt=1;

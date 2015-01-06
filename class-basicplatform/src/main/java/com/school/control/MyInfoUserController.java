@@ -1,28 +1,25 @@
 package com.school.control;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.MyInfoUserManager;
+import com.school.control.base.BaseController;
+import com.school.entity.MyInfoUserInfo;
 import com.school.manager.inter.IMyInfoUserManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.MyInfoUserInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 @Controller
 @RequestMapping(value = "/myinfouser")
 public class MyInfoUserController extends BaseController<MyInfoUserInfo>{
+    @Autowired
     private IMyInfoUserManager myInfoUserManager;
-    public MyInfoUserController(){
-        this.myInfoUserManager=this.getManager(MyInfoUserManager.class);
-    }
+
 
 	/**
 	 * 进入消息列表页面

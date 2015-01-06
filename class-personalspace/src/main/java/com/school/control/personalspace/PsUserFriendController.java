@@ -5,10 +5,9 @@ import com.school.entity.personalspace.PsFriendGroupInfo;
 import com.school.entity.personalspace.PsUserFriend;
 import com.school.manager.inter.personalspace.IPsFriendGroupManager;
 import com.school.manager.inter.personalspace.IPsUserFriendManager;
-import com.school.manager.personalspace.PsFriendGroupManager;
-import com.school.manager.personalspace.PsUserFriendManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +25,11 @@ import java.util.List;
 @Controller
 @RequestMapping(value="/userfriend")
 public class PsUserFriendController extends BaseController<PsUserFriend> {
+    @Autowired
     private IPsUserFriendManager psUserFriendManager;
+    @Autowired
     private IPsFriendGroupManager psFriendGroupManager;
-    public PsUserFriendController(){
-        this.psUserFriendManager=this.getManager(PsUserFriendManager.class);
-        this.psFriendGroupManager=this.getManager(PsFriendGroupManager.class);
-    }
+
 
 
     /**

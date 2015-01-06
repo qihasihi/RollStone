@@ -3,9 +3,9 @@ package com.school.control.teachpaltform;
 import com.school.control.base.BaseController;
 import com.school.entity.teachpaltform.TpTeacherTeachMaterial;
 import com.school.manager.inter.teachpaltform.ITpTeacherTeachMaterialManager;
-import com.school.manager.teachpaltform.TpTeacherTeachMaterialManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,10 +21,9 @@ import java.util.List;
 @Controller
 @RequestMapping(value="/tpteacherteamater")
 public class TpTeacherTeachMaterialController  extends BaseController<TpTeacherTeachMaterial>{
+    @Autowired
     private ITpTeacherTeachMaterialManager tpTeacherTeachMaterialManager;
-    public TpTeacherTeachMaterialController(){
-        this.tpTeacherTeachMaterialManager=this.getManager(TpTeacherTeachMaterialManager.class);
-    }
+
     /**
      * 添加或，如有对应数据，则不操作，没有则添加
      * @param request

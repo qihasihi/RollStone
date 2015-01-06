@@ -1,30 +1,26 @@
 package com.school.control.resource;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.school.control.base.BaseController;
+import com.school.entity.resource.ResourceReport;
 import com.school.manager.inter.resource.IResourceReportManager;
-import com.school.manager.resource.ResourceReportManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.school.control.base.BaseController;
-import com.school.entity.resource.CheckInfo;
-import com.school.entity.resource.ResourceReport;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/resourcereport")
 public class ResourceReportController extends BaseController<ResourceReport> {
+    @Autowired
     private IResourceReportManager resourceReportManager;
-    public ResourceReportController(){
-        this.resourceReportManager=this.getManager(ResourceReportManager.class);
-    }
+
 	/**
 	 * Ìí¼Ó±¨¸æ
 	 * 

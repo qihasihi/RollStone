@@ -1,15 +1,14 @@
 package com.school.dao.teachpaltform.paper;
 
+import com.school.dao.base.CommonDAO;
+import com.school.dao.inter.teachpaltform.paper.IStuPaperQuesLogsDAO;
+import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
+import com.school.util.PageResult;
+import org.springframework.stereotype.Component;
+
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.school.dao.base.CommonDAO;
-import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
-import com.school.dao.inter.teachpaltform.paper.IStuPaperQuesLogsDAO;
-import com.school.util.PageResult;
 
 @Component  
 public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements IStuPaperQuesLogsDAO {
@@ -187,8 +186,14 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
             objList.add(stupaperqueslogs.getAttachType());
         } else
             sqlbuilder.append("null,");
+        if (stupaperqueslogs.getMarkComment() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getMarkComment());
+        } else
+            sqlbuilder.append("null,");
 
-		sqlbuilder.append("?)}");
+
+        sqlbuilder.append("?)}");
 		return objList;
 	}
 
@@ -285,6 +290,11 @@ public class StuPaperQuesLogsDAO extends CommonDAO<StuPaperQuesLogs> implements 
         if (stupaperqueslogs.getAttachType() != null) {
             sqlbuilder.append("?,");
             objList.add(stupaperqueslogs.getAttachType());
+        } else
+            sqlbuilder.append("null,");
+        if (stupaperqueslogs.getMarkComment() != null) {
+            sqlbuilder.append("?,");
+            objList.add(stupaperqueslogs.getMarkComment());
         } else
             sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");

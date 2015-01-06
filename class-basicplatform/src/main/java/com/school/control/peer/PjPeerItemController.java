@@ -1,28 +1,25 @@
 package com.school.control.peer;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.DeptManager;
-import com.school.manager.inter.IDeptManager;
-import com.school.manager.inter.peer.IPjPeerBaseManager;
-import com.school.manager.inter.peer.IPjPeerItemManager;
-import com.school.manager.peer.PjPeerBaseManager;
-import com.school.manager.peer.PjPeerItemManager;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 import com.school.control.base.BaseController;
 import com.school.entity.DeptInfo;
 import com.school.entity.peer.PjPeerBaseInfo;
 import com.school.entity.peer.PjPeerItemInfo;
+import com.school.manager.inter.IDeptManager;
+import com.school.manager.inter.peer.IPjPeerBaseManager;
+import com.school.manager.inter.peer.IPjPeerItemManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ‘¿¥∫—Ù
@@ -31,14 +28,13 @@ import com.school.util.UtilTool;
 @Controller
 @RequestMapping(value="/peeritem")
 public class PjPeerItemController extends BaseController<PjPeerItemInfo> {
+    @Autowired
     private IPjPeerBaseManager pjPeerBaseManager;
+    @Autowired
     private IPjPeerItemManager pjPeerItemManager;
+    @Autowired
     private IDeptManager deptManager;
-    public PjPeerItemController() {
-        this.pjPeerBaseManager = this.getManager(PjPeerBaseManager.class);
-        this.pjPeerItemManager=this.getManager(PjPeerItemManager.class);
-        this.deptManager=this.getManager(DeptManager.class);
-    }
+
 
     /**
 	 * @author ‘¿¥∫—Ù

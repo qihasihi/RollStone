@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.school.manager.*;
 import com.school.manager.inter.*;
 import com.school.utils.EttInterfaceUserUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,26 +37,25 @@ import com.school.util.UtilTool;
 @Scope("prototype") 
 @RequestMapping(value="/student")
 public class StudentController extends BaseController<StudentInfo> {
+    @Autowired
     private IClassYearManager classYearManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private IStudentManager studentManager;
+    @Autowired
     private IOperateExcelManager operaterexcelmanager;
+    @Autowired
     private IClassManager classManager;
+    @Autowired
     private IClassUserManager classUserManager;
+    @Autowired
     private IUserManager userManager;
+    @Autowired
     private IUserIdentityManager userIdentityManager;
+    @Autowired
     private IRoleUserManager roleUserManager;
-    public StudentController(){
-        this.classYearManager=this.getManager(ClassYearManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.studentManager=this.getManager(StudentManager.class);
-        this.operaterexcelmanager=this.getManager(OperateExcelManager.class);
-        this.classManager=this.getManager(ClassManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.userManager=this.getManager(UserManager.class);
-        this.userIdentityManager=this.getManager(UserIdentityManager.class);
-        this.roleUserManager=this.getManager(RoleUserManager.class);
-    }
+
 
 	@RequestMapping(params="m=list",method=RequestMethod.GET)
 	public ModelAndView toStudentList(HttpServletRequest request,ModelAndView mp )throws Exception{

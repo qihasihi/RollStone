@@ -996,11 +996,11 @@ function listReturn(rps){
                             h+='<a href="task?toAddTask&courseid='+courseid+'&tasktype=2&taskvalueid='+itm.topicid+'" class="ico51" title="发任务"></a>';
                         else
                             h+='<span class="ico52" title="已发任务"></span>';
-                        if(itm.status==2){
-                                h+='<a href="javascript:;" onclick="updateTopicStatus('+itm.topicid+',1)" id="a_status_'+itm.topicid+'" class="ico53" title="开放论题"></a>';
-                        }else if(itm.status==1){
-                            h+='<a href="javascript:;" onclick="updateTopicStatus('+itm.topicid+',2)" id="a_status_'+itm.topicid+'" class="ico54" title="关闭论题"></a>';
-                        }
+//                        if(itm.status==2){
+//                                h+='<a href="javascript:;" onclick="updateTopicStatus('+itm.topicid+',1)" id="a_status_'+itm.topicid+'" class="ico53" title="开放论题"></a>';
+//                        }else if(itm.status==1){
+//                            h+='<a href="javascript:;" onclick="updateTopicStatus('+itm.topicid+',2)" id="a_status_'+itm.topicid+'" class="ico54" title="关闭论题"></a>';
+//                        }
                         if(itm.isPublishTask==0)
                             h+='<a href="tptopic?m=toAdmin&topicid='+itm.topicid+'&courseid='+itm.courseid+'" class="ico11" title="编辑"></a>';
                         if(itm.isPublishTask==0){
@@ -1018,10 +1018,10 @@ function listReturn(rps){
                             h+='<span class="ico18" title="标准" ></span>';
                         }
                     }
-                    h+='<a class="ico49b" id="a_op_'+itm.topicid+'" onclick="operateUI(\'dv_main_'+itm.topicid+'\',\'ico49\',\'a_op_'+itm.topicid+'\')" href="javascript:;"></a>';
+                    //h+='<a class="ico49b" id="a_op_'+itm.topicid+'" onclick="operateUI(\'dv_main_'+itm.topicid+'\',\'ico49\',\'a_op_'+itm.topicid+'\')" href="javascript:;"></a>';
                     h+='<a href="tptopic?m=toDetailTopic&topicid='+itm.topicid+'">'+itm.topictitle+'</a> </p><!-- ico49a -->';
                     h+='</div>';
-                    h+='<div id="dv_main_'+itm.topicid+'" class="text" style="display:none">';
+                    h+='<div id="dv_main_'+itm.topicid+'" class="text" style="display:block">';
                     h+='<div class="f_right">';
                     h+='<p>主帖数：'+itm.themecount+'</p>';
                     h+='<p>评论数：'+itm.restorecount+'</p>';
@@ -1030,7 +1030,7 @@ function listReturn(rps){
                     h+='</div>';
                     h+='<div class="f_left">';
                     h+='<div class="height">'+itm.topiccontent+'</div>';
-                    h+='<p class="info">最后发表：'+(typeof(itm.lastFb)=="undefined"?"无":itm.lastFb)+'</p>';
+//                    h+='<p class="info">最后发表：'+(typeof(itm.lastFb)=="undefined"?"无":itm.lastFb)+'</p>';
                     h+='</div>';
                     h+='<div class="clear"></div>';
                     h+='</div>';

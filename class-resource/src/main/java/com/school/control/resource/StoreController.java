@@ -13,6 +13,7 @@ import com.school.manager.inter.teachpaltform.ITpResourceCollectManager;
 import com.school.manager.resource.ResourceManager;
 import com.school.manager.resource.StoreManager;
 import com.school.manager.teachpaltform.TpResourceCollectManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,14 +29,13 @@ import com.school.util.UtilTool;
 @Controller
 @RequestMapping(value="/store") 
 public class StoreController extends BaseController<StoreInfo>{
+    @Autowired
     private IStoreManager storeManager;
+    @Autowired
     private IResourceManager resourceManager;
+    @Autowired
     private ITpResourceCollectManager tpResourceCollectManager;
-    public StoreController(){
-        this.storeManager=this.getManager(StoreManager.class);
-        this.resourceManager=this.getManager(ResourceManager.class);
-        this.tpResourceCollectManager=this.getManager(TpResourceCollectManager.class);
-    }
+
 
 	/**
 	 * Ìí¼Ó

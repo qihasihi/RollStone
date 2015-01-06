@@ -26,6 +26,7 @@ import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,35 +47,32 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/simpleRes")
 public class SimpleResController extends BaseController<ResourceInfo> {
+    @Autowired
     private ISubjectManager subjectManager;
+    @Autowired
     private IGradeManager gradeManager;
+    @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
     private IResourceManager resourceManager;
+    @Autowired
     private IStoreManager storeManager;
+    @Autowired
     private IOperateRecordManager operateRecordManager;
+    @Autowired
     private IResourceReportManager resourceReportManager;
+    @Autowired
     private ICommentManager commentManager;
+    @Autowired
     private IAccessManager accessManager;
+    @Autowired
     private ITpTopicThemeManager tpTopicThemeManager;
+    @Autowired
     private ITpCourseResourceManager tpCourseResourceManager;
+    @Autowired
     private ITpCourseManager tpCourseManager;
+    @Autowired
     private ITeachingMaterialManager teachingMaterialManager;
-    public SimpleResController(){
-        this.tpCourseResourceManager=this.getManager(TpCourseResourceManager.class);
-        this.commentManager=this.getManager(CommentManager.class);
-        this.accessManager=this.getManager(AccessManager.class);
-        this.tpTopicThemeManager=this.getManager(TpTopicThemeManager.class);
-        this.operateRecordManager=this.getManager(OperateRecordManager.class);
-        this.storeManager=this.getManager(StoreManager.class);
-        this.resourceReportManager=this.getManager(ResourceReportManager.class);
-        this.subjectManager=this.getManager(SubjectManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-        this.resourceManager=this.getManager(ResourceManager.class);
-        this.tpCourseManager=this.getManager(TpCourseManager.class);
-        this.teachingMaterialManager=this.getManager(TeachingMaterialManager.class);
-        this.dictionaryManager=this.getManager(DictionaryManager.class);
-    }
-
     /**
      * 进入精简版资源页，首页
      * @param request

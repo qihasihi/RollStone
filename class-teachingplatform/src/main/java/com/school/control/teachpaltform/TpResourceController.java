@@ -502,8 +502,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                 if(this.tpCourseResourceManager.doExcetueArrayProc(sqlList,objListArray)){
                     je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                     je.setType("success");
-                    String src=UtilTool.getResourceLocation(Long.parseLong(resid),2)+"/"+UtilTool.getResourceMd5Directory(resid);
-                    String dest=UtilTool.getResourceLocation(nextResourceId,2)+"/"+UtilTool.getResourceMd5Directory(nextResourceId.toString());
+                    String src=UtilTool.getResourceLocation(request,Long.parseLong(resid),2)+"/"+UtilTool.getResourceMd5Directory(resid);
+                    String dest=UtilTool.getResourceLocation(request,nextResourceId,2)+"/"+UtilTool.getResourceMd5Directory(nextResourceId.toString());
                     UtilTool.copyDirectiory(src,dest);
                 }else
                     je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -2868,7 +2868,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             response.getWriter().print(je.toJSON());
             return;
         }
-        je.getObjList().add(UtilTool.getResourceLocation(Long.parseLong(resid),1));
+        je.getObjList().add(UtilTool.getResourceLocation(request,Long.parseLong(resid),1));
         response.getWriter().print(je.toJSON());
     }
 
@@ -2899,7 +2899,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             String filetype=UtilTool.getConvertResourseType(r.getResname()+r.getFilesuffixname());
             if(filetype!=null&&filetype.equals("doc")){
                 //String destPath=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
-                String destPath=UtilTool.getResourceLocation(r.getResid(),2)+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
+                String destPath=UtilTool.getResourceLocation(request,r.getResid(),2)+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
                 System.out.println("checkConvertStatus destpath:"+destPath);
                 if(!new File(destPath).exists()){
                     je.setMsg("当前资源不可预览，请等待转换完成后预览!");
@@ -2937,9 +2937,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             String filetype=UtilTool.getConvertResourseType(r.getResname()+r.getFilesuffixname());
             if(filetype!=null&&filetype.equals("doc")){
                 boolean flag=false;
-                String destPath=UtilTool.getResourceLocation(r.getResid(),2)+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
+                String destPath=UtilTool.getResourceLocation(request,r.getResid(),2)+"/"+UtilTool.getConvertPath(r.getResid().toString(),r.getFilesuffixname());
                 System.out.println("convertDoc destPath:"+destPath);
-                String file=UtilTool.getResourceLocation(r.getResid(),2)+"/"+UtilTool.getResourceFileUrl(r.getResid().toString(),r.getFilesuffixname());
+                String file=UtilTool.getResourceLocation(request,r.getResid(),2)+"/"+UtilTool.getResourceFileUrl(r.getResid().toString(),r.getFilesuffixname());
                 System.out.println("convertDoc srcPath:"+file);
                 if(!new File(file).exists()){
                     System.out.println("RES_ID:"+r.getResid()+"path:"+file);
@@ -2992,8 +2992,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
                     String filetype=UtilTool.getConvertResourseType(resinfo.getFilename());
                     if(filetype!=null&&filetype.equals("doc")){
                         boolean flag=false;
-                        String destPath=UtilTool.getResourceLocation(resinfo.getResid(),2)+"/"+UtilTool.getConvertPath(resinfo.getResid().toString(),resinfo.getFilesuffixname());
-                        String file=UtilTool.getResourceLocation(resinfo.getResid(),2)+"/"+UtilTool.getResourceFileUrl(resinfo.getResid().toString(),resinfo.getFilesuffixname());
+                        String destPath=UtilTool.getResourceLocation(request,resinfo.getResid(),2)+"/"+UtilTool.getConvertPath(resinfo.getResid().toString(),resinfo.getFilesuffixname());
+                        String file=UtilTool.getResourceLocation(request,resinfo.getResid(),2)+"/"+UtilTool.getResourceFileUrl(resinfo.getResid().toString(),resinfo.getFilesuffixname());
                         if(!new File(file).exists()){
                             System.out.println("RES_ID:"+resinfo.getResid()+"PATH:"+file);
                             continue;

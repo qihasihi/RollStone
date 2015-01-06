@@ -33,6 +33,7 @@ import com.school.manager.teachpaltform.award.TpGroupScoreManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,29 +52,27 @@ import java.util.*;
 @Controller
 @RequestMapping(value="/clsperformance")
 public class TpGroupScoreController extends BaseController<TpStuScore>{
-
+    @Autowired
     private ITpCourseManager courseManager;
+    @Autowired
     private ITpGroupScoreManager tpGroupScoreManager;
+    @Autowired
     private ITpStuScoreManager tpStuScoreManager;
+    @Autowired
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
+    @Autowired
     private ITpCourseClassManager tpCourseClassManager;
+    @Autowired
     private ITpGroupStudentManager tpGroupStudentManager;
+    @Autowired
     private IClassManager classManage;
+    @Autowired
     private ITpVirtualClassManager virtualClassManager;
+    @Autowired
     private ISubjectManager subjectManager;
+    @Autowired
     private IClassUserManager classUserManager;
-    public TpGroupScoreController(){
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.subjectManager=this.getManager(SubjectManager.class);
-        this.tpGroupScoreManager=this.getManager(TpGroupScoreManager.class);
-        this.courseManager=this.getManager(TpCourseManager.class);
-        this.tpStuScoreManager=this.getManager(TpStuScoreManager.class);
-        this.tpCourseClassManager=this.getManager(TpCourseClassManager.class);
-        this.tpGroupStudentManager=this.getManager(TpGroupStudentManager.class);
-        this.classManage=this.getManager(ClassManager.class);
-        this.virtualClassManager=this.getManager(TpVirtualClassManager.class);
-        tpStuScoreLogsManager=this.getManager(TpStuScoreLogsManager.class);
-    }
+
     /**
      * 进入课堂表现页面的首页(分角色)
      * @param request

@@ -1,29 +1,25 @@
 package com.school.control;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.RoleColumnRightManager;
+import com.school.control.base.BaseController;
+import com.school.entity.RoleColumnRightInfo;
 import com.school.manager.inter.IRoleColumnRightManager;
+import com.school.util.JsonEntity;
 import com.school.util.PageResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.school.control.base.BaseController;
-import com.school.entity.DeptInfo;
-import com.school.entity.RoleColumnRightInfo;
-import com.school.util.JsonEntity;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @RequestMapping(value="roleColumnRight")
 public class RoleColumnRightController extends BaseController<RoleColumnRightInfo>  {
+    @Autowired
     public IRoleColumnRightManager roleColumnRightManager;
-    public RoleColumnRightController(){
-        this.roleColumnRightManager=this.getManager(RoleColumnRightManager.class);
-    }
+
 	@RequestMapping(params="m=ajaxlist",method=RequestMethod.POST)
 	public void ajaxList(HttpServletRequest request,HttpServletResponse response) throws Exception{
 		RoleColumnRightInfo roleColumnInfo = this.getParameter(request, RoleColumnRightInfo.class);

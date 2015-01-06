@@ -8,16 +8,12 @@ import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
-import com.school.manager.teachpaltform.*;
-import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
-import com.school.manager.teachpaltform.interactive.TpTopicManager;
-import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,23 +30,21 @@ import java.util.Map;
 @Controller
 @RequestMapping(value="/tptopictheme")
 public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
-    public TpTopicThemeController(){
-        this.tpTopicThemeManager=this.getManager(TpTopicThemeManager.class);
-        this.tpTopicManager=this.getManager(TpTopicManager.class);
-        this.tpTaskManager=this.getManager(TpTaskManager.class);
-        this.taskPerformanceManager=getManager(TaskPerformanceManager.class);
-        this.tpCourseManager=getManager(TpCourseManager.class);
-        this.tpOperateManager=getManager(TpOperateManager.class);
-        this.tpStuScoreLogsManager=getManager(TpStuScoreLogsManager.class);
-        this.tpTaskAllotManager=getManager(TpTaskAllotManager.class);
-    }
+    @Autowired
     private ITpTaskAllotManager tpTaskAllotManager;
+    @Autowired
     private ITpTopicThemeManager tpTopicThemeManager;
+    @Autowired
     private ITpTopicManager tpTopicManager;
+    @Autowired
     private ITpTaskManager tpTaskManager;
+    @Autowired
     private ITaskPerformanceManager taskPerformanceManager;
+    @Autowired
     private ITpCourseManager tpCourseManager;
+    @Autowired
     private ITpOperateManager tpOperateManager;
+    @Autowired
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
     /**
      * ÷¥––AJAX ≤È—Ø

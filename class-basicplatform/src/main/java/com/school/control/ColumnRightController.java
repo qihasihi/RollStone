@@ -1,42 +1,37 @@
 package com.school.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.ColumnManager;
-import com.school.manager.ColumnRightManager;
-import com.school.manager.ColumnRightPageRightManager;
+import com.school.control.base.BaseController;
+import com.school.entity.ColumnInfo;
+import com.school.entity.ColumnRightInfo;
+import com.school.entity.ColumnRightPageRightInfo;
 import com.school.manager.inter.IColumnManager;
 import com.school.manager.inter.IColumnRightManager;
 import com.school.manager.inter.IColumnRightPageRightManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ColumnInfo;
-import com.school.entity.ColumnRightInfo;
-import com.school.entity.ColumnRightPageRightInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value="/columnright")
 public class ColumnRightController extends BaseController<ColumnRightInfo>{
+    @Autowired
     private IColumnRightManager columnRightManager;
+    @Autowired
     private IColumnManager columnManager;
+    @Autowired
     private IColumnRightPageRightManager columnRightPageRightManager;
-    public ColumnRightController(){
-        this.columnRightManager=this.getManager(ColumnRightManager.class);
-        this.columnManager=this.getManager(ColumnManager.class);
-        this.columnRightPageRightManager=this.getManager(ColumnRightPageRightManager.class);
-    }
+
 	
 	@RequestMapping(params="m=list",method=RequestMethod.GET)
 	public ModelAndView getListBy(HttpServletRequest request,ModelMap mp) throws Exception{

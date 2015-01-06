@@ -23,7 +23,7 @@
 			http_operate_handler:listReturn,
 			return_type:'json',
 			page_no:1, 
-			page_size:10,
+			page_size:5,
 			rectotal:0,
 			pagetotal:1,
 			operate_id:"mainUL"
@@ -47,12 +47,8 @@
 <%@include file="/util/nav-base.jsp" %>
 <div class="zhuanti">
   <p>
-  	<c:if test="${!empty courseList}">
-  		<c:forEach items="${courseList}" var="t">
-  			<c:if test="${t.courseid==courseid}">
-  				${t.coursename}<input type="hidden" value="${t.courseid }" id="hd_course_id"/>
-  			</c:if>
-  		</c:forEach>
+  	<c:if test="${!empty coruseName}">
+  				${coruseName}<input type="hidden" value="${courseid }" id="hd_course_id"/>
   	</c:if>
   <a class="ico13" href="javascript:;" onclick="operateUI('ul_courselist')" id="a_courselist"></a></p>
   <ul style="display:none" id="ul_courselist">
@@ -103,16 +99,16 @@
   页&nbsp;&nbsp;<span><a href="1">Go</a></span></div>
 </div>
 </form>
-<c:if test="${!empty staticObj}">
-	<div class="jxxt_zhuanti_hdkj_info">
-		<strong>今日发帖：</strong>${staticObj.JRFT}
-		<strong>昨日发帖：</strong>${staticObj.ZRFT}
-		<strong>论题总数：</strong>${staticObj.LTZS}
-		<strong>主帖总数：</strong>${staticObj.ZTZS}
-		<strong>回帖总数：</strong>${staticObj.HTZS}       
-		<strong>统计时间：</strong>${staticObj.TJSJ}
-	</div>
-</c:if>
+<%--<c:if test="${!empty staticObj}">--%>
+	<%--<div class="jxxt_zhuanti_hdkj_info">--%>
+		<%--<strong>今日发帖：</strong>${staticObj.JRFT}--%>
+		<%--<strong>昨日发帖：</strong>${staticObj.ZRFT}--%>
+		<%--<strong>论题总数：</strong>${staticObj.LTZS}--%>
+		<%--<strong>主帖总数：</strong>${staticObj.ZTZS}--%>
+		<%--<strong>回帖总数：</strong>${staticObj.HTZS}       --%>
+		<%--<strong>统计时间：</strong>${staticObj.TJSJ}--%>
+	<%--</div>--%>
+<%--</c:if>--%>
 </div>
 <%@include file="/util/foot.jsp"%>
 </body>

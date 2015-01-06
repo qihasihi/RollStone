@@ -1,31 +1,28 @@
 package com.school.control;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.ParentManager;
-import com.school.manager.UserManager;
-import com.school.manager.inter.IParentManager;
-import com.school.manager.inter.IUserManager;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 import com.school.control.base.BaseController;
 import com.school.entity.ParentInfo;
 import com.school.entity.UserInfo;
+import com.school.manager.inter.IParentManager;
+import com.school.manager.inter.IUserManager;
 import com.school.util.JsonEntity;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value="/parent")
 public class ParentController extends BaseController<ParentInfo> {
+    @Autowired
     private IUserManager userManager;
+    @Autowired
     private IParentManager parentManager;
-    public ParentController(){
-        this.userManager=this.getManager(UserManager.class);
-        this.parentManager=this.getManager(ParentManager.class);
-    }
+
 	@RequestMapping(params="m=associatechild",method=RequestMethod.POST)
 	public void associateChild(HttpServletRequest request,HttpServletResponse response)throws Exception{
 		

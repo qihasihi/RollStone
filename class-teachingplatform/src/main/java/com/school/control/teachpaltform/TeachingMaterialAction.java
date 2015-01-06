@@ -9,6 +9,7 @@ import com.school.manager.inter.IGradeManager;
 import com.school.manager.inter.teachpaltform.ITeachingMaterialManager;
 import com.school.manager.teachpaltform.TeachingMaterialManager;
 import com.school.util.JsonEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,12 +21,11 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "teachingmaterial")
 public class TeachingMaterialAction extends BaseController<TeachingMaterialInfo> {
+    @Autowired
     private ITeachingMaterialManager teachingMaterialManager;
+    @Autowired
     private IGradeManager gradeManager;
-    public TeachingMaterialAction(){
-        this.teachingMaterialManager=this.getManager(TeachingMaterialManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-    }
+
 	/**
 	 * 获取教材列表(分页)
 	 * @param request

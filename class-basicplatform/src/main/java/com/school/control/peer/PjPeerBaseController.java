@@ -1,34 +1,29 @@
 package com.school.control.peer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.DeptManager;
-import com.school.manager.TermManager;
-import com.school.manager.inter.IDeptManager;
-import com.school.manager.inter.ITermManager;
-import com.school.manager.inter.peer.IPjPeerBaseManager;
-import com.school.manager.inter.peer.IPjPeerUserManager;
-import com.school.manager.peer.PjPeerBaseManager;
-import com.school.manager.peer.PjPeerUserManager;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.school.control.base.BaseController;
 import com.school.entity.DeptInfo;
 import com.school.entity.DeptUser;
 import com.school.entity.TermInfo;
 import com.school.entity.peer.PjPeerBaseInfo;
 import com.school.entity.peer.PjPeerUserInfo;
+import com.school.manager.inter.IDeptManager;
+import com.school.manager.inter.ITermManager;
+import com.school.manager.inter.peer.IPjPeerBaseManager;
+import com.school.manager.inter.peer.IPjPeerUserManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 /**
  * @author 岳春阳
  * @description 同行评价主题设置controller
@@ -36,16 +31,15 @@ import com.school.util.UtilTool;
 @Controller
 @RequestMapping(value="/peerbase") 
 public class PjPeerBaseController extends BaseController<PjPeerBaseInfo> {
+    @Autowired
     private IDeptManager deptManager;
+    @Autowired
     private ITermManager termManager;
+    @Autowired
     private IPjPeerBaseManager pjPeerBaseManager;
+    @Autowired
     private IPjPeerUserManager pjPeerUserManager;
-    public PjPeerBaseController(){
-        this.deptManager=getManager(DeptManager.class);
-        this.termManager=getManager(TermManager.class);
-        this.pjPeerBaseManager=this.getManager(PjPeerBaseManager.class);
-        this.pjPeerUserManager=this.getManager(PjPeerUserManager.class);
-    }
+
 
 	/**
 	 * @author 岳春阳

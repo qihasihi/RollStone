@@ -1,26 +1,24 @@
 package com.school.control.resource;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.school.control.base.BaseController;
+import com.school.entity.resource.CheckInfo;
+import com.school.entity.resource.ExtendInfo;
 import com.school.manager.inter.resource.ICheckManager;
 import com.school.manager.inter.resource.IExtendManager;
-import com.school.manager.resource.CheckManager;
-import com.school.manager.resource.ExtendManager;
+import com.school.util.JsonEntity;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import com.school.control.base.BaseController;
-import com.school.entity.resource.CheckInfo;
-import com.school.entity.resource.ExtendInfo;
-import com.school.util.JsonEntity;
-import com.school.util.UtilTool;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 /**
  * 
  * @author zhengzhou
@@ -29,12 +27,11 @@ import com.school.util.UtilTool;
 @Controller
 @RequestMapping(value="/check")
 public class CheckController extends BaseController<CheckInfo> {
+    @Autowired
     private IExtendManager extendManager;
+    @Autowired
     private ICheckManager checkManager;
-    public CheckController(){
-        this.extendManager=this.getManager(ExtendManager.class);
-        this.checkManager=this.getManager(CheckManager.class);
-    }
+
 	/**
 	 * Ω¯»Î…Û∫À“≥√Ê
 	 * @return

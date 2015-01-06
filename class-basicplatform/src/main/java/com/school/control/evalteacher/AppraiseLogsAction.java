@@ -1,40 +1,28 @@
 package com.school.control.evalteacher;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.school.manager.*;
+import com.school.control.base.BaseController;
+import com.school.entity.*;
+import com.school.entity.evalteacher.AppraiseItemInfo;
+import com.school.entity.evalteacher.AppraiseLogsInfo;
+import com.school.entity.evalteacher.TimeStepInfo;
+import com.school.manager.SubjectManager;
 import com.school.manager.evalteacher.AppraiseItemManager;
 import com.school.manager.evalteacher.AppraiseLogsManager;
-import com.school.manager.evalteacher.TimeStepManager;
 import com.school.manager.inter.*;
 import com.school.manager.inter.evalteacher.ITimeStepManager;
+import com.school.util.JsonEntity;
+import com.school.util.PageResult;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.school.control.base.BaseController;
-import com.school.entity.ClassUser;
-import com.school.entity.ClassYearInfo;
-import com.school.entity.GradeInfo;
-import com.school.entity.SubjectInfo;
-import com.school.entity.TeacherInfo;
-import com.school.entity.UserInfo;
-import com.school.entity.evalteacher.AppraiseItemInfo;
-import com.school.entity.evalteacher.AppraiseLogsInfo;
-import com.school.entity.evalteacher.TimeStepInfo;
-import com.school.util.JsonEntity;
-import com.school.util.PageResult;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 /**
  * 评教系统(评价项)
@@ -45,24 +33,23 @@ import com.school.util.UtilTool;
 @Controller
 @RequestMapping(value = "/teacherappraise")
 public class AppraiseLogsAction extends BaseController<AppraiseLogsInfo> {
+    @Autowired
     private IClassYearManager classYearManager;
+    @Autowired
     private ITimeStepManager timeStepManager;
+    @Autowired
     private ITeacherManager teacherManager;
+    @Autowired
     private AppraiseLogsManager appraiseLogsManager;
+    @Autowired
     private AppraiseItemManager appraiseItemManager;
+    @Autowired
     private IUserManager userManager;
+    @Autowired
     private IClassUserManager classUserManager;
+    @Autowired
     private IGradeManager gradeManager;
-    public AppraiseLogsAction(){
-        this.classYearManager=this.getManager(ClassYearManager.class);
-        this.timeStepManager=this.getManager(TimeStepManager.class);
-        this.teacherManager=this.getManager(TeacherManager.class);
-        this.appraiseLogsManager=this.getManager(AppraiseLogsManager.class);
-        this.appraiseItemManager=this.getManager(AppraiseItemManager.class);
-        this.userManager=this.getManager(UserManager.class);
-        this.classUserManager=this.getManager(ClassUserManager.class);
-        this.gradeManager=this.getManager(GradeManager.class);
-    }
+
 
 	@RequestMapping(params = "m=list_stu", method = RequestMethod.GET)
 	public ModelAndView teacherAppraiseItemList(HttpServletRequest request,

@@ -29,6 +29,8 @@ Created by IntelliJ IDEA.
         var isHaveParent = ${sign};
          var papertype="${papertype}";
          var paperScore=${!empty paperScore?paperScore:0};
+
+         var isShowComment="${!empty sessionScope.isShowComment?sessionScope.isShowComment:2}";//默认为关闭
         switch (parseInt(extension)){
             case 0:
                 extenname="客观";
@@ -208,6 +210,8 @@ Created by IntelliJ IDEA.
             }
             $("#tname").html(typename);
 
+
+            operateCommentP(isShowComment);
         });
         /**
         *显示，隐藏上一题，下一题
@@ -236,10 +240,18 @@ Created by IntelliJ IDEA.
 
 
         function submitScore(ref,score){
+            var p={ref:ref,score:score};
+            var txtMComment=$("#txt_mark_comment");
+            if(txtMComment.length>0){
+                if(txtMComment.val().Trim().length>0){
+                    p.markComment=txtMComment.val().Trim();
+                }
+            }
+            p.isShowComment=isShowComment;
             $.ajax({
                 url:"paper?m=doMarking",
                 type:"post",
-                data:{ref:ref,score:score},
+                data:p,
                 dataType:'json',
                 cache: false,
                 error:function(){
@@ -317,6 +329,20 @@ Created by IntelliJ IDEA.
                 }
             }
         }
+            /**
+            * 显示隐藏评语x
+            * @param flag
+            */
+         function operateCommentP(flag){
+              isShowComment=flag=typeof(flag)=="undefined"?1:flag;
+             if(flag==1){//显示
+                 $("#p_mark_comment").show();
+                 $("#sp_op_comment").html('<a href="javascript:;" onclick="operateCommentP(2)"  style="color:blue">收起评语</a>');
+             }else{
+                 $("#p_mark_comment").hide();
+                 $("#sp_op_comment").html('<a href="javascript:;" onclick="operateCommentP(1)"  style="color:blue">添加评语</a>');
+             }
+         }
     </script>
 </head>
 <body>
@@ -500,7 +526,13 @@ Created by IntelliJ IDEA.
                     </script>
                 </p>
             </c:if>
-            <p><strong>评分：</strong>请选择该学生的得分。</p>
+            <p><strong>评分：</strong>请选择该学生的得分。&nbsp;&nbsp;
+                <span id="sp_op_comment">
+                    <a href="javascript:;" onclick="operateCommentP(1)"  style="color:blue">添加评语</a></span>
+            </p>
+            <p style="display:none;padding-top:5px" id="p_mark_comment"><strong>&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                <textarea id="txt_mark_comment" name="mark_comment" style="height: 100px;width:875px;"></textarea>
+            </p>
             </div>
         </div>
     </div>

@@ -574,7 +574,7 @@ public class ResourceInfo implements java.io.Serializable {
         String file="001";
         // return UtilTool.utilproperty.getProperty("RESOURCE_FILE_UPLOAD_HEAD")+"uploadfile/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
 
-        return UtilTool.getResourceLocation(this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
+        return UtilTool.getResourceLocation(null,this.getResid(),1)+"/"+UtilTool.getResourceMd5Directory(this.getResid().toString())+"/"+file+".swf";
     }
 
     /**
@@ -764,7 +764,7 @@ public class ResourceInfo implements java.io.Serializable {
         String imagepath = "";
         if(!UtilTool.getResourseType(this.getFilesuffixname()).equals("video"))
                     return null;
-        imagepath =UtilTool.getResourceLocation(this.getResid(),1)
+        imagepath =UtilTool.getResourceLocation(null,this.getResid(),1)
                     + this.getPath()+"/001"
                     + this.getFilesuffixname() + ".pre.jpg";
             return imagepath;

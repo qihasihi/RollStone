@@ -1,26 +1,24 @@
 package com.school.control.resource;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.school.control.base.BaseController;
+import com.school.entity.resource.OperateRecord;
 import com.school.manager.inter.resource.IOperateRecordManager;
-import com.school.manager.resource.OperateRecordManager;
+import com.school.util.JsonEntity;
+import com.school.util.UtilTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.school.control.base.BaseController;
-import com.school.entity.resource.OperateRecord;
-import com.school.util.JsonEntity;
-import com.school.util.UtilTool;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "/operaterecord")
 public class OperateRecordController extends BaseController<OperateRecord> {
+    @Autowired
     private IOperateRecordManager operateRecordManager;
-    public OperateRecordController(){
-        this.operateRecordManager=this.getManager(OperateRecordManager.class);
-    }
+
 	/**
 	 * ÍÆ¼ö×ÊÔ´
 	 * 

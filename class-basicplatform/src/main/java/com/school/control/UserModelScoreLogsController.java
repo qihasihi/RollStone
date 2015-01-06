@@ -9,6 +9,8 @@ import com.school.manager.resource.score.UserModelTotalScoreManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,13 +28,12 @@ import java.util.List;
 @Controller
 @RequestMapping("/userModelScoreLogs")
 public class UserModelScoreLogsController extends BaseController<UserModelScoreLogsInfo> {
+    @Autowired
     private IUserModelScoreLogsManager userModelScoreLogsManager;
+    @Autowired
     private IUserModelTotalScoreManager userModelTotalScoreManager;
 
-    public UserModelScoreLogsController(){
-        this.userModelScoreLogsManager=this.getManager(UserModelScoreLogsManager.class);
-        this.userModelTotalScoreManager=this.getManager(UserModelTotalScoreManager.class);
-    }
+
     /**
      * 跳转到管理员公告列表
      * @param request

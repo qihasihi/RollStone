@@ -8,6 +8,7 @@ import com.school.manager.inter.IUserManager;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,10 +26,9 @@ import java.util.*;
 @Controller
 @RequestMapping("/toEttFace")
 public class ToEttInterfaceController extends BaseController<String> {
+    @Autowired
     private IUserManager userManager;
-    public ToEttInterfaceController(){
-        userManager=this.getManager(UserManager.class);
-    }
+
 
     /**
      * www.etiantian.com调用分校进行绑定
