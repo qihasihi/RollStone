@@ -13,14 +13,30 @@
             var isupdateclsstu=false;
 		$(function(){			
 		});
-		var clsid="${classid}";  
+		var clsid="${classid}";
 		function explortExl(){
 			document.forms[0].action="cls?m=exportClsExcel";
 			document.forms[0].submit();     
 		}
 		</script>      
      
-
+    <script type="text/javascript">
+    $(function() {
+        if(${clsinfo.dcschoolid} == <%=UtilTool.utilproperty.getProperty("ELITE_SCHOOL_ID")%>) {
+            $("#add_sel_pattern").attr("disabled", true);
+            $("#activity_type_row").show();
+            $("#term_id_row").show();
+            $("#is_elite").val("1");
+            $("#class_attr").hide();
+            $("#class_type").hide();
+            $("#exportStudent").hide();
+            $("#copyFromOtherClass").hide()
+            var options = document.getElementById("add_sel_pattern").options;
+            options[1].selected=true;
+            $("#tr_add_subject").show();
+        }
+    });
+    </script>
 	</head> 
 	<body>
 	   <%@include file="/util/head.jsp" %>
@@ -59,6 +75,39 @@
         <th><span class="ico06"></span>学&nbsp;&nbsp;&nbsp;&nbsp;年：</th>
         <td><span id="sp_year">${clsinfo.classyearname} <input type="hidden" value="${clsinfo.year}"/></span></td>
       </tr>
+        <tr id="term_id_row" style="display:none">
+            <th><span class="ico06"></span>活动期次：</th>
+            <td>
+                <span id="termid1">第&nbsp;${clsinfo.termid}&nbsp;期</span>
+                <span id="termid_row" style="display:none">第&nbsp;<input id="term_id" type="number" class="w80" min="1" value="${clsinfo.termid}"/>&nbsp;期</span>
+            </td>
+        </tr>
+
+        <tr id="activity_type_row" style="display:none">
+            <input type="hidden" id="is_elite" name="is_elite" value="0">
+            <th><span class="ico06"></span>活动类型：</th>
+            <td><span id="activitytype1"><c:if test="${clsinfo.activitytype==1}">菁英班</c:if>
+                <c:if test="${clsinfo.activitytype==2}">普通班</c:if></span>
+
+                <span id="activitytype_row" style="display:none">
+                    <select class="w160" name="activity_type" id="activity_type">
+                        <c:if test="${clsinfo.activitytype==1}">
+                            <option value="1" selected="selected">菁英班</option>
+                        </c:if>
+                        <c:if test="${clsinfo.activitytype!=1}">
+                            <option value="1">菁英班</option>
+                        </c:if>
+                        <c:if test="${clsinfo.activitytype==2}">
+                            <option value="2" selected="selected">普通班</option>
+                        </c:if>
+                        <c:if test="${clsinfo.activitytype!=2}">
+                            <option value="2">普通班</option>
+                        </c:if>
+                    </select>
+                </span>
+
+            </td>
+        </tr>
       <tr>
         <th><span class="ico06"></span>年&nbsp;&nbsp;&nbsp;&nbsp;级：</th>
         <td><span id="sp_classgrade">${clsinfo.classgrade}</span>
@@ -77,7 +126,7 @@
         <td><span id="sp_classgrade_copy">${clsinfo.classgrade}</span>&middot;
           <span id="sp_classname">${clsinfo.classname}</span></td>
       </tr>
-      <tr>
+      <tr id="class_attr">
         <th><span class="ico06"></span>文 /  理：</th>
         <td><span id="sp_type">
 					<c:if test="${empty clsinfo.type}">
@@ -96,7 +145,7 @@
 					</c:if>
 				</span></td>
       </tr>
-      <tr>
+      <tr id="class_type">
         <th><span class="ico06"></span>类&nbsp;&nbsp;&nbsp;&nbsp;别：</th>
         <td><span id="sp_pattern">
 						<c:if test="${clsinfo.pattern=='行政班'}">
@@ -114,17 +163,17 @@
 					<tr id="up_subject"  style="padding-bottom:5px;">
 				</c:if>
 				<th><span class="ico06"></span>所属学科：</th>
-				<td><span id="sp_subject">${!empty clsinfo.subjectname?clsinfo.subjectname:"无" }</span>				
+				<td><span id="sp_subject">${!empty clsinfo.subjectname?clsinfo.subjectname:"无" }</span>
 					<select name="sel_subject" id="sel_subject" style="display:none">
-						<c:if test="${!empty subList}">
-							<c:forEach items="${subList}" var="sb">
-								<option value="${sb.subjectid }">${sb.subjectname }</option>
-							</c:forEach>
-						</c:if>
-					</select>
-				</td>        
+                        <c:if test="${!empty subList}">
+                            <c:forEach items="${subList}" var="sb">
+                                <option value="${sb.subjectid }">${sb.subjectname }</option>
+                            </c:forEach>
+                        </c:if>
+                    </select>
+				</td>
       </tr>
-      <tr id="up_bottom_li" style="display:none">      
+      <tr id="up_bottom_li" style="display:none">
         <th>&nbsp;</th>
       	<td>
      	 <a  class="an_small_long" href="javascript:doSubUpdate(${clsinfo.classid });">保存班级信息</a>
@@ -137,7 +186,7 @@
 				  <input type="hidden" name="m" value="exportClsExcel"/>
 				</form>
     <h4>班级学生列表</h4>
-    <p class="t_c"><a  href="javascript:toCopyClassStudent(${clsinfo.classid })"  class="an_big_long">从其他班级复制学生</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:showModel('loadExcel')" class="an_big_long">从模版导入学生</a></p>
+    <p class="t_c"><a id="copyFromOtherClass" href="javascript:toCopyClassStudent(${clsinfo.classid })"  class="an_big_long">从其他班级复制学生</a>&nbsp;&nbsp;&nbsp;&nbsp;<a id="exportStudent" href="javascript:showModel('loadExcel')" class="an_big_long">从模版导入学生</a></p>
     <table id="initItemList" border="0" cellpadding="0" cellspacing="0" class="public_tab2 m_t_10">
       <colgroup span="3" class="w200"></colgroup>
       <tr>

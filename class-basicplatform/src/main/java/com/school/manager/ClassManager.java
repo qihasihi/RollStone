@@ -116,7 +116,7 @@ public class  ClassManager extends BaseManager<ClassInfo> implements IClassManag
         return this.classdao.getClassByGradeTerm(gradeId,termId);
     }
 
-    public List<Integer> getAllTerm() {
+    public List<ClassInfo> getAllTerm() {
         return this.classdao.getAllTerm();
     }
 }

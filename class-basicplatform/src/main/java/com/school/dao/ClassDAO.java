@@ -95,7 +95,7 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         StringBuilder sqlbuilder=new StringBuilder("{CALL class_info_proc_split(");
         List<Object> objList=new ArrayList<Object>();
         if(obj==null)
-            sqlbuilder.append("null,null,null,null,null,null,null,null,null,null,0,null,null,null,null,null,");
+            sqlbuilder.append("null,null,null,null,null,null,null,null,null,null,0,null,null,null,null,null,null,null,");//增加两个字段
         else{
             if(obj.getClassid()!=null){
                 sqlbuilder.append("?,");
@@ -178,11 +178,14 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
                 objList.add(obj.getImvaldatecode());
             }else
                 sqlbuilder.append("NULL,");
+
+            //新增期次id字段
             if(obj.getTermid()!=null){
                 sqlbuilder.append("?,");
                 objList.add(obj.getTermid());
             }else
                 sqlbuilder.append("NULL,");
+            //新增活动类型字段
             if(obj.getActivitytype()!=null){
                 sqlbuilder.append("?,");
                 objList.add(obj.getActivitytype());
@@ -628,6 +631,7 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         return total;
     }
 
+    //通过年级和期次获取班级
     public List<ClassInfo> getClassByGradeTerm(int gradeId,int termId) {
         List<ClassInfo> list = null;
 
@@ -641,12 +645,13 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         return list;
     }
 
-    public List<Integer>getAllTerm() {
-        List<Integer> list = null;
+    //获取所有期次id
+    public List<ClassInfo> getAllTerm() {
+        List<ClassInfo> list = null;
 
         StringBuilder sb = new StringBuilder("{call class_info_proc_list_term()}");
 
-        list=this.executeResult_PROC(sb.toString(), null, null, Integer.class, null);
+        list=this.executeResult_PROC(sb.toString(), null, null, ClassInfo.class, null);
         return list;
     }
 }

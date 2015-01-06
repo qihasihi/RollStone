@@ -132,6 +132,11 @@ public class ClassController extends BaseController<ClassInfo>{
                     allowAutoLevel = 0;
             }
         }
+
+        //增加获取期次列表并放入session
+        List<ClassInfo> termList = this.classManager.getAllTerm();
+        request.setAttribute("clsTmList",termList);
+
         request.setAttribute("allowAutoLevel", allowAutoLevel);
         return new ModelAndView("/class/list");
     }
@@ -490,6 +495,11 @@ public class ClassController extends BaseController<ClassInfo>{
             clsEntity.setYear(classinfo.getYear());
         if(classinfo.getIsflag()!=null&&classinfo.getIsflag()!=clsEntity.getIsflag())
             clsEntity.setIsflag(classinfo.getIsflag());
+        if(classinfo.getTermid()!=null&&classinfo.getTermid()!=clsEntity.getTermid())
+            clsEntity.setTermid(classinfo.getTermid());
+        if(classinfo.getActivitytype()!=null&&classinfo.getActivitytype()!=clsEntity.getActivitytype())
+            clsEntity.setActivitytype(classinfo.getActivitytype());
+
         if(classManager.doUpdate(clsEntity)){
             je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
             je.setType("success");

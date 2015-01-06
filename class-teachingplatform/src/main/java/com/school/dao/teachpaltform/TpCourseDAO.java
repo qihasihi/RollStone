@@ -1288,4 +1288,20 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
 
     }
 
+    public List<TpCourseInfo> getCourseByGradeTermSubject(int gradeId,int termId,int subjectId){
+        List<TpCourseInfo> list = null;
+
+        StringBuilder sb = new StringBuilder("{call tp_course_info_proc_list_elite_course(");
+        sb.append(gradeId);
+        sb.append(",");
+        sb.append(termId);
+        sb.append(",");
+        sb.append(subjectId);
+        sb.append(")}");
+
+        list=this.executeResult_PROC(sb.toString(), null, null, TpCourseInfo.class, null);
+        return list;
+    }
+
+
 }

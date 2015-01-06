@@ -1,6 +1,10 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@include file="/util/common-jsp/common-yhqx.jsp"%>
-<%@page import="com.school.entity.UserInfo"%>
+<%@ page import="com.school.manager.ClassManager" %>
+<%@ page import="com.school.entity.*" %>
+<%@ page import="net.sf.json.JSON" %>
+<%@ page import="jcore.jsonrpc.common.JSONObject" %>
+<%@ page import="jcore.jsonrpc.common.JSONArray" %>
 <%  
 	request.setAttribute("isSelect",true);	 //查询功能权限
     request.setAttribute("isAdd",true);	 //添加功能权限
@@ -10,6 +14,11 @@
 <%
     UserInfo user=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
     int dcSchoolID=user.getDcschoolid().intValue();
+    boolean isElite = false;
+    if(dcSchoolID == Integer.valueOf(UtilTool.utilproperty.getProperty("ELITE_SCHOOL_ID"))) {
+        isElite = true;
+    }
+    List<SubjectInfo> subList = (List<SubjectInfo>)request.getAttribute("subList");
 %>
 
  <%
@@ -23,7 +32,11 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
     var isAdd=true;	 //添加功能权限
     var isDelete=true;	 //删除功能权限
     var isUpdate=true;	 //修改功能权限
-    
+    //菁英学校ID
+    var isElite="<%=isElite%>";
+    var eliteSchoolId='<%=UtilTool.utilproperty.getProperty("ELITE_SCHOOL_ID")%>';
+    var currentSchoolId=<%=dcSchoolID%>;
+    var subList = <%=net.sf.json.JSONArray.fromObject(subList).toString()%>;
     /*********功能权限控制**********/
     $(function(){
     	$("#add_btn").hide();
@@ -70,7 +83,24 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
 			$("#"+dvid).hide();
 	}
 
-	
+	$(function() {
+        if(isElite=="true") {
+            $("#add_sel_pattern").attr("disabled", true);
+            $("#activity_type_row").show();
+            $("#term_id_row").show();
+            $("#is_elite").val("1");
+            $("#sel_year_col").hide();
+            $("#class_attr").hide();
+            $("#class_type").hide();
+            $("#sel_type_col").hide();
+            $("#sel_pattern_col").hide();
+            $("#importStd").hide();
+            $("#autoLvUp").hide();
+            var options = document.getElementById("add_sel_pattern").options;
+            options[1].selected=true;
+            $("#tr_add_subject").show();
+        }
+    });
 </script>
 </head>
 
@@ -91,14 +121,27 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
     <div class="jcpt_zzgl">
       <table border="0" cellspacing="0" cellpadding="0" class="public_tab1 public_input">
     <tr>
-      <th>学年：
+    <th>
+        <span id="sel_year_col">
+      学年：
       <select id="sel_year" name="sel_year">
        <c:if test="${!empty classyearList}">
 				<c:forEach items="${classyearList}" var="y">
 					<option value="${y.classyearvalue }">${y.classyearname }</option> 
 				</c:forEach>	
 			</c:if>
-      </select>&nbsp;
+      </select></span>
+        <%if(isElite) {%>
+        开班期次：
+        <select id="sel_term" name="sel_term">
+            <c:if test="${!empty clsTmList}">
+                <c:forEach items="${clsTmList}" var="clsT">
+                    <option value="${clsT.termid}">第${clsT.termid}期</option>
+                </c:forEach>
+            </c:if>
+        </select>
+        <%}%>
+        &nbsp;
       年级：<select name="sel_grade" id="sel_grade">
 	      	<option value="">全部</option> 
 	     	 <c:if test="${!empty gradeList}">
@@ -107,17 +150,40 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
 				</c:forEach>		
 			</c:if> 
 		</select>&nbsp;
+        <span id="sel_type_col">
 		文/理：<select name="sel_type" id="sel_type">
 				<option value="">全部</option>
 				<option value="NORMAL">普通</option>
 				<option value="W">文科</option>
 				<option value="L">理科</option>
-			   </select>&nbsp;
+			   </select>
+            </span>
+            &nbsp;
+        <span id="sel_pattern_col">
 		类别：<select name="sel_pattern" id="sel_pattern">
 				<option value="">全部</option>
 				<option value="行政班">行政班</option>
 				<option value="分层班">分层班</option>
 			  </select>
+            </span>
+        <%if(isElite) {%>
+        学科：
+        <select name="query_subject" id="query_subject" class="w80">
+            <option value="0">全部</option>
+            <c:if test="${!empty subList}">
+                <c:forEach items="${subList}" var="sb">
+                    <option value="${sb.subjectid }">${sb.subjectname }</option>
+                </c:forEach>
+            </c:if>
+        </select>
+
+        &nbsp;
+        类型：<select class="w100" name="sel_activity_type" id="sel_activity_type">
+        <option value="">全部</option>
+        <option value="1">菁英班</option>
+        <option value="2">普通班</option>
+    </select>
+        <%}%>
       </th>
     </tr> 
       <tr>
@@ -131,13 +197,13 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
     </div>
     <h6></h6>
     <p class="t_c"><a href="javascript:checkClass('addClass')" class="an_big">新建班级</a>&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="javascript:showModel('loadExcel')" class="an_big">导入学生</a>    
+    <a id="importStd" href="javascript:showModel('loadExcel')" class="an_big">导入学生</a>
     &nbsp;&nbsp;&nbsp;&nbsp;
     <c:if test="${allowAutoLevel==1}">
-   	 <a href="javascript:checkClass('levelup') "  class="an_big">自动升级</a></p>
+   	 <a id="autoLvUp" href="javascript:checkClass('levelup') "  class="an_big">自动升级</a></p>
     </c:if>
      <c:if test="${allowAutoLevel!=1}">
-   	 <a href="javascript:showModel('dv_autoShenj')  "  class="an_gray">自动升级</a></p>
+   	 <a id="autoLvUp" href="javascript:showModel('dv_autoShenj')  "  class="an_gray">自动升级</a></p>
     </c:if>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab2 m_t_10">
        <colgroup span="6" class="w120"></colgroup>
@@ -217,7 +283,22 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
 		</c:if>
       </select></td>
   </tr>
-  <tr>
+    <tr id="term_id_row" style="display:none">
+        <th>* 活动期次：</th>
+        <td>第&nbsp;<input id="term_id" type="number" class="w80" min="1" value="1"/>&nbsp;期</td>
+    </tr>
+
+    <tr id="activity_type_row" style="display:none">
+        <th>* 活动类型：</th>
+        <td>
+            <input type="hidden" id="is_elite" name="is_elite" value="0">
+            <select class="w160" name="activity_type" id="activity_type">
+                <option value="1" selected="selected">菁英班</option>
+                <option value="2">普通班</option>
+            </select></td>
+    </tr>
+
+    <tr>
     <th>* 年&nbsp;&nbsp;&nbsp;&nbsp;级：</th>
     <td><select name="add_sel_grade"  class="w160" id="add_sel_grade" onchange="document.getElementById('add_showclsgrade').innerHTML=this.value;">
       		<c:if test="${!empty gradeList}">
@@ -231,7 +312,7 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
     <th>* 班级名称：</th>
     <td><span id="add_showclsgrade"></span> <input id="add_sel_clsname" type="text" class="w80" />&nbsp;班</td>
   </tr>
-  <tr>
+  <tr id="class_attr">
     <th>* 文 /  理：</th>
     <td> <select class="w160" name="add_sel_type" id="add_sel_type">
 				<option value="NORMAL">普通</option>
@@ -239,7 +320,7 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
 				<option value="L">理科</option>
 			</select></td>
   </tr>
-  <tr>
+  <tr id="class_type">
     <th>* 类&nbsp;&nbsp;&nbsp;&nbsp;别：</th>
     <td><select name="add_sel_pattern" id="add_sel_pattern" class="w160" onchange="addPatternChange(this,'tr_add_subject')">
       	<option value="行政班" selected="selected">行政班</option>
@@ -268,7 +349,7 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
   	<input name="year" value="" id="year"/>
   	<input name="classgrade" value="" id="classgrade"/>
   	<input name="pattern" value="" id="pattern"/>
-  	<input name="dtype" value="" id="type"/> 
+  	<input name="dtype" value="" id="type"/>
   </form>
   </div>
 <%@include file="/util/foot.jsp" %> 

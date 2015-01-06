@@ -44,5 +44,5 @@ public interface  IClassDAO extends ICommonDAO<ClassInfo>{
 
     public List<ClassInfo> getClassByGradeTerm(int gradeId,int termId);
 
-    public List<Integer> getAllTerm();
+    public List<ClassInfo> getAllTerm();
 }

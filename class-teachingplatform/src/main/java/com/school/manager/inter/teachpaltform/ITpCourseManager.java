@@ -69,4 +69,5 @@ public interface ITpCourseManager  extends IBaseManager<TpCourseInfo> {
      * @author zhengzhou
      */
     public List<Map<String,Object>> getCourseScoreIsOver(final Integer clsid,final Integer subjectid,final String carrayid,String garrayid, Integer roletype);
+    public List<TpCourseInfo> getCourseByGradeTermSubject(int gradeId,int termId,int subjectId);
 }

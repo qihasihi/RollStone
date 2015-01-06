@@ -68,4 +68,7 @@ public interface ITpCourseDAO extends ICommonDAO<TpCourseInfo>{
     public List<Map<String,Object>> getCourseScoreIsOver(final Integer clsid,final Integer subjectid,final String carrayid,String garrayid, Integer roletype);
 
     boolean doUpdateShareCourse();
+
+    public List<TpCourseInfo> getCourseByGradeTermSubject(int gradeId,int termId,int subjectId);
+
 }

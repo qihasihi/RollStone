@@ -31,8 +31,6 @@ public class ClassInfo implements java.io.Serializable {
     private String imvaldatecode;//邀请码 im1.1.3中用到
     private Integer dynamicCount;
 
-
-
     private Integer searchUid;  //根据c_user_id查询
 
     private Integer activitytype;

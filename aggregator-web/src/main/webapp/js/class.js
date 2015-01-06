@@ -23,6 +23,22 @@
 			param.dtype=types.value.Trim(); 
 		}
 
+        var clsTerm=document.getElementById("sel_term");
+        if(clsTerm!=null){
+            param.termid=clsTerm.value.Trim();
+        }
+
+        var actType=document.getElementById("sel_activity_type");
+        if(actType!=null && actType.value !=0){
+            param.activitytype=actType.value.Trim();
+        }
+
+
+        var selSub=document.getElementById("query_subject");
+        if(selSub!=null && selSub.value !=0){
+            param.subject=selSub.value.Trim();
+        }
+
         param.dcschoolid=$("#dcSchoolID").val();
 		p.setPostParams(param);
 	}
@@ -35,51 +51,109 @@
 			alert(rps.msg);
 		}else{			
 			if(rps.objList.length>0){
-				ghtml+='<tr>';
-				ghtml+='<th>年级</th><th>班级</th><th>人数</th><th>文/理</th><th>分类</th><th>操作</th></tr>';				
+
+//                var isjy=false;
+//                if(eliteSchoolId.Trim().length>0){
+//                    var jyArraySchool=eliteSchoolId.split(",");
+//                    $.each(jyArraySchool,function(idxZ,itmZ){
+//                        if(itmZ.length>0){
+//                            if(itmZ.Trim()==currentSchoolId){
+//                                isjy=true;
+//                                return;
+//                            }
+//                        }
+//                    });
+//                }
+                ghtml+='<tr>';
+                if(isElite=="true"){
+                    ghtml+='<th>年级</th><th>学科</th><th>类型</th><th>班级</th><th>人数</th><th>操作</th></tr>';
+                }else{
+                    ghtml+='<th>年级</th><th>班级</th><th>人数</th><th>文/理</th><th>分类</th><th>操作</th></tr>';
+                }
 				$.each(rps.objList,function(idx,itm){
 					ghtml+='<tr';
 					if(idx%2==0) 
 						ghtml+=' class="trbg2"';  
-					ghtml+=' >';   
-					ghtml+='<td>'+itm.classgrade+'</td>';
-					ghtml+='<td><a class="font-blue" href="cls?m=detail&classid='+itm.classid+'">'+itm.classname+'</td>'; 
-					var type='未知';
-					switch(itm.type){  
-						case 'W':
-							type="文科"  
-							break; 
-						case 'L':
-							type="理科"
-							break;
-						case 'NORMAL':
-							type="普通"
-							break;
-					}
+					ghtml+=' >';
+                    if(isElite=="true"){
+                        ghtml+='<td>'+itm.classgrade+'</td>';
+
+                        $.each(subList,function(subidx,subitm) {
+                            if(subitm.subjectid==itm.subjectid) {
+                                ghtml+='<td>'+subitm.subjectname+'</td>';
+                                return;
+                            }
+                        });
+                        switch (itm.activitytype){
+                            case 1:ghtml+='<td>菁英班</td>';break;
+                            case 2:ghtml+='<td>普通班</td>';break;
+                            default:ghtml+='<td></td>';break;
+                        }
+                        ghtml+='<td><a class="font-blue" href="cls?m=detail&classid='+itm.classid+'">'+itm.classname+'</td>';
+                        ghtml+='<td>'+itm.num+'</td>';
+                        /***********功能能权限**************/
+                        ghtml+='<td>';
+                        //ghtml+='<a class="font-lightblue" href="javascript:void(0);" onclick="toUpd('+ itm.classid +')">修改</a>&nbsp;';
+                        //if(isUpdate){
+                        //	ghtml+='<a class="font-lightblue" href="javascript:void(0);" onclick="toUpd('+ itm.classid +')">修改</a>&nbsp;';
+                        //}if(isDelete){
+                        //	ghtml+='<a class="font-lightblue" href="javascript:;" onclick="doDelClass('+itm.classid+')">删除</a>&nbsp;';
+                        //}
+//					    if(itm.isflag==1)	//是启用状态
+//						    ghtml+='<span id="sp_'+itm.classid+'"><a href="javascript:doUpdateIsflag('+itm.classid+',2);" ><span class="ico01" title="禁用"></span></a></span>|';
+//					    else if(itm.isflag==2)
+//						    ghtml+='<span id="sp_'+itm.classid+'"><a href="javascript:doUpdateIsflag('+itm.classid+',1);"><span class="ico02" title="启用"></span></a></span>|';
+
+                        //当班级人数为0时，删除启用，可以删除本班级。
+//					    if(parseInt(itm.num)>0)
+//						    ghtml+='|<a class="font-gray" href="javascript:alert(\'当前班级有学生，不能删除!\')"><span class="ico03" title="删除"></span></a>&nbsp;';
+//					    else if(parseInt(itm.num)<1)
+                        ghtml+='<a class="font-lightblue" href="javascript:;" onclick="doDelClass('+itm.classid+')"><span class="ico04" title="删除"></span></a>&nbsp;';
+                        ghtml+='</td>';
+
+                    }
+                    else {
+					    ghtml+='<td>'+itm.classgrade+'</td>';
+					    ghtml+='<td><a class="font-blue" href="cls?m=detail&classid='+itm.classid+'">'+itm.classname+'</td>';
+					    var type='未知';
+					    switch(itm.type){
+						    case 'W':
+							    type="文科"
+							    break;
+						    case 'L':
+							    type="理科"
+							    break;
+						    case 'NORMAL':
+							    type="普通"
+							    break;
+					    }
 						
-					ghtml+='<td>'+itm.num+'</td>';					 
-					ghtml+='<td>'+type+'</td>';
-					ghtml+='<td>'+itm.pattern+'</td>';
-					/***********功能能权限**************/ 
-					ghtml+='<td>';
-					//ghtml+='<a class="font-lightblue" href="javascript:void(0);" onclick="toUpd('+ itm.classid +')">修改</a>&nbsp;';
-					//if(isUpdate){
-					//	ghtml+='<a class="font-lightblue" href="javascript:void(0);" onclick="toUpd('+ itm.classid +')">修改</a>&nbsp;';    
-					//}if(isDelete){  
-					//	ghtml+='<a class="font-lightblue" href="javascript:;" onclick="doDelClass('+itm.classid+')">删除</a>&nbsp;';
-					//}  
-//					if(itm.isflag==1)	//是启用状态
-//						ghtml+='<span id="sp_'+itm.classid+'"><a href="javascript:doUpdateIsflag('+itm.classid+',2);" ><span class="ico01" title="禁用"></span></a></span>|';
-//					else if(itm.isflag==2)
-//						ghtml+='<span id="sp_'+itm.classid+'"><a href="javascript:doUpdateIsflag('+itm.classid+',1);"><span class="ico02" title="启用"></span></a></span>|';
+					    ghtml+='<td>'+itm.num+'</td>';
+					    ghtml+='<td>'+type+'</td>';
+					    ghtml+='<td>'+itm.pattern+'</td>';
+
+					    /***********功能能权限**************/
+					    ghtml+='<td>';
+					    //ghtml+='<a class="font-lightblue" href="javascript:void(0);" onclick="toUpd('+ itm.classid +')">修改</a>&nbsp;';
+					    //if(isUpdate){
+					    //	ghtml+='<a class="font-lightblue" href="javascript:void(0);" onclick="toUpd('+ itm.classid +')">修改</a>&nbsp;';
+					    //}if(isDelete){
+					    //	ghtml+='<a class="font-lightblue" href="javascript:;" onclick="doDelClass('+itm.classid+')">删除</a>&nbsp;';
+					    //}
+//					    if(itm.isflag==1)	//是启用状态
+//						    ghtml+='<span id="sp_'+itm.classid+'"><a href="javascript:doUpdateIsflag('+itm.classid+',2);" ><span class="ico01" title="禁用"></span></a></span>|';
+//					    else if(itm.isflag==2)
+//						    ghtml+='<span id="sp_'+itm.classid+'"><a href="javascript:doUpdateIsflag('+itm.classid+',1);"><span class="ico02" title="启用"></span></a></span>|';
 						
-					//当班级人数为0时，删除启用，可以删除本班级。
-//					if(parseInt(itm.num)>0)
-//						ghtml+='|<a class="font-gray" href="javascript:alert(\'当前班级有学生，不能删除!\')"><span class="ico03" title="删除"></span></a>&nbsp;';
-//					else if(parseInt(itm.num)<1)
-						ghtml+='<a class="font-lightblue" href="javascript:;" onclick="doDelClass('+itm.classid+')"><span class="ico04" title="删除"></span></a>&nbsp;';
+					    //当班级人数为0时，删除启用，可以删除本班级。
+//					    if(parseInt(itm.num)>0)
+//						    ghtml+='|<a class="font-gray" href="javascript:alert(\'当前班级有学生，不能删除!\')"><span class="ico03" title="删除"></span></a>&nbsp;';
+//					    else if(parseInt(itm.num)<1)
+					    ghtml+='<a class="font-lightblue" href="javascript:;" onclick="doDelClass('+itm.classid+')"><span class="ico04" title="删除"></span></a>&nbsp;';
 					
-					ghtml+='</td>';
+					    ghtml+='</td>';
+
+                    }
 					/***********功能能权限**************/  
 					ghtml+='</tr>';
 				});		
@@ -268,6 +342,7 @@
 		var pattern = $("#add_sel_pattern").val();
 		var type=$("#add_sel_type").val();
         var dcschoolid=$("#dcSchoolID").val();
+        var iselite = $("#is_elite").val();
 		var data1={
 			classgrade : classgrade,
 			classname : classname,
@@ -276,10 +351,17 @@
             dcschoolid : dcschoolid,
 			dyear : year
 		};
-		if(pattern=="分层班"){
-			var subject=$("#sel_subject").val();
-			data1.subjectid=subject;
+		if(iselite=="1"){
+            var activitytype = $("#activity_type").val();
+            var termid = $("#term_id").val();
+			data1.activitytype=activitytype;
+            data1.termid=termid;
 		}
+
+        if(pattern=="分层班"){
+            var subject=$("#sel_subject").val();
+            data1.subjectid=subject;
+        }
 		if(!confirm("数据验证成功，确认添加？")){
 			return;
 		}
@@ -419,6 +501,11 @@ function readlyToUpdate(clsid){
 						$("#sp_cannelUpdate").show();
 
                         $("#sp_update_cls").hide();
+
+                        $("#activitytype1").hide();
+                        $("#activitytype_row").show();
+                        $("#termid1").hide();
+                        $("#termid_row").show();
 					});
 				}
 			}
@@ -435,6 +522,8 @@ function doSubUpdate(clsid){
 	var typeObj=$("#sel_type_up");
 	var patternObj=$("#sel_pattern_up");
 	var subjectObj=$("#sel_subject_up");
+    var activityObj=$("#activity_type");
+    var termObj=$("#term_id");
 	if(gradeObj.val().Trim().length<1){
 		alert('年级不能为空!请选择!');
 		gradeObj.focus();return;
@@ -461,7 +550,9 @@ function doSubUpdate(clsid){
 			classname:clsnameObj.val().replace("班","").Trim()+"班",
 			classgrade:gradeObj.val().Trim(),
 			type:typeObj.val().Trim(),
-			pattern:patternObj.val().Trim()
+			pattern:patternObj.val().Trim(),
+            termid:termObj.val(),
+            activitytype:activityObj.val()
 	};
 	if(patternObj.val().Trim()=="分层班")
 		data.subjectid=subjectObj.val().Trim();	
@@ -478,6 +569,17 @@ function doSubUpdate(clsid){
 			}else if(rps.type=="success"){
 				clsDataRest(gradeObj.val(),clsnameObj.val(),typeObj.val(),patternObj.val(),subjectObj.val());
                 $("#sp_update_cls").show();
+                $("#activitytype1").show();
+                $("#termid1").show();
+                if(activityObj.val()==1) {
+                    $("#activitytype1").html("菁英班");
+                }
+                else {
+                    $("#activitytype1").html("普通班");
+                }
+                $("#termid1").html("第&nbsp;"+termObj.val()+"&nbsp;期");
+                $("#activitytype_row").hide();
+                $("#termid_row").hide();
 			}
 		}
 	})

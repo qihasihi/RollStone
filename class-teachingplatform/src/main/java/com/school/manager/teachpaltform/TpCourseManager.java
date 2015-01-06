@@ -160,5 +160,8 @@ public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCo
         return tpcoursedao.getCourseCalendar(usertype,userid,dcschoolid,year,month,gradeid,subjectid,classid,termid);
     }
 
+    public List<TpCourseInfo> getCourseByGradeTermSubject(int gradeId,int termId,int subjectId){
+        return tpcoursedao.getCourseByGradeTermSubject(gradeId,termId, subjectId);
+    }
 }
 
