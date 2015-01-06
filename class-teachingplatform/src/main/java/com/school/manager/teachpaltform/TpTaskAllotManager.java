@@ -56,10 +56,6 @@ public class  TpTaskAllotManager extends BaseManager<TpTaskAllotInfo> implements
 		return this.tptaskallotdao.getUpdateSql(tptaskallotinfo,sqlbuilder);
 	}
 
-	public Boolean doExcetueArrayProc(List<String> sqlArrayList,
-			List<List<Object>> objArrayList) {
-		return this.tptaskallotdao.doExcetueArrayProc(sqlArrayList,objArrayList);
-	}
 	
 	public TpTaskAllotInfo getOfExcel(Sheet rs, int cols, int d, String type) {
 		// TODO Auto-generated method stub

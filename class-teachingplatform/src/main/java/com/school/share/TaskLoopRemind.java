@@ -101,12 +101,12 @@ public class TaskLoopRemind extends TimerTask {
                         map.put("taskType",task.getTasktype());
                         map.put("isVirtual","0");
                         map.put("classType",tt.getClasstype());
-                        map.put("cUserId",task.getUserid());
+                        map.put("cUserId",task.getEttuserid());
                         if(tt.getDcschoolid()==null||tt.getDcschoolid().toString().length()<1)
                             continue;
                         map.put("schoolId",tt.getDcschoolid());
                         map.put("userType","3");
-                        String userId="";
+                        List<Integer> userId=new ArrayList<Integer>();
                         if(tt.getUsertype()==0){
                             ClassUser cu=new ClassUser();
                             cu.setClassid(Integer.parseInt(tt.getUsertypeid()+""));
@@ -114,10 +114,8 @@ public class TaskLoopRemind extends TimerTask {
                             List<ClassUser>userList=this.classUserManager.getList(cu,null);
                             if(userList!=null&&userList.size()>0){
                                 for(ClassUser classUser:userList){
-                                    if(userId.length()>0)
-                                        userId+=",";
                                     if(classUser.getEttuserid()!=null&&classUser.getEttuserid()>0)
-                                        userId+=classUser.getEttuserid();
+                                        userId.add(classUser.getEttuserid());
                                 }
                             }
                         }else if(tt.getUsertype()==2){
@@ -126,16 +124,21 @@ public class TaskLoopRemind extends TimerTask {
                             List<TpGroupStudent>gsList=this.groupStudentManager.getList(gs,null);
                             if(gsList!=null&&gsList.size()>0){
                                 for(TpGroupStudent groupStudent:gsList){
-                                    if(userId.length()>0)
-                                        userId+=",";
+
                                     if(groupStudent.getEttuserid()!=null&&groupStudent.getEttuserid()>0)
-                                        userId+=groupStudent.getEttuserid();
+                                        userId.add(groupStudent.getEttuserid());
                                 }
                             }
                         }
-                        if(userId==null||userId.trim().length()<1)
+                        if(userId==null||userId.size()<1)
                             continue;
-                        map.put("userIds",userId);
+                        String tmpIds="";
+                        for(Integer uid:userId){
+                            if(tmpIds.length()>0)
+                                tmpIds+=",";
+                            tmpIds+=uid.toString();
+                        }
+                        map.put("userIds",tmpIds);
                         mapList.add(map);
 
 
@@ -159,7 +162,7 @@ public class TaskLoopRemind extends TimerTask {
                 return;
             }else{
                if(objListArray.size()>0&&sqlList.size()>0){
-                    if(this.taskAllotManager.doExcetueArrayProc(sqlList,objListArray)){
+                    if(this.taskManager.doExcetueArrayProc(sqlList,objListArray)){
                         System.out.println("TaskLoopRemind修改任务提醒状态成功!");
                     }else
                         System.out.println("TaskLoopRemind修改任务提醒状态失败!");

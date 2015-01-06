@@ -51,7 +51,11 @@ public class TaskLoopRemindUtil{
 
     public static boolean sendTaskRemindObj(List<Map<String,Object>> cuMapList){
         String addToEtt_URL= UtilTool.utilproperty.getProperty("ETT_INTER_IP")+"taskRemind.do";
-        if(cuMapList==null||cuMapList.size()<1)return false;
+      //  String addToEtt_URL= "http://192.168.10.59/study-im-service-1.0/taskRemind.do";
+        if(cuMapList==null||cuMapList.size()<1){
+            System.out.println("任务提醒对象cuMapList.size():"+cuMapList.size());
+            return false;
+        }
         HashMap<String,String> paramMap=new HashMap<String,String>();
         paramMap.put("timestamp",new Date().getTime()+"");
 

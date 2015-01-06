@@ -1420,9 +1420,9 @@ public class TaskController extends BaseController<TpTaskInfo>{
                     System.out.println("添加任务动态失败!原因：未获取到学生列表!");
                 }*/
                 if(!sendRemind(tasknextid))
-                    System.out.println("添加taskRemind失败!");
+                    System.out.println(" doSubAddTask 添加taskRemind失败!");
                 else
-                    System.out.println("添加taskRemind成功!");
+                    System.out.println(" doSubAddTask 添加taskRemind成功!");
 
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -1434,6 +1434,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
     }
 
     public boolean sendRemind(Long tasknextid){
+        if(tasknextid!=null)
+            return false;
 
         StringBuilder sql=null;
         List<Object>objList=null;
@@ -1464,12 +1466,12 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         map.put("taskType",task.getTasktype());
                         map.put("isVirtual","0");
                         map.put("classType",tt.getClasstype());
-                        map.put("cUserId",task.getUserid());
+                        map.put("cUserId",task.getEttuserid());
                         if(tt.getDcschoolid()==null||tt.getDcschoolid().toString().length()<1)
                             continue;
                         map.put("schoolId",tt.getDcschoolid());
                         map.put("userType","3");
-                        String userId="";
+                        List<Integer> userId=new ArrayList<Integer>();
                         if(tt.getUsertype()==0){
                             ClassUser cu=new ClassUser();
                             cu.setClassid(Integer.parseInt(tt.getUsertypeid()+""));
@@ -1477,10 +1479,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                             List<ClassUser>userList=this.classUserManager.getList(cu,null);
                             if(userList!=null&&userList.size()>0){
                                 for(ClassUser classUser:userList){
-                                    if(userId.length()>0)
-                                        userId+=",";
                                     if(classUser.getEttuserid()!=null&&classUser.getEttuserid()>0)
-                                        userId+=classUser.getEttuserid();
+                                        userId.add(classUser.getEttuserid());
                                 }
                             }
                         }else if(tt.getUsertype()==2){
@@ -1489,16 +1489,20 @@ public class TaskController extends BaseController<TpTaskInfo>{
                             List<TpGroupStudent>gsList=this.tpGroupStudentManager.getList(gs,null);
                             if(gsList!=null&&gsList.size()>0){
                                 for(TpGroupStudent groupStudent:gsList){
-                                    if(userId.length()>0)
-                                        userId+=",";
                                     if(groupStudent.getEttuserid()!=null&&groupStudent.getEttuserid()>0)
-                                        userId+=groupStudent.getEttuserid();
+                                        userId.add(groupStudent.getEttuserid());
                                 }
                             }
                         }
-                        if(userId==null||userId.trim().length()<1)
+                        if(userId==null||userId.size()<1)
                             continue;
-                        map.put("userIds",userId);
+                        String tmpIds="";
+                        for(Integer uid:userId){
+                            if(tmpIds.length()>0)
+                                tmpIds+=",";
+                            tmpIds+=uid.toString();
+                        }
+                        map.put("userIds",tmpIds);
                         mapList.add(map);
 
 
@@ -2082,6 +2086,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 je.setType("success");
                 //添加任务消息提醒
                 //this.tpTaskManager.doSaveTaskMsg(ta);
+
                 if(!sendRemind(tasknextid))
                     System.out.println("doSubUpdTask 添加taskRemind失败!");
                 else

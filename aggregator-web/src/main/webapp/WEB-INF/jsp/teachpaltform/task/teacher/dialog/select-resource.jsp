@@ -194,7 +194,7 @@
 
             },
             'onUploadError' : function(file, errorCode, errorMsg, errorString) {
-                alert('文件： ' + file.name + ' 未上传，原因： ' + errorString);
+                //alert('文件： ' + file.name + ' 未上传，原因： ' + errorString);
             }
         });
 

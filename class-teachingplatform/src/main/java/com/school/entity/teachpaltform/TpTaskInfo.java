@@ -42,6 +42,24 @@ public class TpTaskInfo implements Serializable {
     private String imtaskanalysis;
     private Integer imtaskattachtype;
     private Object unionflag;
+    private Integer ettuserid;
+    private Long paperid;
+
+    public Long getPaperid() {
+        return paperid;
+    }
+
+    public void setPaperid(Long paperid) {
+        this.paperid = paperid;
+    }
+
+    public Integer getEttuserid() {
+        return ettuserid;
+    }
+
+    public void setEttuserid(Integer ettuserid) {
+        this.ettuserid = ettuserid;
+    }
 
     public Object getUnionflag() {
         return unionflag;
