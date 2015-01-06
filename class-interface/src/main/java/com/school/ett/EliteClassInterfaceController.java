@@ -10,6 +10,7 @@ import com.school.manager.teachpaltform.TpCourseManager;
 import com.school.util.MD5_NEW;
 import jcore.jsonrpc.common.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,12 +26,11 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "eliteClassEtt")
 public class EliteClassInterfaceController extends BaseController<String> {
+    @Autowired
     private IClassManager classManager;
+    @Autowired
     private ITpCourseManager courseManager;
-    public EliteClassInterfaceController(){
-        this.classManager=this.getManager(ClassManager.class);
-        this.courseManager=this.getManager(TpCourseManager.class);
-    }
+
 
     @RequestMapping(params="m=getClass")
     public void getEliteClass(HttpServletRequest request, HttpServletResponse response) throws Exception{
