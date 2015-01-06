@@ -3176,6 +3176,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
         EttColumnInfo ettColumnInfo = new EttColumnInfo();
         ettColumnInfo.setRoletype(2);
+        ettColumnInfo.setSchoolid(this.logined(request).getDcschoolid());
         List<EttColumnInfo> columnList =columnManager.getEttColumnSplit(ettColumnInfo,null);
         if(columnList!=null&&columnList.size()>0){
             Boolean b1= false;
@@ -3231,6 +3232,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
         EttColumnInfo ettColumnInfo = new EttColumnInfo();
         ettColumnInfo.setRoletype(2);
+        ettColumnInfo.setSchoolid(this.logined(request).getDcschoolid());
         List<EttColumnInfo> columnList =columnManager.getEttColumnSplit(ettColumnInfo,null);
         if(columnList!=null&&columnList.size()>0){
             for(EttColumnInfo obj:columnList){
@@ -3387,6 +3389,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
         EttColumnInfo ettColumnInfo = new EttColumnInfo();
         ettColumnInfo.setRoletype(2);
+        ettColumnInfo.setSchoolid(this.logined(request).getDcschoolid());
         List<EttColumnInfo> columnList =columnManager.getEttColumnSplit(ettColumnInfo,null);
         if(columnList!=null&&columnList.size()>0){
             for(EttColumnInfo obj:columnList){
@@ -3487,6 +3490,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
         EttColumnInfo ettColumnInfo = new EttColumnInfo();
         ettColumnInfo.setRoletype(2);
+        ettColumnInfo.setSchoolid(this.logined(request).getDcschoolid());
         List<EttColumnInfo> columnList =columnManager.getEttColumnSplit(ettColumnInfo,null);
         if(columnList!=null&&columnList.size()>0){
             for(EttColumnInfo obj:columnList){
