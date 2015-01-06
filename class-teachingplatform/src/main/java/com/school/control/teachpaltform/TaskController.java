@@ -253,12 +253,14 @@ public class TaskController extends BaseController<TpTaskInfo>{
             IColumnManager columnManager=(ColumnManager)this.getManager(ColumnManager.class);
             EttColumnInfo ettColumnInfo = new EttColumnInfo();
             ettColumnInfo.setRoletype(2);
+            ettColumnInfo.setSchoolid(this.logined(request).getDcschoolid());
             List<EttColumnInfo> columnList =columnManager.getEttColumnSplit(ettColumnInfo,null);
             if(columnList!=null&&columnList.size()>0){
                 Boolean b= false;
                 for(EttColumnInfo obj:columnList){
                     if(obj.getEttcolumnid()==7||obj.getEttcolumnid()==320){
                         b=true;
+                        break;
                     }
                 }
                 request.setAttribute("sign",b);
