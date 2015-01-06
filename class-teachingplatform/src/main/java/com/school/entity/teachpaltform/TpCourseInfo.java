@@ -640,7 +640,13 @@ public class TpCourseInfo  implements java.io.Serializable{
         this.courselevel = courselevel;
     }
     public java.lang.String getCoursename(){
-        return coursename;
+        String returnVal=coursename;
+        if(returnVal!=null){
+            returnVal=returnVal.replaceAll("'","бо");
+        }
+        return returnVal;
+
+
     }
     public void setCoursename(java.lang.String coursename){
         this.coursename = coursename;
