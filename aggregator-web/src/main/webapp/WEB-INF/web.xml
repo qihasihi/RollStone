@@ -27,6 +27,13 @@
 	<listener>
    		<listener-class>org.springframework.web.context.request.RequestContextListener </listener-class>
 	 </listener>
+
+
+    <!-- log4j config-->
+    <listener>
+        <listener-class>com.school.config.ConsolFileListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>log4jinit</servlet-name>
         <servlet-class>com.school.config.Log4jInit</servlet-class>
