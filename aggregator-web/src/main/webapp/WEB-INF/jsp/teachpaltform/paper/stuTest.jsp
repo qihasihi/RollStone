@@ -9,6 +9,7 @@
 <%@include file="/util/common-jsp/common-jxpt.jsp"%>
 <html>
 <head>
+
     <script type="text/javascript" src="js/teachpaltform/testpaper.js"></script>
     <script type="text/javascript">
         var quesSize="${quesSize}";

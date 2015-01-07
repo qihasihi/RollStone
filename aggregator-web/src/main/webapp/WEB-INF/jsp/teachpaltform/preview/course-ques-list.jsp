@@ -54,7 +54,9 @@
                             htm+=' class="trbg2"';
                         htm+='>';
                         htm+='<td><span class="bg">'+questype+'</span>';
-
+                        if(typeof(itm.showExamYearMsg)!="undefined"){
+                            htm+='<span>('+itm.showExamYearMsg+')</span>';
+                        }
                         if(itm.extension=='4'){
                             htm+='<div  class="p_t_10" id="sp_mp3_'+itm.questionid+'" ></div>'
                             htm+='<script type="text/javascript">';
@@ -62,7 +64,7 @@
                             htm+='<\/script>';
                         }
                         if(itm.extension!=4)
-                            htm+=content;
+                            htm+="<p>&nbsp;&nbsp;"+content+"</p>";
                         if(typeof itm.questionOptionList!='undefined'&&itm.questionOptionList.length>0&&itm.questiontype!=1){
                             htm+='<table border="0" cellpadding="0" cellspacing="0" >';
                             htm+='<col class="w30"/>';

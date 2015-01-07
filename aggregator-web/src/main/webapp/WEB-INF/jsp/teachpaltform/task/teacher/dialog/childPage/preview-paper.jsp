@@ -459,6 +459,9 @@ function xround(x, num){
                                 </c:if>
                               分</span>
                         <span class="bg">${pq.questiontypename}</span>
+                        <c:if test="${!empty pq.showExamYearMsg}">
+                            <span>(${pq.showExamYearMsg})</span>
+                        </c:if>
                     </caption>
 
                     <tr>

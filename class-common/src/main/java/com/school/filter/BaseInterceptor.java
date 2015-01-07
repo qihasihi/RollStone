@@ -1,28 +1,25 @@
 package com.school.filter;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.HashMap;
+import com.school.entity.DictionaryInfo;
+import com.school.entity.PageRightInfo;
+import com.school.entity.UserInfo;
+import com.school.manager.DictionaryManager;
+import com.school.manager.PageRightManager;
+import com.school.manager.inter.IDictionaryManager;
+import com.school.manager.inter.IPageRightManager;
+import com.school.util.JsonEntity;
+import com.school.util.SpringBeanUtil;
+import com.school.util.UtilTool;
+import org.apache.log4j.Logger;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import com.school.entity.DictionaryInfo;
-import com.school.manager.DictionaryManager;
-import com.school.manager.inter.IDictionaryManager;
-import com.school.util.*;
-import org.apache.log4j.Logger;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
-import com.school.entity.PageRightInfo;
-import com.school.entity.UserInfo;
-import com.school.manager.PageRightManager;
-import com.school.manager.inter.IPageRightManager;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * ¹ýÂËÆ÷
@@ -209,8 +206,8 @@ public class BaseInterceptor implements HandlerInterceptor {
                                         }
                                     }
                                 }
-                                logger.error("----------------\n----No Login active:  reallocalpth:"+request.getRequestURL().toString()+"?"+paramStr.toString()+"");
-                                logger.error("----------------\n----No Login active:  proclocalpath:"+request.getSession().getAttribute("FILE_SYSTEM_IP_PORT")+"?"+paramStr.toString()+"");
+                                logger.warn("----------------\n----No Login active:  reallocalpth:"+request.getRequestURL().toString()+"?"+paramStr.toString()+"");
+                                logger.warn("----------------\n----No Login active:  proclocalpath:"+request.getSession().getAttribute("FILE_SYSTEM_IP_PORT")+"?"+paramStr.toString()+"");
                             }
                             break;
                         }

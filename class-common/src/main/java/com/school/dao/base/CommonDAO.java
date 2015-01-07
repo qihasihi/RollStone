@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
@@ -104,7 +103,7 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
      * com.school.dao.base.ICommonDAO#executeArrayQuery_PROC(java.util.List,
      * java.util.List)
      */
-    @Transactional
+//    @Transactional
     public boolean executeArrayQuery_PROC(List sqlbuilder, List paraV) {
         boolean returnVal=true;
         for (int i = 0; i < sqlbuilder.size(); i++) {

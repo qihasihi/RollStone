@@ -106,11 +106,15 @@ function getInvestReturnMethod_ques(rps){
             if(itm.extension!='4'){
                 shtml+='<p>';
                 shtml+='<span class="bg">'+itm.questiontypename+'</span>';
-                shtml+=content;
-                shtml+='</p>';
+                if(typeof(itm.showExamYearMsg)!="undefined")
+                    shtml+='('+itm.showExamYearMsg+')';
+                shtml+="<br/>"+content;
+                shtml+="<br/>"+'</p>';
             }else{
                 shtml+='<span class="bg">'+itm.questiontypename+'</span>';
-                shtml+=content;
+                if(typeof(itm.showExamYearMsg)!="undefined")
+                    shtml+='('+itm.showExamYearMsg+')';
+                shtml+="<br/>"+content;
             }
 
 

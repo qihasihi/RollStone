@@ -6,8 +6,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class QuestionInfo implements java.io.Serializable {
     /**
@@ -387,5 +388,40 @@ public class QuestionInfo implements java.io.Serializable {
 
     public List<Map<String, Object>> getOptTJMapList() {
         return optTJMapList;
+    }
+
+    public String getShowExamYearMsg(){
+        StringBuilder returnVal=null;
+        if(((this.getCity()!=null&&this.getCity().trim().equals("-1"))
+                ||(this.getAxamarea()!=null&&this.getAxamarea().trim().length()>0))
+                &&this.getExamyear()!=null&&this.getExamyear().trim().length()>0
+                &&this.getExamtype()!=null){
+            if(this.getCity()==null||this.getCity().trim().equals("-1")){
+                if(this.getAxamarea()!=null&&this.getAxamarea().trim().length()>0){
+                    returnVal=new StringBuilder(this.getAxamarea());
+                }
+            }else{
+                returnVal=new StringBuilder(this.getCity());
+            }
+            if(returnVal!=null){
+                returnVal.append(" ").append(this.getExamyear());
+                if(this.getExamtype()!=null){
+                    String examTypeVar="其它";
+                    switch(this.getExamtype()){
+                        case 1:
+                            examTypeVar="高考";
+                            break;
+                        case 2:
+                            examTypeVar="中考";
+                            break;
+                        case 0:
+                            examTypeVar="其它";
+                            break;
+                    }
+                    returnVal.append(examTypeVar).append("题");
+                }
+            }
+        }
+        return returnVal==null?null:returnVal.toString();
     }
 }

@@ -33,10 +33,10 @@ Created by IntelliJ IDEA.
          var isShowComment="${!empty sessionScope.isShowComment?sessionScope.isShowComment:2}";//默认为关闭
         switch (parseInt(extension)){
             case 0:
-                extenname="客观";
+                extenname="客观题";
                 break;
             case 1:
-                extenname="主观";
+                extenname="主观题";
                 break;
             case 2:
                 extenname="阅读理解";
@@ -63,11 +63,11 @@ Created by IntelliJ IDEA.
                 break;
             case 3:
             case 7:
-                typename="单选";
+                typename="单选题";
                 break;
             case 4:
             case 8:
-                typename="多选";
+                typename="多选题";
                 break;
             case 5:
                 typename="资源学习";
@@ -358,7 +358,11 @@ Created by IntelliJ IDEA.
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 w940">
                 <c:if test="${!empty detail.CONTENT2}">
                     <tr>
-                        <td><span class="bg"  id="tname"></span><span id="sp_ct2">${fn:replaceAll(detail.CONTENT2,"_QUESTIONPIC+",pageScope.quesImgpath)}</span><br/>--%>
+                        <td><span class="bg"  id="tname"></span>
+                            <c:if test="${!empty showExamYearMsg}">
+                                <span>(${showExamYearMsg})</span>
+                            </c:if>
+                            <span id="sp_ct2">${fn:replaceAll(detail.CONTENT2,"_QUESTIONPIC+",pageScope.quesImgpath)}</span><br/>--%>
                             <script type="text/javascript">
                                 if(extension==4){
                                     var mp3url=_QUES_IMG_URL+"/${param.questionid}/001.mp3";
@@ -402,7 +406,11 @@ Created by IntelliJ IDEA.
                 </c:if>
                 <c:if test="${empty detail.CONTENT2}">
                     <tr>
-                        <td><span class="bg"><span id="tname"></span>：</span>${fn:replaceAll(detail.CONTENT,"_QUESTIONPIC\\+",pageScope.quesImgpath)}
+                        <td><span class="bg"><span id="tname"></span></span>
+                            <c:if test="${!empty showExamYearMsg}">
+                                <span>(${showExamYearMsg})</span>
+                            </c:if>
+                        <p>${fn:replaceAll(detail.CONTENT,"_QUESTIONPIC\\+",pageScope.quesImgpath)}</p>
                             <c:if test="${!empty option}">
                                 <table border="0" cellpadding="0" cellspacing="0">
                                     <%--<col class="w30"/>--%>

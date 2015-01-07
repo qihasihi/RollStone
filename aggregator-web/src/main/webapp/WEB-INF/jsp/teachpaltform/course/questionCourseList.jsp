@@ -212,7 +212,7 @@
                 <option  value="2">标准/共享专题</option>
                 <option  value="3">关联专题</option>
             </select>
-            <input  id="coursename" name="coursename" placeholder="输入专题名     匹配" type="text" class="w240" />
+            <input  id="coursename" name="coursename" placeholder="输入专题名     匹配" type="text" class="w180" />
             <a href="javascript:pageGo('p1');" class="an_search" title="查询"></a></p>
         <input type="hidden" id="addCourseId" name="addCourseId" value="${addCourseId}"/>
 

@@ -52,7 +52,10 @@ function questionReturn(rps){
             htm+='>'+queslevel+'</td>';
 
             htm+='<td><span class="bg">'+questype+'</span>';
-            htm+=content;
+            if(typeof(itm.showExamYearMsg)!="undefined"){
+                htm+='<span>('+itm.showExamYearMsg+')</span>';
+            }
+            htm+="<p>"+content+"</p>";
             if(itm.extension=='4'){
                 htm+='<div  class="p_t_10" id="sp_mp3_'+itm.questionid+'" ></div>'
                 htm+='<script type="text/javascript">';

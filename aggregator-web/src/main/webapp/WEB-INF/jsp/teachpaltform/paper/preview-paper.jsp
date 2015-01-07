@@ -185,8 +185,12 @@ function preeDoPageSub(pObj){
                         </td>
                         <td>
                             <span class="bg">${pq.questiontypename}</span>
+                            <c:if test="${!empty pq.showExamYearMsg}">
+                                <span>(${pq.showExamYearMsg})</span>
+                            </c:if>
+                            <p>
                              ${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
-
+                            </p>
                             <c:if test="${pq.extension eq 4}">
                                 <div  class="p_t_10" id="sp_mp3_${pq.questionid}" ></div>
                                 <script type="text/javascript">

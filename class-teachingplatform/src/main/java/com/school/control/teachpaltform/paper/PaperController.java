@@ -4308,6 +4308,22 @@ public class PaperController extends BaseController<PaperInfo>{
         request.setAttribute("allquesidObj",allquesidObj);
         request.setAttribute("score",scoreMapList.get(0).get("SCORE"));
         request.setAttribute("detail",detailList.get(0));
+        if(detailList.get(0)!=null){
+            Map<String,Object> objMap=detailList.get(0);
+            if((objMap.containsKey("EXAM_TYPE")||objMap.containsKey("AXAM_AREA"))
+                    &&objMap.containsKey("CITY")&&objMap.containsKey("EXAM_TYPE")
+                    &&objMap.containsKey("EXAM_YEAR")){
+                QuestionInfo ques=new QuestionInfo();
+                ques.setAxamarea(objMap.get("AXAM_AREA") == null ? null : objMap.get("AXAM_AREA").toString());
+                ques.setCity(objMap.get("CITY") == null ? null : objMap.get("CITY").toString());
+                ques.setExamyear(objMap.get("EXAM_YEAR") == null ? null : objMap.get("EXAM_YEAR").toString());
+                ques.setExamtype(objMap.get("EXAM_TYPE") == null ? null : Integer.parseInt(objMap.get("EXAM_TYPE").toString()));
+                request.setAttribute("showExamYearMsg",ques.getShowExamYearMsg());
+            }
+        }
+        
+
+
         request.setAttribute("num",numList.get(0));
         request.setAttribute("papertype",paperList.get(0).getPapertype());
         request.setAttribute("paperScore",paperList.get(0).getScore());

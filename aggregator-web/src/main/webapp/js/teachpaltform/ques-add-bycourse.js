@@ -36,7 +36,10 @@ function questionListReturn(rps){
                 shtml+='/>';
                 shtml+='</td>';
                 shtml+='<td>';
-                shtml+='<p>'+content+'</p>';
+                shtml+='<p><span class="bgSelf">'+itm.questiontypename+'</span>';
+                if(typeof(itm.showExamYearMsg)!="undefined")
+                     shtml+='('+itm.showExamYearMsg+')';
+                shtml+='<br/>'+content+'</p>';
                 if(itm.extension=='4'){
 
                     shtml+='<br><div  class="p_t_10" id="sp_mp3_'+itm.questionid+'" ></div>'

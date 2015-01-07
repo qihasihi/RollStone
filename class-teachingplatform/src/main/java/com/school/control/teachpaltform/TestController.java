@@ -4,23 +4,16 @@ import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
 import com.school.entity.ClassUser;
 import com.school.entity.UserInfo;
-import com.school.entity.teachpaltform.TpGroupInfo;
-import com.school.entity.teachpaltform.TpGroupStudent;
 import com.school.manager.ClassManager;
 import com.school.manager.ClassUserManager;
 import com.school.manager.UserManager;
 import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.IClassUserManager;
 import com.school.manager.inter.IUserManager;
-import com.school.manager.inter.teachpaltform.ITpGroupManager;
-import com.school.manager.inter.teachpaltform.ITpGroupStudentManager;
-import com.school.manager.teachpaltform.TpGroupManager;
-import com.school.manager.teachpaltform.TpGroupStudentManager;
 import com.school.share.*;
 import com.school.util.PageResult;
 import com.school.utils.EttInterfaceUserUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -44,7 +37,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=updateCourseElement",method=RequestMethod.GET)
-    @Transactional
     public void updateCourseElement(HttpServletRequest request,HttpServletResponse response){
         new UpdateCourse(request.getSession().getServletContext()).updateCourseElement();
     }
@@ -55,7 +47,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=updateCourseSelf",method=RequestMethod.GET)
-    @Transactional
     public void updateCourseSelf(HttpServletRequest request,HttpServletResponse response){
         new UpdateCourse(request.getSession().getServletContext()).updateCourseSelf();
     }
@@ -65,13 +56,11 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=updateResourceSelf",method=RequestMethod.GET)
-    @Transactional
     public void updateResourceSelf(HttpServletRequest request,HttpServletResponse response){
         new UpdateCourse(request.getSession().getServletContext()).updateResourceSelf();
     }
 
     @RequestMapping(params="m=SynchroEttColumn",method=RequestMethod.GET)
-    @Transactional
     public void SynchroEttColumn(HttpServletRequest request,HttpServletResponse response){
         new SynchroEttColumns().run();
     }
@@ -82,7 +71,7 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=updateCloudMyInfo",method={RequestMethod.GET, RequestMethod.POST})
-    @Transactional
+    
     public void updateCloudMyInfo(HttpServletRequest request,HttpServletResponse response){
         new UpdateRsMyInfoData(request.getSession().getServletContext()).run();
     }
@@ -93,7 +82,7 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=updateRsHotRank",method={RequestMethod.GET,RequestMethod.POST})
-    @Transactional
+    
     public void UpdateRsHotRank(HttpServletRequest request,HttpServletResponse response){
         new UpdateHotResData(request.getSession().getServletContext()).run();
     }
@@ -105,7 +94,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=updateSchool",method={RequestMethod.GET,RequestMethod.POST})
-    @Transactional
     public void UpdateSchool(HttpServletRequest request,HttpServletResponse response){
         new UpdateSchool(request.getSession().getServletContext()).run();
     }
@@ -124,7 +112,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=synchroResNum",method={RequestMethod.GET,RequestMethod.POST})
-    @Transactional
     public void synchroResNum(HttpServletRequest request,HttpServletResponse response){
         new ShareResNum(request.getSession().getServletContext()).run();
     }
@@ -136,7 +123,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=SynchroSchoolScoreRank",method={RequestMethod.GET,RequestMethod.POST})
-    @Transactional
     public void SynchroSchoolScoreRank(HttpServletRequest request,HttpServletResponse response){
         new UpdateSchoolScoreRank(request.getSession().getServletContext()).run();
     }
@@ -146,7 +132,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=SynchroUserModelTotalScore",method={RequestMethod.GET,RequestMethod.POST})
-    @Transactional
     public void SynchroUserModelTotalScore(HttpServletRequest request,HttpServletResponse response){
         new UpdateUserModelTotalScore(request.getSession().getServletContext()).run();
     }
@@ -156,7 +141,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=SynchroCourse",method={RequestMethod.GET,RequestMethod.POST})
-    @Transactional
     public void SynchroCourse(HttpServletRequest request,HttpServletResponse response){
         new ShareCourse(request.getSession().getServletContext()).run();
 
@@ -167,7 +151,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=ShareResource",method={RequestMethod.GET,RequestMethod.POST})
-    @Transactional
     public void SynchroResource(HttpServletRequest request,HttpServletResponse response){
         new ShareResource(request.getSession().getServletContext()).run();
 
@@ -178,7 +161,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=updateCourse",method=RequestMethod.GET)
-    @Transactional
     public void updateCourse(HttpServletRequest request,HttpServletResponse response){
         new UpdateCourse(request.getSession().getServletContext()).run();
 
@@ -191,7 +173,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=SynchroTeachVersion",method=RequestMethod.GET)
-    @Transactional
     public void synchroTeachVersion(HttpServletRequest request,HttpServletResponse response){
         new ShareTeachVersion(request.getSession().getServletContext()).run();
     }
@@ -201,13 +182,11 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=SynchroTeachingMaterial",method=RequestMethod.GET)
-    @Transactional
     public void synchroTeachingMaterial(HttpServletRequest request,HttpServletResponse response){
         new ShareTeachingMaterial(request.getSession().getServletContext()).run();
     }
     @RequestMapping(params="m=SynchroResource",method=RequestMethod.GET)
-    @Transactional
-        public void synchroResource(HttpServletRequest request,HttpServletResponse response){
+    public void synchroResource(HttpServletRequest request,HttpServletResponse response){
         new ShareResource(request.getSession().getServletContext()).run();
     }
 
@@ -217,7 +196,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=SynchroOperate",method=RequestMethod.GET)
-    @Transactional
     public void SynchroOperate(HttpServletRequest request,HttpServletResponse response){
         new ShareTpOperate(request.getSession().getServletContext()).run();
     }
@@ -228,7 +206,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=SynchroDataToEtt")
-    @Transactional
     public void SynchroDataToEtt(HttpServletRequest request,HttpServletResponse response) throws Exception{
         String dcschoolid=request.getParameter("dcschoolid");
         //只处理>50000的分校

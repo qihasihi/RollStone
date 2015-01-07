@@ -350,4 +350,38 @@ public class TpCourseQuestion implements Serializable{
             return "";
         return UtilTool.DateConvertToString(operatetime, UtilTool.DateType.type1);
     }
+
+    public String getCity() {
+        return this.getQuestioninfo().getCity();
+    }
+
+    public void setCity(String city) {
+        this.getQuestioninfo().setCity(city);
+    }
+
+    public String getExamyear() {
+        return this.getQuestioninfo().getExamyear();
+    }
+
+    public void setExamyear(String examyear) {
+        this.getQuestioninfo().setExamyear(examyear);
+    }
+
+    public Integer getExamtype() {
+        return this.getQuestioninfo().getExamtype();
+    }
+
+    public void setExamtype(Integer examtype) {
+        this.getQuestioninfo().setExamtype(examtype);
+    }
+    public String getAxamarea() {
+        return this.getQuestioninfo().getAxamarea();
+    }
+
+    public void setAxamarea(String axamarea) {
+        this.getQuestioninfo().setAxamarea(axamarea);
+    }
+    public String getShowExamYearMsg(){
+        return this.getQuestioninfo().getShowExamYearMsg();
+    }
 }

@@ -261,6 +261,41 @@ public class  PaperQuestion implements Serializable{
     public void setCtime(Date ctime){
       this.ctime = ctime;
     }
+
+    public String getCity() {
+        return this.getQuestioninfo().getCity();
+    }
+
+    public void setCity(String city) {
+        this.getQuestioninfo().setCity(city);
+    }
+
+    public String getExamyear() {
+        return this.getQuestioninfo().getExamyear();
+    }
+
+    public void setExamyear(String examyear) {
+        this.getQuestioninfo().setExamyear(examyear);
+    }
+
+    public Integer getExamtype() {
+        return this.getQuestioninfo().getExamtype();
+    }
+
+    public void setExamtype(Integer examtype) {
+        this.getQuestioninfo().setExamtype(examtype);
+    }
+    public String getAxamarea() {
+        return this.getQuestioninfo().getAxamarea();
+    }
+
+    public void setAxamarea(String axamarea) {
+        this.getQuestioninfo().setAxamarea(axamarea);
+    }
+    public String getShowExamYearMsg(){
+        return this.getQuestioninfo().getShowExamYearMsg();
+    }
+
     public java.lang.Float getScore(){
       return score;
     }
@@ -268,6 +303,6 @@ public class  PaperQuestion implements Serializable{
       this.score = score;
     }
 
-  
+
 
 }

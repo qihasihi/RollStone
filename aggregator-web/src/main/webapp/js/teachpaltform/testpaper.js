@@ -239,12 +239,18 @@ function loadNextQues(quesid,paperid,idx){
                     var ex=parentQuesObj.extension;
                     h+='<input type="hidden" id="hd_p_extension'+parentQuesObj.questionid+'" id="hd_p_extension" value="'+ex+'"/>';
                     if(ex!=4&&ex!=5&&ex!=3&&ex!=2){
-                        h+='<div class="p_b_20"><strong>试题组（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><br>';
+                        h+='<div class="p_b_20"><strong>试题组（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong>';
+                        if(typeof(parentQuesObj.showExamYearMsg)!="undefined")
+                            h+='<span>('+parentQuesObj.showExamYearMsg+')</span>';
+                        h+='<br>';
                         h+=parentQuesObj.content;
                         h+='</div>';
                     }else if(ex==5){    //七选五
                         //显示题干
-                        h+='<div class="p_b_20"><strong>七选五（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><br>';
+                        h+='<div class="p_b_20"><strong>七选五（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong>';
+                        if(typeof(parentQuesObj.showExamYearMsg)!="undefined")
+                            h+='<span>('+parentQuesObj.showExamYearMsg+')</span>';
+                        h+='<br>';
                         h+=parentQuesObj.content;
                         //题选项
                         h+='<div style="display:none" id="p_option_'+parentQuesObj.questionid+'">';
@@ -258,14 +264,20 @@ function loadNextQues(quesid,paperid,idx){
                          }
                         h+='</div></div>';
                     }else if(ex==2){
-                        h+='<div class="p_b_20"><strong>阅读理解（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><br>';
+                        h+='<div class="p_b_20"><strong>阅读理解（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong>';
+                        if(typeof(parentQuesObj.showExamYearMsg)!="undefined")
+                            h+='<span>('+parentQuesObj.showExamYearMsg+')</span>';
+                        h+='<br>';
                         h+=parentQuesObj.content;
                         //题选项
                         h+='<div style="display:none" id="p_option_'+parentQuesObj.questionid+'">';
                         //选项
                         h+='</div></div>';
                     }else if(ex==3){
-                        h+='<div class="p_b_20"><strong>完形填空（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><br>';
+                        h+='<div class="p_b_20"><strong>完形填空（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong>';
+                        if(typeof(parentQuesObj.showExamYearMsg)!="undefined")
+                            h+='<span>('+parentQuesObj.showExamYearMsg+')</span>';
+                        h+='<br>';
                         h+=parentQuesObj.content;
                         //题选项
                         h+='<div style="display:none" id="p_option_'+parentQuesObj.questionid+'">';
@@ -273,7 +285,12 @@ function loadNextQues(quesid,paperid,idx){
                         h+='</div></div>';
                     }else{
 
-                        h+='<p><strong>英语听力（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong><span id="p_mp3_'+parentQuesObj.questionid+'"></span></p>';
+                        h+='<p><strong>英语听力（<span id="sp_num'+parentQuesObj.questionid+'"></span>）</strong>';
+                        if(typeof(parentQuesObj.showExamYearMsg)!="undefined")
+                            h+='<span>('+parentQuesObj.showExamYearMsg+')</span>';
+                        h+='<br>';
+
+                        h+='<span id="p_mp3_'+parentQuesObj.questionid+'"></span></p>';
                     }
 //                    h+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
 //                    h+='<col class="w30"/><col class="w860"/>';
@@ -336,8 +353,32 @@ function loadNextQues(quesid,paperid,idx){
                 h+='<input  type="hidden" value="'+quesObj.questiontype+'" name="hd_questiontype" id="hd_questiontype_'+quesObj.questionid+'"/>';
                 h+='<input  type="hidden" value="2" name="hd_isright" id="hd_isright_'+quesObj.questionid+'"/>';
 
-                if(typeof(quesObj.content)!="undefined"&&parentQuesObj==null)
-                    h+='<p><span id="p_num_'+quesObj.questionid+'"></span>.'+quesObj.content+'</p>';
+                if(typeof(quesObj.content)!="undefined"&&parentQuesObj==null){
+                    var qtypeStr="其它";//试题类型 1：其它 2：填空 3：单选 4：多选 6:试题组 7：单选组试题 8：多选组试题
+                    switch(quesObj.questiontype){
+                        case 3:
+                        case 7:
+                            qtypeStr="单选题";
+                            break;
+                        case 4:
+                        case 8:
+                            qtypeStr="多选题";
+                            break;
+                        case 1:
+                        case 9:
+                            qtypeStr="其它";
+                             break;
+                        case 2:
+                            qtypeStr="填空题";
+                             break;
+                    }
+//                    h+='<p><span id="p_num_'+quesObj.questionid+'"></span>.<span class="bgSelf">'+qtypeStr+'</span>';
+                    h+='<p><span class="bgSelf">'+qtypeStr+'</span>';
+                    if(typeof(quesObj.showExamYearMsg)!="undefined")
+                         h+='('+quesObj.showExamYearMsg+')';
+                    h+='</p>';
+                    h+=quesObj.content;
+                }
                 if(quesObj.questiontype==1||quesObj.questiontype==9){//问答题
                     h+='<div class="p_t_20"><textarea name="txt_answer" id="txt_answer_'+quesObj.questionid+'"  placeholder="输入你的答案"></textarea></div>';
                 }

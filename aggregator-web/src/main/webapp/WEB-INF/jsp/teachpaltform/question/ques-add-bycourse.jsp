@@ -40,7 +40,7 @@
                 new_page_html_mode:false,
                 return_type:'json',
                 page_no:1,
-                page_size:20,
+                page_size:10,
                 rectotal:0,
                 pagetotal:1,
                 operate_id:"mainTbl"

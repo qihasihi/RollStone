@@ -31,7 +31,6 @@ import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
 import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.fileupload.util.Streams;
 
 import javax.servlet.ServletContext;
 import java.io.*;
@@ -1228,6 +1227,17 @@ public class UpdateCourse extends TimerTask{
                             if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
                                 sqlArrayList.add(sqlbuilder.toString());
                                 objArrayList.add(objList);
+
+                                //每条记录执行执行添加
+                                if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()&&sqlArrayList.size()%10==0){
+                                    istrue=resourceManager.doExcetueArrayProc(sqlArrayList,objArrayList);
+                                    if(!istrue){
+                                        System.out.println("更新资源本身失败!记录日志");
+                                        break;
+                                    }
+                                    sqlArrayList=new ArrayList<String>();
+                                    objArrayList=new ArrayList<List<Object>>();
+                                }
                             }
                         }
                     }
@@ -1392,6 +1402,17 @@ public class UpdateCourse extends TimerTask{
                                 if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
                                     sqlArrayList.add(sqlbuilder.toString());
                                     objArrayList.add(objList);
+                                }
+
+                                //每条记录执行执行添加
+                                if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()&&sqlArrayList.size()%10==0){
+                                    istrue=resourceManager.doExcetueArrayProc(sqlArrayList,objArrayList);
+                                    if(!istrue){
+                                        System.out.println("更新资源本身失败!记录日志");
+                                        break;
+                                    }
+                                    sqlArrayList=new ArrayList<String>();
+                                    objArrayList=new ArrayList<List<Object>>();
                                 }
                              //得到附件
                                String topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString());
@@ -4157,7 +4178,7 @@ class UpdateCourseUtil{
                 UtilTool.utilproperty.get("TOTAL_SCHOOL_LOCATION")).append(urlArray[0]);
         StringBuilder params=new StringBuilder(urlArray[1]).append("&key=").append(key);
         if(ftime==null){
-            ftime="2010-01-01";//默认
+            ftime="2014-01-01";//默认
         }
         params.append("&ftime=");
         params.append(ftime);

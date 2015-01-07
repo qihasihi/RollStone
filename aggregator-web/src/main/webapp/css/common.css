@@ -314,3 +314,14 @@ li.selected a {
 .more_select {
 	float: left;
 }
+span.bgSelf{
+    width:54px;
+    height:16px;
+    background: url(images/bg29_131230.png) no-repeat -444px -148px;
+    line-height:16px;
+    color:#fff;
+    font-weight:bold;
+    text-align:center;
+    display:inline-block;
+    margin-right:5px;
+}
