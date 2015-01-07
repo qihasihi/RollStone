@@ -71,4 +71,13 @@ public interface ITpCourseDAO extends ICommonDAO<TpCourseInfo>{
 
     public List<TpCourseInfo> getCourseByGradeTermSubject(int gradeId,int termId,int subjectId);
 
+
+    /**
+     * 获取教师的年级
+     * @param tpcourseinfo
+     * @param presult
+     * @return
+     */
+    public List<TpCourseInfo>getCourseSubGradeList(TpCourseInfo tpcourseinfo,PageResult presult);
+
 }

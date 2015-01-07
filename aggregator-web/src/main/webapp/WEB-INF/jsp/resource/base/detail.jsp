@@ -21,6 +21,12 @@
     <script type="text/javascript" src="js/common/videoPlayer/new/jwplayer.js"></script>
     <script type="text/javascript" src="flexpaper/swfobject/swfobject.js"></script>
 	<script type="text/javascript" src="flexpaper/flexpaper.js"></script>
+    <script type="text/javascript"
+            src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+    <script type="text/javascript"
+            src="fancybox/jquery.fancybox-1.3.4.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
     <script type="text/javascript">
     	//文件地址:在msg.property中进行编辑
    		var resourcepathHead="<%=fileSystemIpPort%>/uploadfile/";
@@ -43,8 +49,16 @@
         $("#loading").ajaxStart(function(){
             $(this).show();
         });
-
+        var fancyboxObj;
         $(function(){
+            fancyboxObj=$("#a_click").fancybox({
+                'onClosed':function(){
+                    $("#dv_content").hide();
+                }
+
+            });
+
+
             $("#loading").ajaxStart(function(){
                 var w=$(document).width()/2-50;
                 var h=$(document).height()/2-20;
@@ -90,6 +104,26 @@
             //进入加载
             fn_changePanel(cufiletype);
         });
+
+        function changeGrade(){
+            var value=$("#sel_subgrade").val();
+            if(value.Trim().length<1)
+                return;
+            global_gradeid=value.split("_")[0];
+            global_subjectid=value.split("_")[1];
+            //getTchMaterial();
+            pageGo("pCourseList");
+        }
+
+
+
+        function loadCoursePanel(){
+            var url="teachercourse?toQryTeaCourseList&resid=${resObj.resid}";
+            $("#dv_content").load(url,function(){
+                $("#dv_content").show();
+                $("#a_click").click();
+            });
+        }
         /**
          * 更改pannel
          *
@@ -297,6 +331,11 @@
     </script>
   </head>  
   <body>
+
+
+  <a id="a_click" href="#dv_content"></a>
+  <div id="dv_content"  style="display: none;"></div>
+
   <div class="subpage_head"><span class="lm_ico03"></span><strong>资源详情</strong></div>
   <div class="content1 public_input">
       <p class="t_r "><input name="searchValue" id="searchValue" type="text" class="w320"/>
@@ -309,6 +348,7 @@
                   <c:if test="${sessionScope.CURRENT_USER.userid==resObj.userid}">
                       <span  id="sp_up_btn_resname"><a href="javascript:;" onclick="updateResColumn('${resObj.resid}','resname','sp_name','sp_up_btn_resname')" title="编辑" class="ico11"></a></span>
                   </c:if>
+               <a href="javascript:loadCoursePanel()"><span class="ico51" title="发任务"></span></a>
               </h1>
               <div class="zyxt_zyxqR">
                   <p><span id="sp_grade">${resObj.gradename}</span>&nbsp;&nbsp;
@@ -422,6 +462,7 @@
          <c:if test="${fileType=='doc'}">
           <a href="javascript:;" onclick="showDocView(${resObj.resid},resourcepathHead,'${resObj.path}')" title="预览" class="ico76"></a>
          </c:if>
+         <a href="javascript:loadCoursePanel()"><span class="ico51" title="发任务"></span></a>
               </h1>
                   <p><span class="w220"><span id="sp_grade">${resObj.gradename}</span>&nbsp;
                       <span id="sp_subject">${resObj.subjectname}学科</span>
@@ -483,6 +524,7 @@
               <c:if test="${sessionScope.CURRENT_USER.userid==resObj.userid}">
                   <span  id="sp_up_btn_resname"><a href="javascript:;" onclick="updateResColumn('${resObj.resid}','resname','sp_name','sp_up_btn_resname')" title="编辑" class="ico11"></a></span>
               </c:if>
+           <a href="javascript:loadCoursePanel()"><span class="ico51" title="发任务"></span></a>
           </h1>
           <div class="zyxt_zyxqR">
               <p><span id="sp_grade">${resObj.gradename}</span>&nbsp;&nbsp;

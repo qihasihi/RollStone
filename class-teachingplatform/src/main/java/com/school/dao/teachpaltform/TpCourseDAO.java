@@ -494,6 +494,12 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
             objList.add(tpcourseinfo.getCourseclassref());
         } else
             sqlbuilder.append("null,");
+        if (tpcourseinfo.getResid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseinfo.getResid());
+        } else
+            sqlbuilder.append("null,");
+
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
             sqlbuilder.append("?,?,");
             objList.add(presult.getPageNo());
@@ -1301,6 +1307,49 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
 
         list=this.executeResult_PROC(sb.toString(), null, null, TpCourseInfo.class, null);
         return list;
+    }
+
+    @Override
+    public List<TpCourseInfo> getCourseSubGradeList(TpCourseInfo tpcourseinfo, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_course_subgrade_proc_split(");
+        List<Object> objList=new ArrayList<Object>();
+        if(tpcourseinfo==null){
+            return null;
+        }else{
+            if (tpcourseinfo.getTermid() != null) {
+                sqlbuilder.append("?,");
+                objList.add(tpcourseinfo.getTermid());
+            } else
+                sqlbuilder.append("null,");
+
+            if (tpcourseinfo.getUserid() != null) {
+                sqlbuilder.append("?,");
+                objList.add(tpcourseinfo.getUserid());
+            } else
+                sqlbuilder.append("null,");
+        }
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<TpCourseInfo> tpcourseinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpCourseInfo.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return tpcourseinfoList;
     }
 
 

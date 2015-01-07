@@ -242,6 +242,38 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
 
     /**
+     * 资源系统快速添加任务页
+     * @param request
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="toQryTeaCourseList",method=RequestMethod.GET)
+    public ModelAndView toQryTeaCourseList(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
+        //获取当前学期
+        TermInfo termInfo=this.termManager.getMaxIdTerm();
+        if(termInfo==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        PageResult pageResult=new PageResult();
+        pageResult.setOrderBy("grade_id desc");
+        pageResult.setPageNo(0);
+        pageResult.setPageSize(0);
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setTermid(termInfo.getRef());
+        tc.setUserid(this.logined(request).getUserid());
+        List<TpCourseInfo>subGradeList=this.tpCourseManager.getCourseSubGradeList(tc,pageResult);
+        mp.put("currtTerm", termInfo);
+        mp.put("subGradeList",subGradeList);
+        mp.put("userid", this.logined(request).getUserid());
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/select-course", mp);
+    }
+
+
+    /**
      * 教师日历页面
      * @param request
      * @param response
@@ -2820,6 +2852,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String gradeid = request.getParameter("gradeid");
         String subjectid = request.getParameter("subjectid");
         String termid=request.getParameter("atermid");
+        String resid=request.getParameter("resid");
         if (gradeid == null || subjectid == null) {
             je.setType("error");
             je.setMsg("参数错误，无法请求数据！");
@@ -2843,6 +2876,8 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             response.getWriter().print(je.toJSON());
             return;
         }
+        if(resid!=null&&resid.trim().length()>0)
+            tcInfo.setResid(Long.parseLong(resid));
 
 
         PageResult presult = this.getPageResultParameter(request);

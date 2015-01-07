@@ -163,5 +163,10 @@ public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCo
     public List<TpCourseInfo> getCourseByGradeTermSubject(int gradeId,int termId,int subjectId){
         return tpcoursedao.getCourseByGradeTermSubject(gradeId,termId, subjectId);
     }
+
+    @Override
+    public List<TpCourseInfo> getCourseSubGradeList(TpCourseInfo tpcourseinfo, PageResult presult) {
+        return tpcoursedao.getCourseSubGradeList(tpcourseinfo,presult);
+    }
 }
 

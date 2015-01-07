@@ -123,6 +123,33 @@ public class TpCourseInfo  implements java.io.Serializable{
     private String termid;
     private Integer subjectid;
     private Integer gradeid;
+    private String gradevalue;
+    private String subjectname;
+    private Long resid;
+
+    public Long getResid() {
+        return resid;
+    }
+
+    public void setResid(Long resid) {
+        this.resid = resid;
+    }
+
+    public String getSubjectname() {
+        return subjectname;
+    }
+
+    public void setSubjectname(String subjectname) {
+        this.subjectname = subjectname;
+    }
+
+    public String getGradevalue() {
+        return gradevalue;
+    }
+
+    public void setGradevalue(String gradevalue) {
+        this.gradevalue = gradevalue;
+    }
 
     private Object commentnum;
     private Object avgscore;

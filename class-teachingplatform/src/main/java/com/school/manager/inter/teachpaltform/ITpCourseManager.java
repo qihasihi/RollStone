@@ -70,4 +70,12 @@ public interface ITpCourseManager  extends IBaseManager<TpCourseInfo> {
      */
     public List<Map<String,Object>> getCourseScoreIsOver(final Integer clsid,final Integer subjectid,final String carrayid,String garrayid, Integer roletype);
     public List<TpCourseInfo> getCourseByGradeTermSubject(int gradeId,int termId,int subjectId);
+
+    /**
+     * 获取教师的年级
+     * @param tpcourseinfo
+     * @param presult
+     * @return
+     */
+    public List<TpCourseInfo>getCourseSubGradeList(TpCourseInfo tpcourseinfo,PageResult presult);
 }
