@@ -24,6 +24,15 @@
                     });
         }
 
+
+        function loadRelatePage(resid){
+            var url = 'paper?m=toSelRelatePaper&resid='+resid+'&courseid=' + courseid;
+            $("#dv_content").load(url,function(){
+               // $("#dv_content").show();
+               // $("#a_click").click();
+            });
+        }
+
         /**
         *加载微视频详情页面
         * @param resid

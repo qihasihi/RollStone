@@ -162,7 +162,7 @@
 
     <ul class="jxxt_zhuanti_rw_wkc">
         <li id="c_1" class="crumb"><a href="javascript:;" onclick="$('#dv_view').show();$('#dv_paper').hide();"><strong>微视频</strong></a></li>
-        <li id="c_2"><a href="javascript:;" onclick="paperDivShow()"><strong>试卷</strong></a></li>
+        <!--<li id="c_2"><a href="javascript:;" onclick="paperDivShow()"><strong>试卷</strong></a></li>-->
     </ul>
     <div id="dv_view" class="jxxt_float_h560">
 

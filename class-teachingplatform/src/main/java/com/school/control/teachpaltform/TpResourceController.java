@@ -2072,8 +2072,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         t.setResstatus(1);
         if(resid!=null&&resid.trim().length()>0)
             t.setResid(Long.parseLong(resid));
-        if(difftype!=null&&difftype.trim().length()>0)
-            t.setDifftype(Integer.parseInt(difftype));
+        /*if(difftype!=null&&difftype.trim().length()>0)
+            t.setDifftype(Integer.parseInt(difftype));*/
         //学习参考
         //t.setResourcetype(1);
         //查询没有发任务的资源
@@ -2597,10 +2597,11 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         p.setOrderBy("aa.diff_type desc,aa.is_mic_copiece,aa.res_id,ifnull(aa.operate_time ,aa.ctime) desc ");
         TpCourseResource t= new TpCourseResource();
         t.setCourseid(Long.parseLong(courseid));
+        t.setFilesuffixname(".mp4");
         t.setResstatus(1);
         t.setTaskflag(1);//查询没有发任务的资源
-        t.setDifftype(1);//微视频类型
-        t.setHaspaper(1);//有试卷的视频
+        //t.setDifftype(1);//微视频类型
+        //t.setHaspaper(1);//有试卷的视频
         List<TpCourseResource>resList=this.tpCourseResourceManager.getList(t, p);
         mp.put("resList",resList);
         return new ModelAndView("/teachpaltform/task/teacher/dialog/childPage/select-miclist",mp);
@@ -2754,8 +2755,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             response.getWriter().println(je.getAlertMsgAndCloseWin());return null;
         }
 
-        //得到相关的试卷ID
-        MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
+     /*   //得到相关的试卷ID
+       MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
         mvpaper.setMicvideoid(resList.get(0).getResid());
         List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,null);
         if(mvpaperList==null||mvpaperList.size()<1||mvpaperList.get(0)==null){
@@ -2840,9 +2841,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         request.setAttribute("pqList", tmpList);
         request.setAttribute("paper", tpCoursePaperList.get(0));
 
-
+        */
         mp.put("resObj", resList.get(0));
-        mp.put("paperid", mvpaperList.get(0).getPaperid().toString());
+        //mp.put("paperid", mvpaperList.get(0).getPaperid().toString());
         mp.put("courseid",courseid);
         mp.put("taskid",taskid);
 

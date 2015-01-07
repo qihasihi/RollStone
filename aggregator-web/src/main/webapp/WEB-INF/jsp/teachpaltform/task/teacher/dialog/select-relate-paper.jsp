@@ -7,6 +7,7 @@
     </style>
     <script type="text/javascript">
         var courseid = "${param.courseid}";
+        var res_id="${param.resid}";
         var pListR;
         var tpid;
         $(function () {
@@ -64,8 +65,11 @@
                     else if(typeof itm.quesnum!='undefined')
                         shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
                     shtml+='</p></a>';
-                    shtml+='<p class="pic">';
-                    shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
+                    shtml+='<p class="pic">'
+                    if(res_id==itm.resid)
+                        shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
+                    else
+                        shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
                     shtml+='</p>';
                     shtml+='</li>';
                 });
@@ -89,7 +93,10 @@
                             html+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
                         html+='</p></a>';
                         html+='<p class="pic">';
-                        html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
+                        if(res_id==itm.resid)
+                            html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
+                        else
+                            html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
                         html+='</p>';
                         html+='</li>';
                     }
@@ -124,14 +131,20 @@
                 alert('异常错误，系统未获取到课题标识!');
                 return;
             }
-            var resid=$("#hd_resdetailid").val();
+            /*var resid=$("#hd_resdetailid").val();
             if(resid.length<1){
                 alert('系统未获取到资源标识!');
                 return;
-            }
-            if(!confirm("确认关联该试卷?"))return;
+            }*/
+            if(!confirm("确认操作?"))return;
+            $("#hd_pid").val(paperid);
+            //显示相关数据
+            returnValue =res_id;
+            showTaskElementTopic(6);
+            //关闭弹出层
+            $.fancybox.close();
 
-            $.ajax({
+           /* $.ajax({
                 url: 'tpres?doAddVideoPaper',
                 type: 'post',
                 data: {courseid: courseid, paperid: paperid,resid:resid},
@@ -147,7 +160,7 @@
                        alert(json.msg);
                    }
                 }
-            });
+            });*/
         }
 
         /**
@@ -216,7 +229,17 @@
                             $("#dv_selectPaper").hide();
                             $("#dv_paperDetail").show();
                         });
-
+            }else if(type==4){
+                $("#dv_selectPaper").hide();
+                $("#dv_addpaperchild").hide();
+                $("#dv_model").hide();
+                $("#dv_paperDetail").hide();
+                $("#dv_content").load(
+                        "task?m=toSelMicForTask&tasktype=6&courseid=${param.courseid}"
+                        ,function(){
+                            //$("#dv_selectPaper").hide();
+                            //$("#dv_paperDetail").show();
+                        });
             }
         }
     /**
@@ -246,10 +269,22 @@
                     }else{
                         paperid=tpid=rmsg.objList[0];
                         $("#dv_paper_content_child").html('');
-                        $("#dv_paperDetail").load("paper?m=editPaperQuestionModel&courseid="+courseid+"&paperid="+paperid+"&isrelate=1");
+                        $("#dv_paperDetail").load("paper?m=editPaperQuestionModel&courseid="+courseid+"&paperid="+paperid+"&isrelate=1",
+                                function(){
+                                    $("#paper_detail .float_title").remove();
+                                    $("#paper_detail #dv_paperdetail").removeClass("jxxt_float_h600");
+                                    $(".an_small").removeClass("an_small").addClass("an_public1");
+                                    var len=$('div').filter(function(){return this.id.indexOf('dv_table')!=-1&&$(this).html().Trim().length>0}).length
+                                    if(len<1){
+                                        $("#a_sb_taskpaper").hide();
+                                    }else
+                                        $("#a_sb_taskpaper").show();
+                                    $("#paper_detail").show();
+                                    $("#dv_selectPaper").hide();
+                                    $("#dv_paperDetail").show();
 
-                        $("#dv_selectPaper").hide();
-                        $("#dv_paperDetail").show();
+                        });
+
                     }
                 }
             });
@@ -335,7 +370,7 @@
     </div>
 </div>
 <div class="public_float public_float960" id="dv_selectPaper">
-    <p class="float_title"><strong>关联试卷</strong></p>
+    <p class="float_title"><a href="javascript:;" class="ico93" onclick="loadDiv(4)" title="返回"></a><span id="dv_model_mdname">选择关联试卷</span></p>
     <div class="subpage_lm">
         <ul>
             <li class="crumb" id="li_1"><a href="javascript:;" onclick="loadDiv(1)">选择试卷</a></li>

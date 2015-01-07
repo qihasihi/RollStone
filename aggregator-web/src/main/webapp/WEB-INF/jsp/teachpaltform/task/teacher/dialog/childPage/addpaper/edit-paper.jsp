@@ -97,7 +97,8 @@ function loadPaperQues(qid){
                 $("#paper_detail .float_title").remove();
                 $("#paper_detail #dv_paperdetail").removeClass("jxxt_float_h600");
                 $(".an_small").removeClass("an_small").addClass("an_public1");
-                if($('div').filter(function(){return this.id.indexOf('dv_table')!=-1}).length<1){
+                var len=$('div').filter(function(){return this.id.indexOf('dv_table')!=-1&&$(this).html().Trim().length>0}).length
+                if(len<1){
                     $("#a_sb_taskpaper").hide();
                 }else
                     $("#a_sb_taskpaper").show();

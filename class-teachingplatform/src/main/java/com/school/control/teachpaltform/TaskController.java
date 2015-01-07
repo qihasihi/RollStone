@@ -872,11 +872,17 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
 
         //Œ¢ ”∆µ
+        PageResult pageResult=new PageResult();
+        pageResult.setPageSize(0);
+        pageResult.setPageNo(0);
+        pageResult.setOrderBy(" aa.diff_type desc ");
         TpCourseResource tr=new TpCourseResource();
         tr.setCourseid(Long.parseLong(courseid));
-        tr.setDifftype(1);
-        tr.setHaspaper(1);
-        List<TpCourseResource>micList=this.tpCourseResourceManager.getList(tr,null);
+        tr.setTaskflag(1);
+        //tr.setDifftype(1);
+        //tr.setHaspaper(1);
+        tr.setFilesuffixname(".mp4");
+        List<TpCourseResource>micList=this.tpCourseResourceManager.getList(tr,pageResult);
         if(micList!=null&&micList.size()>0)
             mp.put("hasVideo",1);
         // ‘æÌ

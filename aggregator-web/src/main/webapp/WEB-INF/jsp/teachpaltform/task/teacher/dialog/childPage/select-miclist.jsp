@@ -185,7 +185,11 @@
                             <img src="images/pic13_140704.jpg" width="215" height="122">
                         </p>
                         <p class="text">${r.realname}&nbsp;&nbsp;${r.resname}</p></a>
-                    <p class="pic"><a class="ico51" href="javascript:sub_data('${r.resid}')" title="发任务"></a></p>
+                    <p class="pic">
+                       <%-- <a class="ico43" href="javascript:sub_data('${r.resid}')" title="发任务"></a>--%>
+                           <a class="ico43" href="javascript:loadRelatePage('${r.resid}')" title="关联试卷"></a>
+
+                    </p>
                     </li>
 
                 </c:forEach>
@@ -210,7 +214,7 @@
             <c:forEach    items="${resList}" var="r">
                 <li><a href="javascript:;" >
                     <p class="one">${r.resname}</p>
-                    <p class="pic"><a class="ico_wsp1" title="微视频"></a><a href="javascript:sub_data('${r.resid}')"><b><span class="ico51" title="发任务"></span></b></a></p>
+                    <p class="pic"><a class="ico_wsp1" title="微视频"></a><a href="javascript:loadRelatePage('${r.resid}')"><b><span class="ico43" title="关联试卷"></span></b></a></p>
                 </li>
             </c:forEach>
         </c:if>

@@ -185,7 +185,7 @@
     <p class="float_tishi">当前班级类型为<span class="font-red">网校班级</span>，不支持在电脑上添加任务。</p>
 </div>
 
-<input type="hidden" id="returnValue"/>
+<input type="hidden" id="hd_pid"/>
 <div class="subpage_head">
     <span class="back"><a  href="javascript:history.go(-1)">返回</a></span>
     <span class="ico55"></span><strong>添加任务</strong></div>
