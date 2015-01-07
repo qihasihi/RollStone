@@ -973,9 +973,9 @@ function load_resource(type, pageno, isinit) {
                             dvhtm += '<p class="c" style="display: none;">';
                             if(itm.difftype!=1){
                                 dvhtm += '<a  class="ico11" title="编辑" href="javascript:toUpdResource(\'' + itm.resid + '\')"></a>';
-                                dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
                             }
                             dvhtm += '<a  class="ico46" title="添加到学习资源" href="javascript:doUpdResType(' + itm.ref + ')"></a>';
+                            dvhtm += '<a  class="ico04" title="删除" href="javascript:doDelResource(\'' + itm.resid + '\')"></a>';
                             dvhtm += '</p>';
 
 
@@ -1997,20 +1997,20 @@ function loadRelatePaper(resid){
             }else{
                 var h='';
                 if(rps.objList.length>0){
-                    var status=rps.objList[0].status;
+                    var micvideoid=rps.objList[0].micvideoid;
                     var papername=rps.objList[0].papername.length>8?rps.objList[0].papername.substring(0,8)+'...':rps.objList[0].papername;
-                    if(status==1){
+                    if(typeof micvideoid!='undefined')
                         h='<a class="font-blue" href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true,true)"><span class="ico83"></span>网校关联试卷</a>';
-                    }else
-                        h='<a  href="javascript:doCancelVideoPaper('+rps.objList[0].paperid+');" class="ico34 f_right" title="取消关联"></a><a title="'+rps.objList[0].papername+'" id="a_relate_href" class="font-blue"  href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true)"><span class="ico83"></span>'+papername+'</a>';
-                }else{
+                    else{
+                        h='<a class="font-blue" href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true,true)"><span class="ico83"></span>'+papername+'</a>';
+                    }
+                    /*}else
+                        h='<a  href="javascript:doCancelVideoPaper('+rps.objList[0].paperid+');" class="ico34 f_right" title="取消关联"></a><a title="'+rps.objList[0].papername+'" id="a_relate_href" class="font-blue"  href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true)"><span class="ico83"></span>'+papername+'</a>';*/
+                }/*else{
                     h='<a  id="a_relate" class="font-blue" href="javascript:loadRelatePage()"><span class="ico83"></span>关联试卷</a>';
-                }
+                }*/
                 $("#relate_paper").html(h);
 
-                if(rps.objList.length>0&&rps.objList[0].status!=1&&rps.objList[0].taskflag<1){
-                    $("#a_relate_href").prev('a').show();
-                }
             }
         }
     });

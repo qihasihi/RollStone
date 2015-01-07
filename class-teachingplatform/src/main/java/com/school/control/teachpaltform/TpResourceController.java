@@ -2588,6 +2588,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
     public ModelAndView queryMicViewListModel(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
         JsonEntity je = new JsonEntity();
         String courseid=request.getParameter("courseid");
+        String videoid=request.getParameter("videoid");
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
@@ -2599,7 +2600,10 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         t.setCourseid(Long.parseLong(courseid));
         t.setFilesuffixname(".mp4");
         t.setResstatus(1);
+        t.setResourcetype(1);//学习资源
         t.setTaskflag(1);//查询没有发任务的资源
+        if(videoid!=null&&videoid.trim().length()>0)
+            t.setFilterresid(Long.parseLong(videoid));//过滤当前修改微视频
         //t.setDifftype(1);//微视频类型
         //t.setHaspaper(1);//有试卷的视频
         List<TpCourseResource>resList=this.tpCourseResourceManager.getList(t, p);
@@ -2633,8 +2637,16 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(je.getAlertMsgAndCloseWin());return null;
         }
+        TpTaskInfo taskInfo=new TpTaskInfo();
+        taskInfo.setTaskid(Long.parseLong(taskid));
+        taskInfo.setTasktype(6);
+        List<TpTaskInfo>taskList=this.tpTaskManager.getList(taskInfo,null);
+        if(taskList==null||taskList.size()<1||taskList.get(0)==null||taskList.get(0).getPaperid()==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(je.getAlertMsgAndCloseWin());return null;
+        }
 
-        //得到相关的试卷ID
+       /* //得到相关的试卷ID
         MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
         mvpaper.setMicvideoid(resList.get(0).getResid());
         List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,null);
@@ -2642,9 +2654,11 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             je.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(je.getAlertMsgAndCloseWin());return null;
         }
+        */
+        Long paperid=taskList.get(0).getPaperid();
 
         PaperInfo pp=new PaperInfo();
-        pp.setPaperid(mvpaperList.get(0).getPaperid());
+        pp.setPaperid(paperid);
         List<PaperInfo>tpCoursePaperList=this.paperManager.getList(pp, null);
         if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
             je.setMsg("抱歉该试卷已不存在!");
@@ -2654,7 +2668,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
 
         //获取提干
         PaperQuestion pq=new PaperQuestion();
-        pq.setPaperid(mvpaperList.get(0).getPaperid());
+        pq.setPaperid(paperid);
         PageResult p=new PageResult();
         p.setOrderBy("u.order_idx");
         p.setPageNo(0);
@@ -2722,7 +2736,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
 
 
         mp.put("resObj", resList.get(0));
-        mp.put("paperid", mvpaperList.get(0).getPaperid().toString());
+        mp.put("paperid", paperid.toString());
         mp.put("courseid",courseid);
         mp.put("taskid",taskid);
 

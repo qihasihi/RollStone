@@ -373,7 +373,7 @@
     <p class="float_title"><a href="javascript:;" class="ico93" onclick="loadDiv(4)" title="返回"></a><span id="dv_model_mdname">选择关联试卷</span></p>
     <div class="subpage_lm">
         <ul>
-            <li class="crumb" id="li_1"><a href="javascript:;" onclick="loadDiv(1)">选择试卷</a></li>
+            <li class="crumb" id="li_1"><a href="javascript:;" onclick="loadDiv(1)">推荐试卷</a></li>
             <li  id="li_2"><a href="javascript:;" onclick="loadDiv(2)">新建试卷</a></li>
         </ul>
     </div>
@@ -382,7 +382,7 @@
         <div class="jxxt_float_w920 font-black">
             <p class="t_r">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
             <!--<div style="overflow-x: hidden;overflow-y:auto;width:930px;height:530px;">-->
-                    <p><strong>标准试卷</strong></p>
+                    <p><strong>推荐试卷</strong></p>
                     <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
 
                     </ul>

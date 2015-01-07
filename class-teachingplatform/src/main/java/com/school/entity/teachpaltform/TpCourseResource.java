@@ -36,6 +36,17 @@ public class TpCourseResource implements Serializable {
     private Object voteflag; // «∑Ò‘ﬁ
     private Integer voteuid;
 
+    public Long getFilterresid() {
+        return filterresid;
+    }
+
+    public void setFilterresid(Long filterresid) {
+        this.filterresid = filterresid;
+    }
+
+    private Long filterresid;
+
+
     public Object getVoteflag() {
         return voteflag;
     }

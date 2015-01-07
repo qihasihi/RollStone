@@ -3454,14 +3454,31 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         }
 
         //得到相关的试卷ID
-        MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
+        /*MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
         mvpaper.setMicvideoid(Long.parseLong(resid));
         List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,null);
-     if(mvpaperList!=null&&mvpaperList.size()>0){
-     jsonEntity.getObjList().add(mvpaperList.get(0));
-     }
-     jsonEntity.setType("success");
-     response.getWriter().println(jsonEntity.toJSON());
+        if(mvpaperList!=null&&mvpaperList.size()>0){
+
+        }*/
+        //先从任务找
+        TpTaskInfo taskInfo=new TpTaskInfo();
+        taskInfo.setTaskvalueid(Long.parseLong(resid));
+        taskInfo.setCourseid(Long.parseLong(courseid));
+        List<TpTaskInfo>taskList=this.tpTaskManager.getList(taskInfo,null);
+        if(taskList!=null&&taskList.size()>0&&taskList.get(0).getPaperid()!=null){
+            jsonEntity.getObjList().add(taskList.get(0));
+        }else{
+            MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
+            mvpaper.setMicvideoid(Long.parseLong(resid));
+            List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,null);
+            if(mvpaperList!=null&&mvpaperList.size()>0){
+                jsonEntity.getObjList().add(mvpaperList.get(0));
+            }
+        }
+
+
+        jsonEntity.setType("success");
+        response.getWriter().println(jsonEntity.toJSON());
      }
 
 

@@ -172,6 +172,8 @@ function loadTaskElement(type) {
     } else if (type == 6){//微视频
         //url = 'tpres?m=queryMicViewList&tasktype=' + type + '&courseid=' + courseid;
         url = 'task?m=toSelMicForTask&tasktype=' + type + '&courseid=' + courseid;
+        if(typeof videoid!='undefined')
+            url+='&videoid='+videoid;
     }else if(type==2){
         url='task?m=toSelTopicForTask&courseid='+courseid+'&tasktype='+type;
     }
@@ -995,6 +997,7 @@ function doSubManageTask(taskid) {
     var paperid = $("#hd_elementid").val();
     var micresid = $("#hd_elementid").val();
     var quesNum = $("#sel_ques_num").val();
+    var mic_paperid=$("#hd_pid").val();
 
     var url = '', iserror = '', param = {}, paramStr = '?t=' + new Date().getTime(), rflag = false, btimeArray = '', etimeArray = '', clsArray = '';
 
@@ -1160,7 +1163,12 @@ function doSubManageTask(taskid) {
             alert('请选择微视频!');
             return;
         }
+        if (mic_paperid.length<1){
+            alert('请选择微视频关联试卷!');
+            return;
+        }
         param.taskvalueid = micresid;
+        param.paperid=mic_paperid;
     }else if (tasktype.val() == "10") {
         if(taskname.val().Trim().length<1){
              alert('请填写任务名称!');

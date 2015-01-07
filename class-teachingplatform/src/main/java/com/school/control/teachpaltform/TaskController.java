@@ -968,6 +968,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String taskremark=request.getParameter("taskremark");
         String quesnum=request.getParameter("quesnum");
         String clstype=request.getParameter("clstype");
+        String micpaperid=request.getParameter("paperid");
         if(tasktype==null||tasktype.trim().length()<1
             //||StringUtils.isBlank(taskname
                 ){
@@ -1154,12 +1155,18 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 sqlListArray.add(sql.toString());
             }
             ta.setTaskvalueid(paperid);
-        }else if(tasktype.toString().equals("6")){//微视频测试
+        }else if(tasktype.toString().equals("6")){
             if(taskvalueid==null||taskvalueid.trim().length()<1){
-                je.setMsg("错误，系统未获取到微视频标识!");
+                je.setMsg("系统未获取到微视频标识!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
+            if(micpaperid==null||micpaperid.trim().length()<1){
+                je.setMsg("系统未获取到微视频关联试卷!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
+
             TpCourseResource tpCourseResource=new TpCourseResource();
             tpCourseResource.setResid(Long.parseLong(taskvalueid));
             tpCourseResource.setCourseid(Long.parseLong(courseid));
@@ -1169,7 +1176,16 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 response.getWriter().print(je.toJSON());
                 return;
             }
+            PaperInfo paperInfo=new PaperInfo();
+            paperInfo.setPaperid(Long.parseLong(micpaperid));
+            List<PaperInfo>paperList=this.paperManager.getList(paperInfo,null);
+            if(paperList==null||paperList.size()<1){
+                je.setMsg("提示：当前试卷已不存在或删除，请刷新页面后重试!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
+            ta.setPaperid(Long.parseLong(micpaperid));
         }else if(tasktype.toString().equals("10")){//直播课
             if(taskname==null||taskname.trim().length()<1){
                 je.setMsg("错误，系统未获取到直播主题!");
@@ -1646,6 +1662,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         String taskremark=request.getParameter("taskremark");
         String quesnum=request.getParameter("quesnum");
         String clstype=request.getParameter("clstype");
+        String micpaperid=request.getParameter("paperid");
         if(tasktype==null||tasktype.trim().length()<1
                 ||taskid==null||taskvalueid==null
             // ||taskname==null||taskname.trim().length()<1
@@ -1825,10 +1842,19 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 response.getWriter().print(je.toJSON());
                 return;
             }
+            PaperInfo paperInfo=new PaperInfo();
+            paperInfo.setPaperid(Long.parseLong(micpaperid));
+            List<PaperInfo>paperList=this.paperManager.getList(paperInfo,null);
+            if(paperList==null||paperList.size()<1){
+                je.setMsg("提示：当前试卷已不存在或删除，请刷新页面后重试!");
+                response.getWriter().print(je.toJSON());
+                return;
+            }
             ta.setTaskvalueid(Long.parseLong(taskvalueid));
+            ta.setPaperid(Long.parseLong(micpaperid));
         }else if(tasktype.toString().equals("10")){//直播课
             if(taskname==null||taskname.trim().length()<1){
-                je.setMsg("错误，系统未获取到直播主题!");
+                je.setMsg("系统未获取到直播主题!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
@@ -1883,6 +1909,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 ta.setQuesnum(10);
             tasknextid=this.tpTaskManager.getNextId(true);
             ta.setCuserid(this.logined(request).getRef());
+            if(micpaperid!=null&&micpaperid.trim().length()>0)
+                ta.setPaperid(Long.parseLong(micpaperid));
             sql=new StringBuilder();
             objList=this.tpTaskManager.getSaveSql(ta, sql);
             if(objList!=null&&sql!=null&&sql.length()>0){
@@ -1924,6 +1952,8 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 ta.setQuesnum(Integer.parseInt(quesnum));
             else
                 ta.setQuesnum(10);
+            if(micpaperid!=null&&micpaperid.trim().length()>0)
+                ta.setPaperid(Long.parseLong(micpaperid));
             sql=new StringBuilder();
             objList=this.tpTaskManager.getUpdateSql(ta, sql);
             if(objList!=null&&sql!=null&&sql.length()>0){

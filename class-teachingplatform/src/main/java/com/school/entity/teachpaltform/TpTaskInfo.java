@@ -44,6 +44,15 @@ public class TpTaskInfo implements Serializable {
     private Object unionflag;
     private Integer ettuserid;
     private Long paperid;
+    private String papername;
+
+    public String getPapername() {
+        return papername;
+    }
+
+    public void setPapername(String papername) {
+        this.papername = papername;
+    }
 
     public Long getPaperid() {
         return paperid;

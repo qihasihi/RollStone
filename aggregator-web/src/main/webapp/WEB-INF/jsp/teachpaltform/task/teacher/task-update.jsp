@@ -19,6 +19,7 @@
 
 		<script type="text/javascript" src="js/teachpaltform/tptask.js"></script>
 		<script type="text/javascript">
+        var videoid=undefined;
 		var courseid="${courseid}";
         var gradeid="${gradeid}";
         var subjectid="${subjectid}";
@@ -39,6 +40,10 @@
 				$("#task_type option[value='${taskInfo.tasktype}']").attr("selected",true);
 				$("#task_name").val('${taskInfo.taskname}');
                 $("#task_remark").val('${taskInfo.taskremark}');
+                $("#hd_pid").val('${taskInfo.paperid}');
+                <c:if test="${taskInfo.tasktype eq 6}">
+                    videoid=${taskInfo.taskvalueid}
+                </c:if>
 				initTaskCriteria("${taskInfo.tasktype}");
 			</c:if>
 
@@ -163,6 +168,7 @@
             <input type="hidden" id="resource_type"/>
             <input type="hidden" id="remote_type"/>
             <input type="hidden" id="resource_name"/>
+            <input type="hidden" id="hd_pid"/>
             <tr>
                 <th><span class="ico06"></span>任务类型：</th>
                 <td> <select name="select" id="task_type" disabled="disabled" onchange="changeTaskType()">
@@ -255,7 +261,6 @@
                         </c:forEach>
 
                         <%if(dctype==3){%>
-<<<<<<< .working
                             <input placeholder="设置开始时间" class="w140"  onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'all_class_etime\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly"   id="all_class_btime"  name="all_classtime" type="text" /> -
                             <input placeholder="设置结束时间" class="w140" onfocus="WdatePicker({maxDate:'${courseclassList[0].endtimeString}',minDate:'#F{$dp.$D(\'all_class_btime\',{H:1})&&\'%y-%M-%d %H:{%m+1}:%s \'}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${courseclassList[0].begintimeString}'})" readonly="readonly" id="all_class_etime"  name="all_classtime" type="text" />
 

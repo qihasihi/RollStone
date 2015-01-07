@@ -133,6 +133,11 @@ public class TpCourseResourceDAO extends CommonDAO<TpCourseResource> implements 
             objList.add(tpcourseresource.getFilesuffixname());
         } else
             sqlbuilder.append("null,");
+        if (tpcourseresource.getFilterresid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcourseresource.getFilterresid());
+        } else
+            sqlbuilder.append("null,");
 
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){

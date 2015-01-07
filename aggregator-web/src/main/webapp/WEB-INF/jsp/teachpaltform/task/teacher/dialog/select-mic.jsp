@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
     <%--<script src="util/xheditor/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>--%>
@@ -10,7 +11,12 @@
         function loadContent(ty){
 
                     $("#dv_selectMic_child").hide();
-                    $("#dv_selectMic_child").load("tpres?m=queryMicViewListModel&tasktype=${param.tasktype}&courseid=${param.courseid}&op_type1=1"
+                    var url="tpres?m=queryMicViewListModel&tasktype=${param.tasktype}&courseid=${param.courseid}&op_type1=1";
+                    <c:if test="${!empty param.videoid}">
+                        url+='&videoid=${param.videoid}';
+                    </c:if>
+
+                    $("#dv_selectMic_child").load(url
                             ,function(rps){
                                // $("#dv_selectMic_child").html('<div class="jxxt_float_h560">'+rps+'</div>');
                                // $("dv_load_topic").html(rps);

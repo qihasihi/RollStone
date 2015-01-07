@@ -71,4 +71,39 @@
     <mvc:resources mapping="/uploadfile/**" location="/uploadfile/" />
     <mvc:resources mapping="/js/**" location="/js/" />
 
+
+
+
+    <!--Quzrtz -->
+   <!-- <bean id="quartzJob" class="com.school.share.TestQ"></bean>
+    <bean id="jobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="quartzJob"/>
+        &lt;!&ndash; 调用类中的方法 &ndash;&gt;
+        <property name="targetMethod">
+            <value>work</value>
+        </property>
+    </bean>
+
+
+    &lt;!&ndash; 定义触发时间 &ndash;&gt;
+    <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="jobTask"/>
+        </property>
+        &lt;!&ndash; cron表达式 &ndash;&gt;
+        <property name="cronExpression">
+            <value>0-59 * * * * ?</value>
+        </property>
+    </bean>
+    &lt;!&ndash; 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  &ndash;&gt;
+    <bean id="startQuertz" lazy-init="true" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="doTime"/>
+            </list>
+        </property>
+    </bean>-->
+
+
+
 </beans>

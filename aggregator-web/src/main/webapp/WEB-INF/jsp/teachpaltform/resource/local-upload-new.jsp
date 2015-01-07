@@ -204,7 +204,9 @@
             page_no:1,					//当前的页数
             page_size:10,				//当前页面显示的数量
             rectotal:0,				//一共多少
+            page_order_by:" r.diff_type DESC,r.is_mic_copiece,IFNULL(cr.operate_time,cr.c_time) DESC,cr.res_id ",
             pagetotal:1,
+
             operate_id:"resData"
         });
 
