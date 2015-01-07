@@ -1583,7 +1583,7 @@ public class ClassController extends BaseController<ClassInfo>{
     }
 
     @RequestMapping(params="m=validateClass",method=RequestMethod.POST)
-    private void validateClassNum(HttpServletRequest request, HttpServletResponse response){
+    public void validateClassNum(HttpServletRequest request, HttpServletResponse response){
         String sId = request.getParameter("schoolId");
         String year = request.getParameter("year");
         String from = request.getParameter("from");
