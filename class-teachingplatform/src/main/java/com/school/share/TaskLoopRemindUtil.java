@@ -76,6 +76,8 @@ public class TaskLoopRemindUtil{
         paramMap.put("sign",val);
         System.out.println("TaskLoopRemind sendPostUrl:"+addToEtt_URL);
         JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"UTF-8");
+        if(jo!=null)
+            System.out.println(jo.toString());
         if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1")){
             return true;
         }
