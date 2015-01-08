@@ -441,7 +441,10 @@ public class OperateEttController extends BaseController<String>{
                 jsonEntity.setMsg("注册成功!但绑定失败!");
             }else{
                 jsonEntity.setType("error");
-                jsonEntity.setMsg(jsonObject.getString("msg"));
+                if(jsonObject.containsKey("msg"))
+                    jsonEntity.setMsg(jsonObject.getString("msg"));
+                else
+                    jsonEntity.setMsg("绑定失败!");
             }
         }else{
             jsonEntity.setMsg("错误，原因：未知!");
