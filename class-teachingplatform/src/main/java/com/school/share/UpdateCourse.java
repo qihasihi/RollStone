@@ -1378,13 +1378,17 @@ public class UpdateCourse extends TimerTask{
 //                        <Resname>宇宙中的元素丰度为什么差别巨大(暑期3)</Resname>
                         if(mp.containsKey("Type")&&
                                 mp.containsKey("Resid")&&
-                                mp.containsKey("Resname")){
+                                mp.containsKey("Resname")
+                                &&mp.containsKey("Ismicopiece")){
                             Object resObj=mp.get("Resid");
                             if(resObj==null||resObj.toString().trim().length()<1)continue;
                             Object resnameObj=mp.get("Resname");
                             if(resnameObj==null)continue;
                             Object typeObj=mp.get("Type");
                             if(typeObj==null||typeObj.toString().trim().length()<1)continue;
+                            Object Ismicopiece=mp.get("Ismicopiece");
+                            if(Ismicopiece==null||Ismicopiece.toString().trim().length()<1)continue;
+
                             ResourceInfo rs=new ResourceInfo();
                             rs.setResid(Long.parseLong(resObj.toString().trim()));
                             List<ResourceInfo> rsList=this.resourceManager.getList(rs,null);
@@ -1396,6 +1400,7 @@ public class UpdateCourse extends TimerTask{
                                 Integer type=Integer.parseInt(typeObj.toString().trim());
                                 res.setResdegree(type==3?1:4);// type=3=标准  如果是type==3  则szschool  resdegree=1 否则是4（已删除）
                                 res.setSharestatus(type==3?2:3);// type=3=标准  如果是type==3  则szschool  sharetype=2(云端共享) 否则是3：不共享
+                                res.setIsmicopiece(Ismicopiece.toString());
                                 //组织数据
                                 sqlbuilder=new StringBuilder();
                                 objList=resourceManager.getUpdateSql(res,sqlbuilder);
