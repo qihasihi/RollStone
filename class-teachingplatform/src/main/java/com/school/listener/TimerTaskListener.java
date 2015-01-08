@@ -247,7 +247,7 @@ public class TimerTaskListener implements ServletContextListener {
         if (remindLoopDate.before(new Date())) {
             remindLoopDate = this.addDay(remindLoopDate, 1);
         }
-       // taskLoopRemindTimer.schedule(new TaskLoopRemind(arg0.getServletContext()),PERIOD_15MIN);//
+        taskLoopRemindTimer.schedule(new TaskLoopRemind(arg0.getServletContext()),1 * 60 * 1000);//
 
         /**************************每天早上7:50发送昨天晚上10点到今天早上8点开始的任务提醒***********************************/
         //	每天早上7:50开始执行
@@ -263,7 +263,7 @@ public class TimerTaskListener implements ServletContextListener {
         if (remindDate.before(new Date())) {
             remindDate = this.addDay(remindDate, 1);
         }
-        //taskRemindTimer.schedule(new TaskRemind(arg0.getServletContext()),remindDate,PERIOD_DAY);
+        taskRemindTimer.schedule(new TaskRemind(arg0.getServletContext()),remindDate,PERIOD_DAY);
 	}
 
     // 增加或减少天数

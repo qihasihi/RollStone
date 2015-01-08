@@ -89,7 +89,8 @@ function afterAjaxCourseList(rps) {
             html += '</p>';
             html += '<p>' + (itm.resintroduce == null ? "" : itm.resintroduce) + '</p>';
             html += '<p class="jxxt_zhuanti_zy_add_text">' + (typeof itm.username == 'undefined' ? "" : itm.username) + '&nbsp;&nbsp;&nbsp;' + itm.restypename + '、' + itm.filetypename + '&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>' + itm.clicks + '</b>';
-            html += '<a href="javascript:;" onclick="resourceDownLoadFile(\''+itm.resid+'\',\''+itm.filesuffixname+'\');sp_downnum_'+itm.resid+'.innerHTML=parseInt(sp_downnum_'+itm.resid+'.innerHTML)+1"><span class="ico59" title="下载"></span></a><b id="sp_downnum_'+itm.resid+'">' + itm.downloadnum + '</b>';
+            if(typeof(itm.difftype)=="undefined"||itm.difftype==null||itm.difftype!=1)
+                html += '<a href="javascript:;" onclick="resourceDownLoadFile(\''+itm.resid+'\',\''+itm.filesuffixname+'\');sp_downnum_'+itm.resid+'.innerHTML=parseInt(sp_downnum_'+itm.resid+'.innerHTML)+1"><span class="ico59" title="下载"></span></a><b id="sp_downnum_'+itm.resid+'">' + itm.downloadnum + '</b>';
             if(itm.voteflag>0)
                 html += '<span class="ico41" title="已赞" ></span><b>' + itm.praisenum + '</b>';
             else
@@ -383,7 +384,8 @@ function afterAjaxCourseResList(rps) {
             html += '</p>';
             html += '<p>' + (itm.resintroduce == null ? "" : itm.resintroduce) + '</p>';
             html += '<p class="jxxt_zhuanti_zy_add_text">' + (typeof itm.username == 'undefined' ? "--" : itm.username) + '&nbsp;&nbsp;&nbsp;' + itm.restypename + ',' + itm.filetypename + '&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>' + itm.clicks + '</b>';
-            html += '<a href="javascript:;" onclick="resourceDownLoadFile(\''+itm.resid+'\',\''+itm.filesuffixname+'\');document.getElementById(\'sp_dnum_'+itm.resid+'\').innerHTML=parseInt(document.getElementById(\'sp_dnum_'+itm.resid+'\').innerHTML)+1"><span class="ico59" title="下载"></span></a><b id="sp_dnum_'+itm.resid+'">' + itm.downloadnum + '</b>';
+            if(typeof(itm.difftype)=="undefined"||itm.difftype==null||itm.difftype!=1)
+                html += '<a href="javascript:;" onclick="resourceDownLoadFile(\''+itm.resid+'\',\''+itm.filesuffixname+'\');document.getElementById(\'sp_dnum_'+itm.resid+'\').innerHTML=parseInt(document.getElementById(\'sp_dnum_'+itm.resid+'\').innerHTML)+1"><span class="ico59" title="下载"></span></a><b id="sp_dnum_'+itm.resid+'">' + itm.downloadnum + '</b>';
             if(itm.voteflag>0)
                 html += '<span class="ico41" title="已赞" ></span><b>' + itm.praisenum + '</b>';
             else
@@ -1888,6 +1890,10 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     //学习心得
    // if(typeof tpresdetailid!='undeinfed'&& tpresdetailid.toString().length>0)
         loadStudyNotes(1);
+    if(fname.indexOf('.mp4')!=-1)
+        $("#sp_download").parent().hide();
+    else
+        $("#sp_download").parent().show();
 }
 
 

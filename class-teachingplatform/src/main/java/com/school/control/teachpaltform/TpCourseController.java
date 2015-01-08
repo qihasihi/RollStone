@@ -266,6 +266,47 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         tc.setTermid(termInfo.getRef());
         tc.setUserid(this.logined(request).getUserid());
         List<TpCourseInfo>subGradeList=this.tpCourseManager.getCourseSubGradeList(tc,pageResult);
+
+        //获取首页年级学科
+        List<GradeInfo> gradeList = this.gradeManager.getTchGradeList(this.logined(request).getUserid(), termInfo.getYear());
+        List<Map<String,Object>> gradeSubjectList = new ArrayList<Map<String, Object>>();
+
+        if(gradeList!=null&&gradeList.size()>0){
+            //当前学期、学科、年级下的授课班级
+            for(int j=0;j<gradeList.size();j++){
+                ClassUser cu = new ClassUser();
+                cu.setClassgrade(gradeList.get(j).getGradevalue());
+                cu.setUserid(this.logined(request).getRef());
+                cu.setRelationtype("任课老师");
+                //cu.setSubjectid(subuserList.get(i).getSubjectid());
+                cu.setYear(termInfo.getYear());
+                List<ClassUser>classList=this.classUserManager.getList(cu,null);
+                List<SubjectInfo>subjectInfoList=new ArrayList<SubjectInfo>();
+                if(classList!=null&&classList.size()>0){
+                    for(ClassUser classUser :classList){
+                        SubjectInfo s=new SubjectInfo();
+                        s.setSubjectid(classUser.getSubjectid());
+                        s.setSubjectname(classUser.getSubjectname());
+                        if(!subjectInfoList.contains(s))
+                            subjectInfoList.add(s);
+                    }
+                    if(subjectInfoList.size()>0){
+                        for(SubjectInfo subjectInfo:subjectInfoList){
+                            Map<String,Object> map = new HashMap<String, Object>();
+                            map.put("gradeid",gradeList.get(j).getGradeid());
+                            map.put("gradevalue",gradeList.get(j).getGradevalue());
+                            map.put("subjectid",subjectInfo.getSubjectid());
+                            map.put("subjectname",subjectInfo.getSubjectname());
+                            if(!gradeSubjectList.contains(map))
+                                gradeSubjectList.add(map);
+                        }
+                    }
+                }
+            }
+        }
+        mp.put("gradeSubList",gradeSubjectList);
+
+
         mp.put("currtTerm", termInfo);
         mp.put("subGradeList",subGradeList);
         mp.put("userid", this.logined(request).getUserid());
@@ -3404,6 +3445,145 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("tc", tc);
         return new ModelAndView("/teachpaltform/course/courseSaveOrUpdate", mp);
     }
+
+
+    /**
+     * 资源系统
+     * 加载专题新建页面
+     *
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params = "toSaveCourse", method = RequestMethod.GET)
+    public ModelAndView toSaveCourse(HttpServletRequest request, HttpServletResponse response, ModelMap mp)
+            throws Exception {
+        JsonEntity jeEntity = new JsonEntity();
+        UserInfo user = this.logined(request);
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String materialid = request.getParameter("materialid");
+
+        TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+
+        List<GradeInfo> gradeList = null;
+        List<SubjectInfo> subList = null;
+        List<SubjectUser> suList = null;
+        ClassUser cu = new ClassUser();
+
+        TermInfo ti = this.termManager.getMaxIdTerm(false);
+        if (ti == null) {
+            jeEntity.setMsg(UtilTool.msgproperty.getProperty("学期参数错误,请联系教务。"));// 异常错误，参数不齐，无法正常访问!
+            response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
+            return null;
+        }
+
+        GradeInfo grade = new GradeInfo();
+        SubjectInfo sub = new SubjectInfo();
+        if (tc != null && tc.getCourseid() != null) {
+            List<TpCourseInfo> tcList = this.tpCourseManager.getTchCourseList(tc, null);
+            TpCourseRelatedInfo tr = new TpCourseRelatedInfo();
+            tr.setCourseid(tc.getCourseid());
+            List<TpCourseRelatedInfo> trList = this.tpCourseRelatedManager.getList(tr,null);
+            if(trList!=null&&trList.size()>0){
+                mp.put("trList",trList);
+            }
+            if (tcList == null || tcList.size() == 0) {
+                jeEntity.setMsg(UtilTool.msgproperty.getProperty("专题不存在！"));// 异常错误，参数不齐，无法正常访问!
+                response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
+                return null;
+            }
+
+
+
+            tc = tcList.get(0);
+            //add by panfei
+            //mp.put("materialid", tc.getMaterialids()==null?"0":tc.getMaterialids());
+
+            tc.getClassEntity();
+
+            grade.setGradeid(tc.getGradeid());
+            gradeList = this.gradeManager.getList(grade, null);
+            grade=gradeList.get(0);
+
+            sub.setSubjectid(tc.getSubjectid());
+            subList = this.subjectManager.getList(sub, null);
+            sub=subList.get(0);
+
+            cu.setSubjectid(tc.getSubjectid());
+            cu.setClassgrade(gradeList.get(0).getGradevalue());
+
+            //得到当前专题的教材版本
+            TpCourseTeachingMaterial ctmInfo=new TpCourseTeachingMaterial();
+            ctmInfo.setCourseid(tc.getCourseid());
+            List<TpCourseTeachingMaterial> tctmList=this.tpCourseTeachingMaterialManager.getList(ctmInfo,null);
+            if(tctmList!=null&&tctmList.size()>0){
+                mp.put("maid",tctmList.get(0).getTeachingmaterialid());
+            }
+        } else {
+            if (gradeid == null || subjectid == null) {
+                jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));// 异常错误，参数不齐，无法正常访问!
+                response.getWriter().print(jeEntity.getAlertMsgAndCloseWin());
+                return null;
+            }
+            grade.setGradeid(Integer.parseInt(gradeid));
+            gradeList = this.gradeManager.getList(grade, null);
+            grade=gradeList.get(0);
+
+            sub.setSubjectid(Integer.parseInt(subjectid));
+            subList = this.subjectManager.getList(sub, null);
+            sub=subList.get(0);
+
+            cu.setSubjectid(Integer.parseInt(subjectid));
+            cu.setClassgrade(gradeList.get(0).getGradevalue());
+            tc = null;
+        }
+
+        //获取教学班级
+        cu.setUserid(user.getRef());
+        cu.setClassgrade(grade.getGradevalue());
+        cu.setYear(ti.getYear());
+        cu.setRelationtype("任课老师");
+        cu.setSubjectid(Integer.parseInt(subjectid));
+        List<ClassUser> clsList = this.classUserManager.getList(cu, null);
+
+
+//        TrusteeShipClass tsc = new TrusteeShipClass();
+//        tsc.setTrustteacherid(user.getUserid());
+//        tsc.setIsaccept(1);
+//        //tsc.setTrustclasstype(1);
+//        List<TrusteeShipClass> tscList = this.trusteeShipClassManager.getList(tsc, null);
+//        //去除被托管出去的班级
+//        for (TrusteeShipClass tmp_ts : tscList) {
+//            for (ClassUser tmp_cu : clsList) {
+//                if (tmp_ts.getTrustclassid().toString().equals(tmp_cu.getClassid().toString())) {
+//                    clsList.remove(tmp_cu);
+//                    break;
+//                }
+//            }
+//            for (TpVirtualClassInfo tmp_vcu : tvcList) {
+//                if (tmp_ts.getTrustclassid().toString().equals(tmp_vcu.getVirtualclassid().toString())) {
+//                    tvcList.remove(tmp_vcu);
+//                    break;
+//                }
+//            }
+//        }
+
+//        //获取受托管班级
+//        tsc = new TrusteeShipClass();
+//        tsc.setReceiveteacherid(user.getUserid());
+//        tsc.setYear(ti.getYear());
+        //       List<Map<String, Object>> tsList = this.trusteeShipClassManager.getTsClassList(tsc);
+
+
+
+        mp.put("cuList", clsList);
+        mp.put("grade", grade);
+        mp.put("subject", sub);
+        mp.put("term", ti);
+        mp.put("tc", tc);
+        return new ModelAndView("/teachpaltform/task/teacher/dialog/add-course", mp);
+    }
+
     /**
      *
      *

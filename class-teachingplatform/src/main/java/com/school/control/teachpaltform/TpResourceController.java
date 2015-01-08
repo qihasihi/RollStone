@@ -26,6 +26,7 @@ import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -1016,12 +1017,12 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             String fileurl=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/"+UtilTool.getResourceUrl(resid,suffix);
               System.out.println("fileurl:" + fileurl+"");
             File tmp=new File(fileurl);
-         //   System.out.println("fileurl:" + fileurl + "   " + tmp.exists() + " " + request.getSession().getServletContext().getRealPath("/"));
             if(!tmp.exists()){  //
                 je.setMsg("文件不存在!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
+
 
             resbase.setFilesuffixname(suffix);
             resbase.setFilesize(tmp.length());

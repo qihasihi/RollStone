@@ -1457,8 +1457,6 @@ public class TaskController extends BaseController<TpTaskInfo>{
     }
 
     public boolean sendRemind(Long tasknextid){
-        if(tasknextid!=null)
-            return false;
 
         StringBuilder sql=null;
         List<Object>objList=null;

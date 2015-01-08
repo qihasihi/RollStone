@@ -24,6 +24,7 @@
 <%@page import="org.apache.commons.fileupload.FileUploadException"%>
 <%@page import="org.apache.commons.fileupload.FileItem"%>
 <%@page import="com.school.control.base.BaseController"%>
+<%@ page import="org.apache.commons.io.FileUtils" %>
 <%
 	response.setHeader("Cache-Control", "no-store");
 	response.setDateHeader("Expires", 0);
@@ -89,6 +90,10 @@
 			File saveFile = new File(savepath + "001" + extName);
 			try {
 				item.write(saveFile);
+                if(extName!=null&&UtilTool.matchingText(UtilTool._TXT_SUFFIX_TYPE_REGULAR,extName)){
+                    String odtFile=UtilTool.utilproperty.getProperty("RESOURCE_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(resid)+"/001.odt";
+                    FileUtils.copyFile(saveFile,new File(odtFile));
+                }
 				flag = true;
 			} catch (Exception e) {
 				e.printStackTrace();
