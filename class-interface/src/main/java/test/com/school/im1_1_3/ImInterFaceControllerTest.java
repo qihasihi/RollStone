@@ -105,12 +105,7 @@ public class ImInterFaceControllerTest {
     @Test
     public void testClassDetailInfo() throws Exception { 
         //TODO: Test goes here...
-//        //验证必填参数
-//        if(!paramMap.containsKey("jid")
-//                ||!paramMap.containsKey("schoolId")
-//                ||!paramMap.containsKey("classId")
-//                ||!paramMap.containsKey("time")
-//                ||!paramMap.containsKey("sign")){
+        //验证必填参数
         String time=System.currentTimeMillis()+"";
         HashMap<String,String> mp=new HashMap<String, String>();
         mp.put("jid","2579255");
