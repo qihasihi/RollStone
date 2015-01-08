@@ -3547,14 +3547,17 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             }
             mp.put("resObj", resList.get(0));
             //得到相关的试卷ID
-            MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
-            mvpaper.setMicvideoid(resList.get(0).getResid());
-            List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,presult);
-            if(mvpaperList==null||mvpaperList.size()<1||mvpaperList.get(0)==null){
-                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
-            }
-            paperid=mvpaperList.get(0).getPaperid().toString();
+            if(tpTask.getPaperid()==null){
+                MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
+                mvpaper.setMicvideoid(resList.get(0).getResid());
+                List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,presult);
+                if(mvpaperList==null||mvpaperList.size()<1||mvpaperList.get(0)==null){
+                    jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                    response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+                }
+                paperid=mvpaperList.get(0).getPaperid().toString();
+            }else
+               paperid=tpTask.getPaperid().toString();
             //验证paperinfo
             PaperInfo paper=new PaperInfo();
             paper.setPaperid(Long.parseLong(paperid.trim()));
@@ -4016,20 +4019,24 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             //request.setAttribute("isViewPaper",1);
             return toStuTestDetail(request,response,mp);
         }else if(tktype==6){
-
+            String paperid=null;
             //得到相关的试卷ID
-            MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
-            mvpaper.setMicvideoid(tkList.get(0).getTaskvalueid());
-            List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,null);
-            if(mvpaperList==null||mvpaperList.size()<1||mvpaperList.get(0)==null){
-                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            if(tkList.get(0).getPaperid()==null){
+                MicVideoPaperInfo mvpaper=new MicVideoPaperInfo();
+                mvpaper.setMicvideoid(tkList.get(0).getTaskvalueid());
+                List<MicVideoPaperInfo> mvpaperList=this.micVideoPaperManager.getList(mvpaper,null);
+                if(mvpaperList==null||mvpaperList.size()<1||mvpaperList.get(0)==null){
+                    jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                    response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+                }
+                paperid=mvpaperList.get(0).getPaperid().toString();
+            }else{
+                paperid=tkList.get(0).getPaperid().toString();
             }
-            String paperid=mvpaperList.get(0).getPaperid().toString();
+
             String url="paperques?m=toTestPaper&paperid="+paperid+"&userid="+userid+"&courseid="+tkList.get(0).getCourseid()+"&taskid="+tkList.get(0).getTaskid()+"&flag=1";
             String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
             response.sendRedirect(baseUrl+url);return null;
-
         }else if(tktype==5){
             PaperInfo pinfo=new PaperInfo();
             pinfo.setParentpaperid(tkvalueid);

@@ -4453,15 +4453,18 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
         if(tmpTask.getTasktype()==4){
             paperid=tmpTask.getTaskvalueid();
         }else if(tmpTask.getTasktype()==6){
-            MicVideoPaperInfo micPaper=new MicVideoPaperInfo();
-            micPaper.setMicvideoid(tmpTask.getTaskvalueid());
-            List<MicVideoPaperInfo>micVideoPaperInfoList=this.micVideoPaperManager.getList(micPaper,null);
-            if(micVideoPaperInfoList==null||micVideoPaperInfoList.size()<1){
-                returnJo.put("msg","未获取到微视频试卷数据!");
-                response.getWriter().print(returnJo.toString());
-                return;
-            }
-            paperid=micVideoPaperInfoList.get(0).getPaperid();
+            if(tmpTask.getPaperid()==null){
+                MicVideoPaperInfo micPaper=new MicVideoPaperInfo();
+                micPaper.setMicvideoid(tmpTask.getTaskvalueid());
+                List<MicVideoPaperInfo>micVideoPaperInfoList=this.micVideoPaperManager.getList(micPaper,null);
+                if(micVideoPaperInfoList==null||micVideoPaperInfoList.size()<1){
+                    returnJo.put("msg","未获取到微视频试卷数据!");
+                    response.getWriter().print(returnJo.toString());
+                    return;
+                }
+                paperid=micVideoPaperInfoList.get(0).getPaperid();
+            }else
+                paperid=tmpTask.getPaperid();
         }else if(tmpTask.getTasktype()==5){
             if(ImUtilTool.getUserType(userType)!=2){  //学生
                 //判断任务时间
@@ -5619,15 +5622,18 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
                 if(tmpTask.getTasktype()==4){
                     paperid=tmpTask.getTaskvalueid();
                 }else if(tmpTask.getTasktype()==6){
-                    MicVideoPaperInfo micPaper=new MicVideoPaperInfo();
-                    micPaper.setMicvideoid(tmpTask.getTaskvalueid());
-                    List<MicVideoPaperInfo>micVideoPaperInfoList=this.micVideoPaperManager.getList(micPaper,null);
-                    if(micVideoPaperInfoList==null||micVideoPaperInfoList.size()<1){
-                        returnJo.put("msg","未获取到微视频试卷数据!");
-                        response.getWriter().print(returnJo.toString());
-                        return;
-                    }
-                    paperid=micVideoPaperInfoList.get(0).getPaperid();
+                    if(tmpTask.getPaperid()==null){
+                        MicVideoPaperInfo micPaper=new MicVideoPaperInfo();
+                        micPaper.setMicvideoid(tmpTask.getTaskvalueid());
+                        List<MicVideoPaperInfo>micVideoPaperInfoList=this.micVideoPaperManager.getList(micPaper,null);
+                        if(micVideoPaperInfoList==null||micVideoPaperInfoList.size()<1){
+                            returnJo.put("msg","未获取到微视频试卷数据!");
+                            response.getWriter().print(returnJo.toString());
+                            return;
+                        }
+                        paperid=micVideoPaperInfoList.get(0).getPaperid();
+                    }else
+                        paperid=tmpTask.getPaperid();
                 }else if(tmpTask.getTasktype()==5){
                     if(ImUtilTool.getUserType(usertype)!=2){  //学生
                         //判断任务时间

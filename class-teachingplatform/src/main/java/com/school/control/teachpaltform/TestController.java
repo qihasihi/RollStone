@@ -71,7 +71,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=updateCloudMyInfo",method={RequestMethod.GET, RequestMethod.POST})
-    
     public void updateCloudMyInfo(HttpServletRequest request,HttpServletResponse response){
         new UpdateRsMyInfoData(request.getSession().getServletContext()).run();
     }
@@ -82,7 +81,6 @@ public class TestController extends BaseController<String>{
      * @param response
      */
     @RequestMapping(params="m=updateRsHotRank",method={RequestMethod.GET,RequestMethod.POST})
-    
     public void UpdateRsHotRank(HttpServletRequest request,HttpServletResponse response){
         new UpdateHotResData(request.getSession().getServletContext()).run();
     }

@@ -137,7 +137,11 @@
                             </c:if>
                         </td>
                         <td>
-                            <span class="bg">${pq.questiontypename}</span>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
+                            <span class="bg">${pq.questiontypename}</span>
+                            <c:if test="${!empty pq.showExamYearMsg}">
+                                (${pq.showExamYearMsg})
+                            </c:if>
+                            <br/>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
                             <c:if test="${pq.extension eq 4}">
                                 <div  class="p_t_10" id="sp_mp3_${pq.questionid}" ></div>
                                 <script type="text/javascript">
