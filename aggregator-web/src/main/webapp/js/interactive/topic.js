@@ -1024,7 +1024,7 @@ function listReturn(rps){
                     h+='<div id="dv_main_'+itm.topicid+'" class="text" style="display:block">';
                     h+='<div class="f_right">';
                     h+='<p>主帖数：'+itm.themecount+'</p>';
-                    h+='<p>评论数：'+itm.restorecount+'</p>';
+//                    h+='<p>评论数：'+itm.restorecount+'</p>';
                     h+='<p>创建人：'+itm.crealname+'</p>';
                     h+='<p>创建时间：'+itm.ctimeShortString+'</p>';
                     h+='</div>';

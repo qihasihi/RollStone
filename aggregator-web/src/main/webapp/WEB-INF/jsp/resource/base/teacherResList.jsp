@@ -30,6 +30,7 @@
 			http_free_operate_handler:beforeAjaxList,
 			gender_address_id:'page1address',		//显示的区域
 			http_operate_handler:afterAjaxList,	//执行成功后返回方法
+            isShowController:false,
 			return_type:'json',								//放回的值类型
 			page_no:1,					//当前的页数
 			page_size:10,				//当前页面显示的数量
@@ -228,9 +229,10 @@
                         +"<span class='ico41' title='赞'></span><b>"+itm.praisenum+"</b>"
                         +"<span class='ico73' title='推荐'></span><b>"+itm.recomendnum+"</b>"
                         +"<span class='ico58a' title='收藏'></span><b>"+itm.storenum+"</b>"
-                        +"<span class='ico46' title='浏览'></span><b>"+itm.clicks+"</b>"
-                        +"<span class='ico59' title='下载'></span><b>"+itm.downloadnum+"</b></p></td>";
-                html+="</tr> ";
+                        +"<span class='ico46' title='浏览'></span><b>"+itm.clicks+"</b>";
+                if(typeof(itm.difftype)=="undefined"||itm.difftype==null||itm.difftype!=1)
+                    html+="<span class='ico59' title='下载'></span><b>"+itm.downloadnum+"</b>";
+                html+="</p></td></tr> ";
 			});
 		}else{
             html+="<tr><td colspan='2'>暂无数据！</td></tr> ";

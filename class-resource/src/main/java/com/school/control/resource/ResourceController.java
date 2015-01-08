@@ -1403,6 +1403,8 @@ public class ResourceController extends BaseController<ResourceInfo> {
         }
         JsonEntity je = new JsonEntity();
         PageResult presult = this.getPageResultParameter(request);
+        if(presult.getOrderBy()==null||presult.getOrderBy().trim().length()<1)
+            presult.setOrderBy(" IF(diff_type=1,IF(is_mic_copiece<>1,100,99),diff_type) DESC ");
         List<ResourceInfo> extList = this.resourceManager.getList(
                 resourceinfo, presult);
         StringBuilder resStrBuilder=new StringBuilder();
@@ -1489,8 +1491,8 @@ public class ResourceController extends BaseController<ResourceInfo> {
         resourceinfo.setResstatus(1);//ÉóºËÍ¨¹ýµÄ
         JsonEntity je = new JsonEntity();
         PageResult presult = this.getPageResultParameter(request);
-        if(presult.getOrderBy()==null)
-            presult.setOrderBy("C_TIME DESC");
+        if(presult.getOrderBy()==null||presult.getOrderBy().trim().length()<1)
+            presult.setOrderBy(" IF(diff_type=1,IF(is_mic_copiece<>1,100,99),diff_type) DESC ");
         if(resourceinfo.getIsunion()==null)
             resourceinfo.setIsunion(1);
         else if(resourceinfo.getIsunion()==0)

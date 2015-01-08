@@ -158,13 +158,14 @@
                 if(lb.params.subjectvalues!=null&&lb.params.subjectvalues.Trim().length>0&&lb.params.subjectvalues.indexOf(",")==-1){
                     subname=$("#val_ls_subjectvalues li[id='value_subjectvalues_"+lb.params.subjectvalues.Trim()+"'] a").html();
                 }
-				html+="<p class='text_info'>"+subname+","+grdname+","+itm.restypename+","+itm.filetypename
+                html+="<p class='text_info'>"+subname+","+grdname+","+itm.restypename+","+itm.filetypename
                         +"<span class='ico41' title='赞'></span><b>"+itm.praisenum+"</b>"
                         +"<span class='ico73' title='推荐'></span><b>"+itm.recomendnum+"</b>"
                         +"<span class='ico58a' title='收藏'></span><b>"+itm.storenum+"</b>"
-                        +"<span class='ico46' title='浏览'></span><b>"+itm.clicks+"</b>"
-                        +"<span class='ico59' title='下载'></span><b>"+itm.downloadnum+"</b></p></td>";
-				html+="</tr> ";
+                        +"<span class='ico46' title='浏览'></span><b>"+itm.clicks+"</b>";
+                if(typeof(itm.difftype)=="undefined"||itm.difftype==null||itm.difftype!=1)
+                    html+="<span class='ico59' title='下载'></span><b>"+itm.downloadnum+"</b>";
+                html+="</p></td></tr> ";
 			});
             p1.setPageSize(rps.presult.pageSize);
             p1.setPageNo(rps.presult.pageNo);

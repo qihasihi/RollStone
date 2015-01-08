@@ -56,7 +56,11 @@ public class DownloadAction extends BaseController<DownloadInfo>{
 			response.getWriter().print(jEntity.toJSON());return;
 		}
 		restmp=rsList.get(0);
-		//检测是否有权限下载
+        //检测是否有权限下载(微视频不允许 下载)
+        if(restmp.getDifftype()!=null&&restmp.getDifftype().intValue()==1){
+            jEntity.setMsg("微视频不允许下载!");
+            response.getWriter().print(jEntity.toJSON());return;
+        }
 		//查看是否有下载浏览
 		//开始执行添加
 		downTmp.setRef(this.downloadManager.getNextId());

@@ -637,8 +637,11 @@
                  <a href="javascript:;" onClick="operateStore(2,'${resObj.resid }','dv_store')"><span class="ico58b" title="取消收藏"></span><span>${resObj.storenum}</span></a>
              </c:if>
 		    </span>
+              <!--微视频-->
+              <c:if test="${empty resObj.difftype||resObj.difftype!=1}">
+                  <a href="javascript:;" onclick="resourceDownLoadFile('${resObj.resid }','${resObj.filesuffixname}');sp_downnum.innerHTML=parseInt(sp_downnum.innerHTML)+1"><span class="ico59" title="下载"></span><span id="sp_downnum">${resObj.downloadnum}</span></a>
+              </c:if>
 
-              <a href="javascript:;" onclick="resourceDownLoadFile('${resObj.resid }','${resObj.filesuffixname}');sp_downnum.innerHTML=parseInt(sp_downnum.innerHTML)+1"><span class="ico59" title="下载"></span><span id="sp_downnum">${resObj.downloadnum}</span></a>
               <span class="ico46" title="浏览"></span><span>${resObj.clicks}</span></p>
 
           <div class="subpage_lm">
