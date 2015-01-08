@@ -324,7 +324,7 @@ function beforeAjaxCourseResList(p) {
     var selcourseid = $("#hd_courseid").val();
     param.courseid = selcourseid;
     param.currentcourseid=courseid;
-    param.difftype=0;
+    //param.difftype=0;
     p.setPostParams(param);
 }
 

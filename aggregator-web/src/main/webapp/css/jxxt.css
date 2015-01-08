@@ -512,6 +512,7 @@
     .jxxt_zhuanti_rw_tongji_chengjuan {
 	width:940px;
 	overflow: auto;
+	overflow-y:hidden;
 	padding:5px 0;
 	margin-bottom:15px;
 }
@@ -581,7 +582,7 @@
 	vertical-align:top;
 }
 	.jxxt_zhuanti_rw_piyue ul.shiti li b{
-	width:80px;
+	width:127px;
 	height:26px;
 	font-size:14px;
 	line-height:24px;
@@ -590,6 +591,7 @@
 	bottom:0;
 	text-align:right;
 }
+	.jxxt_zhuanti_rw_piyue ul.shiti li b span{ float:left;}
 	.jxxt_zhuanti_rw_piyue ul.shiti li.over{ background-position: -444px 0;}
 	.jxxt_zhuanti_rw_piyue ul.shiti li:hover{ background-position: -870px 0;}
 	.jxxt_zhuanti_rw_piyue ul.shiti li.over:hover{ background-position: -586px 0;}
@@ -601,8 +603,6 @@
 	display:block;
 	color:#fff;
 }
-	.jxxt_zhuanti_rw_piyue div.jxxt_zhuanti_rw_tongji{margin:15px auto 20px;padding:15px 260px 15px 20px;}
-
 	.jxxt_zhuanti_rw_piyue_info{
 	color:#000;
 	padding:10px 30px 15px;
@@ -641,6 +641,16 @@
 	padding-top:8px;
 	display:block;
 	color:#fff;
+}
+	.jxxt_zhuanti_rw_piyue_defen div.pingyu{
+	width:905px;
+	height:100px;
+	padding-top:10px;
+	margin:0 auto;
+}
+	.jxxt_zhuanti_rw_piyue_defen div.pingyu textarea{
+	width:884px;
+	height:90px;
 }
 	.jxxt_zhuanti_rw_ceshi { padding:10px 0;}
 	.jxxt_zhuanti_rw_ceshi ul {width:660px;}
@@ -725,7 +735,16 @@
 	top:6px;
 	right:6px;
 }
-	.jxxt_zhuanti_rw_add ul.gqkt li p.pic span,.jxxt_zhuanti_rw_add ul.gqkt li p.pic a{ margin:2px 0 0 3px;}
+	.jxxt_zhuanti_rw_add ul.gqkt li p.picL{
+	width:20px;
+	height:20px;
+	background: url(images/ico02_131230.png) no-repeat -213px -41px;
+	position:absolute;
+	margin-left:1px;
+	top:6px;
+	right:28px;
+}
+	.jxxt_zhuanti_rw_add ul.gqkt li p.pic span,.jxxt_zhuanti_rw_add ul.gqkt li p.pic a,.jxxt_zhuanti_rw_add ul.gqkt li p.picL span,.jxxt_zhuanti_rw_add ul.gqkt li p.picL a{ margin:2px 0 0 3px;}
 
 	.jxxt_zhuanti_rw_add ul.zsdx {
 	width:960px;
@@ -1146,7 +1165,7 @@
 	.jxxt_zhuanti_shijuan_add table.public_tab1 table td{ padding-top:5px;}
 	.jxxt_zhuanti_shijuan_add table.public_tab1 table th{ padding-top:2px; text-align:center;}
 
-	.jxxt_zhuanti_shijuan_add span.bg,.public_tab1 span.bg{
+	.jxxt_zhuanti_shijuan_add span.bg,.public_tab1 span.bg,.jxxt_zhuanti_rw_ceshi_shiti span.bg{
 	width:54px;
 	height:16px;
 	background: url(images/bg29_131230.png) no-repeat -444px -148px;
@@ -1180,6 +1199,8 @@
 	.jxxt_add_zhuanti_nr table td p.t_r{color:#8d8c8c; }
 	.jxxt_add_zhuanti_nr table td p.t_r b {width:40px; display:inline-block; font-weight:normal; vertical-align:middle; text-align:left;}
 	.jxxt_add_zhuanti_nr table td p {padding-bottom:5px;}
+	
+	.public_float960 .jxxt_add_zhuanti_nr { width:920px; padding:5px 20px 10px; height:540px; overflow:auto;}
 
 	.jxxt_trzt_number {padding:15px 0 15px 25px;color:#000;}
 

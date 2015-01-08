@@ -113,6 +113,8 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String coursename=request.getParameter("coursename");
         String subjectid=request.getParameter("subjectid");
         String currentcourseid=request.getParameter("currentcourseid");
+        String courseid=request.getParameter("courseid");
+
 
         PageResult pageResult=this.getPageResultParameter(request);
         TpCourseInfo tpCourseInfo=new TpCourseInfo();
@@ -135,6 +137,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         }
         if(currentcourseid!=null&&currentcourseid.trim().length()>0){
             tpCourseInfo.setCurrentcourseid(Long.parseLong(currentcourseid));
+        }
+        if(courseid!=null&&courseid.trim().length()>0){
+            tpCourseInfo.setCourseid(Long.parseLong(courseid));
         }
 
 

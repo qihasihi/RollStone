@@ -831,6 +831,7 @@
 	padding-left:10px;
 }
 	.subpage_head .back{padding-top:5px; float:right;margin-right:30px;}
+	.subpage_head .back span.time{ display: inline-block;width:30px; color:red; text-align:center;}
 	.subpage_nav{
 	width: 940px;
 	height: 44px;

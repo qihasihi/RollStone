@@ -133,6 +133,8 @@
             else
                 $("#relate_paper").html('');
 
+
+
         }
 
 
@@ -349,16 +351,24 @@
                     }else{
                         var h='';
                         if(rps.objList.length>0){
-                            var status=rps.objList[0].status;
+                            var micvideoid=rps.objList[0].micvideoid;
                             var papername=rps.objList[0].papername.length>8?rps.objList[0].papername.substring(0,8)+'...':rps.objList[0].papername;
-                            h='<a class="font-blue" href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true,true)"><span class="ico83"></span>关联试卷</a>';
-                        }
+                            if(typeof micvideoid!='undefined')
+                                h='<a class="font-blue" href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true,true)"><span class="ico83"></span>网校关联试卷</a>';
+                            else{
+                                h='<a class="font-blue" href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true,true)"><span class="ico83"></span>'+papername+'</a>';
+                            }
+                            /*}else
+                             h='<a  href="javascript:doCancelVideoPaper('+rps.objList[0].paperid+');" class="ico34 f_right" title="取消关联"></a><a title="'+rps.objList[0].papername+'" id="a_relate_href" class="font-blue"  href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true)"><span class="ico83"></span>'+papername+'</a>';*/
+                        }/*else{
+                         h='<a  id="a_relate" class="font-blue" href="javascript:loadRelatePage()"><span class="ico83"></span>关联试卷</a>';
+                         }*/
                         $("#relate_paper").html(h);
+
                     }
                 }
             });
         }
-
 
 
         function loadEditPaperRes(cid,pid,isshow,isview,ismic){
