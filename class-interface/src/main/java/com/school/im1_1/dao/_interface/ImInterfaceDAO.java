@@ -586,4 +586,70 @@ public class ImInterfaceDAO extends CommonDAO<ImInterfaceInfo> implements IImInt
             return list;
         return null;
     }
+
+    @Override
+    public List<Map<String, Object>> getClassInfoForCourse(String userid, Integer classid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi115_proc_classinfo_for_course(");
+        List<Object> objList=new ArrayList<Object>();
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> getUpdateCourse(Long courseid, Integer classid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi115_proc_getupdatecourse_info(");
+        List<Object> objList=new ArrayList<Object>();
+        if(courseid!=null){
+            sqlbuilder.append("?,");
+            objList.add(courseid);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(classid!=null){
+            sqlbuilder.append("?");
+            objList.add(classid);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> validateGrade(String userid) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL imapi115_proc_validate_grade(");
+        List<Object> objList=new ArrayList<Object>();
+        if(userid!=null){
+            sqlbuilder.append("?");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        return null;
+    }
 }

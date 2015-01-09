@@ -31,4 +31,13 @@ public interface IImInterfaceDAO extends ICommonDAO<ImInterfaceInfo>{
     public List<Map<String,Object>>getStuScoreSubjectList(Integer classid,String userid);
     //任务提醒详情
     public List<Map<String,Object>> getTaskRemind(Long taskid,Integer userid,Integer classid);
+
+    //获取发专题前的信息1.1.5
+    public List<Map<String,Object>> getClassInfoForCourse(String userid,Integer classid);
+
+    //获取修改专题前的信息1.1.5
+    public List<Map<String,Object>> getUpdateCourse(Long courseid,Integer classid);
+
+    //验证学生年级
+    public List<Map<String,Object>> validateGrade(String userid);
 }

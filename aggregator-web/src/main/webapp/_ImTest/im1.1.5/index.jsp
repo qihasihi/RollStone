@@ -52,6 +52,12 @@ $(function(){
             <br>
             <a href="testImSaveUserScore.jsp">任务获得积分</a>
             <br>
+        <a href="testStudyModule.jsp">学习目录</a><br>
+        <a href="testGetCourseBefore.jsp">添加专题前置</a><br>
+        <a href="testCreateCourse.jsp">添加专题</a><br>
+        <a href="testGetUpdateCourse.jsp">修改专题前置</a><br>
+        <a href="testUpdateCourse.jsp">修改专题</a><br>
+        <a href="testDeleteCourse.jsp">删除专题</a><br>
     </div>
 
 </div>

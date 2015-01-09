@@ -5566,6 +5566,8 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             //处理其余输出参数为标准命名
             returnMap.put("taskId",Long.parseLong(taskMap.get("TASKID").toString()));
             returnMap.put("taskType",Integer.parseInt(taskMap.get("TASKTYPE").toString()));
+            returnMap.put("taskCourseId",Long.parseLong(taskMap.get("COURSEID").toString()));
+            returnMap.put("orderIndex",Integer.parseInt(taskMap.get("ORDERIDX").toString()));
             returnMap.put("remoteType",Integer.parseInt(taskMap.get("REMOTETYPE").toString()));
             returnMap.put("quesType",Integer.parseInt(taskMap.get("QUESTYPE").toString()));
 
@@ -5575,10 +5577,10 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             returnMap.put("isOver",Integer.parseInt(taskMap.get("ISOVER").toString()));
             returnMap.put("isDone",Integer.parseInt(taskMap.get("ISDONE").toString()));
             if(questype>6){
-                returnMap.put("taskContent",taskMap.get("TASKCONTENT").toString());
-                returnMap.put("attachs",taskMap.get("ATTACHS").toString());
-                returnMap.put("attachType",taskMap.get("ATTACHTYPE").toString());
-                returnMap.put("taskAnalysis",taskMap.get("TASKANALYSIS").toString());
+                returnMap.put("taskContent",taskMap.get("TASKCONTENT"));
+                returnMap.put("attachs",taskMap.get("ATTACHS"));
+                returnMap.put("attachType",taskMap.get("ATTACHTYPE"));
+                returnMap.put("taskAnalysis",taskMap.get("TASKANALYSIS"));
             }else{
                 returnMap.put("taskContent","");
                 if(questype==1&&tpTaskList.get(0).getResourcetype()==1){

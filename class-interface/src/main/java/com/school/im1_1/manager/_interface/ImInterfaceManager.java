@@ -155,4 +155,19 @@ public class ImInterfaceManager extends BaseManager<ImInterfaceInfo> implements 
     public List<Map<String, Object>> getTaskRemind(Long taskid, Integer userid, Integer classid) {
         return this.imInterfaceDAO.getTaskRemind(taskid,userid,classid);
     }
+
+    @Override
+    public List<Map<String, Object>> getClassInfoForCourse(String userid, Integer classid) {
+        return this.imInterfaceDAO.getClassInfoForCourse(userid,classid);
+    }
+
+    @Override
+    public List<Map<String, Object>> getUpdateCourse(Long courseid, Integer classid) {
+        return this.imInterfaceDAO.getUpdateCourse(courseid,classid);
+    }
+
+    @Override
+    public List<Map<String, Object>> validateGrade(String userid) {
+        return this.imInterfaceDAO.validateGrade(userid);
+    }
 }
