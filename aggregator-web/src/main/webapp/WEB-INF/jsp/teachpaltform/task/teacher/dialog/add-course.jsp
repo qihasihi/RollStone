@@ -23,6 +23,7 @@
     <input id="subjectid" name="gradeid" type="hidden" value="${subject.subjectid}"/>
     <%--<input id="materialid" name="materialid" type="hidden" value="${materialid}"/>--%>
     <input id="courselevel" name="courselevel" type="hidden" value="3"/>
+
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input black">
         <col class="w120"/>
         <col class="w700"/>
@@ -147,7 +148,7 @@
         <tr>
             <th>&nbsp;</th>
             <td>
-               <a id="addButton" href="javascript:getTchingMaterial();" class="an_small">提&nbsp;交</a>
+               <a id="addButton" href="javascript:addTeacherCourse();" class="an_public1">提&nbsp;交</a>
             </td>
         </tr>
     </table>

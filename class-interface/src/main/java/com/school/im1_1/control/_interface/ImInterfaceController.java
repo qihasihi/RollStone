@@ -2,6 +2,7 @@ package com.school.im1_1.control._interface;
 
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
+import com.school.control.teachpaltform.TaskController;
 import com.school.entity.ClassInfo;
 import com.school.entity.UserInfo;
 import com.school.entity.UserModelScoreLogsInfo;
@@ -58,7 +59,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping(value="/imapi1_1")
-public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
+public class ImInterfaceController extends TaskController {
     @Autowired
     private ImInterfaceManager imInterfaceManager;
     @Autowired
@@ -1340,6 +1341,12 @@ public class ImInterfaceController extends BaseController<ImInterfaceInfo>{
             Map stulist = new HashMap();
             stulist.put("stuList",unCompleteList);
             m.put("data",stulist);
+
+            if(!sendRemind(tasknextid))
+                System.out.println("Im1.1 AddTask 添加taskRemind失败! Taskid:"+tasknextid);
+            else
+                System.out.println("Im1.1 AddTask 添加taskRemind成功! Taskid:"+tasknextid);
+
         }else{
             m.put("result","0");
             m.put("message","添加失败");

@@ -67,7 +67,7 @@
                     shtml+='</p></a>';
                     shtml+='<p class="pic">'
                     if(res_id==itm.resid)
-                        shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
+                        shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico02" title="关联试卷"></span></b></a>';
                     else
                         shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
                     shtml+='</p>';
@@ -94,7 +94,7 @@
                         html+='</p></a>';
                         html+='<p class="pic">';
                         if(res_id==itm.resid)
-                            html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
+                            html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico02" title="关联试卷"></span></b></a>';
                         else
                             html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
                         html+='</p>';
@@ -382,7 +382,7 @@
         <div class="jxxt_float_w920 font-black">
             <p class="t_r">图例：<span class="ico81"></span>客观题&nbsp;&nbsp;<span class="ico80"></span>主观题</p>
             <!--<div style="overflow-x: hidden;overflow-y:auto;width:930px;height:530px;">-->
-                    <p><strong>推荐试卷</strong></p>
+                    <p><strong>系统推荐试卷</strong></p>
                     <ul class="jxxt_zhuanti_shijuan_list" id="ul_standard">
 
                     </ul>

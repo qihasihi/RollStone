@@ -395,7 +395,7 @@
                   <c:if test="${sessionScope.CURRENT_USER.userid==resObj.userid}">
                       <span  id="sp_up_btn_resname"><a href="javascript:;" onclick="updateResColumn('${resObj.resid}','resname','sp_name','sp_up_btn_resname')" title="编辑" class="ico11"></a></span>
                   </c:if>
-               <a href="javascript:loadCoursePanel()"><span class="ico51" title="发任务"></span></a>
+               <a href="javascript:loadCoursePanel()"  class="ico51" title="发任务"></a>
               </h1>
               <div class="zyxt_zyxqR">
                   <p><span id="sp_grade">${resObj.gradename}</span>&nbsp;&nbsp;
@@ -509,7 +509,7 @@
          <c:if test="${fileType=='doc'}">
           <a href="javascript:;" onclick="showDocView(${resObj.resid},resourcepathHead,'${resObj.path}')" title="预览" class="ico76"></a>
          </c:if>
-         <a href="javascript:loadCoursePanel()"><span class="ico51" title="发任务"></span></a>
+         <a href="javascript:loadCoursePanel()" class="ico51" title="发任务"></a>
               </h1>
                   <p><span class="w220"><span id="sp_grade">${resObj.gradename}</span>&nbsp;
                       <span id="sp_subject">${resObj.subjectname}学科</span>
@@ -571,7 +571,7 @@
               <c:if test="${sessionScope.CURRENT_USER.userid==resObj.userid}">
                   <span  id="sp_up_btn_resname"><a href="javascript:;" onclick="updateResColumn('${resObj.resid}','resname','sp_name','sp_up_btn_resname')" title="编辑" class="ico11"></a></span>
               </c:if>
-           <a href="javascript:loadCoursePanel()"><span class="ico51" title="发任务"></span></a>
+           <a href="javascript:loadCoursePanel()"  class="ico51" title="发任务"></a>
           </h1>
           <div class="zyxt_zyxqR">
               <p><span id="sp_grade">${resObj.gradename}</span>&nbsp;&nbsp;

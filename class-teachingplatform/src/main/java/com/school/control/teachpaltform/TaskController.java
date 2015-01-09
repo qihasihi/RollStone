@@ -1456,7 +1456,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         response.getWriter().print(je.toJSON());
     }
 
-    public boolean sendRemind(Long tasknextid){
+    protected   boolean sendRemind(Long tasknextid){
 
         StringBuilder sql=null;
         List<Object>objList=null;
@@ -1557,6 +1557,250 @@ public class TaskController extends BaseController<TpTaskInfo>{
         }
         return false;
     }
+
+    /**
+     * 通过资源系统
+     * 添加资源任务
+     * @throws Exception
+     */
+    @RequestMapping(params="addCourseResTask",method=RequestMethod.POST)
+    public void addCourseResTask(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=this.doAddCourseResTask(request,response);
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+
+    protected JsonEntity doAddCourseResTask(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        JsonEntity je=new JsonEntity();
+        String tasktype="1";
+        String courseid=request.getParameter("courseid");
+        String taskvalueid=request.getParameter("resid");
+        if(tasktype==null||tasktype.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return je;
+        }
+        if(StringUtils.isBlank(courseid)){
+            je.setMsg("未获取到课题标识!");
+            response.getWriter().print(je.toJSON());
+            return je;
+        }
+        //与该课题关联的班级
+        TpCourseClass c=new TpCourseClass();
+        c.setCourseid(Long.parseLong(courseid));
+        List<TpCourseClass>courseclassList=this.tpCourseClassManager.getList(c, null);
+        if(courseclassList==null||courseclassList.size()<1){
+            je.setMsg("未获取到该课题的班级信息!请设置后操作任务!");
+            response.getWriter().print(je.toJSON());
+            return je;
+        }else {
+            if(this.logined(request).getDcschoolid()!=1){
+                for(TpCourseClass cc:courseclassList){
+                    if(cc.getDctype()!=null&&cc.getDctype()==2){
+                        je.setMsg("当前专题下包含网校班级，不支持在电脑上添加任务!");
+                        response.getWriter().print(je.toJSON());
+                        return je;
+                    }
+                }
+            }
+        }
+
+        StringBuilder sql=null;
+        List<Object>objList=null;
+        List<String>sqlListArray=new ArrayList<String>();
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        TpTaskInfo ta=new TpTaskInfo();
+
+
+        TpCourseInfo courseInfo=new TpCourseInfo();
+        courseInfo.setCourseid(Long.parseLong(courseid));
+        List<TpCourseInfo>courseList=this.tpCourseManager.getList(courseInfo,null);
+        if(courseList==null||courseList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("ENTITY_NOT_EXISTS"));
+            response.getWriter().print(je.toJSON());
+            return je;
+        }
+        TpCourseInfo tmpCourse=courseList.get(0);
+
+
+        if(tasktype.toString().equals("1")){//资源
+            String resourcetype=request.getParameter("resourcetype");
+            resourcetype=resourcetype==null||resourcetype.length()<1?"1":resourcetype;
+            if(resourcetype.equals("1")){
+                if(taskvalueid==null||taskvalueid.trim().length()<1){
+                    je.setMsg("系统未获取到资源标识!");
+                    response.getWriter().print(je.toJSON());
+                    return je;
+                }
+                //添加专题资源
+                TpCourseResource t=new TpCourseResource();
+                t.setResid(Long.parseLong(taskvalueid));
+                t.setCourseid(Long.parseLong(courseid));
+                List<TpCourseResource>resList=this.tpCourseResourceManager.getList(t, null);
+                if(resList==null||resList.size()<1){
+                    TpCourseResource cr=new TpCourseResource();
+                    cr.setCourseid(Long.parseLong(courseid));
+                    cr.setResid(Long.parseLong(taskvalueid));
+                    cr.setResourcetype(1);
+                    cr.setRef(this.tpCourseResourceManager.getNextId(true));
+                    sql=new StringBuilder();
+                    objList=this.tpCourseResourceManager.getSaveSql(cr,sql);
+                    if(objList!=null&&sql!=null&&sql.length()>0){
+                        objListArray.add(objList);
+                        sqlListArray.add(sql.toString());
+                    }
+                }else{
+                    je.setMsg("当前专题已添加该资源!");
+                    response.getWriter().print(je.toJSON());
+                    return je;
+                }
+                ta.setTaskvalueid(Long.parseLong(taskvalueid));
+                ta.setResourcetype(1);
+            }else{
+                String remotetype=request.getParameter("remotetype");
+                String resourcename=request.getParameter("resourcename");
+                ta.setTaskvalueid(Long.parseLong(taskvalueid));
+                ta.setResourcetype(2);
+                ta.setRemotetype(Integer.parseInt(remotetype));
+                ta.setResourcename(resourcename);
+            }
+        }
+        /**
+         *查询出当前专题有效的任务个数，排序用
+         */
+
+        TpTaskInfo t=new TpTaskInfo();
+        t.setCourseid(Long.parseLong(courseid));
+        //查询没被我删除的任务
+        t.setSelecttype(1);
+        t.setLoginuserid(this.logined(request).getUserid());
+        t.setStatus(1);
+
+        //已发布的任务
+        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(t, null);
+        Integer orderIdx=1;
+        if(taskList!=null&&taskList.size()>0)
+            orderIdx+=taskList.size();
+
+        //添加任务
+        Long tasknextid=this.tpTaskManager.getNextId(true);
+        ta.setTaskid(tasknextid);
+        ta.setTasktype(Integer.parseInt(tasktype));
+        ta.setCourseid(Long.parseLong(courseid));
+        ta.setCuserid(this.logined(request).getRef());
+        ta.setCriteria(2);
+        ta.setOrderidx(orderIdx);
+
+        sql=new StringBuilder();
+        objList=this.tpTaskManager.getSaveSql(ta, sql);
+        if(objList!=null&&sql!=null&&sql.length()>0){
+            objListArray.add(objList);
+            sqlListArray.add(sql.toString());
+        }
+
+        //添加任务对象 班级
+        if(courseclassList!=null&&courseclassList.size()>0){
+
+            for (TpCourseClass courseClass:courseclassList) {
+                /**
+                 * 任务的结束时间 要早于 专题的开始时间。（也就是说任务的开始和结束时间都要早于专题的开始时间）
+                 * 任务的开始时间默认为当前时间，任务的结束时间默认为专题的开始时间。
+                 */
+                TpTaskAllotInfo tal=new TpTaskAllotInfo();
+                //验证班级类型
+                if(courseClass.getClasstype()==1){
+                    tal.setUsertype(0);
+                }else if(courseClass.getClasstype()==2){
+                    tal.setUsertype(1);
+                }else{
+                    je.setMsg("错误!任务班级无效!");
+                    response.getWriter().print(je.toJSON());
+                    return je;
+                }
+                tal.setTaskid(tasknextid);
+                tal.setUsertypeid(Long.parseLong(courseClass.getClassid().toString()));
+                tal.setBtime(new Date());
+                if(courseClass.getDctype()!=null&&courseClass.getDctype().toString().equals("3"))
+                    tal.setEtime(courseClass.getBegintime());
+                else
+                    tal.setEtime(courseClass.getEndtime());
+                tal.setCuserid(this.logined(request).getRef());
+                tal.setCourseid(Long.parseLong(courseid));
+                sql=new StringBuilder();
+                objList=this.tpTaskAllotManager.getSaveSql(tal, sql);
+                if(objList!=null&&sql!=null&&sql.length()>0){
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+            }
+        }
+
+        if(tmpCourse.getQuoteid()!=null&&tmpCourse.getQuoteid().intValue()!=0){
+            TpCourseInfo quoteInfo=new TpCourseInfo();
+            quoteInfo.setCourseid(tmpCourse.getQuoteid());
+            List<TpCourseInfo>quoteList=this.tpCourseManager.getList(quoteInfo,null);
+            if(quoteList!=null&&quoteList.size()>0&&quoteList.get(0).getCourselevel()!=3){
+                //增加专题操作数据
+                TpOperateInfo to=new TpOperateInfo();
+                to.setRef(this.tpOperateManager.getNextId(true));
+                to.setCuserid(this.logined(request).getUserid());
+                to.setCourseid(tmpCourse.getQuoteid());
+                to.setTargetid(tasknextid);
+                to.setOperatetype(2);                                                              //添加
+                to.setDatatype(TpOperateInfo.OPERATE_TYPE.COURSE_TASK.getValue());                 //专题任务
+                sql=new StringBuilder();
+                objList=this.tpOperateManager.getSaveSql(to,sql);
+                if(objList!=null&&sql!=null){
+                    objListArray.add(objList);
+                    sqlListArray.add(sql.toString());
+                }
+            }
+        }
+
+
+
+
+
+        if(objListArray.size()>0&&sqlListArray.size()>0){
+            boolean flag=this.tpTaskManager.doExcetueArrayProc(sqlListArray, objListArray);
+            if(flag){
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
+                je.setType("success");
+                objListArray=new ArrayList<List<Object>>();
+                sqlListArray=new ArrayList<String>();
+                //添加任务消息提醒
+              /*  List<UserInfo>taskUserList=this.userManager.getUserNotCompleteTask(ta,null);
+                if(taskUserList!=null&&taskUserList.size()>0){
+                    for (UserInfo u:taskUserList){
+                        TpTaskInfo dynamicTask=new TpTaskInfo();
+                        dynamicTask.setCourseid(ta.getCourseid());
+                        dynamicTask.setTaskid(ta.getTaskid());
+                        dynamicTask.setCuserid(u.getRef());
+                        if(this.tpTaskManager.doSaveTaskMsg(dynamicTask))
+                            System.out.println("doSaveTaskMsg SUCCESS!");
+                        else
+                            System.out.println("doSaveTaskMsg ERROR!");
+                    }
+                }else{
+                    System.out.println("添加任务动态失败!原因：未获取到学生列表!");
+                }*/
+                if(!sendRemind(tasknextid))
+                    System.out.println(" addCourseResTask 添加taskRemind失败!");
+                else
+                    System.out.println(" addCourseResTask 添加taskRemind成功!");
+
+            }else{
+                je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+            }
+        }else{
+            je.setMsg("您的操作没有执行!");
+        }
+        return je;
+    }
+
+
 
     /**
      * 进入任务修改页

@@ -231,7 +231,7 @@ function getInvestReturnMethod(rps){
             html+='<p class="time" id="p_obj_'+itm.taskid+'"></p>';//<strong>任务对象：</strong>
             if(itm.tasktype<6)
                 html+='<p><strong>完成标准：</strong> '+criteria+'</p>';
-            if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9&&itm.taskremark!='undefined'&&itm.taskremark.length>0)
+            if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9&&typeof itm.taskremark!='undefined'&&itm.taskremark.length>0)
                 html+='<p><strong>任务描述：</strong><span  style="color:#000000;">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';//class="width"
             html+='<table border="0" cellspacing="0" cellpadding="0" class="black">';
             html+='<col class="w50"/>'

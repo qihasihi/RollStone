@@ -79,6 +79,7 @@
                                 else if(itm.subjectivenum>0)
                                     html+='<span class="bg1" style="width:100%">'+itm.subjectivenum+'</span>';
                                 html+='</p></a>';
+                                if(itm.has)
                                 html+='<p class="pic">';
                                 if(itm.taskflag<1)
                                     shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico51" title="发任务"></span></b></a>';
@@ -185,6 +186,11 @@
                             <img src="images/pic13_140704.jpg" width="215" height="122">
                         </p>
                         <p class="text">${r.realname}&nbsp;&nbsp;${r.resname}</p></a>
+                    <c:if test="${r.haspaper eq 1}">
+                        <p class="picL">
+                            <span class="ico83" title="试卷"></span>
+                        </p>
+                    </c:if>
                     <p class="pic">
                        <%-- <a class="ico43" href="javascript:sub_data('${r.resid}')" title="发任务"></a>--%>
                            <a class="ico43" href="javascript:loadRelatePage('${r.resid}')" title="关联试卷"></a>

@@ -77,8 +77,9 @@
 </div>
 
 <div class="public_float public_float960" id="dv_micDetail" style="display:none">
-    <p class="float_title"><a href="javascript:;" onclick="micDetailReturn()" class="ico93" title="返回"></a>微课程详情</p>
+    <p class="float_title"><a href="javascript:;" onclick="micDetailReturn()" class="ico93" title="返回"></a>视频详情</p>
     <div id="dv_micdetail_child">
+
     </div>
 </div>
 <script type="text/javascript">

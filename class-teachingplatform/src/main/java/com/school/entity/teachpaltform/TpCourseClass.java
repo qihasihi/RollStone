@@ -10,7 +10,6 @@ public class TpCourseClass {
 
     private java.util.Date begintime;
     private java.util.Date endtime;
-    private Integer dctype;
 
     public Integer getDctype() {
         return dctype;
@@ -42,6 +41,7 @@ public class TpCourseClass {
 
     private Long quoteid;
     private Integer cuserid;
+    private Integer dctype;
 
     public Integer getCuserid() {
         return cuserid;

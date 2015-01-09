@@ -160,7 +160,33 @@
 <body>
 <input type="hidden" value="${paperid}" name="hd_paper_id" id="hd_paper_id"/>
 
-    <ul class="jxxt_zhuanti_rw_wkc">
+
+<%--<p class="float_title"><a href="1" class="ico93" title="返回"></a>视频详情</p>--%>
+<div class="xxt_float_h560">
+    <p class="font-black t_c p_t_10"><strong>${resObj.resname}</strong><br>${resObj.realname}&nbsp;&nbsp;&nbsp;&nbsp;<span id="videoTime"></span></p>
+    <div class="jxxt_zhuanti_rw_wkc_sp">
+        <div id="div_show0">
+            <img src="images/video_gszh.jpg" width="769px" height="432px" alt="正在排列,转换"/>
+            <script type="text/javascript">
+                //是否显示进度条的判断
+                var isShowBar=true;
+                playerController=loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
+                        ,resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
+                        ,${resObj.resid},769,432,isShowBar);
+                playerController.onTime(function(){
+                    var t=playerController.getDuration();
+                    $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+                })
+
+            </script>
+        </div>
+    </div>
+</div>
+
+
+
+
+  <%--  <ul class="jxxt_zhuanti_rw_wkc">
         <li id="c_1" class="crumb"><a href="javascript:;" onclick="$('#dv_view').show();$('#dv_paper').hide();"><strong>微视频</strong></a></li>
         <!--<li id="c_2"><a href="javascript:;" onclick="paperDivShow()"><strong>试卷</strong></a></li>-->
     </ul>
@@ -186,7 +212,7 @@
             </div>
         </div>
     </div>
-
+--%>
     <div id="dv_paper" class="jxxt_float_h560 " style="display: none">
         <div class="jxxt_zhuanti_rw_ceshi">
 
