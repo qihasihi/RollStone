@@ -762,6 +762,7 @@ class SchoolCallableStatementCreator implements CallableStatementCreator{
             } else {
                 pstatement.setObject(i + 1, paraValue[i]);
             }
+            System.out.println((i+1)+":"+paraValue[i]);
         }
 
         return pstatement;
@@ -776,6 +777,7 @@ class SchoolCallableStatementCreator implements CallableStatementCreator{
     public CallableStatement getParedStatement(Connection conn ,
                                                String sql, Object... paraValue)throws SQLException{
         CallableStatement  pstatement = conn.prepareCall(sql);
+        System.out.println(sql);
         if (paraValue != null)
             setStateParameter(pstatement, paraValue);
         if(hasPageReturn)
