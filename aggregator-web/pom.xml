@@ -84,8 +84,8 @@
                         <!-- 按环境拷贝配置文件。结束 -->
                         <resource>
                             <!-- this is relative to the pom.xml directory -->
-                            <directory>profiles/${package.target}/resources</directory>
-                            <targetPath>WEB-INF/classes/properties</targetPath>
+                            <directory>profiles/${package.target}/resources/</directory>
+                            <targetPath>WEB-INF/classes/</targetPath>
                             <filtering>true</filtering>
                         </resource>
                         <resource>
