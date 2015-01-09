@@ -1981,7 +1981,7 @@ public class UpdateCourse extends TimerTask{
                        String topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(rsEntity.getResid().toString());
                         System.out.println("微视频资源文件"+topath);
                         //下载微视频文件
-                        if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,rsEntity.getResid().toString(),key,-1,topath,rsEntity.getFilename(),null)){
+                        if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,rsEntity.getResid().toString(),key,-1,topath,rsEntity.getFilename(),null,true)){
                             //文件失败
                             System.out.println("资源文件下载失败!");
                         }
