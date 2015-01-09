@@ -130,13 +130,17 @@ public class QuestionInfo implements java.io.Serializable {
                 correctanswer=correctanswer.replaceAll("_QUESTIONPIC\\+",t);
             while (correctanswer.indexOf("\r\n\t")!=-1||
                     correctanswer.indexOf("\r\n")!=-1||
-                    correctanswer.indexOf("\n")!=-1||correctanswer.indexOf("\n\r")!=-1||correctanswer.indexOf("\t")!=-1){
+                    correctanswer.indexOf("\n")!=-1
+                    ||correctanswer.indexOf("\n\r")!=-1
+                    ||correctanswer.indexOf("\t")!=-1
+                    ||correctanswer.indexOf("'")!=-1){
                 //correctanswer=correctanswer.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
                 correctanswer=correctanswer.replace("\r\n\t", "");
                 correctanswer=correctanswer.replace("\r\n", "&nbsp;&nbsp;<br>");
                 correctanswer=correctanswer.replace("\n", "<br>");
                 correctanswer=correctanswer.replace("\n\r", "<br>&nbsp;&nbsp;");
                 correctanswer=correctanswer.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                correctanswer=correctanswer.replace("'", "’");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
 
@@ -190,7 +194,7 @@ public class QuestionInfo implements java.io.Serializable {
                 content=content.replaceAll("\n", "<br>");
                 content=content.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
                 content=content.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                content=content.replaceAll("'", "＇");
+                content=content.replaceAll("'", "’");
             }
             if(content.indexOf("<p>")==0)
                 content=content.replaceFirst("<p>","");
@@ -207,19 +211,60 @@ public class QuestionInfo implements java.io.Serializable {
         String returnVal=this.content;
         if(returnVal!=null)
             returnVal=returnVal.replaceAll("ueditor/jsp/../../","_SZ_SCHOOL_IMG_PLACEHOLDER_");
+        while (returnVal.indexOf("\r\n\t")!=-1||
+                returnVal.indexOf("\r\n")!=-1||
+                returnVal.indexOf("\n")!=-1||
+                returnVal.indexOf("\n\r")!=-1||
+                returnVal.indexOf("\t")!=-1||
+                returnVal.indexOf("'")!=-1){
+            //content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+            returnVal=returnVal.replaceAll("\r\n\t", "");
+            returnVal=returnVal.replaceAll("\r\n", "&nbsp;&nbsp;<br>");
+            returnVal=returnVal.replaceAll("\n", "<br>");
+            returnVal=returnVal.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
+            returnVal=returnVal.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+            returnVal=returnVal.replaceAll("'", "’");
+        }
         return returnVal;
 
     }
     public String getUpAnalysis(){
         String returnVal=this.analysis;
-        if(returnVal!=null)
+        if(returnVal!=null){
             returnVal=returnVal.replaceAll("ueditor/jsp/../../","_SZ_SCHOOL_IMG_PLACEHOLDER_");
+            while (returnVal.indexOf("\r\n\t")!=-1||returnVal.indexOf("\n")!=-1||returnVal.indexOf("\n\r")!=-1
+                    ||returnVal.indexOf("\t")!=-1||returnVal.indexOf("'")!=-1){
+                //analysis=analysis.replaceAll("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                returnVal=returnVal.replaceAll("\r\n\t", "");
+                returnVal=returnVal.replaceAll("\r\n", "&nbsp;&nbsp;<br>");
+                returnVal=returnVal.replaceAll("\n", "<br>");
+                returnVal=returnVal.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
+                returnVal=returnVal.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                returnVal=returnVal.replaceAll("'", "’");
+                //content=content.replaceAll(" ", "&nbsp;");
+                //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
+            }
+        }
         return returnVal;
     }
 
     public java.lang.String getSaveContent(){
         if(this.content!=null){
-            this.setContent(this.content.replaceAll("_SZ_SCHOOL_IMG_PLACEHOLDER_","ueditor/jsp/../../"));
+            this.setContent(this.content.replaceAll("_SZ_SCHOOL_IMG_PLACEHOLDER_", "ueditor/jsp/../../"));
+            while (content.indexOf("\r\n\t")!=-1||
+                    content.indexOf("\r\n")!=-1||
+                    content.indexOf("\n")!=-1||
+                    content.indexOf("\n\r")!=-1||
+                    content.indexOf("\t")!=-1||
+                    content.indexOf("'")!=-1){
+                //content=content.replace("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                content=content.replaceAll("\r\n\t", "");
+                content=content.replaceAll("\r\n", "&nbsp;&nbsp;<br>");
+                content=content.replaceAll("\n", "<br>");
+                content=content.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
+                content=content.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                content=content.replaceAll("'", "’");
+            }
         }
         return content;
     }
@@ -328,7 +373,7 @@ public class QuestionInfo implements java.io.Serializable {
                 analysis=analysis.replaceAll("\n", "<br>");
                 analysis=analysis.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
                 analysis=analysis.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                analysis=analysis.replaceAll("'", "＇");
+                analysis=analysis.replaceAll("'", "’");
                 //content=content.replaceAll(" ", "&nbsp;");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
@@ -346,7 +391,18 @@ public class QuestionInfo implements java.io.Serializable {
     public java.lang.String getSaveAnalysis(){
         if(this.analysis!=null){
             this.setAnalysis(this.analysis.replaceAll("_SZ_SCHOOL_IMG_PLACEHOLDER_","ueditor/jsp/../../"));
-        }
+            while (analysis.indexOf("\r\n\t")!=-1||analysis.indexOf("\n")!=-1||analysis.indexOf("\n\r")!=-1||analysis.indexOf("\t")!=-1||analysis.indexOf("'")!=-1){
+                //analysis=analysis.replaceAll("\r\n\t", "&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;");
+                analysis=analysis.replaceAll("\r\n\t", "");
+                analysis=analysis.replaceAll("\r\n", "&nbsp;&nbsp;<br>");
+                analysis=analysis.replaceAll("\n", "<br>");
+                analysis=analysis.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
+                analysis=analysis.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                analysis=analysis.replaceAll("'", "’");
+                //content=content.replaceAll(" ", "&nbsp;");
+                //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
+            }
+        } 
         return analysis;
     }
     public void setAnalysis(java.lang.String analysis){
