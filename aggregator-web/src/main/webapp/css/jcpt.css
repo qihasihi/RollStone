@@ -148,6 +148,14 @@
 	top:0;
 	left:0;
 }
+	.jcpt_sytj{
+	width:960px;
+	padding:0 20px 10px;
+}
+	.jcpt_sytj div.tab_layout1{height:575px;}
+	.jcpt_sytj div.tab_layout2{width:960px; overflow:auto; overflow-y:hidden; margin-bottom:10px;}
+	.jcpt_sytj div.tab_layout2 table.public_tab2{ margin:10px 0;}
+
 	.jcpt_initial{
 	width:510px;
 	height:360px;

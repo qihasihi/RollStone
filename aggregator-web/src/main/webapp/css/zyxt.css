@@ -319,7 +319,7 @@
 	.zyxt_zyxq p.ico a span{ margin:0 5px 5px;}
 	.zyxt_zyxq span{ display:inline-block;}
 	.zyxt_zyxq b{ display:inline-block;wdith:70px;}
-	.zyxt_zyxq .ico11,.zyxt_zyxq .ico76{margin:0 5px 6px;}
+	.zyxt_zyxq .ico11,.zyxt_zyxq .ico76,.zyxt_zyxq .ico51{margin:0 5px 6px;}
 	.zyxt_zyxq .ico_more{margin:0 0 2px 5px;}
 	.zyxt_zyxq .w220 select,.zyxt_zyxq .w160 select{width:75px;}
 	.zyxt_zyxq textarea.w880{ height:240px; color:#000; margin-bottom:15px;}
@@ -427,3 +427,26 @@
     .zyxt_paihang_xx li {height:20px;}
     .zyxt_paihang_xx li strong {top:2px;}
     .zyxt_paihang_xx li em { float:right;font-style:normal;}
+	
+	.zyxt_fbrw {
+	width:880px;
+	padding:0 20px 10px 60px;
+}
+	.zyxt_fbrw ul{
+	width:880px;
+	height:512px;
+	margin:15px 0 0;
+	overflow:auto;
+}
+	.zyxt_fbrw ul li{
+	padding:0 0 5px 30px;
+	position:relative;
+	color:#000;
+}
+	.zyxt_fbrw ul li input[type="radio"]{
+	position: absolute;
+	top:1px;
+	left:0;
+}
+    .public_float960 div.w430 p{ margin-bottom:8px;}
+	.public_float960 div.w430 input[type=text]{ float:right; width:150px;}

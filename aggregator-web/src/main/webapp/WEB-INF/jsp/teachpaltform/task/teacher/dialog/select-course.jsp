@@ -5,6 +5,7 @@
     <title>${sessionScope.CURRENT_TITLE}</title>
     <style>
     </style>
+    <script type="text/javascript" src="js/resource/res_task.js"></script>
     <script type="text/javascript">
         var termid="${currtTerm.ref}";
         var global_gradeid;
@@ -29,7 +30,7 @@
                 operate_id : "initItemList"
             });
 
-            changeGrade();
+            changeGrade('sel_subgrade');
         });
 
 
@@ -50,47 +51,16 @@
                     &&rps.presult.list[0].length>0){
                 $.each(rps.presult.list[0],function(idx,itm){
                     html+="<tr "+(idx%2==1?"class='trbg1'":"")+">";
-                    html+="<td><p class='one'>";
-
-                    html+='<a  href="javascript:void(0);" onclick="genderClick(\''+itm.courseid+'\')">'+itm.coursename+'</a>';
-                    if(itm.islive>0)
-                        html+='<a  target="_blank" href="'+itm.liveaddress+'"><b class="lm_ico08" title="直播课"></b></a>'; //<b class="lm_ico08" title="直播课"></b>
-                    html+='</p></td>';
                     html+="<td>";
-                    if(typeof(itm.classEntity)!='undefined'&&itm.classEntity.length>0){
-                        if(itm.classEntity[0].CLASS_NAME!="0"){
-                            $.each(itm.classEntity,function(n,classTemp){
-                                html+="<p><span class='f_right'>"+classTemp.CLASS_TIME.substring(0,16)+"</span>"+classTemp.CLASS_NAME+"</p>";
-                            });
-                        }else{
-                            html+="<p><a href='javascript:toUpdCoursePage("+itm.courseid+")' class='font-blue'>" +
-                                    "<img width='15' height='15' src='images/an02_131126.png'/>设置</a></p>";
-                        }
-                    }else{
-                        html+="<p><span class='f_right'>----</span>----</p>";
-                    }
+                    html+=itm.coursename;
                     html+="</td>";
-                    html+='<td><a  target="_blank" href="clsperformance?m=toIndex&courseid='+itm.courseid+'&classtype=1&subjectid='+global_subjectid+'&termid='+termid+'" class="font-blue">查看' ;
-                    if(typeof(itm.courseScoreIsOverStr)!="undefined"&&itm.courseScoreIsOverStr.indexOf("1")!=-1){
-                        html+='<span class="ico33"></span>';
-                    }
-                    html+='</a></td>';
-                    html+="<td><a href='teachercourse?m=toClassCommentList&courseid="+itm.courseid+"&type=1' target='_blank'>"+itm.avgscore+"（"+itm.commentnum+"人）</a></td>";
                     html+="<td>";
-                    if(itm.sharetype==2){
-                        html+='<a class="ico21" title="已共享"></a>';
-                    }else if(typeof itm.quoteid=='undefined'||itm.quoteid==0){
-                        html+="<a href='javascript:shareCourse(\""+itm.courseid+"\","+itm.sharetype+")' class='ico20' title='共享'></a>";
-                    }
-
-                    html+="</td></tr>";
+                    html+='<input type="radio" name="rdo_course" value="'+itm.courseid+'"/>';
+                    html+="</td>";
+                    html+="</tr>";
                 });
 
-
-                if(rps.presult.pageTotal<=1)
-                    $('#pListaddress').hide();
-                else
-                    $('#pListaddress').show();
+                $("#a_sub_task").show();
 
 
                 if(rps.presult.list[0].length>0){
@@ -105,8 +75,8 @@
                 }
                 pCourseList.Refresh();
             }else{
-                html+="<tr><td colspan='5'>没有数据！</td></tr>";
-
+                html+="<tr><td colspan='2'>没有数据!</td></tr>";
+                $("#a_sub_task").hide();
             }
 
             $("#courseTable").html(html);
@@ -167,8 +137,11 @@
             }else if(type==2){
                 $("#li_2").addClass("crumb");
                 $("#li_1").removeClass("crumb");
-                $("#dv_selpaperchild").hide();
+                $("#dv_selectPaper").hide();
                 $("#dv_addpaperchild").show();
+                changeGrade('add_subgrade');
+
+                //toSaveCoursePage();
             }else if(type==3){
                 $("#dv_selectPaper").hide();
                 $("#dv_addpaperchild").hide();
@@ -182,15 +155,9 @@
                         });
             }else if(type==4){
                 $("#dv_selectPaper").hide();
-                $("#dv_addpaperchild").hide();
-                $("#dv_model").hide();
-                $("#dv_paperDetail").hide();
-                $("#dv_content").load(
-                        "task?m=toSelMicForTask&tasktype=6&courseid=${param.courseid}"
-                        ,function(){
-                            //$("#dv_selectPaper").hide();
-                            //$("#dv_paperDetail").show();
-                        });
+                $("#dv_course_parent").show();
+                $("#dv_addCourse").hide();
+                $("#teaching_materia_div").hide();
             }
         }
     /**
@@ -247,12 +214,13 @@
 </head>
 <body>
 <%--试卷三级目录--%>
+<input type="hidden" id="material_id"/>
 <div class="public_float public_float960" id="dv_model" style="display:none">
     <div class="public_float public_float960"  id="dv_model_child">
 
     </div>
 </div>
-<div class="public_float public_float960" id="dv_selectPaper">
+<div class="public_float public_float960" id="dv_course_parent">
     <p class="float_title"><strong>发布任务</strong></p>
     <div class="subpage_lm">
         <ul>
@@ -260,15 +228,17 @@
             <li  id="li_2"><a href="javascript:;" onclick="loadDiv(2)">新建专题</a></li>
         </ul>
     </div>
-    <%--选择试卷--%>
-    <div  style="" id="dv_selCourse">
+
+    <%--选择专题--%>
+    <div  style="" id="dv_selectPaper">
+
         <div class="jxxt_float_w920 font-black">
             <c:if test="${!empty subGradeList}">
-            <select id="sel_subgrade" onchange="changeGrade()">
-                <c:forEach items="${subGradeList}" var="c">
-                    <option value="${c.gradeid}_${c.subjectid}">${c.gradevalue}${c.subjectname}</option>
-                </c:forEach>
-            </select>
+                <select id="sel_subgrade" onchange="changeGrade('sel_subgrade')">
+                    <c:forEach items="${subGradeList}" var="c">
+                        <option value="${c.gradeid}_${c.subjectid}">${c.gradevalue}${c.subjectname}</option>
+                    </c:forEach>
+                </select>
             </c:if>
         </div>
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
@@ -279,9 +249,6 @@
             <col class="w120"/>
             <tr>
                 <th>专题名称</th>
-                <th>班级&mdash;开始时间</th>
-                <th>课堂积分</th>
-                <th>专题评价</th>
                 <th>操作</th>
             </tr>
             <tr>
@@ -289,26 +256,40 @@
                 </tbody>
         </table>
         <form id="pListForm" name="pListForm"><p class="nextpage" id="pListaddress" align="center"></p></form>
+        <p class="t_c"><a href="javascript:doAddPaperTask();" id="a_sub_task" class="an_small">提&nbsp;交</a></p>
     </div>
-    <%--新建试卷--%>
+
+    <%--新建专题--%>
     <div id="dv_addpaperchild" style="display:none">
-        <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input ">
-            <col class="w90"/>
-            <col class="w600"/>
-            <tr>
-                <th>试卷名称：</th>
-                <td><input name="papername" id="papername" type="text" class="w350"/></td>
-            </tr>
-            <tr>
-                <th>&nbsp;</th>
-                <td><a href="javascript:;" onclick="doSaveRelatePaper()" class="an_public1">下一步</a></td>
-            </tr>
-        </table>
+
+        <div class="jxxt_float_w920 font-black">
+            <c:if test="${!empty gradeSubList}">
+                <select id="add_subgrade" onchange="changeGrade('add_subgrade')">
+                    <c:forEach items="${gradeSubList}" var="c">
+                        <option value="${c.gradeid}_${c.subjectid}">${c.gradevalue}${c.subjectname}</option>
+                    </c:forEach>
+                </select>
+            </c:if>
+        </div>
+
+        <div id="dv_addCourse">
+
+        </div>
     </div>
 </div>
 <!--试卷详情-->
 <div class="public_float public_float960" id="dv_paperDetail" style="display:none">
 
+</div>
+<!--专题教材-->
+<div id="teaching_materia_div" class="public_float jxxt_float_jcbb" style="display:none;">
+    <%--<p class="float_title"><strong>选教材版本</strong></p>--%>
+    <p class="float_title"><a href="javascript:;" class="ico93" onclick="loadDiv(4)" title="返回"></a><span id="dv_model_mdname">新建专题</span></p>
+    <p class="font-black">请选择本学科授课的教材版本，选择后搜索资源时会优先推荐该版本。</p>
+    <ul id="teaching_materia">
+    </ul>
+
+    <p class="t_c"><a id="addReportBtn" class="an_public1"  href="javascript:selectMaterial();" onclick="">确定</a></p>
 </div>
 </body>
 </html>

@@ -105,15 +105,62 @@
             fn_changePanel(cufiletype);
         });
 
-        function changeGrade(){
-            var value=$("#sel_subgrade").val();
+        <%--select-course.jsp--%>
+        function changeGrade(div){
+            var value=$("#"+div).val();
             if(value.Trim().length<1)
                 return;
             global_gradeid=value.split("_")[0];
             global_subjectid=value.split("_")[1];
-            //getTchMaterial();
-            pageGo("pCourseList");
+
+            if(div=='add_subgrade'){
+                getTchMaterial(true);
+            }else{
+                getTchMaterial();
+                pageGo("pCourseList");
+            }
         }
+
+        /**
+         *获取教材
+         * 初始教材
+         * 加载专题添加页面
+         */
+        function getTchMaterial(isadd){
+            var param={};
+            param.termid=termid;
+            param.gradeid=global_gradeid;
+            param.subjectid=global_subjectid;
+            param.atermid=termid;
+            $.ajax({
+                url:'teachercourse?m=getTchMaterial',
+                data:param,
+                type:'post',
+                dataType:'json',
+                error:function(){
+                    alert('异常错误,系统未响应！');
+                },success:function(rps){
+                    if(rps.type=="success"){
+                        if(typeof(rps.objList[0])!="undefined"&&rps.objList[0]!=null){
+                            $("input[id='material_id']").val(rps.objList[0].materialid);
+                            if(isadd){
+                                var url='teachercourse?toSaveCourse&gradeid='+global_gradeid+'&subjectid='+global_subjectid;
+                                $("#dv_addCourse").load(url,function(){
+                                    $("#teaching_materia_div").hide();
+                                    $("#dv_course_parent").show();
+                                    $("#dv_addCourse").show();
+                                });
+                            }
+                        }else{
+                            $("input[id='material_id']").val("");
+                            $("#dv_course_parent").hide();
+                            toSaveCoursePage();
+                        }
+                    }
+                }
+            });
+        }
+
 
 
 
