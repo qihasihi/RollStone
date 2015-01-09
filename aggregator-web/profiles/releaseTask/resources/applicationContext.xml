@@ -19,12 +19,27 @@
         <property name="jndiName">
             <value>java:comp/env/jdbc/mschool</value>
         </property>
-    </bean>-->
+    </bean>
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://192.168.8.35:3306/school"/>
         <property name="username" value="schu"/>
         <property name="password" value="schp2014"/>
+    </bean>
+    -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://192.168.8.35:3306/school"/>
+        <property name="user" value="schu"/>
+        <property name="password" value="test"/>
+        <property name="minPoolSize" value="10" />
+        <property name="maxPoolSize" value="50" />
+        <property name="maxIdleTime" value="10" />
+        <property name="acquireIncrement" value="5" />
+        <property name="maxStatements" value="0" />
+        <property name="initialPoolSize" value="10" />
+        <property name="idleConnectionTestPeriod" value="1" />
+        <property name="autoCommitOnClose" value="false" />
     </bean>
     <!-- 配置Jdbc模板 -->
     <bean id="jdbcTemplate" name="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">

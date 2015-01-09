@@ -39,6 +39,7 @@
         <property name="maxStatements" value="0" />
         <property name="initialPoolSize" value="10" />
         <property name="idleConnectionTestPeriod" value="1" />
+        <property name="autoCommitOnClose" value="false" />
     </bean>
 
     <!-- 配置Jdbc模板 -->
