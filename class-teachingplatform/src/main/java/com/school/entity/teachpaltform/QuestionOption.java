@@ -53,7 +53,7 @@ public class QuestionOption implements Serializable{
 
             while(content.indexOf("_QUESTIONPIC+")!=-1)
                 content=content.replaceAll("_QUESTIONPIC\\+", t);
-            while (
+            if (
                     content.indexOf("\r\n\t")!=-1||
                             content.indexOf("\r\n")!=-1||
                             content.indexOf("\n")!=-1||
@@ -66,7 +66,7 @@ public class QuestionOption implements Serializable{
                 content=content.replaceAll("\n", "<br>");
                 content=content.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
                 content=content.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                content=content.replaceAll("'", "£§");
+                content=content.replaceAll("'", "¡¯");
             }
 
             if(content.indexOf("<p>")==0)
@@ -78,7 +78,26 @@ public class QuestionOption implements Serializable{
         return content;
     }
     public java.lang.String getSaveContent(){
-      return content;
+      if(this.content!=null){
+          if (
+                  content.indexOf("\r\n\t")!=-1||
+                          content.indexOf("\r\n")!=-1||
+                          content.indexOf("\n")!=-1||
+                          content.indexOf("\n\r")!=-1||
+                          content.indexOf("\t")!=-1||
+                          content.indexOf("'")!=-1
+                  ){
+              content=content.replaceAll("\r\n\t", "");
+              content=content.replaceAll("\r\n", "&nbsp;&nbsp;<br>");
+              content=content.replaceAll("\n", "<br>");
+              content=content.replaceAll("\n\r", "<br>&nbsp;&nbsp;");
+              content=content.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+              content=content.replaceAll("'", "¡¯");
+          }
+      }
+        return content;
+
+
     }
     public void setContent(java.lang.String content){
       this.content = content;
