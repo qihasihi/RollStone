@@ -1,84 +1,3 @@
-$(function(){
-    $("input[name='classtimeType']").bind("click",function(){
-        if($(this).val()==1){
-
-            $("#list_ct p").hide();
-            $("input[name='classes']:checked").each(function(idx,itm) {
-                $("#p_"+$(this).val()).show();
-            });
-            $("input[name='tsclasses']:checked").each(function(idx,itm) {
-                $("#p_ts_"+$(this).val()).show();
-            });
-            $("input[name='vclasses']:checked").each(function(idx,itm) {
-                $("#p_v_"+$(this).val()).show();
-            });
-            $("#all_ct").hide();
-            $("#list_ct").show('fast');
-        }else{
-            $("#list_ct").hide();
-            $("#all_ct").show('fast');
-        }
-    });
-
-
-    $("input[name='classEndTimeType']").bind("click",function(){
-        if($(this).val()==1){
-
-            $("#list_ct_end p").hide();
-            $("input[name='classes']:checked").each(function(idx,itm) {
-                $("#p_end_"+$(this).val()).show();
-            });
-            $("input[name='tsclasses']:checked").each(function(idx,itm) {
-                $("#p_ts_end_"+$(this).val()).show();
-            });
-            $("input[name='vclasses']:checked").each(function(idx,itm) {
-                $("#p_v_end_"+$(this).val()).show();
-            });
-            $("#all_ct_end").hide();
-            $("#list_ct_end").show('fast');
-        }else{
-            $("#list_ct_end").hide();
-            $("#all_ct_end").show('fast');
-        }
-    });
-
-    $("input[name='classes']").bind("click",function(){
-        if($(this).attr("checked")){
-            $("#p_"+$(this).val()).show();
-            $("#p_end_"+$(this).val()).show();
-        }else{
-            $("#p_"+$(this).val()).hide();
-            $("#p_end_"+$(this).val()).hide();
-            $("#"+$(this).val()+"_classtime").val("");
-            $("#"+$(this).val()+"_classEntTime").val("");
-        }
-    });
-
-    $("input[name='tsclasses']").bind("click",function(){
-        if($(this).attr("checked")){
-            $("#p_ts_"+$(this).val()).show();
-            $("#p_ts_end_"+$(this).val()).show();
-        }else{
-            $("#p_ts_"+$(this).val()).hide();
-            $("#p_ts_end_"+$(this).val()).hide();
-            $("#"+$(this).val()+"_ts_classtime").val("");
-            $("#"+$(this).val()+"_ts_classEndTime").val("");
-        }
-    });
-
-    $("input[name='vclasses']").bind("click",function(){
-        if($(this).attr("checked")){
-            $("#p_v_"+$(this).val()).show();
-            $("#p_v_end_"+$(this).val()).show();
-        }else{
-            $("#p_v_"+$(this).val()).hide();
-            $("#p_v_end_"+$(this).val()).hide();
-            $("#"+$(this).val()+"_v_classtime").val("");
-            $("#"+$(this).val()+"_v_classEndTime").val("");
-        }
-    });
-});
-
 
 
 
@@ -288,6 +207,7 @@ function ChangeTimeToString ( DateIn )
 
 function addTeacherCourse(){
     var term=termid;
+    var residObj=$("#objectid")
     var coursename=$("#courseName");
     var introduction=$("#introduction");
     var sharetype=$('input[name="sharetype"]:checked').val();
@@ -308,6 +228,10 @@ function addTeacherCourse(){
     $("input[name='classes']:checked").each(function() {classes.push($(this).val());});
     $("input[name='tsclasses']:checked").each(function() {classes.push($(this).val());});
     $("input[name='vclasses']:checked").each(function() {vclasses.push($(this).val());});
+    if(residObj.val().Trim().length<1){
+        alert('系统未获取到资源标识!');
+        return;
+    }
     if(coursename.val().Trim().length<1){
         alert('请输入专题名称!');
         coursename.focus();
@@ -318,7 +242,8 @@ function addTeacherCourse(){
         coursename.focus();
         return;
     }
-    if(materiaids.length<1&&$("#material_id").val==0){
+    var maid= $("#material_id").val();
+    if(maid.length<1){
         alert('请选择教材!');
         return;
     }
@@ -399,13 +324,8 @@ function addTeacherCourse(){
 
 
 
-    var maid= $("#material_id").val();
-    if($("#materialid").val()==0){
-        materialidvalues=materiaids.join(',');
-    }else{
-        materialidvalues=$("#materialid").val();
-    }
-    var material_id=$("input[name='materialid']:checked").val();
+
+    materialidvalues=maid;
 //    var selectCourseid='';
 //    $("#selectedCourse li").each(function(){
 //        selectCourseid+=$(this).attr("id")+'|';
@@ -417,17 +337,20 @@ function addTeacherCourse(){
 //    $("#addButton").attr("href","");
 //    $("#addButton").removeClass("an_small");
 //    $("#addButton").addClass("an_gray_small");
-    $("#addButton").attr("href","javascript:;");
+    //$("#addButton").attr("href","javascript:;");
+
     $.ajax({
         url:'teachercourse?m=addCourseByRes',
         data:{
-            termid:term.val(),
+            courseid:addCourseId,
+            resid:residObj.val(),
+            termid:term,
             coursename:coursename.val(),
             introduction:introduction.val(),
             sharetype:sharetype,
             courselevel:courselevel,
-            gradeid:$("#gradeid").val(),
-            subjectid:$("#subjectid").val(),
+            gradeid:global_gradeid,
+            subjectid:global_subjectid,
             classidstr:classes.join(','),
             vclassidstr:vclasses.join(','),
             materialidvalues:materialidvalues,
@@ -439,10 +362,10 @@ function addTeacherCourse(){
         },
         type:'POST',
         dataType:'json',
-        error:function(){
-            alert('异常错误,系统未响应！');
+        error:function(data,status,e){
             $("#addButton").attr("href","javascript:addTeacherCourse();");
-        },success:function(rps){
+        },
+        success:function(rps){
             if(rps.type=="success"){
                 $.fancybox.close();
             }else{

@@ -7,7 +7,8 @@
  import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
- 
+
+ import com.school.util.UtilTool;
  import org.artofsolving.jodconverter.OfficeDocumentConverter;
  import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
 import org.artofsolving.jodconverter.office.OfficeManager;
@@ -78,13 +79,17 @@ import org.artofsolving.jodconverter.office.OfficeManager;
      public String getOfficeHome(HttpServletRequest request) {
          String osName = System.getProperty("os.name");
 //         if (Pattern.matches("Linux.*", osName)) {
-             return request.getRealPath("/")+"util/docconverter/OpenOffice.org 3";
+             //return request.getRealPath("/")+"util/docconverter/OpenOffice.org 3";
 //         } else if (Pattern.matches("Windows.*", osName)) {
 //             return "C:/Program Files/OpenOffice.org 3";
 //         } else if (Pattern.matches("Mac.*", osName)) {
 //             return "/Application/OpenOffice.org.app/Contents";
-//         }         
-         
+//         }
+         String path= UtilTool.utilproperty.getProperty("OPENOFFICE_PATH");
+         if(path==null||path.length()<1)
+             return "C:/Program Files (x86)/OpenOffice.org 3";
+         else
+             return path;
 //         return null;
      }
  

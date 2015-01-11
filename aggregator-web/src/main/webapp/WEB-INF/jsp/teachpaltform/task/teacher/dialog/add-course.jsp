@@ -13,9 +13,89 @@
 <script type="text/javascript">
     var selectedCourseids='';
     var termendtime='${term.semesterenddatestring}';
+    var addCourseId='${addCourseId}';
     $(function(){
-        //$("#material_id").val(materialid);
+        $("input[name='classtimeType']").bind("click",function(){
+            if($(this).val()==1){
+
+                $("#list_ct p").hide();
+                $("input[name='classes']:checked").each(function(idx,itm) {
+                    $("#p_"+$(this).val()).show();
+                });
+                $("input[name='tsclasses']:checked").each(function(idx,itm) {
+                    $("#p_ts_"+$(this).val()).show();
+                });
+                $("input[name='vclasses']:checked").each(function(idx,itm) {
+                    $("#p_v_"+$(this).val()).show();
+                });
+                $("#all_ct").hide();
+                $("#list_ct").show('fast');
+            }else{
+                $("#list_ct").hide();
+                $("#all_ct").show('fast');
+            }
+        });
+
+
+        $("input[name='classEndTimeType']").bind("click",function(){
+            if($(this).val()==1){
+
+                $("#list_ct_end p").hide();
+                $("input[name='classes']:checked").each(function(idx,itm) {
+                    $("#p_end_"+$(this).val()).show();
+                });
+                $("input[name='tsclasses']:checked").each(function(idx,itm) {
+                    $("#p_ts_end_"+$(this).val()).show();
+                });
+                $("input[name='vclasses']:checked").each(function(idx,itm) {
+                    $("#p_v_end_"+$(this).val()).show();
+                });
+                $("#all_ct_end").hide();
+                $("#list_ct_end").show('fast');
+            }else{
+                $("#list_ct_end").hide();
+                $("#all_ct_end").show('fast');
+            }
+        });
+
+        $("input[name='classes']").bind("click",function(){
+            if($(this).attr("checked")){
+                $("#p_"+$(this).val()).show();
+                $("#p_end_"+$(this).val()).show();
+            }else{
+                $("#p_"+$(this).val()).hide();
+                $("#p_end_"+$(this).val()).hide();
+                $("#"+$(this).val()+"_classtime").val("");
+                $("#"+$(this).val()+"_classEntTime").val("");
+            }
+        });
+
+        $("input[name='tsclasses']").bind("click",function(){
+            if($(this).attr("checked")){
+                $("#p_ts_"+$(this).val()).show();
+                $("#p_ts_end_"+$(this).val()).show();
+            }else{
+                $("#p_ts_"+$(this).val()).hide();
+                $("#p_ts_end_"+$(this).val()).hide();
+                $("#"+$(this).val()+"_ts_classtime").val("");
+                $("#"+$(this).val()+"_ts_classEndTime").val("");
+            }
+        });
+
+        $("input[name='vclasses']").bind("click",function(){
+            if($(this).attr("checked")){
+                $("#p_v_"+$(this).val()).show();
+                $("#p_v_end_"+$(this).val()).show();
+            }else{
+                $("#p_v_"+$(this).val()).hide();
+                $("#p_v_end_"+$(this).val()).hide();
+                $("#"+$(this).val()+"_v_classtime").val("");
+                $("#"+$(this).val()+"_v_classEndTime").val("");
+            }
+        });
     });
+
+
 </script>
 <body>
     <input id="termid" name="termid" type="hidden" value="${term.ref}"/>

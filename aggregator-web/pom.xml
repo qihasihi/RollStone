@@ -85,7 +85,7 @@
                         <resource>
                             <!-- this is relative to the pom.xml directory -->
                             <directory>profiles/${package.target}/resources/</directory>
-                            <targetPath>WEB-INF/classes/</targetPath>
+                            <targetPath>WEB-INF/classes/properties</targetPath>
                             <filtering>true</filtering>
                         </resource>
                         <resource>
@@ -94,12 +94,12 @@
                             <includes></includes>
                             <filtering>true</filtering>
                         </resource>
-                        <resource>
-                            <directory>../aggregator-class/src/main/resources</directory>
-                            <targetPath>WEB-INF/classes</targetPath>
-                            <includes></includes>
-                            <filtering>true</filtering>
-                        </resource>
+                        <!--<resource>-->
+                            <!--<directory>../aggregator-class/src/main/resources</directory>-->
+                            <!--<targetPath>WEB-INF/classes</targetPath>-->
+                            <!--<includes></includes>-->
+                            <!--<filtering>true</filtering>-->
+                        <!--</resource>-->
                     </webResources>
                     <overlays>
                         <overlay>

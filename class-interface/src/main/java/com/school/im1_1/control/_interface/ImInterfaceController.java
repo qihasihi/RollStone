@@ -2449,7 +2449,7 @@ public class ImInterfaceController extends TaskController {
             if(tcclist!=null){
                 tg.getTpgroupinfo().setSubjectid(tcclist.get(0).getSubjectid());
             }
-            ITpGroupStudentManager tpGroupStudentManager = this.getManager(TpGroupStudentManager.class);
+            ITpGroupStudentManager tpGroupStudentManager = (TpGroupStudentManager)this.getManager(TpGroupStudentManager.class);
             List<TpGroupStudent> tgList =tpGroupStudentManager.getList(tg,null);
             if(tgList!=null&&tgList.size()==1){
                 allot = new TpTaskAllotInfo();
@@ -3010,7 +3010,7 @@ public class ImInterfaceController extends TaskController {
             if(tcclist!=null){
                 tg.getTpgroupinfo().setSubjectid(tcclist.get(0).getSubjectid());
             }
-            ITpGroupStudentManager tpGroupStudentManager = this.getManager(TpGroupStudentManager.class);
+            ITpGroupStudentManager tpGroupStudentManager = (TpGroupStudentManager)this.getManager(TpGroupStudentManager.class);
             List<TpGroupStudent> tgList =tpGroupStudentManager.getList(tg,null);
             if(tgList!=null&&tgList.size()==1){
                 allot = new TpTaskAllotInfo();

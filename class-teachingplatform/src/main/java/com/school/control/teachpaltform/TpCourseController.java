@@ -29,6 +29,7 @@ import com.school.util.UtilTool;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,7 +44,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping(value = "teachercourse")
-public class TpCourseController extends BaseController<TpCourseInfo> {
+public class TpCourseController extends TaskController{
     @Autowired
     private IClassManager classManager;
     @Autowired
@@ -593,7 +594,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String termid = request.getParameter("termid");
         String gradeid = request.getParameter("gradeid");
 
-        TpCourseInfo tcInfo = this.getParameter(request,
+        TpCourseInfo tcInfo = (TpCourseInfo) this.getParameter(request,
                 TpCourseInfo.class);
         tcInfo.setUserid(user.getUserid());
         tcInfo.setLocalstatus(2);
@@ -666,7 +667,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     public void getCourseQuestionList(HttpServletRequest request,
                                       HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
-        TpCourseInfo obj = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo obj = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
         PageResult p=this.getPageResultParameter(request);
         List<TpCourseInfo> courseList = this.tpCourseManager.getCourseQuestionList(obj, p);
         p.setList(courseList);
@@ -1138,7 +1139,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         //查询得到班级
         PageResult presult = this.getPageResultParameter(request);
         // 分页查询
-        TpCourseInfo tcInfo = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tcInfo = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
         tcInfo.setUserid(this.logined(request).getUserid());
         tcInfo.setClassid(Integer.parseInt(classid.trim()));
         tcInfo.setSelectType(1);
@@ -1425,7 +1426,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     public void doAddCourse(HttpServletRequest request,
                             HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
-        TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tc = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
         tc.setDcschoolid(this.logined(request).getDcschoolid());
         if (tc.getCoursename() == null || tc.getCoursename().length() < 1) {
             je.setMsg("没有专题名称参数！");// 异常错误，参数不齐，无法正常访问!
@@ -1658,21 +1659,32 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
      * 资源系统
      * 添加课题
      */
+    @Transactional
     @RequestMapping(params = "m=addCourseByRes", method = RequestMethod.POST)
     public void doAddCourseByRes(HttpServletRequest request,
                             HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
-        TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tc = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
         tc.setDcschoolid(this.logined(request).getDcschoolid());
+        String resid=request.getParameter("resid");
+
+        if (resid == null || resid.trim().length() < 1) {
+            je.setMsg("没有资源标识参数!");// 异常错误，参数不齐，无法正常访问!
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if (tc.getCourseid() == null || tc.getCourseid().toString().length()< 1) {
+            je.setMsg("没有专题标识参数!");// 异常错误，参数不齐，无法正常访问!
+            response.getWriter().print(je.toJSON());
+            return;
+        }
         if (tc.getCoursename() == null || tc.getCoursename().length() < 1) {
             je.setMsg("没有专题名称参数!");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
         if (tc.getMaterialidvalues() == null || tc.getMaterialidvalues().trim().length() < 1) {
             je.setMsg("没有专题教材编号参数!");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1685,21 +1697,18 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String subjectid = request.getParameter("subjectid");
         if (subjectid == null || subjectid.length() < 1) {
             je.setMsg("没有获取学科参数!");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
         String gradeid = request.getParameter("gradeid");
         if (gradeid == null || gradeid.length() < 1) {
             je.setMsg("没有获取年级参数!");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
         String termid = request.getParameter("termid");
         if (termid == null || termid.length() < 1) {
             je.setMsg("没有获取学期参数!");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1707,13 +1716,11 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String vclassstr = request.getParameter("vclassidstr");
         if (classstr == null && vclassstr == null) {
             je.setMsg("没有获取关联班级参数!");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
         if (classstr.trim().length() < 1 && vclassstr.trim().length() < 1) {
             je.setMsg("没有获取关联班级参数!");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1721,14 +1728,12 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String vclasstimestr = request.getParameter("vclassTimeArray");
         if (classtimestr == null && vclasstimestr == null) {
             je.setMsg("没有获取关联班级开课时间参数!");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
 
         if (classtimestr.trim().length() == 0 && vclasstimestr.trim().length() == 0) {
             je.setMsg("没有获取关联班级开课时间参数!");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1742,7 +1747,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         StringBuilder sql = null;
 
         ////////////////////////// 添加专题，配置相关参数
-        Long courseid = this.tpCourseManager.getNextId(true);
+        Long courseid = tc.getCourseid();
         tc.setCourseid(courseid);
         tc.setCuserid(this.logined(request).getUserid());
 
@@ -1751,7 +1756,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         List<TeacherInfo> tl = this.teacherManager.getList(t, null);
         if (tl == null || tl.size() == 0) {
             je.setMsg("教师信息获取失败，请确认身份或者联系管理员!");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1761,7 +1765,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         objList = this.tpCourseManager.getSaveSql(tc, sql);
         if (sql == null || objList == null) {
             je.setMsg("专题数据写入出错！");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1779,7 +1782,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 objList = this.tpCourseTeachingMaterialManager.getSaveSql(tctm, sql);
                 if (sql == null || objList == null) {
                     je.setMsg("专题教材数据写入出错！");// 异常错误，参数不齐，无法正常访问!
-                    je.setType("error");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1789,7 +1791,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
         }else{
             je.setMsg("获取教材参数错误，请重试！");// 异常错误，参数不齐，无法正常访问!
-            je.setType("error");
             response.getWriter().print(je.toJSON());
             return;
         }
@@ -1850,7 +1851,6 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
                 objList = this.tpCourseClassManager.getSaveSql(cc, sql);
                 if (sql == null || objList == null) {
                     je.setMsg("专题班级数据写入出错！");// 异常错误，参数不齐，无法正常访问!
-                    je.setType("error");
                     response.getWriter().print(je.toJSON());
                     return;
                 }
@@ -1861,7 +1861,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
         //关联专题
         String selectedCourseid=request.getParameter("selectcourseid");
-        if(selectedCourseid.length()>0){
+        if(selectedCourseid!=null&&selectedCourseid.length()>0){
             String[] courseids = selectedCourseid.split("\\|");
             int length = courseids.length;
             for(int i = 0;i<length;i++){
@@ -1880,6 +1880,11 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
             if (bo) {
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_SUCCESS"));
                 je.setType("success");
+                //添加默认
+                je=this.doAddCourseResTask(request,response);
+                if(je!=null&&!je.getType().toString().equals("success")){
+                    transactionRollback();
+                }
             } else {
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
             }
@@ -2620,7 +2625,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     @RequestMapping(params = "m=revertCourse", method = RequestMethod.POST)
     public void doRevertCourse(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
-        TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tc = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
         if (tc.getCourseid() == null) {
             je.setMsg("未获取到专题标识！！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");
@@ -2650,7 +2655,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     @RequestMapping(params = "m=shareCourse", method = RequestMethod.POST)
     public void doShareCourse(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
-        TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tc = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
         if (tc.getCourseid() == null) {
             je.setMsg("未获取到专题标识！！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");
@@ -2696,7 +2701,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     @RequestMapping(params = "m=updateCourse", method = RequestMethod.POST)
     public void doUpdateCourse(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
-        TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tc = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
         if (tc.getCourseid() == null) {
             je.setMsg("专题编号错误！！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");
@@ -2991,7 +2996,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     @RequestMapping(params = "m=doChangeCourse", method = RequestMethod.POST)
     public void doChangeCourse(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
-        TpCourseInfo tcInfo = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tcInfo = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
         if (tcInfo.getCourseid() == null) {
             je.setMsg("专题编号错误！！");// 异常错误，参数不齐，无法正常访问!
             je.setType("error");
@@ -3025,7 +3030,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity je = new JsonEntity();
         String searchType=request.getParameter("searchType");
         PageResult presult = this.getPageResultParameter(request);
-        TpCourseInfo tcInfo = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tcInfo = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
         tcInfo.setDcschoolid(this.logined(request).getDcschoolid());
 
         // 如果搜索类型为专题库搜索 searchType=1 ,则默认附加专题库搜索前置条件
@@ -3050,7 +3055,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         JsonEntity je = new JsonEntity();
         String searchType=request.getParameter("searchType");
         PageResult presult = this.getPageResultParameter(request);
-        TpCourseInfo tcInfo = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tcInfo = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
 
         // 如果搜索类型为专题库搜索 searchType=1 ,则默认附加专题库搜索前置条件
         if(searchType!=null && searchType.trim().equals("1")){
@@ -3141,7 +3146,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
         UserInfo user = this.logined(request);
 
-        TpCourseInfo tcInfo = this.getParameter(request,
+        TpCourseInfo tcInfo = (TpCourseInfo) this.getParameter(request,
                 TpCourseInfo.class);
         tcInfo.setUserid(user.getUserid());
 
@@ -3345,7 +3350,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
 
         UserInfo user = this.logined(request);
 
-        TpCourseInfo tcInfo = this.getParameter(request,
+        TpCourseInfo tcInfo = (TpCourseInfo) this.getParameter(request,
                 TpCourseInfo.class);
         tcInfo.setUserid(user.getUserid());
 
@@ -3519,7 +3524,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
     @RequestMapping(params = "m=getTrusteeshipCourListAjax", method = RequestMethod.POST)
     public void getTrusteeshipCourseListAjax(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
-        TpCourseInfo tcInfo = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tcInfo = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
         if (tcInfo == null
                 || tcInfo.getSubjectid() == null
                 || tcInfo.getGradeid() == null
@@ -3556,7 +3561,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String materialid = request.getParameter("materialid");
 
         mp.put("materialid", materialid==null?"0":materialid);   // 如果没有教材默认为0
-        TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tc = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
 
         List<GradeInfo> gradeList = null;
         List<SubjectInfo> subList = null;
@@ -3701,7 +3706,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         String subjectid = request.getParameter("subjectid");
         String materialid = request.getParameter("materialid");
 
-        TpCourseInfo tc = this.getParameter(request, TpCourseInfo.class);
+        TpCourseInfo tc = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
 
         List<GradeInfo> gradeList = null;
         List<SubjectInfo> subList = null;
@@ -3819,6 +3824,7 @@ public class TpCourseController extends BaseController<TpCourseInfo> {
         mp.put("subject", sub);
         mp.put("term", ti);
         mp.put("tc", tc);
+        mp.put("addCourseId",this.tpCourseManager.getNextId(true));
         return new ModelAndView("/teachpaltform/task/teacher/dialog/add-course", mp);
     }
 

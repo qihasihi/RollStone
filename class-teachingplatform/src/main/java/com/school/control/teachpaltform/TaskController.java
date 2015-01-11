@@ -65,7 +65,7 @@ import static com.school.share.TaskLoopRemindUtil.sendTaskRemindObj;
 
 @Controller
 @RequestMapping(value="/task")
-public class TaskController extends BaseController<TpTaskInfo>{
+public class TaskController extends BaseController{
     @Autowired
     private ITpTaskManager tpTaskManager;
     @Autowired
@@ -1456,8 +1456,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         response.getWriter().print(je.toJSON());
     }
 
-    protected   boolean sendRemind(Long tasknextid){
-
+    protected boolean sendRemind(Long tasknextid){
         StringBuilder sql=null;
         List<Object>objList=null;
         List<String>sqlListArray=new ArrayList<String>();
@@ -1466,7 +1465,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
         TpTaskInfo taskInfo=new TpTaskInfo();
         taskInfo.setSelecttype(TpTaskInfo.QUERY_TYPE.立即开始.getValue());
         taskInfo.setTaskid(tasknextid);
-        List<TpTaskInfo>taskRemindList=this.tpTaskManager.getTaskRemindList(taskInfo,null);
+        List<TpTaskInfo>taskRemindList=tpTaskManager.getTaskRemindList(taskInfo,null);
         if(taskRemindList!=null&&taskRemindList.size()>0){
             //信息Map
             List<Map<String,Object>>mapList=new ArrayList<Map<String, Object>>();
@@ -1475,7 +1474,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
             for(TpTaskInfo task:taskRemindList){
                 TpTaskAllotInfo allotInfo=new TpTaskAllotInfo();
                 allotInfo.setTaskid(task.getTaskid());
-                List<TpTaskAllotInfo>taskAllotList=this.tpTaskAllotManager.getList(allotInfo,null);
+                List<TpTaskAllotInfo>taskAllotList=tpTaskAllotManager.getList(allotInfo,null);
 
                 if(taskAllotList!=null&&taskAllotList.size()>0){
                     for(TpTaskAllotInfo tt:taskAllotList){
@@ -1497,7 +1496,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                             ClassUser cu=new ClassUser();
                             cu.setClassid(Integer.parseInt(tt.getUsertypeid()+""));
                             cu.setRelationtype("学生");
-                            List<ClassUser>userList=this.classUserManager.getList(cu,null);
+                            List<ClassUser>userList=classUserManager.getList(cu,null);
                             if(userList!=null&&userList.size()>0){
                                 for(ClassUser classUser:userList){
                                     if(classUser.getEttuserid()!=null&&classUser.getEttuserid()>0)
@@ -1507,7 +1506,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         }else if(tt.getUsertype()==2){
                             TpGroupStudent gs=new TpGroupStudent();
                             gs.setGroupid(tt.getUsertypeid());
-                            List<TpGroupStudent>gsList=this.tpGroupStudentManager.getList(gs,null);
+                            List<TpGroupStudent>gsList=tpGroupStudentManager.getList(gs,null);
                             if(gsList!=null&&gsList.size()>0){
                                 for(TpGroupStudent groupStudent:gsList){
                                     if(groupStudent.getEttuserid()!=null&&groupStudent.getEttuserid()>0)
@@ -1531,7 +1530,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                         upd.setRef(tt.getRef());
                         upd.setRemindstatus(1);
                         sql=new StringBuilder();
-                        objList=this.tpTaskAllotManager.getUpdateSql(upd,sql);
+                        objList=tpTaskAllotManager.getUpdateSql(upd,sql);
                         if(objList!=null&&sql!=null){
                             objListArray.add(objList);
                             sqlListArray.add(sql.toString());
@@ -1547,7 +1546,7 @@ public class TaskController extends BaseController<TpTaskInfo>{
                 return false;
             }else{
                 if(objListArray.size()>0&&sqlListArray.size()>0){
-                    if(this.tpTaskManager.doExcetueArrayProc(sqlListArray,objListArray)){
+                    if(tpTaskManager.doExcetueArrayProc(sqlListArray,objListArray)){
                         System.out.println("TaskController sendTaskRemind修改任务提醒状态成功!");
                         return true;
                     }else
