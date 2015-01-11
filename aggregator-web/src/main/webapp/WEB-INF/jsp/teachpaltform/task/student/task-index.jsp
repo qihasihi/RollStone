@@ -388,7 +388,7 @@
                      html+='<p class="f_right"><a href="javascript:void(0);" onclick="showModel(\'div_suggest_'+itm.taskid+'\')" class="font-darkblue">提建议</a></p>';
                 if(itm.tasktype<6)
                     html+='<p><strong>完成标准：</strong><span class="font-black">'+criteria+'</span></p>';
-                if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9&&itm.taskremark!='undefined'&&itm.taskremark.length>0&&itm.taskremark!='无')  //IM端任务，不要任务描述
+                if(itm.tasktype!=7&&itm.tasktype!=8&&itm.tasktype!=9&&typeof itm.taskremark!='undefined'&&itm.taskremark.length>0&&itm.taskremark!='无')  //IM端任务，不要任务描述
                     html+='<p><strong>任务描述：</strong><span class="width1">'+(typeof itm.taskremark !='undefined'?itm.taskremark:"")+'</span></p>';
                 if(itm.tasktype==7||itm.tasktype==8||itm.tasktype==9)
                     html+='<p style="color: #808080;">移动端任务只能在手机端完成，PC端只能查看。</p>';
