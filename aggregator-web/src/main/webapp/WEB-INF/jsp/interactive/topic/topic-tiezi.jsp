@@ -20,7 +20,7 @@
             </div>
             <div class="text">
                 <input type="hidden" name="zt_themeid" id="themeid${theme.themeid}" value="${theme.themeid}"/>
-                <p class="t_r">${theme.ctimeString}</p>
+                <p class="t_r">${theme.autoCtimeString}</p>
                 <p>${theme.themetitle}</p>
                 <div id="pizhu_${theme.themeid }_1_updatecontent">
                     <c:if test="${!empty theme.commentbycontent}">

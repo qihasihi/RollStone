@@ -381,6 +381,27 @@ public class TpTopicThemeInfo  implements Serializable {
             returnVal=UtilTool.DateConvertToString(this.getCtime(), UtilTool.DateType.type1);
         return returnVal;
     }
+    public String getAutoCtimeString(){
+        String returnVal="";
+        if(this.getCtime()!=null){
+            Long dt=System.currentTimeMillis()-this.getCtime().getTime();
+            int dLong=(int)(dt/60000);//分钟
+            String sHtml="刚刚";
+            if(dLong<1)
+                sHtml=(int)(dt%60000)/1000+"秒前";
+            else if(dLong>=1&&dLong<60)
+                sHtml=dLong+"分钟前";
+            else if(dLong>=60){
+                dLong=(int)(dLong/60);
+                if(dLong<24)
+                    sHtml=dLong+"小时前";
+                else
+                    sHtml=UtilTool.DateConvertToString(this.getCtime(), UtilTool.DateType.type1);
+            }
+            returnVal=sHtml;
+        }
+        return returnVal;
+    }
 
     public Integer getClsType() {
         return clsType;

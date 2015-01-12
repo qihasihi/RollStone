@@ -120,6 +120,7 @@
                         window.close();
                     else
                         pageGo('p1');
+                    $("#sp_zt_num").html(parseInt($("#sp_zt_num").html())-1);
                     //history.go(-1);
 				}
 			}
@@ -191,6 +192,7 @@
 							try{pageGo('p1');}catch(e){}
                             //清空
                             $("#themetitle").val('');
+                            $("#sp_zt_num").html(parseInt($("#sp_zt_num").html())+1);
                             UE.getEditor('themecontent').setContent('');
                            // 弹出信息
                             $('a[onclick="doAddTheme\\(\\)"]').show();
@@ -609,6 +611,7 @@ function quckRestore(themeid,type){
                 $("#sp_ht"+themeid).html(parseInt($("#sp_ht"+themeid).html())+1);
                 $("#dv_hl"+themeid).html('');
                 getReplyList(themeid+"",1,$("#hd_currentpage"+themeid).val()*5);
+                $("#sp_pl_num").html(parseInt($("#sp_pl_num").html())+1);
                 huitie(themeid);
                 UE.getEditor('txt_hf'+themeid).setContent("");
 			}
@@ -687,7 +690,7 @@ function getReplyList(themeidStr,pageno,pagesize){
                         var sName=itm.crealname;
 
                         h+='<div><b>'+sName+'：</b>'+itm.replycontent+'</div>';
-                        h+='<p class="t_r">'+itm.ctimeString;
+                        h+='<p class="t_r">'+itm.autoCtimeString;
                         if(typeof(isquote)=="undefined"||isquote==1)
                             h+='<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回帖"></a>';
                         if(itm.userid==culoginId)
@@ -711,7 +714,7 @@ function getReplyList(themeidStr,pageno,pagesize){
                         h+='<p class="pic">'+img+'</p>';
                         var sName=itm.crealname+'回复'+itm.torealname;
                         h+='<div><b>'+sName+'：</b>'+itm.replycontent+'</div>';
-                        h+='<p class="t_r">'+itm.ctimeString+'<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回帖"></a>';
+                        h+='<p class="t_r">'+itm.autoCtimeString+'<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回帖"></a>';
                         if(itm.userid==culoginId)
                             h+='<a href="javascript:;" onclick="doDeleteReply('+itm.replyid+','+itm.themeid+')" class="ico04" title="删除"></a></p>';
                         h+='</div>';
@@ -878,6 +881,7 @@ function doDeleteReply(id,themeid){
                 });
                 //先删除全部的评论
                 $("#dv_hl"+themeid).html('');
+                $("#sp_pl_num").html(parseInt($("#sp_pl_num").html())-1);
                 getReplyList(themeid+"",1,5*$("#hd_currentpage"+themeid).val());
 
 				//unloadTextAre('returnVal_'+topicid,'p_btn');

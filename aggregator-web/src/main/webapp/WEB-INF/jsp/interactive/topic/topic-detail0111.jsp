@@ -288,7 +288,7 @@
   <div class="content2">
       <c:if test="${empty param.quoteid||param.quoteid==0}">
           <div class="jxxt_zhuanti_hdkj_nr">
-              <p class="f_right">主帖数：<span id="sp_zt_num">${topic.themecount }</span>&nbsp;&nbsp;&nbsp;评论数：<span id="sp_pl_num"></span></p>
+              <p class="f_right">主帖数：<span id="sp_zt_num">${topic.themecount }</span>&nbsp;&nbsp;&nbsp;评论数：<span id="sp_pl_num">${topic.restorecount}</span></p>
               <p><strong>${topic.topictitle }</strong></p>
               <p>　　${topic.topiccontent }</p>
               <p>
