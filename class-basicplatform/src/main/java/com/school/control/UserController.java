@@ -1474,7 +1474,7 @@ public class UserController extends BaseController<UserInfo> {
                     else
                         userType=1;
                     if(!EttInterfaceUserUtil.ModifyUser(user,userType.toString()))
-                        System.out.println("更新活动用户密码同步至网校失败!UserController edit_base ettuserid:"+user.getEttuserid());
+                        System.out.println("111更新活动用户密码同步至网校失败!UserController edit_base ettuserid:"+user.getEttuserid());
                     else
                         System.out.println("更新活动用户密码同步至网校成功!UserController edit_base ettuserid:"+user.getEttuserid());
                 }
