@@ -1,9 +1,9 @@
 package  com.school.entity.teachpaltform.interactive ;
 
-import java.util.Date;
-
 import com.school.util.UtilTool;
 import com.school.util.UtilTool.DateType;
+
+import java.util.Date;
 
 public class TpThemeReplyInfo  implements java.io.Serializable{
 
@@ -15,12 +15,29 @@ public class TpThemeReplyInfo  implements java.io.Serializable{
     private java.lang.Long themeid;
     private java.lang.Long replyid;
     private Long topicid;
+    private Long toreplyid;
+    private String torealname;
     
     private String cheadimage;
     private String crealname;
     private Object rownum;
-    
-    
+
+    public Long getToreplyid() {
+        return toreplyid;
+    }
+
+    public void setToreplyid(Long toreplyid) {
+        this.toreplyid = toreplyid;
+    }
+
+    public String getTorealname() {
+        return torealname;
+    }
+
+    public void setTorealname(String torealname) {
+
+        this.torealname = torealname;
+    }
 
     public String getCheadimage() {
 		return cheadimage;

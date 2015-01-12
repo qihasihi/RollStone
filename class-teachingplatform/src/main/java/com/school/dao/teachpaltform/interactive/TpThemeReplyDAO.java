@@ -1,15 +1,14 @@
 package com.school.dao.teachpaltform.interactive;
 
+import com.school.dao.base.CommonDAO;
+import com.school.dao.inter.teachpaltform.interactive.ITpThemeReplyDAO;
+import com.school.entity.teachpaltform.interactive.TpThemeReplyInfo;
+import com.school.util.PageResult;
+import org.springframework.stereotype.Component;
+
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.school.dao.base.CommonDAO;
-import com.school.entity.teachpaltform.interactive.TpThemeReplyInfo;
-import com.school.dao.inter.teachpaltform.interactive.ITpThemeReplyDAO;
-import com.school.util.PageResult;
 
 @Component
 public class TpThemeReplyDAO extends CommonDAO<TpThemeReplyInfo> implements
@@ -56,6 +55,51 @@ public class TpThemeReplyDAO extends CommonDAO<TpThemeReplyInfo> implements
 		}
 		return false;
 	}
+    public List<TpThemeReplyInfo> getListByThemeIdStr(final String themeidStr,final Integer searchType, PageResult presult){
+        if(themeidStr==null)return null;
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_theme_reply_info_bythemeidstr_split(");
+        List<Object> objList = new ArrayList<Object>();
+
+        if (themeidStr != null) {
+            sqlbuilder.append("?,");
+            objList.add(themeidStr);
+        } else
+            sqlbuilder.append("null,");
+        if (searchType != null) {
+            sqlbuilder.append("?,");
+            objList.add(searchType);
+        } else
+            sqlbuilder.append("null,");
+
+
+        if (presult != null && presult.getPageNo() > 0
+                && presult.getPageSize() > 0) {
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        } else {
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if (presult != null && presult.getOrderBy() != null
+                && presult.getOrderBy().trim().length() > 0) {
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        } else {
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types = new ArrayList<Integer>();
+        types.add(Types.VARCHAR);
+        Object[] objArray = new Object[1];
+        List<TpThemeReplyInfo> tpthemereplyinfoList = this.executeResult_PROC(
+                sqlbuilder.toString(), objList, types, TpThemeReplyInfo.class,
+                objArray);
+        if (presult != null && objArray[0] != null
+                && objArray[0].toString().trim().length() > 0)
+            presult.getList().add(objArray[0].toString().trim());
+        return tpthemereplyinfoList;
+    }
 
 	public List<TpThemeReplyInfo> getList(TpThemeReplyInfo tpthemereplyinfo,
 			PageResult presult) {
@@ -136,11 +180,21 @@ public class TpThemeReplyDAO extends CommonDAO<TpThemeReplyInfo> implements
 			objList.add(tpthemereplyinfo.getReplyid());
 		} else
 			sqlbuilder.append("null,");
-		if (tpthemereplyinfo.getTopicid() != null) {
-			sqlbuilder.append("?,");
-			objList.add(tpthemereplyinfo.getTopicid());
-		} else
-			sqlbuilder.append("null,");
+        if (tpthemereplyinfo.getTopicid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpthemereplyinfo.getTopicid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpthemereplyinfo.getToreplyid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpthemereplyinfo.getToreplyid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpthemereplyinfo.getTorealname() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpthemereplyinfo.getTorealname());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}

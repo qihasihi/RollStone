@@ -452,7 +452,7 @@
 	.ico06{width:15px;background-position:0 -253px; margin:0;}
 	.ico_delete{width:15px; height:15px;background-position:-2px -86px; margin:0 2px;}
 
-	.ico07,.ico08,.ico09,.ico10{
+	.ico07,.ico08,.ico09,.ico10,.ico95,.ico96{
 	width:16px;
 	height:16px;
 	background: url(images/ico02_131230.png) no-repeat -116px 0;
@@ -659,3 +659,5 @@
    .ico92{background-position:-1006px 0; margin:0;}
    .ico93{background-position:-1023px 0; margin:0 10px 0 0;}
    .ico94{background-position:-1040px 0;}
+   .ico95{background-position:-259px -62px;}
+   .ico96{width:59px;height:43px;background-position:-276px 0;}

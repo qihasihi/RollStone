@@ -13,4 +13,6 @@ public interface ITpTopicThemeManager  extends IBaseManager<TpTopicThemeInfo> {
      * @return
      */
     public void getSynchroSql(TpTopicThemeInfo entity,List<String> sqlArrayList,List<List<Object>> objArrayList);
-} 
+
+
+}

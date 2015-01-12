@@ -110,10 +110,11 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
             Object sql= sqlbuilder.get(i);
             if (sql != null && !sql.toString().equals("")) {
                 List p=(List)paraV.get(i);
+
                 Object afficeRows=jdbcTemplate.execute(new SchoolCallableStatementCreator(sql.toString(),p==null?null:p.toArray()),
                         new SchoolCallableStatementCallback(false,p==null?0:p.size()));
 //                    IN=jdbcTemplate.update(sql.toString(),p==null?null:p.toArray());
-                System.out.println("SQL:"+sql+"  Result:"+afficeRows);
+                System.out.println(" Result:"+afficeRows);
                 if(afficeRows==null||!UtilTool.isNumber(afficeRows.toString())
                         ||Integer.parseInt(afficeRows.toString().trim())<1){
                     returnVal=false;
@@ -783,7 +784,7 @@ class SchoolCallableStatementCreator implements CallableStatementCreator{
         if (paraValue != null)
             setStateParameter(pstatement, paraValue);
         if(hasPageReturn)
-            pstatement.registerOutParameter(paraValue==null?1:paraValue.length+1,Types.INTEGER);
+            pstatement.registerOutParameter(paraValue==null?1:paraValue.length+1,Types.VARCHAR);
         return pstatement;
     }
 }

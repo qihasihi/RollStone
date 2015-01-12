@@ -584,11 +584,87 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
             role=2;
         }
         List<Map<String,Object>> tccList=this.tpTopicManager.getInteractiveClass(topic.getCourseid(), this.logined(request).getUserid(), role);
-        mp.put("tccList",tccList); 
-        
+        mp.put("tccList",tccList);
+
 
         return new ModelAndView("/interactive/topic/topic-detail",mp);
     }
+    /**
+     * 进入专题论题详情页面
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="m=viewTopic",method=RequestMethod.GET)
+    public ModelAndView viewTopic(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        JsonEntity jsonEntity=new JsonEntity();  //返回组织
+        TpTopicInfo topic=this.getParameter(request,TpTopicInfo.class); //得到参数
+        if(topic==null||topic.getTopicid()==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        topic.setQuoteid(null);
+        //查询数据是否存在
+        //只得到一条数据
+        //得到数据 (只取一条数据)
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        presult.setPageNo(1);
+
+        topic.setSelectType(2); /*查询类型  1:status<>3   2:不连接被删除的 */
+        List<TpTopicInfo> topicList=this.tpTopicManager.getList(topic,presult);
+        if(topicList==null||topicList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        topic=topicList.get(0);
+
+        //身份验证
+        String roleStr="TEACHER";
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+            roleStr="STUDENT";
+        }
+        mp.put("roleStr", roleStr);
+
+
+
+        if(roleStr.equals("STUDENT")&&topic.getStatus().intValue()==2){
+            jsonEntity.setMsg("错误，该论题已经关闭，无法进行查看!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+
+
+        mp.put("topic",topic); //存储在request中
+        mp.put("newthemeid",this.tpTopicThemeManager.getNextId(true));
+
+        //得到专题的状态是否是引用的
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setCourseid(topic.getCourseid());
+//        tc.setDcschoolid(this.logined(request).getDcschoolid());
+        List<TpCourseInfo> tcList=this.tpCourseManager.getList(tc,null);
+        if(tcList==null||tcList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ACTIVE_COLUMNS_NO_DATA"));
+            response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        Long quoteid=tcList.get(0).getQuoteid();
+        if(quoteid!=null&&quoteid!=0){//如果<>NULL则说明是引用专题
+            mp.put("coursequoteid", quoteid);
+        }
+        //身份验证
+        Integer role=1;
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+            role=2;
+        }
+        List<Map<String,Object>> tccList=this.tpTopicManager.getInteractiveClass(topic.getCourseid(), this.logined(request).getUserid(), role);
+        mp.put("tccList",tccList);
+
+
+        return new ModelAndView("/interactive/topic/topic-detail0111",mp);
+    }
+
+
 
     /**
      * 进入论题统计页面

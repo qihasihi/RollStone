@@ -93,6 +93,61 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
         jsonEntity.setType("success");
         response.getWriter().print(jsonEntity.toJSON());
     }
+
+
+    /**
+     * 新版页 进入主帖
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params ="m=getTopicZT")
+    public ModelAndView getTopicZT(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        TpTopicThemeInfo tpthemeInfo=this.getParameter(request,TpTopicThemeInfo.class);
+        PageResult presult=this.getPageResultParameter(request);
+        JsonEntity jsonEntity=new JsonEntity();
+        if(tpthemeInfo.getTopicid()==null){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(jsonEntity.getAlertMsg());
+            return null;
+        }
+        String clsid=request.getParameter("clsid");
+        String typeid=request.getParameter("clstype");
+        //排序
+        String ordercol=request.getParameter("ordercol");
+        String orderdirect=request.getParameter("ordertype");
+        if(UtilTool.nullOrEmpty(ordercol)){
+            if(UtilTool.nullOrEmpty(orderdirect))
+                ordercol+=" "+orderdirect;
+            presult.setOrderBy(ordercol);
+        }
+        if(clsid!=null&&clsid.toString().trim().length()>0){
+            tpthemeInfo.setClsid(Integer.parseInt(clsid));
+            tpthemeInfo.setClsType(Integer.parseInt(typeid));
+        }
+
+        //身份验证
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+            //角色 2：代表学生
+            tpthemeInfo.setSearchRoleType(2);
+        }
+        //身份验证
+        String roleStr="TEACHER";
+        if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
+            roleStr="STUDENT";
+        }
+        mp.put("roleStr", roleStr);
+        tpthemeInfo.setSelectType(2);//查询内容
+        //得到列表
+        tpthemeInfo.setLoginuserref(this.logined(request).getRef());
+        List<TpTopicThemeInfo> tpTopicThemeList=this.tpTopicThemeManager.getList(tpthemeInfo,presult);
+        //列表得到后，
+        mp.put("ztTheme",tpTopicThemeList);
+        mp.put("presult",presult);
+        return new ModelAndView("interactive/topic/topic-tiezi",mp);
+    }
+
     /**
      * 执行添加主题
      * @param request

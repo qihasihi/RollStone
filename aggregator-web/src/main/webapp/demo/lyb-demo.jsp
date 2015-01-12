@@ -25,7 +25,8 @@ var ettLyb=null;
         $(function() {
              ettLyb=new EttLyb({
                 addressid:'dv_textarea',
-                controlid:'ettLyb'
+                controlid:'ettLyb',
+                 isHasImage:false
               });
         });
     </script>

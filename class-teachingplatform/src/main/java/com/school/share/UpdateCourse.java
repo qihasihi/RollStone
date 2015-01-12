@@ -1055,7 +1055,7 @@ public class UpdateCourse extends TimerTask{
                             if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
                                 istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
                                 if(!istrue){
-                                    System.out.println("更新专题失败!记录日志");
+                                    System.out.println("更新专题元素失败!记录日志");
                                     break;
                                 }
                                 sqlArrayList=new ArrayList<String>();
@@ -1067,7 +1067,7 @@ public class UpdateCourse extends TimerTask{
                     if(sqlArrayList!=null&&objArrayList!=null&&sqlArrayList.size()==objArrayList.size()){
                         istrue=tpCourseManager.doExcetueArrayProc(sqlArrayList,objArrayList);
                         if(!istrue){
-                            System.out.println("更新专题失败!记录日志");
+                            System.out.println("更新专题元素失败!记录日志");
                             break;
                         }
                         sqlArrayList=new ArrayList<String>();

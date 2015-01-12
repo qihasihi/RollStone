@@ -111,9 +111,16 @@
 				if(rps.type=="error"){
 					alert(rps.msg);
 				}else{
-                    alert('删除主题成功!页面即将退出!');
-                   // window.close();
-                    history.go(-1);
+                    var msg='删除主帖成功!';
+                    var ztlen=$("#dv_mainTbl .jxxt_zhuanti_hdkj_zhutie").length;
+                    if(ztlen<1)
+                        msg+="页面即将退出!";
+                    alert(msg);
+                    if(ztlen<1)
+                        window.close();
+                    else
+                        pageGo('p1');
+                    //history.go(-1);
 				}
 			}
 		})
@@ -187,7 +194,7 @@
                             UE.getEditor('themecontent').setContent('');
                            // 弹出信息
                             $('a[onclick="doAddTheme\\(\\)"]').show();
-                            alert(rps.msg);
+//                            alert(rps.msg);
                             closeModel("dv_create");
 
 						}						
@@ -298,10 +305,13 @@
             var h="<a href=\"javascript:isTopOrIsEssence('"+id+"','"+type+"','"+(val==0?1:0)+"','"+spanid+"')\">";
             if(type==2){
             	h+='<span class="ico40"></span>';
-                if(val==0)
+                if(val==0){
                     h+='精华';
-                else
+                    $("#sp_jhtx"+id).hide();
+                }else{
                     h+='取消精华';
+                    $("#sp_jhtx"+id).show();
+                }
             }else{
             	h+='<span class="ico56"></span>';
                 if(val==0)
@@ -550,27 +560,39 @@ function updateThemePiZhu(){
  * @param topicid
  * @param type 1:回复主贴， 2:回复评论
  */
-function quckRestore(topicid,type,touserid){
+function quckRestore(themeid,type){
 	/*if(state==3){
 		alert("该论题已经锁定，无法发布论题及其下的主题进行回复、评论等功能!");return;
 	}*/
-	if(typeof(topicid)=="undefined"){
+	if(typeof(themeid)=="undefined"){
 		alert('异常错误，参数异常!请刷新页面后重试!');
 		return;
 	}
 	if(typeof(type)=="undefined"||isNaN(type)){
-		alert('异常错误，参数异常!请刷新页面后重试!');
-		return;
+        type=$("#hd_rt"+themeid).val();
+        if(typeof(type)=="undefined"){
+            alert('异常错误，参数异常!请刷新页面后重试!');
+            return;
+        }
 	}
-	
-	 var content=UE.getEditor('returnVal').getContent();
+	var txtareId=$("#dv_doht"+themeid+" textarea").attr("id");
+	 var content=UE.getEditor(txtareId).getContent();
 	if(content.Trim().length<1){
 		alert("回复内容您尚未输入，请输入后提交!");
 		return;
 	}
-	var param={themeid:themeid
-			   ,replycontent:content.Trim()
-			};
+    var param={themeid:themeid
+        ,replycontent:content.Trim()
+    };
+    var replyType=$("#hd_rt"+themeid).val();
+    if(replyType!=1){
+        var replyToReplyId=$("#dv_doht"+themeid).attr("data-bind");
+        if(typeof(replyToReplyId)!="undefined"&&replyToReplyId.Trim().length>0){
+            param.toreplyid=replyToReplyId.split('|')[0];
+            //真实姓名
+            param.torealname=replyToReplyId.split('|')[1];
+        }
+    }
 	
 	$.ajax({
 		url:"tpthemereply?m=doAddReply",
@@ -583,16 +605,161 @@ function quckRestore(topicid,type,touserid){
 		},success:function(rps){
 			if(rps.type=="error"){
 				alert(rps.msg);
-			}else { 
-				var htm='';
-				UE.getEditor("returnVal").setContent("");
-				pageGo('p1');
-                $("span[id='sp_pinglunshu']").html(parseInt($("span[id='sp_pinglunshu']:first").html())+1);
-				//unloadTextAre('returnVal_'+topicid,'p_btn');
+			}else {
+                $("#sp_ht"+themeid).html(parseInt($("#sp_ht"+themeid).html())+1);
+                $("#dv_hl"+themeid).html('');
+                getReplyList(themeid+"",1,$("#hd_currentpage"+themeid).val()*5);
+                huitie(themeid);
+                UE.getEditor('txt_hf'+themeid).setContent("");
 			}
 		}
 	});	
 }
+
+/**
+ * 加载zhutie页面,生成分页控件
+ * @param rps
+ */
+function topicPageReturnLoadTheme(rps){
+    $("#dv_mainTbl").html(rps);
+    if (typeof (p1) != "undefined" && typeof (p1) == "object") {
+        var pt=$("#dv_mainTbl input[name='pagetotal']").val();
+        var ps=$("#dv_mainTbl input[name='pageSize']").val();
+        var pn=$("#dv_mainTbl input[name='pageNo']").val();
+        var rt=$("#dv_mainTbl input[name='rectotal']").val();
+        if(typeof(pt)!="undefined"&&typeof(ps)!="undefined"
+            &&typeof(pn)!="undefined"&&typeof(rt)!="undefined"){
+            p1.setPagetotal(pt);
+            p1.setRectotal(rt);
+            p1.setPageSize(ps);
+            p1.setPageNo(pn);
+            p1.Refresh();
+            if(pt<=1)
+                $('#page1address').hide();
+            else
+                $('#page1address').show();
+        }
+    }
+    //查询回帖的
+    var ztthemeid=$("#dv_mainTbl input[name='zt_themeid']");
+    if(ztthemeid.length>0){
+        var themeidStr="";
+        $.each(ztthemeid,function(idx,itm){
+            if(itm.value.Trim().length>0){
+                themeidStr+=(themeidStr.length>0?",":"")+itm.value.Trim();
+            }
+        })
+
+        if(themeidStr.length>0){
+            getReplyList(themeidStr,1,5);
+        }
+    }
+}
+
+function getReplyList(themeidStr,pageno,pagesize){
+    if(typeof(pageno)=="undefined")
+        pageno=1;
+    if(typeof(pagesize)=="undefined")
+        pagesize=5;
+    $.ajax({
+        url:"tpthemereply?m=getReplyByThemeId&pageResult.pageNo="+pageno+"&pageResult.pageSize="+pagesize,
+        dataType:'json',
+        type:"post",
+        cache: false,
+        data:{themeidstr:themeidStr},
+        error:function(){
+            alert('异常错误!系统未响应!');
+        },success:function(rps){
+            if(rps.type=="success"){
+                if(typeof(rps.objList[1])!="undefined"){
+                    $.each(rps.objList[1],function(idx,itm){
+                        var h='';
+                        if(idx!=1){
+                            h+='<div class="huifu_info">';
+                        }
+                        var divClsname='huifu1';
+                        h+='<div class="'+divClsname+'" id="dv_pl'+itm.replyid+'">';
+                        var img='<img src="images/defaultheadsrc_big.jpg" width="38" height="38">';
+                        if(typeof(itm.cheadimage)!="undefined")
+                            img='<img src="'+itm.cheadimage+'" onerror="headError(this)" width="38" height="38">';
+
+                        h+='<p class="pic">'+img+'</p>';
+                        var sName=itm.crealname;
+
+                        h+='<div><b>'+sName+'：</b>'+itm.replycontent+'</div>';
+                        h+='<p class="t_r">'+itm.ctimeString;
+                        if(typeof(isquote)=="undefined"||isquote==1)
+                            h+='<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回帖"></a>';
+                        if(itm.userid==culoginId)
+                            h+='<a href="javascript:;" onclick="doDeleteReply('+itm.replyid+','+itm.themeid+')" class="ico04" title="删除"></a></p>';
+                        h+='</div>';
+                        if(idx!=1){
+                            h+='</div>';
+                        }
+                        $("#dv_hl"+itm.themeid).append(h);
+                        $("#dv_hl"+itm.themeid).show();
+                    });
+                }
+                if(typeof(rps.objList[2])!="undefined"){
+                    $.each(rps.objList[2],function(idx,itm){
+                        var divClsname='huifu2';
+                        var h='<div class="'+divClsname+'" id="dv_pl'+itm.replyid+'">';
+                        var img='<img src="images/defaultheadsrc_big.jpg" width="38" height="38">';
+                        if(typeof(itm.cheadimage)!="undefined")
+                            img='<img src="'+itm.cheadimage+'" onerror="headError(this)" width="38" height="38">';
+
+                        h+='<p class="pic">'+img+'</p>';
+                        var sName=itm.crealname+'回复'+itm.torealname;
+                        h+='<div><b>'+sName+'：</b>'+itm.replycontent+'</div>';
+                        h+='<p class="t_r">'+itm.ctimeString+'<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回帖"></a>';
+                        if(itm.userid==culoginId)
+                            h+='<a href="javascript:;" onclick="doDeleteReply('+itm.replyid+','+itm.themeid+')" class="ico04" title="删除"></a></p>';
+                        h+='</div>';
+                        $("#dv_hl"+itm.themeid+" #dv_pl"+itm.toreplyid).after(h);
+                        $("#dv_hl"+itm.themeid).show();
+                    });
+                }
+                if(typeof(rps.objList[0])!="undefined"){
+                    $.each(rps.objList[0].split(","),function(ix,im){
+                        var imObj=im.split("|");
+                        $("#hd_zttotalnum"+imObj[0]).val(imObj[1]);
+                        if(imObj[1]>0){
+                            $("#dv_ht_"+imObj[0]).show();
+                            if(pageno>1)
+                                $("#hd_currentpage"+imObj[0]).val(pageno);
+                            else
+                                $("#hd_currentpage"+imObj[0]).val(pagesize/5);
+                            var cpageno=pagesize/5;
+                            if(pageno>1)
+                                cpageno=pageno;
+                            var isdy=imObj[1]>pageno*pagesize;
+                            if(isdy){
+                                //$("#p_opzk_"+imObj[0]).show();
+                                if(cpageno>1)
+                                    $("#a_sq"+imObj[0]).show();
+                                else
+                                    $("#a_sq"+imObj[0]).hide();
+                                if(cpageno*pagesize<imObj[1])
+                                    $("#a_zk"+imObj[0]).show();
+                                else
+                                    $("#a_zk"+imObj[0]).hide();
+                            }else if(!isdy){
+                                if(cpageno>1){
+                                    $("#a_sq"+imObj[0]).show();
+                                }else{
+                                    $("#a_sq"+imObj[0]).hide();
+                                }
+                                $("#a_zk"+imObj[0]).hide();
+                              }
+                        }
+                    });
+                }
+            }
+        }
+    });
+}
+
+
 
 function tpThemeReplyListReturn(rps){
 	if(rps.type=="error"){
@@ -626,7 +793,6 @@ function tpThemeReplyListReturn(rps){
       			h='';
       		}	
 		});
-		
 	}
 	if(h.length>0)
 		$("#div_restore").append(h);
@@ -683,7 +849,7 @@ function doYingyong(id){
  * @param id
  * @return
  */
-function doDeleteReply(id){
+function doDeleteReply(id,themeid){
 	//引用
 	if(typeof(id)=="undefined"){
 		alert('异常错误!参数异常! 错误代码：id is empty!');
@@ -704,13 +870,16 @@ function doDeleteReply(id){
 			if(rps.type=="error"){
 				alert(rps.msg);
 			}else {
-				pageGo('p1');
-				alert(rps.msg);
+				//pageGo('p1');
+                alert(rps.msg);
                 //修改数量
-                $("span[id='sp_pinglunshu']").each(function(idx,itm){
+                $("span[id='sp_ht"+themeid+"']").each(function(idx,itm){
                     this.innerText=parseInt(this.innerText)-1;
+                });
+                //先删除全部的评论
+                $("#dv_hl"+themeid).html('');
+                getReplyList(themeid+"",1,5*$("#hd_currentpage"+themeid).val());
 
-                })
 				//unloadTextAre('returnVal_'+topicid,'p_btn');
 			}
 		}
@@ -740,12 +909,12 @@ function addOrCannelPariseTheme(themeid,type){
 				//unloadTextAre('returnVal_'+topicid,'p_btn');
 				var h='';
 				if(type==1){//赞
-					h+='<span id="sp_praiseshu"><a  href="javascript:addOrCannelPariseTheme('+themeid+',\'2\');"><span class="ico41"></span>取消赞('+rps.objList[0]+')</a>';
+					h+='<a  href="javascript:addOrCannelPariseTheme('+themeid+',\'2\');"><span class="ico41"></span>取消赞('+rps.objList[0]+')</a>';
 					
 				}else{
-					h+='<span id="sp_praiseshu"><a  href="javascript:addOrCannelPariseTheme('+themeid+',\'1\');"><span class="ico41"></span>赞('+rps.objList[0]+')</a>';
+					h+='<a  href="javascript:addOrCannelPariseTheme('+themeid+',\'1\');"><span class="ico41"></span>赞('+rps.objList[0]+')</a>';
 				}
-				$("span[id='sp_praiseshu']").html(h);
+				$("span[id='sp_praiseshu"+themeid+"']").html(h);
 				
 			}
 		}

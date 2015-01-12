@@ -6,7 +6,7 @@
 			function validateParam(tobj){
 				var param=new Object();
 				param.courseid=courseid;
-				var topicnameObj=$("#sel_topicname"); 
+				var topicnameObj=$("#sel_topicname");
 				if(topicnameObj.val().Trim().length>0)
 					param.topictitle=topicnameObj.val().Trim();
 				tobj.setPostParams(param);	
@@ -296,11 +296,9 @@ function deleteTopic(id){
 					param.topicid=quotetopicid;
 				
 				tobj.setPostParams(param);
-				
+
 			}
-			
-			
-			
+
 			/**
 			 * 论题详情页
 			 * @param rps
@@ -362,17 +360,17 @@ function deleteTopic(id){
 					$("#tbl_body_data").html(htm);	
 					//翻页信息
 						if (typeof (p1) != "undefined" && typeof (p1) == "object") {
-							p1.setPagetotal(rps.presult.pageTotal);
-							p1.setRectotal(rps.presult.recTotal);
-							p1.setPageSize(rps.presult.pageSize);
-							p1.setPageNo(rps.presult.pageNo);	
-							p1.Refresh();
+                        p1.setPagetotal(rps.presult.pageTotal);
+                        p1.setRectotal(rps.presult.recTotal);
+                        p1.setPageSize(rps.presult.pageSize);
+                        p1.setPageNo(rps.presult.pageNo);
+                        p1.Refresh();
 
-                            if(rps.presult.pageTotal<=1)
-                                $('#page1address').hide();
-                            else
-                                $('#page1address').show();
-						}
+                        if(rps.presult.pageTotal<=1)
+                            $('#page1address').hide();
+                        else
+                            $('#page1address').show();
+                    }
 				}	
 			}
 			
@@ -1019,7 +1017,7 @@ function listReturn(rps){
                         }
                     }
                     //h+='<a class="ico49b" id="a_op_'+itm.topicid+'" onclick="operateUI(\'dv_main_'+itm.topicid+'\',\'ico49\',\'a_op_'+itm.topicid+'\')" href="javascript:;"></a>';
-                    h+='<a href="tptopic?m=toDetailTopic&topicid='+itm.topicid+'">'+itm.topictitle+'</a> </p><!-- ico49a -->';
+                    h+='<a href="tptopic?m=viewTopic&topicid='+itm.topicid+'">'+itm.topictitle+'</a> </p><!-- ico49a -->';
                     h+='</div>';
                     h+='<div id="dv_main_'+itm.topicid+'" class="text" style="display:block">';
                     h+='<div class="f_right">';

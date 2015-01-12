@@ -1,19 +1,18 @@
 
 package  com.school.manager.teachpaltform.interactive;
 
-import java.util.List;
-import jxl.Sheet;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import com.school.dao.inter.teachpaltform.interactive.ITpThemeReplyDAO;
-
-import com.school.entity.teachpaltform.interactive.TpThemeReplyInfo;
 import com.school.dao.base.ICommonDAO;
+import com.school.dao.inter.teachpaltform.interactive.ITpThemeReplyDAO;
+import com.school.entity.teachpaltform.interactive.TpThemeReplyInfo;
 import com.school.manager.base.BaseManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpThemeReplyManager;
 import com.school.util.PageResult;
+import jxl.Sheet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TpThemeReplyManager extends BaseManager<TpThemeReplyInfo> implements ITpThemeReplyManager  { 
@@ -53,6 +52,9 @@ public class TpThemeReplyManager extends BaseManager<TpThemeReplyInfo> implement
 	public List<Object> getUpdateSql(TpThemeReplyInfo tpthemereplyinfo, StringBuilder sqlbuilder) {
 		return tpThemeReplyDAO.getUpdateSql(tpthemereplyinfo,sqlbuilder);
 	}
+    public List<TpThemeReplyInfo> getListByThemeIdStr(final String themeidStr,final Integer searchType, PageResult presult){
+        return tpThemeReplyDAO.getListByThemeIdStr(themeidStr,searchType,presult);
+    }
 	public TpThemeReplyInfo getOfExcel(Sheet rs, int cols, int d, String type) {
 		// TODO Auto-generated method stub
 		return null;

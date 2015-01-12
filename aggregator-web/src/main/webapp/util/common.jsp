@@ -300,6 +300,12 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
         $("#loading").ajaxStop(function(){
             $(this).hide();
         });
+        $("#loading").ajaxError(function(){
+            $(this).hide();
+        });
+        $("#loading").ajaxSuccess(function(){
+            $(this).hide();
+        });
     })
 </script>  
 <title><%=webTitle%></title>

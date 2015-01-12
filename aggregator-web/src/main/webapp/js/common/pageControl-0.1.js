@@ -647,7 +647,10 @@ PageControl.prototype.doSubURL = function(pageidx) {
                 },success:function(rps){
                     tmpSettings.http_operate_handler(rps);
                     if(tmpSettings.isShowController){
-                        if(rps.presult.pageTotal<=1)
+                        var pt=tmpSettings.pagetotal;
+                        if(tmpSettings.return_type.toLowerCase()=='json')
+                            pt=rps.presult.pageTotal;
+                        if(pt<=1)
                             $('#'+tmpSettings.gender_address_id).hide();
                         else
                             $('#'+tmpSettings.gender_address_id).show();
@@ -661,7 +664,10 @@ PageControl.prototype.doSubURL = function(pageidx) {
                 },success:function(rps){
                     tmpSettings.http_operate_handler(rps);
                     if(tmpSettings.isShowController){
-                        if(rps.presult.pageTotal<=1)
+                        var pt=tmpSettings.pagetotal;
+                        if(tmpSettings.return_type.toLowerCase()=='json')
+                            pt=rps.presult.pageTotal;
+                        if(pt<=1)
                             $('#'+tmpSettings.gender_address_id).hide();
                         else
                             $('#'+tmpSettings.gender_address_id).show();

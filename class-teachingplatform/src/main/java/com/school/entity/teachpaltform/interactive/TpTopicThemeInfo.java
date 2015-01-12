@@ -4,8 +4,6 @@ import com.school.util.UtilTool;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class TpTopicThemeInfo  implements Serializable {
@@ -359,6 +357,10 @@ public class TpTopicThemeInfo  implements Serializable {
 
     public String getHeadimage() {
         return headimage;
+    }
+
+    public void setCheadimage(String headimage) {
+        this.headimage = headimage;
     }
 
     public void setHeadimage(String headimage) {

@@ -26,12 +26,14 @@
         <property name="user" value="schu"/>
         <property name="password" value="schp2014"/>
         <property name="minPoolSize" value="10" />
-        <property name="maxPoolSize" value="15" />
-        <property name="maxIdleTime" value="5" />
+        <property name="maxPoolSize" value="50" />
+        <property name="maxIdleTime" value="600" />
         <property name="acquireIncrement" value="5" />
+        <property name="acquireRetryAttempts" value="60" />
         <property name="maxStatements" value="0" />
         <property name="initialPoolSize" value="10" />
-        <property name="idleConnectionTestPeriod" value="1" />
+        <property name="idleConnectionTestPeriod" value="120" />
+        <property name="testConnectionOnCheckin" value="false" />
         <property name="autoCommitOnClose" value="false" />
     </bean>
 

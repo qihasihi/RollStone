@@ -80,11 +80,13 @@ public class TpThemeReplyController extends BaseController<TpThemeReplyInfo>{
         objArrayList.add(objList);
     }
     //评论数
-    sqlbuilder=new StringBuilder();
-    objList=this.tpTopicThemeManager.getUpdateNumAdd("tp_topic_theme_info","theme_id","pinglunshu",entity.getThemeid().toString(),1,sqlbuilder);
-    if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
-        sqlArrayList.add(sqlbuilder.toString());
-        objArrayList.add(objList);
+    if(entity.getReplyid()!=null){
+        sqlbuilder=new StringBuilder();
+        objList=this.tpTopicThemeManager.getUpdateNumAdd("tp_topic_theme_info","theme_id","pinglunshu",entity.getThemeid().toString(),1,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
     }
 
 		if(objArrayList.size()!=0&&objArrayList.size()==sqlArrayList.size()){
@@ -122,6 +124,38 @@ public class TpThemeReplyController extends BaseController<TpThemeReplyInfo>{
 		jeEntity.setType("success");
 		response.getWriter().print(jeEntity.toJSON());
 	}
+
+    /**
+     * 根据themeid或themeid string得到评论及回复
+     * @param request
+     * @throws Exception
+     */
+    @RequestMapping(params="m=getReplyByThemeId",method=RequestMethod.POST)
+    public void getReplyListByThemeId(HttpServletRequest request,HttpServletResponse response) throws Exception{
+
+        String themeidStr=request.getParameter("themeidstr");
+        JsonEntity jeEntity=new JsonEntity();
+        if(themeidStr==null|| themeidStr.length()<1){
+            jeEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(jeEntity.toJSON());
+            return;
+        }
+        PageResult presult=this.getPageResultParameter(request);
+        //查询
+        String totalStr=null;
+        List<TpThemeReplyInfo> replyList=this.tpThemeReplyManager.getListByThemeIdStr(themeidStr,1, presult); //查回帖
+//        if(presult.getList()!=null&&presult.getList().size()>0&&presult.getList().iterator().next()!=null)
+//            totalStr=presult.getList().iterator().next().toString();
+        presult.getList().add(replyList);
+
+        List<TpThemeReplyInfo> plList=this.tpThemeReplyManager.getListByThemeIdStr(themeidStr,2, null); //查回帖
+        presult.getList().add(plList);
+//        if(totalStr!=null)
+//            presult.getList().add(totalStr);
+        jeEntity.setPresult(presult);
+        jeEntity.setType("success");
+        response.getWriter().print(jeEntity.toJSON());
+    }
 	/**
 	 * 执行删除
 	 * @param request
