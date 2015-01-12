@@ -36,6 +36,25 @@ public class ClassInfo implements java.io.Serializable {
     private Integer activitytype;
     private Integer termid;
 
+    private String begintime;//管理员查询班级任务统计用的开始时间
+    private String endtime;//管理员查询班级任务统计用的结束时间
+
+    public String getBegintime() {
+        return begintime;
+    }
+
+    public void setBegintime(String begintime) {
+        this.begintime = begintime;
+    }
+
+    public String getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(String endtime) {
+        this.endtime = endtime;
+    }
+
     public Integer getActivitytype() {
         return activitytype;
     }

@@ -4020,7 +4020,10 @@ public class PaperController extends BaseController<PaperInfo>{
 
         request.setAttribute("papername",piList.get(0).getPapername());
         request.setAttribute("ismark",sign);
-        return new ModelAndView("teachpaltform/paper/marking/marking-list");
+        request.setAttribute("courseid",taList.get(0).getCourseid());
+        request.setAttribute("taskid",taskid);
+
+        return new ModelAndView("teachpaltform/task/teacher/task-performance-cj");
     }
 
         /**

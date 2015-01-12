@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
@@ -652,6 +653,164 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
         StringBuilder sb = new StringBuilder("{call class_info_proc_list_term()}");
 
         list=this.executeResult_PROC(sb.toString(), null, null, ClassInfo.class, null);
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> getAdminPerformance(ClassInfo obj, PageResult presult) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_split(");
+        List<Object> objList=new ArrayList<Object>();
+        if(obj.getBegintime()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getBegintime());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getEndtime()!=null&&obj.getEndtime().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(obj.getEndtime());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getGradeid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getGradeid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getClassid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+
+        List<Integer> types=new ArrayList<Integer>();
+        Object[] objArray=new Object[1];
+        List<Map<String,Object>> list=this.executeResultListMap_PROC(sqlbuilder.toString(), objList);
+        if(list!=null&&list.size()>0)
+            return list;
+        else
+            return null;
+    }
+
+    @Override
+    public List<List<String>> getAdminPerformanceStu(ClassInfo obj, PageResult presult) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_stu(");
+        List<Object> objList=new ArrayList<Object>();
+        if(obj.getGradeid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getGradeid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getSubjectid()!=null&&obj.getSubjectid().intValue()>0){
+            sqlbuilder.append("?,");
+            objList.add(obj.getSubjectid());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getClassid()!=null&&obj.getClassid().intValue()>0){
+            sqlbuilder.append("?");
+            objList.add(obj.getClassid());
+        }else
+            sqlbuilder.append("NULL");
+        sqlbuilder.append(")}");
+        List<List<String>> list = this.executeResultProcedure(sqlbuilder.toString(),objList);
+        return list;
+    }
+
+    @Override
+    public List<ClassInfo> getAdminPerformanceTeaClass(Integer schoolid, Integer gradeid, Integer subjectid) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_getclass(");
+        List<Object> objList=new ArrayList<Object>();
+        if(schoolid!=null){
+            sqlbuilder.append("?,");
+            objList.add(schoolid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(gradeid!=null){
+            sqlbuilder.append("?,");
+            objList.add(gradeid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(subjectid!=null){
+            sqlbuilder.append("?");
+            objList.add(subjectid);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<ClassInfo> list = this.executeResult_PROC(sqlbuilder.toString(),objList,null,ClassInfo.class,null);
+        return list;
+    }
+
+    @Override
+    public List<ClassInfo> getAdminPerformanceStuClass(Integer schoolid, Integer gradeid, Integer subjectid) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_stu_class(");
+        List<Object> objList=new ArrayList<Object>();
+        if(schoolid!=null){
+            sqlbuilder.append("?,");
+            objList.add(schoolid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(gradeid!=null){
+            sqlbuilder.append("?,");
+            objList.add(gradeid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(subjectid!=null){
+            sqlbuilder.append("?");
+            objList.add(subjectid);
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<ClassInfo> list = this.executeResult_PROC(sqlbuilder.toString(),objList,null,ClassInfo.class,null);
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> getAdminPerformanceStuCol(ClassInfo obj) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_stu_class(");
+        List<Object> objList=new ArrayList<Object>();
+        if(obj.getGradeid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getGradeid());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(obj.getSubjectid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getSubjectid());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(obj.getClassid()!=null){
+            sqlbuilder.append("?");
+            objList.add(obj.getClassid());
+        }else{
+            sqlbuilder.append("null");
+        }
+        sqlbuilder.append(")}");
+        List<Map<String,Object>> list = this.executeResultListMap_PROC(sqlbuilder.toString(),objList);
         return list;
     }
 }

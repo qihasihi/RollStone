@@ -168,7 +168,7 @@ function getInvestReturnMethod(rps){
                 else if (itm.tasktype==1)
                     qtype=undefined;
                 if(itm.tasktype==4){
-                    html+='<a title="查看统计" href="task?toCjTaskPerformance&taskid='+itm.taskid+'&subjectid=${param.subjectid}"><span class="ico35"></span><b>'+stucount+'/'+itm.totalcount+'</b></a>';
+                    html+='<a title="查看统计" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"><span class="ico35"></span><b>'+stucount+'/'+itm.totalcount+'</b></a>';
                 }else{
                     html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'&subjectid=${param.subjectid}"><span class="ico35"></span><b>'+stucount+'/'+itm.totalcount+'</b></a>';
                 }
@@ -217,12 +217,12 @@ function getInvestReturnMethod(rps){
                 }
                 html+='&nbsp;&nbsp;&nbsp;&nbsp<span style="color:gray;">'+itm.btimeSimpleString+'</span>';
             }
-            if(itm.tasktype==4){
-                if(itm.taskstatus!="1")
-                    html+='<a class="ico84" title="批阅"  href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
-                else
-                    html+='<a class="ico84b" title="任务未开始"  href="javascript:;"></a>';
-            }
+//            if(itm.tasktype==4){
+//                if(itm.taskstatus!="1")
+//                    html+='<a class="ico84" title="批阅"  href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"></a>';
+//                else
+//                    html+='<a class="ico84b" title="任务未开始"  href="javascript:;"></a>';
+//            }
             html+='</p>';
             html+='</div>';
             html+='<div id="div_task_'+itm.taskid+'" style="display:none;"  class="text">';

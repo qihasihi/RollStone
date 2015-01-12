@@ -132,7 +132,37 @@ public class GradeDAO extends CommonDAO<GradeInfo> implements IGradeDAO {
         return roleList;
     }
 
-	public List<Object> getSaveSql(GradeInfo obj, StringBuilder sqlbuilder) {
+    @Override
+    public List<GradeInfo> getAdminPerformanceTeaGrade(Integer schoolid) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_getgrade(");
+        List<Object> objList=new ArrayList<Object>();
+        if(schoolid!=null){
+            sqlbuilder.append("?");
+            objList.add(schoolid);
+        }else{
+            return null;
+        }
+        sqlbuilder.append(")}");
+        List<GradeInfo> list = this.executeResult_PROC(sqlbuilder.toString(),objList,null,GradeInfo.class,null);
+        return list;
+    }
+
+    @Override
+    public List<GradeInfo> getAdminPerformanceStuGrade(Integer schoolid) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_stu_grade(");
+        List<Object> objList=new ArrayList<Object>();
+        if(schoolid!=null){
+            sqlbuilder.append("?");
+            objList.add(schoolid);
+        }else{
+            return null;
+        }
+        sqlbuilder.append(")}");
+        List<GradeInfo> list = this.executeResult_PROC(sqlbuilder.toString(),objList,null,GradeInfo.class,null);
+        return list;
+    }
+
+    public List<Object> getSaveSql(GradeInfo obj, StringBuilder sqlbuilder) {
 		if(obj==null||sqlbuilder==null)
 			return null;
 		sqlbuilder.append("{call grade_proc_add(");

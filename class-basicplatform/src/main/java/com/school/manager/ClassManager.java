@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class  ClassManager extends BaseManager<ClassInfo> implements IClassManager  {
@@ -118,6 +119,31 @@ public class  ClassManager extends BaseManager<ClassInfo> implements IClassManag
 
     public List<ClassInfo> getAllTerm() {
         return this.classdao.getAllTerm();
+    }
+
+    @Override
+    public List<Map<String, Object>> getAdminPerformance(ClassInfo obj, PageResult presult) {
+        return this.classdao.getAdminPerformance(obj,presult);
+    }
+
+    @Override
+    public List<ClassInfo> getAdminPerformanceTeaClass(Integer schoolid, Integer gradeid, Integer subjectid) {
+        return this.classdao.getAdminPerformanceTeaClass(schoolid, gradeid, subjectid);
+    }
+
+    @Override
+    public List<ClassInfo> getAdminPerformanceStuClass(Integer schoolid, Integer gradeid, Integer subjectid) {
+        return this.classdao.getAdminPerformanceStuClass(schoolid,gradeid,subjectid);
+    }
+
+    @Override
+    public List<List<String>> getAdminPerformanceStu(ClassInfo obj, PageResult presult) {
+        return this.classdao.getAdminPerformanceStu(obj,presult);
+    }
+
+    @Override
+    public List<Map<String, Object>> getAdminPerformanceStuCol(ClassInfo obj) {
+        return this.classdao.getAdminPerformanceStuCol(obj);
     }
 }
 

@@ -4418,7 +4418,7 @@ public class TaskController extends BaseController{
         }
         je.getObjList().add(numList);
         je.getObjList().add(tList);
-        je.getObjList().add(tmpGroupList);
+        je.getObjList().add(null);
         je.getObjList().add(notCompleteList);
         je.getObjList().add(quesidList);
         je.setType("success");

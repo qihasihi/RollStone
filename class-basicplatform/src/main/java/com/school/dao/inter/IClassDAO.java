@@ -6,6 +6,7 @@ import com.school.entity.ClassInfo;
 import com.school.util.PageResult;
 
 import java.util.List;
+import java.util.Map;
 
 public interface  IClassDAO extends ICommonDAO<ClassInfo>{
     /**
@@ -45,4 +46,29 @@ public interface  IClassDAO extends ICommonDAO<ClassInfo>{
     public List<ClassInfo> getClassByGradeTerm(int gradeId,int termId);
 
     public List<ClassInfo> getAllTerm();
-}
+
+    /**
+     * 管理员查询班级任务统计
+     * */
+    public List<Map<String,Object>> getAdminPerformance(ClassInfo obj,PageResult presult);
+
+    /**
+     * 管理员查询班级学生任务统计
+     * */
+    public List<List<String>> getAdminPerformanceStu(ClassInfo obj,PageResult presult);
+
+    /**
+     * 管理员查询教师班级任务统计,获取班级
+     * */
+    public List<ClassInfo> getAdminPerformanceTeaClass(Integer schoolid,Integer gradeid,Integer subjectid);
+
+    /**
+     * 管理员查询学生班级任务统计,获取班级
+     * */
+    public List<ClassInfo> getAdminPerformanceStuClass(Integer schoolid,Integer gradeid,Integer subjectid);
+
+    /**
+     * 管理员查询学生任务统计，获取列头
+     * */
+    public List<Map<String,Object>> getAdminPerformanceStuCol(ClassInfo obj);
+  }

@@ -2243,23 +2243,19 @@ function cjloadStuPerformance(classid, classtype) {
                         htm +='</div>';
                     });
                 } else {
-                    htm+='<div class="jxxt_zhuanti_rw_tongji_chengjuan">';
+//                    htm+='<div class="jxxt_zhuanti_rw_tongji_chengjuan">';
                     htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2"';
                     if (classid != null && classid.toString().length > 0) {
-                        htm+=' style="width:'+(250+(quesNum*50))+'px"';
-                    } else {
                         htm+=' style="width:'+(350+(quesNum*50))+'px"';
                     }
                     htm+='>';
-                    if(classid==0)
-                        htm+='<colgroup class="w100"></colgroup>';
+                    htm+='<colgroup class="w100"></colgroup>';
                     htm += '<colgroup class="w80"></colgroup>';
                     htm += '<colgroup class="w120"></colgroup>';
                     htm += '<colgroup span="'+(1+quesNum)+'" class="w50"></colgroup>';
                     //htm += '<colgroup class="w80"></colgroup>';
                     htm += '<tr>';
-                    if(classid==0)
-                        htm += '<th>班级</th>';
+                    htm += '<th>小组</th>';
                     htm += '<th>姓名</th>';
                     htm += '<th>学习时间</th>';
                     htm += '<th>总分</th>';
@@ -2271,20 +2267,15 @@ function cjloadStuPerformance(classid, classtype) {
                             htm+='<tr class="trbg1">';
                         else
                             htm += '<tr>';
-                        if(classid==0)
-                            htm += '<td>' + itm[4] + '</td>';
                         htm += '<td>' + itm[0] + '</td>';
-                        var studytime = itm[2];
+                        htm += '<td>' + itm[1] + '</td>';
+                        var studytime = itm[3];
                         studytime=studytime.substring(0,16);
                         htm += '<td>'+studytime+'</td>';
-                        htm += '<td id="td_0"><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">'+itm[3]+'</a></td>';
+                        htm += '<td id="td_0"><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[2]+'&flag=1">'+itm[4]+'</a></td>';
                         $.each(rmsg.objList[4], function (quesnum, ques) {
                             var answer='';
-                            if(classid==0){
-                                answer = itm[quesnum+5];
-                            }else{
-                                answer = itm[quesnum+4];
-                            }
+                            answer = itm[quesnum+5];
                             var answers = answer.split("|");
                             if(answers[2]=="1"){
                                 if(answers[1]=="1"){
@@ -2306,33 +2297,29 @@ function cjloadStuPerformance(classid, classtype) {
                         htm += '</tr>';
                     });
                     htm += '</table>';
-                    htm +='</div>';
+//                    htm +='</div>';
                 }
             } else {
-                htm+='<div class="jxxt_zhuanti_rw_tongji_chengjuan">';
+//                htm+='<div class="jxxt_zhuanti_rw_tongji_chengjuan">';
                 htm += '<table border="0" id="recordList" cellpadding="0" cellspacing="0" class="public_tab2"';
                 if (classid != null && classid.toString().length > 0) {
-                    htm+=' style="width:'+(250+(quesNum*50))+'px"';
-                } else {
-                    htm+=' style="width:'+(350+(quesNum*50))+'px"';
+                    htm+=' style="width:'+(300+(quesNum*50))+'px"';
                 }
                 htm+='>';
-                if(classid==0)
-                    htm+='<colgroup class="w100"></colgroup>';
+                htm+='<colgroup class="w100"></colgroup>';
                 htm += '<colgroup class="w80"></colgroup>';
                 htm += '<colgroup class="w120"></colgroup>';
                 htm += '<colgroup span="'+(1+quesNum)+'" class="w50"></colgroup>';
                 //htm += '<colgroup class="w80"></colgroup>';
                 htm += '<tr>';
-                if(classid==0)
-                    htm += '<th>班级</th>';
+                htm += '<th>小组</th>';
                 htm += '<th>姓名</th>';
                 htm += '<th>学习时间</th>';
                 htm += '<th>总分</th>';
                 htm += quesCol;
                 //htm += '<th>查看试卷</th>';
                 htm += '</tr>';
-                htm+='<tr><td colspan="15">暂无数据!</td></tr></table></div>';
+                htm+='<tr><td colspan="15">暂无数据!</td></tr></table>';
             }
             if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
                 $("#dv_nocomplete_data").html('');
@@ -2363,7 +2350,7 @@ function cjloadStuPerformance(classid, classtype) {
 
 
 
-            writeUnderTr(classid,rmsg.objList[4]);
+            //writeUnderTr(classid,rmsg.objList[4]);
         }
     });
 }

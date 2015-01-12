@@ -79,5 +79,15 @@ public class  GradeManager extends BaseManager<GradeInfo> implements IGradeManag
     public List<GradeInfo> getTchGradeList(Integer userid, String year) {
         return this.gradedao.getTchGradeList(userid,year);
     }
+
+    @Override
+    public List<GradeInfo> getAdminPerformanceStuGrade(Integer schoolid) {
+        return this.gradedao.getAdminPerformanceStuGrade(schoolid);
+    }
+
+    @Override
+    public List<GradeInfo> getAdminPerformanceTeaGrade(Integer schoolid) {
+        return this.gradedao.getAdminPerformanceTeaGrade(schoolid);
+    }
 }
 

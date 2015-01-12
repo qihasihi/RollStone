@@ -22,6 +22,15 @@ public class  PaperQuestion implements Serializable{
     private Float score;
     private Object submitnum;//试题提交数量
     private Object markingnum;//试题批阅数量
+    private Object correctrate;//正确率/得分率
+
+    public Object getCorrectrate() {
+        return correctrate;
+    }
+
+    public void setCorrectrate(Object correctrate) {
+        this.correctrate = correctrate;
+    }
 
     public Object getSubmitnum() {
         return submitnum;

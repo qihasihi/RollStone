@@ -211,4 +211,46 @@ public class SubjectDAO extends CommonDAO<SubjectInfo> implements ISubjectDAO{
         List<SubjectInfo> subjectList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,SubjectInfo.class,null);
         return subjectList;
     }
+
+    @Override
+    public List<SubjectInfo> getAdminPerformanceTeaSubject(Integer schoolid, Integer gradeid) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_getsubject(");
+        List<Object> objList=new ArrayList<Object>();
+        if(schoolid!=null){
+            sqlbuilder.append("?,");
+            objList.add(schoolid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(gradeid!=null){
+            sqlbuilder.append("?");
+            objList.add(gradeid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<SubjectInfo> subjectList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,SubjectInfo.class,null);
+        return subjectList;
+    }
+
+    @Override
+    public List<SubjectInfo> getAdminPerformanceStuSubject(Integer schoolid, Integer gradeid) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_stu_subject(");
+        List<Object> objList=new ArrayList<Object>();
+        if(schoolid!=null){
+            sqlbuilder.append("?,");
+            objList.add(schoolid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(gradeid!=null){
+            sqlbuilder.append("?");
+            objList.add(gradeid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<SubjectInfo> subjectList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,SubjectInfo.class,null);
+        return subjectList;
+    }
 }

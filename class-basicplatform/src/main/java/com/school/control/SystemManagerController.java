@@ -1,13 +1,10 @@
 package com.school.control;
 
 import com.school.control.base.BaseController;
-import com.school.entity.SchoolLogoInfo;
-import com.school.entity.SubjectInfo;
-import com.school.entity.TermInfo;
-import com.school.manager.inter.ISchoolLogoManager;
-import com.school.manager.inter.ISubjectManager;
-import com.school.manager.inter.ITermManager;
+import com.school.entity.*;
+import com.school.manager.inter.*;
 import com.school.util.JsonEntity;
+import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +32,10 @@ public class SystemManagerController extends BaseController<TermInfo>{
     private ITermManager termManager;
     @Autowired
     private ISchoolLogoManager schoolLogoManager;
+    @Autowired
+    private IClassManager classManager;
+    @Autowired
+    private IGradeManager gradeManager;
 
 	@RequestMapping(params="m=logoconfig",method=RequestMethod.GET)
 	public ModelAndView toLogoConfig(HttpServletRequest request,ModelAndView mp )throws Exception{
@@ -261,4 +262,144 @@ public class SystemManagerController extends BaseController<TermInfo>{
 //		}
 		response.getWriter().print(je.toJSON());
 	}
+
+    @RequestMapping(params="m=toAdminPerformance",method=RequestMethod.GET)
+    public ModelAndView toAdminPerformance(HttpServletRequest request,ModelAndView mp )throws Exception{
+        List<GradeInfo> gradeList = this.gradeManager.getAdminPerformanceTeaGrade(this.logined(request).getDcschoolid());
+        request.setAttribute("gradeList",gradeList);
+        return new ModelAndView("/systemmanager/adminPerformance-t");
+    }
+
+    @RequestMapping(params="m=toAdminPerformanceStu",method=RequestMethod.GET)
+    public ModelAndView toAdminPerformanceStu(HttpServletRequest request,ModelAndView mp )throws Exception{
+        List<GradeInfo> gradeList = this.gradeManager.getAdminPerformanceStuGrade(this.logined(request).getDcschoolid());
+        request.setAttribute("gradeList",gradeList);
+        return new ModelAndView("/systemmanager/adminPerformance-s");
+    }
+
+    @RequestMapping(params = "m=getAdminPerformanceSubject", method = RequestMethod.POST)
+    public void getAdminPerformanceSubject(HttpServletRequest request,
+                                    HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String gradeid = request.getParameter("gradeid");
+        if(gradeid==null){
+            je.setMsg("请选择年级");
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<SubjectInfo> subjectList = this.subjectManager.getAdminPerformanceTeaSubject(this.logined(request).getDcschoolid(),Integer.parseInt(gradeid));
+        je.setObjList(subjectList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    @RequestMapping(params = "m=getAdminPerformanceSubjectStu", method = RequestMethod.POST)
+    public void getAdminPerformanceSubjectStu(HttpServletRequest request,
+                                           HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String gradeid = request.getParameter("gradeid");
+        if(gradeid==null){
+            je.setMsg("请选择年级");
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<SubjectInfo> subjectList = this.subjectManager.getAdminPerformanceStuSubject(this.logined(request).getDcschoolid(),Integer.parseInt(gradeid));
+        je.setObjList(subjectList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    @RequestMapping(params = "m=getAdminPerformanceClass", method = RequestMethod.POST)
+    public void getAdminPerformanceClass(HttpServletRequest request,
+                                           HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        if(gradeid==null){
+            je.setMsg("请选择年级");
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<ClassInfo> classList = this.classManager.getAdminPerformanceTeaClass(this.logined(request).getDcschoolid(),Integer.parseInt(gradeid),Integer.parseInt(subjectid));
+        je.setObjList(classList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    @RequestMapping(params = "m=getAdminPerformanceClassStu", method = RequestMethod.POST)
+    public void getAdminPerformanceClassStu(HttpServletRequest request,
+                                         HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        if(gradeid==null){
+            je.setMsg("请选择年级");
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        List<ClassInfo> classList = this.classManager.getAdminPerformanceStuClass(this.logined(request).getDcschoolid(),Integer.parseInt(gradeid),Integer.parseInt(subjectid));
+        je.setObjList(classList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    @RequestMapping(params = "m=getAdminPerformance", method = RequestMethod.POST)
+    public void getAdminPerformance(HttpServletRequest request,
+                          HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        PageResult presult = this.getPageResultParameter(request);
+        String btime = request.getParameter("btime");
+        String etime = request.getParameter("etime");
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String classid = request.getParameter("classid");
+        if(gradeid==null||subjectid==null||classid==null){
+            je.setMsg("缺少必要参数，请刷新后重试");
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        ClassInfo c = new ClassInfo();
+        c.setClassid(Integer.parseInt(classid));
+        c.setGradeid(Integer.parseInt(gradeid));
+        c.setSubjectid(Integer.parseInt(subjectid));
+        if(btime!=null&&etime!=null){
+            c.setBegintime(btime);
+            c.setEndtime(etime);
+        }
+        List<Map<String,Object>> objList = this.classManager.getAdminPerformance(c,presult);
+        je.setObjList(objList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    @RequestMapping(params = "m=getAdminPerformanceStu", method = RequestMethod.POST)
+    public void getAdminPerformanceStu(HttpServletRequest request,
+                                    HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        PageResult presult = this.getPageResultParameter(request);
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String classid = request.getParameter("classid");
+        if(gradeid==null||subjectid==null||classid==null){
+            je.setMsg("缺少必要参数，请刷新后重试");
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        ClassInfo c = new ClassInfo();
+        c.setClassid(Integer.parseInt(classid));
+        c.setGradeid(Integer.parseInt(gradeid));
+        c.setSubjectid(Integer.parseInt(subjectid));
+        List<Map<String,Object>> colList = this.classManager.getAdminPerformanceStuCol(c);
+        List<List<String>> objList = this.classManager.getAdminPerformanceStu(c,presult);
+        je.getObjList().add(colList);
+        je.getObjList().add(objList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
 }

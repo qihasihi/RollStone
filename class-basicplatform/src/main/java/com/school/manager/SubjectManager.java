@@ -101,4 +101,14 @@ public class SubjectManager extends BaseManager<SubjectInfo> implements ISubject
     public List<SubjectInfo> getHavaCourseSubject(String termid, String userref, int userid) {
         return this.subjectDAO.getHavaCourseSubject(termid,userref,userid);
     }
+
+    @Override
+    public List<SubjectInfo> getAdminPerformanceTeaSubject(Integer schoolid, Integer gradeid) {
+        return this.subjectDAO.getAdminPerformanceTeaSubject(schoolid, gradeid);
+    }
+
+    @Override
+    public List<SubjectInfo> getAdminPerformanceStuSubject(Integer schoolid, Integer gradeid) {
+        return this.subjectDAO.getAdminPerformanceStuSubject(schoolid,gradeid);
+    }
 }
