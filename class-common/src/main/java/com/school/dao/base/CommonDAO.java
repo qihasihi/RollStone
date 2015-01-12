@@ -764,7 +764,7 @@ class SchoolCallableStatementCreator implements CallableStatementCreator{
             } else {
                 pstatement.setObject(i + 1, paraValue[i]);
             }
-           // System.out.println((i+1)+":"+paraValue[i]);
+            System.out.println((i+1)+":"+paraValue[i]);
         }
 
         return pstatement;

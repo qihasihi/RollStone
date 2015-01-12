@@ -1465,6 +1465,19 @@ public class UserController extends BaseController<UserInfo> {
                     je.setMsg("用户信息同步至网校失败!更新");
                     transactionRollback();
                 }
+
+                //活动用户更新ett密码
+                if(user!=null&&user.getIsactivity()!=null&&user.getIsactivity()==1){
+                    Integer userType=1;
+                    if(user.getStuname()!=null&&user.getStuname().length()>0)
+                        userType=2;
+                    else
+                        userType=1;
+                    if(!EttInterfaceUserUtil.ModifyUser(user,userType.toString()))
+                        System.out.println("更新活动用户密码同步至网校失败!UserController edit_base ettuserid:"+user.getEttuserid());
+                    else
+                        System.out.println("更新活动用户密码同步至网校成功!UserController edit_base ettuserid:"+user.getEttuserid());
+                }
             }else
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
@@ -2426,11 +2439,11 @@ public class UserController extends BaseController<UserInfo> {
         List<ClassUser>teaHistoryClsList=this.classUserManager.getList(teacu, null);
 
         //年级
-        PageResult gradepage=new PageResult();
-        gradepage.setPageNo(0);
-        gradepage.setPageSize(0);
-        gradepage.setOrderBy("CASE grade_value	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END");
-        List<GradeInfo>gradeList=this.gradeManager.getList(null,gradepage);
+//        PageResult gradepage=new PageResult();
+//        gradepage.setPageNo(0);
+//        gradepage.setPageSize(0);
+//        gradepage.setOrderBy("CASE grade_value	WHEN '高一' THEN 1 WHEN '高二' THEN 2 WHEN '高三' THEN 3 END");
+        List<GradeInfo>gradeList=this.gradeManager.getList(null,null);
 
         //学科
         List<SubjectInfo> subjectList = this.subjectManager.getList(null, null);

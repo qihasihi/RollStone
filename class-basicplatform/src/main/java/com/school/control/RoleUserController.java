@@ -90,7 +90,7 @@ public class RoleUserController extends BaseController<RoleUser> {
 	public void getUserByCondition(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
 		JsonEntity je = new JsonEntity();
 		PageResult pageresult = this.getPageResultParameter(request);
-		pageresult.setOrderBy("state_id,c_time desc"); 
+		pageresult.setOrderBy("u.state_id,u.c_time desc");
 		RoleUser ru=this.getParameter(request, RoleUser.class);
 		
 		request.setAttribute("indentityname", ru.getIdentityname());

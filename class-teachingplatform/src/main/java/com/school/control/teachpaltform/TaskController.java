@@ -1486,9 +1486,9 @@ public class TaskController extends BaseController{
                         map.put("taskType",task.getTasktype());
                         map.put("isVirtual","0");
                         map.put("classType",tt.getClasstype());
-                        map.put("cUserId",task.getEttuserid());
-                        if(tt.getDcschoolid()==null||tt.getDcschoolid().toString().length()<1)
+                        if(tt.getDcschoolid()==null||task.getEttuserid()==null||tt.getDcschoolid().toString().length()<1)
                             continue;
+                        map.put("cUserId",task.getEttuserid());
                         map.put("schoolId",tt.getDcschoolid());
                         map.put("userType","3");
                         List<Integer> userId=new ArrayList<Integer>();
