@@ -51,11 +51,13 @@
                     <a href="javascript:;" onclick="doDelTheme(${theme.themeid });"><span class="ico04"></span>删除</a>
                 </c:if>
                 <c:if test="${empty param.quoteid||param.quoteid==0}">
-                    <c:if test="${theme.istop==0}">
-                        <span id="span_top${theme.themeid}"><a href="javascript:isTopOrIsEssence('${theme.themeid}','1','1','span_top${theme.themeid}');"><span class="ico56"></span>置顶</a></span>
-                    </c:if>
-                    <c:if test="${theme.istop==1}">
-                        <span id="span_top${theme.themeid}"><a href="javascript:isTopOrIsEssence('${theme.themeid}','1','0','span_top${theme.themeid}');"><span class="ico56"></span>取消置顶</a></span>
+                    <c:if test="${!empty roleStr&&roleStr=='TEACHER'}">
+                        <c:if test="${theme.istop==0}">
+                            <span id="span_top${theme.themeid}"><a href="javascript:isTopOrIsEssence('${theme.themeid}','1','1','span_top${theme.themeid}');"><span class="ico56"></span>置顶</a></span>
+                        </c:if>
+                        <c:if test="${theme.istop==1}">
+                            <span id="span_top${theme.themeid}"><a href="javascript:isTopOrIsEssence('${theme.themeid}','1','0','span_top${theme.themeid}');"><span class="ico56"></span>取消置顶</a></span>
+                        </c:if>
                     </c:if>
                     <%--只有教师才能加精华--%>
                     <c:if test="${!empty roleStr&&roleStr=='TEACHER'}">

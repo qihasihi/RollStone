@@ -58,7 +58,7 @@
                 ueditor.setDataId(newthemeid);
                 //加载分页控件
                 //查询基本的不是引用的主题
-                <c:if test="${empty param.quoteid||param.quoteid!=0}">
+                <c:if test="${empty param.quoteid||param.quoteid==0}">
                     p1=new PageControl({
                         post_url:'tptopictheme?m=getTopicZT&&selectType=-3&status=1',
                         page_id:'page1',

@@ -138,7 +138,7 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
             roleStr="STUDENT";
         }
         mp.put("roleStr", roleStr);
-        tpthemeInfo.setSelectType(2);//查询内容
+//        tpthemeInfo.setSelectType(2);//查询内容
         //得到列表
         tpthemeInfo.setLoginuserref(this.logined(request).getRef());
         List<TpTopicThemeInfo> tpTopicThemeList=this.tpTopicThemeManager.getList(tpthemeInfo,presult);
