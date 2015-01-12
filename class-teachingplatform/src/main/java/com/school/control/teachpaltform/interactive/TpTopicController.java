@@ -667,7 +667,7 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
 
 
     /**
-     * 进入论题统计页面
+     * 进入论题统计页面ZT
      * @param request
      * @param response
      * @return

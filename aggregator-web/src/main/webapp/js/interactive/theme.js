@@ -281,7 +281,32 @@
 				});	 			
 			}
 
-			
+/**
+ *
+ * @return
+ */
+function showTdSpan(themeid){
+    var cgrade=$("#cg"+themeid).val()
+    var cclsName=$("#cc"+themeid).val()
+    var cgname=$("#cgn"+themeid).val();
+    var genderDiv='<div id="show_tb_td_content" ';
+    genderDiv+='style="border:1px solid green;position:absolute;background-color:white;display:none;left:'+(mousePostion.x+1)+'px;top:'+(mousePostion.y)+'px">';
+    genderDiv+="<p style='padding:5px 5px 2px 5px'>年 级："+(cgrade.length>0?cgrade:'无')+"</p>";
+    genderDiv+="<p style='padding:2px 5px 2px 5px'>班 级："+(cclsName.length>0?cclsName:'无')+"</p>";
+    genderDiv+="<p style='padding:2px 5px 5px 5px'>小 组："+(cgname.length>0?cgname:'无')+"</p>";
+    genderDiv+='</div>';
+    $("#show_tb_td_content").remove();
+    $("body").append(genderDiv);
+    $("#show_tb_td_content").show('');
+}
+
+/**
+ *
+ * @return
+ */
+function hideTdSpan(){
+ $("#show_tb_td_content").remove();
+}
 
 /**
  * 修改 置顶或精华

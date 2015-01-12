@@ -64,6 +64,34 @@ public class TpTopicThemeInfo  implements Serializable {
     private Object pinglunshu;
 
 
+    private String classname;
+    private String classgrade;
+    private String groupname;
+
+    public String getClassname() {
+        return classname;
+    }
+
+    public void setClassname(String classname) {
+        this.classname = classname;
+    }
+
+    public String getClassgrade() {
+        return classgrade;
+    }
+
+    public void setClassgrade(String classgrade) {
+        this.classgrade = classgrade;
+    }
+
+    public String getGroupname() {
+        return groupname;
+    }
+
+    public void setGroupname(String groupname) {
+        this.groupname = groupname;
+    }
+
     /**
      * 得到附件数组
      * @return

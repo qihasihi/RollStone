@@ -12,11 +12,20 @@
     <c:forEach items="${ztTheme}" var="theme">
         <div class="jxxt_zhuanti_hdkj_zhutie">
             <div class="info">
-                <p class="pic"><img src="${theme.headimage}" onerror="headError(this)" width="125" height="125" alt="头像">
+                <p class="pic">
+                    <c:if test="${theme.croleType eq '学生'}">
+                        <img onmouseover="showTdSpan(${theme.themeid})" src="${theme.headimage}" onmouseout="hideTdSpan()" onerror="headError(this)" width="125" height="125" alt="头像">
+                    </c:if>
+                    <c:if test="${theme.croleType!='学生'}">
+                        <img onmouseover="" src="${theme.headimage}" onerror="headError(this)" width="125" height="125" alt="头像">
+                    </c:if>
                     <span class="ico96" style="display:${theme.isessence==1?'block':'none'}" id="sp_jhtx${theme.themeid}"></span>
                 </p>
                 <p>${theme.croleType}</p>
                 <p>${theme.crealname}</p>
+                <input type="hidden" name="cuser_grade" id="cg${theme.themeid}" value="${!empty theme.classgrade?theme.classgrade:''}"/>
+                <input type="hidden" name="cuser_classname" id="cc${theme.themeid}" value="${!empty theme.classname?theme.classname:''}"/>
+                <input type="hidden" name="cuser_groupname" id="cgn${theme.themeid}" value="${!empty theme.groupname?theme.groupname:''}"/>
             </div>
             <div class="text">
                 <input type="hidden" name="zt_themeid" id="themeid${theme.themeid}" value="${theme.themeid}"/>
