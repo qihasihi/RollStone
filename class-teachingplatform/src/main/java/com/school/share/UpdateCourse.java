@@ -2892,7 +2892,10 @@ class UpdateCourseUtil{
                                 if(resid!=null&&!map.get("Resid").toString().trim().equals(resid.toString()))continue;
                                 ResourceInfo res=new ResourceInfo();
                                 if(map.containsKey("Difftype")&&map.get("Difftype")!=null&&!map.get("Difftype").toString().trim().toUpperCase().equals("NULL")){
-                                    res.setDifftype(Integer.parseInt(map.get("Difftype").toString()));
+                                    Integer dtype=Integer.parseInt(map.get("Difftype").toString());
+                                    if(dtype==2)
+                                        dtype=-1;
+                                    res.setDifftype(dtype);
                                 }
                                 if(difftype!=null&&(res.getDifftype()==null||res.getDifftype().intValue()!=difftype.intValue()))
                                     continue;

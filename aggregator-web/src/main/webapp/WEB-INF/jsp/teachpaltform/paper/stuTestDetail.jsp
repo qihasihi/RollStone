@@ -152,16 +152,32 @@
                     h+=${q.score}+"";
                 h+='</span>分</span><span id="sp_qidx${q.parentQues.questionid}"">${qidx.index+1}</span></caption>';
                 h+='<tr><td><span class="bg">';
-                if(pextension==2)//2阅读理解  3完型填空  4英语听力  5七选五
-                    h+='阅读理解</span>：${q.parentQues.content}';
-                else if(pextension==3)
-                    h+='完形填空</span>：${q.parentQues.content}';
-                else if(pextension==4){
+                if(pextension==2){//2阅读理解  3完型填空  4英语听力  5七选五
+                    h+='阅读理解</span>';
+                     <c:if test="${!empty q.showExamYearMsg}">
+                        h+='(${q.showExamYearMsg})';
+                     </c:if>
+                    h+='<br/>${q.parentQues.content}';
+                }else if(pextension==3){
+                    h+='完形填空</span>';
+                    <c:if test="${!empty q.showExamYearMsg}">
+                      h+='(${q.showExamYearMsg})';
+                    </c:if>
+                    h+='<br/>${q.parentQues.content}';
+                }else if(pextension==4){
                     //如果是英语听力，则还需要添加控件，不用添加内容。
-                    h+='英语听力</span>：${q.parentQues.content}<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div><br/>';
+                    h+='英语听力</span>';
+                    <c:if test="${!empty q.showExamYearMsg}">
+                        h+='(${q.showExamYearMsg})';
+                    </c:if>
+                    h+='<br/>${q.parentQues.content}<br><div class="p_t_10" id="sp_mp3_${q.parentQues.questionid}"></div><br/>';
                     h+='${q.parentQues.analysis}';  //听力原文
                 }else if(pextension==5){
-                    h+='七选五</span>：${q.parentQues.content}';
+                    h+='七选五</span>';
+                    <c:if test="${!empty q.showExamYearMsg}">
+                    h+='(${q.showExamYearMsg})';
+                    </c:if>
+                    h+='<br/>${q.parentQues.content}';
                     h+='<div id="p_option_${q.parentQues.questionid}">';
                     //选项
                     <c:if test="${!empty q.parentQues.questionOption}">
@@ -201,15 +217,19 @@
             <c:if test="${empty q.parentQues}">
             //试题类型 1：其它 2：填空 3：单选 4：多选 6:试题组 7：单选组试题 8：多选组试题
                 if(questype==1){
-                    h1+='<span class="bg">问答题</span>：';
+                    h1+='<span class="bg">问答题</span>';
                     isshowfen=false;
                 } else if(questype==2){
-                    h1+='<span class="bg">填空题</span>：';
+                    h1+='<span class="bg">填空题</span>';
                     isshowfen=false;
                 }else if(questype==3)
-                    h1+='<span class="bg">单选题</span>：';
+                    h1+='<span class="bg">单选题</span>';
                 else if(questype==4)
-                    h1+='<span class="bg">多选题</span>：';
+                    h1+='<span class="bg">多选题</span>';
+                <c:if test="${!empty q.showExamYearMsg}">
+                    h1+='(${q.showExamYearMsg})';
+                </c:if>
+                h1+='<br/>';
             </c:if>
             <c:if test="${!empty q.parentQues}">
                 <%--如果是七选五--%>
