@@ -1443,9 +1443,9 @@ public class TaskController extends BaseController{
                     System.out.println("添加任务动态失败!原因：未获取到学生列表!");
                 }*/
                 if(!sendRemind(tasknextid))
-                    System.out.println(" doSubAddTask 添加taskRemind失败!");
+                    System.out.println(" doSubAddTask 添加taskRemind失败! Taskid"+tasknextid);
                 else
-                    System.out.println(" doSubAddTask 添加taskRemind成功!");
+                    System.out.println(" doSubAddTask 添加taskRemind成功! Taskid"+tasknextid);
 
             }else{
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
@@ -1553,6 +1553,8 @@ public class TaskController extends BaseController{
                         System.out.println("TaskController sendTaskRemind修改任务提醒状态失败!");
                 }
             }
+        }else{
+            System.out.println("TaskController sendTaskRemind TaskList.size():"+taskRemindList.size());
         }
         return false;
     }

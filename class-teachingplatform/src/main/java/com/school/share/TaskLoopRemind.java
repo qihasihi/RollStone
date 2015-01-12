@@ -39,7 +39,6 @@ import static com.school.share.TaskLoopRemindUtil.sendTaskRemindObj;
 
 public class TaskLoopRemind extends TimerTask {
     //¼ÇÂ¼Log4J
-    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     private ITpTaskAllotManager taskAllotManager;
     private ITpTaskManager taskManager;
     private IClassUserManager classUserManager;

@@ -41,6 +41,7 @@ public class TpCoursePaper {
     private Object micflag; //当前试卷关联微视频是否发任务
     private Object isvideopaper; //当前试卷关联了微视频
 
+
     public Object getIsvideopaper() {
         return isvideopaper;
     }

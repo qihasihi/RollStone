@@ -343,17 +343,17 @@ public class PaperController extends BaseController<PaperInfo>{
             return null;
         }
         List tpCoursePaperList=null;
-        if(mic==null){
-            TpCoursePaper t=new TpCoursePaper();
-            t.setCourseid(Long.parseLong(courseid));
-            t.setPaperid(Long.parseLong(paperid));
-            tpCoursePaperList=this.tpCoursePaperManager.getList(t, null);
-            if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
-                je.setMsg("抱歉该试卷已不存在!");
-                je.getAlertMsgAndBack();
-                return null;
-            }
-        }else{
+//        if(mic==null){
+//            TpCoursePaper t=new TpCoursePaper();
+//            t.setCourseid(Long.parseLong(courseid));
+//            t.setPaperid(Long.parseLong(paperid));
+//            tpCoursePaperList=this.tpCoursePaperManager.getList(t, null);
+//            if(tpCoursePaperList==null||tpCoursePaperList.size()<1){
+//                je.setMsg("抱歉该试卷已不存在!");
+//                je.getAlertMsgAndBack();
+//                return null;
+//            }
+//        }else{
             PaperInfo pp=new PaperInfo();
             pp.setPaperid(Long.parseLong(paperid));
             tpCoursePaperList=this.paperManager.getList(pp, null);
@@ -362,7 +362,7 @@ public class PaperController extends BaseController<PaperInfo>{
                 je.getAlertMsgAndBack();
                 return null;
             }
-        }
+//        }
 
 
         //获取提干
@@ -586,6 +586,8 @@ public class PaperController extends BaseController<PaperInfo>{
         }
         PageResult p=this.getPageResultParameter(request);
         p.setOrderBy(" p.paper_type,u.c_time desc,u.paper_id desc ");
+        if(p.getPageNo()==0)
+            p.setPageNo(1);
         TpCoursePaper t= new TpCoursePaper();
         t.setCourseid(Long.parseLong(courseid));
         t.setLocalstatus(1);

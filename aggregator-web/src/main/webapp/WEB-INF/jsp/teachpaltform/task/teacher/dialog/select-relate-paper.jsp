@@ -66,7 +66,7 @@
                         shtml+='<span class="bg1" style="width:100%">'+itm.quesnum+'</span>';
                     shtml+='</p></a>';
                     shtml+='<p class="pic">'
-                    if(res_id==itm.resid)
+                    if(res_id==itm.micvideoid)
                         shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico02" title="关联试卷"></span></b></a>';
                     else
                         shtml+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';
@@ -93,7 +93,7 @@
                             html+='<span class="bg2" style="width:100%">'+itm.subjectivenum+'</span>';
                         html+='</p></a>';
                         html+='<p class="pic">';
-                        if(res_id==itm.resid)
+                        if(res_id==itm.micvideoid)
                             html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico02" title="关联试卷"></span></b></a>';
                         else
                             html+='<a href="javascript:sub_data('+itm.paperid+')"><b><span class="ico43" title="关联试卷"></span></b></a>';

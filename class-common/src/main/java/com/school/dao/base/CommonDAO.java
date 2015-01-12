@@ -113,6 +113,7 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
                 Object afficeRows=jdbcTemplate.execute(new SchoolCallableStatementCreator(sql.toString(),p==null?null:p.toArray()),
                         new SchoolCallableStatementCallback(false,p==null?0:p.size()));
 //                    IN=jdbcTemplate.update(sql.toString(),p==null?null:p.toArray());
+                System.out.println("SQL:"+sql+"  Result:"+afficeRows);
                 if(afficeRows==null||!UtilTool.isNumber(afficeRows.toString())
                         ||Integer.parseInt(afficeRows.toString().trim())<1){
                     returnVal=false;
@@ -132,6 +133,7 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
                 Object afficeRows=jdbcTemplate.execute(new SchoolCallableStatementCreator(sql.toString(),p==null?null:p.toArray()),
                         new SchoolCallableStatementCallback(false,p==null?0:p.size()));
 //                    IN=jdbcTemplate.update(sql.toString(),p==null?null:p.toArray());
+                System.out.println("SQL:"+sql+"  Result:"+afficeRows);
                 if(afficeRows==null||!UtilTool.isNumber(afficeRows.toString())
                         ||Integer.parseInt(afficeRows.toString().trim())<1){
                     returnVal=false;
@@ -762,7 +764,7 @@ class SchoolCallableStatementCreator implements CallableStatementCreator{
             } else {
                 pstatement.setObject(i + 1, paraValue[i]);
             }
-            System.out.println((i+1)+":"+paraValue[i]);
+           // System.out.println((i+1)+":"+paraValue[i]);
         }
 
         return pstatement;

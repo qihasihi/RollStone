@@ -2639,9 +2639,8 @@ function loadPaperPerformance(classid, tasktype, paperid, classtype) {
                 htm += '<table><tr><td>暂无数据!</td></tr></table>';
             }
 
-
+            $("#dv_nocomplete_data").html('');
             if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
-                $("#dv_nocomplete_data").html('');
                 $.each(rmsg.objList[3], function (idx, itm) {
                     if ($('p[id="p_stu_' + itm.classid + '"]').length > 0)
                         if ($('ul[id="ul_stu_' + itm.classid + '"]').length > 0)
@@ -2824,9 +2823,8 @@ function loadLiveLessionPerformance(classid, tasktype, paperid, classtype) {
                 htm += '<table><tr><td>暂无数据!</td></tr></table>';
             }
 
-
+            $("#dv_nocomplete_data").html('');
             if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
-                $("#dv_nocomplete_data").html('');
                 $.each(rmsg.objList[3], function (idx, itm) {
                     if ($('p[id="p_stu_' + itm.classid + '"]').length > 0)
                         if ($('ul[id="ul_stu_' + itm.classid + '"]').length > 0)

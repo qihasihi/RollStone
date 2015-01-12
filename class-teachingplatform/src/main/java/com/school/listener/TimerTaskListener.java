@@ -236,18 +236,7 @@ public class TimerTaskListener implements ServletContextListener {
         /**************************每天早上8点20~晚上22点每隔20分钟发送任务提醒***********************************/
         //	每天早上8：20开始执行
         taskLoopRemindTimer=new Timer();
-        Calendar calremind = Calendar.getInstance();
-        //每天定点执行
-        calremind.set(Calendar.HOUR_OF_DAY,12);
-        calremind.set(Calendar.MINUTE,0);
-        calremind.set(Calendar.SECOND,0);
-        Date remindLoopDate=calremind.getTime(); //第一次执行定时任务的时间
-        //如果第一次执行定时任务的时间 小于当前的时间
-        //此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行。
-        if (remindLoopDate.before(new Date())) {
-            remindLoopDate = this.addDay(remindLoopDate, 1);
-        }
-        taskLoopRemindTimer.schedule(new TaskLoopRemind(arg0.getServletContext()),1 * 60 * 1000);//
+        taskLoopRemindTimer.schedule(new TaskLoopRemind(arg0.getServletContext()),0,PERIOD_15MIN);//
 
         /**************************每天早上7:55发送昨天晚上10点到今天早上8点开始的任务提醒***********************************/
         //	每天早上7:50开始执行
