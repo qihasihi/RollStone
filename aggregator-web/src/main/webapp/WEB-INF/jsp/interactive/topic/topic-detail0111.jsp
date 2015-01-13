@@ -57,10 +57,7 @@
                 }
 
 
-                //加载富文本框
-                ueditor= new UE.ui.Editor(edotpr_opt)
-                ueditor.render("themecontent");
-                ueditor.setDataId(newthemeid);
+
                 //加载分页控件
                 //查询基本的不是引用的主题
                 <c:if test="${empty param.quoteid||param.quoteid==0}">
@@ -145,6 +142,17 @@
                 $("#dv_content>div").hide();
                 $("#dv_content #"+dvid).show();	//显示。
                 <c:if test="${empty topic.quoteid||topic.quoteid==0}">
+                try{
+                    UE.getEditor("themecontent").destroy();
+                }catch(e){}
+                     $(".edui-default").remove();
+                    $("#themecontent").css({'width':'800px','height':'400px'});
+                    //加载富文本框
+                    var eopt=edotpr_opt;
+                    ueditor= new UE.ui.Editor(edotpr_opt)
+                    ueditor.render("themecontent");
+                    ueditor.setDataId(newthemeid);
+
                     $("#dv_content").show();
                     $("#a_click").click();
                 </c:if>

@@ -80,7 +80,7 @@ public class TpThemeReplyController extends BaseController<TpThemeReplyInfo>{
         objArrayList.add(objList);
     }
     //评论数
-    if(entity.getReplyid()!=null){
+    if(entity.getToreplyid()==null){
         sqlbuilder=new StringBuilder();
         objList=this.tpTopicThemeManager.getUpdateNumAdd("tp_topic_theme_info","theme_id","pinglunshu",entity.getThemeid().toString(),1,sqlbuilder);
         if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
@@ -148,7 +148,7 @@ public class TpThemeReplyController extends BaseController<TpThemeReplyInfo>{
 //            totalStr=presult.getList().iterator().next().toString();
         presult.getList().add(replyList);
 
-        List<TpThemeReplyInfo> plList=this.tpThemeReplyManager.getListByThemeIdStr(themeidStr,2, null); //查回帖
+        List<TpThemeReplyInfo> plList=this.tpThemeReplyManager.getListByThemeIdStr(themeidStr,2, null); //查评论
         presult.getList().add(plList);
 //        if(totalStr!=null)
 //            presult.getList().add(totalStr);
@@ -199,10 +199,12 @@ public class TpThemeReplyController extends BaseController<TpThemeReplyInfo>{
         //执行theme-1
         //评论数
         sqlbuilder=new StringBuilder();
-        objList=this.tpTopicThemeManager.getUpdateNumAdd("tp_topic_theme_info","theme_id","pinglunshu",replyList.get(0).getThemeid().toString(),2,sqlbuilder);
-        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
-            sqlArrayList.add(sqlbuilder.toString());
-            objArrayList.add(objList);
+        if(replyList.get(0).getReplyid()==null){
+            objList=this.tpTopicThemeManager.getUpdateNumAdd("tp_topic_theme_info","theme_id","pinglunshu",replyList.get(0).getThemeid().toString(),2,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                sqlArrayList.add(sqlbuilder.toString());
+                objArrayList.add(objList);
+            }
         }
 		//执行
 		if(objArrayList.size()!=0&&objArrayList.size()==sqlArrayList.size()){

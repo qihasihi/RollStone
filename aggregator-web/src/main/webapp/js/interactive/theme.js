@@ -473,6 +473,8 @@ function showUpdateDiv(divid,themetid){
     UE.getEditor("update_txt").destroy();
     }catch(e){}
     $(".edui-default").remove();
+    //给赋样式。
+    $("#dv_content #"+divid+" #update_txt").css({'width':'800px','height':'400px'});
     tpueditor= new UE.ui.Editor(edotpr_opt);
     tpueditor.render("update_txt");
     tpueditor.setDataId(themetid);
@@ -539,6 +541,7 @@ function showPiZhuDiv(divid,id){
     if(typeof(id)=="undefined"||isNaN(id)){
         alert('异常错误，参数异常! id is empty!');return;
     }
+
     $("#pizhu_txt").removeNotes();
     $("#"+divid+" span[id='to_span']").html($("span[id='realname_theme']").html());
     $("#pizhu_id").val(id);
@@ -547,10 +550,12 @@ function showPiZhuDiv(divid,id){
     $("#dv_content").show();
     $("#a_click").click();
     var p={tools:''};
-    p.width='880px';
+    p.width='100%';
     p.height='210px';
+
     var obj=$("#pizhu_txt").xheditor(p);
     obj.setSource($("#pizhu_"+id+"_1_updatecontent").html());
+    $("#dv_content #"+divid+" .xheIframeArea").css("height","100%");
     //将按钮加进工具栏
     //加载富文本
    // UE.getEditor("pizhu_txt").setContent($("#pizhu_"+id+"_1_updatecontent").html());
@@ -668,10 +673,13 @@ function quckRestore(themeid,type){
 			if(rps.type=="error"){
 				alert(rps.msg);
 			}else {
-                $("#sp_ht"+themeid).html(parseInt($("#sp_ht"+themeid).html())+1);
+                if(replyType==1){
+                    $("#sp_ht"+themeid).html(parseInt($("#sp_ht"+themeid).html())+1);
+                    $("#sp_pl_num").html(parseInt($("#sp_pl_num").html())+1);
+                }
                 $("#dv_hl"+themeid).html('');
                 getReplyList(themeid+"",1,$("#hd_currentpage"+themeid).val()*5);
-                $("#sp_pl_num").html(parseInt($("#sp_pl_num").html())+1);
+
                 huitie(themeid);
                 UE.getEditor('txt_hf'+themeid).setContent("");
 			}
@@ -752,7 +760,7 @@ function getReplyList(themeidStr,pageno,pagesize){
                         h+='<div><b>'+sName+'：</b>'+itm.replycontent+'</div>';
                         h+='<p class="t_r">'+itm.autoCtimeString;
                         if(typeof(isquote)=="undefined"||isquote==1)
-                            h+='<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回帖"></a>';
+                            h+='<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回复"></a>';
                         if(itm.userid==culoginId)
                             h+='<a href="javascript:;" onclick="doDeleteReply('+itm.replyid+','+itm.themeid+')" class="ico04" title="删除"></a></p>';
                         h+='</div>';
@@ -774,7 +782,7 @@ function getReplyList(themeidStr,pageno,pagesize){
                         h+='<p class="pic">'+img+'</p>';
                         var sName=itm.crealname+'回复'+itm.torealname;
                         h+='<div><b>'+sName+'：</b>'+itm.replycontent+'</div>';
-                        h+='<p class="t_r">'+itm.autoCtimeString+'<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回帖"></a>';
+                        h+='<p class="t_r">'+itm.autoCtimeString+'<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回复"></a>';
                         if(itm.userid==culoginId)
                             h+='<a href="javascript:;" onclick="doDeleteReply('+itm.replyid+','+itm.themeid+')" class="ico04" title="删除"></a></p>';
                         h+='</div>';

@@ -1,5 +1,6 @@
 $.fn.extend({	
 		removeNotes:function(){
+            $("#"+this.attr("id")).xheditor(false)
 			$("#"+this.attr("id")).prev("ul[id='notes_control_tools']").remove();
 		}, 
 		notes:function(tools,xheditorobj){
