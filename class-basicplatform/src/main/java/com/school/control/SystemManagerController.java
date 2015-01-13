@@ -36,6 +36,8 @@ public class SystemManagerController extends BaseController<TermInfo>{
     private IClassManager classManager;
     @Autowired
     private IGradeManager gradeManager;
+    @Autowired
+    private IOperateExcelManager operaterexcelmanager;
 
 	@RequestMapping(params="m=logoconfig",method=RequestMethod.GET)
 	public ModelAndView toLogoConfig(HttpServletRequest request,ModelAndView mp )throws Exception{
@@ -371,8 +373,16 @@ public class SystemManagerController extends BaseController<TermInfo>{
             c.setBegintime(btime);
             c.setEndtime(etime);
         }
-        List<Map<String,Object>> objList = this.classManager.getAdminPerformance(c,presult);
-        je.setObjList(objList);
+        List<AdminPerformance> objList = this.classManager.getAdminPerformance(c,presult);
+        presult.getList().add(objList);
+        je.setType("success");
+        if(presult.getPageNo()==1){
+            List<AdminPerformance> objListTotal = this.classManager.getAdminPerformance(c,null);
+            presult.getList().add(objListTotal);
+        }else{
+            presult.getList().add(null);
+        }
+        je.setPresult(presult);
         je.setType("success");
         response.getWriter().print(je.toJSON());
     }
@@ -401,5 +411,159 @@ public class SystemManagerController extends BaseController<TermInfo>{
         je.getObjList().add(objList);
         je.setType("success");
         response.getWriter().print(je.toJSON());
+    }
+
+    @RequestMapping(params = "m=exportAdminPerformance", method = RequestMethod.POST)
+    public void exportOrGetTotal(HttpServletRequest request,
+                                       HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        PageResult presult = this.getPageResultParameter(request);
+        String btime = request.getParameter("btime");
+        String etime = request.getParameter("etime");
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String classid = request.getParameter("classid");
+        if(gradeid==null||subjectid==null||classid==null){
+            je.setMsg("缺少必要参数，请刷新后重试");
+            je.setType("error");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        ClassInfo c = new ClassInfo();
+        c.setClassid(Integer.parseInt(classid));
+        List<ClassInfo> clist = this.classManager.getList(c,null);
+        ClassInfo cobj = clist.get(0);
+        c.setGradeid(Integer.parseInt(gradeid));
+        c.setSubjectid(Integer.parseInt(subjectid));
+        if(btime!=null&&etime!=null){
+            c.setBegintime(btime);
+            c.setEndtime(etime);
+        }
+        List<AdminPerformance> objList = this.classManager.getAdminPerformance(c,null);
+        if(objList!=null&&objList.size()>0){
+            //导出用变量
+            List<String> sheetNameList=new ArrayList<String>();
+            List<List<String>> columnsList=new ArrayList<List<String>>();
+            List datalist=new ArrayList();
+            List<String> titleList=new ArrayList<String>();
+            List<Class<? extends Object>> entityClsList=new ArrayList<Class<? extends Object>>();
+            List<String> explortObjList=new ArrayList<String>();
+            sheetNameList.add(cobj.getClassgrade()+cobj.getClassname());
+            //excel列头
+            List<String> coltmpList=new ArrayList<String>();
+            coltmpList.add("专题");
+            coltmpList.add("任务数");
+            coltmpList.add("已结束任务");
+            coltmpList.add("任务完成率");
+            coltmpList.add("专题评价");
+            coltmpList.add("资源学习");
+            coltmpList.add("互动交流");
+            coltmpList.add("微课程");
+            coltmpList.add("成卷测试");
+            coltmpList.add("自主测试");
+            coltmpList.add("直播课");
+            coltmpList.add("试题");
+            coltmpList.add("一般任务");
+            columnsList.add(coltmpList);
+            //title
+            String title=cobj.getYear()+" "+cobj.getClassgrade()+"("+cobj.getClassname()+")";
+            titleList.add(title);
+            //datalist   (空)
+            List<List<String>> dataArrayList=new ArrayList<List<String>>();
+            //组织数据，把数据变成List<List<String>>格式
+            List<String> data = new ArrayList<String>();
+            for(int i = 0 ;i<objList.size();i++){
+                data = new ArrayList<String>();
+                AdminPerformance obj = objList.get(i);
+                data.add(obj.getCoursename());
+                data.add(obj.getTasknum().toString());
+                data.add(obj.getEndtasknum().toString());
+                data.add(obj.getCompleterate().toString());
+                data.add(obj.getEvaluation().toString());
+                data.add(obj.getResourcetask().toString());
+                data.add(obj.getInteractivetask().toString());
+                data.add(obj.getMicrotask().toString());
+                data.add(obj.getCoilingtesttask().toString());
+                data.add(obj.getSelftesttask().toString());
+                data.add(obj.getLivetask().toString());
+                data.add(obj.getQuestask());
+                data.add(obj.getGeneraltask());
+                dataArrayList.add(data);
+            }
+            datalist.add(dataArrayList);
+            //entityCls
+            entityClsList.add(null);
+            //explortObjList
+            explortObjList.add(null);
+//        je.setObjList(objList);
+//        je.setType("success");
+//        response.getWriter().print(je.toJSON());
+            String stemp="班级课程统计";
+            String filename=cobj.getYear()+stemp;
+            //导出
+            this.operaterexcelmanager.ExplortExcel(response, filename,sheetNameList,columnsList
+                    ,datalist,titleList,entityClsList,explortObjList);
+        }
+    }
+
+    @RequestMapping(params = "m=exportAdminPerformanceStu", method = RequestMethod.POST)
+    public void exportStuPerformance(HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+        String gradeid = request.getParameter("gradeid");
+        String subjectid = request.getParameter("subjectid");
+        String classid = request.getParameter("classid");
+        if(gradeid==null||subjectid==null||classid==null){
+            return;
+        }
+        ClassInfo c = new ClassInfo();
+        c.setClassid(Integer.parseInt(classid));
+        List<ClassInfo> clist = this.classManager.getList(c,null);
+        ClassInfo cobj = clist.get(0);
+        c.setGradeid(Integer.parseInt(gradeid));
+        c.setSubjectid(Integer.parseInt(subjectid));
+        List<List<String>> objList = this.classManager.getAdminPerformanceStu(c, null);
+        List<Map<String,Object>> colList = this.classManager.getAdminPerformanceStuCol(c);
+        TermInfo term = this.termManager.getAutoTerm();
+        if(objList!=null&&objList.size()>0){
+            //导出用变量
+            List<String> sheetNameList=new ArrayList<String>();
+            List<List<String>> columnsList=new ArrayList<List<String>>();
+            List datalist=new ArrayList();
+            List<String> titleList=new ArrayList<String>();
+            List<Class<? extends Object>> entityClsList=new ArrayList<Class<? extends Object>>();
+            List<String> explortObjList=new ArrayList<String>();
+            sheetNameList.add(cobj.getClassgrade()+cobj.getClassname());
+            //excel列头
+            List<String> coltmpList=new ArrayList<String>();
+            coltmpList.add("姓名");
+            coltmpList.add("总分");
+            for(int i = 0;i<colList.size();i++){
+                coltmpList.add(colList.get(i).get("COLNAME").toString());
+            }
+            columnsList.add(coltmpList);
+            //title
+            String title=cobj.getYear()+" "+cobj.getClassgrade()+"("+cobj.getClassname()+")";
+            titleList.add(title);
+            //datalist   (空)
+            List<List<String>> dataArrayList=new ArrayList<List<String>>();
+            //组织数据，把数据变成List<List<String>>格式
+            for(int i = 0 ;i<objList.size();i++){
+                List<String> obj = objList.get(i);
+                dataArrayList.add(obj);
+            }
+            datalist.add(dataArrayList);
+            //entityCls
+            entityClsList.add(null);
+            //explortObjList
+            explortObjList.add(null);
+//        je.setObjList(objList);
+//        je.setType("success");
+//        response.getWriter().print(je.toJSON());
+            String stemp="学生答卷统计";
+            String filename=term.getSemesterbegindatestring()+"~"+term.getSemesterenddatestring()+cobj.getClassgrade()+cobj.getClassname()+stemp;
+            //导出
+            this.operaterexcelmanager.ExplortExcel(response, filename,sheetNameList,columnsList
+                    ,datalist,titleList,entityClsList,explortObjList);
+        }
     }
 }

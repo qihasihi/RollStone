@@ -1,6 +1,7 @@
 
 package  com.school.manager.inter;
 
+import com.school.entity.AdminPerformance;
 import com.school.entity.ClassInfo;
 import com.school.manager.base.IBaseManager;
 import com.school.util.PageResult;
@@ -49,7 +50,7 @@ public interface IClassManager  extends IBaseManager<ClassInfo> {
     /**
      * 管理员查询班级任务统计
      * */
-    public List<Map<String,Object>> getAdminPerformance(ClassInfo obj,PageResult presult);
+    public List<AdminPerformance> getAdminPerformance(ClassInfo obj,PageResult presult);
 
     /**
      * 管理员查询教师班级任务统计,获取班级

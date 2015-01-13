@@ -11,7 +11,25 @@
 <head>
     <title>教务统计--教师</title>
     <script type="text/javascript">
-        function ajaxPerformance(){
+        var pList;
+        $(function(){
+            pList = new PageControl( {
+                post_url : 'sysm?m=getAdminPerformance',
+                page_id : 'page1',
+                page_control_name : "pList",
+                post_form : document.pListForm,
+                gender_address_id : 'pListaddress',
+                http_free_operate_handler : preeDoPageSub, //执行查询前操作的内容
+                http_operate_handler : ajaxPerformance, //执行成功后返回方法
+                return_type : 'json', //放回的值类型
+                page_no : 1, //当前的页数
+                page_size : 5, //当前页面显示的数量
+                rectotal : 0, //一共多少
+                pagetotal : 1,
+                operate_id : "mainTbl"
+            });
+        });
+        function preeDoPageSub(pObj){
             var btime = $("#beginTime").val();
             var etime = $("#endTime").val();
             var gradeid = $("#selgrade").val();
@@ -44,20 +62,35 @@
                 alert("请选择班级");
                 return;
             }
-            $.ajax({
-                url:'sysm?m=getAdminPerformance',
-                data:param,
-                type:'POST',
-                dataType:'json',
-                error:function(){
-                    alert('异常错误,系统未响应！');
-                },success:function(rps){
-                    if(rps.type=="success"){
-                        var thhtm='';
-                        var htm='';
-                        thhtm+='<tr><th>专题</th><th>任务数</th><th>已结束任务</th><th>任务完成率</th>' +
-                                '<th>专题评价</th><th>资源学习</th><th>互动交流</th><th>微课程</th><th>成卷测试</th><th>自主测试</th><th>直播课</th><th>试题</th><th>一般任务</th></tr>';
-                        if(rps.objList!=null&&rps.objList.length>0){
+            pObj.setPostParams(param);
+        }
+        function ajaxPerformance(rps){
+                if(rps.type=="success"){
+                    var thhtm='';
+                    var htm='';
+                    thhtm+='<tr><th>专题</th><th>任务数</th><th>已结束任务</th><th>任务完成率</th>' +
+                            '<th>专题评价</th><th>资源学习</th><th>互动交流</th><th>微课程</th><th>成卷测试</th><th>自主测试</th><th>直播课</th><th>试题</th><th>一般任务</th></tr>';
+                    if(rps.objList[0]!=null&&rps.objList[0].length>0){
+                        $.each(rps.objList[0],function(idx,itm){
+                            //查询到的数据
+                            htm+='<tr>';
+                            htm+='<td>'+itm.coursename+'</td>';
+                            htm+='<td>'+itm.tasknum+'</td>';
+                            htm+='<td>'+itm.endtasknum+'</td>';
+                            htm+='<td>'+itm.completerate+'</td>';
+                            htm+='<td>'+itm.evaluation.replace("|","<br>(")+'人)</td>';
+                            htm+='<td>'+itm.resourcetask.replace("|","<br>(")+'%)</td>';
+                            htm+='<td>'+itm.interactivetask.replace("|","<br>(")+'%)</td>';
+                            htm+='<td>'+itm.microtask.replace("|","<br>(")+'%)</td>';
+                            htm+='<td>'+itm.coilingtesttask.replace("|","<br>(")+'%)</td>';
+                            htm+='<td>'+itm.selftesttask.replace("|","<br>(")+'%)</td>';
+                            htm+='<td>'+itm.livetask.replace("|","<br>(")+'%)</td>';
+                            htm+='<td>'+itm.questask.replace("|","<br>(")+'%)</td>';
+                            htm+='<td>'+itm.generaltask.replace("|","<br>(")+'%)</td>';
+                            htm+='</tr>';
+                        });
+                        var top = '';
+                        if(rps.objList[1]!=null&&rps.objList.length>0){
                             var totalNum=0;
                             var totalCourseName='总数';
                             var totalTaskNum = 0;
@@ -81,50 +114,31 @@
                             var totalQuesTaskRate = 0.00;
                             var totalGeneralTaskNum = 0;
                             var totalGeneralTaskRate=0.00;
-
-                            $.each(rps.objList,function(idx,itm){
+                            $.each(rps.objList[1],function(idx,itm){
                                 //组织总数的数据
-                                totalNum++;
-                                totalTaskNum+=parseInt(itm.TASK_NUM);
-                                totalEndTaskNum+=parseInt(itm.END_TASK_NUM);
-                                totalCompleteRate+=parseFloat(itm.COMPLETE_RATE.split("%")[0]);
-                                totalEvaluationAvg+=parseFloat(itm.EVALUATION.split("|")[0]);
-                                totalEvaluationPeo+=parseInt(itm.EVALUATION.split("|")[1]);
-                                totalResourceTaskNum+=parseInt(itm.RESOURCE_TASK.split("|")[0]);
-                                totalResourceTaskRate+=parseFloat(itm.RESOURCE_TASK.split("|")[1]);
-                                totalInteractiveTaskNum+=parseInt(itm.INTERACTIVE_TASK.split("|")[0]);
-                                totalInteractiveTaskRate+=parseFloat(itm.INTERACTIVE_TASK.split("|")[1]);
-                                totalMicroTaskNum+=parseInt(itm.MICRO_TASK.split("|")[0]);
-                                totalMicroTaskRate+=parseFloat(itm.MICRO_TASK.split("|")[1]);
-                                totalCoilingtestTaskNum+=parseInt(itm.COILINGTEST_TASK.split("|")[0]);
-                                totalCoilingtestTaskRate+=parseFloat(itm.COILINGTEST_TASK.split("|")[1]);
-                                totalSelftestTaskNum+=parseInt(itm.SELFTEST_TASK.split("|")[0]);
-                                totalSelftestTaskRate+=parseFloat(itm.SELFTEST_TASK.split("|")[1]);
-                                totalLiveTaskNum+=parseInt(itm.LIVE_TASK.split("|")[0]);
-                                totalLiveTaskRate+=parseFloat(itm.LIVE_TASK.split("|")[1]);
-                                totalQuesTaskNum+=parseInt(itm.QUES_TASK.split("|")[0]);
-                                totalQuesTaskRate+=parseFloat(itm.QUES_TASK.split("|")[1]);
-                                totalGeneralTaskNum+=parseInt(itm.GENERAL_TASK.split("|")[0]);
-                                totalGeneralTaskRate+=parseFloat(itm.GENERAL_TASK.split("|")[1]);
-
-                                //查询到的数据
-                                htm+='<tr>';
-                                htm+='<td>'+itm.COURSE_NAME+'</td>';
-                                htm+='<td>'+itm.TASK_NUM+'</td>';
-                                htm+='<td>'+itm.END_TASK_NUM+'</td>';
-                                htm+='<td>'+itm.COMPLETE_RATE+'</td>';
-                                htm+='<td>'+itm.EVALUATION.replace("|","<br>(")+'人)</td>';
-                                htm+='<td>'+itm.RESOURCE_TASK.replace("|","<br>(")+'%)</td>';
-                                htm+='<td>'+itm.INTERACTIVE_TASK.replace("|","<br>(")+'%)</td>';
-                                htm+='<td>'+itm.MICRO_TASK.replace("|","<br>(")+'%)</td>';
-                                htm+='<td>'+itm.COILINGTEST_TASK.replace("|","<br>(")+'%)</td>';
-                                htm+='<td>'+itm.SELFTEST_TASK.replace("|","<br>(")+'%)</td>';
-                                htm+='<td>'+itm.LIVE_TASK.replace("|","<br>(")+'%)</td>';
-                                htm+='<td>'+itm.QUES_TASK.replace("|","<br>(")+'%)</td>';
-                                htm+='<td>'+itm.GENERAL_TASK.replace("|","<br>(")+'%)</td>';
-                                htm+='</tr>';
+                            totalNum++;
+                            totalTaskNum+=parseInt(itm.tasknum);
+                            totalEndTaskNum+=parseInt(itm.endtasknum);
+                            totalCompleteRate+=parseFloat(itm.completerate.split("%")[0]);
+                            totalEvaluationAvg+=parseFloat(itm.evaluation.split("|")[0]);
+                            totalEvaluationPeo+=parseInt(itm.evaluation.split("|")[1]);
+                            totalResourceTaskNum+=parseInt(itm.resourcetask.split("|")[0]);
+                            totalResourceTaskRate+=parseFloat(itm.resourcetask.split("|")[1]);
+                            totalInteractiveTaskNum+=parseInt(itm.interactivetask.split("|")[0]);
+                            totalInteractiveTaskRate+=parseFloat(itm.interactivetask.split("|")[1]);
+                            totalMicroTaskNum+=parseInt(itm.microtask.split("|")[0]);
+                            totalMicroTaskRate+=parseFloat(itm.microtask.split("|")[1]);
+                            totalCoilingtestTaskNum+=parseInt(itm.coilingtesttask.split("|")[0]);
+                            totalCoilingtestTaskRate+=parseFloat(itm.coilingtesttask.split("|")[1]);
+                            totalSelftestTaskNum+=parseInt(itm.selftesttask.split("|")[0]);
+                            totalSelftestTaskRate+=parseFloat(itm.selftesttask.split("|")[1]);
+                            totalLiveTaskNum+=parseInt(itm.livetask.split("|")[0]);
+                            totalLiveTaskRate+=parseFloat(itm.livetask.split("|")[1]);
+                            totalQuesTaskNum+=parseInt(itm.questask.split("|")[0]);
+                            totalQuesTaskRate+=parseFloat(itm.questask.split("|")[1]);
+                            totalGeneralTaskNum+=parseInt(itm.generaltask.split("|")[0]);
+                            totalGeneralTaskRate+=parseFloat(itm.generaltask.split("|")[1]);
                             });
-                            var top = '';
                             top+='<tr>';
                             top+='<td>'+totalCourseName+'</td>';
                             top+='<td>'+totalTaskNum+'</td>';
@@ -140,16 +154,32 @@
                             top+='<td>'+totalQuesTaskNum+'<br>('+(totalQuesTaskRate/totalNum).toFixed(2)+'%)</td>';
                             top+='<td>'+totalGeneralTaskNum+'<br>('+(totalGeneralTaskRate/totalNum).toFixed(2)+'%)</td>';
                             top+='</tr>';
-                        }else{
-                            htm+='<tr><td colspan="15">当前班级暂无数据</td></tr>';
                         }
-                        htm=thhtm+top+htm;
-                        $("#mainTbl").html(htm);
                     }else{
-                        alert("操作失败，"+rps.msg);
+                        htm+='<tr><td colspan="15">当前班级暂无数据</td></tr>';
                     }
+                    htm=thhtm+top+htm;
+                    $("#mainTbl").html(htm);
+                }else{
+                    alert("操作失败，"+rps.msg);
                 }
-            });
+            if(rps.presult.pageTotal<=1)
+                $('#pListaddress').hide();
+            else
+                $('#pListaddress').show();
+
+
+            if(rps.presult.list[0].length>0){
+                pList.setPagetotal(rps.presult.pageTotal);
+                pList.setRectotal(rps.presult.recTotal);
+                pList.setPageSize(rps.presult.pageSize);
+                pList.setPageNo(rps.presult.pageNo);
+            }else{
+                pList.setPagetotal(0);
+                pList.setRectotal(0);
+                pList.setPageNo(1);
+            }
+            pList.Refresh();
         }
         function getSubject(){
             var gradeid = $("#selgrade").val();
@@ -205,6 +235,48 @@
                 }
             });
         }
+    function exportExcel(){
+        var btime = $("#beginTime").val();
+        var etime = $("#endTime").val();
+        var gradeid = $("#selgrade").val();
+        var subjectid = $("#selsubject").val();
+        var classid = $("#selclass").val();
+
+        var param={};
+        if(btime.length>0&&etime.length>0){
+            param.btime=btime;
+            param.etime=etime;
+        }else{
+            alert("请选择开始结束时间");
+            return;
+        }
+        if(gradeid.length>0){
+            param.gradeid=gradeid;
+        }else{
+            alert("请选择年级");
+            return;
+        }
+        if(subjectid.length>0){
+            param.subjectid = subjectid;
+        }else{
+            alert("请选择学科");
+            return;
+        }
+        if(classid.length>0){
+            param.classid=classid;
+        }else{
+            alert("请选择班级");
+            return;
+        }
+//
+        $("#btime").val(btime);
+        $("#etime").val(etime);
+        $("#gradeid").val(gradeid);
+        $("#subjectid").val(subjectid);
+        $("#classid").val(classid);
+        $("#exportExcelForm").attr("action","sysm?m=exportAdminPerformance");
+        $("#exportExcelForm").submit();
+    }
     </script>
 </head>
 <body>
@@ -250,9 +322,9 @@
             <select id="selclass" class="w100">
 
             </select>
-            <a href="javascript:ajaxPerformance()" class="an_search" title="查询"></a>
+            <a href="javascript:pageGo('pList');" class="an_search" title="查询"></a>
         </p>
-        <p><a href="1" class="font-darkblue">导出</a></p>
+        <p><a href="javascript:exportExcel();" class="font-darkblue">导出</a></p>
         <div class="tab_layout1">
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
                 <colgroup class="w140"></colgroup>
@@ -260,9 +332,20 @@
                 <colgroup span="11" class="w70"></colgroup>
                 <tbody id="mainTbl"></tbody>
             </table>
+            <form id="pListForm" name="pListForm"><p class="nextpage" id="pListaddress" align="center"></p></form>
         </div>
     </div>
         </div>
+
+<div style="display: none">
+    <form id="exportExcelForm" nam="exportExcelForm" method="post">
+        <input id="btime" name="btime"/>
+        <input id="etime" name="etime"/>
+        <input id="gradeid" name="gradeid"/>
+        <input id="subjectid" name="subjectid"/>
+        <input id="classid" name="classid"/>
+    </form>
+</div>
 <%@include file="/util/foot.jsp" %>
 </body>
 </html>

@@ -2,6 +2,7 @@ package  com.school.dao;
 
 import com.school.dao.base.CommonDAO;
 import com.school.dao.inter.IClassDAO;
+import com.school.entity.AdminPerformance;
 import com.school.entity.ClassInfo;
 import com.school.entity.ClassUser;
 import com.school.util.PageResult;
@@ -657,7 +658,7 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
     }
 
     @Override
-    public List<Map<String, Object>> getAdminPerformance(ClassInfo obj, PageResult presult) {
+    public List<AdminPerformance> getAdminPerformance(ClassInfo obj, PageResult presult) {
         StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_split(");
         List<Object> objList=new ArrayList<Object>();
         if(obj.getBegintime()!=null){
@@ -702,7 +703,9 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 
         List<Integer> types=new ArrayList<Integer>();
         Object[] objArray=new Object[1];
-        List<Map<String,Object>> list=this.executeResultListMap_PROC(sqlbuilder.toString(), objList);
+        List<AdminPerformance> list=this.executeResult_PROC(sqlbuilder.toString(), objList,types,AdminPerformance.class,objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
         if(list!=null&&list.size()>0)
             return list;
         else
@@ -789,7 +792,7 @@ public class ClassDAO extends CommonDAO<ClassInfo> implements IClassDAO {
 
     @Override
     public List<Map<String, Object>> getAdminPerformanceStuCol(ClassInfo obj) {
-        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_stu_class(");
+        StringBuilder sqlbuilder=new StringBuilder("{CALL admin_performance_proc_stu_paper(");
         List<Object> objList=new ArrayList<Object>();
         if(obj.getGradeid()!=null){
             sqlbuilder.append("?,");

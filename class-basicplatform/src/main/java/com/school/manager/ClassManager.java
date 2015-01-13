@@ -3,6 +3,7 @@ package  com.school.manager;
 
 import com.school.dao.base.ICommonDAO;
 import com.school.dao.inter.IClassDAO;
+import com.school.entity.AdminPerformance;
 import com.school.entity.ClassInfo;
 import com.school.manager.base.BaseManager;
 import com.school.manager.inter.IClassManager;
@@ -122,7 +123,7 @@ public class  ClassManager extends BaseManager<ClassInfo> implements IClassManag
     }
 
     @Override
-    public List<Map<String, Object>> getAdminPerformance(ClassInfo obj, PageResult presult) {
+    public List<AdminPerformance> getAdminPerformance(ClassInfo obj, PageResult presult) {
         return this.classdao.getAdminPerformance(obj,presult);
     }
 

@@ -51,7 +51,7 @@
                         var w = 0;
                         $.each(rps.objList[0],function(idx,itm){
                             span++;
-                            col+='<th title="'+itm.COLNAME+'">'+idx+'</th>';
+                            col+='<th title="'+itm.COLNAME+'">'+(idx+1)+'</th>';
                         });
                         htmTop+='<colgroup class="w100"></colgroup><colgroup span="'+span+'" class="w80"></colgroup>';
                         htmTop+='<tr>';
@@ -59,11 +59,15 @@
                         htmTop+='<th>总分</th>';
                         htmTop+=col+'</tr>';
                         if(rps.objList[1]!=null&&rps.objList[1].length>0){
+
                             $.each(rps.objList[1],function(idx,itm){
                                 htmMain+='<tr>';
-                                htmMain+='<td>'+itm[idx]+'</td>';
+                                $.each(itm,function(i,x){
+                                    htmMain+='<td>'+x+'</td>';
+                                });
                                 htmMain+='</tr>';
                             });
+
                         }
                         htmMain=htmTop+htmMain;
                         w=100+(1+span)*80;
@@ -129,6 +133,35 @@
                 }
             });
         }
+        function exprotStuPerformance(){
+            var gradeid = $("#selgrade").val();
+            var subjectid = $("#selsubject").val();
+            var classid = $("#selclass").val();
+            var param={};
+            if(gradeid.length>0&&gradeid!=-1){
+                param.gradeid=gradeid;
+            }else{
+                alert("请选择年级");
+                return;
+            }
+            if(subjectid.length>0&&subjectid!=-1){
+                param.subjectid = subjectid;
+            }else{
+                alert("请选择学科");
+                return;
+            }
+            if(classid.length>0&&classid!=-1){
+                param.classid=classid;
+            }else{
+                alert("请选择班级");
+                return;
+            }
+            $("#gradeid").val(gradeid);
+            $("#subjectid").val(subjectid);
+            $("#classid").val(classid);
+            $("#exportExcelForm").attr("action","sysm?m=exportAdminPerformanceStu");
+            $("#exportExcelForm").submit();
+        }
     </script>
 </head>
 <body>
@@ -172,13 +205,20 @@
             </select>
             <a href="javascript:ajaxPerformance()" class="an_search" title="查询"></a>
         </p>
-        <p><a href="1" class="font-darkblue">导出</a></p>
+        <p><a href="javascript:exprotStuPerformance();" class="font-darkblue">导出</a></p>
         <div class="tab_layout2">
             <table border="0" cellpadding="0" cellspacing="0" class="public_tab2" style="width:740px" id="mainTbl">
 
             </table>
         </div>
     </div>
+</div>
+<div style="display: none">
+    <form id="exportExcelForm" nam="exportExcelForm" method="post">
+        <input id="gradeid" name="gradeid"/>
+        <input id="subjectid" name="subjectid"/>
+        <input id="classid" name="classid"/>
+    </form>
 </div>
 <%@include file="/util/foot.jsp" %>
 </body>

@@ -858,7 +858,7 @@ public class OperateExcelManager implements IOperateExcelManager {
                                List<String> sheetNames, List<List<String>> columns, List list,
                                List<String> title, List<Class<? extends Object>> clz,
                                List<String> explortObject) throws Exception {
-       return  ExplortExcel(response,filename,sheetNames,columns,list,title,clz,explortObject,true);
+       return  ExplortExcel(response,filename,sheetNames,columns,list,title,clz,explortObject,false);
     }
 
 	/******************************** 导入Excel 涉及方法 ************************************/
