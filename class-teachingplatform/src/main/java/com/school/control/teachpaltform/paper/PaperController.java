@@ -3921,7 +3921,7 @@ public class PaperController extends BaseController<PaperInfo>{
                     Map map = new HashMap();
                     map.put("classid",objList.get(0).getClassid());
                     map.put("classname",objList.get(0).getClassname());
-                    map.put("classtype",1);
+                    map.put("classtype",8);
                     if(classList.size()>0){
                         Boolean b = false;
                         for(Map m:classList){
