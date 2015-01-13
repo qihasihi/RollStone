@@ -43,7 +43,7 @@
 					if(idx%2==1)
 						htm+=' class="trbg2"';
 					htm+='><td><p><a href="../activetopic/toStuTopic?themeid='+itm.themeid+'">'+itm.themetitle+'</a></p></td>';
-					htm+='<td>'+itm.topiccount+'</td>'; //主题数
+					htm+='<td>'+itm.topiccount+'</td>'; //主帖数
 					htm+='<td>'+itm.restorecount+'</td>'; //回复数
 					htm+='<td>'+itm.cuserInfo.realname+'</td>';
 					htm+='<td>'+itm.ctimeShortString+'</td>';
@@ -97,7 +97,7 @@
 			alert('异常错误，参数异常! themeid is empty!');return;
 		}
 		
-		if(!confirm("您确认删除该主题吗？\n\n提示：删除主题会连带删除该主题下的所有评论!"))
+		if(!confirm("您确认删除该主帖吗？\n\n提示：删除主帖会连带删除该主帖下的所有评论!"))
 			return;
 		$.ajax({
 			url:"tptopictheme?m=doDelTheme",
@@ -146,7 +146,7 @@
 			doAddTheme();
 	}	
 	/**
-	执行添加主题
+	执行添加主帖
 	*/
 	function doAddTheme(){
                 if(typeof(topicid)=="undefined"||topicid.Trim().length<1){
@@ -197,7 +197,9 @@
                            // 弹出信息
                             $('a[onclick="doAddTheme\\(\\)"]').show();
 //                            alert(rps.msg);
-                            closeModel("dv_create");
+                           // closeModel("dv_create");
+                            pageGo('p1');
+                            $.fancybox.close();
 
 						}						
 					}
@@ -348,6 +350,7 @@ function hideTdSpan(){
             }
             h+='</a>';
             $("span[id='"+spanid+"']").html(h);
+
         }
     }
 
@@ -387,6 +390,9 @@ function hideTdSpan(){
                     return false;
 				}else{
                     //操作成功
+                    if(columnName=='istop'){
+                        pageGo('p1');
+                    }
                     return true;
 				}						
 			}
@@ -455,14 +461,35 @@ function searchBeadCheck(txtid){
 
 //显示修改层，修改TopicContent
 function showUpdateDiv(divid,themetid){
-    var tpccontent=$("#pizhu_"+themetid+"_1_updatecontent").html().Trim();
-   
-    $("#"+divid+" input[type='text']").val($("span[id='title_span']").html().Trim());
-    $("#"+divid+" input[id='themeid']").val(themetid);
-    showModel(divid,false);
 
+   
+    $("#"+divid+" input[type='text']").val($("span[id='spti"+themetid+"']").html().Trim());
+    $("#"+divid+" input[id='themeid']").val(themetid);
+    $("#dv_content>div").hide();
+    $("#dv_content #"+divid).show();	//显示。
+    $("#dv_content").show();
     //加载富文本赋值
-    UE.getEditor('update_txt').setContent(tpccontent);
+    try{
+    UE.getEditor("update_txt").destroy();
+    }catch(e){}
+    $(".edui-default").remove();
+    tpueditor= new UE.ui.Editor(edotpr_opt);
+    tpueditor.render("update_txt");
+    tpueditor.setDataId(themetid);
+
+    tpueditor.ready(function(){
+        $("#a_click").click();
+        var tpccontent=$("#pizhu_"+themetid+"_1_updatecontent").html().Trim();
+        tpueditor.setContent(tpccontent,false);
+    });
+
+
+
+
+
+
+
+
 }
 //进行修改
 function updateThemeContent(divid){
@@ -480,7 +507,7 @@ function updateThemeContent(divid){
     }
     var content=UE.getEditor('update_txt').getContent();
 
-    if(!confirm("您确认要修改该主题吗?\n\n提示：修改后，修改前的主题数据不予保留!"))return;
+    if(!confirm("您确认要修改该主帖吗?\n\n提示：修改后，修改前的主帖数据不予保留!"))return;
     $.ajax({
         url:'tptopictheme?m=doUpdateTheme',
         dataType:'json',
@@ -496,7 +523,7 @@ function updateThemeContent(divid){
                 if(rps.type=="success"){
                     $("#pizhu_"+themeid+"_1_updatecontent").html(content);
                     $("span[id='title_span']").html(updatetitle.val().Trim());
-                    closeModel(divid);
+                    $.fancybox.close();
                 }
                 alert(rps.msg);
             }
@@ -512,11 +539,17 @@ function showPiZhuDiv(divid,id){
     if(typeof(id)=="undefined"||isNaN(id)){
         alert('异常错误，参数异常! id is empty!');return;
     }
-
+    $("#pizhu_txt").removeNotes();
     $("#"+divid+" span[id='to_span']").html($("span[id='realname_theme']").html());
     $("#pizhu_id").val(id);
-	showModel(divid,'fade',false);
-    var obj=$("#pizhu_txt").xheditor({tools:''});
+    $("#dv_content>div").hide();
+    $("#dv_content #"+divid).show();	//显示。
+    $("#dv_content").show();
+    $("#a_click").click();
+    var p={tools:''};
+    p.width='880px';
+    p.height='210px';
+    var obj=$("#pizhu_txt").xheditor(p);
     obj.setSource($("#pizhu_"+id+"_1_updatecontent").html());
     //将按钮加进工具栏
     //加载富文本
@@ -576,7 +609,9 @@ function updateThemePiZhu(){
                 var idobj="div[id='pizhu_"+id+"_1_updatecontent']";
                 $(idobj).html(txtVal.Trim());
                 $("#pizhu_id").val('');
-                closePiZhuDiv('div_pizhu');
+                //closePiZhuDiv('div_pizhu');
+                pageGo('p1');
+                $.fancybox.close();
             }
         }
     });
@@ -589,7 +624,7 @@ function updateThemePiZhu(){
  */
 function quckRestore(themeid,type){
 	/*if(state==3){
-		alert("该论题已经锁定，无法发布论题及其下的主题进行回复、评论等功能!");return;
+		alert("该论题已经锁定，无法发布论题及其下的主帖进行回复、评论等功能!");return;
 	}*/
 	if(typeof(themeid)=="undefined"){
 		alert('异常错误，参数异常!请刷新页面后重试!');

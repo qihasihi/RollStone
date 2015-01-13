@@ -5,6 +5,9 @@
 		<title>${sessionScope.CURRENT_TITLE}</title>
 		<script type="text/javascript" src="js/interactive/topic.js"></script>
         <script type="text/javascript" src="js/interactive/theme.js"></script>
+        <script type="text/javascript" src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+        <script type="text/javascript"  src="fancybox/jquery.fancybox-1.3.4.js"></script>
+        <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
         <script type="text/javascript" src="ueditor/lyb/ett-lyb%200.1.js"></script>
 		<script type="text/javascript">
             var topicid="${topic.topicid}";
@@ -52,6 +55,8 @@
                 if(topicid==null||topicid.Trim().length<1){
                     alert('错误，非法访问!参数异常!');return;
                 }
+
+
                 //加载富文本框
                 ueditor= new UE.ui.Editor(edotpr_opt)
                 ueditor.render("themecontent");
@@ -117,11 +122,32 @@
                 </c:if>
 
                 pageGo('p1');
+               <c:if test="${empty topic.quoteid||topic.quoteid==0}">
+                    fancyboxObj=$("#a_click").fancybox({
+                        'onClosed':function(){
+                            $("#dv_content").hide();
+                        }
+                    });
+
+
+//                    tpueditor.ready(function(){
+//
+//                    });
+
+
+                </c:if>
+
+
             })
 
             /*显示创建主题层*/
             function showCreateDiv(dvid){
-                showModel(dvid);	//显示。
+                $("#dv_content>div").hide();
+                $("#dv_content #"+dvid).show();	//显示。
+                <c:if test="${empty topic.quoteid||topic.quoteid==0}">
+                    $("#dv_content").show();
+                    $("#a_click").click();
+                </c:if>
                 //生成UEditor
             }
             function headError(obj){
@@ -303,49 +329,68 @@
       </form>
   </div>
 <c:if test="${empty topic.quoteid||topic.quoteid==0}">
-  <div id="dv_create" style="display:none">
-      <div class="subpage_head"><span class="ico55"></span><strong>新建主帖</strong></div>
-      <div class="content1">
-          <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
-              <col class="w100"/>
-              <col class="w700"/>
-              <tr>
-                  <th><span class="ico06"></span>标&nbsp;&nbsp;题：</th>
-                  <td><input name="themetitle" placeholder="请限制在40个字以内!" maxlength="40" id="themetitle" type="text" class="w350" /></td>
-              </tr>
-              <tr>
-                  <th><span class="ico06"></span>内&nbsp;&nbsp;容：</th>
-                  <td><textarea name="themecontent" id="themecontent" class="h210 w650" style="height:120px;"></textarea></td>
-              </tr>
-              <tr>
-                  <th>&nbsp;</th>
-                  <td><a href="javascript:;" onclick="doAddTheme()" class="an_small">确&nbsp;定</a>
-                      <a href="javascript:;" onclick="closeModel('dv_create');" class="an_small">取&nbsp;消</a>
-                  </td>
-              </tr>
-          </table>
-          <br>
+    <div class="public_float jxxt_zhuanti_hdkj_float" id="dv_content" style="display: none">
+<%--新建--%>
+        <div id="dv_create" style="display:none">
+            <p class="float_title"><strong>新建主帖</strong></p>
+            <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
+                <col class="w100"/>
+                <col class="w800"/>
+                <tr>
+                    <th><span class="ico06"></span>标&nbsp;&nbsp;题：</th>
+                    <td><input  name="themetitle" placeholder="请限制在40个字以内!" maxlength="40" id="themetitle" type="text" class="w350"  /></td>
+                </tr>
+                <tr>
+                    <th><span class="ico06"></span>内&nbsp;&nbsp;容：</th>
+                    <td><textarea name="themecontent" id="themecontent" style="height:400px; width: 800px"></textarea></td>
+                </tr>
+                <tr>
+                    <th>&nbsp;</th>
+                    <td><a href="javascript:;" onclick="doAddTheme()"  class="an_public1">提&nbsp;交</a></td>
+                </tr>
+            </table>
+         </div>
+        <%--编辑--%>
+        <div id="div_update" style="display:none">
+            <p class="float_title"><strong>编辑主帖</strong></p>
+            <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input">
+                <col class="w100"/>
+                <col class="w800"/>
+                <tr>
+                    <th><span class="ico06"></span>标&nbsp;&nbsp;题：</th>
+                    <td><input   name="update_title" id="update_title"  placeholder="请限制在40个字以内!" maxlength="40" type="text" class="w350"  /></td>
+                </tr>
+                <tr>
+                    <th><span class="ico06"></span>内&nbsp;&nbsp;容：</th>
+                    <td><textarea name="update_txt" id="update_txt"  style="height:400px; width: 800px"></textarea>
+                        <input type="hidden" name="themeid" id="themeid"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>&nbsp;</th>
+                    <td><a  href="javascript:;" onclick="updateThemeContent('div_update')"  class="an_public1">提&nbsp;交</a></td>
+                </tr>
+            </table>
+        </div>
+
+<%--批注--%>
+        <div id="div_pizhu"  style="display:none">
+            <p class="float_title"><strong>批注详情</strong></p>
+            <p class="font-black"><strong>主帖作者：</strong> <span id="to_span"></span> </p>
+            <div class="jxxt_zhuanti_hdkj_pizhu">
+                <div class="public_input">
+                    <textarea id="pizhu_txt" ></textarea>
+                </div>
+                <input type="hidden" name="pizhu_id" id="pizhu_id"/>
+                <p class="p_b_10"><a href="javascript:;" onclick="updateThemePiZhu()" class="an_public3">确定</a></p>
+            </div>
       </div>
   </div>
+    </div>
+    <a id="a_click" href="#dv_content">
+    </a>
 </c:if>
-<c:if test="${empty topic.quoteid||topic.quoteid==0}">
-  <div id="div_pizhu"  style="display:none">
-      <div class="subpage_head"><span class="ico55"></span><strong>批注详情</strong></div>
-      <div class="content1">
-          <p class="font-black"><strong>主帖作者：</strong> <span id="to_span"></span> </p>
-          <div class="jxxt_zhuanti_hdkj_pizhu">
-              <div class="public_input">
-                  <div style="padding-bottom: 15px;">
-                      <textarea id="pizhu_txt" ></textarea>
-                  </div>
-                  <input type="hidden" name="pizhu_id" id="pizhu_id"/>
-              </div>
-              <p class="p_b_10"><a href="javascript:;" onclick="updateThemePiZhu()" class="an_public3">确定</a><a href="javascript:;" onclick="closePiZhuDiv('div_pizhu')" class="an_public3">取消</a></p>
-          </div>
-          <br/>
-      </div>
-  </div>
-</c:if>
+
  <%@include file="/util/foot.jsp" %>
   </body>
 </html>

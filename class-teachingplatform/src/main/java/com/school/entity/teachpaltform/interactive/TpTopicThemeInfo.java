@@ -68,6 +68,27 @@ public class TpTopicThemeInfo  implements Serializable {
     private String classgrade;
     private String groupname;
 
+    private String classGroup;
+
+    public String getClassGroup() {
+        return classGroup;
+    }
+
+    public void setClassGroup(String classGroup) {
+        this.classGroup = classGroup;
+        if(this.classGroup!=null&&this.classGroup.length()>0){
+            String[] infoTmp=this.classGroup.split("\\|");
+            if(infoTmp!=null&&infoTmp.length>0){
+                if(infoTmp[0]!=null&&infoTmp[0].length()>0)
+                    this.setClassgrade(infoTmp[0]);
+                if(infoTmp.length>1&&infoTmp[1]!=null&&infoTmp[1].length()>0)
+                    this.setClassname(infoTmp[1]);
+                if(infoTmp.length>2&&infoTmp[2]!=null&&infoTmp[2].length()>0)
+                    this.setGroupname(infoTmp[2]);
+            }
+        }
+    }
+
     public String getClassname() {
         return classname;
     }

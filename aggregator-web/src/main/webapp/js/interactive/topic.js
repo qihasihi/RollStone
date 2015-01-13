@@ -119,7 +119,7 @@ function updateTopic(){
         status:status
     };
     if(!confirm('您修改的论题如下：\n论题标题：'
-        +topictitle.val().Trim()+'\n论题说明：'+tcontent.val().Trim()+'\n论题状态：'+(param.status==1?"开放":"关闭")+'\n\n您确认修改吗?'))
+        +topictitle.val().Trim()+'\n论题说明：'+tcontent.val().Trim()+'\n\n您确认修改吗?'))
         return;
     $.ajax({
         url:"tptopic?m=doUpdateTopic",
@@ -133,8 +133,10 @@ function updateTopic(){
             if(rps.type=="error"){
                 alert(rps.msg);
             }else{
+                $.fancybox.close();
             	alert("修改论题成功!");
-                location.href="tptopic?m=index&courseid="+courseid;
+                //location.href="tptopic?m=index&courseid="+courseid;
+                //pageGo('p1');
             }
         }
     });
@@ -216,12 +218,12 @@ function addTopic(){
                     ax.close();
                     return;
                 }
-               if(confirm("新建论题已完成，是否退出该页面?\n\n提示：不退出，可继续创建!"))
-            	  location.href='tptopic?m=index&courseid='+courseid;
-               else{
+               alert("论题新建成功!")
+
             	   title.val('');
             	   content.val('');
-               }
+                $.fancybox.close();
+
             }
         }
     });
@@ -987,7 +989,7 @@ function listReturn(rps){
                     h+='<div>'
                     h+='<div class="title">';
                     h+='<p class="f_right" style="width:160px">';
-                    h+='<a href="tptopic?m=toTopicStatices&topicid='+itm.topicid+'" class="ico37" title="统计"></a>';
+                 //   h+='<a href="tptopic?m=toTopicStatices&topicid='+itm.topicid+'" class="ico37" title="统计"></a>';
                     if(rt.length>0&&rt.Trim()=="TEACHER"){
                         //task?toAddTask&courseid='+courseid+'&tasktype=1&taskvalueid='+itm.resid+'"
                         if(itm.isPublishTask==0)
@@ -1000,7 +1002,7 @@ function listReturn(rps){
 //                            h+='<a href="javascript:;" onclick="updateTopicStatus('+itm.topicid+',2)" id="a_status_'+itm.topicid+'" class="ico54" title="关闭论题"></a>';
 //                        }
                         if(itm.isPublishTask==0)
-                            h+='<a href="tptopic?m=toAdmin&topicid='+itm.topicid+'&courseid='+itm.courseid+'" class="ico11" title="编辑"></a>';
+                            h+='<a href="javascript:;" onclick="loadTopicAdmin('+itm.topicid+')" class="ico11" title="编辑"></a>';
                         if(itm.isPublishTask==0){
 //                        h+='<a href="javascript:;" onclick="if(confirm(\'您确定要删除此论题吗?\\n\\n提示：删除该论题后可在回收站里恢复!\')){updateTopicStatus('+itm.topicid+',3);}" class="ico04" title="删除"></a>';
                             h+='<a href="javascript:;" onclick="if(confirm(\'您确定要删除此论题吗?\')){updateTopicStatus('+itm.topicid+',3);}" class="ico04" title="删除"></a>';

@@ -30,7 +30,7 @@
             <div class="text">
                 <input type="hidden" name="zt_themeid" id="themeid${theme.themeid}" value="${theme.themeid}"/>
                 <p class="t_r">${theme.autoCtimeString}</p>
-                <p>${theme.themetitle}</p>
+                <p><span id="spti${theme.themeid}">${theme.themetitle}</span></p>
                 <div id="pizhu_${theme.themeid }_1_updatecontent">
                     <c:if test="${!empty theme.commentbycontent}">
                         ${theme.commentbycontent }
@@ -55,7 +55,9 @@
             <p class="t_r">
                 <c:if test="${!empty roleStr&&(roleStr=='TEACHER' || (culoginid==theme.cuserid))||(!empty param.quoteid&&param.quoteid!=0)}">
                     <c:if test="${(!empty param.quoteid&&param.quoteid!=0)||culoginid==theme.cuserid}">
-                        <a href="javascript:;" onclick="showUpdateDiv('div_update','${theme.themeid}')"><span class="ico11"></span>编辑</a>&nbsp;&nbsp;
+                        <c:if test="${empty theme.commentbycontent}">
+                            <a href="javascript:;" onclick="showUpdateDiv('div_update','${theme.themeid}')"><span class="ico11"></span>编辑</a>&nbsp;&nbsp;
+                        </c:if>
                     </c:if>
                     <a href="javascript:;" onclick="doDelTheme(${theme.themeid });"><span class="ico04"></span>删除</a>
                 </c:if>

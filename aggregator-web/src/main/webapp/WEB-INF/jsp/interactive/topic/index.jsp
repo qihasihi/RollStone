@@ -3,15 +3,26 @@
 <html>
 <head>
 <script type="text/javascript" src="js/interactive/topic.js"></script>
+<script type="text/javascript" src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script type="text/javascript"  src="fancybox/jquery.fancybox-1.3.4.js"></script>
+<link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
+
 <script type="text/javascript">
 	var rt="${roleStr}";
 	var courseid=${courseid};
-	var p1;
+	var p1,fancyboxObj;
 	$(function(){
         if($("#ul_courselist li").length>1)
             $("#a_courselist").show();
         else
             $("#a_courselist").hide();
+
+        fancyboxObj=$("#a_click").fancybox({
+            'onClosed':function(){
+                pageGo('p1');
+                $("#dv_optpc").hide();
+            }
+        });
 
 		p1 = new PageControl({
 			post_url:'tptopic?m=ajaxtopiclist',
@@ -37,6 +48,26 @@
 		param.courseid=courseid;
 		tobj.setPostParams(param);		
 	}
+
+    function loadTopicAdmin(tpcid){
+        if(typeof(tpcid)=="undefined"||tpcid==null){
+            //新建
+            $("#dv_optpc").load("tptopic?m=toAdmin&courseid=${courseid}",function(){
+               //加载完毕后，显示
+                $("#dv_optpc .foot").remove();
+                $("#dv_optpc").show();
+                $("#a_click").click();
+            });
+        }else{
+            //新建
+            $("#dv_optpc").load("tptopic?m=toAdmin&courseid=${courseid}&topicid="+tpcid,function(){
+                //加载完毕后，显示
+                $("#dv_optpc .foot").remove();
+                $("#dv_optpc").show();
+                $("#a_click").click();
+            });
+        }
+    }
 
 	
 </script>
@@ -86,7 +117,7 @@
  <c:if test="${!empty roleStr&&roleStr eq 'TEACHER'}">
   <div class="jxxt_zhuanti_hdkj_add">
   <%--<p class="f_right"><a class="ico15" href="tpres?m=toRecycleIdx&type=4&courseid=${courseid}" title="回收站"></a></p>--%>
-  <p class="font-darkblue"><a href="tptopic?m=toAdmin&courseid=${courseid }"><span class="ico26"></span>新建论题</a></p>
+  <p class="font-darkblue"><a href="javascript:;" onclick="loadTopicAdmin()"><span class="ico26"></span>新建论题</a></p>
   </div>
 </c:if>
 
@@ -94,9 +125,7 @@
   <div class="jxxt_zhuanti_hdkj_lunti">
   <div id="mainUL"></div> 
   <form name="f1" id="f1" method="post">
-	<div class="nextpage" id="pageAddress1"> <span><b class="before"></b></span><span><a href="1">1</a></span><span><a href="1">2</a></span><span class="crumb"><a href="1">3</a></span><span><a href="1">4</a></span><span><a href="1">5</a></span>&hellip;<span><a href="1">9</a></span><span><a href="1">10</a></span><span><a href="1">11</a></span><span><a href="1"><b class="after"></b></a></span>&nbsp;&nbsp;共20页&nbsp;&nbsp;去第
-  <input name="textfield2" type="text" id="textfield" value="3000" />
-  页&nbsp;&nbsp;<span><a href="1">Go</a></span></div>
+	<div class="nextpage" id="pageAddress1"></div>
 </div>
 </form>
 <%--<c:if test="${!empty staticObj}">--%>
@@ -111,5 +140,10 @@
 <%--</c:if>--%>
 </div>
 <%@include file="/util/foot.jsp"%>
+<div id="dv_optpc" style="display:none" class="public_float jxxt_zhuanti_hdkj_float">
+
+</div>
+<a id="a_click" href="#dv_optpc">
+</a>
 </body>
 </html>

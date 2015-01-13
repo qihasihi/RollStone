@@ -367,8 +367,6 @@ function loadPaperDetail(paperid,courid){
     </ul>
 </div>
 <a id="a_click" href="#dv_content">
-
-
 </a>
 
 
