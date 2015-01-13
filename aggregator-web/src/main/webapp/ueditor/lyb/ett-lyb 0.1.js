@@ -48,17 +48,15 @@ EttLyb.prototype={
         this.editor= new UE.ui.Editor(edotpr_opt)
         this.editor.render(textareaObj.attr("id"));
         //ueditor.setDataId(newthemeid);
-        var divObj=$("#"+this.settings.addressid+" div[id*='_scalelayer']");
         var addressid=this.settings.addressid;
         this.settings.upImgLength=0;
         var ControlObj=this;
         this.editor.addListener( 'ready', function( editor ) {
             //准备完毕后
-            divObj.html($("#"+addressid+" .edui-editor-toolbarbox").html());
-
-            //删除
+            //将工具栏复制入底部栏中
+            $("#"+addressid+" .edui-editor-bottomContainer").html($("#"+addressid+" .edui-editor-toolbarbox").html());
+             //删除
             $("#"+addressid+" .edui-editor-toolbarbox").remove();
-            $("#"+addressid+" .edui-editor-bottomContainer").remove();
             ControlObj.settings.readlly();
             //向
             var nt=new Date().getTime();
