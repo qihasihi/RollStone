@@ -1757,7 +1757,7 @@ public class ImFace115Controller extends BaseController {
                         return;
                     }
                     if(lstime>letime){
-                        returnJo.put("msg",cList.get(0).getClassgrade()+cList.get(0).getClassname()+"--班级开始时间不能晚于班级结束时间，请重新选择");
+                        returnJo.put("msg","请修改"+cList.get(0).getClassgrade()+cList.get(0).getClassname()+"--结束时间应该在开始时间之后");
                         response.getWriter().print(returnJo.toString());
                         return;
                     }
