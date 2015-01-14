@@ -297,36 +297,40 @@
       论题详情
     </c:if>
     <c:if test="${!empty param.quoteid&&param.quoteid!=0}">
-        参考主帖
+            参考主帖
     </c:if>
      </strong>
     <c:if test="${empty param.quoteid||param.quoteid==0}">
-        <span class="font-black public_input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分班级查看：
-         <select name="select" onchange="pclsid=this.value.split('.')[0];pclstype=this.value.split('.')[1];pageGo('p1');">
-             <option value="t=1">全部</option>
-             <c:if test="${!empty tccList}">
-                 <c:forEach items="${tccList}" var="tc">
-                     <c:if test="${param.clsid==tc.CLASS_ID}">
-                         <option value="${tc.CLASS_ID}.${tc.CLASSTYPE}" selected>${tc.CLASSES}</option>
-                     </c:if>
-                     <c:if test="${empty param.clsid||!empty param.clsid&&param.clsid!=tc.CLASS_ID}">
-                         <option value="${tc.CLASS_ID}.${tc.CLASSTYPE}">${tc.CLASSES}</option>
-                     </c:if>
-                 </c:forEach>
-             </c:if>
-         </select>
-        </span>
+        <c:if test="${!empty roleStr&&roleStr!='STUDENT'}">
+            <span class="font-black public_input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分班级查看：
+             <select name="select" onchange="pclsid=this.value.split('.')[0];pclstype=this.value.split('.')[1];pageGo('p1');">
+                 <option value="t=1">全部</option>
+                 <c:if test="${!empty tccList}">
+                     <c:forEach items="${tccList}" var="tc">
+                         <c:if test="${param.clsid==tc.CLASS_ID}">
+                             <option value="${tc.CLASS_ID}.${tc.CLASSTYPE}" selected>${tc.CLASSES}</option>
+                         </c:if>
+                         <c:if test="${empty param.clsid||!empty param.clsid&&param.clsid!=tc.CLASS_ID}">
+                             <option value="${tc.CLASS_ID}.${tc.CLASSTYPE}">${tc.CLASSES}</option>
+                         </c:if>
+                     </c:forEach>
+                 </c:if>
+             </select>
+            </span>
+        </c:if>
      </c:if>
   </div>
 
   <div class="content2">
       <c:if test="${empty param.quoteid||param.quoteid==0}">
           <div class="jxxt_zhuanti_hdkj_nr">
-              <p class="f_right">主帖数：<span id="sp_zt_num">${topic.themecount }</span>&nbsp;&nbsp;&nbsp;评论数：<span id="sp_pl_num">${topic.restorecount}</span></p>
+              <p class="f_right">主帖数：<span id="sp_zt_num">${topic.themecount }</span>&nbsp;&nbsp;&nbsp;回帖数：<span id="sp_pl_num">${topic.restorecount}</span></p>
               <p><strong>${topic.topictitle }</strong></p>
               <p>　　${topic.topiccontent }</p>
               <p>
+            <c:if test="${!empty isHasCKZT&&isHasCKZT>0}">
                   <a href="tptopic?m=viewTopic&topicid=${topic.topicid}&quoteid=1" class="font-darkblue f_right">参考主帖</a>
+              </c:if>
                   <a href="javascript:;" onclick="showCreateDiv('dv_create')"  class="font-darkblue"><span class="ico36"></span>新建主帖</a></p>
           </div>
       </c:if>

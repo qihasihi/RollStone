@@ -15,4 +15,5 @@ public interface ITpTopicThemeManager  extends IBaseManager<TpTopicThemeInfo> {
     public void getSynchroSql(TpTopicThemeInfo entity,List<String> sqlArrayList,List<List<Object>> objArrayList);
 
 
+    public Integer getPingLunShu(final Long topicid,final Integer clsid);
 }

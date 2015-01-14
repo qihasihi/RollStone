@@ -79,13 +79,14 @@
                             <span id="span_best${theme.themeid}"><a  href="javascript:isTopOrIsEssence('${theme.themeid}','2','1','span_best${theme.themeid}');"><span class="ico40"></span>加为精华</a></span>
                         </c:if>
                     </c:if>
-                    <c:if test="${!empty roleStr&&roleStr=='TEACHER'}">
+
                         <c:if  test="${theme.ispraise==1}">
                             <span id="sp_praiseshu${theme.themeid}"><a  href="javascript:addOrCannelPariseTheme('${theme.themeid}',2);"><span class="ico41"></span>取消赞(${theme.praisecount})</a></span>
                         </c:if>
                         <c:if  test="${theme.ispraise==0}">
                             <span id="sp_praiseshu${theme.themeid}"><a  href="javascript:addOrCannelPariseTheme('${theme.themeid}',1);"><span class="ico41"></span>赞(${theme.praisecount})</a></span>
                         </c:if>
+                <c:if test="${!empty roleStr&&roleStr=='TEACHER'}">
                         <a href="javascript:;" onclick="showPiZhuDiv('div_pizhu','${theme.themeid}')"><span class="ico42"></span>批注</a>&nbsp;&nbsp;
                     </c:if>
                     <a href="javascript:;" onclick="huitie(${theme.themeid})">
@@ -121,4 +122,5 @@
     <input type="hidden" name="pageSize" value="${presult.pageSize}"/>
     <input type="hidden" name="pageNo" value="${presult.pageNo}"/>
     <input type="hidden" name="rectotal" value="${presult.recTotal}"/>
+    <input type="hidden" name="pls" value="${pls}"/>
 </div>

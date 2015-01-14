@@ -6,6 +6,7 @@ import com.school.entity.teachpaltform.TpCourseInfo;
 import com.school.entity.teachpaltform.TpCourseTeachingMaterial;
 import com.school.entity.teachpaltform.TpOperateInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
+import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
 import com.school.manager.inter.teachpaltform.ITpCourseTeachingMaterialManager;
@@ -659,6 +660,30 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
         }
         List<Map<String,Object>> tccList=this.tpTopicManager.getInteractiveClass(topic.getCourseid(), this.logined(request).getUserid(), role);
         mp.put("tccList",tccList);
+        Integer ishasCKZT=0;//是否有参考主帖 0：没有 1：是有
+        //查询参考主帖是否存在
+        if(quoteid!=null){
+            TpTopicThemeInfo th=new TpTopicThemeInfo();
+            th.setCourseid(quoteid);
+            th.setTopicid(topic.getTopicid());
+            th.setLoginuserref(this.logined(request).getRef());
+            if(role==2){
+                //学生：&selectType=-4&status=1
+                th.setSelectType(-4);
+                th.setStatus(1L);
+                th.setSearchRoleType(2);
+            }else{
+                //老师: cloudstatus=3&selectType=-4
+                th.setSelectType(-4);
+                th.setCloudstatus(3);
+            }
+            List<TpTopicThemeInfo> tpTopicThemeList=this.tpTopicThemeManager.getList(th,presult);
+            if(tpTopicThemeList!=null&&tpTopicThemeList.size()>0)
+                ishasCKZT=1;
+        }
+        mp.put("isHasCKZT",ishasCKZT);
+
+
 
 
         return new ModelAndView("/interactive/topic/topic-detail0111",mp);

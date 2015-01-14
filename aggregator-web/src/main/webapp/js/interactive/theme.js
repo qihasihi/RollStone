@@ -524,7 +524,7 @@ function updateThemeContent(divid){
             }else{
                 if(rps.type=="success"){
                     $("#pizhu_"+themeid+"_1_updatecontent").html(content);
-                    $("span[id='title_span']").html(updatetitle.val().Trim());
+                    $("#spti"+themeid).html(updatetitle.val().Trim());
                     $.fancybox.close();
                 }
                 alert(rps.msg);
@@ -744,50 +744,54 @@ function getReplyList(themeidStr,pageno,pagesize){
             if(rps.type=="success"){
                 if(typeof(rps.objList[1])!="undefined"){
                     $.each(rps.objList[1],function(idx,itm){
-                        var h='';
-                        if(idx!=1){
-                            h+='<div class="huifu_info">';
-                        }
-                        var divClsname='huifu1';
-                        h+='<div class="'+divClsname+'" id="dv_pl'+itm.replyid+'">';
-                        var img='<img src="images/defaultheadsrc_big.jpg" width="38" height="38">';
-                        if(typeof(itm.cheadimage)!="undefined")
-                            img='<img src="'+itm.cheadimage+'" onerror="headError(this)" width="38" height="38">';
+                        if($("#dv_pl"+itm.replyid).length<1){
+                            var h='';
+                            if(idx!=1){
+                                h+='<div class="huifu_info">';
+                            }
+                            var divClsname='huifu1';
+                            h+='<div class="'+divClsname+'" id="dv_pl'+itm.replyid+'">';
+                            var img='<img src="images/defaultheadsrc_big.jpg" width="38" height="38">';
+                            if(typeof(itm.cheadimage)!="undefined")
+                                img='<img src="'+itm.cheadimage+'" onerror="headError(this)" width="38" height="38">';
 
-                        h+='<p class="pic">'+img+'</p>';
-                        var sName=itm.crealname;
+                            h+='<p class="pic">'+img+'</p>';
+                            var sName=itm.crealname;
 
-                        h+='<div><b>'+sName+'：</b>'+itm.replycontent+'</div>';
-                        h+='<p class="t_r">'+itm.autoCtimeString;
-                        if(typeof(isquote)=="undefined"||isquote==1)
-                            h+='<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回复"></a>';
-                        if(itm.userid==culoginId)
-                            h+='<a href="javascript:;" onclick="doDeleteReply('+itm.replyid+','+itm.themeid+')" class="ico04" title="删除"></a></p>';
-                        h+='</div>';
-                        if(idx!=1){
+                            h+='<div><b>'+sName+'：</b>'+itm.replycontent+'</div>';
+                            h+='<p class="t_r">'+itm.autoCtimeString;
+                            if(typeof(isquote)=="undefined"||isquote==1)
+                                h+='<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回复"></a>';
+                            if(itm.userid==culoginId)
+                                h+='<a href="javascript:;" onclick="doDeleteReply('+itm.replyid+','+itm.themeid+')" class="ico04" title="删除"></a></p>';
                             h+='</div>';
+                            if(idx!=1){
+                                h+='</div>';
+                            }
+                            $("#dv_hl"+itm.themeid).append(h);
+                            $("#dv_hl"+itm.themeid).show();
                         }
-                        $("#dv_hl"+itm.themeid).append(h);
-                        $("#dv_hl"+itm.themeid).show();
                     });
                 }
                 if(typeof(rps.objList[2])!="undefined"){
                     $.each(rps.objList[2],function(idx,itm){
-                        var divClsname='huifu2';
-                        var h='<div class="'+divClsname+'" id="dv_pl'+itm.replyid+'">';
-                        var img='<img src="images/defaultheadsrc_big.jpg" width="38" height="38">';
-                        if(typeof(itm.cheadimage)!="undefined")
-                            img='<img src="'+itm.cheadimage+'" onerror="headError(this)" width="38" height="38">';
+                        if($("#dv_pl"+itm.replyid).length<1){
+                            var divClsname='huifu2';
+                            var h='<div class="'+divClsname+'" id="dv_pl'+itm.replyid+'">';
+                            var img='<img src="images/defaultheadsrc_big.jpg" width="38" height="38">';
+                            if(typeof(itm.cheadimage)!="undefined")
+                                img='<img src="'+itm.cheadimage+'" onerror="headError(this)" width="38" height="38">';
 
-                        h+='<p class="pic">'+img+'</p>';
-                        var sName=itm.crealname+'回复'+itm.torealname;
-                        h+='<div><b>'+sName+'：</b>'+itm.replycontent+'</div>';
-                        h+='<p class="t_r">'+itm.autoCtimeString+'<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回复"></a>';
-                        if(itm.userid==culoginId)
-                            h+='<a href="javascript:;" onclick="doDeleteReply('+itm.replyid+','+itm.themeid+')" class="ico04" title="删除"></a></p>';
-                        h+='</div>';
-                        $("#dv_hl"+itm.themeid+" #dv_pl"+itm.toreplyid).after(h);
-                        $("#dv_hl"+itm.themeid).show();
+                            h+='<p class="pic">'+img+'</p>';
+                            var sName=itm.crealname+'回复'+itm.torealname;
+                            h+='<div><b>'+sName+'：</b>'+itm.replycontent+'</div>';
+                            h+='<p class="t_r">'+itm.autoCtimeString+'<a href="javascript:;" onclick="huitie('+itm.themeid+','+itm.replyid+',\''+itm.crealname+'\')" class="ico45" title="回复"></a>';
+                            if(itm.userid==culoginId)
+                                h+='<a href="javascript:;" onclick="doDeleteReply('+itm.replyid+','+itm.themeid+')" class="ico04" title="删除"></a></p>';
+                            h+='</div>';
+                            $("#dv_hl"+itm.themeid+" #dv_pl"+itm.toreplyid).after(h);
+                            $("#dv_hl"+itm.themeid).show();
+                        }
                     });
                 }
                 if(typeof(rps.objList[0])!="undefined"){
@@ -824,6 +828,14 @@ function getReplyList(themeidStr,pageno,pagesize){
                               }
                         }
                     });
+                }
+                var pn=$("input[name='rectotal']").val();
+                if(pn.Trim().length>0){
+                    $("#sp_zt_num").html(pn);
+                }
+                var plsValue=$("input[name='pls']").val();
+                if(plsValue.Trim().length>0){
+                    $("#sp_pl_num").html(plsValue);
                 }
             }
         }

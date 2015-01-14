@@ -143,9 +143,14 @@ public class TpTopicThemeController  extends BaseController<TpTopicThemeInfo> {
         //得到列表
         tpthemeInfo.setLoginuserref(this.logined(request).getRef());
         List<TpTopicThemeInfo> tpTopicThemeList=this.tpTopicThemeManager.getList(tpthemeInfo,presult);
-        //列表得到后，
+        //得到评论数
+        Integer pls=this.tpTopicThemeManager.getPingLunShu(tpthemeInfo.getTopicid(),(clsid==null?null:Integer.parseInt(clsid)));
+        mp.put("pls",pls);
         mp.put("ztTheme",tpTopicThemeList);
         mp.put("presult",presult);
+
+
+
         return new ModelAndView("interactive/topic/topic-tiezi",mp);
     }
 

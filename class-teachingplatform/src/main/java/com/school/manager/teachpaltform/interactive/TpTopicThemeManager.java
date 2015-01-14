@@ -73,6 +73,16 @@ public class  TpTopicThemeManager extends BaseManager<TpTopicThemeInfo> implemen
         this.tptopicthemedao.getSynchroSql(entity,sqlArrayList,objArrayList);
     }
 
+    /**
+     * 得到该论题下，某个班级的评论数
+     * @param topicid
+     * @param clsid
+     * @return
+     */
+    public Integer getPingLunShu(final Long topicid,final Integer clsid){
+        return this.tptopicthemedao.getPingLunShu(topicid,clsid);
+    }
+
 	@Override
 	protected ICommonDAO<TpTopicThemeInfo> getBaseDAO() {
 		// TODO Auto-generated method stub

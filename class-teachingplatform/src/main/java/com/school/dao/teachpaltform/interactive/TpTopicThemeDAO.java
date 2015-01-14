@@ -1,15 +1,14 @@
 package com.school.dao.teachpaltform.interactive;
 
+import com.school.dao.base.CommonDAO;
+import com.school.dao.inter.teachpaltform.interactive.ITpTopicThemeDAO;
+import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
+import com.school.util.PageResult;
+import org.springframework.stereotype.Component;
+
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.school.dao.base.CommonDAO;
-import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
-import com.school.dao.inter.teachpaltform.interactive.ITpTopicThemeDAO;
-import com.school.util.PageResult;
 
 @Component  
 public class TpTopicThemeDAO extends CommonDAO<TpTopicThemeInfo> implements ITpTopicThemeDAO {
@@ -48,6 +47,33 @@ public class TpTopicThemeDAO extends CommonDAO<TpTopicThemeInfo> implements ITpT
 			return true;
 		}return false;
 	}
+
+    /**
+     * 得到评论数
+     * @param topicid
+     * @param clsid
+     * @return
+     */
+    public Integer getPingLunShu(final Long topicid,final  Integer clsid){
+        if(topicid==null)
+            return 0;
+        StringBuilder sqlBuilder=new StringBuilder();
+        sqlBuilder.append("{CALL tp_theme_reply_info_pinglunshu(?,");
+        List<Object> objParam=new ArrayList<Object>();
+        objParam.add(topicid);
+        if(clsid!=null){
+            sqlBuilder.append("?,");
+            objParam.add(clsid);
+        }else
+            sqlBuilder.append("NULL,");
+        sqlBuilder.append("?)}");
+        Object afficeObj=this.executeSacle_PROC(sqlBuilder.toString(), objParam.toArray());
+        if(afficeObj!=null&&afficeObj.toString().trim().length()>0&&Integer.parseInt(afficeObj.toString())>0){
+            return Integer.parseInt(afficeObj.toString());
+        }
+        return 0;
+    }
+
 
 	public Boolean doUpdate(TpTopicThemeInfo tptopicthemeinfo) {
 		if (tptopicthemeinfo == null)
