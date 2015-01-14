@@ -200,12 +200,21 @@ public class TpCourseInfo  implements java.io.Serializable{
     private Object topiccount;
     private Object papercount;
     private Integer filterquote;    //去除被引用的专题
+    private Integer filtergrade; //去除当前年级被引用的专题
     private Integer uncompletenum;
     private Integer questiontype;
     private String classname;
     private String classgrade;
     private Integer classid;
     private Integer isself;
+
+    public Integer getFiltergrade() {
+        return filtergrade;
+    }
+
+    public void setFiltergrade(Integer filtergrade) {
+        this.filtergrade = filtergrade;
+    }
 
     public Integer getIsself() {
         return isself;

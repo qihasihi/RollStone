@@ -62,6 +62,7 @@
             function preeDoPageSub(pObj){
                 var param={};
                 param.searchType=1;
+                param.filtergrade=tea_gradeid;
                 if(srhType==1){
                     if($("#materialid").val()!=0){
                         param.gradeid=$("#gradeid").val();
