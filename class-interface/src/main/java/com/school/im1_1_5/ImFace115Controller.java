@@ -1699,7 +1699,7 @@ public class ImFace115Controller extends BaseController {
                 Long currentTime = System.currentTimeMillis();
                 //获取班级对象的开始时间
                 Long startTime = tccList.get(i).getBegintime().getTime();
-                if(startTime>currentTime){
+                if(startTime<currentTime){
                     classSign=true;
                     break;
                 }
