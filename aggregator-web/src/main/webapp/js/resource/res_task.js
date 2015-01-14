@@ -334,10 +334,7 @@ function addTeacherCourse(){
     $("#selectedCourse li").each(function(ix,im){
         selectedcourseids+=$(this).attr("id")+"|";
     });
-//    $("#addButton").attr("href","");
-//    $("#addButton").removeClass("an_small");
-//    $("#addButton").addClass("an_gray_small");
-    //$("#addButton").attr("href","javascript:;");
+    resetBtnAttr("addButton","an_public1","an_gray_public1","",2);
 
     $.ajax({
         url:'teachercourse?m=addCourseByRes',
@@ -362,15 +359,15 @@ function addTeacherCourse(){
         },
         type:'POST',
         dataType:'json',
-        error:function(data,status,e){
-            $("#addButton").attr("href","javascript:addTeacherCourse();");
+        error:function(){
+            resetBtnAttr("addButton","an_public1","an_gray_public1","addTeacherCourse()",1);
         },
         success:function(rps){
             if(rps.type=="success"){
                 $.fancybox.close();
             }else{
                 alert("无法添加!"+rps.msg);
-                $("#addButton").attr("href","javascript:addTeacherCourse();");
+                resetBtnAttr("addButton","an_public1","an_gray_public1","addTeacherCourse()",1);
             }
         }
     });

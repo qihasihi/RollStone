@@ -170,6 +170,7 @@
                 alert('请选择专题!');
                 return;
             }
+            resetBtnAttr("a_sub_task","an_public1","an_gray_public1","",2);
             $.ajax({
                 url:"task?addCourseResTask",
                 type:"post",
@@ -178,9 +179,11 @@
                 cache: false,
                 error:function(){
                     alert('系统未响应，请稍候重试!');
+                    resetBtnAttr("a_sub_task","an_public1","an_gray_public1","doSaveCouresTask()",1);
                 },success:function(rmsg){
                     if(rmsg.type=="error"){
                         alert(rmsg.msg);
+                        resetBtnAttr("a_sub_task","an_public1","an_gray_public1","doSaveCouresTask()",1);
                     }else{
                         $.fancybox.close();
                     }

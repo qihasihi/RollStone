@@ -1193,6 +1193,7 @@ function doSubManageTask(taskid) {
         return;
     resetBtnAttr("submit_btn","an_small","an_gray_small","",2);
 
+
     if (typeof(taskid) != 'undefined') {
         url = 'task?doSubUpdTask';
         param.taskid = taskid;
