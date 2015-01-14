@@ -746,7 +746,7 @@ public class UpdateCourse extends TimerTask{
                                             tmpPaper.setScore(100F);
                                             tmpPaper.setPapertype(5);//Œ¢ ”∆µ ‘æÌ
                                             tmpPaper.setCuserid(0);
-                                            tmpPaper.setPapername(ctmp.getCoursename()+"Œ¢øŒ≥Ã≤‚ ‘"+newPaperid);
+                                            tmpPaper.setPapername(ctmp.getCoursename()+"Œ¢øŒ≥Ã≤‚ ‘");
                                             sqlbuilder=new StringBuilder();
                                             objList=paperManager.getSaveSql(tmpPaper,sqlbuilder);
                                             if(sqlbuilder!=null){
