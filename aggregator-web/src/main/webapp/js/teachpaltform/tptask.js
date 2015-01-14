@@ -1191,7 +1191,7 @@ function doSubManageTask(taskid) {
 
     if (!confirm('数据验证完毕!确认提交?'))
         return;
-    resetBtnAttr("submint_btn","an_small","an_gray_small","",2);
+    resetBtnAttr("submit_btn","an_small","an_gray_small","",2);
 
     if (typeof(taskid) != 'undefined') {
         url = 'task?doSubUpdTask';
@@ -1211,7 +1211,7 @@ function doSubManageTask(taskid) {
         }, success: function (rmsg) {
             if (rmsg.type == "error") {
                 alert(rmsg.msg);
-                resetBtnAttr("submint_btn","an_small","an_gray_small","doSubManageTask(undefined)",1);
+                resetBtnAttr("submit_btn","an_small","an_gray_small","doSubManageTask(undefined)",1);
             } else {
                 alert(rmsg.msg);
                 location.href = 'task?toTaskList&courseid=' + courseid;

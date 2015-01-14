@@ -1467,17 +1467,17 @@ public class UserController extends BaseController<UserInfo> {
                 }
 
                 //活动用户更新ett密码
-                if(user!=null&&user.getIsactivity()!=null&&user.getIsactivity()==1){
-                    Integer userType=1;
-                    if(user.getStuname()!=null&&user.getStuname().length()>0)
-                        userType=2;
-                    else
-                        userType=1;
-                    if(!EttInterfaceUserUtil.ModifyUser(user,userType.toString()))
-                        System.out.println("111更新活动用户密码同步至网校失败!UserController edit_base ettuserid:"+user.getEttuserid());
-                    else
-                        System.out.println("更新活动用户密码同步至网校成功!UserController edit_base ettuserid:"+user.getEttuserid());
-                }
+//                if(user!=null&&user.getIsactivity()!=null&&user.getIsactivity()==1){
+//                    Integer userType=1;
+//                    if(user.getStuname()!=null&&user.getStuname().length()>0)
+//                        userType=2;
+//                    else
+//                        userType=1;
+//                    if(!EttInterfaceUserUtil.ModifyUser(user,userType.toString()))
+//                        System.out.println("111更新活动用户密码同步至网校失败!UserController edit_base ettuserid:"+user.getEttuserid());
+//                    else
+//                        System.out.println("更新活动用户密码同步至网校成功!UserController edit_base ettuserid:"+user.getEttuserid());
+//                }
             }else
                 je.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }
@@ -6836,7 +6836,8 @@ public class UserController extends BaseController<UserInfo> {
                     je.setMsg("LzxSchoolId:"+schoolid+" LzxUserId:"+lzxuserid+" not exists!");
                     response.getWriter().print(je.toJSON());return;
                 }else{
-                    userRefList.add(userInfo.getRef());
+
+                    userRefList.add(userInfoList.get(0).getRef());
 
                     //修改用户头像
                     if(headimage!=null&&headimage.trim().length()>0){
@@ -7012,7 +7013,7 @@ public class UserController extends BaseController<UserInfo> {
                         objListArray.add(objList);
                         sqlListArray.add(sql.toString());
                     }
-                    userRefList.add(userInfo.getRef());
+                    userRefList.add(userInfoList.get(0).getRef());
                 }
             }
         }else {

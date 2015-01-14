@@ -112,7 +112,7 @@
                 <h1>
                     <a href="javascript:;" onclick="prev()" class="left"></a>
                     <span id="year">
-                        ${fn:split(selTerm.byear,'-')[0]}
+                        ${selTerm.autoyear}
                     </span>
                     年
                     <span id="month">

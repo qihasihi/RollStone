@@ -126,7 +126,34 @@ public class ImInterFaceControllerTest {
             }
         }
         Assert.assertTrue(isflag);
-    } 
+    }
+
+    @Test
+    public void testSaveClassTimePoint() throws Exception {
+        //TODO: Test goes here...
+        //验证必填参数
+        String time=System.currentTimeMillis()+"";
+        HashMap<String,String> mp=new HashMap<String, String>();
+        mp.put("jid","2470767");
+        mp.put("schoolId", "51005");
+        mp.put("classId", "399973");
+        mp.put("time", time);
+        String sign=UrlSigUtil.makeSigSimple("saveClassTimePoint.do",mp);
+        mp.put("sign", sign);
+        request.addParameters(mp);
+        imInterFaceController.saveClassTimePoint(request, response);
+        String msg=response.getContentAsString();
+        System.out.println(msg);
+        boolean isflag=false;
+        if(msg!=null&&msg.trim().length()>0){
+            JSONObject jo=JSONObject.fromObject(msg);
+            if(jo!=null&&jo.get("result")!=null&&jo.get("result").toString().trim().equals("1")){
+                isflag=true;
+            }
+        }
+        Assert.assertTrue(isflag);
+    }
+
 
     /**
      * init  proc config 

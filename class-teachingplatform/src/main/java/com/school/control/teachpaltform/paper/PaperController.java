@@ -577,6 +577,7 @@ public class PaperController extends BaseController<PaperInfo>{
         JsonEntity je = new JsonEntity();
         String courseid=request.getParameter("courseid");
         String type=request.getParameter("type");
+        String micvideoid=request.getParameter("resid");
 
         if(courseid==null||courseid.trim().length()<1||
                 type==null||type.trim().length()<1){
@@ -595,6 +596,8 @@ public class PaperController extends BaseController<PaperInfo>{
         t.setIscloud(2);
         List<TpCoursePaper>paperList=this.tpCoursePaperManager.getSelRelatePaPerList(t, p);
         t.setIscloud(1);
+        if(micvideoid!=null&&micvideoid.trim().length()>0)
+            t.setMicvideoid(Long.parseLong(micvideoid));
         List<TpCoursePaper>paperCloudList=this.tpCoursePaperManager.getSelRelatePaPerList(t,null);
         je.setPresult(p);
 

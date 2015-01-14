@@ -44,6 +44,7 @@
             }
             var param={courseid:courseid};
             param.type=4;
+            param.resid=res_id;
             //param.taskflag=1;
             pObj.setPostParams(param);
         }

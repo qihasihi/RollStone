@@ -84,8 +84,18 @@ public class TermInfo implements java.io.Serializable {
 	public void setMtime(Date mtime) {
 		this.mtime = mtime;
 	}
-	
-	public String getCtimeString(){
+
+    private Object autoyear;
+
+    public Object getAutoyear() {
+        return autoyear;
+    }
+
+    public void setAutoyear(Object autoyear) {
+        this.autoyear = autoyear;
+    }
+
+    public String getCtimeString(){
 		if(ctime==null)
 			return "";
 		return UtilTool.DateConvertToString(ctime, DateType.type1);
