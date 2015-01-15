@@ -14,8 +14,9 @@
        http://www.springframework.org/schema/tx
     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
     ">
+
     <!-- 配置数据源
-    <bean id="dataSource" name="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+ <bean id="dataSource" name="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
         <property name="jndiName">
             <value>java:comp/env/jdbc/mschool</value>
         </property>

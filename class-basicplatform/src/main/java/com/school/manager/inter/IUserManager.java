@@ -10,6 +10,8 @@ import com.school.manager.base.IBaseManager;
 import com.school.util.PageResult;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 public interface IUserManager extends IBaseManager<UserInfo> {
 
@@ -17,7 +19,6 @@ public interface IUserManager extends IBaseManager<UserInfo> {
 
 	
 	public UserInfo doLogin(UserInfo user);
-	
 	public UserInfo getUserInfo(UserInfo user);
 	
 	/**

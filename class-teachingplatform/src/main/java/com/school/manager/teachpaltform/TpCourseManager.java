@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+
 public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCourseManager  {
 
 	private ITpCourseDAO tpcoursedao;
@@ -43,6 +44,7 @@ public class  TpCourseManager extends BaseManager<TpCourseInfo> implements ITpCo
 	}
 
 	public List<Object> getSaveSql(TpCourseInfo tpcourseinfo, StringBuilder sqlbuilder) {
+
 		return this.tpcoursedao.getSaveSql(tpcourseinfo,sqlbuilder);
 	}
 

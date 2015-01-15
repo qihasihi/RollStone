@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.school.entity.teachpaltform.TpTaskInfo;
+import com.school.entity.userlog.UserDynamicPcLog;
+import com.school.manager.inter.teachpaltform.ITpTaskManager;
+import com.school.manager.inter.userlog.IUserDynamicPCManager;
 import jxl.Sheet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +21,20 @@ import com.school.manager.base.BaseManager;
 import com.school.manager.inter.IOperateExcelManager;
 import com.school.manager.inter.IUserManager;
 import com.school.util.PageResult;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+
 @Service
+
+
 public class UserManager extends BaseManager<UserInfo> implements IUserManager{
 	@Autowired
 	@Qualifier("userDAO")
 	private IUserDAO userdao;
+
+    @Autowired
+    private IUserDynamicPCManager userDynamicPCManager;
 
 	public void setUserdao(IUserDAO userdao) {
 		this.userdao = userdao;
@@ -95,8 +107,9 @@ public class UserManager extends BaseManager<UserInfo> implements IUserManager{
 		// TODO Auto-generated method stub
 		return this.userdao.doLogin(user);
 	}
-	
-	public UserInfo getUserInfo(UserInfo user) {
+
+
+    public UserInfo getUserInfo(UserInfo user) {
 		// TODO Auto-generated method stub
 		return this.userdao.getUser(user);
 	}

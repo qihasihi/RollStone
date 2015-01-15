@@ -11,11 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.entity.*;
+import com.school.entity.userlog.UserDynamicInfo;
+import com.school.entity.userlog.UserDynamicPcLog;
 import com.school.manager.*;
 import com.school.manager.impl.activity.ActivityManager;
 import com.school.manager.inter.*;
 import com.school.manager.inter.activity.IActivityManager;
 import com.school.manager.inter.notice.INoticeManager;
+import com.school.manager.inter.userlog.IUserDynamicPCManager;
 import com.school.manager.notice.NoticeManager;
 
 import com.school.utils.*;
@@ -99,6 +102,8 @@ public class UserController extends BaseController<UserInfo> {
     protected IInitWizardManager initWizardManager;
     @Autowired
     protected ISchoolManager schoolManager;
+    @Autowired
+    protected IUserDynamicPCManager userDynamicPCManager;
 
     public  List<Map<String,Object>> getClassUserMap(String relationtype,Integer classid){
         List<Map<String,Object>>mapList=null;
@@ -1016,6 +1021,7 @@ public class UserController extends BaseController<UserInfo> {
      */
     protected JsonEntity loginBase(UserInfo userinfo,HttpServletRequest request,HttpServletResponse response) throws Exception{
         JsonEntity je=new JsonEntity();
+        Integer source=userinfo.getSource();
         je.setMsg("错误，原因：参数异常!");
         if(userinfo==null)return je;
         if (userinfo.getUsername() == null || userinfo.getPassword() == null) {
@@ -1145,6 +1151,22 @@ public class UserController extends BaseController<UserInfo> {
                         je.setType("success");
                         je.setMsg("登陆成功并记录成功!");
                         System.out.print("login success!");
+
+                        Integer usertype=1;
+                        if(this.validateRole(request,UtilTool._ROLE_TEACHER_ID))
+                            usertype=1;
+                        else if(this.validateRole(request,UtilTool._ROLE_STU_ID))
+                            usertype=2;
+                        //记录登录日志
+                        UserDynamicPcLog loginLog=new UserDynamicPcLog();
+                        loginLog.setSource(source);
+                        loginLog.setUserid(this.logined(request).getUserid());
+                        loginLog.setEttuserid(this.logined(request).getEttuserid());
+                        loginLog.setUsertype(usertype);
+                        loginLog.setDynamicid(UserDynamicInfo.DYNAMIC_NAME.LOGIN.getVal());
+                        this.userDynamicPCManager.doSave(loginLog);
+
+
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         System.out.println(e.getMessage());
@@ -1200,6 +1222,7 @@ public class UserController extends BaseController<UserInfo> {
         String autolo=request.getParameter("autoLogin");
         boolean autoLogin = false;
         if(autolo!=null&&autolo.equals("1"))autoLogin=true;
+        userinfo.setSource(UserInfo.LOGIN_SOURCE.SX.getValue());
         je=loginBase(userinfo,request,response);
         if(je.getType().trim().equals("success")){
 //            if(UtilTool._IS_SIMPLE_RESOURCE!=2){
@@ -4582,6 +4605,7 @@ public class UserController extends BaseController<UserInfo> {
         UserInfo tmpUser=new UserInfo();
         tmpUser.setUsername(userInfo.getUsername());
         tmpUser.setPassword(userInfo.getPassword());
+        tmpUser.setSource(UserInfo.LOGIN_SOURCE.LZX.getValue());
         jsonEntity=this.loginBase(tmpUser,request,response);
         tmpUser=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
         if(tmpUser!=null&&jsonEntity.getType().trim().equals("success")){
@@ -7457,6 +7481,7 @@ public class UserController extends BaseController<UserInfo> {
         }
         loginUsr.setUsername(usrList.get(0).getUsername());
         loginUsr.setPassword(usrList.get(0).getPassword());
+        loginUsr.setSource(UserInfo.LOGIN_SOURCE.LZX.getValue());
         jsonEntity=this.loginBase(loginUsr,request,response);
         if(!jsonEntity.getType().trim().equals("success")){
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
@@ -7560,6 +7585,8 @@ public class UserController extends BaseController<UserInfo> {
         }
         loginUsr.setUsername(usrList.get(0).getUsername());
         loginUsr.setPassword(usrList.get(0).getPassword());
+        //乐知行登录
+        loginUsr.setSource(UserInfo.LOGIN_SOURCE.LZX.getValue());
         jsonEntity=this.loginBase(loginUsr,request,response);
         if(!jsonEntity.getType().trim().equals("success")){
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;

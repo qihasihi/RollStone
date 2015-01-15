@@ -40,6 +40,26 @@ public class UserInfo implements java.io.Serializable {
     private String schoolid;
     private Integer ettuserid;//网校用户id
     private Integer isactivity;
+    private Integer source;     //登录来源 1:数校平台  2：网校后台  3：乐知行
+
+    /**
+     * 登录来源
+     */
+    public  static enum LOGIN_SOURCE{
+        SX{public Integer getValue(){return 1;}},
+        ETT{public Integer getValue(){return 2;}},
+        LZX{public Integer getValue(){return 3;}};
+        public abstract Integer getValue();
+    }
+
+
+    public Integer getSource() {
+        return source;
+    }
+
+    public void setSource(Integer source) {
+        this.source = source;
+    }
 
     public Integer getIsactivity() {
         return isactivity;

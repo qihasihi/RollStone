@@ -31,7 +31,7 @@
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
         <property name="jdbcUrl" value="jdbc:mysql://192.168.8.35:3306/school"/>
         <property name="user" value="schu"/>
-        <property name="password" value="test"/>
+        <property name="password" value="schp2014"/>
         <property name="minPoolSize" value="10" />
         <property name="maxPoolSize" value="50" />
         <property name="maxIdleTime" value="600" />
