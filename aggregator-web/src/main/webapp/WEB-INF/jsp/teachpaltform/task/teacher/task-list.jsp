@@ -168,7 +168,7 @@ function getInvestReturnMethod(rps){
                 else if (itm.tasktype==1)
                     qtype=undefined;
                 if(itm.tasktype==4){
-                    html+='<a title="查看统计" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'"><span class="ico35"></span><b>'+stucount+'/'+itm.totalcount+'</b></a>';
+                    html+='<a title="查看统计" href="paper?m=toMarking&taskid='+itm.taskid+'&paperid='+itm.taskvalueid+'&subjectid=${param.subjectid}"><span class="ico35"></span><b>'+stucount+'/'+itm.totalcount+'</b></a>';
                 }else{
                     html+='<a title="查看统计" href="task?toTaskPerformance&taskid='+itm.taskid+'&questype='+qtype+'&subjectid=${param.subjectid}"><span class="ico35"></span><b>'+stucount+'/'+itm.totalcount+'</b></a>';
                 }

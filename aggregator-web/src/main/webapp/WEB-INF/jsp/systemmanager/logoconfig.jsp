@@ -142,7 +142,7 @@ function uploadImg(){
 		    }else{
 			    alert("设置成功");
 		   	 	closeModel('cuthear_div');
-		   	 	$("#current_photo").attr("src",json.objList[0]);
+		   	 	//$("#current_photo").attr("src",json.objList[0]);
 		    	imgareaselectObj.setOptions({remove:true,hide:true});
                 self.reload();  //重新刷新
 		    } 

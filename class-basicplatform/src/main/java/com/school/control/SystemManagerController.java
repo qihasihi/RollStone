@@ -242,6 +242,8 @@ public class SystemManagerController extends BaseController<TermInfo>{
                 if(logoList!=null){
                     request.getSession().setAttribute("logoObj",logoList.get(0));
                 }
+                je.setType("success");
+                je.setMsg("上传成功");
 			}
 		}        
 		catch (Exception e) {

@@ -494,7 +494,7 @@ public class TaskPerformanceDAO extends CommonDAO<TaskPerformanceInfo> implement
         return performanceList;
     }
 
-    public List<List<String>> getCjTaskPerformance(Long taskid,Integer classid,Integer classtype) {
+    public List<List<String>> getCjTaskPerformance(Long taskid,Integer classid,Integer classtype,Integer subjectid) {
         if(taskid==null)
             return null;
         StringBuilder sqlbuilder = new StringBuilder();
@@ -513,8 +513,14 @@ public class TaskPerformanceDAO extends CommonDAO<TaskPerformanceInfo> implement
             sqlbuilder.append("null,");
         }
         if(classtype!=null){
-            sqlbuilder.append("?");
+            sqlbuilder.append("?,");
             objList.add(classtype);
+        }else{
+            sqlbuilder.append("null,");
+        }
+        if(subjectid!=null){
+            sqlbuilder.append("?");
+            objList.add(subjectid);
         }else{
             sqlbuilder.append("null");
         }

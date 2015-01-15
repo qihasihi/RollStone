@@ -4357,7 +4357,7 @@ public class TaskController extends BaseController{
             return;
         }
         //任务记录
-        List<List<String>>tList=this.taskPerformanceManager.getCjTaskPerformance(Long.parseLong(taskid),Integer.parseInt(classid),Integer.parseInt(type));
+        List<List<String>>tList=this.taskPerformanceManager.getCjTaskPerformance(Long.parseLong(taskid),Integer.parseInt(classid),Integer.parseInt(type),Integer.parseInt(subjectid));
         //数量统计
         List<Map<String,Object>> numList = new ArrayList<Map<String, Object>>();
         List<TpGroupInfo> tiList=new ArrayList<TpGroupInfo>();

@@ -2263,41 +2263,119 @@ function cjloadStuPerformance(classid, classtype) {
                     htm += quesCol;
                     //htm += '<th>查看试卷</th>';
                     htm += '</tr>';
-                    $.each(rmsg.objList[1], function (idx, itm) {
-                        if(idx%2==0)
-                            htm+='<tr class="trbg1">';
-                        else
-                            htm += '<tr>';
-                        htm += '<td>' + itm[0] + '</td>';
-                        htm += '<td>' + itm[1] + '</td>';
-                        var studytime = itm[3];
-                        studytime=studytime.substring(0,16);
-                        htm += '<td>'+studytime+'</td>';
-                        htm += '<td id="td_0"><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[2]+'&flag=1">'+itm[4]+'</a></td>';
-                        $.each(rmsg.objList[4], function (quesnum, ques) {
-                            var answer='';
-                            answer = itm[quesnum+5];
-                            var answers = answer.split("|");
-                            if(answers[2]=="1"){
-                                if(answers[1]=="1"){
-                                    htm+='<td id="td_'+(quesnum+1)+'">&radic;';
-                                    htm+='<input type="hidden" value="1"/>';
-                                    htm+='</td>';
-                                }else{
-                                    htm+='<td id="td_'+(quesnum+1)+'"><span class="font-red">&times;</span>';
-                                    htm+='<input type="hidden" value="1"/>';
-                                    htm+='</td>';
-                                }
-                            }else{
-                                htm+='<td id="td_'+(quesnum+1)+'">'+answers[0];
-                                htm+='<input type="hidden" value="2"/>';
-                                htm+='</td>';
-                            }
-                        });
-                        //htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">查看卷面</a></td>';
-                        htm += '</tr>';
-                    });
                     htm += '</table>';
+                    $("#mainTbl").html(htm);
+                    $.each(rmsg.objList[1],function(idx,itm){
+                        if($("tr[id='tr_"+itm[0]+"']").length<1){
+                            var h = '';
+                            h+='<tr id="tr_'+itm[0]+'">';
+                            h+='<td id="td_'+itm[0]+'">'+itm[1]+'</td>';
+                            h+='</tr>';
+                            $("#recordList").append(h);
+                        }
+
+                    });
+
+                    $.each(rmsg.objList[1], function (idx, itm) {
+                        if($("#tr_"+itm[0]+" td").length<2){
+                            var htm2='';
+                            //htm2 += '<td>' + itm[1] + '</td>';
+                            htm2 += '<td>' + itm[2] + '</td>';
+                            var studytime = itm[4];
+                            studytime=studytime.substring(0,16);
+                            htm2 += '<td>'+studytime+'</td>';
+                            htm2 += '<td id="td_0"><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[3]+'&flag=1">'+itm[5]+'</a></td>';
+                            $.each(rmsg.objList[4], function (quesnum, ques) {
+                                var answer='';
+                                answer = itm[quesnum+6];
+                                var answers = answer.split("|");
+                                if(answers[2]=="1"){
+                                    if(answers[1]=="1"){
+                                        htm2+='<td id="td_'+(quesnum+1)+'">&radic;';
+                                        htm2+='<input type="hidden" value="1"/>';
+                                        htm2+='</td>';
+                                    }else{
+                                        htm2+='<td id="td_'+(quesnum+1)+'"><span class="font-red">&times;</span>';
+                                        htm2+='<input type="hidden" value="1"/>';
+                                        htm2+='</td>';
+                                    }
+                                }else{
+                                    htm2+='<td id="td_'+(quesnum+1)+'">'+answers[0];
+                                    htm2+='<input type="hidden" value="2"/>';
+                                    htm2+='</td>';
+                                }
+                            });
+                            //htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">查看卷面</a></td>';
+                            //htm += '</tr>';
+                            $("#tr_"+itm[0]).append(htm2);
+                        }else{
+                            var htm2='<tr id="tr_'+itm[0]+'">';
+                           // htm2 += '<td>' + itm[1] + '</td>';
+                            htm2 += '<td>' + itm[2] + '</td>';
+                            var studytime = itm[4];
+                            studytime=studytime.substring(0,16);
+                            htm2 += '<td>'+studytime+'</td>';
+                            htm2 += '<td id="td_0"><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[3]+'&flag=1">'+itm[5]+'</a></td>';
+                            $.each(rmsg.objList[4], function (quesnum, ques) {
+                                var answer='';
+                                answer = itm[quesnum+6];
+                                var answers = answer.split("|");
+                                if(answers[2]=="1"){
+                                    if(answers[1]=="1"){
+                                        htm2+='<td id="td_'+(quesnum+1)+'">&radic;';
+                                        htm2+='<input type="hidden" value="1"/>';
+                                        htm2+='</td>';
+                                    }else{
+                                        htm2+='<td id="td_'+(quesnum+1)+'"><span class="font-red">&times;</span>';
+                                        htm2+='<input type="hidden" value="1"/>';
+                                        htm2+='</td>';
+                                    }
+                                }else{
+                                    htm2+='<td id="td_'+(quesnum+1)+'">'+answers[0];
+                                    htm2+='<input type="hidden" value="2"/>';
+                                    htm2+='</td>';
+                                }
+                            });
+                            //htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">查看卷面</a></td>';
+                            //htm += '</tr>';
+                            var rowspan=$("#td_"+itm[0]).attr("rowspan");
+                            $("#td_"+itm[0]).attr("rowspan",(typeof(rowspan)=="undefined"?0:parseInt(rowspan))+1);
+                            $("tr[id='tr_"+itm[0]+"']:last").after(htm2);
+                        }
+//                        if(idx%2==0)
+//                            htm+='<tr class="trbg1">';
+//                        else
+//                            htm += '<tr>';
+//                        htm += '<td>' + itm[0] + '</td>';
+//                        htm += '<td>' + itm[1] + '</td>';
+//                        var studytime = itm[3];
+//                        studytime=studytime.substring(0,16);
+//                        htm += '<td>'+studytime+'</td>';
+//                        htm += '<td id="td_0"><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[2]+'&flag=1">'+itm[4]+'</a></td>';
+//                        $.each(rmsg.objList[4], function (quesnum, ques) {
+//                            var answer='';
+//                            answer = itm[quesnum+5];
+//                            var answers = answer.split("|");
+//                            if(answers[2]=="1"){
+//                                if(answers[1]=="1"){
+//                                    htm+='<td id="td_'+(quesnum+1)+'">&radic;';
+//                                    htm+='<input type="hidden" value="1"/>';
+//                                    htm+='</td>';
+//                                }else{
+//                                    htm+='<td id="td_'+(quesnum+1)+'"><span class="font-red">&times;</span>';
+//                                    htm+='<input type="hidden" value="1"/>';
+//                                    htm+='</td>';
+//                                }
+//                            }else{
+//                                htm+='<td id="td_'+(quesnum+1)+'">'+answers[0];
+//                                htm+='<input type="hidden" value="2"/>';
+//                                htm+='</td>';
+//                            }
+//                        });
+                        //htm+='<td><a class="font-darkblue" href="paperques?m=teaViewStuPaper&taskid='+taskid+'&userid='+itm[1]+'&flag=1">查看卷面</a></td>';
+                        //htm += '</tr>';
+                    });
+                    //htm += '</table>';
 //                    htm +='</div>';
                 }
             } else {
@@ -2321,6 +2399,9 @@ function cjloadStuPerformance(classid, classtype) {
                 //htm += '<th>查看试卷</th>';
                 htm += '</tr>';
                 htm+='<tr><td colspan="15">暂无数据!</td></tr></table>';
+                $("#mainTbl").hide();
+                $("#mainTbl").html(htm);
+                $("#mainTbl").show();
             }
             if(rmsg.objList[3]!=null&&rmsg.objList[3].length>0){
                 $("#dv_nocomplete_data").html('');
@@ -2345,9 +2426,7 @@ function cjloadStuPerformance(classid, classtype) {
                 //$("#sendMsg").html('<a href="javascript:doSendTaskMsg(' + taskid + ',' + classid + ')"  class="an_public3">发提醒</a>');
 
             }
-            $("#mainTbl").hide();
-            $("#mainTbl").html(htm);
-            $("#mainTbl").show();
+
 
 
 

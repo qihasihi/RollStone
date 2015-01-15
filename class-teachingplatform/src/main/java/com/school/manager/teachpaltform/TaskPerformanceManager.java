@@ -131,8 +131,8 @@ public class  TaskPerformanceManager extends BaseManager<TaskPerformanceInfo> im
     }
 
     @Override
-    public List<List<String>> getCjTaskPerformance(Long taskid, Integer classid, Integer classtype) {
-        return this.taskperformancedao.getCjTaskPerformance(taskid,classid,classtype);
+    public List<List<String>> getCjTaskPerformance(Long taskid, Integer classid, Integer classtype,Integer subjectid) {
+        return this.taskperformancedao.getCjTaskPerformance(taskid,classid,classtype,subjectid);
     }
 
     @Override

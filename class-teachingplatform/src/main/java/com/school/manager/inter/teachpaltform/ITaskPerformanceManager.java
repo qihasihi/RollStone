@@ -74,7 +74,7 @@ public interface ITaskPerformanceManager  extends IBaseManager<TaskPerformanceIn
     /**
      * 教师查询学生成卷测试任务统计
      * */
-    public List<List<String>> getCjTaskPerformance(Long taskid,Integer classid,Integer classtype);
+    public List<List<String>> getCjTaskPerformance(Long taskid,Integer classid,Integer classtype,Integer subjectid);
 
     /**
      * 教师查询学生成卷测试任务统计
