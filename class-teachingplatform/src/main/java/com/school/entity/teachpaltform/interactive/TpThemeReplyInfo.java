@@ -105,7 +105,9 @@ public class TpThemeReplyInfo  implements java.io.Serializable{
             int dLong=(int)(dt/60000);//分钟
             String sHtml="刚刚";
             if(dLong<1)
-                sHtml=(int)(dt%60000)/1000+"秒前";
+                if(((int)(dt%60000)/1000)>0){
+                    sHtml=(int)(dt%60000)/1000+"秒前";
+                }
             else if(dLong>=1&&dLong<60)
                 sHtml=dLong+"分钟前";
             else if(dLong>=60){

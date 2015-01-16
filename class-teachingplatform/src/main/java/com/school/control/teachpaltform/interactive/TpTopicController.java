@@ -664,7 +664,7 @@ public class TpTopicController extends BaseController<TpTopicInfo>{
         //查询参考主帖是否存在
         if(quoteid!=null){
             TpTopicThemeInfo th=new TpTopicThemeInfo();
-            th.setCourseid(quoteid);
+            th.setCourseid(tcList.get(0).getCourseid());
             th.setTopicid(topic.getTopicid());
             th.setLoginuserref(this.logined(request).getRef());
             if(role==2){

@@ -474,7 +474,11 @@ public class QuestionInfo implements java.io.Serializable {
                             examTypeVar="其它";
                             break;
                     }
-                    returnVal.append(examTypeVar).append("题");
+                    if(examTypeVar.equals("其它")){
+                        returnVal=null;
+                    }else
+                        returnVal.append(examTypeVar).append("题");
+
                 }
             }
         }
