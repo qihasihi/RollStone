@@ -53,15 +53,15 @@
                 </c:if>
             </div>
             <p class="t_r">
-                <c:if test="${!empty roleStr&&(roleStr=='TEACHER' || (culoginid==theme.cuserid))||(!empty param.quoteid&&param.quoteid!=0)}">
-                    <c:if test="${(!empty param.quoteid&&param.quoteid!=0)||culoginid==theme.cuserid}">
+                <c:if test="${!empty roleStr&&(roleStr=='TEACHER' || (culoginid==theme.cuserid))||(!empty param.quoteid1&&param.quoteid1!=0)}">
+                    <c:if test="${(!empty param.quoteid1&&param.quoteid1!=0)||culoginid==theme.cuserid}">
                         <c:if test="${empty theme.commentbycontent}">
                             <a href="javascript:;" onclick="showUpdateDiv('div_update','${theme.themeid}')"><span class="ico11"></span>编辑</a>&nbsp;&nbsp;
                         </c:if>
                     </c:if>
                     <a href="javascript:;" onclick="doDelTheme(${theme.themeid });"><span class="ico04"></span>删除</a>
                 </c:if>
-                <c:if test="${empty param.quoteid||param.quoteid==0}">
+                <c:if test="${empty param.quoteid1||param.quoteid1==0}">
                     <c:if test="${!empty roleStr&&roleStr=='TEACHER'}">
                         <c:if test="${theme.istop==0}">
                             <span id="span_top${theme.themeid}"><a href="javascript:isTopOrIsEssence('${theme.themeid}','1','1','span_top${theme.themeid}');"><span class="ico56"></span>置顶</a></span>
@@ -92,7 +92,7 @@
                     <a href="javascript:;" onclick="huitie(${theme.themeid})">
                 </c:if>
                 <span class="ico45"></span>回帖(<span style="margin:0 0 0 0;"  id="sp_ht${theme.themeid}">${theme.pinglunshu}</span>)
-                <c:if test="${empty param.quoteid||param.quoteid==0}">
+                <c:if test="${empty param.quoteid1||param.quoteid1==0}">
                     </a>
                 </c:if>
             </p>
@@ -105,7 +105,7 @@
                      <a href="javascript:;" onclick="sqzk(${theme.themeid},1)" id="a_zk${theme.themeid}" style="display:none">展开回帖</a>
                      <a href="javascript:;" onclick="sqzk(${theme.themeid},2)" id="a_sq${theme.themeid}" style="display:none">收起回帖</a></p>
                 <%--此处的data-bind是动态的，点击时动态绑定--%>
-                <c:if test="${empty param.quoteid||param.quoteid==0}">
+                <c:if test="${empty param.quoteid1||param.quoteid1==0}">
                     <div class="fabiao public_input" id="dv_doht${theme.themeid}" data-bind="" style="display:none">
 
                         <div id="dv_txt${theme.themeid}"><textarea name="txt_hf" id="txt_hf${theme.themeid}" class="" style="width:745px;height:30px;"></textarea></div>

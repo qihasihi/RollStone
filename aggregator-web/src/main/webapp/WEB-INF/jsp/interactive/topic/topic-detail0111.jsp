@@ -25,7 +25,7 @@
             var pclstype="${param.type}";
             var culoginId="${sessionScope.CURRENT_USER.userid}";
 
-            var isquote=${(empty topic.quoteid||topic.quoteid==0)?1:2};   //1：不是  2:是
+            var isquote=${(empty param.quoteid||param.quoteid==0)?1:2};   //1：不是  2:是
             var edotpr_opt = {
                 autoHeightEnabled:false,
                 toolbars:[
@@ -82,7 +82,7 @@
                     //教师查询
                     <c:if test="${!empty roleStr&&roleStr=='TEACHER'&&!empty param.quoteid&&param.quoteid!=0}">
                         p1=new PageControl({
-                            post_url:'tptopictheme?m=getTopicZT&cloudstatus=3&selectType=-4',
+                            post_url:'tptopictheme?m=getTopicZT&cloudstatus=3&selectType=-4&quoteid1=1',
                             page_id:'page1',
                             page_control_name:"p1",		//分页变量空间的对象名称
                             post_form:document.page1form,		//form
@@ -101,7 +101,7 @@
                     <c:if test="${!empty roleStr&&roleStr=='STUDENT'&&!empty param.quoteid&&param.quoteid!=0}">
                     //加载分页控件  如果是学生，则显示所有的引用专题主题
                             p1=new PageControl({
-                                post_url:'tptopictheme?m=getTopicZT&selectType=-4&status=1',
+                                post_url:'tptopictheme?m=getTopicZT&selectType=-4&status=1&quoteid=1',
                                 page_id:'page1',
                                 page_control_name:"p1",		//分页变量空间的对象名称
                                 post_form:document.page1form,		//form
@@ -119,7 +119,7 @@
                 </c:if>
 
                 pageGo('p1');
-               <c:if test="${empty topic.quoteid||topic.quoteid==0}">
+               <c:if test="${empty param.quoteid||param.quoteid==0}">
                     fancyboxObj=$("#a_click").fancybox({
                         'onClosed':function(){
                             $("#dv_content").hide();
@@ -141,7 +141,7 @@
             function showCreateDiv(dvid){
                 $("#dv_content>div").hide();
                 $("#dv_content #"+dvid).show();	//显示。
-                <c:if test="${empty topic.quoteid||topic.quoteid==0}">
+                <c:if test="${empty param.quoteid||param.quoteid==0}">
                 try{
                     UE.getEditor("themecontent").destroy();
                 }catch(e){}
@@ -340,7 +340,7 @@
           <div class="nextpage" id="page1address"></div>
       </form>
   </div>
-<c:if test="${empty topic.quoteid||topic.quoteid==0}">
+<c:if test="${empty param.quoteid||param.quoteid==0}">
     <div class="public_float jxxt_zhuanti_hdkj_float" id="dv_content" style="display: none">
 <%--新建--%>
         <div id="dv_create" style="display:none">
