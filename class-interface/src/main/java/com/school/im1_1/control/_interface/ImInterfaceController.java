@@ -5491,6 +5491,21 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
+        //首先判断如果是自主测试，需要顺便生成试卷
+        if(tpTaskList.get(0).getTasktype().equals("5")){
+            PaperInfo pentity=new PaperInfo();
+            //  pentity.setpar
+            pentity.setParentpaperid(tpTaskList.get(0).getTaskvalueid());
+            pentity.setCuserid(userList.get(0).getUserid());
+            List<PaperInfo> paperList=this.paperManager.getList(pentity,null);
+            if(paperList==null||paperList.size()<1){
+                if(!this.paperManager.doGenderZiZhuPaper(Long.parseLong(taskid),userList.get(0).getUserid())){
+                    returnJo.put("msg","生成试卷失败!,请稍后重试");
+                    response.getWriter().print(returnJo.toString());
+                    return;
+                }
+            }
+        }
         List<Map<String,Object>> taskList = this.imInterfaceManager.getTaskRemind(tpTaskList.get(0).getTaskid(), userList.get(0).getUserid(), Integer.parseInt(classid));
         List returnList = new ArrayList();
         Map returnMap = new HashMap();
