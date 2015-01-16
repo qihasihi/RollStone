@@ -3037,7 +3037,8 @@ public class TpCourseController extends TaskController{
         if(searchType!=null && searchType.trim().equals("1")){
             //tcInfo.setQuoteid(new Long(0));
             tcInfo.setCourselevel(-3); // -3标识不共享反义，即所有符合共享条件的专题 或者校内共享
-            tcInfo.setFilterquote(1);//去除当前教师引用过的专题
+            if(tcInfo.getFiltergrade()!=null)
+                tcInfo.setFilterquote(1);//去除当前教师引用过的专题
             tcInfo.setCuserid(this.logined(request).getUserid());
         }
         List<TpCourseInfo> courseList = this.tpCourseManager.getList(tcInfo, presult);
