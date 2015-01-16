@@ -2235,7 +2235,7 @@ public class TpCourseController extends TaskController{
                         if(themeInfoList!=null&&themeInfoList.size()>0){
                             for(TpTopicThemeInfo tmpThemeInfo :themeInfoList){
                             	tmpThemeInfo.setQuoteid(tmpThemeInfo.getThemeid());//记录引用的ID
-                            	tmpThemeInfo.setCuserid(this.logined(request).getUserid());
+                            	tmpThemeInfo.setCuserid(tmpThemeInfo.getCuserid());
                                 tmpThemeInfo.setThemeid(this.tpTopicThemeManager.getNextId(true));
                                 tmpThemeInfo.setTopicid(nextTopicid);
                                 tmpThemeInfo.setCourseid(nextCourseId);
