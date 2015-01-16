@@ -4012,7 +4012,7 @@ public class PaperController extends BaseController<PaperInfo>{
             }
         }
         request.setAttribute("classid",clsid);
-        request.setAttribute("classtype",classtype);
+        request.setAttribute("classtype",classList.get(0).get("classtype"));
         request.setAttribute("classes",classList);
         request.setAttribute("questionList",objList);
         request.setAttribute("papertype",piList.get(0).getPapertype());

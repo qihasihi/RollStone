@@ -348,8 +348,8 @@ Created by IntelliJ IDEA.
 <body>
     <div class="subpage_head">
           <span class="back">
-             <a href="paper?m=toMarking&taskid=${param.taskid}&paperid=${param.paperid}">返回</a>
-         <%--<a href="javascript:history.go(-1)">返回</a>--%>
+             <%--<a href="paper?m=toMarking&taskid=${param.taskid}&paperid=${param.paperid}">返回</a>--%>
+         <a href="javascript:history.go(-1)">返回</a>
      </span><span class="ico55"></span><strong>批阅试卷</strong></div>
     <div class="content2">
         <p class="jxxt_zhuanti_rw_piyue_info"><a href="javascript:;" onclick="tabQuestion(2)"  id="nextquestion" class="an_public3">下一题</a>
