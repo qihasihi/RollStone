@@ -25,7 +25,7 @@
             var pclstype="${param.type}";
             var culoginId="${sessionScope.CURRENT_USER.userid}";
 
-            var isquote=${(empty param.quoteid||param.quoteid==0)?1:2};   //1：不是  2:是
+            var isquote=${(empty param.quoteid1||param.quoteid1==0)?1:2};   //1：不是  2:是
             var edotpr_opt = {
                 autoHeightEnabled:false,
                 toolbars:[
@@ -60,9 +60,9 @@
 
                 //加载分页控件
                 //查询基本的不是引用的主题
-                <c:if test="${empty param.quoteid||param.quoteid==0}">
+                <c:if test="${empty param.quoteid1||param.quoteid1==0}">
                     p1=new PageControl({
-                        post_url:'tptopictheme?m=getTopicZT&&selectType=-3&status=1',
+                        post_url:'tptopictheme?m=getTopicZT&&selectType=-3',
                         page_id:'page1',
                         page_control_name:"p1",		//分页变量空间的对象名称
                         post_form:document.page1form,		//form
@@ -78,9 +78,9 @@
                     });
                  </c:if>
                 //查询引用的主题
-                <c:if test="${!empty param.quoteid&&param.quoteid==1}">
+                <c:if test="${!empty param.quoteid1&&param.quoteid1==1}">
                     //教师查询
-                    <c:if test="${!empty roleStr&&roleStr=='TEACHER'&&!empty param.quoteid&&param.quoteid!=0}">
+                    <c:if test="${!empty roleStr&&roleStr=='TEACHER'&&!empty param.quoteid1&&param.quoteid1!=0}">
                         p1=new PageControl({
                             post_url:'tptopictheme?m=getTopicZT&cloudstatus=3&selectType=-4&quoteid1=1',
                             page_id:'page1',
@@ -98,10 +98,10 @@
                         });
                     </c:if>
                     //学生查询
-                    <c:if test="${!empty roleStr&&roleStr=='STUDENT'&&!empty param.quoteid&&param.quoteid!=0}">
+                    <c:if test="${!empty roleStr&&roleStr=='STUDENT'&&!empty param.quoteid1&&param.quoteid1!=0}">
                     //加载分页控件  如果是学生，则显示所有的引用专题主题
                             p1=new PageControl({
-                                post_url:'tptopictheme?m=getTopicZT&selectType=-4&status=1&quoteid=1',
+                                post_url:'tptopictheme?m=getTopicZT&selectType=-4&quoteid1=1',
                                 page_id:'page1',
                                 page_control_name:"p1",		//分页变量空间的对象名称
                                 post_form:document.page1form,		//form
@@ -119,7 +119,6 @@
                 </c:if>
 
                 pageGo('p1');
-               <c:if test="${empty param.quoteid||param.quoteid==0}">
                     fancyboxObj=$("#a_click").fancybox({
                         'onClosed':function(){
                             $("#dv_content").hide();
@@ -132,8 +131,6 @@
 //                    });
 
 
-                </c:if>
-
 
             })
 
@@ -141,7 +138,7 @@
             function showCreateDiv(dvid){
                 $("#dv_content>div").hide();
                 $("#dv_content #"+dvid).show();	//显示。
-                <c:if test="${empty param.quoteid||param.quoteid==0}">
+                <c:if test="${empty param.quoteid1||param.quoteid1==0}">
                 try{
                     UE.getEditor("themecontent").destroy();
                 }catch(e){}
@@ -276,7 +273,7 @@
   <body>
   <div class="subpage_head">
       <span class="back">
-        <c:if test="${empty param.quoteid||param.quoteid==0}">
+        <c:if test="${empty param.quoteid1||param.quoteid1==0}">
               <c:if test="${!empty param.taskid}">
                   <%if(isStudent){%>
                   <a href="task?toStuTaskIndex&courseid=${topic.courseid}">返回</a>
@@ -288,19 +285,19 @@
                 <a href="tptopic?m=index&courseid=${topic.courseid}">返回</a>
             </c:if>
         </c:if>
-        <c:if test="${!empty param.quoteid&&param.quoteid!=0}">
+        <c:if test="${!empty param.quoteid1&&param.quoteid1!=0}">
             <a href="tptopic?m=viewTopic&topicid=${topic.topicid}">返回</a>
         </c:if>
     </span>
       <span class="ico55"></span><strong>
-    <c:if test="${empty param.quoteid||param.quoteid==0}">
+    <c:if test="${empty param.quoteid1||param.quoteid1==0}">
       论题详情
     </c:if>
-    <c:if test="${!empty param.quoteid&&param.quoteid!=0}">
+    <c:if test="${!empty param.quoteid1&&param.quoteid1!=0}">
             参考主帖
     </c:if>
      </strong>
-    <c:if test="${empty param.quoteid||param.quoteid==0}">
+    <c:if test="${empty param.quoteid1||param.quoteid1==0}">
         <c:if test="${!empty roleStr&&roleStr!='STUDENT'}">
             <span class="font-black public_input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分班级查看：
              <select name="select" onchange="pclsid=this.value.split('.')[0];pclstype=this.value.split('.')[1];pageGo('p1');">
@@ -322,14 +319,14 @@
   </div>
 
   <div class="content2">
-      <c:if test="${empty param.quoteid||param.quoteid==0}">
+      <c:if test="${empty param.quoteid1||param.quoteid1==0}">
           <div class="jxxt_zhuanti_hdkj_nr">
               <p class="f_right">主帖数：<span id="sp_zt_num">${topic.themecount }</span>&nbsp;&nbsp;&nbsp;回帖数：<span id="sp_pl_num">${topic.restorecount}</span></p>
               <p><strong>${topic.topictitle }</strong></p>
               <p>　　${topic.topiccontent }</p>
               <p>
             <c:if test="${!empty isHasCKZT&&isHasCKZT>0}">
-                  <a href="tptopic?m=viewTopic&topicid=${topic.topicid}&quoteid=1" class="font-darkblue f_right">参考主帖</a>
+                  <a href="tptopic?m=viewTopic&topicid=${topic.topicid}&quoteid1=1" class="font-darkblue f_right">参考主帖</a>
               </c:if>
                   <a href="javascript:;" onclick="showCreateDiv('dv_create')"  class="font-darkblue"><span class="ico36"></span>新建主帖</a></p>
           </div>
@@ -340,7 +337,6 @@
           <div class="nextpage" id="page1address"></div>
       </form>
   </div>
-<c:if test="${empty param.quoteid||param.quoteid==0}">
     <div class="public_float jxxt_zhuanti_hdkj_float" id="dv_content" style="display: none">
 <%--新建--%>
         <div id="dv_create" style="display:none">
@@ -401,8 +397,6 @@
     </div>
     <a id="a_click" href="#dv_content">
     </a>
-</c:if>
-
  <%@include file="/util/foot.jsp" %>
   </body>
 </html>

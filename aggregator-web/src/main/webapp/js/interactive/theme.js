@@ -293,7 +293,7 @@ function showTdSpan(themeid){
     var cgname=$("#cgn"+themeid).val();
     var genderDiv='<div id="show_tb_td_content" ';
     genderDiv+='style="border:1px solid green;position:absolute;background-color:white;display:none;left:'+(mousePostion.x+1)+'px;top:'+(mousePostion.y)+'px">';
-    genderDiv+="<p style='padding:5px 5px 2px 5px'>"+(cgrade.length>0?cgrade:'无')+"</p>";
+//    genderDiv+="<p style='padding:5px 5px 2px 5px'>"+(cgrade.length>0?cgrade:'无')+"</p>";
     genderDiv+="<p style='padding:2px 5px 2px 5px'>"+(cclsName.length>0?cclsName:'无')+"</p>";
     genderDiv+="<p style='padding:2px 5px 5px 5px'>"+(cgname.length>0?cgname:'无')+"</p>";
     genderDiv+='</div>';

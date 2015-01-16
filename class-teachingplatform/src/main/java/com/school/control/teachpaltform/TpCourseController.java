@@ -6,12 +6,14 @@ import com.school.entity.*;
 
 import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
+import com.school.entity.teachpaltform.interactive.TpThemeReplyInfo;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
 import com.school.manager.*;
 import com.school.manager.inter.*;
 
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.interactive.ITpThemeReplyManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 
@@ -103,6 +105,8 @@ public class TpCourseController extends TaskController{
     private IResourceManager resourceManager;
     @Autowired
     private ITpCourseRelatedManager tpCourseRelatedManager;
+    @Autowired
+    private ITpThemeReplyManager tpThemeReplyManager;
 
     /**
      * 进入教师课题页
@@ -2240,7 +2244,8 @@ public class TpCourseController extends TaskController{
                                 tmpThemeInfo.setTopicid(nextTopicid);
                                 tmpThemeInfo.setCourseid(nextCourseId);
                                 tmpThemeInfo.setCloudstatus(3);// 3：通过
-                                tmpThemeInfo.setStatus(2L);//引用专题下  1：显示   2：不显示
+                                tmpThemeInfo.setStatus(1L);//引用专题下  1：显示   2：不显示
+                                tmpThemeInfo.setPinglunshu(tmpThemeInfo.getPinglunshu());
                                 sql=new StringBuilder();
                                 objList=this.tpTopicThemeManager.getSaveSql(tmpThemeInfo,sql);
                                 if(sql!=null&&objList!=null){
@@ -2257,8 +2262,37 @@ public class TpCourseController extends TaskController{
                                 	  //得到comment_content的更新语句
                                     this.tpTopicThemeManager.getArrayUpdateLongText("tp_topic_theme_info", "theme_id", "comment_content"
                                             , tmpThemeInfo.getCommentcontent(), tmpThemeInfo.getThemeid().toString(),sqlListArray,objListArray);
-
                                 }
+                                //根据引用的ID,得到相关评论
+                                TpThemeReplyInfo tr1=new TpThemeReplyInfo();
+                                tr1.setThemeid(tmpThemeInfo.getQuoteid());
+                                tr1.setToreplyid(-1L);
+                                List<TpThemeReplyInfo> trList=this.tpThemeReplyManager.getList(tr1,null);
+                                if(trList!=null&&trList.size()>0){
+                                    for (TpThemeReplyInfo trTmp:trList){
+                                        if(trTmp!=null){
+                                            trTmp.setThemeid(tmpThemeInfo.getThemeid());
+                                            trTmp.setToreplyid(null);
+                                            Long oldReplyId=trTmp.getReplyid();
+                                            Long nreplyId=this.tpThemeReplyManager.getNextId(true);
+                                            trTmp.setReplyid(nreplyId);
+                                            trTmp.setCtime(trTmp.getCtime());
+                                            StringBuilder sqlbuilder=new StringBuilder();
+                                            objList=this.tpThemeReplyManager.getSaveSql(trTmp,sqlbuilder);
+                                            if(sqlbuilder!=null&&objList!=null){
+                                                sqlListArray.add(sqlbuilder.toString());
+                                                objListArray.add(objList);
+                                            }
+                                            if(trTmp.getReplycontent()!=null){
+                                                //得到theme_content的更新语句
+                                                this.tpTopicThemeManager.getArrayUpdateLongText("tp_theme_reply_info", "reply_id", "reply_content"
+                                                        , trTmp.getReplycontent(), trTmp.getReplyid().toString(),sqlListArray,objListArray);
+                                            }
+                                            loadReplyInfo(oldReplyId,trTmp.getReplyid(),tmpThemeInfo.getThemeid(),sqlListArray,objListArray);
+                                        }
+                                    }
+                                }
+
                             }
                         }
                         //引用的TOPIC_ID
@@ -2292,6 +2326,36 @@ public class TpCourseController extends TaskController{
         response.getWriter().print(je.toJSON());
     }
 
+    private void loadReplyInfo(Long oreplyid,Long nreplyid,Long themeid,List<String> sqlListArray, List<List<Object>> objListArray){
+        //加载回帖
+        TpThemeReplyInfo tr=new TpThemeReplyInfo();
+        tr.setToreplyid(oreplyid);
+        List<TpThemeReplyInfo> tpThemeList=this.tpThemeReplyManager.getList(tr,null);
+        if(tpThemeList!=null&&tpThemeList.size()>0){
+            for (TpThemeReplyInfo trTmp:tpThemeList){
+                if(trTmp!=null){
+                    StringBuilder sqlbuilder=new StringBuilder();
+                    trTmp.setToreplyid(nreplyid);
+                    Long oldReplyId=trTmp.getReplyid();
+                    Long newThemeId=this.tpThemeReplyManager.getNextId(true);
+                    trTmp.setReplyid(newThemeId);
+                    trTmp.setThemeid(themeid);
+                    trTmp.setCtime(trTmp.getCtime());
+                    List<Object> objList=this.tpThemeReplyManager.getSaveSql(trTmp,sqlbuilder);
+                    if(sqlbuilder!=null&&objList!=null){
+                        sqlListArray.add(sqlbuilder.toString());
+                        objListArray.add(objList);
+                    }
+                    if(trTmp.getReplycontent()!=null){
+                        //得到theme_content的更新语句
+                        this.tpTopicThemeManager.getArrayUpdateLongText("tp_theme_reply_info", "reply_id", "reply_content"
+                                , trTmp.getReplycontent(), trTmp.getReplyid().toString(),sqlListArray,objListArray);
+                    }
+                    loadReplyInfo(oldReplyId,trTmp.getReplyid(),themeid,sqlListArray,objListArray);
+                }
+            }
+        }
+    }
 
 
     /**

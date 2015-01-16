@@ -123,11 +123,16 @@ public class TpThemeReplyDAO extends CommonDAO<TpThemeReplyInfo> implements
 			objList.add(tpthemereplyinfo.getReplyid());
 		} else
 			sqlbuilder.append("null,");
-		if (tpthemereplyinfo.getTopicid() != null) {
-			sqlbuilder.append("?,");
-			objList.add(tpthemereplyinfo.getTopicid());
-		} else
-			sqlbuilder.append("null,");
+        if (tpthemereplyinfo.getTopicid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpthemereplyinfo.getTopicid());
+        } else
+            sqlbuilder.append("null,");
+        if (tpthemereplyinfo.getToreplyid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpthemereplyinfo.getToreplyid());
+        } else
+            sqlbuilder.append("null,");
 		
 		if (presult != null && presult.getPageNo() > 0
 				&& presult.getPageSize() > 0) {
@@ -195,7 +200,14 @@ public class TpThemeReplyDAO extends CommonDAO<TpThemeReplyInfo> implements
             objList.add(tpthemereplyinfo.getTorealname());
         } else
             sqlbuilder.append("null,");
-		sqlbuilder.append("?)}");
+
+        if (tpthemereplyinfo.getCtimeString() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpthemereplyinfo.getCtimeString());
+        } else
+            sqlbuilder.append("null,");
+
+        sqlbuilder.append("?)}");
 		return objList;
 	}
 
