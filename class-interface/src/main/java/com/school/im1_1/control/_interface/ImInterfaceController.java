@@ -5492,7 +5492,7 @@ public class ImInterfaceController extends TaskController {
             return;
         }
         //首先判断如果是自主测试，需要顺便生成试卷
-        if(tpTaskList.get(0).getTasktype().equals("5")){
+        if(tpTaskList.get(0).getTasktype().intValue()==5){
             PaperInfo pentity=new PaperInfo();
             //  pentity.setpar
             pentity.setParentpaperid(tpTaskList.get(0).getTaskvalueid());
