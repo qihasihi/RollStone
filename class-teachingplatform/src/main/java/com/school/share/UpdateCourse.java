@@ -1400,7 +1400,14 @@ public class UpdateCourse extends TimerTask{
                                 Integer type=Integer.parseInt(typeObj.toString().trim());
                                 res.setResdegree(type==3?1:4);// type=3=标准  如果是type==3  则szschool  resdegree=1 否则是4（已删除）
                                 res.setSharestatus(type==3?2:3);// type=3=标准  如果是type==3  则szschool  sharetype=2(云端共享) 否则是3：不共享
-                                res.setIsmicopiece(Ismicopiece.toString());
+
+                                String ismic=Ismicopiece.toString();
+                                switch(Integer.parseInt(Ismicopiece.toString())){
+                                    case 0: // 小祁要改成-2
+                                        ismic="-2";
+                                        break;
+                                }
+                                res.setIsmicopiece(ismic);
                                 //组织数据
                                 sqlbuilder=new StringBuilder();
                                 objList=resourceManager.getUpdateSql(res,sqlbuilder);
