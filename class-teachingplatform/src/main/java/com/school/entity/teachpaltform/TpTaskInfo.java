@@ -311,7 +311,7 @@ public class TpTaskInfo implements Serializable {
     public Object getTaskobjnameremind() {
         if(taskobjname==null)return null;
         String content=taskobjname.toString();
-        if(content!=null&&content.trim().length()>0){
+       /* if(content!=null&&content.trim().length()>0){
 //            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 //            String localName=request.getSession().getAttribute("IP_PROC_NAME").toString();
 //            String t=localName+UtilTool.utilproperty.getProperty("RESOURCE_QUESTION_IMG_PARENT_PATH")+"/"+this.getTaskvalueid()+"/";
@@ -324,7 +324,7 @@ public class TpTaskInfo implements Serializable {
                 //content=content.replace(" ", "&nbsp;");
                 //s=s.replace("\"", "\\"+"\"");//如果原文含有双引号
             }
-        }
+        }*/
         return content;
     }
     public Object getTaskobjname() {
