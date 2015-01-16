@@ -53,6 +53,8 @@ public class ImInterFaceControllerTest {
                 .andExpect(status().isOk()).andReturn().getRequest();
 
 
+        request.removeParameter("username");
+        request.removeParameter("password");
         response=new MockHttpServletResponse();
     }
     @After
