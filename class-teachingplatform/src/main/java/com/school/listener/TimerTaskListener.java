@@ -203,7 +203,7 @@ public class TimerTaskListener implements ServletContextListener {
 //            rsRankDate = this.addDay(rsRankDate, 1);
 //        }
      //   rsRankTimer.schedule(new UpdateHotResData(arg0.getServletContext()),rsRankDate,PERIOD_DAY);
-        /**************************三天执行一次 凌晨3点00--3.30开始执行专题下行***********************************/
+        /**************************每天执行一次 凌晨3点00--3.30开始执行专题下行***********************************/
         dcTimer=new Timer(true);
         Calendar  dCourseCal = Calendar.getInstance();
         //每天定点执行
@@ -215,8 +215,10 @@ public class TimerTaskListener implements ServletContextListener {
         if (dcdate.before(new Date())) {
             dcdate = this.addDay(dcdate, 1);
         }
-        long courseCal=PERIOD_DAY*3;
-        dcTimer.schedule(new UpdateCourse(arg0.getServletContext()),dcdate,courseCal);
+        //long courseCal=PERIOD_DAY*3;
+        dcTimer.schedule(new UpdateCourse(arg0.getServletContext()),dcdate,PERIOD_DAY);
+
+
         /**************************每天凌晨4点00--4.30开始执行专题下行***********************************/
         upEttColumn=new Timer(true);
         Calendar  ueCourseCal = Calendar.getInstance();
