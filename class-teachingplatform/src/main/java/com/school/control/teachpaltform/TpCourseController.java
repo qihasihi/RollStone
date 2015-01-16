@@ -2264,7 +2264,7 @@ public class TpCourseController extends TaskController{
                         //ÒýÓÃµÄTOPIC_ID
                         tmpTopic.setQuoteid(tmpTopic.getTopicid());
                         tmpTopic.setCourseid(nextCourseId);
-                        tmpTopic.setCuserid(this.logined(request).getUserid());
+                        tmpTopic.setCuserid(tmpTopic.getCuserid());
                         tmpTopic.setTopicid(nextTopicid);
                         sql=new StringBuilder();
                         objList=this.tpTopicManager.getSaveSql(tmpTopic,sql);
