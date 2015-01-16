@@ -1,11 +1,12 @@
 package com.school.entity.resource;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import com.school.entity.UserInfo;
 import com.school.util.UtilTool;
 import com.school.util.UtilTool.DateType;
+
 import javax.persistence.Entity;
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 public class ResourceInfo implements java.io.Serializable {
@@ -630,7 +631,7 @@ public class ResourceInfo implements java.io.Serializable {
 
     public java.lang.String getResintroduce() {
         if(resintroduce!=null){
-            resintroduce=resintroduce.replaceAll("\\\\","/");
+            resintroduce=resintroduce.replaceAll("\\\\","/").replaceAll("\'","¡¯");
         }
         return resintroduce;
     }
@@ -689,7 +690,7 @@ public class ResourceInfo implements java.io.Serializable {
     }
 
     public java.lang.String getResname() {
-        return resname;
+        return resname.replaceAll("\'","¡¯");
     }
 
     public void setResname(java.lang.String resname) {
