@@ -186,7 +186,11 @@
 				  <input type="hidden" name="m" value="exportClsExcel"/>
 				</form>
     <h4>班级学生列表</h4>
-    <p class="t_c"><a id="copyFromOtherClass" href="javascript:toCopyClassStudent(${clsinfo.classid })"  class="an_big_long">从其他班级复制学生</a>&nbsp;&nbsp;&nbsp;&nbsp;<a id="exportStudent" href="javascript:showModel('loadExcel')" class="an_big_long">从模版导入学生</a></p>
+    <p class="t_c"><a id="copyFromOtherClass" href="javascript:toCopyClassStudent(${clsinfo.classid })"  class="an_big_long">从其他班级复制学生</a>
+        <%if(u!=null&&(u.getIsactivity()==null||u.getIsactivity()==0)){%>
+            &nbsp;&nbsp;&nbsp;&nbsp;<a id="exportStudent" href="javascript:showModel('loadExcel')" class="an_big_long">从模版导入学生</a>
+        <%}%>
+    </p>
     <table id="initItemList" border="0" cellpadding="0" cellspacing="0" class="public_tab2 m_t_10">
       <colgroup span="3" class="w200"></colgroup>
       <tr>

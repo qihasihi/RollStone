@@ -161,12 +161,12 @@ request.setAttribute("isSetService",true);
    <div class="contentL">
     <ul> 
     <li class="crumb"><a href="user?m=list">查询</a></li>
-    <c:if test="${}">
+    <%if(u!=null&&(u.getIsactivity()==null||u.getIsactivity()==0)){%>
         <li><a href="user?m=toAdd">添加</a></li>
-    </c:if>
-        <% if(visible){%>
-            <li><a href="role?m=list">角色管理</a></li>
-        <%}%>
+    <%}%>
+    <% if(visible){%>
+        <li><a href="role?m=list">角色管理</a></li>
+    <%}%>
     </ul>
    </div>
    <div class="clear"></div>

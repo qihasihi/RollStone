@@ -197,8 +197,10 @@ jcore.jsonrpc.common.JsonRpcRegister.registerObject(request,"PageUtilTool",com.s
       </table>
     </div>
     <h6></h6>
-    <p class="t_c"><a href="javascript:checkClass('addClass')" class="an_big">新建班级</a>&nbsp;&nbsp;&nbsp;&nbsp;
-    <a id="importStd" href="javascript:showModel('loadExcel')" class="an_big">导入学生</a>
+    <p class="t_c"><a href="javascript:checkClass('addClass')" class="an_big">新建班级</a>
+    <%if(u!=null&&(u.getIsactivity()==null||u.getIsactivity()==0)){%>
+        &nbsp;&nbsp;&nbsp;&nbsp;<a id="importStd" href="javascript:showModel('loadExcel')" class="an_big">导入学生</a>
+    <%}%>
     &nbsp;&nbsp;&nbsp;&nbsp;
     <c:if test="${allowAutoLevel==1}">
    	 <a id="autoLvUp" href="javascript:checkClass('levelup') "  class="an_big">自动升级</a></p>
