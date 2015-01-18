@@ -218,14 +218,12 @@ public class TestController extends BaseController<String>{
         tmpUser.setDcschoolid(schoolid);
         IUserManager userManager=this.getManager(UserManager.class);
         PageResult presult=new PageResult();
-        presult.setPageSize(100);
+        presult.setPageSize(1);
         presult.setPageNo(0);
         while(true){
             presult.setPageNo(presult.getPageNo()+1);
             List<UserInfo> uList=userManager.getList(tmpUser,presult);
             if(uList==null||uList.size()<1)break;
-            for(UserInfo u:uList){
-            }
             //开始同步
             if(EttInterfaceUserUtil.delUserBase(uList))
                 EttInterfaceUserUtil.addUserBase(uList);
