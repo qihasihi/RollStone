@@ -42,6 +42,7 @@ public class UtilTool implements java.io.Serializable {
     /************************** 全局 常量********************** */
     public static boolean isSynchroFileType=false;//是否同步了资源文件类型
     private final static String KEY="ettpLatforMsiZhonGJ8";
+    public static String ETT_CODE="abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210";
     /**
      * 1:公告   2:网上公示
      */
@@ -2134,5 +2135,36 @@ public class UtilTool implements java.io.Serializable {
         String fileSystemCloudUpload=publicFileSystemIpPort+UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD")+"/";
         if(request.getSession().getAttribute("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD")==null||!request.getSession().getAttribute("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD").toString().equals(fileSystemCloudUpload))
             request.getSession().setAttribute("RESOURCE_CLOUD_DOWN_DIRECTORY_HEAD", fileSystemCloudUpload);
+    }
+
+
+
+
+    /**
+     *   lineFlag int 线路类型 1 电信 2联通
+     resourceId long 资源id
+     time long 时间戳
+     md5 string MD5加密串
+     * @param resid
+     * @return
+     */
+   public static String getMicVideoUrl(String resid,String line){
+        if(resid==null||resid.trim().length()<1)
+            return "";
+        String lineFlag=line;
+        String resourceId=resid;
+        String time=System.currentTimeMillis()+"";
+        String md5= MD5_NEW.getMD5ResultCode(resourceId+lineFlag+time,ETT_CODE);
+        //String url="http://wangjie.etiantian.com:8080/ett20/study/common/sxGetVideoUrl.jsp";
+        String url="http://123.103.19.218:16180/ett20/study/common/sxGetVideoUrl.jsp";
+        Map<String,String>map=new HashMap<String, String>();
+        map.put("lineFlag",lineFlag);
+        map.put("resourceId",resourceId);
+        map.put("time",time);
+        map.put("md5",md5);
+        JSONObject obj=UtilTool.sendPostUrl(url,map,"utf-8");
+        if(obj!=null)
+            return obj.toString();
+        return "";
     }
 }

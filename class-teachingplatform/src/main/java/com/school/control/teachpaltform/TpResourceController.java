@@ -3954,6 +3954,22 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         response.getWriter().print(je.toJSON());
     }
 
+    @RequestMapping(params="loadMicVideoJsp",method={RequestMethod.POST,RequestMethod.GET})
+    public void loadMicVideoJsp(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String resid=request.getParameter("resid");
+        String lineFlag=request.getParameter("line");
+        if(lineFlag==null||lineFlag.trim().length()<1)
+            lineFlag="1";
+        if(resid==null||resid.trim().length()<1){
+            je.setMsg("resid is null!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        String url=UtilTool.getMicVideoUrl(resid,lineFlag);
+        response.getWriter().print(url);
+    }
+
     /**
      *后台调用接口
      * @param urlstr

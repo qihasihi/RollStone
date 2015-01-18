@@ -8,6 +8,7 @@
 <%@page import="com.school.entity.UserInfo"%>
 <%@page import="com.school.entity.UserIdentityInfo"%>
 <%@page import="java.math.BigDecimal"%>
+<%@ page import="com.school.util.MD5_NEW" %>
 <%
     /**
      * 数据库连接公用文件
@@ -196,7 +197,9 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 			return false;
 		}*/ 
 		return true;
-} %>
+}
+
+%>
 <%--<script type="text/javascript">--%>
     <%--var uuploadfile='<%=uuploadfile%>';--%>
 <%--</script>--%>

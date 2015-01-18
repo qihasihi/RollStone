@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 public class PropertiesFileConfig {
     //几个配置文件的相对地址，
     public static final String[] propertiesConfigPath={
-            "/../../../../aggregator-class/src/main/resources/properties/ethosStudentScoreRule.properties",
-            "/../../../../aggregator-class/src/main/resources/properties/msg.properties",
-            "/../../../../aggregator-class/src/main/resources/properties/SimpleResUtil.properties",
-            "/../../../../aggregator-class/src/main/resources/properties/stuScoreAwardUtil.properties",
-            "/../../../../aggregator-web/profiles/dev/resources/properties/util.properties",
+            "/../../../aggregator-class/src/main/resources/properties/ethosStudentScoreRule.properties",
+            "/../../../aggregator-class/src/main/resources/properties/msg.properties",
+            "/../../../aggregator-class/src/main/resources/properties/SimpleResUtil.properties",
+            "/../../../aggregator-class/src/main/resources/properties/stuScoreAwardUtil.properties",
+            "/../../../aggregator-web/profiles/dev/resources/properties/util.properties",
     };
     public static String getPropertiesConfigPath(int i){
         ServletRequestAttributes srabutes =(ServletRequestAttributes)RequestContextHolder.getRequestAttributes();

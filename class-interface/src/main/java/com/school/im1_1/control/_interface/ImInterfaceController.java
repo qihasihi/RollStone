@@ -5668,6 +5668,7 @@ public class ImInterfaceController extends TaskController {
                         pentity.setCuserid(userList.get(0).getUserid());
                         List<PaperInfo> paperList=this.paperManager.getList(pentity, null);
                         paperid=paperList.get(0).getPaperid();
+
                     }
                 }
                 List<PaperQuestion>pqList=null;

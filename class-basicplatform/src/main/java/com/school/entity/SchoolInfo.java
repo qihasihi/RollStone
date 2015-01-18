@@ -18,6 +18,42 @@ public class SchoolInfo {
     private String name;
     private Date ctime;
     private String ip;
+    private String country;
+    private String province;
+    private String city;
+    private Integer isactive;
+
+    public Integer getIsactive() {
+        return isactive;
+    }
+
+    public void setIsactive(Integer isactive) {
+        this.isactive = isactive;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
     private Integer enable;
 

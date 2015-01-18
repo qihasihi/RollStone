@@ -690,7 +690,9 @@ public class ResourceInfo implements java.io.Serializable {
     }
 
     public java.lang.String getResname() {
-        return (resname==null?null:resname.replaceAll("\'","¡¯"));
+        if(resname!=null&&resname.trim().length()>0)
+            return resname.replaceAll("\'","¡¯");
+        return resname;
     }
 
     public void setResname(java.lang.String resname) {

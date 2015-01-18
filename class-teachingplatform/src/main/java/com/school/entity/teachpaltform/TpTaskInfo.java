@@ -308,6 +308,10 @@ public class TpTaskInfo implements Serializable {
         this.criteria = criteria;
     }
 
+    /**
+     * 手机任务提醒内容
+     * @return
+     */
     public Object getTaskobjnameremind() {
         if(taskobjname==null)return null;
         String content=taskobjname.toString();

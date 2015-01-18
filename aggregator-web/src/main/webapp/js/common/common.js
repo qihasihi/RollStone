@@ -144,6 +144,26 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
 //        }
     };
 
+    var lastname="";
+    if (typeof(filepath) != 'undefined' && filepath.Trim().length > 0 && filepath.indexOf(".") != -1)
+        lastname = filepath.substring(filepath.lastIndexOf(".")).toLowerCase();
+    jwplayer.key='TS4qsaxnmU61G+MTcWh8YKllWcQ=';
+    if(resid>0&&lastname.indexOf('.mp4')!=-1){
+        $.getJSON("tpres?loadMicVideoJsp", {resid: resid, line:1}, function (data) {
+            if (typeof data.videoUrl!='undefined'&&data.videoUrl.length>0) {
+                filepath=data.videoUrl;
+                imagepath=data.imageUrl;
+                jwplayerSetup.file=filepath;
+                jwplayerSetup.image=imagepath;
+                jwplayer(playeraddressid).setup(jwplayerSetup);
+            }
+        });
+    }else{
+        jwplayer(playeraddressid).setup(jwplayerSetup);
+    }
+
+
+
     if(typeof(isshowBar)!="undefined"&&!isshowBar){
         jwplayerSetup.controls=false;
     }

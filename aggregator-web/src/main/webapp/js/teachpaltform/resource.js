@@ -1492,9 +1492,9 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
         lastnameobj = lastname + lastnameobj;
 
     fileSystemIpPort=fileSystemIpPort.substring(0,fileSystemIpPort.indexOf("fileoperate"))+"fileoperate/";
-    if(resid>0)
+    if(resid>0){
         fileSystemIpPort+="/clouduploadfile/";
-    else
+    }else
         fileSystemIpPort+="/uploadfile/";
 
     var filepath = fileSystemIpPort  + resmd5id + "/" + filemd5name + lastnameobj;
@@ -1506,12 +1506,14 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
     if (typeof(imagepath) != "undefined" && imagepath.Trim().length > 0)
         imagepath=bathPath+imagepath;
 
-    var jwplayerSetup = {
+
+  /*  var jwplayerSetup = {
         'id': 'player'+new Date().getTime(),
         'width': '560',
         'height': '500',
-        'playlist': ''+bathPath+'util/rss.jsp?filepath='+filepath+"&imgurl="+imagepath,
-            //[{file:filepath}],
+        //'playlist': ''+bathPath+'util/rss.jsp?filepath='+filepath+"&imgurl="+imagepath+"&resid="+resid+"&suffix="+lastname,
+        //[{file:filepath}],
+        //'file':filepath,
         'primary': 'flash',
         'controlbar': 'over',
         'controlbar.idlehide': 'true',
@@ -1522,58 +1524,59 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
                     autostart: "false",
                     menu: "false"
                 }
-            },
-            {type: 'html5'}
+            }
+            ,{type: 'html5'}
         ], events: {
             onReady: function () {
-               jwplayer().play();
+                jwplayer().play();
             }
         }
     };
+*/
 
+
+    var jwplayerSetup = {
+        'id': 'player'+new Date().getTime(),
+        'width': '560',
+        'height': '500',
+        //'playlistfile': "/ett20/studyrvice_class/free/toxml.jsp?resourceID=<%=resourceID%>&frame=1",
+
+        'primary': 'flash',
+        'controlbar':'over',
+        'controlbar.idlehide':'false',
+        'modes': [
+            {type: 'flash', src: 'js/common/videoPlayer/new/jwplayer.flash.swf', //
+                config: {
+                    provider: "http",
+                    autostart:"false",
+                    menu:"false"
+                }
+            }
+            ,{type: 'html5'}
+        ]
+//        ,events:{
+//            onReady:function(){
+//                jwplayer().play();
+//            }
+//        }
+    };
     if (typeof(imagepath) != "undefined" && imagepath.Trim().length > 0)
         jwplayerSetup.image = imagepath;
-    /*var jwplayerSetup={
-     'width': '667',
-     'height': '520',
-     //'playlist': "/ett20/studyrvice_class/free/toxml_jwp6.jsp?resourceID=<%=resourceID%>&frame=1",
-     'file':  filepath,
-     analytics: {
-     cookies: false,
-     enabled: false
-     },
-     primary: "flash",
-     abouttext: "Etiantian.com",
-     aboutlink: "http://www.etiantian.com",
-     autostart: "false",
-     events:{
-     onReady:function(){
-     jwplayer().play();
-     }
-     }
-     }; */
 
+    jwplayer.key='TS4qsaxnmU61G+MTcWh8YKllWcQ=';
+    if(resid>0&&lastname.indexOf('.mp4')!=-1){
+        $.getJSON("tpres?loadMicVideoJsp", {resid: resid, line:1}, function (data) {
+            if (typeof data.videoUrl!='undefined'&&data.videoUrl.length>0) {
+                jwplayerSetup.file=data.videoUrl;
+                jwplayerSetup.image=data.imageUrl;
+                jwplayer(playeraddressid).setup(jwplayerSetup);
 
-    // 加载
-
-
-
-
-
-  /*  if(typeof jwplayer(playeraddressid)!='undefined'&&$("object[id='div_show']").length>0){
-        //  $("object[id='div_show']").parent().after('<div id="div_show" style="width:560px;height:500px;"></div>');
-        //jwplayer(playeraddressid).destroyPlayer();
-        //  jwplayer(playeraddressid).remove();
-        jwplayer(playeraddressid).load( [{
-            sources: [{
-                file: filepath
-            }]
-        }]);
-    }else */
+            }
+        });
+    }else{
+        jwplayerSetup.playlist=bathPath+'util/rss.jsp?filepath='+filepath+"&imgurl="+imagepath+"&resid="+resid+"&suffix="+lastname,
         jwplayer(playeraddressid).setup(jwplayerSetup);
-
-
-
+    }
     if (isshow)
         showModel("swfplayer", false);
 }
@@ -1765,11 +1768,14 @@ function convertDocResource(resid) {
  * @return
  */
 function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, resdetailid, swfpath, liobj) {
+    var lastname = "";
+    if (typeof(fname) != 'undefined' && fname.Trim().length > 0 && fname.indexOf(".") != -1)
+        lastname = fname.substring(fname.lastIndexOf(".")).toLowerCase();
     //获取文件路径
     fileSystemIpPort=fileSystemIpPort.substring(0,fileSystemIpPort.indexOf("fileoperate"))+"fileoperate/";
-    if(resid>0)
+    if(resid>0){
         fileSystemIpPort+="/clouduploadfile/";
-    else
+    }else
         fileSystemIpPort+="/uploadfile/";
     //转换文件
     checkConvertStatus(resid);
@@ -1817,9 +1823,7 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
 
 
     $("#p_tishi").html('');
-    var lastname = "";
-    if (typeof(fname) != 'undefined' && fname.Trim().length > 0 && fname.indexOf(".") != -1)
-        lastname = fname.substring(fname.lastIndexOf(".")).toLowerCase();
+
 
     if (type == 1) {
         htm = "<img src='" + preimg + "' width='560' height='370'  title='" + fname + "' id='img_res'  />";
