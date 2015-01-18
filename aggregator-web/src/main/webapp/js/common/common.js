@@ -250,7 +250,7 @@ function loadSWFPlayerLitterView(filepath,playeraddressid,imagepath,resid,width,
     }
     if(typeof(imagepath)!="undefined"&&imagepath.Trim().length>0)
         jwplayerSetup.image=imagepath;
-    jwplayerSetup.key='TS4qsaxnmU61G+MTcWh8YKllWcQ=';
+    jwplayer.key='TS4qsaxnmU61G+MTcWh8YKllWcQ=';
     if(resid>0&&lastname.indexOf('.mp4')!=-1){
         $.getJSON("tpres?loadMicVideoJsp", {resid: resid, line:1}, function (data) {
             if (typeof data.videoUrl!='undefined'&&data.videoUrl.length>0) {

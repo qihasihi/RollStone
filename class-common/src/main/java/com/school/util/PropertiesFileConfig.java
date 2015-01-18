@@ -5,6 +5,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
 /**
  * junit”√µΩ
@@ -26,6 +27,9 @@ public class PropertiesFileConfig {
             request=new MockHttpServletRequest();
         }else
             request=((ServletRequestAttributes)srabutes).getRequest();
-        return request.getRealPath("/")+""+propertiesConfigPath[i];
+        File f=new File(request.getRealPath("/")+""+propertiesConfigPath[i]);
+        if(f.exists())
+            return f.getPath();
+        return request.getRealPath("/")+"/../"+propertiesConfigPath[i];
     }
 }
