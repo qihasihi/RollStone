@@ -238,6 +238,7 @@
         <li class="three" id="li_web_im"><a href="javascript:loadLZXWeImRight();">爱学</a></li>
         <%
         }
+        //临时打开
             if(isTeacher&&!isStudent&&modelType==2){
             //加载乐知行，教学首页，左上角的链接
             if(ettColumnInfos!=null&&ettColumnInfos.size()>0){

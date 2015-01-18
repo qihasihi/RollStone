@@ -249,7 +249,7 @@ public class EttInterfaceUserUtil {
         //¥Ê»Î
         paramMap.put("data",JSONObject.fromObject(tmpMap).toString());
 //        JSONObject jb=JSONObject.fromObject(paramMap);
-        String val = UrlSigUtil.makeSigSimple("jionClassUserInterFace.do", paramMap);
+        String val = UrlSigUtil.makeSigSimple(" .do", paramMap);
         paramMap.put("sign",val);
         JSONObject jo=UtilTool.sendPostUrl(addToEtt_URL,paramMap,"UTF-8");
         if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1")){

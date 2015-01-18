@@ -213,6 +213,9 @@ function loadSWFPlayerLitterView(filepath,playeraddressid,imagepath,resid,width,
         width=435;
         height:270;
     }
+    var lastname = "";
+    if (typeof(filepath) != 'undefined' && filepath.Trim().length > 0 && filepath.indexOf(".") != -1)
+        lastname = filepath.substring(filepath.lastIndexOf(".")).toLowerCase();
 
     //清空
     //由于SWFplayer生成的时候，是替换DIV层。如果想重新生成一个,需重新生成DIV并且删除SWFPlayer
@@ -245,11 +248,21 @@ function loadSWFPlayerLitterView(filepath,playeraddressid,imagepath,resid,width,
     if(typeof(isshowBar)!="undefined"&&!isshowBar){
         jwplayerSetup.controls=false;
     }
-
-
     if(typeof(imagepath)!="undefined"&&imagepath.Trim().length>0)
         jwplayerSetup.image=imagepath;
-    var returnPobj= jwplayer(playeraddressid).setup(jwplayerSetup);
+    jwplayerSetup.key='TS4qsaxnmU61G+MTcWh8YKllWcQ=';
+    if(resid>0&&lastname.indexOf('.mp4')!=-1){
+        $.getJSON("tpres?loadMicVideoJsp", {resid: resid, line:1}, function (data) {
+            if (typeof data.videoUrl!='undefined'&&data.videoUrl.length>0) {
+                jwplayerSetup.file=data.videoUrl;
+                jwplayerSetup.image=data.imageUrl;
+                jwplayer(playeraddressid).setup(jwplayerSetup);
+
+            }
+        });
+    }else{
+         jwplayer(playeraddressid).setup(jwplayerSetup);
+    }
     if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
         jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
     if(typeof(isshowBar)!="undefined"&&!isshowBar){
@@ -276,7 +289,6 @@ function loadSWFPlayerLitterView(filepath,playeraddressid,imagepath,resid,width,
 //            );
 //        }
 //    }
-    return returnPobj;
 }
 
 function swfobjPlayer(path, playeraddressid,width,height, isshow,imagepath) {
