@@ -201,7 +201,7 @@ public class TpThemeReplyDAO extends CommonDAO<TpThemeReplyInfo> implements
         } else
             sqlbuilder.append("null,");
 
-        if (tpthemereplyinfo.getCtimeString() != null) {
+        if (tpthemereplyinfo.getCtime()!=null) {
             sqlbuilder.append("?,");
             objList.add(tpthemereplyinfo.getCtimeString());
         } else

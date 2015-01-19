@@ -54,7 +54,7 @@
             </div>
             <p class="t_r">
                 <c:if test="${!empty roleStr&&(roleStr=='TEACHER' || (culoginid==theme.cuserid)||(empty param.quoteid1||param.quoteid1==0))}">
-                    <c:if test="${(!empty param.quoteid1&&param.quoteid1!=0)||culoginid==theme.cuserid}">
+                    <c:if test="${culoginid==theme.cuserid}">
                         <c:if test="${empty theme.commentbycontent}">
                             <a href="javascript:;" onclick="showUpdateDiv('div_update','${theme.themeid}')"><span class="ico11"></span>编辑</a>&nbsp;&nbsp;
                         </c:if>

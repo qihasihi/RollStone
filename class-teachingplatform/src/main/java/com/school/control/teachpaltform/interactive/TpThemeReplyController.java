@@ -68,17 +68,17 @@ public class TpThemeReplyController extends BaseController<TpThemeReplyInfo>{
 			this.tpTopicThemeManager.getArrayUpdateLongText("tp_theme_reply_info", "REPLY_ID", "reply_content"
 	                    , entity.getReplycontent(), nextid.toString(), sqlArrayList, objArrayList);
 	    }
-    //主题最后回复
-    TpTopicThemeInfo them=new TpTopicThemeInfo();
-    them.setThemeid(entity.getThemeid());
-    them.setLastfabiao(this.logined(request).getRealname()+" "+UtilTool.DateConvertToString(new Date(), UtilTool.DateType.type4));
-    //主题最后发布
-    sqlbuilder=new StringBuilder();
-    objList=this.tpTopicThemeManager.getUpdateSql(them,sqlbuilder);
-    if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
-        sqlArrayList.add(sqlbuilder.toString());
-        objArrayList.add(objList);
-    }
+        //主题最后回复
+        TpTopicThemeInfo them=new TpTopicThemeInfo();
+        them.setThemeid(entity.getThemeid());
+        them.setLastfabiao(this.logined(request).getRealname()+" "+UtilTool.DateConvertToString(new Date(), UtilTool.DateType.type4));
+        //主题最后发布
+        sqlbuilder=new StringBuilder();
+        objList=this.tpTopicThemeManager.getUpdateSql(them,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            sqlArrayList.add(sqlbuilder.toString());
+            objArrayList.add(objList);
+        }
     //评论数
     if(entity.getToreplyid()==null){
         sqlbuilder=new StringBuilder();

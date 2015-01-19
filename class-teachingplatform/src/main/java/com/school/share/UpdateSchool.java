@@ -1,10 +1,8 @@
 package com.school.share;
 
 import com.school.entity.SchoolInfo;
-import com.school.entity.resource.score.SchoolScoreRank;
 import com.school.manager.SchoolManager;
 import com.school.manager.inter.ISchoolManager;
-import com.school.manager.resource.score.SchoolScoreRankManager;
 import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -198,6 +196,21 @@ class UpdateSchoolUtil{
                             ssr.setIp(ssr.getIp()+"/");
                         }
                     }
+
+                    //JIRA-BEGIN: PJXPT-1335
+                    if(courseMap.containsKey("Country")&&courseMap.get("Country")!=null
+                            &&!courseMap.get("Country").toString().trim().toUpperCase().equals("NULL"))
+                        ssr.setCountry(courseMap.get("Country").toString().trim());
+                    if(courseMap.containsKey("Provincename")&&courseMap.get("Provincename")!=null
+                            &&!courseMap.get("Provincename").toString().trim().toUpperCase().equals("NULL"))
+                        ssr.setProvince(courseMap.get("Provincename").toString().trim());
+                    if(courseMap.containsKey("Cityname")&&courseMap.get("Cityname")!=null
+                            &&!courseMap.get("Cityname").toString().trim().toUpperCase().equals("NULL"))
+                        ssr.setCity(courseMap.get("Cityname").toString().trim());
+                    if(courseMap.containsKey("Isactive")&&courseMap.get("Isactive")!=null
+                            &&!courseMap.get("Isactive").toString().trim().toUpperCase().equals("NULL"))
+                        ssr.setIsactive(Integer.parseInt(courseMap.get("Isactive").toString().trim()));
+                    // JIRA-END:   PJXPT-1335
 //                    if(courseMap.containsKey("Ctime")&&courseMap.get("Ctime")!=null
 //                            &&!courseMap.get("Ctime").toString().trim().toUpperCase().equals("NULL"))
 //                        ssr.setCtime(UtilcourseMap.get("ModelId").toString()));

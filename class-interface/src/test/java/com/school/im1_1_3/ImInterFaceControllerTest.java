@@ -1,4 +1,5 @@
 package com.school.im1_1_3;
+
 import com.etiantian.unite.utils.UrlSigUtil;
 import net.sf.json.JSONObject;
 import org.junit.After;
@@ -65,15 +66,15 @@ public class ImInterFaceControllerTest {
      * Method: teacherJoinClass(HttpServletRequest request, HttpServletResponse response)
      *     test main method
      */
-  /*  @Test
+   @Test
     public void testTeacherJoinClass() throws Exception {
         String time=System.currentTimeMillis()+"";
         HashMap<String,String> mp=new HashMap<String, String>();
-        mp.put("jid","2470528");
-        mp.put("classCode", "515264");  //加入的班级邀请码
+        mp.put("jid","2470768");
+        mp.put("classCode", "904487");  //加入的班级邀请码
         mp.put("time", time);
-        mp.put("isAdmin", "1");         //是否是班主任 1:是班主任
-        mp.put("subjectId", "");        //如果不是班主任，则是任课教师，则需要传入学科 例：1,2,3,4,5,7
+        mp.put("isAdmin", "0");         //是否是班主任 1:是班主任
+        mp.put("subjectId", "1,2,3");        //如果不是班主任，则是任课教师，则需要传入学科 例：1,2,3,4,5,7
         String sign= UrlSigUtil.makeSigSimple("teacherJoinClass.do", mp);
         mp.put("sign", sign);
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.post("/im1.1.3?m=teacherJoinClass.do")
@@ -93,18 +94,18 @@ public class ImInterFaceControllerTest {
                 isflag=true;
             }
         }
-//        Assert.assertTrue(isflag);
+        Assert.assertTrue(isflag);
     }
-*/
+
     @Test
     public void testClassDetailInfo() throws Exception {
         //TODO: Test goes here...
         //验证必填参数
         String time=System.currentTimeMillis()+"";
         HashMap<String,String> mp=new HashMap<String, String>();
-        mp.put("jid","2579255");
-        mp.put("schoolId", "51013");
-        mp.put("classId", "67018");
+            mp.put("jid","2470767");
+        mp.put("schoolId", "51005");
+        mp.put("classId", "399973");
         mp.put("time", time);
         String sign=UrlSigUtil.makeSigSimple("classDetailInfo.do",mp);
         mp.put("sign", sign);
