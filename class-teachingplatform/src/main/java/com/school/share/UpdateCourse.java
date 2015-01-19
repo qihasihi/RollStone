@@ -1986,10 +1986,10 @@ public class UpdateCourse extends TimerTask{
                        String topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(rsEntity.getResid().toString());
                         System.out.println("微视频资源文件"+topath);
                         //下载微视频文件
-                        if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,rsEntity.getResid().toString(),key,-1,topath,rsEntity.getFilename(),null,true)){
-                            //文件失败
-                            System.out.println("资源文件下载失败!");
-                        }
+//                        if(!UpdateCourseUtil.copyResourceToPath(postFileUrl,rsEntity.getResid().toString(),key,-1,topath,rsEntity.getFilename(),null,true)){
+//                            //文件失败
+//                            System.out.println("资源文件下载失败!");
+//                        }
                     }
 
                 //添加微视频试卷
@@ -2005,7 +2005,7 @@ public class UpdateCourse extends TimerTask{
                     tmpPaper.setScore(100F);
                     tmpPaper.setPapertype(5);//微视频试卷
                     tmpPaper.setCuserid(0);
-                    tmpPaper.setPapername(courseid+"微课程测试"+newPid);
+                    tmpPaper.setPapername(courseid+"微课程测试");
                     sqlbuilder=new StringBuilder();
                     objList=paperManager.getSaveSql(tmpPaper,sqlbuilder);
                     if(sqlbuilder!=null){
