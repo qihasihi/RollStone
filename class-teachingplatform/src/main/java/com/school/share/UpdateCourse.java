@@ -2904,8 +2904,13 @@ class UpdateCourseUtil{
                                         dtype=-1;
                                     res.setDifftype(dtype);
                                 }
+
+                                if(map.containsKey("Ismicopiece")&&map.get("Ismicopiece")!=null&&!map.get("Ismicopiece").toString().trim().toUpperCase().equals("NULL")){
+                                    res.setIsmicopiece(map.get("Ismicopiece").toString());
+                                }
                                 if(difftype!=null&&(res.getDifftype()==null||res.getDifftype().intValue()!=difftype.intValue()))
                                     continue;
+
                                 if(map.containsKey("Appobj")&&map.get("Appobj")!=null&&!map.get("Appobj").toString().trim().toUpperCase().equals("NULL")){
                                     res.setUseobject(map.get("Appobj").toString());
                                 }
