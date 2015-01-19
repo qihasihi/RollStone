@@ -266,7 +266,7 @@ public class OperateEttController extends BaseController<String>{
             paraMap.put("email",email);
 //            if(this.validateRole(request,UtilTool._ROLE_STU_ID))
             paraMap.put("gradeId",currentClsCode+"");
-            paraMap.put("userType",this.validateRole(request,UtilTool._ROLE_STU_ID)?"1":"2");
+            paraMap.put("userType",this.validateRole(request,UtilTool._ROLE_STU_ID)?"1":"3");
             paraMap.put("time",new Date().getTime()+"");
             // paraMap.put("identity",this.validateRole(request,UtilTool._ROLE_STU_ID)?1:2);
 
