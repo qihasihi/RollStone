@@ -1423,6 +1423,7 @@ public class UpdateCourse extends TimerTask{
                                     }
                                     sqlArrayList=new ArrayList<String>();
                                     objArrayList=new ArrayList<List<Object>>();
+
                                 }
                              //µÃµ½¸½¼þ
                                String topath= UtilTool.utilproperty.getProperty("RESOURCE_CLOUD_SERVER_PATH")+"/"+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString());

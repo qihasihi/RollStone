@@ -1481,7 +1481,7 @@ public class TaskController extends BaseController{
                         Map<String,Object>map=new HashMap<String, Object>();
                         map.put("taskId",task.getTaskid());
                         Object taskObjName=task.getTaskobjnameremind()==null?"":task.getTaskobjnameremind();
-                        map.put("content",UtilTool.ecode("提醒你完成任务[任务 "+task.getOrderidx()+" "+taskObjName+"]，快去完成它吧！"));
+                        map.put("content",UtilTool.ecode(task.getRealname()+"老师提醒你去完成[任务 "+task.getOrderidx()+" "+task.getTaskTypeName()+" "+taskObjName+"]"));
                         map.put("classId",tt.getAllotid());
                         map.put("taskType",task.getTasktype());
                         map.put("isVirtual","0");

@@ -251,6 +251,7 @@ public class TestController extends BaseController<String>{
 
                         List<Map<String,Object>> mapList=new ArrayList<Map<String, Object>>();
                         if(cuList!=null&&cuList.size()>0){
+
                             for (ClassUser cuTmpe:cuList){
                                 if(cuTmpe!=null){
                                     Map<String,Object> tmpMap=new HashMap<String, Object>();

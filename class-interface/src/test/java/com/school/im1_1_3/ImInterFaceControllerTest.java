@@ -65,7 +65,7 @@ public class ImInterFaceControllerTest {
      * Method: teacherJoinClass(HttpServletRequest request, HttpServletResponse response)
      *     test main method
      */
-    @Test
+  /*  @Test
     public void testTeacherJoinClass() throws Exception {
         String time=System.currentTimeMillis()+"";
         HashMap<String,String> mp=new HashMap<String, String>();
@@ -95,7 +95,7 @@ public class ImInterFaceControllerTest {
         }
 //        Assert.assertTrue(isflag);
     }
-
+*/
     @Test
     public void testClassDetailInfo() throws Exception {
         //TODO: Test goes here...

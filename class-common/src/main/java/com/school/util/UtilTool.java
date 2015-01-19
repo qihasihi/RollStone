@@ -2156,7 +2156,8 @@ public class UtilTool implements java.io.Serializable {
         String time=System.currentTimeMillis()+"";
         String md5= MD5_NEW.getMD5ResultCode(resourceId+lineFlag+time,ETT_CODE);
         //String url="http://wangjie.etiantian.com:8080/ett20/study/common/sxGetVideoUrl.jsp";
-        String url="http://123.103.19.218:16180/ett20/study/common/sxGetVideoUrl.jsp";
+        //String url="http://123.103.19.218:16180/ett20/study/common/sxGetVideoUrl.jsp";
+        String url=UtilTool.utilproperty.getProperty("MIC_VIDEO_JSP");
         Map<String,String>map=new HashMap<String, String>();
         map.put("lineFlag",lineFlag);
         map.put("resourceId",resourceId);

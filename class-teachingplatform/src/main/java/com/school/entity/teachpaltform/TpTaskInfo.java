@@ -307,6 +307,15 @@ public class TpTaskInfo implements Serializable {
     public void setCriteria(Integer criteria) {
         this.criteria = criteria;
     }
+    private String realname;
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
 
     /**
      * 手机任务提醒内容
@@ -510,6 +519,7 @@ public class TpTaskInfo implements Serializable {
             case 7:tasktype="移动端任务";break;
             case 8:tasktype="移动端任务";break;
             case 9:tasktype="移动端任务";break;
+            case 10:tasktype="直播课";break;
         }
         return  tasktype;
     }
