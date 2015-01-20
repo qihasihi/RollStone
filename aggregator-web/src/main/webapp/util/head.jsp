@@ -239,7 +239,7 @@
         <%
         }
         //临时打开
-            if(isTeacher&&!isStudent&&modelType==2){
+          //  if(isTeacher&&!isStudent&&modelType==2){
             //加载乐知行，教学首页，左上角的链接
             if(ettColumnInfos!=null&&ettColumnInfos.size()>0){
                 String headcolumnico=UtilTool.utilproperty.getProperty("LZX_HEAD_COLUMN_ICO");
@@ -268,7 +268,7 @@
                         }
                 }
             }
-          }
+          //}
         %>
         <%--<li class="two"><a href="" target="_blank"></a></li>--%>
         <%--<li class="one"><a href="1" target="_blank">四中公开课</a></li>--%>

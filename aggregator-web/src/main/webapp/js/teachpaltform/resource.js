@@ -1012,7 +1012,7 @@ function load_resource(type, pageno, isinit) {
                             $("#ul_resource").append(htm);
                             $("#ul_resource").hide();
                             $("#ul_resource").show('fast');
-
+                                
                             var liObj = $("ul[id='ul_resource'] li").eq(idx);
                             if (liObj) {
                                 $(liObj).hover(
