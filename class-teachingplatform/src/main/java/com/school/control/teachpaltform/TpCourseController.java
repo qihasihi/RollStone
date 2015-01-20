@@ -1,31 +1,21 @@
 package com.school.control.teachpaltform;
 
 import com.etiantian.unite.utils.UrlSigUtil;
-import com.school.control.base.BaseController;
 import com.school.entity.*;
-
 import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpThemeReplyInfo;
+import com.school.entity.teachpaltform.interactive.TpTopicInfo;
+import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.entity.teachpaltform.paper.TpCoursePaper;
-import com.school.manager.*;
 import com.school.manager.inter.*;
-
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
 import com.school.manager.inter.teachpaltform.interactive.ITpThemeReplyManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
-
 import com.school.manager.inter.teachpaltform.paper.ITpCoursePaperManager;
-import com.school.manager.resource.ResourceManager;
-import com.school.manager.teachpaltform.*;
-import com.school.manager.teachpaltform.interactive.TpTopicManager;
-import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
-import com.school.manager.teachpaltform.paper.TpCoursePaperManager;
 import com.school.util.JsonEntity;
-import com.school.entity.teachpaltform.interactive.TpTopicInfo;
-import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import net.sf.json.JSONObject;
@@ -37,11 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -2277,6 +2264,7 @@ public class TpCourseController extends TaskController{
                                             Long nreplyId=this.tpThemeReplyManager.getNextId(true);
                                             trTmp.setReplyid(nreplyId);
                                             trTmp.setCtime(trTmp.getCtime());
+
                                             StringBuilder sqlbuilder=new StringBuilder();
                                             objList=this.tpThemeReplyManager.getSaveSql(trTmp,sqlbuilder);
                                             if(sqlbuilder!=null&&objList!=null){

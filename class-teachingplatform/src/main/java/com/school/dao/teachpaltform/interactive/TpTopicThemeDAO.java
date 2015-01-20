@@ -350,7 +350,11 @@ public class TpTopicThemeDAO extends CommonDAO<TpTopicThemeInfo> implements ITpT
             objList.add(tptopicthemeinfo.getSourceid());
         } else
             sqlbuilder.append("null,");
-
+        if (tptopicthemeinfo.getPinglunshu() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptopicthemeinfo.getPinglunshu());
+        } else
+            sqlbuilder.append("null,");
 		sqlbuilder.append("?)}");
 		return objList;
 	}
