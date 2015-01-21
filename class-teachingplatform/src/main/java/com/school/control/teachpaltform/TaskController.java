@@ -3494,7 +3494,7 @@ public class TaskController extends BaseController{
         if(taskCriList!=null&&taskCriList.size()>0&&taskCriList.get(0).getTaskstatus()!=null
                 &&!taskCriList.get(0).getTaskstatus().equals("1")&&!taskCriList.get(0).getTaskstatus().equals("3")){
             if(tList!=null&&tList.size()>0){
-                response.sendRedirect(baseUrl+"tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+                response.sendRedirect(baseUrl+"tptopic?m=viewTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
             }else{
                 if(this.taskPerformanceManager.doSave(tp)){
                        /*奖励加分*/
@@ -3536,14 +3536,14 @@ public class TaskController extends BaseController{
                         System.out.println("awardScore err ");
 
 
-                    response.sendRedirect(baseUrl+"tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+                    response.sendRedirect(baseUrl+"tptopic?m=viewTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
                 }else{
                     je.setMsg("错误!添加查看记录失败!请重试!");
                     response.getWriter().print(je.toJSON());
                 }
             }
         }else{
-            response.sendRedirect(baseUrl+"tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+            response.sendRedirect(baseUrl+"tptopic?m=viewTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
         }
     }
 
