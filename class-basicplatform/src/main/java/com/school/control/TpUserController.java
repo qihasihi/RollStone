@@ -1864,6 +1864,206 @@ public class TpUserController extends UserController {
 
 
     /**
+     * 初始化菁英班学生
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "m=initEliteStudent.do", method = {RequestMethod.POST,RequestMethod.GET})
+    public void initEliteStudent(HttpServletRequest request,
+                         HttpServletResponse response) throws Exception {
+        JsonEntity je=new JsonEntity();
+        HashMap<String,String> paraMap=TpUserUtilTool.getRequestParam(request);
+        if(!TpUserUtilTool.ValidateRequestParam(request)){
+            je.setMsg(UtilTool.ecode("参数错误!"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        String classId=request.getParameter("classId");
+        String data=request.getParameter("data");
+        String sign=request.getParameter("sign");
+        String time=request.getParameter("timestamp");
+        if(classId==null||data==null||sign==null||time==null){
+            je.setMsg(UtilTool.ecode("参数验证失败!"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        //删除sign
+        paraMap.remove("sign");
+        //根据参数生前sign，与传入的sign进行对比
+        if(!UrlSigUtil.verifySigSimple("initEliteStudent.do",paraMap, sign)){
+            je.setMsg(UtilTool.ecode("Sign验证失败!"));//md5比较异常
+            response.getWriter().print(je.toJSON());return;
+        }
+
+        //转换成JSON
+        System.out.println(data);
+        JSONArray jsonArray;
+        try{
+            jsonArray= JSONArray.fromObject(java.net.URLDecoder.decode(data,"UTF-8"));
+        }catch (Exception e){
+            je.setMsg("data:" + e.getMessage());//md5比较异常
+            response.getWriter().print(je.toJSON());return;
+        }
+
+        List<Object>objList=null;
+        StringBuilder sql=null;
+        List<List<Object>>objListArray=new ArrayList<List<Object>>();
+        List<String>sqlListArray=new ArrayList<String>();
+        if(jsonArray!=null&&jsonArray.size()>0){
+            //获取菁英班
+            ClassInfo eliteClass=new ClassInfo();
+            eliteClass.setClassid(Integer.parseInt(classId));
+            eliteClass.setActivitytype(1);
+            List<ClassInfo>clsList=this.classManager.getList(eliteClass,null);
+            if(clsList==null||clsList.size()<1){
+                je.setMsg(UtilTool.ecode("当前班级不存在!"));
+                response.getWriter().print(je.toJSON());return;
+            }
+            ClassInfo tmpCls=clsList.get(0);
+
+
+            Iterator iterator=jsonArray.iterator();
+            while(iterator.hasNext()){
+                JSONObject obj=(JSONObject)iterator.next();
+                String jid=obj.containsKey("jid")?obj.getString("jid"):"";
+                String realName=obj.containsKey("realName")?obj.getString("realName"):"";
+                String schoolId=obj.containsKey("schoolId")?obj.getString("schoolId"):"";
+
+                if(jid.length()<1){
+                    je.setMsg("jid is empty!");
+                    response.getWriter().print(je.toJSON());return;
+                }
+                if(realName.length()<1){
+                    je.setMsg("realname is empty!");
+                    response.getWriter().print(je.toJSON());return;
+                }
+                if(schoolId.length()<1){
+                    je.setMsg("schoolId is empty!");
+                    response.getWriter().print(je.toJSON());return;
+                }
+
+
+
+                UserInfo userInfo=new UserInfo();
+                userInfo.setUsername("学生"+schoolId+jid);
+                userInfo.setDcschoolid(Integer.parseInt(schoolId));
+                List<UserInfo>userInfoList=this.userManager.getList(userInfo,null);
+                //已存在
+                if(userInfoList!=null&&userInfoList.size()>0){
+                    je.setMsg("SchoolId:"+schoolId+" jid:"+jid+" already exists!");
+                    response.getWriter().print(je.toJSON());return;
+                }else{
+                    //添加用户
+                    String userNextRef = UUID.randomUUID().toString();
+                    userInfo.setRef(userNextRef);
+                    userInfo.setPassword("111111");
+                    userInfo.setStateid(0);
+                    userInfo.setEttuserid(Integer.parseInt(jid));
+                    userInfo.setDcschoolid(Integer.parseInt(schoolId));
+                    sql = new StringBuilder();
+                    objList = this.userManager.getSaveSql(userInfo, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+
+                    //添加用户与身份关联信息
+                    String identityNextRef = UUID.randomUUID().toString();
+                    UserIdentityInfo ui = new UserIdentityInfo();
+                    ui.setRef(identityNextRef);
+                    ui.getUserinfo().setRef(userNextRef);
+                    ui.setIdentityname("学生");
+                    sql = new StringBuilder();
+                    objList = this.userIdentityManager.getSaveSql(ui, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+
+                    // 添加学生
+                    StudentInfo s = new StudentInfo();
+                    s.getUserinfo().setRef(userNextRef);
+                    s.setStuname(realName);
+                    s.setStusex("男");
+                    sql = new StringBuilder();
+                    objList = this.studentManager.getSaveSql(s, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+
+                    //添加默认学生角色
+                    String ruNextRef = UUID.randomUUID().toString();
+                    RoleUser ru = new RoleUser();
+                    ru.setRef(ruNextRef);
+                    ru.getUserinfo().setRef(userNextRef);
+                    ru.getRoleinfo().setRoleid(UtilTool._ROLE_STU_ID);
+
+                    sql = new StringBuilder();
+                    objList = this.roleUserManager.getSaveSql(ru, sql);
+                    if (objList != null && sql != null) {
+                        sqlListArray.add(sql.toString());
+                        objListArray.add(objList);
+                    }
+
+                    //添加学生角色默认权限
+                    RoleColumnRightInfo rc=new RoleColumnRightInfo();
+                    rc.setRoleid(UtilTool._ROLE_STU_ID);
+                    List<RoleColumnRightInfo>rcList=this.roleColumnRightManager.getList(rc, null);
+                    if(rcList!=null&&rcList.size()>0){
+                        for (RoleColumnRightInfo roleColumnRightInfo : rcList) {
+                            UserColumnRightInfo ucr=new UserColumnRightInfo();
+                            ucr.setColumnid(roleColumnRightInfo.getColumnid());
+                            ucr.setUserid(userNextRef);
+                            ucr.setRef(this.userColumnRightManager.getNextId());
+                            ucr.setColumnrightid(roleColumnRightInfo.getColumnrightid());
+                            sql=new StringBuilder();
+                            objList=this.userColumnRightManager.getSaveSql(ucr, sql);
+                            if(objList!=null&&sql!=null){
+                                sqlListArray.add(sql.toString());
+                                objListArray.add(objList);
+                            }
+                        }
+                    }
+
+                    //添加
+                    ClassUser sel=new ClassUser();
+                    sel.setClassid(tmpCls.getClassid());
+                    sel.setUserid(userNextRef);
+                    sel.setRelationtype("学生");
+                    List<ClassUser>stuList=this.classUserManager.getList(sel,null);
+                    if(stuList==null||stuList.size()<1){
+                        ClassUser save=new ClassUser();
+                        save.setClassid(tmpCls.getClassid());
+                        save.setUserid(userNextRef);
+                        save.setRelationtype("学生");
+                        save.setRef(this.classUserManager.getNextId());
+                        sql=new StringBuilder();
+                        objList=this.classUserManager.getSaveSql(save,sql);
+                        if(objList!=null&&sql!=null){
+                            sqlListArray.add(sql.toString());
+                            objListArray.add(objList);
+                        }
+                    }
+                    }
+                }
+        }else {
+            je.setMsg("Data empty!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        if(sqlListArray.size()>0&&objListArray.size()>0&&sqlListArray.size()==objListArray.size()){
+            boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
+            if(flag){
+                je.setType("success");
+            }
+        }else
+            je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
      *修改网校云账号
      * @param request
      * @param response
