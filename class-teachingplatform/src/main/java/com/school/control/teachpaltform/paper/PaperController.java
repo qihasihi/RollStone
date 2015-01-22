@@ -3237,17 +3237,17 @@ public class PaperController extends BaseController<PaperInfo>{
         if(taskCriList!=null&&taskCriList.size()>0&&taskCriList.get(0).getTaskstatus()!=null
                 &&!taskCriList.get(0).getTaskstatus().equals("1")&&!taskCriList.get(0).getTaskstatus().equals("3")){
             if(tList!=null&&tList.size()>0){
-                response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+                response.sendRedirect("tptopic?m=viewTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
             }else{
                 if(this.taskPerformanceManager.doSave(tp)){
-                    response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+                    response.sendRedirect("tptopic?m=viewTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
                 }else{
                     je.setMsg("¥ÌŒÛ!ÃÌº”≤Èø¥º«¬º ß∞‹!«Î÷ÿ ‘!");
                     response.getWriter().print(je.toJSON());
                 }
             }
         }else{
-            response.sendRedirect("tptopic?m=toDetailTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
+            response.sendRedirect("tptopic?m=viewTopic&topicid="+themeid+"&taskid="+taskid+"&courseid="+courseid);
         }
     }
 
@@ -4098,9 +4098,13 @@ public class PaperController extends BaseController<PaperInfo>{
                    je.setType("success");
                    JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
                    FileOutputStream fos = null;
-                   String fname="/optionPie/pt"+new Date().getTime()+".png";
+                   String directory=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/";
+                   String fname="pt"+new Date().getTime()+".png";
                    try{
-                       fos = new FileOutputStream(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/"+fname);
+                       File directoryFile=new File(directory);
+                       if(!directoryFile.exists())
+                           directoryFile.mkdirs();
+                       fos = new FileOutputStream(directory+fname);
                        ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
                    }finally{
                        fos.close();
@@ -4143,9 +4147,13 @@ public class PaperController extends BaseController<PaperInfo>{
                    je.setType("success");
                    JFreeChart chart = ChartFactory.createPieChart("", dataset, true, false, false);
                    FileOutputStream fos = null;
-                   String fname="/optionPie/pt"+new Date().getTime()+".png";
+                   String directory=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/";
+                   String fname="optionPie/pt"+new Date().getTime()+".png";
                    try{
-                       fos = new FileOutputStream(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+fname);
+                       File directoryFile=new File(directory+"optionPie");
+                       if(!directoryFile.exists())
+                           directoryFile.mkdirs();
+                       fos = new FileOutputStream(directory+fname);
                        ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
                    }finally{
                        if(fos!=null)

@@ -21,7 +21,7 @@
 						htm+='<tr';
 						if(idx%2==1)
 							htm+=' class="trbg2"';
-						htm+='><td><p><a target="_blank" href="tptopic?m=toDetailTopic&topicid='+itm.topicid+'">';
+						htm+='><td><p><a target="_blank" href="tptopic?m=viewTopic&topicid='+itm.topicid+'">';
 						htm+=itm.topictitle25word+'</a></p></td>';
                         htm+='<td>'+itm.themecount+'</td>';
                         htm+='<td>'+itm.restorecount+'</td>';

@@ -38,17 +38,14 @@
         </c:if>
 
         <c:if test="${!empty tc && !empty tc.courselevel && tc.courselevel ne 3}">
-        $("textarea[id='introduction']").attr("disabled",true);
-        $("input[id='courseName']").attr("disabled",true);
+            //$("textarea[id='introduction']").attr("disabled",true);
+            //$("input[id='courseName']").attr("disabled",true);
         </c:if>
 
-        <c:if test="${!empty tc && !empty tc.qcourselevel && tc.qcourselevel ne 3}">
-        $("textarea[id='introduction']").attr("disabled",true);
-        $("input[id='courseName']").attr("disabled",true);
-        </c:if>
+
 
         <c:if test="${!empty tc && !empty tc.quoteid && tc.quoteid ne 0}">
-        $("input[name='sharetype']").attr("disabled",true);
+            $("input[name='sharetype']").attr("disabled",true);
         </c:if>
     });
 </script>
@@ -197,9 +194,11 @@
             <th><span class="ico06"></span>分享等级：</th>
             <td>
                 <input type="radio" name="sharetype" id="sharetype" value="1" />
-                校内教师&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="radio" name="sharetype" id="sharetype" value="2" />
-                云端教师&nbsp;&nbsp;&nbsp;&nbsp;
+                校内分享&nbsp;&nbsp;&nbsp;&nbsp;
+              <%--  <c:if test="${!empty tc}">
+                    <input type="radio" name="sharetype" id="sharetype" value="2" />
+                    云端教师&nbsp;&nbsp;&nbsp;&nbsp;
+                </c:if>--%>
                 <input type="radio" name="sharetype" id="sharetype" value="3" checked="true"/>
                 不分享</td>
         </tr>
@@ -275,6 +274,10 @@
             $("input[name='classes'][value='${cid}']").attr("checked",true);
             $("#p_${cid}").show();
             $("#p_end_${cid}").show();
+            <c:if test="${fn:isBegin(tc.classTimeArray[status.index]) eq '1'}">
+                $("#${cid}_classtime").attr("disabled",false);
+                $("#${cid}_classEndTime").attr("disabled",false);
+            </c:if>
             $("#${cid}_classtime").val("${tc.classTimeArray[status.index]}");
             $("#${cid}_classEndTime").val("${tc.classEndTimeArray[status.index]}");
             </c:if>
@@ -282,6 +285,7 @@
             $("input[name='vclasses'][value='${cid}']").attr("checked",true);
             $("#p_v_${cid}").show();
             $("#p_v_end_${cid}").show();
+
             $("#${cid}_v_classtime").val("${tc.classTimeArray[status.index]}");
             $("#${cid}_v_classEndTime").val("${tc.classEndTimeArray[status.index]}");
             </c:if>

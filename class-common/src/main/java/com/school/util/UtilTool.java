@@ -2148,7 +2148,7 @@ public class UtilTool implements java.io.Serializable {
      * @param resid
      * @return
      */
-   public static String getMicVideoUrl(String resid,String line){
+   public static String getMicVideoUrl(String resid,String line,String type){
         if(resid==null||resid.trim().length()<1)
             return "";
         String lineFlag=line;
@@ -2158,6 +2158,12 @@ public class UtilTool implements java.io.Serializable {
         //String url="http://wangjie.etiantian.com:8080/ett20/study/common/sxGetVideoUrl.jsp";
         //String url="http://123.103.19.218:16180/ett20/study/common/sxGetVideoUrl.jsp";
         String url=UtilTool.utilproperty.getProperty("MIC_VIDEO_JSP");
+
+        if(type!=null&&type.trim().length()>0){
+            url=url.substring(0,url.lastIndexOf("."));
+            url+="MP4.jsp";
+        }
+
         Map<String,String>map=new HashMap<String, String>();
         map.put("lineFlag",lineFlag);
         map.put("resourceId",resourceId);

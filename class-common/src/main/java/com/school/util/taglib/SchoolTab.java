@@ -1,6 +1,10 @@
 package com.school.util.taglib;
 
+import com.school.util.PageUtil.PageUtilTool;
 import com.school.util.UtilTool;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by zhengzhou on 14-10-13.
@@ -41,5 +45,27 @@ public class SchoolTab{
             return UtilTool.matchingText(reg,validateStr.toLowerCase());
         return returnBo;
     }
+
+
+    /**
+     *
+     * @param time
+     * @return
+     */
+    public static String isBegin(String time){//
+        if(time==null||time.trim().length()<1)
+            return "";
+        //开始时间
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date db=sd.parse(time);
+            if(db.after(new Date()))
+                return "1";
+            return "";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
 
 }

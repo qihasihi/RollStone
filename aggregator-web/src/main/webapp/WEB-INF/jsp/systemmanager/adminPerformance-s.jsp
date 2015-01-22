@@ -56,8 +56,9 @@
                         htmTop+='<colgroup class="w100"></colgroup><colgroup span="'+span+'" class="w80"></colgroup>';
                         htmTop+='<tr>';
                         htmTop+='<th>姓名</th>';
+                        htmTop+=col;
                         htmTop+='<th>总分</th>';
-                        htmTop+=col+'</tr>';
+                        htmTop+='</tr>';
                         if(rps.objList[1]!=null&&rps.objList[1].length>0){
 
                             $.each(rps.objList[1],function(idx,itm){

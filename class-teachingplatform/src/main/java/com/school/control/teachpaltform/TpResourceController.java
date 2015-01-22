@@ -3966,7 +3966,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             response.getWriter().print(je.toJSON());
             return;
         }
-        String url=UtilTool.getMicVideoUrl(resid,lineFlag);
+        String url=UtilTool.getMicVideoUrl(resid,lineFlag,"");
         response.getWriter().print(url);
     }
 

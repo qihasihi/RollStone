@@ -32,7 +32,7 @@
                 }
                 $("#showdetail").attr("href",uri);
             }else if(${taskInfo.tasktype==2}){
-                var uri="tptopic?m=toDetailTopic&topicid=${taskInfo.taskvalueid}";
+                var uri="tptopic?m=viewTopic&topicid=${taskInfo.taskvalueid}";
                 $("#showdetail").attr("href",uri);
             }else{
                 <%--var uri="question?m=todetail&id=${taskInfo.taskvalueid}";--%>

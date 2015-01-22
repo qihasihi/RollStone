@@ -75,18 +75,27 @@
                             //查询到的数据
                             htm+='<tr>';
                             htm+='<td>'+itm.coursename+'</td>';
-                            htm+='<td>'+itm.tasknum+'</td>';
+                            htm+='<td>'+(isNaN(itm.tasknum)?0:itm.tasknum)+'</td>';
                             htm+='<td>'+itm.endtasknum+'</td>';
                             htm+='<td>'+itm.completerate+'</td>';
-                            htm+='<td>'+itm.evaluation.replace("|","<br>(")+'人)</td>';
-                            htm+='<td>'+itm.resourcetask.replace("|","<br>(")+'%)</td>';
+                            htm+='<td>'+itm.evaluation.replace("|","<br>")+'人</td>';
+                            /*htm+='<td>'+itm.resourcetask.replace("|","<br>(")+'%)</td>';
                             htm+='<td>'+itm.interactivetask.replace("|","<br>(")+'%)</td>';
                             htm+='<td>'+itm.microtask.replace("|","<br>(")+'%)</td>';
                             htm+='<td>'+itm.coilingtesttask.replace("|","<br>(")+'%)</td>';
                             htm+='<td>'+itm.selftesttask.replace("|","<br>(")+'%)</td>';
                             htm+='<td>'+itm.livetask.replace("|","<br>(")+'%)</td>';
                             htm+='<td>'+itm.questask.replace("|","<br>(")+'%)</td>';
-                            htm+='<td>'+itm.generaltask.replace("|","<br>(")+'%)</td>';
+                            htm+='<td>'+itm.generaltask.replace("|","<br>(")+'%)</td>';*/
+                            htm+='<td>'+itm.resourcetask.replace("|",'<br>(')+')</td>';
+                            htm+='<td>'+itm.interactivetask.replace("|",'<br>(')+')</td>';
+                            htm+='<td>'+itm.microtask.replace("|",'<br>(')+')</td>';
+                            htm+='<td>'+itm.coilingtesttask.replace("|",'<br>(')+')</td>';
+                            htm+='<td>'+itm.selftesttask.replace("|",'<br>(')+')</td>';
+                            htm+='<td>'+itm.livetask.replace("|",'<br>(')+')</td>';
+                            htm+='<td>'+itm.questask.replace("|",'<br>(')+')</td>';
+                            htm+='<td>'+itm.generaltask.replace("|",'<br>(')+')</td>';
+
                             htm+='</tr>';
                         });
                         var top = '';
@@ -169,7 +178,7 @@
                 $('#pListaddress').show();
 
 
-            if(rps.presult.list[0].length>0){
+            if(rps.presult.list[0]!=null&&rps.presult.list[0].length>0){
                 pList.setPagetotal(rps.presult.pageTotal);
                 pList.setRectotal(rps.presult.recTotal);
                 pList.setPageSize(rps.presult.pageSize);

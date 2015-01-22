@@ -2016,6 +2016,8 @@ public class TpCourseController extends TaskController{
             tc.setCuserid(user.getUserid());
             tc.setCourselevel(tc.getCourselevel());
             tc.setDcschoolid(this.logined(request).getDcschoolid());
+            //默认为校内分享
+            tc.setSharetype(1);
 
             sql = new StringBuilder();
             objList = this.tpCourseManager.getSaveSql(tc, sql);
@@ -3698,11 +3700,11 @@ public class TpCourseController extends TaskController{
         cu.setSubjectid(Integer.parseInt(subjectid));
         List<ClassUser> clsList = this.classUserManager.getList(cu, null);
 
-        //获取虚拟班级
-        TpVirtualClassInfo tvc = new TpVirtualClassInfo();
-        tvc.setCuserid(this.logined(request).getUserid());
-        tvc.setStatus(1);
-        List<TpVirtualClassInfo> tvcList = this.tpVirtualClassManager.getList(tvc, null);
+//        //获取虚拟班级
+//        TpVirtualClassInfo tvc = new TpVirtualClassInfo();
+//        tvc.setCuserid(this.logined(request).getUserid());
+//        tvc.setStatus(1);
+//        List<TpVirtualClassInfo> tvcList = this.tpVirtualClassManager.getList(tvc, null);
 
 //        TrusteeShipClass tsc = new TrusteeShipClass();
 //        tsc.setTrustteacherid(user.getUserid());
@@ -3735,7 +3737,7 @@ public class TpCourseController extends TaskController{
 
         mp.put("cuList", clsList);
        // mp.put("tsList", tsList);
-        mp.put("tvcList", tvcList);
+        //mp.put("tvcList", tvcList);
         mp.put("grade", grade);
         mp.put("subject", sub);
         mp.put("term", ti);

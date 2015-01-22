@@ -196,7 +196,7 @@ function getInvestReturnMethod(rps){
                 }else
                     html+='<a href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==2){
-                html+='<a href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'" class="font-blue">'+taskObj+'</a>';
+                html+='<a href="tptopic?m=viewTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==4){
                 html+='<a href="paper?toPreviewPaper&courseid='+itm.courseid+'&paperid='+itm.taskvalueid+'" class="font-blue">'+taskObj+'</a>';
             }else if(itm.tasktype==5){
@@ -449,7 +449,7 @@ function getBankInvestReturnMethod(rps){
                 }
                 //html+='<a target="_blank" href="tpres?toTeacherIdx&courseid='+courseid+'&tpresdetailid='+itm.taskvalueid+'&taskid='+itm.taskid+'" >';
             }else if(itm.tasktype==2){
-                html+='<a target="_blank" href="tptopic?m=toDetailTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'">'+objName+'</a>';
+                html+='<a target="_blank" href="tptopic?m=viewTopic&topicid='+itm.taskvalueid+'&taskid='+itm.taskid+'&courseid='+courseid+'">'+objName+'</a>';
             }else if(itm.tasktype==3){
                 //html+='<a target="_blank" href="question?m=todetail&courseid='+itm.courseid+'&id='+itm.taskvalueid+'">';
                 html+=objName;

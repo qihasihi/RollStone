@@ -34,7 +34,18 @@
     </function>
     <function>
         <description>
-                后台验证正则表达式,第二个参数全部匹配第一个参数(是否存在)
+                验证一个时间是否比当前时间大
+        </description>
+        <name>isBegin</name>
+        <function-class>com.school.util.taglib.SchoolTab</function-class>
+        <function-signature>java.lang.String isBegin(java.lang.String)</function-signature>
+        <example>
+            ${fn:isBegin(String)}
+        </example>
+    </function>
+    <function>
+        <description>
+            后台验证正则表达式,第二个参数全部匹配第一个参数(是否存在)
         </description>
         <name>doExecReg</name>
         <function-class>com.school.util.taglib.SchoolTab</function-class>

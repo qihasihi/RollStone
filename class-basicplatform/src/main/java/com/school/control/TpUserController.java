@@ -2624,7 +2624,10 @@ class TpUserUtilTool extends TpUserController{
         if(eObj!=null){
             while(eObj.hasMoreElements()){
                 Object obj=eObj.nextElement();
-                if(obj==null||obj.toString().trim().length()<1||request.getQueryString().toString().equals(obj))
+                String qString=request.getQueryString();
+                if(request.getQueryString()==null)
+                    qString=request.getParameter("m");
+                if(obj==null||obj.toString().trim().length()<1||(qString!=null&&qString.toString().equals(obj)))
                     continue;
 
                 Object val=request.getParameter(obj.toString());

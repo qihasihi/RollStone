@@ -71,7 +71,7 @@
 
                     }else if(qtype==3){
                         var obj=$("input[name='rdo_answer"+t+"']").filter(function(){return this.value.Trim()==t1});
-                        var answerObj={val:obj[0].value,id:obj[0].id,name:obj[0].name};
+                        var answerObj={val:obj.val(),id:obj.attr('id'),name:obj.attr('name')};
                         obj.parent().html("<input type='radio' checked=true id='"+answerObj.id+"' disabled=true name='"+answerObj.name+"' value='"+answerObj.value+"'>");
                     }else if(qtype==4){
                         var splitChar="|";

@@ -1420,7 +1420,20 @@ public class ImInterfaceController extends TaskController {
             ResourceInfo rs = new ResourceInfo();
             rs.setResid(taskList.get(0).getTaskvalueid());
             List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
-            String attchStr = UtilTool.getResourceLocation(request,rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+            String attchStr =null;
+            if(rsList!=null&&rsList.size()>0){
+                ResourceInfo tmpRes=rsList.get(0);
+                JSONObject obj;
+                //ÔÆ¶ËÎ¢ÊÓÆµ
+                if(tmpRes.getResid()>0&&tmpRes.getDifftype()!=null&&tmpRes.getDifftype().toString().equals("1")){
+                    obj=JSONObject.fromObject(UtilTool.getMicVideoUrl(tmpRes.getResid() + "", "1", "mp4"));
+                    if(obj!=null&&obj.containsKey("result")&&obj.get("result").toString().equals("1")){
+                        attchStr=obj.get("videoUrl")==null?null:obj.get("videoUrl").toString();
+                    }
+                }else{
+                    attchStr=UtilTool.getResourceLocation(request,rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+                }
+            }
             Map att = new HashMap();
             att.put("attach",attchStr);
             List attList = new ArrayList();
@@ -1468,7 +1481,20 @@ public class ImInterfaceController extends TaskController {
             ResourceInfo rs = new ResourceInfo();
             rs.setResid(taskList.get(0).getTaskvalueid());
             List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
-            String attchStr = UtilTool.getResourceLocation(request,rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+            String attchStr =null;
+            if(rsList!=null&&rsList.size()>0){
+                ResourceInfo tmpRes=rsList.get(0);
+                JSONObject obj;
+                //ÔÆ¶ËÎ¢ÊÓÆµ
+                if(tmpRes.getResid()>0&&tmpRes.getDifftype()!=null&&tmpRes.getDifftype().toString().equals("1")){
+                    obj=JSONObject.fromObject(UtilTool.getMicVideoUrl(tmpRes.getResid() + "", "1", "mp4"));
+                    if(obj!=null&&obj.containsKey("result")&&obj.get("result").toString().equals("1")){
+                        attchStr=obj.get("videoUrl")==null?null:obj.get("videoUrl").toString();
+                    }
+                }else{
+                    attchStr=UtilTool.getResourceLocation(request,rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+                }
+            }
             Map att = new HashMap();
             att.put("attach",attchStr);
             List attList = new ArrayList();
@@ -5609,7 +5635,20 @@ public class ImInterfaceController extends TaskController {
                     ResourceInfo rs = new ResourceInfo();
                     rs.setResid(tpTaskList.get(0).getTaskvalueid());
                     List<ResourceInfo> rsList = this.resourceManager.getList(rs,null);
-                    String attchStr = UtilTool.getResourceLocation(request,rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+                    String attchStr =null;
+                    if(rsList!=null&&rsList.size()>0){
+                        ResourceInfo tmpRes=rsList.get(0);
+                        JSONObject obj;
+                        //ÔÆ¶ËÎ¢ÊÓÆµ
+                        if(tmpRes.getResid()>0&&tmpRes.getDifftype()!=null&&tmpRes.getDifftype().toString().equals("1")){
+                            obj=JSONObject.fromObject(UtilTool.getMicVideoUrl(tmpRes.getResid() + "", "1", "mp4"));
+                            if(obj!=null&&obj.containsKey("result")&&obj.get("result").toString().equals("1")){
+                                attchStr=obj.get("videoUrl")==null?null:obj.get("videoUrl").toString();
+                            }
+                        }else{
+                            attchStr=UtilTool.getResourceLocation(request,rsList.get(0).getResid(),1)+UtilTool.getResourceMd5Directory(rsList.get(0).getResid().toString())+"/001"+rsList.get(0).getFilesuffixname();
+                        }
+                    }
                     Map att = new HashMap();
                     att.put("attach",attchStr);
                     List attList = new ArrayList();

@@ -2150,8 +2150,9 @@ function cjloadStuPerformance(classid, classtype) {
                     finishnum += parseInt(itm.FINISHNUM);
 
                 });
-                var fn = parseFloat(parseInt(finishnum)) / parseInt(totalnum) * 100;
+                var fn =parseFloat(parseInt(finishnum)) / parseInt(totalnum) * 100;
                 var finishhtml = fn.toFixed(2);
+                finishhtml=isNaN(finishhtml)?0:finishhtml;
                 finishhtml += "%";
                 $("#finishnum").html(finishhtml);
             } else {

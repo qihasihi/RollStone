@@ -123,7 +123,7 @@
                             }
                         }else if(im.TASK_TYPE==2){
                             typename="互动交流";
-                            details="tptopic?m=toDetailTopic&topicid="+im.TASK_VALUE_ID;
+                            details="tptopic?m=viewTopic&topicid="+im.TASK_VALUE_ID;
                         }else if(im.TASK_TYPE==3){
                             typename="试题";
                             details="question?m=todetail&id="+im.TASK_VALUE_ID+"&courseid="+im.COURSE_ID;
