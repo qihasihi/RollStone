@@ -1,0 +1,1 @@
+ALTER  TABLE stu_paper_ques_logs ADD mark_comment   VARCHAR(500)    COMMENT '批阅评语';
