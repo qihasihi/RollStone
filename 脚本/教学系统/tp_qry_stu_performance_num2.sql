@@ -4,11 +4,19 @@ USE `m_school`$$
 
 DROP PROCEDURE IF EXISTS `tp_qry_stu_performance_num2`$$
 
-CREATE DEFINER=`schu`@`%` PROCEDURE `tp_qry_stu_performance_num2`(p_taskid BIGINT,p_classid BIGINT)
+CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_qry_stu_performance_num2`(p_taskid BIGINT,p_classid BIGINT)
 BEGIN
 	DECLARE tmp_sql VARCHAR(20000) DEFAULT '';
-	SET tmp_sql=CONCAT(tmp_sql,'SELECT  COUNT(tj.user_id) totalnum,(SELECT COUNT(DISTINCT p.ref) FROM tp_task_performance p,tp_task_allot_info tta ,tp_group_info g,tp_j_group_student ts,user_info ui WHERE ui.user_id=ts.user_id AND p.user_id=ui.ref AND  ts.group_id=tta.user_type_id 	
-	AND tta.task_id=p.task_id AND p.task_id=u.`TASK_ID` AND  p.creteria_type=u.criteria AND tta.user_type_id=ta.`user_type_id` and g.class_id=',p_classid,' and g.group_id=ts.group_id) finishnum,
+	SET tmp_sql=CONCAT(tmp_sql,'SELECT  COUNT(tj.user_id) totalnum,(    SELECT 
+    COUNT(DISTINCT p.ref) 
+  FROM
+    tp_task_performance p,
+    tp_task_allot_info tta
+  WHERE p.task_id=tta.task_id
+  AND p.task_id=u.`TASK_ID`
+  AND p.creteria_type=u.`CRITERIA`
+  AND (tta.user_type_id=',p_classid,' OR tta.user_type_id IN (SELECT group_id FROM tp_group_info WHERE class_id=',p_classid,'))
+  ) finishnum,
 			(SELECT COUNT(tf.USER_ID) FROM tp_task_performance tf WHERE tf.IS_RIGHT=1 AND tf.TASK_ID=ta.task_id
 			and (tf.user_id in(select jc.user_id from j_class_user jc where jc.class_id=',p_classid,') 
 								or tf.user_id=(select ref from user_info where user_id in(select jv.user_id from tp_j_virtual_class_student jv where jv.virtual_class_id=',p_classid,')))) rightnum
@@ -25,6 +33,6 @@ BEGIN
 	PREPARE s1 FROM  @sql1;   
 	EXECUTE s1;   
 	DEALLOCATE PREPARE s1;  
-END $$
+    END$$
 
 DELIMITER ;
