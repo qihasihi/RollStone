@@ -147,6 +147,11 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
     var lastname="";
     if (typeof(filepath) != 'undefined' && filepath.Trim().length > 0 && filepath.indexOf(".") != -1)
         lastname = filepath.substring(filepath.lastIndexOf(".")).toLowerCase();
+    if(typeof(isshowBar)!="undefined"&&!isshowBar){
+        jwplayerSetup.controls=false;
+    }
+    if(typeof(imagepath)!="undefined"&&imagepath.Trim().length>0)
+        jwplayerSetup.image=imagepath;
     jwplayer.key='TS4qsaxnmU61G+MTcWh8YKllWcQ=';
     if(resid>0&&lastname.indexOf('.mp4')!=-1){
         $.getJSON("tpres?loadMicVideoJsp", {resid: resid, line:1}, function (data) {
@@ -156,28 +161,24 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
                 jwplayerSetup.file=filepath;
                 jwplayerSetup.image=imagepath;
                 jwplayer(playeraddressid).setup(jwplayerSetup);
+                if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+                    jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
+                if(typeof(isshowBar)!="undefined"&&!isshowBar){
+                    jwplayer(playeraddressid).onReady(function(){
+                        jwplayer(playeraddressid).play(); //.seek(0)
+                    });
+                }
             }
         });
     }else{
         jwplayer(playeraddressid).setup(jwplayerSetup);
-    }
-
-
-
-    if(typeof(isshowBar)!="undefined"&&!isshowBar){
-        jwplayerSetup.controls=false;
-    }
-
-
-    if(typeof(imagepath)!="undefined"&&imagepath.Trim().length>0)
-        jwplayerSetup.image=imagepath;
-    var returnPobj= jwplayer(playeraddressid).setup(jwplayerSetup);
-    if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
-        jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
-    if(typeof(isshowBar)!="undefined"&&!isshowBar){
-        jwplayer(playeraddressid).onReady(function(){
-            jwplayer(playeraddressid).play(); //.seek(0)
-        });
+        if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+            jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
+        if(typeof(isshowBar)!="undefined"&&!isshowBar){
+            jwplayer(playeraddressid).onReady(function(){
+                jwplayer(playeraddressid).play(); //.seek(0)
+            });
+        }
     }
 
 //     if(typeof(resid)!="undefined"){
@@ -257,19 +258,27 @@ function loadSWFPlayerLitterView(filepath,playeraddressid,imagepath,resid,width,
                 jwplayerSetup.file=data.videoUrl;
                 jwplayerSetup.image=data.imageUrl;
                 jwplayer(playeraddressid).setup(jwplayerSetup);
+                if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+                    jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
+                if(typeof(isshowBar)!="undefined"&&!isshowBar){
+                    jwplayer(playeraddressid).onReady(function(){
+                        jwplayer(playeraddressid).play(); //.seek(0)
+                    });
+                }
 
             }
         });
     }else{
          jwplayer(playeraddressid).setup(jwplayerSetup);
+        if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+            jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
+        if(typeof(isshowBar)!="undefined"&&!isshowBar){
+            jwplayer(playeraddressid).onReady(function(){
+                jwplayer(playeraddressid).play(); //.seek(0)
+            });
+        }
     }
-    if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
-        jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
-    if(typeof(isshowBar)!="undefined"&&!isshowBar){
-        jwplayer(playeraddressid).onReady(function(){
-            jwplayer(playeraddressid).play(); //.seek(0)
-        });
-    }
+
 
 //     if(typeof(resid)!="undefined"){
 //        var suffixName=filepath;

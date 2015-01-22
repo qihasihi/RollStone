@@ -191,7 +191,7 @@ $.fn.extend({
 															var txt=$("#notes_"+buttonName+"_div textarea").val().Trim();
 															if(txt.length>0){
 																var h='<span id="'+id+'_'+buttonName+'" class="'+clsName+'">';
-																	h+='<strike id="'+id+'">'+str+'</strike>';
+																	h+='<del id="'+id+'">'+str+'</del>';
 																	h+='<span id="'+id+'">';
 																	h+='('+txt+')';
 																	h+='</span></span>';
@@ -316,58 +316,137 @@ $.fn.extend({
 													var isflag=false;
 													if(str.indexOf('<span')>=0||str.indexOf('<u')>=0||str.indexOf('<strike')>=0
 															||str.indexOf("<a")>=0||str.indexOf('<del')>=0)
-														isflag=true; 
-													while(isflag){
-														if(str.indexOf('(病句)')>0)str=str.replace("(病句)",'');
-														if(str.indexOf('(好句)')>0)str=str.replace("(好句)",'');
-														if(str.indexOf('(错别字)')>0)str=str.replace("(错别字)",'');
-														if(str.indexOf('(用词不当)')>0)str=str.replace("(用词不当)",'');	
-														if(str.indexOf('<span')>-1){
-															var tmp=str.substring(str.indexOf('<span'),str.indexOf('>',str.indexOf('<span'))+1);
-															if(tmp.length>0)
-																str=str.replace(tmp,'').replace('</span>','');
-														}
-														if(str.indexOf('<u')>-1){
-															tmp=str.substring(str.indexOf('<u'),str.indexOf('>',str.indexOf('<u'))+1);
-															if(tmp.length>0)
-																str=str.replace(tmp,'').replace('</u>','');
-							    						}
-														if(str.indexOf('<a')>-1){
-															tmp=str.substring(str.indexOf('<a'),str.indexOf('>',str.indexOf('<a'))+1);
-															if(tmp.length>0)
-																str=str.replace(tmp,'').replace('</a>','');
-							    						}
-														if(str.indexOf('<del')>-1){
-															tmp=str.substring(str.indexOf('<del'),str.indexOf('>',str.indexOf('<del'))+1);
-															if(tmp.length>0)
-																str=str.replace(tmp,'').replace('</del>','');
-							    						}
-														if(str.indexOf('<strike')>-1){
-															tmp=str.substring(str.indexOf('<strike'),str.indexOf('>',str.indexOf('<strike'))+1);
-															if(tmp.length>0)
-																str=str.replace(tmp,'').replace('</strike>','');
-							    						}	
-														/*if(str.indexOf('<span id="'+id+'_update"')>-1){
-															var end='</span>'; 
-															tmp=str.substring(str.indexOf('<span'),str.indexOf(">")+1);
-															if(tmp.length>0){
-																str=str.replace(tmp,'').replace(end,''); 
-															}
-														}*/		 
-														if(str.indexOf('<span')>-1){
-															var end='</span>'; 
-															tmp=str.substring(str.indexOf('<span'),str.indexOf('>',str.indexOf('<span'))+1);
-															if(tmp.length>0) 
-																str=str.replace(tmp,'').replace('</span>','');   
-														}															
-														if(str.indexOf('<span')<0&&str.indexOf('<u')<0&&str.indexOf('<strike')<0
-																&&str.indexOf("<a")<0&&str.indexOf("<del")<0)
-															isflag=false; 
-													}													
-												}
-												xheditorV.pasteHTML(str);  
-												break;
-									}
+
+                                                        if($("#dv_tmp_pizhu").length>0)
+                                                            $("#dv_tmp_pizhu").remove();
+                                                        if($("#dv_all_pz").length>0)
+                                                            $("#dv_all_pz").remove();
+
+                                                        var obj=$("<div style='display:none' id='dv_tmp_pizhu'>"+str+"</div><div  style='display:none' id='dv_all_pz'></div>");
+                                                        $("body").append(obj);
+                                                        //添加去除
+                                                        $("#dv_tmp_pizhu .notes_insert").remove();
+                                                        $("#dv_all_pz").html($("#dv_tmp_pizhu").html());
+                                                        //删除去除
+//                                                        $("#dv_tmp_pizhu .notes_del").each(function(ix,im){
+//                                                            $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html().replace($(im).attr("outerHTML"),$(this).html()));
+//                                                        })
+                                                        while($("#dv_all_pz .notes_del").length>0){
+                                                            $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html()
+                                                                .replace($("#dv_tmp_pizhu .notes_del").eq(0).attr("outerHTML")
+                                                                    ,$("#dv_tmp_pizhu .notes_del").eq(0).html()));
+                                                            if($("#dv_tmp_pizhu .notes_del").length<1){
+                                                                $("#dv_all_pz").html($("#dv_tmp_pizhu").html());
+                                                                break;
+                                                            }
+                                                        }
+//                                                        $("#dv_all_pz").html($("#dv_tmp_pizhu").val());
+                                                        //修改
+                                                        while($("#dv_all_pz .notes_update").length>0){
+                                                            var h='';
+                                                            if($("#dv_tmp_pizhu .notes_update").eq(0).find("strike").length>0)
+                                                                h=$("#dv_tmp_pizhu .notes_update").eq(0).find("strike").html();
+                                                            else if($("#dv_tmp_pizhu .notes_update").eq(0).find("del").length>0)
+                                                                h=$("#dv_tmp_pizhu .notes_update").eq(0).find("del").html();
+
+
+                                                            $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html()
+                                                                .replace($("#dv_tmp_pizhu .notes_update").eq(0).attr("outerHTML")
+                                                                    ,h));
+                                                            if($("#dv_tmp_pizhu .notes_update").length<1){
+                                                                $("#dv_all_pz").html($("#dv_tmp_pizhu").html());
+                                                                break;
+                                                            }
+                                                        }
+
+
+                                                        //note
+//                                                        $("#dv_tmp_pizhu .notes_note").each(function(ix,im){
+//                                                            $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html().replace($(im).attr("outerHTML")
+//                                                                ,$(im).find("a").html()));
+//                                                        })
+                                                        while($("#dv_all_pz .notes_note").length>0){
+                                                            $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html()
+                                                                .replace($("#dv_tmp_pizhu .notes_note").eq(0).attr("outerHTML")
+                                                                    ,$("#dv_tmp_pizhu .notes_note").eq(0).find("a").html()));
+                                                            if($("#dv_tmp_pizhu .notes_note").length<1){
+                                                                $("#dv_all_pz").html($("#dv_tmp_pizhu").html());
+                                                                break;
+                                                            }
+                                                        }
+                                                        //病句
+//                                                        $("#dv_tmp_pizhu .notes_errsen").each(function(ix,im){
+//                                                            $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html().replace($(im).attr("outerHTML")
+//                                                                ,$(im).children().children().children().html()));
+//                                                        })
+                                                        while($("#dv_all_pz .notes_errsen").length>0){
+                                                            $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html()
+                                                                .replace($("#dv_tmp_pizhu .notes_errsen").eq(0).attr("outerHTML")
+                                                                    ,$("#dv_tmp_pizhu .notes_errsen").eq(0).children().children().children().html()));
+                                                            if($("#dv_tmp_pizhu .notes_errsen").length<1){
+                                                                $("#dv_all_pz").html($("#dv_tmp_pizhu").html());
+                                                                break;
+                                                            }
+                                                        }
+                                                        //好句
+//                                                        $("#dv_tmp_pizhu .notes_goodsen").each(function(ix,im){
+//                                                            $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html().replace($(im).attr("outerHTML")
+//                                                                ,$(im).children().children().children().html()));
+//                                                        })
+                                                    while($("#dv_all_pz .notes_goodsen").length>0){
+                                                        $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html()
+                                                            .replace($("#dv_tmp_pizhu .notes_goodsen").eq(0).attr("outerHTML")
+                                                                ,$("#dv_tmp_pizhu .notes_goodsen").eq(0).children().children().children().html()));
+
+                                                        if($("#dv_tmp_pizhu .notes_goodsen").length<1){
+                                                            $("#dv_all_pz").html($("#dv_tmp_pizhu").html());
+                                                            break;
+                                                        }
+                                                    }
+                                                    //错别字
+                                                    while($("#dv_all_pz .notes_errorword").length>0){
+                                                        $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html()
+                                                            .replace($("#dv_tmp_pizhu .notes_errorword").eq(0).attr("outerHTML")
+                                                                ,$("#dv_tmp_pizhu .notes_errorword").eq(0).children().children().children().html()));
+
+                                                        if($("#dv_tmp_pizhu .notes_errorword").length<1){
+                                                            $("#dv_all_pz").html($("#dv_tmp_pizhu").html());
+                                                            break;
+                                                        }
+                                                    }
+                                                    //错别字
+                                                    while($("#dv_all_pz .notes_misnomer").length>0){
+                                                        $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html()
+                                                            .replace($("#dv_tmp_pizhu .notes_misnomer").eq(0).attr("outerHTML")
+                                                                ,$("#dv_tmp_pizhu .notes_misnomer").eq(0).children().children().html()));
+
+                                                        if($("#dv_tmp_pizhu .notes_misnomer").length<1){
+                                                            $("#dv_all_pz").html($("#dv_tmp_pizhu").html());
+                                                            break;
+                                                        }
+                                                    }
+                                                    //点评
+                                                    while($("#dv_all_pz .notes_critique").length>0){
+                                                        $("#dv_tmp_pizhu").html($("#dv_tmp_pizhu").html()
+                                                            .replace($("#dv_tmp_pizhu .notes_critique").eq(0).attr("outerHTML")
+                                                                ,$("#dv_tmp_pizhu .notes_critique").eq(0).children().children().html()));
+
+                                                        if($("#dv_tmp_pizhu .notes_critique").length<1){
+                                                            $("#dv_all_pz").html($("#dv_tmp_pizhu").html());
+                                                            break;
+                                                        }
+                                                    }
+                                                    $("#dv_tmp_pizhu a[id='notes_tag_pizhu_txt']").remove();
+//														if(str.indexOf('(病句)')>0)str=str.replace("(病句)",'');
+//														if(str.indexOf('(好句)')>0)str=str.replace("(好句)",'');
+//														if(str.indexOf('(错别字)')>0)str=str.replace("(错别字)",'');
+//														if(str.indexOf('(用词不当)')>0)str=str.replace("(用词不当)",'');
+                                                    $("#dv_all_pz").html($("#dv_tmp_pizhu").html());
+
+                                                    xheditorV.pasteHTML($("#dv_all_pz").html());
+                                                    break;
+                                                }
+                                        }
 							});  
 					}					
 				}

@@ -4111,6 +4111,9 @@ public class TaskController extends BaseController{
         FileOutputStream fos = null;
         Date d = new Date();
         try{
+            File tmpf=new File(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/optionPie/");
+            if(!tmpf.exists())
+                tmpf.mkdirs();
             fos = new FileOutputStream(UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE")+"/optionPie/"+d.getTime()+"taskPie.png");
             ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
         }finally{

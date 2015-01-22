@@ -16,7 +16,7 @@
         var taskid="${taskid}";
         var questype="${questype}";
         var tasktype="${taskInfo.tasktype}";
-        var g_subjectid="${param.subjectid}";
+        var g_subjectid="${subjectid}";
         var quesidStr = "${quesidStr}";
         var paperid = "${param.paperid}";
         var sign = ${ismark};

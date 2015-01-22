@@ -3854,7 +3854,21 @@ public class PaperController extends BaseController<PaperInfo>{
         String taskid = request.getParameter("taskid");
         String clsid = request.getParameter("classid");
         String classtype=request.getParameter("classtype");
+        String subjectid=request.getParameter("subjectid");
         JsonEntity je = new JsonEntity();
+        if(subjectid!=null&&subjectid.length()>0){
+            request.getSession().setAttribute("marking_sub",subjectid);
+        }else{
+            Object subObj=request.getSession().getAttribute("marking_sub");
+            if(subObj==null){
+                je.setMsg("错误，没有得到该教师的学科信息!");
+                response.getWriter().println(je.getAlertMsgAndBack());return null;
+            }
+            subjectid=subObj.toString();
+        }
+            request.setAttribute("subjectid",subjectid);
+
+
         if(paperid==null||paperid.length()<1||taskid==null||taskid.trim().length()<1){
             je.setMsg("错误，请刷新页面重试");
             response.getWriter().println(je.getAlertMsgAndBack());return null;
