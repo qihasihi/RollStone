@@ -54,12 +54,14 @@
             </div>
             <p class="t_r">
                 <c:if test="${!empty roleStr&&(roleStr=='TEACHER' || (culoginid==theme.cuserid)||(empty param.quoteid1||param.quoteid1==0))}">
-                    <c:if test="${culoginid==theme.cuserid}">
+                    <c:if test="${(empty param.quoteid1||param.quoteid1==0)&&culoginid==theme.cuserid}">
                         <c:if test="${empty theme.commentbycontent}">
                             <a href="javascript:;" onclick="showUpdateDiv('div_update','${theme.themeid}')"><span class="ico11"></span>编辑</a>&nbsp;&nbsp;
                         </c:if>
                     </c:if>
-                    <a href="javascript:;" onclick="doDelTheme(${theme.themeid });"><span class="ico04"></span>删除</a>
+                    <c:if test="${(param.quoteid1==1&&!empty roleStr&&roleStr=='TEACHER')||((empty param.quoteid1||param.quoteid1==0)&&culoginid==theme.cuserid)}">
+                        <a href="javascript:;" onclick="doDelTheme(${theme.themeid });"><span class="ico04"></span>删除</a>
+                    </c:if>
                 </c:if>
                 <c:if test="${empty param.quoteid1||param.quoteid1==0}">
                     <c:if test="${!empty roleStr&&roleStr=='TEACHER'}">
