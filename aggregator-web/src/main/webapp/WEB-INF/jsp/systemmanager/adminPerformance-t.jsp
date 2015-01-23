@@ -126,47 +126,83 @@
 
 
                             //分母
-                            var taskCount= 0,taskRateCount= 0,pjCount= 0,resCount= 0,topicCount= 0,quesCount= 0,cjCount= 0,zzCount= 0,micCount= 0,
-                                liveCount= 0,normalCount=0;
+                            var completeRateCount= 0,taskCount= 0,pjCount= 0,resCount= 0,topicCount= 0,quesCount= 0,cjCount= 0,
+                                    zzCount= 0,micCount= 0,
+                                liveCount= 0,normalCount= 0,evaluationRateCount=0;
                             $.each(rps.objList[1],function(idx,itm){
                                 //组织总数的数据
                                 totalNum++;
-                                totalTaskNum+=parseInt(isNaN(itm.tasknum)?0:(itm.tasknum,taskCount++));
-                                totalEndTaskNum+=parseInt(isNaN(itm.endtasknum)?0:itm.endtasknum);
-                                totalCompleteRate+=parseFloat((isNaN(itm.completerate.split("%")[0])?0:(itm.completerate.split("%")[0],taskRateCount++)));
-                                totalEvaluationAvg+=parseFloat((isNaN(itm.evaluation.split("|")[0])?0:itm.evaluation.split("|")[0]));
+                                if(!isNaN(itm.tasknum)&&itm.tasknum!=0){
+                                    totalTaskNum+=parseInt(itm.tasknum);
+                                    taskCount+=1;
+                                }
+                                if(!isNaN(itm.endtasknum)&&itm.endtasknum!=0){
+                                    totalEndTaskNum+=parseInt(itm.endtasknum);
+                                }
+                                if(!isNaN(itm.completerate.split("%")[0])&&itm.completerate.split("%")[0]!=0){
+                                    totalCompleteRate+=parseFloat(itm.completerate.split("%")[0]);
+                                    completeRateCount+=1;
+                                }
+                                if(!isNaN(itm.evaluation.split("|")[0])&&itm.evaluation.split("|")[0]!=0){
+                                    totalEvaluationAvg+=parseFloat(itm.evaluation.split("|")[0]);
+                                    evaluationRateCount+=1;
+                                }
                                 totalEvaluationPeo+=parseInt((isNaN(itm.evaluation.split("|")[1])?0:itm.evaluation.split("|")[1]));
-                                totalResourceTaskNum+=parseInt((isNaN(itm.resourcetask.split("|")[0])?0:(itm.resourcetask.split("|")[0],resCount++)));
+                                if(!isNaN(itm.resourcetask.split("|")[0])&&itm.resourcetask.split("|")[0]!=0){
+                                    totalResourceTaskNum+=parseInt(itm.resourcetask.split("|")[0]);
+                                    resCount+=1;
+                                }
                                 totalResourceTaskRate+=parseFloat((isNaN(itm.resourcetask.split("|")[1])?0:itm.resourcetask.split("|")[1]));
-                                totalInteractiveTaskNum+=parseInt((isNaN(itm.interactivetask.split("|")[0])?0:itm.interactivetask.split("|")[0]));
+                                if(!isNaN(itm.interactivetask.split("|")[0])&&itm.interactivetask.split("|")[0]!=0){
+                                    totalInteractiveTaskNum+=parseInt(itm.interactivetask.split("|")[0]);
+                                    topicCount+=1;
+                                }
                                 totalInteractiveTaskRate+=parseFloat((isNaN(itm.interactivetask.split("|")[1])?0:itm.interactivetask.split("|")[1]));
-                                totalMicroTaskNum+=parseInt((isNaN(itm.microtask.split("|")[0])?0:itm.microtask.split("|")[0]));
+                                if(!isNaN(itm.microtask.split("|")[0])&&itm.microtask.split("|")[0]!=0){
+                                    totalMicroTaskNum+=parseInt(itm.microtask.split("|")[0]);
+                                    micCount+=1;
+                                }
                                 totalMicroTaskRate+=parseFloat((isNaN(itm.microtask.split("|")[1])?0:itm.microtask.split("|")[1]));
-                                totalCoilingtestTaskNum+=parseInt((isNaN(itm.coilingtesttask.split("|")[0])?0:itm.coilingtesttask.split("|")[0]));
+                                if(!isNaN(itm.coilingtesttask.split("|")[0])&&itm.coilingtesttask.split("|")[0]!=0){
+                                    totalCoilingtestTaskNum+=parseInt(itm.coilingtesttask.split("|")[0]);
+                                    cjCount+=1;
+                                }
                                 totalCoilingtestTaskRate+=parseFloat((isNaN(itm.coilingtesttask.split("|")[1])?0:itm.coilingtesttask.split("|")[1]));
-                                totalSelftestTaskNum+=parseInt((isNaN(itm.selftesttask.split("|")[0])?0:itm.selftesttask.split("|")[0]));
+                                if(!isNaN(itm.selftesttask.split("|")[0])&&itm.selftesttask.split("|")[0]!=0){
+                                    totalSelftestTaskNum+=parseInt(itm.selftesttask.split("|")[0]);
+                                    zzCount+=1;
+                                }
                                 totalSelftestTaskRate+=parseFloat((isNaN(itm.selftesttask.split("|")[1])?0:itm.selftesttask.split("|")[1]));
-                                totalLiveTaskNum+=parseInt((isNaN(itm.livetask.split("|")[0])?0:itm.livetask.split("|")[0]));
+                                if(!isNaN(itm.livetask.split("|")[0])&&itm.livetask.split("|")[0]!=0){
+                                    totalLiveTaskNum+=parseInt(itm.livetask.split("|")[0]);
+                                    liveCount+=1;
+                                }
                                 totalLiveTaskRate+=parseFloat((isNaN(itm.livetask.split("|")[1])?0:itm.livetask.split("|")[1]));
-                                totalQuesTaskNum+=parseInt((isNaN(itm.questask.split("|")[0])?0:itm.questask.split("|")[0]));
+                                if(!isNaN(itm.questask.split("|")[0])&&itm.questask.split("|")[0]!=0){
+                                    totalQuesTaskNum+=parseInt(itm.questask.split("|")[0]);
+                                    quesCount+=1;
+                                }
                                 totalQuesTaskRate+=parseFloat((isNaN(itm.questask.split("|")[1])?0:itm.questask.split("|")[1]));
-                                totalGeneralTaskNum+=parseInt((isNaN(itm.generaltask.split("|")[0])?0:itm.generaltask.split("|")[0]));
+                                if(!isNaN(itm.generaltask.split("|")[0])&&itm.generaltask.split("|")[0]!=0){
+                                    totalGeneralTaskNum+=parseInt(itm.generaltask.split("|")[0]);
+                                    normalCount+=1;
+                                }
                                 totalGeneralTaskRate+=parseFloat((isNaN(itm.generaltask.split("|")[1])?0:itm.generaltask.split("|")[1]));
                             });
                             top+='<tr>';
                             top+='<td>'+totalCourseName+'</td>';
                             top+='<td>'+totalTaskNum+'</td>';
                             top+='<td>'+totalEndTaskNum+'</td>';
-                            top+='<td>'+(totalCompleteRate/totalNum).toFixed(2)+'%</td>';
-                            top+='<td>'+(totalEvaluationAvg/totalNum).toFixed(2)+'<br>('+totalEvaluationPeo+')</td>';
-                            top+='<td>'+totalResourceTaskNum+'<br>('+(totalResourceTaskRate/totalNum).toFixed(2)+'%)</td>';
-                            top+='<td>'+totalInteractiveTaskNum+'<br>('+(totalInteractiveTaskRate/totalNum).toFixed(2)+'%)</td>';
-                            top+='<td>'+totalMicroTaskNum+'<br>('+(totalMicroTaskRate/totalNum).toFixed(2)+'%)</td>';
-                            top+='<td>'+totalCoilingtestTaskNum+'<br>('+(totalCoilingtestTaskRate/totalNum).toFixed(2)+'%)</td>';
-                            top+='<td>'+totalSelftestTaskNum+'<br>('+(totalSelftestTaskRate/totalNum).toFixed(2)+'%)</td>';
-                            top+='<td>'+totalLiveTaskNum+'<br>('+(totalLiveTaskRate/totalNum).toFixed(2)+'%)</td>';
-                            top+='<td>'+totalQuesTaskNum+'<br>('+(totalQuesTaskRate/totalNum).toFixed(2)+'%)</td>';
-                            top+='<td>'+totalGeneralTaskNum+'<br>('+(totalGeneralTaskRate/totalNum).toFixed(2)+'%)</td>';
+                            top+='<td>'+(isNaN(totalCompleteRate/completeRateCount)?0:totalCompleteRate/completeRateCount).toFixed(2)+'%</td>';
+                            top+='<td>'+(isNaN(totalEvaluationAvg/evaluationRateCount)?0:totalEvaluationAvg/evaluationRateCount).toFixed(2)+'<br>('+totalEvaluationPeo+')</td>';
+                            top+='<td>'+totalResourceTaskNum+'<br>('+(isNaN(totalResourceTaskRate/resCount)?0:totalResourceTaskRate/resCount).toFixed(2)+'%)</td>';
+                            top+='<td>'+totalInteractiveTaskNum+'<br>('+(isNaN(totalInteractiveTaskRate/topicCount)?0:totalInteractiveTaskRate/topicCount).toFixed(2)+'%)</td>';
+                            top+='<td>'+totalMicroTaskNum+'<br>('+(isNaN(totalMicroTaskRate/micCount)?0:totalMicroTaskRate/micCount).toFixed(2)+'%)</td>';
+                            top+='<td>'+totalCoilingtestTaskNum+'<br>('+(isNaN(totalCoilingtestTaskRate/cjCount)?0:totalCoilingtestTaskRate/cjCount).toFixed(2)+'%)</td>';
+                            top+='<td>'+totalSelftestTaskNum+'<br>('+(isNaN(totalSelftestTaskRate/zzCount)?0:totalSelftestTaskRate/zzCount).toFixed(2)+'%)</td>';
+                            top+='<td>'+totalLiveTaskNum+'<br>('+(isNaN(totalLiveTaskRate/liveCount)?0:totalLiveTaskRate/liveCount).toFixed(2)+'%)</td>';
+                            top+='<td>'+totalQuesTaskNum+'<br>('+(isNaN(totalQuesTaskRate/quesCount)?0:totalQuesTaskRate/quesCount).toFixed(2)+'%)</td>';
+                            top+='<td>'+totalGeneralTaskNum+'<br>('+(isNaN(totalGeneralTaskRate/normalCount)?0:totalGeneralTaskRate/normalCount).toFixed(2)+'%)</td>';
                             top+='</tr>';
                             //alert(taskRateCount);
                         }
