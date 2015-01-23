@@ -538,10 +538,10 @@ public class SystemManagerController extends BaseController<TermInfo>{
             //excel列头
             List<String> coltmpList=new ArrayList<String>();
             coltmpList.add("姓名");
-            coltmpList.add("总分");
             for(int i = 0;i<colList.size();i++){
                 coltmpList.add(colList.get(i).get("COLNAME").toString());
             }
+            coltmpList.add("总分");
             columnsList.add(coltmpList);
             //title
             String title=cobj.getYear()+" "+cobj.getClassgrade()+"("+cobj.getClassname()+")";

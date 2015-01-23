@@ -2016,8 +2016,8 @@ public class TpCourseController extends TaskController{
             tc.setCuserid(user.getUserid());
             tc.setCourselevel(tc.getCourselevel());
             tc.setDcschoolid(this.logined(request).getDcschoolid());
-            //默认为校内分享
-            tc.setSharetype(1);
+            //默认为不分享
+            tc.setSharetype(3);
 
             sql = new StringBuilder();
             objList = this.tpCourseManager.getSaveSql(tc, sql);

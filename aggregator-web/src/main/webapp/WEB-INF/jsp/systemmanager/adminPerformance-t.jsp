@@ -123,15 +123,20 @@
                             var totalQuesTaskRate = 0.00;
                             var totalGeneralTaskNum = 0;
                             var totalGeneralTaskRate=0.00;
+
+
+                            //分母
+                            var taskCount= 0,taskRateCount= 0,pjCount= 0,resCount= 0,topicCount= 0,quesCount= 0,cjCount= 0,zzCount= 0,micCount= 0,
+                                liveCount= 0,normalCount=0;
                             $.each(rps.objList[1],function(idx,itm){
                                 //组织总数的数据
                                 totalNum++;
-                                totalTaskNum+=parseInt(isNaN(itm.tasknum)?0:itm.tasknum);
+                                totalTaskNum+=parseInt(isNaN(itm.tasknum)?0:(itm.tasknum,taskCount++));
                                 totalEndTaskNum+=parseInt(isNaN(itm.endtasknum)?0:itm.endtasknum);
-                                totalCompleteRate+=parseFloat((isNaN(itm.completerate.split("%")[0])?0:itm.completerate.split("%")[0]));
+                                totalCompleteRate+=parseFloat((isNaN(itm.completerate.split("%")[0])?0:(itm.completerate.split("%")[0],taskRateCount++)));
                                 totalEvaluationAvg+=parseFloat((isNaN(itm.evaluation.split("|")[0])?0:itm.evaluation.split("|")[0]));
                                 totalEvaluationPeo+=parseInt((isNaN(itm.evaluation.split("|")[1])?0:itm.evaluation.split("|")[1]));
-                                totalResourceTaskNum+=parseInt((isNaN(itm.resourcetask.split("|")[0])?0:itm.resourcetask.split("|")[0]));
+                                totalResourceTaskNum+=parseInt((isNaN(itm.resourcetask.split("|")[0])?0:(itm.resourcetask.split("|")[0],resCount++)));
                                 totalResourceTaskRate+=parseFloat((isNaN(itm.resourcetask.split("|")[1])?0:itm.resourcetask.split("|")[1]));
                                 totalInteractiveTaskNum+=parseInt((isNaN(itm.interactivetask.split("|")[0])?0:itm.interactivetask.split("|")[0]));
                                 totalInteractiveTaskRate+=parseFloat((isNaN(itm.interactivetask.split("|")[1])?0:itm.interactivetask.split("|")[1]));
@@ -163,12 +168,14 @@
                             top+='<td>'+totalQuesTaskNum+'<br>('+(totalQuesTaskRate/totalNum).toFixed(2)+'%)</td>';
                             top+='<td>'+totalGeneralTaskNum+'<br>('+(totalGeneralTaskRate/totalNum).toFixed(2)+'%)</td>';
                             top+='</tr>';
+                            //alert(taskRateCount);
                         }
                     }else{
                         htm+='<tr><td colspan="15">当前班级暂无数据</td></tr>';
                     }
                     htm=thhtm+top+htm;
                     $("#mainTbl").html(htm);
+
                 }else{
                     alert("操作失败，"+rps.msg);
                 }
