@@ -33,6 +33,7 @@
                      $("#dv_loadTopic").load("tptopic?m=toAdmin&operate_type=1&courseid=${param.courseid}"
                              ,function(rps){
                                 // $("dv_load_topic").html(rps);
+                                 $("#dv_loadTopic .float_title").remove();
                                  $("#dv_loadTopic .content1").removeClass("content1");
                                  $("#dv_loadTopic .subpage_head").remove();
                                  $("#dv_loadTopic .foot").remove();
