@@ -25,6 +25,7 @@ import com.school.utils.*;
 import com.school.util.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Controller;
@@ -7474,6 +7475,21 @@ public class UserController extends BaseController<UserInfo> {
             jsonEntity.setMsg("错误，非法登陆!!");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
+        String fromType="lzx";
+        //如果功能ID=3,4,5,6,7 则需要判断分校是否为四中分校，如果不是，则拒绝访问
+        //1:教学系统   2：资源系统    3：成绩系统    4：选修课    5:校风    6：学生评教  7：同行评教
+        if(Integer.parseInt(flag_id)==3||Integer.parseInt(flag_id)==4
+                ||Integer.parseInt(flag_id)==5||Integer.parseInt(flag_id)==6
+                ||Integer.parseInt(flag_id)==7){
+            //如果不是四中分校ID,则返回
+             if(!dcschoolid.trim().equals(UtilTool.utilproperty.getProperty("BHSF_SCHOOL_ID").trim())){
+                 jsonEntity.setMsg("非法登陆!!只有北京四中学校才能访问!");
+                 response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
+             }
+            fromType="bhsf";
+        }
+
+
         List<UserInfo> usrList=this.userManager.getList(loginUsr,null);
         if(usrList==null||usrList.size()<1){
             jsonEntity.setMsg("没有发现该用户!");
@@ -7504,10 +7520,40 @@ public class UserController extends BaseController<UserInfo> {
             jsonEntity.setMsg("错误，网校端配置错误!请联系管理人员");
             response.getWriter().print(jsonEntity.getAlertMsgAndCloseWin());return;
         }
-        request.getSession().setAttribute("fromType","lzx");
-        String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
-        response.sendRedirect(baseUrl+"/"+targetUrl);
+        if(fromType==null||fromType.equals("lzx")){
+            request.getSession().setAttribute("fromType","lzx");
+            String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
+            response.sendRedirect(baseUrl+"/"+targetUrl);
+        }else if(fromType.equals("bhsf")){
+            //根据相关信息跳转到四中
+            redirectBHSF(targetUrl,flag_id,this.logined(request).getUserid(),response);
+        }
     }
+
+    /**
+     * 根据数校ID跳转到四中
+     * @param flagId
+     * @param userId
+     * @param response
+     * @throws Exception
+     */
+    private void redirectBHSF(String targetUrl,String flagId,Integer userId,HttpServletResponse response) throws Exception{
+        if(StringUtils.isEmpty(targetUrl)||StringUtils.isEmpty(flagId)
+                ||userId==null||response==null){
+            logger.error("跳转到四中error!参数不齐!");
+            return;
+        }
+        Long time=System.currentTimeMillis();
+        String md5Str=time+flagId+userId+time;
+        targetUrl=new StringBuilder(targetUrl).append("?")
+                .append("sxUserId=").append(userId)
+                .append("&flagId=").append(flagId)
+                .append("&time=").append(time)
+                .append("&sign=").append(LZX_MD5.getMD5Str(md5Str))
+                .toString();
+        response.sendRedirect(targetUrl);
+    }
+
 
     /**
      * 外部接口登陆(必要参数 user_name,password)
