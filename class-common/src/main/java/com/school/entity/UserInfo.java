@@ -42,6 +42,26 @@ public class UserInfo implements java.io.Serializable {
     private Integer isactivity;
     private Integer source;     //登录来源 1:数校平台  2：网校后台  3：乐知行
 
+    //同步四中用户使用
+    private String roleIdStr;
+    private String teacherno;
+
+    public String getRoleIdStr() {
+        return roleIdStr;
+    }
+
+    public void setRoleIdStr(String roleIdStr) {
+        this.roleIdStr = roleIdStr;
+    }
+
+    public String getTeacherno() {
+        return teacherno;
+    }
+
+    public void setTeacherno(String teacherno) {
+        this.teacherno = teacherno;
+    }
+
     /**
      * 登录来源
      */

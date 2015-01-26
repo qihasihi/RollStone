@@ -22,10 +22,17 @@ public class TeacherInfo implements java.io.Serializable{
     private String teacherpost;  
     
     private String subjects;
- 
-  
-   
-	public String getSubjects() {
+    private String teacherno;
+
+    public String getTeacherno() {
+        return teacherno;
+    }
+
+    public void setTeacherno(String teacherno) {
+        this.teacherno = teacherno;
+    }
+
+    public String getSubjects() {
 		return subjects;
 	}
 	public void setSubjects(String subjects) {
