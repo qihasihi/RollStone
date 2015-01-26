@@ -195,7 +195,7 @@ public class BhsfInterfaceUtil {
         String md5key=time+"SX_OA";
         md5key= LZX_MD5.getMD5Str(md5key);//生成md5加密
         paramMap.put("sign",md5key);
-        JSONObject jo=UtilTool.sendPostUrl(BASF_URL,paramMap,"UTF-8");
+        JSONObject jo=UtilTool.sendPostUrl(BHSF_URL,paramMap,"UTF-8");
         if(jo!=null&&jo.containsKey("type")&&jo.get("type").toString().trim().equals("success"))
             return true;
         if(jo!=null)
@@ -204,11 +204,11 @@ public class BhsfInterfaceUtil {
     }
 
     /**
-     * 添加班级信息
+     * 添加或修改班级信息
      * @param entity 班级信息
      * @return
      */
-    public static boolean addClassBase(final ClassInfo entity){
+    public static boolean addOrModifyClassBase(final ClassInfo entity){
         return OperateClassBase(entity,"addOrModifyClass");
     }
     /**
@@ -219,15 +219,6 @@ public class BhsfInterfaceUtil {
     public static boolean delClassBase(final ClassInfo entity){
         return OperateClassBase(entity,"delClass");
     }
-    /**
-     * 修改班级信息
-     * @param entity 班级信息
-     * @return
-     */
-    public static boolean updateClassBase(final ClassInfo entity){
-        return OperateClassBase(entity,"addOrModifyClass");
-    }
-
 
     /**
      * 操作用户与班级数据

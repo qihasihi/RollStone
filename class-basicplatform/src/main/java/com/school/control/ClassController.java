@@ -6,7 +6,7 @@ import com.school.entity.*;
 import com.school.manager.*;
 import com.school.manager.inter.*;
 import com.school.util.*;
-import com.school.utils.EttInterfaceUserUtil;
+import com.school.utils.*;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1075,7 +1075,7 @@ public class ClassController extends BaseController<ClassInfo>{
                                 //如果是四中，则同步修改或添加相关班级信息
                                 if(dcschoolid.toString().trim().equals(UtilTool.utilproperty.getProperty("BHSF_SCHOOL_ID"))){
                                     //同步到四中
-                                    if(!updateClsToBHSF(cList.get(0))){
+                                    if(!BhsfInterfaceUtil.addOrModifyClassBase(cList.get(0))){
                                         logger.error(cList.get(0).getClassid()+"更新四中班级失败!");
                                         transactionRollback();
                                         response.getWriter().println("{\"type\":\"error\",\"msg\":\""+cList.get(0).getClassid()+"更新四中班级失败!\"}");return;
@@ -1094,63 +1094,6 @@ public class ClassController extends BaseController<ClassInfo>{
             else
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");return;
         }
-    }
-
-    /**
-     * 同步信息到四中OA
-     * @param entity
-     * @return
-     */
-    private boolean updateClsToBHSF(ClassInfo entity ){
-        if(entity==null||entity.getClassid()==null
-                ||entity.getClassname()==null||entity.getPattern()==null
-                ||entity.getClassgrade()==null||entity.getYear()==null
-                ||entity.getType()==null)return false;
-        Long timestamp=System.currentTimeMillis();
-        String signKey=new StringBuilder(timestamp.toString()).append("timestamp").toString();
-        String sign=LZX_MD5.getMD5Str(signKey);
-        Map<String,String> paramMap=new HashMap<String, String>();
-        paramMap.put("timestamp",timestamp.toString());
-        paramMap.put("sign",sign);
-        Map<String,Object> messageMap=new HashMap<String, Object>();
-        messageMap.put("sx_classid",entity.getClassid());
-        messageMap.put("class_name",entity.getClassname());
-        messageMap.put("pattern",entity.getPattern());
-        messageMap.put("class_grade",entity.getClassgrade());
-        messageMap.put("year",entity.getYear());
-        messageMap.put("type",entity.getType());
-        paramMap.put("message", JSONObject.fromObject(messageMap).toString());
-
-        JSONObject jo=UtilTool.sendPostUrlNotEncoding(UtilTool.utilproperty.getProperty("BHSF_OPERATE_CLASS_URL").toString(),paramMap,"UTF-8");
-        System.out.println(jo==null?"returnJson:null":"returnJson:"+jo);
-        if(jo!=null&&jo.containsKey("type")&&jo.get("type")!=null
-                &&jo.get("type").toString().trim().toLowerCase().equals("success"))
-            return true;
-        return false;
-    }
-
-
-    /**
-     * 同步信息到四中OA
-     * @param classid
-     * @return
-     */
-    private boolean delClsToBHSF(Integer classid){
-        if(classid==null)return false;
-        Long timestamp=System.currentTimeMillis();
-        String signKey=new StringBuilder(timestamp.toString()).append("timestamp").toString();
-        String sign=LZX_MD5.getMD5Str(signKey);
-        Map<String,String> paramMap=new HashMap<String, String>();
-        paramMap.put("timestamp",timestamp.toString());
-        paramMap.put("sign",sign);
-        paramMap.put("sx_class_id",classid.toString());
-
-        JSONObject jo=UtilTool.sendPostUrlNotEncoding(UtilTool.utilproperty.getProperty("BHSF_OPERATE_CLASS_URL").toString(),paramMap,"UTF-8");
-        System.out.println(jo==null?"returnJson:null":"returnJson:"+jo);
-        if(jo!=null&&jo.containsKey("type")&&jo.get("type")!=null
-                &&jo.get("type").toString().trim().toLowerCase().equals("success"))
-            return true;
-        return false;
     }
 
 
@@ -1414,8 +1357,9 @@ public class ClassController extends BaseController<ClassInfo>{
                                 response.getWriter().println("{\"type\":\"success\",\"msg\":\"删除Ett班级失败!\"}");
                                 return;
                             }
+                            //同步删除班级到四中
                             if(dcschoolid.toString().trim().equals(UtilTool.utilproperty.getProperty(""))){
-                                if(!delClsToBHSF(cList.get(0).getClassid())){
+                                if(!BhsfInterfaceUtil.delClassBase(cList.get(0))){
                                     logger.error(cList.get(0).getClassid()+"删除四中班级失败!");
                                     transactionRollback();
                                     response.getWriter().println("{\"type\":\"success\",\"msg\":\"删除四中班级失败!\"}");
