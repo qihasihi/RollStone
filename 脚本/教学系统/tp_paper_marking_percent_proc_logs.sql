@@ -4,7 +4,7 @@ USE `m_school`$$
 
 DROP PROCEDURE IF EXISTS `tp_paper_marking_percent_proc_logs`$$
 
-CREATE DEFINER=`schu`@`%` PROCEDURE `tp_paper_marking_percent_proc_logs`(p_paper_id BIGINT,p_bignum INT,p_smallnum INT,p_classid INT)
+CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_paper_marking_percent_proc_logs`(p_paper_id BIGINT,p_bignum INT,p_smallnum INT,p_classid INT,p_taskid BIGINT)
 BEGIN
 	DECLARE tmp_sql VARCHAR(20000) DEFAULT '';
 	IF p_paper_id IS NOT NULL THEN
@@ -13,12 +13,13 @@ BEGIN
 	      SET tmp_sql = CONCAT(tmp_sql," WHERE paperlogs.`score`<=",p_bignum);
 	      SET tmp_sql = CONCAT(tmp_sql," AND paperlogs.`score`>=",p_smallnum);
 	      SET tmp_sql = CONCAT(tmp_sql," AND paperlogs.`paper_id`=",p_paper_id);
+	      SET tmp_sql = CONCAT(tmp_sql," AND paperlogs.`task_id`=",p_taskid);	      
 	      SET tmp_sql=CONCAT(tmp_sql," AND paperlogs.user_id IN (
-			SELECT u.user_id FROM j_class_user cu,user_info u WHERE cu.user_id=u.ref  AND cu.relation_type='Ñ§Éú' AND cu.class_id=",p_classid,")");
+			SELECT u.user_id FROM j_class_user cu,user_info u WHERE cu.user_id=u.ref  AND cu.relation_type='å­¦ç”Ÿ' AND cu.class_id=",p_classid,")");
               SET @sql1 =tmp_sql;   
 	      PREPARE s1 FROM  @sql1;   
 	      EXECUTE s1;  
 	END IF;
-END $$
+    END$$
 
 DELIMITER ;
