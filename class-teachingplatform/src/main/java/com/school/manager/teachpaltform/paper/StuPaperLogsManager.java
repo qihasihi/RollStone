@@ -1,21 +1,19 @@
 
 package  com.school.manager.teachpaltform.paper;
 
-import java.util.List;
-import java.util.Map;
-
-import jxl.Sheet;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import com.school.dao.inter.teachpaltform.paper.IStuPaperLogsDAO;
-
-import com.school.entity.teachpaltform.paper.StuPaperLogs;
 import com.school.dao.base.ICommonDAO;
+import com.school.dao.inter.teachpaltform.paper.IStuPaperLogsDAO;
+import com.school.entity.teachpaltform.paper.StuPaperLogs;
 import com.school.manager.base.BaseManager;
 import com.school.manager.inter.teachpaltform.paper.IStuPaperLogsManager;
 import com.school.util.PageResult;
+import jxl.Sheet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements IStuPaperLogsManager  {
@@ -94,13 +92,13 @@ public class  StuPaperLogsManager extends BaseManager<StuPaperLogs> implements I
     }
 
     @Override
-    public List<Map<String, Object>> getPaperPercentNum(Long paperid, int bignum, int smallnum,Integer classid) {
-        return this.stupaperlogsdao.getPaperPercentNum(paperid,bignum,smallnum,classid);
+    public List<Map<String, Object>> getPaperPercentNum(Long paperid, int bignum, int smallnum,Integer classid,Long taskid) {
+        return this.stupaperlogsdao.getPaperPercentNum(paperid,bignum,smallnum,classid,taskid);
     }
 
     @Override
-    public List<Map<String, Object>> getPaperPercentNum2(Long paperid, int bignum, int smallnum,Integer classid) {
-        return this.stupaperlogsdao.getPaperPercentNum2(paperid,bignum,smallnum,classid);
+    public List<Map<String, Object>> getPaperPercentNum2(Long paperid, int bignum, int smallnum,Integer classid,Long taskid) {
+        return this.stupaperlogsdao.getPaperPercentNum2(paperid,bignum,smallnum,classid,taskid);
     }
 
     @Override

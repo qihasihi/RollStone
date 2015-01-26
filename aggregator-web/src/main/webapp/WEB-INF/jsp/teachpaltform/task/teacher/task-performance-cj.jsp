@@ -85,7 +85,7 @@
             $.ajax({
                 url:"paper?m=getpercentscore",
                 type:"post",
-                data:{type:type,paperid:paperid,classid:${classid}},
+                data:{type:type,paperid:paperid,classid:${classid},taskId:${param.taskid}},
                 dataType:'json',
                 cache: false,
                 error:function(){

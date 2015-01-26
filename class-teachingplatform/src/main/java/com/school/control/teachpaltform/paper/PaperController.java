@@ -4056,8 +4056,10 @@ public class PaperController extends BaseController<PaperInfo>{
             String paperid = request.getParameter("paperid");
             String type = request.getParameter("type");
             String classid=request.getParameter("classid");
+            String taskId=request.getParameter("taskId");
             if(paperid==null||paperid.trim().length()<1||type==null||type.trim().length()<1
-                    ||classid==null||classid.trim().length()<1){
+                    ||classid==null||classid.trim().length()<1
+                    ||taskId==null||taskId.trim().length()<1){
                 je.setType("error");
                 je.setMsg("²ÎÊýÓÐÎó!");
                 response.getWriter().println(je.toJSON());return;
@@ -4086,7 +4088,7 @@ public class PaperController extends BaseController<PaperInfo>{
                        }
                        int bignum = Integer.parseInt(new java.text.DecimalFormat("0").format(dbnum));
                        int smallnum = Integer.parseInt(new java.text.DecimalFormat("0").format(dbnum2));
-                       List<Map<String,Object>> numList = this.stuPaperLogsManager.getPaperPercentNum(Long.parseLong(paperid),bignum,smallnum,Integer.parseInt(classid.trim()));
+                       List<Map<String,Object>> numList = this.stuPaperLogsManager.getPaperPercentNum(Long.parseLong(paperid),bignum,smallnum,Integer.parseInt(classid.trim()),Long.parseLong(taskId.trim()));
                        //m.put(smallnum + "~" + bignum, numList.get(0).get("NUM"));
                        htm+="<tr><td>"+smallnum + "~" + bignum+"</td><td>"+numList.get(0).get("NUM")+"</td></tr>";
                        int num = Integer.parseInt(numList.get(0).get("NUM").toString());
@@ -4132,7 +4134,7 @@ public class PaperController extends BaseController<PaperInfo>{
                        int bignum = dbnum;
                        int smallnum = dbnum2;
                        List<Map<String,Object>> numList = this.stuPaperLogsManager.getPaperPercentNum2(Long.parseLong(paperid),
-                               bignum, smallnum, Integer.parseInt(classid.trim()));
+                               bignum, smallnum, Integer.parseInt(classid.trim()),Long.parseLong(taskId.trim()));
                        m.put(smallnum + "~" + bignum, numList.get(0).get("NUM"));
                        int num = Integer.parseInt(numList.get(0).get("NUM").toString());
                        int totalnum = Integer.parseInt(numList.get(0).get("TOTALNUM").toString());
