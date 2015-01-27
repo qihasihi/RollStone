@@ -3,10 +3,8 @@ package com.school.ett;
 import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
 import com.school.entity.teachpaltform.TpCourseInfo;
-import com.school.manager.ClassManager;
 import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.teachpaltform.ITpCourseManager;
-import com.school.manager.teachpaltform.TpCourseManager;
 import com.school.util.MD5_NEW;
 import jcore.jsonrpc.common.JSONArray;
 import net.sf.json.JSONObject;
@@ -81,8 +79,9 @@ public class EliteClassInterfaceController extends BaseController<String> {
             obj.put("classId", cls.getClassid());
             obj.put("subjectId", cls.getSubjectid());
             obj.put("className", cls.getClassname());
-            obj.put("gradeId", gradeId);
-            obj.put("termId", termId);
+            obj.put("gradeId", cls.getGradeid());
+            obj.put("periodId", cls.getTermid());
+            obj.put("classType", cls.getActivitytype());
             array.put(obj);
         }
 
