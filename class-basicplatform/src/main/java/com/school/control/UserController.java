@@ -7390,8 +7390,15 @@ public class UserController extends BaseController<UserInfo> {
                 sel.setUserid(userInfoList.get(0).getRef());
                 sel.setClassid(clsList.get(0).getClassid());
                 sel.setRelationtype(relationtype);
-                if(availableSubject&&subjectid.length()>0&&subjectList!=null&&subjectList.size()>0)
+                if(availableSubject&&subjectid.length()>0&&subjectList!=null&&subjectList.size()>0){
+                    if(clsList.get(0).getPattern().equals("·Ö²ã°à")&&
+                            (!subjectid.equals(clsList.get(0).getSubjectid().toString()))){
+                        je.setMsg("subjectid conflict!"+clsList.get(0).getSubjectid()+" classid:"+classid+"!");
+                        response.getWriter().print(je.toJSON());return;
+                    }
                     sel.setSubjectid(subjectList.get(0).getSubjectid());
+                }
+
                 List<ClassUser>clsUserList=this.classUserManager.getList(sel,null);
                 if(clsUserList!=null&&clsUserList.size()>0){
                     je.setMsg("clsid:"+classid+",lzxuserid:"+lzxuserid+" already exist!");
