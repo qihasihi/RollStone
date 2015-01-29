@@ -4,9 +4,9 @@ USE `m_school`$$
 
 DROP PROCEDURE IF EXISTS `class_proc_delete`$$
 
-CREATE DEFINER=`schu`@`%` PROCEDURE `class_proc_delete`(
+CREATE DEFINER=`mytest`@`%` PROCEDURE `class_proc_delete`(
 				            p_class_id INT,
-				            p_lzxclassid INT,
+				            p_lzxclassid VARCHAR(100),
 				            p_subject_id INT,
 				            p_isflag INT,
 				            p_dcschoolid INT,
@@ -22,7 +22,7 @@ BEGIN
 		SET tmp_sql=CONCAT(tmp_sql," and CLASS_ID=",p_class_id);
 	END IF;
 	IF p_lzxclassid IS NOT NULL THEN
-		SET tmp_sql=CONCAT(tmp_sql," and lzx_classid=",p_lzxclassid);
+		SET tmp_sql=CONCAT(tmp_sql," and lzx_classid='",p_lzxclassid,"'");
 	END IF;
 	IF p_subject_id IS NOT NULL THEN
 		SET tmp_sql=CONCAT(tmp_sql," and subject_id=",p_subject_id);
@@ -53,7 +53,7 @@ BEGIN
 		SET tmp_sql=CONCAT(tmp_sql," and isflag=",p_isflag);
 	END IF;
 	IF p_lzxclassid IS NOT NULL THEN
-		SET tmp_sql=CONCAT(tmp_sql," and lzx_classid=",p_lzxclassid);
+		SET tmp_sql=CONCAT(tmp_sql," and lzx_classid='",p_lzxclassid,"'");
 	END IF;
 		IF p_dcschoolid IS NOT NULL THEN
 		SET tmp_sql=CONCAT(tmp_sql," and dc_school_id=",p_dcschoolid);
@@ -65,6 +65,6 @@ BEGIN
 	EXECUTE stmt;	
 	SET affect_row = 1;
 	
-END $$
+    END$$
 
 DELIMITER ;

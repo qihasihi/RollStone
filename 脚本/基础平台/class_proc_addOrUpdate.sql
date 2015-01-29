@@ -1,11 +1,11 @@
 DELIMITER $$
 
-USE `school`$$
+USE `m_school`$$
 
 DROP PROCEDURE IF EXISTS `class_proc_addOrUpdate`$$
 
 CREATE DEFINER=`mytest`@`%` PROCEDURE `class_proc_addOrUpdate`(
-					    p_lzx_class_id INT,
+					    p_lzx_class_id VARCHAR(100),
 				             p_class_grade VARCHAR(1000),
 				             p_class_name VARCHAR(1000),
 				             p_year VARCHAR(1000),
@@ -20,7 +20,7 @@ CREATE DEFINER=`mytest`@`%` PROCEDURE `class_proc_addOrUpdate`(
 				            OUT affect_row INT)
 BEGIN
 	DECLARE tmp_sql VARCHAR(20000);
-	SET tmp_sql=CONCAT("SELECT COUNT(*) INTO @tmp_sumCount FROM class_info where lzx_classid=",p_lzx_class_id);
+	SET tmp_sql=CONCAT("SELECT COUNT(*) INTO @tmp_sumCount FROM class_info where lzx_classid='",p_lzx_class_id,"'");
 	IF p_dcschoolid IS NOT NULL THEN
 	  SET tmp_sql=CONCAT(tmp_sql," AND dc_school_id=",p_dcschoolid);
 	END IF;
@@ -30,7 +30,7 @@ BEGIN
 	DEALLOCATE PREPARE stmt;
 	SET affect_row=1;
 	IF @tmp_sumCount>0 THEN
-	SET tmp_sql=CONCAT("SELECT class_id INTO @tmp_clsid FROM class_info where lzx_classid=",p_lzx_class_id);
+	SET tmp_sql=CONCAT("SELECT class_id INTO @tmp_clsid FROM class_info where lzx_classid='",p_lzx_class_id,"'");
 	IF p_dcschoolid IS NOT NULL THEN
 	  SET tmp_sql=CONCAT(tmp_sql," AND dc_school_id=",p_dcschoolid);
 	END IF;

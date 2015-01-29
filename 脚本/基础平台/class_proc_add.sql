@@ -1,24 +1,29 @@
 DELIMITER $$
+
+USE `m_school`$$
+
+DROP PROCEDURE IF EXISTS `class_proc_add`$$
+
 CREATE DEFINER=`mytest`@`%` PROCEDURE `class_proc_add`(
-					    p_lzx_class_id INT,
-					    p_dc_school_id int,
+					    p_lzx_class_id VARCHAR(100),
+					    p_dc_school_id INT,
 				             p_class_grade VARCHAR(1000),
 				             p_class_name VARCHAR(1000),
 				             p_year VARCHAR(1000),
 				            p_type VARCHAR(1000),
 				            p_pattern VARCHAR(1000),
-				            p_subject_id int,
+				            p_subject_id INT,
 				            p_dctype INT,
 				            p_isflag INT, 
-				            p_allow_join int,
-				            p_verify_time varchar(50),
-				            p_cls_num int,
-				            p_invite_code varchar(6),
+				            p_allow_join INT,
+				            p_verify_time VARCHAR(50),
+				            p_cls_num INT,
+				            p_invite_code VARCHAR(6),
 				            p_c_user_id INT,
 				            p_im_valdate_code VARCHAR(6),
 				            p_class_id INT,
-							p_activity_type int,
-							p_term_id int,
+							p_activity_type INT,
+							p_term_id INT,
 				            OUT affect_row INT)
 BEGIN
 	DECLARE tmp_column_sql VARCHAR(1000) DEFAULT '';
@@ -35,7 +40,7 @@ BEGIN
 	END IF;
 	IF p_lzx_class_id IS NOT NULL THEN
 		SET tmp_column_sql=CONCAT(tmp_column_sql,"lzx_classid,");
-		SET tmp_value_sql=CONCAT(tmp_value_sql,p_lzx_class_id,",");
+		SET tmp_value_sql=CONCAT(tmp_value_sql,"'",p_lzx_class_id,"',");
 	END IF;
 	IF p_im_valdate_code IS NOT NULL THEN
 		SET tmp_column_sql=CONCAT(tmp_column_sql,"im_valdate_code,");
@@ -131,4 +136,5 @@ BEGIN
 	SET affect_row = 1;
 	
     END$$
+
 DELIMITER ;
