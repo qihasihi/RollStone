@@ -1005,7 +1005,7 @@ public class ClassController extends BaseController<ClassInfo>{
 
             cls.setType(type.toString());
 
-            cls.setClassid(Integer.parseInt(classid.toString()));
+            //cls.setClassid(Integer.parseInt(classid.toString()));
             cls.setIsflag(Integer.parseInt(isflag.toString()));
             if(pattern.toString().trim().equals("·Ö²ã°à")){
                 cls.setSubjectid(Integer.parseInt(subjectid.toString()));
