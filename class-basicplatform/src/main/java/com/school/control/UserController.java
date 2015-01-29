@@ -6277,7 +6277,7 @@ public class UserController extends BaseController<UserInfo> {
                     response.getWriter().print(je.toJSON());return;
                 }
                 ClassInfo c=new ClassInfo();
-                c.setLzxclassid(Integer.parseInt(classid));
+                c.setLzxclassid(classid);
                 List<ClassInfo>clsList=this.classManager.getList(c,null);
                 if(clsList==null||clsList.size()<1){
                     je.setMsg("classid:"+classid+" class not exists!");
@@ -6407,7 +6407,7 @@ public class UserController extends BaseController<UserInfo> {
                     response.getWriter().print(je.toJSON());return;
                 }
                 ClassInfo c=new ClassInfo();
-                c.setLzxclassid(Integer.parseInt(classid));
+                c.setLzxclassid(classid);
                 List<ClassInfo>clsList=this.classManager.getList(c,null);
                 if(clsList==null||clsList.size()<1){
                     je.setMsg("classid:"+classid+" class not exists!");
@@ -7227,7 +7227,7 @@ public class UserController extends BaseController<UserInfo> {
                     response.getWriter().print(je.toJSON());return;
                 }
                 ClassInfo c=new ClassInfo();
-                c.setLzxclassid(Integer.parseInt(classid));
+                c.setLzxclassid(classid);
                 c.setDcschoolid(Integer.parseInt(dcschoolid));
                 List<ClassInfo>clsList=this.classManager.getList(c,null);
                 if(clsList==null||clsList.size()<1){
@@ -7383,7 +7383,7 @@ public class UserController extends BaseController<UserInfo> {
                     response.getWriter().print(je.toJSON());return;
                 }
                 ClassInfo c=new ClassInfo();
-                c.setLzxclassid(Integer.parseInt(classid));
+                c.setLzxclassid(classid);
                 c.setDcschoolid(Integer.parseInt(dcschoolid));
                 List<ClassInfo>clsList=this.classManager.getList(c,null);
                 if(clsList==null||clsList.size()<1){

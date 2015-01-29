@@ -20,7 +20,7 @@ public class ClassInfo implements java.io.Serializable {
     private Integer islike; //是否模糊查询
     private SubjectInfo subjectinfo;
     private Integer isflag; //是否启用：  1：启用   2：禁用
-    private Integer lzxclassid;
+    private String lzxclassid;
     private Integer allowjoin;  //学生是否允许加入 1：允许 2：不允许
     private Integer clsnum; //班级限额
     private Date verifytime;    //失效时间
@@ -175,11 +175,11 @@ public class ClassInfo implements java.io.Serializable {
 
     private String classyearname;
 
-    public Integer getLzxclassid() {
+    public String getLzxclassid() {
         return lzxclassid;
     }
 
-    public void setLzxclassid(Integer lzxclassid) {
+    public void setLzxclassid(String lzxclassid) {
         this.lzxclassid = lzxclassid;
     }
 

@@ -953,7 +953,7 @@ public class ClassController extends BaseController<ClassInfo>{
             Object subjectid=clsJo.get("subject_id");
             Object isflag=clsJo.get("isflag");
 
-            if(classid==null||classid.toString().trim().length()<1||!UtilTool.isNumber(classid.toString())){
+            if(classid==null||classid.toString().trim().length()<1){
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，班级ID为空!!\"}");return;
             }
             if(className==null||className.toString().trim().length()<1){
@@ -995,7 +995,7 @@ public class ClassController extends BaseController<ClassInfo>{
             cls.setClassgrade(classGrade.toString());
             cls.setYear(year.toString());
             cls.setPattern(pattern.toString());
-            cls.setLzxclassid(Integer.parseInt(classid.toString()));
+            cls.setLzxclassid(classid.toString());
             cls.setDcschoolid(Integer.parseInt(dcschoolid.toString()));
 //            List<ClassInfo> clsList=this.classManager.getList(cls,null);
 //            if(clsList!=null&&clsList.size()>0){
@@ -1019,14 +1019,14 @@ public class ClassController extends BaseController<ClassInfo>{
             //查询该用户是否存在，存在则是修改不存在则是添加
             ClassInfo searchCls=new ClassInfo();
             searchCls.setDcschoolid(Integer.parseInt(dcschoolid.toString()));
-            searchCls.setLzxclassid(Integer.parseInt(classid.toString()));
+            searchCls.setLzxclassid(classid.toString());
             List<ClassInfo> tmpClsList=this.classManager.getList(searchCls,null);
             int opType=1;  //添加
             if(tmpClsList!=null&&tmpClsList.size()>0)
                opType=2;            //修改
 
             //添加到相应集合中，用于传入ett中
-            if(cls.getLzxclassid()!=null&&cls.getDcschoolid()!=null){
+            if(cls.getLzxclassid()!=null&&cls.getLzxclassid().length()>0&&cls.getDcschoolid()!=null){
                 lzxClsList.add(cls.getLzxclassid()+","+cls.getDcschoolid()+","+opType);
             }
         }
@@ -1044,7 +1044,7 @@ public class ClassController extends BaseController<ClassInfo>{
                 if(lzxClsList!=null&&lzxClsList.size()>0){
                     for(String tmpstr:lzxClsList){
                         String[] itemArray=tmpstr.split(",");
-                        Integer lzxclassid=Integer.parseInt(itemArray[0].trim());
+                        String lzxclassid=itemArray[0].trim();
                         Integer scl=Integer.parseInt(itemArray[1].trim());
                         Integer optype=Integer.parseInt(itemArray[2].trim());
 
@@ -1158,7 +1158,7 @@ public class ClassController extends BaseController<ClassInfo>{
             Object subjectid=clsJo.get("subject_id");
             Object isflag=clsJo.get("isflag");
 
-            if(classid==null||classid.toString().trim().length()<1||!UtilTool.isNumber(classid.toString())){
+            if(classid==null||classid.toString().trim().length()<1){
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，班级ID为空!!\"}");return;
             }
             if(className==null||className.toString().trim().length()<1){
@@ -1200,7 +1200,7 @@ public class ClassController extends BaseController<ClassInfo>{
             cls.setClassgrade(classGrade.toString());
             cls.setYear(year.toString());
             cls.setPattern(pattern.toString());
-            cls.setLzxclassid(Integer.parseInt(classid.toString()));
+            cls.setLzxclassid(classid.toString());
 //            List<ClassInfo> clsList=this.classManager.getList(cls,null);
 //            if(clsList!=null&&clsList.size()>0){
 //                hasClsid=(hasClsid==null?classid.toString():hasClsid+","+classid.toString());
@@ -1296,7 +1296,7 @@ public class ClassController extends BaseController<ClassInfo>{
             net.sf.json.JSONObject clsJo=(net.sf.json.JSONObject)jrIte.next();
             Object classid=clsJo.get("lzx_classid");
 
-            if(classid==null||classid.toString().trim().length()<1||!UtilTool.isNumber(classid.toString())){
+            if(classid==null||classid.toString().trim().length()<1){
                 response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，班级ID为空!!\"}");return;
             }
             //查看是否存在学生记录
@@ -1313,7 +1313,7 @@ public class ClassController extends BaseController<ClassInfo>{
             }
             //验证通过
             ClassInfo cls=new ClassInfo();
-            cls.setLzxclassid(Integer.parseInt(classid.toString()));
+            cls.setLzxclassid(classid.toString());
             cls.setDcschoolid(Integer.parseInt(dcschoolid.toString()));
             StringBuilder sqlbuilder=new StringBuilder();
             List<Object> objList=this.classManager.getDeleteSql(cls, sqlbuilder);
@@ -1323,7 +1323,7 @@ public class ClassController extends BaseController<ClassInfo>{
             }
 
             //添加到相应集合中，用于传入ett中
-            if(cls.getLzxclassid()!=null&&cls.getDcschoolid()!=null){
+            if(cls.getLzxclassid()!=null&&cls.getLzxclassid().length()>0&&cls.getDcschoolid()!=null){
                 lzxClsList.add(cls.getLzxclassid()+","+cls.getDcschoolid());
             }
         }
@@ -1341,7 +1341,7 @@ public class ClassController extends BaseController<ClassInfo>{
                 if(lzxClsList!=null&&lzxClsList.size()>0){
                     for(String tmpstr:lzxClsList){
                         String[] itemArray=tmpstr.split(",");
-                        Integer lzxclassid=Integer.parseInt(itemArray[0].trim());
+                        String lzxclassid=itemArray[0].trim();
                         Integer scl=Integer.parseInt(itemArray[1].trim());
                         //查询
                         ClassInfo tmpCls=new ClassInfo();
@@ -1432,7 +1432,7 @@ public class ClassController extends BaseController<ClassInfo>{
             net.sf.json.JSONObject clsJo=(net.sf.json.JSONObject)jrIte.next();
             Object classid=clsJo.get("lzx_classid");
 
-            if(classid==null||classid.toString().trim().length()<1||!UtilTool.isNumber(classid.toString())){
+            if(classid==null||classid.toString().trim().length()<1){
                 response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，班级ID为空!!\"}");return;
             }
             //查看是否存在学生记录
@@ -1448,7 +1448,7 @@ public class ClassController extends BaseController<ClassInfo>{
             }
             //验证通过
             ClassInfo cls=new ClassInfo();
-            cls.setLzxclassid(Integer.parseInt(classid.toString()));
+            cls.setLzxclassid(classid.toString());
             StringBuilder sqlbuilder=new StringBuilder();
             List<Object> objList=this.classManager.getDeleteSql(cls, sqlbuilder);
             if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
