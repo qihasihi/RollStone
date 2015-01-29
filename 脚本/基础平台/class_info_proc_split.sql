@@ -1,7 +1,12 @@
 DELIMITER $$
+
+USE `m_school`$$
+
+DROP PROCEDURE IF EXISTS `class_info_proc_split`$$
+
 CREATE DEFINER=`mytest`@`%` PROCEDURE `class_info_proc_split`(
 				           p_class_id INT,
-				           p_lzx_class_id INT,
+				           p_lzx_class_id VARCHAR(100),
 				           p_dc_school_id INT,
 				          p_class_name VARCHAR(1000),
 				          p_class_grade VARCHAR(1000),
@@ -16,8 +21,8 @@ CREATE DEFINER=`mytest`@`%` PROCEDURE `class_info_proc_split`(
 				          p_subject_str VARCHAR(1000),
 				          p_invite_code VARCHAR(1000),
 				          p_im_validate_code VARCHAR(1000),
-						  p_term_id int,
-						  p_activity_type int,
+						  p_term_id INT,
+						  p_activity_type INT,
 							p_current_page INT,
 							p_page_size INT,
 							p_sort_column VARCHAR(100),
@@ -34,7 +39,7 @@ BEGIN
 		SET tmp_search_condition=CONCAT(tmp_search_condition," and u.TYPE='",p_type,"'");
 	END IF;
 	IF p_im_validate_code IS NOT NULL THEN
-		SET tmp_search_condition=CONCAT(tmp_search_condition," and u.im_valdate_code='",replace(p_im_validate_code,'\\','\\\\'),"'");
+		SET tmp_search_condition=CONCAT(tmp_search_condition," and u.im_valdate_code='",REPLACE(p_im_validate_code,'\\','\\\\'),"'");
 	END IF;
 	
 	IF p_class_id IS NOT NULL THEN
@@ -45,7 +50,7 @@ BEGIN
 		SET tmp_search_condition=CONCAT(tmp_search_condition," and u.dc_school_id=",p_dc_school_id);
 	END IF;
 	IF p_lzx_class_id IS NOT NULL THEN
-		SET tmp_search_condition=CONCAT(tmp_search_condition," and u.lzx_classid=",p_lzx_class_id);
+		SET tmp_search_condition=CONCAT(tmp_search_condition," and u.lzx_classid='",p_lzx_class_id,"'");
 	END IF;
 	IF p_dctype IS NOT NULL THEN
 		IF p_dctype=9 THEN
@@ -89,7 +94,7 @@ BEGIN
 	END IF;
 	
 	IF p_subject_str IS NOT NULL THEN
-		SET tmp_search_condition=CONCAT(tmp_search_condition," AND ((pattern='∑÷≤„∞‡' AND subject_id in (",p_subject_str,")) OR pattern='––’˛∞‡') ");
+		SET tmp_search_condition=CONCAT(tmp_search_condition," AND ((pattern='ÂàÜÂ±ÇÁè≠' AND subject_id in (",p_subject_str,")) OR pattern='Ë°åÊîøÁè≠') ");
 	END IF;
 	
 	IF p_invite_code IS NOT NULL THEN
@@ -105,7 +110,7 @@ IF p_activity_type IS NOT NULL THEN
 	END IF;
 	
 	SET tmp_sql=CONCAT("SELECT u.*,g.grade_id,
-       IFNULL((SELECT COUNT(*) FROM j_class_user cu WHERE cu.class_id=u.CLASS_ID AND cu.relation_type='—ß…˙'),0)NUM ,
+       IFNULL((SELECT COUNT(*) FROM j_class_user cu WHERE cu.class_id=u.CLASS_ID AND cu.relation_type='Â≠¶Áîü'),0)NUM ,
        (SELECT subject_name FROM subject_info WHERE subject_id=u.subject_id) subjectname,
        (SELECT class_year_name FROM class_year_info where class_year_value=u.year) classyearname
        FROM (SELECT ",tmp_search_column," FROM ",tmp_tbl_name," WHERE ",tmp_search_condition,") u inner join grade_info g on u.class_grade=g.grade_value ");	
@@ -130,4 +135,5 @@ IF p_activity_type IS NOT NULL THEN
 	SET sumCount=@tmp_sumCount;
 	
     END$$
+
 DELIMITER ;
