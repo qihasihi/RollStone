@@ -1903,7 +1903,8 @@ public class TpUserController extends UserController {
             je.setMsg("data:" + e.getMessage());//md5比较异常
             response.getWriter().print(je.toJSON());return;
         }
-
+        //学生UserId列表
+        List<String>userRefList=new ArrayList<String>();
         List<Object>objList=null;
         StringBuilder sql=null;
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
@@ -1955,6 +1956,7 @@ public class TpUserController extends UserController {
                     //添加用户
                     String userNextRef = UUID.randomUUID().toString();
                     userInfo.setRef(userNextRef);
+                    userRefList.add(userNextRef);
                     userInfo.setPassword("111111");
                     userInfo.setStateid(0);
                     userInfo.setEttuserid(Integer.parseInt(jid));
@@ -2056,6 +2058,26 @@ public class TpUserController extends UserController {
             boolean flag=this.userManager.doExcetueArrayProc(sqlListArray,objListArray);
             if(flag){
                 je.setType("success");
+                List<UserInfo>bindUserList=new ArrayList<UserInfo>();
+                if(userRefList.size()>0){
+                    for (String userRef:userRefList){
+                        UserInfo sel=new UserInfo();
+                        sel.setRef(userRef);
+                        List<UserInfo>uList=this.userManager.getList(sel,null);
+                        if(uList!=null&&uList.size()>0)
+                            bindUserList.add(uList.get(0));
+                    }
+                    if(!EttInterfaceUserUtil.addUserBase(bindUserList))
+                        System.out.println("Add ett elite-stu error!");
+                    else
+                        System.out.println("Add ett elite-stu success!");
+                }
+
+                List<Map<String,Object>>mapList=this.getClassUserMap("",Integer.parseInt(classId));
+                if(!EttInterfaceUserUtil.OperateClassUser(mapList,Integer.parseInt(classId),Integer.parseInt(UtilTool.utilproperty.get("ELITE_SCHOOL_ID").toString())))
+                    System.out.println("Add ett elite-cls stu error!");
+                else
+                    System.out.println("Add ett elite-cls stu success!");
             }
         }else
             je.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));

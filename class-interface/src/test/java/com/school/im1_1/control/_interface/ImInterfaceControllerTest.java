@@ -98,6 +98,32 @@ public class ImInterfaceControllerTest {
         }
         Assert.assertTrue(result);
     }
+
+
+
+ /*   @Test
+        public void testGetLiveAddress() throws Exception {
+        String time=System.currentTimeMillis()+"";
+        HashMap<String,String>map=new HashMap<String, String>();
+        map.put("taskId","-3188141132755");
+        map.put("courseId","-9978058759128");
+        map.put("schoolId","50040");
+        map.put("jid","1963076");
+        map.put("time",time);
+        String sign=UrlSigUtil.makeSigSimple("getLiveAddress",map);
+        map.put("sign",sign);
+        request.addParameters(map);
+        imInterfaceController.getLiveAddress(request,response);
+        String returnMsg=response.getContentAsString();
+        boolean result=false;
+        if(returnMsg!=null&&returnMsg.length()>0){
+            JSONObject jsonObject=JSONObject.fromObject(returnMsg);
+            if(jsonObject!=null&&jsonObject.containsKey("result")&&jsonObject.get("result").toString().equals("1")){
+                result=true;
+            }
+        }
+        Assert.assertTrue(result);
+    }*/
     private void setProjectValidate(HttpServletRequest request){
         String ipStr=request.getServerName();
         if(request.getServerPort()!=80){

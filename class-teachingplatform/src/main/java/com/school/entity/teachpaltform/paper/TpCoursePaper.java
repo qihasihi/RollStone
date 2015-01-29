@@ -40,7 +40,15 @@ public class TpCoursePaper {
     private Integer isrelate;    //添加关联试卷 查询条件
     private Object micflag; //当前试卷关联微视频是否发任务
     private Object isvideopaper; //当前试卷关联了微视频
+    private Integer sharetype;  //专题分享等级  1:校内 2：云端 3：不分享
 
+    public Integer getSharetype() {
+        return sharetype;
+    }
+
+    public void setSharetype(Integer sharetype) {
+        this.sharetype = sharetype;
+    }
 
     public Object getIsvideopaper() {
         return isvideopaper;

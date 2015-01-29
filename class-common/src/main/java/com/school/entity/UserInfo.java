@@ -45,6 +45,15 @@ public class UserInfo implements java.io.Serializable {
     //同步四中用户使用
     private String roleIdStr;
     private String teacherno;
+    private String subjectid;
+
+    public String getSubjectid() {
+        return subjectid;
+    }
+
+    public void setSubjectid(String subjectid) {
+        this.subjectid = subjectid;
+    }
 
     public String getRoleIdStr() {
         return roleIdStr;

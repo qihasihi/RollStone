@@ -302,6 +302,12 @@ public class TpCoursePaperDAO extends CommonDAO<TpCoursePaper> implements ITpCou
             objList.add(tpcoursepaper.getIscloud());
         } else
             sqlbuilder.append("null,");
+        if (tpcoursepaper.getSharetype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursepaper.getSharetype());
+        } else
+            sqlbuilder.append("null,");
+
 
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
@@ -414,6 +420,8 @@ public class TpCoursePaperDAO extends CommonDAO<TpCoursePaper> implements ITpCou
 
     @Override
     public List<TpCoursePaper> getRelateCoursePaPerList(TpCoursePaper tpcoursepaper, PageResult presult) {
+        if(tpcoursepaper==null||tpcoursepaper.getCourseid()==null)
+            return null;
         StringBuilder sqlbuilder = new StringBuilder();
         sqlbuilder.append("{CALL tp_j_relate_course_paper_proc_split(");
         List<Object> objList=new ArrayList<Object>();
@@ -432,6 +440,12 @@ public class TpCoursePaperDAO extends CommonDAO<TpCoursePaper> implements ITpCou
             objList.add(tpcoursepaper.getIsrelate());
         } else
             sqlbuilder.append("null,");
+        if (tpcoursepaper.getSharetype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursepaper.getSharetype());
+        } else
+            sqlbuilder.append("null,");
+
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
             sqlbuilder.append("?,?,");

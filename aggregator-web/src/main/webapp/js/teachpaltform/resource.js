@@ -346,7 +346,7 @@ function afterAjaxCourseResList(rps) {
             var filename = itm.resname + itm.filesuffixname;
 
             if (itm.resourseType == "other") {
-               // html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)"></a>';
+                // html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',0,\'\',\'\',\'\',' + itm.resid + ',\'\',\'\',this)"></a>';
             }
             if (itm.resourseType == "doc") {
                 html += '<a  title="预览" class="ico76"  href="javascript:void(0);" onclick="showPreviewResource(\'' + itm.md5Id + '\',\'' + filename + '\',\'div_show\',4,\'\',\'\',\'' + itm.filesize + '\',\'' + itm.resid + '\',\'\',\'' + itm.swfpath + '\',this)"></a>';
@@ -697,7 +697,7 @@ function doUploadResource(usertype) {
     var restype = $("input[name='res_type']:checked");
     var crestype = $("input[name='tp_res_type']:checked").val();
     var resintroduce = $("#res_remark");
-   // var uploadfile = $("#uploadfile");
+    // var uploadfile = $("#uploadfile");
     var uploadfile=$("#uploadfile-queue .uploadify-queue-item");
     var resid = nextid;
     var allowTypes='.xls,.xlsx,.doc,.docx,.ppt,.pptx,.xml,.pdf,.txt,.vsd,.rtf',msg='数据验证完毕!确认提交?';
@@ -770,14 +770,14 @@ function doUploadResource(usertype) {
             isConvert=true;
         }
 
-      /*   if(!isTishi){
-            $("#s_tishi").html('');
-            if(isConvert)
-                $("#s_tishi").html("提示：当前文件需要转换请等待!");
-            showModel('dv_tishi');
-            isTishi=true;
-            return;
-        } */
+        /*   if(!isTishi){
+         $("#s_tishi").html('');
+         if(isConvert)
+         $("#s_tishi").html("提示：当前文件需要转换请等待!");
+         showModel('dv_tishi');
+         isTishi=true;
+         return;
+         } */
 
 
         if (!confirm(msg)) {
@@ -1012,7 +1012,7 @@ function load_resource(type, pageno, isinit) {
                             $("#ul_resource").append(htm);
                             $("#ul_resource").hide();
                             $("#ul_resource").show('fast');
-                                
+
                             var liObj = $("ul[id='ul_resource'] li").eq(idx);
                             if (liObj) {
                                 $(liObj).hover(
@@ -1045,7 +1045,7 @@ function load_resource(type, pageno, isinit) {
                 if (rps.presult.recTotal > 0 && rps.presult.pageTotal > 1) {
                     var prev = (parseInt(pageno) - 1) > 0 ? (parseInt(pageno) - 1) : 1;
                     var next = (parseInt(pageno) + 1) >= rps.presult.pageTotal ? rps.presult.pageTotal : (parseInt(pageno) + 1);
-                   // var page_split = '<span><a href="javascript:load_resource(' + type + ',1)"><b class="first"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + next + ')"><b class="after"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + rps.presult.pageTotal + ')"><b class="last"></b></a></span>';
+                    // var page_split = '<span><a href="javascript:load_resource(' + type + ',1)"><b class="first"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + next + ')"><b class="after"></b></a></span><span><a href="javascript:load_resource(' + type + ',' + rps.presult.pageTotal + ')"><b class="last"></b></a></span>';
                     var page_split = '<span><a href="javascript:load_resource(' + type + ',' + prev + ')"><b class="before"></b></a></span>&nbsp;';
                     page_split+=pageno+'/'+rps.presult.pageTotal;
                     page_split+='&nbsp;<span><a href="javascript:load_resource(' + type + ',' + next + ')"><b class="after"></b></a></span>';
@@ -1372,8 +1372,8 @@ function load_resdetail(resid) {
                     htm += '<p style="word-wrap:break-word;word-break: break-all;">' + (typeof itm.resintroduce == 'undefined' ? "" : replaceAll(replaceAll(itm.resintroduce.toLowerCase(),"<p>",""),"</p>","")) + '</p>';
                     htm +='</div>';
                     /*if(typeof itm.username != 'undefined'&&itm.username.toString().length>0
-                            &&itm.username=='北京四中网校')
-                        $("#h1_promt").html("当前资源不支持在线预览，请下载后查看!");*/
+                     &&itm.username=='北京四中网校')
+                     $("#h1_promt").html("当前资源不支持在线预览，请下载后查看!");*/
                 });
             }
             $("#dv_res_detail").html(htm);
@@ -1483,9 +1483,9 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
     // 清空
     // 由于SWFplayer生成的时候，是替换DIV层。如果想重新生成一个,需重新生成DIV并且删除SWFPlayer
     /*if (typeof ($("object[name='player1']")) != "undefined")
-        $("object[name='player1']").parent()
-            .append('<div id="div_show" style="width:560px;height:500px;"></div>');
-    $("object[name='player1']").remove(); */
+     $("object[name='player1']").parent()
+     .append('<div id="div_show" style="width:560px;height:500px;"></div>');
+     $("object[name='player1']").remove(); */
 
     var lastnameobj = ".mp4";
     if (lastname != null && lastname.length > 0)
@@ -1507,32 +1507,32 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
         imagepath=bathPath+imagepath;
 
 
-  /*  var jwplayerSetup = {
-        'id': 'player'+new Date().getTime(),
-        'width': '560',
-        'height': '500',
-        //'playlist': ''+bathPath+'util/rss.jsp?filepath='+filepath+"&imgurl="+imagepath+"&resid="+resid+"&suffix="+lastname,
-        //[{file:filepath}],
-        //'file':filepath,
-        'primary': 'flash',
-        'controlbar': 'over',
-        'controlbar.idlehide': 'true',
-        'modes': [
-            {type: 'flash', src: 'js/common/videoPlayer/new/jwplayer.flash.swf', //
-                config: {
-                    provider: "http",
-                    autostart: "false",
-                    menu: "false"
-                }
-            }
-            ,{type: 'html5'}
-        ], events: {
-            onReady: function () {
-                jwplayer().play();
-            }
-        }
-    };
-*/
+    /*  var jwplayerSetup = {
+     'id': 'player'+new Date().getTime(),
+     'width': '560',
+     'height': '500',
+     //'playlist': ''+bathPath+'util/rss.jsp?filepath='+filepath+"&imgurl="+imagepath+"&resid="+resid+"&suffix="+lastname,
+     //[{file:filepath}],
+     //'file':filepath,
+     'primary': 'flash',
+     'controlbar': 'over',
+     'controlbar.idlehide': 'true',
+     'modes': [
+     {type: 'flash', src: 'js/common/videoPlayer/new/jwplayer.flash.swf', //
+     config: {
+     provider: "http",
+     autostart: "false",
+     menu: "false"
+     }
+     }
+     ,{type: 'html5'}
+     ], events: {
+     onReady: function () {
+     jwplayer().play();
+     }
+     }
+     };
+     */
 
 
     var jwplayerSetup = {
@@ -1575,7 +1575,7 @@ function loadSWFPlayer(resmd5id, filemd5name, playeraddressid, isshow, lastname,
         });
     }else{
         jwplayerSetup.playlist=bathPath+'util/rss.jsp?filepath='+filepath+"&imgurl="+imagepath+"&resid="+resid+"&suffix="+lastname,
-        jwplayer(playeraddressid).setup(jwplayerSetup);
+            jwplayer(playeraddressid).setup(jwplayerSetup);
     }
     if (isshow)
         showModel("swfplayer", false);
@@ -1672,7 +1672,7 @@ function previewImg(imgaddress, resmd5id, resmd5name,resid) {
             .append('<div id="div_show" style="width:560px;height:500px;"></div>');
     $("object[name='div_show']").remove();
 
-   // resmd5name = resmd5name.substring(0, resmd5name.lastIndexOf("."));
+    // resmd5name = resmd5name.substring(0, resmd5name.lastIndexOf("."));
 
     fileSystemIpPort=fileSystemIpPort.substring(0,fileSystemIpPort.indexOf("fileoperate"))+"fileoperate/";
     if(resid>0)
@@ -1768,6 +1768,7 @@ function convertDocResource(resid) {
  * @return
  */
 function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, resdetailid, swfpath, liobj) {
+    $("#hd_resdetailid").val(resid);
     var lastname = "";
     if (typeof(fname) != 'undefined' && fname.Trim().length > 0 && fname.indexOf(".") != -1)
         lastname = fname.substring(fname.lastIndexOf(".")).toLowerCase();
@@ -1800,11 +1801,11 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     $("object[name='player1']").remove();
 
 
-/*
-   if (typeof ($("object[name='div_show']")) != "undefined")
-        $("object[name='div_show']").parent()
-            .append('<div id="div_show" style="width:560px;height:500px;"></div>');
-    $("object[name='div_show']").remove();  */
+    /*
+     if (typeof ($("object[name='div_show']")) != "undefined")
+     $("object[name='div_show']").parent()
+     .append('<div id="div_show" style="width:560px;height:500px;"></div>');
+     $("object[name='div_show']").remove();  */
 
     if (typeof ($("div[id='div_show_wrapper']")) != "undefined")
         $("div[id='div_show_wrapper']").after('<div id="div_show" style="width:560px;height:500px;"></div>');
@@ -1828,7 +1829,7 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     if (type == 1) {
         htm = "<img src='" + preimg + "' width='560' height='370'  title='" + fname + "' id='img_res'  />";
     } else if (type == 2) {
-       // htm += "<div style='color:gray;font-size:10px' id='progress_1'>";
+        // htm += "<div style='color:gray;font-size:10px' id='progress_1'>";
         //htm += "</div>";
         videoConvertProgress(resid, fname, md5name, 1, md5id, fileSystemIpPort);
         $("#p_tishi").html('提示：视频限MP4格式，建议使用格式工厂等软件转换，视频编码为：AVC（H264）,比特率为：300-500KB/秒');
@@ -1839,7 +1840,7 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
         var priviewimg='';
         loadSWFPlayer(md5id, md5name, divid, false, lastname, 'mp3','images/mp3.jpg',resid);
     } else if (type == 0) {
-       // htm += '<p>' + fname + '</p>';
+        // htm += '<p>' + fname + '</p>';
     } else if (type == 5) {
         //showMp3Resource('div_show', 0, md5name, md5id,fileSystemIpPort);  
         swfobjPlayer(md5id, md5name, divid, false, lastname, 'swf','',resid);
@@ -1882,8 +1883,7 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     load_resdetail(resid);
     // 加载评论框
     generXheditor(resid);
-    // 评论 
-    loadAllComment();
+
     checkStudyNotes(resid);
     //关联试卷
     if(!isStudent&&fname.indexOf('.mp4')!=-1)
@@ -1891,10 +1891,7 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     else
         $("#relate_paper").html('');
 
-    //学习心得
-   // if(typeof tpresdetailid!='undeinfed'&& tpresdetailid.toString().length>0)
-        loadStudyNotes(1);
-    if(fname.indexOf('.mp4')!=-1)
+    if(resid>0&&fname.indexOf('.mp4')!=-1)
         $("#sp_download").parent().hide();
     else
         $("#sp_download").parent().show();
@@ -2008,17 +2005,17 @@ function loadRelatePaper(resid){
                 var h='';
                 if(rps.objList.length>0){
                     var micvideoid=rps.objList[0].micvideoid;
-                    var papername=rps.objList[0].papername.length>8?rps.objList[0].papername.substring(0,8)+'...':rps.objList[0].papername;
                     if(typeof micvideoid!='undefined')
                         h='<a class="font-blue" href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true,true)"><span class="ico83"></span>网校关联试卷</a>';
                     else{
+                        var papername=rps.objList[0].papername.length>8?rps.objList[0].papername.substring(0,8)+'...':rps.objList[0].papername;
                         h='<a class="font-blue" href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true,true)"><span class="ico83"></span>'+papername+'</a>';
                     }
                     /*}else
-                        h='<a  href="javascript:doCancelVideoPaper('+rps.objList[0].paperid+');" class="ico34 f_right" title="取消关联"></a><a title="'+rps.objList[0].papername+'" id="a_relate_href" class="font-blue"  href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true)"><span class="ico83"></span>'+papername+'</a>';*/
+                     h='<a  href="javascript:doCancelVideoPaper('+rps.objList[0].paperid+');" class="ico34 f_right" title="取消关联"></a><a title="'+rps.objList[0].papername+'" id="a_relate_href" class="font-blue"  href="javascript:loadEditPaperRes('+courseid+','+rps.objList[0].paperid+',1,true)"><span class="ico83"></span>'+papername+'</a>';*/
                 }/*else{
-                    h='<a  id="a_relate" class="font-blue" href="javascript:loadRelatePage()"><span class="ico83"></span>关联试卷</a>';
-                }*/
+                 h='<a  id="a_relate" class="font-blue" href="javascript:loadRelatePage()"><span class="ico83"></span>关联试卷</a>';
+                 }*/
                 $("#relate_paper").html(h);
 
             }
@@ -2097,8 +2094,11 @@ function checkStudyNotes(resid) {
             } else {
                 if (rps.objList != null && rps.objList.length > 0) {
                     $("#li_studynote").show();
+                    loadStudyNotes(usertype);
                 } else {
                     $("#li_studynote").hide();
+                    // 评论
+                    loadAllComment();
                 }
             }
         }
@@ -2581,20 +2581,20 @@ function generXheditor(resdetailid, isstuipt) {
         htm += '<p class="t_r"><a href="javascript:void(0);" onclick="doSubResourceComment(\'' + resdetailid + '\')"  class="an_small">发&nbsp;表</a></p>';
     $("#div_xheditor").html(htm);
     if(isstuipt){
-       /* editor = new UE.ui.Editor({
-            //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
-            toolbars: [
-                //['emotion','attachment','superscript','subscript','fullscreen','insertimage']
-                ['emotion','attachment','fullscreen']
-            ],
-            // initialFrameWidth: "580px",
-            // initialFrameHeight: "500px",
-            autoHeightEnabled: false
-        });
-        textarea:'xheditor'; //与textarea的name值保持一致
-        //editor.render('editor');
-        editor.setDataId(new Date().getTime());
-        editor.render('xheditor'); */
+        /* editor = new UE.ui.Editor({
+         //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+         toolbars: [
+         //['emotion','attachment','superscript','subscript','fullscreen','insertimage']
+         ['emotion','attachment','fullscreen']
+         ],
+         // initialFrameWidth: "580px",
+         // initialFrameHeight: "500px",
+         autoHeightEnabled: false
+         });
+         textarea:'xheditor'; //与textarea的name值保持一致
+         //editor.render('editor');
+         editor.setDataId(new Date().getTime());
+         editor.render('xheditor'); */
     }
     /*  editor = new UE.ui.Editor({
      //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
@@ -2732,7 +2732,7 @@ function getStuNoteReturnMethod(rps) {
             html += '</div>';
         });
     } else {
-        //html = '<p>暂无数据!</p>';
+        html = '<p>暂无心得!</p>';
     }
     $("div[id='div_comment_htm']").html(html);
     $("div[id='div_comment_htm']").hide();
@@ -2784,7 +2784,8 @@ function preeDoStuNotePageSub(pObj) {
     var param = {courseid: courseid};
     var resdetailid = $("#hd_resdetailid").val();
     var flag = $("#hd_comment_flag").val();
-    if (resdetailid.Trim().length > 0 && flag.Trim().length < 1)
+    //if (resdetailid.Trim().length > 0 && flag.Trim().length < 1)
+    if (resdetailid.Trim().length > 0)
         param.resdetailid = resdetailid;
     param.usertype=usertype;
     pObj.setPostParams(param);
@@ -2878,7 +2879,7 @@ function loadStuNoteReplyTextArea(id, touserid, resdetailid) {
     htm += '</div>';
     $("div[id='p_rframe_" + id + "']").html(htm);
     $("div[id='p_rframe_" + id + "']").show('fast');
-	//$("div[id='p_rframe_" + id + "'] textarea").xheditor( {
+    //$("div[id='p_rframe_" + id + "'] textarea").xheditor( {
 //		tools : 'Removeformat,|,Link,Unlink,|,Emot'
 //	});
     /*  child_editor = new UE.ui.Editor({
@@ -3174,7 +3175,6 @@ function loadStudyNotes(usertype) {
         courseid: courseid,
         usertype: usertype
     };
-
     $
         .ajax({
             url: "task?loadStudyNotes",
@@ -3223,11 +3223,9 @@ function loadStudyNotes(usertype) {
                             return;
                         }
                     }
-
                     $("div[id='dv_study_note']").html(htm);
                     $("#dv_study_note").hide();
                     $("#dv_study_note").show("fast");
-                    $("#div_comment_htm").html('');
                 }
             }
         });
@@ -3254,19 +3252,19 @@ function genderStuNoteTextArea(ref) {
     innerHtm+= '<p class="t_r"><a href="javascript:doUpdStuNote(' + ref + ')" class="an_small">确定</a><a  class="an_small" href="javascript:cancelUpdStuNote()">取消</a></p>';
     divObj.html(innerHtm);
     /*
-    note_editor = new UE.ui.Editor({
-        //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
-        toolbars: [
-            ['emotion','attachment',,'fullscreen'] //'superscript','subscript','insertimage'
-        ],
-        // initialFrameWidth: "580px",
-        // initialFrameHeight: "500px",
-        autoHeightEnabled: false
-    });
-    textarea:'txt_updnote'; //与textarea的name值保持一致
-    note_editor.setDataId(new Date().getTime());
-    note_editor.render('txt_updnote');
-    //note_editor.setContent(); */
+     note_editor = new UE.ui.Editor({
+     //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+     toolbars: [
+     ['emotion','attachment',,'fullscreen'] //'superscript','subscript','insertimage'
+     ],
+     // initialFrameWidth: "580px",
+     // initialFrameHeight: "500px",
+     autoHeightEnabled: false
+     });
+     textarea:'txt_updnote'; //与textarea的name值保持一致
+     note_editor.setDataId(new Date().getTime());
+     note_editor.render('txt_updnote');
+     //note_editor.setContent(); */
 }
 
 function cancelUpdStuNote() {
@@ -3278,15 +3276,15 @@ function doUpdStuNote(ref) {
     if (typeof  ref == 'undefined')
         return;
     var valObj = $("#txt_updnote");
-   if (valObj.val().Trim().length < 1) {
-     alert("请输入学习心得!");
-     return;
-   }
-
-    /*if (note_editor.getContent().Trim().length < 1) {
+    if (valObj.val().Trim().length < 1) {
         alert("请输入学习心得!");
         return;
-    }*/
+    }
+
+    /*if (note_editor.getContent().Trim().length < 1) {
+     alert("请输入学习心得!");
+     return;
+     }*/
 
     var isTishiAnnex=false;
     //附件上传
@@ -3706,7 +3704,7 @@ function getRemoteResources(type){
                 if(rps.objList[1]!=null){
                     if(rps.objList[1]=="0"){
                         $("#moreGaoqing").show();
-                       // pageNo=pageNo+1;
+                        // pageNo=pageNo+1;
                     }else{
                         $("#moreGaoqing").hide();
                     }
@@ -3735,7 +3733,7 @@ function getRemoteResources(type){
                 if(rps.objList[4]!=null){
                     if(rps.objList[4]=="0"){
                         $("#moreZhishi").show();
-                       // pageNo2=pageNo2+1;
+                        // pageNo2=pageNo2+1;
                     }else{
                         $("#moreZhishi").hide();
                     }

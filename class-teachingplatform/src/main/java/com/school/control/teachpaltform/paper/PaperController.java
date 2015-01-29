@@ -835,7 +835,10 @@ public class PaperController extends BaseController<PaperInfo>{
 
         //获取自建试卷
         t.setIscloud(2);
+        //校内分享
+        t.setSharetype(1);
         List<TpCoursePaper>coursePaperList=null;
+
         if(isrelate!=null&&isrelate.equals("1"))
             coursePaperList=this.tpCoursePaperManager.getSelRelatePaPerList(t, p);
         else
@@ -898,8 +901,10 @@ public class PaperController extends BaseController<PaperInfo>{
         if(subjectid!=null&&subjectid.length()>0)
             t.setSubjectid(Integer.parseInt(subjectid));
 
-        //获取云端试卷
+        //获取标准试卷
         t.setIscloud(1);
+        //校内分享
+        t.setSharetype(1);
         List<TpCoursePaper>coursePaperList=null;
         if(isrelate!=null&&isrelate.equals("1"))
             coursePaperList=this.tpCoursePaperManager.getSelRelatePaPerList(t, p);
@@ -1678,6 +1683,7 @@ public class PaperController extends BaseController<PaperInfo>{
         //查询关联专题的试卷
         TpCoursePaper sel=new TpCoursePaper();
         sel.setCourseid(Long.parseLong(courseid));
+        sel.setSharetype(1);
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,null);
 
         List<TpCoursePaper>standardList=new ArrayList<TpCoursePaper>();
@@ -1751,6 +1757,7 @@ public class PaperController extends BaseController<PaperInfo>{
         //查询关联专题的试卷
         TpCoursePaper sel=new TpCoursePaper();
         sel.setCourseid(Long.parseLong(courseid));
+        sel.setSharetype(1);
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,null);
 
         List<TpCoursePaper>standardList=new ArrayList<TpCoursePaper>();
@@ -1825,6 +1832,7 @@ public class PaperController extends BaseController<PaperInfo>{
         TpCoursePaper sel=new TpCoursePaper();
         sel.setCourseid(Long.parseLong(courseid));
         sel.setIscloud(2);
+        sel.setSharetype(1);
         if(isrelate!=null&&isrelate.equals("1"))
             sel.setIsrelate(1);
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,p);
@@ -1887,6 +1895,7 @@ public class PaperController extends BaseController<PaperInfo>{
         TpCoursePaper sel=new TpCoursePaper();
         sel.setCourseid(Long.parseLong(courseid));
         sel.setIscloud(1);
+        sel.setSharetype(1);
         if(isrelate!=null&&isrelate.equals("1"))
             sel.setIsrelate(1);
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,p);

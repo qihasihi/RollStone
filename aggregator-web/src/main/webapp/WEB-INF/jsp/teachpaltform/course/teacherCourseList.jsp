@@ -298,8 +298,8 @@
     <input type="hidden" id="courseid"/>
     <h3><a href="javascript:closeModel('shareWindow')" title="关闭"></a>分享专题</h3>
     <div class="jxxt_float_fxzt public_input">
-        <p class="font-black"><input type="radio" name="share" id="cloudShare" value="2"> 云端教师</p>
-        <p class="font-black"><input type="radio" name="share" id="selfShare" value="1"> 校内教师</p>
+        <%--<p class="font-black"><input type="radio" name="share" id="cloudShare" value="2"> 云端教师</p>--%>
+        <p class="font-black"><input type="radio" name="share" id="selfShare" value="1"> 校内分享</p>
         <p class="t_c p_t_10"><a href="javascript:doShareCourse()" class="an_public1">确&nbsp;定</a>&nbsp;&nbsp;<a href="javascript:closeModel('shareWindow')"  class="an_public1">取&nbsp;消</a></p>
     </div>
 </div>

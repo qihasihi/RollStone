@@ -878,7 +878,7 @@ public class TaskController extends BaseController{
         pageResult.setOrderBy(" aa.diff_type desc ");
         TpCourseResource tr=new TpCourseResource();
         tr.setCourseid(Long.parseLong(courseid));
-        tr.setTaskflag(1);
+        //tr.setTaskflag(1);
         //tr.setDifftype(1);
         //tr.setHaspaper(1);
         tr.setFilesuffixname(".mp4");
@@ -2110,9 +2110,18 @@ public class TaskController extends BaseController{
                 liveAllot.setTasktype(10);
                 List<TpTaskAllotInfo>allotInfoList=this.tpTaskAllotManager.getTaskRemindObjList(liveAllot,null);
                 if(allotInfoList!=null&&allotInfoList.size()>0){
-                    je.setMsg("提示：您设置的时间内已有直播课任务，请调整时间! \n\n时间："+bClsArray[i]+"~"+eClsArray[i]+"");
-                    response.getWriter().print(je.toJSON());
-                    return;
+                    boolean isHas=false;
+                    for(TpTaskAllotInfo allot:allotInfoList){
+                        if(allot.getTaskid().toString().equals(taskid.toString())){
+                            isHas=true;
+                        }else
+                            isHas=false;
+                    }
+                    if(!isHas){
+                        je.setMsg("提示：您设置的时间内已有直播课任务，请调整时间! \n\n时间："+bClsArray[i]+"~"+eClsArray[i]+"");
+                        response.getWriter().print(je.toJSON());
+                        return;
+                    }
                 }
             }
 
@@ -3255,10 +3264,9 @@ public class TaskController extends BaseController{
 
         //查学生心得
         if(type!=null&&type.equals("1")){
-//            if(this.validateRole(request,UtilTool._ROLE_STU_ID)){   //如果是学生查询，则判断是否
-//
-//            }
-            qa.setUserid(this.logined(request).getRef());
+            if(this.validateRole(request,UtilTool._ROLE_STU_ID)){   //如果是学生查询，则判断是否
+                qa.setUserid(this.logined(request).getRef());
+            }
         }
         List<QuestionAnswer>qaList=this.questionAnswerManager.getList(qa, null);
         je.getObjList().add(qaList!=null&&qaList.size()>0?qaList.get(0):null);

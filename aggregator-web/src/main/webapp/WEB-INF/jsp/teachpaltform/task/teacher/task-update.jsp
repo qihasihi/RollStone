@@ -67,9 +67,9 @@
 			//任务类型
 			changeTaskType("${taskInfo.questiontype}",${taskInfo.tasktype eq 10?taskInfo.taskid:taskInfo.taskvalueid},taskstatus,"${taskInfo.quesnum}");
 
-            $("input[name='ck_criteria']").filter(function(){return this.value=${taskInfo.criteria}}).attr({"checked":true});
+            $("input[name='ck_criteria']").filter(function(){return this.value==${taskInfo.criteria}}).attr({"checked":true});
             <c:if test="${!empty operatetype}">
-                $("input[name='ck_criteria']").filter(function(){return this.value=${taskInfo.criteria}}).attr({"disabled":true});
+                $("input[name='ck_criteria']").filter(function(){return this.value==${taskInfo.criteria}}).attr({"disabled":true});
             </c:if>
 
 

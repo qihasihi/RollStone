@@ -368,9 +368,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
 
         }
 
-        tmpCourseResource.setLocalstatus(2);//±¾µØÉ¾³ý£¬ÐÞ¸Ä×´Ì¬
+        //tmpCourseResource.setLocalstatus(2);//±¾µØÉ¾³ý£¬ÐÞ¸Ä×´Ì¬
         sql=new StringBuilder();
-        objList=this.tpCourseResourceManager.getUpdateSql(tmpCourseResource,sql);
+        objList=this.tpCourseResourceManager.getDeleteSql(tmpCourseResource,sql);
         if(objList!=null&&sql!=null){
             objListArray.add(objList);
             sqlList.add(sql.toString());

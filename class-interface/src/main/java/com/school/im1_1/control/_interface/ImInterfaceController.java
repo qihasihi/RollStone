@@ -5778,12 +5778,11 @@ public class ImInterfaceController extends TaskController {
     /**
      * 获取直播地址接口
      * @param request
-     * @param mp
      * @return
      * @throws Exception
      */
     @RequestMapping(params="m=getLiveAddress",method= {RequestMethod.GET,RequestMethod.POST})
-    public void getLiveAddress(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+    public void getLiveAddress(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
         JSONObject returnJo = new JSONObject();
         returnJo.put("result","0");
