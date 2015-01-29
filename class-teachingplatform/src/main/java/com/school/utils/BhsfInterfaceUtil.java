@@ -184,9 +184,9 @@ public class BhsfInterfaceUtil {
         paramMap.put("timestamp",time);
         Map<String,Object> tmpMap=new HashMap<String, Object>();
         tmpMap.put("sx_classid",entity.getClassid());
-        tmpMap.put("className",entity.getClassname());
+        tmpMap.put("class_name",entity.getClassname());
         String classGrade=entity.getClassgrade();
-        tmpMap.put("type",entity.getDctype());
+        tmpMap.put("type",entity.getType());
         tmpMap.put("class_grade",classGrade);
         tmpMap.put("year",entity.getYear());
         tmpMap.put("pattern",entity.getPattern());
