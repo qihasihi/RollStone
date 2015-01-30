@@ -1,4 +1,4 @@
-<%--
+﻿<%--
   Created by IntelliJ IDEA.
   User: zhengzhou
   Date: 14-6-30
@@ -32,28 +32,20 @@
         var scoreArray=[];
         var t=1;
         $(function(){
-        <%--教师进入查看试卷--%>
-        <c:if test="${!empty param.flag&&param.flag==1}">
+            <%--教师进入查看试卷--%>
+            <c:if test="${!empty param.flag&&param.flag==1}">
             loadExam();
-        </c:if>
-        <c:if test="${empty param.flag||param.flag!=1}">
+            </c:if>
+            <c:if test="${empty param.flag||param.flag!=1}">
             <c:if test="${!empty param.isMidView&&param.isMidView==1}">
-                isViewVideo();
-                 loadExam();
+            isViewVideo();
+            loadExam();
             </c:if>
             <c:if test="${!empty isViewVideo&&isViewVideo!=0}">
-                //如果已经预览过。则显示。
-                isViewVideo();
+            //如果已经预览过。则显示。
+            isViewVideo();
             </c:if>
-
-            jwplayer('div_show0').onTime(function(){
-                if(t==1){
-                    var videoTime=jwplayer('div_show0').getDuration();
-                    $("#sp_video_time").html(parseInt(videoTime/60)+'分' + parseInt(videoTime%60)+'秒');
-                    t=2;
-                }
-            });
-        </c:if>
+            </c:if>
         });
 
         function isViewVideo(isMid){
@@ -205,7 +197,7 @@
         </ul>
   </c:if>
    <div id="div_video">
-    <p class="font-black t_c"><strong>${resObj.resname}</strong><br>${resObj.realname}&nbsp;&nbsp;&nbsp;&nbsp;时长：<span id="sp_video_time"></span></p>
+    <p class="font-black t_c"><strong>${resObj.resname}</strong><br>${resObj.realname}&nbsp;&nbsp;&nbsp;&nbsp;时长：<span id="videoTime"></span></p>
     <div class="jxxt_zhuanti_rw_wkc_sp">
         <div id="div_show0">
             <img src="images/video_gszh.jpg" width="578px" height="400px" alt="正在排列,转换"/>

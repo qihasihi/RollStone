@@ -65,14 +65,7 @@
                 })
             })
 
-            jwplayer('div_show0').play();
-            jwplayer('div_show0').onTime(function(){
-                var t=jwplayer('div_show0').getDuration();
-                $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
-            })
-
         });
-
 
         /**
          * 加载试卷中的试题
@@ -94,7 +87,6 @@
         <li id="c_2"><a href="javascript:;" onclick="$('#dv_view').hide();$('#dv_paper').show();"><strong>试卷</strong></a></li>
     </ul>
     <div id="dv_view">
-
         <p class="font-black t_c"><strong>${resObj.resname}</strong><br>${resObj.realname}&nbsp;&nbsp;&nbsp;&nbsp;时长：<span id="videoTime"></span>
         </p>
         <div class="jxxt_zhuanti_rw_wkc_sp">

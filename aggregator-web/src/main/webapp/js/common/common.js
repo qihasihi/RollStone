@@ -162,26 +162,34 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
                 jwplayerSetup.image=imagepath;
                 jwplayer(playeraddressid).setup(jwplayerSetup);
                 if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+                    jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
+
                     jwplayer(playeraddressid).onReady(function(){
-                        if(typeof(playEndMethod)!="undefined")
-                            playEndMethod();
                         if(typeof(isshowBar)!="undefined"&&!isshowBar){
                             jwplayer(playeraddressid).play(); //.seek(0)
                         }
+                        jwplayer(playeraddressid).onTime(function(){
+                            var t=jwplayer(playeraddressid).getDuration();
+                            $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+                        })
                     });
+
             }
         });
     }else{
         jwplayer(playeraddressid).setup(jwplayerSetup);
-
+        if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+            jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
+        if(typeof(isshowBar)!="undefined"&&!isshowBar){
             jwplayer(playeraddressid).onReady(function(){
-                if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
-                    jwplayer(playeraddressid).onPlaylistComplete();
-                if(typeof(isshowBar)!="undefined"&&!isshowBar){
-                    jwplayer(playeraddressid).play(); //.seek(0)
-                 }
-            });
+                jwplayer(playeraddressid).play(); //.seek(0)
 
+                jwplayer(playeraddressid).onTime(function(){
+                    var t=jwplayer(playeraddressid).getDuration();
+                    $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+                })
+            });
+        }
     }
 
 //     if(typeof(resid)!="undefined"){
@@ -261,25 +269,32 @@ function loadSWFPlayerLitterView(filepath,playeraddressid,imagepath,resid,width,
                 jwplayerSetup.file=data.videoUrl;
                 jwplayerSetup.image=data.imageUrl;
                 jwplayer(playeraddressid).setup(jwplayerSetup);
+                if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+                    jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
 
                     jwplayer(playeraddressid).onReady(function(){
-                        if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
-                            playEndMethod();
                         if(typeof(isshowBar)!="undefined"&&!isshowBar){
-                        jwplayer(playeraddressid).play(); //.seek(0)
+                          jwplayer(playeraddressid).play(); //.seek(0)
                         }
+                        jwplayer(playeraddressid).onTime(function(){
+                            var t=jwplayer(playeraddressid).getDuration();
+                            $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+                        })
                     });
+
+
             }
         });
     }else{
          jwplayer(playeraddressid).setup(jwplayerSetup);
-
+        if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+            jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
             jwplayer(playeraddressid).onReady(function(){
-                if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
-                    playEndMethod();
-                if(typeof(isshowBar)!="undefined"&&!isshowBar){
                     jwplayer(playeraddressid).play(); //.seek(0)
-                }
+                jwplayer(playeraddressid).onTime(function(){
+                    var t=jwplayer(playeraddressid).getDuration();
+                    $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+                })
             });
 
     }
