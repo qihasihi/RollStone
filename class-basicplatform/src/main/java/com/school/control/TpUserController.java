@@ -296,6 +296,7 @@ public class TpUserController extends UserController {
         JsonEntity je=new JsonEntity();
         String schoolid=request.getParameter("schoolId");
         String jid=request.getParameter("jId");
+        String scheme=request.getParameter("scheme");
         if(schoolid==null||schoolid.trim().length()<1||!UtilTool.isNumber(schoolid)){
             je.setMsg("Schoolid is empty!");
             response.getWriter().print(je.getAlertMsgAndBack());
@@ -303,6 +304,11 @@ public class TpUserController extends UserController {
         }
         if(jid==null||jid.trim().length()<1||!UtilTool.isNumber(jid)){
             je.setMsg("jid is empty!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        if(scheme==null||jid.trim().length()<1||!UtilTool.isNumber(scheme)){
+            je.setMsg("scheme is empty!");
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
@@ -322,6 +328,12 @@ public class TpUserController extends UserController {
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
+        //是否为学案导学学生
+        StudentInfo stu=new StudentInfo();
+        stu.setUserref(this.logined(request).getRef());
+        stu.setCardstatus(Integer.parseInt(scheme));
+        if(!this.studentManager.doUpdate(stu))
+            System.out.println("TpUserController update scheme error!");
         //增加分校ID
         this.logined(request).setDcschoolid(Integer.parseInt(schoolid));
 

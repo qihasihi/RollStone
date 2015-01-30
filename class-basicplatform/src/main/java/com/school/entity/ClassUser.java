@@ -19,6 +19,15 @@ public class ClassUser  implements java.io.Serializable{
     private Integer sportsex;
     private SubjectInfo subjectinfo;
     private String password;
+    private Integer cardstatus;
+
+    public Integer getCardstatus() {
+        return cardstatus;
+    }
+
+    public void setCardstatus(Integer cardstatus) {
+        this.cardstatus = cardstatus;
+    }
 
     public void setGradeid(Integer gid){
         this.getClassinfo().setGradeid(gid);

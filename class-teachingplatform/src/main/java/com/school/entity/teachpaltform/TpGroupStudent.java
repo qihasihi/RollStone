@@ -21,6 +21,15 @@ public class TpGroupStudent {
     private String password;
     private Integer ettuserid;
     private Integer subjectid;
+    private Integer cardstatus;
+
+    public Integer getCardstatus() {
+        return cardstatus;
+    }
+
+    public void setCardstatus(Integer cardstatus) {
+        this.cardstatus = cardstatus;
+    }
 
     public Integer getSubjectid() {
         return subjectid;

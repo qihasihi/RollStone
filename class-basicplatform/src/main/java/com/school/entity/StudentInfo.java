@@ -17,6 +17,16 @@ public class StudentInfo implements java.io.Serializable {
     private String linkman;
     private ClassInfo classinfo;
     private String islearnguide;
+
+    private Integer cardstatus;
+
+    public Integer getCardstatus() {
+        return cardstatus;
+    }
+
+    public void setCardstatus(Integer cardstatus) {
+        this.cardstatus = cardstatus;
+    }
     
     public String getIslearnguide() {
 		return islearnguide;

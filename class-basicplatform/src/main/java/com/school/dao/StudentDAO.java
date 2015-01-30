@@ -254,11 +254,16 @@ public class StudentDAO extends CommonDAO<StudentInfo> implements IStudentDAO {
 			objList.add(obj.getUserinfo().getRef());
 		}else
 			sqlbuilder.append("NULL,"); 
-		if(obj.getLinkmanphone()!=null){ 
-			sqlbuilder.append("?,"); 
-			objList.add(obj.getLinkmanphone());
-		}else
-			sqlbuilder.append("NULL,");
+		if(obj.getLinkmanphone()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getLinkmanphone());
+        }else
+            sqlbuilder.append("NULL,");
+        if(obj.getCardstatus()!=null){
+            sqlbuilder.append("?,");
+            objList.add(obj.getCardstatus());
+        }else
+            sqlbuilder.append("NULL,");
 		
 		sqlbuilder.append("?)}");
 		return objList; 

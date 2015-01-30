@@ -41,6 +41,15 @@ public class UserInfo implements java.io.Serializable {
     private Integer ettuserid;//网校用户id
     private Integer isactivity;
     private Integer source;     //登录来源 1:数校平台  2：网校后台  3：乐知行
+    private Integer cardstatus;
+
+    public Integer getCardstatus() {
+        return cardstatus;
+    }
+
+    public void setCardstatus(Integer cardstatus) {
+        this.cardstatus = cardstatus;
+    }
 
     //同步四中用户使用
     private String roleIdStr;

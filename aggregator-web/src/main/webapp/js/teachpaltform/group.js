@@ -110,7 +110,7 @@ function getNoGroupStudentsByClassId(classId,classType,dctype){
                     if(dctype==1)
                         h+='<span style="display: none;" class="password" name="pass">'+itm.PASSWORD+'</span>';
                     //else
-                        //h+='<span style="display: none;" class="password" name="pass"><a target="_blank" href="'+viewEttUserURL+itm.ETT_USER_ID+'">'+itm.ETT_USER_ID+'</a></span>';
+                    //h+='<span style="display: none;" class="password" name="pass"><a target="_blank" href="'+viewEttUserURL+itm.ETT_USER_ID+'">'+itm.ETT_USER_ID+'</a></span>';
                     h+='</li>';
                     $("#noGroupStudents").append(h);
                     $("#no_gs").append("<option value='"+itm.USER_ID+"' >"+itm.STU_NAME+"</option>");
@@ -118,11 +118,11 @@ function getNoGroupStudentsByClassId(classId,classType,dctype){
             }else
                 $("#dv_addGroup").hide();
 
-           /* if(responseText.objList[0]!=null&&responseText.objList[0].length>0){
-                $("#no_gs").append("<option id='special_option' value='0' style='display:none;' ></option>");
-            }else{
-                $("#no_gs").append("<option id='special_option' value='0' ></option>");
-            } */
+            /* if(responseText.objList[0]!=null&&responseText.objList[0].length>0){
+             $("#no_gs").append("<option id='special_option' value='0' style='display:none;' ></option>");
+             }else{
+             $("#no_gs").append("<option id='special_option' value='0' ></option>");
+             } */
             if(responseText.objList[0]!=null||responseText.objList[0].length==0){
                 $("#nogroup").hide();
             }
@@ -304,11 +304,15 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
                 }
                 var stuno=typeof itm.stuno=='undefined'?'--':itm.stuno;
                 gtHtml+="<td>"+stuno+"</td>";
-                gtHtml+="<td><span class='w60'>"+itm.stuname;
+                gtHtml+="<td><span class='w60'>";
+                if(typeof itm.cardstatus!='undefined'&&itm.cardstatus==0)
+                    gtHtml+='<span title="学生已过期" style="color: red">'+itm.stuname+'</span>';
+                else
+                    gtHtml+=itm.stuname;
                 if(dcType==1)
                     gtHtml+="<b style='display: none;'>"+itm.password+"</b>";
                 //else
-                    //gtHtml+="<b style='display: none;'><a target='_blank' href='"+viewEttUserURL+itm.ettuserid+"'>"+itm.ettuserid+"</a></b>";
+                //gtHtml+="<b style='display: none;'><a target='_blank' href='"+viewEttUserURL+itm.ettuserid+"'>"+itm.ettuserid+"</a></b>";
                 gtHtml+="</span>";
                 if(dcType==1)
                     gtHtml+='<a name="a_view" class="ico92" title="查看密码" href="javascript:void(0);"></a>';
@@ -453,7 +457,11 @@ function getStuList(clsid,dctype){
             var h='';
             if(rps.objList.length>0){
                 $.each(rps.objList,function(idx,itm){
-                    h+='<li>'+itm.realname;
+                    h+='<li>';
+                    if(typeof itm.cardstatus!='undefined'&&itm.cardstatus==0)
+                        h+='<span style="color: red" title="学生已过期">'+itm.realname+'</span>';
+                    else
+                        h+=itm.realname;
                     if(dctype>1){
                         h+='<a style="display: none;" href="javascript:delClassUser(\''+itm.ref+'\')" class="ico_delete" title="删除"></a>';
                         h+='<a style="display: none;" name="a_view" target="_blank" class="ico92" title="查看学生信息" href="'+viewEttUserURL+itm.ettuserid+'"></a>';
