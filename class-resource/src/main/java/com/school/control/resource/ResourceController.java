@@ -2204,7 +2204,7 @@ public class ResourceController extends BaseController<ResourceInfo> {
         rsInfo.setResid(Long.parseLong(resid.toString()));
         List<ResourceInfo> rsList=resourceManager.getList(rsInfo,null);
         if(rsList!=null&&rsList.size()>0){
-            path+="/"+rsList.get(0).getPath()+"/001"+rsList.get(0).getFilesuffixname();//完整路径
+            path+="/"+UtilTool.getResourceFileUrl(rsList.get(0).getResid().toString(),rsList.get(0).getFilesuffixname());//完整路径
             if(imgw!=null&&imgh!=null&&imgw.trim().length()>0&&imgh.trim().length()>0){
                 //生成新图
                 writeImage(response, ImgResize(path, Integer.parseInt(imgw), Integer.parseInt(imgh)));

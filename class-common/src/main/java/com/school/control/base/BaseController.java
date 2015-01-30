@@ -12,6 +12,7 @@ import com.school.util.UtilTool;
 import com.school.util.jqgrid.JQGridConditionEntity;
 import com.school.util.jqgrid.JQGridDetial;
 import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageDecoder;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import net.sf.json.JSONObject;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -22,6 +23,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -626,6 +628,7 @@ public class BaseController<T extends java.io.Serializable> {
     public String ImgResize(String path,int w, int h) throws IOException {
         path=path.replaceAll("\\\\","//");
         File _file = new File(path);
+        System.out.println(path);
         _file.setReadOnly();
         File    srcFile  = _file;
         String  fileSuffix = _file.getName().substring(
@@ -646,11 +649,21 @@ public class BaseController<T extends java.io.Serializable> {
             }
             if(!_file.exists()){
                 System.out.println("图片不存在.");
+                return null;
             }
-            Image srcImage  = javax.imageio.ImageIO.read(_file);
+            BufferedImage _imageRBG =null;
+            try{
+                _imageRBG= ImageIO.read(_file);
+            }catch(IOException e){
+                JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(new FileInputStream(_file) );
+                _imageRBG= decoder.decodeAsBufferedImage();
+            }
+            int imageWidth = _imageRBG.getWidth(null);
+            int imageHeight = _imageRBG.getHeight(null);
+
+
             //得到图片的原始大小， 以便按比例压缩。
-            int  imageWidth = srcImage.getWidth(null);
-            int  imageHeight = srcImage.getHeight(null);
+
             //        System.out.println("width: " + imageWidth);
             //        System.out.println("height: " + imageHeight);
             //得到合适的压缩大小，按比例。
@@ -660,10 +673,10 @@ public class BaseController<T extends java.io.Serializable> {
                 w = (int)Math.round((imageWidth * h * 1.0 / imageHeight));
 
             //构建图片对象
-            BufferedImage _image = new BufferedImage(w, h,
-                    BufferedImage.TYPE_INT_RGB);
+            BufferedImage _image = new BufferedImage(w, h,BufferedImage.TYPE_INT_RGB);
+
             //绘制缩小后的图
-            _image.getGraphics().drawImage(srcImage, 0, 0, w, h, null);
+            _image.getGraphics().drawImage(_imageRBG, 0, 0, w, h, null);
             //输出到文件流
             FileOutputStream out = new FileOutputStream(destFile);
             JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
