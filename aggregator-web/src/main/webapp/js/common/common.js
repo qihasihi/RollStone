@@ -162,23 +162,26 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
                 jwplayerSetup.image=imagepath;
                 jwplayer(playeraddressid).setup(jwplayerSetup);
                 if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
-                    jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
-                if(typeof(isshowBar)!="undefined"&&!isshowBar){
                     jwplayer(playeraddressid).onReady(function(){
-                        jwplayer(playeraddressid).play(); //.seek(0)
+                        if(typeof(playEndMethod)!="undefined")
+                            playEndMethod();
+                        if(typeof(isshowBar)!="undefined"&&!isshowBar){
+                            jwplayer(playeraddressid).play(); //.seek(0)
+                        }
                     });
-                }
             }
         });
     }else{
         jwplayer(playeraddressid).setup(jwplayerSetup);
-        if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
-            jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
-        if(typeof(isshowBar)!="undefined"&&!isshowBar){
+
             jwplayer(playeraddressid).onReady(function(){
-                jwplayer(playeraddressid).play(); //.seek(0)
+                if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+                    jwplayer(playeraddressid).onPlaylistComplete();
+                if(typeof(isshowBar)!="undefined"&&!isshowBar){
+                    jwplayer(playeraddressid).play(); //.seek(0)
+                 }
             });
-        }
+
     }
 
 //     if(typeof(resid)!="undefined"){
@@ -258,25 +261,27 @@ function loadSWFPlayerLitterView(filepath,playeraddressid,imagepath,resid,width,
                 jwplayerSetup.file=data.videoUrl;
                 jwplayerSetup.image=data.imageUrl;
                 jwplayer(playeraddressid).setup(jwplayerSetup);
-                if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
-                    jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
-                if(typeof(isshowBar)!="undefined"&&!isshowBar){
-                    jwplayer(playeraddressid).onReady(function(){
-                        jwplayer(playeraddressid).play(); //.seek(0)
-                    });
-                }
 
+                    jwplayer(playeraddressid).onReady(function(){
+                        if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+                            playEndMethod();
+                        if(typeof(isshowBar)!="undefined"&&!isshowBar){
+                        jwplayer(playeraddressid).play(); //.seek(0)
+                        }
+                    });
             }
         });
     }else{
          jwplayer(playeraddressid).setup(jwplayerSetup);
-        if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
-            jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
-        if(typeof(isshowBar)!="undefined"&&!isshowBar){
+
             jwplayer(playeraddressid).onReady(function(){
-                jwplayer(playeraddressid).play(); //.seek(0)
+                if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
+                    playEndMethod();
+                if(typeof(isshowBar)!="undefined"&&!isshowBar){
+                    jwplayer(playeraddressid).play(); //.seek(0)
+                }
             });
-        }
+
     }
 
 

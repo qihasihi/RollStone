@@ -155,6 +155,13 @@
             });
             $("#ul_xuhao").html(h);
         }
+
+        function litterViewLoadOver(){
+            jwplayer('div_show0').onTime(function(){
+                var t=jwplayer('div_show0').getDuration();
+                $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+            })
+        }
     </script>
 </head>
 <body>
@@ -172,11 +179,8 @@
                 var isShowBar=true;
                 playerController=loadSWFPlayer(resourcepathHead+"${resObj.path}/001${resObj.filesuffixname}",'div_show0'
                         ,resourcepathHead+'${resObj.path}/001${resObj.filesuffixname}.pre.jpg'
-                        ,${resObj.resid},769,432,isShowBar);
-                playerController.onTime(function(){
-                    var t=playerController.getDuration();
-                    $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
-                })
+                        ,${resObj.resid},769,432,isShowBar,litterViewLoadOver);
+
 
             </script>
         </div>
