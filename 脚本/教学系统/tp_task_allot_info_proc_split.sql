@@ -1,10 +1,10 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `tp_task_allot_info_proc_split`$$
 
-CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_task_allot_info_proc_split`(
+CREATE DEFINER=`schu`@`%` PROCEDURE `tp_task_allot_info_proc_split`(
 					  p_task_id BIGINT,
 				          p_course_id BIGINT,
 				          p_user_type INT,
@@ -30,7 +30,7 @@ BEGIN
   (CASE u.user_type  WHEN 0 THEN (SELECT c.dc_type FROM class_info c WHERE c.class_id=u.user_type_id) ELSE -1 END) class_type,
  (SELECT dc_school_id FROM tp_course_info tc,tp_task_info t WHERE tc.course_id=t.course_id AND t.task_id=u.task_id)dc_school_id';  
 	DECLARE tmp_search_condition VARCHAR(2000) DEFAULT ' 1=1 ';  
-	DECLARE tmp_tbl_name VARCHAR(2000) DEFAULT 'tp_task_allot_info u'; 
+	DECLARE tmp_tbl_name VARCHAR(2000) DEFAULT 'tp_task_allot_info u '; 
 	
 	IF p_course_id IS NOT NULL THEN
 		SET tmp_search_condition=CONCAT(tmp_search_condition," and u.COURSE_ID=",p_course_id);

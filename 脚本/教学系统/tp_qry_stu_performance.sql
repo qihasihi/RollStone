@@ -1,10 +1,10 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `tp_qry_stu_performance`$$
 
-CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_qry_stu_performance`(
+CREATE DEFINER=`schu`@`%` PROCEDURE `tp_qry_stu_performance`(
 					  p_task_id	VARCHAR(50),
 				          p_class_id INT,
 				          p_class_type INT,
@@ -13,6 +13,7 @@ BEGIN
 	DECLARE tmp_sql VARCHAR(30000) DEFAULT '';
 	DECLARE tmp_sql2 VARCHAR(30000) DEFAULT '';
 	DECLARE tmp_sql1 VARCHAR(30000) DEFAULT '';
+	DECLARE tmp_order VARCHAR(30000) DEFAULT ' t.c_time desc  ';
         DECLARE tmp_search_sql VARCHAR(20000) DEFAULT 'SELECT DISTINCT u.user_id uid,t.task_id,t.task_type,s.user_id,s.stu_no,
 	s.stu_name,ttp.c_time,(SELECT COUNT(*) FROM tp_task_performance per where per.task_id=t.task_id and per.user_id=s.user_id)STATUS,
 			(SELECT is_right FROM tp_task_performance per WHERE per.user_id=s.user_id AND per.task_id=t.task_id) isright,
@@ -64,25 +65,23 @@ BEGIN
 	END IF;
 	
 	
-    
-	 
-	 
-	 
-         
-	 
-	 IF p_order_str IS NOT NULL THEN 
-		SET tmp_sql1=CONCAT("SELECT * FROM (SELECT t.*,@row:=@row+1 AS ROW,@rank := IF(@prev_score=score,@rank ,@row) AS rank,
-		  @prev_score := score
-		  FROM (");
+	SET tmp_sql1=CONCAT("SELECT * FROM (SELECT t.*,@row:=@row+1 AS ROW,@rank := IF(@prev_score=score,@rank ,@row) AS rank,
+	  @prev_score := score
+	  FROM (");
+	  
+	  IF p_class_type=0 THEN
+		SET tmp_sql2=CONCAT(tmp_sql1,"SELECT * FROM (",tmp_sql2," order by score desc)t where clsname is not null )t ");
+	  ELSE 
+		SET tmp_sql2=CONCAT(tmp_sql1,tmp_sql2,"  order by score desc)t ");
+	  END IF;	
+	  
+	  SET tmp_sql2=CONCAT(tmp_sql2,",(SELECT @rank:=0,@ROW:=0,@prev_score:=NULL)a )t "); 
+	  
+	  IF p_order_str IS NOT NULL THEN 
+		SET tmp_sql2=CONCAT(tmp_sql2," order by ",p_order_str,""); 
+	  END IF;
 		  
-		  IF p_class_type=0 THEN
-			SET tmp_sql2=CONCAT(tmp_sql1,"SELECT * FROM (",tmp_sql2," order by score desc)t where clsname is not null )t ");
-		  ELSE 
-			SET tmp_sql2=CONCAT(tmp_sql1,tmp_sql2,"  order by score desc)t ");
-	          END IF;	
-	          
-		  SET tmp_sql2=CONCAT(tmp_sql2,",(SELECT @rank:=0,@ROW:=0,@prev_score:=NULL)a )t order by ",p_order_str," "); 
-	 END IF;
+	 
 	 
 	 
 	 

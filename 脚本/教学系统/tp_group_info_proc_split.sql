@@ -1,6 +1,5 @@
 DELIMITER $$
 
-USE `m_school`$$
 
 DROP PROCEDURE IF EXISTS `tp_group_info_proc_split`$$
 
@@ -13,6 +12,7 @@ CREATE DEFINER=`schu`@`%` PROCEDURE `tp_group_info_proc_split`(
 				          p_term_id VARCHAR(50),
 				          p_stu_userid INT,
 				          p_subject_id INT,
+				          p_task_id BIGINT,
 							p_current_page INT(10),
 							p_page_size INT(10),
 							p_sort_column INT(1),
@@ -20,10 +20,10 @@ CREATE DEFINER=`schu`@`%` PROCEDURE `tp_group_info_proc_split`(
 				          )
 BEGIN
 	DECLARE tmp_sql VARCHAR(20000) DEFAULT '';
-	DECLARE tmp_search_column VARCHAR(2000) DEFAULT ' distinct u.*,(select t.teacher_name from teacher_info t,user_info cu where t.user_id=cu.ref and cu.user_id=u.c_user_id)teacher_name,
+	DECLARE tmp_search_column VARCHAR(4000) DEFAULT ' distinct u.*,(select t.teacher_name from teacher_info t,user_info cu where t.user_id=cu.ref and cu.user_id=u.c_user_id)teacher_name,
 	(SELECT COUNT(*) FROM tp_j_group_student gs WHERE gs.group_id=u.group_id)group_num ';  
 	DECLARE tmp_search_condition VARCHAR(2000) DEFAULT ' 1=1 ';  
-	DECLARE tmp_tbl_name VARCHAR(2000) DEFAULT 'tp_group_info u LEFT JOIN j_class_user cu ON u.CLASS_ID=cu.CLASS_ID AND cu.RELATION_TYPE=''»ŒøŒ¿œ ¶'' AND u.CLASS_TYPE=1 '; 
+	DECLARE tmp_tbl_name VARCHAR(2000) DEFAULT 'tp_group_info u LEFT JOIN j_class_user cu ON u.CLASS_ID=cu.CLASS_ID AND cu.RELATION_TYPE=''‰ªªËØæËÄÅÂ∏à'' AND u.CLASS_TYPE=1 '; 
 	
         	
 	
@@ -61,6 +61,13 @@ BEGIN
 		SET tmp_search_condition=CONCAT(tmp_search_condition," and exists (select 1 from tp_j_group_student t where t.user_id=",p_stu_userid," and t.group_id=u.group_id )");
 	END IF;
 	
+	IF p_task_id IS NOT NULL THEN 
+		SET tmp_search_column=CONCAT(tmp_search_column,",(SELECT 1 FROM tp_task_info t INNER JOIN tp_task_allot_info ta ON t.`TASK_ID`=ta.`task_id` 
+		INNER JOIN tp_group_info g ON g.`GROUP_ID`=ta.user_type_id
+		INNER JOIN tp_task_performance tp ON  tp.`TASK_ID`=t.`TASK_ID` 
+		WHERE 1=1 AND t.`TASK_ID`=",p_task_id," and g.group_id=u.group_id AND EXISTS ( SELECT u.ref FROM user_info u,tp_j_group_student gs WHERE gs.`USER_ID`=u.`USER_ID` AND gs.`GROUP_ID`=ta.`user_type_id` AND u.ref=tp.user_id)limit 1)isHas");
+	END IF;
+	
 	
 	SET tmp_sql=CONCAT("SELECT ",tmp_search_column," FROM ",tmp_tbl_name," WHERE ",tmp_search_condition);	
 	
@@ -85,6 +92,6 @@ BEGIN
 	DEALLOCATE PREPARE stmt;
 	SET sumCount=@tmp_sumCount;
 	
-END $$
+    END$$
 
 DELIMITER ;

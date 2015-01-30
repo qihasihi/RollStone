@@ -1,6 +1,6 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school`$$
 
 DROP PROCEDURE IF EXISTS `tp_qry_res_stunote_tree`$$
 
@@ -27,7 +27,7 @@ BEGIN
 		     (
     SELECT GROUP_CONCAT(t.ref) FROM ( SELECT 
 			DISTINCT t.ref
-			FROM tp_ques_answer_record t WHERE t.TASK_TYPE=1 ';
+			FROM tp_ques_answer_record t WHERE t.TASK_TYPE=1 and t.ques_id=0 ';
 			
         IF p_res_id IS NOT NULL THEN
 		SET tmp_sql=CONCAT(tmp_sql," and t.QUES_PARENT_ID='",p_res_id,"'");
@@ -64,6 +64,6 @@ BEGIN
 	
 	
 	
-END $$
+    END$$
 
 DELIMITER ;
