@@ -1,6 +1,6 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `teach_version_info_proc_synchro`$$
 
@@ -9,6 +9,7 @@ CREATE DEFINER=`schu`@`%` PROCEDURE `teach_version_info_proc_synchro`(
 				            p_version_id INT,
 				            p_remark VARCHAR(1000),
 				            p_c_user_id VARCHAR(1000),
+				            p_abbreviation VARCHAR(1000),
 							OUT affect_row INT
 							)
 BEGIN
@@ -28,6 +29,7 @@ BEGIN
 				          p_version_id ,
 				          p_remark ,
 				          p_c_user_id ,
+				          p_abbreviation,
 				           affect_row 
 				          );
 	  ELSE
@@ -36,10 +38,11 @@ BEGIN
 				            p_version_id ,
 				            p_remark ,
 				            p_c_user_id ,
+				            p_abbreviation,
 					     affect_row 
 							);
 	END IF;
 	
-END $$
+    END$$
 
 DELIMITER ;

@@ -1,6 +1,6 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `teach_version_info_proc_update`$$
 
@@ -9,6 +9,7 @@ CREATE DEFINER=`schu`@`%` PROCEDURE `teach_version_info_proc_update`(
 				          p_version_id INT,
 				          p_remark VARCHAR(1000),
 				          p_c_user_id VARCHAR(1000),
+				          p_abbreviation VARCHAR(1000),
 				          OUT affect_row INT
 				          )
 BEGIN
@@ -25,6 +26,9 @@ BEGIN
 	IF p_remark IS NOT NULL THEN
 		SET tmp_sql=CONCAT(tmp_sql,",REMARK='",p_remark,"'");
 	END IF;
+	IF p_abbreviation IS NOT NULL THEN
+		SET tmp_sql=CONCAT(tmp_sql,",abbreviation='",p_abbreviation,"'");
+	END IF;
 	
 	IF p_c_user_id IS NOT NULL THEN
 		SET tmp_sql=CONCAT(tmp_sql,",C_USER_ID='",p_c_user_id,"'");
@@ -40,6 +44,6 @@ BEGIN
 	PREPARE stmt FROM @tmp_sql;
 	EXECUTE stmt;
 	SET affect_row = 1;
-END $$
+    END$$
 
 DELIMITER ;
