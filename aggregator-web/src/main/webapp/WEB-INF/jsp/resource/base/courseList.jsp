@@ -89,19 +89,19 @@
             var gradeid=$("#gradeid").val();
             var subjectid=$("#subjectid").val();
             $.post('teachingmaterial?m=getTchingMaterialList',{gradeid:gradeid,subjectid:subjectid},
-                function(rps){
-                    var html ="";
-                    if(rps!=null && rps.objList!=null && rps.objList.length>0){
-                        html+="<option value='0'>- 全部 -</option>";
-                        $.each(rps.objList,function(idx,itm) {
-                            html+="<option value='"+itm.materialid+"'>"+itm.materialname+"("+itm.versionname+")</option>";
-                        });
-                    }else{
-                        html+="<option value='0'>- 无 -</option>";
-                    }
-                    $("#materialid").html(html);
-                    pageGo('p1');
-                },"json");
+                    function(rps){
+                        var html ="";
+                        if(rps!=null && rps.objList!=null && rps.objList.length>0){
+                            html+="<option value='0'>- 全部 -</option>";
+                            $.each(rps.objList,function(idx,itm) {
+                                html+="<option value='"+itm.materialid+"'>"+itm.materialname+"("+itm.autoVersionName+")</option>";
+                            });
+                        }else{
+                            html+="<option value='0'>- 无 -</option>";
+                        }
+                        $("#materialid").html(html);
+                        pageGo('p1');
+                    },"json");
         }
     </script>
 </head>

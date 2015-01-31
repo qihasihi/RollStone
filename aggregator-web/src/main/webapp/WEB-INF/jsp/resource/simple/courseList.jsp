@@ -104,7 +104,7 @@
                                   istrue=false;
                             }
                             if(istrue)
-                                html+="<option value='"+itm.materialid+"'>"+itm.materialname+"("+itm.versionname+")</option>";
+                                html+="<option value='"+itm.materialid+"'>"+itm.materialname+"("+itm.autoVersionName+")</option>";
                         });
                         if(html.Trim().length>0)
                             html=html1+html;

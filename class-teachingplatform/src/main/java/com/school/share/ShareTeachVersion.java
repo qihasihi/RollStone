@@ -209,6 +209,9 @@ class ShareTeachVersionUtil{
                 if(courseMap.containsKey("VersionName")&&courseMap.get("VersionName")!=null&&!courseMap.get("VersionName").toString().trim().toUpperCase().equals("NULL")){
                     tvEntity.setVersionname(courseMap.get("VersionName").toString());
                 }
+                if(courseMap.containsKey("Abbreviation")&&courseMap.get("Abbreviation")!=null&&!courseMap.get("Abbreviation").toString().trim().toUpperCase().equals("NULL")){
+                    tvEntity.setAbbreviation(courseMap.get("Abbreviation").toString());
+                }
                 returnList.add(tvEntity);
             }
         }
@@ -232,7 +235,7 @@ class ShareTeachVersionUtil{
 
             httpConnection.setRequestMethod("POST");
             httpConnection.setRequestProperty("Content-Length",
-            String.valueOf(params.length()));
+                    String.valueOf(params.length()));
             httpConnection.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded");
 

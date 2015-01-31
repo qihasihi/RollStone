@@ -90,7 +90,11 @@
                             quesname=replaceAll(quesname.toLowerCase(),'<span name="fillbank"></span>','_______');
                             htm+='<tr>';
                             htm+='<td><input type="radio" name="rdo_data" id="rdo_data" value="'+itm.questionid+'"></td>';
-                            htm+='<td><p>'+quesname+'</p>';
+                            htm+='<td><span class="bg">'+itm.questiontypename+'</span>';
+                            if(typeof(itm.showExamYearMsg)!="undefined"&&itm.showExamYearMsg!=null){
+                                htm+='<span>('+itm.showExamYearMsg+')</span>';
+                            }
+                            htm+='<p>'+quesname+'</p>'
                             htm+='<p>';
                             if(itm.questionOptionList!=null&&itm.questionOptionList.length>0&&itm.questiontype!=1){
                                 $.each(itm.questionOptionList,function(idx,im){
@@ -187,9 +191,9 @@
         </ul>
     </div>
     <p class="public_input t_r w940 p_b_10">
-      <!--  <input name="textfield2" type="text" class="w240" placeholder="专题名称" />
-        <a href="1" class="an_search" title="查询"></a>-->
-        </p>
+        <!--  <input name="textfield2" type="text" class="w240" placeholder="专题名称" />
+          <a href="1" class="an_search" title="查询"></a>-->
+    </p>
     <div class="jxxt_float_h460">
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
             <col class="w30"/>

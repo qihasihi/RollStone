@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class TeachingMaterialInfo implements java.io.Serializable{
 
-	public void TeachingMaterialInfo (){}
-   
+    public void TeachingMaterialInfo (){}
+
     private java.lang.Integer gradeid;
     private java.lang.String materialname;
     private java.lang.Integer subjectid;
@@ -18,6 +18,22 @@ public class TeachingMaterialInfo implements java.io.Serializable{
     private String versionname;
     private String gradename;
     private String type;
+    private String abbreviation;//°æ±¾¼ò³Æ
+
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }
+
+    public String getAutoVersionName(){
+        String returnVal=this.getVersionname();
+        if(abbreviation!=null)
+            returnVal=abbreviation;
+        return returnVal;
+    }
 
     public String getType() {
         return type;
@@ -52,10 +68,10 @@ public class TeachingMaterialInfo implements java.io.Serializable{
     }
 
     public java.lang.Integer getGradeid(){
-      return gradeid;
+        return gradeid;
     }
     public void setGradeid(java.lang.Integer gradeid){
-      this.gradeid = gradeid;
+        this.gradeid = gradeid;
     }
 
 
@@ -76,19 +92,19 @@ public class TeachingMaterialInfo implements java.io.Serializable{
     }
 
     public java.lang.Integer getSubjectid(){
-      return subjectid;
+        return subjectid;
     }
     public void setSubjectid(java.lang.Integer subjectid){
-      this.subjectid = subjectid;
+        this.subjectid = subjectid;
     }
     public Date getCtime(){
-      return ctime;
+        return ctime;
     }
     public void setCtime(Date ctime){
-      this.ctime = ctime;
+        this.ctime = ctime;
     }
     public java.lang.Integer getVersionid(){
-      return versionid;
+        return versionid;
     }
 
     public void setVersionid(Integer versionid) {
@@ -96,18 +112,18 @@ public class TeachingMaterialInfo implements java.io.Serializable{
     }
 
     public java.lang.String getCuserid(){
-      return cuserid;
+        return cuserid;
     }
     public void setCuserid(java.lang.String cuserid){
-      this.cuserid = cuserid;
+        this.cuserid = cuserid;
     }
 
     public java.lang.String getRemark(){
-      return remark;
+        return remark;
     }
     public void setRemark(java.lang.String remark){
-      this.remark = remark;
+        this.remark = remark;
     }
-  
+
 
 }

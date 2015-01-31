@@ -530,7 +530,7 @@ function load_material(materialid) {
                 if (rps.objList.length) {
                     //htm+='<option value="">全部</option>';
                     $.each(rps.objList, function (idx, itm) {
-                        var versionname=typeof itm.versionname !='undefined'&&itm.versionname.length>0?'('+itm.versionname+')':'';
+                        var versionname=typeof itm.autoVersionName !='undefined'&&itm.autoVersionName.length>0?'('+itm.autoVersionName+')':'';
                         htm += '<option value="' + itm.materialid + '">' + itm.subjectname + itm.materialname +versionname+ '</option>';
                     })
                 }
@@ -1783,7 +1783,7 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     genderHtml();
     var afname='<a style="color:#000000;" title="下载" href="javascript:resourceDownLoadFile(\'' + resid + '\',\'' + fname + '\',1)">'+fname+'</a>';
     $("#h1_resname").html(afname);
-    //选中效果  
+    //选中效果
     $("#ul_resource li").removeClass();
     $(liobj).parent().parent().addClass("crumb");
 
@@ -1842,7 +1842,7 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     } else if (type == 0) {
         // htm += '<p>' + fname + '</p>';
     } else if (type == 5) {
-        //showMp3Resource('div_show', 0, md5name, md5id,fileSystemIpPort);  
+        //showMp3Resource('div_show', 0, md5name, md5id,fileSystemIpPort);
         swfobjPlayer(md5id, md5name, divid, false, lastname, 'swf','',resid);
         //var path=fileSystemIpPort+"uploadfile/" + md5id + "/"+ md5name;
         //loadSwfReview(path,'div_show',560,370);
@@ -1864,7 +1864,7 @@ function showResource(md5id, fname, divid, type, preimg, md5name, size, resid, r
     //$("#sp_collect").html('<a  style="color:#34a4c6" class="ico58a" title="收藏" href="javascript:doCollectResource(\'' + resid + '\');"></a>');
     $("#sp_download").html('<a  style="color:#34a4c6"  title="下载" href="javascript:resourceDownLoadFile(\'' + resid + '\',\'' + fname + '\',1)">下载</a>');
     // 收藏
-    // 好评  
+    // 好评
     if (isStudent)
         $("#sp_collect").html('<a  style="color:#34a4c6"  title="收藏" href="javascript:doCollectResource(\'' + resid + '\');">收藏</a>');
     else
@@ -2141,11 +2141,11 @@ function videoConvertProgress(resid, fname, md5fname, idxstate, path, baseIpPort
                             clearTimeout(tarray[idxstate]);
                         progress = "完成";
                         //$("#img_video").unbind("click");
-                        //$("#img_video").bind("click",function(){  
+                        //$("#img_video").bind("click",function(){
                         loadSWFPlayer(path, md5fname, 'div_show', false, lastname,'','',resid);
                         $("#progress_" + idxstate).html("转换进度:" + progress);
                         return;
-                        //});    
+                        //});
 
                     } else {
                         progress += "%";
@@ -2190,7 +2190,7 @@ function loadAllComment(isshowall) {
         $('#ul_comment').children('li').removeClass('crumb').end().children('li').eq(1).addClass('crumb');
     }
 
-    // 显示评论框和分页按钮  
+    // 显示评论框和分页按钮
     $("#pListForm").show();
     $("#div_xheditor").show();
     pageGo("pList");
@@ -2513,11 +2513,11 @@ function showMp3Resource(divid, pidx, filemd5name, md5Id, tmpport) {
 
     loadSWFPlayer(path, filemd5name, divid, false, lastname);
 
-    /*	var htm = '';  
-     htm += '<img src="images/mp3.jpg" width="75" height="52" />';   
+    /*	var htm = '';
+     htm += '<img src="images/mp3.jpg" width="75" height="52" />';
      htm += '<span style="color:blue;font-size:10px" id="play_operate_' + pidx
-     + '" filemd5name="' + filemd5name + '">';  
-     htm += '<a href="javascript:;" onclick="operateSound(' + pidx + ',\''  
+     + '" filemd5name="' + filemd5name + '">';
+     htm += '<a href="javascript:;" onclick="operateSound(' + pidx + ',\''
      + md5Id + '\',\'' + filemd5name + '\',\'play\',\''+tmpport+'\')">试听</a>';
      htm += '</span>';
      $("#" + divid).html(htm); */
