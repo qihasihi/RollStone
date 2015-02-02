@@ -1564,6 +1564,7 @@ public class ClassController extends BaseController<ClassInfo>{
         if(clsid!=null){
             //查询班级信息
             ClassInfo cls=new ClassInfo();
+            cls.setClassid(clsid);
             List<ClassInfo> clsList=this.classManager.getList(cls,null);
             if(clsList==null||clsList.size()<1)return false;
             Integer dcschoolid =clsList.get(0).getDcschoolid();
