@@ -30,7 +30,7 @@
     -->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
-        <property name="jdbcUrl" value="jdbc:mysql://192.168.10.41:3306/m_school"/>
+        <property name="jdbcUrl" value="jdbc:mysql://192.168.10.41:3306/school201501"/>
         <property name="user" value="mytest"/>
         <property name="password" value="testdb"/>
         <property name="minPoolSize" value="10" />
@@ -39,7 +39,7 @@
         <property name="acquireIncrement" value="5" />
         <property name="acquireRetryAttempts" value="60" />
         <property name="maxStatements" value="0" />
-        <property name="initialPoolSize" value="10" />
+        <property name="initialPoolSize" value="5" />
         <property name="idleConnectionTestPeriod" value="120" />
         <property name="testConnectionOnCheckin" value="false" />
         <property name="autoCommitOnClose" value="false" />
