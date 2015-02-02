@@ -18,6 +18,14 @@ public interface ITpTaskDAO extends ICommonDAO<TpTaskInfo>{
     List<TpTaskInfo> getTaskReleaseList(TpTaskInfo t,PageResult presult);
 
     /**
+     * 查询任务详情(学校名称，学科)
+     * @param t
+     * @param presult
+     * @return
+     */
+    List<TpTaskInfo> getTaskDetailList(TpTaskInfo t,PageResult presult);
+
+    /**
      * 获取学生任务
      * @param t
      * @param presult

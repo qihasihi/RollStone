@@ -512,7 +512,68 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
             presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
         return tptaskinfoList;
     }
-   public List<TpTaskInfo> getListbyStu(TpTaskInfo tptaskinfo, PageResult presult) {
+
+    @Override
+    public List<TpTaskInfo> getTaskDetailList(TpTaskInfo tptaskinfo, PageResult presult) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_live_task_proc_split(");
+        List<Object> objList=new ArrayList<Object>();
+        if (tptaskinfo.getTaskid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getTaskid());
+        } else
+            sqlbuilder.append("null,");
+
+        if (tptaskinfo.getTaskvalueid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getTaskvalueid());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskinfo.getTasktype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getTasktype());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskinfo.getCuserid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getCuserid());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskinfo.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskinfo.getSchoolid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getSchoolid());
+        } else
+            sqlbuilder.append("null,");
+        if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
+            sqlbuilder.append("?,?,");
+            objList.add(presult.getPageNo());
+            objList.add(presult.getPageSize());
+        }else{
+            sqlbuilder.append("NULL,NULL,");
+        }
+        if(presult!=null&&presult.getOrderBy()!=null&&presult.getOrderBy().trim().length()>0){
+            sqlbuilder.append("?,");
+            objList.add(presult.getOrderBy());
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        Object[] objArray=new Object[1];
+        List<TpTaskInfo> tptaskinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpTaskInfo.class, objArray);
+        if(presult!=null&&objArray[0]!=null&&objArray[0].toString().trim().length()>0)
+            presult.setRecTotal(Integer.parseInt(objArray[0].toString().trim()));
+        return tptaskinfoList;
+    }
+
+
+    public List<TpTaskInfo> getListbyStu(TpTaskInfo tptaskinfo, PageResult presult) {
         StringBuilder sqlbuilder = new StringBuilder();
         if(tptaskinfo.getUserid()==null)
             return null;

@@ -98,6 +98,11 @@ public class  TpTaskManager extends BaseManager<TpTaskInfo> implements ITpTaskMa
         return this.tptaskdao.getTaskReleaseList(t,presult);
     }
 
+    @Override
+    public List<TpTaskInfo> getTaskDetailList(TpTaskInfo t, PageResult presult) {
+        return this.tptaskdao.getTaskDetailList(t,presult);
+    }
+
     public List<TpTaskInfo> getListbyStu(TpTaskInfo t, PageResult presult) {
         return this.tptaskdao.getListbyStu(t,presult);
     }

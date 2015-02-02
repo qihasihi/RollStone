@@ -337,6 +337,134 @@ public class TaskController extends BaseController{
 
 
     /**
+     * 总校后台进入直播课列表页面
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="toLiveTaskList",method=RequestMethod.GET)
+    public ModelAndView toLiveTaskPage(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String sign=request.getParameter("sign");
+        String time=request.getParameter("time");
+        if(sign==null||sign.trim().length()<1||time==null||time.length()<1){
+            je.setMsg("Param Error!");
+            response.getWriter().print(je.toJSON());
+        }
+        HashMap<String,String> map = new HashMap();
+        map.put("time",time);
+        Boolean b = UrlSigUtil.verifySigSimple("LiveTask",map,sign);
+        if(!b){
+            je.setMsg("Md5 Error!");
+            response.getWriter().print(je.toJSON());
+            return null;
+        }
+        return new ModelAndView("/teachepaltform/teacher/live-task-list");
+    }
+    /**
+     * 获取菁英班直播课任务列表
+     * @throws Exception
+     */
+    @RequestMapping(params="m=ajaxLiveTaskList",method=RequestMethod.POST)
+    public void ajaxLiveTaskList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String eliteSchoolId=UtilTool.utilproperty.get("ELITE_SCHOOL_ID").toString();
+        if(eliteSchoolId==null||eliteSchoolId.trim().length()<1){
+            je.setMsg("系统未获取菁英学校标识!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        PageResult p=this.getPageResultParameter(request);
+        p.setOrderBy(" ta.b_time desc ");
+        TpTaskInfo t=new TpTaskInfo();
+        // t.setSchoolid(Integer.parseInt(eliteSchoolId));
+        t.setTasktype(10);
+        //已发布的任务
+        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskDetailList(t, p);
+        if(taskList!=null&&taskList.size()>0){
+//            for(TpTaskInfo task:taskList){
+//                if(task.getTasktype().toString().equals("10")&&(task.getTaskstatus()!="3" && task.getTaskstatus()!="1")){
+//                    String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
+//                    String lessionid=task.getTaskid().toString().replace("-","");
+//                    HashMap<String,String> signMap = new HashMap();
+//                    signMap.put("courseName",task.getCoursename().toString());
+//                    signMap.put("courseId",lessionid);
+//                    signMap.put("userId","100");
+//                    signMap.put("userName","luzhi");
+//                    signMap.put("rec","2");
+//                    signMap.put("srcId","90");
+//                    signMap.put("timestamp",System.currentTimeMillis()+"");
+//                    String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
+//                    signMap.put("sign",signture);
+//                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+//                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+//                    if(type==1){
+//                        String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
+//                        if(liveurl!=null&&liveurl.trim().length()>0)
+//                            task.setLiveaddress(java.net.URLDecoder.decode(liveurl,"UTF-8"));
+//                    }
+//                }
+//            }
+        }
+        p.setList(taskList);
+        je.setPresult(p);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 生成直播课连接
+     * @throws Exception
+     */
+    @RequestMapping(params="m=GenerateLiveTaskUrl",method=RequestMethod.POST)
+    public void getLiveTaskAddress(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String taskid=request.getParameter("taskid");
+        String name=request.getParameter("name");
+        if(taskid==null||taskid.trim().length()<1||name==null||name.trim().length()<1){
+            je.setMsg("参数异常!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+
+        TpTaskInfo t=new TpTaskInfo();
+        t.setTaskid(Long.parseLong(taskid));
+        t.setTasktype(10);
+        //已发布的任务
+        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskDetailList(t, null);
+        if(taskList!=null&&taskList.size()>0){
+            for(TpTaskInfo task:taskList){
+                if(task.getTasktype().toString().equals("10")){
+                    String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
+                    String lessionid=task.getTaskid().toString().replace("-","");
+                    HashMap<String,String> signMap = new HashMap();
+                    signMap.put("courseName",task.getCoursename().toString());
+                    signMap.put("courseId",lessionid);
+                    signMap.put("userId","100");
+                    signMap.put("userName",name);
+                    signMap.put("rec","1");
+                    signMap.put("srcId","90");
+                    signMap.put("timestamp",System.currentTimeMillis()+"");
+                    String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
+                    signMap.put("sign",signture);
+                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
+                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
+                    if(type==1){
+                        String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
+                        if(liveurl!=null&&liveurl.trim().length()>0)
+                            task.setLiveaddress(java.net.URLDecoder.decode(liveurl,"UTF-8"));
+                    }
+                }
+            }
+        }
+        je.setObjList(taskList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
      * 获取任务列表
      * @throws Exception
      */
