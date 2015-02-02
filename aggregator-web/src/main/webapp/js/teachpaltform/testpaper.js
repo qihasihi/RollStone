@@ -873,3 +873,33 @@ function howLong(bt,et,showId){
     //动态
     setTimeout("howLong('"+bt+"','"+et+"','"+showId+"')",1000);
 }
+/**
+ * 时间统计
+ * @param p_courseid
+ * @param p_taskid
+ * @param p_userid
+ * @param p_paperid
+ */
+function paperSYTime(p_courseid,p_taskid,p_userid,p_paperid){
+    $.ajax({
+        url:"paperques?m=getSurplusTime",
+        dataType:'json',
+        type:'post',
+        data:{taskid:p_taskid,paperid:p_paperid,courseid:p_courseid,userid:p_userid},
+        cache: false,
+        error:function(){
+            alert('异常错误!系统未响应!');
+        },success:function(rps){
+            if(rps.type=="success"){
+                if(rps.objList[0]=="-1"){
+                    alert('答题时间到了，已强制性交卷!');
+                    location.href=location.href;
+                }else{
+                    $("#sp_timestate").html(rps.objList[0]);
+                    setTimeout("paperSYTime("+p_courseid+","+p_taskid+","+p_userid+","+p_paperid+")",1000);
+                }
+            }else
+                alert(rps.msg);
+        }
+    })
+}

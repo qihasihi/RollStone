@@ -114,6 +114,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
     private IPaperQuesTeamScoreManager paperQuesTeamScoreManager;
     @Autowired
     private ITpStuScoreLogsManager tpStuScoreLogsManager;
+    @Autowired
+    private IStuPaperTimesManager stuPaperTimesManager;
 
     /**
      * 根据课题ID，加载试卷列表
@@ -3675,22 +3677,12 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
 
 
         mp.put("taskstatus",taskstatus);
-        //验证是否已经交卷
-        StuPaperLogs splog=new StuPaperLogs();
-        splog.setUserid(uid);
-        splog.setPaperid(Long.parseLong(paperid));
-        splog.setIsinpaper(2);
-        if(taskid!=null)
-            splog.setTaskid(Long.parseLong(taskid));
+
+
+
+
 
         String baseUrl=request.getSession().getAttribute("IP_PROC_NAME")==null?"":request.getSession().getAttribute("IP_PROC_NAME").toString();
-        List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,pr);
-        if(spList!=null&&spList.size()>0||(flag!=null&&flag.trim().equals("1"))){ //已经交卷，不能再进入
-            String url="paperques?m=toTestDetail&paperid="+paperid+"&taskid="+taskid;
-            if(flag!=null)url+="&flag="+flag;
-            if(userid!=null)url+="&userid="+userid;
-            response.sendRedirect(baseUrl+url);return null;
-        }
         //验证任务是否已经结束
         if(taskstatus.equals("3")){
             String url="paperques?m=toTestDetail&paperid="+paperid+"&taskid="+taskid;
@@ -3699,6 +3691,44 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             response.sendRedirect(baseUrl+url);return null;
         }
 
+        Integer allowPaperCompleteTime=taskList.get(0).getAllowCompleteTime(); //分钟为单位
+        //查询是否已经过了答题时间允许范围
+        if(allowPaperCompleteTime!=null&&allowPaperCompleteTime>0){
+            Long allowCompleteTime=allowPaperCompleteTime*60*1000L;
+            StuPaperTimesInfo spt=new StuPaperTimesInfo();
+            spt.setPaperId(Long.parseLong(paperid));
+            spt.setTaskId(Long.parseLong(taskid));
+            spt.setUserId(Long.parseLong(uid+""));
+            List<StuPaperTimesInfo> sptList=this.stuPaperTimesManager.getList(spt,null);
+            if(sptList!=null&&sptList.size()>0&&sptList.get(0)!=null
+                    &&sptList.get(0).getBeginTime()!=null){
+                Date btime=sptList.get(0).getBeginTime();
+                Long chaTime=System.currentTimeMillis()-btime.getTime();//已经过去的毫秒数
+                Long shenyuTime=allowCompleteTime-chaTime;
+                if(shenyuTime<1){//说明时间到了，强行提交数据库
+                    doInPaper(request,response);//提交成功后，走详情页面
+                }else{
+                    allowCompleteTime=shenyuTime;//分钟
+                    mp.put("syAllowCompleTime",allowCompleteTime);
+                }
+            }else
+                mp.put("syAllowCompleTime",allowCompleteTime);
+        }
+        //验证是否已经交卷
+        StuPaperLogs splog=new StuPaperLogs();
+        splog.setUserid(uid);
+        splog.setPaperid(Long.parseLong(paperid));
+        splog.setIsinpaper(2);
+        if(taskid!=null)
+            splog.setTaskid(Long.parseLong(taskid));
+
+        List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,pr);
+        if(spList!=null&&spList.size()>0||(flag!=null&&flag.trim().equals("1"))){ //已经交卷，不能再进入
+            String url="paperques?m=toTestDetail&paperid="+paperid+"&taskid="+taskid;
+            if(flag!=null)url+="&flag="+flag;
+            if(userid!=null)url+="&userid="+userid;
+            response.sendRedirect(baseUrl+url);return null;
+        }
 
         //得到当前的所有问题
         List<Map<String,Object>> listMapStr=this.paperQuestionManager.getPaperQuesAllId(Long.parseLong(paperid));
@@ -3711,6 +3741,7 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
             response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
         }
+
         //得到该用户已经答过的题
         StuPaperQuesLogs tspqLogs=new StuPaperQuesLogs();
         tspqLogs.setUserid(uid);
@@ -3725,6 +3756,10 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 }
             }
         }
+        //向数据库添加记录。记录该测试的开始时间
+
+
+
         mp.put("answerQuesId",answerQuesId.toString());
         mp.put("allquesidObj",allquesidObj);
         mp.put("paperObj",paperList.get(0));
@@ -4278,10 +4313,13 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         String courseid=request.getParameter("courseid");
         String taskid=request.getParameter("taskid");
         String uid=request.getParameter("userid");
+        int notResponse=request.getAttribute("notResponse")==null?0:Integer.parseInt(request.getAttribute("notResponse").toString());
         JsonEntity jsonEntity=new JsonEntity();
         if(paperid==null||paperid.length()<1||courseid==null||courseid.trim().length()<1||taskid==null||taskid.trim().length()<1){
             jsonEntity.setMsg("-1||"+UtilTool.msgproperty.getProperty("PARAM_ERROR"));
-            response.getWriter().println(jsonEntity.toJSON());return ;
+            if(notResponse==0)
+                response.getWriter().println(jsonEntity.toJSON());
+            return ;
         }
         //验证任务
         TpTaskInfo tk=new TpTaskInfo();
@@ -4289,7 +4327,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
         if(tkList==null||tkList.size()<1||!tkList.get(0).getCourseid().toString().equals(courseid.trim())){
             jsonEntity.setMsg("-1||"+UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-            response.getWriter().println(jsonEntity.toJSON());return ;
+            if(notResponse==0)
+                response.getWriter().println(jsonEntity.toJSON());
+            return ;
         }
         tk=tkList.get(0);
 
@@ -4310,7 +4350,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
             List<UserInfo> uList=this.userManager.getList(u,null);
             if(uList==null||uList.size()<1){
                 jsonEntity.setMsg("-1||"+UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                response.getWriter().println(jsonEntity.toJSON());return ;
+                if(notResponse==0)
+                    response.getWriter().println(jsonEntity.toJSON());
+                return ;
             }
             schoolid=uList.get(0).getDcschoolid();
             jid=uid;
@@ -4327,7 +4369,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,presult);
         if(spList!=null&&spList.size()>0){
             jsonEntity.setMsg("5||您已经提交过该试卷。无法进行修改!");
-            response.getWriter().print(jsonEntity.toJSON());return;
+            if(notResponse==0)
+                 response.getWriter().print(jsonEntity.toJSON());
+            return;
         }
 //
         List<String> sqlArrayList=new ArrayList<String>();
@@ -4406,7 +4450,9 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                         if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
                                 ||clsMapList.get(0).get("CLASS_ID")==null){
                             jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                            response.getWriter().println(jsonEntity.toJSON());return ;
+                            if(notResponse==0)
+                                response.getWriter().println(jsonEntity.toJSON());
+                            return ;
                         }
 
                         //taskinfo:   4:成卷测试  5：自主测试   6:微视频
@@ -4449,7 +4495,8 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
                 jsonEntity.setMsg("-1||"+UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
         }else
             jsonEntity.setMsg("-1||"+UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
-        response.getWriter().println(jsonEntity.toJSON());
+        if(notResponse==0)
+             response.getWriter().println(jsonEntity.toJSON());
     }
 
 
@@ -4687,4 +4734,72 @@ public class PaperQuestionController extends BaseController<PaperQuestion>{
         response.getWriter().println(jsonEntity.toJSON());
     }
 
+    /**
+     * 得到学生做题的剩余时间
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=getSurplusTime",method=RequestMethod.POST)
+    public void addStuPaperTime(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        String paperId=request.getParameter("paperid");
+        String courseId=request.getParameter("courseid");
+        String taskId=request.getParameter("taskid");
+        String uId=request.getParameter("userid");
+
+        JsonEntity jsonEntity=new JsonEntity();
+        if(StringUtils.isEmpty(paperId)||StringUtils.isEmpty(courseId)
+                ||StringUtils.isEmpty(taskId)||StringUtils.isEmpty(uId)){
+            jsonEntity.setMsg("参数异常!");
+            response.getWriter().println(jsonEntity.toJSON());return;
+        }
+
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskId));
+        List<TpTaskInfo> taskList=this.tpTaskManager.getList(tk,null);
+
+        if(taskList==null||taskList.size()<1){
+            jsonEntity.setMsg("没有发现任务!");
+            response.getWriter().println(jsonEntity.toJSON());return;
+        }
+        Integer allowPaperCompleteTime=taskList.get(0).getAllowCompleteTime(); //分钟为单位
+        //查询是否已经过了答题时间允许范围
+        if(allowPaperCompleteTime!=null&&allowPaperCompleteTime>0){
+            Long allowCompleteTime=allowPaperCompleteTime*60*1000L;
+            StuPaperTimesInfo spt=new StuPaperTimesInfo();
+            spt.setPaperId(Long.parseLong(paperId));
+            spt.setTaskId(Long.parseLong(taskId));
+            spt.setUserId(Long.parseLong(uId));
+            List<StuPaperTimesInfo> sptList=this.stuPaperTimesManager.getList(spt,null);
+            if(sptList==null||sptList.size()<1){
+                if(!this.stuPaperTimesManager.doSave(spt)){
+                    jsonEntity.setMsg("添加时间记录失败!");
+                    response.getWriter().println(jsonEntity.toJSON());return;
+                }
+                //重新查询后，再次进入
+                sptList=this.stuPaperTimesManager.getList(spt,null);
+            }
+            if(sptList!=null&&sptList.size()>0&&sptList.get(0)!=null
+                    &&sptList.get(0).getBeginTime()!=null){
+                Date btime=sptList.get(0).getBeginTime();
+                Long chaTime=System.currentTimeMillis()-btime.getTime();//已经过去的毫秒数
+                Long shenyuTime=allowCompleteTime-chaTime;
+                if(shenyuTime<1){//说明时间到了，强行提交数据库
+                    request.setAttribute("notResponse",1);
+                    doInPaper(request, response);//提交成功后，走详情页
+                    allowCompleteTime=-1L;
+                }else{
+                    allowCompleteTime=shenyuTime;//分钟
+                }
+            }
+            if(allowCompleteTime!=-1L){
+                jsonEntity.getObjList().add((allowCompleteTime/1000/60)+"分"+((allowCompleteTime%60000)/1000)+"秒");
+            }else
+                jsonEntity.getObjList().add(-1);
+            jsonEntity.setType("success");
+        }else{
+            jsonEntity.setMsg("试卷没有设置时间");
+        }
+        response.getWriter().println(jsonEntity.toJSON());
+    }
 }

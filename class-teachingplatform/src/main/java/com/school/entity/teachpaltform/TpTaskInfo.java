@@ -7,13 +7,13 @@ import com.school.util.UtilTool;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.persistence.Entity;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+@Entity
 public class TpTaskInfo implements Serializable {
 
     public void TpTaskInfo (){}
@@ -45,6 +45,16 @@ public class TpTaskInfo implements Serializable {
     private Integer ettuserid;
     private Long paperid;
     private String papername;
+
+    private Integer allowCompleteTime;
+
+    public Integer getAllowCompleteTime() {
+        return allowCompleteTime;
+    }
+
+    public void setAllowCompleteTime(Integer allowCompleteTime) {
+        this.allowCompleteTime = allowCompleteTime;
+    }
 
     public String getPapername() {
         return papername;

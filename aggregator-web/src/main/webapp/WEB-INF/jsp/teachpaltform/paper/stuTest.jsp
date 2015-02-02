@@ -40,13 +40,29 @@
             }
             loadQuesNumberTool(quesSize);
             nextNum(0);
+            //所有加载完毕后，开始记时
+            <c:if test="${!empty syAllowCompleTime}">
+                paperSYTime(courseid,taskid,${sessionScope.CURRENT_USER.userid},paperid);
+                $("#loading").ajaxStart(function(){
+                   $(this).hide();
+                });
+            </c:if>
         });
     </script>
 </head>
 <body>
 <input type="hidden" value="${paperid}" name="hd_paper_id" id="hd_paper_id"/>
 <div class="subpage_head">
-    <p class="back"><span class="ico_time"></span>${taskstatus}</p>
+    <p class="back"><span class="ico_time"></span>
+        <c:if test="${empty syAllowCompleTime}">
+            ${taskstatus}
+        </c:if>
+        <c:if test="${!empty syAllowCompleTime}">
+            <span id="sp_timestate"></span>
+            <input type="hidden" name="allowCompleTime" id="txt_allowTime" value="${syAllowCompleTime}"/>
+        </c:if>
+
+    </p>
     <span class="ico55"></span><strong>
     <c:if test="${!empty paperObj&&(paperObj.papertype==3||paperObj.papertype==1||paperObj.papertype==2)}">成卷测试</c:if>
     <c:if test="${!empty paperObj&&paperObj.papertype==4}">自主测试</c:if>
