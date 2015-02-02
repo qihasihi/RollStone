@@ -42,6 +42,15 @@ public class TpCourseClass {
     private Long quoteid;
     private Integer cuserid;
     private Integer dctype;
+    private Long taskid;
+
+    public Long getTaskid() {
+        return taskid;
+    }
+
+    public void setTaskid(Long taskid) {
+        this.taskid = taskid;
+    }
 
     public Integer getCuserid() {
         return cuserid;
