@@ -2221,8 +2221,12 @@ function cjloadStuPerformance(classid, classtype) {
                                                 htm+='<td id="td_'+(quesnum+1)+'">&radic;';
                                                 htm+='<input type="hidden" value="1"/>';
                                                 htm+='</td>';
-                                            }else{
+                                            }else if(answers[1]==2){
                                                 htm+='<td id="td_'+(quesnum+1)+'"><span class="font-red">&times;</span>';
+                                                htm+='<input type="hidden" value="1"/>';
+                                                htm+='</td>';
+                                            }else{
+                                                htm+='<td id="td_'+(quesnum+1)+'">--';
                                                 htm+='<input type="hidden" value="1"/>';
                                                 htm+='</td>';
                                             }
@@ -2295,8 +2299,12 @@ function cjloadStuPerformance(classid, classtype) {
                                         htm2+='<td id="td_'+(quesnum+1)+'">&radic;';
                                         htm2+='<input type="hidden" value="1"/>';
                                         htm2+='</td>';
-                                    }else{
+                                    }else if(answers[1]=="2"){
                                         htm2+='<td id="td_'+(quesnum+1)+'"><span class="font-red">&times;</span>';
+                                        htm2+='<input type="hidden" value="1"/>';
+                                        htm2+='</td>';
+                                    }else{
+                                        htm2+='<td id="td_'+(quesnum+1)+'">--';
                                         htm2+='<input type="hidden" value="1"/>';
                                         htm2+='</td>';
                                     }
@@ -2326,8 +2334,12 @@ function cjloadStuPerformance(classid, classtype) {
                                         htm2+='<td id="td_'+(quesnum+1)+'">&radic;';
                                         htm2+='<input type="hidden" value="1"/>';
                                         htm2+='</td>';
-                                    }else{
+                                    }else if(answers[1]=="2"){
                                         htm2+='<td id="td_'+(quesnum+1)+'"><span class="font-red">&times;</span>';
+                                        htm2+='<input type="hidden" value="1"/>';
+                                        htm2+='</td>';
+                                    }else{
+                                        htm2+='<td id="td_'+(quesnum+1)+'">--';
                                         htm2+='<input type="hidden" value="1"/>';
                                         htm2+='</td>';
                                     }
@@ -2435,6 +2447,7 @@ function cjloadStuPerformance(classid, classtype) {
         }
     });
 }
+
 
 function writeUnderTr(classid,quesArray){
     $("table").each(function(i,tab){

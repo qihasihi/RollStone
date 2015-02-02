@@ -19,7 +19,7 @@ CREATE DEFINER=`schu`@`%` PROCEDURE `tp_j_group_student_proc_split`(
 				          )
 BEGIN
 	DECLARE tmp_sql VARCHAR(20000) DEFAULT '';
-	DECLARE tmp_search_column VARCHAR(2000) DEFAULT ' gs.*,s.stu_name,s.stu_no,g.group_name,u.password,u.ett_user_id ';  
+	DECLARE tmp_search_column VARCHAR(2000) DEFAULT ' gs.*,s.stu_name,s.stu_no,g.group_name,u.password,u.ett_user_id,s.card_status ';  
 	DECLARE tmp_search_condition VARCHAR(2000) DEFAULT ' gs.user_id=u.user_id AND u.REF=s.USER_ID and gs.group_id=g.group_id AND cu.class_id=g.class_id  AND cu.`USER_ID`=u.`REF`  ';  
 	DECLARE tmp_tbl_name VARCHAR(2000) DEFAULT 'tp_j_group_student gs,tp_group_info g,user_info u,student_info s,j_class_user cu '; 
 	

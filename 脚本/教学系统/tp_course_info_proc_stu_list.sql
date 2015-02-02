@@ -1,6 +1,6 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `tp_course_info_proc_stu_list`$$
 
@@ -23,12 +23,12 @@ CREATE DEFINER=`schu`@`%` PROCEDURE `tp_course_info_proc_stu_list`(
 				          p_class_id INT,
 					  p_current_page INT(10),
 					  p_page_size INT(10),
-					  p_sort_column varchar(100),
+					  p_sort_column VARCHAR(100),
 				          OUT sumCount INT
 				          )
 BEGIN
 	DECLARE tmp_sql VARCHAR(20000) DEFAULT '';
-	DECLARE tmp_search_column VARCHAR(2000) DEFAULT " tc.*,aa.term_id,aa.USER_ID TEACHER_ID,aa.REF COURSECLASSREF,aa.classesid,aa.classtimes ,aa.classes,aa.classtype,
+	DECLARE tmp_search_column VARCHAR(2000) DEFAULT " tc.*,aa.term_id,aa.USER_ID TEACHER_ID,aa.REF COURSECLASSREF,aa.classesid,aa.classtimes ,aa.classendtimes,aa.classes,aa.classtype,
 	(SELECT COUNT(*) FROM tp_task_info t ,tp_task_allot_info ta WHERE t.`COURSE_ID`=tc.course_id AND t.`TASK_ID`=ta.`task_id` AND t.`TASK_TYPE`=10 AND NOW() BETWEEN ta.`b_time` AND ta.`e_time`)islive
 	";  
 	DECLARE tmp_search_condition VARCHAR(2000) DEFAULT ' ';  
@@ -36,8 +36,8 @@ BEGIN
 	
 	SET tmp_search_column=CONCAT(tmp_search_column,",IF(EXISTS(SELECT c.COMMENT_ID FROM comment_info c WHERE c.COMMENT_USER_ID=",p_user_id," AND c.COMMENT_OBJECT_ID=tc.COURSE_ID  AND c.COMMENT_TYPE=2),1,0) iscomment ");
 	
-	if p_class_id IS NOT NULL AND p_subject_id IS NOT NULL AND p_user_id IS NOT NULL THEN
-	set tmp_search_column=CONCAT(tmp_search_column,"
+	IF p_class_id IS NOT NULL AND p_subject_id IS NOT NULL AND p_user_id IS NOT NULL THEN
+	SET tmp_search_column=CONCAT(tmp_search_column,"
 		,IFNULL((SELECT course_total_score FROM tp_stu_score WHERE course_id=tc.course_id
 		 AND subject_id=",p_subject_id," AND class_id=",p_class_id,"  AND class_type=1 AND user_id=",p_user_id,"  ORDER BY c_time DESC  LIMIT 0,1),-1) coursetotalscore
 	");
@@ -62,13 +62,13 @@ BEGIN
 		
 	
 	SET tmp_tbl_name=CONCAT(tmp_tbl_name,"INNER JOIN
-		(SELECT tcc.term_id,tcc.course_id,tcc.ref,tcc.USER_ID,CONCAT(tcc.class_id) classesid,CONCAT(tcc.begin_time) classtimes,CONCAT(c.CLASS_GRADE,c.CLASS_NAME) classes,'1' classtype,tcc.c_time order_c FROM tp_j_course_class tcc 
+		(SELECT tcc.term_id,tcc.course_id,tcc.ref,tcc.USER_ID,CONCAT(tcc.class_id) classesid,CONCAT(tcc.begin_time) classtimes,CONCAT(tcc.end_time) classendtimes,CONCAT(c.CLASS_GRADE,c.CLASS_NAME) classes,'1' classtype,tcc.c_time order_c FROM tp_j_course_class tcc 
 			INNER JOIN j_class_user cu ON cu.class_id=tcc.class_id AND tcc.class_type=1
 			INNER JOIN class_info c ON c.CLASS_ID=tcc.CLASS_ID
 			INNER JOIN user_info u ON u.REF=cu.USER_ID
 			WHERE u.USER_ID=",p_user_id,tmp_search_condition," 
 			UNION 
-		 SELECT tcc.term_id,tcc.course_id,tcc.ref,tcc.USER_ID,CONCAT(tcc.class_id) classesid,CONCAT(tcc.begin_time) classtimes,tvc.VIRTUAL_CLASS_NAME classes,'2' classtype,tcc.c_time order_c FROM tp_j_course_class tcc 
+		 SELECT tcc.term_id,tcc.course_id,tcc.ref,tcc.USER_ID,CONCAT(tcc.class_id) classesid,CONCAT(tcc.begin_time) classtimes,CONCAT(tcc.end_time) classendtimes,tvc.VIRTUAL_CLASS_NAME classes,'2' classtype,tcc.c_time order_c FROM tp_j_course_class tcc 
 			INNER JOIN tp_virtual_class_info tvc ON tvc.VIRTUAL_CLASS_ID=tcc.CLASS_ID AND tcc.class_type=2
 			INNER JOIN tp_j_virtual_class_student tvcs ON tvcs.VIRTUAL_CLASS_ID=tvc.VIRTUAL_CLASS_ID
 			WHERE tvcs.USER_ID=",p_user_id,tmp_search_condition,"
@@ -124,7 +124,7 @@ BEGIN
 	
 	IF p_sort_column IS NOT NULL THEN
 		SET tmp_sql=CONCAT(tmp_sql," ORDER BY  ",p_sort_column);
-	else
+	ELSE
 		SET tmp_sql=CONCAT(tmp_sql," ORDER BY  aa.order_c DESC");
 	END IF;	
 	
@@ -144,6 +144,6 @@ BEGIN
 	DEALLOCATE PREPARE stmt;
 	SET sumCount=@tmp_sumCount;
 	
-END $$
+    END$$
 
 DELIMITER ;

@@ -73,7 +73,14 @@
                             u+='&questionid='+questionid;
                         u+='&sign='+sign+'&tabidx='+i+'&paperid=${param.paperid}&quesid='+id+'&idx='+orderidx+'&classid='+classid+'&classtype='+classtype+'&taskid=${param.taskid}';
                         </c:if>
-                        htm+='><a href="'+u+'">'+orderidx+'<b>${itm.markingnum}/${itm.submitnum}<span>'+${itm.correctrate}+'%</span></b></a>';
+
+                        htm+='><a href="'+u+'">'+orderidx;
+                        htm+='<b>';
+                        <c:if test="${itm.markingnum ne itm.submitnum }">
+                        htm+=parseInt(${itm.submitnum})-parseInt(${itm.markingnum});
+                        </c:if>
+                        htm+='<span>'+${itm.correctrate}+'%</span>';
+                        htm+='</b></a>';
                     }
                     </c:forEach>
                     htm+='</li>';
