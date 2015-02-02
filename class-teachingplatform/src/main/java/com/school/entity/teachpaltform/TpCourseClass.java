@@ -43,6 +43,15 @@ public class TpCourseClass {
     private Integer cuserid;
     private Integer dctype;
     private Long taskid;
+    private Object ishas;//是否有任务完成数据
+
+    public Object getIshas() {
+        return ishas;
+    }
+
+    public void setIshas(Object ishas) {
+        this.ishas = ishas;
+    }
 
     public Long getTaskid() {
         return taskid;
