@@ -1082,7 +1082,7 @@ public class ClassController extends BaseController<ClassInfo>{
                                     }
                                 }
                             }else{
-                                logger.error(cList.get(0).getClassid()+"没有查到班级!");
+                                logger.error("没有查到班级!");
                                 transactionRollback();
                                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"更新班级失败!没有查询到相关班级!\"}");return;
                             }
