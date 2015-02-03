@@ -3,6 +3,7 @@ package com.school.control;
 import com.etiantian.unite.utils.UrlSigUtil;
 import com.school.control.base.BaseController;
 import com.school.entity.*;
+import com.school.entity.ClassInfo;
 import com.school.manager.*;
 import com.school.manager.inter.*;
 import com.school.util.*;
@@ -10,6 +11,7 @@ import com.school.utils.*;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -1276,12 +1278,12 @@ public class ClassController extends BaseController<ClassInfo>{
         }
 
         //验证是否在三分钟内
-        Long ct=Long.parseLong(timeStr.toString());
-        Long nt=new Date().getTime();
-        double d=(nt-ct)/(1000*60);
-        if(d>3){//大于三分钟
-            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，响应超时!接口三分钟内有效!\"}");return;
-        }
+//        Long ct=Long.parseLong(timeStr.toString());
+//        Long nt=new Date().getTime();
+//        double d=(nt-ct)/(1000*60);
+//        if(d>3){//大于三分钟
+//            response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，响应超时!接口三分钟内有效!\"}");return;
+//        }
         //验证key
         String md5key=timeStr.toString()+schoolid+dcschoolid;
         md5key+=timeStr.toString();
@@ -1297,11 +1299,22 @@ public class ClassController extends BaseController<ClassInfo>{
         Iterator jrIte=clsJr.iterator();
         while(jrIte.hasNext()){
             net.sf.json.JSONObject clsJo=(net.sf.json.JSONObject)jrIte.next();
-            Object classid=clsJo.get("lzx_classid");
+            Object lzxclassid=clsJo.get("lzx_classid");
 
-            if(classid==null||classid.toString().trim().length()<1){
+            if(lzxclassid==null||lzxclassid.toString().trim().length()<1){
                 response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，班级ID为空!!\"}");return;
             }
+            //验证班级是否存在
+            //验证通过
+            ClassInfo cls=new ClassInfo();
+            cls.setLzxclassid(lzxclassid.toString());
+            cls.setDcschoolid(Integer.parseInt(dcschoolid.toString()));
+            List<ClassInfo> clsList=this.classManager.getList(cls,null);
+            if(clsList==null||clsList.size()<1){
+                response.getWriter().println("{\"type\":\"error\",\"msg\":\"没有发现该班级!!\"}");return;
+            }
+            Integer classid=clsList.get(0).getClassid();
+
             //查看是否存在学生记录
             ClassUser cutmp=new ClassUser();
             cutmp.setClassid(Integer.parseInt(classid.toString()));
@@ -1315,8 +1328,8 @@ public class ClassController extends BaseController<ClassInfo>{
                 continue;
             }
             //验证通过
-            ClassInfo cls=new ClassInfo();
-            cls.setLzxclassid(classid.toString());
+            cls=new ClassInfo();
+            cls.setLzxclassid(lzxclassid.toString());
             cls.setDcschoolid(Integer.parseInt(dcschoolid.toString()));
             StringBuilder sqlbuilder=new StringBuilder();
             List<Object> objList=this.classManager.getDeleteSql(cls, sqlbuilder);
@@ -1377,7 +1390,10 @@ public class ClassController extends BaseController<ClassInfo>{
                 response.getWriter().println("{\"type\":\"success\",\"msg\":\"异常错误，原因：未知!\"}");
             }
         }else{
-            response.getWriter().println("{\"type\":\"success\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");
+            if(noDelClsId!=null&&noDelClsId.toString().trim().length()>0){
+                response.getWriter().println("{\"type\":\"success\",\"msg\":\""+noDelClsId+"\"}");
+            }else
+                 response.getWriter().println("{\"type\":\"success\",\"msg\":\"没有可添加或修改的班级记录可以操作!\"}");
         }
     }
     /**
