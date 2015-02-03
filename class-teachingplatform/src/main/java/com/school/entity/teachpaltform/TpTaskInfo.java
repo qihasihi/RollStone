@@ -45,6 +45,15 @@ public class TpTaskInfo implements Serializable {
     private Integer ettuserid;
     private Long paperid;
     private String papername;
+    private Integer schoolid;
+
+    public Integer getSchoolid() {
+        return schoolid;
+    }
+
+    public void setSchoolid(Integer schoolid) {
+        this.schoolid = schoolid;
+    }
 
     private Integer allowCompleteTime;
 
