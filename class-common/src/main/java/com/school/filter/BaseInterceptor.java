@@ -303,10 +303,19 @@ public class BaseInterceptor implements HandlerInterceptor {
             ///group1/1.jsp
             pcname=pcname.substring(0,pcname.substring(1).indexOf("/"));
         }
-        //System.out.println(pcname);
-        String realpath=request.getRequestURI().substring(
-                request.getRequestURI().indexOf(pcname)+pcname.length()
-        );
+        System.out.println(request.getRequestURI()+"   "+pcname);
+        String realpath="";
+        if(request.getRequestURI().indexOf(pcname)!=-1){
+            realpath=request.getRequestURI().substring(
+                    request.getRequestURI().indexOf(pcname)+pcname.length()
+            );
+        }else{
+            String realProcName="/sz_school";
+            realpath=request.getRequestURI().substring(
+                    request.getRequestURI().indexOf(realProcName)+realProcName.length()
+            );
+        }
+        System.out.println("realpath:"+realpath);
         if(realpath.substring(0,1).equals("/"))
             realpath=realpath.substring(1);
         if(realpath.lastIndexOf("/")!=-1&&realpath.substring(realpath.lastIndexOf("/")).equals("/"))
