@@ -472,9 +472,7 @@ function xround(x, num){
             <span class="ico44"></span>
         </c:if>
     </td>
-    <td>
-            ${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}
-
+    <td><p>${fn:replace(pq.content,'<span name="fillbank"></span>' ,"_____" )}</p>
         <c:if test="${pq.extension eq 4}">
             <div  class="p_t_10" id="sp_mp3_${pq.questionid}" ></div>
             <script type="text/javascript">
