@@ -14,7 +14,22 @@
 
     <name>aggregator-class</name>
 
-
+    <scm>
+        <connection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/trunk/</connection>
+        <developerConnection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/trunk/</developerConnection>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Release Repository</name>
+            <url>http://192.168.10.8:18080/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://192.168.10.8:18080/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -33,6 +48,13 @@
     </properties>
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <tagBase>http://123.103.19.252:91/repos/sz_school_chanpin_m/tags/</tagBase>
+                </configuration>
+            </plugin>
             <!-- 解决模块相互依赖,综合所有相互依赖代码统一编译 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -58,7 +58,22 @@
         </profile>
     </profiles>
 
-
+    <scm>
+        <connection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/trunk/</connection>
+        <developerConnection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/trunk/</developerConnection>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Release Repository</name>
+            <url>http://192.168.10.8:18080/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://192.168.10.8:18080/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <finalName>sz_school</finalName>
@@ -67,7 +82,13 @@
         </filters>
 
         <plugins>
-
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <tagBase>http://123.103.19.252:91/repos/sz_school_chanpin_m/tags/</tagBase>
+                </configuration>
+            </plugin>
             <!-- 合并web项目。聚合项目需配置依赖。 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
