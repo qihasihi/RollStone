@@ -2236,7 +2236,7 @@ public class TaskController extends BaseController{
                 liveAllot.setBtime(UtilTool.StringConvertToDate(bClsArray[i]));
                 liveAllot.setEtime(UtilTool.StringConvertToDate(eClsArray[i]));
                 liveAllot.setTasktype(10);
-                List<TpTaskAllotInfo>allotInfoList=this.tpTaskAllotManager.getTaskRemindObjList(liveAllot,null);
+                List<TpTaskAllotInfo>allotInfoList=this.tpTaskAllotManager.getList(liveAllot,null);
                 if(allotInfoList!=null&&allotInfoList.size()>0){
                     boolean isHas=false;
                     for(TpTaskAllotInfo allot:allotInfoList){

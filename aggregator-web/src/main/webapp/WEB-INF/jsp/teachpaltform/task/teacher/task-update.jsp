@@ -85,8 +85,8 @@
                     $("#p_"+$(this).val()).show();
                 }else{
                     $("#p_"+$(this).val()).hide();
-                    $("#b_time_"+$(this).val()+"").val("");
-                    $("#e_time_"+$(this).val()+"").val("");
+                    //$("#b_time_"+$(this).val()+"").val("");
+                    //$("#e_time_"+$(this).val()+"").val("");
                 }
             });
 
@@ -229,7 +229,7 @@
                 <c:if test="${!empty courseclassList}">
                 <c:forEach var="cc" items="${courseclassList}" varStatus="idx">
 
-                <p class="font-black"><input name="ck_cls" data-bind="${cc.ishas}" type="checkbox"  onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
+                <p class="font-black" data-bind="cls"><input name="ck_cls" data-bind="${cc.ishas}" type="checkbox"  onclick="selectClassObj(this,'${cc.classid }')" value="${cc.classid }" id="ckb_${cc.classid}" /> ${cc.classgrade }${cc.classname }</p>
 
                 <p class="font-black" style="margin: 15px 0;padding: 0 0 0 24px;"><input type="checkbox" value="${cc.classid}" name="p_ck_g" id="p_ck_${cc.classid}"/>选中所有小组</p>
                 <ul class="public_list3" id="p_group_${cc.classid }">
@@ -466,9 +466,9 @@
                 $(im).prev("p").remove();
             }
 
-            var liArray=$(im).children('li').children('input[data-bind!="1"]').length;
+            var liArray=$(im).children('li').children('input:not([data-bind="1"])').length;
             if(liArray==len)
-                $(im).siblings("p").first().children("input").attr("disabled",false);
+                $(im).siblings("p[data-bind='cls']").eq(ix).children('input:not([data-bind="1"])').attr("disabled",false);
         });
     });
 

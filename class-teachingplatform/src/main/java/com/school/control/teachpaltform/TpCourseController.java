@@ -306,6 +306,152 @@ public class TpCourseController extends TaskController{
     }
 
 
+
+    /**
+     * 教务查看专题统计
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="toJWPerformPage",method=RequestMethod.GET)
+    public ModelAndView toJWPerformPage(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+        JsonEntity je=new JsonEntity();
+        String termid=request.getParameter("termid");
+        String subjectid=request.getParameter("subjectid");
+        String gradeid=request.getParameter("gradeid");
+
+
+        TermInfo termInfo=null;
+        if(termid!=null){
+            TermInfo t=new TermInfo();
+            t.setRef(termid);
+            List<TermInfo>termList=this.termManager.getList(t,null);
+            if(termList==null||termList.size()<1){
+                je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+                response.getWriter().print(je.getAlertMsgAndBack());
+                return null;
+            }
+            termInfo=termList.get(0);
+        }else
+            termInfo=this.termManager.getMaxIdTerm(false);
+
+        if(termInfo==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到学期信息!"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+
+        PageResult pr = new PageResult();
+        pr.setOrderBy("SEMESTER_BEGIN_DATE");
+        List<TermInfo> termList = this.termManager.getList(null, pr);
+        mp.put("termList", termList);
+        mp.put("currtTerm", this.termManager.getMaxIdTerm(false));
+        mp.put("selTerm",termInfo);
+
+        //获取首页年级学科
+        List<GradeInfo> gradeList = this.gradeManager.getTchGradeList(this.logined(request).getUserid(), termInfo.getYear());
+        List<Map<String,Object>> gradeSubjectList = new ArrayList<Map<String, Object>>();
+
+        if(gradeList!=null&&gradeList.size()>0){
+            //当前学期、学科、年级下的授课班级
+            for(int j=0;j<gradeList.size();j++){
+                ClassUser cu = new ClassUser();
+                cu.setClassgrade(gradeList.get(j).getGradevalue());
+                cu.setUserid(this.logined(request).getRef());
+                cu.setRelationtype("任课老师");
+                //cu.setSubjectid(subuserList.get(i).getSubjectid());
+                cu.setYear(termInfo.getYear());
+                List<ClassUser>classList=this.classUserManager.getList(cu,null);
+                List<SubjectInfo>subjectInfoList=new ArrayList<SubjectInfo>();
+                if(classList!=null&&classList.size()>0){
+                    for(ClassUser classUser :classList){
+                        SubjectInfo s=new SubjectInfo();
+                        s.setSubjectid(classUser.getSubjectid());
+                        s.setSubjectname(classUser.getSubjectname());
+                        if(!subjectInfoList.contains(s))
+                            subjectInfoList.add(s);
+                    }
+                    if(subjectInfoList.size()>0){
+                        for(SubjectInfo subjectInfo:subjectInfoList){
+                            Map<String,Object> map = new HashMap<String, Object>();
+                            map.put("gradeid",gradeList.get(j).getGradeid());
+                            map.put("gradevalue",gradeList.get(j).getGradevalue());
+                            map.put("subjectid",subjectInfo.getSubjectid());
+                            map.put("subjectname",subjectInfo.getSubjectname());
+                            if(!gradeSubjectList.contains(map))
+                                gradeSubjectList.add(map);
+                        }
+                    }
+                }
+            }
+        }
+        mp.put("gradeSubjectList",gradeSubjectList);
+
+/*        if(gradeSubjectList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到授课信息!"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        } */
+
+        if(gradeSubjectList.size()>0){
+            Map<String,Object>objectMap=gradeSubjectList.get(0);
+            if(subjectid!=null&&subjectid.trim().length()>0&&gradeid!=null&&gradeid.trim().length()>0){
+                SubjectInfo s=new SubjectInfo();
+                s.setSubjectid(Integer.parseInt(subjectid));
+                List<SubjectInfo>subList=this.subjectManager.getList(s,null);
+
+                GradeInfo gradeInfo=new GradeInfo();
+                gradeInfo.setGradeid(Integer.parseInt(gradeid));
+                List<GradeInfo>gList=this.gradeManager.getList(gradeInfo,null);
+
+                if(subList!=null&&gList!=null){
+                    Map<String,Object>subGradeMap=new HashMap<String, Object>();
+                    subGradeMap.put("subjectid",subList.get(0).getSubjectid());
+                    subGradeMap.put("gradeid",gList.get(0).getGradeid());
+                    subGradeMap.put("subjectname",subList.get(0).getSubjectname());
+                    subGradeMap.put("gradevalue",gList.get(0).getGradevalue());
+                    objectMap=subGradeMap;
+                }
+            }
+
+            GradeInfo g=new GradeInfo();
+            g.setGradeid(Integer.parseInt(objectMap.get("gradeid").toString()));
+            List<GradeInfo>gradeInfoList=this.gradeManager.getList(g,null);
+            if(gradeInfoList==null||gradeInfoList.size()<1){
+                je.setMsg(UtilTool.msgproperty.getProperty("系统未获取到年级信息!"));
+                response.getWriter().print(je.getAlertMsgAndBack());
+                return null;
+            }
+
+            ClassUser c = new ClassUser();
+            List<ClassUser>clsList=null;
+            //当前学期、学科、年级下的授课班级
+            c.setClassgrade(gradeInfoList.get(0).getGradevalue());
+            c.setUserid(this.logined(request).getRef());
+            c.setRelationtype("任课老师");
+            c.setSubjectid(Integer.parseInt(objectMap.get("subjectid").toString()));
+            c.setYear(termInfo.getYear());
+            clsList=this.classUserManager.getList(c,null);
+            if(clsList!=null&&clsList.size()>0)
+                mp.put("isLession",1);
+            c.setRelationtype("班主任");
+            c.setSubjectid(null);
+            clsList=this.classUserManager.getList(c,null);
+            if(clsList!=null&&clsList.size()>0)
+                mp.put("isBanzhuren",1);
+            mp.put("subGradeInfo",objectMap);
+        }
+
+        List<GradeInfo> gList = this.gradeManager.getAdminPerformanceTeaGrade(this.logined(request).getDcschoolid());
+        mp.put("gradeList",gList);
+
+        return new ModelAndView("/teachpaltform/course/jw-performance", mp);
+    }
+
+
+
     /**
      * 教师日历页面
      * @param request
@@ -445,6 +591,8 @@ public class TpCourseController extends TaskController{
 
         return new ModelAndView("/teachpaltform/course/teacherCalendar", mp);
     }
+
+
 
 
     /**

@@ -25,11 +25,26 @@ public class BhsfInterfaceUtil {
      * @return
      */
     private static boolean OperateUserBase(final List<UserInfo> uentity,final String optype){
+        System.out.println("BhsfInterfaceUtil operateUserBase ....");
         String BHSF_URL=UtilTool.utilproperty.getProperty("BHSF_BASE_URL").toString();
         if(BHSF_URL==null||BHSF_URL.length()<1)return false;
         BHSF_URL+="foreignFace!"+optype+".action";
+        /**
+         * 	Object sxUserId = j.get("sx_user_id");
+         Object userName = j.get("user_name");
+         Object roleId = j.get("role_id");
+         Object teacherId = j.get("teacher_no");
+         Object teacherName = j.get("teacher_name");
+         Object teacherSex = j.get("teacher_sex");
+         Object headImgUrl = j.get("headimgurl");
+         Object stuName = j.get("stu_name");
+         Object stuSex = j.get("stu_sex");
+         Object stuNo = j.get("stu_no");
+
+         */
 
         if(uentity==null||uentity.size()<1)return false;
+        System.out.println("uentity:"+uentity.toString());
         HashMap<String,String> paramMap=new HashMap<String,String>();
         String time=new Date().getTime()+"";
         paramMap.put("timestamp",time);
@@ -37,7 +52,7 @@ public class BhsfInterfaceUtil {
         for(UserInfo u:uentity){
             Map<String,Object> tmpMap=new HashMap<String, Object>();
             tmpMap.put("sx_user_id",u.getUserid());
-            tmpMap.put("userName",u.getUsername());
+            tmpMap.put("user_name",u.getUsername());
             tmpMap.put("role_id",u.getRoleIdStr());
             tmpMap.put("headimgurl",u.getHeadimage());
             String[]roleArray=u.getRoleIdStr().split(",");
@@ -55,15 +70,15 @@ public class BhsfInterfaceUtil {
                         System.out.println("InValidate Role!");
                         return false;
                     }
-
                 }
             }else{
-                System.out.println("RoleId is empt!");
+                System.out.println("RoleId is empty!");
                 return false;
             }
             mapList.add(tmpMap);
         }
         JSONArray jsonArray=JSONArray.fromObject(mapList);
+        System.out.print("message:"+jsonArray.toString());
         paramMap.put("message",jsonArray.toString());
         String md5key=time+"SX_OA";
         md5key= LZX_MD5.getMD5Str(md5key);//生成md5加密
@@ -226,7 +241,7 @@ public class BhsfInterfaceUtil {
      * @param optype
      * @return
      */
-    public static boolean OperateClassUser(List<Map<String,Object>> cuMapList,String optype){
+    public static boolean OperateClassUser(List<Map<String,Object>> cuMapList,String optype,Integer classid){
         String BHSF_URL=UtilTool.utilproperty.getProperty("BHSF_BASE_URL").toString();
         if(BHSF_URL==null||BHSF_URL.length()<1)return false;
         BHSF_URL+="foreignFace!"+optype+".action";
@@ -234,12 +249,16 @@ public class BhsfInterfaceUtil {
         String time=new Date().getTime()+"";
         paramMap.put("timestamp",time);
         //存入
-        paramMap.put("message",JSONArray.fromObject(cuMapList).toString());
+        if(cuMapList!=null&&cuMapList.size()>0)
+            paramMap.put("message",JSONArray.fromObject(cuMapList).toString());
+        if(classid!=null)
+            paramMap.put("sx_class_id",classid.toString());
+        System.out.println("BhsfInterfaceUtil OperateClassUser:"+JSONArray.fromObject(cuMapList).toString());
         String md5key=time+"SX_OA";
         md5key= LZX_MD5.getMD5Str(md5key);//生成md5加密
         paramMap.put("sign",md5key);
         JSONObject jo=UtilTool.sendPostUrl(BHSF_URL,paramMap,"UTF-8");
-        if(jo!=null&&jo.containsKey("result")&&jo.get("result").toString().trim().equals("1")){
+        if(jo!=null&&jo.containsKey("type")&&jo.get("type").toString().trim().equals("success")){
             return true;
         }
         if(jo!=null)
@@ -253,8 +272,8 @@ public class BhsfInterfaceUtil {
      * @param cuMapList
      * @return
      */
-    public static boolean delClassUser(List<Map<String,Object>> cuMapList){
-        return OperateClassUser(cuMapList, "delClassUser");
+    public static boolean delClassUser(List<Map<String,Object>> cuMapList,Integer classid){
+        return OperateClassUser(cuMapList, "delClassUser",classid);
     }
     /**
      * 添加班级人员
@@ -262,7 +281,7 @@ public class BhsfInterfaceUtil {
      * @return
      */
     public static boolean addClassUser(List<Map<String,Object>> cuMapList){
-        return OperateClassUser(cuMapList, "addClassUser");
+        return OperateClassUser(cuMapList, "addClassUser",null);
     }
 
 

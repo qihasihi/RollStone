@@ -151,7 +151,7 @@ public class UserController extends BaseController<UserInfo> {
                 reMap.put("sx_user_id",tmp.getUid());
                 reMap.put("class_id",tmp.getClassid());
                 if(tmp.getSubjectid()!=null&&tmp.getSubjectid().toString().length()>0)
-                    reMap.put("subjectId",tmp.getSubjectid());
+                    reMap.put("subject_id",tmp.getSubjectid());
                 reMap.put("relation_type",tmp.getRelationtype());
                 mapList.add(reMap);
             }
@@ -6539,6 +6539,7 @@ public class UserController extends BaseController<UserInfo> {
         JSONArray jsonArray;
         try{
             jsonArray= JSONArray.fromObject(java.net.URLDecoder.decode(message,"UTF-8"));
+            //jsonArray= JSONArray.fromObject(message);
         }catch (Exception e){
             je.setMsg(e.getMessage());
             response.getWriter().print(je.toJSON());
@@ -6594,8 +6595,6 @@ public class UserController extends BaseController<UserInfo> {
                     isTea=true;
                     teachername=obj.containsKey("teacher_name")?obj.getString("teacher_name"):"";
                     teachersex=obj.containsKey("teacher_sex")?obj.getString("teacher_sex"):"";
-
-
                     teacherno=obj.containsKey("teacher_no")?obj.getString("teacher_no"):"";
                     if(teachername.length()<1){
                         je.setMsg("teachername is empty!");
@@ -7166,6 +7165,8 @@ public class UserController extends BaseController<UserInfo> {
         List<List<Object>>objListArray=new ArrayList<List<Object>>();
         List<String>sqlListArray=new ArrayList<String>();
         List<String>userRefList=new ArrayList<String>();
+        //存放RoleId,TeacherNo
+        List<UserInfo>bhsfUserList=new ArrayList<UserInfo>();
 
         if(jsonArray!=null&&jsonArray.size()>0){
             Iterator iterator=jsonArray.iterator();
@@ -7193,7 +7194,16 @@ public class UserController extends BaseController<UserInfo> {
                         objListArray.add(objList);
                         sqlListArray.add(sql.toString());
                     }
+                    RoleUser ru=new RoleUser();
+                    ru.setUserid(userInfoList.get(0).getRef());
+                    ru.setRoleid(UtilTool._ROLE_STU_ID);
+                    List<RoleUser>ruList=this.roleUserManager.getList(ru,null);
+                    if(ruList!=null&&ruList.size()>0){
+                        userInfo.setRoleIdStr("36");
+                    }else
+                        userInfo.setRoleIdStr("18");
                     userRefList.add(userInfoList.get(0).getRef());
+                    bhsfUserList.add(userInfo);
                 }
             }
         }else {
@@ -7209,12 +7219,18 @@ public class UserController extends BaseController<UserInfo> {
 
                 List<UserInfo>bindUserList=new ArrayList<UserInfo>();
                 if(userRefList.size()>0){
-                    for (String userid:userRefList){
+                    for (int i=0;i<userRefList.size();i++){
                         UserInfo usel=new UserInfo();
-                        usel.setRef(userid);
+                        usel.setRef(userRefList.get(i));
                         List<UserInfo>uList=this.userManager.getList(usel,null);
-                        if(uList!=null&&uList.size()>0)
-                            bindUserList.add(uList.get(0));
+                        if(uList!=null&&uList.size()>0){
+                            UserInfo tmpUser=uList.get(0);
+                            //四中用户
+                            if(bhsfUserList.get(i)!=null&&bhsfUserList.get(i).getRoleIdStr()!=null){
+                                tmpUser.setRoleIdStr(bhsfUserList.get(i).getRoleIdStr());
+                            }
+                            bindUserList.add(tmpUser);
+                        }
                     }
 
                     if(!EttInterfaceUserUtil.delUserBase(bindUserList)){
@@ -7397,6 +7413,8 @@ public class UserController extends BaseController<UserInfo> {
                         response.getWriter().print(je.toJSON());return;
                     }
                     sel.setSubjectid(subjectList.get(0).getSubjectid());
+                }else if(!availableSubject&&subjectid.length()>0){//四中教师
+                    sel.setSubjectid(11);
                 }
 
                 List<ClassUser>clsUserList=this.classUserManager.getList(sel,null);
@@ -7411,13 +7429,17 @@ public class UserController extends BaseController<UserInfo> {
                 cu.setRelationtype(relationtype);
                 if(availableSubject&&subjectid.length()>0&&subjectList!=null&&subjectList.size()>0)
                     cu.setSubjectid(subjectList.get(0).getSubjectid());
+                else if(!availableSubject&&subjectid.length()>0)
+                    cu.setSubjectid(11);
                 sql=new StringBuilder();
                 objList=this.classUserManager.getSaveSql(cu,sql);
                 if(objList!=null&&sql!=null){
                     objListArray.add(objList);
                     sqlListArray.add(sql.toString());
                 }
-
+                //四中教师
+                if(!availableSubject&&subjectid.length()>0)
+                    cu.setSubjectid(Integer.parseInt(subjectid));
                 tmpUserList.add(cu);
             }
         }else {
@@ -7600,7 +7622,7 @@ public class UserController extends BaseController<UserInfo> {
 
                         if(isBhsfSchool){
                             mapList=getBhsfClassUserMap(classid,null);
-                            if(!BhsfInterfaceUtil.delClassUser(mapList)){
+                            if(!BhsfInterfaceUtil.delClassUser(mapList,classid)){
                                 System.out.println("Delete Bhsf clsUser error!");
                                 je.setType("error");
                                 je.setMsg("删除四中班级用户失败!");
