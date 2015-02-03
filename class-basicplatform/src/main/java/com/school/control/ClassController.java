@@ -1081,10 +1081,13 @@ public class ClassController extends BaseController<ClassInfo>{
                                         response.getWriter().println("{\"type\":\"error\",\"msg\":\""+cList.get(0).getClassid()+"更新四中班级失败!\"}");return;
                                     }
                                 }
+                            }else{
+                                logger.error(cList.get(0).getClassid()+"没有查到班级!");
+                                transactionRollback();
+                                response.getWriter().println("{\"type\":\"error\",\"msg\":\"更新班级失败!没有查询到相关班级!\"}");return;
                             }
                     }
                 }
-
             }else{
                 response.getWriter().println("{\"type\":\"error\",\"msg\":\"异常错误，原因：未知!\"}");return;
             }

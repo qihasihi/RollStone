@@ -104,4 +104,20 @@ public class StuPaperTimesDAO extends CommonDAO<StuPaperTimesInfo> implements co
 		return null;
 	}
 
+    /**
+     * 得到学生做试卷已经开始，但未提交试卷的记录
+     * @param entity
+     * @return
+     */
+    public List<StuPaperTimesInfo> getStuPaperNoCommitUser(final StuPaperTimesInfo entity){
+        if(entity==null||entity.getPaperId()==null||entity.getTaskId()==null)
+            return null;
+        StringBuilder sqlbuilder=new StringBuilder("{CALL stu_paper_time_queryNoCommitUserId(?,?)}");
+        List<Object> objList=new ArrayList<Object>();
+        objList.add(entity.getTaskId());
+        objList.add(entity.getPaperId());
+        List<StuPaperTimesInfo> paperinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, null, StuPaperTimesInfo.class, null);
+        return paperinfoList;
+    }
+
 }

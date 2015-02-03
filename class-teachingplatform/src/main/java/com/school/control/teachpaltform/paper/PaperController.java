@@ -3,6 +3,7 @@ package com.school.control.teachpaltform.paper;
 import com.school.control.base.BaseController;
 import com.school.entity.ClassInfo;
 import com.school.entity.DictionaryInfo;
+import com.school.entity.UserInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
 import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
@@ -12,6 +13,7 @@ import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.ISmsManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.teachpaltform.*;
+import com.school.manager.inter.teachpaltform.award.ITpStuScoreLogsManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.*;
@@ -96,6 +98,10 @@ public class PaperController extends BaseController<PaperInfo>{
     private IStuPaperLogsManager stuPaperLogsManager;
     @Autowired
     private IStuPaperQuesLogsManager stuPaperQuesLogsManager;
+    @Autowired
+    private IStuPaperTimesManager stuPaperTimesManager;
+    @Autowired
+    private ITpStuScoreLogsManager tpStuScoreLogsManager;
 
     /**
 	 * 根据课题ID，加载试卷列表
@@ -3885,7 +3891,15 @@ public class PaperController extends BaseController<PaperInfo>{
             je.setMsg("错误，请刷新页面重试");
             response.getWriter().println(je.getAlertMsgAndBack());return null;
         }
-
+        //验证taskid
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid.trim()));
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
+        if(tkList==null||tkList.size()<1){
+            je.setMsg("任务已经不存在，请重新刷新任务列表!");
+            response.getWriter().println(je.getAlertMsgAndBack());return null;
+        }
+        Long courseid=tkList.get(0).getCourseid();
         //获取任务相关的班级
         TpTaskAllotInfo ta = new TpTaskAllotInfo();
         ta.setTaskid(Long.parseLong(taskid));
@@ -4013,6 +4027,9 @@ public class PaperController extends BaseController<PaperInfo>{
         }
         classtype="1";
 
+        //验证此试卷的相关人员是否有做的，但超时了，未提交
+        doHelpNoCommitSubPaper(courseid,Long.parseLong(taskid),Long.parseLong(paperid));
+
         //获取试卷内所有试题的提交人数和审批人数
         List<PaperQuestion> objList = this.paperQuestionManager.getQuestionByPaper(Long.parseLong(paperid),Integer.parseInt(clsid),Integer.parseInt(classtype),Long.parseLong(taskid.trim()));
         //获取试卷内所有试题
@@ -4054,8 +4071,210 @@ public class PaperController extends BaseController<PaperInfo>{
 
         return new ModelAndView("teachpaltform/task/teacher/task-performance-cj");
     }
+    /**
+     * 验证此试卷的相关人员是否有做的，但超时了，未提交
+     * 如果存在，则帮助提交
+     * @param taskid
+     * @param paperid
+     */
+    private void doHelpNoCommitSubPaper(Long courseid,Long taskid,Long paperid){
+        if(taskid!=null&&paperid!=null){
+            //查询
+            StuPaperTimesInfo sptEntity=new StuPaperTimesInfo();
+            sptEntity.setTaskId(taskid);
+            sptEntity.setPaperId(paperid);
+            List<StuPaperTimesInfo> sptList=stuPaperTimesManager.getStuPaperNoCommitUser(sptEntity);
+            if(sptList!=null&&sptList.size()>0){
+                for (StuPaperTimesInfo spt:sptList){
+                    if(spt!=null&&spt.getUserId()!=null){
+                        //提交
+                        try{
+                            this.doInPaper(paperid.toString()
+                                        ,courseid.toString(),taskid.toString()
+                                    ,spt.getUserId().toString());
+                        }catch(Exception e){
+                            System.err.println(e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-        /**
+    /**
+     * 交卷
+     * @param paperid 试卷ID
+     * @param courseid 学科ID
+     * @param taskid 任务ID
+     * @param uid 用户ID
+     * @return
+     * @throws Exception
+     */
+    private JsonEntity doInPaper(String paperid,String courseid,String taskid,String uid) throws Exception{
+       JsonEntity jsonEntity=new JsonEntity();
+        if(paperid==null||paperid.length()<1||courseid==null||courseid.trim().length()<1||taskid==null
+                ||taskid.trim().length()<1||uid==null||uid.trim().length()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            return jsonEntity;
+        }
+        //验证任务
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,null);
+        if(tkList==null||tkList.size()<1||!tkList.get(0).getCourseid().toString().equals(courseid.trim())){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            return jsonEntity;
+        }
+        tk=tkList.get(0);
+        Integer  userid=Integer.parseInt(uid);
+            //验证用户
+        UserInfo u=new UserInfo();
+        u.setUserid(userid);
+        List<UserInfo> uList=this.userManager.getList(u,null);
+        if(uList==null||uList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            return jsonEntity;
+        }
+        Integer schoolid=uList.get(0).getDcschoolid();
+        String jid=uid;
+        String userref=uList.get(0).getRef();
+        Integer isinpaper=2;
+        StuPaperLogs splog=new StuPaperLogs();
+        splog.setUserid(userid);
+        splog.setPaperid(Long.parseLong(paperid));
+        splog.setIsinpaper(isinpaper);
+        splog.setTaskid(tk.getTaskid());
+        PageResult presult=new PageResult();
+        presult.setPageSize(1);
+        List<StuPaperLogs> spList=this.stuPaperLogsManager.getList(splog,presult);
+        if(spList!=null&&spList.size()>0){
+            jsonEntity.setMsg("您已经提交过该试卷。无法进行修改!");
+            return jsonEntity;
+        }
+//
+        List<String> sqlArrayList=new ArrayList<String>();
+        List<List<Object>> objArrayList=new ArrayList<List<Object>>();
+        TaskPerformanceInfo tpf=new TaskPerformanceInfo();
+        tpf.setCourseid(Long.parseLong(courseid.trim()));
+        tpf.setTaskid(tk.getTaskid());
+        tpf.setUserid(userref);
+
+        List<TaskPerformanceInfo> tpfList=this.taskPerformanceManager.getList(tpf,null);
+        //查询是否存在数据，如果存在，则更新
+        tpf.setIsright(1);
+        tpf.setTasktype(tk.getTasktype());
+        if(tkList.get(0).getTasktype()==6)
+            tpf.setCriteria(2);//如果是微视频
+        else
+            tpf.setCriteria(1);//提交试卷
+        StringBuilder sqlbuilder=new StringBuilder();
+        if(tpfList==null||tpfList.size()<1){
+            List<Object> objList=this.taskPerformanceManager.getSaveSql(tpf,sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                objArrayList.add(objList);
+                sqlArrayList.add(sqlbuilder.toString());
+            }
+        }else{
+            tpf.setRef(tpfList.get(0).getRef());
+            List<Object> objList=this.taskPerformanceManager.getUpdateSql(tpf, sqlbuilder);
+            if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+                objArrayList.add(objList);
+                sqlArrayList.add(sqlbuilder.toString());
+            }
+        }
+        //得到判断题得分记录得到总分，进行记录
+        List<Map<String,Object>> stuScoreSumList=this.stuPaperLogsManager.getStuPaperSumScore(userid,splog.getPaperid());
+        if(stuScoreSumList!=null&&stuScoreSumList.get(0)!=null&&stuScoreSumList.get(0).containsKey("V_SCORE"));
+        splog.setScore(Float.parseFloat(stuScoreSumList.get(0).get("V_SCORE").toString()));
+
+        //如果该试卷都是客观题，则修改试卷状态。
+        List<Map<String,Object>> zgtCountList=this.paperQuestionManager.getZGTCount(Long.parseLong(paperid));
+        if(zgtCountList!=null&&zgtCountList.size()>0&&zgtCountList.get(0)!=null&&zgtCountList.get(0).containsKey("ZGTCOUNT")
+                &&zgtCountList.get(0).get("ZGTCOUNT")!=null){
+            Object zgtCount=zgtCountList.get(0).get("ZGTCOUNT");
+            if(Integer.parseInt(zgtCount.toString().trim())>0){
+                splog.setIsmarking(1);
+                //查询这个学生在该试题，该任务中的总分
+                float sumScore=0f;
+                List<Map<String,Object>> mapSumScoreList=this.paperQuestionManager.getPaperScoreByUser(Long.parseLong(paperid),userid,Long.parseLong(taskid));
+                if(mapSumScoreList!=null&&mapSumScoreList.size()>0&&!mapSumScoreList.get(0).containsKey("SUM_SCORE")){
+                    sumScore=Float.parseFloat(mapSumScoreList.get(0).get("SUM_SCORE").toString());
+                }
+                splog.setScore(sumScore);
+            }else
+                splog.setIsmarking(0);
+        }
+        sqlbuilder=new StringBuilder();
+        List<Object> objList=this.stuPaperLogsManager.getSaveSql(splog,sqlbuilder);
+        if(sqlbuilder!=null&&sqlbuilder.toString().trim().length()>0){
+            objArrayList.add(objList);
+            sqlArrayList.add(sqlbuilder.toString());
+        }
+
+
+        if(sqlArrayList!=null&&sqlArrayList.size()>0&&sqlArrayList.size()==objArrayList.size()){
+            if(this.stuPaperLogsManager.doExcetueArrayProc(sqlArrayList,objArrayList)){
+                jsonEntity.setType("success");
+                jsonEntity.setMsg("交卷成功，积分宝石保存失败！");
+                try{
+                    //添加奖励
+                 /*奖励加分*/
+                    //得到班级ID
+                    TpTaskAllotInfo tallot=new TpTaskAllotInfo();
+                    tallot.setTaskid(Long.parseLong(taskid));
+
+                    tallot.getUserinfo().setUserid(userid);
+                    List<Map<String,Object>> clsMapList=this.tpTaskAllotManager.getClassId(tallot);
+                    if(clsMapList==null||clsMapList.size()<1||clsMapList.get(0)==null||!clsMapList.get(0).containsKey("CLASS_ID")
+                            ||clsMapList.get(0).get("CLASS_ID")==null){
+                        jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                        return jsonEntity;
+                    }
+
+                    //taskinfo:   4:成卷测试  5：自主测试   6:微视频
+                    //规则转换:    6             7         8
+                    Integer type=0;
+                    switch(tk.getTasktype()){
+                        case 3:     //试题
+                            type=1;break;
+                        case 1:     //资源学习
+                            type=2;break;
+                        case 2:
+                            type=4;
+                            break;
+                        case 4:
+                            type=6;
+                            break;
+                        case 5:
+                            type=7;
+                            break;
+                        case 6:
+                            type=8;
+                            break;
+                    }
+
+
+                    String msg=null;
+                                /*奖励加分通过*/
+                    if(this.tpStuScoreLogsManager.awardStuScore(tk.getCourseid()
+                            , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                            , tk.getTaskid()
+                            , Long.parseLong(userid + ""),jid, type,schoolid)){
+                       // msg="恭喜您,获得了1积分和1蓝宝石!";
+                        jsonEntity.setMsg("交卷成功，积分宝石保存成功！");
+                    }
+                }catch(Exception e){
+                    System.out.println(e);
+                }
+            }else
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("OPERATE_ERROR"));
+        }else
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("NO_EXECUTE_SQL"));
+        return jsonEntity;
+    }
+
+
+    /**
          * 分数段统计
          * @return
          */
