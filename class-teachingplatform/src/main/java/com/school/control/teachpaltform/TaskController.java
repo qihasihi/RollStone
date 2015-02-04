@@ -2589,7 +2589,7 @@ public class TaskController extends BaseController{
             if(this.logined(request).getCardstatus()!=null&&this.logined(request).getCardstatus()==0){
                 TpCourseInfo tmpCourse=courseList.get(0);
                 if(tmpCourse.getClassendtimes()!=null&&
-                        new Date().after(UtilTool.StringConvertToDate(tmpCourse.getClassendtimes().toString())))
+                        new Date().before(UtilTool.StringConvertToDate(tmpCourse.getClassendtimes().toString())))
                     je.setMsg("您的卡已过期，请续卡!");
                 response.getWriter().print(je.getAlertMsgAndCloseWin());return null;
             }
