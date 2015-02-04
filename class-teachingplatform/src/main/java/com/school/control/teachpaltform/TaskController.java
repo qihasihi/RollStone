@@ -1437,12 +1437,12 @@ public class TaskController extends BaseController{
         }
         //添加任务对象 班级
         if(clsArray!=null&&clsArray.length>0){
-            if(clstype==null||clstype.trim().length()<1){
-                je.setMsg("错误!系统未获取到班级类型!");
-                response.getWriter().print(je.toJSON());
-                return;
-            }
-            String[]classTypeArray=clstype.split(",");
+//            if(clstype==null||clstype.trim().length()<1){
+//                je.setMsg("错误!系统未获取到班级类型!");
+//                response.getWriter().print(je.toJSON());
+//                return;
+//            }
+//            String[]classTypeArray=clstype.split(",");
             for (int i=0;i<clsArray.length;i++) {
                 /**
                  * 任务的结束时间 要早于 专题的开始时间。（也就是说任务的开始和结束时间都要早于专题的开始时间）
@@ -1490,21 +1490,7 @@ public class TaskController extends BaseController{
 
                 TpTaskAllotInfo tal=new TpTaskAllotInfo();
                 //验证班级类型
-                if(classTypeArray[i].equals("1")){
-                    /*ClassInfo c=new ClassInfo();
-                    c.setClassid(Integer.parseInt(clsArray[i]));
-                    List<ClassInfo>clsList=this.classManager.getList(c,null);*/
-                    tal.setUsertype(0);
-                }else if(classTypeArray[i].equals("2")){
-                    /*TpVirtualClassInfo tv=new TpVirtualClassInfo();
-                    tv.setVirtualclassid(Integer.parseInt(clsArray[i]));
-                    List<TpVirtualClassInfo>vclsList=this.tpVirtualClassManager.getList(tv,null);*/
-                    tal.setUsertype(1);
-                }else{
-                    je.setMsg("错误!任务班级无效!");
-                    response.getWriter().print(je.toJSON());
-                    return;
-                }
+                tal.setUsertype(0);
                 tal.setTaskid(tasknextid);
                 tal.setUsertypeid(Long.parseLong(clsArray[i]));
                 tal.setBtime(UtilTool.StringConvertToDate(bClsArray[i]));
@@ -2414,12 +2400,12 @@ public class TaskController extends BaseController{
         }
         //添加任务对象 班级
         if(clsArray!=null&&clsArray.length>0){
-            if(clstype==null||clstype.trim().length()<1){
+         /*   if(clstype==null||clstype.trim().length()<1){
                 je.setMsg("错误!系统未获取到班级类型!");
                 response.getWriter().print(je.toJSON());
                 return;
             }
-            String[]classTypeArray=clstype.split(",");
+            String[]classTypeArray=clstype.split(",");*/
             for (int i=0;i<clsArray.length;i++) {
                 /**
                  * 任务的结束时间 要早于 专题的开始时间。（也就是说任务的开始和结束时间都要早于专题的开始时间）
@@ -2464,22 +2450,7 @@ public class TaskController extends BaseController{
 
 
                 TpTaskAllotInfo tal=new TpTaskAllotInfo();
-                //验证是什么类型的班级
-                if(classTypeArray[i].equals("1")){
-                    /*ClassInfo c=new ClassInfo();
-                    c.setClassid(Integer.parseInt(clsArray[i]));
-                    List<ClassInfo>clsList=this.classManager.getList(c,null);*/
-                    tal.setUsertype(0);
-                }else if(classTypeArray[i].equals("2")){
-                    /*TpVirtualClassInfo tv=new TpVirtualClassInfo();
-                    tv.setVirtualclassid(Integer.parseInt(clsArray[i]));
-                    List<TpVirtualClassInfo>vclsList=this.tpVirtualClassManager.getList(tv,null);*/
-                    tal.setUsertype(1);
-                }else{
-                    je.setMsg("错误!任务班级无效!");
-                    response.getWriter().print(je.toJSON());
-                    return;
-                }
+                tal.setUsertype(0);
                 tal.setTaskid(tasknextid);
                 tal.setUsertypeid(Long.parseLong(clsArray[i]));
                 tal.setBtime(UtilTool.StringConvertToDate(bClsArray[i]));
@@ -2589,9 +2560,10 @@ public class TaskController extends BaseController{
             if(this.logined(request).getCardstatus()!=null&&this.logined(request).getCardstatus()==0){
                 TpCourseInfo tmpCourse=courseList.get(0);
                 if(tmpCourse.getClassendtimes()!=null&&
-                        new Date().before(UtilTool.StringConvertToDate(tmpCourse.getClassendtimes().toString())))
+                        new Date().before(UtilTool.StringConvertToDate(tmpCourse.getClassendtimes().toString()))){
                     je.setMsg("您的卡已过期，请续卡!");
-                response.getWriter().print(je.getAlertMsgAndCloseWin());return null;
+                    response.getWriter().print(je.getAlertMsgAndCloseWin());return null;
+                }
             }
 
             request.setAttribute("coursename", courseList.get(0).getCoursename());
