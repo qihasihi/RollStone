@@ -3,7 +3,7 @@
     <parent>
         <artifactId>sz_school</artifactId>
         <groupId>com.etiantian.digital-school</groupId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -23,12 +23,12 @@
         <dependency>
             <groupId>com.etiantian.digital-school</groupId>
             <artifactId>class-common</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.etiantian.digital-school</groupId>
             <artifactId>aggregator-class</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.2</version>
         </dependency>
 
         <!--JUNIT-->

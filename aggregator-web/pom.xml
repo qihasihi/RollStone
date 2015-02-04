@@ -3,7 +3,7 @@
     <parent>
         <artifactId>sz_school</artifactId>
         <groupId>com.etiantian.digital-school</groupId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -58,8 +58,8 @@
     </profiles>
 
     <scm>
-        <connection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/trunk/</connection>
-        <developerConnection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/trunk/</developerConnection>
+        <connection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/tags/sz_school-1.0.2/trunk</connection>
+        <developerConnection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/tags/sz_school-1.0.2/trunk</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
@@ -153,37 +153,37 @@
         <dependency>
             <groupId>com.etiantian.digital-school</groupId>
             <artifactId>class-common</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.2</version>
         </dependency>
 
         <dependency>
             <groupId>com.etiantian.digital-school</groupId>
             <artifactId>class-basicplatform</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.2</version>
         </dependency>
 
         <dependency>
             <groupId>com.etiantian.digital-school</groupId>
             <artifactId>class-teachingplatform</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.2</version>
         </dependency>
 
         <dependency>
             <groupId>com.etiantian.digital-school</groupId>
             <artifactId>class-resource</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.2</version>
         </dependency>
 
         <dependency>
             <groupId>com.etiantian.digital-school</groupId>
             <artifactId>class-personalspace</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.2</version>
         </dependency>
 
         <dependency>
             <groupId>com.etiantian.digital-school</groupId>
             <artifactId>class-interface</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.2</version>
         </dependency>
 
         <dependency>
