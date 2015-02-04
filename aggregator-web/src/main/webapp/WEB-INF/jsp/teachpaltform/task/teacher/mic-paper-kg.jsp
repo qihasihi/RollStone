@@ -80,7 +80,7 @@
                     document.write(h.toFixed(2)+"%")
                 </script>
             </p>
-            <div class="right"><img src="images/taskMicPie.png" width="193" height="140"></div>
+            <div class="right"><img src="images/imgCache/tkP${taskid}${currentQuesId}.png" width="193" height="140"></div>
             <div class="left"><strong>分项统计：</strong>
                 <table border="0" cellspacing="0" cellpadding="0" class="public_tab3">
                     <colgroup span="2" class="w100">

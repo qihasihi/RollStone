@@ -4680,7 +4680,9 @@ public class TaskController extends BaseController{
             FileOutputStream fos = null;
 
             try{
-                fos = new FileOutputStream(request.getRealPath("/")+"images/taskMicPie.png");
+                if(!new File(request.getRealPath("/")+"images/imgCache/").exists())
+                    new File(request.getRealPath("/")+"images/imgCache/").mkdirs();
+                fos = new FileOutputStream(request.getRealPath("/")+"images/imgCache/tkP"+taskid+questionid+".png");
                 ChartUtilities.writeChartAsPNG(fos, chart, 193, 140);
             }finally{
                 fos.close();
