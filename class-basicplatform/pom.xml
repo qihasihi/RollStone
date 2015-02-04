@@ -2,7 +2,7 @@
 
     <parent>
         <artifactId>sz_school</artifactId>
-        <groupId>sz_school</groupId>
+        <groupId>com.etiantian.digital-school</groupId>
         <version>1.0.2-SNAPSHOT</version>
     </parent>
 
@@ -21,12 +21,12 @@
         </dependency>
 
         <dependency>
-            <groupId>sz_school</groupId>
+            <groupId>com.etiantian.digital-school</groupId>
             <artifactId>class-common</artifactId>
             <version>1.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>sz_school</groupId>
+            <groupId>com.etiantian.digital-school</groupId>
             <artifactId>aggregator-class</artifactId>
             <version>1.0.2-SNAPSHOT</version>
         </dependency>

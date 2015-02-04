@@ -2,7 +2,7 @@
 
     <parent>
         <artifactId>sz_school</artifactId>
-        <groupId>sz_school</groupId>
+        <groupId>com.etiantian.digital-school</groupId>
         <version>1.0.2-SNAPSHOT</version>
     </parent>
 
