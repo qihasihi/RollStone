@@ -93,6 +93,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
+
                     <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
 
                     <!--不强制转换编码-->
@@ -121,13 +122,13 @@
                             <filtering>true</filtering>
                         </resource>
                     </webResources>
-                    <overlays>
-                        <overlay>
-                            <groupId>sz_school</groupId>
-                            <artifactId>web-chanpin</artifactId>
-                        </overlay>
+                    <!--<overlays>-->
+                        <!--<overlay>-->
+                            <!--<groupId>sz_school</groupId>-->
+                            <!--<artifactId>web-chanpin</artifactId>-->
+                        <!--</overlay>-->
 
-                    </overlays>
+                    <!--</overlays>-->
                 </configuration>
             </plugin>
 
@@ -140,12 +141,13 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>sz_school</groupId>
-            <artifactId>web-chanpin</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
-            <type>war</type>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>sz_school</groupId>-->
+            <!--<artifactId>web-chanpin</artifactId>-->
+            <!--<version>1.0-SNAPSHOT</version>-->
+            <!--<type>war</type>-->
+        <!--</dependency>-->
+
 
 
         <dependency>
