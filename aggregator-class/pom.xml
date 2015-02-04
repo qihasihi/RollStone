@@ -2,20 +2,20 @@
     <parent>
         <artifactId>sz_school</artifactId>
         <groupId>sz_school</groupId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>aggregator-class</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>aggregator-class</name>
 
     <scm>
-        <connection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/tags/sz_school-1.0.1/trunk</connection>
-        <developerConnection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/tags/sz_school-1.0.1/trunk</developerConnection>
+        <connection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/trunk/</connection>
+        <developerConnection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/trunk/</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>sz_school</groupId>
             <artifactId>class-common</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>

@@ -3,7 +3,7 @@
     <groupId>sz_school</groupId>
     <artifactId>sz_school</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
 
 
     <properties>
@@ -25,8 +25,8 @@
     </modules>
 
     <scm>
-        <connection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/tags/sz_school-1.0.1</connection>
-        <developerConnection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/tags/sz_school-1.0.1</developerConnection>
+        <connection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/trunk/</connection>
+        <developerConnection>scm:svn:http://123.103.19.252:91/repos/sz_school_chanpin_m/trunk/</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
