@@ -14,12 +14,12 @@
        http://www.springframework.org/schema/tx
     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
     ">
-    <!-- 配置数据源
+    <!-- 配置数据源-->
     <bean id="dataSource" name="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
         <property name="jndiName">
             <value>java:comp/env/jdbc/mschool</value>
         </property>
-    </bean>-->
+    </bean>
     <!--JDBC配置服务器
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
@@ -27,7 +27,7 @@
         <property name="username" value="mytest"/>
         <property name="password" value="testdb"/>
     </bean>
-  -->
+
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
         <property name="jdbcUrl" value="jdbc:mysql://192.168.11.130:3306/school"/>
@@ -43,7 +43,7 @@
         <property name="idleConnectionTestPeriod" value="120" />
         <property name="testConnectionOnCheckin" value="false" />
         <property name="autoCommitOnClose" value="false" />
-    </bean>
+    </bean>-->
 
     <!-- 配置Jdbc模板 -->
     <bean id="jdbcTemplate" name="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
