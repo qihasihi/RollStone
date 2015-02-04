@@ -1249,7 +1249,7 @@ public class ClassController extends BaseController<ClassInfo>{
      * @param request
      * @param response
      */
-    @RequestMapping(params="m=lzxDelM",method=RequestMethod.POST)
+    @RequestMapping(params="m=lzxDelM",method=RequestMethod.GET)
     @Transactional
     public void lzxDelM(HttpServletRequest request,HttpServletResponse response) throws Exception{
         Object timeStr=request.getParameter("timestamp");
@@ -1329,7 +1329,8 @@ public class ClassController extends BaseController<ClassInfo>{
             }
             //验证通过
             cls=new ClassInfo();
-            cls.setLzxclassid(lzxclassid.toString());
+//            cls.setLzxclassid(lzxclassid.toString());
+            cls.setClassid(classid);
             cls.setDcschoolid(Integer.parseInt(dcschoolid.toString()));
             StringBuilder sqlbuilder=new StringBuilder();
             List<Object> objList=this.classManager.getDeleteSql(cls, sqlbuilder);
