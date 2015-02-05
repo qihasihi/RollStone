@@ -1801,6 +1801,7 @@ public class PaperController extends BaseController<PaperInfo>{
         JsonEntity je =new JsonEntity();//
         String courseid=request.getParameter("courseid");
         String isrelate=request.getParameter("isrelate");
+        String paperid=request.getParameter("paperid");
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             je.getAlertMsgAndBack();
@@ -1843,6 +1844,8 @@ public class PaperController extends BaseController<PaperInfo>{
         sel.setSharetype(1);
         if(isrelate!=null&&isrelate.equals("1"))
             sel.setIsrelate(1);
+        if(paperid!=null&&paperid.length()>0)
+            sel.setPaperid(Long.parseLong(paperid));
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,p);
         p.setList(coursePaperList);
         je.setPresult(p);

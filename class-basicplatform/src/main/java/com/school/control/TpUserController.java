@@ -307,12 +307,6 @@ public class TpUserController extends UserController {
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        if(scheme==null||jid.trim().length()<1||!UtilTool.isNumber(scheme)){
-            je.setMsg("scheme is empty!");
-            response.getWriter().print(je.getAlertMsgAndBack());
-            return null;
-        }
-
         UserInfo u=new UserInfo();
         u.setDcschoolid(Integer.parseInt(schoolid));
         u.setEttuserid(Integer.parseInt(jid));
@@ -328,12 +322,6 @@ public class TpUserController extends UserController {
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        //是否为学案导学学生
-        StudentInfo stu=new StudentInfo();
-        stu.setUserref(this.logined(request).getRef());
-        stu.setCardstatus(Integer.parseInt(scheme));
-        if(!this.studentManager.doUpdate(stu))
-            System.out.println("TpUserController update scheme error!");
         //增加分校ID
         this.logined(request).setDcschoolid(Integer.parseInt(schoolid));
 
@@ -341,6 +329,19 @@ public class TpUserController extends UserController {
         String url=null;
         if(this.validateRole(request,UtilTool._ROLE_STU_ID)){
             url="teachercourse?m=toStudentCourseList";
+            String eliteSchoolId=UtilTool.utilproperty.getProperty("ELITE_SCHOOL_ID").toString();
+            if(eliteSchoolId!=null&&eliteSchoolId.length()>0&&!schoolid.toString().equals(eliteSchoolId)){
+                if(scheme==null||jid.trim().length()<1||!UtilTool.isNumber(scheme)){
+                    je.setMsg("scheme is empty!");
+                    response.getWriter().print(je.getAlertMsgAndBack());
+                    return null;
+                }
+                StudentInfo stu=new StudentInfo();
+                stu.setUserref(this.logined(request).getRef());
+                stu.setCardstatus(Integer.parseInt(scheme));
+                if(!this.studentManager.doUpdate(stu))
+                    System.out.println("TpUserController update scheme error!");
+            }
         }else if (this.validateRole(request,UtilTool._ROLE_TEACHER_ID)){
             url="teachercourse?toTeacherCourseList";
             Integer isLessionBzn=this.classUserManager.isTeachingBanZhuRen(this.logined(request).getRef(),null,null,null);

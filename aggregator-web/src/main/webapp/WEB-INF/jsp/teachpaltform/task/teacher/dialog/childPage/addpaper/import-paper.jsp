@@ -328,7 +328,7 @@ function preDoPageSubRelate(pObj){
         alert('异常错误，系统未获取到专题标识!');
         return;
     }
-    var param={courseid:courseid,materialid:materialid,gradeid:gradeid,subjectid:subjectid};
+    var param={courseid:courseid,materialid:materialid,gradeid:gradeid,subjectid:subjectid,paperid:paperid};
    // $("#pListaddress_Cloudpaper").hide();
    // $("#pListForm_Paper").hide();
     if(isrelate.length>0)
