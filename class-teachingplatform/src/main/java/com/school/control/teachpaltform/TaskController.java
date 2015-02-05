@@ -360,7 +360,7 @@ public class TaskController extends BaseController{
             response.getWriter().print(je.toJSON());
             return null;
         }
-        return new ModelAndView("/teachepaltform/teacher/live-task-list");
+        return new ModelAndView("/teachpaltform/task/teacher/live-task-list");
     }
     /**
      * 获取菁英班直播课任务列表
