@@ -1,10 +1,10 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `tp_task_remind_allotobj_split`$$
 
-CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_task_remind_allotobj_split`(
+CREATE DEFINER=`schu`@`%` PROCEDURE `tp_task_remind_allotobj_split`(
 					  p_task_id BIGINT,
 				          p_course_id BIGINT,
 				          p_user_type INT,
@@ -22,7 +22,7 @@ CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_task_remind_allotobj_split`(
 				          )
 BEGIN
 	DECLARE tmp_sql VARCHAR(20000) DEFAULT '';
-	DECLARE tmp_search_column VARCHAR(4000) DEFAULT ' distinct  u.ref,u.user_type_id,u.user_type  ';  
+	DECLARE tmp_search_column VARCHAR(4000) DEFAULT ' distinct  u.ref,u.user_type_id,u.user_type ,u.task_id ';  
 	DECLARE tmp_search_condition VARCHAR(4000) DEFAULT ' 1=1 and  u.task_id=t.task_id and t.status=1 ';  
 	DECLARE tmp_tbl_name VARCHAR(4000) DEFAULT 'tp_task_allot_info u,tp_task_info t'; 
 	

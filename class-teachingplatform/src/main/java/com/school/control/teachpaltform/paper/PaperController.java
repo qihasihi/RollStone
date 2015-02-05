@@ -1764,6 +1764,8 @@ public class PaperController extends BaseController<PaperInfo>{
         TpCoursePaper sel=new TpCoursePaper();
         sel.setCourseid(Long.parseLong(courseid));
         sel.setSharetype(1);
+        if(paperid!=null&&paperid.trim().length()>0)
+            sel.setPaperid(Long.parseLong(paperid));
         List<TpCoursePaper>coursePaperList=this.tpCoursePaperManager.getRelateCoursePaPerList(sel,null);
 
         List<TpCoursePaper>standardList=new ArrayList<TpCoursePaper>();

@@ -445,7 +445,11 @@ public class TpCoursePaperDAO extends CommonDAO<TpCoursePaper> implements ITpCou
             objList.add(tpcoursepaper.getSharetype());
         } else
             sqlbuilder.append("null,");
-
+        if (tpcoursepaper.getPaperid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tpcoursepaper.getPaperid());
+        } else
+            sqlbuilder.append("null,");
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){
             sqlbuilder.append("?,?,");
