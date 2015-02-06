@@ -77,6 +77,7 @@
 				<li>
 					<a href="term?m=list">系统设置</a>
 				</li>
+                <li><a href="sysm?m=toAdminPerformance">使用统计</a></li>
 			</ul>
 		</div>
 
