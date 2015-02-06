@@ -50,7 +50,6 @@ BEGIN
  (SELECT MIN(b_time) FROM tp_task_allot_info ta WHERE ta.task_id=u.task_id)b_time,
  (SELECT MAX(e_time) FROM tp_task_allot_info ta WHERE ta.task_id=u.task_id)e_time,
   (SELECT 1 FROM tp_task_allot_info ta WHERE ta.task_id=u.task_id GROUP BY ta.task_id)flag,
-  (select 1  from tp_task_info a where a.course_id=u.course_id and a.task_type=1 and a.task_value_id=u.task_value_id limit 1)task_flag,
   (select q.question_type from question_info q where q.question_id=u.task_value_id)question_type  ';  
 	DECLARE tmp_search_condition VARCHAR(4000) DEFAULT ' 1=1 ';  
 	DECLARE tmp_tbl_name VARCHAR(2000) DEFAULT 'tp_task_info u'; 
@@ -77,7 +76,9 @@ BEGIN
 	IF p_status IS NOT NULL THEN
 		SET tmp_search_condition=CONCAT(tmp_search_condition," and u.STATUS=",p_status);
 		IF p_select_type IS NOT NULL AND  p_select_type=2 THEN
-			SET tmp_search_condition=CONCAT(tmp_search_condition,"  and not exists  (SELECT 1 FROM tp_task_allot_info ta WHERE ta.task_id=u.task_id) ");
+			SET tmp_search_condition=CONCAT(tmp_search_condition,"  and not exists  (SELECT 1 FROM tp_task_allot_info ta WHERE ta.task_id=u.task_id) 
+			and not exists (select 1 from tp_task_info a,tp_task_allot_info ta where ta.task_id=a.task_id and a.course_id =u.course_id and and a.task_type in (1,3,4,6) and a.task_value_id=u.task_value_id limit 1 )
+			");
 		END IF;		
 	END IF;
 	

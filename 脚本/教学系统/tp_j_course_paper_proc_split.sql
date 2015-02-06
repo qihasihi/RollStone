@@ -1,10 +1,10 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `tp_j_course_paper_proc_split`$$
 
-CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_j_course_paper_proc_split`(
+CREATE DEFINER=`schu`@`%` PROCEDURE `tp_j_course_paper_proc_split`(
 					  p_ref INT,
 				          p_paper_id BIGINT,
 				          p_course_id BIGINT,
@@ -21,6 +21,7 @@ CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_j_course_paper_proc_split`(
 				          p_sel_date_type INT,
 				          p_course_paper_name VARCHAR(200),
 				          p_is_cloud INT,
+				          p_share_type INT,
 							p_current_page INT(10),
 							p_page_size INT(10),
 							p_sort_column VARCHAR(100),
@@ -30,7 +31,7 @@ BEGIN
 	DECLARE tmp_sql VARCHAR(20000) DEFAULT '';
 	DECLARE tmp_count_sql VARCHAR(20000) DEFAULT '';
 	DECLARE tmp_search_column VARCHAR(4000) DEFAULT ' distinct u.*,p.paper_name,p.score,p.paper_type,
-	(select count(*) from tp_task_info t where t.task_value_id=u.paper_id and t.course_id=u.course_id)task_flag,
+	(select count(*) from tp_task_info t,tp_task_allot_info ta  where ta.task_id=t.task_id and t.task_value_id=u.paper_id and t.course_id=u.course_id)task_flag,
 	(SELECT count(*) FROM j_mic_video_paper mvp,tp_task_info t  WHERE t.task_value_id=mvp.mic_video_id and mvp.paper_id=u.paper_id)mic_flag,
 	(SELECT count(*) FROM j_mic_video_paper mvp where mvp.paper_id=u.paper_id)is_video_paper,
 	(SELECT COUNT(*) FROM question_info q,j_paper_question pq
@@ -54,6 +55,14 @@ BEGIN
 	
 	IF p_paper_id IS NOT NULL THEN
 		SET tmp_search_condition=CONCAT(tmp_search_condition," and u.PAPER_ID=",p_paper_id);
+	END IF;
+	
+	IF p_share_type IS NOT NULL THEN
+		IF p_share_type =1 THEN
+			SET tmp_search_condition=CONCAT(tmp_search_condition," and c.SHARE_TYPE<3");
+		ELSE
+			SET tmp_search_condition=CONCAT(tmp_search_condition," and c.SHARE_TYPE=3");
+		END IF;
 	END IF;
 	
 	IF p_is_cloud IS NOT NULL AND p_is_cloud=1 THEN
@@ -125,7 +134,7 @@ BEGIN
 	END IF;
 	
 	
-	SET tmp_sql=CONCAT("SELECT ",tmp_search_column," FROM ",tmp_tbl_name," WHERE ",tmp_search_condition);	
+	SET tmp_sql=CONCAT("SELECT ",tmp_search_column," FROM ",tmp_tbl_name," WHERE ",tmp_search_condition," group by p.paper_id");	
 	
 	SET tmp_count_sql=tmp_sql;
 	
@@ -136,7 +145,7 @@ BEGIN
 	    SET tmp_sql=CONCAT(tmp_sql," LIMIT ",(p_current_page-1)*p_page_size,',',p_page_size);
 	END IF;
 	
-	SET tmp_sql=CONCAT("SELECT t.*,(objective1+objective2)objectivenum,(subjective1+subjective2)subjectivenum FROM ( ",tmp_sql,")t");	
+	SET tmp_sql=CONCAT("SELECT t.*,(objective1+objective2)objectivenum,(subjective1+subjective2)subjectivenum FROM ( ",tmp_sql,")t group by t.paper_id ");	
 	
 	SET @sql1 =tmp_sql;   
 	PREPARE s1 FROM  @sql1;   

@@ -40,7 +40,7 @@ BEGIN
 	
 	IF p_share_type IS NOT NULL THEN
 		IF p_share_type =1 THEN  /*导入试卷查询 过滤掉不分享的关联专题 此过滤不包含当前专题*/
-			SET tmp_search_condition=CONCAT(tmp_search_condition," and (c.SHARE_TYPE<3 or (c.course_id=",p_course_id,"))");
+			SET tmp_search_condition=CONCAT(tmp_search_condition," and (c.course_level <3 or (c.SHARE_TYPE<3  and c.course_level>2 ) or (c.course_id=",p_course_id,"))");
 		ELSE
 			SET tmp_search_condition=CONCAT(tmp_search_condition," and c.SHARE_TYPE=3");
 		END IF;
