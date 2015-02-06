@@ -172,7 +172,7 @@ function getInvestReturnMethod(rps){
 </div>
 
 
-<div id="dv_luzhi" style="display:none">
+<div id="dv_luzhi" style="display:none;background-color: white;">
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 public_input ">
         <col class="w90"/>
         <col class="w600"/>

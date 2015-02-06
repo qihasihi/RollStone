@@ -487,7 +487,7 @@ function getBankInvestReturnMethod(rps){
             }else if(itm.tasktype==3){
                 html+='<a target="_blank" href="question?m=todetail&id='+itm.taskvalueid+'" class="ico46" title="浏览"></a>&nbsp;';
             }*/
-            if(itm.flag>0||itm.objflag>0){
+            if(itm.flag>0||itm.objflag>0||itm.taskflag>0){
                 html+='<span class="ico43" title="已启用"></span>';
             }else{
                 html+='<a  class="ico02" title="启用" href="task?doUpdTask&courseid='+courseid+'&taskid='+itm.taskid+'&flag=1"></a>';

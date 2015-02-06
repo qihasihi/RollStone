@@ -1,10 +1,10 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `tp_task_info_proc_split`$$
 
-CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_task_info_proc_split`(
+CREATE DEFINER=`schu`@`%` PROCEDURE `tp_task_info_proc_split`(
 				          p_task_id BIGINT,
 				          p_task_name VARCHAR(1000),
 				          p_task_value_id BIGINT,
@@ -50,6 +50,7 @@ BEGIN
  (SELECT MIN(b_time) FROM tp_task_allot_info ta WHERE ta.task_id=u.task_id)b_time,
  (SELECT MAX(e_time) FROM tp_task_allot_info ta WHERE ta.task_id=u.task_id)e_time,
   (SELECT 1 FROM tp_task_allot_info ta WHERE ta.task_id=u.task_id GROUP BY ta.task_id)flag,
+  (select 1  from tp_task_info a where a.course_id=u.course_id and a.task_type=1 and a.task_value_id=u.task_value_id limit 1)task_flag,
   (select q.question_type from question_info q where q.question_id=u.task_value_id)question_type  ';  
 	DECLARE tmp_search_condition VARCHAR(4000) DEFAULT ' 1=1 ';  
 	DECLARE tmp_tbl_name VARCHAR(2000) DEFAULT 'tp_task_info u'; 

@@ -322,7 +322,7 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
                 if(itm.isleader==2)
                     gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\',\''+groupId+'\');" class="ico22" title="调组"></a></td>';
                 else if(itm.isleader==1)
-                    gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\',\''+groupId+'\');" class="ico23" title="调组"></a></td>';
+                    gtHtml+='<a href="javascript:showGroupsPanel(\''+itm.ref+'\',\''+groupId+'\',1);" class="ico23" title="调组"></a></td>';
                 gtHtml+='<td>'+itm.completenum+'%</td>';
                 gtHtml+='<td>'+itm.ctimestring+'</td>';
                 gtHtml+='</tr>';
@@ -349,9 +349,10 @@ function closeDiv(showId){
     showAndHidden('fade','hide');
 }
 
-function showGroupsPanel(ref,groupid){
+function showGroupsPanel(ref,groupid,isleader){
     $("#gs_ref").val(ref);
     $("#changeGroups").val(groupid);
+    $("#isleader").attr("checked",(typeof isleader!='undefined'));
     showModel('changeGroupDiv');
 }
 

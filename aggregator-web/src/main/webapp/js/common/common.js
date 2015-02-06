@@ -11,10 +11,10 @@ function loginDestory(baseIp){
 $(function(){
     document.onmousemove = mouseMove;
     /*if(typeof window.showModalDialog=='undefined'){
-        window.showModalDialog= function(sUrl,vArguments,sFeatures) {
-            window.open(sUrl,"newwindow",vArguments);
-        };
-    }*/
+     window.showModalDialog= function(sUrl,vArguments,sFeatures) {
+     window.open(sUrl,"newwindow",vArguments);
+     };
+     }*/
 });
 
 
@@ -164,15 +164,15 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
                 if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
                     jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
 
-                    jwplayer(playeraddressid).onReady(function(){
-                        if(typeof(isshowBar)!="undefined"&&!isshowBar){
-                            jwplayer(playeraddressid).play(); //.seek(0)
-                        }
-                        jwplayer(playeraddressid).onTime(function(){
-                            var t=jwplayer(playeraddressid).getDuration();
-                            $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
-                        })
-                    });
+                jwplayer(playeraddressid).onReady(function(){
+                    if(typeof(isshowBar)!="undefined"&&!isshowBar){
+                        jwplayer(playeraddressid).play(); //.seek(0)
+                    }
+                    jwplayer(playeraddressid).onTime(function(){
+                        var t=jwplayer(playeraddressid).getDuration();
+                        $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+                    })
+                });
 
             }
         });
@@ -180,16 +180,18 @@ function loadSWFPlayer(filepath,playeraddressid,imagepath,resid,width,height,iss
         jwplayer(playeraddressid).setup(jwplayerSetup);
         if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
             jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
-        if(typeof(isshowBar)!="undefined"&&!isshowBar){
-            jwplayer(playeraddressid).onReady(function(){
-                jwplayer(playeraddressid).play(); //.seek(0)
 
-                jwplayer(playeraddressid).onTime(function(){
-                    var t=jwplayer(playeraddressid).getDuration();
-                    $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
-                })
-            });
-        }
+        jwplayer(playeraddressid).onReady(function(){
+            if(typeof(isshowBar)!="undefined"&&!isshowBar){
+                jwplayer(playeraddressid).play(); //.seek(0)
+            }
+            jwplayer(playeraddressid).onTime(function(){
+                var t=jwplayer(playeraddressid).getDuration();
+                $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+            })
+
+        });
+
     }
 
 //     if(typeof(resid)!="undefined"){
@@ -272,30 +274,30 @@ function loadSWFPlayerLitterView(filepath,playeraddressid,imagepath,resid,width,
                 if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
                     jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
 
-                    jwplayer(playeraddressid).onReady(function(){
-                        if(typeof(isshowBar)!="undefined"&&!isshowBar){
-                          jwplayer(playeraddressid).play(); //.seek(0)
-                        }
-                        jwplayer(playeraddressid).onTime(function(){
-                            var t=jwplayer(playeraddressid).getDuration();
-                            $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
-                        })
-                    });
+                jwplayer(playeraddressid).onReady(function(){
+                    if(typeof(isshowBar)!="undefined"&&!isshowBar){
+                        jwplayer(playeraddressid).play(); //.seek(0)
+                    }
+                    jwplayer(playeraddressid).onTime(function(){
+                        var t=jwplayer(playeraddressid).getDuration();
+                        $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+                    })
+                });
 
 
             }
         });
     }else{
-         jwplayer(playeraddressid).setup(jwplayerSetup);
+        jwplayer(playeraddressid).setup(jwplayerSetup);
         if(typeof(playEndMethod)!="undefined"&&typeof(playEndMethod)=="function")
             jwplayer(playeraddressid).onPlaylistComplete(playEndMethod);
-            jwplayer(playeraddressid).onReady(function(){
-                    jwplayer(playeraddressid).play(); //.seek(0)
-                jwplayer(playeraddressid).onTime(function(){
-                    var t=jwplayer(playeraddressid).getDuration();
-                    $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
-                })
-            });
+        jwplayer(playeraddressid).onReady(function(){
+            jwplayer(playeraddressid).play(); //.seek(0)
+            jwplayer(playeraddressid).onTime(function(){
+                var t=jwplayer(playeraddressid).getDuration();
+                $('#videoTime').html(parseInt(t/60)+'分'+parseInt(t%60)+ '秒');
+            })
+        });
 
     }
 
@@ -439,7 +441,7 @@ function playSound(type,mp3Url,width,height,address,autoplay){
     if ($.trim(type) == "play") {
         // 播放文件地址
         var mp3url =mp3Url;
-       // $("#b_sound").remove();
+        // $("#b_sound").remove();
         // 修改提示文字
 //        $("span[id*='play_operate_']").each(
 //            function(ix, itm) {
@@ -701,7 +703,7 @@ function toPostURL(url,params,isblank,windowName,type){
         }
     }
     if(typeof(type)=="undefiend"||type==null)
-    type="post";
+        type="post";
     $("#targetToAddFrm").attr("action",url);
     $("#targetToAddFrm").attr("method",type);
     if(typeof(isblank)=="undefined"||isblank==true){
@@ -711,7 +713,7 @@ function toPostURL(url,params,isblank,windowName,type){
         }else{
             var datawindow=new Date().getTime();
             $("#targetToAddFrm").attr("target","window_"+datawindow);
-           // $("#targetToAddFrm").submit();
+            // $("#targetToAddFrm").submit();
         }
 
     }else{

@@ -1591,6 +1591,7 @@ public class UpdateCourse extends TimerTask{
                 List<ResourceInfo> tmpResList=UpdateCourseUtil.getActionResource(mp);
                 if(tmpResList!=null&&tmpResList.size()>0){//执行
                     for(ResourceInfo rsEntity:tmpResList){
+
                         sqlbuilder=new StringBuilder();
                         //得到资源的同步语句
                         objList=resourceManager.getSynchroSql(rsEntity,sqlbuilder);

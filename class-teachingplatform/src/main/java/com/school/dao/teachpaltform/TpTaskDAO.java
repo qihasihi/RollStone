@@ -1,16 +1,14 @@
 package com.school.dao.teachpaltform;
 
+import com.school.dao.base.CommonDAO;
+import com.school.dao.inter.teachpaltform.ITpTaskDAO;
+import com.school.entity.teachpaltform.TpTaskInfo;
+import com.school.util.PageResult;
+import org.springframework.stereotype.Component;
+
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.school.entity.teachpaltform.TpCourseResource;
-import org.springframework.stereotype.Component;
-
-import com.school.dao.base.CommonDAO;
-import com.school.entity.teachpaltform.TpTaskInfo;
-import com.school.dao.inter.teachpaltform.ITpTaskDAO;
-import com.school.util.PageResult;
 
 @Component  
 public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
@@ -418,6 +416,11 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
         if (tptaskinfo.getPaperid() != null) {
             sqlbuilder.append("?,");
             objList.add(tptaskinfo.getPaperid());
+        } else
+            sqlbuilder.append("null,");
+        if (tptaskinfo.getCriteria() != null) {
+            sqlbuilder.append("?,");
+            objList.add(tptaskinfo.getCriteria());
         } else
             sqlbuilder.append("null,");
 

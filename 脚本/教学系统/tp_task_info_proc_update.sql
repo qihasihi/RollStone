@@ -1,10 +1,10 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `tp_task_info_proc_update`$$
 
-CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_task_info_proc_update`(
+CREATE DEFINER=`schu`@`%` PROCEDURE `tp_task_info_proc_update`(
 				            p_task_id BIGINT,
 				            p_task_name VARCHAR(1000),
 				            p_task_value_id BIGINT,
@@ -20,6 +20,7 @@ CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_task_info_proc_update`(
 				            p_remote_type INT,
 				            p_resource_name VARCHAR(1000),
 				            p_paper_id BIGINT,
+				            p_criteria INT,
 				          OUT affect_row INT
 				          )
 BEGIN
@@ -44,6 +45,11 @@ BEGIN
 	
 	IF p_course_id IS NOT NULL THEN
 		SET tmp_sql=CONCAT(tmp_sql,",COURSE_ID=",p_course_id);
+	END IF;
+	
+	
+	IF p_criteria IS NOT NULL THEN
+		SET tmp_sql=CONCAT(tmp_sql,",CRITERIA=",p_criteria);
 	END IF;
 	
 	IF p_cloud_status IS NOT NULL THEN

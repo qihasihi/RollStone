@@ -758,7 +758,7 @@ class SchoolCallableStatementCreator implements CallableStatementCreator{
         for (int i = 0; i < paraValue.length; i++) { // ¸³²Î
             if(paraValue[i]==null)continue;
             if (paraValue[i].getClass().getSimpleName().equals("String")) {
-                pstatement.setString(i + 1, paraValue[i].toString());
+                pstatement.setString(i + 1, paraValue[i].toString().replace("'","&apos;"));
             } else if (paraValue[i].getClass().getSimpleName().equals(
                     "Blob")) {
                 pstatement.setBlob(i + 1, (Blob) paraValue[i]);
