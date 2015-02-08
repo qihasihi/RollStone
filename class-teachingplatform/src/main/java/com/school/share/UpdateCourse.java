@@ -2906,7 +2906,10 @@ class UpdateCourseUtil{
                                 }
 
                                 if(map.containsKey("Ismicopiece")&&map.get("Ismicopiece")!=null&&!map.get("Ismicopiece").toString().trim().toUpperCase().equals("NULL")){
-                                    res.setIsmicopiece(map.get("Ismicopiece").toString());
+                                    String ismic=map.get("Ismicopiece").toString();
+                                    if(map.get("Ismicopiece").toString().trim().equals("0"))
+                                        ismic="-2";
+                                    res.setIsmicopiece(ismic);
                                 }
                                 if(difftype!=null&&(res.getDifftype()==null||res.getDifftype().intValue()!=difftype.intValue()))
                                     continue;
