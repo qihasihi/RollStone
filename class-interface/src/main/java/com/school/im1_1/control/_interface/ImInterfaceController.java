@@ -1690,7 +1690,7 @@ public class ImInterfaceController extends TaskController {
 //                        }
 //                    }
 //                }
-                JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid,usertype);
                 if(jr!=null&&jr.size()>0){
                     for(int i = 0;i<jr.size();i++){
                         JSONObject jo = jr.getJSONObject(i);
@@ -1786,7 +1786,7 @@ public class ImInterfaceController extends TaskController {
 //                        }
 //                    }
 //                }
-                JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid,usertype);
                 if(jr!=null&&jr.size()>0){
                     for(int i = 0;i<jr.size();i++){
                         JSONObject jo = jr.getJSONObject(i);
@@ -2021,7 +2021,7 @@ public class ImInterfaceController extends TaskController {
 //                            }
 //                        }
 //                    }
-                    JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                    JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid,usertype);
                     if(jr!=null&&jr.size()>0){
                         for(int i = 0;i<jr.size();i++){
                             JSONObject jo = jr.getJSONObject(i);
@@ -2869,7 +2869,7 @@ public class ImInterfaceController extends TaskController {
 //                                    }
 //                                }
 //                            }
-                            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid,usertype);
                             if(jr!=null&&jr.size()>0){
                                 for(int i = 0;i<jr.size();i++){
                                     JSONObject jObject = jr.getJSONObject(i);
@@ -2931,7 +2931,7 @@ public class ImInterfaceController extends TaskController {
 //                                    }
 //                                }
 //                            }
-                            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid,usertype);
                             if(jr!=null&&jr.size()>0){
                                 for(int i = 0;i<jr.size();i++){
                                     JSONObject jobj = jr.getJSONObject(i);
@@ -3319,8 +3319,9 @@ public class ImInterfaceController extends TaskController {
 //                        }
 //                    }
 //                }
+//                }
 //            }
-            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid,usertype);
             if(jr!=null&&jr.size()>0){
                 for(int i = 0;i<jr.size();i++){
                     JSONObject jObject = jr.getJSONObject(i);
@@ -4296,7 +4297,7 @@ public class ImInterfaceController extends TaskController {
                     }
                     if(jids.toString().indexOf("jid")>0){
                         String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
-                        JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                        JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid,usertype);
                         if(jr!=null&&jr.size()>0){
                             for(int i = 0;i<jr.size();i++){
                                 JSONObject jObject = jr.getJSONObject(i);
@@ -4860,7 +4861,7 @@ public class ImInterfaceController extends TaskController {
 //                    }
 //                }
 //            }
-            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolId,jid);
+            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolId,jid,userType);
             if(jr!=null&&jr.size()>0){
                 for(int i = 0;i<jr.size();i++){
                     JSONObject jsono = jr.getJSONObject(i);
@@ -5254,7 +5255,7 @@ public class ImInterfaceController extends TaskController {
             System.out.println("jidstr---------------"+jidstr);
             System.out.println("schoolId---------------"+schoolId);
             System.out.println("jid---------------"+jid);
-            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolId,jid);
+            JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolId,jid,usertype);
             if(jr!=null&&jr.size()>0){
                 for(int i = 0;i<jr.size();i++){
                     JSONObject jo = jr.getJSONObject(i);
@@ -5943,7 +5944,7 @@ class ImUtilTool{
         return type;
     }
 
-    public static JSONArray getEttPhoneAndRealNmae(String jidstr,String schoolid,String userid) throws UnsupportedEncodingException {
+    public static JSONArray getEttPhoneAndRealNmae(String jidstr,String schoolid,String userid,String usertype) throws UnsupportedEncodingException {
         String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
         System.out.println("ettip------------------------------"+ettip);
         String url=ettip+"queryPhotoAndRealName.do";
@@ -5952,7 +5953,7 @@ class ImUtilTool{
         signMap.put("userList",jidstr);
         signMap.put("schoolId",schoolid);
         signMap.put("srcJid",userid);
-        signMap.put("userType","3");
+        signMap.put("userType",(usertype==null?"3":usertype));
         signMap.put("timestamp",""+System.currentTimeMillis());
         String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
         signMap.put("sign",signture);
