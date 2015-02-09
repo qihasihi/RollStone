@@ -437,6 +437,7 @@ public class StudentController extends BaseController<StudentInfo> {
                     }
                     tmpMap.put("userType",userType);
                     tmpMap.put("subjectId",cuTmpe.getSubjectid()==null?-1:cuTmpe.getSubjectid());
+                    tmpMap.put("jid",(cuTmpe.getEttuserid()==null?-1:cuTmpe.getEttuserid()));
                     mapList.add(tmpMap);
                 }
             }

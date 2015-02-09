@@ -264,6 +264,7 @@ public class TestController extends BaseController<String>{
                                             userType=1;
                                     }
                                     tmpMap.put("userType",userType);
+                                    tmpMap.put("jid",(cuTmpe.getEttuserid()==null?-1:cuTmpe.getEttuserid()));
                                     tmpMap.put("subjectId",cuTmpe.getSubjectid()==null?-1:cuTmpe.getSubjectid());
                                     mapList.add(tmpMap);
                                 }

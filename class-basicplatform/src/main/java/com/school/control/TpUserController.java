@@ -2570,6 +2570,7 @@ public class TpUserController extends UserController {
                 Map<String,Object> reMap=new HashMap<String, Object>();
                 reMap.put("userId",tmp.getUid());
                 reMap.put("subjectId",tmp.getSubjectid()==null?-1:tmp.getSubjectid());
+                reMap.put("jid",(tmp.getEttuserid()==null?-1:tmp.getEttuserid()));
                 reMap.put("userType",tmp.getRelationtype().equals("学生")?3:tmp.getRelationtype().equals("任课老师")?2:tmp.getRelationtype().equals("班主任")?1:null);
                 mapList.add(reMap);
             }

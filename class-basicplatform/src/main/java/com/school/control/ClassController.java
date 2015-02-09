@@ -1566,6 +1566,7 @@ public class ClassController extends BaseController<ClassInfo>{
                     // 必带 userId，userType,subjectId 的三个key
                     Map<String,Object> reMap=new HashMap<String, Object>();
                     reMap.put("userId",tmp.getUid());
+                    reMap.put("jid",(tmp.getEttuserid()==null?-1:tmp.getEttuserid()));
                     reMap.put("subjectId",cu.getSubjectid()==null?-1:cu.getSubjectid());
                     reMap.put("userType",1);
                     mapList.add(reMap);
@@ -1607,6 +1608,7 @@ public class ClassController extends BaseController<ClassInfo>{
                                 userType=1;
                         }
                         tmpMap.put("userType",userType);
+                        tmpMap.put("jid",(cuTmpe.getEttuserid()==null?-1:cuTmpe.getEttuserid()));
                         tmpMap.put("subjectId",cuTmpe.getSubjectid()==null?-1:cuTmpe.getSubjectid());
                         mapList.add(tmpMap);
                     }
