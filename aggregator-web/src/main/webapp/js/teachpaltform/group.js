@@ -180,7 +180,8 @@ function getClassGroups(classId,classType){
                     $.each(responseText.objList,function(idx,itm){
                         groupHtml+="<tbody id='group_"+itm.groupid+"'>";
                         groupHtml+="<tr>";
-                        groupHtml+="<td class='v_c'>"+itm.groupname;
+                        groupHtml+="<td class='v_c'><span id='sp_"+itm.groupid+"'>"+itm.groupname+"</span>";
+                        groupHtml+="<a href='javascript:;' class='ico11' title='修改'></a>";
                         groupHtml+="<a href='javascript:delGroup("+itm.groupid+");' class='ico04' title='删除'></a>";
                         groupHtml+="</td>";
                         groupHtml+="<td>&nbsp;</td>";
@@ -255,6 +256,44 @@ function delGroup(groupId){
         },"json");
 }
 
+
+function updGroup(groupId){
+    var obj=$("#sp_"+groupId);
+    if(obj.length<1)return;
+    var val=obj.html().Trim();
+    $(obj).html('').append('<input type="text" value="'+val+'"/>');
+    $(obj).children("input").bind("blur",function(){
+        doUpdGroup(groupId);
+    });
+    obj.next().hide();
+}
+
+function doUpdGroup(groupId){
+    var groupName=$("#sp_"+groupId+" input[type='text']").val();
+    if(groupName.Trim().length<1){
+        alert('请输入小组名称!');
+        return;
+    }
+    var param={groupid:groupId,groupname:groupName};
+    $.ajax({
+        url: 'group?m=updateGroup',
+        type: "post",
+        data: param,
+        dataType: 'json',
+        cache: false,
+        error: function () {
+            alert('系统未响应，请稍候重试!');
+        }, success: function (rps) {
+            if(rps.type=='error'){
+                alert(rps.msg);
+            }else{
+                $("#sp_"+groupId).html(rps.objList[0]);
+                $("#sp_"+groupId).next().show();
+            }
+        }
+    });
+}
+
 function delGroupStudent(ref){
     if(!confirm("确认删除？"))
         return;
@@ -288,7 +327,8 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
     $.post(url,{groupid:groupId},
         function(responseText){
             if(responseText==null||responseText.objList==null||responseText.objList.length==0){
-                gtHtml+="<tr><td class='v_c'>"+groupName+"<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'></td>";
+                gtHtml+="<tr><td class='v_c'><span>"+groupName+"</span>";
+                gtHtml+="<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'></td>";
                 gtHtml+="<td colspan='4'>没有小组成员！</td></tr>";
                 $("#group_"+groupId).html(gtHtml);
                 return;
@@ -297,7 +337,8 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
             $.each(responseText.objList,function(idx,itm){
                 gtHtml+="<tr>";
                 if(idx==0){
-                    gtHtml+="<td rowspan="+responseText.objList.length+" class='v_c'>"+groupName;
+                    gtHtml+="<td rowspan="+responseText.objList.length+" class='v_c'><span id='sp_"+itm.groupid+"'>"+groupName+"</span>";
+                    gtHtml+="<a href='javascript:updGroup("+itm.groupid+");' class='ico11' title='修改'></a>";
                     gtHtml+="<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'></a>";
                     gtHtml+=percentHtml;
                     gtHtml+="</td>";

@@ -474,7 +474,44 @@ public class GroupController extends BaseController<TpGroupInfo>{
 	}
 
 
-	/**
+    /**
+     * 修改小组
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=updateGroup",method=RequestMethod.POST)
+    public void doUpdGroup(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je=new JsonEntity();
+        TpGroupInfo tg = this.getParameter(request, TpGroupInfo.class);
+        String groupname=request.getParameter("groupname");
+        String groupid=request.getParameter("groupid");
+        if(tg.getGroupid()==null||tg.getGroupname()==null) {
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return ;
+        }
+        if(this.tpGroupManager.checkGroupName(tg)){
+            je.setMsg("小组名称已存在!");
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        if(this.tpGroupManager.doUpdate(tg)){
+            je.setType("success");
+            je.getObjList().add(tg.getGroupname());
+            if(!updGroupToEtt(tg.getGroupid()))
+                System.out.println("修改ETT小组请求，失败!");
+            else
+                System.out.println("修改ETT小组请求，成功!");
+        }else{
+            je.setMsg(UtilTool.msgproperty.getProperty("ARRAYEXECUTE_NOT_EXECUTESQL"));
+        }
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+    /**
 	 * ajax查询小组信息
 	 * @param request
 	 * @param response
@@ -909,6 +946,26 @@ public class GroupController extends BaseController<TpGroupInfo>{
             List<ClassInfo> clsList=this.classManager.getList(cls,null);
             if(clsList==null||clsList.size()<1)return false;
             return EttInterfaceUserUtil.addGroupBase(tpGroupList.get(0),clsList.get(0).getDcschoolid());
+        }
+        return false;
+    }
+
+    /**
+     * 向ETT发送请求，修改组
+     * @param groupid
+     * @return
+     */
+    private boolean updGroupToEtt(Long groupid){
+        if(groupid==null)return false;
+        TpGroupInfo tg=new TpGroupInfo();
+        tg.setGroupid(groupid);
+        List<TpGroupInfo> tpGroupList=this.tpGroupManager.getList(tg,null);
+        if(tpGroupList!=null&&tpGroupList.size()>0){
+            ClassInfo cls=new ClassInfo();
+            cls.setClassid(tpGroupList.get(0).getClassid());
+            List<ClassInfo> clsList=this.classManager.getList(cls,null);
+            if(clsList==null||clsList.size()<1)return false;
+            return EttInterfaceUserUtil.updateGroupBase(tpGroupList.get(0),clsList.get(0).getDcschoolid());
         }
         return false;
     }
