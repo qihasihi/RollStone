@@ -365,7 +365,7 @@
             //序号重排
             updateQuesIdx();
             //计算每题的分数
-            if(papertype==1||papertype==2){
+            if(papertype==1||papertype==2||papertype==4){
                 var allqueslength=allquesid.split(",").length;
                 var avgScore=parseInt(paperSumScore/allqueslength);
                 $("span[id='avg_score']").html(avgScore);
