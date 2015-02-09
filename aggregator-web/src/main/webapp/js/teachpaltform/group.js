@@ -262,7 +262,7 @@ function updGroup(groupId){
     if(obj.length<1)return;
     var val=obj.html().Trim();
     $(obj).html('').append('<input type="text" value="'+val+'"/>');
-    $(obj).children("input").bind("blur",function(){
+    $(obj).children("input").select().bind("blur",function(){
         doUpdGroup(groupId);
     });
     obj.next().hide();

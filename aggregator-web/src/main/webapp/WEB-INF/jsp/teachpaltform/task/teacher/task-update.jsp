@@ -280,14 +280,14 @@
                         <p id="p_${cc.classid}"  style="display:none">
 
                             <c:if test="${cc.dctype eq 3}">
-                                <span class="f_right"><input placeholder="设置开始时间" class="w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" /> -
-                                    <input placeholder="设置结束时间" onfocus="WdatePicker({maxDate:'${cc.endtimeString}',minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{H:1})&&\'%y-%M-%d %H:{%m+1}:%s \'}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="w140" />
+                                <span class="f_right"><input placeholder="设置开始时间" class="w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{m:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" /> -
+                                    <input placeholder="设置结束时间" onfocus="WdatePicker({maxDate:'${cc.endtimeString}',minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{m:1})&&\'%y-%M-%d %H:{%m+1}:%s \'}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="w140" />
 
                             </c:if>
 
                             <c:if test="${cc.dctype ne 3}">
-                                <span class="f_right"><input placeholder="设置开始时间" class="w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{H:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" /> -
-                                    <input placeholder="设置结束时间" onfocus="WdatePicker({maxDate:'${cc.endtimeString}',minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{H:1})&&\'%y-%M-%d %H:{%m+1}:%s \'}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="w140" />
+                                <span class="f_right"><input placeholder="设置开始时间" class="w140" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'e_time_${cc.classid}\',{m:-1})}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}',alwaysUseStartDate:true})" readonly="readonly"   id="b_time_${cc.classid}"  name="b_time" type="text" /> -
+                                    <input placeholder="设置结束时间" onfocus="WdatePicker({maxDate:'${cc.endtimeString}',minDate:'#F{$dp.$D(\'b_time_${cc.classid}\',{m:1})&&\'%y-%M-%d %H:{%m+1}:%s \'}',dateFmt:'yyyy-MM-dd HH:mm:ss',startDate:'${cc.begintimeString}'})" readonly="readonly" id="e_time_${cc.classid}" type="text" class="w140" />
 
                             </c:if>
                             </span>&nbsp;&nbsp;&nbsp;${cc.classgrade}${cc.classname}：

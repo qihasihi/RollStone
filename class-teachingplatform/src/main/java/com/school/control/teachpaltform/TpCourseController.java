@@ -3468,8 +3468,11 @@ public class TpCourseController extends TaskController{
                                         int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
                                         if(type==1){
                                             String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
-                                            if(liveurl!=null&&liveurl.trim().length()>0)
+                                            if(liveurl!=null&&liveurl.trim().length()>0){
                                                 tctmp.setLiveaddress(liveurl);
+                                                tctmp.setTaskid(tmpTask.getTaskid());
+                                            }
+
                                         }
 
                                     }catch (Exception e){

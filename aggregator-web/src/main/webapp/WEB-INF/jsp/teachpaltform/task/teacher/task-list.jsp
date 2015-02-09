@@ -212,10 +212,10 @@ function getInvestReturnMethod(rps){
                 html+='<a class="font-blue" href="task?m=teaQuesAnserList&taskid='+itm.taskid+'"target="_blank" >'+taskObj+'</a>';
             }else if(itm.tasktype==10){
                 if(itm.taskstatus!="3"&&itm.taskstatus!="1"){
-                    html+='<a class="font-blue" target="_blank" href="'+itm.liveaddress+'" >'+taskObj+'</a>';
-                    html+='<a class="lm_ico08" title="直播课" target="_blank" href="'+itm.liveaddress+'"></a>';
-                }
-                html+='&nbsp;&nbsp;&nbsp;&nbsp<span style="color:gray;">'+itm.btimeSimpleString+'</span>';
+                    html+='<a class="font-blue" target="_blank" onclick="toPostURL(\'task?doTeaRedirectLiveTask\',{taskid:'+itm.taskid+',liveaddress:\''+itm.liveaddress+'\'},false,null)" href="javascript:;" >'+taskObj+'</a>';
+                    html+='<a class="lm_ico08" target="_blank" onclick="toPostURL(\'task?doTeaRedirectLiveTask\',{taskid:'+itm.taskid+',liveaddress:\''+itm.liveaddress+'\'},false,null)" title="直播课" href="javascript:;" ></a>';
+                }else
+                    html+=taskObj;
             }
 //            if(itm.tasktype==4){
 //                if(itm.taskstatus!="1")

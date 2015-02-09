@@ -231,7 +231,7 @@ public class TpUserController extends UserController {
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
-        userList.get(0).setSource(UserInfo.LOGIN_SOURCE.ETT.getValue());
+        userLoginList.get(0).setSource(UserInfo.LOGIN_SOURCE.ETT.getValue());
         je=this.loginBase(userLoginList.get(0),request,response);
         if(!je.getType().trim().equals("success")){
             response.getWriter().print(je.getAlertMsgAndCloseWin());return null;

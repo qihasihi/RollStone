@@ -976,7 +976,9 @@ public class TaskController extends BaseController{
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }else {
-            if(this.logined(request).getDcschoolid()!=1){
+            String EliteSchoolId=UtilTool.utilproperty.getProperty("ELITE_SCHOOL_ID").toString();
+            if(this.logined(request).getDcschoolid()!=1&&
+                    this.logined(request).getDcschoolid()!=Integer.parseInt(EliteSchoolId)){
                 for(TpCourseClass cc:courseclassList){
                     if(cc.getDctype()!=null&&cc.getDctype()==2){
                         //request.setAttribute("isWXCLS",1);
@@ -2557,7 +2559,8 @@ public class TaskController extends BaseController{
             je.setMsg("错误，没有发现当前专题!请刷新后重试!");
             response.getWriter().print(je.getAlertMsgAndBack());return null;
         }else{
-            if(this.logined(request).getCardstatus()!=null&&this.logined(request).getCardstatus()==0){
+            if(this.logined(request).getDcschoolid()!=null&&this.logined(request).getDcschoolid()<50000&&
+                    this.logined(request).getCardstatus()!=null&&this.logined(request).getCardstatus()==0){
                 TpCourseInfo tmpCourse=courseList.get(0);
                 if(tmpCourse.getClassendtimes()!=null&&
                         new Date().before(UtilTool.StringConvertToDate(tmpCourse.getClassendtimes().toString()))){
@@ -3665,6 +3668,44 @@ public class TaskController extends BaseController{
 
 
     /**
+     * 教师跳转直播课
+     * @throws Exception
+     */
+    @RequestMapping(params="doTeaRedirectLiveTask",method=RequestMethod.POST)
+    public void doTeaRedirectLiveTask(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        JsonEntity je = new JsonEntity();
+        String taskid=request.getParameter("taskid");
+        String liveaddress=request.getParameter("liveaddress");
+
+        if(liveaddress==null||liveaddress.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        if(taskid==null||taskid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());return;
+        }
+
+        //检测任务是否过期
+        TpTaskInfo taskInfo=new TpTaskInfo();
+        taskInfo.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo>taskList=this.tpTaskManager.getTaskReleaseList(taskInfo, null);
+        if(taskList==null||taskList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("当前任务不存在!"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        for(TpTaskInfo t:taskList){
+            if(t.getEtime()!=null&&new Date().getTime()>UtilTool.StringConvertToDate(t.getEtime().toString()).getTime()){
+                je.setMsg("当前任务已结束!");
+                response.getWriter().print(je.getAlertMsgAndBack());return;
+            }
+        }
+        response.sendRedirect(liveaddress);
+    }
+
+
+
+    /**
      * 添加直播课记录
      * @throws Exception
      */
@@ -3692,6 +3733,24 @@ public class TaskController extends BaseController{
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());return;
         }
+        //检测任务是否过期
+        TpTaskInfo taskInfo=new TpTaskInfo();
+        taskInfo.setCourseid(Long.parseLong(courseid));
+        taskInfo.setUserid(this.logined(request).getUserid());
+        taskInfo.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo>taskList=this.tpTaskManager.getListbyStu(taskInfo, null);
+        if(taskList==null||taskList.size()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("当前任务不存在!"));
+            response.getWriter().print(je.toJSON());return;
+        }
+        for(TpTaskInfo t:taskList){
+            if(t.getEtime()!=null&&new Date().getTime()>UtilTool.StringConvertToDate(t.getEtime().toString()).getTime()){
+                je.setMsg("当前任务已结束!");
+                response.getWriter().print(je.getAlertMsgAndBack());return;
+            }
+        }
+
+
         //检测是否有查看标准
         TpTaskInfo t=new TpTaskInfo();
         t.setTaskid(Long.parseLong(taskid));
