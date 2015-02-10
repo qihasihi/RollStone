@@ -158,9 +158,10 @@
                         +"<span class='ico41' title='赞'></span><b>"+itm.praisenum+"</b>"
                         +"<span class='ico73' title='推荐'></span><b>"+itm.recomendnum+"</b>"
                         +"<span class='ico58a' title='收藏'></span><b>"+itm.storenum+"</b>"
-                        +"<span class='ico46' title='浏览'></span><b>"+itm.clicks+"</b>"
-                        +"<span class='ico59' title='下载'></span><b>"+itm.downloadnum+"</b></p></td>";
-				html+="</tr> ";
+                        +"<span class='ico46' title='浏览'></span><b>"+itm.clicks+"</b>";
+                if(typeof(itm.difftype)=="undefined"||itm.difftype!=1||(typeof(itm.difftype)!="undefined"&&itm.difftype==1&&itm.resid<0))
+                    html+="<span class='ico59' title='下载'></span><b>"+itm.downloadnum+"</b>";
+				html+="</p></td></tr> ";
 			});
             p1.setPageSize(rps.presult.pageSize);
             p1.setPageNo(rps.presult.pageNo);
