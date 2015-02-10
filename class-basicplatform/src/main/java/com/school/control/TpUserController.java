@@ -11,6 +11,7 @@ import com.school.manager.inter.teachpaltform.ITpGroupStudentManager;
 import com.school.manager.teachpaltform.TpGroupManager;
 import com.school.manager.teachpaltform.TpGroupStudentManager;
 import com.school.util.JsonEntity;
+import com.school.util.MD5_NEW;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
 import com.school.utils.EttInterfaceUserUtil;
@@ -297,6 +298,7 @@ public class TpUserController extends UserController {
         String schoolid=request.getParameter("schoolId");
         String jid=request.getParameter("jId");
         String scheme=request.getParameter("scheme");
+        String sign=request.getParameter("sign");
         if(schoolid==null||schoolid.trim().length()<1||!UtilTool.isNumber(schoolid)){
             je.setMsg("Schoolid is empty!");
             response.getWriter().print(je.getAlertMsgAndBack());
@@ -307,6 +309,13 @@ public class TpUserController extends UserController {
             response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
+        String md5Str= MD5_NEW.getMD5ResultEttCode(schoolid + jid);
+        if(!md5Str.equals(sign)){
+            je.setMsg("Md5 Error!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+
         UserInfo u=new UserInfo();
         u.setDcschoolid(Integer.parseInt(schoolid));
         u.setEttuserid(Integer.parseInt(jid));

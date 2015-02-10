@@ -4184,7 +4184,7 @@ public class ImInterfaceController extends TaskController {
 //                            }
 //                        }
 //                    }
-                    JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid);
+                    JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid,usertype);
                     if(jr!=null&&jr.size()>0){
                         for(int i = 0;i<jr.size();i++){
                             JSONObject jo = jr.getJSONObject(i);
@@ -5953,7 +5953,7 @@ class ImUtilTool{
         signMap.put("userList",jidstr);
         signMap.put("schoolId",schoolid);
         signMap.put("srcJid",userid);
-        signMap.put("userType",(usertype==null?"3":usertype));
+        signMap.put("userType",((usertype==null||usertype.length()<1)?"3":usertype));
         signMap.put("timestamp",""+System.currentTimeMillis());
         String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
         signMap.put("sign",signture);

@@ -1,6 +1,6 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `admin_performance_proc_stu`$$
 
@@ -41,7 +41,7 @@ BEGIN
 			END IF;
 			
 			SET idx=idx+1;
-		        SET tmp_column_sql = CONCAT(tmp_column_sql,",IFNULL(MAX(CASE t.task_id WHEN '",v_taskid,"' THEN (SELECT score FROM stu_paper_logs a WHERE a.`task_id`=t.task_id AND a.`user_id`=u.user_id) ELSE 0 END ),'--') col",idx,"");
+		        SET tmp_column_sql = CONCAT(tmp_column_sql,",IFNULL(MAX(CASE t.task_id WHEN '",v_taskid,"' THEN (SELECT score FROM stu_paper_logs a WHERE a.`task_id`=t.task_id AND a.`user_id`=u.user_id) ELSE null END ),'--') col",idx,"");
 		        SET tmp_sum_sql=CONCAT(tmp_sum_sql," +col",idx,"");
 		        -- 任务类型  1：资源学习  2：互动交流  3： 课后作业  4:成卷测试  5：自主测试   6:微视频  7-9:移动端任务 7:图片  8：文字  9：视频
 	   
