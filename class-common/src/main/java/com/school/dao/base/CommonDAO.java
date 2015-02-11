@@ -699,7 +699,8 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
                                             !m.getParameterTypes()[0].getSimpleName().toLowerCase().equals("string")
                                             &&!m.getParameterTypes()[0].getSimpleName().toLowerCase().equals("date"))
                                         val= ConvertUtils.convert(val.toString(), m.getParameterTypes()[0]);
-
+                                    if(m.getParameterTypes()[0].getSimpleName().toLowerCase().equals("string"))
+                                        val= val.toString().replace("&apos;","'");
                                     m.invoke(obj, val); // obj:被实例化的类
                                     break;
                                 }
@@ -840,8 +841,11 @@ class  SchoolCallableStatementCallback implements  CallableStatementCallback<Obj
                                     valObj = UtilTool.DateConvertToString(rs
                                             .getTimestamp(j + 1),
                                             com.school.util.UtilTool.DateType.type1);
-                                else
+                                else{
                                     valObj = rs.getString(j + 1);
+                                    if(valObj!=null)
+                                        valObj= valObj.toString().replace("&apos;","'");
+                                }
 
                                 tmpMap.put(columnStr.toUpperCase(), valObj);
                             }
@@ -868,8 +872,12 @@ class  SchoolCallableStatementCallback implements  CallableStatementCallback<Obj
                                     strList.add(UtilTool.DateConvertToString(
                                             (Date) rs.getTimestamp(j + 1),
                                             DateType.type1));
-                                else
-                                    strList.add(rs.getString(j + 1));
+                                else{
+                                    String valObj=rs.getString(j + 1);
+                                    if(valObj!=null)
+                                        valObj= valObj.toString().replace("&apos;","'");
+                                    strList.add(valObj);
+                                }
                             }
                             if (rsdata.getColumnCount() > 0)
                                 returnList.add(strList);
@@ -977,7 +985,8 @@ class  SchoolCallableStatementCallback implements  CallableStatementCallback<Obj
                                             !m.getParameterTypes()[0].getSimpleName().toLowerCase().equals("string")
                                             &&!m.getParameterTypes()[0].getSimpleName().toLowerCase().equals("date"))
                                         val= ConvertUtils.convert(val.toString(), m.getParameterTypes()[0]);
-
+                                     if(m.getParameterTypes()[0].getSimpleName().toLowerCase().equals("string"))
+                                         val= val.toString().replace("&apos;","'");
                                     m.invoke(obj, val); // obj:被实例化的类
                                     break;
                                 }
