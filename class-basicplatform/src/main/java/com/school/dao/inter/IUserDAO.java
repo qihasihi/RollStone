@@ -1,12 +1,12 @@
 package com.school.dao.inter;
 
-import java.util.List;
-import java.util.Map;
-
 import com.school.dao.base.ICommonDAO;
 import com.school.entity.RoleUser;
 import com.school.entity.UserInfo;
 import com.school.util.PageResult;
+
+import java.util.List;
+import java.util.Map;
 
 public interface IUserDAO extends ICommonDAO<UserInfo> {
 	
@@ -46,4 +46,6 @@ public interface IUserDAO extends ICommonDAO<UserInfo> {
     List<UserInfo>getUserNotCompleteTask(Long taskid,Integer userid,Integer classid,String flag);
 
     public List<Map<String,Object>> getCourseTaskCount(final Integer userid);
+
+    Integer getUserId(Integer jid, Long taskId, Integer classId);
 }

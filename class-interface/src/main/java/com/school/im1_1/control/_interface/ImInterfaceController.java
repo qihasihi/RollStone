@@ -1,11 +1,10 @@
 package com.school.im1_1.control._interface;
 
 import com.etiantian.unite.utils.UrlSigUtil;
-import com.school.control.base.BaseController;
 import com.school.control.teachpaltform.TaskController;
 import com.school.entity.ClassInfo;
+import com.school.entity.RoleUser;
 import com.school.entity.UserInfo;
-import com.school.entity.UserModelScoreLogsInfo;
 import com.school.entity.resource.ResourceInfo;
 import com.school.entity.teachpaltform.*;
 import com.school.entity.teachpaltform.interactive.TpTopicInfo;
@@ -13,11 +12,9 @@ import com.school.entity.teachpaltform.interactive.TpTopicThemeInfo;
 import com.school.entity.teachpaltform.paper.*;
 import com.school.im1_1.entity._interface.ImInterfaceInfo;
 import com.school.im1_1.manager._interface.ImInterfaceManager;
-import com.school.manager.ClassManager;
-import com.school.manager.ClassUserManager;
-import com.school.manager.UserManager;
 import com.school.manager.inter.IClassManager;
 import com.school.manager.inter.IClassUserManager;
+import com.school.manager.inter.IRoleUserManager;
 import com.school.manager.inter.IUserManager;
 import com.school.manager.inter.resource.IResourceManager;
 import com.school.manager.inter.teachpaltform.*;
@@ -26,13 +23,7 @@ import com.school.manager.inter.teachpaltform.award.ITpStuScoreManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicManager;
 import com.school.manager.inter.teachpaltform.interactive.ITpTopicThemeManager;
 import com.school.manager.inter.teachpaltform.paper.*;
-import com.school.manager.resource.ResourceManager;
-import com.school.manager.teachpaltform.*;
-import com.school.manager.teachpaltform.award.TpStuScoreLogsManager;
-import com.school.manager.teachpaltform.award.TpStuScoreManager;
-import com.school.manager.teachpaltform.interactive.TpTopicManager;
-import com.school.manager.teachpaltform.interactive.TpTopicThemeManager;
-import com.school.manager.teachpaltform.paper.*;
+import com.school.manager.teachpaltform.TpGroupStudentManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -45,14 +36,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by yuechunyang on 14-7-25.
@@ -110,6 +100,8 @@ public class ImInterfaceController extends TaskController {
     private IClassManager classManager;
     @Autowired
     private IClassUserManager classUserManager;
+    @Autowired
+    private IRoleUserManager roleUserManager;
 
 
     /**
@@ -321,11 +313,16 @@ public class ImInterfaceController extends TaskController {
             return;
         }
         int utype=ImUtilTool.getUserType(usertype);
+        Integer uid=this.getUserId(Integer.parseInt(userid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"用户未绑定\"}");
+            return ;
+        }
         UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
+        ui.setUserid(uid);
         List<UserInfo> userList = this.userManager.getList(ui, null);
         if(userList==null||userList.size()<1){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"用户未绑定\"}");
             return;
         }
         ImInterfaceInfo obj = new ImInterfaceInfo();
@@ -589,18 +586,23 @@ public class ImInterfaceController extends TaskController {
         map.put("time",timestamp);
         map.put("requestMonth",month);
         map.put("requestYear",year);
-       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+        // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendar",map,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
         int utype = ImUtilTool.getUserType(usertype);
+        Integer uid=this.getUserId(Integer.parseInt(userid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
+        }
         UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
-        List<UserInfo> userList = this.userManager.getList(ui,null);
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
         if(userList==null||userList.size()<1){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
             return;
         }
         ImInterfaceInfo obj = new ImInterfaceInfo();
@@ -609,7 +611,7 @@ public class ImInterfaceController extends TaskController {
         Map m = new HashMap();
         Map m2 = new HashMap();
         List<Map<String,Object>> courseList = this.imInterfaceManager.getStudentCalendar(userList.get(0).getUserid(),Integer.parseInt(schoolid),Integer.parseInt(classid),Integer.parseInt(year),Integer.parseInt(month));
-         if(utype!=2){
+        if(utype!=2){
             long mTime = System.currentTimeMillis();
             int offset = Calendar.getInstance().getTimeZone().getRawOffset();
             Calendar c = Calendar.getInstance();
@@ -771,7 +773,7 @@ public class ImInterfaceController extends TaskController {
         map.put("time",timestamp);
         map.put("requestMonth",month);
         map.put("requestYear",year);
-       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+        // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("TeaClassCalendar",map,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
@@ -887,7 +889,7 @@ public class ImInterfaceController extends TaskController {
         map.put("schoolId",schoolid);
         map.put("time",timestamp);
         map.put("requestDay",currentDay);
-       // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
+        // String sign = UrlSigUtil.makeSigSimple("StuClassCalendar",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("TeaClassCalendarDetail",map,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
@@ -982,18 +984,23 @@ public class ImInterfaceController extends TaskController {
         map.put("schoolId",schoolid);
         map.put("time",timestamp);
         map.put("requestDay",currentDay);
-       //String sign = UrlSigUtil.makeSigSimple("StuClassCalendarDetail",map,"*ETT#HONER#2014*");
+        //String sign = UrlSigUtil.makeSigSimple("StuClassCalendarDetail",map,"*ETT#HONER#2014*");
         Boolean b = UrlSigUtil.verifySigSimple("StuClassCalendarDetail",map,sig);
         if(!b){
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
         int utype = ImUtilTool.getUserType(usertype);
+        Integer uid=this.getUserId(Integer.parseInt(userid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
+        }
         UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
+        ui.setUserid(uid);
         List<UserInfo> userList = this.userManager.getList(ui, null);
         if(userList==null||userList.size()<1){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
             return;
         }
         List<Map<String,Object>> courseArray = this.imInterfaceManager.getstudentCalendarDetail(userList.get(0).getUserid(), utype,Integer.parseInt(classid), Integer.parseInt(schoolid), currentDay);
@@ -1251,10 +1258,16 @@ public class ImInterfaceController extends TaskController {
                             end.setTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(endtime));
                         } catch (Exception e) {
                         }
+
+                        //如果任务开始时间小于当前时间，开始时间=当前时间
+                        if(start.getTimeInMillis()<new Date().getTime()){
+                            start.setTime(new Date());
+                        }
                         if(end.getTimeInMillis()<start.getTimeInMillis()){
                             response.getWriter().print("\"{\"result\":\"0\",\"msg\":\"任务开始时间不能晚于结束时间\"}\"");
                             return;
                         }
+
                         TpTaskAllotInfo tpTaskAllotInfo = new TpTaskAllotInfo();
                         tpTaskAllotInfo.setCourseid(courseid);
                         tpTaskAllotInfo.setTaskid(tasknextid);
@@ -1398,14 +1411,7 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print("{\"result\":\"0\",\"message\":\"验证失败，非法登录\"}");
             return;
         }
-        int utype = ImUtilTool.getUserType(usertype);
-        UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
-        List<UserInfo> userList = this.userManager.getList(ui,null);
-        if(userList==null||userList.size()<1){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
-            return;
-        }
+
         TpTaskInfo tpTaskInfo = new TpTaskInfo();
         tpTaskInfo.setTaskid(Long.parseLong(taskid));
         List<TpTaskInfo> taskList = this.tpTaskManager.getList(tpTaskInfo,null);
@@ -1413,6 +1419,29 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print("{\"result\":\"0\",\"message\":\"当前任务不存在\"}");
             return;
         }
+
+        TpCourseInfo tpCourseInfo=new TpCourseInfo();
+        tpCourseInfo.setCourseid(taskList.get(0).getCourseid());
+        List<TpCourseInfo> tcList=this.tpCourseManager.getList(tpCourseInfo,null);
+        if(tcList==null||tcList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"当前任务不存在\"}");
+            return;
+        }
+
+        int utype = ImUtilTool.getUserType(usertype);
+        Integer uid=this.getUserId(Integer.parseInt(userid),Long.parseLong(taskid),null);
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
+        }
+
         List<Map<String,Object>> taskinfo = this.imInterfaceManager.getTaskInfo(taskList.get(0).getTaskid(),Integer.parseInt(classid));
         List<Map<String,Object>> returnInfo = new ArrayList<Map<String, Object>>();
         Map returnMap = new HashMap();
@@ -1656,8 +1685,8 @@ public class ImInterfaceController extends TaskController {
                         returnUserMap.put("uPhoto","http://attach.etiantian.com/ett20/study/common/upload/unknown.jpg");
                         returnUserMap.put("uName",taskUserRecord.get(i).get("realname"));
                     }
-                   // returnUserMap.put("uPhoto","img");
-                   // returnUserMap.put("uName","小虎");
+                    // returnUserMap.put("uPhoto","img");
+                    // returnUserMap.put("uName","小虎");
                     returnUserRecord.add(returnUserMap);
                 }
                 String jidstr = jids.toString().substring(0,jids.toString().lastIndexOf(","))+"]";
@@ -1865,11 +1894,17 @@ public class ImInterfaceController extends TaskController {
         System.out.println("当前接口"+"------------"+"toQuestionJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------验证用户通过      当前时间------"+currentDay);
         System.out.println();
         int utype = ImUtilTool.getUserType(usertype);
+        //验证用户ETTUserId,得到Userid
+        Integer uid=this.getUserId(Integer.parseInt(userid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"用户未绑定\"}");
+            return new ModelAndView("");
+        }
         UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
+        ui.setUserid(uid);
         List<UserInfo> userList = this.userManager.getList(ui, null);
         if(userList==null||userList.size()<1){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"用户未绑定\"}");
             return new ModelAndView("");
         }
         request.setAttribute("userRef", userList.get(0).getRef());
@@ -1901,9 +1936,9 @@ public class ImInterfaceController extends TaskController {
             if(questionInfoList.get(0).getQuestiontype()==3||questionInfoList.get(0).getQuestiontype()==4){
                 QuestionOption questionOption = new QuestionOption();
                 questionOption.setQuestionid(questionInfoList.get(0).getQuestionid());
-               // System.out.println("查询试题开始："+System.currentTimeMillis());
+                // System.out.println("查询试题开始："+System.currentTimeMillis());
                 List<QuestionOption> questionOptionList=this.questionOptionManager.getList(questionOption,null);
-              //  System.out.println("查询试题结束："+System.currentTimeMillis());
+                //  System.out.println("查询试题结束："+System.currentTimeMillis());
                 List<Map<String,Object>> option = new ArrayList<Map<String, Object>>();
                 request.setAttribute("option",questionOptionList);
                 if(utype==2){
@@ -1941,10 +1976,10 @@ public class ImInterfaceController extends TaskController {
                     }
                     request.setAttribute("optionNum",option);
                 }else{
-                   // System.out.println("查询用户数据："+System.currentTimeMillis());
+                    // System.out.println("查询用户数据："+System.currentTimeMillis());
                     List<Map<String,Object>> optionnumList = new ArrayList<Map<String, Object>>();
                     optionnumList = this.taskPerformanceManager.getPerformanceOptionNum(Long.parseLong(taskid),Long.parseLong(classid));
-                   // System.out.println("查询用户数据结束："+System.currentTimeMillis());
+                    // System.out.println("查询用户数据结束："+System.currentTimeMillis());
                     int totalNum = 0;
                     for(int i =0;i<optionnumList.size();i++){
                         totalNum+=Integer.parseInt(optionnumList.get(i).get("NUM").toString());
@@ -1971,7 +2006,7 @@ public class ImInterfaceController extends TaskController {
                 List<QuestionAnswer> questionAnswerList=this.questionAnswerManager.getList(questionAnswer,null);
                 request.setAttribute("answer",questionAnswerList);
                 request.setAttribute("myanswer",questionAnswerList.size()>0?questionAnswerList.get(0).getAnswercontent():null);
-            //用户回答列表
+                //用户回答列表
                 taskUserRecord = this.imInterfaceManager.getTaskUserRecord(taskList.get(0).getTaskid(),Integer.parseInt(classid),Integer.parseInt(isvir),null);
                 if(taskUserRecord!=null&&taskUserRecord.size()>0){
                     StringBuilder jids = new StringBuilder();
@@ -2043,7 +2078,7 @@ public class ImInterfaceController extends TaskController {
             request.setAttribute("courseid",taskList.get(0).getCourseid());
             request.setAttribute("taskid",taskList.get(0).getTaskid());
             request.setAttribute("usertype",utype);
-           // System.out.println(System.currentTimeMillis());
+            // System.out.println(System.currentTimeMillis());
             if(questionInfoList.get(0).getQuestiontype()==1){
                 System.out.println("当前接口"+"------------"+"toQuestionJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------接口结束，跳转jsp      当前时间------"+currentDay);
                 return new ModelAndView("/imjsp-1.1/task-detail-question-wenda");
@@ -2383,7 +2418,7 @@ public class ImInterfaceController extends TaskController {
                         je.setMsg("1");
                     }else{
                         je.setType("success");
-                       je.setMsg("2");
+                        je.setMsg("2");
                     }
                 }catch (Exception e){
                     je.setType("success");
@@ -2445,12 +2480,18 @@ public class ImInterfaceController extends TaskController {
             return;
         }
         int utype = ImUtilTool.getUserType(usertype);
-        UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
-        List<UserInfo> userList = this.userManager.getList(ui,null);
-        if(userList==null||userList.size()<1){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+        //验证用户ETTUserId,得到Userid
+        Integer uid=this.getUserId(Integer.parseInt(userid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"用户未绑定\"}");
             return;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"用户未绑定\"}");
+            return ;
         }
         TpTaskInfo tpTaskInfo = new TpTaskInfo();
         tpTaskInfo.setTaskid(Long.parseLong(taskid));
@@ -3005,12 +3046,18 @@ public class ImInterfaceController extends TaskController {
             return;
         }
         int utype = ImUtilTool.getUserType(usertype);
-        UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
-        List<UserInfo> userList = this.userManager.getList(ui,null);
-        if(userList==null||userList.size()<1){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+        //验证用户ETTUserId,得到Userid
+        Integer uid=this.getUserId(Integer.parseInt(userid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"用户未绑定\"}");
             return;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"msg\":\"用户未绑定\"}");
+            return ;
         }
         //验证当前任务，并得到论题id
         TpTaskInfo t = new TpTaskInfo();
@@ -3171,15 +3218,15 @@ public class ImInterfaceController extends TaskController {
                                 /*奖励加分通过*/
             try{
                 if(this.tpStuScoreLogsManager.awardStuScore(tList.get(0).getCourseid()
-                    , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
-                    , tList.get(0).getTaskid()
-                    , Long.parseLong(userList.get(0).getUserid() + ""), userid, type1, Integer.parseInt(schoolid))){
-                jo.put("result","1");
-                jo.put("msg","答题成功，积分宝石保存成功！");
-            }else{
-                jo.put("result","2");
-                jo.put("msg","答题成功，积分宝石保存失败！");
-            }
+                        , Long.parseLong(clsMapList.get(0).get("CLASS_ID").toString())
+                        , tList.get(0).getTaskid()
+                        , Long.parseLong(userList.get(0).getUserid() + ""), userid, type1, Integer.parseInt(schoolid))){
+                    jo.put("result","1");
+                    jo.put("msg","答题成功，积分宝石保存成功！");
+                }else{
+                    jo.put("result","2");
+                    jo.put("msg","答题成功，积分宝石保存失败！");
+                }
             }catch (Exception e){
                 jo.put("result","2");
                 jo.put("msg","答题成功，积分宝石保存失败！");
@@ -3235,13 +3282,19 @@ public class ImInterfaceController extends TaskController {
             return null;
         }
         int utype = ImUtilTool.getUserType(usertype);
-        UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
-        List<UserInfo> userList = this.userManager.getList(ui,null);
-        if(userList==null||userList.size()<1){
-            je.setMsg("当前用户未绑定");
+        //验证用户ETTUserId,得到Userid
+        Integer uid=this.getUserId(Integer.parseInt(userid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            je.setMsg("错误，当前用户未绑定!");
             response.getWriter().print(je.getAlertMsgAndBack());
-            System.out.println("当前接口"+"------------"+"toTopicJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------当前用户未绑定      当前时间------"+currentDay);
+            return null;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            je.setMsg("错误，当前用户未绑定!");
+            response.getWriter().print(je.getAlertMsgAndBack());
             return null;
         }
         //验证当前任务，并得到论题id
@@ -3318,7 +3371,6 @@ public class ImInterfaceController extends TaskController {
 //                            }
 //                        }
 //                    }
-//                }
 //                }
 //            }
             JSONArray jr = ImUtilTool.getEttPhoneAndRealNmae(jidstr,schoolid,userid,usertype);
@@ -3410,12 +3462,19 @@ public class ImInterfaceController extends TaskController {
         }
 
         //验证用户ETTUserId,得到Userid
-        UserInfo validateUid=new UserInfo();
-        validateUid.setEttuserid(Integer.parseInt(jid.trim()));
-        List<UserInfo> userList=this.userManager.getList(validateUid,null);
-        if(userList==null||userList.size()<1||userList.get(0)==null||userList.get(0).getUserid()==null){
-            returnJo.put("msg","当前云帐号未绑定!");
-            response.getWriter().println(returnJo.toString());return;
+        Integer uid=this.getUserId(Integer.parseInt(jid),null,Integer.parseInt(classId));
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return ;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
         }
         Integer userid=userList.get(0).getUserid();
 
@@ -3425,7 +3484,7 @@ public class ImInterfaceController extends TaskController {
         tpRecordInfo.setCourseId(Long.parseLong(courseId.trim()));
 
         tpRecordInfo.setDcSchoolId(Long.parseLong(schoolId.trim()));
-                 //查询是否已经存在
+        //查询是否已经存在
 //        List<TpRecordInfo> tpRecordInfoList=this.tpRecordManager.getList(tpRecordInfo,null);
 //        if(tpRecordInfoList!=null&&tpRecordInfoList.size()>0){
 //            returnJo.put("msg","添加失败!已经存在该信息!");
@@ -3502,12 +3561,19 @@ public class ImInterfaceController extends TaskController {
         }
         //验证该jid是否已经绑定
         //验证用户ETTUserId,得到Userid
-        UserInfo validateUid=new UserInfo();
-        validateUid.setEttuserid(Integer.parseInt(jid.trim()));
-        List<UserInfo> userList=this.userManager.getList(validateUid,null);
-        if(userList==null||userList.size()<1||userList.get(0)==null||userList.get(0).getUserid()==null){
-            returnJo.put("msg","当前云帐号未绑定!");
-            response.getWriter().println(returnJo.toString());return;
+        Integer uid=this.getUserId(Integer.parseInt(jid),null,Integer.parseInt(classId));
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return ;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
         }
         Integer userid=userList.get(0).getUserid();
         //验证是否存在该记录
@@ -3585,12 +3651,19 @@ public class ImInterfaceController extends TaskController {
         }
         //验证该jid是否已经绑定
         //验证用户ETTUserId,得到Userid
-        UserInfo validateUid=new UserInfo();
-        validateUid.setEttuserid(Integer.parseInt(jid.trim()));
-        List<UserInfo> userList=this.userManager.getList(validateUid,null);
-        if(userList==null||userList.size()<1||userList.get(0)==null||userList.get(0).getUserid()==null){
-            returnJo.put("msg","当前云帐号未绑定!");
-            response.getWriter().println(returnJo.toString());return;
+        Integer uid=this.getUserId(Integer.parseInt(jid),null,Integer.parseInt(classId));
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return ;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg", "错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
         }
         Integer userid=userList.get(0).getUserid();
         //查询数据
@@ -3668,36 +3741,36 @@ public class ImInterfaceController extends TaskController {
 
         boolean isendTask=false;
         List<TpTaskInfo> taskList=null;
-            PageResult pr=new PageResult();
-            pr.setPageSize(1);
+        PageResult pr=new PageResult();
+        pr.setPageSize(1);
 
-            TpTaskInfo tk=new TpTaskInfo();
-            tk.setTaskid(Long.parseLong(taskid));
-            List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,pr);
-            if(tkList==null||tkList.size()<1){
+        TpTaskInfo tk=new TpTaskInfo();
+        tk.setTaskid(Long.parseLong(taskid));
+        List<TpTaskInfo> tkList=this.tpTaskManager.getList(tk,pr);
+        if(tkList==null||tkList.size()<1){
+            jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+            response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+        }
+        if(userType!=null&&Integer.parseInt(userType)!=2){
+            TpTaskInfo t=new TpTaskInfo();
+            t.setUserid(uid);
+            t.setTaskid(Long.parseLong(taskid));
+            t.setCourseid(tkList.get(0).getCourseid());
+            pr.setPageSize(1);
+            // 学生任务
+            taskList=this.tpTaskManager.getUnionListbyStu(t, pr);
+            if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
                 jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
                 response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
             }
-            if(userType!=null&&Integer.parseInt(userType)!=2){
-                TpTaskInfo t=new TpTaskInfo();
-                t.setUserid(uid);
-                t.setTaskid(Long.parseLong(taskid));
-                t.setCourseid(tkList.get(0).getCourseid());
-                pr.setPageSize(1);
-                // 学生任务
-                taskList=this.tpTaskManager.getUnionListbyStu(t, pr);
-                if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
-                    jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                    response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
-                }
-                if(taskList.get(0).getTaskstatus().equals("3")){
-                    isendTask=true;
-                }
-                if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
-                    jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
-                    response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
-                }
+            if(taskList.get(0).getTaskstatus().equals("3")){
+                isendTask=true;
             }
+            if(taskList==null||taskList.size()<1||taskList.get(0).getBtime()==null||taskList.get(0).getEtime()==null){
+                jsonEntity.setMsg(UtilTool.msgproperty.getProperty("ERR_NO_DATE"));
+                response.getWriter().println(jsonEntity.getAlertMsgAndCloseWin());return null;
+            }
+        }
 
 
 
@@ -3771,7 +3844,7 @@ public class ImInterfaceController extends TaskController {
         //得到年有题的分数
         mp.put("userType",userType);
         mp.put("classid",classid);
-       // mp.put("allquesidObj",allquesidObj);
+        // mp.put("allquesidObj",allquesidObj);
         mp.put("paperObj",paperList.get(0));
         mp.put("taskid",taskid);
         mp.put("courseid",tk.getCourseid());
@@ -3834,12 +3907,19 @@ public class ImInterfaceController extends TaskController {
         }
         //验证该jid是否已经绑定
         //验证用户ETTUserId,得到Userid
-        UserInfo validateUid=new UserInfo();
-        validateUid.setEttuserid(Integer.parseInt(jid.trim()));
-        List<UserInfo> userList=this.userManager.getList(validateUid,null);
-        if(userList==null||userList.size()<1||userList.get(0)==null||userList.get(0).getUserid()==null){
-            jsonEntity.setMsg("当前云帐号未绑定!");
-            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+        Integer uid=this.getUserId(Integer.parseInt(jid),Long.parseLong(taskid),null);
+        if(uid==null||uid==0){
+            jsonEntity.setMsg("错误，当前用户未绑定!");
+            response.getWriter().print(jsonEntity.toString());
+            return null;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            jsonEntity.setMsg("错误，当前用户未绑定!");
+            response.getWriter().print(jsonEntity.toString());
+            return null;
         }
         Integer userid=userList.get(0).getUserid();
         //得到任务信息
@@ -3939,7 +4019,7 @@ public class ImInterfaceController extends TaskController {
             response.sendRedirect(directBuilder.toString());
 //            jsonEntity.setMsg("当前任务未开始或不存在!");
 //            response.getWriter().println(jsonEntity.getAlertMsgAndBack());
-             return null;
+            return null;
         }
 
 
@@ -3978,7 +4058,7 @@ public class ImInterfaceController extends TaskController {
                     if(qid!=null&&qid.trim().length()>0){
                         String tmpid=qid;
                         if(tmpid.trim().indexOf("|")!=-1){
-                               String[] tArray=tmpid.trim().split("\\|");
+                            String[] tArray=tmpid.trim().split("\\|");
                             if(tArray.length>1){
                                 tmpid=tArray[1];
                             }
@@ -4076,15 +4156,29 @@ public class ImInterfaceController extends TaskController {
 
         System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------验证用户通过      当前时间------"+currentDay);
         int utype = ImUtilTool.getUserType(usertype);
-        UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
-        List<UserInfo> userList = this.userManager.getList(ui,null);
-        if(userList==null||userList.size()<1){
-            je.setMsg("当前用户未绑定");
-            response.getWriter().print(je.getAlertMsgAndBack());
-            System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------当前用户未绑定      当前时间------"+currentDay);
+        Integer uid=this.getUserId(Integer.parseInt(userid),Long.parseLong(taskId),null);
+        if(uid==null||uid==0){
+            je.setMsg("错误，当前用户未绑定!");
+            response.getWriter().print(je.toString());
             return null;
         }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            je.setMsg("错误，当前用户未绑定!");
+            response.getWriter().print(je.toString());
+            return null;
+        }
+//        UserInfo ui = new UserInfo();
+//        ui.setEttuserid(Integer.parseInt(userid));
+//        List<UserInfo> userList = this.userManager.getList(ui,null);
+//        if(userList==null||userList.size()<1){
+//            je.setMsg("当前用户未绑定");
+//            response.getWriter().print(je.getAlertMsgAndBack());
+//            System.out.println("当前接口"+"------------"+"toRemoteResourceJsp"+"         当前用户id"+"------------"+userid+"     当前位置------------当前用户未绑定      当前时间------"+currentDay);
+//            return null;
+//        }
         //验证当前任务，并得到远程资源id
         TpTaskInfo task = new TpTaskInfo();
         task.setTaskid(Long.parseLong(taskId));
@@ -4189,10 +4283,12 @@ public class ImInterfaceController extends TaskController {
                         for(int i = 0;i<jr.size();i++){
                             JSONObject jo = jr.getJSONObject(i);
                             for(int j = 0;j<returnUserRecord.size();j++){
-                                returnUserMap = new HashMap();
-                                if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
-                                    returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
-                                    returnUserRecord.get(j).put("uName", jo.getString("realName"));
+//                                returnUserMap = new HashMap();
+                                if(returnUserRecord.get(j).containsKey("jid")&&returnUserRecord.get(j).get("jid").toString().trim().length()>0){
+                                    if(jo.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                        returnUserRecord.get(j).put("uPhoto", jo.getString("headUrl"));
+                                        returnUserRecord.get(j).put("uName", jo.getString("realName"));
+                                    }
                                 }
                             }
                         }
@@ -4302,10 +4398,11 @@ public class ImInterfaceController extends TaskController {
                             for(int i = 0;i<jr.size();i++){
                                 JSONObject jObject = jr.getJSONObject(i);
                                 for(int j = 0;j<returnUserRecord.size();j++){
-                                    returnUserMap = new HashMap();
-                                    if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
-                                        returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
-                                        returnUserRecord.get(j).put("uName", jObject.getString("realName"));
+                                    if(returnUserRecord.get(j).containsKey("jid")&&returnUserRecord.get(j).get("jid").toString().trim().length()>0){
+                                        if(jObject.getInt("jid")==Integer.parseInt(returnUserRecord.get(j).get("jid").toString())){
+                                            returnUserRecord.get(j).put("uPhoto", jObject.getString("headUrl"));
+                                            returnUserRecord.get(j).put("uName", jObject.getString("realName"));
+                                        }
                                     }
                                 }
                             }
@@ -4448,15 +4545,29 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
-        UserInfo u=new UserInfo();
-        u.setEttuserid(Integer.parseInt(jid));
-        u.setDcschoolid(Integer.parseInt(schoolId));
-        List<UserInfo>userList=this.userManager.getList(u,null);
-        if(userList==null||userList.size()<1){
-            returnJo.put("msg","当前云帐号未绑定!");
+        Integer uid=this.getUserId(Integer.parseInt(jid),Long.parseLong(taskId),null);
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
             response.getWriter().print(returnJo.toString());
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+//        UserInfo u=new UserInfo();
+//        u.setEttuserid(Integer.parseInt(jid));
+//        u.setDcschoolid(Integer.parseInt(schoolId));
+//        List<UserInfo>userList=this.userManager.getList(u,null);
+//        if(userList==null||userList.size()<1){
+//            returnJo.put("msg","当前云帐号未绑定!");
+//            response.getWriter().print(returnJo.toString());
+//            return;
+//        }
         UserInfo tmpUser=userList.get(0);
 
         List<Map<String,Object>> returnMapList=new ArrayList<Map<String, Object>>();
@@ -4614,7 +4725,7 @@ public class ImInterfaceController extends TaskController {
                 //去掉试题组
                 if(paperQuestion.getQuestiontype()!=6)
                     returnMapList.add(map);
-               // map.put("isQesTeam",paperQuestion.getQuestiontype()==6?1:0); //6：试题组
+                // map.put("isQesTeam",paperQuestion.getQuestiontype()==6?1:0); //6：试题组
                 if(paperQuestion.getQuestionTeam()!=null&&paperQuestion.getQuestionTeam().size()>0){
                     List<Map<String,Object>> childMapList=new ArrayList<Map<String, Object>>();
                    /*
@@ -4755,15 +4866,29 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
-        UserInfo u=new UserInfo();
-        u.setEttuserid(Integer.parseInt(jid));
-        u.setDcschoolid(Integer.parseInt(schoolId));
-        List<UserInfo>userList=this.userManager.getList(u,null);
-        if(userList==null||userList.size()<1){
-            returnJo.put("msg","当前云帐号未绑定!");
+        Integer uid=this.getUserId(Integer.parseInt(jid),null,Integer.parseInt(classId));
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
             response.getWriter().print(returnJo.toString());
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+//        UserInfo u=new UserInfo();
+//        u.setEttuserid(Integer.parseInt(jid));
+//        u.setDcschoolid(Integer.parseInt(schoolId));
+//        List<UserInfo>userList=this.userManager.getList(u,null);
+//        if(userList==null||userList.size()<1){
+//            returnJo.put("msg","当前云帐号未绑定!");
+//            response.getWriter().print(returnJo.toString());
+//            return;
+//        }
         UserInfo currentUser=userList.get(0);
         List<Map<String,Object>>tmpRankList=new ArrayList<Map<String, Object>>();
         List<Map<String,Object>>subjectList=new ArrayList<Map<String, Object>>();
@@ -4953,15 +5078,29 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
-        UserInfo u=new UserInfo();
-        u.setEttuserid(Integer.parseInt(jid));
-        u.setDcschoolid(Integer.parseInt(schoolId));
-        List<UserInfo>userList=this.userManager.getList(u,null);
-        if(userList==null||userList.size()<1){
-            returnJo.put("msg","当前云帐号未绑定!");
+        Integer uid=this.getUserId(Integer.parseInt(jid),Long.parseLong(taskId),null);
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
             response.getWriter().print(returnJo.toString());
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+//        UserInfo u=new UserInfo();
+//        u.setEttuserid(Integer.parseInt(jid));
+//        u.setDcschoolid(Integer.parseInt(schoolId));
+//        List<UserInfo>userList=this.userManager.getList(u,null);
+//        if(userList==null||userList.size()<1){
+//            returnJo.put("msg","当前云帐号未绑定!");
+//            response.getWriter().print(returnJo.toString());
+//            return;
+//        }
         UserInfo tmpUser=userList.get(0);
         //验证任务 是否存在
         TpTaskInfo tk=new TpTaskInfo();
@@ -5067,15 +5206,29 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
-        UserInfo u=new UserInfo();
-        u.setEttuserid(Integer.parseInt(jid));
-        u.setDcschoolid(Integer.parseInt(schoolId));
-        List<UserInfo>userList=this.userManager.getList(u,null);
-        if(userList==null||userList.size()<1){
-            returnJo.put("msg","当前云帐号未绑定!");
+        Integer uid=this.getUserId(Integer.parseInt(jid), Long.parseLong(taskId), null);
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
             response.getWriter().print(returnJo.toString());
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+//        UserInfo u=new UserInfo();
+//        u.setEttuserid(Integer.parseInt(jid));
+//        u.setDcschoolid(Integer.parseInt(schoolId));
+//        List<UserInfo>userList=this.userManager.getList(u,null);
+//        if(userList==null||userList.size()<1){
+//            returnJo.put("msg","当前云帐号未绑定!");
+//            response.getWriter().print(returnJo.toString());
+//            return;
+//        }
         UserInfo tmpUser=userList.get(0);
         //验证任务 是否存在
         TpTaskInfo tk=new TpTaskInfo();
@@ -5182,15 +5335,29 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
-        UserInfo u=new UserInfo();
-        u.setEttuserid(Integer.parseInt(jid));
-        u.setDcschoolid(Integer.parseInt(schoolId));
-        List<UserInfo>userList=this.userManager.getList(u,null);
-        if(userList==null||userList.size()<1){
-            returnJo.put("msg","当前云帐号未绑定!");
+        Integer uid=this.getUserId(Integer.parseInt(jid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
             response.getWriter().print(returnJo.toString());
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+//        UserInfo u=new UserInfo();
+//        u.setEttuserid(Integer.parseInt(jid));
+//        u.setDcschoolid(Integer.parseInt(schoolId));
+//        List<UserInfo>userList=this.userManager.getList(u,null);
+//        if(userList==null||userList.size()<1){
+//            returnJo.put("msg","当前云帐号未绑定!");
+//            response.getWriter().print(returnJo.toString());
+//            return;
+//        }
         UserInfo tmpUser=userList.get(0);
         //验证任务 是否存在
         TpTaskInfo tk=new TpTaskInfo();
@@ -5206,7 +5373,7 @@ public class ImInterfaceController extends TaskController {
         int utype = ImUtilTool.getUserType(usertype);
         List<Map<String,Object>> stuList = null;
         if(utype==2){
-             stuList = this.imInterfaceManager.getUnCompleteStu(Long.parseLong(taskId),1,Integer.parseInt(classid),null);
+            stuList = this.imInterfaceManager.getUnCompleteStu(Long.parseLong(taskId),1,Integer.parseInt(classid),null);
         }else{
             stuList = this.imInterfaceManager.getUnCompleteStu(Long.parseLong(taskId),1,Integer.parseInt(classid),userList.get(0).getUserid());
         }
@@ -5327,15 +5494,31 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
-        UserInfo u=new UserInfo();
-        u.setEttuserid(Integer.parseInt(jid));
-        u.setDcschoolid(Integer.parseInt(schoolId));
-        List<UserInfo>userList=this.userManager.getList(u,null);
-        if(userList==null||userList.size()<1){
-            returnJo.put("msg","当前云帐号未绑定!");
+
+        Integer uid=this.getUserId(Integer.parseInt(jid),Long.parseLong(taskId),null);
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
             response.getWriter().print(returnJo.toString());
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+//
+//        UserInfo u=new UserInfo();
+//        u.setEttuserid(Integer.parseInt(jid));
+//        u.setDcschoolid(Integer.parseInt(schoolId));
+//        List<UserInfo>userList=this.userManager.getList(u,null);
+//        if(userList==null||userList.size()<1){
+//            returnJo.put("msg","当前云帐号未绑定!");
+//            response.getWriter().print(returnJo.toString());
+//            return;
+//        }
         UserInfo tmpUser=userList.get(0);
         //验证任务 是否存在
         TpTaskInfo tk=new TpTaskInfo();
@@ -5499,13 +5682,30 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
-        UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
-        List<UserInfo> userList = this.userManager.getList(ui, null);
-        if(userList==null||userList.size()<1){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+        Integer uid=this.getUserId(Integer.parseInt(userid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
             return;
         }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+
+
+
+//        UserInfo ui = new UserInfo();
+//        ui.setEttuserid(Integer.parseInt(userid));
+//        List<UserInfo> userList = this.userManager.getList(ui, null);
+//        if(userList==null||userList.size()<1){
+//            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+//            return;
+//        }
 
         //验证任务 是否存在
         TpTaskInfo tk=new TpTaskInfo();
@@ -5558,7 +5758,7 @@ public class ImInterfaceController extends TaskController {
                 }
             }
             if(days>0){
-               returnMap.put("leftTime", days + "天");
+                returnMap.put("leftTime", days + "天");
             }else{
                 if(hours>0){
                     returnMap.put("leftTime", hours + "小时");
@@ -5810,26 +6010,22 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
+
+        Integer uid=this.getUserId(Integer.parseInt(userid),Long.parseLong(taskid),null);
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
         UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
+        ui.setUserid(uid);
         List<UserInfo> userList = this.userManager.getList(ui, null);
         if(userList==null||userList.size()<1){
             returnJo.put("msg","错误，当前用户未绑定!");
             response.getWriter().print(returnJo.toString());
             return;
         }
-        //验证任务 是否存在
-        TpTaskInfo tk=new TpTaskInfo();
-        tk.setTaskid(Long.parseLong(taskid));
-        tk.setTasktype(10);
-        PageResult presult=new PageResult();
-        presult.setPageSize(1);
-        List<TpTaskInfo> tpTaskList=this.tpTaskManager.getList(tk,presult);
-        if(tpTaskList==null||tpTaskList.size()<1){
-            returnJo.put("msg","错误，当前任务不存在!");
-            response.getWriter().print(returnJo.toString());
-            return;
-        }
+
         //验证专题
         TpCourseInfo tc = new TpCourseInfo();
         tc.setCourseid(Long.parseLong(courseid));
@@ -5839,10 +6035,75 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
+
+
+        RoleUser ru=new RoleUser();
+        ru.setUserid(userList.get(0).getRef());
+        List<RoleUser>ruList=this.roleUserManager.getList(ru,null);
+        if(ruList==null||ruList.size()<1){
+            returnJo.put("msg","错误，当前用户没有角色!");
+            response.getWriter().print(returnJo.toString());
+            return;
+        }
+        boolean isStu=false;
+        for(RoleUser r:ruList){
+            if(r.getRoleid().toString().equals(UtilTool._ROLE_STU_ID)){
+                isStu=true;
+                break;
+            }
+        }
+        if(isStu){
+            TpTaskInfo stuTask=new TpTaskInfo();
+            stuTask.setTaskid(Long.parseLong(taskid));
+            stuTask.setUserid(userList.get(0).getUserid());
+            stuTask.setCourseid(Long.parseLong(courseid));
+            stuTask.setTasktype(10);
+            List<TpTaskInfo>stuTaskList=this.tpTaskManager.getListbyStu(stuTask,null);
+            if(stuTaskList==null||stuTaskList.size()<1){
+                returnJo.put("msg","错误，当前任务不存在!");
+                response.getWriter().print(returnJo.toString());
+                return;
+            }else{
+                TpTaskInfo tmpTask=stuTaskList.get(0);
+                if(tmpTask.getEtime()!=null&&
+                        new Date().getTime()>UtilTool.StringConvertToDate(tmpTask.getEtime().toString()).getTime()){
+                    returnJo.put("msg","当前任务已结束!");
+                    response.getWriter().print(returnJo.toString());
+                    return;
+                }
+            }
+        }else {
+            //验证任务 是否存在
+            TpTaskInfo tk=new TpTaskInfo();
+            tk.setTaskid(Long.parseLong(taskid));
+            tk.setTasktype(10);
+            tk.setCourseid(Long.parseLong(courseid));
+            tk.setLoginuserid(userList.get(0).getUserid());
+            PageResult presult=new PageResult();
+            presult.setPageSize(1);
+            List<TpTaskInfo> tpTaskList=this.tpTaskManager.getTaskReleaseList(tk, presult);
+            if(tpTaskList==null||tpTaskList.size()<1){
+                returnJo.put("msg","错误，当前任务不存在!");
+                response.getWriter().print(returnJo.toString());
+                return;
+            }else{
+                TpTaskInfo tmpTask=tpTaskList.get(0);
+                if(tmpTask.getEtime()!=null&&
+                        new Date().getTime()>UtilTool.StringConvertToDate(tmpTask.getEtime().toString()).getTime()){
+                    returnJo.put("msg","当前任务已结束!");
+                    response.getWriter().print(returnJo.toString());
+                    return;
+                }
+            }
+        }
+
+
+
+
         String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
         HashMap<String,String> signMap = new HashMap();
         signMap.put("courseName",tcList.get(0).getCoursename());
-        signMap.put("courseId",tpTaskList.get(0).getTaskid().toString().replace("-",""));
+        signMap.put("courseId",taskid.toString().replace("-",""));
         signMap.put("userId",userList.get(0).getUserid()+"");
         signMap.put("userName",userList.get(0).getRealname()!=null?userList.get(0).getRealname():userList.get(0).getUsername());
         signMap.put("rec","3");
@@ -5866,6 +6127,22 @@ public class ImInterfaceController extends TaskController {
         response.getWriter().print(returnJo.toString());
     }
 
+    /**
+     * 得到用户ID
+     * @param jid
+     * @param classId
+     * @param taskId
+     * @return
+     */
+    private Integer getUserId(Integer jid,Long taskId,Integer classId){
+        Integer returnUid=0;
+        if(jid!=null){
+            Integer uid=this.userManager.getUserId(jid,taskId,classId);
+            if(uid!=null)
+                returnUid=uid;
+        }
+        return returnUid;
+    }
 
 }
 
@@ -5944,7 +6221,7 @@ class ImUtilTool{
         return type;
     }
 
-    public static JSONArray getEttPhoneAndRealNmae(String jidstr,String schoolid,String userid,String usertype) throws UnsupportedEncodingException {
+    public static JSONArray getEttPhoneAndRealNmae(String jidstr,String schoolid,String userid,String userType) throws UnsupportedEncodingException {
         String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
         System.out.println("ettip------------------------------"+ettip);
         String url=ettip+"queryPhotoAndRealName.do";
@@ -5953,7 +6230,14 @@ class ImUtilTool{
         signMap.put("userList",jidstr);
         signMap.put("schoolId",schoolid);
         signMap.put("srcJid",userid);
-        signMap.put("userType",((usertype==null||usertype.length()<1)?"3":usertype));
+
+        if(userType.trim().equals("1"))
+            userType="2";
+        else if(userType.trim().equals("4")||userType.trim().equals("6"))
+            userType="3";
+
+
+        signMap.put("userType",((userType==null||userType.length()<1)?"3":userType));
         signMap.put("timestamp",""+System.currentTimeMillis());
         String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");
         signMap.put("sign",signture);

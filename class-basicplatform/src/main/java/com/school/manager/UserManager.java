@@ -1,29 +1,20 @@
 package com.school.manager;
 
-import java.util.List;
-import java.util.Map;
-
-import com.school.entity.teachpaltform.TpTaskInfo;
-import com.school.entity.userlog.UserDynamicPcLog;
-import com.school.manager.inter.teachpaltform.ITpTaskManager;
-import com.school.manager.inter.userlog.IUserDynamicPCManager;
-import jxl.Sheet;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.school.dao.base.ICommonDAO;
 import com.school.dao.inter.IUserDAO;
 import com.school.entity.RoleUser;
 import com.school.entity.UserInfo;
 import com.school.manager.base.BaseManager;
-import com.school.manager.inter.IOperateExcelManager;
 import com.school.manager.inter.IUserManager;
+import com.school.manager.inter.userlog.IUserDynamicPCManager;
 import com.school.util.PageResult;
-import org.springframework.transaction.annotation.Transactional;
+import jxl.Sheet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Service
 
@@ -152,5 +143,11 @@ public class UserManager extends BaseManager<UserInfo> implements IUserManager{
 
     public List<Map<String,Object>> getCourseTaskCount(Integer userid){
         return this.userdao.getCourseTaskCount(userid);
+    }
+
+
+    @Override
+    public Integer getUserId(Integer jid, Long taskId, Integer classId) {
+        return this.userdao.getUserId(jid,taskId,classId);
     }
 }

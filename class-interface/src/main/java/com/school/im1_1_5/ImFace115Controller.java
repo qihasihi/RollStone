@@ -12,7 +12,6 @@ import com.school.entity.teachpaltform.paper.StuPaperLogs;
 import com.school.entity.teachpaltform.paper.StuPaperQuesLogs;
 import com.school.entity.teachpaltform.paper.StuViewMicVideoLog;
 import com.school.im1_1.entity._interface.ImInterfaceInfo;
-import com.school.im1_1.manager._interface.ImInterfaceManager;
 import com.school.im1_1.manager.inter._interface.IImInterfaceManager;
 import com.school.manager.inter.*;
 import com.school.manager.inter.teachpaltform.*;
@@ -36,7 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -132,11 +130,16 @@ public class ImFace115Controller extends BaseController {
             return;
         }
         int utype = ImFace115Util.getUserType(usertype);
+        Integer uid=this.getUserId(Integer.parseInt(userid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
+        }
         UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
-        List<UserInfo> userList = this.userManager.getList(ui,null);
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
         if(userList==null||userList.size()<1){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
             return;
         }
         Integer schoolId=this.getDcSchoolIdByClassId(Integer.parseInt(classid));
@@ -315,11 +318,16 @@ public class ImFace115Controller extends BaseController {
             return;
         }
         int utype = ImFace115Util.getUserType(usertype);
+        Integer uid=this.getUserId(Integer.parseInt(userid),null,Integer.parseInt(classid));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
+        }
         UserInfo ui = new UserInfo();
-        ui.setEttuserid(Integer.parseInt(userid));
+        ui.setUserid(uid);
         List<UserInfo> userList = this.userManager.getList(ui, null);
         if(userList==null||userList.size()<1){
-            response.getWriter().print("{\"result\":\"0\",\"msg\":\"当前用户未绑定，请联系管理员\"}");
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
             return;
         }
         Integer schoolId=this.getDcSchoolIdByClassId(Integer.parseInt(classid));
@@ -460,7 +468,7 @@ public class ImFace115Controller extends BaseController {
         HashMap<String,String> paramMap=ImFace115Util.getRequestParam(request);
         //获取参数
         String jid=paramMap.get("jid");
-       // String schoolId=paramMap.get("schoolId");
+        // String schoolId=paramMap.get("schoolId");
         String classId=paramMap.get("classId");
         String courseId=paramMap.get("courseId");
         String content=paramMap.get("attachDescribe");
@@ -494,12 +502,17 @@ public class ImFace115Controller extends BaseController {
         }
 
         //验证用户ETTUserId,得到Userid
-        UserInfo validateUid=new UserInfo();
-        validateUid.setEttuserid(Integer.parseInt(jid.trim()));
-        List<UserInfo> userList=this.userManager.getList(validateUid,null);
-        if(userList==null||userList.size()<1||userList.get(0)==null||userList.get(0).getUserid()==null){
-            returnJo.put("msg","当前云帐号未绑定!");
-            response.getWriter().println(returnJo.toString());return;
+        Integer uid=this.getUserId(Integer.parseInt(jid),null,Integer.parseInt(classId));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
         }
         Integer dcschoolId=this.getDcSchoolIdByClassId(Integer.parseInt(classId.trim()));
 
@@ -559,7 +572,7 @@ public class ImFace115Controller extends BaseController {
         HashMap<String,String> paramMap=ImFace115Util.getRequestParam(request);
         //获取参数
         String jid=paramMap.get("jid");
-       // String schoolId=paramMap.get("schoolId");
+        // String schoolId=paramMap.get("schoolId");
         String classId=paramMap.get("classId");
         String userType=paramMap.get("userType");
         String courseId=paramMap.get("courseId");
@@ -590,12 +603,18 @@ public class ImFace115Controller extends BaseController {
         }
         //验证该jid是否已经绑定
         //验证用户ETTUserId,得到Userid
-        UserInfo validateUid=new UserInfo();
-        validateUid.setEttuserid(Integer.parseInt(jid.trim()));
-        List<UserInfo> userList=this.userManager.getList(validateUid,null);
-        if(userList==null||userList.size()<1||userList.get(0)==null||userList.get(0).getUserid()==null){
-            returnJo.put("msg","当前云帐号未绑定!");
-            response.getWriter().println(returnJo.toString());return;
+        //验证用户ETTUserId,得到Userid
+        Integer uid=this.getUserId(Integer.parseInt(jid),null,Integer.parseInt(classId));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
         }
         Integer userid=userList.get(0).getUserid();
         //查询数据
@@ -603,7 +622,7 @@ public class ImFace115Controller extends BaseController {
         //entity.setUserId(Long.parseLong(userid.toString()));
         Integer dcSchoolId=this.getDcSchoolIdByClassId(Integer.parseInt(classId.trim()));
         if(dcSchoolId!=null)
-          entity.setDcSchoolId(Long.parseLong(dcSchoolId+""));
+            entity.setDcSchoolId(Long.parseLong(dcSchoolId+""));
         entity.setClassId(Long.parseLong(classId.trim()));
         entity.setCourseId(Long.parseLong(courseId.trim()));
         List<TpRecordInfo> recordList=this.tpRecordManager.getList(entity,null);
@@ -808,7 +827,7 @@ public class ImFace115Controller extends BaseController {
         HashMap<String,String> paramMap=ImFace115Util.getRequestParam(request);
         String jid=paramMap.get("jid");
         String taskid=paramMap.get("taskId");
-       // String schoolid=paramMap.get("schoolId");
+        // String schoolid=paramMap.get("schoolId");
         String clsid=paramMap.get("classId");
         String paperid=paramMap.get("paperId");
         String userType=paramMap.get("userType");
@@ -843,12 +862,20 @@ public class ImFace115Controller extends BaseController {
         }
         //验证该jid是否已经绑定
         //验证用户ETTUserId,得到Userid
-        UserInfo validateUid=new UserInfo();
-        validateUid.setEttuserid(Integer.parseInt(jid.trim()));
-        List<UserInfo> userList=this.userManager.getList(validateUid,null);
-        if(userList==null||userList.size()<1||userList.get(0)==null||userList.get(0).getUserid()==null){
-            jsonEntity.setMsg("当前云帐号未绑定!");
-            response.getWriter().println(jsonEntity.getAlertMsgAndBack());return null;
+        //验证用户ETTUserId,得到Userid
+        Integer uid=this.getUserId(Integer.parseInt(jid),null,Integer.parseInt(clsid));
+        if(uid==null||uid==0){
+            jsonEntity.setMsg("错误，当前用户未绑定!!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndBack());
+            return null;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            jsonEntity.setMsg("错误，当前用户未绑定!!");
+            response.getWriter().print(jsonEntity.getAlertMsgAndBack());
+            return null;
         }
         Integer userid=userList.get(0).getUserid();
         //得到任务信息
@@ -1062,7 +1089,7 @@ public class ImFace115Controller extends BaseController {
         String taskId=paramMap.get("taskId");
         String jid=paramMap.get("jid");
         String classId=paramMap.get("classId");
-       // String schoolId=paramMap.get("schoolId");
+        // String schoolId=paramMap.get("schoolId");
         String time=paramMap.get("time");
         String sign=paramMap.get("sign");
         if(taskId==null||/*schoolId==null||*/time==null||sign==null||jid==null||classId==null){
@@ -1089,14 +1116,20 @@ public class ImFace115Controller extends BaseController {
             return;
         }
         Integer schoolId=this.getDcSchoolIdByClassId(Integer.parseInt(classId));
-        UserInfo u=new UserInfo();
-        u.setEttuserid(Integer.parseInt(jid));
-        u.setDcschoolid(schoolId);
-        List<UserInfo>userList=this.userManager.getList(u,null);
-        if(userList==null||userList.size()<1){
-            returnJo.put("msg","当前云帐号未绑定!");
+        //验证用户ETTUserId,得到Userid
+        Integer uid=this.getUserId(Integer.parseInt(jid),null,Integer.parseInt(classId));
+        if(uid==null||uid==0){
+            returnJo.put("msg","错误，当前用户未绑定!!");
             response.getWriter().print(returnJo.toString());
-            return;
+            return ;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
+        if(userList==null||userList.size()<1){
+            returnJo.put("msg","错误，当前用户未绑定!!");
+            response.getWriter().print(returnJo.toString());
+            return ;
         }
         UserInfo tmpUser=userList.get(0);
         //验证任务 是否存在
@@ -1160,7 +1193,7 @@ public class ImFace115Controller extends BaseController {
      */
     @RequestMapping(params = "m=getCourseSubjectAndClass", method = RequestMethod.POST)
     public void getCourseSubjectAndClass(HttpServletRequest request,
-                            HttpServletResponse response) throws Exception {
+                                         HttpServletResponse response) throws Exception {
         JSONObject returnJo=new JSONObject();
         returnJo.put("result","0");//默认失败
         if(!ImFace115Util.ValidateRequestParam(request)){  //验证参数
@@ -1438,6 +1471,10 @@ public class ImFace115Controller extends BaseController {
                     response.getWriter().print(returnJo.toString());
                     return;
                 }
+                //如果任务开始时间小于当前时间，开始时间=当前时间
+//                if(lstime<new Date().getTime()){
+//                    lstime=new Date().getTime();
+//                }
                 if(lstime>letime){
                     returnJo.put("msg","请修改"+cList.get(0).getClassgrade()+cList.get(0).getClassname()+"--结束时间应该在开始时间之后");
                     response.getWriter().print(returnJo.toString());
@@ -1486,7 +1523,7 @@ public class ImFace115Controller extends BaseController {
      */
     @RequestMapping(params = "m=getUpdateCourse", method = RequestMethod.POST)
     public void getUpdateCourse(HttpServletRequest request,
-                                         HttpServletResponse response) throws Exception {
+                                HttpServletResponse response) throws Exception {
         JSONObject returnJo=new JSONObject();
         returnJo.put("result","0");//默认失败
         if(!ImFace115Util.ValidateRequestParam(request)){  //验证参数
@@ -1755,6 +1792,10 @@ public class ImFace115Controller extends BaseController {
                         returnJo.put("msg",cList.get(0).getClassgrade()+cList.get(0).getClassname()+"--班级结束时间不能晚于学期结束时间--"+termInfo.getSemesterenddatestring()+"，请重新选择");
                         response.getWriter().print(returnJo.toString());
                         return;
+                    }
+                    //如果任务开始时间小于当前时间，开始时间=当前时间
+                    if(lstime<new Date().getTime()){
+                        lstime=new Date().getTime();
                     }
                     if(lstime>letime){
                         returnJo.put("msg","请修改"+cList.get(0).getClassgrade()+cList.get(0).getClassname()+"--结束时间应该在开始时间之后");
@@ -2068,7 +2109,22 @@ public class ImFace115Controller extends BaseController {
         }
         return returnVal;
     }
-
+    /**
+     * 得到用户ID
+     * @param jid
+     * @param classId
+     * @param taskId
+     * @return
+     */
+    private Integer getUserId(Integer jid,Long taskId,Integer classId){
+        Integer returnUid=0;
+        if(jid!=null){
+            Integer uid=this.userManager.getUserId(jid,taskId,classId);
+            if(uid!=null)
+                returnUid=uid;
+        }
+        return returnUid;
+    }
     public static JSONObject sendPostUrl(String urlstr,Map<String,String> paramMap,String requestEncoding){
         HttpURLConnection httpConnection=null;
         URL url;
@@ -2237,6 +2293,7 @@ class ImFace115Util{
         }
         return type;
     }
+/*
 
     public static JSONArray getEttPhoneAndRealNmae(String jidstr,String schoolid,String userid) throws UnsupportedEncodingException {
         String ettip = UtilTool.utilproperty.getProperty("ETT_INTER_IP");
@@ -2266,6 +2323,7 @@ class ImFace115Util{
             return null;
         }
     }
+*/
 
     public static void main(String[] args){
         String leftime = ImFace115Util.getTaskOvertime("705780");

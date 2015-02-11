@@ -439,6 +439,11 @@
                     YSumScore+=parseInt($(this).html());
                 });
                 $("#"+this.id+" #you_sum").html(YSumScore);
+                //序号问题
+               $("#"+this.id+" table[id*='dv_qs_'] span[id*='sp_quesIdx']").each(function(qidx,qim){
+                     var objArray=$(this).html().split(".");
+                     $(this).html(objArray[0]+"("+(qidx+1)+")."+objArray[1]);
+               });
             });
             if(isshowfen||isAllMark){
                 var sumScore=0;

@@ -654,4 +654,34 @@ public class UserDAO extends CommonDAO<UserInfo> implements IUserDAO {
         List<UserInfo> userList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, UserInfo.class, objArray);
         return userList;
     }
+
+    @Override
+    public Integer getUserId(Integer jid, Long taskId, Integer classId) {
+        StringBuilder sqlbuilder = new StringBuilder(
+                "{CALL user_proc_getUserId(");
+        List<Object> objList = new ArrayList<Object>();
+        if(jid!=null){
+            sqlbuilder.append("?,");
+            objList.add(jid);
+        }else
+            sqlbuilder.append("NULL,");
+        if(taskId!=null){
+            sqlbuilder.append("?,");
+            objList.add(taskId);
+        }else
+            sqlbuilder.append("NULL,");
+        if(classId!=null){
+            sqlbuilder.append("?,");
+            objList.add(classId);
+        }else
+            sqlbuilder.append("NULL,");
+
+
+
+        sqlbuilder.append("?)}");
+        Object obj=this.executeSacle_PROC(sqlbuilder.toString(),objList.toArray());
+        if(obj!=null&&obj.toString().trim().length()>0)
+            return Integer.parseInt(obj.toString());
+        return null;
+    }
 }

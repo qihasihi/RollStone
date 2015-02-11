@@ -238,7 +238,7 @@ function preeDoPageSub(pObj){
                                           <script type="text/javascript">
                                               var qteamSize="${fn:length(pq.questionTeam)}";
                                               var tmpIdx=quesOrderIdx-qteamSize;
-                                              document.write(tmpIdx+${cidx.index});
+                                              document.write((tmpIdx+${cidx.index})+"(${cidx.index})");
                                           </script>
                                         </span>. ${c.content}</p>
                                     <table border="0" cellpadding="0" cellspacing="0">

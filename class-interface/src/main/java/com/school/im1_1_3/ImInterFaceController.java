@@ -1906,16 +1906,30 @@ public class ImInterFaceController extends BaseController {
             response.getWriter().print(jsonObj.toString());return;
         }
 
-        //获取用户
-        UserInfo user=new UserInfo();
-        user.setEttuserid(Integer.parseInt(jid));
-        user.setDcschoolid(Integer.parseInt(schoolId));
-        List<UserInfo>userList=this.userManager.getList(user,null);
+        Integer uid=this.getUserId(Integer.parseInt(jid),null,Integer.parseInt(classId));
+        if(uid==null||uid==0){
+            response.getWriter().print("{\"result\":\"0\",\"message\":\"错误，当前用户未绑定!\"}");
+            return;
+        }
+        UserInfo ui = new UserInfo();
+        ui.setUserid(uid);
+        List<UserInfo> userList = this.userManager.getList(ui, null);
         if(userList==null||userList.size()<1){
-            jsonObj.put("msg","当前用户不存在!");
+            jsonObj.put("msg", "当前用户不存在!");
             jsonObj.put("result", 0);
             response.getWriter().print(jsonObj.toString());return;
         }
+
+//        //获取用户
+//        UserInfo user=new UserInfo();
+//        user.setEttuserid(Integer.parseInt(jid));
+//        user.setDcschoolid(Integer.parseInt(schoolId));
+//        List<UserInfo>userList=this.userManager.getList(user,null);
+//        if(userList==null||userList.size()<1){
+//            jsonObj.put("msg","当前用户不存在!");
+//            jsonObj.put("result", 0);
+//            response.getWriter().print(jsonObj.toString());return;
+//        }
         MyInfoUserInfo info=new MyInfoUserInfo();
         info.setClassid(Integer.parseInt(classId));
         info.setOperateid(userList.get(0).getRef());
@@ -2279,6 +2293,22 @@ public class ImInterFaceController extends BaseController {
             }
         }
     }
+    /**
+     * 得到用户ID
+     * @param jid
+     * @param classId
+     * @param taskId
+     * @return
+     */
+    private Integer getUserId(Integer jid,Long taskId,Integer classId){
+        Integer returnUid=0;
+        if(jid!=null){
+            Integer uid=this.userManager.getUserId(jid,taskId,classId);
+            if(uid!=null)
+                returnUid=uid;
+        }
+        return returnUid;
+    }
 }
 
 /**
@@ -2366,6 +2396,10 @@ class  ImInterFaceUtil{
         signMap.put("userList",jidstr);
         signMap.put("schoolId",schoolid);
         signMap.put("srcJid",userid);
+        if(utype==1)
+            utype=2;
+        else if(utype==4||utype==6)
+            utype=3;
         signMap.put("userType",utype+"");
         signMap.put("timestamp",""+System.currentTimeMillis());
         String signture = UrlSigUtil.makeSigSimple("queryPhotoAndRealName.do",signMap,"*ETT#HONER#2014*");

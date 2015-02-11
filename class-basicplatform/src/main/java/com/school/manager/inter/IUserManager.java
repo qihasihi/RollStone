@@ -1,16 +1,12 @@
 package com.school.manager.inter;
 
-import java.util.List;
-import java.util.Map;
-
 import com.school.entity.RoleUser;
 import com.school.entity.UserInfo;
-
 import com.school.manager.base.IBaseManager;
 import com.school.util.PageResult;
-import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 
 public interface IUserManager extends IBaseManager<UserInfo> {
@@ -53,4 +49,6 @@ public interface IUserManager extends IBaseManager<UserInfo> {
     public List<Object> getUpdateEttUserByEttUserIdSql(final Integer ettUserid,StringBuilder sqlbuilder);
 
     public List<Map<String,Object>> getCourseTaskCount(Integer userid);
+
+    Integer getUserId(Integer jid, Long taskId, Integer classId);
 }
