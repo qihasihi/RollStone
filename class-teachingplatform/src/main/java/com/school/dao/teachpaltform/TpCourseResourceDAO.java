@@ -1,16 +1,14 @@
 package com.school.dao.teachpaltform;
 
+import com.school.dao.base.CommonDAO;
+import com.school.dao.inter.teachpaltform.ITpCourseResourceDAO;
+import com.school.entity.teachpaltform.TpCourseResource;
+import com.school.util.PageResult;
+import org.springframework.stereotype.Component;
+
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.school.entity.teachpaltform.TpCourseQuestion;
-import org.springframework.stereotype.Component;
-
-import com.school.dao.base.CommonDAO;
-import com.school.entity.teachpaltform.TpCourseResource;
-import com.school.dao.inter.teachpaltform.ITpCourseResourceDAO;
-import com.school.util.PageResult;
 
 @Component  
 public class TpCourseResourceDAO extends CommonDAO<TpCourseResource> implements ITpCourseResourceDAO {
@@ -138,6 +136,7 @@ public class TpCourseResourceDAO extends CommonDAO<TpCourseResource> implements 
             objList.add(tpcourseresource.getFilterresid());
         } else
             sqlbuilder.append("null,");
+
 
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){

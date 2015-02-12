@@ -1452,6 +1452,8 @@ public class ResourceController extends BaseController<ResourceInfo> {
                 ResourceInfo.class);
         resourceinfo.setDcschoolid(this.logined(request).getDcschoolid());
         resourceinfo.setResstatus(1);
+        if(resourceinfo.getRestypevalues()!=null&&resourceinfo.getRestypevalues().equals("7"))
+            resourceinfo.setRestypevalues(null);
         String timeRange = request.getParameter("timerange");
         if (timeRange != null && timeRange.trim().length() > 0) {
             if (resourceinfo == null)

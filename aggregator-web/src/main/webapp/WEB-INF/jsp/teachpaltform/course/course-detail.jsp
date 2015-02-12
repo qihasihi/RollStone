@@ -13,6 +13,7 @@
     <script type="text/javascript"  src="<%=basePath %>js/teachpaltform/resource.js"></script>　
     <script type="text/javascript">
         var courseid = "${param.courseid}";
+
         $(function () {
             //加载任务
             loadDetial(1);
@@ -43,7 +44,9 @@
 
 
 <div class="subpage_head">
-    <span class="back"><a href="javascript:window.history.go(-1)">返回</a></span>
+    <c:if test="${empty param.flag}">
+        <span class="back"><a href="javascript:window.history.go(-1)">返回</a></span>
+    </c:if>
     <span class="ico55"></span><strong>专题详情&mdash;&mdash;${courseInfo.coursename}</strong>
 </div>
 <div class="jxxt_zhuanti_hdkj_nr">

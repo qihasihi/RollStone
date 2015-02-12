@@ -2,7 +2,6 @@ package com.school.dao.resource;
 
 import com.school.dao.base.CommonDAO;
 import com.school.dao.inter.resource.IResourceDAO;
-import com.school.dao.resource.score.UserModelTotalScoreDAO;
 import com.school.entity.UserInfo;
 import com.school.entity.resource.MyInfoCloudInfo;
 import com.school.entity.resource.ResourceInfo;
@@ -961,6 +960,11 @@ public class ResourceDAO extends CommonDAO<ResourceInfo> implements IResourceDAO
         if(resourceinfo.getVoteuid()!=null){
             sqlbuilder.append("?,");
             objList.add(resourceinfo.getVoteuid());
+        } else
+            sqlbuilder.append("null,");
+        if(resourceinfo.getMaterialid()!=null){
+            sqlbuilder.append("?,");
+            objList.add(resourceinfo.getMaterialid());
         } else
             sqlbuilder.append("null,");
         if (presult != null && presult.getPageNo() > 0

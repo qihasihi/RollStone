@@ -92,6 +92,15 @@ public class ResourceInfo implements java.io.Serializable {
     private Integer isunion; //关联专题教材查询资源
     private Integer convertstatus;
     private Integer difftype;   //区分类型
+    private Integer materialid; //教材编号
+
+    public Integer getMaterialid() {
+        return materialid;
+    }
+
+    public void setMaterialid(Integer materialid) {
+        this.materialid = materialid;
+    }
 
     public Integer getDcschoolid() {
         return dcschoolid;

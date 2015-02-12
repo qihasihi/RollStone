@@ -53,7 +53,7 @@
                         else if(itm.sourceType==2||itm.sourceType==3)
                             htm += "<span class='ico17' title='共享'></span>";
                         htm+='</td>';
-                        htm+='<td><p><a href="teachercourse?m=toCourseDetial&courseid=' + itm.courseid +'&materialid='+itm.materialids+'" target="_blank">'+itm.coursename+'</a></p>';
+                        htm+='<td><p><a href="teachercourse?m=toCourseDetial&courseid=' + itm.courseid +'&materialid='+itm.materialids+'&flag=1" target="_blank">'+itm.coursename+'</a></p>';
                         htm+='<p class="font-darkgray">作者：'+(itm.schoolname==null?"北京四中网校":itm.schoolname) + "&nbsp;"+(itm.teachername==null?"":itm.teachername)+'&nbsp;&nbsp;&nbsp;&nbsp;年级：'+itm.gradevalue+'</p>';
                         htm+='<p>简介：'+(itm.introduction==null?"无":itm.introduction)+'</p>';
                         htm += "<p class='t_r'>资源：<b>"+itm.rescount+"</b> 试题：<b>"+itm.quescount+"</b>试卷：<b>"+itm.papercount+"</b>论题：<b>"+itm.topiccount+"</b>任务：<b>"+itm.taskcount+"</b>";

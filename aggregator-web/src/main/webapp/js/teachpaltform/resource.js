@@ -6,37 +6,34 @@
  * @param p
  */
 function beforeAjaxCourseList(p) {
-    var values = "";
-    var resname = "";
-    resname = $("#searchValue").val();
+    var sel_courseid=$("#hd_courseid").val();
+    var sel_grade = $("#sel_grade").val();
+    var sel_res_type = $("#sel_res_type").val();
+    var sel_material = $("#sel_material").val();
+    var txt_course = $("#txt_course").val();
+    var sel_sharetype=$("#sel_share_type").val();
+    var resname = $("#txt_course").val();
     var param = {};
-
-    if (lb.params.subjectvalues != null && lb.params.subjectvalues.Trim().length > 0) {
-        param.subjectvalues = lb.params.subjectvalues;
+    param.subjectvalues = courseSubject;
+    if(sel_grade!=null&&sel_grade.toString().length>0)
+        param.gradevalues = sel_grade;
+    if(sel_res_type!=null&&sel_res_type.toString().length>0)
+        param.restypevalues = sel_res_type;
+    if(sel_sharetype!=null&&sel_sharetype.toString().length>0){
+        param.sharestatus=sel_sharetype;    /*允许本地共享*/
+        param.sharestatusvalues = sel_sharetype;
     }
-    if (lb.params.gradevalues != null && lb.params.gradevalues.Trim().length > 0) {
-        param.gradevalues = lb.params.gradevalues;
-    }
-    if (lb.params.restypevalues != null && lb.params.restypevalues.Trim().length > 0) {
-        param.restypevalues = lb.params.restypevalues;
-    }
-    if (lb.params.filetypevalues != null && lb.params.filetypevalues.Trim().length > 0) {
-        param.filetypevalues = lb.params.filetypevalues;
-    }
-    if (lb.params.timerange != null && lb.params.timerange.Trim().length > 0) {
-        param.timerange = lb.params.timerange;
-    }
-    if(lb.params.sharestatusvalues!=null&&(lb.params.sharestatusvalues+"").length>0){
-        param.sharestatusvalues = lb.params.sharestatusvalues;
-    }
-
     if (resname.Trim().length > 0) {
         param.resname = resname.Trim();
     }
+    if(sel_courseid!=null&&sel_courseid.toString().length>0)
+        param.courseid = sel_courseid;
+    if(sel_material!=null&&sel_material.toString().length>0)
+        param.materialid = sel_material;
     /*关联教材的年级学科查询资源*/
     param.isunion=1;
-    param.sharestatus=1;    /*允许本地共享*/
     param.currentcourseid=courseid;
+
     p.setPostParams(param);
 }
 
@@ -103,6 +100,7 @@ function afterAjaxCourseList(rps) {
         html += "<td></td><p><strong>暂无数据！</strong></p>";
         html += "</tr> ";
     }
+    $("#sp_res_count").html(rps.presult.recTotal);
 
     p1.setPageSize(rps.presult.pageSize);
     p1.setPageNo(rps.presult.pageNo);
@@ -262,15 +260,20 @@ function beforeQryCourseList(p) {
     var sel_material = $("#sel_material").val();
     var sel_courselevel = $("#sel_courselevel").val();
     var txt_course = $("#txt_course").val();
+    var sel_courseid = $("#hd_courseid").val();
     var param = {
-        gradeid: sel_grade,
-        materialid: sel_material,
-        courselevel: sel_courselevel,
-        coursename: txt_course,
         subjectid: courseSubject,
         currentcourseid:courseid,
         difftype:0
     };
+    if(sel_courseid!=null&&sel_courseid.toString().length>0)
+        param.courseid=sel_courseid;
+    if(sel_grade!=null&&sel_grade.toString().length>0)
+        param.gradeid=sel_grade;
+    if(sel_material!=null&&sel_material.toString().length>0)
+        param.materialid=sel_material;
+    if(txt_course!=null&&txt_course.toString().length>0)
+        param.coursename=txt_course;
     p.setPostParams(param);
 }
 
@@ -304,6 +307,7 @@ function afterQryCourseList(rps) {
         htm += "<tr><td>暂无数据！</td></tr>";
     }
     $("#tbl_course").html(htm);
+    $("#sp_course_count").html(rps.presult.recTotal);
 
     pCourseRes.setPageSize(rps.presult.pageSize);
     pCourseRes.setPageNo(rps.presult.pageNo);
@@ -526,7 +530,7 @@ function load_material(materialid) {
             if (rps.type == "error") {
                 alert(rps.msg);
             } else {
-                var htm = '<option value="">==请选择教材版本==</option>';
+                var htm = '';//'<option value="">==请选择教材版本==</option>';
                 if (rps.objList.length) {
                     //htm+='<option value="">全部</option>';
                     $.each(rps.objList, function (idx, itm) {
@@ -535,8 +539,11 @@ function load_material(materialid) {
                     })
                 }
                 $("#sel_material").html(htm);
-                if(typeof(materialid)!='undefined'&&materialid.length>0)
+                if(typeof(materialid)!='undefined'&&materialid.length>0){
                     $("#sel_material").val(materialid);
+                }
+                if(typeof loadCourseList!='undefined')
+                    loadCourseList();
             }
         }
     });

@@ -245,6 +245,10 @@
         if(usertype==1)
             $("#tr_res_type").hide();
 
+        $("#sel_course").bind("change",function(){
+           $("#hd_courseid").val($(this).val());
+        });
+
     });
 
     var allowViewDoc=true;
@@ -290,6 +294,61 @@
         });
     }
 
+    /**
+    *切换资源类型
+    * @param obj
+     */
+    function changeResType(obj){
+        var resType=$(obj).val();
+        var materialObj=$("#sel_material");
+        var courseObj=$("#sel_course");
+        if(resType=="7"){
+            courseObj.show();
+            materialObj.show();
+            load_material();
+        }else{
+            courseObj.hide();
+            materialObj.hide();
+        }
+    }
+    /**
+    *获取知识点
+     */
+    function loadCourseList(){
+        var sel_grade = $("#sel_grade").val();
+        var sel_material = $("#sel_material").val();
+        var sel_courselevel = $("#sel_courselevel").val();
+        var txt_course = $("#txt_course").val();
+        var param = {
+            gradeid: sel_grade,
+            materialid: sel_material,
+            courselevel: sel_courselevel,
+            coursename: txt_course,
+            subjectid: courseSubject,
+            currentcourseid:courseid,
+            difftype:0
+        };
+
+        $.ajax({
+            url: 'tpres?m=ajaxCourseList&pageResult.pageNo=1&pageResult.pageSize=99999&t=',
+            type: 'post',
+            data: param,
+            dataType: 'json',
+            cache: false,
+            error: function () {
+                alert('网络异常!')
+            },
+            success: function (rps) {
+                var htm='<option value="">选择知识点</option>';
+                if(rps.objList!=null&&rps.objList.length>0){
+                    $.each(rps.objList,function(idx,itm){
+                        htm+='<option value="'+itm.courseid+'">'+itm.coursename+'</option>';
+                    })
+                }
+                $("#sel_course").html(htm);
+            }
+        });
+    }
 
 
 </script>
@@ -438,7 +497,7 @@
             <p>类型：<span id="sp_type"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作者：<span id="sp_author"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年级：<span id="sp_grade"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="sp_star"></span></p>
 
         </div>
-        <input id="hd_courseid" type="hidden">
+        <input id="hd_courseid" value="" type="hidden">
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
             <col class="w50"/>
             <col class="w700"/>
@@ -455,7 +514,7 @@
     </div>
 
     <p class="public_input t_l" id="p_upload_course1">
-        <select  class="w60" >
+        <select id="sel_share_type"  class="w60" >
             <option value="">全部</option>
             <option value="2">云端</option>
             <option value="1">校内</option>
@@ -469,7 +528,7 @@
             </c:if>
         </select>
 
-        <select  class="w80">
+        <select id="sel_res_type" class="w80" onchange="changeResType(this)" >
             <c:if test="${!empty resType}">
                 <c:forEach items="${resType}" var="d">
                     <option value="${d.dictionaryvalue}">${d.dictionaryname}</option>
@@ -477,11 +536,11 @@
             </c:if>
         </select>
 
-        <select id="sel_material" class="w190" style="display: none;">
+        <select id="sel_material" onchange="loadCourseList()" class="w190" style="display: none;">
 
         </select>
 
-        <select id="sel_course" class="w280" style="display: none;">
+        <select id="sel_course"  class="w280" style="display: none;">
 
         </select>
 
@@ -499,10 +558,47 @@
 
     <p class="public_input t_l">
         <input id="txt_course" name="txt_course" type="text"  placeholder="知识点/资源名称搜索"  class="w440" />
-        <a onclick="pageGo('pCourseRes')" class="an_search" title="查询"></a>
+        <a onclick="pageGo('pCourseRes');pageGo('p1');" class="an_search" title="查询"></a>
     </p>
 
-    <div id="dv_detail_course">
+
+    <div class="jxxt_zhuanti_zy_add_info p_t_10">
+        <p class="font-black">
+            <strong class="font-darkblue f_right">
+                <a href="1" target="_blank">相关专题<span id="sp_course_count">0</span>个</a>
+            </strong>搜到的资源&nbsp;
+            <span class="font-red" id="sp_res_count">0</span>&nbsp;个</p>
+    </div>
+
+    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
+        <col class="w50"/>
+        <col class="w700"/>
+        <tbody id="resData" >
+
+        </tbody>
+       <%-- <tr>
+            <td><input type="checkbox" name="checkbox2" id="checkbox2"><span class="ico_doc1"></span></td>
+            <td>
+                <p>数学二元一次方程经典例题</p>
+                <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p>
+            </td>
+        </tr>--%>
+
+    </table>
+
+    <form action="/role/ajaxlist" id="page1form" name="page1form" method="post">
+        <p align="center" id="page1address"></p>
+    </form>
+    <p class="t_c p_tb_10"><a onclick="sub_res('dv_upload_resource',1)"  class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="sub_res('dv_upload_resource',2)"  class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    </p>
+
+
+
+
+
+
+    <div style="display: none" id="dv_detail_course">
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab2">
             <col class="w350"/>
             <col class="w80"/>
@@ -548,17 +644,12 @@
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black" style="float: left;width:100%">
         <col class="w50"/>
         <col class="w700"/>
-        <tbody id="resData" >
+   <%--     <tbody id="resData" >
 
-        </tbody>
+        </tbody>--%>
     </table>
 
-    <form action="/role/ajaxlist" id="page1form" name="page1form" method="post">
-        <p align="center" id="page1address"></p>
-    </form>
-    <p class="t_c p_tb_10"><a onclick="sub_res('dv_upload_resource',1)"  class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="sub_res('dv_upload_resource',2)"  class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;
-        <!--<a onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a>-->
-    </p>
+
 
 </div>
 </div>

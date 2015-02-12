@@ -36,6 +36,25 @@ public class TpCourseResource implements Serializable {
     private Object voteflag; //ÊÇ·ñÔŞ
     private Integer voteuid;
 
+    private Integer gradeid;
+    private Integer subjectid;
+
+    public Integer getGradeid() {
+        return gradeid;
+    }
+
+    public void setGradeid(Integer gradeid) {
+        this.gradeid = gradeid;
+    }
+
+    public Integer getSubjectid() {
+        return subjectid;
+    }
+
+    public void setSubjectid(Integer subjectid) {
+        this.subjectid = subjectid;
+    }
+
     public Long getFilterresid() {
         return filterresid;
     }

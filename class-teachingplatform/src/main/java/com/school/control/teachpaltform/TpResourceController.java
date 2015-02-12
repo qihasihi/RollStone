@@ -123,7 +123,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             if(courselevel.equals("1"))
                 tpCourseInfo.setCuserid(this.logined(request).getUserid());
         }
-        if(materialid!=null&&materialid.trim().length()>0){
+        if(materialid!=null&&materialid.trim().length()>0&&!materialid.toLowerCase().equals("null")){
             tpCourseInfo.setMaterialid(Integer.parseInt(materialid));
         }
         if(gradeid!=null&&gradeid.trim().length()>0){
@@ -141,9 +141,9 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         if(courseid!=null&&courseid.trim().length()>0){
             tpCourseInfo.setCourseid(Long.parseLong(courseid));
         }
-
-
-
+        tpCourseInfo.setLocalstatus(1);
+        /*if(tpCourseInfo.getSharetype()==null||tpCourseInfo.getSharetype()<1)
+            tpCourseInfo.setSharetype(1);*/
         List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getCouresResourceList(tpCourseInfo, pageResult);
         pageResult.setList(teacherCourseList);
         je.setPresult(pageResult);
@@ -160,9 +160,14 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         PageResult pageResult=this.getPageResultParameter(request);
         //pageResult.setOrderBy(" aa.diff_type desc, aa.ctime desc,aa.operate_time desc ");
         pageResult.setOrderBy(" aa.diff_type desc,aa.is_mic_copiece,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id");
-        TpCourseResource tr=this.getParameter(request,TpCourseResource.class);
+        TpCourseResource tr=this.getParameter(request, TpCourseResource.class);
         String courseid=request.getParameter("courseid");
         String currentcourseid=request.getParameter("currentcourseid");
+//        /*新增*/
+//        String gradeid=request.getParameter("gradeid");
+//        String coursename=request.getParameter("coursename");
+//        String subjectid=request.getParameter("subjectid");
+//        String restype=request.getParameter("restype") ;
         if(courseid!=null&&courseid.trim().length()>0)
             tr.setCourseid(Long.parseLong(courseid));
         else
@@ -171,7 +176,20 @@ public class TpResourceController extends BaseController<TpCourseResource>{
             tr.setCurrentcourseid(Long.parseLong(currentcourseid));
             //pageResult.setOrderBy(" aa.diff_type desc,aa.ctime desc,aa.operate_time desc,aa.res_flag ");
             pageResult.setOrderBy(" aa.diff_type desc,aa.is_mic_copiece,ifnull(aa.operate_time,aa.ctime) desc,aa.res_id,aa.res_flag ");
+        } 
+/*
+        if(gradeid!=null&&gradeid.trim().length()>0){
+            tr.setGradeid(Integer.parseInt(gradeid));
         }
+        if(subjectid!=null&&subjectid.trim().length()>0){
+            tr.setSubjectid(Integer.parseInt(subjectid));
+        }
+        if(restype!=null&&restype.trim().length()>0&&!restype.equals("7")){
+            tr.setRestype(Integer.parseInt(restype));
+        }
+        if(coursename!=null&&coursename.trim().length()>0){
+            tr.setCoursename(coursename);
+        }*/
 
         //当前资源是否赞
         tr.setVoteuid(this.logined(request).getUserid());
