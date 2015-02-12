@@ -1,8 +1,7 @@
 <%@ page language="java" import="java.util.*,org.w3c.dom.*,java.io.*,com.school.entity.*"
          pageEncoding="UTF-8"%>
-<%@page
-        import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.springframework.context.ApplicationContext"%>
+<%--<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>--%>
+<%--<%@page import="org.springframework.context.ApplicationContext"%>--%>
 <%@page import="javax.xml.parsers.DocumentBuilderFactory"%>
 <%@page import="javax.xml.parsers.DocumentBuilder"%>
 <%@page import="java.io.File"%>

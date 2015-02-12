@@ -1,16 +1,15 @@
 package  com.school.dao;
 
 
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.school.dao.base.CommonDAO;
 import com.school.dao.inter.IGradeDAO;
 import com.school.entity.GradeInfo;
 import com.school.util.PageResult;
+import org.springframework.stereotype.Component;
+
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component  
 public class GradeDAO extends CommonDAO<GradeInfo> implements IGradeDAO {
@@ -156,6 +155,32 @@ public class GradeDAO extends CommonDAO<GradeInfo> implements IGradeDAO {
             objList.add(schoolid);
         }else{
             return null;
+        }
+        sqlbuilder.append(")}");
+        List<GradeInfo> list = this.executeResult_PROC(sqlbuilder.toString(),objList,null,GradeInfo.class,null);
+        return list;
+    }
+    /**
+     * 根据用户ID,年份得到当前所在的年级
+     * @param userid
+     * @param year
+     * @return
+     */
+    @Override
+    public List<GradeInfo> getListByUserYear(Integer userid, String year) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL grade_proc_getbyUserYear(");
+        List<Object> objList=new ArrayList<Object>();
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(year!=null){
+            sqlbuilder.append("?");
+            objList.add(year);
+        }else{
+            sqlbuilder.append("NULL");
         }
         sqlbuilder.append(")}");
         List<GradeInfo> list = this.executeResult_PROC(sqlbuilder.toString(),objList,null,GradeInfo.class,null);

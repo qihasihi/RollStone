@@ -1,19 +1,18 @@
 
 package  com.school.manager;
 
-import java.util.List;
-
-import jxl.Sheet;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 import com.school.dao.base.ICommonDAO;
 import com.school.dao.inter.IGradeDAO;
-import com.school.util.PageResult;
 import com.school.entity.GradeInfo;
 import com.school.manager.base.BaseManager;
 import com.school.manager.inter.IGradeManager;
+import com.school.util.PageResult;
+import jxl.Sheet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class  GradeManager extends BaseManager<GradeInfo> implements IGradeManager  {
@@ -88,6 +87,15 @@ public class  GradeManager extends BaseManager<GradeInfo> implements IGradeManag
     @Override
     public List<GradeInfo> getAdminPerformanceTeaGrade(Integer schoolid) {
         return this.gradedao.getAdminPerformanceTeaGrade(schoolid);
+    }
+    /**
+     * 根据用户ID,年份得到当前所在的年级
+     * @param userid
+     * @param year
+     * @return
+     */
+    public List<GradeInfo> getListByUserYear(Integer userid, String year){
+        return this.gradedao.getListByUserYear(userid,year);
     }
 }
 

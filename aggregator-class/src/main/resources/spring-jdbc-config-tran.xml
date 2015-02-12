@@ -26,7 +26,7 @@
     <!--JDBC配置服务器   -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://192.168.10.41:3306/m_school"/>
+        <property name="url" value="jdbc:mysql://192.168.10.41:3306/school201501"/>
         <property name="username" value="mytest"/>
         <property name="password" value="testdb"/>
     </bean>

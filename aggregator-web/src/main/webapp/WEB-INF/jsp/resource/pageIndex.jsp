@@ -199,15 +199,15 @@ function myInfoAjaxList1(rps){
         <p class="f_right"><span class="ico61" title="资源更新"></span><span class="font-red">16339</span>&nbsp;<span class="ico65" title="校内上传"></span>83320&nbsp;<span class="ico62" title="云端上传"></span>22320&nbsp;<span class="ico66" title="资源积分"></span>63230</p>
        */%>
         <p><a href="resource?m=toadd" target="_blank" class="an_small">上传资源</a>&nbsp;&nbsp;<a href="resource?m=toMyResList" target="_blank" class="an_small">资源管理</a>&nbsp;&nbsp;
-            <select id="searchType" name="searchType" class="w80">
-                <option value="1">资源</option>
+            <select id="searchType" name="searchType" class="w80" style="display:none">
+                <option value="1" selected>资源</option>
                 <option value="2">教师</option>
                 <option value="3">知识点</option>
             </select>
             <input id="searchValue" name="searchValue" type="text" class="w240"/>&nbsp;
             <a href="javascript:doSearch()" class="an_search" title="搜索"></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <%--<a href="resource?m=toAllResPage" target="_blank" class="font-darkblue">查看全部资源</a>--%>
-            <a href="resource?m=list" target="_blank" class="font-darkblue">高级搜索</a>
+            <%--<a href="resource?m=list" target="_blank" class="font-darkblue">高级搜索</a>--%>
             </p>
     </div>
 

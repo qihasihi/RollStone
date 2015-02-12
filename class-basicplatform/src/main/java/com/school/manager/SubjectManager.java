@@ -1,20 +1,17 @@
 package com.school.manager;
 
-import java.util.List;
-
 import com.school.dao.base.ICommonDAO;
-import jxl.Sheet;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import com.school.dao.base.CommonDAO;
 import com.school.dao.inter.ISubjectDAO;
 import com.school.entity.SubjectInfo;
 import com.school.manager.base.BaseManager;
 import com.school.manager.inter.ISubjectManager;
 import com.school.util.PageResult;
+import jxl.Sheet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -111,4 +108,10 @@ public class SubjectManager extends BaseManager<SubjectInfo> implements ISubject
     public List<SubjectInfo> getAdminPerformanceStuSubject(Integer schoolid, Integer gradeid) {
         return this.subjectDAO.getAdminPerformanceStuSubject(schoolid,gradeid);
     }
+
+    @Override
+    public List<SubjectInfo> getListByUserYear(Integer userid, String year) {
+        return this.subjectDAO.getListByUserYear(userid,year);
+    }
+
 }

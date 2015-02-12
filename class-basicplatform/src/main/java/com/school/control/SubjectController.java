@@ -3,8 +3,10 @@ package com.school.control;
 import com.school.control.base.BaseController;
 import com.school.entity.DictionaryInfo;
 import com.school.entity.SubjectInfo;
+import com.school.entity.TermInfo;
 import com.school.manager.inter.IDictionaryManager;
 import com.school.manager.inter.ISubjectManager;
+import com.school.manager.inter.ITermManager;
 import com.school.util.JsonEntity;
 import com.school.util.MD5_NEW;
 import com.school.util.UtilTool;
@@ -27,6 +29,8 @@ public class SubjectController extends BaseController<SubjectInfo>{
     private ISubjectManager subjectManager;
     @Autowired
     private IDictionaryManager dictionaryManager;
+    @Autowired
+    private ITermManager termManager;
 
 
 	@RequestMapping(params="m=list",method=RequestMethod.GET)
@@ -144,6 +148,26 @@ public class SubjectController extends BaseController<SubjectInfo>{
         je.setObjList(subList);
         response.getWriter().print(je.toJSON());
     }
+
+    @RequestMapping(params="m=ajaxReslist",method=RequestMethod.POST)
+    protected void getAjaxResUseList(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{
+        List<SubjectInfo> subList =null;
+
+        if(this.validateRole(request,UtilTool._ROLE_SXJW_ID)){
+            subList=this.subjectManager.getList(new SubjectInfo(), null);
+        }else{
+            //得到当前学期
+            TermInfo tm=this.termManager.getAutoTerm();
+            subList=this.subjectManager.getListByUserYear(this.logined(request).getUserid(),tm.getYear());
+        }
+        JsonEntity je = new JsonEntity();
+        je.setObjList(subList);
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+
 
     @RequestMapping(params="m=addLzxSubject",method=RequestMethod.POST)
     protected void addLzxSubject(HttpServletRequest request,HttpServletResponse response,ModelMap mp) throws Exception{

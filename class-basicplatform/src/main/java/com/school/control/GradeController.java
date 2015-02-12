@@ -2,7 +2,9 @@ package com.school.control;
 
 import com.school.control.base.BaseController;
 import com.school.entity.GradeInfo;
+import com.school.entity.TermInfo;
 import com.school.manager.inter.IGradeManager;
+import com.school.manager.inter.ITermManager;
 import com.school.util.JsonEntity;
 import com.school.util.PageResult;
 import com.school.util.UtilTool;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -21,32 +24,73 @@ import java.util.List;
 public class GradeController extends BaseController<GradeInfo> {
     @Autowired
     private IGradeManager gradeManager;
+    @Autowired
+    private ITermManager termManager;
 
 	@RequestMapping(params="m=list",method=RequestMethod.GET) 
 	public ModelAndView toGradeList(HttpServletRequest request,ModelAndView mp )throws Exception{
 		return new ModelAndView("/grade/list");
 	}
-	
-	/**
-	 * 获取List
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(params="m=ajaxlist",method=RequestMethod.POST)
-	public void AjaxGetList(HttpServletRequest request,HttpServletResponse response)throws Exception{
-		GradeInfo gradeinfo = this.getParameter(request, GradeInfo.class);
-		PageResult pageresult = this.getPageResultParameter(request);
-		List<GradeInfo> gradeList =gradeManager.getList(gradeinfo, pageresult);
-		pageresult.setList(gradeList);
-		JsonEntity je = new JsonEntity();
-		je.setType("success");
-		je.setPresult(pageresult);
-		response.getWriter().print(je.toJSON()); 
-	}
-	
-	
-	/**
+
+    /**
+     * 获取List
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=ajaxlist",method=RequestMethod.POST)
+    public void AjaxGetList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        GradeInfo gradeinfo = this.getParameter(request, GradeInfo.class);
+        PageResult pageresult = this.getPageResultParameter(request);
+        List<GradeInfo> gradeList =gradeManager.getList(gradeinfo, pageresult);
+        pageresult.setList(gradeList);
+        JsonEntity je = new JsonEntity();
+        je.setType("success");
+        je.setPresult(pageresult);
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 资源系统获取List
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params="m=ajaxReslist",method=RequestMethod.POST)
+    public void AjaxResGetList(HttpServletRequest request,HttpServletResponse response)throws Exception{
+        GradeInfo g=new GradeInfo();
+        List<GradeInfo> gradeList=this.gradeManager.getList(g,null);
+        List<GradeInfo> returnGrade=null;
+        if(!this.validateRole(request,UtilTool._ROLE_SXJW_ID)){
+            //得到当前学期
+            TermInfo tm=this.termManager.getAutoTerm();
+            List<GradeInfo> userGradeList=this.gradeManager.getListByUserYear(this.logined(request).getUserid(),tm.getYear());
+            if(userGradeList!=null&&userGradeList.size()>0&&gradeList!=null&&gradeList.size()>0){
+                returnGrade=new ArrayList<GradeInfo>();
+                   for(GradeInfo gentity:userGradeList){
+                       if(gentity!=null){
+                           //如果 高中一年级，小学一年级，初学一年级，其它，取第一个字，进行匹配
+                           String firstCode=gentity.getGradevalue().substring(0,1);
+                           for(GradeInfo e:gradeList){
+                               if(e!=null&&e.getGradeid()!=null&&e.getGradevalue().indexOf(firstCode)>=0){
+                                    if(!returnGrade.contains(e))
+                                        returnGrade.add(e);
+                               }
+                           }
+                       }
+                   }
+            }
+        }else
+            returnGrade=gradeList;
+        JsonEntity je = new JsonEntity();
+        je.setType("success");
+        je.setObjList(returnGrade);
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
 	 * 去修改
 	 * @param request
 	 * @param response

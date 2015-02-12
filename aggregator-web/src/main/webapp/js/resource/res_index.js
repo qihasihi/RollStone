@@ -208,7 +208,8 @@ function cutoverDiv(div1,div2){
 function doSearch(){
     var searchType=$("#searchType").val();
     if(searchType==1){
-        var url="resource?m=resList&srhValue="+$("#searchValue").val();
+//        var url="resource?m=resList&srhValue="+$("#searchValue").val();
+        var url="resource?m=list&srhValue="+$("#searchValue").val();
         url=encodeURI(encodeURI(url));
         window.open(url);
     }

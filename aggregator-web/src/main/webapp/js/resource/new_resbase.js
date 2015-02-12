@@ -9,17 +9,17 @@ if (LeibieControl == undefined) {
 	LeibieControl = function(settings,ismu) {
 		if(typeof(settings)=="undefined"||settings==null)
 			settings={};	
-		settings.isMultiple=ismu;
+		settings.isSearch=ismu;
 		this.init(settings);
 	}
 	/**
 	 * checkedval:要选中的节点,以逗号隔开,多个以|隔开。
 	 */
-	LeibieControl = function(settings,ismu,checkedval) {
+	LeibieControl = function(settings,isSearch,checkedval) {
 		if(typeof(settings)=="undefined"||settings==null)
 			settings={};	
 		settings.checkedval=checkedval;
-		settings.isMultiple=ismu;
+		settings.isSearch=isSearch;
 		this.init(settings);
 	}
 };
@@ -28,10 +28,6 @@ LeibieControl.prototype={
 			init:function(settings){
                 this.params=typeof(settings.params)=="undefined"?{}:settings.params;
 				this.settings=settings;
-                this.sub_isMultiple=false;
-                this.grade_isMultiple=false;
-                this.rt_isMultiple=false;
-                this.ft_isMultiple=false;
 				this.initSettings();				
 				this.initPropertyArea();
 			},			
@@ -50,8 +46,9 @@ LeibieControl.prototype={
 		initPropertyArea:function(){  
 			//初始化属性			
 			var paHtml="";
-			paHtml+="<div id='selectedProperties' class='yixuan'><p><strong>已选择：<span id='wu'>无</span></strong></p></div>";
-			paHtml+="<div class='jxpt_ziyuan_zrss_option' id='extendMainDIV'></div>";
+//			paHtml+="<div id='selectedProperties' class='yixuan'><p><strong>已选择：<span id='wu'>无</span></strong></p></div>";
+			paHtml+="<div class='jxpt_ziyuan_zrss_option' id='extendMainDIV'>";
+            paHtml+="</div>";
 			$("#PropertyArea").html(paHtml);
 			this.initSelectedArea();
             this.createExtendList();
@@ -76,46 +73,28 @@ LeibieControl.prototype={
 		},getShareStatusList:function(){
         var controlobj=this;
                 var trHtml="";
-                    trHtml="<div id='div_sharestatusvalues_mul'><ul id='val_ls_mul_sharestatusvalues' style='float:left;'>";
-                    trHtml+="<li id='value_sharestatusvalues_mul_2'>";
-                    trHtml+="<input title='云端' name='ext_ck_sharestatusvalues'id='ext_ck_sharestatusvalues_2' type='checkbox' value='2' />&nbsp;<label for='ext_ck_sharestatusvalues_2'>云端</label>";
-                    trHtml+="</li>";
-                    trHtml+="<li id='value_sharestatusvalues_mul_1'>";
-                    trHtml+="<input title='校内' name='ext_ck_sharestatusvalues'id='ext_ck_sharestatusvalues_1' type='checkbox' value='1' />&nbsp;<label for='ext_ck_sharestatusvalues_1'>校内</label>";
-                    trHtml+="</li>";
-
-                    trHtml+="</ul>";
-                    trHtml+="<p class='p_b_10'>";
-                    trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings['controlid']+".subMultipleChoice('sharestatusvalues');"+" class='an_blue_small'>确定</a>";
-                    trHtml+="&nbsp;&nbsp;&nbsp;&nbsp;";
-                    trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings["controlid"]
-                        +".toggleMultiple('sharestatusvalues',false)"+" class='an_blue_small'>取消</a></p>";
-                    trHtml+="</div>";
                     trHtml+="<div id='div_sharestatusvalues'><ul id='val_ls_sharestatusvalues'>";
                 trHtml+="<li id='value_sharestatusvalues_1'><a href="+"javascript:"+controlobj.settings["controlid"]
                     +".clickedProperty('sharestatusvalues','1','校内',false)"+">校内</a></li>";
                 trHtml+="<li id='value_sharestatusvalues_2'><a href="+"javascript:"+controlobj.settings["controlid"]
                     +".clickedProperty('sharestatusvalues','2','云端',false)"+">云端</a></li>";
-                                if(controlobj.settings.isMultiple)
-                                    trHtml+="<li class='more'><a id='mulcho_sharestatusvalues' href="+"javascript:"+controlobj.settings["controlid"]
-                                        +".toggleMultiple('sharestatusvalues',true)"+">+多选</a></li>";
                     trHtml+="</ul></div>";
                 $("#ev_area_sharestatusvalues").html(trHtml);
                  $("#div_sharestatusvalues_mul").hide();
                 if(typeof(controlobj.params.sharestatusvalues)!="undefined"&&controlobj.params.sharestatusvalues!=null){
                     controlobj.clickedProperty('sharestatusvalues',controlobj.params.sharestatusvalues,
-                        $("#value_sharestatusvalues_"+controlobj.params.sharestatusvalues+" a").text(),false,false);
+                        $("#value_sharestatusvalues_"+controlobj.params.sharestatusvalues+" a").text(),false,false,true);
                 }
          },createExtendList:function(){
             var controlobj=this;
-            var trHtml='';
+            var trHtml='<p class="f_right"><a class="an_public3" href="1">快速搜索</a></p>';
             trHtml+='<input id="sharestatusvalues_title" type="hidden" value="共享类型"/>';
             trHtml+='<input id="subjectvalues_title" type="hidden" value="学科">';
             trHtml+='<input id="gradevalues_title" type="hidden" value="年级">';
             trHtml+='<input id="restypevalues_title" type="hidden" value="资源类型">';
             trHtml+='<input id="filetypevalues_title" type="hidden" value="文件类型">';
             trHtml+='<input id="timerange_title" type="hidden" value="发布时间">';
-            trHtml+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1" style="float: left;width:100%">';
+            trHtml+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab1">';
             trHtml+='<tr id="extend_sharestatusvalues"><th style="width: 77px;">共享类型：</th><td id="ev_area_sharestatusvalues"></td></tr>';
             trHtml+='<tr id="extend_subjectvalues"><th style="width: 77px;">学&nbsp;&nbsp;&nbsp;&nbsp;科：</th>';
             trHtml+='<td id="ev_area_subjectvalues">&nbsp;</td></tr>';
@@ -125,18 +104,18 @@ LeibieControl.prototype={
             trHtml+='<td id="ev_area_restypevalues">&nbsp;</td></tr>';
             trHtml+='<tr id="extend_filetypevalues"><th style="width: 77px;">文件类型：</th>';
             trHtml+='<td id="ev_area_filetypevalues">&nbsp;</td></tr>';
-            trHtml+='<tr id="extend_timerange"><th style="width: 77px;">发布时间：</th><td id="ev_area_timerange"><ul id="val_ls_timerange">';
-            trHtml+="<li id='value_timerange_day'><a href="+"javascript:"+controlobj.settings["controlid"]
-                +".clickedProperty('timerange','day','今天',true)"+">今天</a></li>";
-            trHtml+="<li id='value_timerange_week'><a href="+"javascript:"+controlobj.settings["controlid"]
-                +".clickedProperty('timerange','week','一周内',true)"+">一周内</a></li>";
-            trHtml+="<li id='value_timerange_halfMonth'><a href="+"javascript:"+controlobj.settings["controlid"]
-                +".clickedProperty('timerange','halfMonth','15天以内',true)"+">15天以内</a></li>";
-            trHtml+="<li id='value_timerange_month'><a href="+"javascript:"+controlobj.settings["controlid"]
-                +".clickedProperty('timerange','month','一个月内',true)"+">一个月内</a></li>";
-            trHtml+='</ul></td></tr>';
+//            trHtml+='<tr id="extend_timerange"><th style="width: 77px;">发布时间：</th><td id="ev_area_timerange"><ul id="val_ls_timerange">';
+//            trHtml+="<li id='value_timerange_day'><a href="+"javascript:"+controlobj.settings["controlid"]
+//                +".clickedProperty('timerange','day','今天',true)"+">今天</a></li>";
+//            trHtml+="<li id='value_timerange_week'><a href="+"javascript:"+controlobj.settings["controlid"]
+//                +".clickedProperty('timerange','week','一周内',true)"+">一周内</a></li>";
+//            trHtml+="<li id='value_timerange_halfMonth'><a href="+"javascript:"+controlobj.settings["controlid"]
+//                +".clickedProperty('timerange','halfMonth','15天以内',true)"+">15天以内</a></li>";
+//            trHtml+="<li id='value_timerange_month'><a href="+"javascript:"+controlobj.settings["controlid"]
+//                +".clickedProperty('timerange','month','一个月内',true)"+">一个月内</a></li>";
+//            trHtml+='</ul></td></tr>';
             trHtml+='<tr style="display:none;"><th>&nbsp;</th><td><a href="javascript:doSearch();" class="an_blue">搜索</a></td></tr>';
-            trHtml+='<tr><td colspan="2"></td></tr>';
+//            trHtml+='<tr><td colspan="2"></td></tr>';
             trHtml+='</table>';
             $("#extendMainDIV").html(trHtml);
             this.getShareStatusList();
@@ -145,34 +124,32 @@ LeibieControl.prototype={
             this.getExtendRTList();
             this.getExtendFTList();
 		},
-
 		getExtendSubList:function(){
             var controlobj=this;
 			$.ajax({
-				url:'subject?m=ajaxlist',
-				type:'POST', 
-				data:{},
+				url:'subject?m=ajaxReslist',
+				type:'POST',
                 dataType:'json',
 				error:function(){alert("网络异常")},
 				success:function(rps){
 					var trHtml="";
 					if(rps!=null&&rps.objList!=null&&rps.objList.length>0){
-                        trHtml="<div id='div_subjectvalues_mul'><ul id='val_ls_mul_subjectvalues' style='float:left;'>";
-                        $.each(rps.objList,function(idx,itm) {
-                            trHtml+="<li id='value_subjectvalues_mul_"+itm.subjectid+"'>";
-                            trHtml+="<input title='"+itm.subjectname+"' name='ext_ck_subjectvalues' type='checkbox' value='"+itm.subjectid+"' />&nbsp;"+itm.subjectname;
-                            trHtml+="</li>";
-                        });
-                        trHtml+="</ul>";
-                        trHtml+="<p class='p_b_10'>";
-                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings['controlid']+".subMultipleChoice('subjectvalues');"+" class='an_blue_small'>确定</a>";
-                        trHtml+="&nbsp;&nbsp;&nbsp;&nbsp;";
-                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings["controlid"]
-                            +".toggleMultiple('subjectvalues',false)"+" class='an_blue_small'>取消</a></p>";
-                        trHtml+="</div>";
+//                        trHtml="<div id='div_subjectvalues_mul'><ul id='val_ls_mul_subjectvalues' style='float:left;'>";
+//                        $.each(rps.objList,function(idx,itm) {
+//                            trHtml+="<li id='value_subjectvalues_mul_"+itm.subjectid+"'>";
+//                            trHtml+="<input title='"+itm.subjectname+"' name='ext_ck_subjectvalues' type='checkbox' value='"+itm.subjectid+"' />&nbsp;"+itm.subjectname;
+//                            trHtml+="</li>";
+//                        });
+//                        trHtml+="</ul>";
+//                        trHtml+="<p class='p_b_10'>";
+//                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings['controlid']+".subMultipleChoice('subjectvalues');"+" class='an_blue_small'>确定</a>";
+//                        trHtml+="&nbsp;&nbsp;&nbsp;&nbsp;";
+//                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings["controlid"]
+//                            +".toggleMultiple('subjectvalues',false)"+" class='an_blue_small'>取消</a></p>";
+//                        trHtml+="</div>";
 						trHtml+="<div id='div_subjectvalues'><ul id='val_ls_subjectvalues'>";
                         $.each(rps.objList,function(idx,itm) {
-                            trHtml+="<li id='value_subjectvalues_"+itm.subjectid+"'><a href="+"javascript:"+controlobj.settings["controlid"]
+                            trHtml+="<li id='value_subjectvalues_"+itm.subjectid+"' data-bind='"+itm.subjectid+"'><a href="+"javascript:"+controlobj.settings["controlid"]
                                 +".clickedProperty('subjectvalues','"+itm.subjectid+"','"+itm.subjectname+"',true)"+">"+itm.subjectname+"</a></li>";
                         });
 
@@ -183,11 +160,12 @@ LeibieControl.prototype={
 					}
 					$("#ev_area_subjectvalues").html(trHtml);
                     $("#div_subjectvalues_mul").hide();
+                    //默认第一行
+                    if(typeof(controlobj.params.subjectvalues)=="undefined"||controlobj.params.subjectvalues==null)
+                         controlobj.params.subjectvalues=$("li[id*='value_subjectvalues_']:first").attr("data-bind");
+                     controlobj.clickedProperty('subjectvalues',controlobj.params.subjectvalues,
+                        $("#value_subjectvalues_"+controlobj.params.subjectvalues+" a").text(),true,true,true);
 
-                    if(typeof(controlobj.params.subjectvalues)!="undefined"&&controlobj.params.subjectvalues!=null){
-                        controlobj.clickedProperty('subjectvalues',controlobj.params.subjectvalues,
-                        $("#value_subjectvalues_"+controlobj.params.subjectvalues+" a").text(),true,true);
-                    }
 		        }
             })
         },
@@ -195,7 +173,7 @@ LeibieControl.prototype={
         getExtendGradeList:function(){
             var controlobj=this;
             $.ajax({
-                url:'grade?m=ajaxlist',
+                url:'grade?m=ajaxReslist',
                 type:'POST',
                 data:{},
                 dataType:'json',
@@ -203,32 +181,39 @@ LeibieControl.prototype={
                 success:function(rps){
                     var trHtml="";
                     if(rps!=null&&rps.objList!=null&&rps.objList.length>0){
-                        trHtml="<div id='div_gradevalues_mul'><ul id='val_ls_mul_gradevalues' style='float:left;'>";
-                        $.each(rps.objList,function(idx,itm) {
-                            trHtml+="<li id='value_gradevalues_mul_"+itm.gradeid+"'>";
-                            trHtml+="<input title='"+itm.gradename+"' name='ext_ck_gradevalues' type='checkbox' value='"+itm.gradeid+"' />&nbsp;"+itm.gradename;
-                            trHtml+="</li>";
-                        });
-                        trHtml+="</ul>";
-                        trHtml+="<p class='p_b_10'>";
-                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings['controlid']+".subMultipleChoice('gradevalues');"+" class='an_blue_small'>确定</a>";
-                        trHtml+="&nbsp;&nbsp;&nbsp;&nbsp;";
-                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings["controlid"]
-                            +".toggleMultiple('gradevalues',false)"+" class='an_blue_small'>取消</a></p>";
-                        trHtml+="</div>";
+//                        trHtml="<div id='div_gradevalues_mul'><ul id='val_ls_mul_gradevalues' style='float:left;'>";
+//                        $.each(rps.objList,function(idx,itm) {
+//                            trHtml+="<li id='value_gradevalues_mul_"+itm.gradeid+"'>";
+//                            trHtml+="<input title='"+itm.gradename+"' name='ext_ck_gradevalues' type='checkbox' value='"+itm.gradeid+"' />&nbsp;"+itm.gradename;
+//                            trHtml+="</li>";
+//                        });
+//                        trHtml+="</ul>";
+//                        trHtml+="<p class='p_b_10'>";
+//                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings['controlid']+".subMultipleChoice('gradevalues');"+" class='an_blue_small'>确定</a>";
+//                        trHtml+="&nbsp;&nbsp;&nbsp;&nbsp;";
+//                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings["controlid"]
+//                            +".toggleMultiple('gradevalues',false)"+" class='an_blue_small'>取消</a></p>";
+//                        trHtml+="</div>";
                         trHtml+="<div id='div_gradevalues'><ul id='val_ls_gradevalues'>";
                         $.each(rps.objList,function(idx,itm) {
-                            trHtml+="<li id='value_gradevalues_"+itm.gradeid+"'><a href="+"javascript:"+controlobj.settings["controlid"]
+                            trHtml+="<li id='value_gradevalues_"+itm.gradeid+"' data-bind='"+itm.gradeid+"'><a href="+"javascript:"+controlobj.settings["controlid"]
                                 +".clickedProperty('gradevalues','"+itm.gradeid+"','"+itm.gradename+"',false)"+">"+itm.gradename+"</a></li>";
                         });
 
-                        if(controlobj.settings.isMultiple)
-                            trHtml+="<li class='more'><a id='mulcho_gradevalues' href="+"javascript:"+controlobj.settings["controlid"]
-                                +".toggleMultiple('gradevalues',true)"+">+多选</a></li>";
+//                        if(controlobj.settings.isMultiple)
+//                            trHtml+="<li class='more'><a id='mulcho_gradevalues' href="+"javascript:"+controlobj.settings["controlid"]
+//                                +".toggleMultiple('gradevalues',true)"+">+多选</a></li>";
                         trHtml+="</ul></div>";
                     }
                     $("#ev_area_gradevalues").html(trHtml);
-                    $("#div_gradevalues_mul").hide();
+//                    $("#div_gradevalues_mul").hide();
+
+                    if(typeof(controlobj.params.gradevalues)=="undefined"||controlobj.params.gradevalues==null)
+                        controlobj.params.gradevalues=$("li[id*='value_gradevalues_']:first").attr("data-bind");
+                     controlobj.clickedProperty('gradevalues',controlobj.params.gradevalues,
+                            $("#value_subjectvalues_"+controlobj.params.gradevalues+" a").text(),true,true,true);
+
+
                 }
             })
         },
@@ -244,31 +229,48 @@ LeibieControl.prototype={
                 success:function(rps){
                     var trHtml="";
                     if(rps!=null&&rps.objList!=null&&rps.objList.length>0){
-                        trHtml="<div id='div_restypevalues_mul'><ul id='val_ls_mul_restypevalues' style='float:left;'>";
-                        $.each(rps.objList,function(idx,itm) {
-                            trHtml+="<li id='value_restypevalues_mul_"+itm.dictionaryvalue+"'>";
-                            trHtml+="<input title='"+itm.dictionaryname+"' name='ext_ck_restypevalues' type='checkbox' value='"+itm.dictionaryvalue+"' />&nbsp;"+itm.dictionaryname;
-                            trHtml+="</li>";
-                        });
-                        trHtml+="</ul>";
-                        trHtml+="<p class='p_b_10'>";
-                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings['controlid']+".subMultipleChoice('restypevalues');"+" class='an_blue_small'>确定</a>";
-                        trHtml+="&nbsp;&nbsp;&nbsp;&nbsp;";
-                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings["controlid"]
-                            +".toggleMultiple('restypevalues',false)"+" class='an_blue_small'>取消</a></p>";
-                        trHtml+="</div>";
+//                        trHtml="<div id='div_restypevalues_mul'><ul id='val_ls_mul_restypevalues' style='float:left;'>";
+//                        $.each(rps.objList,function(idx,itm) {
+//                            var dcValue=itm.dictionaryvalue;
+//                            //将 将案例和文献资料合并到课件类型下  即4，5合并到3中
+//                            if(dcValue!=4&&dcValue!=5){
+//                                if(dcValue==3){
+//                                    dcValue='3,4,5'
+//                                }
+//                                trHtml+="<li id='value_restypevalues_mul_"+dcValue+"' data-bind='"+dcValue+"'>";
+//                                trHtml+="<input title='"+itm.dictionaryname+"' name='ext_ck_restypevalues' type='checkbox' value='"+dcValue+"' />&nbsp;"+itm.dictionaryname;
+//                                trHtml+="</li>";
+//                            }
+//                        });
+//                        trHtml+="</ul>";
+////                        trHtml+="<p class='p_b_10'>";
+////                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings['controlid']+".subMultipleChoice('restypevalues');"+" class='an_blue_small'>确定</a>";
+////                        trHtml+="&nbsp;&nbsp;&nbsp;&nbsp;";
+////                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings["controlid"]
+////                            +".toggleMultiple('restypevalues',false)"+" class='an_blue_small'>取消</a></p>";
+//                        trHtml+="</div>";
                         trHtml+="<div id='div_restypevalues'><ul id='val_ls_restypevalues'>";
                         $.each(rps.objList,function(idx,itm) {
-                            trHtml+="<li id='value_restypevalues_"+itm.dictionaryvalue+"'><a href="+"javascript:"+controlobj.settings["controlid"]
-                                +".clickedProperty('restypevalues','"+itm.dictionaryvalue+"','"+itm.dictionaryname+"',false)"+">"+itm.dictionaryname+"</a></li>";
+                            var dcValue=itm.dictionaryvalue;
+                            //将 将案例和文献资料合并到课件类型下  即4，5合并到3中
+                            if(dcValue!=4&&dcValue!=5){
+                                if(dcValue==3){
+                                    dcValue='3,4,5'
+                                }
+                                trHtml+="<li id='value_restypevalues_"+dcValue+"' data-bind='"+dcValue+"'><a href="+"javascript:"+controlobj.settings["controlid"]
+                                    +".clickedProperty('restypevalues','"+dcValue+"','"+itm.dictionaryname+"',false)"+">"+itm.dictionaryname+"</a></li>";
+                            }
                         });
-                        if(controlobj.settings.isMultiple)
-                            trHtml+="<li class='more'><a id='mulcho_restypevalues' href="+"javascript:"+controlobj.settings["controlid"]
-                                +".toggleMultiple('restypevalues',true)"+">+多选</a></li>";
                         trHtml+="</ul></div>";
                     }
                     $("#ev_area_restypevalues").html(trHtml);
-                    $("#div_restypevalues_mul").hide();
+                  //  $("#div_restypevalues_mul").hide();
+
+//                    if(typeof(controlobj.params.restypevalues)=="undefined"||controlobj.params.restypevalues==null)
+//                        controlobj.params.restypevalues=$("li[id*='value_restypevalues_']:first").attr("data-bind");
+//                        controlobj.clickedProperty('restypevalues',controlobj.params.restypevalues,
+//                            $("#value_subjectvalues_"+controlobj.params.restypevalues+" a").text(),true,true,true);
+
                 }
             })
         },
@@ -284,28 +286,28 @@ LeibieControl.prototype={
                 success:function(rps){
                     var trHtml="";
                     if(rps!=null&&rps.objList!=null&&rps.objList.length>0){
-                        trHtml="<div id='div_filetypevalues_mul'><ul id='val_ls_mul_filetypevalues' style='float:left;'>";
-                        $.each(rps.objList,function(idx,itm) {
-                            trHtml+="<li id='value_filetypevalues_mul_"+itm.dictionaryvalue+"'>";
-                            trHtml+="<input title='"+itm.dictionaryname+"' name='ext_ck_filetypevalues' type='checkbox' value='"+itm.dictionaryvalue+"' />&nbsp;"+itm.dictionaryname;
-                            trHtml+="</li>";
-                        });
-                        trHtml+="</ul>";
-                        trHtml+="<p class='p_b_10'>";
-                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings['controlid']+".subMultipleChoice('filetypevalues');"+" class='an_blue_small'>确定</a>";
-                        trHtml+="&nbsp;&nbsp;&nbsp;&nbsp;";
-                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings["controlid"]
-                            +".toggleMultiple('filetypevalues',false)"+" class='an_blue_small'>取消</a></p>";
-                        trHtml+="</div>";
+//                        trHtml="<div id='div_filetypevalues_mul'><ul id='val_ls_mul_filetypevalues' style='float:left;'>";
+//                        $.each(rps.objList,function(idx,itm) {
+//                            trHtml+="<li id='value_filetypevalues_mul_"+itm.dictionaryvalue+"'>";
+//                            trHtml+="<input title='"+itm.dictionaryname+"' name='ext_ck_filetypevalues' type='checkbox' value='"+itm.dictionaryvalue+"' />&nbsp;"+itm.dictionaryname;
+//                            trHtml+="</li>";
+//                        });
+//                        trHtml+="</ul>";
+//                        trHtml+="<p class='p_b_10'>";
+//                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings['controlid']+".subMultipleChoice('filetypevalues');"+" class='an_blue_small'>确定</a>";
+//                        trHtml+="&nbsp;&nbsp;&nbsp;&nbsp;";
+//                        trHtml+="<a class='an_public3' href="+"javascript:"+controlobj.settings["controlid"]
+//                            +".toggleMultiple('filetypevalues',false)"+" class='an_blue_small'>取消</a></p>";
+//                        trHtml+="</div>";
                         trHtml+="<div id='div_filetypevalues'><ul id='val_ls_filetypevalues'>";
                         $.each(rps.objList,function(idx,itm) {
-                            trHtml+="<li id='value_filetypevalues_"+itm.dictionaryvalue+"'><a href="+"javascript:"+controlobj.settings["controlid"]
+                            trHtml+="<li id='value_filetypevalues_"+itm.dictionaryvalue+"' data-bind='"+itm.dictionaryvalue+"'><a href="+"javascript:"+controlobj.settings["controlid"]
                                 +".clickedProperty('filetypevalues','"+itm.dictionaryvalue+"','"+itm.dictionaryname+"',false)"+">"+itm.dictionaryname+"</a></li>";
                         });
 
-                        if(controlobj.settings.isMultiple)
-                            trHtml+="<li class='more'><a id='mulcho_filetypevalues' href="+"javascript:"+controlobj.settings["controlid"]
-                                +".toggleMultiple('filetypevalues',true)"+">+多选</a></li>";
+//                        if(controlobj.settings.isMultiple)
+//                            trHtml+="<li class='more'><a id='mulcho_filetypevalues' href="+"javascript:"+controlobj.settings["controlid"]
+//                                +".toggleMultiple('filetypevalues',true)"+">+多选</a></li>";
                         trHtml+="</ul></div>";
                     }
                     $("#ev_area_filetypevalues").html(trHtml);
@@ -326,12 +328,31 @@ LeibieControl.prototype={
             }
         },
 
-        clickedProperty:function(type,value,valuename,istime,isselected){
+        clickedProperty:function(type,value,valuename,istime,isselected,isfirst){
             $("#val_ls_"+type).children("li").attr("class","");
-            if(!istime){
-                $("#val_ls_"+type).children("li:last").attr("class","more");
+//            if(!istime){
+//                $("#val_ls_"+type).children("li:last").attr("class","more");
+//            }
+//            class="crumb"
+
+            if($("li[id='value_"+type+"_"+value+"'] a").attr("class")!="crumb"){
+                $("li[id='value_"+type+"_"+value+"'] a").addClass("crumb");
+            }else{
+                if(typeof(isfirst)=="undefined"||!isfirst){
+                    if(type=='subjectvalues'||type=='gradevalues'){
+                        var len=$("li[id*='value_"+type+"_'] .crumb").length;
+                        if(len<=1){
+                            return;
+                        }
+                    }
+                }
+                $("li[id='value_"+type+"_"+value+"'] a").removeClass("crumb");
+
             }
-            $("#value_"+type+"_"+value).attr("class","font-blue1");
+
+            var subSelectLength=$("li[id*='value_subjectvalues_'] .crumb").length;
+
+
             this.creatPropertySelected(type,value,valuename,isselected);
         },
 
@@ -349,16 +370,39 @@ LeibieControl.prototype={
         },
 
         creatPropertySelected:function(type,value,valuename,isselected){
-			var psHtml="";
-            var title=$("#"+type+"_title").val();
-            psHtml+=title+"："+valuename+"<a href="+"javascript:"+this.settings["controlid"]+".delPropertySelected('"+type+"')"
-                +" title='删除' class='ico_delete'></a>";
-			$("#et_"+type+"_selected").html(psHtml);
-			$("#et_"+type+"_selected").show();
-            $("#wu").hide();
-            this.params[type]=value;
-            if(typeof(isselected)=="undefined"||isselected)
-                pageGo("p1",1);
+//			var psHtml="";
+//            var title=$("#"+type+"_title").val();
+//            psHtml+=title+"："+valuename+"<a href="+"javascript:"+this.settings["controlid"]+".delPropertySelected('"+type+"')"
+//                +" title='删除' class='ico_delete'></a>";
+//			$("#et_"+type+"_selected").html(psHtml);
+//			$("#et_"+type+"_selected").show();
+//            $("#wu").hide();
+            var clss=$("li[id='value_"+type+"_"+value+"'] a").attr("class");
+            if(clss=='crumb'){
+                if(typeof(this.params[type])=="undefined"||this.params[type].length<1)
+                    this.params[type]=value;
+                else
+                    this.params[type]+=","+value;
+            }else{
+                if(typeof(this.params[type])!="undefined"&&this.params[type].length>0){
+                    this.params[type]=this.params[type].replace((","+value),"").replace(value,"");
+                    if(this.params[type].length>0){
+                        if(this.params[type].indexOf(",")==0){
+                            this.params[type]=this.params[type].substring(1);
+                        }
+                    }
+                }
+            }
+            if(typeof(this.params[type])!="undefined"&&this.params[type].length>0){
+                if(this.params[type].length>0){
+                    if(this.params[type].indexOf(",")==0){
+                        this.params[type]=this.params[type].substring(1);
+                    }
+                    if(this.params[type].indexOf(",")==this.params[type].length-1){
+                        this.params[type]=this.params[type].substring(0,this.params[type].length-1);
+                    }
+                }
+            }
 		},		
 		
 		delPropertySelected:function(type){

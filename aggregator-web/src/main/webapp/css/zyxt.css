@@ -229,48 +229,24 @@
 	.zyxt_searchR h6 {margin:10px auto 4px;}
 
 	.zyxt_search_number {border-bottom:1px solid #cfcfcf;padding:10px 0 5px; margin-bottom:10px; color:#257aa7;}
-	.zyxt_search_gaoji {
-	width:938px;
-	border:1px solid #cfcfcf;
-	padding-top:10px;
-	margin:10px 0;
-}
+
 	.zyxt_search_gaoji p {padding-bottom:5px;}
-    .zyxt_search_gaoji table tr.blue{background-color:#d3e4eb; }
-	.zyxt_search_gaoji table th { text-align:center; color:#8d8c8c; width:118px;}
+	
+	.zyxt_search_gaoji table { margin:0;}
+	.zyxt_search_gaoji table th { color:#8d8c8c; width:90px; padding-top:17px;}
 	.zyxt_search_gaoji table td { width:820px;}
     .zyxt_search_gaoji table td ul li {
 	display:inline-table;
-	margin:0 15px 10px 0;
+	margin-right:10px;
 	color:#000;
 }
-    .zyxt_search_gaoji table td ul li.more {
-	background-color:#d3e4eb;
-	color:#5a8ca0;
-}
-    .zyxt_search_gaoji table td ul li.more a:link,.zyxt_search_gaoji table td ul li.more a:visited{color:#5a8ca0;padding:0 6px;}
-    .zyxt_search_gaoji table td ul li.more a:hover,.zyxt_search_gaoji table td ul li.more a:active{color:#2682E7; }
+    .zyxt_search_gaoji table td ul li a {display: inline-block;	padding:3px 5px 2px; }
 	.zyxt_search_gaoji table td ul li a:link,.zyxt_search_gaoji table td ul li a:visited{color:#000;}
     .zyxt_search_gaoji table td ul li a:hover,.zyxt_search_gaoji table td ul li a:active{color:#3297a3; }
-	.zyxt_search_gaoji table td ul li a.font-blue {color:#3297a3;}
+	.zyxt_search_gaoji table td ul li a.crumb {background-color:#d3e4eb;color:#5a8ca0;}
 
-	.zyxt_search_gaoji div.yixuan {
-	width:910px;
-	border-bottom:1px dashed #cedce3;
-	padding:5px 10px 10px;
-	margin:0 auto 10px;
-	color:#000;
-}
-    .zyxt_search_gaoji div.yixuan ul li{
-	border:1px solid #9c9c9c;
-	margin:5px 15px 10px 0;
-	padding:3px 0 0 5px;
-	display:inline-table;
-	line-height:16px;
-	height:18px;
-	color:#8d8c8c;
-	background-color:#fff;
-}
+
+
     .zyxt_qbzy .subpage_lm {margin:20px 0 ;}
 
 	.zyxt_add{padding:10px 0;}

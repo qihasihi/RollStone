@@ -12,16 +12,15 @@
     var imagesuffix="${imagesuffix}";
 	var p1;
 	$(function(){
-		if(defaultSearchValue!=null
-				&&defaultSearchValue.length>0)
-			$("#searchValue").val(defaultSearchValue);
+
         var defaultParam={sharestatusvalues:2};
-        <c:if test="${!empty subjectid}">
-             defaultParam.subjectvalues='${subjectid}';
-        </c:if>
-        <c:if test="${empty subjectid}">
-             defaultParam.subjectvalues=1;  //默认为1
-        </c:if>
+        <%--<c:if test="${!empty subjectid}">--%>
+             <%--defaultParam.subjectvalues='${subjectid}';--%>
+        <%--</c:if>--%>
+        <%--<c:if test="${empty subjectid}">--%>
+             <%--defaultParam.subjectvalues=1;  //默认为1--%>
+        <%--</c:if>--%>
+
 		lb=new LeibieControl({controlid:"lb",params:defaultParam},true);
 		p1=new PageControl({
 			post_url:'resource?m=ajaxListByValues',
@@ -40,12 +39,19 @@
 			operate_id:"resData"
 		});
         //开始防ajax刷新
-      //  pageGo('p1');
+//        pageGo('p1');
         //默认为云端共享
         //lb.clickedProperty('sharestatusvalues','2','云端',false,false);
 
 
-        allowRefresh();
+        $("#extendMainDIV table").append($("#dv_hd_search table").html());
+        $("#dv_hd_search table").empty()
+        if(defaultSearchValue!=null
+                &&defaultSearchValue.length>0)
+            $("#searchValue").val(defaultSearchValue);
+        setTimeout(function(){
+            pageGo('p1');
+        },800);
 	});
 
 	function beforeAjaxList(p){
@@ -203,11 +209,8 @@
 <body>
 <div class="subpage_head"><span class="ico57"></span><strong>资源搜索——高级搜索</strong></div>
 <div class="content1">
-
-    <div>
-        <p><input id="searchValue"  placeholder="输入信息按资源名称搜索!" name="searchValue" type="text" class="w320"/>&nbsp;
-            <a class="an_search" href="javascript:pageGo('p1',1);" title="搜索"></a></p>
-        <div  id="PropertyArea" class="zyxt_search_gaoji">
+    <div class="zyxt_search_gaoji public_input">
+        <div  id="PropertyArea" >
         </div>
     </div>
     <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
@@ -229,6 +232,19 @@
     <ul id="ul_course">
 
     </ul>
+</div>
+<div style="display:none" id="dv_hd_search">
+    <table><tbody>
+    <tr>
+        <th></th>
+        <td><input type="text"  id="searchValue"  class="w440" placeholder="资源名称搜索" name="searchValue" ></td>
+    </tr>
+    <tr>
+        <th></th>
+        <td><a class="an_big" href="javascript:pageGo('p1',1);">查询资源</a></td>
+    </tr>
+    </tbody>
+    </table>
 </div>
 
 <%@include file="/util/foot.jsp" %>

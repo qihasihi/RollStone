@@ -16,4 +16,11 @@ public interface ISubjectDAO extends com.school.dao.base.ICommonDAO<SubjectInfo>
      * 管理员教务统计学生获取学科
      * */
     public List<SubjectInfo> getAdminPerformanceStuSubject(Integer schoolid,Integer gradeid);
- }
+    /**
+     * 根据用户ID,年份得到当前所在的学科
+     * @param userid
+     * @param year
+     * @return
+     */
+    List<SubjectInfo> getListByUserYear(Integer userid, String year);
+}

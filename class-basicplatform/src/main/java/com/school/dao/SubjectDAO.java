@@ -1,15 +1,14 @@
 package com.school.dao;
 
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.school.dao.base.CommonDAO;
 import com.school.dao.inter.ISubjectDAO;
 import com.school.entity.SubjectInfo;
 import com.school.util.PageResult;
+import org.springframework.stereotype.Component;
+
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class SubjectDAO extends CommonDAO<SubjectInfo> implements ISubjectDAO{
@@ -246,6 +245,27 @@ public class SubjectDAO extends CommonDAO<SubjectInfo> implements ISubjectDAO{
         if(gradeid!=null){
             sqlbuilder.append("?");
             objList.add(gradeid);
+        }else{
+            sqlbuilder.append("NULL");
+        }
+        sqlbuilder.append(")}");
+        List<SubjectInfo> subjectList = this.executeResult_PROC(sqlbuilder.toString(),objList,null,SubjectInfo.class,null);
+        return subjectList;
+    }
+
+    @Override
+    public List<SubjectInfo> getListByUserYear(Integer userid, String year) {
+        StringBuilder sqlbuilder=new StringBuilder("{CALL subject_proc_getbyUserYear(");
+        List<Object> objList=new ArrayList<Object>();
+        if(userid!=null){
+            sqlbuilder.append("?,");
+            objList.add(userid);
+        }else{
+            sqlbuilder.append("NULL,");
+        }
+        if(year!=null){
+            sqlbuilder.append("?");
+            objList.add(year);
         }else{
             sqlbuilder.append("NULL");
         }
