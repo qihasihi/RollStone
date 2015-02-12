@@ -364,7 +364,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
 		tg.setTermid(termInfo.getRef());
 		List<TpGroupInfo>groupList=this.tpGroupManager.getGroupBySubject(tg);
         //查询小组任务完成率
-        int completenum=0;
+       /* int completenum=0;
         int totalnum=0;
         if(groupList!=null&&groupList.size()>0){
             for(int i = 0;i<groupList.size();i++){
@@ -386,7 +386,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
                 groupList.get(i).setCompletenum(completenum);
                 groupList.get(i).setTotalnum(totalnum);
             }
-        }
+        }*/
 		je.setObjList(groupList);
 		je.setType("success"); 
 		response.getWriter().append(je.toJSON());

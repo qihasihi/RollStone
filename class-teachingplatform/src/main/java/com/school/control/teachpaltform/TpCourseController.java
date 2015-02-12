@@ -307,16 +307,17 @@ public class TpCourseController extends TaskController{
 
 
 
+
     /**
-     * 教务查看专题统计
+     * 教务统计
      * @param request
      * @param response
      * @param mp
      * @return
      * @throws Exception
      */
-    @RequestMapping(params="toJWPerformPage",method=RequestMethod.GET)
-    public ModelAndView toJWPerformPage(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
+    @RequestMapping(params="toAdminStat",method=RequestMethod.GET)
+    public ModelAndView toAdminStat(HttpServletRequest request, HttpServletResponse response,ModelMap mp) throws Exception {
         JsonEntity je=new JsonEntity();
         String termid=request.getParameter("termid");
         String subjectid=request.getParameter("subjectid");
@@ -443,12 +444,10 @@ public class TpCourseController extends TaskController{
                 mp.put("isBanzhuren",1);
             mp.put("subGradeInfo",objectMap);
         }
-
-        List<GradeInfo> gList = this.gradeManager.getAdminPerformanceTeaGrade(this.logined(request).getDcschoolid());
-        mp.put("gradeList",gList);
-
-        return new ModelAndView("/teachpaltform/course/jw-performance", mp);
+        return new ModelAndView("/teachpaltform/course/jwStat", mp);
     }
+
+
 
 
 
@@ -2050,10 +2049,12 @@ public class TpCourseController extends TaskController{
             return;
         }
         TpCourseInfo obj = new TpCourseInfo();
+
+
         obj.setCuserid(userid);
         obj.setQuoteid(Long.parseLong(quoteid));
         List<TpCourseInfo> tcList = this.tpCourseManager.checkQuoteCourse(obj);
-        if(tcList!=null&&tcList.size()==1){
+        if(tcList!=null&&tcList.size()>0){
             je.setType("success");
             je.setObjList(tcList);
         }else{
@@ -3244,6 +3245,51 @@ public class TpCourseController extends TaskController{
                 tcInfo.setCuserid(this.logined(request).getUserid());
             }
         }
+        List<TpCourseInfo> courseList = this.tpCourseManager.getList(tcInfo, presult);
+        presult.setList(courseList);
+        je.setPresult(presult);
+        response.getWriter().print(je.toJSON());
+    }
+
+    /**
+     * 进入相关专题页面
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="toQuoteCoursePage",method = RequestMethod.GET)
+    public ModelAndView toQuoteCoursePage(HttpServletRequest request,HttpServletResponse response) throws  Exception{
+        JsonEntity je=new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        if(courseid==null||courseid.length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return null;
+        }
+        request.setAttribute("courseid",courseid);
+        request.setAttribute("userid",this.logined(request).getUserid());
+        return new ModelAndView("/teachpaltform/course/relateCourse");
+    }
+
+    /**
+     * 获取相关专题
+     */
+    @RequestMapping(params = "getRelateCourseList", method = RequestMethod.POST)
+    public void getRelateCourseList(HttpServletRequest request,
+                                HttpServletResponse response) throws Exception {
+        JsonEntity je = new JsonEntity();
+        PageResult presult = this.getPageResultParameter(request);
+        TpCourseInfo tcInfo = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
+        if(tcInfo.getQuoteid()==null||tcInfo.getQuoteid().toString().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        tcInfo.setDcschoolid(this.logined(request).getDcschoolid());
+        tcInfo.setCourselevel(-3); // -3标识不共享反义，即所有符合共享条件的专题 或者校内共享
+        //tcInfo.setFilterquote(1);//去除当前教师引用过的专题
+        //tcInfo.setCuserid(this.logined(request).getUserid());
         List<TpCourseInfo> courseList = this.tpCourseManager.getList(tcInfo, presult);
         presult.setList(courseList);
         je.setPresult(presult);

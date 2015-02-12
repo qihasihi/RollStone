@@ -1,6 +1,5 @@
 package  com.school.entity.teachpaltform;
 
-import com.school.util.PageUtil.PageUtilTool;
 import com.school.util.UtilTool;
 
 import javax.persistence.Entity;
@@ -126,6 +125,15 @@ public class TpCourseInfo  implements java.io.Serializable{
     private String gradevalue;
     private String subjectname;
     private Long resid;
+    private Object quotecount;     //相关专题数量
+
+    public Object getQuotecount() {
+        return quotecount;
+    }
+
+    public void setQuotecount(Object quotecount) {
+        this.quotecount = quotecount;
+    }
 
     public Long getResid() {
         return resid;

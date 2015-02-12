@@ -34,7 +34,7 @@ qhs.GetLength = function(str) {
 var isIE = (document.all) ? true : false;
 
 var AZarray=["A","B","C","D","E","F","G","H",
-    "I","G","K","L","M","N","O","P",
+    "I","J","K","L","M","N","O","P",
     "Q","R","S","T","U","V","W","X","Y","Z"];
 
 

@@ -7,6 +7,13 @@
 		<meta http-equiv="pragma" content="no-cache"/>
 		<meta http-equiv="cache-control" content="no-cache"/>
 		<meta http-equiv="expires" content="0"/>
+        <script type="text/javascript"
+                src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+        <script type="text/javascript"
+                src="fancybox/jquery.fancybox-1.3.4.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
+
         <script type="text/javascript">
             var srhType=1;
             var teacherid="${teacherid}";
@@ -17,7 +24,13 @@
             var subjectid="${subject.subjectid}";
             var gradeid="${grade.gradeid}";
             var tea_gradeid = "${param.gradeid}";
+            var fancyboxObj;
             $(function(){
+                fancyboxObj=$("#a_click").fancybox({
+                    'onClosed':function(){
+                        $("#dv_content").hide();
+                    }
+                });
                 //定位materialid 选中
                 if(materialid.Trim().length>0){
                     $("#materialid option[value='"+materialid+"']").attr("selected",true);
@@ -87,6 +100,14 @@
                 pObj.setPostParams(param);
             }
 
+
+            function loadQuoteCourse(courseid) {
+                var url = 'teachercourse?toQuoteCoursePage&courseid='+courseid+"&gradeid="+tea_gradeid;
+                $("#dv_content").load(url,function(){
+                    $("#dv_content").show();
+                    $("#a_click").click();
+                });
+            }
             function getInvestReturnMethod(rps){
                 var html="";
                 var materialid=$("#materialid").val();
@@ -108,8 +129,12 @@
                             html += "<span class='ico17' title='共享'></span>";
                         //else if(itm.sourceType==3)
                             //html += "<span class='ico44' title='参考'></span>";
-                        html += "</td><td><p><a href='teachercourse?m=toCourseDetial&courseid=" + itm.courseid + "&materialid="+materialid+"' target='_self'>" + itm.coursename + "</a></p>";
-                        html += "<p class='font-darkgray'>作者：" + (itm.schoolname==null?"北京四中网校":itm.schoolname) + "&nbsp;"+(itm.teachername==null?"":itm.teachername)+"</p>";
+                        html += "</td><td><p>";
+                        if(itm.quotecount>0){
+                            html+='<span class="f_right">相关专题：<a class="font-blue" href="javascript:loadQuoteCourse('+itm.courseid+');" >'+itm.quotecount+'</a>个</span>';
+                        }
+                        html += "<a href='teachercourse?m=toCourseDetial&courseid=" + itm.courseid + "&materialid="+materialid+"' target='_self'>" + itm.coursename + "</a></p>";
+                        html += "<p class='font-darkgray'>作者：" + (itm.schoolname==null?"北京四中网校":itm.schoolname) + "&nbsp;"+(itm.teachername==null?"":itm.teachername)+"&nbsp;&nbsp;&nbsp;&nbsp;年级："+itm.gradevalue+"</p>";
                         html += "<p>简介：" + (itm.introduction==null?"无":itm.introduction) + "</p>";
                         html += "<p class='t_r'>资源：<b>"+itm.rescount+"</b> 试题：<b>"+itm.quescount+"</b>试卷：<b>"+itm.papercount+"</b>论题：<b>"+itm.topiccount+"</b>任务：<b>"+itm.taskcount+"</b>";
                         for(var i=1;i<6;i++)
@@ -145,9 +170,10 @@
             }
 
             //添加引用专题前的检查
-            function checkCourse(){
+            function checkCourse(type){
+                var rdoName=typeof type=='undefined'?'courseid':'quote_course';
                 var courseid;
-                $("input[name='courseid']:checked").each(function() {courseid=$(this).val();});
+                $("input[name="+rdoName+"]:checked").each(function() {courseid=$(this).val();});
                 $.ajax({
                     url:'teachercourse?m=checkQuoteCourse',
                     data:{
@@ -173,7 +199,7 @@
                                 showModel('confirmCourseDiv');
                             }
                         }else{
-                            addTeacherCourse();
+                            addTeacherCourse(type);
                         }
                     }
                 });
@@ -230,13 +256,14 @@
             }
 
             //添加引用专题
-            function addTeacherCourse(){
+            function addTeacherCourse(type){
                 $("#addP").html('<a class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;');
                 var term=$("#termid");
                 var courseids=new Array();
                 var subjectid=$("#subjectid");
                 var gradeid=$("#gradeid");
-                $("input[name='courseid']:checked").each(function() {courseids.push($(this).val());});
+                var rdoName=typeof type=='undefined'?'courseid':'quote_course';
+                $("input[name="+rdoName+"]:checked").each(function() {courseids.push($(this).val());});
                 if(term.val().Trim().length<1){
                     alert('学期参数错误!');
                     window.close();
@@ -384,6 +411,10 @@
         </script>
 </head>
     <body>
+
+    <a id="a_click" href="#dv_content"></a>
+    <div id="dv_content"  style="display: none;"></div>
+
     <div id="confirmCourseDiv"  class="public_windows" style="display: none"></div>
     <input id="subjectid" type="hidden" value="${subject.subjectid}">
     <div class="subpage_head">
@@ -464,6 +495,55 @@
         </div>
         <p class="p_tb_10 t_c" id="addP"><a id="addButton" href="javascript:checkCourse();" class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;</p>
             </div>
+
+
+    <div class="public_float public_float960" id="dv_releate_course" style="display: none;">
+        <p class="float_title"><strong>查看相关专题</strong></p>
+        <div class="jxxt_add_zhuanti_nr">
+            <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
+                <col class="w50"/>
+                <col class="w860"/>
+                <tr>
+                    <td><input name="" type="radio">
+                        <span class="ico16" title="自建"></span></td>
+                    <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
+                        <p class="font-darkgray">作者：四川师范大学附属第二实验中学_卢大大艳&nbsp;&nbsp;&nbsp;&nbsp;年级：高一</p>
+                        <p>简介：款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                        <p class="t_r">资源：<b>100</b>试题：<b>10</b>试卷：<b>0</b>论题：<b>100</b>任务：<b>10</b><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star2"></span><span class="ico_star3"></span> 3.5</p></td>
+                </tr>
+                <tr>
+                    <td><input name="" type="radio">
+                        <span class="ico17" title="共享"></span></td>
+                    <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
+                        <p class="font-darkgray">作者：四川师范大学附属第二实验中学_卢大大艳&nbsp;&nbsp;&nbsp;&nbsp;年级：高一</p>
+                        <p>简介：款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                        <p class="t_r">资源：<b>100</b>试题：<b>10</b>试卷：<b>0</b>论题：<b>100</b>任务：<b>10</b><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star2"></span><span class="ico_star3"></span> 3.5</p></td>
+                </tr>
+                <tr>
+                    <td><input name="" type="radio">
+                        <span class="ico18" title="标准"></span></td>
+                    <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
+                        <p class="font-darkgray">作者：四川师范大学附属第二实验中学_卢大大艳&nbsp;&nbsp;&nbsp;&nbsp;年级：高一</p>
+                        <p>简介：款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                        <p class="t_r">资源：<b>100</b>试题：<b>10</b>试卷：<b>0</b>论题：<b>100</b>任务：<b>10</b><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star2"></span><span class="ico_star3"></span> 3.5</p></td>
+                </tr>
+                <tr>
+                    <td><input name="" type="radio">
+                        <span class="ico44" title="参考"></span></td>
+                    <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
+                        <p class="font-darkgray">作者：四川师范大学附属第二实验中学_卢大大艳&nbsp;&nbsp;&nbsp;&nbsp;年级：高一</p>
+                        <p>简介：款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                        <p class="t_r">资源：<b>100</b>试题：<b>10</b>试卷：<b>0</b>论题：<b>100</b>任务：<b>10</b><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star2"></span><span class="ico_star3"></span> 3.5</p></td>
+                </tr>
+            </table>
+        </div>
+        <div class="nextpage"> <span><b class="before"></b></span><span><a href="1">1</a></span><span><a href="1">2</a></span><span class="crumb"><a href="1">3</a></span><span><a href="1">4</a></span><span><a href="1">5</a></span>&hellip;<span><a href="1">9</a></span><span><a href="1">10</a></span><span><a href="1">11</a></span><span><a href="1"><b class="after"></b></a></span> &nbsp;&nbsp;共20页&nbsp;&nbsp;去第
+            <input name="textfield3" type="text" id="textfield2" value="3000" />
+            页&nbsp;&nbsp;<span><a href="1">Go</a></span></div>
+        <p class="p_tb_10 t_c"><a href="1" target="_blank" class="an_public1">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="1" target="_blank" class="an_public1">取&nbsp;消</a>
+    </div>
+
+
     <%@include file="/util/foot.jsp" %>
     </body>
 </html>

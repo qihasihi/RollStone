@@ -103,7 +103,6 @@ public class ImInterfaceController extends TaskController {
     @Autowired
     private IRoleUserManager roleUserManager;
 
-
     /**
      * 学习目录接口
      * @param request
@@ -6010,7 +6009,6 @@ public class ImInterfaceController extends TaskController {
             response.getWriter().print(returnJo.toString());
             return;
         }
-
         Integer uid=this.getUserId(Integer.parseInt(userid),Long.parseLong(taskid),null);
         if(uid==null||uid==0){
             returnJo.put("msg","错误，当前用户未绑定!");
@@ -6036,7 +6034,6 @@ public class ImInterfaceController extends TaskController {
             return;
         }
 
-
         RoleUser ru=new RoleUser();
         ru.setUserid(userList.get(0).getRef());
         List<RoleUser>ruList=this.roleUserManager.getList(ru,null);
@@ -6047,7 +6044,7 @@ public class ImInterfaceController extends TaskController {
         }
         boolean isStu=false;
         for(RoleUser r:ruList){
-            if(r.getRoleid().toString().equals(UtilTool._ROLE_STU_ID)){
+            if(r.getRoleid().toString().equals(UtilTool._ROLE_STU_ID.toString())){
                 isStu=true;
                 break;
             }
@@ -6096,10 +6093,6 @@ public class ImInterfaceController extends TaskController {
                 }
             }
         }
-
-
-
-
         String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
         HashMap<String,String> signMap = new HashMap();
         signMap.put("courseName",tcList.get(0).getCoursename());
@@ -6127,6 +6120,22 @@ public class ImInterfaceController extends TaskController {
         response.getWriter().print(returnJo.toString());
     }
 
+//    /**
+//     * 得到用户ID
+//     * @param jid
+//     * @param classId
+//     * @param taskId
+//     * @return
+//     */
+//    private Integer getUserId(Integer jid,Long taskId,Integer classId){
+//        Integer returnUid=0;
+//        if(jid!=null){
+//            Integer uid=this.userManager.getUserId(jid,taskId,classId);
+//            if(uid!=null)
+//                returnUid=uid;
+//        }
+//        return returnUid;
+//    }
     /**
      * 得到用户ID
      * @param jid

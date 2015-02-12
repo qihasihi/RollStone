@@ -23,7 +23,7 @@
  *   1:资源平台
  *   2:教学平台
  */
-Integer modelType=0;
+    Integer modelType=0;
 %>
 <jsp:useBean id="htLastURI" class="java.util.Hashtable" scope="session"/>
 <%
@@ -52,8 +52,8 @@ Integer modelType=0;
         var timmer=window.setTimeout('toClose()',5*1000);
     </script>
 </head>
-<body> 
-请勿频繁刷新！ 
+<body>
+请勿频繁刷新！
 </body>
 </html>
 <%
@@ -75,15 +75,15 @@ Integer modelType=0;
 
 
 <%
-//	response.setHeader("Cache-Control", "Public");
+    //	response.setHeader("Cache-Control", "Public");
 //	response.setHeader("Pragma", "no-cache");
 //	response.setDateHeader("Expires", 0);
 
     response.setHeader("Pragma","No-cache");
     response.setHeader("Cache-Control","no-cache");
     response.setDateHeader("Expires", 0);
-%>      
-  
+%>
+
 <%
     String proc_name=request.getHeader("x-etturl");
     if(proc_name==null){
@@ -100,8 +100,8 @@ Integer modelType=0;
         ipStr+=":"+request.getServerPort();
     }
     //UtilTool.utilproperty.getProperty("PROC_NAME");
-	String basePath = (request.getScheme() + "://"
-			+ ipStr
+    String basePath = (request.getScheme() + "://"
+            + ipStr
             +"/"+proc_name+"/");
     if(session.getAttribute("IP_PROC_NAME")==null||!session.getAttribute("IP_PROC_NAME").toString().equals(basePath))
         session.setAttribute("IP_PROC_NAME",basePath);
@@ -117,71 +117,75 @@ Integer modelType=0;
 //out.println(basePath);
     UserInfo u=(UserInfo)request.getSession().getAttribute("CURRENT_USER");
 //    String uuploadfile=UtilTool.utilproperty.getProperty("USER_UPLOAD_FILE");
- boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false,isteaidentity=false,isstuidentity=false;
- List<RoleUser> cruList=null;
-if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
-		||!request.getServletPath().replaceAll("/","").equals(proc_name+"login.jsp")
-		||!request.getServletPath().replaceAll("/","").equals(proc_name+"userRegister.jsp")
-		)){
-	if(u==null){
-		response.getWriter().print("<script type='text/javascript'>alert('"
-				+UtilTool.msgproperty.getProperty("NO_LOGINED")+"');location.href='"
-				+UtilTool.getCurrentLocation(request)+"';</script>");
-		return;
-	}else{
-		cruList=u.getCjJRoleUsers();
-	
-		for(RoleUser ru : cruList){
-			if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID)){
-                if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_CLASSADVISE_ID))
-                    isBzr=true;
-				isTeacher=true;
-			}else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_STU_ID)){
-				isStudent=true;
-			}else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_WXJW_ID))
-                isWxJw=true;
-		} 
-	}   
-	session.setAttribute("currentUserRoleList",cruList);		
-}else{
-	if(u!=null){		
-		cruList=u.getCjJRoleUsers();
-		for(RoleUser ru : cruList){
-			if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID)){
-				isTeacher=true;
+    boolean isTeacher=false,isStudent=false,isBzr=false,isWxJw=false,isteaidentity=false,isstuidentity=false,isSXJw=false;
+    List<RoleUser> cruList=null;
+    if(!(request.getRequestURI().trim().replaceAll("/","").equals(proc_name)
+            ||!request.getServletPath().replaceAll("/","").equals(proc_name+"login.jsp")
+            ||!request.getServletPath().replaceAll("/","").equals(proc_name+"userRegister.jsp")
+    )){
+        if(u==null){
+            response.getWriter().print("<script type='text/javascript'>alert('"
+                    +UtilTool.msgproperty.getProperty("NO_LOGINED")+"');location.href='"
+                    +UtilTool.getCurrentLocation(request)+"';</script>");
+            return;
+        }else{
+            cruList=u.getCjJRoleUsers();
 
-			}else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_STU_ID)){
-				isStudent=true;
-			}
-            if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_CLASSADVISE_ID))
-                isBzr=true;
-            if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_WXJW_ID))
-                isWxJw=true;
-		}
-
-
-	}
-    Object cutUidentity=request.getSession().getAttribute("cut_uidentity");
-    if(cutUidentity!=null){
-        List<UserIdentityInfo> uittList=(List<UserIdentityInfo>)cutUidentity;
-        if(uittList!=null&&uittList.size()>0){
-            for (UserIdentityInfo uita:uittList){
-                if(uita!=null&&uita.getIdentityname()!=null&&uita.getIdentityname().trim().equals("教职工")){
-                    isteaidentity=true;
-                }
-                if(uita!=null&&uita.getIdentityname()!=null&&uita.getIdentityname().trim().equals("学生")){
-                    isstuidentity=true;
-                }
+            for(RoleUser ru : cruList){
+                if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID)){
+                    if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_CLASSADVISE_ID))
+                        isBzr=true;
+                    isTeacher=true;
+                }else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_STU_ID)){
+                    isStudent=true;
+                }else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_WXJW_ID))
+                    isWxJw=true;
+                else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_SXJW_ID))
+                    isSXJw=true;
             }
         }
         session.setAttribute("currentUserRoleList",cruList);
+    }else{
+        if(u!=null){
+            cruList=u.getCjJRoleUsers();
+            for(RoleUser ru : cruList){
+                if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_TEACHER_ID)){
+                    isTeacher=true;
+
+                }else if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_STU_ID)){
+                    isStudent=true;
+                }
+                if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_CLASSADVISE_ID))
+                    isBzr=true;
+                if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_WXJW_ID))
+                    isWxJw=true;
+                if(ru!=null&&ru.getRoleid().equals(UtilTool._ROLE_SXJW_ID))
+                    isSXJw=true;
+            }
+
+
+        }
+        Object cutUidentity=request.getSession().getAttribute("cut_uidentity");
+        if(cutUidentity!=null){
+            List<UserIdentityInfo> uittList=(List<UserIdentityInfo>)cutUidentity;
+            if(uittList!=null&&uittList.size()>0){
+                for (UserIdentityInfo uita:uittList){
+                    if(uita!=null&&uita.getIdentityname()!=null&&uita.getIdentityname().trim().equals("教职工")){
+                        isteaidentity=true;
+                    }
+                    if(uita!=null&&uita.getIdentityname()!=null&&uita.getIdentityname().trim().equals("学生")){
+                        isstuidentity=true;
+                    }
+                }
+            }
+            session.setAttribute("currentUserRoleList",cruList);
+        }
     }
-}
     String testhost = "http://web.etiantian.com";
-%> 
+%>
 <%!/**
-页面权限验证
-*/
+ 页面权限验证
+ */
 boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal serviceid,boolean isshow){
 		/*if(!UtilTool.functionRight(u,serviceid)){
 			if(isshow){
@@ -195,17 +199,17 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 				}
 			}
 			return false;
-		}*/ 
-		return true;
+		}*/
+    return true;
 }
 
 %>
 <%--<script type="text/javascript">--%>
-    <%--var uuploadfile='<%=uuploadfile%>';--%>
+<%--var uuploadfile='<%=uuploadfile%>';--%>
 <%--</script>--%>
 <link rel="stylesheet" type="text/css"	href="<%=basePath %>css/common.css" />
-	<link rel="stylesheet" type="text/css" href="<%=basePath %>css/master.css"/> 
-		<link rel="stylesheet" type="text/css" href="<%=basePath %>css/style.css"/>
+<link rel="stylesheet" type="text/css" href="<%=basePath %>css/master.css"/>
+<link rel="stylesheet" type="text/css" href="<%=basePath %>css/style.css"/>
 
 
 
@@ -213,92 +217,92 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
 <link rel="stylesheet" type="text/css" href="<%=basePath %>css/WdatePicker.css" />
 <!-- <link rel="stylesheet" type="text/css"	href="<%=basePath %>util/progressupload-1/css/progressupload.css" /> -->
 <link rel="stylesheet" type="text/css" href="<%=basePath %>css/jquery.autocomplete.css"/>
- <%--<script src="<%=basePath %>js/common/jquery-1.9.1.js"></script>--%>
+<%--<script src="<%=basePath %>js/common/jquery-1.9.1.js"></script>--%>
 <script src="<%=basePath %>util/xheditor/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
 
-<script src="<%=basePath %>js/common/common.js"></script>   
+<script src="<%=basePath %>js/common/common.js"></script>
 <script src="<%=basePath %>js/common/date-extend-property.js"></script>
-    
-		
-		<script type="text/javascript"	src="<%=basePath %>js/common/pageControl-0.1.js"></script>
-		<script type="text/javascript" src="<%=basePath %>js/common/dtree.js"></script>
 
-	
-        <%--<link rel="stylesheet" type="text/css" href="<%=basePath %>css/jcpt.css"/>--%>
-		<!-- <link rel="stylesheet" type="text/css"	href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" /> -->
 
-		<script src="<%=basePath %>util/My97DatePicker/WdatePicker.js" language="javascript" type="text/javascript"></script>
-		<!-- <script src="<%=basePath %>util/xheditor/xheditor-1.1.6-zh-cn.js"type="text/javascript"></script>-->
+<script type="text/javascript"	src="<%=basePath %>js/common/pageControl-0.1.js"></script>
+<script type="text/javascript" src="<%=basePath %>js/common/dtree.js"></script>
 
-		<!-- xheditor 1.2.1 -->
-		<script src="<%=basePath %>util/xheditor/xheditor-1.2.1.min.js" type="text/javascript"></script>
-		
-		<script type="text/javascript" src="<%=basePath %>util/xheditor/xheditor_lang/zh-cn.js"></script>
-		
-		<!-- 文件上传
-		<script src="<%=basePath %>js/common/ajaxUpload.js"	type="text/javascript"></script> -->
-			<script src="<%=basePath %>js/common/notes-zhengzhou-0.1-zh-cn.js"	type="text/javascript"></script>
-		<script src="<%=basePath %>js/common/ajaxfileupload.js" type="text/javascript"></script>
 
-		<script type="text/javascript" src="<%=basePath %>js/common/jquery.json-2.4.js"></script>
+<%--<link rel="stylesheet" type="text/css" href="<%=basePath %>css/jcpt.css"/>--%>
+<!-- <link rel="stylesheet" type="text/css"	href="<%=basePath %>css/jquery-ui-1.10.2.custom.css" /> -->
+
+<script src="<%=basePath %>util/My97DatePicker/WdatePicker.js" language="javascript" type="text/javascript"></script>
+<!-- <script src="<%=basePath %>util/xheditor/xheditor-1.1.6-zh-cn.js"type="text/javascript"></script>-->
+
+<!-- xheditor 1.2.1 -->
+<script src="<%=basePath %>util/xheditor/xheditor-1.2.1.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="<%=basePath %>util/xheditor/xheditor_lang/zh-cn.js"></script>
+
+<!-- 文件上传
+<script src="<%=basePath %>js/common/ajaxUpload.js"	type="text/javascript"></script> -->
+<script src="<%=basePath %>js/common/notes-zhengzhou-0.1-zh-cn.js"	type="text/javascript"></script>
+<script src="<%=basePath %>js/common/ajaxfileupload.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="<%=basePath %>js/common/jquery.json-2.4.js"></script>
 <%--<script type="text/javascript" src="<%=basePath %>js/common/jquery.rotate.1-1.js"></script>--%>
 <!--
 <script type="text/javascript" src="<%=basePath %>js/common/UUID.js"></script>
 -->
-<script type="text/javascript" src="<%=basePath %>js/common/jquery.autocomplete.js"></script>  
-			<!-- 上传控件
-	<script type="text/javascript" src="<%=basePath %>js/common/jquery-migrate-1.1.1.min.js"></script>
-		<script type="text/javascript" src="<%=basePath %>js/common/knockout-2.2.1.js"></script>
+<script type="text/javascript" src="<%=basePath %>js/common/jquery.autocomplete.js"></script>
+<!-- 上传控件
+<script type="text/javascript" src="<%=basePath %>js/common/jquery-migrate-1.1.1.min.js"></script>
+<script type="text/javascript" src="<%=basePath %>js/common/knockout-2.2.1.js"></script>
 -->
-		<!-- ckeditor -->
-		<script type="text/javascript" src="<%=basePath %>ckeditor/ckeditor.js"></script>
-		<script type="text/javascript" src="<%=basePath %>ckfinder/ckfinder/ckfinder.js"></script>
+<!-- ckeditor -->
+<script type="text/javascript" src="<%=basePath %>ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="<%=basePath %>ckfinder/ckfinder/ckfinder.js"></script>
 
-        <!--ueditor-->
-        <script  type="text/javascript" src="<%=basePath %>ueditor/ueditor.config.js"></script>
-        <script   type="text/javascript" src="<%=basePath %>ueditor/ueditor.all.js"></script>
-        <link rel="stylesheet" type="text/css" href="<%=basePath %>ueditor/themes/default/css/ueditor.css">
-<% 
+<!--ueditor-->
+<script  type="text/javascript" src="<%=basePath %>ueditor/ueditor.config.js"></script>
+<script   type="text/javascript" src="<%=basePath %>ueditor/ueditor.all.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=basePath %>ueditor/themes/default/css/ueditor.css">
+<%
 
-	Integer grade_role_id=UtilTool._ROLE_GRADE_LEADER_ID; //年级组长
-	Integer grade_fu_role_id=UtilTool._ROLE_GRADE_FU_LEADER_ID; //副年级组长
-	Integer dept_role_id=UtilTool._ROLE_DEPT_LEADER_ID; //部门主任
-	Integer teach_role_id=UtilTool._ROLE_TEACH_LEADER_ID; //教研组长
-	Integer dept_manage_role=UtilTool._ROLE_FREE_DEPT_LEADER_ID;
-	Integer stu_role_id=UtilTool._ROLE_STU_ID;
-	Integer tea_role_id=UtilTool._ROLE_TEACHER_ID;
-	Integer admin_role_id=UtilTool._ROLE_ADMIN_ID;
-	Integer bzr_role_id=UtilTool._ROLE_CLASSADVISE_ID;
+    Integer grade_role_id=UtilTool._ROLE_GRADE_LEADER_ID; //年级组长
+    Integer grade_fu_role_id=UtilTool._ROLE_GRADE_FU_LEADER_ID; //副年级组长
+    Integer dept_role_id=UtilTool._ROLE_DEPT_LEADER_ID; //部门主任
+    Integer teach_role_id=UtilTool._ROLE_TEACH_LEADER_ID; //教研组长
+    Integer dept_manage_role=UtilTool._ROLE_FREE_DEPT_LEADER_ID;
+    Integer stu_role_id=UtilTool._ROLE_STU_ID;
+    Integer tea_role_id=UtilTool._ROLE_TEACHER_ID;
+    Integer admin_role_id=UtilTool._ROLE_ADMIN_ID;
+    Integer bzr_role_id=UtilTool._ROLE_CLASSADVISE_ID;
     /*Object title=request.getSession().getAttribute("_TITLE");
     if(title==null)
         request.getSession().setAttribute("_TITLE",UtilTool.utilproperty.getProperty("CURRENT_PAGE_TITLE"));
     title=request.getSession().getAttribute("_TITLE");*/
     String webTitle="北京四中网校--数字化校园";//java.net.URLDecoder.decode(title.toString());
     if(request.getSession().getAttribute("fromType")!=null&&request.getSession().getAttribute("fromType").toString().trim().equals("lzx")){
-      //  webTitle="北京四中教育云";
+        //  webTitle="北京四中教育云";
     }
-  //  System.out.println(webTitle);
+    //  System.out.println(webTitle);
 
 %>
-      
-<script type="text/javascript"> 
-	var $STU_ID=<%=stu_role_id%>,$TEA_ID=<%=tea_role_id%>,$PARENT_ID="3",$ADMIN_ID=<%=admin_role_id%>,$BANZR_ID=<%=bzr_role_id%>;
-	var $GRADE_ID=<%=grade_role_id%>;
-	var $DEPT_ID=<%=dept_role_id%>;
-	var $TEACH_ID=<%=teach_role_id%>;
- 
-	var isStudent=<%=isStudent%>;
-	var isTeacher=<%=isTeacher%>;
+
+<script type="text/javascript">
+    var $STU_ID=<%=stu_role_id%>,$TEA_ID=<%=tea_role_id%>,$PARENT_ID="3",$ADMIN_ID=<%=admin_role_id%>,$BANZR_ID=<%=bzr_role_id%>;
+    var $GRADE_ID=<%=grade_role_id%>;
+    var $DEPT_ID=<%=dept_role_id%>;
+    var $TEACH_ID=<%=teach_role_id%>;
+
+    var isStudent=<%=isStudent%>;
+    var isTeacher=<%=isTeacher%>;
     var isBzr=<%=isBzr%>;
-	var fileSystemIpPort='<%=fileSystemIpPort%>';
+    var fileSystemIpPort='<%=fileSystemIpPort%>';
     var viewEttUserURL='<%=viewEttUserURL%>';
     var fromType="${sessionScope.fromType}";
     $(function(){
         $("#loading").ajaxStart(function(){
-                var w=$(document).width()/2-parseInt($(this).css("width"))/2;
-                var h=$(document).height()/2-parseInt($(this).css("height"))/2;
-                $(this).css({"left":w+"px","top":h+"px"});
-                $(this).show();
+            var w=$(document).width()/2-parseInt($(this).css("width"))/2;
+            var h=$(document).height()/2-parseInt($(this).css("height"))/2;
+            $(this).css({"left":w+"px","top":h+"px"});
+            $(this).show();
         });
         $("#loading").ajaxStop(function(){
             $(this).hide();
@@ -310,7 +314,7 @@ boolean validateFunctionRight(HttpServletResponse response,UserInfo u,BigDecimal
             $(this).hide();
         });
     })
-</script>  
+</script>
 <title><%=webTitle%></title>
 
 

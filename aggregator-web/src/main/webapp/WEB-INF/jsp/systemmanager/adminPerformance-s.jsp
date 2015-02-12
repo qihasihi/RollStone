@@ -7,7 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@include file="/util/common-jsp/common-yhqx.jsp"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
     <title></title>
@@ -20,19 +20,19 @@
             if(gradeid.length>0&&gradeid!=-1){
                 param.gradeid=gradeid;
             }else{
-                alert("请选择年级");
+                alert("请选择年级!");
                 return;
             }
             if(subjectid.length>0&&subjectid!=-1){
                 param.subjectid = subjectid;
             }else{
-                alert("请选择学科");
+                alert("请选择学科!");
                 return;
             }
             if(classid.length>0&&classid!=-1){
                 param.classid=classid;
             }else{
-                alert("请选择班级");
+                alert("请选择班级!");
                 return;
             }
             $.ajax({
@@ -82,6 +82,10 @@
         }
         function getSubject(){
             var gradeid = $("#selgrade").val();
+            if(gradeid.length<1){
+                alert("请选择年级!")
+                return;
+            }
             $.ajax({
                 url:'sysm?m=getAdminPerformanceSubject',
                 data:{gradeid:gradeid},
@@ -110,13 +114,21 @@
         function getSelClass(){
             var gradeid = $("#selgrade").val();
             var subjectid=$("#selsubject").val();
+            if(gradeid.length<1){
+                alert("请选择年级!")
+                return;
+            }
+            if(subjectid.length<1){
+                alert("请选择学科!")
+                return;
+            }
             $.ajax({
                 url:'sysm?m=getAdminPerformanceClass',
                 data:{gradeid:gradeid,subjectid:subjectid},
                 type:'POST',
                 dataType:'json',
                 error:function(){
-                    alert('异常错误,系统未响应！');
+                    alert('系统未响应!');
                 },success:function(rps){
                     if(rps.type=="success"){
                         var htm = '<option value="-1">请选择</option>';
@@ -142,19 +154,19 @@
             if(gradeid.length>0&&gradeid!=-1){
                 param.gradeid=gradeid;
             }else{
-                alert("请选择年级");
+                alert("请选择年级!");
                 return;
             }
             if(subjectid.length>0&&subjectid!=-1){
                 param.subjectid = subjectid;
             }else{
-                alert("请选择学科");
+                alert("请选择学科!");
                 return;
             }
             if(classid.length>0&&classid!=-1){
                 param.classid=classid;
             }else{
-                alert("请选择班级");
+                alert("请选择班级!");
                 return;
             }
             $("#gradeid").val(gradeid);
@@ -166,26 +178,8 @@
     </script>
 </head>
 <body>
-<%@include file="/util/head.jsp" %>
-<%@include file="/util/nav-base.jsp" %>
-<div id="nav">
-    <ul>
-        <li><a href="user?m=list">用户管理</a></li>
-        <li><a href="cls?m=list">组织管理</a></li>
-        <li><a href="sysm?m=logoconfig">系统设置</a></li>
-        <li class="crumb"><a href="sysm?m=toAdminPerformance">使用统计</a></li>
-    </ul>
-</div>
 
-<div class="content2">
-    <div class="subpage_lm">
-        <ul>
-            <li ><a href="sysm?m=toAdminPerformance">教师统计</a></li>
-            <li class="crumb"><a href="sysm?m=toAdminPerformanceStu">学生统计</a></li>
-        </ul>
-    </div>
 
-    <div class="jcpt_sytj public_input">
         <p class="font-black">
             年级：
             <select id="selgrade" onchange="getSubject()" class="w120">
@@ -212,8 +206,6 @@
 
             </table>
         </div>
-    </div>
-</div>
 <div style="display: none">
     <form id="exportExcelForm" nam="exportExcelForm" method="post">
         <input id="gradeid" name="gradeid"/>
@@ -221,6 +213,5 @@
         <input id="classid" name="classid"/>
     </form>
 </div>
-<%@include file="/util/foot.jsp" %>
 </body>
 </html>

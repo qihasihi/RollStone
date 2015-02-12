@@ -66,7 +66,7 @@ public class UtilTool implements java.io.Serializable {
     private final static String _FULL_DATE_CHINA = "yyyy年MM月dd日 HH时mm分ss秒";
     private final static String _DATE_GMT="EEE MMM dd hh:mm:ss z yyyy";
 
-    public final static String[]AZ={"A","B","C","D","E","F","G","H","I","G","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+    public final static String[]AZ={"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 
     public static int _IS_SIMPLE_RESOURCE=1;//精简版标识   1：普通  2：精简
 
@@ -190,6 +190,12 @@ public class UtilTool implements java.io.Serializable {
      * 网校教务ID
      */
     public static final Integer _ROLE_WXJW_ID=22;
+
+    /**
+     * 数校教务ID
+     */
+    public static final Integer _ROLE_SXJW_ID=21;
+
 
 
 

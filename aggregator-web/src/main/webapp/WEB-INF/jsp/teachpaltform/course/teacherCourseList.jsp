@@ -174,6 +174,10 @@
         <li  class="crumb"><a id="a_course" href="javascript:;">教学组织</a></li>
         <li><a href="javascript:;" id="a_clsid" >班级管理</a></li>
         <li><a id="a_calendar" href="javascript:;">课程日历</a></li>
+        <%if(isSXJw){%>
+            <li><a id="a_stat" href="javascript:;">教务统计</a></li>
+        <%}%>
+
     </ul>
 </div>
 

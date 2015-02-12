@@ -165,6 +165,8 @@ function addQuesOption(quesobj,questype,isDialog){
     htm+='<td>';
     if(questype=="2"){
         htm+='<input style="display:none;" name="ck_right_option" type="checkbox" value="1" id="ck_right_'+sysid+'" />';
+    }else if(questype=="4"){
+        htm+='<input style="display:none;" name="ck_right_option" type="checkbox"  value="1" id="ck_right_'+sysid+'" />';
     }else{
         htm+='<input style="display:none;" name="rdo_right_option" type="radio"  value="1" id="rdo_right_'+sysid+'" />';
     }

@@ -406,6 +406,13 @@
 	.jxxt_rili td.border a { border:1px solid #70bfd7; text-align:center; margin:0 auto;}
 	.jxxt_rili_layout .jxxt_rili{ position:absolute;top:15px;left:50px; }
 	
+	.jxxt_jxtj{
+	width:960px;
+	padding:0 20px 10px;
+}
+	.jxxt_jxtj div.tab_layout1{height:575px;}
+	.jxxt_jxtj div.tab_layout2{width:960px; overflow:auto; overflow-y:hidden; margin-bottom:10px;}
+	.jxxt_jxtj div.tab_layout2 table.public_tab2{ margin:10px 0;}
 
 	.jxxt_zhuanti {width:1000px;  background-color:#fff; padding:10px 0; margin-bottom:10px;}
 	.jxxt_zhuanti_rw {width:1000px;  background-color:#fff;}
@@ -1466,7 +1473,6 @@
 	.jxxt_float_w920 ul.jxxt_zhuanti_shijuan_list {width:930px; margin-left:-10px;}
 	.jxxt_float_w920 ul.jxxt_zhuanti_shijuan_list li{margin:5px 0 20px 7px;}
 	.jxxt_float_w920 .nextpage{ text-align:right;}
-
 
 	.public_float caption{ text-align:left;}
 	.public_float table.public_tab1 input.w30{ text-align: center; margin-right:5px;}

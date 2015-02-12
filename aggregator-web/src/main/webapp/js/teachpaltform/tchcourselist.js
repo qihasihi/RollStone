@@ -82,6 +82,7 @@ function changeGrade(gradeid,subjectid,idx,name){
     $("#a_clsid").attr("href",'group?m=toGroupManager&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'');
     $("#a_course").attr("href",'teachercourse?toTeacherCourseList&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'');
     $("#a_calendar").attr("href",'teachercourse?toTeacherCalendarPage&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'');
+    $("#a_stat").attr("href",'teachercourse?toAdminStat&termid='+termid+'&subjectid='+global_subjectid+'&gradeid='+global_gradeid+'');
     $("#recylebin").attr("href","teachercourse?m=toTeacherCourseRecycle&termid="+termid+"&subjectid="+global_subjectid+"&gradeid="+global_gradeid);
 
 
@@ -91,15 +92,15 @@ function changeGrade(gradeid,subjectid,idx,name){
     }
 
 
-   // $("#li_"+gradeid+"_"+subjectid+"_"+idx).siblings().attr("class","");
-  //  $("#li_"+gradeid+"_"+subjectid+"_"+idx).attr("class","crumb");
-  //  $("#fGradeSub").html($("#t_grade_sub_"+idx).html());
-   //$("#material_name").html("点击教材版本");
-  // $("#material_id").val(0);
+    // $("#li_"+gradeid+"_"+subjectid+"_"+idx).siblings().attr("class","");
+    //  $("#li_"+gradeid+"_"+subjectid+"_"+idx).attr("class","crumb");
+    //  $("#fGradeSub").html($("#t_grade_sub_"+idx).html());
+    //$("#material_name").html("点击教材版本");
+    // $("#material_id").val(0);
     getTchMaterial();
     pageGo("pList");
     if(pTsList!=null)
-       pageGo("pTsList");
+        pageGo("pTsList");
 }
 
 function fChangeGrade(){
@@ -177,8 +178,12 @@ function getInvestReturnMethod(rps){
                 html+="<span class='ico17' title='共享'></span>";
 
             html+='<a  href="javascript:void(0);" onclick="genderClick(\''+itm.courseid+'\')">'+itm.coursename+'</a>';
-            if(itm.islive>0)
+            if(itm.islive>0){
+                //html+='<a  target="_blank" href="'+itm.liveaddress+'"><b class="lm_ico08" title="直播课"></b></a>';
                 html+='<a  target="_blank" href="javascript:;" onclick="toPostURL(\'task?doTeaRedirectLiveTask\',{taskid:'+itm.taskid+',liveaddress:\''+itm.liveaddress+'\'},false,null)" title="直播课" ><b class="lm_ico08" title="直播课"></b></a>';
+
+            }
+
             html+='</p></td>';
             html+="<td>";
             if(typeof(itm.classEntity)!='undefined'&&itm.classEntity.length>0){
@@ -250,14 +255,14 @@ function getInvestReturnMethod(rps){
             classhtml+="<li><a target='_blank' href='teachercourse?m=toClassStudentList&classid="+itm.virtualclassid+"&classtype=2&subjectid="+global_subjectid+"&gradeid="+global_gradeid+"' >"+itm.virtualclassname+"</a></li>";
         });
     }
-   /* if(typeof(rps.objList[3])!="undefined"&&rps.objList[3]!=null){
-        $("span[id='material_name']").html(rps.objList[3].materialname+"("+rps.objList[3].versionname+")");
-        $("input[id='material_id']").val(rps.objList[3].materialid);
-    }else{
-        $("input[id='material_id']").val("");
-        $("span[id='material_name']").html("点击教材版本");
-        materialid="";
-    } */
+    /* if(typeof(rps.objList[3])!="undefined"&&rps.objList[3]!=null){
+     $("span[id='material_name']").html(rps.objList[3].materialname+"("+rps.objList[3].versionname+")");
+     $("input[id='material_id']").val(rps.objList[3].materialid);
+     }else{
+     $("input[id='material_id']").val("");
+     $("span[id='material_name']").html("点击教材版本");
+     materialid="";
+     } */
     $("#courseTable").html(html);
     //$("#claList").html(classhtml);
 }
@@ -278,7 +283,7 @@ function shareCourse(courseid,sharetype){
     if(sharetype==1){
         $("input:radio[value=1]").attr('checked','true');
     }
-   $("#courseid").val(courseid);
+    $("#courseid").val(courseid);
     showModel('shareWindow');
 }
 
@@ -363,7 +368,7 @@ function getTermCondition(tid,termname,iscalendar){
         type:'post',
         dataType:'json',
         error:function(){
-           // alert('异常错误,系统未响应！');
+            // alert('异常错误,系统未响应！');
         },
         success:function(rps){
 
@@ -407,7 +412,7 @@ function getTermCondition(tid,termname,iscalendar){
                 if($("#showMoreSubject").length<1)
                     $("#gradeSubjectList").before(showMore);
             }
-             $("#gradeSubjectList").html(html);
+            $("#gradeSubjectList").html(html);
             $("#sp_subgrade").next().show();
             if(typeof currentSubjectid!="undefined"&&currentSubjectid!=null&&currentSubjectid.length>0){
                 var liid="li_"+currentGradeid+"_"+currentSubjectid;
@@ -495,9 +500,9 @@ function getTermCondition111(tid,termname,iscalendar){
                 html+="<a href="+"javascript:changeGrade("+gitm.gradeid+","+gitm.subjectid+","+idx+");"+">";
                 html+="<span id='t_grade_sub_"+idx+"'>"+gitm.gradevalue+gitm.subjectname+"</span></a>";
             });
-           // $("#ul_grade").html(html);
-          //  changeTab('back');
-          //  changeTab('front');
+            // $("#ul_grade").html(html);
+            //  changeTab('back');
+            //  changeTab('front');
             if(typeof currentSubjectid!="undefined"&&currentSubjectid!=null&&currentSubjectid.length>0){
                 var liid="li_"+currentGradeid+"_"+currentSubjectid;
                 var obj=$("li").filter(function(){return this.id.indexOf(liid)!=-1});
@@ -520,14 +525,14 @@ function getFTermCondition(){
         },
         success:function(rps){
             var html="";
-     //       alert("rps.objList.length"+rps.objList.length+"   rps.objList[0].length"+rps.objList[0].length+"   rps.objList[1].length"+rps.objList[1].length);
+            //       alert("rps.objList.length"+rps.objList.length+"   rps.objList[0].length"+rps.objList[0].length+"   rps.objList[1].length"+rps.objList[1].length);
             if(rps.objList.length>0
                 &&rps.objList[0].length>0){
 
-                    $.each(rps.objList[0],function(subIdx,subItm){
-                       html+="<option value='"+subItm.gradeid+"_"+subItm.subjectid+"'>"
-                            +subItm.gradevalue+subItm.subjectname+"</option>";
-                    });
+                $.each(rps.objList[0],function(subIdx,subItm){
+                    html+="<option value='"+subItm.gradeid+"_"+subItm.subjectid+"'>"
+                        +subItm.gradevalue+subItm.subjectname+"</option>";
+                });
 
             }else{
                 html+="<option value='0'>-- 无 --</option>";
@@ -643,7 +648,7 @@ function updateTrusteeShip(ref,value){
                     closeModel("trusteeShip_div");
                 }
             }else{
-                 alert("操作失败，"+rps.msg);
+                alert("操作失败，"+rps.msg);
             }
         }
     });
@@ -816,7 +821,7 @@ function selectMaterial(isinit){
             if(rps.type=="success"){
                 closeModel("teaching_materia_div");
                 if(isinit){
-                   $("#addReportBtn").hide();
+                    $("#addReportBtn").hide();
                     toSaveCoursePage();
                 }
             }else{

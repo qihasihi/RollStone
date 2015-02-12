@@ -44,9 +44,11 @@
 
 
 
-        <c:if test="${!empty tc && !empty tc.quoteid && tc.quoteid ne 0 && tc.courselevel==3}">
-            $("input[name='sharetype']").attr("disabled",true);
-        </c:if>
+        <%--<c:if test="${!empty tc && !empty tc.quoteid && tc.quoteid ne 0 && (tc.courselevel==3 and tc.sharetype==3)}">--%>
+            <%--$("input[name='sharetype']").attr("disabled",true);--%>
+        <%--</c:if>--%>
+
+
     });
 </script>
 <body>

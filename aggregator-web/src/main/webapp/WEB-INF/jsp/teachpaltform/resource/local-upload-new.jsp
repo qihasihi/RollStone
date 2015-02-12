@@ -316,8 +316,9 @@
     <ul>
         <li id="li_dv_upload_local" class="crumb"><a onclick="changeTab('dv_upload_local')">本地上传</a></li>
         <c:if test="${param.usertype eq 2}">
-            <li id="li_dv_upload_course"><a onclick="changeTab('dv_upload_course')">通过专题查找</a></li>
-            <li id="li_dv_upload_resource"><a onclick="changeTab('dv_upload_resource')">通过资源库查找</a></li>
+           <%-- <li id="li_dv_upload_course"><a onclick="changeTab('dv_upload_course')">通过专题查找</a></li>
+            <li id="li_dv_upload_resource"><a onclick="changeTab('dv_upload_resource')">通过资源库查找</a></li>--%>
+            <li id="li_dv_upload_course"><a onclick="changeTab('dv_upload_course')">搜索资源</a></li>
         </c:if>
 
     </ul>
@@ -420,7 +421,6 @@
         <tr>
             <th>&nbsp;</th>
             <td><a id="a_submit" onclick="doUploadResource(${param.usertype})"   class="an_small">提&nbsp;交</a>
-                <!--<a href="javascript:void(0);" onclick="hideUploadDiv()" class="an_small">取&nbsp;消</a>-->
             </td>
         </tr>
     </table>
@@ -436,7 +436,7 @@
 
             </p>
             <p>类型：<span id="sp_type"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作者：<span id="sp_author"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年级：<span id="sp_grade"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="sp_star"></span></p>
-            <!--<p class="font-darkblue">搜到的资源&nbsp;<span class="font-red">40</span></p>-->
+
         </div>
         <input id="hd_courseid" type="hidden">
         <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
@@ -445,37 +445,22 @@
             <tbody id="courseResData">
 
             </tbody>
-            <!-- <tr>
-                 <td><input type="checkbox" name="checkbox2" id="checkbox2"><span class="ico_doc1"></span></td>
-                 <td>
-                     <p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-                     <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                     <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p>
-                 </td>
-             </tr>
-
-             <tr>
-                 <td><input type="checkbox" name="checkbox2" id="checkbox2"><span class="ico_xls1"></span></td>
-                 <td>
-                     <p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-                     <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                     <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
-             </tr>
-             <tr>
-                 <td><input type="checkbox" name="checkbox" id="checkbox"><span class="ico_tex1"></span></td>
-                 <td><span class="ico_txt1"></span><span class="ico_ppt1"></span><span class="ico_rtf1"></span><span class="ico_vsd1"></span><span class="ico_mp31"></span><span class="ico_swf1"></span><span class="ico_mp41"></span><span class="ico_jpg1"></span><span class="ico_wps1"></span></td>
-             </tr> -->
         </table>
 
         <form action="/role/ajaxlist" id="page2form" name="page2form" method="post" >
             <p align="center" id="page2address"></p>
         </form>
         <p class="t_c"><a href="javascript:void(0);" onclick="sub_res('dv_upload_course',1)" class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="sub_res('dv_upload_course',2)" class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <!--<a onclick="p_upload_course2.style.display='NONE';p_upload_course1.style.display='block';dv_detail_course.style.display='block';" class="an_small">取&nbsp;消</a>-->
-        </p><!--hideUploadDiv()-->
+        </p>
     </div>
 
     <p class="public_input t_l" id="p_upload_course1">
+        <select  class="w60" >
+            <option value="">全部</option>
+            <option value="2">云端</option>
+            <option value="1">校内</option>
+        </select>
+
         <select id="sel_grade" onchange="load_material()">
             <c:if test="${!empty gradeList}">
                 <c:forEach items="${gradeList}" var="g">
@@ -484,20 +469,36 @@
             </c:if>
         </select>
 
-        <select id="sel_material">
-
-        </select>
-
-        <select id="sel_courselevel">
-            <c:if test="${!empty courseLevel}">
-                    <option value="">==请选择专题类型==</option>
-                <c:forEach items="${courseLevel}" var="g">
-                    <option  value="${g.dictionaryvalue}">${g.dictionaryname}</option>
+        <select  class="w80">
+            <c:if test="${!empty resType}">
+                <c:forEach items="${resType}" var="d">
+                    <option value="${d.dictionaryvalue}">${d.dictionaryname}</option>
                 </c:forEach>
             </c:if>
         </select>
 
-        <input id="txt_course" name="txt_course" type="text" class="w220" />
+        <select id="sel_material" class="w190" style="display: none;">
+
+        </select>
+
+        <select id="sel_course" class="w280" style="display: none;">
+
+        </select>
+
+        <%--<select id="sel_courselevel">--%>
+            <%--<c:if test="${!empty courseLevel}">--%>
+                    <%--<option value="">==请选择专题类型==</option>--%>
+                <%--<c:forEach items="${courseLevel}" var="g">--%>
+                    <%--<option  value="${g.dictionaryvalue}">${g.dictionaryname}</option>--%>
+                <%--</c:forEach>--%>
+            <%--</c:if>--%>
+        <%--</select>--%>
+
+
+    </p>
+
+    <p class="public_input t_l">
+        <input id="txt_course" name="txt_course" type="text"  placeholder="知识点/资源名称搜索"  class="w440" />
         <a onclick="pageGo('pCourseRes')" class="an_search" title="查询"></a>
     </p>
 
@@ -516,13 +517,7 @@
                 <th>总评分</th>
             </tr>
             <tbody id="tbl_course">
-            <!-- <tr>
-                 <td><p><a href="1" target="_blank">是否可以提供更多的视频资源？是否可以提供更多的视频资源？是否可以提供更多的</a></p></td>
-                 <td><span class="font-red">300</span></td>
-                 <td>王美联</td>
-                 <td>高一</td>
-                 <td><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star1"></span><span class="ico_star2"></span><span class="ico_star3"></span>&nbsp;3.5</td>
-             </tr> -->
+
             </tbody>
         </table>
 
@@ -554,32 +549,7 @@
         <col class="w50"/>
         <col class="w700"/>
         <tbody id="resData" >
-        <!-- <tr>
-             <td><input type="checkbox" name="checkbox2" id="checkbox2">
-                 <span class="ico_doc1"></span></td>
-             <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-                 <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                 <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
-         </tr>
-         <tr>
-             <td><input type="checkbox" name="checkbox2" id="checkbox2">
-                 <span class="ico_pdf1"></span></td>
-             <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-                 <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                 <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
-         </tr>
-         <tr>
-             <td><input type="checkbox" name="checkbox2" id="checkbox2">
-                 <span class="ico_xls1"></span></td>
-             <td><p><a href="1" target="_blank">数学二元一次方程经典例题</a></p>
-                 <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                 <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p></td>
-         </tr>
-         <tr>
-             <td><input type="checkbox" name="checkbox" id="checkbox">
-                 <span class="ico_tex1"></span></td>
-             <td><span class="ico_txt1"></span><span class="ico_ppt1"></span><span class="ico_rtf1"></span><span class="ico_vsd1"></span><span class="ico_mp31"></span><span class="ico_swf1"></span><span class="ico_mp41"></span><span class="ico_jpg1"></span><span class="ico_wps1"></span></td>
-         </tr>-->
+
         </tbody>
     </table>
 

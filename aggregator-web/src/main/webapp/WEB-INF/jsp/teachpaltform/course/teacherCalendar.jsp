@@ -39,6 +39,7 @@
     $(function(){
         $("#a_course").attr("href",'teachercourse?toTeacherCourseList&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
         $("#a_clsid").attr("href",'group?m=toGroupManager&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
+        $("#a_stat").attr("href",'teachercourse?toAdminStat&termid='+termid+'&subjectid='+subjectid+'&gradeid='+gradeid+'');
     });
 
 
@@ -99,6 +100,9 @@
             <%}%>
             <li ><a href="javascript:;" id="a_clsid" >班级管理</a></li>
             <li class="crumb"><a href="javascript:;"  id="a_calendar">课程日历</a></li>
+            <%if(isSXJw){%>
+                <li><a id="a_stat" href="javascript:;">教务统计</a></li>
+            <%}%>
         </ul>
     </div>
 

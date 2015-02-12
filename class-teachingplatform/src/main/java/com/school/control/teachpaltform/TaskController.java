@@ -4362,8 +4362,8 @@ public class TaskController extends BaseController{
             ta.setUsertype(2);
             List<TpTaskAllotInfo> taskAllotInfoList=this.tpTaskAllotManager.getList(ta,null);
             if(taskAllotInfoList!=null&&taskAllotInfoList.size()>0&&tiList!=null){
-                for(TpTaskAllotInfo allotInfo:taskAllotInfoList){
-                    for(TpGroupInfo groupInfo:tiList){
+                for(TpGroupInfo groupInfo:tiList){
+                    for(TpTaskAllotInfo allotInfo:taskAllotInfoList){
                         if(allotInfo.getUsertypeid().equals(groupInfo.getGroupid()))
                             tmpGroupList.add(groupInfo);
                     }

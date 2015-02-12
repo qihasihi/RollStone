@@ -265,6 +265,7 @@ function updGroup(groupId){
     $(obj).children("input").select().bind("blur",function(){
         doUpdGroup(groupId);
     });
+
     obj.next().hide();
 }
 
@@ -315,15 +316,8 @@ function delGroupStudent(ref){
 function getGroupStudents(groupId,groupName,completenum,totalnum){
     var url="group?m=getGroupStudents";
     var gtHtml="";
-    var percentHtml="";
-    if(completenum>0){
-        var cnum=parseInt(completenum);
-        var tnum=parseInt(totalnum);
-        var percent=parseFloat(cnum)/tnum*100;
-        percentHtml="<br>" +percent.toFixed(2)+"%";
-    }else{
-        var percentHtml="<br>0%";
-    }
+    var percentHtml="<br>0%";
+
     $.post(url,{groupid:groupId},
         function(responseText){
             if(responseText==null||responseText.objList==null||responseText.objList.length==0){
@@ -333,14 +327,19 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
                 $("#group_"+groupId).html(gtHtml);
                 return;
             }
+            var groupCompleteNum=0;
+            var ix=responseText.objList.length;
             var dcType=$("#dcType").val();
             $.each(responseText.objList,function(idx,itm){
+                if(typeof itm.completenum!='undefined')
+                    groupCompleteNum+=parseFloat(itm.completenum);
+
                 gtHtml+="<tr>";
                 if(idx==0){
                     gtHtml+="<td rowspan="+responseText.objList.length+" class='v_c'><span id='sp_"+itm.groupid+"'>"+groupName+"</span>";
                     gtHtml+="<a href='javascript:updGroup("+itm.groupid+");' class='ico11' title='修改'></a>";
                     gtHtml+="<a href='javascript:delGroup("+groupId+");' class='ico04' title='删除'></a>";
-                    gtHtml+=percentHtml;
+                    gtHtml+='<span id="complete_'+itm.groupid+'"></span>';
                     gtHtml+="</td>";
                 }
                 var stuno=typeof itm.stuno=='undefined'?'--':itm.stuno;
@@ -369,6 +368,11 @@ function getGroupStudents(groupId,groupName,completenum,totalnum){
                 gtHtml+='</tr>';
             });
             $("#group_"+groupId).html(gtHtml);
+
+            var percent=isNaN(parseFloat(groupCompleteNum)/ix)?0:parseFloat(groupCompleteNum)/ix;
+            percentHtml="<br>" +percent.toFixed(2)+"%";
+            $("#complete_"+groupId).html(percentHtml)
+
 
 
             var array= $.makeArray($("#group_"+groupId+" a[name='a_view']"));
