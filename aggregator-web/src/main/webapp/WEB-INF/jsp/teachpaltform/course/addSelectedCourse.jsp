@@ -172,8 +172,9 @@
             //添加引用专题前的检查
             function checkCourse(type){
                 var rdoName=typeof type=='undefined'?'courseid':'quote_course';
-                var courseid;
-                $("input[name="+rdoName+"]:checked").each(function() {courseid=$(this).val();});
+
+                //var courseid=$("input[name="+rdoName+"]:checked").each(function() {courseid=$(this).val();});
+                var courseid=$("input[name="+rdoName+"]:checked").val();
                 $.ajax({
                     url:'teachercourse?m=checkQuoteCourse',
                     data:{
@@ -188,10 +189,6 @@
                             if(rps.objList!=null&&rps.objList.length>0){
                                 var htm='';
                                 htm+= '<h3><a href="javascript:closeModel(\'confirmCourseDiv\')"  title="关闭"></a>引用专题</h3>';
-                                var courseid;
-                                $.each(rps.objList,function(idx,itm){
-                                   courseid=itm.courseid;
-                                });
                                 htm+='<p class="p_t_20 t_c"><input type="radio" name="checkQuote" value="1">&nbsp;继续使用';
                                 htm+='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" value="2" name="checkQuote">&nbsp;重新引用</p>';
                                 htm+='<p class="p_t_20 t_c"><a href="javascript:subCheckQuote('+courseid+')"  class="an_public1">确&nbsp;定</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:closeModel(\'confirmCourseDiv\')"  class="an_public1">取&nbsp;消</a></p>';
@@ -259,11 +256,13 @@
             function addTeacherCourse(type){
                 $("#addP").html('<a class="an_small">添&nbsp;加</a>&nbsp;&nbsp;&nbsp;&nbsp;');
                 var term=$("#termid");
-                var courseids=new Array();
+                //var courseids=new Array();
+
                 var subjectid=$("#subjectid");
                 var gradeid=$("#gradeid");
                 var rdoName=typeof type=='undefined'?'courseid':'quote_course';
-                $("input[name="+rdoName+"]:checked").each(function() {courseids.push($(this).val());});
+                //$("input[name="+rdoName+"]:checked").each(function() {courseids.push($(this).val());});
+                var courseids=$("input[name="+rdoName+"]:checked").val();
                 if(term.val().Trim().length<1){
                     alert('学期参数错误!');
                     window.close();
@@ -285,7 +284,7 @@
                         termid:term.val(),
                         subjectid:subjectid.val(),
                         gradeid:tea_gradeid,
-                        courseids:courseids.join(','),
+                        courseids:courseids,
                         materialid:materialid
                     },
                     type:'POST',

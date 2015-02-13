@@ -574,7 +574,10 @@ function showCourseList(){
     </div>
 
     <div id="dv_task">
-        <p class="jxxt_zhuanti_add font-darkblue" id="btn_add"><a href="task?toAddTask&courseid=${param.courseid }&gradeid=${param.gradeid}&subjectid=${param.subjectid}&termid=${param.termid}" ><span class="ico26"></span>添加任务</a></p>
+        <p class="jxxt_zhuanti_add font-darkblue" id="btn_add">
+            <a class="f_right"  href="task?toLoadStuStat&courseid=${courseid}"><span class="ico37"></span>全部任务统计</a>
+            <a href="task?toAddTask&courseid=${param.courseid }&gradeid=${param.gradeid}&subjectid=${param.subjectid}&termid=${param.termid}" ><span class="ico26"></span>添加任务</a>
+        </p>
         <div class="jxxt_zhuanti" id="initItemList">
 
         </div>

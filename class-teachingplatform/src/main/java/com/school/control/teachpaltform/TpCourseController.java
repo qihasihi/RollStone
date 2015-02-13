@@ -3280,14 +3280,16 @@ public class TpCourseController extends TaskController{
                                 HttpServletResponse response) throws Exception {
         JsonEntity je = new JsonEntity();
         PageResult presult = this.getPageResultParameter(request);
-        TpCourseInfo tcInfo = (TpCourseInfo) this.getParameter(request, TpCourseInfo.class);
-        if(tcInfo.getQuoteid()==null||tcInfo.getQuoteid().toString().length()<1){
+        String quoteid=request.getParameter("quoteid");
+        if(quoteid==null||quoteid.toString().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.toJSON());
             return;
         }
+        TpCourseInfo tcInfo=new TpCourseInfo();
         tcInfo.setDcschoolid(this.logined(request).getDcschoolid());
         tcInfo.setCourselevel(-6); // -3标识不共享反义，即所有符合共享条件的专题 或者校内共享
+        tcInfo.setQuoteid(Long.parseLong(quoteid));
         //tcInfo.setFilterquote(1);//去除当前教师引用过的专题
         //tcInfo.setCuserid(this.logined(request).getUserid());
         List<TpCourseInfo> courseList = this.tpCourseManager.getList(tcInfo, presult);

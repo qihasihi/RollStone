@@ -32,11 +32,11 @@ CREATE DEFINER=`schu`@`%` PROCEDURE `tp_course_info_proc_split`(
 BEGIN
 	DECLARE tmp_sql VARCHAR(20000) DEFAULT '';
 	DECLARE tmp_sql2 VARCHAR(20000) DEFAULT '';
-	DECLARE tmp_search_column VARCHAR(2000) DEFAULT ' DISTINCT g.grade_value,school.name schoolname,tc.share_type,tc.teacher_name realname,tc.course_id,GROUP_CONCAT(tm.material_id) materialids,GROUP_CONCAT(CONCAT(tm.material_name,"(",tv.version_name,")")) materialnames,
+	DECLARE tmp_search_column VARCHAR(4000) DEFAULT ' DISTINCT g.grade_value,school.name schoolname,tc.share_type,tc.teacher_name realname,tc.course_id,GROUP_CONCAT(tm.material_id) materialids,GROUP_CONCAT(CONCAT(tm.material_name,"(",tv.version_name,")")) materialnames,
 	(select count(*) from tp_task_info t where t.course_id=tc.course_id )task_count,(select count(*) from tp_j_course_resource_info t where t.course_id=tc.course_id )res_count,
 	(select count(*) from tp_j_course_question_info t where t.course_id=tc.course_id )ques_count,(select count(*) from tp_topic_info t where t.course_id=tc.course_id )topic_count, 
-	(select count(*) from tp_j_course_paper p where p.course_id=tc.course_id) paper_count,
-	(select count(*) from tp_course_info c where c.quote_id=tc.course_id  AND IF(tc.course_id<1,c.dc_school_id=tc.`dc_school_id` ,1=1) and c.local_status=1 and c.share_type<3) quote_count
+	(select count(*) from tp_j_course_paper p where p.course_id=tc.course_id) paper_count
+	
 	 ';  
 	DECLARE tmp_search_condition VARCHAR(2000) DEFAULT ' 1=1 ';  
 	DECLARE tmp_tbl_name VARCHAR(2000) DEFAULT 'tp_course_info tc 
@@ -46,6 +46,12 @@ BEGIN
 	inner join grade_info g on g.grade_id=tm.grade_id
 	left join school_info school on school.school_id=tc.dc_school_id
 	'; 
+	
+
+	IF p_dc_school_id IS NOT NULL THEN
+		SET tmp_search_column=CONCAT(tmp_search_column,",(SELECT COUNT(*) FROM tp_course_info c 
+		WHERE c.quote_id=tc.course_id  AND IF(tc.course_id<1,c.dc_school_id=tc.`dc_school_id` ,c.dc_school_id=",p_dc_school_id,") AND c.local_status=1 AND c.share_type<3) quote_count ");
+	END IF;
 	
 	IF p_school_name IS NOT NULL THEN
 		SET tmp_search_condition=CONCAT(tmp_search_condition," and tc.SCHOOL_NAME='",p_school_name,"'");
@@ -74,7 +80,9 @@ BEGIN
 	
 		IF p_course_level =-3 THEN
 			-- -3为查找所有符合共享条件 ：云端标准，云端共享专题  或 校内共享(父级)
-			SET tmp_search_condition=CONCAT(tmp_search_condition," and (( (tc.COURSE_LEVEL=1 and tc.COURSE_ID>0) OR (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0))  OR (QUOTE_ID=0 and COURSE_LEVEL=3 and SHARE_TYPE=1 and  tc.dc_school_id=",p_dc_school_id,") )");
+			SET tmp_search_condition=CONCAT(tmp_search_condition," and (( (tc.COURSE_LEVEL=1 and tc.COURSE_ID>0) 
+			OR (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0))  
+			OR (QUOTE_ID=0 and COURSE_LEVEL=3 and SHARE_TYPE=1 and  tc.dc_school_id=",p_dc_school_id,") )");
 		ELSEIF p_course_level=-4 THEN     
 			-- -4只查云端标准，或云端共享，但course_id>0
 			SET tmp_search_condition=CONCAT(tmp_search_condition," and ((tc.COURSE_LEVEL=1 AND tc.course_id>0) or  (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0) )");		
@@ -92,7 +100,7 @@ BEGIN
 				SET tmp_search_condition=CONCAT(tmp_search_condition," and tc.dc_school_id=",p_dc_school_id," and tc.COURSE_LEVEL=",p_share_type);
 				
 		ELSEIF p_course_level =-6 THEN   -- 子集
-			SET tmp_search_condition=CONCAT(tmp_search_condition," and (( (tc.COURSE_LEVEL=1 and tc.COURSE_ID>0) OR (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0))  OR (SHARE_TYPE=1 and  tc.dc_school_id=",p_dc_school_id,") )");
+			SET tmp_search_condition=CONCAT(tmp_search_condition," and (( (tc.COURSE_LEVEL=1 and tc.COURSE_ID>0) OR (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0))  OR (SHARE_TYPE<3 and  tc.dc_school_id=",p_dc_school_id,") )");
 	         	
 		END IF;
 	
