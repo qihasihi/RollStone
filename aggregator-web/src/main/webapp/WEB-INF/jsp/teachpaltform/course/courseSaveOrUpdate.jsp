@@ -9,13 +9,26 @@
     <meta http-equiv="expires" content="0"/>
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3"/>
     <meta http-equiv="description" content="This is my page"/>
+    <script type="text/javascript"
+            src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+    <script type="text/javascript"
+            src="fancybox/jquery.fancybox-1.3.4.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css"/>
     <script type="text/javascript" src="js/teachpaltform/course.js"></script>
 </head>
 <script type="text/javascript">
     var materialid="${materialid}";
     var selectedCourseids='';
     var termendtime='${term.semesterenddatestring}';
+    var fancyboxObj;
     $(function(){
+        fancyboxObj=$("#a_click").fancybox({
+            'onClosed':function(){
+                $("#teaching_materia_div").hide();
+            }
+
+        });
         inputThinking();
         $("#material_id").val(materialid);
         /**
@@ -237,6 +250,7 @@
 </body>
 </html>
 
+<a id="a_click" href="#teaching_materia_div"></a>
 <div id="teaching_materia_div" class="public_float jxxt_float_jcbb" style="display:none;">
     <%--<h3><a href="javascript:closeModel('teaching_materia_div');" title="关闭"></a>选教材版本</h3>--%>
         <p class="float_title"><strong>选教材版本</strong></p>

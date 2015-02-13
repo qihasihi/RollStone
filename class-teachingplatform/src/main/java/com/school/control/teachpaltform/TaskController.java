@@ -369,7 +369,7 @@ public class TaskController extends BaseController{
      * 获取菁英班直播课任务列表
      * @throws Exception
      */
-    @RequestMapping(params="m=ajaxLiveTaskList",method=RequestMethod.POST)
+    @RequestMapping(params="m=ajaxLiveTaskList",method={RequestMethod.POST,RequestMethod.GET})
     public void ajaxLiveTaskList(HttpServletRequest request,HttpServletResponse response)throws Exception{
         JsonEntity je = new JsonEntity();
         String eliteSchoolId=UtilTool.utilproperty.get("ELITE_SCHOOL_ID").toString();
@@ -385,31 +385,6 @@ public class TaskController extends BaseController{
         t.setTasktype(10);
         //已发布的任务
         List<TpTaskInfo>taskList=this.tpTaskManager.getTaskDetailList(t, p);
-        if(taskList!=null&&taskList.size()>0){
-//            for(TpTaskInfo task:taskList){
-//                if(task.getTasktype().toString().equals("10")&&(task.getTaskstatus()!="3" && task.getTaskstatus()!="1")){
-//                    String url=UtilTool.utilproperty.getProperty("GET_ETT_LIVE_ADDRESS");
-//                    String lessionid=task.getTaskid().toString().replace("-","");
-//                    HashMap<String,String> signMap = new HashMap();
-//                    signMap.put("courseName",task.getCoursename().toString());
-//                    signMap.put("courseId",lessionid);
-//                    signMap.put("userId","100");
-//                    signMap.put("userName","luzhi");
-//                    signMap.put("rec","2");
-//                    signMap.put("srcId","90");
-//                    signMap.put("timestamp",System.currentTimeMillis()+"");
-//                    String signture = UrlSigUtil.makeSigSimple("getTutorUrl.do",signMap,"*ETT#HONER#2014*");
-//                    signMap.put("sign",signture);
-//                    JSONObject jsonObject = UtilTool.sendPostUrl(url,signMap,"utf-8");
-//                    int type = jsonObject.containsKey("result")?jsonObject.getInt("result"):0;
-//                    if(type==1){
-//                        String liveurl= jsonObject.containsKey("data")?jsonObject.getString("data"):"";
-//                        if(liveurl!=null&&liveurl.trim().length()>0)
-//                            task.setLiveaddress(java.net.URLDecoder.decode(liveurl,"UTF-8"));
-//                    }
-//                }
-//            }
-        }
         p.setList(taskList);
         je.setPresult(p);
         je.setType("success");
