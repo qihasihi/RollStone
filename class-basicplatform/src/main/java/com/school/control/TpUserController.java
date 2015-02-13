@@ -2505,6 +2505,13 @@ public class TpUserController extends UserController {
      * @return
      */
     public boolean BindEttUser(String userid,String schoolid,String userType){
+        if(schoolid==null||schoolid.trim().length()<1)
+            return false;
+        String eliteSchoolid=UtilTool.utilproperty.getProperty("ELITE_SCHOOL_ID").toString();
+        if(eliteSchoolid!=null&&schoolid.equals(eliteSchoolid)){
+            System.out.println("BindEttUser eliteSchool!");
+            return true;
+        }
         UserInfo sel=new UserInfo();
         sel.setEttuserid(Integer.parseInt(userid));
         sel.setDcschoolid(Integer.parseInt(schoolid));
@@ -2542,8 +2549,13 @@ public class TpUserController extends UserController {
      * @return
      */
     public boolean BindEttUser(List<UserInfo>userList,String schoolid,String userType){
-        if(userList==null||userList.size()<1)return false;
+        if(userList==null||userList.size()<1||schoolid==null)return false;
 
+        String eliteSchoolid=UtilTool.utilproperty.getProperty("ELITE_SCHOOL_ID").toString();
+        if(eliteSchoolid!=null&&schoolid.equals(eliteSchoolid)){
+            System.out.println("BindEttUser eliteSchool!");
+            return true;
+        }
         JSONArray array=new JSONArray();
         for(UserInfo u:userList){
             JSONObject obj = new JSONObject();
