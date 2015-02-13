@@ -306,9 +306,12 @@
             courseObj.show();
             materialObj.show();
             load_material();
+            showOrHide('course');
         }else{
-            courseObj.hide();
-            materialObj.hide();
+            courseObj.val("").hide();
+            materialObj.val("").hide();
+            pageGo('p1');
+            showOrHide('resource');
         }
     }
     /**
@@ -317,20 +320,30 @@
     function loadCourseList(){
         var sel_grade = $("#sel_grade").val();
         var sel_material = $("#sel_material").val();
-        var sel_courselevel = $("#sel_courselevel").val();
+        var sel_sharetype = $("#sel_share_type").val();
         var txt_course = $("#txt_course").val();
+        var sel_courseid = $("#hd_courseid").val();
+
         var param = {
-            gradeid: sel_grade,
-            materialid: sel_material,
-            courselevel: sel_courselevel,
-            coursename: txt_course,
             subjectid: courseSubject,
             currentcourseid:courseid,
             difftype:0
         };
+//        if(sel_courseid!=null&&sel_courseid.toString().length>0)
+//            param.courseid=sel_courseid;
+        if(sel_grade!=null&&sel_grade.toString().length>0)
+            param.gradeid=sel_grade;
+        if(sel_material!=null&&sel_material.toString().length>0)
+            param.materialid=sel_material;
+        if(txt_course!=null&&txt_course.toString().length>0)
+            param.coursename=txt_course;
+        if(sel_sharetype!=null&&sel_sharetype.toString().length>0)
+            param.sharetype=sel_sharetype;
 
+        pageGo('pCourseRes');
+        pageGo('p1');
         $.ajax({
-            url: 'tpres?m=ajaxCourseList&pageResult.pageNo=1&pageResult.pageSize=99999&t=',
+            url: 'tpres?m=ajaxCourseList&pageResult.pageNo=1&pageResult.pageSize=99999999&t='+new Date().getTime(),
             type: 'post',
             data: param,
             dataType: 'json',
@@ -348,6 +361,32 @@
                 $("#sel_course").html(htm);
             }
         });
+    }
+
+    function showOrHide(type){
+        var courseDiv=$("#dv_detail_course");
+        var resourceDiv=$("#dv_detail_res");
+        var resCount=$("#sp_res_count").html();
+        var courseCount=$("#sp_course_count").html();
+        var resType=$("#sel_res_type").val();
+        var htm='';
+        if(type=='course'&&resType=="7"){
+            courseDiv.show();
+            resourceDiv.hide();
+            htm='<strong class="font-darkblue f_right" >';
+            htm+='<a href="javascript:showOrHide(\'resource\')" >相关资源<span id="sp_res_count">'+resCount+'</span>个</a>';
+            htm+='</strong><p id="course_num">搜到的专题&nbsp;';
+            htm+='<span class="font-red" id="sp_course_count">'+courseCount+'</span>&nbsp;个</p>';
+        }else{
+            courseDiv.hide();
+            resourceDiv.show();
+
+            htm='<strong class="font-darkblue f_right" id="course_num" style="display: '+(resType==7?"":"none")+';" >';
+            htm+='<a href="javascript:showOrHide(\'course\')" >相关专题<span id="sp_course_count">'+courseCount+'</span>个</a>';
+            htm+='</strong>搜到的资源&nbsp;';
+            htm+='<span class="font-red" id="sp_res_count">'+resCount+'</span>&nbsp;个';
+        }
+        $("#p_obj_count").html(htm);
     }
 
 
@@ -489,7 +528,7 @@
     <div id="p_upload_course2" style="display: none;">
         <div class="jxxt_zhuanti_zy_add_info">
             <p class="back">
-                <a class="one"  href="javascript:;" onclick="p_upload_course2.style.display='NONE';p_upload_course1.style.display='block';dv_detail_course.style.display='block';">返回</a>
+                <a class="one"  href="javascript:;" onclick="p_upload_course2.style.display='NONE';p_upload_course1.style.display='block';p_search.style.display='block';dv_data_count.style.display='block';dv_detail_course.style.display='block';">返回</a>
             </p>
             <p class="font-black" id="p_coursename">
 
@@ -556,42 +595,44 @@
 
     </p>
 
-    <p class="public_input t_l">
+    <p class="public_input t_l" id="p_search">
         <input id="txt_course" name="txt_course" type="text"  placeholder="知识点/资源名称搜索"  class="w440" />
         <a onclick="pageGo('pCourseRes');pageGo('p1');" class="an_search" title="查询"></a>
     </p>
 
 
-    <div class="jxxt_zhuanti_zy_add_info p_t_10">
-        <p class="font-black">
-            <strong class="font-darkblue f_right">
-                <a href="1" target="_blank">相关专题<span id="sp_course_count">0</span>个</a>
+    <div class="jxxt_zhuanti_zy_add_info p_t_10" id="dv_data_count">
+        <p class="font-black" id="p_obj_count">
+            <strong class="font-darkblue f_right" id="course_num" style="display: none;">
+                <a href="javascript:showOrHide('course')" >相关专题<span id="sp_course_count">0</span>个</a>
             </strong>搜到的资源&nbsp;
-            <span class="font-red" id="sp_res_count">0</span>&nbsp;个</p>
+            <span class="font-red" id="sp_res_count">0</span>&nbsp;个
+        </p>
     </div>
+    <div id="dv_detail_res">
+        <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
+            <col class="w50"/>
+            <col class="w700"/>
+            <tbody id="resData" >
 
-    <table border="0" cellpadding="0" cellspacing="0" class="public_tab1 font-black">
-        <col class="w50"/>
-        <col class="w700"/>
-        <tbody id="resData" >
+            </tbody>
+           <%-- <tr>
+                <td><input type="checkbox" name="checkbox2" id="checkbox2"><span class="ico_doc1"></span></td>
+                <td>
+                    <p>数学二元一次方程经典例题</p>
+                    <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
+                    <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p>
+                </td>
+            </tr>--%>
 
-        </tbody>
-       <%-- <tr>
-            <td><input type="checkbox" name="checkbox2" id="checkbox2"><span class="ico_doc1"></span></td>
-            <td>
-                <p>数学二元一次方程经典例题</p>
-                <p>款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款 款了附件啦积分就开发就开发点击发建军节款</p>
-                <p class="jxxt_zhuanti_zy_add_text">北京四中_李静&nbsp;&nbsp;&nbsp;课件&nbsp;&nbsp;<span class="ico46" title="浏览"></span><b>1463</b><span class="ico59" title="下载"></span><b>1523</b><span class="ico41" title="赞"></span><b>15463</b></p>
-            </td>
-        </tr>--%>
+        </table>
 
-    </table>
-
-    <form action="/role/ajaxlist" id="page1form" name="page1form" method="post">
-        <p align="center" id="page1address"></p>
-    </form>
-    <p class="t_c p_tb_10"><a onclick="sub_res('dv_upload_resource',1)"  class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="sub_res('dv_upload_resource',2)"  class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;
-    </p>
+        <form action="/role/ajaxlist" id="page1form" name="page1form" method="post">
+            <p align="center" id="page1address"></p>
+        </form>
+        <p class="t_c p_tb_10"><a onclick="sub_res('dv_upload_resource',1)"  class="an_small_long">添加到学习资源</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="sub_res('dv_upload_resource',2)"  class="an_small_long">添加到教学参考</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        </p>
+    </div>
 
 
 

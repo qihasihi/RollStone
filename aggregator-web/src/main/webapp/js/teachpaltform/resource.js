@@ -6,10 +6,10 @@
  * @param p
  */
 function beforeAjaxCourseList(p) {
-    var sel_courseid=$("#hd_courseid").val();
+    var sel_courseid=$("#sel_course").val();
     var sel_grade = $("#sel_grade").val();
     var sel_res_type = $("#sel_res_type").val();
-    var sel_material = $("#sel_material").val();
+    var sel_material = $("#sel_material ").val();
     var txt_course = $("#txt_course").val();
     var sel_sharetype=$("#sel_share_type").val();
     var resname = $("#txt_course").val();
@@ -186,6 +186,8 @@ function load_courseres_detail(cid) {
                 }
                 $("#p_upload_course1").hide();
                 $("#p_upload_course2").show();
+                $("#p_search").hide();
+                $("#dv_data_count").hide();
                 pageGo("pCourse");
             }
         }
@@ -258,9 +260,10 @@ function load_course() {
 function beforeQryCourseList(p) {
     var sel_grade = $("#sel_grade").val();
     var sel_material = $("#sel_material").val();
-    var sel_courselevel = $("#sel_courselevel").val();
+    var sel_sharetype = $("#sel_share_type").val();
     var txt_course = $("#txt_course").val();
-    var sel_courseid = $("#hd_courseid").val();
+    var sel_courseid = $("#sel_course").val();
+
     var param = {
         subjectid: courseSubject,
         currentcourseid:courseid,
@@ -274,6 +277,8 @@ function beforeQryCourseList(p) {
         param.materialid=sel_material;
     if(txt_course!=null&&txt_course.toString().length>0)
         param.coursename=txt_course;
+    if(sel_sharetype!=null&&sel_sharetype.toString().length>0)
+        param.sharetype=sel_sharetype;
     p.setPostParams(param);
 }
 
@@ -308,6 +313,9 @@ function afterQryCourseList(rps) {
     }
     $("#tbl_course").html(htm);
     $("#sp_course_count").html(rps.presult.recTotal);
+    var resType=$("#sel_res_type").val();
+    if(resType=="7")
+        $("#course_num").show();
 
     pCourseRes.setPageSize(rps.presult.pageSize);
     pCourseRes.setPageNo(rps.presult.pageNo);

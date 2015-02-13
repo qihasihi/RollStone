@@ -145,6 +145,7 @@ public class TaskController extends BaseController{
         String gradeid=request.getParameter("gradeid");
         String materialid=request.getParameter("material_id");
         String addresstype = request.getParameter("addresstype");
+
         if(courseid==null||courseid.trim().length()<1){
             je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
             response.getWriter().print(je.getAlertMsgAndBack());
@@ -204,6 +205,7 @@ public class TaskController extends BaseController{
 
         //if(materialid!=null&&!materialid.toString().equals("0"))
         //    request.getSession().setAttribute("session_material",materialid);
+
 
         //任务库
         List<DictionaryInfo>courselevel=this.dictionaryManager.getDictionaryByType("COURSE_LEVEL");
@@ -5463,4 +5465,54 @@ public class TaskController extends BaseController{
         }
         response.getWriter().print(je.toJSON());
     }
+
+    /**
+     * 学生专题任务完成情况
+     * @param request
+     * @param response
+     * @param mp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(params="toLoadStuStat",method= {RequestMethod.GET})
+    public ModelAndView toLoadStuStat(HttpServletRequest request,HttpServletResponse response,ModelMap mp)throws Exception{
+        JsonEntity je=new JsonEntity();
+        String courseid=request.getParameter("courseid");
+        if(courseid==null||courseid.trim().length()<1){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //获取专题班级
+        TpCourseClass cc=new TpCourseClass();
+        cc.setCourseid(Long.parseLong(courseid));
+        List<TpCourseClass>clsList=this.tpCourseClassManager.getList(cc,null);
+        if(clsList==null||clsList.size()<1){
+            je.setMsg("请设置专题班级!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        TpCourseInfo tc=new TpCourseInfo();
+        tc.setCourseid(Long.parseLong(courseid));
+        List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getTchCourseList(tc, null);
+        if(teacherCourseList==null||teacherCourseList.size()<1){
+            je.setMsg("找不到指定课题!");
+            response.getWriter().print(je.getAlertMsgAndBack());
+            return null;
+        }
+        //获取当前专题教材
+        String subjectid=null;
+        TpCourseTeachingMaterial ttm=new TpCourseTeachingMaterial();
+        ttm.setCourseid(Long.parseLong(courseid));
+        List<TpCourseTeachingMaterial>materialList=this.tpCourseTeachingMaterialManager.getList(ttm,null);
+        if(materialList!=null&&materialList.size()>0)
+            subjectid=materialList.get(0).getSubjectid().toString();
+
+        mp.put("courseid",courseid);
+        mp.put("subjectid",subjectid);
+        mp.put("classList",clsList);
+        mp.put("termid",teacherCourseList.get(0).getTermid());
+        return new ModelAndView("/teachpaltform/task/teacher/stat/stu-task-stat",mp);
+    }
+
 }

@@ -1,10 +1,10 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `tp_j_course_resource_info_proc_split`$$
 
-CREATE DEFINER=`mytest`@`%` PROCEDURE `tp_j_course_resource_info_proc_split`(
+CREATE DEFINER=`schu`@`%` PROCEDURE `tp_j_course_resource_info_proc_split`(
 				          p_ref INT,
 				          p_res_id BIGINT,
 				          p_course_id BIGINT,

@@ -1,6 +1,6 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `tp_course_info_proc_split`$$
 
@@ -21,6 +21,7 @@ CREATE DEFINER=`schu`@`%` PROCEDURE `tp_course_info_proc_split`(
 				          p_grade_id INT,
 				          p_material_values VARCHAR(50),
 				          p_filter_quote INT,
+				          p_filter_grade INT,
 				          p_subjectvalues VARCHAR(100),
 					  p_versionvalues VARCHAR(1000),
 					  p_current_page INT(10),
@@ -31,10 +32,12 @@ CREATE DEFINER=`schu`@`%` PROCEDURE `tp_course_info_proc_split`(
 BEGIN
 	DECLARE tmp_sql VARCHAR(20000) DEFAULT '';
 	DECLARE tmp_sql2 VARCHAR(20000) DEFAULT '';
-	DECLARE tmp_search_column VARCHAR(2000) DEFAULT ' DISTINCT school.name schoolname,tc.teacher_name realname,tc.course_id,GROUP_CONCAT(tm.material_id) materialids,GROUP_CONCAT(CONCAT(tm.material_name,"(",tv.version_name,")")) materialnames,
+	DECLARE tmp_search_column VARCHAR(2000) DEFAULT ' DISTINCT g.grade_value,school.name schoolname,tc.share_type,tc.teacher_name realname,tc.course_id,GROUP_CONCAT(tm.material_id) materialids,GROUP_CONCAT(CONCAT(tm.material_name,"(",tv.version_name,")")) materialnames,
 	(select count(*) from tp_task_info t where t.course_id=tc.course_id )task_count,(select count(*) from tp_j_course_resource_info t where t.course_id=tc.course_id )res_count,
 	(select count(*) from tp_j_course_question_info t where t.course_id=tc.course_id )ques_count,(select count(*) from tp_topic_info t where t.course_id=tc.course_id )topic_count, 
-	(select count(*) from tp_j_course_paper p where p.course_id=tc.course_id) paper_count ';  
+	(select count(*) from tp_j_course_paper p where p.course_id=tc.course_id) paper_count,
+	(select count(*) from tp_course_info c where c.quote_id=tc.course_id  AND IF(tc.course_id<1,c.dc_school_id=tc.`dc_school_id` ,1=1) and c.local_status=1 and c.share_type<3) quote_count
+	 ';  
 	DECLARE tmp_search_condition VARCHAR(2000) DEFAULT ' 1=1 ';  
 	DECLARE tmp_tbl_name VARCHAR(2000) DEFAULT 'tp_course_info tc 
 	INNER JOIN tp_j_course_teaching_material jtm ON jtm.course_id=tc.COURSE_ID 
@@ -56,10 +59,10 @@ BEGIN
 		SET tmp_search_condition=CONCAT(tmp_search_condition," and tm.subject_id IN (",p_subjectvalues,")");
 	END IF;
 	IF p_filter_quote IS NOT NULL AND p_cuser_id IS NOT NULL THEN
-	/*  */
 		/*SET tmp_search_condition=CONCAT(tmp_search_condition," and (tc.quote_id IS  NULL or quote_id=0) and tc.cuser_id <> ",p_cuser_id,"");*/
 		/*SET tmp_search_condition=CONCAT(tmp_search_condition," AND NOT EXISTS (SELECT 1 FROM tp_course_info WHERE CUSER_ID =",p_cuser_id," AND quote_id IS NOT NULL AND quote_id <>0  and QUOTE_ID=tc.COURSE_ID) ");*/
-		SET tmp_search_condition=CONCAT(tmp_search_condition," AND NOT EXISTS (SELECT 1 FROM tp_course_info WHERE CUSER_ID =",p_cuser_id," and (course_id=tc.course_id or (quote_id=tc.course_id and quote_id not in(select quote_id from tp_course_info where local_status=2 and cuser_id=",p_cuser_id,"))))");
+		/*SET tmp_search_condition=CONCAT(tmp_search_condition," AND NOT EXISTS (SELECT 1 FROM tp_course_info WHERE CUSER_ID =",p_cuser_id," and (course_id=tc.course_id or (quote_id=tc.course_id and quote_id not in(select quote_id from tp_course_info where local_status=2 and cuser_id=",p_cuser_id,"))))");*/
+		SET tmp_search_condition=CONCAT(tmp_search_condition," AND NOT EXISTS (SELECT 1 FROM tp_course_info t1,tp_j_course_class t2 WHERE t1.course_id=t2.course_id and t2.grade_id=",p_filter_grade," and t1.CUSER_ID =",p_cuser_id," and (t1.course_id=tc.course_id or (t1.quote_id=tc.course_id and t1.quote_id not in(select quote_id from tp_course_info where local_status=2 and cuser_id=",p_cuser_id,"))))");
 	END IF;
 	
 	IF p_teacher_name IS NOT NULL THEN
@@ -70,19 +73,26 @@ BEGIN
 	-- test sql SET tmp_search_condition=CONCAT(tmp_search_condition," and tc. course_id=-9372786402551 ");
 	
 		IF p_course_level =-3 THEN
-			-- -3Îª²éÕÒËùÓÐ·ûºÏ¹²ÏíÌõ¼þ £ºÔÆ¶Ë±ê×¼£¬ÔÆ¶Ë¹²Ïí×¨Ìâ  »ò Ð£ÄÚ¹²Ïí
-			SET tmp_search_condition=CONCAT(tmp_search_condition," and (( (tc.COURSE_LEVEL=1 and tc.COURSE_ID>0) OR (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0)) OR (SHARE_TYPE=1 and  tc.dc_school_id=",p_dc_school_id,") )");
+			-- -3ä¸ºæŸ¥æ‰¾æ‰€æœ‰ç¬¦åˆå…±äº«æ¡ä»¶ ï¼šäº‘ç«¯æ ‡å‡†ï¼Œäº‘ç«¯å…±äº«ä¸“é¢˜  æˆ– æ ¡å†…å…±äº«(çˆ¶çº§)
+			SET tmp_search_condition=CONCAT(tmp_search_condition," and (( (tc.COURSE_LEVEL=1 and tc.COURSE_ID>0) OR (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0))  OR (QUOTE_ID=0 and COURSE_LEVEL=3 and SHARE_TYPE=1 and  tc.dc_school_id=",p_dc_school_id,") )");
+		ELSEIF p_course_level=-4 THEN     
+			-- -4åªæŸ¥äº‘ç«¯æ ‡å‡†ï¼Œæˆ–äº‘ç«¯å…±äº«ï¼Œä½†course_id>0
+			SET tmp_search_condition=CONCAT(tmp_search_condition," and ((tc.COURSE_LEVEL=1 AND tc.course_id>0) or  (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0) )");		
+		
 		ELSEIF p_course_level=-2 THEN     
-			-- -2Îª²é ÔÆ¶Ë±ê×¼£¬ÔÆ¶Ë¹²Ïí£¬ºÍÒª¹²Ïíµ½ÔÆ¶ËµÄ£¬
-			SET tmp_search_condition=CONCAT(tmp_search_condition," and tc.COURSE_LEVEL=1 or  (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0)  or (tc.COURSE_LEVEL=2 and  tc.dc_school_id=",p_dc_school_id," )");
-	        ELSEIF p_course_level=1 THEN  -- ÔÆ¶Ë±ê×¼
+			-- -2ä¸ºæŸ¥ äº‘ç«¯æ ‡å‡†ï¼Œäº‘ç«¯å…±äº«ï¼Œå’Œè¦å…±äº«åˆ°äº‘ç«¯çš„ï¼Œ
+			SET tmp_search_condition=CONCAT(tmp_search_condition," and (tc.COURSE_LEVEL=1 or  (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0)  or (tc.COURSE_LEVEL=2 and  tc.dc_school_id=",p_dc_school_id," ))");
+	        ELSEIF p_course_level=1 THEN  -- äº‘ç«¯æ ‡å‡†
 				SET tmp_search_condition=CONCAT(tmp_search_condition," and tc.COURSE_LEVEL=",p_share_type);
-	        ELSEIF p_course_level=2 THEN  -- Ð£ÄÚ¹²Ïí»òÔÆ¶Ë¹²Ïí 
+	        ELSEIF p_course_level=2 THEN  -- æ ¡å†…å…±äº«æˆ–äº‘ç«¯å…±äº« 
 				SET tmp_search_condition=CONCAT(tmp_search_condition,"  and ( (tc.dc_school_id=",p_dc_school_id,"  and tc.COURSE_LEVEL=2 ) or 
-				(tc.COURSE_LEVEL=2 and tc.course_id>0)");
+				(tc.COURSE_LEVEL=2 and tc.course_id>0))");
 	         	
-	        ELSEIF p_course_level=3 THEN  -- ±¾µØ
+	        ELSEIF p_course_level=3 THEN  -- æœ¬åœ°
 				SET tmp_search_condition=CONCAT(tmp_search_condition," and tc.dc_school_id=",p_dc_school_id," and tc.COURSE_LEVEL=",p_share_type);
+				
+		ELSEIF p_course_level =-6 THEN   -- å­é›†
+			SET tmp_search_condition=CONCAT(tmp_search_condition," and (( (tc.COURSE_LEVEL=1 and tc.COURSE_ID>0) OR (tc.COURSE_LEVEL=2 AND tc.COURSE_ID>0))  OR (SHARE_TYPE=1 and  tc.dc_school_id=",p_dc_school_id,") )");
 	         	
 		END IF;
 	
@@ -163,6 +173,6 @@ BEGIN
 	DEALLOCATE PREPARE stmt2;
 	SET sumCount=@tmp_sumCount;
 	
-END $$
+    END$$
 
 DELIMITER ;

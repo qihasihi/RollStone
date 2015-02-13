@@ -114,6 +114,7 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         String subjectid=request.getParameter("subjectid");
         String currentcourseid=request.getParameter("currentcourseid");
         String courseid=request.getParameter("courseid");
+        String sharetype=request.getParameter("sharetype");
 
 
         PageResult pageResult=this.getPageResultParameter(request);
@@ -141,9 +142,14 @@ public class TpResourceController extends BaseController<TpCourseResource>{
         if(courseid!=null&&courseid.trim().length()>0){
             tpCourseInfo.setCourseid(Long.parseLong(courseid));
         }
+        if(sharetype!=null&&sharetype.trim().length()>0){
+            tpCourseInfo.setSharetype(Integer.parseInt(sharetype));
+        }else
+            tpCourseInfo.setSharetype(3);
+
         tpCourseInfo.setLocalstatus(1);
-        /*if(tpCourseInfo.getSharetype()==null||tpCourseInfo.getSharetype()<1)
-            tpCourseInfo.setSharetype(1);*/
+        tpCourseInfo.setDcschoolid(this.logined(request).getDcschoolid());
+
         List<TpCourseInfo>teacherCourseList=this.tpCourseManager.getCouresResourceList(tpCourseInfo, pageResult);
         pageResult.setList(teacherCourseList);
         je.setPresult(pageResult);

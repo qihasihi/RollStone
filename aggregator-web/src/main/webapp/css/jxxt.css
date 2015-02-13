@@ -516,6 +516,16 @@
 	.jxxt_zhuanti_rw_tongji div.left{width:300px; min-height:140px;padding-top:20px;}
 	.jxxt_zhuanti_rw_tongji div.right{width:280px;padding-top:20px; float:right;}
 
+    .jxxt_zhuanti_rw_tongji_all {
+	width:940px;
+	overflow: auto;
+	overflow-y:hidden;
+	padding-bottom:5px;
+	margin-bottom:15px;
+}
+    .jxxt_zhuanti_rw_tongji_all table.public_tab2{ margin:0;}
+	.jxxt_zhuanti_rw_tongji_all table.public_tab2 th,.jxxt_zhuanti_rw_tongji_all table.public_tab2 td{ width:78px;}
+
     .jxxt_zhuanti_rw_tongji_chengjuan {
 	width:940px;
 	overflow: auto;

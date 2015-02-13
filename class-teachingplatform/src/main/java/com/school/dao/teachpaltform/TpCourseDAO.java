@@ -1157,6 +1157,12 @@ public class TpCourseDAO extends CommonDAO<TpCourseInfo> implements ITpCourseDAO
                 objList.add(tpcourseinfo.getSharetype());
             } else
                 sqlbuilder.append("null,");
+            if (tpcourseinfo.getDcschoolid() != null) {
+                sqlbuilder.append("?,");
+                objList.add(tpcourseinfo.getDcschoolid());
+            } else
+                sqlbuilder.append("null,");
+
         }
 
         if(presult!=null&&presult.getPageNo()>0&&presult.getPageSize()>0){

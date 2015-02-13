@@ -1,10 +1,10 @@
 DELIMITER $$
 
-USE `m_school`$$
+USE `school201501`$$
 
 DROP PROCEDURE IF EXISTS `rs_resource_proc_searchby_value`$$
 
-CREATE DEFINER=`mytest`@`%` PROCEDURE `rs_resource_proc_searchby_value`(
+CREATE DEFINER=`schu`@`%` PROCEDURE `rs_resource_proc_searchby_value`(
 				         p_res_id VARCHAR(1000),
 				          p_res_name VARCHAR(1000),
 				          p_res_keyword VARCHAR(1000),
@@ -55,6 +55,7 @@ CREATE DEFINER=`mytest`@`%` PROCEDURE `rs_resource_proc_searchby_value`(
 				             p_current_course_id BIGINT,
 				             p_dc_school_id INT,
 				             p_vote_uid INT ,
+				             p_material_id INT,
 				          p_current_page INT(10),
 					  p_page_size INT(10),
 					  p_sort_column VARCHAR(150),
@@ -73,7 +74,7 @@ BEGIN
 	DECLARE tmp_tbl_name VARCHAR(10000) DEFAULT 'rs_resource_info r '; 
 	DECLARE course_res_sql VARCHAR(10000) DEFAULT ' '; 
 	DECLARE total_sql VARCHAR(10000) DEFAULT ' '; 
-	
+	DECLARE is_order INT DEFAULT 0;
 	IF p_vote_uid IS NOT NULL THEN 
 	 SET tmp_search_column=CONCAT(tmp_search_column,",(SELECT COUNT(*) FROM rs_operate_record rr WHERE  rr.USER_ID=",p_vote_uid, " AND rr.RES_ID=r.res_id AND rr.OPERATE_TYPE=2)voteflag ");
 	END IF;
@@ -84,7 +85,7 @@ BEGIN
   
 	
 	IF p_sharestatusvalues IS NULL  OR (LOCATE(1,p_sharestatusvalues)>0 AND  LOCATE(2,p_sharestatusvalues)>0) THEN
-		SET tmp_search_condition=CONCAT(tmp_search_condition,' AND ((r.RES_DEGREE=3 AND r.SHARE_STATUS=1 and r.dc_school_id=',p_dc_school_id,') OR (r.RES_DEGREE <>3 and AND r.dc_school_id=',p_dc_school_id,')) ');
+		SET tmp_search_condition=CONCAT(tmp_search_condition,' AND ((r.RES_DEGREE=3 AND r.SHARE_STATUS=1 and r.dc_school_id=',p_dc_school_id,') OR (r.RES_DEGREE <>3  AND (r.res_id>0 or (r.res_id<0  and r.dc_school_id=',p_dc_school_id,')))) ');
 	END IF;
 	IF p_sharestatusvalues IS NOT NULL AND (LOCATE(1,p_sharestatusvalues)<1 OR  LOCATE(2,p_sharestatusvalues)<1) THEN
 		IF LOCATE(1,p_sharestatusvalues)>0 THEN
@@ -266,11 +267,11 @@ BEGIN
 				  INNER JOIN  tp_j_course_teaching_material tcm ON tc.course_id=tcm.course_id
 				  INNER JOIN teaching_material_info tm ON tm.material_id=tcm.teaching_material_id 
 				   INNER JOIN grade_info g ON g.GRADE_ID=tm.grade_id
-				  where 1=1 and r.res_status=1 
+				  where 1=1 and r.res_status=1 AND (tc.dc_school_id IS NULL OR tc.dc_school_id=',p_dc_school_id,')
 				  ');
 		
 			IF p_sharestatusvalues IS NULL OR (LOCATE(1,p_sharestatusvalues)>0 AND  LOCATE(2,p_sharestatusvalues)>0) THEN
-				SET tmp_sql=CONCAT(tmp_sql,' AND ((r.RES_DEGREE=3 AND r.SHARE_STATUS=1 and r.dc_school_id=',p_dc_school_id,') OR (r.RES_DEGREE <>3 and r.dc_school_id=',p_dc_school_id,')) ');
+				SET tmp_sql=CONCAT(tmp_sql,' AND ((r.RES_DEGREE=3 AND r.SHARE_STATUS=1 and r.dc_school_id=',p_dc_school_id,')  OR (r.RES_DEGREE <>3  AND (r.res_id>0 or (r.res_id<0  and r.dc_school_id=',p_dc_school_id,')))) ');
 			END IF;
 			IF p_sharestatusvalues IS NOT NULL AND (LOCATE(1,p_sharestatusvalues)<1 OR  LOCATE(2,p_sharestatusvalues)<1) THEN
 				IF LOCATE(1,p_sharestatusvalues)>0 THEN
@@ -295,6 +296,17 @@ BEGIN
 		IF p_versionvalues IS NOT NULL THEN
 			SET tmp_sql=CONCAT(tmp_sql," and tm.version_id IN (",p_versionvalues,")");
 		END IF;
+		
+		IF p_material_id IS NOT NULL THEN
+			SET tmp_sql=CONCAT(tmp_sql," and tm.material_id=",p_material_id);
+		END IF;
+		
+		IF p_course_id IS NOT NULL THEN
+			SET tmp_sql=CONCAT(tmp_sql," and cr.course_id=",p_course_id);
+		END IF;
+		
+		
+		
 	
 		IF p_subjects IS NOT NULL THEN
 			SET tmp_sql=CONCAT(tmp_sql," and tm.SUBJECT_ID IN (",p_subjects,")");
@@ -321,10 +333,11 @@ BEGIN
 			END IF;
 			-- SET tmp_search_condition=CONCAT(tmp_search_condition,")");	
 		END IF;
-		
-		SET tmp_sql=CONCAT(tmp_sql," ORDER BY ");
+		IF is_order <>1 THEN
+			SET tmp_sql=CONCAT(tmp_sql," ORDER BY ");
 			IF p_sort_column IS NOT NULL THEN
 				SET tmp_sql=CONCAT(tmp_sql," ",p_sort_column);
+				SET is_order=1;
 			ELSE 
 				IF p_currentloginSub IS NOT NULL THEN
 					SET tmp_sql=CONCAT(tmp_sql," ABS(",p_currentloginSub,"-IFNULL(tm.subject_id,0)) ASC,");		
@@ -333,12 +346,14 @@ BEGIN
 					SET tmp_sql=CONCAT(tmp_sql," ABS(",p_currentloginGrd,"-IFNULL(tm.grade_id,0)) ASC,");		
 				END IF;
 				SET tmp_sql=CONCAT(tmp_sql," r.C_TIME DESC");
+				SET is_order=1;
 			END IF;	  
+		END IF;
 		SET tmp_sql=CONCAT(tmp_sql,") r");
 	END IF;
 	
 	
-	SET tmp_sql=CONCAT(" SELECT t.RES_ID FROM (",tmp_sql);
+	SET tmp_sql=CONCAT("SELECT t.RES_ID FROM (",tmp_sql);
 	
 	
 	
@@ -351,8 +366,9 @@ BEGIN
 	END IF;
 	
 	SET total_sql=tmp_sql;
-	IF p_isunion IS NULL AND p_sort_column IS NOT NULL THEN
+	IF is_order<>1 AND p_isunion IS NULL AND p_sort_column IS NOT NULL THEN
 		SET tmp_sql=CONCAT(tmp_sql," ORDER BY ",p_sort_column);
+		SET is_order=1;
 	END IF;
 	IF p_current_page IS NOT NULL AND p_page_size IS NOT NULL THEN	
 	    SET tmp_sql=CONCAT(tmp_sql," LIMIT ",(p_current_page-1)*p_page_size,',',p_page_size);

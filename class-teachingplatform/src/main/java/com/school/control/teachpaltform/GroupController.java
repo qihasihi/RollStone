@@ -353,7 +353,7 @@ public class GroupController extends BaseController<TpGroupInfo>{
         if(tg==null
                 ||tg.getSubjectid()==null
                 ||tg.getClassid()==null
-                ||tg.getClasstype()==null
+                //||tg.getClasstype()==null
 			    ||termInfo.getRef()==null
                     ||termInfo.getRef().trim().length()<1){
             je.setType("error");
