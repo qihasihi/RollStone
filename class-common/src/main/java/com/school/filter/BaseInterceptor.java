@@ -340,6 +340,8 @@ public class BaseInterceptor implements HandlerInterceptor {
                 if (queryPath.indexOf("&") != -1) {
                     queryPath = queryPath.substring(0, queryPath.indexOf("&"));
                     realpath += "?" + queryPath;
+                }else{
+                    realpath += "?" + queryPath;
                 }
             }
         }

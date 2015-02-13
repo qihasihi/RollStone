@@ -353,6 +353,7 @@ public class TaskController extends BaseController{
         if(sign==null||sign.trim().length()<1||time==null||time.length()<1){
             je.setMsg("Param Error!");
             response.getWriter().print(je.toJSON());
+            return null;
         }
         HashMap<String,String> map = new HashMap();
         map.put("time",time);

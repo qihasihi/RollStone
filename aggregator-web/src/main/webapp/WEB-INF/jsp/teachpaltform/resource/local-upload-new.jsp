@@ -305,11 +305,11 @@
         if(resType=="7"){
             courseObj.show();
             materialObj.show();
-            load_material();
+            load_material("${materialInfo.teachingmaterialid}");
             showOrHide('course');
         }else{
-            courseObj.val("").hide();
-            materialObj.val("").hide();
+            //courseObj.val("").hide();
+            //materialObj.val("").hide();
             pageGo('p1');
             showOrHide('resource');
         }
@@ -352,7 +352,7 @@
                 alert('网络异常!')
             },
             success: function (rps) {
-                var htm='<option value="">选择知识点</option>';
+                var htm='<option value="">==请选择知识点==</option>';
                 if(rps.objList!=null&&rps.objList.length>0){
                     $.each(rps.objList,function(idx,itm){
                         htm+='<option value="'+itm.courseid+'">'+itm.coursename+'</option>';
@@ -446,8 +446,8 @@
                 <c:if test="${!empty resType}">
                 <c:forEach items="${resType}" var="d">
                     <!--去掉微视频-->
-                    <c:if test="${d.dictionaryvalue!=6}">
-                <input type="radio" name="res_type"  value="${d.dictionaryvalue}" />${d.dictionaryname}&nbsp;&nbsp;&nbsp;&nbsp;
+                    <c:if test="${d.dictionaryvalue!=6 and d.dictionaryvalue!=7}">
+                      <input type="radio" name="res_type"  value="${d.dictionaryvalue}" />${d.dictionaryname}&nbsp;&nbsp;&nbsp;&nbsp;
                     </c:if>
                 </c:forEach>
                 </c:if>

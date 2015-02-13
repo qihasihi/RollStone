@@ -538,7 +538,7 @@ function load_material(materialid) {
             if (rps.type == "error") {
                 alert(rps.msg);
             } else {
-                var htm = '';//'<option value="">==请选择教材版本==</option>';
+                var htm = '<option value="">==请选择教材版本==</option>';
                 if (rps.objList.length) {
                     //htm+='<option value="">全部</option>';
                     $.each(rps.objList, function (idx, itm) {
