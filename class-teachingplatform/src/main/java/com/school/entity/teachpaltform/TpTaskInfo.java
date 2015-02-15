@@ -46,6 +46,42 @@ public class TpTaskInfo implements Serializable {
     private Long paperid;
     private String papername;
     private Integer schoolid;
+    private Integer subjectid;
+    private Object taskflag;
+    private String stuname;
+    private Long groupid;
+
+    public Long getGroupid() {
+        return groupid;
+    }
+
+    public void setGroupid(Long groupid) {
+        this.groupid = groupid;
+    }
+
+    public String getStuname() {
+        return stuname;
+    }
+
+    public void setStuname(String stuname) {
+        this.stuname = stuname;
+    }
+
+    public Object getTaskflag() {
+        return taskflag;
+    }
+
+    public void setTaskflag(Object taskflag) {
+        this.taskflag = taskflag;
+    }
+
+    public Integer getSubjectid() {
+        return subjectid;
+    }
+
+    public void setSubjectid(Integer subjectid) {
+        this.subjectid = subjectid;
+    }
 
     public Integer getSchoolid() {
         return schoolid;

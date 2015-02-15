@@ -1,7 +1,6 @@
 
 package  com.school.manager.inter.teachpaltform;
 
-import com.school.entity.teachpaltform.TpTaskAllotInfo;
 import com.school.entity.teachpaltform.TpTaskInfo;
 import com.school.manager.base.IBaseManager;
 import com.school.util.PageResult;
@@ -65,5 +64,35 @@ public interface ITpTaskManager  extends IBaseManager<TpTaskInfo> {
      * @return
      */
     public List<TpTaskInfo> getTaskRemindList(TpTaskInfo t,PageResult presult);
+
+    /**
+     * 获取班级任务统计
+     * @param t
+     * @return
+     */
+    public List<TpTaskInfo> getTaskColumnByClass(TpTaskInfo t);
+
+    /**
+     * 获取班级任务统计
+     * @param t
+     * @return
+     */
+    public List<List<String>>  getTaskStatByClass(TpTaskInfo t);
+
+
+    /**
+     * 获取小组任务统计
+     * @param t
+     * @return
+     */
+    public List<List<String>>  getTaskStatByGroup(TpTaskInfo t);
+
+
+    /**
+     * 获取未分配小组任务统计
+     * @param t
+     * @return
+     */
+    public List<List<String>>  getTaskStatByNoGroup(TpTaskInfo t);
 
 } 

@@ -337,6 +337,157 @@ public class TpTaskDAO extends CommonDAO<TpTaskInfo> implements ITpTaskDAO {
         return tptaskinfoList;
     }
 
+    @Override
+    public List<TpTaskInfo> getTaskColumnByClass(TpTaskInfo t) {
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_course_task_stat_stu_column(");
+        List<Object> objList=new ArrayList<Object>();
+
+        if (t.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getClassid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getClassid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getSelecttype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getSelecttype());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getGroupid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getGroupid());
+        } else
+            sqlbuilder.append("null,");
+        sqlbuilder.append("?)}");
+        List<Integer> types=new ArrayList<Integer>();
+        types.add(Types.INTEGER);
+        List<TpTaskInfo> tptaskinfoList=this.executeResult_PROC(sqlbuilder.toString(), objList, types, TpTaskInfo.class, null);
+        return tptaskinfoList;
+    }
+
+    @Override
+    public List<List<String>> getTaskStatByClass(TpTaskInfo t) {
+        if(t==null||t.getCourseid()==null||
+                t.getSubjectid()==null||
+                t.getClassid()==null)
+            return null;
+
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_course_task_stat_stu(");
+        List<Object> objList=new ArrayList<Object>();
+
+        if (t.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getClassid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getClassid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getSelecttype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getSelecttype());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getGroupid() != null) {
+            sqlbuilder.append("?");
+            objList.add(t.getGroupid());
+        } else
+            sqlbuilder.append("null");
+        sqlbuilder.append(")}");
+        List<List<String>> tptaskinfoList=this.executeResultProcedure(sqlbuilder.toString(), objList);
+        return tptaskinfoList;
+    }
+
+    @Override
+    public List<List<String>> getTaskStatByGroup(TpTaskInfo t) {
+        if(t==null||t.getCourseid()==null||
+                t.getSubjectid()==null||
+                t.getClassid()==null)
+            return null;
+
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_course_task_stat_group(");
+        List<Object> objList=new ArrayList<Object>();
+
+        if (t.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getClassid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getClassid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getSelecttype() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getSelecttype());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getGroupid() != null) {
+            sqlbuilder.append("?");
+            objList.add(t.getGroupid());
+        } else
+            sqlbuilder.append("null");
+        sqlbuilder.append(")}");
+        List<List<String>> tptaskinfoList=this.executeResultProcedure(sqlbuilder.toString(), objList);
+        return tptaskinfoList;
+    }
+
+    @Override
+    public List<List<String>> getTaskStatByNoGroup(TpTaskInfo t) {
+        if(t==null||t.getCourseid()==null||
+                t.getSubjectid()==null||
+                t.getClassid()==null)
+            return null;
+
+        StringBuilder sqlbuilder = new StringBuilder();
+        sqlbuilder.append("{CALL tp_course_task_stat_no_group(");
+        List<Object> objList=new ArrayList<Object>();
+
+        if (t.getCourseid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getCourseid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getSubjectid() != null) {
+            sqlbuilder.append("?,");
+            objList.add(t.getSubjectid());
+        } else
+            sqlbuilder.append("null,");
+        if (t.getClassid() != null) {
+            sqlbuilder.append("?");
+            objList.add(t.getClassid());
+        } else
+            sqlbuilder.append("null");
+        sqlbuilder.append(")}");
+        List<List<String>> tptaskinfoList=this.executeResultProcedure(sqlbuilder.toString(), objList);
+        return tptaskinfoList;
+    }
+
 
     public List<Object> getUpdateSql(TpTaskInfo tptaskinfo, StringBuilder sqlbuilder) {
 		if(tptaskinfo==null||sqlbuilder==null)

@@ -1,23 +1,19 @@
 
 package  com.school.manager.teachpaltform;
 
-import java.util.List;
-import java.util.UUID;
-
-import com.school.entity.teachpaltform.TpTaskAllotInfo;
-import com.school.util.UtilTool;
-import jxl.Sheet;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import com.school.dao.inter.teachpaltform.ITpTaskDAO;
-
-import com.school.entity.teachpaltform.TpTaskInfo;
 import com.school.dao.base.ICommonDAO;
+import com.school.dao.inter.teachpaltform.ITpTaskDAO;
+import com.school.entity.teachpaltform.TpTaskInfo;
 import com.school.manager.base.BaseManager;
 import com.school.manager.inter.teachpaltform.ITpTaskManager;
 import com.school.util.PageResult;
+import jxl.Sheet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class  TpTaskManager extends BaseManager<TpTaskInfo> implements ITpTaskManager  { 
@@ -125,6 +121,26 @@ public class  TpTaskManager extends BaseManager<TpTaskInfo> implements ITpTaskMa
     @Override
     public List<TpTaskInfo> getTaskRemindList(TpTaskInfo t, PageResult presult) {
         return this.tptaskdao.getTaskRemindList(t,presult);
+    }
+
+    @Override
+    public List<TpTaskInfo> getTaskColumnByClass(TpTaskInfo t) {
+        return this.tptaskdao.getTaskColumnByClass(t);
+    }
+
+    @Override
+    public List<List<String>>  getTaskStatByClass(TpTaskInfo t) {
+        return this.tptaskdao.getTaskStatByClass(t);
+    }
+
+    @Override
+    public List<List<String>> getTaskStatByGroup(TpTaskInfo t) {
+        return this.tptaskdao.getTaskStatByGroup(t);
+    }
+
+    @Override
+    public List<List<String>> getTaskStatByNoGroup(TpTaskInfo t) {
+        return this.tptaskdao.getTaskStatByNoGroup(t);
     }
 }
 

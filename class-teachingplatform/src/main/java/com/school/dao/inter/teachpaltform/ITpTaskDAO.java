@@ -2,7 +2,6 @@
 package com.school.dao.inter.teachpaltform;
 
 import com.school.dao.base.ICommonDAO;
-import com.school.entity.teachpaltform.TpTaskAllotInfo;
 import com.school.entity.teachpaltform.TpTaskInfo;
 import com.school.util.PageResult;
 
@@ -68,4 +67,35 @@ public interface ITpTaskDAO extends ICommonDAO<TpTaskInfo>{
      * @return
      */
     public List<TpTaskInfo> getTaskRemindList(TpTaskInfo t,PageResult presult);
+
+
+
+    /**
+     * 获取班级任务统计
+     * @param t
+     * @return
+     */
+    public List<TpTaskInfo> getTaskColumnByClass(TpTaskInfo t);
+
+    /**
+     * 获取班级任务统计
+     * @param t
+     * @return
+     */
+    public List<List<String>>  getTaskStatByClass(TpTaskInfo t);
+
+    /**
+     * 获取小组任务统计
+     * @param t
+     * @return
+     */
+    public List<List<String>>  getTaskStatByGroup(TpTaskInfo t);
+
+    /**
+     * 获取未分配小组任务统计
+     * @param t
+     * @return
+     */
+    public List<List<String>>  getTaskStatByNoGroup(TpTaskInfo t);
+
 }

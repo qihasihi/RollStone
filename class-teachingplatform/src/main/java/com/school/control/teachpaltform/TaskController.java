@@ -5484,11 +5484,125 @@ public class TaskController extends BaseController{
         if(materialList!=null&&materialList.size()>0)
             subjectid=materialList.get(0).getSubjectid().toString();
 
+        /**
+         * ① 专题下有多个班级，可以按班级查看
+
+         ② 若分小组则按小组进行统计；若没有分小组，则按班级进行统计。
+
+         ③ 分小组统计时，没有在任何小组中的成员，自动显示在一个"未分配小组成员"的表格中
+
+         ④ 统计表格中，统计的是学生做或没做，完成了就使用"√"，没完成就使用" - "
+
+         注意：表格导航中的任务序号要与实际的任务序号一致，比如对于第二组来说，教师第一个任务并没有发给第二组，那么第二组的任务统计中就没有任务1.
+         */
+
         mp.put("courseid",courseid);
         mp.put("subjectid",subjectid);
         mp.put("classList",clsList);
         mp.put("termid",teacherCourseList.get(0).getTermid());
         return new ModelAndView("/teachpaltform/task/teacher/stat/stu-task-stat",mp);
+    }
+
+
+    /**
+     * 获取任务统计
+     * 班级统计
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "loadStuStatByClass",method = RequestMethod.POST)
+    public void loadStuStatByClass(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String courseid=request.getParameter("courseid");
+        String subjectid=request.getParameter("subjectid");
+        String classid=request.getParameter("classid");
+        JsonEntity je=new JsonEntity();
+        if(courseid==null||courseid.length()<1||
+                subjectid==null||classid==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpTaskInfo t=new TpTaskInfo();
+        t.setSubjectid(Integer.parseInt(subjectid));
+        t.setClassid(classid);
+        t.setCourseid(Long.parseLong(courseid));
+        t.setSelecttype(0);
+        List<TpTaskInfo>columnList=this.tpTaskManager.getTaskColumnByClass(t);
+        List<List<String>> dataList=this.tpTaskManager.getTaskStatByClass(t);
+        je.getObjList().add(columnList);
+        je.getObjList().add(dataList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+
+    /**
+     * 获取任务统计
+     * 小组统计
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "loadStuStatByGroup",method = RequestMethod.POST)
+    public void loadStuStatByGroup(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String courseid=request.getParameter("courseid");
+        String subjectid=request.getParameter("subjectid");
+        String classid=request.getParameter("classid");
+        String groupid=request.getParameter("groupid");
+        JsonEntity je=new JsonEntity();
+        if(courseid==null||courseid.length()<1||
+                subjectid==null||classid==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpTaskInfo t=new TpTaskInfo();
+        t.setSubjectid(Integer.parseInt(subjectid));
+        t.setClassid(classid);
+        t.setCourseid(Long.parseLong(courseid));
+        t.setGroupid(Long.parseLong(groupid));
+        t.setSelecttype(2);
+        List<TpTaskInfo>columnList=this.tpTaskManager.getTaskColumnByClass(t);
+        List<List<String>> dataList=this.tpTaskManager.getTaskStatByGroup(t);
+        je.getObjList().add(columnList);
+        je.getObjList().add(dataList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
+    }
+
+
+
+    /**
+     * 获取任务统计
+     * 小组统计
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(params = "loadNoGroupStuStat",method = RequestMethod.POST)
+    public void loadNoGroupStuStat(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        String courseid=request.getParameter("courseid");
+        String subjectid=request.getParameter("subjectid");
+        String classid=request.getParameter("classid");
+        JsonEntity je=new JsonEntity();
+        if(courseid==null||courseid.length()<1||
+                subjectid==null||classid==null){
+            je.setMsg(UtilTool.msgproperty.getProperty("PARAM_ERROR"));
+            response.getWriter().print(je.toJSON());
+            return;
+        }
+        TpTaskInfo t=new TpTaskInfo();
+        t.setSubjectid(Integer.parseInt(subjectid));
+        t.setClassid(classid);
+        t.setCourseid(Long.parseLong(courseid));
+        t.setSelecttype(0);
+        List<TpTaskInfo>columnList=this.tpTaskManager.getTaskColumnByClass(t);
+        List<List<String>> dataList=this.tpTaskManager.getTaskStatByNoGroup(t);
+        je.getObjList().add(columnList);
+        je.getObjList().add(dataList);
+        je.setType("success");
+        response.getWriter().print(je.toJSON());
     }
 
 }
