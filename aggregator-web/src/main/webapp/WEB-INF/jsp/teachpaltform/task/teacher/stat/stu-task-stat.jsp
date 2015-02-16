@@ -111,134 +111,137 @@ $(function(){
             }});
     }
 
-function statByGroupId(classid,groupid,groupname,callback){
-    if(groupid==null||groupid.toString().length<1){
-        alert('系统未获取小组标识!');
-        return;
-    }
-    var url="task?loadStuStatByGroup";
-    $.ajax({
-        url:url,
-        data:{groupid:groupid,subjectid:subjectid,courseid:courseid,classid:classid},
-        type:'post',
-        dataType:'json',
-        error:function(){
-            alert('系统未响应!');
-        },
-        success:function(rps){
-            var column='',data='';
-            if(rps.objList[0]!=null&&rps.objList[0].length>0){
-                column+='<div class="jxxt_zhuanti_rw_tongji_all">';
-                column+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab2" >';
-                column+='<caption>'+groupname+'</caption>';
-                column+='<tr>';
-                $.each(rps.objList[0],function(idx,itm){
-                    if(idx==0)
-                        column+='<th>姓名</th>';
-                    column+='<th>任务'+itm.orderidx+'<br>'+itm.taskTypeName+'</th>';
-                });
-                column+='</tr>';
-                column+='<tbody id="tb_data_'+groupid+'"></tbody>';
-                column+='</table>';
-                column+='</div>';
-
-            }else{
-                column+='<div class="jxxt_zhuanti_rw_tongji_all">';
-                column+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab2" >';
-                column+='<tr><td>暂无数据!</td></tr>';
-                column+='</table>';
-                column+='</div>';
-            }
-            $("#dv_content").html(column);
-            if(rps.objList[1]!=null&&rps.objList[1].length>0){
-                $.each(rps.objList[1],function(idx,itm){
-                    data+='<tr>';
-                    $.each(itm,function(ix,im){
-                        data+='<td>';
-                        if(ix==0)
-                            data+=im;
-                        else{
-                            if(typeof im!='undefined'&&im=='1')
-                                data+='√';
-                            else
-                                data+='<span class="font-red">－</span>';
-                        }
-                        data+='</td>';
-                    });
-                    data+='</tr>';
-                });
-            }
-            $("#tb_data_"+groupid).html(data);
-
-            if(callback)
-                statNoGroup(classid);
+    function statByGroupId(classid,groupid,groupname,callback){
+        if(groupid==null||groupid.toString().length<1){
+            alert('系统未获取小组标识!');
+            return;
         }
-
-
-    });
-}
-
-
-function statNoGroup(classid){
-    if(classid==null||classid.toString().length<1){
-        alert('系统未获取班级标识!');
-        return;
-    }
-    var url="task?loadNoGroupStuStat";
-    $.ajax({
-        url:url,
-        data:{subjectid:subjectid,courseid:courseid,classid:classid},
-        type:'post',
-        dataType:'json',
-        error:function(){
-            alert('系统未响应!');
-        },
-        success:function(rps){
-            var column='',data='';
-            if(rps.objList[0]!=null&&rps.objList[0].length>0){
-                column+='<div class="jxxt_zhuanti_rw_tongji_all">';
-                column+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab2" >';
-                column+='<caption>未分配小组</caption>';
-                column+='<tr>';
-                $.each(rps.objList[0],function(idx,itm){
-                    if(idx==0)
-                        column+='<th>姓名</th>';
-                    column+='<th>任务'+itm.orderidx+'<br>'+itm.taskTypeName+'</th>';
-                });
-                column+='</tr>';
-                column+='<tbody id="tb_no_group"></tbody>';
-                column+='</table>';
-                column+='</div>';
-
-            }else{
-                column+='<div class="jxxt_zhuanti_rw_tongji_all">';
-                column+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab2" >';
-                column+='<tr><td>暂无数据!</td></tr>';
-                column+='</table>';
-                column+='</div>';
-            }
-            $("#dv_content").append(column);
-            if(rps.objList[1]!=null&&rps.objList[1].length>0){
-                $.each(rps.objList[1],function(idx,itm){
-                    data+='<tr>';
-                    $.each(itm,function(ix,im){
-                        data+='<td>';
-                        if(ix==0)
-                            data+=im;
-                        else{
-                            if(typeof im!='undefined'&&im=='1')
-                                data+='√';
-                            else
-                                data+='<span class="font-red">－</span>';
-                        }
-                        data+='</td>';
+        var url="task?loadStuStatByGroup";
+        $.ajax({
+            url:url,
+            data:{groupid:groupid,subjectid:subjectid,courseid:courseid,classid:classid},
+            type:'post',
+            dataType:'json',
+            error:function(){
+                alert('系统未响应!');
+            },
+            success:function(rps){
+                var column='',data='';
+                if(rps.objList[0]!=null&&rps.objList[0].length>0){
+                    column+='<div class="jxxt_zhuanti_rw_tongji_all">';
+                    column+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab2" >';
+                    column+='<caption>'+groupname+'</caption>';
+                    column+='<tr>';
+                    $.each(rps.objList[0],function(idx,itm){
+                        if(idx==0)
+                            column+='<th>姓名</th>';
+                        column+='<th>任务'+itm.orderidx+'<br>'+itm.taskTypeName+'</th>';
                     });
-                    data+='</tr>';
-                });
+                    column+='</tr>';
+                    column+='<tbody id="tb_data_'+groupid+'"></tbody>';
+                    column+='</table>';
+                    column+='</div>';
+
+                }else{
+                    column+='<div class="jxxt_zhuanti_rw_tongji_all">';
+                    column+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab2" >';
+                    column+='<tr><td>暂无数据!</td></tr>';
+                    column+='</table>';
+                    column+='</div>';
+                }
+                $("#dv_content").append(column);
+                if(rps.objList[1]!=null&&rps.objList[1].length>0){
+                    $.each(rps.objList[1],function(idx,itm){
+                        data+='<tr>';
+                        $.each(itm,function(ix,im){
+                            data+='<td>';
+                            if(ix==0)
+                                data+=im;
+                            else{
+                                if(typeof im!='undefined'&&im=='1')
+                                    data+='√';
+                                else
+                                    data+='<span class="font-red">－</span>';
+                            }
+                            data+='</td>';
+                        });
+                        data+='</tr>';
+                    });
+                }
+                $("#tb_data_"+groupid).html(data);
+
+                if(callback)
+                    statNoGroup(classid);
             }
-            $("#tb_no_group").html(data);
-        }});
-}
+
+
+        });
+    }
+
+
+    function statNoGroup(classid){
+        if(classid==null||classid.toString().length<1){
+            alert('系统未获取班级标识!');
+            return;
+        }
+        var url="task?loadNoGroupStuStat";
+        $.ajax({
+            url:url,
+            data:{subjectid:subjectid,courseid:courseid,classid:classid},
+            type:'post',
+            dataType:'json',
+            error:function(){
+                alert('系统未响应!');
+            },
+            success:function(rps){
+                var column='',data='';
+                if(rps.objList[0]!=null&&rps.objList[0].length>0){
+                    column+='<div class="jxxt_zhuanti_rw_tongji_all" id="dv_no_group">';
+                    column+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab2" >';
+                    column+='<caption>未分配小组成员</caption>';
+                    column+='<tr>';
+                    $.each(rps.objList[0],function(idx,itm){
+                        if(idx==0)
+                            column+='<th>姓名</th>';
+                        column+='<th>任务'+itm.orderidx+'<br>'+itm.taskTypeName+'</th>';
+                    });
+                    column+='</tr>';
+                    column+='<tbody id="tb_no_group"></tbody>';
+                    column+='</table>';
+                    column+='</div>';
+
+                }else{
+                    column+='<div class="jxxt_zhuanti_rw_tongji_all">';
+                    column+='<table border="0" cellpadding="0" cellspacing="0" class="public_tab2" >';
+                    column+='<tr><td>暂无数据!</td></tr>';
+                    column+='</table>';
+                    column+='</div>';
+                }
+                $("#dv_content").append(column);
+                if(rps.objList[1]!=null&&rps.objList[1].length>0){
+                    $.each(rps.objList[1],function(idx,itm){
+                        data+='<tr>';
+                        $.each(itm,function(ix,im){
+                            data+='<td>';
+                            if(ix==0)
+                                data+=im;
+                            else{
+                                if(typeof im!='undefined'&&im=='1')
+                                    data+='√';
+                                else
+                                    data+='<span class="font-red">－</span>';
+                            }
+                            data+='</td>';
+                        });
+                        data+='</tr>';
+                    });
+                    $("#tb_no_group").html(data);
+                }else{
+                    $("#dv_no_group").remove();
+                }
+
+            }});
+    }
 
 </script>
 </head>

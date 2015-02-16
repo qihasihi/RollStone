@@ -340,8 +340,6 @@
         if(sel_sharetype!=null&&sel_sharetype.toString().length>0)
             param.sharetype=sel_sharetype;
 
-        pageGo('pCourseRes');
-        pageGo('p1');
         $.ajax({
             url: 'tpres?m=ajaxCourseList&pageResult.pageNo=1&pageResult.pageSize=99999999&t='+new Date().getTime(),
             type: 'post',
@@ -359,6 +357,8 @@
                     })
                 }
                 $("#sel_course").html(htm);
+                pageGo('pCourseRes');
+                pageGo('p1');
             }
         });
     }

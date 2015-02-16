@@ -722,6 +722,7 @@ public abstract class CommonDAO<T> implements ICommonDAO<T> {
 
 }
 
+
 /**
  * 重写执行存储过程前的相关方法
  */
@@ -789,6 +790,8 @@ class SchoolCallableStatementCreator implements CallableStatementCreator{
         return pstatement;
     }
 }
+
+
 
 /**
  * 执行复杂的查询完成后的返回方法

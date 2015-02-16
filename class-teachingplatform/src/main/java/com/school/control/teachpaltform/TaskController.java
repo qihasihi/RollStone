@@ -5575,7 +5575,7 @@ public class TaskController extends BaseController{
 
     /**
      * 获取任务统计
-     * 小组统计
+     * 未分配小组人员统计
      * @param request
      * @param response
      * @throws Exception

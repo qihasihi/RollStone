@@ -1198,7 +1198,7 @@ public class UserController extends BaseController<UserInfo> {
                         loginLog.setEttuserid(this.logined(request).getEttuserid());
                         loginLog.setUsertype(usertype);
                         loginLog.setDynamicid(UserDynamicInfo.DYNAMIC_NAME.LOGIN.getVal());
-                        //this.userDynamicPCManager.doSave(loginLog);
+                        this.userDynamicPCManager.doSave(loginLog);
 
 
                     } catch (Exception e) {
